@@ -39,6 +39,7 @@ class ImagesService
   const USER_STORAGE = 'UserStorage';
   const APP_STORAGE = 'AppStorage';
   const TMP_STORAGE = 'cache';
+  const DATABASE_STORAGE = 'DatabaseStorage';
 
   const IMAGE_ID_ANY = -1;
   const IMAGE_ID_PLACEHOLDER = 0;
@@ -178,23 +179,29 @@ EOT;
       default: // data-base
         $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
 
-        $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-        $this->logDebug("cooked table: ".$joinTableClass);
+        if ($joinTable == self::DATABASE_STORAGE) {
+          // plain data-base id without join table
+          $dbImage = $imagesRepository->find($imageId);
+        } else {
+          $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+          $this->logDebug("cooked table: ".$joinTableClass);
 
-        $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
-        $findBy =  [ 'ownerId' => $ownerId ];
-        if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
-          $findBy['image'] = $imageId;
+          $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+          $findBy =  [ 'ownerId' => $ownerId ];
+          if ($imageId > self::IMAGE_ID_PLACEHOLDER) {
+            $findBy['image'] = $imageId;
+          }
+
+          $joinTableEntity = $joinTableRepository->findOneBy($findBy);
+          if ($joinTableEntity == null) {
+            $this->logInfo('NOT FOUND ' . $findBy);
+            break;
+          }
+
+          /** @var Entities\Image $dbImage */
+          $dbImage = $joinTableEntity->getImage();
         }
 
-        $joinTableEntity = $joinTableRepository->findOneBy($findBy);
-        if ($joinTableEntity == null) {
-          $this->logInfo('NOT FOUND ' . $findBy);
-          break;
-        }
-
-        /** @var Entities\Image $dbImage */
-        $dbImage = $joinTableEntity->getImage();
         $fileName = $dbImage->getFileName();
         if (empty($fileName)) {
           $fileName = $joinTable . '-' . $ownerId . '-' . $dbImage->getId();
@@ -316,7 +323,8 @@ EOT;
         $existsMethod = 'fileExists';
       }
 
-      if ($imageId == self::IMAGE_ID_PLACEHOLDER && $directory->$existsMethod($fileName)) {
+      if ($imageId === self::IMAGE_ID_PLACEHOLDER && $directory->$existsMethod($fileName)) {
+        $this->logInfo(sprintf('File %s / %s exists, generate versioned file-name.', $imageId, $fileName));
         $base = pathinfo($fileName, PATHINFO_FILENAME);
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         $cnt = 0;
@@ -392,20 +400,25 @@ EOT;
     default: // data-base
       $imagesRepository = $this->getDatabaseRepository(Entities\Image::class);
 
-      $joinTableClass = $imagesRepository->joinTableClass($joinTable);
-      $this->logDebug("cooked table: ".$joinTableClass);
+      if ($joinTable == self::DATABASE_STORAGE) {
+        $joinTableEntities = [ $imagesRepository->find($imageId) ];
+      } else {
+        $joinTableClass = $imagesRepository->joinTableClass($joinTable);
+        $this->logDebug("cooked table: ".$joinTableClass);
 
-      $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
+        $joinTableRepository = $this->getDatabaseRepository($joinTableClass);
 
-      $findBy =  [ 'ownerId' => $ownerId ];
-      if ($imageId > self::IMAGE_ID_ANY) {
-        $findBy['imageId'] = $imageId;
+        $findBy =  [ 'ownerId' => $ownerId ];
+        if ($imageId > self::IMAGE_ID_ANY) {
+          $findBy['imageId'] = $imageId;
+        }
+
+        $joinTableEntities = $joinTableRepository->findBy($findBy);
       }
 
-      $joinTableEntities = $joinTableRepository->findBy($findBy);
       if (count($joinTableEntities) < 1) {
         throw new \RuntimeException(
-          $this->l->t('Unable to find image link for ownerId "%s" in join-table "%s".', [ $ownerId, $joinTable ])
+          $this->l->t('Unable to find image link for ownerId/imageId "%s/%s" in join-table "%s".', [ $ownerId, $imageId, $joinTable ])
         );
       }
       foreach ($joinTableEntities as $joinTableEntity) {

@@ -85,11 +85,6 @@ class Project implements \ArrayAccess
   private $instrumentationNumbers;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectPoster", mappedBy="owner", fetch="EXTRA_LAZY")
-   */
-  private $posters;
-
-  /**
    * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", fetch="EXTRA_LAZY")
    * @todo this should cascade deletes
    */
@@ -134,7 +129,6 @@ class Project implements \ArrayAccess
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
-    $this->posters = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->participantFields = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
@@ -236,30 +230,6 @@ class Project implements \ArrayAccess
   public function getType():Types\EnumProjectTemporalType
   {
     return $this->type;
-  }
-
-  /**
-   * Set posters.
-   *
-   * @param ArrayCollection $posters
-   *
-   * @return Project
-   */
-  public function setPosters($posters):Project
-  {
-    $this->posters = $posters;
-
-    return $this;
-  }
-
-  /**
-   * Get posters.
-   *
-   * @return ArrayCollection
-   */
-  public function getPosters():Collection
-  {
-    return $this->posters;
   }
 
   /**

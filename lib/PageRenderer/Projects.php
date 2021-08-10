@@ -47,7 +47,6 @@ class Projects extends PMETableViewBase
   const TABLE = self::PROJECTS_TABLE;
   const ENTITY = Entities\Project::class;
   const NAME_LENGTH_MAX = 20;
-  const POSTER_JOIN_TABLE = 'ProjectPosters';
 
   private const MAX_POSTER_COLUMNS = 4;
 
@@ -96,15 +95,6 @@ class Projects extends PMETableViewBase
         'id' => false,
       ],
       'column' => 'id',
-    ],
-    self::POSTER_JOIN_TABLE => [
-      'entity' => Entities\ProjectPoster::class,
-      'flags' => self::JOIN_READONLY,
-      'identifier' => [
-        'owner_id' => 'id',
-        'image_id' => false,
-      ],
-      'column' => 'image_id',
     ],
   ];
 
@@ -420,34 +410,7 @@ __EOT__;
       'escape' => false
     ];
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::POSTER_JOIN_TABLE, 'image_id', [
-        'input' => 'RSV',
-        'name' => $this->l->t('Poster'),
-        'select' => 'T',
-        'options' => 'VCD',
-        'php' => function($value, $action, $field, $row, $recordId, $pme) {
-          $projectId = $recordId['id'];
-          $imageIds = Util::explode(',', $value);
-          if (empty($imageIds) || ($action != 'display')) {
-            $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
-          }
-          $numImages = count($imageIds);
-          $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
-          $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
-          $html = '';
-          for ($i = 0; $i < $numImages; ++$i) {
-            $html .= $this->posterImageLinkOld($projectId, $action, $columns, $imageIds[$i]);
-          }
-          return $html;
-        },
-        'values' => [ 'grouped' => true, ],
-        'css' => ['postfix' => ' projectposter'],
-        'default' => '',
-        'sort' => false,
-      ]);
-
-    $opts['fdd']['poster_new'] = [
+    $opts['fdd']['poster'] = [
       'name'     => $this->l->t('Posters'),
       'input'    => 'V',
       'options'  => 'VCD',

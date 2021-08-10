@@ -29,11 +29,16 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 
 class MoveProjectPosters implements IMigration
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  private const POSTERS_JOIN_TABLE = 'ProjectPosters';
 
   /** @var IL10N */
   private $l;
@@ -49,27 +54,35 @@ class MoveProjectPosters implements IMigration
     , IL10N $l10n
     , ProjectService $projectService
     , ImagesService $imagesService
+    , EntityManager $entityManager
   ) {
     $this->logger = $logger;
     $this->l = $l10n;
     $this->projectService = $projectService;
     $this->imagesService = $imagesService;
+    $this->entityManager = $entityManager;
   }
 
   public function execute():bool
   {
-    return true;
-    // get all projects
+    // try to migrate as much data as possible
+    $numFailures = 0;
+
     $projects = $this->projectService->fetchAll();
+
     /** @var Entities\Project $project */
     foreach($projects as $project) {
       $postersFolder = $this->projectService->ensurePostersFolder($project);
-      try {
-        $dbImageIds = $this->imagesService->getImageIds(Entities\ProjectPoster::class, $project->getId());
-      } catch (\Throwable $t) {
-        $this->logException($t, $this->l->t('Unable to fetch data-base images, assuming they do not exist.'));
-        $dbImageIds = [];
-      }
+
+      // the idea is that the ProjectPosters join table _entity_ is
+      // gone, so just use DBAL
+      $connection = $this->entityManager->getConnection();
+      $sql = 'SELECT image_id FROM ' . self::POSTERS_JOIN_TABLE . ' WHERE owner_id = ?';
+      $stmt = $connection->prepare($sql);
+      $stmt->bindValue(1, $project->getId());
+      $dbImageIds = $stmt->executeQuery()->fetchFirstColumn();
+      $this->logDebug('IMAGES: ' . print_r($dbImageIds, true));
+
       $fsImageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
       if (!empty($dbImageIds)) {
         if (!empty($fsImageIds)) {
@@ -82,7 +95,8 @@ class MoveProjectPosters implements IMigration
 
       foreach ($dbImageIds as $dbImageId) {
         try {
-          list($image, $fileName) = $this->imagesService->getImage(Entities\ProjectPoster::class, $project->getId(), $dbImageId);
+          /** @var \OCP\Image $image */
+          list($image, $fileName) = $this->imagesService->getImage(ImagesService::DATABASE_STORAGE, $project->getId(), $dbImageId);
           if (empty($image)) {
             $this->logWarn(
               $this->l->t('Unable to fetch data-base image "%1$d" for project "%2$s".',
@@ -90,21 +104,54 @@ class MoveProjectPosters implements IMigration
             );
             continue;
           }
+
+          // make the filename look a bit better ..
+          if (strpos($fileName, ImagesService::DATABASE_STORAGE) === 0) {
+            $fileName = $project->getName() . '-' . $dbImageId;
+          }
+          $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+          if (empty($ext)) {
+            $mimeType = $image->mimeType();
+            $ext = Util::fileExtensionFromMimeType($mimeType);
+            if (empty($ext)) {
+              $this->logWarn('Unable to determine file-extension for mime-type ' . $mimeType);
+            } else {
+              $fileName .= '.' . $ext;
+            }
+          }
+
           $fileName = $this->imagesService->storeImage($image, ImagesService::USER_STORAGE, $postersFolder, $fileName, $fileName);
-          $this->logInfo($this->l->t(
+          $this->logInfo(sprintf(
             'Stored data-base image id "%1$d" of project "%2$s" in file-system storage with file-name "%3$s".',
-            [ $dbImageId, $project->getName(), $fileName ]));
-          $this->imagesService->deleteImage(Entities\ProjectPoster::class, $project->getId(), $dbImageId);
-          $this->logInfo($this->l->t('Deleted old data-base image with id "%1$sd".', $dbImageId));
+            $dbImageId, $project->getName(), $fileName));
+
+          // delete the join table entry with "pure DBAL"
+          $sql = 'DELETE FROM ' . self::POSTERS_JOIN_TABLE . ' WHERE image_id = ?';
+          $stmt = $connection->prepare($sql);
+          $stmt->bindValue(1, $dbImageId);
+          $stmt->executeQuery();
+
+          // Images entity is still there, so use ORM
+          $this->imagesService->deleteImage(ImagesService::DATABASE_STORAGE, $project->getId(), $dbImageId);
+          $this->logInfo(sprintf('Deleted old data-base image with id "%1$d".', $dbImageId));
         } catch (\Throwable $t) {
           $this->logException($t, $this->l->t(
             'Unable to move data-base image id "%1$d" of project "%2$s" to file-system storage with file-name "%3$s".',
             [ $dbImageId, $project->getName(), $fileName ])
           );
+          $numFailures++;
           continue;
         }
+
       }
     }
+
+    if ($numFailures === 0) {
+      // remove the join table
+      $connection->query('DROP TABLE ' . self::POSTERS_JOIN_TABLE);
+    }
+
+    return $numFailures == 0;
   }
 };
 
