@@ -68,15 +68,16 @@ class MoveProjectPosters implements IMigration
     // try to migrate as much data as possible
     $numFailures = 0;
 
+    // the idea is that the ProjectPosters join table _entity_ is
+    // gone, so just use DBAL
+    $connection = $this->entityManager->getConnection();
+
     $projects = $this->projectService->fetchAll();
 
     /** @var Entities\Project $project */
     foreach($projects as $project) {
       $postersFolder = $this->projectService->ensurePostersFolder($project);
 
-      // the idea is that the ProjectPosters join table _entity_ is
-      // gone, so just use DBAL
-      $connection = $this->entityManager->getConnection();
       $sql = 'SELECT image_id FROM ' . self::POSTERS_JOIN_TABLE . ' WHERE owner_id = ?';
       $stmt = $connection->prepare($sql);
       $stmt->bindValue(1, $project->getId());
