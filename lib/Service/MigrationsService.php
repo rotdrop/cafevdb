@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\IMigration;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 
 class MigrationsService
 {
@@ -113,7 +114,14 @@ class MigrationsService
   protected function findLatestVersion():?string
   {
     /** @var Entities\Migration $latestMigration */
-    $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
+    try {
+      $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);
+    } catch (DBALException\TableNotFoundException $tnfe) {
+      // Ok, there is no migrations table, handle this inside the initial migration
+      $this->logInfo('NO MIGRATIONS TABLE');
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
     if (empty($latestMigration)) {
       $this->logInfo('NO MIGRATIONS HAVE BEEN APPLIED YET.');
       return null;
