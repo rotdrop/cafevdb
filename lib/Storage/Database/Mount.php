@@ -23,9 +23,14 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+// FIXME internal
+use OC\Files\Mount\MountPoint;
+
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
+
+use OCA\CAFEVDB\Service\ConfigService;
 
 /**
  * Mount parts of the database-storage somewhere.
@@ -35,6 +40,14 @@ use OCP\IUser;
  */
 class Mount implements IMountProvider
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public function __construct(ConfigService $configService)
+  {
+    $this->configService = $configService;
+    $this->l = $this->l10n();
+  }
+
   /**
    * Get all mountpoints applicable for the user
    *
@@ -44,7 +57,21 @@ class Mount implements IMountProvider
    */
   public function getMountsForUser(IUser $user, IStorageFactory $loader)
   {
-    return [];
+    if (!$this->inGroup()) {
+      return [];
+    }
+
+    $storage = new Storage([]);
+    \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
+
+    $mountPoint = new class(
+      $storage,
+      '/' . $user->getUID() . '/files' . '/' . $this->appName() . '-database',
+      null,
+      $loader
+    ) extends MountPoint { public function getMountType() { return 'database'; } };
+
+    return [ $mountPoint ];
   }
 }
 

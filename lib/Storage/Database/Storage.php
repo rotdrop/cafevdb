@@ -27,9 +27,14 @@ namespace OCA\CAFEVDB\Storage\Database;
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
 
+use Icewind\Streams\CallbackWrapper;
+use Icewind\Streams\CountWrapper;
+use Icewind\Streams\IteratorDirectory;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -41,35 +46,91 @@ class Storage extends AbstractStorage
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  public function __construct($parameters)
+  /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository */
+  private $filesRepository;
+
+  /** @var string */
+  private $root;
+
+  public function __construct($params)
   {
     $this->configService = \OC::$server->query(ConfigService::class);
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
+    $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
+
+    $this->root = isset($params['root']) ? '/' . ltrim($params['root'], '/') : '/';
   }
 
   /** {@inheritdoc} */
   public function getId()
   {
-    return 'ftp::' . $this->username . '@' . $this->host . '/' . $this->root;
+    return $this->appName() . '::' . 'database-storage' . $this->root;
   }
 
+  protected function buildPath($path) {
+    return rtrim($this->root . '/' . $path, '/');
+  }
+
+  /** {@inheritdoc} */
   public static function checkDependencies() {
-    if (function_exists('ftp_login')) {
-      return (true);
-    } else {
-      return ['ftp'];
+    return true;
+  }
+
+  private function fileNameFromEntity(Entities\File $file)
+  {
+    $nameParts = [ 'db', $file->getId() ];
+    if (!empty($file->getFileName())) {
+      $nameParts[] = $file->getFileName();
     }
+    $name = implode('-', $nameParts);
+    $ext = pathinfo($name, PATHINFO_EXTENSION);
+    if (empty($ext)) {
+      $ext = Util::fileExtensionFromMimeType($file->getMimeType());
+      if (!empty($ext)) {
+        $name .= '.' . $ext;
+      }
+    }
+    return $name;
+  }
+
+  private function fileIdFromFileName($name)
+  {
+    $name = $this->buildPath($name);
+    $name = pathinfo($name, PATHINFO_BASENAME);
+    list(,$id) = explode('-', $name);
+    return (int)$id;
+  }
+
+  /**
+   * @return null|Enties\File
+   */
+  private function fileFromFileName($name):?Entities\File
+  {
+    $id = $this->fileIdFromFileName($name);
+    if ($id > 0) {
+      return $this->filesRepository->find($id);
+    }
+    return null;
   }
 
   public function filemtime($path)
   {
-    return 0;
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return 0;
+    }
+    $updated = $file->getUpdated();
+    return empty($updated) ? 0 : $updated->getTimestamp();
   }
 
   public function filesize($path)
   {
-    return false;
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    return $file->getSize();
   }
 
   public function rmdir($path)
@@ -77,27 +138,64 @@ class Storage extends AbstractStorage
     return false;
   }
 
-  public function test() {
-    return false;
+  public function test()
+  {
+    try {
+      $this->filesRepository->count([]);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+    return true;
   }
 
-  public function stat($path) {
-    return false;
+  public function stat($path)
+  {
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    return [
+      'mtime' => $file->getUpdated()->getTimestamp(),
+      'size' => $file->getSize(),
+    ];
   }
 
   public function file_exists($path)
   {
-    return false;
+    if ($path === '' || $path === '.' || $path === '/') {
+      return true;
+    }
+
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    return true;
   }
 
   public function unlink($path)
   {
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
     return false;
+    // $this->entityManager->remove($file);
+    // $this->flush();
+    // return true;
   }
 
   public function opendir($path)
   {
-    return null;
+    if (!$this->is_dir($path)) {
+      return false;
+    }
+    $fileNames = [];
+    foreach ($this->filesRepository->findAll() as $file) {
+      $fileNames[] = $this->fileNameFromEntity($file);
+    }
+    return IteratorDirectory::wrap($fileNames);
   }
 
   public function mkdir($path)
@@ -107,32 +205,84 @@ class Storage extends AbstractStorage
 
   public function is_dir($path)
   {
+    if ($path === '' || $path == '/') {
+      return true;
+    }
     return false;
   }
 
-  public function is_file($path) {
-    return false;
+  public function is_file($path)
+  {
+    return $this->filesize($path) !== false;
   }
 
   public function filetype($path)
   {
-    return false;
+    if ($this->is_dir($path)) {
+      return 'dir';
+    } elseif ($this->is_file($path)) {
+      return 'file';
+    } else {
+      return false;
+    }
   }
 
   public function fopen($path, $mode)
   {
+    $useExisting = true;
+    switch ($mode) {
+    case 'r':
+    case 'rb':
+      return $this->readStream($path);
+    case 'w':
+    case 'w+':
+    case 'wb':
+    case 'wb+':
+      $useExisting = false;
+      // no break
+    case 'a':
+    case 'ab':
+    case 'r+':
+    case 'a+':
+    case 'x':
+    case 'x+':
+    case 'c':
+    case 'c+':
+      //emulate these
+      if ($useExisting and $this->file_exists($path)) {
+        if (!$this->isUpdatable($path)) {
+          return false;
+        }
+        $tmpFile = $this->getCachedFile($path);
+      } else {
+        if (!$this->isCreatable(dirname($path))) {
+          return false;
+        }
+        $tmpFile = \OC::$server->getTempManager()->getTemporaryFile();
+      }
+      $source = fopen($tmpFile, $mode);
+      return CallbackWrapper::wrap($source, null, null, function () use ($tmpFile, $path) {
+        $this->writeStream($path, fopen($tmpFile, 'r'));
+        unlink($tmpFile);
+      });
+    }
     return false;
-  }
-
-  public function writeStream(string $path, $stream, int $size = null): int
-  {
-    $size = 0;
-    return $size;
   }
 
   public function readStream(string $path)
   {
-    return null;
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    $stream = fopen('php://temp', 'w+');
+    $result = fwrite($stream, $file->getFileData()->getData());
+    rewind($stream);
+    if ($result === false) {
+      fclose($stream);
+      return false;
+    }
+    return $stream;
   }
 
   public function touch($path, $mtime = null)
@@ -143,11 +293,6 @@ class Storage extends AbstractStorage
   public function rename($path1, $path2)
   {
     return false;
-  }
-
-  public function getDirectoryContent($directory): \Traversable
-  {
-    yield null;
   }
 }
 
