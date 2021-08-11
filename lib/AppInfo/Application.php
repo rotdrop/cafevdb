@@ -58,6 +58,17 @@ use OCA\CAFEVDB\Middleware;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 
+/*
+ *
+ **********************************************************
+ *
+ * Mount data-base storage
+ *
+ */
+
+use OCP\Files\Config\IMountProviderCollection;
+use OCA\CAFEVDB\Storage\DatabaseMount;
+
 class Application extends App implements IBootstrap
 {
   /** @var string */
@@ -82,6 +93,10 @@ class Application extends App implements IBootstrap
           $contactsManager->registerAddressBook($addressBook);
         }
       });
+    });
+
+    $context->injectFn(function(IMountProviderCollection $mountProviderCollection, DatabaseMount $mountProvider) {
+      $mountProviderCollection->registerProvider($mountProvider);
     });
   }
 
