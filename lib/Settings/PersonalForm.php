@@ -269,7 +269,6 @@ class PersonalForm {
             'dbname' => $this->getConfigValue('dbname'),
             'dbuser' => $this->getConfigValue('dbuser'),
             'dbpassword' => $this->getConfigValue('dbpassword'),
-            'encryptionkey' => $this->getConfigValue('encryptionkey'),
 
             'shareowner' => $this->getConfigValue('shareowner', ''),
             'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
