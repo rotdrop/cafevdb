@@ -1454,6 +1454,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
       $valuesTable = $joinInfo['sql'] ?? explode(self::VALUES_TABLE_SEP, $table)[0];
 
+      $opts['fdd'] = $opts['fdd'] ?? [];
       $joinIndex[$table] = count($opts['fdd']);
       $joinTables[$table] = 'PMEjoin'.$joinIndex[$table];
       $fqnColumn = $joinTables[$table].'.'.$joinInfo['column'];
