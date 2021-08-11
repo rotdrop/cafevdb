@@ -110,16 +110,32 @@ class FileData implements \ArrayAccess
    */
   public function getData(string $format = 'binary')
   {
-    rewind($this->data);
-    switch ($format) {
-    case 'base64':
-      return base64_encode(stream_get_contents($this->data));
-    case 'resource':
-      return $this->data;
-    case 'binary':
-      return stream_get_contents($this->data);
-    default:
-      return $this->data;
+    if (is_resource($this->data)) {
+      rewind($this->data);
+      switch ($format) {
+      case 'base64':
+        return base64_encode(stream_get_contents($this->data));
+      case 'resource':
+        return $this->data;
+      case 'binary':
+        return stream_get_contents($this->data);
+      default:
+        return $this->data;
+      }
+    } else {
+      switch ($format) {
+      case 'base64':
+        return base64_encode($this->data);
+      case 'resource':
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, $this->data);
+        rewind($stream);
+        return $stream;
+      case 'binary':
+        return $this->data;
+      default:
+        return $this->data;
+      }
     }
   }
 
