@@ -600,6 +600,10 @@ class EncryptionService
   public function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {
+      // not encrypted hack
+      if (substr($value, -2, 2) !== '|3') {
+        return $value;
+      }
       try {
          $value = $this->crypto->decrypt($value, $enckey);
       } catch (\Throwable $t) {
