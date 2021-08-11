@@ -67,7 +67,7 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
  */
 
 use OCP\Files\Config\IMountProviderCollection;
-use OCA\CAFEVDB\Storage\DatabaseMount;
+use OCA\CAFEVDB\Storage\Database\Mount as DatabaseMount;
 
 class Application extends App implements IBootstrap
 {

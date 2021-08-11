@@ -21,7 +21,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Storage;
+namespace OCA\CAFEVDB\Storage\Database;
 
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\Storage\IStorageFactory;
@@ -33,7 +33,7 @@ use OCP\IUser;
  * @todo This is just a dummy for now in order to test the integration
  * with the surrounding cloud.
  */
-class DatabaseMount
+class Mount implements IMountProvider
 {
   /**
    * Get all mountpoints applicable for the user

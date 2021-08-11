@@ -29,7 +29,7 @@ use OCP\ILogger;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-class DatabaseStorage
+class DatabaseStorageUtil
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -75,7 +75,7 @@ class DatabaseStorage
     $id = $file->getId();
 
     $urlGenerator = \OC::$server->getURLGenerator();
-    $filesUrl = $urlGenerator->inkToRoute(
+    $filesUrl = $urlGenerator->linkToRoute(
       $this->appName.'.downloads.get', [
         'section' => 'database',
         'object' => $id,
