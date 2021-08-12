@@ -57,7 +57,11 @@ class Mount implements IMountProvider
    */
   public function getMountsForUser(IUser $user, IStorageFactory $loader)
   {
-    if (!$this->inGroup()) {
+    if (!$this->inGroup($user->getUID())) {
+      return [];
+    }
+
+    if ($user->getUID() !== $this->shareOwnerId()) {
       return [];
     }
 
@@ -66,7 +70,10 @@ class Mount implements IMountProvider
 
     $mountPoint = new class(
       $storage,
-      '/' . $user->getUID() . '/files' . '/' . $this->appName() . '-database',
+      '/' . $user->getUID()
+      . '/files'
+      . '/' . $this->getSharedFolderPath()
+      . '/' . $this->appName() . '-database',
       null,
       $loader
     ) extends MountPoint { public function getMountType() { return 'database'; } };
