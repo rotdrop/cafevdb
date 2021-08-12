@@ -58,7 +58,10 @@ class UserLoggedInEventListener implements IEventListener
     $this->l = $l10n;
   }
 
-  public function handle(Event $event): void {
+  public function handle(Event $event): void
+  {
+    return; // ATM not needed
+
     if (!($event instanceOf Event1) && !($event instanceOf Event2)) {
       return;
     }
@@ -73,10 +76,13 @@ class UserLoggedInEventListener implements IEventListener
     try {
       // in principle the constructor should do it all, i.e. generate
       // any missing keys and check for the global encryption key
+
+      /** @var EncryptionService $encryptionService */
       $encryptionService = \OC::$server->query(EncryptionService::class);
 
       // but play safe
       $encryptionService->bind($userId, $event->getPassword());
+      $encryptionService->initAppEncryptionKey();
     } catch (\Throwable $t) {
       $this->logException($t, $this->l->t('Unable to bind encryption service for user "%s".', $userId));
     }
