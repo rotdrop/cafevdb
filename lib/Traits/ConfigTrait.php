@@ -273,11 +273,11 @@ trait ConfigTrait {
   }
 
   /**
-   * @return \OCP\IUSER
+   * @return null|\OCP\IUSER
    */
-  protected function shareOwner()
+  protected function shareOwner():?\OCP\User
   {
-    $shareOwnerUid = $this->getConfigValue('shareowner');
+    $shareOwnerUid = $this->shareOwnerId();
     if (empty($shareOwnerUid)) {
       return null;
     }
