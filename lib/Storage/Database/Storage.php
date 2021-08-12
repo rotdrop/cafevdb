@@ -114,8 +114,22 @@ class Storage extends AbstractStorage
     return null;
   }
 
+  public function isReadable($path) {
+    // at least check whether it exists
+    // subclasses might want to implement this more thoroughly
+    return $this->file_exists($path);
+  }
+
+  public function isUpdatable($path) {
+    // return $this->file_exists($path);
+    return false; // readonly for now
+  }
+
   public function filemtime($path)
   {
+    if ($this->is_dir($path)) {
+      return 0;
+    }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return 0;
@@ -126,6 +140,9 @@ class Storage extends AbstractStorage
 
   public function filesize($path)
   {
+    if ($this->is_dir($path)) {
+      return 0;
+    }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;
@@ -151,6 +168,12 @@ class Storage extends AbstractStorage
 
   public function stat($path)
   {
+    if (!$this->is_dir($path)) {
+      return [
+        'mtime' => 0,
+        'size' => 0,
+      ];
+    }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;
