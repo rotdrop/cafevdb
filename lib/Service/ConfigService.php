@@ -335,7 +335,8 @@ class ConfigService {
     return $this->userId;
   }
 
-  /**Install a new user id.
+  /**
+   * Install a new user id.
    *
    * @parm int $user
    *
