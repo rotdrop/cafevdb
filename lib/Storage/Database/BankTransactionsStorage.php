@@ -51,6 +51,27 @@ class BankTransactionsStorage extends Storage
     $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
   }
 
+  protected function fileNameFromEntity(Entities\File $file)
+  {
+    $fileName = $file->getFileName();
+    if (empty($fileName)) {
+      return parent::fileNameFromEntity($file);
+    }
+    return $fileName;
+  }
+
+  protected function fileFromFileName($name):?Entities\File
+  {
+    $name = $this->buildPath($name);
+    $name = pathinfo($name, PATHINFO_BASENAME);
+    // transaction files should have a unique file name
+    $files = $this->filesRepository->findBy([ 'fileName' => $name ]);
+    if (count($files) != 1) {
+      return null;
+    }
+    return reset($files);
+  }
+
   protected function findFiles()
   {
     $transactions = $this->transactionsRepository->findAll();
