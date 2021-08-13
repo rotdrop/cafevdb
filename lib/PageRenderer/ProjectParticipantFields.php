@@ -1033,7 +1033,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $newvals['data_options'] = $newvals[$tag];
 
       $newvals['default_value'] = $first;
-      if (empty(Uuid::asUuid($first))) {
+      if ($op != PHPMyEdit::SQL_QUERY_INSERT && PHPMyEdit::empty(Uuid::asUuid($first))) {
         throw new \RuntimeException(
           $this->l->t('Simple field-option key is not an UUID: "%s".', $key));
       }
@@ -1287,7 +1287,7 @@ class ProjectParticipantFields extends PMETableViewBase
     // deposit
     $prop = 'deposit';
     $cssClass = implode(' ', [
-      field-'.$prop.',
+      'field-'.$prop,
       'not-multiplicity-simple-set-deposit-due-date-required',
       'not-multiplicity-single-set-deposit-due-date-required',
       'not-multiplicity-groupofpeople-set-deposit-due-date-required',
@@ -1421,7 +1421,7 @@ class ProjectParticipantFields extends PMETableViewBase
         $value = IRecurringReceivablesGenerator::GENERATOR_LABEL;
       }
       if ($prop == 'limit') {
-        // $value is stored as Unix time-stamp, convert it to locate
+        // $value is stored as Unix time-stamp, convert it to locale
         // date.
         $value = $this->dateTimeFormatter()->formatDate($value, 'medium');
         $html .= '
