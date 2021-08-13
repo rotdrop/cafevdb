@@ -433,7 +433,7 @@ class ProjectParticipantsController extends Controller {
         return self::grumble($this->l->t('No file was uploaded. Unknown error'));
       }
 
-      $this->logInfo('PARAMETERS '.print_r($this->parameterService->getParams(), true));
+      $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
 
       $files = Util::transposeArray($_FILES[$fileKey]);
 
