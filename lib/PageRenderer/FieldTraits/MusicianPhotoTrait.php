@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\Controller\ImagesController;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
@@ -36,7 +36,7 @@ trait MusicianPhotoTrait
   public function photoImageLink($musicianId, $action, $imageId)
   {
     if (empty($imageId)) {
-      $imageId = ImagesController::IMAGE_ID_ANY;
+      $imageId = ImagesService::IMAGE_ID_ANY;
     }
     switch ($action) {
     case 'add':
