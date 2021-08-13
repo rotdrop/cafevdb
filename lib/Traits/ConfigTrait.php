@@ -342,7 +342,7 @@ trait ConfigTrait {
 
   protected function getSharedFolderPath()
   {
-    return $this->getConfigValue('sharedfolder', null);
+    return $this->getConfigValue(ConfigService::SHARED_FOLDER, null);
   }
 
   /**
@@ -354,11 +354,43 @@ trait ConfigTrait {
     if (empty($sharedFolder)) {
       return null;
     }
-    $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+    $templatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
     if (empty($templatesFolder)) {
       return null;
     }
     return '/' . $sharedFolder . '/' . $templatesFolder;
+  }
+
+  /**
+   * Return the full path to the finance folder.
+   */
+  protected function getFinanceFolderPath()
+  {
+    $sharedFolder = $this->getSharedFolderPath();
+    if (empty($sharedFolder)) {
+      return null;
+    }
+    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
+    if (empty($financeFolder)) {
+      return null;
+    }
+    return '/' . $sharedFolder . '/' . $financeFolder;
+  }
+
+  /**
+   * Return the full path to the bank-transactions folder
+   */
+  protected function getBankTransactionsPath()
+  {
+    $financeFolder = $this->getFinanceFolderPath();
+    if (empty($financeFolder)) {
+      return null;
+    }
+    $transactionsFolder = $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER);
+    if (empty($transactionsFolder)) {
+      return null;
+    }
+    return '/' . $financeFolder . '/' . $transactionsFolder;
   }
 
   public function getIcon() {

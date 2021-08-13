@@ -61,19 +61,41 @@ class Mount implements IMountProvider
       return [];
     }
 
-    if ($user->getUID() !== $this->shareOwnerId()) {
-      return [];
+    $mounts = [];
+
+    if ($user->getUID() === $this->shareOwnerId()) {
+
+      $this->logInfo('share owner');
+      $storage = new Storage([]);
+      \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
+
+      $mounts[] = new class(
+        $storage,
+        '/' . $user->getUID()
+        . '/files'
+        . '/' . $this->getSharedFolderPath()
+        . '/' . $this->appName() . '-database',
+        null,
+        $loader,
+        [
+          'filesystem_check_changes' => 1,
+          'readonly' => true,
+          'previews' => true,
+          'enable_sharing' => true,
+        ]
+      ) extends MountPoint { public function getMountType() { return 'database'; } };
+    } else {
+      $this->logInfo('not share owner ' . $user->getUID());
     }
 
-    $storage = new Storage([]);
+    $storage = new BankTransactionsStorage([]);
     \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
 
-    $mountPoint = new class(
+    $mounts[] = new class(
       $storage,
       '/' . $user->getUID()
       . '/files'
-      . '/' . $this->getSharedFolderPath()
-      . '/' . $this->appName() . '-database',
+      . '/' . $this->getBankTransactionsPath(),
       null,
       $loader,
       [
@@ -84,7 +106,7 @@ class Mount implements IMountProvider
       ]
     ) extends MountPoint { public function getMountType() { return 'database'; } };
 
-    return [ $mountPoint ];
+    return $mounts;
   }
 }
 

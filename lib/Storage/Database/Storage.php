@@ -47,7 +47,7 @@ class Storage extends AbstractStorage
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository */
-  private $filesRepository;
+  protected $filesRepository;
 
   /** @var string */
   private $root;
@@ -57,6 +57,11 @@ class Storage extends AbstractStorage
     $this->configService = \OC::$server->query(ConfigService::class);
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
+
+    if (!$this->entityManager->connected()) {
+      throw new \Exception('not connected');
+    }
+
     $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
 
     $this->root = isset($params['root']) ? '/' . ltrim($params['root'], '/') : '/';
