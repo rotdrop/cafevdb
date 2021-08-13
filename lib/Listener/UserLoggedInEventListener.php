@@ -34,6 +34,9 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
+/**
+ * Do early initialization of the encryption service.
+ */
 class UserLoggedInEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -60,8 +63,6 @@ class UserLoggedInEventListener implements IEventListener
 
   public function handle(Event $event): void
   {
-    return; // ATM not needed
-
     if (!($event instanceOf Event1) && !($event instanceOf Event2)) {
       return;
     }
@@ -74,13 +75,8 @@ class UserLoggedInEventListener implements IEventListener
 
     // the listener should not throw ...
     try {
-      // in principle the constructor should do it all, i.e. generate
-      // any missing keys and check for the global encryption key
-
       /** @var EncryptionService $encryptionService */
       $encryptionService = \OC::$server->query(EncryptionService::class);
-
-      // but play safe
       $encryptionService->bind($userId, $event->getPassword());
       $encryptionService->initAppEncryptionKey();
     } catch (\Throwable $t) {
