@@ -110,6 +110,8 @@ class phpMyEdit
 	const FDD_SELECT = 'select';
 	const FDD_VALUES = 'values';
 
+	const OPT_TRIGGERS = 'triggers';
+	const TRIGGER_DATA = 'data';
 	const TRIGGER_BEFORE = 'before';
 	const TRIGGER_AFTER = 'after';
 	const TRIGGER_PRE = 'pre';
@@ -5451,7 +5453,7 @@ class phpMyEdit
 	 */
 	function exec_data_triggers($op, &$row)
 	{
-		$step = 'data';
+		$step = self::TRIGGER_DATA;
 		if (!isset($this->triggers[$op][$step])) {
 			return true;
 		}

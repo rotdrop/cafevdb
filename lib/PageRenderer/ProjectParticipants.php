@@ -994,13 +994,13 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
-    $opts['triggers']['update']['before'][] = [ $this, 'ensureUserIdSlug' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'extractInstrumentRanking' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'cleanupParticipantFields' ];
-    $opts['triggers']['update']['before'][] = [ $this, 'renameProjectParticipantFolders' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'renameProjectParticipantFolders' ];
 
     $opts = $this->mergeDefaultOptions($opts);
 

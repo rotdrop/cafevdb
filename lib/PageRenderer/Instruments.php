@@ -339,12 +339,12 @@ class Instruments extends PMETableViewBase
 
     $opts['groupby_fields'] = [ 'id' ];
 
-    $opts['triggers']['update']['before'][] = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['insert']['before'][] = [ $this, 'beforeInsertDoInsertAll' ];
-    $opts['triggers']['delete']['before'][] = [ $this, 'beforeDeleteTrigger' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
 
-    $opts['triggers']['select']['data'][] =
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode)  {
         if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);

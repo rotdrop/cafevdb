@@ -279,7 +279,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
 
     // wrap the composite groups into tbody elements, otherwise the
     // groups cannot be hidden individually.
-    $opts['triggers']['select']['data'][] = function($pme, $op, $step, $row) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, $row) {
       // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastBulkTransactionId = -1;
 
@@ -548,10 +548,10 @@ __EOT__;
     }
 
     // redirect all updates through Doctrine\ORM.
-    $opts['triggers']['update']['before'][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts['triggers']['insert']['before'][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
 
-    $opts['triggers']['select']['data'][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts)  {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts)  {
       if (empty($row['qf'.$submitIdx])) {
         $pme->options = $opts['options'];
       } else {

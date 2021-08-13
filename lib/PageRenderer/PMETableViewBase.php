@@ -239,28 +239,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $this->template = $template; // overwrite with child-class supplied value
 
-    $this->pmeOptions['triggers']['*']['pre'][] = [ $this, 'preTrigger' ];
+    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['*']['pre'][] = [ $this, 'preTrigger' ];
 
-    //$this->pmeOptions['triggers']['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
-    $this->pmeOptions['triggers']['update']['after'][] =
-      $this->pmeOptions['triggers']['insert']['after'][] =
-      $this->pmeOptions['triggers']['copy']['after'][] =
-      $this->pmeOptions['triggers']['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
+    //$this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
+    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] =
+      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['after'][] =
+      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['after'][] =
+      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
 
-    $this->pmeOptions['triggers']['update']['before'][] =
-      $this->pmeOptions['triggers']['copy']['before'][] =
-      $this->pmeOptions['triggers']['insert']['before'][] =
+    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['before'][] =
+      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
         [ $this, 'beforeAnythingTrimAnything' ];
 
-    $this->pmeOptions['triggers']['update']['before'][] =
-       $this->pmeOptions['triggers']['insert']['before'][] =
-       $this->pmeOptions['triggers']['delete']['before'][] =
+    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+       $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
+       $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['before'][] =
          function($pme, $op, $step, &$oldvals, &$changed, &$newvals) {
            $this->changeSetSize = count($changed);
            return true;
          };
 
-    $this->pmeOptions['triggers']['update']['after'][] = function($pme) {
+    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] = function($pme) {
       $pme->message = $this->l->n(
         '%n data field affected',
         '%n data fields affected',

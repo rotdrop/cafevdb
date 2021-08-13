@@ -267,7 +267,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     // wrap the composite groups into tbody elements, otherwise the
     // groups cannot be hidden individually.
-    $opts['triggers']['select']['data'][] = function($pme, $op, $step, $row) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, $row) {
       // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastCompositeId = -1;
 
@@ -556,7 +556,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'display|LF' => [ 'popup' => 'data' ],
     ];
 
-    $opts['triggers']['select']['data'][] =
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($opts) {
 
         $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
@@ -571,7 +571,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->options = $opts['options'];
         }
       };
-    $opts['triggers']['update']['data'] = $opts['triggers']['select']['data'];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA] = $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA];
 
     $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
 
