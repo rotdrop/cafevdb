@@ -62,6 +62,16 @@ class Storage extends AbstractStorage
     $this->root = isset($params['root']) ? '/' . ltrim($params['root'], '/') : '/';
   }
 
+  protected function findFiles()
+  {
+    return $this->filesRepository->findAll();
+  }
+
+  protected function getStorageModificationTime()
+  {
+    return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
+  }
+
   /** {@inheritdoc} */
   public function getId()
   {
@@ -128,7 +138,7 @@ class Storage extends AbstractStorage
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
-      return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
+      return $this->getStorageModificationTime();
     }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
@@ -215,7 +225,7 @@ class Storage extends AbstractStorage
       return false;
     }
     $fileNames = [];
-    foreach ($this->filesRepository->findAll() as $file) {
+    foreach ($this->findFiles() as $file) {
       $fileNames[] = $this->fileNameFromEntity($file);
     }
     return IteratorDirectory::wrap($fileNames);
