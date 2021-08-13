@@ -59,7 +59,7 @@ class ProjectService
     ConfigService::PROJECTS_FOLDER,
     ConfigService::PROJECT_PARTICIPANTS_FOLDER,
     ConfigService::PROJECT_POSTERS_FOLDER,
-    ConfigService::PROJECT_BALANCE_FOLDER,
+    ConfigService::BALANCES_FOLDER,
   ];
 
   /** @var UserStorage */
@@ -316,8 +316,12 @@ class ProjectService
         }
         $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue($key);
         break;
-      case ConfigService::PROJECT_BALANCE_FOLDER:
-        $paths[$key] = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER).$yearName;
+      case ConfigService::BALANCES_FOLDER:
+        $paths[$key] = $sharedFolder
+                     . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+                     . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+                     . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+                     . $yearName;
         break;
       }
     }
@@ -353,9 +357,10 @@ class ProjectService
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
     $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
     $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
+    $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
     $projectPaths = [
       self::FOLDER_TYPE_PROJECT => [
@@ -366,7 +371,8 @@ class ProjectService
       ],
       self::FOLDER_TYPE_BALANCE => [
         $sharedFolder,
-        $balanceFolder,
+        $financeFolder,
+        $balancesFolder,
         $projectsFolder,
         $project['year'],
         $project['name'],
@@ -428,7 +434,11 @@ class ProjectService
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
     $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
     $postersFolder  = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    $balanceFolder  = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER).$yearName;
+    $balanceFolder  = $sharedFolder
+                    . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+                    . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+                    . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+                    . $yearName;
 
     $projectPaths = [
       self::FOLDER_TYPE_POSTERS => $postersFolder,
@@ -466,11 +476,12 @@ class ProjectService
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $balanceFolder  = $this->getConfigValue(ConfigService::PROJECT_BALANCE_FOLDER);
+    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
+    $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
     $prefixPath = [
       self::FOLDER_TYPE_PROJECT => '/'.$sharedFolder.'/'.$projectsFolder.'/',
-      self::FOLDER_TYPE_BALANCE => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      self::FOLDER_TYPE_BALANCE => '/'.$sharedFolder.'/'.$financeFolder.'/'.$balancesFolder.'/'.$projectsFolder.'/',
     ];
 
     $returnPaths = [];

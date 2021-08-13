@@ -725,7 +725,7 @@ class ConfigCheckService
    */
   public function checkProjectFolder($projectFolder)
   {
-    $sharedFolder = $this->getConfigValue('sharedfolder');
+    $sharedFolder = $this->getConfigValue(ConfigService::SHARED_FOLDER);
 
     if (!$this->sharedFolderExists($sharedFolder)) {
       return false;

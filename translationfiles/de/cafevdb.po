@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2021-08-11 08:02+0200\n"
-"PO-Revision-Date: 2021-08-11 08:07+0200\n"
+"PO-Revision-Date: 2021-08-13 14:33+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -10877,7 +10877,7 @@ msgstr "Plakat-Ordner"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:218
 msgid "Financial balance folder"
-msgstr "Finanz-Ordner"
+msgstr "Abrechnungs-Ordner"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/translations.php:49
 msgid "Select a phrase to translate"

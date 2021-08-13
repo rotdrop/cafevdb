@@ -1064,7 +1064,9 @@ class PersonalSettingsController extends Controller {
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
     case ConfigService::PROJECT_POSTERS_FOLDER:
-    case ConfigService::PROJECT_BALANCE_FOLDER:
+    case ConfigService::FINANCE_FOLDER:
+    case ConfigService::TRANSACTIONS_FOLDER:
+    case ConfigService::BALANCES_FOLDER:
     case ConfigService::PROJECTS_FOLDER:
       $appGroup = $this->getConfigValue('usergroup');
       if (empty($appGroup)) {
@@ -1101,14 +1103,28 @@ class PersonalSettingsController extends Controller {
       case ConfigService::PROJECT_POSTERS_FOLDER:
         $this->setConfigValue($parameter, $real);
         return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
+      case ConfigService::BALANCES_FOLDER:
+      case ConfigService::TRANSACTIONS_FOLDER:
+        $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
+        if (empty($prefixFolder)) {
+          return self::grumble(
+            $this->l->t(
+              '"%s" has to be defined first before defining "%s".',
+              [ ConfigService::FINANCE_FOLDER, $parameter ]));
+        }
+        $prefixFolder .= UserStorage::PATH_SEP;
+        break;
+      default:
+        $prefixFolder = '';
+        break;
       }
       try {
         $url = null;
         if (empty($saved) || $force) {
-          if ($this->configCheckService->checkProjectFolder($real)) {
+          if ($this->configCheckService->checkProjectFolder($prefixFolder . $real)) {
             $this->setConfigValue($parameter, $real);
             try {
-              $folderLink = $this->userStorage->getFilesAppLink($real);
+              $folderLink = $this->userStorage->getFilesAppLink($prefixFolder. $real);
             } catch (\Throwable $t) {
               // don't care
               $this->logException($t);
@@ -1116,7 +1132,7 @@ class PersonalSettingsController extends Controller {
             if ($parameter == ConfigService::POSTBOX_FOLDER) {
               try {
                 $url = $this->configCheckService->checkLinkSharedFolder(
-                  $sharedFolder . UserStorage::PATH_SEP . $real
+                  $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
                 );
                 $this->setConfigValue($parameter . 'ShareLink', $url);
               } catch (\Throwable $t) {
@@ -1126,24 +1142,24 @@ class PersonalSettingsController extends Controller {
             return self::dataResponse([
               'value' => $real,
               'url' => $url,
-              'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
+              'message' => $this->l->t('Created and shared new folder "%s".', $prefixFolder . $real),
               'folderLink' => $folderLink,
             ]);
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder "%s".', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder "%s".', $prefixFolder . $real));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
-        } else if ($this->configCheckService->checkProjectFolder($actual)) {
+        } else if ($this->configCheckService->checkProjectFolder($prefixFolder . $actual)) {
           try {
-            $folderLink = $this->userStorage->getFilesAppLink($actual);
+            $folderLink = $this->userStorage->getFilesAppLink($prefixFolder . $actual);
           } catch (\Throwable $t) {
             // don't care
           }
           if ($parameter == ConfigService::POSTBOX_FOLDER) {
             try {
               $url = $this->configCheckService->checkLinkSharedFolder(
-                $sharedFolder . UserStorage::PATH_SEP . $real
+                $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
               );
               $this->setConfigValue($parameter . 'ShareLink', $url);
             } catch (\Throwable $t) {
@@ -1153,17 +1169,17 @@ class PersonalSettingsController extends Controller {
           return self::dataResponse([
             'value' => $actual,
             'url' => $url,
-            'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
+            'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $prefixFolder . $actual]),
             'folderLink' => $folderLink,
             ]);
         } else {
-          return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
+          return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', $prefixFolder . $actual));
         }
       } catch(\Exception $e) {
         $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
         return self::grumble(
           $this->l->t('Failure checking folder "%s", caught an exception "%s".',
-                      [$real, $e->getMessage()]));
+                      [ $prefixFolder . $real, $e->getMessage() ]));
       }
     case 'concertscalendar':
     case 'rehearsalscalendar':

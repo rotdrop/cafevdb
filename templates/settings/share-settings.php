@@ -208,25 +208,63 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="projectpostersfolder-check" id="projectpostersfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="projectsbalancefolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+      <fieldset id="financefolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
-        <input type="hidden" id="projectsbalancefolder-saved" name="projectsbalancefolder-saved" value="<?php echo $_['projectsbalancefolder']; ?>" />
-        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="financefolder-saved" name="financefolder-saved" value="<?php echo $_['financefolder']; ?>" />
+        <input <?php echo $_['financefolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="projectsbalancefolder"
-          name="projectsbalancefolder"
-          placeholder="<?php echo $l->t('Financial balance folder'); ?>"
-          value="<?php echo $_['projectsbalancefolder']; ?>"
-          title="<?php echo $toolTips['projectsbalancefolder']; ?>"
+          id="financefolder"
+          name="financefolder"
+          placeholder="<?php echo $l->t('finance folder'); ?>"
+          value="<?php echo $_['financefolder']; ?>"
+          title="<?php echo $toolTips['financefolder']; ?>"
+        />
+        <input type="checkbox" id="financefolder-force" name="financefolder-force" class="checkbox"/>
+        <label for="financefolder-force" title="<?php echo $toolTips['financefolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="financefolder-check" id="financefolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
+      <fieldset id="transactionsfolder-fieldset" <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
+        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
+        <span><b>/</b></span>
+        <input type="hidden" id="transactionsfolder-saved" name="transactionsfolder-saved" value="<?php echo $_['transactionsfolder']; ?>" />
+        <input <?php echo $_['transactionsfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="transactionsfolder"
+          name="transactionsfolder"
+          placeholder="<?php echo $l->t('transactions'); ?>"
+          value="<?php echo $_['transactionsfolder']; ?>"
+          title="<?php echo $toolTips['transactionsfolder']; ?>"
+        />
+        <input type="checkbox" id="transactionsfolder-force" name="transactionsfolder-force" class="checkbox"/>
+        <label for="transactionsfolder-force" title="<?php echo $toolTips['transactionsfolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="transactionsfolder-check" id="transactionsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
+      <fieldset id="balancesfolder-fieldset" <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
+        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
+        <span><b>/</b></span>
+        <input type="hidden" id="balancesfolder-saved" name="balancesfolder-saved" value="<?php echo $_['balancesfolder']; ?>" />
+        <input <?php echo $_['balancesfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="balancesfolder"
+          name="balancesfolder"
+          placeholder="<?php echo $l->t('balances'); ?>"
+          value="<?php echo $_['balancesfolder']; ?>"
+          title="<?php echo $toolTips['balancesfolder']; ?>"
         />
         <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder'];?></span>
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>
-        <input type="checkbox" id="projectsbalancefolder-force" name="projectsbalancefolder-force" class="checkbox"/>
-        <label for="projectsbalancefolder-force" title="<?php echo $toolTips['projectsbalancefolder-force']; ?>" >
+        <input type="checkbox" id="balancesfolder-force" name="balancesfolder-force" class="checkbox"/>
+        <label for="balancesfolder-force" title="<?php echo $toolTips['balancesfolder-force']; ?>" >
           <?php echo $l->t('force');?>
         </label>
-        <input name="projectsbalancefolder-check" id="projectsbalancefolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="balancesfolder-check" id="balancesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
   </div>

@@ -498,7 +498,7 @@ const afterLoad = function(container) {
 
     /**************************************************************************
      *
-     * Sharing, share-folder, projects-folder, projects balance folder
+     * Sharing, share-folder, projects-folder, finance-folder, balances-folder
      *
      *************************************************************************/
 
@@ -512,15 +512,23 @@ const afterLoad = function(container) {
         $folderView.addClass('hidden');
       }
     });
+    sharedFolder('financefolder', function(element, css, data, value, msg) {
+      const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
+      $('#balancesfolder-fieldset').prop('disabled', value[css] === '' || emptyProjectsFolder);
+      $('#transactionsfolder-fieldset').prop('disabled', value[css] === '');
+      $('div#sharing-settings span.financefolder').html(value[css]); // update
+    });
     sharedFolder('projectsfolder', function(element, css, data, value, msg) {
-      $('#projectsbalancefolder-fieldset').prop('disabled', value[css] === '');
+      const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
+      $('#balancesfolder-fieldset').prop('disabled', value[css] === '' || emptyFinanceFolder);
       $('#projectparticipantsfolder-fieldset').prop('disabled', value[css] === '');
       $('#projectpostersfolder-fieldset').prop('disabled', value[css] === '');
       $('div#sharing-settings span.projectsfolder').html(value[css]); // update
     });
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectpostersfolder');
-    sharedFolder('projectsbalancefolder');
+    sharedFolder('transactionsfolder');
+    sharedFolder('balancesfolder');
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
       $('fieldset.document-template input').prop('disabled', value[css] === '');
     });
