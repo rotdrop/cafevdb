@@ -128,7 +128,7 @@ class Storage extends AbstractStorage
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
-      return 0;
+      return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
     }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
@@ -170,8 +170,8 @@ class Storage extends AbstractStorage
   {
     if (!$this->is_dir($path)) {
       return [
-        'mtime' => 0,
-        'size' => 0,
+        'mtime' => $this->filemtime($path),
+        'size' => $this->filesize($path),
       ];
     }
     $file = $this->fileFromFileName($path);

@@ -75,7 +75,13 @@ class Mount implements IMountProvider
       . '/' . $this->getSharedFolderPath()
       . '/' . $this->appName() . '-database',
       null,
-      $loader
+      $loader,
+      [
+        'filesystem_check_changes' => 1,
+        'readonly' => true,
+        'previews' => true,
+        'enable_sharing' => true,
+      ]
     ) extends MountPoint { public function getMountType() { return 'database'; } };
 
     return [ $mountPoint ];
