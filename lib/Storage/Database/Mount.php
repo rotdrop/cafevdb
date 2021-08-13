@@ -65,7 +65,6 @@ class Mount implements IMountProvider
 
     if ($user->getUID() === $this->shareOwnerId()) {
 
-      $this->logInfo('share owner');
       $storage = new Storage([]);
       \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
 
@@ -84,8 +83,7 @@ class Mount implements IMountProvider
           'enable_sharing' => true,
         ]
       ) extends MountPoint { public function getMountType() { return 'database'; } };
-    } else {
-      $this->logInfo('not share owner ' . $user->getUID());
+
     }
 
     $storage = new BankTransactionsStorage([]);
