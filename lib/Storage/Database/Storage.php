@@ -95,8 +95,12 @@ class Storage extends AbstractStorage
   /**
    * Generate the file name from the entity. The default is to prepend
    * the database id. Derived classes may want to override this.
+   *
+   * @param Entities\File $file
+   *
+   * @return string
    */
-  protected function fileNameFromEntity(Entities\File $file)
+  protected function fileNameFromEntity(Entities\File $file):string
   {
     $nameParts = [ 'db', $file->getId() ];
     if (!empty($file->getFileName())) {
@@ -124,9 +128,11 @@ class Storage extends AbstractStorage
   /**
    * Fetch the file entity corresponding to file-name.
    *
+   * @param string $name
+   *
    * @return null|Enties\File
    */
-  protected function fileFromFileName($name):?Entities\File
+  protected function fileFromFileName(string $name):?Entities\File
   {
     $id = $this->fileIdFromFileName($name);
     if ($id > 0) {

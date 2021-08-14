@@ -34,21 +34,30 @@ use Icewind\Streams\IteratorDirectory;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Common\Util;
 
 /**
  * Storage implementation for data-base storage, including access to
  * encrypted entities.
  */
-class BankTransactionsStorage extends Storage
+class ProjectParticipantsStorage extends Storage
 {
-  /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
-  private $transactionsRepository;
+  /** @var Entities\Project */
+  private $project;
+
+  /** @var Entities\ProjectParticipant */
+  private $participant;
+
+  /** @var array */
+  private $files = [];
 
   public function __construct($params)
   {
     parent::__construct($params);
-    $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
+    $this->participant = $params['participant'];
+    $this->project = $this->participant->getProject();
   }
 
   /**
@@ -58,8 +67,9 @@ class BankTransactionsStorage extends Storage
   {
     $fileName = $file->getFileName();
     if (empty($fileName)) {
-      return parent::fileNameFromEntity($file);
+      $fileName = parent::fileNameFromEntity($file);
     }
+    $this->logInfo('Returning ' . $fileName);
     return $fileName;
   }
 
@@ -72,12 +82,12 @@ class BankTransactionsStorage extends Storage
   {
     $name = $this->buildPath($name);
     $name = pathinfo($name, PATHINFO_BASENAME);
-    // transaction files should have a unique file name
-    $files = $this->filesRepository->findBy([ 'fileName' => $name ]);
-    if (count($files) != 1) {
-      return null;
+
+    if (empty($this->files)) {
+      $this->findFiles();
     }
-    return reset($files);
+
+    return $this->files[$name] ?? null;
   }
 
   /**
@@ -85,15 +95,30 @@ class BankTransactionsStorage extends Storage
    */
   protected function findFiles()
   {
-    $transactions = $this->transactionsRepository->findAll();
-    $files = [];
-    /** @var Entities\SepaBulkTransaction $transaction */
-    foreach ($transactions as $transaction) {
-      $files = array_merge($files, $transaction->getSepaTransactionData()->toArray());
+    $this->files = [];
+    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+    foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
+      $dataType = $fieldDatum->getField()->getDataType();
+      switch ($dataType) {
+      case FieldType::DB_FILE:
+        $fileId = (int)$fieldDatum->getOptionValue();
+        $file = $this->filesRepository->find($fileId);
+        if (!empty($file)) {
+          $this->files[$file->getFileName()] = $file;
+        }
+        break;
+      case FieldType::SERVICE_FEE:
+        break;
+      default:
+        continue 2;
+      }
     }
-    return $files;
+    return array_values($this->files);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getStorageModificationTime()
   {
     $date = (new \DateTimeImmutable)->setTimestamp(0);
@@ -110,7 +135,13 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName() . '::' . 'database-storage/finance/transactions' . $this->root;
+    return $this->appName()
+      . '::'
+      . 'database-storage/'
+      . $this->project->getName()
+      . 'participants/'
+      . $this->participant->getMusician()->getUserIdSlug()
+      . $this->root;
   }
 }
 
