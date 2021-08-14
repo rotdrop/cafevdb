@@ -1239,6 +1239,7 @@ OC.L10N.register(
     "Finance" : "Kasse",
     "Miscellaneous" : "Sonstiges",
     "Path \"%s\" must consist of exactly one directory and exactly one file component." : "Der Pfad \"%s\" muss aus genau einem Verzeichnis und einem Dateinamen bestehen.",
+    "documents" : "Dokumente",
     "Rename of \"%s\" to \"%s\" failed." : "Umbenennen von \"%s\" zu \"%s\" fehlgeschlagen.",
     "Deleted non-directory %s" : "Datei %s gelöscht",
     "Unable to set content of file \"%s\"." : "Kann den Inhalt der Datei \"%s\" nicht speichern.",

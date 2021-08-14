@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-08-13 23:03+0200\n"
-"PO-Revision-Date: 2021-08-13 23:05+0200\n"
+"POT-Creation-Date: 2021-08-15 01:30+0200\n"
+"PO-Revision-Date: 2021-08-15 01:30+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -7468,6 +7468,10 @@ msgid ""
 msgstr ""
 "Der Pfad \"%s\" muss aus genau einem Verzeichnis und einem Dateinamen "
 "bestehen."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Storage/Database/MountProvider.php:176
+msgid "documents"
+msgstr "Dokumente"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Storage/UserStorage.php:146
 #, php-format
