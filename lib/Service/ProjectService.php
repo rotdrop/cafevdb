@@ -405,7 +405,7 @@ class ProjectService
         $returnPaths[$key] = UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain);
       } catch (\Throwable $t) {
         if (!empty($only)) {
-          throw \Exception(
+          throw new \Exception(
             $this->l->t('Unable to ensure existence of folder "%s".',
                         UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain)),
             $t->getCode(),
