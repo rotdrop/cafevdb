@@ -57,7 +57,7 @@ class Util
    *
    * @param array $arrayCriteria Array of FIELD => VALUE pairs. FIELD
    * support a negation operation '!'. If VALUE is an array it is
-   * interpreted as a list of acceptable values. Otherwise equality is testet.
+   * interpreted as a list of acceptable values. Otherwise equality is tested.
    *
    * @return Collections\Criteria
    */
