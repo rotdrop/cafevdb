@@ -201,7 +201,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         case self::UPDATE_STRATEGY_EXCEPTION:
           throw new \RuntimeException(
             $this->l->t('Data inconsistency, old fee %f, new fee %f.',
-                        [ (float)$datum_>getOptionValue(), $fee ]));
+                        [ (float)$datum->getOptionValue(), $fee ]));
           break;
         default:
           throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
