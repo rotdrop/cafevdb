@@ -67,13 +67,20 @@ class Util
     $expr = self::criteriaExpr();
     // unfortunately, andWhere() does not work if there is no condition already.
     foreach ($arrayCriteria as $key => $value) {
+      $junctor = 'andWhere';
+      if ($key[0] == '|') {
+        $key = substr($key, 1);
+        $junctor = 'orWhere';
+      } elseif ($key[0] == '&') {
+        $key = substr($key, 1);
+      }
       if ($key[0] == '!') {
         $key = substr($key, 1);
         $comp = is_array($value) ? $expr->notIn($key, $value) : $expr->neq($key, $value);
       } else {
         $comp = is_array($value) ? $expr->in($key, $value) : $expr->eq($key, $value);
       }
-      $criteria->andWhere($comp);
+      $criteria->$junctor($comp);
     }
     return $criteria;
   }
