@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 /**
@@ -143,14 +144,17 @@ class MountProvider implements IMountProvider
 
     $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
     $projects = $projectsRepo->findBy([
-      'participantFields.dataType' => FieldType::DB_FILE,
+      'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+      'participantFields.multiplicity' => [ FieldMultiplicity::SIMPLE, FieldMultiplicity::RECURRING ],
     ]);
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
 
-    // @@@@@ there are more fields with potential documents
-    $fileCriteria = DBUtil::criteriaWhere([ 'dataType' => FieldType::DB_FILE ]);
+    $fileCriteria = DBUtil::criteriaWhere([
+      'dataType' => FieldType::DB_FILE,
+      '|multiplicity' => FieldMultiplicity::RECURRING,
+    ]);
 
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
@@ -162,7 +166,6 @@ class MountProvider implements IMountProvider
       /** @var Entities\ProjectParticipant $participant */
       foreach ($project->getParticipants() as $participant) {
         $folder = $projectService->ensureParticipantFolder($project, $participant->getMusician(), false);
-        //$this->logInfo('USER FOLDER ' . $folder);
         $storage = new ProjectParticipantsStorage([
           'participant' => $participant,
         ]);
