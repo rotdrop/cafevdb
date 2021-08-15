@@ -45,6 +45,9 @@ class BankTransactionsStorage extends Storage
   /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;
 
+  /** @var array */
+  private $files = [];
+
   public function __construct($params)
   {
     parent::__construct($params);
@@ -65,19 +68,17 @@ class BankTransactionsStorage extends Storage
 
   /**
    * {@inheritdoc}
-   *
-   * @bug This will fail if the file-name is not unique
    */
   protected function fileFromFileName(string $name):?Entities\File
   {
     $name = $this->buildPath($name);
     $name = pathinfo($name, PATHINFO_BASENAME);
-    // transaction files should have a unique file name
-    $files = $this->filesRepository->findBy([ 'fileName' => $name ]);
-    if (count($files) != 1) {
-      return null;
+
+    if (empty($this->files)) {
+      $this->findFiles();
     }
-    return reset($files);
+
+    return $this->files[$name] ?? null;
   }
 
   /**
@@ -85,13 +86,15 @@ class BankTransactionsStorage extends Storage
    */
   protected function findFiles()
   {
+    $this->files = [];
     $transactions = $this->transactionsRepository->findAll();
-    $files = [];
     /** @var Entities\SepaBulkTransaction $transaction */
     foreach ($transactions as $transaction) {
-      $files = array_merge($files, $transaction->getSepaTransactionData()->toArray());
+      foreach ($transaction->getSepaTransactionData() as $transactionDatum) {
+        $this->files[$transactionDatum->getFileName()] = $transactionDatum;
+      }
     }
-    return $files;
+    return array_values($this->files);
   }
 
   protected function getStorageModificationTime()
@@ -110,7 +113,10 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName() . '::' . 'database-storage/finance/transactions' . $this->root;
+    return $this->appName()
+      . '::'
+      . 'database-storage/finance/transactions'
+      . $this->root;
   }
 }
 
