@@ -22,7 +22,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
