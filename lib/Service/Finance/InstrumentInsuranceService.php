@@ -255,7 +255,7 @@ class InstrumentInsuranceService
       $amount = $insurance->getInsuranceAmount();
       $annualFee = $amount * $rate->getRate();
       $annualFee *= $this->yearFraction($insuranceStart, $dueDate, $currentYearOnly);
-      $fee += $annualFee * self::TAXES;
+      $fee += $annualFee * (1.0 + self::TAXES);
     }
     return round($fee, 2);
   }
