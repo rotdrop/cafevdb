@@ -69,14 +69,11 @@ class ProjectParticipantsStorage extends Storage
     if (empty($fileName)) {
       $fileName = parent::fileNameFromEntity($file);
     }
-    $this->logInfo('Returning ' . $fileName);
     return $fileName;
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @bug This will fail if the file-name is not unique
    */
   protected function fileFromFileName(string $name):?Entities\File
   {
@@ -108,6 +105,10 @@ class ProjectParticipantsStorage extends Storage
         }
         break;
       case FieldType::SERVICE_FEE:
+        $file = $fieldDatum->getSupportingDocument();
+        if (!empty($file)) {
+          $this->files[$file->getFileName()] = $file;
+        }
         break;
       default:
         continue 2;
