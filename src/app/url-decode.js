@@ -27,7 +27,7 @@
  *
  * @returns {String} The decoded query string.
  *
- * @see{https://locutus.io/php/url/urlencode/}
+ * @see {@link https://locutus.io/php/url/urlencode/}
  */
 const urlDecode = function(str) {
   return decodeURIComponent(
@@ -46,7 +46,7 @@ const urlDecode = function(str) {
  *
  * @returns {String} The encoded query string.
  *
- * @see{https://locutus.io/php/url/urlencode/}
+ * @see {@link https://locutus.io/php/url/urlencode/}
  */
 const urlEncode = function(str) {
   str = (str + '');
