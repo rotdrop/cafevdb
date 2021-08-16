@@ -249,7 +249,7 @@ class Instruments extends PMETableViewBase
 
     $opts['fdd']['name'] = [
       'name'   => $this->l->t('Instrument'),
-      'sql'    => $joinTables[self::TRANSLATIONS_TABLE].'.content',
+      'sql'    => 'COALESCE('.$joinTables[self::TRANSLATIONS_TABLE].'.content, $main_table.$field_name)',
       'select' => 'T',
       'maxlen' => 64,
       'sort'   => true,
