@@ -20,7 +20,6 @@
     "globalcitizen/php-iban": "^4.0",
     "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
-    "ioncube/php-openssl-cryptor": "dev-master",
     "mikehaertl/php-pdftk": "^0.10.0",
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^4",
@@ -49,10 +48,6 @@
     {
       "type": "path",
       "url": "3rdparty/php-index"
-    },
-    {
-      "type": "path",
-      "url": "3rdparty/php-openssl-cryptor"
     },
     {
       "type": "path",
