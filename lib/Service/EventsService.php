@@ -364,9 +364,9 @@ class EventsService
    *
    * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
    *
-   * @param $eventObject The corresponding event object from fetchEvent() or events().
+   * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param $timezone Explicit time zone to use, otherwise fetched
+   * @param string $timezone Explicit time zone to use, otherwise fetched
    * from user-settings.
    *
    * @param $locale Explicit language setting to use, otherwise
@@ -496,11 +496,23 @@ class EventsService
     return $result;
   }
 
-  /**Form an array with the most relevant event data. */
+  /**
+   * Form an array with the most relevant event data.
+   *
+   * @return array
+   * ```
+   * [
+   *   'times' => $this->eventTimes($eventObject, $timezone, $locale),
+   *   'summary' => $eventObject['summary'],
+   *   'location' => $eventObject['location'],
+   *   'description' => $eventObject['description'],
+   * ]
+   * ```
+   */
   private function eventData($eventObject, $timezone = null, $locale = null)
   {
-    $vcalendar = self::getVCalendar($eventObject);
-    $vobject = self::getVObject($vcalendar);
+    // $vcalendar = self::getVCalendar($eventObject);
+    // $vobject = self::getVObject($vcalendar);
 
     $times = $this->eventTimes($eventObject, $timezone, $locale);
 
@@ -520,6 +532,24 @@ class EventsService
   /**
    * Return event data for given project id and calendar id. Used in
    * an API call from Redaxo.
+   *
+   * @param int $projectId
+   *
+   * @param null|string|array $calendarIds null to get the events from all
+   * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigService::CALENDARS.
+   *
+   * @param null|string $timeZone
+   *
+   * @param null|string $locale
+   *
+   * @return array
+   * ```
+   * [
+   *   [ 'events' => EVENT_DATA1 ],
+   *   [ 'events' => EVENT_DATA2 ],
+   *   ...
+   * ]
+   * ```
    */
   public function projectEventData($projectId, $calendarIds = null, $timezone = null, $locale = null)
   {

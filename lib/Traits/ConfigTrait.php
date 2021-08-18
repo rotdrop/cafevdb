@@ -393,15 +393,32 @@ trait ConfigTrait {
     return '/' . $financeFolder . '/' . $transactionsFolder;
   }
 
-  public function getIcon() {
+  public function getIcon()
+  {
     return $this->configService->getIcon();
   }
 
-  protected function getDateTimeZone($timeStamp = false) {
+  /**
+   * Get the current timezone
+   *
+   * @param bool|int $timeStamp
+   *
+   * @return \DateTimeZone
+   */
+  protected function getDateTimeZone($timeStamp = false):\DateTimeZone
+  {
     return $this->configService->getDateTimeZone($timeStamp);
   }
 
-  protected function getTimezone($timeStamp = false) {
+  /**
+   * Return the current time-zone string
+   *
+   * @param bool|int $timeStamp
+   *
+   * @return string
+   */
+  protected function getTimezone($timeStamp = false):string
+  {
     $timeZone = $this->getDateTimeZone($timeStamp);
     if (empty($timeZone)) {
       return 'UTC';
@@ -456,8 +473,15 @@ trait ConfigTrait {
       $timestamp, $formatDate, $formatTime, $timeZone, $$l);
   }
 
-  /**Return the locale. */
-  protected function getLocale($lang = null) {
+  /**
+   * Return the locale.
+   *
+   * @param null|string $lang
+   *
+   * @return string
+   */
+  protected function getLocale(?string $lang = null):string
+  {
     return $this->configService->getLocale($lang);
   }
 
