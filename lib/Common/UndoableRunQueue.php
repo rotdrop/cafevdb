@@ -50,9 +50,10 @@ class UndoableRunQueue
   /**
    * Register the given action in the run-queue.
    */
-  public function register(IUndoable $action)
+  public function register(IUndoable $action):UndoableRunQueue
   {
     $this->actionQueue[] = $action; // at end
+    return $this;
   }
 
   /** Clears the action queue and the undo stack. */
