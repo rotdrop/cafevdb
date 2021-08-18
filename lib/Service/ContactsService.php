@@ -30,16 +30,6 @@ use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\Constants;
 
-use OCA\DAV\Events\AddressBookUpdatedEvent;
-use OCA\DAV\Events\AddressBookDeletedEvent;
-
-use OCA\DAV\Events\CardCreatedEvent;
-use OCA\DAV\Events\CardDeletedEvent;
-use OCA\DAV\Events\CardUpdatedEvent;
-
-use OCA\CAFEVDB\Events\ProjectDeletedEvent;
-use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
-
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
