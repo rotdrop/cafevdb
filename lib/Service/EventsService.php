@@ -183,7 +183,7 @@ class EventsService
   {
     $projectId = $event->getProject();
     $projectEvents = $this->projectEvents($projectId);
-    foreach ($calendarEvents as $projectEvent) {
+    foreach ($projectEvents as $projectEvent) {
       $eventUri = $projectEvent->getEventUri();
 
       // remove project link from join table
