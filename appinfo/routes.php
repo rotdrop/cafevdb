@@ -43,6 +43,21 @@ namespace OCA\CAFEVDB;
  * @todo docme.
  */
 $routes = [
+  'ocs' => [
+    [
+      'name' => 'project_events_api#service_switch',
+      'url' => '/api/{apiVersion}/projects/events/{indexObject}/{objectId}/{calendar}/{timezone}/{locale}',
+      'verb' => 'GET',
+      'defaults' => [
+        'calendar' => 'all',
+        'timezone' => null,
+        'locale' => null,
+      ],
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ]
+    ],
+  ],
   'routes' => [
     [
       'name' => 'page#index',
