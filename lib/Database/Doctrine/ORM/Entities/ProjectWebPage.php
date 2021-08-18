@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -80,11 +81,11 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int $project
+   * @param Project $project
    *
-   * @return ProjectWebPages
+   * @return ProjectWebPage
    */
-  public function setProject($project)
+  public function setProject($project):ProjectWebPage
   {
     $this->project = $project;
 
@@ -94,9 +95,9 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return int
+   * @return Project
    */
-  public function getProject()
+  public function getProject():Project
   {
     return $this->project;
   }
@@ -106,9 +107,9 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @param int $articleId
    *
-   * @return ProjectWebPages
+   * @return ProjectWebPage
    */
-  public function setArticleId($articleId)
+  public function setArticleId(int $articleId):ProjectWebPage
   {
     $this->articleId = $articleId;
 
@@ -120,7 +121,7 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @return int
    */
-  public function getArticleId()
+  public function getArticleId():int
   {
     return $this->articleId;
   }
@@ -130,9 +131,9 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @param string $articleName
    *
-   * @return ProjectWebPages
+   * @return ProjectWebPage
    */
-  public function setArticleName($articleName)
+  public function setArticleName(string $articleName):ProjectWebPage
   {
     $this->articleName = $articleName;
 
@@ -144,7 +145,7 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @return string
    */
-  public function getArticleName()
+  public function getArticleName():string
   {
     return $this->articleName;
   }
@@ -154,9 +155,9 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @param int $categoryId
    *
-   * @return ProjectWebPages
+   * @return ProjectWebPage
    */
-  public function setCategoryId($categoryId)
+  public function setCategoryId($categoryId):ProjectWebPage
   {
     $this->categoryId = $categoryId;
 
@@ -168,7 +169,7 @@ class ProjectWebPage implements \ArrayAccess
    *
    * @return int
    */
-  public function getCategoryId()
+  public function getCategoryId():int
   {
     return $this->categoryId;
   }
