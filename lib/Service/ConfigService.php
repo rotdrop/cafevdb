@@ -178,24 +178,6 @@ class ConfigService {
    */
   private $user;
 
-  /** @var string
-   *
-   * Will be overridden by sudo().
-   */
-  private $userId;
-
-  /** @var IUser
-   *
-   * Unaffected by sudo().
-   */
-  private $loginUser;
-
-  /** @var string
-   *
-   * Unaffected by sudo().
-   */
-  private $loginUserId;
-
   /** @var IL10N */
   protected $l;
 
@@ -258,17 +240,10 @@ class ConfigService {
     $this->l = $l;
 
     if (defined('OC_CONSOLE') && empty($userSession->getUser())) {
-      $this->loginUid = $this->userId = $GLOBALS['cafevdb-user'];
-      $this->loginUser = $this->userManager->get($this->loginUid);
-      $this->user = $this->userManager->get($this->userId);
+      $this->setUserId($GLOBALS['cafevdb-user']);
     } else {
-      $this->loginUser = $this->user = $this->userSession->getUser();
-      if (empty($this->user)) {
-        // can happen at login
-        $this->loginUid = $this->userId = null;
-      } else {
-        $this->loginUid = $this->userId = $this->user->getUID();
-      }
+      // The user may be empty at login. This is lazily corrected later.
+      $this->user = $this->userSession->getUser();
     }
 
     // Cache encrypted config values in order to speed up things
@@ -325,26 +300,38 @@ class ConfigService {
     return $this->urlGenerator;
   }
 
-  public function getUser($userId = null):?IUser
+  /**
+   * @param null|string $userId
+   *
+   * Get the currently active user.
+   *
+   * @return null|IUser
+   */
+  public function getUser(?string $userId = null):?IUser
   {
     if (!empty($userId)) {
       return $this->userManager->get($userId);
     }
+    if (empty($this->user)) {
+      $this->user = $this->userSession->getUser();
+    }
     return $this->user;
   }
 
-  public function getUserId() {
-    return $this->userId;
+  public function getUserId():?string
+  {
+    $user = $this->getUser();
+    return !empty($user) ? $user->getUID() : null;
   }
 
   /**
    * Install a new user id.
    *
-   * @parm int $user
+   * @parm string $userId
    *
-   * @return IUser old user.
+   * @return null|IUser old user.
    */
-  public function setUserId($userId)
+  public function setUserId(string $userId):?IUser
   {
     return $this->setUser($this->getUser($userId));
   }
@@ -352,18 +339,17 @@ class ConfigService {
   /**
    * Install a new user.
    *
-   * @parm IUser $user
+   * @parm null|IUser $user
    *
-   * @return IUser old user.
+   * @return null|IUser old user.
    */
-  public function setUser($user)
+  public function setUser(?IUser $user):?IUser
   {
     if (empty($user)) {
       return null;
     }
-    $oldUser = $this->user;
+    $oldUser = $this->getUser();
     $this->user = $user;
-    $this->userId = $user->getUID();
     $this->userSession->setUser($this->user);
     return $oldUser;
   }
@@ -420,13 +406,13 @@ class ConfigService {
 
   public function getUserValue($key, $default = null, $userId = null)
   {
-    empty($userId) && ($userId = $this->userId);
+    empty($userId) && ($userId = $this->getUserId());
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
   public function setUserValue($key, $value, $userId = null)
   {
-    empty($userId) && ($userId = $this->userId);
+    empty($userId) && ($userId = $this->getUserId());
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }
 
@@ -616,11 +602,11 @@ class ConfigService {
    * and in case an exeption has been called will re-throw the
    * exception.
    *
-   * @param $uid The "fake" uid.
+   * @param string $uid The "fake" uid.
    *
-   * @param $callback function.
+   * @param callable $callback function.
    *
-   * @return Whatever the callback-functoni returns.
+   * @return mixed Whatever the callback-functoni returns.
    *
    */
   public function sudo($uid, $callback)
@@ -654,16 +640,24 @@ class ConfigService {
 
   /**
    * Get the current timezone
+   *
+   * @param bool|int $timeStamp
+   *
+   * @return \DateTimeZone
    */
-  public function getDateTimeZone($timeStamp = null):\DateTimeZone
+  public function getDateTimeZone($timeStamp = false):\DateTimeZone
   {
     return $this->dateTimeZone->getTimeZone($timeStamp);
   }
 
   /**
    * Return the locale as string, e.g. de_DE.UTF-8.
+   *
+   * @param string|null $lang
+   *
+   * @return string
    */
-  public function getLocale($lang = null)
+  public function getLocale(?string $lang = null):string
   {
     if (empty($lang)) {
       $locale = $this->l10NFactory->findLocale($this->appName);

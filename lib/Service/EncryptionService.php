@@ -127,11 +127,9 @@ class EncryptionService
     $this->logger = $logger;
     $this->l = new FakeL10N(); // $l10n;
     try {
-      $this->user = $userSession->getUser();
-      $this->userId = $this->user->getUID();
+      $this->userId = $userSession->getUser()->getUID();
     } catch (\Throwable $t) {
       //$this->logException($t);
-      $this->user = null;
       $this->userId = null;
     }
     if (!$authorization->authorized($this->userId)) {
