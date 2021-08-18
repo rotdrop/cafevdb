@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Behat\Transliterator\Transliterator;
+use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -38,6 +38,9 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Events;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -77,6 +80,9 @@ class ProjectService
   /** @var ProjectsRepository */
   private $repository;
 
+  /** @var IEventDispatcher */
+  private $eventDispatcher;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -84,10 +90,12 @@ class ProjectService
     , ProjectParticipantFieldsService $participantFieldsService
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
+    , IEventDispatcher $eventDispatcher
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
+    $this->eventDispatcher = $eventDispatcher;
 
     $this->wikiRPC = $wikiRPC;
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
@@ -1459,79 +1467,67 @@ Whatever.',
     $newYear = $newYear?:$project['year'];
     $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
-    $stages = [
-      [
-        'method' => 'renameProjectFolder',
-        'forward' => [ $newProject, $project ],
-        'backwards' => [ $project, $newProject ],
-        'done' => false,
-      ],
-      [
-        'method' => 'renameProjectWikiPage',
-        'forward' => [ $newProject, $project ],
-        'backwards' => [ $project, $newProject ],
-        'done' => false,
-      ],
-      [
-        'method' => 'nameProjectWebPages',
-        'forward' => [ $projectId, $newName ],
-        'backwards' => [ $projectId, $project['name'] ],
-        'done' => false,
-      ],
-    ];
+    $oldName = $project->getName();
+    $oldYear = $project->getYear();
+
+    $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
+       ->register(new GenericUndoable(
+         function() use ($project, $newProject) {
+           $this->renameProjectFolder($newProject, $project);
+         },
+         function() use ($project, $newProject) {
+           $this->renameProjectFolder($project, $newProject);
+         }
+       ))
+       ->register(new GenericUndoable(
+         function() use ($project, $newProject) {
+           $this->renameProjectWikiPage($newProject, $project);
+         },
+         function() use ($project, $newProject) {
+           $this->renameProjectWikiPage($project, $newProject);
+         }
+       ))
+       ->register(new GenericUndoable(
+         function() use ($projectId, $newName) {
+           $this->nameProjectWebPages($projectId, $newName);
+         },
+         function() use ($projectId, $oldName) {
+           $this->nameProjectWebPages($projectId, $oldName);
+         }
+       ))
+       ->register(new GenericUndoable(
+         function() use ($project, $newProject) {
+           $this->eventDispatcher->dispatchTyped(
+             new Events\ProjectUpdatedEvent($project->getId(), $project, $newProject)
+           );
+         },
+         function() use ($project, $newProject) {
+           $this->eventDispatcher->dispatchTyped(
+             new Events\ProjectUpdatedEvent($project->getId(), $newProject, $Project)
+           );
+         }
+       ));
+
     $this->entityManager->beginTransaction();
     try {
 
-      // stages should throw on error
-      foreach ($stages as &$stage) {
-        \call_user_func_array([ $this, $stage['method'] ], $stage['forward']);
-        $stage['done'] = true;
-      }
+      $preCommitActions->executeActions();
 
-      // // Now that we link events to projects using their short name as
-      // // category, we also need to updated all linke events in case the
-      // // short-name has changed.
-      // $events = Events::events($pme->rec, $pme->dbh);
+      $project->setName($newName);
+      $project->setYear($newYear);
 
-      // foreach ($events as $event) {
-      //   // Last parameter "true" means to also perform string substitution
-      //   // in the summary field of the event.
-      //   Events::replaceCategory($event, $oldvals['name'], $newvals['name'], true);
-      // }
-
-      // // Now, we should also rename the project folder. We simply can
-      // // pass $newvals and $oldvals
-      // $this->renameProjectFolder($newProject, $project);
-
-      // // Same for the Wiki
-      // $this->renameProjectWikiPage($newProject, $project);
-
-      // // Rename titles of all public project web pages
-      // $this->nameProjectWebPages($projectId, $newName);
-
-      $project['name'] = $newName;
-      $project['year'] = $newYear;
       $this->persistProject($project);
-
+      $this->flush();
       $this->entityManager->commit();
-
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
+      $project->setName($oldName); // needed ?
+      $project->setYear($oldYear); // needed ?
+      $preCommitActions->executeUndo();
       if (!$this->entityManager->isTransactionActive()) {
         $this->entityManager->close();
         $this->entityManager->reopen();
-      }
-
-      foreach ($stages as $stage) {
-        try {
-          if ($stage['done']) {
-            \call_user_func_array([ $this, $stage['method'] ], $stage['backwards']);
-            $stage['done'] = false;
-          }
-        } catch (\Throwable $t2)  {
-          $this->logException($t2);
-        }
       }
 
       throw new \Exception(
