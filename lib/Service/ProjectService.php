@@ -1365,6 +1365,8 @@ Whatever.',
    *
    * @return null|Entities\Project Returns null if project was
    * actually deleted, else the updated "soft-deleted" project instance.
+   *
+   * @todo Check for proper cascading.
    */
   public function deleteProject($projectOrId):? Entities\Project
   {
@@ -1375,6 +1377,9 @@ Whatever.',
 
     $this->entityManager->beginTransaction();
     try {
+
+      $this->eventDispatcher->dispatchTyped(
+        new Events\ProjectDeletedEvent($project->getId(), $softDelete));
 
       // Remove the project folder ... OC has undelete
       // functionality and we have a long-ranging backup.
@@ -1404,8 +1409,8 @@ Whatever.',
           Entities\ProjectParticipant::class,
           Entities\ProjectInstrument::class,
           Entities\ProjectWebPage::class,
-          Entities\ProjectParticipantField::class, // needs cascading
-          // [ 'table' => 'ProjectEvents', 'column' => 'project_id' ], handled above
+          Entities\ProjectParticipantField::class,
+          Entities\ProjectEvent::class,
         ];
 
         $triggerResult = true;

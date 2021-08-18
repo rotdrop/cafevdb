@@ -22,7 +22,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -36,7 +35,6 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Events;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -58,9 +56,6 @@ class Projects extends PMETableViewBase
 
   /** @var ImagesService */
   private $imagesService;
-
-  /** @var \OCP\EventDispatcher\IEventDispatcher */
-  private $eventDispatcher;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -108,13 +103,11 @@ class Projects extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
-    , IEventDispatcher $eventDispatcher
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->imagesService = $imagesService;
-    $this->eventDispatcher = $eventDispatcher;
 
     if (empty($this->projectId) || $this->projectId < 0 || empty($this->projectName)) {
       $this->projectId = $this->pmeRecordId;
@@ -882,27 +875,6 @@ project without a poster first.");
       // Nothing more has to be done if the name stays the same
       return true;
     }
-
-    // // Now that we link events to projects using their short name as
-    // // category, we also need to updated all linke events in case the
-    // // short-name has changed.
-    // $events = Events::events($pme->rec, $pme->dbh);
-
-    // foreach ($events as $event) {
-    //   // Last parameter "true" means to also perform string substitution
-    //   // in the summary field of the event.
-    //   Events::replaceCategory($event, $oldvals['name'], $newvals['name'], true);
-    // }
-
-    // // Now, we should also rename the project folder. We simply can
-    // // pass $newvals and $oldvals
-    // $this->projectService->renameProjectFolder($newvals, $oldvals);
-
-    // // Same for the Wiki
-    // $this->projectService->renameProjectWikiPage($newvals, $oldvals);
-
-    // // Rename titles of all public project web pages
-    // $this->projectService->nameProjectWebPages($pme->rec, $newvals['name']);
 
     $this->projectService->renameProject($pme->rec, $newvals);
 
