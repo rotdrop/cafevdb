@@ -29,10 +29,12 @@ use OCP\Security\ICrypto;
 use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 
 /**
  * This kludge is here as long as our slightly over-engineered
@@ -85,9 +87,6 @@ class EncryptionService
   /** @var string */
   private $appName;
 
-  /** @var string */
-  private $userId;
-
   /** @var IConfig */
   private $containerConfig;
 
@@ -96,6 +95,15 @@ class EncryptionService
 
   /** @var IHasher */
   private $hasher;
+
+  /** @var IEventDispatcher */
+  private $eventDispatcher;
+
+  /** @var string */
+  private $userId = null;
+
+  /** @var string */
+  private $userPassword = null;
 
   /** @var string */
   private $userPrivateKey = null;
@@ -106,9 +114,6 @@ class EncryptionService
   /** @var string */
   private $appEncryptionKey = null;
 
-  /** @var string */
-  private $userPassword = null;
-
   public function __construct(
     $appName
     , AuthorizationService $authorization
@@ -117,6 +122,7 @@ class EncryptionService
     , ICrypto $crypto
     , IHasher $hasher
     , ICredentialsStore $credentialsStore
+    , IEventDispatcher $eventDispatcher
     , ILogger $logger
     , IL10N $l10n
   ) {
@@ -124,37 +130,30 @@ class EncryptionService
     $this->containerConfig = $containerConfig;
     $this->crypto = $crypto;
     $this->hasher = $hasher;
+    $this->eventDispatcher = $eventDispatcher;
     $this->logger = $logger;
     $this->l = new FakeL10N(); // $l10n;
+
     try {
-      $this->userId = $userSession->getUser()->getUID();
+      $userId = $userSession->getUser()->getUID();
     } catch (\Throwable $t) {
       //$this->logException($t);
-      $this->userId = null;
+      $userId = null;
     }
-    if (!$authorization->authorized($this->userId)) {
+    if (!$authorization->authorized($userId)) {
       return;
     }
     try {
-      $this->credentials = $credentialsStore->getLoginCredentials();
-      $this->userPassword = $this->credentials->getPassword();
+      $userPassword = $credentialsStore->getLoginCredentials()->getPassword();
     } catch (\Throwable $t) {
       $this->logException($t);
-      $this->credentials = null;
-      $this->userPassword = null;
+      $userPassword = null;
     }
-    if (!empty($this->userId) && !empty($this->userPassword)) {
-      $this->initUserKeyPair();
-    } else {
-      $this->userPrivateKey = null;
-      $this->userPublicKey = null;
-    }
-    if ($this->bound()) {
+    if (!empty($userId) && !empty($userPassword)) {
       try {
-        $this->initAppEncryptionKey();
+        $this->bind($userId, $userPassword);
       } catch (\Throwable $t) {
         $this->logException($t);
-        $this->appEncryptionKey = null;
       }
     }
   }
@@ -165,9 +164,12 @@ class EncryptionService
    */
   public function bind(string $userId, string $password)
   {
+    $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
     $this->userId = $userId;
     $this->userPassword = $password;
     $this->initUserKeyPair();
+    $this->initAppEncryptionKey();
+    $this->eventDispatcher->dispatchTyped(new EncryptionServiceBoundEvent($userId));
   }
 
   /**

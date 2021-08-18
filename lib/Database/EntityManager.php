@@ -27,6 +27,7 @@ use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -64,6 +65,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Events;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -157,21 +159,46 @@ class EntityManager extends EntityManagerDecorator
     $this->request = $request;
     $this->logger = $logger;
     $this->l = $l10n;
-    $this->userId = $this->encryptionService->getUserId()?:$this->l->t('unknown');
+
+    $this->bind();
+    if (!$this->bound()) {
+      $eventDispatcher = $this->appContainer->get(IEventDispatcher::class);
+      $eventDispatcher->addListener(Events\EncryptionServiceBound::class, function(Events\EncryptionServiceBound $event) {
+        $this->logDebug('LAZY BINDING ENTITY MANAGER');
+        $this->bind();
+      });
+    }
+  }
+
+  public function bound():bool
+  {
+    return !empty($this->wrapped);
+  }
+
+  /**
+   * Initialize the wrapper if the EncryptionService has been bound to
+   * a user and password.
+   */
+  public function bind()
+  {
     if (!$this->encryptionService->bound()) {
-      // @todo: try to bind to unencrypted service account
       return;
     }
-
-    $this->debug = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
-    $this->showSoftDeleted = $encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
-
+    if (!empty($this->wrapped)) {
+      $this->close();
+    }
+    $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
+    if (empty($wrapped) || $userId != $this->userId) {
+      $this->userId = $userId;
+      $this->debug = 0 != ($this->encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+      $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
+      $this->decorateClassMetadata = true;
+    }
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
     }
-    $this->decorateClassMetadata = true;
   }
 
   public function getConnection():?DatabaseConnection
@@ -213,16 +240,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function reopen()
   {
-    if (!$this->encryptionService->bound()) {
-      return;
-    }
-    $this->close();
-    parent::__construct($this->getEntityManager());
-    $this->entityManager = $this->wrapped;
-    $this->debug = 0 != ($this->encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
-    if ($this->connected()) {
-      $this->registerTypes();
-    }
+    $this->bind();
   }
 
   /**
