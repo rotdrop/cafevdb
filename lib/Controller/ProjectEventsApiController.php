@@ -56,7 +56,6 @@ class ProjectEventsApiController extends OCSController
     $this->eventsService = $eventsService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
-    $this->logException(new \Exception('balh'));
   }
 
   /**
@@ -66,8 +65,6 @@ class ProjectEventsApiController extends OCSController
    */
   public function serviceSwitch($indexObject, $objectId, $calendar, $timezone, $locale)
   {
-    $this->logInfo('');
-
     // OC uses symphony which rawurldecodes the request URL. This
     // implies that in order to pass a slash / we caller must
     // urlencode that thingy twice, and Symphony consequently will
