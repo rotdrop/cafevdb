@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-08-15 01:31+0200\n"
+"POT-Creation-Date: 2021-08-18 13:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1311,6 +1311,11 @@ msgstr ""
 msgid "Progress \"%s\" successfully deleted."
 msgstr ""
 
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectEventsApiController.php:102
+#, php-format
+msgid "Invalid calendar type: \"%1$s\""
+msgstr ""
+
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectEventsController.php:76
 #, php-format
 msgid "Project-id AND -name have to be specified (%s / %s)"
@@ -2153,11 +2158,11 @@ msgstr ""
 msgid "No hidden join column."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:752
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:753
 msgid "EntityManager is not connected to database."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:821
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:822
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -2518,7 +2523,7 @@ msgstr ""
 msgid "by day and month"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Listener/UserLoggedInEventListener.php:83
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Listener/UserLoggedInEventListener.php:85
 #, php-format
 msgid "Unable to bind encryption service for user \"%s\"."
 msgstr ""
@@ -2547,7 +2552,7 @@ msgid ""
 "Cloud database server \"%s\" and app database server \"%s\" must coincide."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/GroupMemberMiddleware.php:65
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/GroupMemberMiddleware.php:66
 msgid "Logged in user must be a member of the orchestra group"
 msgstr ""
 
@@ -4172,7 +4177,7 @@ msgid "Decrypt failed"
 msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/EventsService.php:474
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/EventsService.php:540
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/EventsService.php:570
 msgid "Unknown Calendar"
 msgstr ""
 
@@ -6512,7 +6517,7 @@ msgid ""
 "component."
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Storage/Database/MountProvider.php:176
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Storage/Database/MountProvider.php:179
 msgid "documents"
 msgstr ""
 

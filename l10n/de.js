@@ -253,6 +253,7 @@ OC.L10N.register(
     "Exception \"%s\"" : "Ausnahme \"%s\"",
     "Unable to find status of job \"%s\"" : "Kann den Zustand der Aufgabe \"%s\" nicht finden.",
     "Progress \"%s\" successfully deleted." : "Fortschrittsstatus \"%s\" wurde erfolgreich gelöscht.",
+    "Invalid calendar type: \"%1$s\"" : "Ungültige Anfragedaten: \"%s\".",
     "Project-id AND -name have to be specified (%s / %s)" : "Projekt-Id und -Name müssen angegeben werden (%s / %s)",
     "Download-cookies have not been submitted" : "Download-Cookies wurden nicht übermittelt",
     "Missing parameters in request \"%s\": \"%s\"." : "Fehlende Anfrage-Parameter \"%s\" / \"%s\".",
