@@ -77,8 +77,9 @@ class UserLoggedInEventListener implements IEventListener
     try {
       /** @var EncryptionService $encryptionService */
       $encryptionService = \OC::$server->query(EncryptionService::class);
-      $encryptionService->bind($userId, $event->getPassword());
-      $encryptionService->initAppEncryptionKey();
+      if (!$encryptionService->bound()) {
+        $encryptionService->bind($userId, $event->getPassword());
+      }
     } catch (\Throwable $t) {
       $this->logException($t, $this->l->t('Unable to bind encryption service for user "%s".', $userId));
     }
