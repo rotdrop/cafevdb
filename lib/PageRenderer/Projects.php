@@ -468,8 +468,8 @@ __EOT__;
     // data. However, at the moment the stuff does not work without JS
     // anyway, and we use Ajax calls to verify the form data.
 
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateTrigger' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_AFTER][]   = [ $this, 'afterUpdateTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertTrigger' ];
@@ -894,15 +894,17 @@ project without a poster first.");
     //   Events::replaceCategory($event, $oldvals['name'], $newvals['name'], true);
     // }
 
-    // Now, we should also rename the project folder. We simply can
-    // pass $newvals and $oldvals
-    $this->projectService->renameProjectFolder($newvals, $oldvals);
+    // // Now, we should also rename the project folder. We simply can
+    // // pass $newvals and $oldvals
+    // $this->projectService->renameProjectFolder($newvals, $oldvals);
 
-    // Same for the Wiki
-    $this->projectService->renameProjectWikiPage($newvals, $oldvals);
+    // // Same for the Wiki
+    // $this->projectService->renameProjectWikiPage($newvals, $oldvals);
 
-    // Rename titles of all public project web pages
-    $this->projectService->nameProjectWebPages($pme->rec, $newvals['name']);
+    // // Rename titles of all public project web pages
+    // $this->projectService->nameProjectWebPages($pme->rec, $newvals['name']);
+
+    $this->projectService->renameProject($pme->rec, $newvals);
 
     return true;
   }
