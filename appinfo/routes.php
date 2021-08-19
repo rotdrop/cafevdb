@@ -55,7 +55,23 @@ $routes = [
       ],
       'requirements' => [
         'apiVersion' => 'v1',
-      ]
+      ],
+    ],
+    [
+      'name' => 'maintenance_api#service_switch',
+      'url' => '/api/{apiVersion}/maintenance/{operation}',
+      'verb' => 'POST',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
+    ],
+    [
+      'name' => 'maintenance_api#get',
+      'url' => '/api/{apiVersion}/maintenance/{topic}',
+      'verb' => 'GET',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
     ],
   ],
   'routes' => [

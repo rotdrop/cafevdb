@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,9 +34,10 @@ use OCA\CAFEVDB\Service\ConfigService;
 
 /**
  * Verifies whether an user has at least subadmin rights.
- * To bypass use the `@NoSubadminRequired` annotation
+ * To enforce use the `@SubadminRequired` annotation
  */
-class SubadminMiddleware extends Middleware {
+class SubadminMiddleware extends Middleware
+{
   /** @var ConfigService */
   protected $configService;
 
@@ -68,6 +70,11 @@ class SubadminMiddleware extends Middleware {
     if ($this->reflector->hasAnnotation('SubadminRequired')) {
       if (!$this->configService->isSubAdminOfGroup()) {
         throw new NotAdminException($this->l->t('Logged in user must be a subadmin of the orchestra group'));
+      }
+    }
+    if ($this->reflector->hasAnnotation('ServiceAccountRequired')) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue('shareowner')) {
+        throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }
   }
