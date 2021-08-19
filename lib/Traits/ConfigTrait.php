@@ -275,7 +275,7 @@ trait ConfigTrait {
   /**
    * @return null|\OCP\IUSER
    */
-  protected function shareOwner():?\OCP\User
+  protected function shareOwner():?\IUser
   {
     $shareOwnerUid = $this->shareOwnerId();
     if (empty($shareOwnerUid)) {
