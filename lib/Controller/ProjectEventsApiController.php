@@ -110,7 +110,7 @@ class ProjectEventsApiController extends OCSController
       }
       return new DataResponse($data);
     default:
-      throw new OCSException\OCSNotFoundException;
+      throw new OCS\OCSNotFoundException;
     }
   }
 
