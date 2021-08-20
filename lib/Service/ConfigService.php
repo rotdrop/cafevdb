@@ -239,7 +239,7 @@ class ConfigService {
     $this->appContainer = $appContainer;
     $this->l = $l;
 
-    if (defined('OC_CONSOLE') && empty($userSession->getUser())) {
+    if (defined('OC_CONSOLE') && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
       $this->setUserId($GLOBALS['cafevdb-user']);
     } else {
       // The user may be empty at login. This is lazily corrected later.
@@ -618,7 +618,7 @@ class ConfigService {
     try {
       $result = $callback();
     } catch (\Throwable $t) {
-      $this->setUserId($oldUserId);
+      $this->setUser($oldUser);
       throw new \RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
     }
     $this->setUser($oldUser);
