@@ -139,7 +139,7 @@ class MusicianCardBackend implements ICardBackend
     $uri = $this->getUriFromUuid($uuid);
     if ($lastModified === null) {
       $info = $this->musiciansRepository->fetchLastModifiedDate([ 'uuid' => $uuid ]);
-      $lastModified = strtotime($info['lastModified']);
+      $lastModified = strtotime($info['lastModified']) ?: null;
     }
     return new MusicianCard($uri, $lastModified, $vCard);
   }
