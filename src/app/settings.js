@@ -312,6 +312,25 @@ const afterLoad = function(container) {
    *
    ***************************************************************************/
 
+  const enableFieldSets = function() {
+    const shareOwnerSet = $('#shareowner').find('input#user').val() !== '';
+
+    $('#calendars, #contacts').find('fieldset').each(function(i, elm) {
+      $(elm).prop('disabled', !shareOwnerSet);
+    });
+    const sharedFolder = $('input#sharedfolder').val() !== '';
+    const projectsFolder = $('input#projectsfolder').val() !== '';
+    const financeFolder = $('input#financefolder').val() !== '';
+    $('#sharedfolder-form').find('fieldset').each(function(i, element) {
+      const $element = $(element);
+      let disabled = (!shareOwnerSet
+                      || ($element.hasClass('needs-sharedfolder') && !sharedFolder)
+                      || ($element.hasClass('needs-projectsfolder') && !projectsFolder)
+                      || ($element.hasClass('needs-financefolder') && !financeFolder));
+      $element.prop('disabled', disabled);
+    });
+  };
+
   {
     const container = $('#shareowner');
     const msg = $('#shareownerform .statusmessage');
@@ -338,18 +357,10 @@ const afterLoad = function(container) {
 
     simpleSetValueHandler(
       shareOwnerCheck, 'click', msg, {
-        sucess(element, data, value, msg) { // done
-          shareOwner.prop('disabled', true);
+        success(element, data, value, msg) { // done
           shareOwnerSaved.val(shareOwner.val());
-          if (shareOwner.val() !== '') {
-            $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-              $(elm).removeAttr('disabled');
-            });
-          } else {
-            $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
-              $(elm).prop('disabled', true);
-            });
-          }
+          shareOwner.prop('disabled', true);
+          enableFieldSets();
         },
         getValue(element, msg) { // getValue
           return {
@@ -496,12 +507,6 @@ const afterLoad = function(container) {
         });
     };
 
-    /**************************************************************************
-     *
-     * Sharing, share-folder, projects-folder, finance-folder, balances-folder
-     *
-     *************************************************************************/
-
     sharedFolder('sharedfolder', function(element, css, data, value, msg) {
       $('div#sharing-settings span.sharedfolder').html(value[css]); // update display
       const $folderView = $('#sharedfolder-fieldset').find('a.sharedfolder-view');
@@ -511,19 +516,17 @@ const afterLoad = function(container) {
       } else {
         $folderView.addClass('hidden');
       }
+      enableFieldSets();
     });
     sharedFolder('financefolder', function(element, css, data, value, msg) {
       const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
-      $('#balancesfolder-fieldset').prop('disabled', value[css] === '' || emptyProjectsFolder);
-      $('#transactionsfolder-fieldset').prop('disabled', value[css] === '');
       $('div#sharing-settings span.financefolder').html(value[css]); // update
+      enableFieldSets();
     });
     sharedFolder('projectsfolder', function(element, css, data, value, msg) {
       const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
-      $('#balancesfolder-fieldset').prop('disabled', value[css] === '' || emptyFinanceFolder);
-      $('#projectparticipantsfolder-fieldset').prop('disabled', value[css] === '');
-      $('#projectpostersfolder-fieldset').prop('disabled', value[css] === '');
       $('div#sharing-settings span.projectsfolder').html(value[css]); // update
+      enableFieldSets();
     });
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectpostersfolder');

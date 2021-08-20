@@ -30,7 +30,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
   <div id="sharing-settings">
     <!-- VIRTUAL USER -->
     <h4><?php echo $l->t('Share owner') ; ?></h4>
-    <form id="shareownerform"><!-- <legend><?php echo $l->t('Share owner') ; ?></legend> -->
+    <form id="shareownerform">
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
         <input <?php echo $_['shareowner'] != '' ? 'disabled' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
@@ -55,7 +55,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <!-- CALENDARS -->
     <h4><?php echo $l->t('Calendars'); ?></h4>
     <form id="calendars">
-      <fieldset  <?php echo $off; ?> ><!-- <legend><?php echo $l->t('Calendars'); ?></legend> -->
+      <fieldset  <?php echo $off; ?> >
         <input type="text" id="concerts" name="concertscalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['concertscalendar']; ?>" />
         <label for="concerts"><?php echo $l->t('Calendar for Concerts');?></label>
         <br/>
@@ -79,7 +79,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <!-- Contacts, adressbooks -->
     <h4><?php echo $l->t('Contacts'); ?></h4>
     <form id="contacts">
-      <fieldset  <?php echo $off; ?> ><!-- <legend><?php echo $l->t('Contacts'); ?></legend> -->
+      <fieldset  <?php echo $off; ?> >
         <input type="text" id="generaladdressbook" name="generaladdressbook" placeholder="<?php echo $l->t('addressbook');?>" value="<?php echo $_['generaladdressbook']; ?>" />
         <label for="generaladdressbook"><?php echo $l->t('General Addresbook');?></label>
         <br/>
@@ -90,7 +90,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <!-- Shared folders -->
     <h4><?php echo $l->t('Shared folder'); ?></h4>
     <form id="sharedfolder-form">
-      <fieldset id="sharedfolder-fieldset" <?php echo $off; ?> ><!-- <legend><?php echo $l->t('Shared folder'); ?></legend> -->
+      <fieldset id="sharedfolder-fieldset" <?php echo $off; ?> >
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
         <input <?php echo $_['sharedfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
@@ -108,9 +108,11 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         <a name="sharedfolder-view"
            href="<?php p($sharedFolderLink); ?>"
            target="<?php p($appName . '-sharedfolder-view'); ?>"
-           class="sharedfolder-view button<?php empty($sharedFolderLink) && p(' hidden'); ?>"></a>
+           class="sharedfolder-view button<?php empty($_['sharedfolder']) && p(' really hidden'); ?>"></a>
       </fieldset>
-      <fieldset id="postboxfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+      <fieldset id="postboxfolder-fieldset"
+		class="needs-sharedfolder"
+		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="postboxfolder-saved" name="postboxfolder-saved" value="<?php echo $_['postboxfolder']; ?>" />
         <input <?php echo $_['postboxfolder'] != '' ? 'disabled' : ''; ?>
@@ -128,7 +130,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         <input name="postboxfolder-check" id="postboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
         <div class="postboxfolder-sharelink<?php empty($postboxFolderShareLink) && p('hidden'); ?>"><?php p($postboxFolderShareLink); ?></div>
       </fieldset>
-      <fieldset id="documenttemplatesfolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+      <fieldset id="documenttemplatesfolder-fieldset"
+		class="needs-sharedfolder"
+		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="documenttemplatesfolder-saved" name="documenttemplatesfolder-saved" value="<?php echo $_['documenttemplatesfolder']; ?>" />
         <input <?php echo $_['documenttemplatesfolder'] != '' ? 'disabled' : ''; ?>
@@ -145,7 +149,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="documenttemplatesfolder-check" id="documenttemplatesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="projectsfolder-fieldset" <?php echo $off; ?> >
+      <fieldset id="projectsfolder-fieldset"
+		class="needs-sharedfolder"
+		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span>
         <input type="hidden" id="projectsfolder-saved" name="projectsfolder-saved" value="<?php echo $_['projectsfolder']; ?>" />
@@ -165,7 +171,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="projectsfolder-check" id="projectsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="projectparticipantsfolder-fieldset" class="projectparticipantsfolder" <?php echo $off; ?> >
+      <fieldset id="projectparticipantsfolder-fieldset"
+		class="needs-sharedfolder needs-projectsfolder"
+		class="projectparticipantsfolder" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
@@ -187,7 +195,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="projectparticipantsfolder-check" id="projectparticipantsfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="projectpostersfolder-fieldset" class="projectpostersfolder" <?php echo $off; ?> >
+      <fieldset id="projectpostersfolder-fieldset"
+		class="projectpostersfolder needs-sharedfolder needs-projectsfolder"
+		<?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
@@ -208,7 +218,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="projectpostersfolder-check" id="projectpostersfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="financefolder-fieldset" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+      <fieldset id="financefolder-fieldset"
+		class="needs-sharedfolder"
+		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
         <input type="hidden" id="financefolder-saved" name="financefolder-saved" value="<?php echo $_['financefolder']; ?>" />
         <input <?php echo $_['financefolder'] != '' ? 'disabled' : ''; ?>
@@ -225,7 +237,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="financefolder-check" id="financefolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="transactionsfolder-fieldset" <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
+      <fieldset id="transactionsfolder-fieldset"
+		class="needs-sharedfolder needs-projectsfolder needs-financefolder"
+		<?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
         <span><b>/</b></span>
@@ -244,7 +258,9 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="transactionsfolder-check" id="transactionsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="balancesfolder-fieldset" <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
+      <fieldset id="balancesfolder-fieldset"
+		class="needs-sharedfolder needs-projectsfolder needs-financefolder"
+		<?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
         <span><b>/</b></span>
