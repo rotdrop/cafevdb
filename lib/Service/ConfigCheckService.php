@@ -1001,6 +1001,8 @@ class ConfigCheckService
   {
     $connection = null;
 
+    $this->entityManager->reopen();
+
     $connection = $this->entityManager->getConnection();
 
     if (empty($connection)) {

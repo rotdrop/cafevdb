@@ -284,10 +284,12 @@ class PersonalSettingsController extends Controller {
     case 'dbpassword':
       try {
         if (!empty($value)) {
+          $oldPassword = $this->getConfigValue('dbpassword');
+          $this->setConfigValue('dbpassword', $value);
           if ($this->configCheckService->databaseAccessible(['password' => $value])) {
-            $this->setConfigValue('dbpassword', $value);
             return self::response($this->l->t('DB-test passed and DB-password set.'));
           } else {
+            $this->setConfigValue('dbpassword', $oldDbPassword);
             return self::grumble($this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'));
           }
         } else {
@@ -1036,7 +1038,7 @@ class PersonalSettingsController extends Controller {
               'folderLink' => $folderLink,
             ]);
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder"%s".', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder "%s".', [$real]));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);
@@ -1054,10 +1056,11 @@ class PersonalSettingsController extends Controller {
         } else {
           return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
         }
-      } catch(\Exception $e) {
+      } catch(\Throwable $t) {
+        $this->logException($t);
         return self::grumble(
           $this->l->t('Failure checking folder "%s", caught an exception "%s".',
-                      [$real, $e->getMessage()]));
+                      [$real, $t->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
     case ConfigService::POSTBOX_FOLDER:
