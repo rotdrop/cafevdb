@@ -615,7 +615,7 @@ class EncryptionService
 
   public function verifyHash($value, $hash)
   {
-    return $value !== null && (empty($hash) || $this->hasher->verify($value, $hash));
+    return $value === null || empty($hash) || $this->hasher->verify($value, $hash);
   }
 
   public function computeHash($value)
