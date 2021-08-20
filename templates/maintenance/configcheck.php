@@ -54,34 +54,32 @@ $cfgchk = $_['configcheck'];
 
 $missingtext = [
   'orchestra' => $l->t(
-    'You need to specify a name for the orchestra.  Please click as
-group-administrator on the gear-symbol in the top-right corner and
-specify a short-hand name for the orchestra in the
-`Administration\'-tab. This is just a tag to provide defaults for
+    'You need to specify a name for the orchestra.  Please access the
+app-settings through the settings-menu in the upper right corner
+and specify a short-hand name for the orchestra in the
+"Administration"-tab. This is just a tag to provide defaults for
 user-ids and folders; it should be a short one-word identifier.'),
   'usergroup' => $l->t('You need to create a dedicatd user group.
 You have to log-in as administrator to do so.'),
   'shareowner' => $l->t(
     'You need to create a dummy-user which owns all shared resources
 (calendars, files etc.). You need to be a group-admin for the
-orchestra user group `%s\' to do so. You can create the share-owner
-uid by setting the respective field in the application settings menu
-(click as group-admin on the gear-symbol in the top-right corner and
-choose the `Sharing\'-tab).',
+orchestra user group "%s" to do so. You can create the share-owner
+uid by setting the respective field in the application settings menu in the
+"Sharing"-tab).',
                         [$_['usergroup']]),
   'sharedfolder' => $l->t(
     'You need to create a dedicated shared folder shared among the
-user-group `%s\'. You can do so through the respective web-form in the
-application settings windows accessible through the gear-symbol in the
-top-right corner. Click on the symbol and choose the `Sharing\'-tab in
+user-group "%s". You can do so through the respective web-form in the
+application settings windows accessible through the settings-menu in the
+top-right corner. Choose the "Sharing"-tab in
 the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
                           [$_['usergroup']]),
-  'sharedaddressbooks' => $l->t('blah'),
+  'sharedaddressbooks' => $l->t('Shared addressbooks do not exist or are inaccessible.'),
   'database' => $l->t('You need to configure the database access. You can do so through the
 respective web-form in the application settings windows accessible
-through the gear-symbol in the upper left corner. Click on the
-gear-symbol and choose the `Administration\'-tab.You need to be a
+through the settings-menu in the upper right corner. You need to be a
 group-admin, otherwise the application settings are not visible for
 you.',
                       [$_['usergroup']]),
@@ -89,8 +87,8 @@ you.',
     'You may want to set an encryption key for encrypting configuration
 values and (in the future) sensitive data in the members- and project
 database.  You can do so through the respective web-form in the
-application settings windows accessible through the gear-symbol in the
-upper left corner. You need to be a group-admin, otherwise the
+application settings windows accessible through the settings-menu in the
+upper right corner. You need to be a group-admin, otherwise the
 application settings are not visible for you. Note also that after
 installing a non-empty encryption key each user has to log-out and
 log-in again in order to be able to access the encrypted values.',
