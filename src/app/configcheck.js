@@ -52,10 +52,15 @@ function documentReady() {
         if (data.migrations.length <= 0) {
           return;
         }
+        let migrationList = '<dl class="migrations-list">';
+        for (const [version, description] of Object.entries(data.migrations)) {
+          migrationList += `<dt class="migration-version">${version}</dt><dd class="migration-description">${description}</dd>`;
+        }
+        migrationList += '</dl>';
         Dialogs.info(
           t(appName, 'Data-migrations need to be performed before proceeding to the orchestra app.')
             + '<p>'
-            + data.migrations.join(', ')
+            + migrationList
             + '<p>'
             + t(appName, 'Click the "ok" button to start the migrations.'),
           t(appName, 'Data Migration'),

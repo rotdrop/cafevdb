@@ -40,6 +40,7 @@ class MigrationsController extends Controller
   const ALL_MIGRATIONS = 'all';
   const UNAPPLIED_MIGRATIONS = 'unapplied';
   const LATEST_MIGRATION = 'latest';
+  const MIGRATION_DESCRIPTION = 'description';
 
   /** @var MigrationsService */
   private $migrationsService;
@@ -76,6 +77,17 @@ class MigrationsController extends Controller
   /**
    * @NoAdminRequired
    */
+  public function getDescription($migrationVersion)
+  {
+    return self::dataResponse([
+      'version' => $migrationVersion,
+      'description' => $this->migrationsService->description($migrationVersion),
+    ]);
+  }
+
+  /**
+   * @NoAdminRequired
+   */
   public function serviceSwitch($topic, $subTopic)
   {
     switch ($topic) {
@@ -84,7 +96,7 @@ class MigrationsController extends Controller
       case 'all':
         $unapplied = $this->migrationsService->getUnapplied();
         $applied = [];
-        foreach ($unapplied as $version) {
+        foreach ($unapplied as $version => $description) {
           try {
             $this->migrationsService->apply($version);
             $applied[] = $version;

@@ -63,6 +63,11 @@ class MoveProjectPosters implements IMigration
     $this->entityManager = $entityManager;
   }
 
+  public function description():string
+  {
+    return $this->l->t('Move project posters from database to filesystem storage.');
+  }
+
   public function execute():bool
   {
     // try to migrate as much data as possible

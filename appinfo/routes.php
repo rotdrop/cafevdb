@@ -164,6 +164,11 @@ $routes = [
       'verb' => 'POST',
     ],
     [
+      'name' => 'migrations#getDescription',
+      'url' => '/maintenance/migrations/description/{$migrationVersion}',
+      'verb' => 'GET',
+    ],
+    [
       'name' => 'migrations#get',
       'url' => '/maintenance/migrations/{what}',
       'verb' => 'GET',

@@ -38,6 +38,11 @@ class Version00000000000001 implements IMigration
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  public function description():string
+  {
+    return $this->l->t('Create MySQL stored functions and procedures.');
+  }  
+  
   private const SQL = [
     "CREATE OR REPLACE PROCEDURE `generateNumbers`(IN `min` INT)
 BEGIN

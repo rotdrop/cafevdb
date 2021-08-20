@@ -25,6 +25,9 @@ namespace OCA\CAFEVDB\Maintenance;
 
 interface IMigration
 {
+  /** @return string Short description of the migration */
+  public function description():string;
+  
   /**
    * @throws \Throwable
    * @return bool True on success, false otherwise

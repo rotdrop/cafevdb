@@ -47,6 +47,11 @@ class MigrationsService
     $this->l = $this->l10n();
   }
 
+  /**
+   * Check whether there need any migrations to be applied.
+   *
+   * @return bool
+   */
   public function needsMigration():bool
   {
     $this->ensureMigrationsAreLoaded();
@@ -69,13 +74,19 @@ class MigrationsService
 
   public function getUnapplied()
   {
+    if (!$this->entityManager->connected()) {
+      return [];
+    }
     $this->ensureMigrationsAreLoaded();
-    return array_keys($this->unappliedMigrations);
+    return array_map(function($className) { return  $this->di($className)->description(); }, $this->unappliedMigrations);
   }
 
   public function getAll()
   {
-    return array_keys($this->findMigrations(self::MIGRATIONS_FOLDER));
+    if (!$this->entityManager->connected()) {
+      return [];
+    }
+    return array_map(function($className) { return $this->di($className)->description(); }, $this->findMigrations(self::MIGRATIONS_FOLDER));
   }
 
   public function getLatest()
@@ -83,12 +94,31 @@ class MigrationsService
     return $this->findLatestVersion();
   }
 
+  /**
+   * Apply the migration with the given version
+   *
+   * @param string $version
+   */
   public function apply(string $version)
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
     if (!empty($allMigrations[$version])) {
       $this->applyMigration($version, $allMigrations[$version]);
     }
+  }
+
+  /**
+   * Get the description of the migration with the given version
+   *
+   * @param string $version
+   *
+   * @return string $version
+   */
+  public function description(string $version):string
+  {
+    /** @var IMigration $instance */
+    $instance = $this->di($className);
+    return $instance->description();
   }
 
   protected function applyMigration(string $version, string $className)
@@ -113,6 +143,9 @@ class MigrationsService
 
   protected function findLatestVersion():?string
   {
+    if (!$this->entityManager->connected()) {
+      return null;
+    }
     /** @var Entities\Migration $latestMigration */
     try {
       $latestMigration = $this->getDatabaseRepository(Entities\Migration::class)->findOneBy([], [ 'version' => 'DESC' ]);

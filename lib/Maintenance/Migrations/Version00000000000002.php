@@ -41,6 +41,11 @@ class Version00000000000002 implements IMigration
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  public function description():string
+  {
+    return $this->l->t('Create views for user_sql auth backend.');
+  }  
+  
   private const SQL = [
     "CREATE OR REPLACE VIEW NextcloudGroupView AS
 select p.id AS gid,

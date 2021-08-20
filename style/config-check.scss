@@ -26,24 +26,37 @@ div.cafevdb-page-header-box.config-check {
 div.cafevdb-page-header.config-check {
   height:23ex;
 }
-div.cafevdb-page-container.config-check {
-  padding-top:18ex;
+div.cafevdb-page-container {
+  .config-check {
+    padding-top:18ex;
+
+    cafevdb-page-playground {
+      width: 60em;
+      max-width: 60em;
+    }
+
+    .progress-status.button, .pdfletter-download.button {
+      display: inline-block;
+    }
+  }
+
+  #progress-status-info {
+    margin-right: 1em;
+    display: inline-block;
+    min-width: 10em;
+    min-height: 24px;
+    text-align: right;
+  }
 }
 
-.cafevdb-page-container.config-check cafevdb-page-playground {
-  width: 60em;
-  max-width: 60em;
-}
-
-.cafevdb-page-container #progress-status-info {
-  margin-right: 1em;
-  display: inline-block;
-  min-width: 10em;
-  min-height: 24px;
-  text-align: right;
-}
-
-.cafevdb-page-container.config-check .progress-status.button,
-.cafevdb-page-container.config-check .pdfletter-download.button {
-  display: inline-block;
+.oc-dialog .migrations-list {
+  .migration-version {
+    color:red;
+    font-weight:bold;
+  }
+  .migration-description {
+    color:red;
+    font-weight:bold;
+    font-style:italic;
+  }
 }

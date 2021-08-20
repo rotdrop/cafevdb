@@ -55,6 +55,11 @@ class Version00000000000000 implements IMigration
     $this->entityManager = $entityManager;
   }
 
+  public function description():string
+  {
+    return $this->l->t('Initial database setup.');
+  }  
+  
   public function execute():bool
   {
     $connection = $this->entityManager->getConnection();

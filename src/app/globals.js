@@ -63,7 +63,7 @@ require('@nextcloud/dialogs/styles/toast.scss');
 
 require('oc-fixes.css');
 require('mobile.css');
-require('config-check.css');
+require('config-check.scss');
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
