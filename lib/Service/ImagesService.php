@@ -255,6 +255,9 @@ EOT;
       switch ($joinTable) {
       case self::USER_STORAGE:
         // $ownerId is a directory, $imageId a file in that directory
+        if (empty($ownerId)) {
+          throw new \RuntimeException($this->l->t('Images path must not be empty.'));
+        }
         /** @var UserStorage $storage */
         $storage = $this->di(UserStorage::class);
         $directory = $storage->getFolder($ownerId);
