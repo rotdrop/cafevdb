@@ -212,6 +212,11 @@ EOT;
         $imageMimeType = $dbImage->getMimeType();
         $imageData = $dbImage->getFileData()->getData('binary');
 
+        if (empty($imageData)) {
+          $this->logInfo('EMPTY IMAGE DATA FOR FILE ID ' . $dbImage->getId());
+          break;
+        }
+
         $image = new \OCP\Image();
         $image->loadFromData($imageData);
 
