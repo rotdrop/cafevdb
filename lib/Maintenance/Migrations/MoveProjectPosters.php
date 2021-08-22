@@ -108,6 +108,7 @@ class MoveProjectPosters implements IMigration
               $this->l->t('Unable to fetch data-base image "%1$d" for project "%2$s".',
                           [ $dbImageId, $project->getName() ])
             );
+            ++$numFailures;
             continue;
           }
 
