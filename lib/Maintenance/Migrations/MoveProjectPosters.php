@@ -152,12 +152,23 @@ class MoveProjectPosters implements IMigration
       }
     }
 
+    $numPosters = -1;
     if ($numFailures === 0) {
-      // remove the join table
-      $connection->query('DROP TABLE ' . self::POSTERS_JOIN_TABLE);
+      try {
+        $sql = 'SELECT COUNT(*) FROM ' . self::POSTERS_JOIN_TABLE;
+        $stmt = $connection->prepare($sql);
+        $numPosters = $stmt->executeQuery()->fetchOne();
+        $this->logInfo('Number of posters remaining: ', $numPosters);
+        if ($numPosters === 0) {
+          $this->logInfo('Removing join table ' . self::POSTERS_JOIN_TABLE);
+          $connection->query('DROP TABLE ' . self::POSTERS_JOIN_TABLE);
+        }
+      } catch (\Throwable $t) {
+        ++$numFailures;
+      }
     }
 
-    return $numFailures == 0;
+    return $numPosters === 0 && $numFailures === 0;
   }
 };
 
