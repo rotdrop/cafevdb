@@ -534,7 +534,7 @@ class ProjectService
    */
   public function ensurePostersFolder($projectOrId, bool $dry = false)
   {
-    list($path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
+    list('posters' => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
     return $path;
   }
 
