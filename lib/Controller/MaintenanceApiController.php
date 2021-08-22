@@ -120,7 +120,7 @@ class MaintenanceApiController extends OCSController
           $appEncryptionKey = $this->getAppEncryptionKey();
           $data = [
             'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
-          ]
+          ];
         }
         return new DataResponse($data);
       }
