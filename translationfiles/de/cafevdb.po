@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-08-18 13:44+0200\n"
-"PO-Revision-Date: 2021-08-18 13:46+0200\n"
+"POT-Creation-Date: 2021-08-23 18:15+0200\n"
+"PO-Revision-Date: 2021-08-23 18:21+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Kann die Forstschrittsdaten aus der Datei \"%s\" auch nach %d Versuchen "
 "nicht lesen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/UndoableRunQueue.php:78
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Common/UndoableRunQueue.php:79
 #, php-format
 msgid ""
 "Exception during execution of run-queue; number of successful actions: %d."
@@ -454,7 +454,7 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/InstrumentInsuranceController.php:269
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:160
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:190
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:216
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1251
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:370
@@ -559,14 +559,14 @@ msgstr "`%s' erfolgreich gelöscht."
 msgid "Method %s is not yet implemented."
 msgstr "Methode %s is noch nicht implementiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:73
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:130
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:74
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MigrationsController.php:142
 #, php-format
 msgid "Unknown Request \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:131
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:517
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:519
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr "Die Rufnummer %s scheint keine gültige Telefonnummer zu sein."
@@ -630,7 +630,7 @@ msgid "Switching %2$s %1$s"
 msgstr "Schalte %2$s %1$s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:181
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1256
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1259
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr "Wert \\\"%1$s\\\" für \\\"%2$s\\\" ist nicht im erlaubten Bereich."
@@ -680,17 +680,17 @@ msgstr ""
 "Wahrheitswert \"fasch\" sein."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:283
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:750
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:773
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:752
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:775
 #, php-format
 msgid "\"%s\" set to \"%s\"."
 msgstr "\"%s\" als \"%s\" konfiguriert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:289
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:290
 msgid "DB-test passed and DB-password set."
 msgstr "Datenbank-Test erfolgreich; Datenbank-Passwort gespeichert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:291
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:293
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
@@ -698,40 +698,40 @@ msgstr ""
 "Datenbank-TEst fehlgeschlagen. Bitte Einstellungen überprüfen. Der Test "
 "wurde mit dem neuen Passwort durchgeführt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:296
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:298
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 "Datenbank-Test mit gespeichertem Passwort erfolgreich (leeres neues Passwort "
 "ignoriert)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:298
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:300
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 "Datenbank-Test mit gespeichertem Passwort fehlgeschlagen (leeres neues "
 "Passwort ignoriert)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:302
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:304
 #, php-format
 msgid "DB-test failed with exception \"%s\"."
 msgstr "Datenbank-Test fehlgeschlagen: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:307
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:309
 #, php-format
 msgid "Missing parameter \"%s\"."
 msgstr "Fehlender Parameter \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:318
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:320
 msgid "Wrong old encryption key"
 msgstr "Falscher alter Verschlüsselungs-Schlüssel"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:327
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:333
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:329
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:335
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 "Die Konfigurationdaten ist zum Bearbeiten gesperrt, kann den Schlüssel nicht "
 "ändern."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:404
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:406
 #, php-format
 msgid ""
 "Failed to restore config-values %s, keeping all backup values with suffix "
@@ -740,17 +740,17 @@ msgstr ""
 "Kann die Einstellungen %s nicht wieder herstellen und behalte deshalb\n"
 "alle Sicherungskopieen unter der Namensendung \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:417
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:436
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:419
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:438
 #, php-format
 msgid "Failed to remove backups for config-values %s."
 msgstr "Kann die Sicherungskopien für die Einstellungen %s nicht löschen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:450
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:452
 msgid "Stored new encryption key."
 msgstr "Neuer Schlüssel wurde gespeichert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:452
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:454
 msgid ""
 "Stored the new encryption key, however, distributing the new encryption key "
 "failed for at least some of the users."
@@ -758,124 +758,124 @@ msgstr ""
 "Neues Verschlüsselungs-Passwort eingestellt, aber es konnte nicht an alle "
 "Benutzende verteilt werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:464
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1463
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:466
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1466
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr "\"%s\" auf \"%s\" eingestellt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:470
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1011
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1086
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:472
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1013
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1089
 msgid "Invalid request parameters: "
 msgstr "Ungültige Anfrage-Parameter: "
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:479
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1021
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1096
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:481
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1023
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1099
 #, php-format
 msgid "Submitted \"%s\" != \"%s\" (stored)"
 msgstr "Eingegeber Wert \"%s\" != \"%s\" (gespeichert)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:483
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:485
 msgid "Share-owner user id must not be empty."
 msgstr "Benutzer-Kennung der `Teilen-Strohpuppe' darf nicht leer sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:488
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:490
 #, php-format
 msgid "New share-owner \"%s\"."
 msgstr "Share-Strohpuppe \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:490
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:492
 #, php-format
 msgid "Failure creating account for user-id \"%s\"."
 msgstr "Fehler beim Einrichten des Accounts \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:497
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:499
 #, php-format
 msgid "Failure checking account for user-id \"%s\"."
 msgstr "Fehler beim Testen des Accounts \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:500
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:502
 #, php-format
 msgid "Share-owner user \"%s\" ok."
 msgstr "Share-Strohpuppe \"%s\" in Ordnung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:514
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:516
 #, php-format
 msgid "Orchestra Phone Number set to %s"
 msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:540
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:716
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1593
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:542
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:718
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1596
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:552
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:562
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:586
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:598
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:607
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:640
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:652
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:673
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:688
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:554
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:564
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:588
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:600
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:609
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:642
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:654
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:675
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:690
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:616
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:618
 #, php-format
 msgid "Invalid IBAN: \"%s\"."
 msgstr "Ungültige IBAN: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:695
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:697
 #, php-format
 msgid "Value for \"%s\" invalid: \"%s\"."
 msgstr "Der Wert für \"%s\" ist ungültig: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:722
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:724
 msgid "Delete old Project?"
 msgstr "Altes Projekt löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:724
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:726
 #, php-format
 msgid "Delete old project \"%s\" (%d) and all its associated data?"
 msgstr "Altes Projekt \"%s\" (%d) und alle verknüpften Daten löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:740
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:742
 #, php-format
 msgid "Sanitized project name from \"%s\" to \"%s\"."
 msgstr "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:761
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:763
 msgid "Rename Project?"
 msgstr "Projekt umbenennen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:763
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:765
 #, php-format
 msgid "\"%s\" project already exists, rename it from \"%s\" to \"%s?"
 msgstr ""
 "Ein Projekt \"%s\" existiert bereits, soll es von \"%s\" nach \"%s\" "
 "umbenannt werden?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:779
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:781
 #, php-format
 msgid "Type of project \"%s\" set to \"%s\"."
 msgstr "Art des Projekts \"%s\" auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:784
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:786
 msgid "Create project?"
 msgstr "Projekt erzeugen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:786
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:788
 #, php-format
 msgid "A project with name \"%s\" does not exist, shall we create it?"
 msgstr "Ein Projekt mit Namen \"%s\" existiert nicht, soll es erzeugt werden?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:805
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:807
 #, php-format
 msgid ""
 "Configured project-id %d and submitted project id %d differ, please reload "
@@ -884,32 +884,32 @@ msgstr ""
 "Die Projekt-Id %d in der Konfigurationsdatenbank und die übermittelte "
 "Projekt-Id %d sind verschieden. Bitte die Seite im Browser neu laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:819
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:821
 #, php-format
 msgid "Unable to create project with name \"%s\"."
 msgstr "Konnte das Projekt mit dem Namen \"%s\" nicht laden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:823
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:825
 #, php-format
 msgid "Created Project \"%s\" with id \"%d\"."
 msgstr "Projekt erzeugt mit Namen \"%s\" und Id \"%d\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:833
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:835
 #, php-format
 msgid "Unable to find project with id %d."
 msgstr "Konnte kein Projekt mit der Id %d finden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:842
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:844
 #, php-format
 msgid "Project \"%s\" successfully validated."
 msgstr "Das Projekt \"%s\" wurde erfolgreich validiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:855
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:857
 #, php-format
 msgid "Deleted project \"%s\" with id \"%d\"."
 msgstr "Projekt \"%s\" mit Id \"%d\" gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:857
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:859
 #, php-format
 msgid ""
 "Project \"%s\", id \"%d\" has been marked as disabled as it is still needed "
@@ -918,213 +918,209 @@ msgstr ""
 "Das Projekt \"%s\", Id \"%d\", wurde als deaktiviert markiert; es wird nach "
 "wie vor für die Finanzbuchhaltung benötigt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:863
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1424
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:865
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1437
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:883
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:885
 msgid "Result of rename is empty without throwing an exception."
 msgstr ""
 "Ergebnis des Umbenennens scheint ungültig, aber es wurde keine Fehlerausgabe "
 "erzeugt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:888
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:890
 #, php-format
 msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:896
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1538
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:898
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1539
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
 "Fehler beim Umbennen des Projekts \"%s\", Id \"%d\" zum neuen Namen \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:921
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:923
 #, php-format
 msgid "SETTING %s NOT YET IMPLEMENTED"
 msgstr "EINSTELLUNG %s NOCH IMPLEMENTIERT WERDEN"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:927
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:929
 msgid "Please create the share-owner user first."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:931
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:933
 msgid "Share-owner does not seem to exist, please recreate."
 msgstr "Teilen-Strohpuppe scheint nicht zu existieren, bitte neu erzeugen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:934
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:936
 msgid "Authentication backend does not support changing passwords."
 msgstr ""
 "Authentifizierungs-Maschinerie erlaubt nicht das Ändern von Passwörtern."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:938
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:940
 msgid "Password must not be empty"
 msgstr "Password darf nicht leer sein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:941
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:943
 #, php-format
 msgid "Unable to set password for \"%s\"."
 msgstr "Ingültiges Passwort für \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:944
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:946
 #, php-format
 msgid "Successfully changed passsword for \"%s\"."
 msgstr "Passwort für \"%s\" erfolgreich geändert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:959
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:961
 msgid "Shared folder is not configured, cannot store templates."
 msgstr ""
 "Gemeinsamer Ordner ist nicht konfiguriert, kann Vorlagen nicht speichern."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:964
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:966
 msgid "Document template folder is not configured, cannot store templates."
 msgstr ""
 "Ort für Vorlagen-Ordner ist nicht konfiguriert, kann Dokumentenvorlagen "
 "nicht speichern."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:972
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:974
 #, php-format
 msgid "Removed setting for document-template \"%s\"."
 msgstr "Einstellung für Dokumentenvorlage \"%s\" gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:977
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:979
 #, php-format
 msgid "Unable to find file \"%s\"."
 msgstr "Kann die Datei \"%s\" nicht finden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:981
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:983
 #, php-format
 msgid "Document-template \"%s\" successfully set to \"%s\"."
 msgstr "Dokumenten-Vorlage \"%s\" auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:990
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:992
 #, php-format
 msgid "Successfully deleted old document-template \"%s\"."
 msgstr "Dokumentenvorlage \"%s\" erfolgreich gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1002
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1073
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1004
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1076
 msgid "App user-group is not set."
 msgstr "Anwender-Gruppe nicht gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1006
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1077
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1008
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1080
 msgid "Share-owner is not set."
 msgstr "Share-Strohpuppe ist nicht eingestellt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1018
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1093
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1020
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1096
 msgid "Folder must not be empty."
 msgstr "Ordner darf nicht leer sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1035
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1145
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1037
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1148
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr "Neuen Ordner \"%s\" erzeugt und `geteilt'."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1039
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1041
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1152
 #, php-format
-msgid "Failed to create new shared folder\"%s\"."
+msgid "Failed to create new shared folder \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1051
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1172
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1053
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1175
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 "\"%s\" -- konfiguriert als \"%s\" -- existiert und kann verwendet werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1055
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1176
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1057
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1179
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr "\"%s\" existiert nicht oder ist nicht erreichbar."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1059
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1181
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1062
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1184
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Ordner \"%s\", Ausnahme \"%s\" `gefangen'."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1081
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1084
 msgid "Shared folder is not set."
 msgstr "Gemeinsamer Ordner ist nicht festgelegt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1102
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1105
 #, php-format
 msgid "Participants-folder set to \"%s\"."
 msgstr "Teilnehmenden-Order auf \"%s\" eingestellt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1105
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1108
 #, php-format
 msgid "Posters-folder set to \"%s\"."
 msgstr "Poster-Ordner auf \"%s\" eingestellt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1112
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1115
 #, php-format
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr "\"%s\" muss angegeben werden bevor \"%s\" spezifiziert werden kann."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1149
-#, php-format
-msgid "Failed to create new shared folder \"%s\"."
-msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
-
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1202
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1205
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr "Kalender \"%s\" erzeugt und `geteilt'."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1203
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1206
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr "Gemeinsamer Kalender \"%s\" erfolgreich validiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1206
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1209
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1211
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1214
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
 "\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1223
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1226
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr "Fehler beim erzeugen des gemeinsamen Adressbuchs \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1229
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1232
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr "Neues Adressbuch \"%s\" erzeugt und geteilt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1233
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1236
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf das Adressbuch \"%s\", Ausnahme \"%s\" "
 "\"aufgefangen\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1243
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1246
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr "Anzeigename des Musiker-Adressbuchs auf \"%s\" zurückgesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1245
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1248
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr "Anzeigename des Musiker-Adressbuchs auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1248
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1251
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
@@ -1133,93 +1129,93 @@ msgstr ""
 "Kann den Anzeigenamen des Musker-Adressbhuchs nicht auf \"%s\" setzen, es "
 "bleibt bei \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1259
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1262
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr "Setze `%2$s' auf `%1$s' Minuten."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1285
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1288
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr "Email-Zugangsdaten erfolgreich an folgende Benutzer verteilt: %s."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1287
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1290
 msgid "Unable to distribute the email credentials to any user."
 msgstr "Konnte die Email-Zugangsdaten an keinen einzigen Benutzer verteilen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1290
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1293
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr "Die Email-Zugangsdaten für %s konnten nicht installiert werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1293
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1296
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 "Setzen der Email-Zugangsdaten für %s ist endgültig fehlgeschlagen: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1313
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1316
 #, php-format
 msgid "%s connection seems functional."
 msgstr "%s Verbindung scheint zu funktionieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1314
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1317
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr "Kann keine %s-Verbindung zu %s@%s:%d herstellen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1335
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1338
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr "Der Server-Name \"%s\" hat weder eine IPV4- noch eine IPV6-Adresse."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1346
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1349
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr "\"%s\" ist keine Ganzzahl im Bereicht [%d, %d]."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1355
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1358
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr "Unbekannter Transport-Sicherheits-Typ: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1361
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1364
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr "Verwende Transport-Verschlüsselung \"%s\" für das Protokoll \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1371
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1374
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 "Wert \\\"%s\\\" für \\\"%s\\\" kann nicht als Wahrheitswert interpretiert "
 "werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1379
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1382
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr "\"%s\" scheint keine gültige Email-Adresse zu sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1406
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1412
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1409
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1415
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr "Kann keine Verbindung zum Mailing-List-Service unter \"%s\" aufnehmen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1419
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1422
 msgid "Empty translation phrase or language"
 msgstr "Leere Übersetzung oder Sprache"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1422
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1425
 msgid "Missing translation"
 msgstr "Fehlende Übersetzung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1426
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1429
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr "Leere Übersetzung der Phrase \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1430
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1433
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
@@ -1227,110 +1223,110 @@ msgstr ""
 "Sprachkürzel (%s) müsste eine Länge zweischen 2 und 5 Buchstaben haben (e.g. "
 "de or en_US)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1434
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1437
 msgid "Recording the translation failed"
 msgstr "Speichern der Übersetzung fehlgeschlagen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1436
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1439
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr "Übersetzung für Sprache \"%s\" erfolgreich gespeichert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1439
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1442
 msgid "Failed to erase all recorded translations."
 msgstr "Das Löschen aller aufgezeichneter Übersetzungen ist fehlgeschlagen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1441
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1444
 msgid "All recorded translations have been erased."
 msgstr "Alle aufgezeichneten Übersetzungen wurden gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1453
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1456
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist keine gültige URL."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1457
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1460
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 "\"%1$s\" muss eine http(s)-URL sein, Schema \"%2$s\" nicht unterstützt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1477
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1480
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr "Unbekannter Konfigurationseintrag `%s'"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1481
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1484
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr "Wert \"%s\" für \"%s\" ist nicht im erlaubten Bereich."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1486
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1489
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr "Redaxo-Kategorie für \"%s\" auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1490
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1522
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1493
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1525
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:608
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1514
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1517
 #, php-format
 msgid "Unknown link target %s"
 msgstr "Unbekanntes Verknüpfungs-Ziel %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1547
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1550
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1568
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1571
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1583
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1586
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PmeTableController.php:143
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:129
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1603
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1606
 #, php-format
 msgid "Value for \"%s\" set to \"%s\""
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1619
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1622
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1640
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1643
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1642
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1645
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1645
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1648
 #, php-format
 msgid "Public SSL key missing for %s, key distribution failed."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel kann nicht gesetzt werden, denn er "
 "öffentliche SSL-Schlüssel für %s fehlt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1650
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1653
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -1386,7 +1382,7 @@ msgstr "Kann den Zustand der Aufgabe \"%s\" nicht finden."
 msgid "Progress \"%s\" successfully deleted."
 msgstr "Fortschrittsstatus \"%s\" wurde erfolgreich gelöscht."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectEventsApiController.php:102
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectEventsApiController.php:99
 #, php-format
 msgid "Invalid calendar type: \"%1$s\""
 msgstr "Ungültiger Kalendertyp \"%1$s\"."
@@ -2323,11 +2319,11 @@ msgstr "Mehr als eine versteckte Verknüpfungs-Spalte."
 msgid "No hidden join column."
 msgstr "Keine versteckte Verknüpfungsspalte."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:753
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:770
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:822
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Database/EntityManager.php:839
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -2690,13 +2686,17 @@ msgstr "nach Wochennummer(n)"
 msgid "by day and month"
 msgstr "nach Tag im Monat"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Listener/UserLoggedInEventListener.php:85
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Listener/UserLoggedInEventListener.php:84
 #, php-format
 msgid "Unable to bind encryption service for user \"%s\"."
 msgstr ""
 "Kann den Verschlüsselungs-Service für den Benutzer \"%s\" nicht einrichten."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:91
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:68
+msgid "Move project posters from database to filesystem storage."
+msgstr "Verschiebe die Projekt-Plakate aus der Datenbank in das Dateisystem."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:96
 #, php-format
 msgid ""
 "The project \"%1$s\" already has the following file-system images: \"%2$s\"."
@@ -2704,14 +2704,14 @@ msgstr ""
 "Für das Projekt \"%1$s\" existieren bereits die folgenden Bilder im "
 "Dateisystem: \"%2$s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:103
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:108
 #, php-format
 msgid "Unable to fetch data-base image \"%1$d\" for project \"%2$s\"."
 msgstr ""
 "Konnte das Bild \"%1$d\" für das Projekt \"%2$s\" nicht aus der Datenbank "
 "laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:140
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/MoveProjectPosters.php:146
 #, php-format
 msgid ""
 "Unable to move data-base image id \"%1$d\" of project \"%2$s\" to file-"
@@ -2720,7 +2720,19 @@ msgstr ""
 "Konnte das Bild mit der Id \"%1$d\" des Projekts \"%2$s\" nicht aus der\n"
 "Datenbank in den Datensystem-Speicher mit Dateinamen \"%3$s\" verschieben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/Version00000000000002.php:122
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/Version00000000000000.php:60
+msgid "Initial database setup."
+msgstr "Datenbank-Initialisierung."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/Version00000000000001.php:43
+msgid "Create MySQL stored functions and procedures."
+msgstr "MySQL \"Stored-Functions\" und \"-Procedures\" erzeugen."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/Version00000000000002.php:46
+msgid "Create views for user_sql auth backend."
+msgstr "Ansichten für das \"user_sql\" Backend der Cloud erzeugen."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Maintenance/Migrations/Version00000000000002.php:127
 #, php-format
 msgid ""
 "Cloud database server \"%s\" and app database server \"%s\" must coincide."
@@ -2728,15 +2740,19 @@ msgstr ""
 "Cloud-Datenbankserver \"%s\" und App-Datenbankserver \"%s\" müssen "
 "übereinstimmen.<\n"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/GroupMemberMiddleware.php:66
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/GroupMemberMiddleware.php:65
 msgid "Logged in user must be a member of the orchestra group"
 msgstr "Angemeldeter Benutzer muss ein Mitglied der Orchestergruppe sein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/SubadminMiddleware.php:70
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/SubadminMiddleware.php:72
 msgid "Logged in user must be a subadmin of the orchestra group"
 msgstr ""
 "Angemeldeter Benutzer muss ein Gruppenadministrator für die Orchester-Gruppe "
 "sein"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Middleware/SubadminMiddleware.php:77
+msgid "Logged in user account must be the service-account of the orchester app"
+msgstr "Angemeldeter Benutzer muss die Service-Strohpuppe der Orchester-App sein."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:117
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:243
@@ -2910,7 +2926,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:483
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:304
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:477
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:267
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:260
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -2924,8 +2940,8 @@ msgid "Revert to default"
 msgstr "Auf Voreinstellung zurücksetzen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:595
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:279
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:286
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:293
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:498
 msgid "Actions"
 msgstr "Aktionen"
@@ -3381,7 +3397,7 @@ msgstr "Foto"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:788
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:958
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:448
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:441
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -3398,8 +3414,8 @@ msgstr "Alle zu %s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PME/Config.php:55
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:549
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:677
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:741
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:670
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:734
 msgid "Em@il"
 msgstr "Em@il"
 
@@ -3531,8 +3547,8 @@ msgid "Instrumentation Numbers for `%s'"
 msgstr "Besetzungszahlen für `%s'"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:102
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:641
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:747
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:634
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:740
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:621
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
@@ -3852,47 +3868,47 @@ msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:135
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:128
 #, php-format
 msgid "%s Project %s"
 msgstr "%s Projekt %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:139
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:132
 #, php-format
 msgid "%s Projects"
 msgstr "%s Projekte"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:240
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:233
 msgid "Projekt-Name"
 msgstr "Projekt-Name"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:274
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:267
 msgid "Kind"
 msgstr "Art"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:305
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:298
 msgid "Toolbox"
 msgstr "Werkzeuge"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:324
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:317
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:364
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:646
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:357
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:639
 msgid "Extra Member Data"
 msgstr "Teilnehmer-Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:398
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:391
 msgid "Program"
 msgstr "Programm"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:414
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:407
 msgid "Posters"
 msgstr "Plakate"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:503
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:556
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:496
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:549
 msgid ""
 "Posters can only be added to existing projects, please add the new\n"
 "project without a poster first."
@@ -3900,34 +3916,34 @@ msgstr ""
 "Plakate leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Plakate anlegen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:529
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:584
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:522
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:577
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:532
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:587
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:525
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:580
 msgid "Delete current poster"
 msgstr "Aktuelles Plakat löschen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:533
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:588
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:526
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:581
 msgid "Edit current poster"
 msgstr "Aktuelles Plakat editieren"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:534
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:589
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:527
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:582
 msgid "Upload new poster"
 msgstr "Neues Poster hochladen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:535
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:590
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:528
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:583
 msgid "Select image from Cloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:541
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:596
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:534
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:589
 msgid ""
 "Internal error, don't know what to do concerning project-posters in the "
 "given context."
@@ -3935,44 +3951,44 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Postern "
 "umgegangen werden sollte."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:626
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:619
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:636
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:629
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:591
 msgid "Participants"
 msgstr "Teillnehmer"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:655
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:648
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:663
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:725
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:656
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:718
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:665
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:729
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:658
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:722
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:671
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:735
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:664
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:728
 msgid "Events"
 msgstr "Termine"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:687
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:680
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:694
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:687
 msgid "Payments"
 msgstr "Zahlungen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:701
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:694
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
@@ -4355,7 +4371,7 @@ msgstr ""
 msgid "Folder \\`%s' could not be created"
 msgstr "Der Ordner `%s' konnte nicht erzeugt werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:1036
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ConfigCheckService.php:1038
 #, php-format
 msgid "Unapplied migrations: %s."
 msgstr "Ausstehende Datenmigrationen: %s."
@@ -4787,12 +4803,16 @@ msgstr ""
 msgid "Placeholder Image"
 msgstr "Platzhalter-Bild"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ImagesService.php:312
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ImagesService.php:264
+msgid "Images path must not be empty."
+msgstr "Der Pfad der Bilddatei darf nicht leer sein."
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ImagesService.php:320
 #, php-format
 msgid "Image-id \"%s\" must be identical to the file-name \"%s\" or %d."
 msgstr "Bild-Id \"%s\" muss identisch zum Dateinamen \"%s\" sein oder %d."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ImagesService.php:421
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ImagesService.php:429
 #, php-format
 msgid ""
 "Unable to find image link for ownerId/imageId \"%s/%s\" in join-table \"%s\"."
@@ -4816,7 +4836,7 @@ msgstr "Nirgends"
 msgid "42, Undiscoverable"
 msgstr "Unauffindbarweg 42"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/MigrationsService.php:100
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/MigrationsService.php:130
 #, php-format
 msgid "Migration %s has failed to execute."
 msgstr "Datenmigration %s konnte nicht ausgeführt werden."
@@ -4938,17 +4958,17 @@ msgstr ""
 "Nur Sammlungen von Teilnehmenden-Feldern können gefiltert werden, nicht aber "
 "\"%s\"-Klassen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:409
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:417
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:615
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:623
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:661
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:669
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -5007,78 +5027,78 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:779
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:787
 msgid "Preview"
 msgstr "Vorschau"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:781
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:833
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:979
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1017
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1074
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:789
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:841
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:987
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1025
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1082
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Settings/PersonalForm.php:275
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:783
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:791
 msgid "Archive"
 msgstr "Archiv"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:785
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:793
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:827
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:835
 msgid "Empty project-id"
 msgstr "Fehlende Projekt-Id"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:854
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:862
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:877
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:885
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:902
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:910
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:938
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:946
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:962
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:970
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1118
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1126
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1154
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1162
 #, php-format
 msgid "Unable to fetch musician's personal information for id %d."
 msgstr "Kann die persönlichen Daten des Musiker zur Id %d nicht ermitteln."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1170
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1178
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1191
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1199
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1239
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1247
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -5087,26 +5107,26 @@ msgstr ""
 "Der Musiker \"%s\" spielt kein einziges Instrument, das in der "
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1268
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1276
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1276
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1284
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1345
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1353
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1616
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1617
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1648
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1649
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -5116,7 +5136,7 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1653
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1654
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
@@ -7841,8 +7861,8 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:61
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:158
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/inlineimage.js:429
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1023
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1035
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1026
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1038
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/legacy/calendar/calendar.js:303
 msgid "Error"
 msgstr "Fehler"
@@ -8011,8 +8031,8 @@ msgstr "Wähle aus den Optionen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/chosen-popup.js:38
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/sepa-debit-mandate.js:532
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:188
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:209
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:196
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:219
 msgid "Save"
 msgstr "Speichern"
 
@@ -8036,30 +8056,30 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:56
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:61
 msgid ""
 "Data-migrations need to be performed before proceeding to the orchestra app."
 msgstr ""
 "Daten-Migrationen müssen vorgenommen werden, bevor die Orchester-App "
 "gestartet werden kann."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:60
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:65
 msgid "Click the \"ok\" button to start the migrations."
 msgstr "Den \"ok\"-Button anklicken, um die Daten-Migration zu starten."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:61
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:66
 msgid "Data Migration"
 msgstr "Daten-Migration"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:70
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:75
 msgid "Successfully applied the following migrations:"
 msgstr "Die folgenden Daten-Migrationen wurden erfolgreich ausgeführt:"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:77
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:82
 msgid "Redirecting to the orchestra app in {timeout} seconds."
 msgstr "Leite in {timeout} Sekunden zur Orchester-App weiter."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:95
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/configcheck.js:100
 msgid "Unable to download test-letter."
 msgstr "Kann den Test-Brief nicht herunter laden."
 
@@ -8709,24 +8729,24 @@ msgstr "Bitte warten, das dauert jetzt ein wenig!"
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:386
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:592
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:397
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:595
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:987
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:990
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1023
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1026
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1034
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1037
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1175
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/settings.js:1178
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
@@ -9809,15 +9829,16 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:57
 msgid ""
-"You need to specify a name for the orchestra.  Please click as\n"
-"group-administrator on the gear-symbol in the top-right corner and\n"
-"specify a short-hand name for the orchestra in the\n"
-"`Administration'-tab. This is just a tag to provide defaults for\n"
+"You need to specify a name for the orchestra.  Please access the\n"
+"app-settings through the settings-menu in the upper right corner\n"
+"and specify a short-hand name for the orchestra in the\n"
+"\"Administration\"-tab. This is just a tag to provide defaults for\n"
 "user-ids and folders; it should be a short one-word identifier."
 msgstr ""
-"Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als Gruppen-"
-"Administrator können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und "
-"im `Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine "
+"Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als\n"
+"Gruppen-Administrator können Sie dazu auf die App-Einstellungen über\n"
+"das Einstellungs-Menü oben rechts errechen und und im\n"
+"`Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine\n"
 "Kurzbezeichnung, typischerweise ein einzelnes, kurzes Wort. "
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:62
@@ -9829,27 +9850,40 @@ msgstr ""
 "einem Administrator-Account ein."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:65
-#, php-format
+#, fuzzy, php-format
+#| msgid ""
+#| "You need to create a dummy-user which owns all shared resources\n"
+#| "(calendars, files etc.). You need to be a group-admin for the\n"
+#| "orchestra user group `%s' to do so. You can create the share-owner\n"
+#| "uid by setting the respective field in the application settings menu\n"
+#| "(click as group-admin on the gear-symbol in the top-right corner and\n"
+#| "choose the `Sharing'-tab)."
 msgid ""
 "You need to create a dummy-user which owns all shared resources\n"
 "(calendars, files etc.). You need to be a group-admin for the\n"
-"orchestra user group `%s' to do so. You can create the share-owner\n"
-"uid by setting the respective field in the application settings menu\n"
-"(click as group-admin on the gear-symbol in the top-right corner and\n"
-"choose the `Sharing'-tab)."
+"orchestra user group \"%s\" to do so. You can create the share-owner\n"
+"uid by setting the respective field in the application settings menu in the\n"
+"\"Sharing\"-tab)."
 msgstr ""
 "Sie müssen eine Benutzer-`Strohpuppe' anlegen, der alle gemeinsamen "
 "Resourcen gehören. Als Gruppen-Administrator für die Orchestergruppe `%s' "
 "können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Sharing'-"
 "Reiter diese Einstellung vornehmen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:73
-#, php-format
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:72
+#, fuzzy, php-format
+#| msgid ""
+#| "You need to create a dedicated shared folder shared among the\n"
+#| "user-group `%s'. You can do so through the respective web-form in the\n"
+#| "application settings windows accessible through the gear-symbol in the\n"
+#| "top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
+#| "the settings-window. You need to be a group-admin, otherwise the\n"
+#| "application settings are not visible for you."
 msgid ""
 "You need to create a dedicated shared folder shared among the\n"
-"user-group `%s'. You can do so through the respective web-form in the\n"
-"application settings windows accessible through the gear-symbol in the\n"
-"top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
+"user-group \"%s\". You can do so through the respective web-form in the\n"
+"application settings windows accessible through the settings-menu in the\n"
+"top-right corner. Choose the \"Sharing\"-tab in\n"
 "the settings-window. You need to be a group-admin, otherwise the\n"
 "application settings are not visible for you."
 msgstr ""
@@ -9859,16 +9893,25 @@ msgstr ""
 "klicken und die entsprechenden Einstellungen im `Sharing'-Reiter\n"
 "vornehmen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:80
-msgid "blah"
-msgstr "blah"
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:79
+#, fuzzy
+#| msgid "\"%s\" does not exist or is unaccessible."
+msgid "Shared addressbooks do not exist or are inaccessible."
+msgstr "\"%s\" existiert nicht oder ist nicht erreichbar."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:81
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:80
+#, fuzzy
+#| msgid ""
+#| "You need to configure the database access. You can do so through the\n"
+#| "respective web-form in the application settings windows accessible\n"
+#| "through the gear-symbol in the upper left corner. Click on the\n"
+#| "gear-symbol and choose the `Administration'-tab.You need to be a\n"
+#| "group-admin, otherwise the application settings are not visible for\n"
+#| "you."
 msgid ""
 "You need to configure the database access. You can do so through the\n"
 "respective web-form in the application settings windows accessible\n"
-"through the gear-symbol in the upper left corner. Click on the\n"
-"gear-symbol and choose the `Administration'-tab.You need to be a\n"
+"through the settings-menu in the upper right corner. You need to be a\n"
 "group-admin, otherwise the application settings are not visible for\n"
 "you."
 msgstr ""
@@ -9877,13 +9920,23 @@ msgstr ""
 "rechts klicken und die erforderlichen Einstellungen im\n"
 "`Verwaltung'-Reiter vornehmen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:89
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:87
+#, fuzzy
+#| msgid ""
+#| "You may want to set an encryption key for encrypting configuration\n"
+#| "values and (in the future) sensitive data in the members- and project\n"
+#| "database.  You can do so through the respective web-form in the\n"
+#| "application settings windows accessible through the gear-symbol in the\n"
+#| "upper left corner. You need to be a group-admin, otherwise the\n"
+#| "application settings are not visible for you. Note also that after\n"
+#| "installing a non-empty encryption key each user has to log-out and\n"
+#| "log-in again in order to be able to access the encrypted values."
 msgid ""
 "You may want to set an encryption key for encrypting configuration\n"
 "values and (in the future) sensitive data in the members- and project\n"
 "database.  You can do so through the respective web-form in the\n"
-"application settings windows accessible through the gear-symbol in the\n"
-"upper left corner. You need to be a group-admin, otherwise the\n"
+"application settings windows accessible through the settings-menu in the\n"
+"upper right corner. You need to be a group-admin, otherwise the\n"
 "application settings are not visible for you. Note also that after\n"
 "installing a non-empty encryption key each user has to log-out and\n"
 "log-in again in order to be able to access the encrypted values."
@@ -9896,19 +9949,19 @@ msgstr ""
 "nachdem ebenfalls im `Verwaltung'-Reiter der Knopf `Schlüssel publiczieren' "
 "aktiviert wurde."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:108
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:106
 msgid "Test again"
 msgstr "Erneut testen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:167
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:165
 msgid "You are a group administrator."
 msgstr "Sie sind Gruppen-Administrator."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:168
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:166
 msgid "You are not a group administrator."
 msgstr "Sie sind kein Gruppenadministrator."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:170
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:168
 #, php-format
 msgid ""
 "Ask a user with group-administrator rights to perform the required\n"
@@ -9919,34 +9972,34 @@ msgstr ""
 "erforderlichen Einstellungen vorzunehmen, oder fragen Sie einen Owncloud-"
 "Administrator, Ihnen diese Rolle für die Orchester-Gruppe `%s' gewähren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:188
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:222
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:239
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:186
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:220
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:237
 msgid "Additional diagnostic message:"
 msgstr "Weitere Fehlermeldungen:"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:193
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:235
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:191
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:233
 msgid "is set"
 msgstr "ist eingestellt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:198
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:196
 msgid "is set, but inaccessible"
 msgstr "ist eingestellt, kann aber nicht darauf zugreifen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:203
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:201
 msgid "is not set"
 msgstr "ist nicht eingestellt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:218
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:216
 msgid "not needed"
 msgstr "nicht benötigt"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:218
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:216
 msgid "data needs migration"
 msgstr "es müssen Daten migriert werden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:235
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/maintenance/configcheck.php:233
 msgid "is missing"
 msgstr "fehlt"
 
@@ -10756,7 +10809,6 @@ msgid "Locale Information:"
 msgstr "Locale Information:"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:32
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:33
 msgid "Share owner"
 msgstr "Share-Strohpuppe"
 
@@ -10766,25 +10818,25 @@ msgstr "Share-Strohpuppe"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:39
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:105
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:126
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:144
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:164
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:186
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:207
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:224
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:243
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:265
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:128
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:148
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:170
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:194
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:217
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:236
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:257
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:281
 msgid "force"
 msgstr "zwingen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:41
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:107
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:128
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:146
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:166
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:226
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:245
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:267
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:130
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:150
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:172
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:238
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:259
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:283
 msgid "Check"
 msgstr "Überprüfen"
 
@@ -10797,7 +10849,6 @@ msgid "Change"
 msgstr "Ändern"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:56
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:58
 msgid "Calendars"
 msgstr "Kalender"
 
@@ -10838,7 +10889,6 @@ msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:80
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:82
 msgid "Contacts"
 msgstr "Kontakte"
 
@@ -10856,7 +10906,6 @@ msgid "Addresbook for Musicians"
 msgstr "Adressbuch für Musiker"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:91
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:93
 msgid "Shared folder"
 msgstr "Gemeinsamer Ordner"
 
@@ -10864,53 +10913,53 @@ msgstr "Gemeinsamer Ordner"
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:120
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:122
 msgid "Postbox-Folder"
 msgstr "Briefkasten-Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:138
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:142
 msgid "Document templates folder"
 msgstr "Dokumentenvorlagen-Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:156
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:162
 msgid "Project folder"
 msgstr "Projekt-Dateien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:160
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:171
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:193
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:261
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:166
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:179
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:203
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:277
 msgid "YEAR"
 msgstr "JAHR"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:161
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:172
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:194
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:262
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:167
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:180
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:204
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:278
 msgid "PROJECT"
 msgstr "PROJEKT"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:179
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:187
 msgid "Participants Folder"
 msgstr "Teilnehmenden Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:183
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:191
 msgid "john.doe"
 msgstr "lieschen.mueller"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:201
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:211
 msgid "Posters Folder"
 msgstr "Plakat-Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:218
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:230
 msgid "finance folder"
 msgstr "Finanz-Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:237
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:251
 msgid "transactions"
 msgstr "Bankaufträge"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:256
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:272
 msgid "balances"
 msgstr "Bilanzen"
 
@@ -11538,6 +11587,13 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid "Failed to create new shared folder\"%s\"."
+#~ msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
+
+#~ msgid "blah"
+#~ msgstr "blah"
 
 #~ msgid "Unable to fetch data-base images, assuming they do not exist."
 #~ msgstr ""
