@@ -82,7 +82,7 @@ function documentReady() {
                   'Redirecting to the orchestra app in {timeout} seconds.',
                   { timeout: redirectTimeout }));
                 setTimeout(function() {
-                  window.location.replace(webRoot);
+                  window.location.reload();
                 }, redirectTimeout * 1000);
               });
           },
