@@ -159,12 +159,16 @@ class MoveProjectPosters implements IMigration
         $sql = 'SELECT COUNT(*) FROM ' . self::POSTERS_JOIN_TABLE;
         $stmt = $connection->prepare($sql);
         $numPosters = $stmt->executeQuery()->fetchOne();
-        $this->logInfo('Number of posters remaining: ', $numPosters);
+        $numPosters = filter_var($numPosters, FILTER_VALIDATE_INT, ['min_range' => 0]);
+        $this->logInfo('Number of posters remaining: ' . $numPosters);
         if ($numPosters === 0) {
           $this->logInfo('Removing join table ' . self::POSTERS_JOIN_TABLE);
           $connection->query('DROP TABLE ' . self::POSTERS_JOIN_TABLE);
+        } else {
+          $this->logInfo('Keeping join-table ' . self::POSTERS_JOIN_TABLE . ' as it still contains ' . $numPosters . ' entries.');
         }
       } catch (\Throwable $t) {
+        $this->logException($t);
         ++$numFailures;
       }
     }
