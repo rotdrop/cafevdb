@@ -50,7 +50,7 @@ class Storage extends AbstractStorage
   protected $filesRepository;
 
   /** @var string */
-  private $root;
+  protected $root;
 
   public function __construct($params)
   {

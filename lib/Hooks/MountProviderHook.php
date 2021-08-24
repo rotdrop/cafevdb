@@ -50,13 +50,14 @@ class MountProviderHook
     $this->logger = $logger;
     $this->mountProviderCollection = $mountProviderCollection;
     $this->mountProvider = $mountProvider;
+    // $this->logInfo('CONNECTING TO ' . self::SIGNAL_CLASS . '::' . self::SIGNAL_NAME);
     \OCP\Util::connectHook(self::SIGNAL_CLASS, self::SIGNAL_NAME, $this, self::SIGNAL_HANDLER);
   }
 
   public function handler($arguments)
   {
-    //$this->logInfo(print_r($arguments, true));
-    //$this->logException(new \Exception(''));
+    // $this->logInfo(print_r($arguments, true));
+    // $this->logException(new \Exception(''));
     $this->mountProviderCollection->registerProvider($this->mountProvider);
   }
 }

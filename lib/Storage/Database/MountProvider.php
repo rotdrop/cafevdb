@@ -49,6 +49,8 @@ class MountProvider implements IMountProvider
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  private static $recursionLevel = 0;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -67,14 +69,22 @@ class MountProvider implements IMountProvider
    */
   public function getMountsForUser(IUser $user, IStorageFactory $loader)
   {
+    if (self::$recursionLevel > 0) {
+      // the getNode() stuff below triggers recursion.
+      $this->logDebug('RECURSION: ' . self::$recursionLevel);
+      return [];
+    }
+
     if (!$this->inGroup($user->getUID())) {
       return [];
     }
 
     if (!$this->entityManager->connected()) {
-      $this->logDebug('EntityManager is not connected');
+      $this->logDebug('EntityManager is not connected for user ' . $user->getUID());
       return [];
     }
+
+    self::$recursionLevel++;
 
     $sharedFolder = $this->getSharedFolderPath();
 
@@ -83,17 +93,24 @@ class MountProvider implements IMountProvider
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
       $this->logException(new \Exception('NO shared folder for ' . $user->getUID()));
+      --self::$recursionLevel;
       return [];
     }
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
     try {
-      $node = $node->get('projects');
+      $node = $node->get($projectsFolder);
       if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-        $this->logException(new \Exception('NO projects folder'));
+        $this->logException(new \Exception('NO projects folder for ' . $user->getUID()));
+        --self::$recursionLevel;
         return [];
       }
     } catch (\Throwable $t) {
+      $this->logException(new \Exception('NO projects folder ' . $projectsFolder . ' for ' . $user->getUID()));
+      --self::$recursionLevel;
       return [];
     }
+
+    $this->logDebug($user->getUID() . ' ' . $sharedFolder);
 
     $mounts = [];
 
@@ -190,6 +207,7 @@ class MountProvider implements IMountProvider
       }
     }
 
+    --self::$recursionLevel;
     return $mounts;
   }
 }
