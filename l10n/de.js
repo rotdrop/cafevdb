@@ -1811,7 +1811,7 @@ OC.L10N.register(
     "Link to cloud Developer Information" : "Web-Verweis auf die Cloud-Entwickler-Dokumentation",
     "Ambient cloud provider developer documentation" : "Cloud-Software Entwickler-Dokumentation",
     "Link for uploading CSP failure information" : "Link für die Meldung von CSP-Fehlern",
-    "CSP-failure upload link" : "CSP-Fehle Upload-Link",
+    "CSP-failure upload link" : "CSP-Fehler Upload-Link",
     "Server Settings" : "Server-Einstellungen",
     "security" : "Sicherheit",
     "Email Account" : "Em@il Account",
