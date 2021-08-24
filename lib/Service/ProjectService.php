@@ -534,7 +534,7 @@ class ProjectService
    */
   public function ensurePostersFolder($projectOrId, bool $dry = false)
   {
-    list('posters' => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
+    list(self::FOLDER_TYPE_POSTERS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
     return $path;
   }
 
@@ -553,7 +553,7 @@ class ProjectService
    */
   public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
   {
-    $parentPath = array_shift($this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry));
+    list(self::FOLDER_TYPE_PARTICIPANTS => $parentPath,) = $this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry);
     $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
     $participantFolder = $parentPath.UserStorage::PATH_SEP.$userIdSlug;
     if (!$dry) {
