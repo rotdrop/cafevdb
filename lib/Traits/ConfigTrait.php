@@ -346,6 +346,22 @@ trait ConfigTrait {
   }
 
   /**
+   * Return the full path to the finance folder.
+   */
+  protected function getProjectsFolderPath()
+  {
+    $sharedFolder = $this->getSharedFolderPath();
+    if (empty($sharedFolder)) {
+      return null;
+    }
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    if (empty($projectsFolder)) {
+      return null;
+    }
+    return '/' . $sharedFolder . '/' . $projectsFolder;
+  }
+
+  /**
    * Return the full path to the document templates folder.
    */
   protected function getDocumentTemplatesPath()
