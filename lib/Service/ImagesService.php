@@ -182,6 +182,9 @@ EOT;
         if ($joinTable == self::DATABASE_STORAGE) {
           // plain data-base id without join table
           $dbImage = $imagesRepository->find($imageId);
+          if (empty($dbImage)) {
+            $this->logInfo('Unable to load image with id ' . $imageId);
+          }
         } else {
           $joinTableClass = $imagesRepository->joinTableClass($joinTable);
           $this->logDebug("cooked table: ".$joinTableClass);
