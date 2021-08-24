@@ -142,7 +142,7 @@ class CalDavService
       return false;
     }
     $this->calDavBackend->updateShares($calendar, [$share], []);
-    return $this->isGroupSharedCalendar($calendarId, $groupid, $readOnly);
+    return $this->isGroupSharedCalendar($calendarId, $groupId, $readOnly);
   }
 
   /**
