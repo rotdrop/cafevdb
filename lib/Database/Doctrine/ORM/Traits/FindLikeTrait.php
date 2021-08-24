@@ -290,7 +290,7 @@ trait FindLikeTrait
     $indexBy = $queryParts['indexBy']?:['mainTable' => null];
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
     foreach (array_keys($queryParts['joinEntities']) as $association) {
-      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association]);
+      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association] ?? null);
     }
     if (!empty($select)) {
       $qb->select($select);
