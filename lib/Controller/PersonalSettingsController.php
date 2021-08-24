@@ -1209,7 +1209,7 @@ class PersonalSettingsController extends Controller {
           return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
         }
       } catch(\Exception $e) {
-        $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+        $this->logException($e, sprintf('Failure checking calendar "%1$s".', $real));
         return self::grumble(
           $this->l->t('Failure checking calendar "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
