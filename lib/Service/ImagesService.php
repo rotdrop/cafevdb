@@ -125,6 +125,7 @@ EOT;
   public function getImage($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY)
   {
     $image = null;
+    $fileName = null;
 
     try {
       switch ($joinTable) {
@@ -197,7 +198,7 @@ EOT;
 
           $joinTableEntity = $joinTableRepository->findOneBy($findBy);
           if ($joinTableEntity == null) {
-            $this->logInfo('NOT FOUND ' . $findBy);
+            $this->logDebug('NOT FOUND ' . print_r($findBy, true));
             break;
           }
 

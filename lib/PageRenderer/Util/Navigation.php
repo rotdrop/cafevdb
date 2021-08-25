@@ -367,7 +367,7 @@ class Navigation
       $value = ' value="'.Util::htmlEscape((isset($tag['value']) ? $tag['value'] : $name)).'"';
       $title = ' title="'.(isset($tag['title']) ? $tag['title'] : $name).'"';
       $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
-      $class = ' class="'.$tag['class'].'"';
+      $class = empty($tag['class']) ? '' : ' class="'.$tag['class'].'"';
       $disabled = (isset($tag['disabled']) && $tag['disabled']) ? ' disabled' : '';
       $data = '';
       if (isset($tag['data'])) {
@@ -427,7 +427,7 @@ class Navigation
           ';
         break;
       case 'input':
-        $style = isset($tag['style']) ? $tag['style'] : '';
+        $style = !empty($tag['style']) ? $tag['style'] : '';
         if (isset($tag['image'])) {
           $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
           $value  = '';
@@ -439,6 +439,8 @@ class Navigation
                   ';
         break;
       case 'option':
+        $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
+        $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
         $selected = '';
         if (isset($tag['selected']) && $tag['selected'] !== false) {
           $selected = ' selected="selected"';
