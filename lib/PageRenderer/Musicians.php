@@ -553,7 +553,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['projects'] = [
       'tab' => ['id' => 'orchestra'],
       'input' => 'VR',
-      'options' => 'LFVC',
+      'options' => 'LFVCD',
       'select' => 'M',
       'name' => $this->l->t('Projects'),
       'sort' => true,
@@ -822,7 +822,7 @@ make sure that the musicians are also automatically added to the
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
 
-    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
 
     $opts = $this->mergeDefaultOptions($opts);
 
@@ -831,6 +831,42 @@ make sure that the musicians are also automatically added to the
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * This is a phpMyEdit before-SOMETHING trigger.
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldValues Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newValues Set of new values, which may also be modified.
+   *
+   * @return boolean If returning @c false the operation will be terminated
+   */
+  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $entity = $this->getDatabaseRepository($this->joinStructure[self::TABLE]['entity'])
+                   ->find($pme->rec);
+
+    /** @var Entities\Musician $entity */
+    $this->remove($entity, true); // this should be soft-delete
+    if ($entity->unused()) {
+      $this->logInfo($entity->getPublicName() . ' is unused, issuing hard-delete');
+      $this->remove($entity, true); // this should be soft-delete
+    }
+    $changed = []; // disable PME delete query
+
+    return true; // but run further triggers if appropriate
   }
 
 }
