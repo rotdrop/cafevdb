@@ -392,7 +392,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $this->logError('Rolling back SQL transaction ...');
       $this->preCommitActions->executeUndo();
       $this->pme->rollBack();
-      throw new \Exception($this->l->t('SQL Transaction failed.'), $t->getCode(), $t);
+      throw new \Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), $t->getCode(), $t);
     }
   }
 
@@ -1932,6 +1932,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * ```
    * [ 'musician' => MUSICIAN_ENTITY, 'categories' => ADDRESSBOOK_CATEGORIES ]
    * ```
+   *
+   * @bug This should be moved to a trait for reuse only in classes needing it.
    */
   protected function musicianFromRow($row, ?PHPMyEdit $pme)
   {
@@ -1939,7 +1941,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
     foreach($pme->fds as $idx => $label) {
-      $data[$label] = $row['qf'.$idx];
+      if (isset($row['qf'.$idx])) {
+        $data[$label] = $row['qf'.$idx];
+      }
     }
     $categories = [];
     $musician = new Entities\Musician();

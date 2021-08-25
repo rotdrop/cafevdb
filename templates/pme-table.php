@@ -44,7 +44,7 @@ try {
   ob_end_clean();
 } catch (\Throwable $t) {
   ob_end_clean();
-  throw new \Exception("Renderer failed", $t->getCode(), $t);
+  throw new \Exception($l->t('Renderer failed: %s', $t->getMessage()), $t->getCode(), $t);
 }
 
 //echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
