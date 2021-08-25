@@ -115,8 +115,14 @@ pre-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer namespace-wrapper npm
+build: pre-build composer namespace-wrapper npm-build
 .PHONY: build
+
+#@@ Fetches the PHP and JS dependencies and compiles the JS.
+#@ If no composer.json is present, the composer step is skipped, if no
+#@ package.json or js/package.json is present, the npm step is skipped
+dev: pre-build composer namespace-wrapper npm-dev
+.PHONY: dev
 
 .PHONY: comoser-download
 composer-download:
@@ -192,9 +198,13 @@ npm-init: node-hacks
 
 # Installs npm dependencies
 .PHONY: npm
-npm: npm-init
+npm: npm-dev
+
+.PHONY: npm-dev
+npm-dev: npm-init
 	npm run dev
 
+.PHONY: npm-build
 npm-build: npm-init
 	npm run build
 
