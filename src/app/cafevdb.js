@@ -450,6 +450,9 @@ const toolTipsInit = function(containerSel) {
   container.find('input[class*="pme-filter"]').cafevTooltip(
     { placement: 'bottom', cssclass: 'tooltip-wide' }
   );
+  container.find('td.pme-sys ~ td.pme-data .info').cafevTooltip(
+    { placement: 'bottom', cssclass: 'tooltip-wide' }
+  );
 
   container.find('[class*="tooltip-"]').each(function(index) {
     // console.log("tooltip autoclass", $(this), $(this).attr('title'));
