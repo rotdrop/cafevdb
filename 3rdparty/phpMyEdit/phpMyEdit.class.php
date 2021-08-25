@@ -274,7 +274,7 @@ class phpMyEdit
 
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
-	function col_needs_having($k) { return @$this->fdd[$k]['filter'] == 'having'; }
+	function col_needs_having($k) { return !empty($this->fdd[$k]['filter']['having']); }
 	function col_has_join($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['join']); }
 	function col_has_description($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['description']); }
 	function col_has_values($k) {
@@ -1667,6 +1667,9 @@ class phpMyEdit
 
 	function gather_query_opts() /* {{{ */
 	{
+		// gathers query options into an array, $this->query_opts or
+		// $this->query_group_opts. The latter is needed if the field
+		// is an aggregate.
 		$this->query_opts = array();
 		$this->query_group_opts = array();
 		$this->prev_qfn	  = $this->qfn;
@@ -1674,11 +1677,6 @@ class phpMyEdit
 		if ($this->clear_operation()) {
 			return;
 		}
-		// gathers query options into an array, $this->query_opts or
-		// $this->query_group_opts. The latter is needed if the field
-		// is an aggregate.
-		$query_opts = array();
-		$query_group_opts = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$l	  = 'qf'.$k;
 			$lc	  = $l.'_comp';
@@ -1705,13 +1703,15 @@ class phpMyEdit
 			} else {
 				$qo = &$this->query_opts;
 			}
+			$fqn_flags = $this->fdd[$k]['filter']['flags'] ?? null;
 
 			if (is_array($m) || is_array($mi)) {
-				$fqn_flags = self::COOKED;
 				if (is_array($mi)) {
-					$fqn_flags = self::OMIT_DESC;
+					$fqn_flags = $fqn_flags ?? self::OMIT_DESC;
 					$m = $mi;
 					$l = $li;
+				} else {
+					$fqn_flags = $fqn_flags ?? self::COOKED;
 				}
 				if (in_array('*', $m)) {
 					continue;
@@ -1745,9 +1745,10 @@ class phpMyEdit
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
-					$fqn_flags = isset($this->fdd[$k][self::FDD_VALUES]['description'])?self::OMIT_DESC:0;
+					$fqn_flags = $fqn_flags ??
+							   (isset($this->fdd[$k][self::FDD_VALUES]['description']) ? self::OMIT_DESC : self::COOKED);
 					$qo[$this->fqn($k, $fqn_flags)] =
-						array('oper'  => $qf_op, 'value' => "($qf_val)"); // )
+						array('oper' => $qf_op, 'value' => "($qf_val)"); // )
 				}
 			} else if (isset($mi)) {
 				if ($mi == '*') {
@@ -1759,7 +1760,7 @@ class phpMyEdit
 					continue;
 				}
 				$afilter = addslashes($mi);
-				$qo[$this->fqn($k, true, true)] = array('oper'	=> '=', 'value' => "'$afilter'");
+				$qo[$this->fqn($k, $fqn_flags ?? self::OMIT_DESC|self::OMIT_SQL)] = array('oper'	=> '=', 'value' => "'$afilter'");
 				$this->qfn .= '&'.$this->cgi['prefix']['sys'].$li.'='.rawurlencode($mi);
 			} else if (isset($m)) {
 				if ($m == '*') {
@@ -1773,7 +1774,7 @@ class phpMyEdit
 				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
 					$afilter = addslashes($m);
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
-					$qo[$this->fqn($k)] = array('oper' => $mc, 'value' => "'$afilter'");
+					$qo[$this->fqn($k, $fqn_flags ?? self::COOKED)] = array('oper' => $mc, 'value' => "'$afilter'");
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
@@ -1827,7 +1828,7 @@ class phpMyEdit
 						$compare = 'notequal';
 					}
 
-					$sqlKey = $this->fqn($k);
+					$sqlKey = $this->fqn($k, $fqn_flags ?? self::COOKED);
 
 					switch ($compare) {
 					case 'equal':
@@ -1867,7 +1868,7 @@ class phpMyEdit
 					}
 
 					if (is_array($this->fdd[$k]['values2']??null)) {
-						$sqlKey = $this->fqn($k, true, true);
+						$sqlKey = $this->fqn($k, $fqn_flags ?? self::OMIT_DESC|self::OMIT_SQL);
 						switch ($compare) {
 						case 'equal':
 							if ($afilter == '') {
@@ -1928,8 +1929,6 @@ class phpMyEdit
 				}
 			}
 		}
-		//$this->query_opts = $query_opts;
-		//$this->query_group_opts  = $query_group_opts;
 	} /* }}} */
 
 	/*
@@ -4090,12 +4089,18 @@ class phpMyEdit
 			$css_class_name .= ' '.$this->getCSSclass('default');
 		}
 		$css_sys = $this->getCSSclass('sys');
-		echo '<tr class="',$css_class_name,'">',"\n";
-		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), $disabled);
+		$css_data = $this->getCSSclass('data');
+		$css_clear = $this->getCSSclass('clear');
+		$htmlSorting = join(', ', $this->sort_fields_w);
+		echo '<tr class="' . $css_class_name . '">' . "\n";
+		echo '<td class="' . $css_class_name . ' ' . $css_sys . '" colspan="' . $this->sys_cols . '">';
+		echo '<span class="' . $css_class_name . ' label">' . $this->labels['Sorting'] . ':' . '</span>';
+		echo $this->htmlSubmit('sfn', 'Clear', $css_clear, $disabled);
 		echo "</td>\n";
-		echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
-		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";
+		echo '<td class="' . $css_class_name . ' ' . $css_data . '" colspan="' . $this->num_fields_displayed . '">';
+		echo '<span class="' .$css_class_name . ' label">' . $this->labels['Sorted By'] . ':' . '</span>';
+		echo '<span class="' . $css_class_name . ' info" title="' . $htmlSorting . '">' . $htmlSorting . '</span>';
+		echo '</td></tr>',"\n";
 	} /* }}} */
 
 	function display_current_query() /* {{{ */
@@ -4123,15 +4128,16 @@ class phpMyEdit
 			}
 			echo '<tr class="',$css_class_name,'">',"\n";
 			echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],': </span>';
+			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],':</span>';
 			echo $this->htmlSubmit('sw', 'Clear', $css_clear, $disabled);
 			echo "</td>\n";
 			$htmlQuery = htmlspecialchars($text_query);
-			// $shortHtmlQuery = preg_replace('/`PMEtable[0-9]+`[.]/', '', $htmlQuery);
+			$shortHtmlQuery = preg_replace('/`PMEtable([0-9]+)`[.]/', 't$1.', $htmlQuery);
+			$shortHtmlQuery = preg_replace('/`PMEjoin([0-9]+)`[.]/', 'j$1.', $shortHtmlQuery);
 			// title="'.$htmlQuery.'"
 			echo '<td class="',$css_class_name,' ',$css_data,'" colspan="',$this->num_fields_displayed,'">';
-			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],': </span>';
-			echo '<span class="',$css_class_name,' info" title="',$htmlQuery,'">',$htmlQuery,'</span>';
+			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],':</span>';
+			echo '<span class="',$css_class_name,' info" title="',$htmlQuery,'">',$shortHtmlQuery,'</span>';
 			echo '</td></tr>',"\n";
 		}
 	} /* }}} */
@@ -4420,27 +4426,19 @@ class phpMyEdit
 					echo 'title="'.$this->fdd[$k]['tooltip'].'"';
 				}
 				echo '>';
+				// tri-state: sort off - > sort fwrd -> sort rvrs -> sort off
 				if (!$sorted) {
+					// sort off -> sort fwrd
 					echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'));
+				} else if ($forward) {
+					// sort fwrd -> sort rvrs
+					echo "\n  ".$this->htmlSubmit("rvrt[$k]", $this->labels['ascending'] . ' ' . $fdn, $this->getCSSclass('sort-rvrt'));
+					echo "\n  ".$this->htmlHiddenSys('sfn['.$sfnidx.']', $k);
 				} else {
-					echo "\n  ".$this->htmlSubmit("rvrt[$k]", $fdn, $this->getCSSclass('sort-rvrt'));
+					// sort rvrs -> sort off
+					echo "\n  ".$this->htmlHiddenSys('sfn['.$sfnidx.']', -$k);
+					echo "\n  ".$this->htmlSubmit('sfn['.$sfnidx.']',  $this->labels['descending'] . ' ' . $fdn, $this->getCSSclass('sort-off'));
 				}
-				echo '<BR/>'."\n";
-				echo '	<label class="'.$this->getCSSclass('sort')
-					.'" for="'.$this->cgi['prefix']['sys'].'srt-'.$k.'"'
-					.$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
-					.'>'."\n	  ".'<input class="'.$this->getCSSclass('sort')
-					.'" id="'.$this->cgi['prefix']['sys'].'srt-'.$k
-					.'" type="checkbox"  name="'.$this->cgi['prefix']['sys'].'sfn['.$sfnidx.']"'
-					.$this->fetchToolTip($this->getCSSclass('sort'), $this->cgi['prefix']['sys'].'sfn[]')
-					.' value="'.($backward ? "-$k" : $k).'"';
-				if ($forward || $backward) {
-					echo ' checked';
-				}
-				echo ' />'."\n	  ".'<div class="'.$this->getCSSclass('sort').'"'
-					/*.$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])*/
-					.'>'
-					.$this->labels['Sort Field'].'</div>'."\n	 ".'</label>';
 				echo '</th>'."\n";
 			}
 		}
@@ -6029,7 +6027,7 @@ class phpMyEdit
 		// at this point $this->filters is a normalized array
 
 		// HAVING filters
-		$this->having   = array('AND' => false, 'OR' => false);
+		$this->having = array('AND' => false, 'OR' => false);
 		if (isset($opts['having'])) {
 			$filters = $opts['having'];
 			if (!is_array($filters)) {

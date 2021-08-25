@@ -772,11 +772,13 @@ class ProjectParticipants extends PMETableViewBase
       'css'      => ['postfix' => ' projects tooltip-top'],
       'display|LVF' => ['popup' => 'data'],
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      //'filter' => 'having', // need "HAVING" for group by stuff
+      'filter' => [
+        'having' => false,
+        'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+      ],
       'values' => [
         'table' => self::PROJECTS_TABLE,
         'column' => 'name',
-        //'description' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
         'join' => '$join_table.id = '.$this->joinTables[self::TABLE].'.project_id'
@@ -870,13 +872,17 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('Remarks'),
         'maxlen'   => 65535,
-        'css'      => ['postfix' => ' remarks tooltip-top'],
+        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
         'textarea' => [
           'css' => 'wysiwyg-editor',
           'rows' => 5,
           'cols' => 50,
         ],
-        'display|LF' => ['popup' => 'data'],
+        'display|LF' => [
+          'popup' => 'data',
+          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
         'escape' => false,
       ]);
 

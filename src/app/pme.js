@@ -1352,7 +1352,6 @@ const pmeInit = function(containerSel) {
   const pmeFilter = pmeToken('filter');
   const pmeSearch = pmeToken('search');
   const pmeHide = pmeToken('hide');
-  const pmeSort = pmeToken('sort');
   const pmeGoto = pmeToken('goto');
   const pmePageRows = pmeToken('pagerows');
 
@@ -1419,12 +1418,7 @@ const pmeInit = function(containerSel) {
     return false;
   });
 
-  let onChangeSel =
-      'input[type="checkbox"].' + pmeSort
-      + ','
-      + 'select.' + pmeGoto
-      + ','
-      + 'select.' + pmePageRows;
+  let onChangeSel = 'select.' + pmeGoto + ',' + 'select.' + pmePageRows;
   if (!PHPMyEdit.selectChosen) {
     onChangeSel += ',' + 'select.' + pmeFilter;
   }

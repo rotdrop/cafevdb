@@ -41,6 +41,7 @@ return Array(
 		'Filter'			=>'Filter',
 		'Query'				=>'Query',
 		'Current Query'		=>'Current Query',
+		'Sorting'			=>'Sorting',
 		'Sorted By'			=>'Sorted By',
 		'ascending'			=>'ascending',
 		'descending'		=>'descending',

@@ -593,37 +593,6 @@ input.pme-delete-navigation {
   background:url(../img/pme-delete.png) no-repeat !important;
 }
 
-:not(.lt-ie9) input.pme-sort[type=checkbox] {
-  display:none;
-}
-div.pme-sort {
-  /* width:93px; */
-  /* height:14px; */
-  /* text-align:center; */
-  font-style:italic;
-  opacity:0.2;
-  display:inline-block;
-  cursor:pointer;
-}
-input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
-  /* width:93px; */
-  /* height:14px; */
-  /* background:url(../img/sortierfeld.png); */
-  /* text-align:center; */
-  opacity:1.0;
-  display:inline-block;
-}
-input.pme-sort-rvrt[type=submit] {
-  background-image:url('../img/ok_process-16x16.png');
-  background-repeat:no-repeat;
-  background-position:0px;
-  background-origin:padding-box;
-  background-clip:padding-box;
-  min-height:16px;
-  padding-left:16px;
-  overflow:visible;
-}
-
 td.pme-cell.register-musician {
   text-align:center;
 }
@@ -783,8 +752,8 @@ td.pme-sortinfo, td.pme-queryinfo {
   text-overflow:ellipsis;
 }
 
-tr.pme-queryinfo {
-  td.pme-queryinfo.pme-sys {
+tr.pme-queryinfo, tr.pme-sortinfo {
+  td.pme-sys {
     .label {
       font-weight:bold;
     }
@@ -800,7 +769,7 @@ tr.pme-queryinfo {
       background:url(../img/pme-delete.png) no-repeat !important;
     }
   }
-  td.pme-queryinfo.pme-data {
+  td.pme-data {
     .label {
       display:none;
     }
@@ -1019,88 +988,100 @@ th.pme-header.mandate-project, td.pme-cell.mandate-project {
   text-overflow:ellipsis;
 }
 
-table.pme-main td.pme-cell.restrict-height .pme-cell-wrapper,
-table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-wrapper {
-  display:block;
-  max-height:24px;
-  overflow:hidden;
-}
+table.pme-main {
 
-/* Restrict height of buttons in list view */
-table.pme-main td.pme-cell.restrict-height .pme-cell-wrapper input {
-  min-height:24px;
-  max-height:24px;
-  margin-top:0;
-  margin-bottom:0;
-  padding-top:0;
-  padding-bottom:0;
-}
+  .full-line-width {
+    max-width:72ex;
+  }
 
-table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-squeezer {
-  display:inline-block;
-  max-height:24px;
-  line-height:7px;
-  font-size:66.67%;
-  /* overflow:hidden; */
-  position:relative;
-}
+  .half-line-width {
+    max-width:36ex;
+  }
 
-table.pme-main td.pme-cell.squeeze-subsequent-lines .pme-cell-squeezer::first-line {
-  line-height:12px;
-  font-size:150%; /* this is relative to the 2/3 above */
-}
+  .third-line-width {
+    max-width:24ex;
+  }
 
-/* Hide everything but the first line */
-table.pme-main td.pme-cell.remarks,
-table.pme-main td.pme-cell.hide-subsequent-lines {
-  /* font-size:25%;
-  line-height:100%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;*/
-}
+  td.pme-cell.restrict-height {
+    pme-cell-wrapper {
+      display:block;
+      max-height:24px;
+      overflow:hidden;
+    }
 
-/* Make all remarks shorter */
-table.pme-main td.pme-cell.remarks::first-line,
-table.pme-main td.pme-cell.remarks p:nth-child(1)::first-line,
-table.pme-main td.pme-cell.hide-subsequent-lines::first-line,
-table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1)::first-line {
-  /*font-size:400%;*/ /* seems to be relative to !first-line */
-  /* line-height:100%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;*/
-}
+    /* Restrict height of buttons in list view */
+    .pme-cell-wrapper input {
+      min-height:24px;
+      max-height:24px;
+      margin-top:0;
+      margin-bottom:0;
+      padding-top:0;
+      padding-bottom:0;
+    }
+  }
 
-table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper {
-  line-height:100%;
-  display:inline-block;
-  max-height:2em;
-}
+  td.pme-cell.squeeze-subsequent-lines {
+    .pme-cell-wrapper {
+      display:block;
+      max-height:24px;
+      overflow:hidden;
+    }
 
-table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.halfed-sized {
-  max-height:4em;
-  font-size:50%;
-}
+    .pme-cell-squeezer {
+      display:inline-block;
+      max-height:24px;
+      line-height:8px;
+      font-size:66.67%;
+      position:relative;
+      overflow-x:clip;
+      overflow-y:visible;
+      text-overflow:ellipsis;
+      max-width:100%;
 
-table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.quarter-sized {
-  max-height:8em;
-  font-size:25%;
-}
+      * {
+	overflow-x:clip;
+	overflow-y:visible;
+	text-overflow:ellipsis;
+	max-width:100%;
+      }
+    }
 
-table.pme-main [class^="chosen"] {
-  /* border-radius: 0.5em !important; */
-  /* background-color: rgb(244, 244, 244) !important; */
-  border-radius: 3px;
-}
+    .pme-cell-squeezer::first-line,
+    .pme-cell-squeezer p:nth-child(1)::first-line {
+      line-height:12px;
+      font-size:150%; /* this is relative to the 2/3 above */
+    }
+  }
 
-table.pme-main div.pme-filter div.chosen-container {
-  box-sizing: border-box;
-}
+  td.pme-cell.hide-subsequent-lines {
+    .pme-cell-wrapper {
+      line-height:100%;
+      display:inline-block;
+      max-height:24px;
+
+      &.halfed-sized {
+	max-height:48px;
+	font-size:50%;
+      }
+
+      &.quarter-sized {
+	max-height:96px;
+	font-size:25%;
+      }
+    }
+  }
+
+  [class^="chosen"] {
+    /* border-radius: 0.5em !important; */
+    /* background-color: rgb(244, 244, 244) !important; */
+    border-radius: 3px;
+  }
+
+  div.pme-filter div.chosen-container {
+    box-sizing: border-box;
+  }
+
+} /* table.pme-main */
 
 input.pme-filter {
   width:auto;

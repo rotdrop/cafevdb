@@ -504,6 +504,9 @@ make sure that the musicians are also automatically added to the
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
+      'filter' => [
+        'having' => true,
+      ],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
@@ -558,9 +561,12 @@ make sure that the musicians are also automatically added to the
       'name' => $this->l->t('Projects'),
       'sort' => true,
       'css'      => ['postfix' => ' projects tooltip-top'],
-      'display|LVF' => ['popup' => 'data'],
+      'display|LVDF' => ['popup' => 'data'],
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      //'filter' => 'having', // need "HAVING" for group by stuff
+      'filter' => [
+        'having' => false,
+        'flags' => PHPMyEdit::OMIT_DESC|PHPMyEdit::OMIT_SQL,
+      ],
       'values' => [
         'table' => self::PROJECTS_TABLE,
         'column' => 'name',
@@ -652,11 +658,15 @@ make sure that the musicians are also automatically added to the
       'name'     => strval($this->l->t('Remarks')),
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => ['postfix' => ' remarks tooltip-top'],
+      'css'      => [ 'postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
       'textarea' => ['css' => 'wysiwyg-editor',
                      'rows' => 5,
                      'cols' => 50],
-      'display|LF' => ['popup' => 'data'],
+      'display|LF' => [
+        'popup' => 'data',
+        'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+        'postfix' => '</div></div>',
+      ],
       'escape' => false,
       'sort'     => true,
     ];

@@ -446,11 +446,12 @@ __EOT__;
       );
 
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
-    if (!empty($this->parameterService[$this->pme->cgiSysName('qf'.$nameIdx.'_id')])) {
+    if (!empty($this->requestParameters[$this->pme->cgiSysName('qf'.$nameIdx.'_idx')])) {
       // unset the year filter, as it does not make sense
       unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
       unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
+      $this->logInfo('SHOWING OR permanent');
       $opts['filters']['OR'][] = "\$table.type = 'permanent'";
     }
     if (!$this->showDisabled) {

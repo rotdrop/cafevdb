@@ -273,7 +273,9 @@ class Instruments extends PMETableViewBase
         'display|LVFD' => [ 'popup' => 'data' ],
         'sort'         => true,
         'sql'          => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'filter'       => 'having',
+        'filter'       => [
+          'having' => true,
+        ],
         'select'       => 'M',
         'values' => [
           'description' => 'l10n_family',

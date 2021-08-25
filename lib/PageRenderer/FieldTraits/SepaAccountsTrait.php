@@ -89,7 +89,9 @@ trait SepaAccountsTrait
       $join_table.sequence),
     $join_col_fqn)
   ORDER BY $order_by)',
-          'filter' => 'having',
+          'filter' => [
+            'having' => true,
+          ],
           'sort' => true,
           'select' => 'M',
           'values' => [
@@ -116,7 +118,9 @@ trait SepaAccountsTrait
       $join_table.sequence),
     $join_col_fqn)
   ORDER BY $order_by)',
-          'filter' => 'having',
+          'filter' => [
+            'having' => true,
+          ],
           'sort' => true,
           'select' => 'M',
           'values' => [
@@ -175,7 +179,9 @@ trait SepaAccountsTrait
       '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
     $join_col_fqn)
   ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
-          'filter' => 'having',
+          'filter' => [
+            'having' => true,
+          ],
           'display|LFDV' => [
             'popup' => 'data',
             // For an unknown reason we need two divs. Otherwise the
@@ -214,7 +220,9 @@ trait SepaAccountsTrait
      '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
     $join_col_fqn)
   ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
-          'filter' => 'having',
+          'filter' => [
+            'having' => true,
+          ],
           'sort' => true,
           'select' => 'M',
           'values' => [

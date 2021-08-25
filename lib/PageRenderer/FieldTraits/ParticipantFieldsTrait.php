@@ -113,7 +113,9 @@ trait ParticipantFieldsTrait
           'tab' => $tab,
           'css'      => [ 'postfix' => $css, ],
           'default|A'  => $field['default_value'],
-          'filter' => 'having',
+          'filter' => [
+            'having' => true,
+          ],
           'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
   IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_enc, NULL)
   ORDER BY $order_by))',
@@ -726,7 +728,9 @@ trait ParticipantFieldsTrait
               'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
               'display' => [ 'popup' => 'data' ],
               'colattrs' => [ 'data-groups' => $dataOptionsData, ],
-              'filter' => 'having',
+              'filter' => [
+                'having' => true,
+              ],
               'values' => [
                 'table' => "SELECT
    m1.id AS musician_id,
