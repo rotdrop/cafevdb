@@ -147,6 +147,7 @@ class phpMyEdit
 	var $groupby_where; // whether to use groupby field in single record retrieval
 	var $mrecs;     // array of custom-multi records selected
 	var $inc;		// number of records to display
+	var $total_recs; // total number of records available
 	var $fm;		// first record to display
 	var $fl;		// is the filter row displayed (boolean)
 	var $fds;		// $k => sql field names
@@ -2970,7 +2971,6 @@ class phpMyEdit
 		}
 	}
 
-
 	function doFetchToolTip($css_class_name, $name, $label = false)
 	{
 		// First clean the CSS-class, it may consist of more than one
@@ -3987,8 +3987,8 @@ class phpMyEdit
 			$fd				  = $this->field_name;
 			$this->field	  = $this->fdd[$fd];
 			$l	= 'qf'.$k;
-			$lc = 'qf'.$k.'_comp';
-			$li = 'qf'.$k.'_idx';
+			$lc = $l.'_comp';
+			$li = $l.'_idx';
 			if ($this->clear_operation()) {
 				$m	= null;
 				$mc = null;
@@ -4007,6 +4007,8 @@ class phpMyEdit
 					$mc	  = $this->get_sys_cgi_var($lc);
 					$mi	  = $this->get_sys_cgi_var($li)?:[];
 				}
+				// reset $l to numeric field id in order to output normalized controls
+				$l = 'qf'.$k;
 			}
 			echo '<td class="',$css_class_name,'">';
 			if ($this->password($k) || !$this->filtered($k)) {
@@ -4062,7 +4064,7 @@ class phpMyEdit
 										   $this->comp_ops, null, null, null,
 										   $mc);
 				}
-				$name = $this->cgi['prefix']['sys'].'qf'.$k;
+				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
@@ -4112,6 +4114,8 @@ class phpMyEdit
 		if ($text_query != '' || $this->display['query'] === 'always') {
 			$css_class_name = $this->getCSSclass('queryinfo');
 			$css_sys = $this->getCSSclass('sys');
+			$css_data = $this->getCSSclass('data');
+			$css_clear = $this->getCSSclass('clear');
 			$disabled = false;
 			if ($text_query == '') {
 				$css_class_name .= ' '.$this->getCSSclass('empty');
@@ -4119,11 +4123,13 @@ class phpMyEdit
 			}
 			echo '<tr class="',$css_class_name,'">',"\n";
 			echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), $disabled);
+			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],': </span>';
+			echo $this->htmlSubmit('sw', 'Clear', $css_clear, $disabled);
 			echo "</td>\n";
 			$htmlQuery = htmlspecialchars($text_query);
-			//title="'.$htmlQuery.'"
-			echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
+			// $shortHtmlQuery = preg_replace('/`PMEtable[0-9]+`[.]/', '', $htmlQuery);
+			// title="'.$htmlQuery.'"
+			echo '<td class="',$css_class_name,' ',$css_data,'" colspan="',$this->num_fields_displayed,'">';
 			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],': </span>';
 			echo '<span class="',$css_class_name,' info" title="',$htmlQuery,'">',$htmlQuery,'</span>';
 			echo '</td></tr>',"\n";

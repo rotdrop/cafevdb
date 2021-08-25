@@ -783,6 +783,30 @@ td.pme-sortinfo, td.pme-queryinfo {
   text-overflow:ellipsis;
 }
 
+tr.pme-queryinfo {
+  td.pme-queryinfo.pme-sys {
+    .label {
+      font-weight:bold;
+    }
+    input.pme-clear {
+      float:right;
+      width:16px !important;
+      height:15px !important;
+      border:0 !important;
+      font-size:0 !important;
+      vertical-align:middle;
+      min-height:unset;
+      padding:unset;
+      background:url(../img/pme-delete.png) no-repeat !important;
+    }
+  }
+  td.pme-queryinfo.pme-data {
+    .label {
+      display:none;
+    }
+  }
+}
+
 form.pme-form .tab-all {
   /* display:none; */
 }
@@ -1212,31 +1236,33 @@ form.pme-form tr.pme-row:hover td.pme-navigation {
   background-color: #9BAFC8;
 }
 
-table.pme-main .pme-queryinfo.pme-empty,
-table.pme-main .pme-filter.pme-hidden {
-  display:none !important;
-}
+table.pme-main {
+  .pme-queryinfo.pme-empty, .pme-filter.pme-hidden {
+    display:none !important;
+  }
 
-table.pme-main tr.pme-header input.pme-hidden {
-  display:none !important;
-}
+  tr.pme-header input.pme-hidden {
+    display:none !important;
+  }
 
-table.pme-main tr.pme-sortinfo.pme-default {
-  display:none !important;
-}
+  tr.pme-sortinfo.pme-default {
+    display:none !important;
+  }
 
-table.pme-main tr.pme-header input.pme-hide,
-table.pme-main tr.pme-header input.pme-clear {
-  display:block;
-}
+  tr.pme-header {
+    input.pme-hide, input.pme-clear {
+      display:block;
+    }
+  }
 
-table.pme-main tr.pme-header th.pme-nosort {
-  padding:1ex;
-}
+  tr.pme-header th.pme-nosort {
+    padding:1ex;
+  }
 
-table.pme-main tbody td.pme-cell:not(.control),
-table.pme-main tbody td.pme-navigation {
-  cursor:pointer;
+  tbody td.pme-cell:not(.control),
+  tbody td.pme-navigation {
+    cursor:pointer;
+  }
 }
 
 /* cursor as pointer for clickable data rows, compare the rowSelector

@@ -38,6 +38,7 @@ return Array(
 		'Search'			=>'Search',
 		'Hide'				=>'Hide',
 		'Clear'				=>'Clear',
+		'Filter'			=>'Filter',
 		'Query'				=>'Query',
 		'Current Query'		=>'Current Query',
 		'Sorted By'			=>'Sorted By',
