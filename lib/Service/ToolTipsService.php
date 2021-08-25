@@ -158,8 +158,8 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     if ($this->debug && empty($tip)) {
       if (!empty($subKey)) {
-        $tip = $this->l->t('Unknown Tooltip for key "%s-%s" requested.',
-                           [$key, $subKey]);
+        $tip = $this->l->t('Unknown Tooltip for key "%s%s%s" requested.',
+                           [$key, self::SUB_KEY_SEP, $subKey]);
       } else {
         $tip = $this->l->t('Unknown Tooltip for key "%s" requested.',
                            [$key]);
