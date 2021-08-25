@@ -446,6 +446,19 @@ class PHPMyEdit extends \phpMyEdit
       $this->myquery($query, __LINE__);
     }
   }
+
+  function doFetchToolTip($css_class_name, $name, $label = false)
+  {
+    if ($this->tooltips instanceof \OCA\CAFEVDB\Service\ToolTipsService) {
+      $oldDebug = $this->tooltips->debug();
+      $this->tooltips->debug(false);
+    }
+    $result = parent::doFetchToolTip($css_class_name, $name, $label);
+    if ($this->tooltips instanceof \OCA\CAFEVDB\Service\ToolTipsService) {
+      $this->tooltips->debug($oldDebug);
+    }
+    return $result;
+  }
 }
 
 // Local Variables: ***
