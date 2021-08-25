@@ -43,10 +43,10 @@ trait LoggerTrait
 
     do {
       $caller = $trace[$shift];
-      $file = $caller['file'];
-      $line = $caller['line'];
-      $caller = $trace[$shift+1];
-      $class = $caller['class'];
+      $file = $caller['file']??'unknown';
+      $line = $caller['line']??'unknown';
+      $caller = $trace[$shift+1]??'unknown';
+      $class = $caller['class']??'unknown';
       $method = $caller['function'];
 
       $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
