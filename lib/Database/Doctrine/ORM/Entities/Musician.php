@@ -982,8 +982,10 @@ class Musician implements \ArrayAccess
 
   /**
    * Return the number of "serious" items which "use" this entity. For
-   * project participant this is (for now) the number of payments. In
+   * project participants this is (for now) the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * @return int
    */
   public function usage():int
   {
