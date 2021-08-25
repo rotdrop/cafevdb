@@ -172,8 +172,8 @@ trait FindLikeTrait
 
   public function findOneBy(array $criteria, ?array $orderBy = null)
   {
-    list($result,) = $this->findBy($criteria, $orderBy, 1, 0);
-    return $result;
+    $result = $this->findBy($criteria, $orderBy, 1, 0);
+    return $result[0] ?? null;
   }
 
   /**
