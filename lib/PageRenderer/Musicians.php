@@ -528,7 +528,7 @@ make sure that the musicians are also automatically added to the
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
-        'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
+        'tab'     => [ 'id' => [ 'orchestra' ] ],
         'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn IS NULL, NULL, \$join_table.instrument_id))",
         'default' => false,
         'select'  => 'T',
@@ -541,6 +541,7 @@ make sure that the musicians are also automatically added to the
      */
     $opts['fdd']['member_status'] = [
       'name'    => strval($this->l->t('Member Status')),
+      'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
