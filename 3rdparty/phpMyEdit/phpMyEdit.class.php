@@ -876,10 +876,10 @@ class phpMyEdit
 		}
 
 		// allow for unconditional override
-		$groups = (array)$fdd['valueGroups'];
-		$data = (array)$fdd['valueData'];
-		$titles = (array)$fdd['valueTitles'];
-		$values = (array)$fdd['values2'];
+		$groups = (array)($fdd['valueGroups']??[]);
+		$data = (array)($fdd['valueData']??[]);
+		$titles = (array)($fdd['valueTitles']??[]);
+		$values = (array)($fdd['values2']??[]);
 
 		$valuesDef = $this->values_with_defaults($field_num);
 
@@ -913,7 +913,7 @@ class phpMyEdit
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
 		$fdd    = $this->fdd[$field_num];
-		$db	    = $fdd[self::FDD_VALUES]['db'];
+		$db	    = $fdd[self::FDD_VALUES]['db']??null;
 		$table  = $fdd[self::FDD_VALUES]['table'];
 		if (empty($table)) {
 			$table = $this->tb;
@@ -922,13 +922,13 @@ class phpMyEdit
 
 		$column   = $valuesDef['column'];
 		$desc     = $valuesDef['description'];
-		$filters  = $valuesDef['filters'];
-		$orderby  = $valuesDef['orderby'];
-		$groups   = $valuesDef['groups'];
-		$data     = $valuesDef['data'];
-		$titles   = $valuesDef['titles'];
-		$encode   = $valuesDef['encode'];
-		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
+		$filters  = $valuesDef['filters'] ?? null;
+		$orderby  = $valuesDef['orderby'] ?? null;
+		$groups   = $valuesDef['groups'] ?? null;
+		$data     = $valuesDef['data'] ?? null;
+		$titles   = $valuesDef['titles'] ?? null;
+		$encode   = $valuesDef['encode'] ?? null;
+		$dbp      = !empty($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		if ($encode == self::TRIVIAL_ENCODE) {
 			unset($encode);
@@ -953,7 +953,7 @@ class phpMyEdit
 			'record_id'   => implode(',', $this->rec), // may be useful for change op.
 			'table'		  => $table_name,
 			'column'	  => $column,
-			'description' => $desc);
+			'description' => $desc ?? null);
 		if (!empty($this->rec)) {
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
@@ -1043,8 +1043,8 @@ class phpMyEdit
 		$grps   = array();
 		$dt     = array();
 		$ttls   = array();
-		$idx    = $desc ? 1 : 0;
-		if ($idx == 0 && is_callable($fdd['encryption']['decrypt'])) {
+		$idx    = !empty($desc) ? 1 : 0;
+		if ($idx == 0 && is_callable($fdd['encryption']['decrypt']??null)) {
 			$decrypt = $fdd['encryption']['decrypt'];
 			$decode = function($value) use ($decrypt) {
 				return call_user_func($decrypt, $value);
@@ -1122,9 +1122,9 @@ class phpMyEdit
 	 */
 	protected function values_with_defaults(int $field)
 	{
-		$values = $this->fdd[$field][self::FDD_VALUES]?:[];
+		$values = $this->fdd[$field][self::FDD_VALUES]??[];
 
-		$encode = $values['encode']?:self::TRIVIAL_ENCODE;
+		$encode = $values['encode']??self::TRIVIAL_ENCODE;
 
 		$join_table = $this->join_table_alias($field);
 		if (!isset($values['column'])) {
@@ -1188,10 +1188,10 @@ class phpMyEdit
 		$order_by = $values['orderby'];
 
 		$fdd = $this->fdd[$field];
-		$sql = $fdd['sql']?
-			 : ($values['grouped']
-				 ? 'GROUP_CONCAT(DISTINCT $join_col_enc ORDER BY $order_by)'
-				 : null);
+		$sql = $fdd['sql']??
+			 ($values['grouped']
+			  ? 'GROUP_CONCAT(DISTINCT $join_col_enc ORDER BY $order_by)'
+			  : null);
 
 		if (!empty($sql)) {
 			return $this->substituteVars(
@@ -1242,14 +1242,14 @@ class phpMyEdit
 			return $this->sql_field($field, $flags & self::OMIT_SQL);
 		} else {
 			$fdd = $this->fdd[$field];
-			$values = $fdd[self::FDD_VALUES];
+			$values = $fdd[self::FDD_VALUES]??null;
 			if (isset($values['description']) && ! $dont_desc) {
 
 				$join_table = $this->join_table_alias($field);
 
 				$column = $values['column'];
 				$desc = $values['description'];
-				$grouped = $values['grouped'];
+				$grouped = $values['grouped']??false;
 				$orderBy = $values['orderby'];
 				$descSubs = [
 					'table' => $join_table,
@@ -1865,7 +1865,7 @@ class phpMyEdit
 
 					}
 
-					if (is_array($this->fdd[$k]['values2'])) {
+					if (is_array($this->fdd[$k]['values2']??null)) {
 						$sqlKey = $this->fqn($k, true, true);
 						switch ($compare) {
 						case 'equal':
@@ -2924,7 +2924,7 @@ class phpMyEdit
 			} else if (is_string($popup)) {
 				switch ($popup) {
 				case 'data'.substr($popup, strlen('data')):
-					$cell = explode(':', $popup)[1];
+					$cell = explode(':', $popup)[1] ?? null;
 					if (empty($cell) || $cell == $k || $cell == 'this' || $cell == 'self') {
 						if (empty($cell_data)) {
 							$cell_data = $this->cellDisplay($k, $row);
@@ -6357,10 +6357,14 @@ class phpMyEdit
 			if ($key_type == 'real') {
 				/* If 'real' key_type does not work,
 				   try change MySQL datatype from float to double */
-				$this->rec[$key] = doubleval($this->rec[$key]);
+				if (isset($this->rec[$key])) {
+					$this->rec[$key] = doubleval($this->rec[$key]);
+				}
 				$this->key_delim[$key] = '';
 			} elseif ($key_type == 'int') {
-				$this->rec[$key] = intval($this->rec[$key]);
+				if (isset($this->rec[$key])) {
+					$this->rec[$key] = intval($this->rec[$key]);
+				}
 				$this->key_delim[$key] = '';
 			} else {
 				$this->key_delim[$key] = "'";
