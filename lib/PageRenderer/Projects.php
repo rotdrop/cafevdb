@@ -245,8 +245,8 @@ class Projects extends PMETableViewBase
       'css'      => ['postfix' => ' projectname control'],
       'sort'     => true,
       'values|LF'   => [
-        //'table' => self::TABLE,
-        //'column' => 'name',
+        'table' => self::TABLE,
+        'column' => 'name',
         'description' => 'name',
         'groups' => 'year',
         'orderby' => '$table.`year` DESC',
