@@ -1735,7 +1735,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fdd['css'] = [ 'postfix' => [] ];
     }
     $fdd['css']['postfix'][] = $cssSlug;
-    $fdd['tooltip'] = $this->toolTipsService[$toolTipSlug];
+    $fdd['tooltip'] = $this->toolTipsService[$tooltipSlug];
   }
 
   protected function queryFieldIndex(string $key, array $fdd)
