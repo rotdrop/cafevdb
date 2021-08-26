@@ -30,6 +30,7 @@ $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('instruments');
 $nav .= $pageNavigation->pageControlElement('project-participant-fields');
+$nav .= $pageNavigation->pageControlElement('blog');
 
 echo $this->inc('part.common.header', [
   'css-prefix' => $css_pfx,

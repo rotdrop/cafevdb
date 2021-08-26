@@ -28,7 +28,6 @@ $css_class = $renderer->cssClass();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('instruments');
 if ($roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('insurances');
   $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts');
