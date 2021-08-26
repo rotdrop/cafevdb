@@ -1373,7 +1373,7 @@ Whatever.',
     $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
 
-    $softDelete  = count($project['payments']) > 0;
+    $softDelete  = count($project['payments']??[]) > 0;
 
     $this->entityManager->beginTransaction();
     try {
