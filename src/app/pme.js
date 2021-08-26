@@ -1220,6 +1220,9 @@ const installTabHandler = function(containerSel, changeCallback) {
       const form = container.find(pmeFormSelector());
       const table = form.find(pmeTableSelector());
 
+      // console.info('FORM', form.scrollLeft());
+      form.scrollLeft(0);
+
       const oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
       const tabClass = $(this).find('a').attr('href').substring(1);
 
