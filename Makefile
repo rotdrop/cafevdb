@@ -186,7 +186,7 @@ $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCD
 	make -C $(ABSSRCDIR)/3rdparty/selectize
 
 .PHONY: node-hacks
-node-hacks: selectize
+node-hacks: # selectize
 
 .PHONY: npm-update
 npm-update: node-hacks
