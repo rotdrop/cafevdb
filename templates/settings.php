@@ -75,7 +75,23 @@ $toolTipClass = "tooltip-right";
     </ul>
     <?php
     $tabNo = 1;
-    echo $this->inc("settings/personal-settings", [ 'tabNr' => $tabNo++ ]);
+    echo $this->inc("settings/personal-settings", [
+      'tabNr' => $tabNo++,
+      'toolTipClass' => $toolTipClass,
+      'tooltipstitle' => $tooltipstitle,
+      'filtervistitle' => $filtervistitle,
+      'directchgtitle' => $directchgtitle,
+      'showdistitle' => $showdistitle,
+      'pagerowstitle' => $pagerowstitle,
+      'wysiwygtitle' => $wysiwygtitle,
+      'experttitle' => $experttitle,
+      'debugtitle' => $debugtitle,
+      'pageRowsOptions' => $pageRowsOptions,
+      'pageRows' => $pageRows,
+      'expertClass' => $expertClass,
+      'timestamp' => $timestamp,
+      'time' => $time,
+    ]);
     if ($adminsettings === true) {
       echo $this->inc("settings/app-settings", [ 'tabNr' => $tabNo++ ]);
       echo $this->inc("settings/orchestra-settings", [ 'tabNr' => $tabNo++ ]);

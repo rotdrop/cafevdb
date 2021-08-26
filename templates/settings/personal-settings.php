@@ -126,18 +126,6 @@ namespace OCA\CAFEVDB;
     </div>
     <div class="debugmode-container expertmode-container<?php p($expertClass); ?>">
       <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipClass ]); ?>
-      <!-- <select
-           multiple
-           name="debugmode"
-           data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-           class="debug-mode debugmode <?php p($toolTipClass); ?>"
-           title="<?php echo $debugtitle; ?>">
-           <?php
-           foreach ($debugModes as $key => $value) {
-           echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
-           }
-           ?>
-           </select> -->
     </div>
     <span class="statusmessage" id="msg"></span><span>&nbsp;</span>
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />

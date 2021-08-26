@@ -1473,7 +1473,8 @@ class PersonalSettingsController extends Controller {
         'Trashbin',
         'Template',
         'ConcertModule',
-        'RehearsalsModule'
+        'RehearsalsModule',
+        'SubPageTemplate',
       ];
       $key = str_replace('redaxo', '', $parameter);
       if (array_search($key, $redaxoKeys) === false) {

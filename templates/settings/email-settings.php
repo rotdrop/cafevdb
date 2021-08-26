@@ -157,8 +157,8 @@ use OCA\CAFEVDB\Controller\PersonalSettingsController;
     <form class="mailing-list">
       <input type="text"
              name="mailingListURL"
-             id="mailingListServer"
-             value="<?php echo $mailingListServer; ?>"
+             id="mailingListURL"
+             value="<?php echo $mailingListURL; ?>"
              placeholder="<?php p('http://localhost:8001');?>"
              required
       />

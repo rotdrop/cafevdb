@@ -154,7 +154,7 @@ foreach ($localeCountryNames as $country => $name) {
                  type="text"
                  id="<?php p($documentTemplate); ?>"
                  name="<?php p($documentTemplate); ?>"
-                 value="<?php p(${$documentTemplate}); ?>"
+                 value="<?php p(${$documentTemplate . 'FileName'}); ?>"
                  title="<?php echo $toolTips['templates:' . $documentTemplate]; ?>"
                  placeholder="<?php p($l->t($placeholder) . ' - ' . $l->t('drop or click')); ?>"
           />

@@ -146,7 +146,7 @@ if (count($otherPages) > 0) {
                 'value' => $webPage['articleId'],
                 'name' => $webPage['articleName'],
                 'data' => [ 'article' => json_encode($webPage)] ];
-    if ($webPage['linked']) {
+    if ($webPage['linked']??false) {
       // THIS IS UNUSED CODE; WAS ALREADY DISABLED IN OC VERSION
       // Idea was to provide all articles with the already linked
       // articles selected.

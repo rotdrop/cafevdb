@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Common\Util;
 
 $probablyOffline = empty($webPageCategories);
 if ($probablyOffline) {
@@ -102,7 +103,7 @@ foreach ($webPageTemplates as $template) {
       <?php
       foreach (ConfigService::CMS_TEMPLATES as $templateSlug) {
         $class = 'redaxo';
-        $ucSlug = ucfirst($templateSlug);
+        $ucSlug = Util::dashesToCamelCase($templateSlug, true);
         $id = $class.$ucSlug.'Template';
         $name = $id;
         $title = $class.'-'.$templateSlug;

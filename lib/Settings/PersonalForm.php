@@ -311,13 +311,15 @@ class PersonalForm {
           foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $documentTemplate) {
             $fileName = $this->getConfigValue($documentTemplate);
             // $this->logInfo('TEMPLATE '.$documentTemplate.': '.$folder.$fileName);
+            $templateParameters[$documentTemplate . 'FileName'] = $fileName;
             if (!empty($fileName)) {
-              $templateParameters[$documentTemplate . 'FileName'] = $fileName;
               try {
                 $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $fileName);
               } catch (\Throwable $t) {
                 $this->logException($t);
               }
+            } else {
+              $templateParameters[$documentTemplate . 'DownloadLink'] = null;
             }
           }
         }
@@ -349,7 +351,8 @@ class PersonalForm {
                   'Trashbin',
                   'Template',
                   'ConcertModule',
-                  'RehearsalsModule'] as $key) {
+                  'RehearsalsModule',
+                  'SubPageTemplate'] as $key) {
           $templateParameters['redaxo'.$key] = $this->getConfigValue('redaxo'.$key);
         }
 
