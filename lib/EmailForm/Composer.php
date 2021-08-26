@@ -1493,7 +1493,7 @@ Störung.';
         'total' =>  $this->diagnostics['TotalPayload'],
         'active' => $this->diagnostics['TotalCount'],
       ]);
-      $phpMailer->progressCallback = function($current, $total) use ($progressStatus) {
+      $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus) {
         $oldCurrent = $progressStatus->getCurrent();
         $oldTime = $progressStatus->getLastModified()->getTimestamp();
         $nowTime = time();
@@ -1502,7 +1502,7 @@ Störung.';
                 && $nowTime - $oldTime >= self::PROGRESS_THROTTLE_SECONDS)) {
           $progressStatus->update($current, $total);
         }
-      };
+      });
 
       $phpMailer->Host = $this->getConfigValue('smtpserver');
       $phpMailer->Port = $this->getConfigValue('smtpport');

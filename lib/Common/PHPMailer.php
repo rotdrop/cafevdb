@@ -39,6 +39,8 @@ class PHPMailer extends PHPMailerUpstream
   protected $mimeMessageTotalSize = 0;
   protected $mimeDataSent;
 
+  protected $progressCallback = null;
+
   /**
    * Returns the complete headers, but not the body.
    * Only valid post preSend().
@@ -74,6 +76,11 @@ class PHPMailer extends PHPMailerUpstream
       }
     };
     $this->SMTPDebug = 1;
+  }
+
+  public function setProgressCallback($progressCallback)
+  {
+    $this->progressCallback = $progressCallback;
   }
 
   /**
