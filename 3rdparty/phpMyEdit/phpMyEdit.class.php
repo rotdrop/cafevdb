@@ -109,6 +109,7 @@ class phpMyEdit
 
 	const FDD_SELECT = 'select';
 	const FDD_VALUES = 'values';
+	const FDD_VALUES2 = 'values2';
 
 	const OPT_TRIGGERS = 'triggers';
 	const TRIGGER_DATA = 'data';
@@ -279,7 +280,7 @@ class phpMyEdit
 	function col_has_description($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['description']); }
 	function col_has_values($k) {
 		return (isset($this->fdd[$k][self::FDD_VALUES]) && !empty($this->fdd[$k][self::FDD_VALUES]['description']))
-			|| isset($this->fdd[$k]['values2']);
+			|| isset($this->fdd[$k][self::FDD_VALUES2]);
 	}
 	function col_has_php($k)	{ return isset($this->fdd[$k]['php']); }
 	function col_has_URL($k)	{ return isset($this->fdd[$k]['URL'])
@@ -551,7 +552,7 @@ class phpMyEdit
 	function is_values2($k, $val = 'X') /* {{{ */
 	{
 		return $val === null ||
-			(isset($this->fdd[$k]['values2']) && !isset($this->fdd[$k][self::FDD_VALUES]['table']));
+			(isset($this->fdd[$k][self::FDD_VALUES2]) && !isset($this->fdd[$k][self::FDD_VALUES]['table']));
 	} /* }}} */
 
 	function processed($k) /* {{{ */
@@ -880,7 +881,7 @@ class phpMyEdit
 		$groups = (array)($fdd['valueGroups']??[]);
 		$data = (array)($fdd['valueData']??[]);
 		$titles = (array)($fdd['valueTitles']??[]);
-		$values = (array)($fdd['values2']??[]);
+		$values = (array)($fdd[self::FDD_VALUES2]??[]);
 
 		$valuesDef = $this->values_with_defaults($field_num);
 
@@ -901,7 +902,7 @@ class phpMyEdit
 			'data' => $data
 		];
 
-		$fdd['values2'] = $fdd['setvalues']['values'];
+		$fdd[self::FDD_VALUES2] = $fdd['setvalues']['values'];
 
 		if ($this->fds[$field_num]  == 'updated') {
 			throw new \Exception('blah');
@@ -1867,7 +1868,7 @@ class phpMyEdit
 
 					}
 
-					if (is_array($this->fdd[$k]['values2']??null)) {
+					if (is_array($this->fdd[$k][self::FDD_VALUES2]??null)) {
 						$sqlKey = $this->fqn($k, $fqn_flags ?? self::OMIT_DESC|self::OMIT_SQL);
 						switch ($compare) {
 						case 'equal':
@@ -1878,7 +1879,7 @@ class phpMyEdit
 								$afilter = addslashes($matches[1]);
 								$afilter = str_replace('*', '.*', $afilter);
 								$afilter = str_replace('%', '.*', $afilter);
-								foreach ($this->fdd[$k]['values2'] as $key => $val) {
+								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 									if (strlen($val) > 0 && preg_match('/'.$afilter.'/', $val)) {
 										$ids[] = '"'.addslashes($key).'"';
 									}
@@ -1899,7 +1900,7 @@ class phpMyEdit
 								$afilter = addslashes($matches[1]);
 								$afilter = str_replace('*', '.*', $afilter);
 								$afilter = str_replace('%', '.*', $afilter);
-								foreach ($this->fdd[$k]['values2'] as $key => $val) {
+								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 									if (preg_match('/'.$afilter.'/', $val) === false) {
 										$ids[] = '"'.addslashes($key).'"';
 									}
@@ -1911,7 +1912,7 @@ class phpMyEdit
 							break;
 						case 'contains':
 						default:
-							foreach ($this->fdd[$k]['values2'] as $key => $val) {
+							foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 								// stristr() performs like %M%, so we
 								// implement the same augmented logic here, as described above.
 								if (strlen($m) > 0 && stristr($val, $m)) {
@@ -2850,7 +2851,7 @@ class phpMyEdit
 		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
-		} else if (isset($this->fdd[$k]['values2'])) {
+		} else if (isset($this->fdd[$k][self::FDD_VALUES2])) {
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
 			} else if (isset($row["qf${k}_encrypted"])) {
@@ -2862,8 +2863,8 @@ class phpMyEdit
 				$value_ar  = explode(',', $value);
 				$value_ar2 = array();
 				foreach ($value_ar as $value_key) {
-					if (isset($this->fdd[$k]['values2'][$value_key])) {
-						$value_ar2[$value_key] = $this->formatValue($this->fdd[$k]['values2'][$value_key], $k, $css, $key_rec);
+					if (isset($this->fdd[$k][self::FDD_VALUES2][$value_key])) {
+						$value_ar2[$value_key] = $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value_key], $k, $css, $key_rec);
 						$escape = false;
 					}
 				}
@@ -2874,8 +2875,8 @@ class phpMyEdit
 				}
 				$value = join($glue, $value_ar2);
 			} else {
-				if (isset($this->fdd[$k]['values2'][$value])) {
-					$value	= $this->formatValue($this->fdd[$k]['values2'][$value], $k, $css, $key_rec);
+				if (isset($this->fdd[$k][self::FDD_VALUES2][$value])) {
+					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value], $k, $css, $key_rec);
 					$escape = false;
 				}
 			}
@@ -5608,14 +5609,14 @@ class phpMyEdit
 				$num_fields_displayed++;
 			}
 			$ref = $this->join_table_reference($this->fdd[$key]);
-			if ($ref !== false &&
-				!isset($this->fdd[$key][self::FDD_VALUES]['join']['table'])) {
+			if ($ref !== false
+				&& !isset($this->fdd[$key][self::FDD_VALUES]['join']['table'])) {
 				$this->fdd[$key][self::FDD_VALUES]['table'] = $this->fdd[$ref][self::FDD_VALUES]['table'];
 			}
 			if (is_array(@$this->fdd[$key][self::FDD_VALUES]) &&
 				empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
 				foreach ($this->fdd[$key][self::FDD_VALUES] as $val) {
-					$this->fdd[$key]['values2'][$val] = $val;
+					$this->fdd[$key][self::FDD_VALUES2][$val] = $val;
 				}
 				unset($this->fdd[$key][self::FDD_VALUES]);
 			}
