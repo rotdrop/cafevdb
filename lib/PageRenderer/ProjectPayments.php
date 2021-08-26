@@ -573,7 +573,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       };
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA] = $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA];
 
-    $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
+    if ($projectMode) {
+      $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
+    }
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
