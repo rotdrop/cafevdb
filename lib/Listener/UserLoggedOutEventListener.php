@@ -53,7 +53,7 @@ class UserLoggedOutEventListener implements IEventListener
       return;
     }
 
-    $this->logInfo("Hello Logout-Handler!");
+    // $this->logInfo("Hello Logout-Handler!");
 
     // @@todo check if we want this.
     return;
