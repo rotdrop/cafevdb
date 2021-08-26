@@ -1633,7 +1633,7 @@ class phpMyEdit
 						}
 					}
 					if (isset($ov['oper']) &&
-						strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!') {
+						(strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!')) {
 						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
 											  $field, $tmp_ov_val);
 					}
@@ -2455,7 +2455,7 @@ class phpMyEdit
 				$readonly = $this->display['readonly'];
 			}
 			$len_props = '';
-			$maxlen = intval($this->fdd[$k]['maxlen']);
+			$maxlen = intval($this->fdd[$k]['maxlen'] ?? 0);
 			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
 			$type = $select == 'N' ? 'number' : 'text';
 			if ($size > 0) {
@@ -4460,7 +4460,9 @@ class phpMyEdit
 		// filter
 		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
 		// Display sorting sequence
-		if ($qparts[self::QPARTS_ORDERBY] && $this->display['sort']) $this->display_sorting_sequence();
+		if (!empty($qparts[self::QPARTS_ORDERBY]) && $this->display['sort']) {
+			$this->display_sorting_sequence();
+		}
 		// Display the current query
 		if ($this->display['query']) $this->display_current_query();
 
@@ -5613,8 +5615,9 @@ class phpMyEdit
 				&& !isset($this->fdd[$key][self::FDD_VALUES]['join']['table'])) {
 				$this->fdd[$key][self::FDD_VALUES]['table'] = $this->fdd[$ref][self::FDD_VALUES]['table'];
 			}
-			if (is_array(@$this->fdd[$key][self::FDD_VALUES]) &&
-				empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
+			if (is_array(@$this->fdd[$key][self::FDD_VALUES])
+				&& empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
+				$this->logInfo("Move $key values to values2");
 				foreach ($this->fdd[$key][self::FDD_VALUES] as $val) {
 					$this->fdd[$key][self::FDD_VALUES2][$val] = $val;
 				}
@@ -5633,7 +5636,9 @@ class phpMyEdit
 		foreach ($this->groupby as $key) {
 			$field_num = $this->fdn[$key];
 			$this->groupby_num[$key] = $field_num;
-			$this->fdd[$field_num]['options'] .= 'LF';
+			if (isset($this->fdd[$field_num]['options'])) {
+				$this->fdd[$field_num]['options'] .= 'LF';
+			}
 		}
 
 		/* Adds first displayed column into sorting fields by replacing last
