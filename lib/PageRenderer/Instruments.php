@@ -235,8 +235,11 @@ class Instruments extends PMETableViewBase
     foreach ($instrumentTables as $table => $columns) {
       $this->joinStructure[$table] = [
         'entity' => null,
+        'sql' => "SELECT $columns[1], COUNT(DISTINCT $columns[0]) AS count
+FROM $table
+GROUP BY $columns[1]",
         'identifier' => [
-          $columns[0] => false,
+          'count' => false,
           $columns[1] => 'id'
         ],
         'column' => $columns[1],
@@ -299,9 +302,9 @@ class Instruments extends PMETableViewBase
 
     $usageSQL = [];
     foreach ($instrumentTables as $table => $columns) {
-      $usageSQL[] = 'COUNT(DISTINCT '.$joinTables[$table].'.'.($columns[0]).')';
+      $usageSQL[] = $joinTables[$table]  . '.count';
     }
-    $usageSQL = implode('+', $usageSQL);
+    $usageSQL = 'COALESCE(' . implode('+', $usageSQL) . ', 0)';
     $usageIdx = count($opts['fdd']);
     $opts['fdd']['usage'] = [
       'name'    => $this->l->t('#Usage'),
