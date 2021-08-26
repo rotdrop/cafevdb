@@ -440,7 +440,7 @@ class Navigation
         break;
       case 'option':
         $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
-        $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
+        $name  = empty($name) ? '' : Util::htmlEscape($name);
         $selected = '';
         if (isset($tag['selected']) && $tag['selected'] !== false) {
           $selected = ' selected="selected"';
