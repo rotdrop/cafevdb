@@ -613,12 +613,15 @@ project without a poster first.");
 '
              .($overview
                ? $this->pageNavigation->htmlTagsFromArray([
-                 'pre' => '<optgroup>', 'post' => '</optgroup>',
-                 ['type' => 'option',
-                  'title' => $this->toolTipsService['project-infopage'],
-                  'value' => 'project-infopage',
-                'name' => $this->l->t('Project Overview')
-                 ]])
+                 'pre' => '<optgroup>',
+                 'post' => '</optgroup>',
+                 [
+                   'type' => 'option',
+                   'title' => $this->toolTipsService['project-infopage'],
+                   'value' => 'project-infopage',
+                   'name' => $this->l->t('Project Overview')
+                 ]
+               ])
                : '')
              .$this->pageNavigation->htmlTagsFromArray([
                'pre' => '<optgroup>',
@@ -698,7 +701,7 @@ project without a poster first.");
   </select>
 </span>
 ';
-      return $control;
+    return $control;
   }
 
   /**Gather events, instrumentation numbers and the wiki-page in a
