@@ -149,7 +149,7 @@ class PHPMyEdit extends \phpMyEdit
         $this->logtable = $this->disabledLogTable;
       }
     } else if (!empty($this->logtable)) {
-      $this->disabledLogTable = $logTable;
+      $this->disabledLogTable = $this->logTable;
       $this->logtable = null;
     }
   }
