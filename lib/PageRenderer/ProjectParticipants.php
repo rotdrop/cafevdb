@@ -267,8 +267,8 @@ class ProjectParticipants extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [
       $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
-      'voice',
-      '-section_leader',
+      $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
+      '-' . $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
@@ -518,6 +518,20 @@ class ProjectParticipants extends PMETableViewBase
       ]);
     $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
+    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+      'tab'         => [ 'id' => [ 'orchestra' ] ],
+      'name'        => $this->l->t('Instrument Sort Order'),
+      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+      'input'       => 'HRS',
+      'select'      => 'M',
+      'sort'     => true,
+      'values' => [
+        'column' => 'sort_order',
+        'orderby' => '$table.sort_order ASC',
+        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+      ],
+    ];
+
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
       [
@@ -637,7 +651,7 @@ class ProjectParticipants extends PMETableViewBase
       AND ft.foreign_key = i.id
   WHERE
     pi.project_id = $this->projectId
-  GROUP BY pi.instrument_id
+  GROUP BY pi.instrument_id, pi.musician_id
   HAVING (MAX(pin.voice) = 0 OR pi.voice > 0)",
          'column' => 'value',
          'description' => [ 'l10n_name', 'IF($table.voice = 0, \'\', CONCAT(\' \', $table.voice))' ],
@@ -647,7 +661,7 @@ class ProjectParticipants extends PMETableViewBase
        ],
        'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
        'align|LF' => 'center',
-       'tooltip' => $this->l->t("Set to `%s' in order to mark the section leader",
+       'tooltip' => $this->l->t('Set to "%s" in order to mark the section leader',
                                 [ "&alpha;" ]),
       ]);
 
@@ -661,7 +675,11 @@ class ProjectParticipants extends PMETableViewBase
       'sort' => true,
       'escape' => false,
       'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2' => [ 0 => '', 1 => '&#10004;' ],
+      'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+      'values2|LVDF' => [
+        0 => '',
+        1 => '&#10004;'
+      ],
       'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                                [ "&#10004;" ]),
       'display|LF' => [
