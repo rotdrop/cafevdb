@@ -343,7 +343,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts['fdd']['project_id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Project-Id'),
-      'input'    => 'R',
+      'input'    => ($expertMode ? 'R' : 'RH'),
       'select'   => 'T',
       'options'  => 'LACPDV',
       'maxlen'   => 5,
@@ -355,7 +355,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts['fdd']['musician_id'] = [
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Musician-Id'),
-      'input'    => 'R',
+      'input'    => ($expertMode ? 'R' : 'RH'),
       'select'   => 'T',
       'options'  => 'LACPDV',
       'maxlen'   => 5,
@@ -905,8 +905,7 @@ class ProjectParticipants extends PMETableViewBase
       'options' => 'APVCD',
       'sql' => '$main_table.musician_id', // @todo: needed?
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-        $stampIdx = array_search('Updated', $pme->fds);
-        $stamp = strtotime($row['qf'.$stampIdx]);
+        $stamp = strtotime($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'updated', $pme->fdd)]);
         return $this->photoImageLink($musicianId, $action, $stamp);
       },
       'css' => ['postfix' => ' photo'],

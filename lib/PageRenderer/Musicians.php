@@ -308,7 +308,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => 'id',
       'select'   => 'T',
-      'input'    => 'R',
+      'input'    => ($expertMode ? 'R' : 'RH'),
       'input|AP' => 'RH', // new id, no sense to display
       'options'  => 'AVCPD',
       'maxlen'   => 5,
