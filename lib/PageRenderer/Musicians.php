@@ -419,7 +419,7 @@ make sure that the musicians are also automatically added to the
       'select'   => 'T',
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
-          $this->logInfo('OP '.$op);
+          // $this->logInfo('OP '.$op);
           $surName = $row['qf'.($k-3)];
           $firstName = $row['qf'.($k-2)];
           $nickName = $row['qf'.($k-1)];
