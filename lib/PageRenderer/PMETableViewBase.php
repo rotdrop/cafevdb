@@ -1492,7 +1492,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             } else if (!empty($joinTableValue['condition'])) {
               $joinCondition .= $joinTableValue['condition'];
             } else if (!empty($joinTableValue['self'])) {
-              // use during update to determine key values, otherwise ignore
+              // used during update to determine key values, otherwise ignored
               continue;
             } else {
               throw new \RuntimeException($this->l->t('Unknown column description: "%s"', print_r($joinTableValue, true)));
