@@ -97,7 +97,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   public function shortTitle()
   {
     if ($this->projectName) {
-      return $this->l->t("Instrumentation Numbers for `%s'", array($this->projectName));
+      return $this->l->t("Instrumentation Numbers for `%s'", [ $this->projectName ]);
     } else {
       return $this->l->t("Instrumentation Numbers");
     }
@@ -119,7 +119,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $template       = $this->template;
     $projectName    = $this->projectName;
     $projectId      = $this->projectId;
-    $projectMode    = $projectId > 0;
+    $projectMode    = $this->projectId > 0;
     $instruments    = $this->instruments;
     $recordsPerPage = $this->recordsPerPage;
 
@@ -178,7 +178,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['fdd']['project_id'] = [
       'name'      => $this->l->t('Project'),
-      'input'     => ($projectMode ? 'R' : ''),
+      'input'     => ($projectMode ? 'HR' : ''),
       'css' => [ 'postfix' => [ 'project-instrument-project-name', ], ],
       'select|DV' => 'T', // delete, filter, list, view
       'select|ACPFL' => 'D',  // add, change, copy
@@ -321,6 +321,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'align'  => 'right',
     ];
     $this->addSlug('balance', $opts['fdd']['missing']);
+
+    if ($projectMode) {
+      $opts['filters'] = $joinTables[self::TABLE].'.project_id = '.$projectId;
+    }
 
     // trigger
 
