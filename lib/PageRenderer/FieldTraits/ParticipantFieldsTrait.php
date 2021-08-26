@@ -367,10 +367,17 @@ trait ParticipantFieldsTrait
             $key => $this->l->t('true'),
           ];
           $keyFdd['select'] = 'C';
+          // make sure we get 0 not null
+          $keyFdd['sql'] = 'COALESCE(' . $keyFdd['sql'] . ', 0)';
           $keyFdd['default'] = $field->getDefaultValue() === null ? false : $key;
           $keyFdd['css']['postfix'][] = 'boolean';
           $keyFdd['css']['postfix'][] = 'single-valued';
           $keyFdd['css']['postfix'][] = $dataType;
+          $keyFdd['values|FL'] = array_merge(
+            $keyFdd['values'], [
+              'filters' => ('$table.field_id = '.$fieldId
+                            .' AND $table.project_id = '.$this->projectId),
+            ]);
           switch ($dataType) {
           case FieldType::BOOLEAN:
             break;
