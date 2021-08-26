@@ -2358,6 +2358,7 @@ class phpMyEdit
 		 */
 		$select = $this->fdd[$k][self::FDD_SELECT]?:null;
 		$multiValues = false;
+		$vals = false;
 		if (empty($select) || stristr("MCOD", $select) !== false) {
 			$vals        = false;
 			$groups      = false;
