@@ -81,7 +81,6 @@ class LoginNameSlugHandler implements SlugHandlerInterface
    *
    * @param object $object
    * @param string $slug
-   *
    * @return void
    */
   public function postSlugBuild(SluggableAdapter $ea, array &$config, $object, &$slug)
@@ -94,7 +93,7 @@ class LoginNameSlugHandler implements SlugHandlerInterface
     $slugs = explode($outerSeparator, $slug);
 
     // prefer a set of components if all are non empty
-    if (is_array(options['preferred'])) {
+    if (is_array($options['preferred'])) {
       $preferred = array_filter(array_intersect_key($slugs, array_flip($options['preferred'])));
       // use preferred fields if all are non empty
       if (count($preferred) == count($options['preferred'])) {
