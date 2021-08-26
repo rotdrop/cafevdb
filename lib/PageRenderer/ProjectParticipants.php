@@ -1025,6 +1025,8 @@ class ProjectParticipants extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'renameProjectParticipantFolders' ];
 
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
+
     $opts = $this->mergeDefaultOptions($opts);
 
     if ($execute) {
@@ -1182,5 +1184,52 @@ class ProjectParticipants extends PMETableViewBase
     return $this->defaultTableTabs($useFinanceTab, $extraTabs);
   }
 
+  /**
+   * This is a phpMyEdit before-SOMETHING trigger.
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldValues Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newValues Set of new values, which may also be modified.
+   *
+   * @return boolean If returning @c false the operation will be terminated
+   */
+  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $entity = $this->getDatabaseRepository($this->joinStructure[self::TABLE]['entity'])
+                   ->find([
+                     'project' => $pme->rec['project_id'],
+                     'musician' => $pme->rec['musician_id'],
+                   ]);
+
+    /** @var Entities\ProjectParticipant $entity */
+    $this->remove($entity, true); // this should be soft-delete
+    if ($entity->unused()) {
+      $this->logInfo('Project participant ' . $entity->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
+
+      // For now rather cascade manually. Could also use ORM, of course ...
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      foreach ($entity->getParticipantFieldsData() as $fieldDatum) {
+        $this->remove($fieldDatum, true);
+        if ($fieldDatum->unused()) {
+          $this->remove($fieldDatum, true);
+        }
+      }
+      $this->remove($entity, true); // this should be hard-delete
+    }
+    $changed = []; // disable PME delete query
+
+    return true; // but run further triggers if appropriate
+  }
 
 }

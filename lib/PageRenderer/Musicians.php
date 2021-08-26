@@ -872,7 +872,7 @@ make sure that the musicians are also automatically added to the
     $this->remove($entity, true); // this should be soft-delete
     if ($entity->unused()) {
       $this->logInfo($entity->getPublicName() . ' is unused, issuing hard-delete');
-      $this->remove($entity, true); // this should be soft-delete
+      $this->remove($entity, true); // this should be hard-delete
     }
     $changed = []; // disable PME delete query
 
