@@ -5617,7 +5617,6 @@ class phpMyEdit
 			}
 			if (is_array(@$this->fdd[$key][self::FDD_VALUES])
 				&& empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
-				$this->logInfo("Move $key values to values2");
 				foreach ($this->fdd[$key][self::FDD_VALUES] as $val) {
 					$this->fdd[$key][self::FDD_VALUES2][$val] = $val;
 				}
