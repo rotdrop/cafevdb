@@ -969,50 +969,12 @@ class phpMyEdit
 		$qparts[self::QPARTS_SELECT] = 'DISTINCT '.$queryField;
 
 		if (!empty($desc)) {
-
-			// normalize $desc
-			if (!is_array($desc)) {
-				$desc = [ 'columns' => [ $desc, ] ];
-			} else {
-				if (empty($desc['columns'])) {
-					$desc['columns'] = $desc;
-				}
-				if (!empty($desc['columns']) && !is_array($desc['columns'])) {
-					$desc['columns'] = [ $desc['columns'], ];
-				}
-				if (!empty($desc['divs']) && !is_array($desc['divs'])) {
-					$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
-				}
-			}
-
-			$qparts[self::QPARTS_SELECT] .= ',CONCAT('; // )
-			$num_cols = sizeof($desc['columns']);
-			if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
-				$qparts[self::QPARTS_SELECT] .= '"'.addslashes($desc['divs'][-1]).'",';
-			}
-			$selects = [];
-			foreach ($desc['columns'] as $idx => $val) {
-				if ($val) {
-					if ($this->hasSubstitutions($val)) {
-						$descSubs = [
-							'table' => $table_name,
-							'column' => $column,
-						];
-						$val = $this->substituteVars($val, $descSubs);
-					} else {
-						$val = $this->sd.$val.$this->ed;
-					}
-					$select = 'IFNULL(CAST('.$val.' AS CHAR),';
-					$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
-					$select .= $null.')';
-					if (!empty($desc['divs'][$idx]) && is_array($desc['divs'])) {
-						$select .= ',"'.addslashes($desc['divs'][$idx]).'"';
-					}
-					$selects[] = $select;
-				}
-			}
-			$qparts[self::QPARTS_SELECT] .= implode(',', $selects).',';
-			$qparts[self::QPARTS_SELECT][strlen($qparts[self::QPARTS_SELECT]) - 1] = ')';
+			$descSubs = [
+				'table' => $table_name,
+				'column' => $column,
+			];
+			$sqlPart = $this->field_description_sql($desc, $descSubs);
+			$qparts[self::QPARTS_SELECT] .= ' ,' . $sqlPart;
 			$qparts[self::QPARTS_SELECT] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 			$qparts[self::QPARTS_ORDERBY] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 		} else if ($column) {
@@ -1171,6 +1133,8 @@ class phpMyEdit
 	 *
 	 * @param bool $vanilla Return just the expression for the field.
 	 *
+	 * @bug $values['description'] only works for simple description fields.
+	 *
 	 */
 	protected function sql_field($field, $vanilla = false)
 	{
@@ -1186,7 +1150,6 @@ class phpMyEdit
 		}
 
 		$join_desc = $this->sd.$values['description'].$this->ed;
-		$join_desc_fqn = $join_table.'.'.$join_desc;
 		$order_by = $values['orderby'];
 
 		$fdd = $this->fdd[$field];
@@ -1205,10 +1168,9 @@ class phpMyEdit
 					'join_col_fqn' => $join_col_fqn,
 					'join_col_enc' => sprintf($values['encode'], $join_col_fqn),
 					'join_description' => $join_desc,
-					'join_desc_fqn' => $join_desc_fqn,
+					'description' => $join_desc,
 					'table' => $join_table,
 					'column' => $join_column,
-					'description' => $join_desc,
 					'order_by' => $order_by,
 				));
 		} else {
@@ -1216,6 +1178,83 @@ class phpMyEdit
 		}
 	}
 
+	/**
+	 * Normalize field description to have the form
+	 * ```
+	 * [
+	 *   'columns' => [ COL1, ... ]
+	 *   'divs' => [
+	 *     -1 => PREFIX, // optional
+	 *      0 => AFTER_COL_1,
+	 *      ...,
+	 *      N => AFTER_COL_N
+	 *   ]
+	 * ```
+	 */
+	protected function normalize_field_description($desc)
+	{
+		if (!is_array($desc)) {
+			$desc = [ 'columns' => [ $desc, ] ];
+		} else {
+			if (empty($desc['columns'])) {
+				$desc['columns'] = $desc;
+			}
+			if (!empty($desc['columns']) && !is_array($desc['columns'])) {
+				$desc['columns'] = [ $desc['columns'], ];
+			}
+			if (!empty($desc['divs']) && !is_array($desc['divs'])) {
+				$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
+			}
+		}
+		return $desc;
+	}
+
+	/**
+	 * Generate the field-description SQL part.
+	 *
+	 * @param mixed $desc FDD['values']['description'] as given by
+	 * user. $desc may contain placeholders '$table' and '$column'.
+	 *
+	 * @param array $descSubs Array
+	 * ```
+	 * [
+	 *   'table' => TABLE_SUBSTITUTION
+	 *   'column => COLUMN_SUBSTITUTION
+	 * ]
+	 * ```
+	 */
+	protected function field_description_sql($desc, $descSubs)
+	{
+		// normalize $desc
+		$desc = $this->normalize_field_description($desc);
+
+		// short-cut for simple
+
+		$ret = 'CONCAT(';
+		$num_cols = sizeof($desc['columns']);
+		if (!empty($desc['divs'][-1])) {
+			$ret .= '"'.addslashes($desc['divs'][-1]).'",';
+		}
+		$descFields = [];
+		foreach ($desc['columns'] as $idx => $val) {
+			if ($val) {
+				if (!$this->hasSubstitutions($val)) {
+					$val = '$table.'.$this->sd.$val.$this->ed;
+				}
+				$val = $this->substituteVars($val, $descSubs);
+				$descField = 'IFNULL(CAST('.$val.' AS CHAR),';
+				$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
+				$descField .= $null.')';
+				if (!empty($desc['divs'][$idx])) {
+					$descField .= ',"'.addslashes($desc['divs'][$idx]).'"';
+				}
+				$descFields[] = $descField;
+			}
+		}
+		$ret .= implode(',', $descFields);
+		$ret .= ')';
+		return $ret;
+	}
 	/**
 	 * Generate the query code for one field.
 	 *
@@ -1252,51 +1291,16 @@ class phpMyEdit
 				$column = $values['column'];
 				$desc = $values['description'];
 				$grouped = $values['grouped']??false;
-				$orderBy = $values['orderby'];
+				$orderBy = $values['orderby']??null;
+
+				$ret = $grouped ? 'GROUP_CONCAT(DISTINCT ' : ''; // )
+
 				$descSubs = [
 					'table' => $join_table,
 					'column' => $column,
 				];
+				$ret .= $this->field_description_sql($desc, $descSubs);
 
-				// normalize $desc
-				if (!is_array($desc)) {
-					$desc = [ 'columns' => [ $desc, ] ];
-				} else {
-					if (empty($desc['columns'])) {
-						$desc['columns'] = $desc;
-					}
-					if (!empty($desc['columns']) && !is_array($desc['columns'])) {
-						$desc['columns'] = [ $desc['columns'], ];
-					}
-					if (!empty($desc['divs']) && !is_array($desc['divs'])) {
-						$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
-					}
-				}
-
-				$ret = $grouped ? 'GROUP_CONCAT(DISTINCT ' : ''; // )
-				$ret .= 'CONCAT('; // )
-				$num_cols = sizeof($desc['columns']);
-				if (!empty($desc['divs'][-1]) && is_array($desc['divs'])) {
-					$ret .= '"'.addslashes($desc['divs'][-1]).'",';
-				}
-				$descFields = [];
-				foreach ($desc['columns'] as $idx => $val) {
-					if ($val) {
-						if (!$this->hasSubstitutions($val)) {
-							$val = '$table.'.$this->sd.$val.$this->ed;
-						}
-						$val = $this->substituteVars($val, $descSubs);
-						$descField = 'IFNULL(CAST('.$val.' AS CHAR),';
-						$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
-						$descField .= $null.')';
-						if (!empty($desc['divs'][$idx]) && is_array($desc['divs'])) {
-							$descField .= ',"'.addslashes($desc['divs'][$idx]).'"';
-						}
-						$descFields[] = $descField;
-					}
-				}
-				$ret .= implode(',', $descFields).',';
-				$ret[strlen($ret) - 1] = ')';
 				if ($grouped) {
 					if (empty($orderBy)) {
 						$orderBy = $join_table.'.'.$column.' ASC';
@@ -3984,8 +3988,7 @@ class phpMyEdit
 			}
 			$css_postfix	  = @$this->fdd[$k]['css']['postfix'];
 			$css_class_name	  = $this->getCSSclass('filter', null, null, $css_postfix);
-			$this->field_name = $this->fds[$k];
-			$fd				  = $this->field_name;
+			$fd				  = $this->fds[$k];
 			$this->field	  = $this->fdd[$fd];
 			$l	= 'qf'.$k;
 			$lc = $l.'_comp';
@@ -4805,6 +4808,14 @@ class phpMyEdit
 		if ($this->display['time'] && $this->timer != null) {
 			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
 		}
+		if (!empty($this->display['postfix'])) {
+			$postfix = $this->display['postfix'];
+			if (is_callable($postfix)) {
+				echo call_user_func($postfix, $this);
+			} else {
+				echo $postfix;
+			}
+		}
 		echo '</div>'."\n";
 		$this->form_end();
 	} /* }}} */
@@ -4933,6 +4944,14 @@ class phpMyEdit
 		$this->display_record_buttons('down');
 		if ($this->display['time'] && $this->timer != null) {
 			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
+		}
+		if (!empty($this->display['postfix'])) {
+			$postfix = $this->display['postfix'];
+			if (is_callable($postfix)) {
+				echo call_user_func($postfix, $this);
+			} else {
+				echo $postfix;
+			}
 		}
 		echo '</div>'."\n";
 		$this->form_end();
@@ -5623,6 +5642,7 @@ class phpMyEdit
 				unset($this->fdd[$key][self::FDD_VALUES]);
 			}
 			isset($this->fdd[$key]['help']) && $this->guidance = true;
+			$this->fdd[$key][self::FDD_SELECT] = $this->fdd[$key][self::FDD_SELECT] ?? null;
 
 			$this->fdd[$field_num] = $this->fdd[$key];
 			$field_num++;
@@ -6084,6 +6104,7 @@ class phpMyEdit
 		if ($this->display['time']) {
 			$this->timer = new phpMyEdit_timer();
 		}
+		$this->display['postfix'] = @$opts['display']['postfix'];
 		$this->display['tabs'] = isset($opts['display']['tabs'])
 			? $opts['display']['tabs'] : true;
 		$this->display['form'] = isset($opts['display']['form'])
