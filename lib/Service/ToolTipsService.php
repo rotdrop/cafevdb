@@ -309,6 +309,10 @@ invited to have a look, but please do not change anything unless you know what y
 
       'expert-operations' => $this->l->t('For those who know what they are doing, which essentially means: don\'t.'),
 
+      'instrument-insurance' => [
+        'not-a-club-member' => $this->l->t('The bill-to-party of an instrument-insurance must be a club-member. This seems not to be the case.'),
+      ],
+
       'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
 
       'participant-attachment-upload-replace' => $this->l->t('Upload a new attachment. The old file will be overwritten but possibly may be restored using hte file-app of the cloud-software.'),

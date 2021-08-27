@@ -32,6 +32,8 @@ import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 
+require('instrument-insurances.scss');
+
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const container = PHPMyEdit.container(containerSel);

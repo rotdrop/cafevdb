@@ -44,6 +44,8 @@ class InstrumentInsurances extends PMETableViewBase
   const TABLE = self::INSTRUMENT_INSURANCES_TABLE;
   const BROKER_TABLE = 'InsuranceBrokers';
   const RATES_TABLE = 'InsuranceRates';
+  const MEMBERSHIP_TABLE = self::PROJECT_PARTICIPANTS_TABLE . self::VALUES_TABLE_SEP . 'memberShip';
+  const BILL_TO_PARTY_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'BillToParty';
 
   protected $joinStructure = [
     self::TABLE => [
@@ -80,11 +82,24 @@ class InstrumentInsurances extends PMETableViewBase
     // for summing stuff up
     self::TABLE . self::VALUES_TABLE_SEP . 'allItems' => [
       'entity' => Entities\InstrumentInsurance::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'instrument_holder_id' => 'instrument_holder_id',
         'id' => false,
       ],
       'column' => 'id',
+    ],
+    // in order to trace missing member-ship
+    self::MEMBERSHIP_TABLE => [
+      'entity' => Entities\ProjectParticipant::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'project_id' => [
+          'value' => 'FILL_ME',
+        ],
+        'musician_id' => 'bill_to_party_id',
+      ],
+      'column' => 'musician_id',
     ],
   ];
 
@@ -130,9 +145,6 @@ class InstrumentInsurances extends PMETableViewBase
   public function render(bool $execute = true)
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $musicianId      = $this->musicianId;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
@@ -142,6 +154,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['css']['postfix'] = [
       'direct-change',
       'show-hide-disabled',
+      $this->cssClass(),
     ];
 
     // Number of records to display on the screen
@@ -212,8 +225,8 @@ class InstrumentInsurances extends PMETableViewBase
       ],
     ];
 
-    if ($musicianId > 0) {
-      $opts['filters'] = "$table.musician_id = ".$musicianId;
+    if ($this->musicianId > 0) {
+      $opts['filters'] = "$table.musician_id = " . $this->musicianId;
     }
 
     $opts['groupby_fields'] = [ 'id' ];
@@ -235,13 +248,14 @@ class InstrumentInsurances extends PMETableViewBase
       'sort'     => true
     ];
 
+    $this->joinStructure[self::MEMBERSHIP_TABLE]['identifier']['project_id']['value'] = $this->projectId;
     $joinTables = $this->defineJoinStructure($opts);
 
     $joinTables[self::MUSICIANS_TABLE] = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['instrument_holder_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Musician'),
-      'css'      => [ 'postfix' => ' musician-id' ],
+      'css'      => [ 'postfix' => [ 'musician-id', 'instrument-holder', ] ],
       'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
@@ -251,15 +265,27 @@ class InstrumentInsurances extends PMETableViewBase
         'column' => 'id',
         'description' => parent::musicianPublicNameSql(),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
-        'filters' => parent::musicianInProjectSql($this->projectId),
+        // 'filters' => parent::musicianInProjectSql($this->projectId),
+      ],
+      'display' => [
+        'prefix' => function($op, $pos, $row, $k, $pme) {
+          $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
+          $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+          $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+          $css = [ 'cell-wrapper' ];
+          $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
+          $css[] = $instrumentHolder == $billToParty ? 'is-bill-to-party' : 'not-the-bill-to-party';
+          return '<div class="' . implode(' ', $css) . '">';
+        },
+        'postfix' => '</div>',
       ],
     ];
 
-    $joinTables[self::MUSICIANS_TABLE.parent::VALUES_TABLE_SEP.'BillToParty'] = 'PMEjoin'.count($opts['fdd']);
+    $joinTables[self::BILL_TO_PARTY_TABLE] = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['bill_to_party_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Bill-to Party'),
-      'css'      => [ 'postfix' => ' bill-to-party allow-empty' ],
+      'css'      => [ 'postfix' => [ 'bill-to-party', 'allow-empty' ], ],
       'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
@@ -269,9 +295,44 @@ class InstrumentInsurances extends PMETableViewBase
         'column' => 'id',
         'description' => parent::musicianPublicNameSql(),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
-        'filters' => parent::musicianInProjectSql($this->projectId),
+        //'filters' => parent::musicianInProjectSql($this->projectId),
+      ],
+      'display' => [
+        'prefix' => function($op, $pos, $row, $k, $pme) {
+          $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
+          $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+          $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+          $css = [ 'cell-wrapper', 'tooltip-auto' ];
+          $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
+          $css[] = $instrumentHolder == $billToParty ? 'is-instrument-holder' : 'not-the-instrument-holder';
+          $title = $isClubMember
+                 ? ''
+                 : ' title="' . $this->toolTipsService['instrument-insurance:not-a-club-member'] . '"';
+          return '<div class="' . implode(' ', $css) . '"' . $title . '>';
+        },
+        'postfix' => '</div>',
       ],
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MEMBERSHIP_TABLE, 'project_id',
+      [
+        'name' => $this->l->t('Club Member'),
+        'tab'  => [ 'id' => 'tab-all' ],
+        'css' => [ 'postfix' => [ 'align-center', ], ],
+        'options' => 'LFACPDV',
+        'sql' => 'IF($join_col_fqn IS NULL, 0, 1)',
+        'input|LF' => 'RHV',
+        'input' => 'RV',
+        'select' => 'T',
+        'values2' => [
+          0 => '',
+          1 => '&#10004;',
+        ],
+        'php|CAP' => function($value) {
+          return $value ? '&#10004;' : '';
+        },
+      ]);
 
     $joinTables[self::BROKER_TABLE] = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['broker_id'] = [
@@ -323,13 +384,18 @@ GROUP BY b.short_name',
     $opts['fdd']['accessory'] = [
       'tab'      => [ 'id' => 'item' ],
       'name'     => $this->l->t('Accessory'),
-      'css'      => [ 'postfix' => ' accessory' ],
-      'select'   => 'O',
+      'css'      => [ 'postfix' => [ 'accessory', 'align-center', ], ],
+      'select|CAP'   => 'O',
+      'select|LVDF' => 'T',
       'sort'     => true,
-      'default' => false,
+      'default'  => false,
+      'escape'   => false,
       'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2' => [ 0 => '', 1 => '&#10004;' ],
-      'values2|CAP' => [ 0 => '', 1 => '' ],
+      'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+      'values2|LVDF' => [
+        0 => '',
+        1 => '&#10004;',
+      ],
     ];
 
     $opts['fdd']['manufacturer'] = [
@@ -425,7 +491,7 @@ GROUP BY b.short_name',
     $opts['fdd']['bill'] = [
       'tab'   => [ 'id' => 'tab-all' ],
       'name'  => $this->l->t('Bill'),
-      'css'   => [ 'postfix' => ' instrument-insurance-bill' ],
+      'css'   => [ 'postfix' => [ 'instrument-insurance-bill', ], ],
       'input' => 'VR',
       'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
@@ -444,6 +510,7 @@ GROUP BY b.short_name',
         ];
         $html = '';
         foreach ($actions as $key => $action) {
+          $action['properties'] = $action['properties'] ?? null;
           $html .=<<<__EOT__
 <li class="nav tooltip-left inline-block ">
   <a class="nav {$key} tooltip-auto"
