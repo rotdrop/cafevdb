@@ -254,7 +254,7 @@ class MusiciansController extends Controller {
       $streets = array_values(array_unique($streets));
 
       return self::dataResponse([
-        'message' => nl2br($message),
+        'message' => '',
         'city' => $city,
         'zip' => $zip,
         'street' => $street,
