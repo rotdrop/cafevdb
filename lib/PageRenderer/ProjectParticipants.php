@@ -1081,7 +1081,12 @@ class ProjectParticipants extends PMETableViewBase
     return true;
   }
 
-  // ??????
+  /**
+   * Translate the tab-name to an id if the name is set in the tab
+   * definitions of the table. This is needed by the
+   * ParticipantFieldsTrait in order to move extra-fields to the
+   * correct tab.
+   */
   private function tableTabId($idOrName)
   {
     $dflt = $this->defaultTableTabs();

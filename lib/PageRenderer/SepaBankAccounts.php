@@ -749,4 +749,38 @@ received so far'),
       $this->pme->setOptions($opts);
     }
   }
+
+  private function tableTabs()
+  {
+    return [
+      [
+        'id' => 'account',
+        'tooltip' => $this->l->t('Bank account associated to this debit mandate.'),
+        'name' => $this->l->t('Bank Account'),
+        ],
+      [
+        'id' => 'mandate',
+        'tooltip' => $this->l->t('Debit mandate, mandate-id, last used date, recurrence'),
+        'name' => $this->l->t('Mandate'),
+      ],
+    ];
+  }
+
+  /**
+   * Translate the tab-name to an id if the name is set in the tab
+   * definitions of the table. This is needed by the
+   * ParticipantFieldsTrait in order to move extra-fields to the
+   * correct tab.
+   */
+  private function tableTabId($idOrName)
+  {
+    $dflt = $this->tableTabs();
+    foreach($dflt as $tab) {
+      if ($idOrName === $tab['name']) {
+        return $idOrName;
+      }
+    }
+    return $idOrName;
+  }
+
 }
