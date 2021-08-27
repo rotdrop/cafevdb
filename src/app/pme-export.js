@@ -81,7 +81,7 @@ const pmeExportMenu = function(containerSel) {
   // install placeholder as first item if chosen is not active
   fixupNoChosenMenu(exportSelect);
 
-  container.find('select.pme-export-choice')
+  exportSelect
     .off('change')
     .on('change', function(event) {
       handleTableExportMenu($(this));
