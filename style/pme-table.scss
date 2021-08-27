@@ -150,74 +150,90 @@ tr.table-tabs ul.table-tabs {
   z-index:1;
 }
 
-/* Do we really need these??? */
-form.pme-form th[class*=tab-],
-form.pme-form td[class*=tab-] {
-  display:none;
-}
+form.pme-form {
 
-/**Display data on every tab. */
-form.pme-form tr th.tab-all,
-form.pme-form tr td.tab-all {
-  display:table-cell;
-}
+  /* Do we really need these??? */
+  th[class*=tab-],
+  td[class*=tab-] {
+    display:none;
+  }
 
-/**Display all tabs. */
-form.pme-form table.pme-main.tab-all tr th,
-form.pme-form table.pme-main.tab-all tr  td {
-  display:table-cell;
-}
+  /**Display data on every tab. */
+  tr th.tab-all,
+  tr td.tab-all {
+    display:table-cell;
+  }
 
-/**Otherwise diplay is triggerred by "diagonal" CSS classes */
-form.pme-form table.pme-main.tab-0 th.tab-0,
-form.pme-form table.pme-main.tab-0 td.tab-0 {
-  display:table-cell;
-}
+  /**Otherwise diplay is triggerred by "diagonal" CSS classes */
+  table.pme-main {
 
-form.pme-form table.pme-main.tab-1 th.tab-1,
-form.pme-form table.pme-main.tab-1 td.tab-1 {
-  display:table-cell;
-}
+    /**Display all tabs. */
+    &.tab-all tr {
+      th, td {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-2 th.tab-2,
-form.pme-form table.pme-main.tab-2 td.tab-2 {
-  display:table-cell;
-}
+    &.tab-0 {
+      th.tab-0, td.tab-0 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-3 th.tab-3,
-form.pme-form table.pme-main.tab-3 td.tab-3 {
-  display:table-cell;
-}
+    &.tab-1 {
+      th.tab-1, td.tab-1 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-4 th.tab-4,
-form.pme-form table.pme-main.tab-4 td.tab-4 {
-  display:table-cell;
-}
+    &.tab-2 {
+      th.tab-2, td.tab-2 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-5 th.tab-5,
-form.pme-form table.pme-main.tab-5 td.tab-5 {
-  display:table-cell;
-}
+    &.tab-3 {
+      th.tab-3, td.tab-3 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-6 th.tab-6,
-form.pme-form table.pme-main.tab-6 td.tab-6 {
-  display:table-cell;
-}
+    &.tab-4 {
+      th.tab-4, td.tab-4 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-7 th.tab-7,
-form.pme-form table.pme-main.tab-7 td.tab-7 {
-  display:table-cell;
-}
+    &.tab-5 th.tab-5,
+    &.tab-5 td.tab-5 {
+      display:table-cell;
+    }
 
-form.pme-form table.pme-main.tab-8 th.tab-8,
-form.pme-form table.pme-main.tab-8 td.tab-8 {
-  display:table-cell;
-}
+    &.tab-6 {
+      th.tab-6, td.tab-6 {
+	display:table-cell;
+      }
+    }
 
-form.pme-form table.pme-main.tab-9 th.tab-9,
-form.pme-form table.pme-main.tab-9 td.tab-9 {
-  display:table-cell;
-}
+    &.tab-7 {
+      th.tab-7, td.tab-7 {
+	display:table-cell;
+      }
+    }
+
+    &.tab-8 {
+      th.tab-8, td.tab-8 {
+	display:table-cell;
+      }
+    }
+
+    &.tab-9 {
+      th.tab-9, td.tab-9 {
+	display:table-cell;
+      }
+    }
+  } /* table.pme-main */
+} /* form.pme-form */
 
 /*******************************************************************************
  *
@@ -281,13 +297,15 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
  *
  */
 
-tr.pme-navigation .listall {
-  display:none;
-}
+tr.pme-navigation {
+  .listall {
+    display:none;
+  }
 
-tr.pme-navigation td.pme-buttons span div {
-  vertical-align:middle;
-  font-weight:bold;
+  td.pme-buttons span div {
+    vertical-align:middle;
+    font-weight:bold;
+  }
 }
 
 .pme-export-block select,
@@ -299,22 +317,24 @@ tr.pme-navigation td.pme-buttons span div {
   padding-right:1.5em!important;
 }
 
-tr.pme-navigation td.pme-buttons span .chosen-container {
-  height:28px;
-}
+tr.pme-navigation {
+  td.pme-buttons span .chosen-container {
+    height:28px;
+  }
 
-tr.pme-navigation td.pme-buttons span .chosen-container-multi .chosen-choices li.search-choice {
-  line-height:12px;
-}
+  td.pme-buttons span .chosen-container-multi .chosen-choices li.search-choice {
+    line-height:12px;
+  }
 
-tr.pme-navigation td.pme-buttons span .chosen-container.chosen-container-multi {
-  height:28px;
-}
+  td.pme-buttons span .chosen-container.chosen-container-multi {
+    height:28px;
+  }
 
-tr.pme-navigation td.pme-buttons span .chosen-container .chosen-search-input {
-  height: 24px!important;
-  min-height:unset;
-}
+  td.pme-buttons span .chosen-container .chosen-search-input {
+    height: 24px!important;
+    min-height:unset;
+  }
+} /* tr.pme-navigation */
 
 .pme-goto .chosen-container,
 .pme-pagerows .chosen-container {
@@ -452,50 +472,51 @@ td.select-hidden select {
   height:100%;
 }
 
-form.pme-form textarea:not(.wysiwyg-editor) {
-  overflow-x:hidden; /* fix FF extra-line bug */
-  width:unset;
-}
-
-form.pme-form textarea.constrained {
-  resize: none;
-}
-
-form.pme-form textarea.constrained-width {
-  resize: vertical;
-}
-
-form.pme-form textarea.constrained-height {
-  resize: horizontal;
-}
-
-$pme-form-padding-left: 1ex;
-
 form.pme-form {
+  textarea:not(.wysiwyg-editor) {
+    overflow-x:hidden; /* fix FF extra-line bug */
+    width:unset;
+  }
+
+  textarea.constrained {
+    resize: none;
+  }
+
+  textarea.constrained-width {
+    resize: vertical;
+  }
+
+  textarea.constrained-height {
+    resize: horizontal;
+  }
+
+  $pme-form-padding-left: 1ex;
+
   padding-left:$pme-form-padding-left;
   background-color:#f2f8ff;
   width:auto;
-}
 
-/** @todo provide nicer scrolling facilities */
-form.pme-form.pme-list {
-  width:100%;
-  height:100%;
-  overflow:auto;
-  scrollbar-width:auto;
-  position:relative;
-}
+  /** @todo provide nicer scrolling facilities */
+  &.pme-list {
+    width:100%;
+    height:100%;
+    overflow:auto;
+    scrollbar-width:auto;
+    position:relative;
+  }
 
-form.pme-form.pme-list .pme-navigation-container {
-  position:sticky;
-  left:0;
-  /* overflow:hidden; */ /* otherwise the scroll-region extends indefinitely */
-}
+  &.pme-list .pme-navigation-container {
+    position:sticky;
+    left:0;
+    /* overflow:hidden; */ /* otherwise the scroll-region extends indefinitely */
+  }
 
-form.pme-form input[type=text] {
-  width:auto;
-  vertical-align:middle;
-}
+  input[type=text] {
+    width:auto;
+    vertical-align:middle;
+  }
+
+} /* form.pme-form */
 
 .pme-form tr,.pme-form tr:hover,.pme-form tr:active {
   background-color:inherit;
@@ -1088,17 +1109,19 @@ input.pme-filter {
   white-space:nowrap;
 }
 
-form.pme-form select.pme-comp-filter ~ input[type="text"].pme-filter {
-  width:auto;
-  white-space:nowrap;
-}
+form.pme-form {
+  select.pme-comp-filter ~ input[type="text"].pme-filter {
+    width:auto;
+    white-space:nowrap;
+  }
 
-form.pme-form input[type="text"].pme-filter {
-  box-sizing:border-box;
-  margin-left:0px;
-  margin-right:0px;
-  width:100%;
-  white-space:nowrap;
+  input[type="text"].pme-filter {
+    box-sizing:border-box;
+    margin-left:0px;
+    margin-right:0px;
+    width:100%;
+    white-space:nowrap;
+  }
 }
 
 td.pme-filter, th.pme-filter {
@@ -1112,109 +1135,113 @@ table.pme-main div.pme-filter-negate {
   overflow:visible;
 }
 
-table.pme-main label.pme-filter-negate-label,
-table.pme-main label.pme-filter-negate {
-  vertical-align:top;
-}
+table.pme-main {
+  label.pme-filter-negate-label,
+  label.pme-filter-negate {
+    vertical-align:top;
+  }
 
-table.pme-main label.pme-filter-negate span,
-table.pme-main label.pme-filter-negate-label span {
-  display:inline-block;
-  text-indent:-10000px;
-  width:24px;
-  height:24px;
-  position:relative;
-  top:-12px;
-  background:url(../img/dont.svg);
-  cursor:pointer;
-  opacity:0.4;
-  z-index:1;
-}
+  label.pme-filter-negate span,
+  label.pme-filter-negate-label span {
+    display:inline-block;
+    text-indent:-10000px;
+    width:24px;
+    height:24px;
+    position:relative;
+    top:-12px;
+    background:url(../img/dont.svg);
+    cursor:pointer;
+    opacity:0.4;
+    z-index:1;
+  }
 
-table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span,
-table.pme-main label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
-  opacity:1.0;
-  background:url(../img/dontred.svg);
-}
+  label.pme-filter-negate input[type=checkbox]:checked ~ span,
+  label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
+    opacity:1.0;
+    background:url(../img/dontred.svg);
+  }
 
-table.pme-main label.pme-filter-negate input[type=checkbox],
-table.pme-main label.pme-filter-negate-label input[type=checkbox] {
-  display:none;
-}
+  label.pme-filter-negate input[type=checkbox],
+  label.pme-filter-negate-label input[type=checkbox] {
+    display:none;
+  }
 
-table.pme-main select.pme-filter {
-  width:100%;
-}
+  select.pme-filter {
+    width:100%;
+  }
 
-table.pme-main select.pme-filter.projects {
-  width:auto;
-}
+  select.pme-filter.projects {
+    width:auto;
+  }
 
-/*Style links in a more ordinary fashion */
-table.pme-main a:not(.ui-tabs-anchor, .chosen-single):link {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-weight:bold;
-}
-table.pme-main a:not(.ui-tabs-anchor, .chosen-single):visited {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-weight:bold;
-}
-table.pme-main a:not(.ui-tabs-anchor, .chosen-single):hover {
-  color:CornFlowerBlue;
-  text-decoration:underline;
-  font-style:italic;
-  font-weight:bold;
-}
+  /*Style links in a more ordinary fashion */
+  a:not(.ui-tabs-anchor, .chosen-single):link {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-weight:bold;
+  }
+  a:not(.ui-tabs-anchor, .chosen-single):visited {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-weight:bold;
+  }
+  a:not(.ui-tabs-anchor, .chosen-single):hover {
+    color:CornFlowerBlue;
+    text-decoration:underline;
+    font-style:italic;
+    font-weight:bold;
+  }
 
-table.pme-main li.nav {
-  list-style:none;
-}
+  li.nav {
+    list-style:none;
+  }
 
-table.pme-main li.nav.inline-block {
-  display:inline-block;
-  vertical-align:middle;
-}
+  li.nav.inline-block {
+    display:inline-block;
+    vertical-align:middle;
+  }
 
-table.pme-main li.nav.inline-block > a.nav {
-  min-height:unset;
-  line-height:unset;
-}
+  li.nav.inline-block > a.nav {
+    min-height:unset;
+    line-height:unset;
+  }
 
-table.pme-main li.nav > a.nav {
-  color:#000;
-  text-decoration:none;
-  font-weight:inherit;
-}
+  li.nav > a.nav {
+    color:#000;
+    text-decoration:none;
+    font-weight:inherit;
+  }
 
-table.pme-main li.nav:hover > a.nav,
-table.pme-main li.nav:focus > a.nav {
-  background-color:#DDD;
-  color:#000;
-  opacity:1;
-  text-decoration:none;
-  font-weight:inherit;
-  font-style:normal;
-}
+  li.nav:hover > a.nav,
+  li.nav:focus > a.nav {
+    background-color:#DDD;
+    color:#000;
+    opacity:1;
+    text-decoration:none;
+    font-weight:inherit;
+    font-style:normal;
+  }
 
-table.pme-main li.nav > a.nav {
-  display: block;
-  width: 100%;
-  line-height: 44px;
-  min-height: 44px;
-  padding: 0px 12px;
-  overflow: hidden;
-  box-sizing: border-box;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: #000;
-  opacity: 0.57;
-}
+  li.nav > a.nav {
+    display: block;
+    width: 100%;
+    line-height: 44px;
+    min-height: 44px;
+    padding: 0px 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #000;
+    opacity: 0.57;
+  }
+} /* table.pme-main */
 
-form.pme-form tr.pme-row:hover td.pme-cell,
-form.pme-form tr.pme-row:hover td.pme-navigation {
-  background-color: #9BAFC8;
+form.pme-form {
+  tr.pme-row:hover td.pme-cell,
+  tr.pme-row:hover td.pme-navigation {
+    background-color: #9BAFC8;
+  }
 }
 
 table.pme-main {
@@ -1249,17 +1276,21 @@ table.pme-main {
 /* cursor as pointer for clickable data rows, compare the rowSelector
  * in pme.js around line 1442
  */
-form.pme-form td.pme-cell:not(.control),
-form.pme-form td.pme-navigation {
-  cursor:pointer;
-}
-form.pme-form td.pme-cell:not(.control) *,
-form.pme-form td.pme-navigation * {
-  cursor:inherit;
+form.pme-form {
+  td.pme-cell:not(.control),
+  td.pme-navigation {
+    cursor:pointer;
+  }
+  td.pme-cell:not(.control) *,
+  td.pme-navigation * {
+    cursor:inherit;
+  }
 }
 
-table.pme-main tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
-  display:none;
+table.pme-main {
+  tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
+    display:none;
+  }
 }
 
 /* Disable some inputs with a checkbox */
@@ -1310,14 +1341,51 @@ input[type="checkbox"].pme-input.pme-input-lock-unlock:checked + label.pme-input
 }
 
 /* show/hide deleted data */
-form.pme-form.hide-disabled table.pme-main > thead > tr > .hide-disabled-hidden,
-form.pme-form.hide-disabled table.pme-main > tbody > tr > .hide-disabled-hidden {
-  display:none!important;
+form.pme-form {
+  &.hide-disabled table.pme-main > {
+    thead > tr > .hide-disabled-hidden,
+    tbody > tr > .hide-disabled-hidden {
+      display:none!important;
+    }
+  }
+
+  &.show-disabled table.pme-main > {
+    thead > tr > .show-disabled-hidden,
+    tbody > tr > .show-disabled-hidden {
+      display:none!important;
+    }
+  }
 }
 
-form.pme-form.show-disabled table.pme-main > thead > tr > .show-disabled-hidden,
-form.pme-form.show-disabled table.pme-main > tbody > tr > .show-disabled-hidden {
-  display:none!important;
+form.pme-form {
+  span.query-log {
+    margin-left:1ex;
+  }
+}
+
+.oc-dialog .query-log-container {
+  * {
+    all:revert;
+  }
+  @import 'sanitize.css/sanitize';
+  @import '@csstools/normalize.css/normalize';
+
+  dt {
+    font-weight:bold;
+  }
+  a.copy {
+    margin-left: 1ex;
+    display:inline-block;
+    font-weight:bold;
+    text-decoration: none;
+    background-color: var(--color-background-dark);
+    color: var(--color-main-text);
+    padding: 2px 6px 2px 6px;
+    border: 1px solid var(--color-border-dark);
+    outline: none;
+    font-family: var(--font-face);
+    border-radius: var(--border-radius-pill);
+  }
 }
 
 /*

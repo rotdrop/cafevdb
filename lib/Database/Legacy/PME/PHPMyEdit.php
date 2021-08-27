@@ -56,6 +56,7 @@ class PHPMyEdit extends \phpMyEdit
   private $overrideOptions;
 
   private $debug;
+  private $queryLog;
 
   private $disabledLogTable;
 
@@ -104,6 +105,7 @@ class PHPMyEdit extends \phpMyEdit
     ];
     $this->setOptions($options->getArrayCopy());
     $this->labelOverride = [];
+    $this->queryLog = [];
   }
 
   public function setOptions(array $options)
@@ -222,6 +224,7 @@ class PHPMyEdit extends \phpMyEdit
     parent::__construct($opts); // oh oh
     $this->labels = array_merge($this->labels, $this->labelOverride);
     parent::execute();
+    $this->logInfo('QUERY LOG ' . strlen(print_r($this->queryLog, true)));
   }
 
 
@@ -315,17 +318,26 @@ class PHPMyEdit extends \phpMyEdit
     if ($debug || $this->debug) {
       $this->logInfo("DEBUG QUERY: ".$query, [], 2);
     }
+    $logEntry = [ 'query' => $query, ];
     try {
       $stmt = $this->dbh->executeQuery($query);
       $this->affectedRows = $stmt->rowCount();
       $this->errorCode = $stmt->errorCode();
       $this->errorInfo = $stmt->errorInfo();
+      $logEntry['affectedRows'] = $this->affectedRows;
+      $logEntry['errorCode'] = $this->errorCode;
+      $logEntry['errorInfo'] = $this->errorInfo;
+      $this->queryLog[] = $logEntry;
     } catch (DBALException $t) {
       $this->logException($t);
       throw $t;
       $this->exception = $t;
       $this->errorCode = $t->getCode();
       $this->errorInfo = $t->getMessage();
+      $logEntry['affectedRows'] = $this->affectedRows;
+      $logEntry['errorCode'] = $this->errorCode;
+      $logEntry['errorInfo'] = $this->errorInfo;
+      $this->queryLog[] = $logEntry;
       return false;
     }
     return $stmt;
@@ -458,6 +470,16 @@ class PHPMyEdit extends \phpMyEdit
       $this->tooltips->debug($oldDebug);
     }
     return $result;
+  }
+
+  public function queryLog()
+  {
+    return $this->queryLog;
+  }
+
+  public function clearQueryLog()
+  {
+    $this->queryLog = [];
   }
 }
 

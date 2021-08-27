@@ -268,6 +268,27 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       return true;
     };
 
+    $this->pmeOptions['display']['postfix'] = function($pme) {
+      if (!$this->expertMode) {
+        return '';
+      }
+      $html = '<span class="query-log"><select class="chosen chosen-dropup" name="query-log" data-placeholder="' . $this->l->t('Query Log'). '">';
+      //$html .= '<option value="" hidden>' . $this->l->t('Query Log') . '</option>';
+      $html .= '<option value="" hidden></option>';
+      $cnt = 0;
+      foreach ($this->pme->queryLog() as $logEntry) {
+        $label = htmlspecialchars(substr($logEntry['query'], 0, 24));
+        if (strlen($logEntry['query']) > 24) {
+          $label .= ' &#8230;';
+        }
+        $data = htmlspecialchars(json_encode($logEntry), ENT_QUOTES, 'UTF-8');
+        $html .= '<option data-query=\'' . $data . '\' value="' . $cnt . '">' . $label . '</option>';
+        $cnt++;
+      }
+      $html .= '</select></span>';
+      return $html;
+    };
+
     // @todo: the following should be done only on demand and is
     // somewhat chaotic.
 
@@ -1748,9 +1769,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return 'qf'.$this->queryFieldIndex($key, $fdd);
   }
 
+  protected function queryIndexField(string $key, array $fdd)
+  {
+    return $this->queryField($key, $fdd) . '_idx';
+  }
+
   protected function joinQueryField($tableInfo, $column, array $fdd)
   {
     return $this->queryField($this->joinTableFieldName($tableInfo, $column), $fdd);
+  }
+
+  protected function joinQueryIndexField($tableInfo, $column, array $fdd)
+  {
+    return $this->queryIndexField($this->joinTableFieldName($tableInfo, $column), $fdd);
   }
 
   protected function makeFieldTranslationsJoin(array $joinInfo, $fields)

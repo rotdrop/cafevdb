@@ -33,9 +33,11 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
+
 import checkInvalidInputs from './check-invalid-inputs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
+import pmeQueryLogMenu from './pme-querylog.js';
 import {
   sys as pmeSys,
   data as pmeData,
@@ -133,7 +135,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
   const args = [selector, parameters, resizeReadyCB];
   $.merge(args, cbHandle.parameters);
 
-  console.debug('Run table load callback for ' + template, callback);
+  console.info('Run table load callback for ' + template, callback);
   return callback.apply(context, args);
 };
 
@@ -734,6 +736,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             case 'dialogOpen':
               WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
                 transposeReady(containerSel);
+		pmeQueryLogMenu(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function() {
                   // console.trace();
                   // installInputChosen(containerSel);
@@ -872,6 +875,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       pmeInit(selector);
       WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
+	pmeQueryLogMenu(selector);
         tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
         pmeTweaks(container);
         CAFEVDB.toolTipsInit(selector);
@@ -1594,6 +1598,7 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
     transposeReady();
+    pmeQueryLogMenu();
     pmeInit();
     clear(pmeOpenDialogs); // not cleared in init on purpose
   });
