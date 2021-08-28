@@ -681,7 +681,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           const cssWidth = widget.prop('style').width;
           if (cssWidth === 'auto') {
             self.data('drag-width-tweak', true);
-            widget.width(widget.width() + 1); // copy with jquery-ui + ff drag bug
+            widget.width(widget.width() + 1); // cope with jquery-ui + ff drag bug
           }
         },
         resize() {
@@ -716,6 +716,14 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                 - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
             newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
             dialogHolder.height(newHeight);
+	    const form = dialogHolder.find('form.pme-form')[0];
+	    const html = $('html')[0];
+	    const dialog = dialogWidget[0];
+	    const scrollDelta = form.scrollWidth - form.clientWidth;
+	    if (scrollDelta > 0 && dialog.offsetWidth + scrollDelta < html.clientWidth) {
+	      console.debug('Compensating dialog width for pme-form vertical scrollbar');
+	      dialogWidget.css('width', (dialog.offsetWidth + scrollDelta) + 'px');
+	    }
           };
 
           tableDialogHandlers(tableOptions, function(parameters) {
