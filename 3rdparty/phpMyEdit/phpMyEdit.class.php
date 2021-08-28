@@ -1332,13 +1332,11 @@ class phpMyEdit
 
 	function get_SQL_groupby_query_opts()
 	{
-		$fields = '';
-		if (!empty($this->groupby)) {
-			foreach($this->groupby as $field) {
-				$fields .= $this->fqn($field, self::VANILLA).',';
-			}
+		$fields = [];
+		foreach($this->groupby as $field) {
+			$fields[] = $this->fqn($field, self::VANILLA);
 		}
-		return trim($fields, ',');
+		return implode(',', $fields);
 	}
 
 	function get_SQL_main_list_query_parts() /* {{{ */
@@ -6020,8 +6018,8 @@ class phpMyEdit
 		if (!is_array($this->key)) {
 			$this->key = [ $this->key => $opts['key_type'] ];
 		}
-		$this->groupby   = @$opts['groupby_fields'];
-		if ($this->groupby) {
+		$this->groupby   = $opts['groupby_fields'] ?? [];
+		if (!empty($this->groupby)) {
 			if (!is_array($this->groupby)) {
 				$this->groupby = array($this->groupby);
 			}
