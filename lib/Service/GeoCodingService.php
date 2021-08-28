@@ -557,7 +557,7 @@ class GeoCodingService
           'name' => $name,
         ]);
         if (empty($geoPostalCode)) {
-          $geoPostalCode = GeoPostalCodes::create()
+          $geoPostalCode = GeoPostalCode::create()
                          ->setCountry($country)
                          ->setPostalCode($postalCode)
                          ->setName($name);
