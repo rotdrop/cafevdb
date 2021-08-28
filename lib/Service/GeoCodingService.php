@@ -534,15 +534,13 @@ class GeoCodingService
         $translations = [];
         foreach ($this->languages($language) as $lang) {
           $translation = $this->translatePlaceName($name, $country, $lang);
-          if (!$translation) {
-            $translation = 'NULL';
-          } else {
-            $translation = Util::normalizeSpaces($translation);
-            $translation = "'".$translation."'";
-          }
+          $translation = Util::normalizeSpaces($translation);
           $this->logDebug(print_r($translations, true));
           $this->logDebug(print_r($lang, true));
           $this->logDebug(print_r($translation, true));
+          if (empty($translation)) {
+            continue;
+          }
           $translations[$lang] = $translation;
         }
 
@@ -551,6 +549,7 @@ class GeoCodingService
 
         $hasChanged = false;
         $this->setDatabaseRepository(GeoPostalCode::class);
+        /** @var Entities\GeoPostalCode $geoPostalCode */
         $geoPostalCode = $this->findOneBy([
           'country' => $country,
           'postalCode' => $postalCode,
@@ -593,7 +592,7 @@ class GeoCodingService
           }
           if ($hasChanged) {
             $entity->setTranslation($translation);
-            $entity = $this->merge($entity);
+            $entity = $this->persist($entity);
           }
         }
 
