@@ -527,7 +527,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
-      'tab'         => [ 'id' => [ 'orchestra' ] ],
+      'tab'         => [ 'id' => [ 'instrumentation' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'input'       => 'HRS',
