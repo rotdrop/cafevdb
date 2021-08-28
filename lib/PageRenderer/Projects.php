@@ -251,7 +251,7 @@ class Projects extends PMETableViewBase
       'values|LF'   => [
         'table' => self::TABLE,
         'column' => 'name',
-        'description' => 'name',
+        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         'groups' => 'year',
         'orderby' => '$table.`year` DESC',
       ],
@@ -327,7 +327,7 @@ class Projects extends PMETableViewBase
         'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
         'values' => [
           'column' => 'id',
-          'description' => 'name',
+          'description' => self::trivialDescription('name'),
           'orderby' => '$table.sort_order ASC',
           'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
         ],
