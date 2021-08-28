@@ -140,6 +140,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'column' => 'project_id',
         ]
       ],
+      'column' => 'id',
     ],
     self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDataOption::class,
@@ -294,7 +295,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'], [
+      $opts['display'] ?? [], [
         'form'  => true,
         'sort'  => true,
         'time'  => true,
@@ -350,10 +351,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'name' => 'row_tag', 'input' => 'SRH' ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'sort_key', [ 'input' => 'SRH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'sort_key', [ 'name' => 'input', 'input' => 'SRH' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
@@ -520,7 +521,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'name' => $this->l->t('IBAN'),
         'input'  => 'R',
         'options' => 'LFVD',
-        'css'  => [ 'postfix' => ' bank-account-iban' ],
+        'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => function($value) { return $this->encrypt($value); },
@@ -528,6 +529,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
         'display' => [
           'popup' => function($data) {
+	    if (empty($data)) {
+	      return ''; // can happen
+	    }
             $info  = $this->financeService->getIbanInfo($data);
             $result = '';
             foreach ($info as $key => $value) {
