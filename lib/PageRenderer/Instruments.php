@@ -281,7 +281,11 @@ GROUP BY $columns[1]",
         ],
         'select'       => 'M',
         'values' => [
-          'description' => 'l10n_family',
+          'description' => [
+            'columns' => [ 'l10n_family' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
           'orderby'     => '$description ASC',
         ],
       ]);

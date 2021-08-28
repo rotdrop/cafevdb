@@ -528,7 +528,12 @@ received so far'),
         'maxlen'   => 11,
         'sort'     => true,
         'values' => [
-          'description' => 'CONCAT($table.id, \': \', '.parent::musicianPublicNameSql().')',
+          'description' => [
+            'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+            'divs' => [ ': ' ],
+            'ifnull' => [ false, false ],
+            'cast' => [ 'CHAR', false ],
+          ],
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),
@@ -710,8 +715,6 @@ received so far'),
 
     ///////////////
 
-    // @todo PARTICIPANT FIELD STUFF / PROJECT MODE
-
     if (!$this->addOperation() && $projectMode) {
       if ($monetary->count() > 0) {
         $this->makeTotalFeesField($opts['fdd'], $monetary, $amountTab['id']);
@@ -721,9 +724,9 @@ received so far'),
 
     ///////////////
 
-    if ($musicianId > 0) {
-      $opts['filters']['AND'][] = '$table.musicianId = '.$musicianId;
-    }
+    // if ($musicianId > 0) {
+    //   $opts['filters']['AND'][] = '$table.musicianId = '.$musicianId;
+    // }
     if ($projectMode) {
       $opts['filters']['AND'][] =
         $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;

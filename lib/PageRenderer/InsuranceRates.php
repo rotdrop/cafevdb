@@ -149,6 +149,7 @@ class InsuranceRates extends PMETableViewBase
           'description' => [
             'columns' => [ 'long_name', 'address' ],
             'divs' => ' / ',
+            'cast' => [ false, false ],
           ],
           'join' => '$join_col_fqn = $main_table.broker_id',
         ],

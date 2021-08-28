@@ -498,7 +498,11 @@ make sure that the musicians are also automatically added to the
       'values' => [
         'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
         'orderby'     => '$table.sort_order ASC',
         'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
       ],
@@ -560,7 +564,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'M',
       'name' => $this->l->t('Projects'),
       'sort' => true,
-      'css'      => ['postfix' => ' projects tooltip-top'],
+      'css'      => ['postfix' => [ 'projects', 'tooltip-top', ], ],
       'display|LVDF' => ['popup' => 'data'],
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
       'filter' => [
@@ -569,6 +573,7 @@ make sure that the musicians are also automatically added to the
       ],
       'values' => [
         'table' => self::PROJECTS_TABLE,
+        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         'column' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',

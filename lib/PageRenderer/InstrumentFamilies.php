@@ -43,17 +43,13 @@ class InstrumentFamilies extends PMETableViewBase
   const TEMPLATE = 'instrument-families';
   const TABLE = 'InstrumentFamilies';
   private const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
-  private const TRANSLATIONS_TABLE = 'TableFieldTranslations';
-
-  /** @var BiDirectionalL10N */
-  private $musicL10n;
 
   protected $joinStructure = [
     self::TABLE => [
       'entity' => Entities\InstrumentFamily::class,
       'flags' => self::JOIN_MASTER,
     ],
-    self::TRANSLATIONS_TABLE => [
+    self::FIELD_TRANSLATIONS_TABLE => [
       'entity' => null,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -94,11 +90,9 @@ class InstrumentFamilies extends PMETableViewBase
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
-    , BiDirectionalL10N $musicL10n
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
-    $this->musicL10n = $musicL10n;
     $this->getDatabaseRepository(Entities\InstrumentFamily::class)->findAll();
     $this->flush();
   }
@@ -204,7 +198,7 @@ class InstrumentFamilies extends PMETableViewBase
     // set the locale into the join-structure
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       switch ($table) {
-      case self::TRANSLATIONS_TABLE:
+      case self::FIELD_TRANSLATIONS_TABLE:
         $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
         break;
       case self::INSTRUMENTS_TABLE:
@@ -220,7 +214,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['fdd']['family'] = [
       'name'   => $this->l->t('Family'),
-      'sql'    => 'IFNULL('.$joinTables[self::TRANSLATIONS_TABLE].'.content,$field_name)',
+      'sql'    => 'IFNULL('.$joinTables[self::FIELD_TRANSLATIONS_TABLE].'.content,$field_name)',
       'select' => 'T',
       'maxlen' => 64,
       'sort'   => true,
@@ -238,7 +232,11 @@ class InstrumentFamilies extends PMETableViewBase
         ],
         'select'       => 'M',
         'values' => [
-          'description' => 'l10n_name',
+          'description' => [
+            'columns' => [ 'l10n_name' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
           'orderby'     => 'sort_order ASC, $description ASC',
         ],
       ]);

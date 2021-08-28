@@ -254,7 +254,11 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort'     => true,
       'values|ACP' => [
         'column'      => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'ifnull' => [ false ],
+          'cast' => [ false ],
+        ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         //        'join'        => '$main_col_fqn = $join_col_fqn',
@@ -262,7 +266,11 @@ class ProjectParticipantFields extends PMETableViewBase
       ],
       'values|DVFL' => [
         'column'      => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'ifnull' => [ false ],
+          'cast' => [ false ],
+        ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
@@ -420,7 +428,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'name' => $this->currencyLabel($this->l->t('Data'), $prefix),
         'css' => [ 'postfix' => [ 'data-options-' . $variant ] ],
         'sql' => '$main_table.id',
-        'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant, $role) {
+        'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant) {
           // allowed values from virtual JSON aggregator field
           $dataOptions = $row['qf'.$pme->fdn['data_options']];
           $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
@@ -445,7 +453,7 @@ class ProjectParticipantFields extends PMETableViewBase
           ],
         ],
         'sql' => '$main_table.id',
-        'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($variant, $role) {
+        'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($variant) {
           // allowed values from virtual JSON aggregator field
           $dataOptions = $row['qf'.$pme->fdn['data_options']];
           $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
@@ -586,7 +594,10 @@ class ProjectParticipantFields extends PMETableViewBase
         'table' => self::OPTIONS_TABLE,
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
-        'description' => 'label',
+        'description' => [
+          'columns' => [ 'label' ],
+          'cast' => [ false ],
+        ],
         'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_col_fqn = $main_table.default_value',
       ],

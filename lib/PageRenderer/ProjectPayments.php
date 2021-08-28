@@ -362,7 +362,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'css'      => [ 'postfix' => ' instrumentation-id' ],
         'select' => 'D',
         'values' => [
-          'description' => 'CONCAT($table.id, \': \', '.parent::musicianPublicNameSql().')',
+	  'description' => [
+	    'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+	    'divs' => [ ': ' ],
+	    'ifnull' => [ false, false ],
+	    'cast' => [ 'CHAR', false ],
+	  ],
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),

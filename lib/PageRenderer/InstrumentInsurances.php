@@ -263,7 +263,7 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => parent::musicianPublicNameSql(),
+        'description' => self::trivialDescription(self::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
         // 'filters' => parent::musicianInProjectSql($this->projectId),
       ],
@@ -293,7 +293,7 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => parent::musicianPublicNameSql(),
+        'description' => self::trivialDescription(self::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
         //'filters' => parent::musicianInProjectSql($this->projectId),
       ],
@@ -355,6 +355,7 @@ GROUP BY b.short_name',
         'description' => [
           'columns' => [ 'long_name', 'address' ],
           'divs' => '; ',
+          'cast' => [ false, false ],
         ],
         'join' => '$join_col_fqn = $main_table.broker_id',
         'data' => '$table.geographical_scopes',

@@ -504,6 +504,8 @@ trait ParticipantFieldsTrait
                 'description' => [
                   'columns' => [ 'BIN2UUID($table.option_key)', '$table.option_value', ],
                   'divs' => self::JOIN_KEY_SEP,
+                  'ifnull' => [ false, "''" ],
+                  'cast' => [ false, false ],
                 ],
                 // ordering by UUID is meaningless but provides a
                 // consistent ordering if any two fields should have
@@ -769,7 +771,11 @@ LEFT JOIN (SELECT
   ON fdg.group_id = fd.option_key
 WHERE pp.project_id = $this->projectId",
                 'column' => 'musician_id',
-                'description' => 'name',
+                'description' => [
+                  'columns' => [ 'name' ],
+                  'cast' => [ false ],
+                  'ifnull' => [ false ],
+                ],
                 'groups' => "IF(
   \$table.group_number IS NULL,
   '".$this->l->t('without group')."',
@@ -937,7 +943,11 @@ LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = fd.field_id AND do.key = fd.option_key
 WHERE pp.project_id = $this->projectId",
                 'column' => 'musician_id',
-                'description' => 'name',
+                'description' => [
+                  'columns' => [ 'name' ],
+                  'ifnull' => [ false ],
+                  'cast' => [ false ],
+                ],
                 'groups' => "CONCAT(\$table.group_label, ': ', \$table.group_data)",
                 'data' => 'JSON_OBJECT(
   "groupId", IFNULL(BIN2UUID($table.group_id), -1),

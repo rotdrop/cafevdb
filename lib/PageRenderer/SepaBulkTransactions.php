@@ -363,7 +363,12 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'table' => self::MUSICIANS_TABLE,
           'column' => 'id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
-          'description' => 'CONCAT($table.id, \': \', '.parent::musicianPublicNameSql().')',
+	  'description' => [
+	    'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+	    'divs' => [ ': ' ],
+	    'ifnull' => [ false, false ],
+	    'cast' => [ 'CHAR', false ],
+	  ],
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),
@@ -390,7 +395,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   FROM ".self::SEPA_BANK_ACCOUNTS_TABLE." __t",
           'column' => 'bank_account_id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
-          'description' => 'iban',
+          'description' => self::trivialDescription('iban'),
         ],
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
           $values = Util::explode(',', $value, Util::TRIM);
@@ -421,7 +426,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   FROM ".self::SEPA_DEBIT_MANDATES_TABLE." __t",
           'column' => 'debit_mandate_id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
-          'description' => 'mandate_reference',
+          'description' => self::trivialDescription('mandate_reference'),
         ],
         'values2glue' => '<br/>',
         'display' => [

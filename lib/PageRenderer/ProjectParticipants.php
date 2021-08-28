@@ -498,7 +498,11 @@ class ProjectParticipants extends PMETableViewBase
         'values|VDPC' => [
           'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => 'l10n_name',
+          'description' => [
+            'columns' => [ 'l10n_name' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           //          'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::MUSICIAN_INSTRUMENTS_TABLE." mi WHERE \$record_id[project_id] = ".$this->projectId." AND \$record_id[musician_id] = mi.musician_id GROUP BY mi.musician_id))",
@@ -507,7 +511,11 @@ class ProjectParticipants extends PMETableViewBase
         'values|LFV' => [
           'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
           'column'      => 'id',
-          'description' => '$table.l10n_name',
+          'description' => [
+            'columns' => [ '$table.l10n_name' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
           //'filters'     => "FIND_IN_SET(id, (SELECT GROUP_CONCAT(DISTINCT instrument_id) FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi WHERE ".$this->projectId." = pi.project_id GROUP BY pi.project_id))",

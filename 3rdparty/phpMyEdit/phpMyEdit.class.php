@@ -886,7 +886,7 @@ class phpMyEdit
 		$valuesDef = $this->values_with_defaults($field_num);
 
 		if (!empty($valuesDef['table']) || $strict) {
-			$value_group_data = $this->set_values_from_table($field_num, $strict);
+			$value_group_data = $this->set_values_from_table($field_num);
 			$groups += $value_group_data['groups'];
 			$data += $value_group_data['data'];
 			$titles += $value_group_data['titles'];
@@ -912,7 +912,7 @@ class phpMyEdit
 		return $fdd['setvalues'];
 	} /* }}} */
 
-	function set_values_from_table($field_num, $strict = false) /* {{{ */
+	function set_values_from_table($field_num) /* {{{ */
 	{
 		$fdd    = $this->fdd[$field_num];
 		$db	    = $fdd[self::FDD_VALUES]['db']??null;
@@ -950,12 +950,20 @@ class phpMyEdit
 			$from_table = $dbp.$table.' '.$table_name;
 		}
 
+		if (!empty($desc)) {
+			$descSubs = [
+				'table' => $table_name,
+				'column' => $column,
+			];
+			$descSql = $this->field_description_sql($desc, $descSubs);
+		}
+
 		$subs = array(
 			'main_table'  => $this->tb,
 			'record_id'   => implode(',', $this->rec), // may be useful for change op.
 			'table'		  => $table_name,
 			'column'	  => $column,
-			'description' => $desc ?? null);
+			'description' => $descSql ?? null);
 		if (!empty($this->rec)) {
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
@@ -969,12 +977,7 @@ class phpMyEdit
 		$qparts[self::QPARTS_SELECT] = 'DISTINCT '.$queryField;
 
 		if (!empty($desc)) {
-			$descSubs = [
-				'table' => $table_name,
-				'column' => $column,
-			];
-			$sqlPart = $this->field_description_sql($desc, $descSubs);
-			$qparts[self::QPARTS_SELECT] .= ' ,' . $sqlPart;
+			$qparts[self::QPARTS_SELECT] .= ' ,' . $descSql;
 			$qparts[self::QPARTS_SELECT] .= ' AS '.$this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 			$qparts[self::QPARTS_ORDERBY] = $this->sd.self::COLUMN_ALIAS.$field_num.$this->ed;
 		} else if ($column) {
@@ -1149,7 +1152,10 @@ class phpMyEdit
 			return $join_col_fqn;
 		}
 
-		$join_desc = $this->sd.$values['description'].$this->ed;
+		$join_desc = $this->field_description_sql($values['description'], [
+			'table' => $join_table,
+			'column' => $this->sd . $join_column . $this->ed,
+		]);
 		$order_by = $values['orderby'];
 
 		$fdd = $this->fdd[$field];
@@ -1231,30 +1237,38 @@ class phpMyEdit
 		// short-cut for simple
 
 		$ret = 'CONCAT(';
-		$num_cols = sizeof($desc['columns']);
+		$descParts = [];
 		if (!empty($desc['divs'][-1])) {
-			$ret .= '"'.addslashes($desc['divs'][-1]).'",';
+			$descParts[] = "'" . addslashes($desc['divs'][-1]) . "'";
 		}
-		$descFields = [];
 		foreach ($desc['columns'] as $idx => $val) {
 			if ($val) {
 				if (!$this->hasSubstitutions($val)) {
 					$val = '$table.'.$this->sd.$val.$this->ed;
 				}
 				$val = $this->substituteVars($val, $descSubs);
-				$descField = 'IFNULL(CAST('.$val.' AS CHAR),';
-				$null = empty($desc['ifnull'][$idx]) ? '""' : $desc['ifnull'][$idx];
-				$descField .= $null.')';
-				if (!empty($desc['divs'][$idx])) {
-					$descField .= ',"'.addslashes($desc['divs'][$idx]).'"';
+				$cast = $desc['cast'][$idx] ?? 'CHAR';
+				if ($cast !== false) {
+					$val = 'CAST('.$val.' AS ' . $cast . ')';
 				}
-				$descFields[] = $descField;
+				$ifnull = $desc['ifnull'][$idx] ?? "''";
+				if ($ifnull === false) {
+					$descParts[] = $val;
+				} else {
+					$descParts[] = 'COALESCE(' . $val . ', ' . $ifnull . ')';
+				}
+				if (!empty($desc['divs'][$idx])) {
+					$descParts[] = "'" . addslashes($desc['divs'][$idx]) . "'";
+				}
 			}
 		}
-		$ret .= implode(',', $descFields);
-		$ret .= ')';
-		return $ret;
+		if (count($descParts) > 1) {
+			return 'CONCAT(' . implode(',', $descParts) . ')';
+		} else {
+			return $descParts[0] ?? 'NULL';
+		}
 	}
+
 	/**
 	 * Generate the query code for one field.
 	 *
@@ -2853,6 +2867,7 @@ class phpMyEdit
 		}
 
 		$this->col_has_values($k) && $this->set_values($k);
+
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k][self::FDD_VALUES2])) {

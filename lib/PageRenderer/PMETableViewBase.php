@@ -2067,6 +2067,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
   WHERE pp.project_id = $projectIdSql)";
   }
+
+  /**
+   * Create a trivial description definition with no casts and no NULL
+   * coalescing.
+   */
+  static protected function trivialDescription($singleField = PHPMyEdit::TRIVIAL_DESCRIPION)
+  {
+    return [
+      'columns' => [ $singleField ],
+      'ifnull' => [ false ],
+      'cast' => [ false ],
+    ];
+  }
 }
 
 // Local Variables: ***

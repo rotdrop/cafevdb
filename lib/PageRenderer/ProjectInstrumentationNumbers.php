@@ -188,7 +188,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'     => $sort,
       'values|ACP' => [
         'column'      => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         //        'join'        => '$main_col_fqn = $join_col_fqn',
@@ -196,7 +200,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       ],
       'values|DVFL' => [
         'column'      => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
@@ -229,7 +237,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'     => $sort,
       'values'   => [
         'column' => 'id',
-        'description' => 'name',
+        'description' => [
+          'columns' => [ 'name' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
         'orderby' => '$table.sort_order',
         'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
