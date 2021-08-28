@@ -224,7 +224,6 @@ class PHPMyEdit extends \phpMyEdit
     parent::__construct($opts); // oh oh
     $this->labels = array_merge($this->labels, $this->labelOverride);
     parent::execute();
-    $this->logInfo('QUERY LOG ' . strlen(print_r($this->queryLog, true)));
   }
 
 
