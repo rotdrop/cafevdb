@@ -77,7 +77,6 @@ trait SepaAccountsTrait
           'name' => $this->l->t('SEPA Debit Mandate Reference'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
-          'tab' => [ 'id' => 'contact' ],
           'sql' => 'GROUP_CONCAT(
   DISTINCT
   CONCAT_WS(
@@ -106,7 +105,6 @@ trait SepaAccountsTrait
           'name' => $this->l->t('SEPA Debit Mandate Deleted'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
-          'tab' => [ 'id' => 'contact' ],
           'sql' => 'GROUP_CONCAT(
   DISTINCT
   CONCAT_WS(
@@ -208,7 +206,6 @@ trait SepaAccountsTrait
           'name' => $this->l->t('Bank Account Deleted'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
-          'tab' => [ 'id' => 'contact' ],
           'sql' => 'GROUP_CONCAT(
   DISTINCT
   CONCAT_WS(
