@@ -26,6 +26,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 class ProjectsRepository extends EntityRepository
 {
+  // use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
   const ALIAS = 'proj';
 
   /**Sort by configured sorting column. */
@@ -47,8 +49,9 @@ class ProjectsRepository extends EntityRepository
    */
   public function findById($projectOrId):?Entities\Project
   {
+    // $this->log(print_r($projectOrId, true));
     if (isset($projectOrId['id'])) { // allow plain array with id
-      $projectId = $projectId['id'];
+      $projectId = $projectOrId['id'];
     } else {
       $projectId = $projectOrId;
     }

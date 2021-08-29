@@ -918,8 +918,12 @@ Whatever.',
   /**
    * Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
+   *
+   * @param int $projectId
+   *
+   * @param mixed $article Either an array or Entities\ProjectWebPage
    */
-  public function deleteProjectWebPage($projectId, array $article)
+  public function deleteProjectWebPage($projectId, $article)
   {
     $articleId = $article['articleId'];
     $categoryId = $article['categoryId'];
@@ -1371,6 +1375,10 @@ Whatever.',
   public function deleteProject($projectOrId):? Entities\Project
   {
     $project = $this->repository->ensureProject($projectOrId);
+    if (empty($project)) {
+      throw new \RuntimeException($this->l->t('Unable to find the project to delete (id = %d)', $projectOrId));
+    }
+
     $projectId = $project['id'];
 
     $softDelete  = count($project['payments']??[]) > 0;

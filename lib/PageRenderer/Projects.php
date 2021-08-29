@@ -463,7 +463,6 @@ __EOT__;
       unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
       unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $this->logInfo('SHOWING OR permanent');
       $opts['filters']['OR'][] = "\$table.type = 'permanent'";
     }
     if (!$this->showDisabled) {
@@ -483,7 +482,6 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][]   = [ $this, 'afterInsertTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this , 'deleteTrigger' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_AFTER][] = [ $this, 'deleteTrigger' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
