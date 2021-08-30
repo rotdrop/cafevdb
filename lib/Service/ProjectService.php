@@ -598,8 +598,11 @@ class ProjectService
 
   /**
    * Generate an automated overview
+   *
+   * @param array<int> $exclude Excluded project-ids, used e.g. during
+   * deletion of projects.
    */
-  public function generateWikiOverview()
+  public function generateWikiOverview(array $exclude = [])
   {
 /*
   ====== Projekte der Camerata Academica Freiburg e.V. ======
@@ -618,7 +621,9 @@ class ProjectService
     $orchestra = $this->getConfigValue('orchestra');
     $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
 
-    $projects = $this->repository->findAll();
+    $projects = $this->repository->findBy(
+      [ '!id' => $exclude ],
+      [ 'year' => 'DESC', 'name' => 'ASC' ]);
 
     $page = "====== ".($this->l->t('Projects of %s', [$orchestra]))."======\n\n";
 
@@ -694,8 +699,22 @@ Whatever.',
 
       $pagename = $this->projectWikiLink($projectName);
       $this->wikiRPC->putPage($pagename, $page,
-                              [ "sum" => "Automatic CAFEVDB synchronization",
+                              [ "sum" => "Automatic CAFEVDB synchronization, project created",
                                 "minor" => true ]);
+  }
+
+  /**
+   * Delete the wiki page after the project has been deleted.
+   *
+   * @param array|Entities\Project $project
+   */
+  public function deleteProjectWikiPage($project)
+  {
+    $projectName = $project['name'];
+    $pagename = $this->projectWikiLink($projectName);
+    $this->wikiRPC->putPage($pagename, '',
+                            [ "sum" => "Automatic CAFEVDB synchronization, project deleted.",
+                              "minor" => true ]);
   }
 
   /**
@@ -1383,26 +1402,44 @@ Whatever.',
 
     $softDelete  = count($project['payments']??[]) > 0;
 
+    $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
+       ->register(new GenericUndoable(
+         function() use ($project) {
+           $this->removeProjectFolders($project);
+         },
+         function() {
+           $this->logWarn('No undo mechanism for removeProjectFolders()');
+         }))
+       ->register(new GenericUndoable(
+         function() use ($project) {
+           $projectId = $project->getId();
+           $this->deleteProjectWikiPage($project);
+           $this->generateWikiOverview([ $projectId ]);
+         },
+         function() {
+           $this->generateWikiOverview();
+           $this->logWarn('No undo mechanism for deleteProjectWikiPage()');
+         }))
+       ->register(new GenericUndoable(
+         function() use ($project) {
+           $projectId = $project->getId();
+           $webPages = $project->getWebPages();
+           foreach ($webPages as $page) {
+             // ignore errors
+             $this->deleteProjectWebPage($projectId, $page);
+           }
+         },
+         function() {
+           $this->logWarn('No undo mechanism for deleteProjectWebPage()');
+         }));
+
     $this->entityManager->beginTransaction();
     try {
 
       $this->eventDispatcher->dispatchTyped(
         new Events\ProjectDeletedEvent($project->getId(), $softDelete));
 
-      // Remove the project folder ... OC has undelete
-      // functionality and we have a long-ranging backup.
-      $this->removeProjectFolders($project);
-
-      // Regenerate the TOC page in the wiki.
-      $this->generateWikiOverview();
-
-      // Delete the page template from the public web-space. However,
-      // here we only move it to the trashbin.
-      $webPages = $project->getWebPages();
-      foreach ($webPages as $page) {
-        // ignore errors
-        $this->deleteProjectWebPage($projectId, $page);
-      }
+      $preCommitActions->executeActions();
 
       if ($softDelete) {
         if (!$project->isDeleted()) {
@@ -1440,6 +1477,7 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
+      $preCommitActions->executeUndo();
       if (!$this->entityManager->isTransactionActive()) {
         $this->entityManager->close();
         $this->entityManager->reopen();
@@ -1450,10 +1488,6 @@ Whatever.',
         $t->getCode(),
         $t);
     }
-
-    // if ($this->entityManager->isTransactionActive()) {
-    //   throw new \Exception('Transaction still active '.$this->entityManager->getTransactionNestingLevel());
-    // }
 
     return $softDelete ? $project : null;
   }
