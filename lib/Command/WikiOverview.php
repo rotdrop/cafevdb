@@ -96,18 +96,13 @@ class WikiOverview extends Command
     $encryptionService->bind($userId, $password);
     $encryptionService->initAppEncryptionKey();
 
-    $output->writeln('DB SERVER: ' . $encryptionService->getConfigValue('dbserver'));
-
     /** @var AuthDokuWiki $wikiRPC */
     $wikiRPC = \OC::$server->query(AuthDokuWiki::class);
     $result = $wikiRPC->login($userId, $password);
-    $output->writeln($this->l->t('Result is: %d', (int)$result));
 
     /** @var ProjectService $projectService */
     $projectService = \OC::$server->query(ProjectService::class);
     $result = $projectService->generateWikiOverview();
-
-    $output->writeln($this->l->t('Result is: %d', (int)$result));
 
     return 0;
   }
