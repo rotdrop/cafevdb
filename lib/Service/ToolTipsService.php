@@ -741,11 +741,11 @@ Suchkriterien anzuzeigen.'),
 
       'pme-showall-tab' => $this->l->t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
 
-      'pme-sort' => $this->l->t('Klick mich, um das Sortieren nach diesem Feld ein zu schalten!'),
+      'pme-sort' => $this->l->t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
 
-      'pme-sort-rvrt' => $this->l->t('Klick mich, um die Sortierreihenfolge umzukehren!'),
+      'pme-sort-rvrt' => $this->l->t('Click me to reverse the sort order by this field!'),
 
-      'pme-sort-off' => $this->l->t('Klick mich, um das Sortieren nach diesem Feld aus zu schalten!'),
+      'pme-sort-off' => $this->l->t('Click me to remove this field from the sorting criteria!'),
 
       'pme-transpose' => $this->l->t('Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!'),
 
