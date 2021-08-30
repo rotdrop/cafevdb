@@ -179,6 +179,7 @@ class phpMyEdit
 	var $cancelcopy;
 	var $savedelete;
 	var $canceldelete;
+	var $reloaddelete;
 	var $cancelview;
 	var $reloadview;
 
@@ -230,7 +231,7 @@ class phpMyEdit
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
-		'D' => array('save','cancel'),
+		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_multi_buttons = array(
@@ -241,7 +242,7 @@ class phpMyEdit
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
-		'D' => array('save','cancel'),
+		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_buttons_no_B = array(
@@ -252,7 +253,7 @@ class phpMyEdit
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
-		'D' => array('save','cancel'),
+		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_multi_buttons_no_B = array(
@@ -263,7 +264,7 @@ class phpMyEdit
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
-		'D' => array('save','cancel'),
+		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
 
@@ -3642,6 +3643,7 @@ class phpMyEdit
 		echo 'cancelcopy=',$this->cancelcopy,'	 ';
 		echo 'savedelete=',$this->savedelete,'	 ';
 		echo 'canceldelete=',$this->canceldelete,'	 ';
+		echo 'reloaddelete=',$this->reloaddelete,'	 ';
 		echo 'cancelview=',$this->cancelview,'	 ';
 		echo 'reloadview=',$this->reloadview,'	 ';
 		echo 'operation=',$this->operation,'   ';
@@ -5946,6 +5948,12 @@ class phpMyEdit
 			$this->backward_compatibility();
 			$this->recreate_displayed();
 		}
+		elseif ($this->label_cmp($this->reloaddelete, 'Reload')) {
+			$this->operation = $this->labels['Delete']; // to force delete operation
+			$this->recreate_fdd();
+			$this->backward_compatibility();
+			$this->recreate_displayed();
+		}
 
 
 		/*
@@ -6385,6 +6393,7 @@ class phpMyEdit
 		$this->cancelcopy	= $this->get_sys_cgi_var('cancelcopy');
 		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');
+		$this->reloaddelete = $this->get_sys_cgi_var('reloaddelete');
 		$this->cancelview	= $this->get_sys_cgi_var('cancelview');
 		$this->reloadview	= $this->get_sys_cgi_var('reloadview');
 

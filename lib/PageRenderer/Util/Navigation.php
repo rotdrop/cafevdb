@@ -272,7 +272,7 @@ class Navigation
       'A' => ['save', 'apply', 'more', 'cancel'],
       'C' => ['save', 'more', 'cancel', 'reload'],
       'P' => ['save', 'apply', 'cancel'],
-      'D' => ['save', 'cancel'],
+      'D' => ['save', 'cancel', 'reload'],
       'V' => ['change', 'copy', 'delete', 'cancel', 'reload']
     ];
 
