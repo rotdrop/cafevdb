@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Exceptions\MissingProjectsFolderException;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 /**
@@ -92,7 +93,7 @@ class MountProvider implements IMountProvider
     $userStorage = $this->di(\OCA\CAFEVDB\Storage\UserStorage::class);
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-      $this->logException(new \Exception('NO shared folder for ' . $user->getUID()));
+      $this->logException(new \Exception('No shared folder for ' . $user->getUID()));
       --self::$recursionLevel;
       return [];
     }
@@ -100,12 +101,12 @@ class MountProvider implements IMountProvider
     try {
       $node = $node->get($projectsFolder);
       if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-        $this->logException(new \Exception('NO projects folder for ' . $user->getUID()));
+        $this->logException(new MissingProjectsFolderException('No projects folder for ' . $user->getUID()));
         --self::$recursionLevel;
         return [];
       }
     } catch (\Throwable $t) {
-      $this->logException(new \Exception('NO projects folder ' . $projectsFolder . ' for ' . $user->getUID()));
+      $this->logException(new MissingProjectsFolderException('No projects folder ' . $projectsFolder . ' for ' . $user->getUID()));
       --self::$recursionLevel;
       return [];
     }
