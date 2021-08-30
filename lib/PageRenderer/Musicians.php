@@ -389,7 +389,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
-          $firstName = $row['qf'.($k-1)];
+          $firstName = $row['qf'.($k-1)] ?? '';
           return [
             'placeholder' => $firstName ?: '',
             'readonly' => empty($row['qf'.$k]),
@@ -420,9 +420,9 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
           // $this->logInfo('OP '.$op);
-          $surName = $row['qf'.($k-3)];
-          $firstName = $row['qf'.($k-2)];
-          $nickName = $row['qf'.($k-1)];
+          $surName = $row['qf'.($k-3)] ?? '';
+          $firstName = $row['qf'.($k-2)] ?? '';
+          $nickName = $row['qf'.($k-1)] ?? '';
           return [
             'placeholder' => $op == 'add' ? '' : $surName.', '.($nickName?:$firstName),
             'readonly' => empty($row['qf'.$k]),
@@ -453,9 +453,9 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
-          $surName = $row['qf'.($k-4)];
-          $firstName = $row['qf'.($k-3)];
-          $nickName = $row['qf'.($k-2)];
+          $surName = $row['qf'.($k-4)] ?? '';
+          $firstName = $row['qf'.($k-3)] ?? '';
+          $nickName = $row['qf'.($k-2)] ?? '';
           $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
             'placeholder' => $op == 'add' ? '' : $placeHolder,
@@ -743,7 +743,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'APVCD',
       'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $recordId['id'];
+        $musicianId = $recordId['id'] ?? 0;
         return $this->photoImageLink($musicianId, $action, $imageId);
       },
       'css' => ['postfix' => ' photo'],

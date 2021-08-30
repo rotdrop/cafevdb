@@ -416,10 +416,9 @@ class ProjectParticipantFields extends PMETableViewBase
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
       'php' => function($dataOptions, $op, $field, $row, $recordId, $pme) {
-        // $this->logInfo('OPTIONS '.print_r($dataOptions, true));
-        $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
-        $dataType = $row['qf'.$pme->fdn['data_type']];
-        return $this->showDataOptions($dataOptions, $op, $recordId['id'], $multiplicity, $dataType);
+        $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
+        $dataType = $row['qf'.$pme->fdn['data_type']]??null;
+        return $this->showDataOptions($dataOptions, $op, $recordId['id']??null, $multiplicity, $dataType);
       },
     ];
 
@@ -430,10 +429,10 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant) {
           // allowed values from virtual JSON aggregator field
-          $dataOptions = $row['qf'.$pme->fdn['data_options']];
-          $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
-          $dataType = $row['qf'.$pme->fdn['data_type']];
-          return $this->showAllowedSingleValue($dataOptions, $op, $fdd[$field]['tooltip'], $multiplicity, $dataType, $variant);
+          $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
+          $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
+          $dataType = $row['qf'.$pme->fdn['data_type']]??null;
+          return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $variant);
         },
         'input' => 'SR',
         'options' => 'ACP', // but not in list/view/delete-view
@@ -455,15 +454,15 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($variant) {
           // allowed values from virtual JSON aggregator field
-          $dataOptions = $row['qf'.$pme->fdn['data_options']];
-          $multiplicity = $row['qf'.$pme->fdn['multiplicity']];
-          $dataType = $row['qf'.$pme->fdn['data_type']];
+          $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
+          $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
+          $dataType = $row['qf'.$pme->fdn['data_type']]??null;
           $entry = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
           $key = $entry['key'];
           $name  = $this->pme->cgiDataName('data_options_' . $variant);
           $field = 'deposit';
           $value = htmlspecialchars($entry[$field]);
-          $tip = $fdd[$field]['tooltip'];
+          $tip = $pme->fdd[$pmeField]['tooltip'];
           $html =<<<__EOT__
             <div class="active-value">
             <input class="pme-input data-options-{$variant} multiplicity-{$variant}-set-deposit-due-date-required"
@@ -1391,7 +1390,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $html .= '
   </td>
 </tr>';
-    $generator = $generatorItem['data'];
+    $generator = $generatorItem['data']??null;
     $html .= '
 <tr
   class="data-line data-options generator active only-multiplicity-recurring"
@@ -1726,7 +1725,7 @@ __EOT__;
     $html .= '</div>';
     $html .= '<div class="inactive-values">';
     // Now emit all left-over values. Flag all items as deleted.
-    foreach ($allowed as $key => $option) {
+    foreach ($dataOptions as $key => $option) {
       $key = $option['key'];
       if ($key == $entry['key']) {
         continue;

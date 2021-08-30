@@ -252,6 +252,9 @@ trait SepaAccountsTrait
             'orderby' => '$table.musician_id ASC, $table.sequence ASC',
           ],
           'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField, $projectRestrictions) {
+            if (empty($row)) {
+              return '';
+            }
             // $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
 
             //$valInfo = $pme->set_values($k-1);
