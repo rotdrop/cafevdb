@@ -797,7 +797,7 @@ project without a poster first.");
       return true;
     }
     if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = $this->sanitizeName($newvals['name']);
+      $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
       if ($newvals['name'] === false) {
         return false;
       }
