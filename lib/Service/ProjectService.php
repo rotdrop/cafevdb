@@ -678,7 +678,7 @@ helpful to reduce unnecessary data-digging in our email box.
 
 ===== Contacts =====
 Please add any relevant email and mail-adresses here. Please use the wiki-syntax
-* [[foobar@important.com|Mister Universe]]
+* [[foobar@important.com||Mister Universe]]
 
 ===== Financial Arrangements =====
 Please add any special financial arrangements here. For example:
@@ -714,7 +714,7 @@ Whatever.',
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $oldPage = " *  ".$oldvals['name']." wurde zu [[".$newPageName."]] umbenant\n";
+    $oldPage = ' *  '.$this->l->t('1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
     $newPage = $this->wikiRPC->getPage($oldPageName);
 
     $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
@@ -1049,7 +1049,7 @@ Whatever.',
         // if successful then also update the data-base entry
         $webPagesRepository->mergeAttributes(
           [ 'articleId' => $article['articleId'] ],
-          [ 'articleName' => newName ]);
+          [ 'articleName' => $newName ]);
       }
     }
 
@@ -1463,6 +1463,8 @@ Whatever.',
    *
    * @param int|Entities\Project $project
    *
+   * @param string|array|Entities\Project $oldData
+   *
    * @param string|array|Entities\Project $newData
    *
    * @return Entities\Project Returns the renamed and persisted
@@ -1470,8 +1472,13 @@ Whatever.',
    */
   public function renameProject($projectOrId, $newData)
   {
+    // This may be inside a transaction where the project-entity
+    // already reflects the new state, so rather rely on the data.
     $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
+
+    $oldName = $projectOrId['name'] ?? $project->getName();
+    $oldYear = $projectOrId['year'] ?? $project->getYear();
 
     if (is_string($newData)) {
       list('name' => $newName, 'year' => $newYear) = $this->yearFromName($newData);
@@ -1481,45 +1488,50 @@ Whatever.',
       $newYear = $newData['year'];
     }
     $newYear = $newYear?:$project['year'];
-    $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
-    $oldName = $project->getName();
-    $oldYear = $project->getYear();
+    if ($oldName == $newName && $oldYear == $newYear) {
+      return $project; // nothing to do
+    }
+
+    // project-entity is changed during the update.
+    $oldProject = [ 'id' => $projectId, 'name' => $oldName, 'year' => $oldYear ];
+    $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
     $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
        ->register(new GenericUndoable(
-         function() use ($project, $newProject) {
-           $this->renameProjectFolder($newProject, $project);
+         function() use ($oldProject, $newProject) {
+           $this->logInfo('OLD ' . print_r($oldProject, true) . ' NEW ' . print_r($newProject, true));
+           $this->renameProjectFolder($newProject, $oldProject);
          },
-         function() use ($project, $newProject) {
-           $this->renameProjectFolder($project, $newProject);
+         function() use ($oldProject, $newProject) {
+           $this->renameProjectFolder($oldProject, $newProject);
          }
        ))
        ->register(new GenericUndoable(
-         function() use ($project, $newProject) {
-           $this->renameProjectWikiPage($newProject, $project);
+         function() use ($oldProject, $newProject) {
+           $this->renameProjectWikiPage($newProject, $oldProject);
          },
-         function() use ($project, $newProject) {
-           $this->renameProjectWikiPage($project, $newProject);
+         function() use ($oldProject, $newProject) {
+           $this->renameProjectWikiPage($oldProject, $newProject);
          }
        ))
        ->register(new GenericUndoable(
-         function() use ($projectId, $newName) {
-           $this->nameProjectWebPages($projectId, $newName);
+         function() use ($oldProject, $newProject) {
+           $this->nameProjectWebPages($newProject['id'], $newProject['name']);
          },
-         function() use ($projectId, $oldName) {
-           $this->nameProjectWebPages($projectId, $oldName);
+         function() use ($oldProject, $newProject) {
+           $this->nameProjectWebPages($oldProject['id'], $oldProject['name']);
          }
        ))
        ->register(new GenericUndoable(
-         function() use ($project, $newProject) {
+         function() use ($oldProject, $newProject) {
            $this->eventDispatcher->dispatchTyped(
-             new Events\ProjectUpdatedEvent($project->getId(), $project, $newProject)
+             new Events\ProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
            );
          },
-         function() use ($project, $newProject) {
+         function() use ($oldProject, $newProject) {
            $this->eventDispatcher->dispatchTyped(
-             new Events\ProjectUpdatedEvent($project->getId(), $newProject, $Project)
+             new Events\ProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
            );
          }
        ));

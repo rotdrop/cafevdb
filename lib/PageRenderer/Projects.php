@@ -838,7 +838,7 @@ project without a poster first.");
       return true;
     }
 
-    $this->projectService->renameProject($pme->rec, $newvals);
+    $this->projectService->renameProject($oldvals,  $newvals);
 
     return true;
   }
