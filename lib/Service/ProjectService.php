@@ -1410,7 +1410,10 @@ Whatever.',
         }
       } else {
 
-        $this->remove($project, true);
+        if (!$project->isDeleted) {
+          $this->remove($project, true); // soft
+        }
+        $this->remove($project, true); // hard
 
         // @todo: use cascading to remove
         $deleteTables = [
