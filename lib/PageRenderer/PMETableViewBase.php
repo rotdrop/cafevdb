@@ -820,7 +820,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
-      $changeSet = $changeSets[$table];
+      $changeSet = $changeSets[$table]??[];
       if (empty($changeSet)) {
         continue;
       }
@@ -1089,7 +1089,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // however, in the long run the goal would be to switch to
         // Doctrine/ORM for everything. So we live with it for the
         // moment.
-        $this->logInfo('IDENTIFIER '.print_r($identifier, true));
+        $this->debug('IDENTIFIER '.print_r($identifier, true));
         $entityId = $meta->extractKeyValues($identifier);
         $entity = $this->find($entityId);
         if (empty($entity)) {
@@ -1201,7 +1201,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
-      $changeSet = $changeSets[$table];
+      $changeSet = $changeSets[$table] ?? [];
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
         foreach ($changeSet as $column => $joinColumn) {
           Util::unsetValue($changed, $joinColumn);
