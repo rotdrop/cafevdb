@@ -28,6 +28,8 @@ use OCP\IRequest;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\Http\DataResponse;
 
+use OCP\Authentication\LoginCredentials\IStore;
+
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -56,6 +58,16 @@ class ProjectEventsApiController extends OCSController
     $this->eventsService = $eventsService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
+
+    if (false) {
+      try {
+        $credentialsStore = $this->di(IStore::class);
+        $credentials = $credentialsStore->getLoginCredentials();
+        //$this->logInfo($credentials->getLoginName() . ' ' . $credentials->getPassword());
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
+    }
   }
 
   /**

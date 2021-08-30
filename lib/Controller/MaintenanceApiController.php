@@ -29,6 +29,7 @@ use OCP\AppFramework\OCS;
 use OCP\AppFramework\Http\DataResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 class MaintenanceApiController extends OCSController
 {
@@ -36,6 +37,7 @@ class MaintenanceApiController extends OCSController
 
   const TOPIC_PLAYGROUND = 'playground';
   const TOPIC_ENCRYPTION_KEY = 'encryption-key';
+  const TOPIC_WIKI = 'wiki';
 
   const ENCRYPTION_KEY_STATUS = 'status';
   const ENCRYPTION_KEY_SET = 'set';
@@ -43,6 +45,8 @@ class MaintenanceApiController extends OCSController
   const ENCRYPTOIN_KEY_RECRYPT = 'recrypt';
 
   const PLAYGROUND_HELLO = 'hello';
+
+  const WIKI_PROJECTS_OVERVIEW = 'projects-overview';
 
   public function __construct(
     $appName
@@ -86,6 +90,19 @@ class MaintenanceApiController extends OCSController
         return new DataResponse($data);
       case self::ENCRYPTION_KEY_RECRYPT:
         // perhaps ...
+      }
+      break;
+    case self::TOPIC_WIKI:
+      switch ($operation) {
+      case self::WIKI_PROJECTS_OVERVIEW:
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        if ($projectService->generateWikiOverview()) {
+          return new DataResponse([ 'status' => 'ok' ]);
+        } else {
+          return new DataResponse([ 'status' => 'failed' ]);
+        }
+        break;
       }
       break;
     }
