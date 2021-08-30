@@ -473,14 +473,13 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       const deleteSelector = pmeSysNameSelector('input', 'savedelete');
 
       reloadDeferred(container).then(function() {
-        let post = $(container).find(pmeFormSelector()).serialize();
-        post += '&' + $.param(options);
         let name, value;
 
         const deleteButton = container.find(deleteSelector);
         if (deleteButton.length > 0) {
           name = deleteButton.attr('name');
           value = deleteButton.val();
+          options[pmeSys('operation')] = '';
         } else {
           const applyButton = container.find(applySelector);
           if (applyButton.length > 0) {
@@ -488,6 +487,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             value = applyButton.val();
           }
         }
+        let post = $(container).find(pmeFormSelector()).serialize();
+        post += '&' + $.param(options);
         const obj = {};
         obj[name] = value;
         post += '&' + $.param(obj);
@@ -602,8 +603,8 @@ const tableDialog = function(form, element, containerSel) {
     dialogHolderCSSId: dialogCSSId,
     templateRenderer,
     initialViewOperation: viewOperation,
-    initialName: initialName,
-    initialValue: initialValue,
+    initialName,
+    initialValue,
     reloadName: initialName,
     reloadValue: initialValue,
     modalDialog: true,
