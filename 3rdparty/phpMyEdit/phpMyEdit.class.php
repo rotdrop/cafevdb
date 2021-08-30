@@ -1487,6 +1487,9 @@ class phpMyEdit
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
+			if (empty($this->fdd[$main_column][self::FDD_VALUES])) {
+				continue;
+			}
 			$join        = $this->fdd[$main_column][self::FDD_VALUES]['join'];
 			if (is_array($join)) {
 				if (isset($join['condition'])) {
@@ -1502,11 +1505,11 @@ class phpMyEdit
 			if (isset($this->fdd[$main_column][self::FDD_VALUES]['db'])) {
 				$dbp = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['db'].$this->ed.'.';
 			} else {
-				//$dbp = $this->dbp; not needed
+				$dbp = null; // $this->dbp; not needed
 			}
 
 			$join_column = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['column'].$this->ed;
-			$join_desc	 = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['description'].$this->ed;
+			$join_desc	 = $this->sd.($this->fdd[$main_column][self::FDD_VALUES]['description']??'').$this->ed;
 			if ($join_desc == $this->sd.$this->ed) {
 				$join_desc = $join_column;
 			}
@@ -5202,7 +5205,7 @@ class phpMyEdit
 				//error_log('Changed '.$fd.' "'.$oldvals[$fd].'" "'.$value.'"');
 				//error_log($fd.' old: '.$oldvals[$fd].' '.$value);
 				$fdn = $this->fdn[$fd]; // $fdn == field number
-				if ($this->col_has_multiple($k) && !$this->skipped($fdn)) {
+				if ($this->col_has_multiple($fdn) && !$this->skipped($fdn)) {
 					$tmpval1 = explode(',',$value);
 					sort($tmpval1);
 					$tmpval2 = explode(',',$oldvals[$fd]);
