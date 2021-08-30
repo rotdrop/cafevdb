@@ -592,8 +592,9 @@ class ProjectService
   public function projectWikiLink($pageName)
   {
     $orchestra = $this->getConfigValue('orchestra');
+    $projectsNamespace = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
 
-    return $orchestra.":projects:".$pageName;
+    return $orchestra . ':' . $projectsNamespace . ':' . $pageName;
   }
 
   /**
@@ -651,11 +652,12 @@ class ProjectService
       $page .= "  * [[".$this->projectWikiLink($name)."|".$bareName."]]\n";
     }
 
-    $pageName = $this->projectWikiLink('projects');
+    $projectsName = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
+    $pageName = $this->projectWikiLink($projectsName);
 
-    $this->wikiRPC->putPage($pageName, $page,
-                            [ "sum" => "Automatic CAFEVDB synchronization",
-                              "minor" => true ]);
+    return $this->wikiRPC->putPage($pageName, $page,
+                                   [ "sum" => "Automatic CAFEVDB synchronization",
+                                     "minor" => true ]);
   }
 
   /**Generate an almost empty project page. This spares people the
