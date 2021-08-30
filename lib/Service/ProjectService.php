@@ -1410,7 +1410,7 @@ Whatever.',
         }
       } else {
 
-        if (!$project->isDeleted) {
+        if (!$project->isDeleted()) {
           $this->remove($project, true); // soft
         }
         $this->remove($project, true); // hard
