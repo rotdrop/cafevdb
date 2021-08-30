@@ -714,7 +714,7 @@ Whatever.',
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $oldPage = ' *  '.$this->l->t('1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
+    $oldPage = ' *  '.$this->l->t('%1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
     $newPage = $this->wikiRPC->getPage($oldPageName);
 
     $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
