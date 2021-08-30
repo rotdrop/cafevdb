@@ -717,14 +717,14 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                 - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
             newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
             dialogHolder.height(newHeight);
-	    const form = dialogHolder.find('form.pme-form')[0];
-	    const html = $('html')[0];
-	    const dialog = dialogWidget[0];
-	    const scrollDelta = form.scrollWidth - form.clientWidth;
-	    if (scrollDelta > 0 && dialog.offsetWidth + scrollDelta < html.clientWidth) {
-	      console.debug('Compensating dialog width for pme-form vertical scrollbar');
-	      dialogWidget.css('width', (dialog.offsetWidth + scrollDelta) + 'px');
-	    }
+            const form = dialogHolder.find('form.pme-form')[0];
+            const html = $('html')[0];
+            const dialog = dialogWidget[0];
+            const scrollDelta = form.scrollWidth - form.clientWidth;
+            if (scrollDelta > 0 && dialog.offsetWidth + scrollDelta < html.clientWidth) {
+              console.debug('Compensating dialog width for pme-form vertical scrollbar');
+              dialogWidget.css('width', (dialog.offsetWidth + scrollDelta) + 'px');
+            }
           };
 
           tableDialogHandlers(tableOptions, function(parameters) {
@@ -745,7 +745,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             case 'dialogOpen':
               WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
                 transposeReady(containerSel);
-		pmeQueryLogMenu(containerSel);
+                pmeQueryLogMenu(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function() {
                   // console.trace();
                   // installInputChosen(containerSel);
@@ -884,7 +884,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       pmeInit(selector);
       WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
-	pmeQueryLogMenu(selector);
+        pmeQueryLogMenu(selector);
         tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
         pmeTweaks(container);
         CAFEVDB.toolTipsInit(selector);
