@@ -354,7 +354,7 @@ class GeoCodingService
       if ($hasChanged) {
         $geoPostalCode->setLongitude($lng);
         $geoPostalCode->setLatitude($lat);
-        $geoPostalCode = $this->merge($geoPostalCode);
+        $this->persist($geoPostalCode);
       }
 
       foreach ($translations as $language => $translation) {
@@ -376,7 +376,7 @@ class GeoCodingService
         }
         if ($hasChanged) {
           $entity->setTranslation($translation);
-          $entity = $this->merge($entity);
+          $this->persist($entity);
         }
       }
 
@@ -548,6 +548,7 @@ class GeoCodingService
         $name = Util::normalizeSpaces($name);
 
         $hasChanged = false;
+        $newEntity = true;
         $this->setDatabaseRepository(GeoPostalCode::class);
         /** @var Entities\GeoPostalCode $geoPostalCode */
         $geoPostalCode = $this->findOneBy([
@@ -561,6 +562,7 @@ class GeoCodingService
                          ->setPostalCode($postalCode)
                          ->setName($name);
           $hasChanged = true;
+          $newEntity = true;
         } else {
           if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
             $hasChanged = true;
@@ -569,7 +571,10 @@ class GeoCodingService
         if ($hasChanged) {
           $geoPostalCode->setLongitude($lng);
           $geoPostalCode->setLatitude($lat);
-          $geoPostalCode = $this->merge($geoPostalCode);
+          $this->persist($geoPostalCode);
+          if ($newEntity) {
+            $this->flush(); // generate id for new entity
+          }
           $numChanged++;
         }
 
@@ -592,7 +597,7 @@ class GeoCodingService
           }
           if ($hasChanged) {
             $entity->setTranslation($translation);
-            $entity = $this->persist($entity);
+            $this->persist($entity);
           }
         }
 
@@ -737,7 +742,7 @@ class GeoCodingService
             $numRows += (int)($entity->getData() != $data);
           }
           $entity->setData($data);
-          $this->merge($entity);
+          $this->persist($entity);
         }
       }
 
@@ -753,7 +758,7 @@ class GeoCodingService
           $numRows += (int)($entity->getTranslation() != $continentName);
         }
         $entity->setTranslation($continentName);
-        $this->merge($entity);
+        $this->persist($entity);
       }
     }
 
