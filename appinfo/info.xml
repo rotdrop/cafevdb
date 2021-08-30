@@ -42,6 +42,7 @@
     <command>OCA\CAFEVDB\Command\HelloWorld</command>
     <command>OCA\CAFEVDB\Command\TooltipsList</command>
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
+    <command>OCA\CAFEVDB\Command\WikiOverview</command>
   </commands>
   <!--
       This cannot work as some stuff needs authenticated users.
