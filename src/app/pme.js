@@ -479,7 +479,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         if (deleteButton.length > 0) {
           name = deleteButton.attr('name');
           value = deleteButton.val();
-          options[pmeSys('operation')] = '';
+          options[pmeSys('operation')] = 'Null'; // end-point, don't ouptput
         } else {
           const applyButton = container.find(applySelector);
           if (applyButton.length > 0) {

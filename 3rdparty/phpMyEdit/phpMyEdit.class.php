@@ -493,6 +493,7 @@ class phpMyEdit
 	function copy_operation()	{ return $this->label_cmp($this->operation, 'Copy')	  && $this->copy_enabled();	  }
 	function delete_operation() { return $this->label_cmp($this->operation, 'Delete') && $this->delete_enabled(); }
 	function misc_operation()	{ return $this->label_cmp($this->operation, 'Misc')	  && $this->misc_enabled();	 }
+	function null_operation()	{ return $this->label_cmp($this->operation, 'Null');	}
 	function view_operation()	{ return $this->label_cmp($this->operation, 'View')	  && $this->view_enabled();	  }
 	function filter_operation() { return $this->fl && $this->filter_enabled(); }
 	function list_operation()	{ /* covers also filtering page */ return ! $this->change_operation()
@@ -5980,6 +5981,19 @@ class phpMyEdit
 			$this->sql_disconnect();
 			error_reporting($error_reporting);
 			return call_user_func($this->miscphp);
+		}
+
+		/*
+		 * ======================================================================
+		 *
+		 * If no output is request, then just do not output.
+		 *
+		 * ======================================================================
+		 */
+		elseif ($this->null_operation()) {
+			$this->sql_disconnect();
+			error_reporting($error_reporting);
+			return;
 		}
 
 		/*
