@@ -970,6 +970,21 @@ class phpMyEdit
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
 			}
+		} else {
+			foreach ($this->key as $recKey => $keyType) {
+				switch ($keyType) {
+				case 'real':
+					$value = 0.0;
+					break;
+				case 'int':
+					$value = 0;
+					break;
+				default:
+					$value = '';
+					break;
+				}
+				$subs['record_id['.$recKey.']'] = $value;
+			}
 		}
 
 		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
@@ -2182,7 +2197,7 @@ class phpMyEdit
 			} else {
 				// Simple edit box required
 				$len_props = '';
-				$maxlen = intval($this->fdd[$k]['maxlen']);
+				$maxlen = intval($this->fdd[$k]['maxlen']??0);
 				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 40);
 
 				if ($size > 0) {
@@ -2209,7 +2224,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['attributes'])) {
 					$attributes = $this->fdd[$k]['display']['attributes'];
 					if (is_callable($attributes)) {
-						$attributes = call_user_func($attributes, 'add', $row, $k, $this);
+						$attributes = call_user_func($attributes, 'add', [], $k, $this);
 					}
 					if (!is_array($attributes)) {
 						$attributes= [ $attributes ];
@@ -2248,7 +2263,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['postfix'])) {
 				$postfix = $this->fdd[$k]['display']['postfix'];
 				if (is_callable($postfix)) {
-					echo call_user_func($postfix, 'add', 'postfix', $row, $k, $this);
+					echo call_user_func($postfix, 'add', 'postfix', [], $k, $this);
 				} else {
 					echo $this->fdd[$k]['display']['postfix'];
 				}
