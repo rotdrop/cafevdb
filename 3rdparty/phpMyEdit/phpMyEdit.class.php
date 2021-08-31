@@ -4998,7 +4998,8 @@ class phpMyEdit
 	function do_add_record() /* {{{ */
 	{
 		$key_col_val = [];
-		$newvals	 = array();
+		$oldvals = array();
+		$newvals = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
 				$fd = $this->fds[$k];
