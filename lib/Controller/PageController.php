@@ -347,7 +347,7 @@ class PageController extends Controller {
     return $response;
   }
 
-  private function getTemplate(string $template, string $renderAs)
+  private function getTemplate(?string $template, string $renderAs)
   {
     if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
       return 'maintenance/configcheck';
