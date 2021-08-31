@@ -457,7 +457,7 @@ class ProjectParticipantFields extends PMETableViewBase
           $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
           $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
           $dataType = $row['qf'.$pme->fdn['data_type']]??null;
-          $entry = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+          list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
           $key = $entry['key'];
           $name  = $this->pme->cgiDataName('data_options_' . $variant);
           $field = 'deposit';
@@ -861,7 +861,7 @@ class ProjectParticipantFields extends PMETableViewBase
     if (empty($newvals[$tag])) {
       $newvals[$tag] = null;
       Util::unsetValue($changed, $tag);
-      if ($newvals[$tag] !== $oldvals[$tag]) {
+      if ($newvals[$tag] !== $oldvals[$tag]??null) {
         $changed[] = $tag;
       }
     }
@@ -879,7 +879,7 @@ class ProjectParticipantFields extends PMETableViewBase
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
-    if (empty($newvals['tab']) && $newvals['tab'] !== null) {
+    if (empty($newvals['tab']) && ($newvals['tab']??null) !== null) {
       $newvals['tab'] = null;
       $changed[] = 'tab';
     }
@@ -1666,7 +1666,7 @@ __EOT__;
     if ($multiplicity == Multiplicity::GROUPOFPEOPLE) {
       $entry['key'] = Uuid::NIL;
     }
-    return $entry;
+    return [ $entry, $allowed ];
   }
 
   /**
@@ -1674,7 +1674,7 @@ __EOT__;
    */
   private function showAllowedSingleValue($dataOptions, $op, $toolTip, $multiplicity, $dataType, $variant)
   {
-    $entry = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+    list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
     $value = $entry['data'];
     if ($op === 'display') {
       return $this->currencyValue($value);
@@ -1725,7 +1725,7 @@ __EOT__;
     $html .= '</div>';
     $html .= '<div class="inactive-values">';
     // Now emit all left-over values. Flag all items as deleted.
-    foreach ($dataOptions as $key => $option) {
+    foreach ($allowed as $key => $option) {
       $key = $option['key'];
       if ($key == $entry['key']) {
         continue;
