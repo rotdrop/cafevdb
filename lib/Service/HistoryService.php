@@ -25,10 +25,12 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\ISession;
 use OCP\IL10N;
+use OCP\ILogger;
 
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   const MAX_HISTORY_SIZE = 100;
   const SESSION_HISTORY_KEY = 'PageHistory';
@@ -36,6 +38,9 @@ class HistoryService
 
   /** @var IL10N */
   protected $l;
+
+  /** @var bool */
+  protected $debug = false;
 
   /**
    * The data-contents. A "cooked" array structure with the
@@ -59,13 +64,15 @@ class HistoryService
   public function __construct(
     ISession $session
     , IL10N $l10n
+    , ILogger $logger
   ) {
     $this->session = $session;
     $this->l = $l10n;
+    $this->logger = $logger;
     $this->load();
   }
 
-  /**Initialize a sane do-nothing record. */
+  /** Initialize a sane do-nothing record. */
   private function default()
   {
     $this->historySize = 1;
@@ -74,7 +81,7 @@ class HistoryService
                                 'data' => [] ] ];
   }
 
-  /**Add a history snapshot. */
+  /** Add a history snapshot. */
   public function push($data)
   {
     ksort($data);
@@ -91,10 +98,35 @@ class HistoryService
         array_pop($this->historyRecords);
         --$this->historySize;
       }
+      if ($this->debug) {
+        $this->printRecords();
+      }
     }
   }
 
-  /**Fetch the history record at $offset. The function will throw
+  private function printRecords()
+  {
+    $message = 'Position/Size: ' . $this->historyPosition . ' / ' . $this->historySize;
+    $printRecords = [];
+    $printKeys = [ 'projectId', 'template' ];
+    $count = 0;
+    $max = $this->historyPosition + 2;
+    foreach ($this->historyRecords as $record) {
+      $printRecord = [];
+      foreach ($printKeys as $key)  {
+        $printRecord[$key] = $record['data'][$key] ?? 'undefined';
+      }
+      $printRecords[] = $printRecord;
+      if ($count++ > $max) {
+        break;
+      }
+    }
+    $message .= ', '. print_r($printRecords, true);
+    $this->logInfo($message, [], 2, true);
+  }
+
+  /**
+   * Fetch the history record at $offset. The function will throw
    * an exception if offset is out of bounds.
    */
   public function fetch($offset)
@@ -108,24 +140,27 @@ class HistoryService
 
     $this->historyPosition = $newPosition;
 
+    if ($this->debug) {
+      $this->printRecords();
+    }
+
     // Could check for valid data here, but so what
     return $this->historyRecords[$this->historyPosition]['data'];
   }
 
-  /**Return the current position into the history. */
+  /** Return the current position into the history. */
   public function position()
   {
     return $this->historyPosition;
   }
 
-  /**Return the current position into the history. */
+  /** Return the current position into the history. */
   public function size()
   {
     return $this->historySize;
   }
 
-  /**Return true if the recorded history is essentially empty.
-   */
+  /** Return true if the recorded history is essentially empty. */
   public function empty()
   {
     return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
@@ -143,7 +178,8 @@ class HistoryService
     $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
   }
 
-  /**Load the history state. Initialize to default state in case of
+  /**
+   * Load the history state. Initialize to default state in case of
    * errors.
    */
   private function load()
@@ -159,7 +195,8 @@ class HistoryService
     return true;
   }
 
-  /**Validate the given history records, return false on error.
+  /**
+   * Validate the given history records, return false on error.
    */
   private function validate($history)
   {
@@ -173,7 +210,7 @@ class HistoryService
     return true;
   }
 
-  /**Validate one history entry */
+  /** Validate one history entry */
   private function validateRecord($record) {
     if (!is_array($record)) {
       return false;
@@ -184,7 +221,7 @@ class HistoryService
     return true;
   }
 
-  /**Validate all history records. */
+  /** Validate all history records. */
   private function validateRecords($history) {
     foreach($history['records'] as $record) {
       if (!$this->validateRecord($record)) {
