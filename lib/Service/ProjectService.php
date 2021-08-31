@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -741,6 +742,9 @@ Whatever.',
     $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
     $this->logInfo('NEW '.$newPageName.' / '.$newPage);
 
+    // replace the old project name in the old project page
+    $newPage = str_replace($oldName, $newName, $newPage);
+
     if ($newPage) {
       $this->wikiRPC->putPage(
         $newPageName, $newPage,
@@ -1346,7 +1350,7 @@ Whatever.',
    *
    * @param mixed $type Type of the project, @see Types\EnumProjectTemporalType
    */
-  public function createProject(string $name, ?int $year = null, $type = Types\EnumProjectTemporalType::TEMPORARY):?Entities\Project
+  public function createProject(string $name, ?int $year = null, $type = ProjectType::TEMPORARY):?Entities\Project
   {
     $project = null;
 
@@ -1492,6 +1496,78 @@ Whatever.',
     }
 
     return $softDelete ? $project : null;
+  }
+
+  /**
+   * Copy the given project, including:
+   *
+   * - participant fields structure
+   * - instrumentation numbers
+   *
+   * Everything else is not copied, in particular no project members
+   * are copied over.
+   *
+   * @param int|Entities\Project $project
+   *
+   * @param null|string $newName The name of the copied project. If it
+   * does not contain a year then the current year is used.
+   *
+   * @return null|Entities\Project Returns null if project was
+   * actually deleted, else the updated "soft-deleted" project instance.
+   *
+   * @todo Check for proper cascading.
+   */
+  public function copyProject($projectOrId, ?string $newName = null):? Entities\Project
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+    if (empty($project)) {
+      throw new \RuntimeException($this->l->t('Unable to find the project to copy (id = %d)', $projectOrId));
+    }
+
+    // Road-map:
+    // - sanitize name
+    // - copy project and generate folders etc.
+    // - copy instrumentation numbers
+    // - copy participant fields
+
+    if (empty($newName)) {
+      $newName = $this->l->t('copy of %s', $project->getName());
+      if ($project->getType() == ProjectType::TEMPORARY) {
+        $newName = substr($newName, 0, -4) . date('Y');
+      }
+      $this->sanitizeName($projectName, $project->getType() == ProjectType::TEMPORARY);
+    }
+    list(, $newYear) = $this->yearFromName($newName);
+
+    $this->entityManager->beginTransaction();
+    try {
+
+      /** @var Entities\Project $newProject */
+      $newProject = clone $project;
+      $newProject->setName($newName);
+      $newProject->setYear($newYear);
+
+      $this->persist($newProject);
+      $this->flush();
+
+      $this->createProjectInfraStructure($newProject);
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t)  {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+      throw new \Exception(
+        $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
+        $t->getCode(),
+        $t);
+    }
+
+    return null;
   }
 
   /**

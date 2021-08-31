@@ -178,10 +178,31 @@ class ProjectParticipantField implements \ArrayAccess
    */
   private $fieldData;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
+  }
+
+  public function __clone()
+  {
+    if (!$this->id) {
+      return;
+    }
+    $oldDataOptions = $this->dataOptions;
+    $oldDefalutValue = $this->defaultValue;
+    $this->__construct();
+    $this->id = null;
+    $this->project = null;
+    foreach ($oldDataOptions as $oldDataOption) {
+      $dataOption = clone $oldDataOption;
+      $dataOption->setField($this);
+      $this->dataOptions->add($dataOption);
+      if ($oldDataOption == $oldDefaultValue) {
+        $this->defaultValue = $dataOption;
+      }
+    }
   }
 
   /**

@@ -138,6 +138,35 @@ class Project implements \ArrayAccess
     $this->payments = new ArrayCollection();
   }
 
+  public function __clone()
+  {
+    if ($this->id) {
+      return;
+    }
+    $this->id = null;
+    $oldInstrumentationNumbers = $this->instrumentationNumbers;
+    $oldParticipantFields = $this->participantFields;
+    $this->__construct();
+
+    // clone all instrumentation numbers
+    foreach ($oldInstrumentationNumbers as $oldInstrumentationNumber) {
+      /** @var ProjectInstrumentationNumber $instrumentationNumber  */
+      $instrumentationNumber = clone $oldInstrumentationNumber;
+      $instrumentationNumber->setProject($this);
+      $this->instrumentationNumbers->add($instrumentationNumber);
+    }
+
+    // clone all participant fields
+    foreach ($oldParticipantFields as $oldParticipantField)  {
+      /** @var ProjectParticipantField $participantField */
+      $participantField = clone $oldParticipantField;
+      $participantField->setProject($this);
+      $this->participantFields->add($participantField);
+    }
+
+    // anything else stays empty
+  }
+
   /**
    * Set id.
    *

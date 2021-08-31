@@ -128,10 +128,21 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->fieldData = new ArrayCollection();
     $this->payments = new ArrayCollection();
+  }
+
+  public function __clone()
+  {
+    if (empty($this->field) || empty($this->key)) {
+      return;
+    }
+    $this->__construct();
+    $this->field = null;
+    $this->key = Uuid::create();
   }
 
   /**
