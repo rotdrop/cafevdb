@@ -97,9 +97,17 @@ const ready = function(selector, resizeCB) {
     return elem.data('data');
   };
 
+  /**
+   * Hide the header for single choice options because in View and
+   * Delete mode the mult-value table is used as well.
+   */
   const allowedHeaderVisibility = function() {
     const allowedValuesTable = container.find('table.data-options');
-    if (allowedValuesTable.find('tbody tr:visible').length >= 2) {
+    if (allowedValuesTable.hasClass('multiplicity-multiple')
+        || allowedValuesTable.hasClass('multiplicity-parallel')
+        || allowedValuesTable.hasClass('multiplicity-recurring')
+        || allowedValuesTable.hasClass('multiplicity-groups-of-people')
+        || allowedValuesTable.find('tbody tr:visible').length >= 1) {
       allowedValuesTable.find('thead').show();
     } else {
       allowedValuesTable.find('thead').hide();
