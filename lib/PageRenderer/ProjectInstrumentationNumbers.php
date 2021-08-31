@@ -180,13 +180,14 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'name'      => $this->l->t('Project'),
       'input'     => ($projectMode ? 'HR' : ''),
       'css' => [ 'postfix' => [ 'project-instrument-project-name', ], ],
-      'select|DV' => 'T', // delete, filter, list, view
-      'select|ACPFL' => 'D',  // add, change, copy
+      'select|DV' => 'T', // delete, view
+      'select|ACPFL' => 'D',  // add, change, copy, filter, list
       'maxlen'   => 20,
       'size'     => 16,
       'default'  => ($projectMode ? $projectId : -1),
       'sort'     => $sort,
       'values|ACP' => [
+        'table'       => self::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
           'columns' => [ 'name' ],
@@ -195,30 +196,24 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
-        //        'join'        => '$main_col_fqn = $join_col_fqn',
-        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
       ],
       'values|DVFL' => [
+        'table'       => self::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
-          'columns' => [ 'name' ],
-          'cast' => [ false ],
+          'columns'   => [ 'name' ],
+          'cast'   => [ false ],
           'ifnull' => [ false ],
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
         'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
+        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
       ],
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'name',
-      [
-        'name'  => $this->l->t('Project Name'),
-        'input' => ($projectMode ? 'HR' : ''),
-      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'year',
@@ -235,7 +230,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'align'    => 'right',
       'default'  => '0',
       'sort'     => $sort,
+      'sql'      => '$main_table.instrument_id',
       'values'   => [
+        'table' => self::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
           'columns' => [ 'name' ],
@@ -243,7 +240,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order',
-        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
       //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -259,15 +256,35 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['fdd']['voice'] = [
       'name'     => $this->l->t('Voice'),
-      //'input'    => 'R',
       'select'   => 'D',
       'options'  => 'LACPDVF',
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
       'sort'     => $sort,
-      'values2' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+      'values' => [
+        'table' => self::TABLE,
+        'column' => 'voice',
+        'description' => [
+          'columns' => [ 'IF($table.$column = 0, "' . $this->l->t('n/a') . '", $table.$column)', ],
+          'cast' => [ false, ],
+        ],
+        'filters' => $projectMode ? '$table.project_id = ' . $this->projectId : null,
+        'join' => false,
+      ],
+      //'values2' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
     ];
+    $opts['fdd']['voice']['values|ACP'] = array_merge(
+      $opts['fdd']['voice']['values'], [
+        'table' => 'SELECT
+  n.n AS voice
+  FROM ' . self::TABLE . ' t
+  JOIN numbers n
+    ON n.n <= GREATEST(4, (t.voice +1))
+  ' . ($projectMode ? 'WHERE t.project_id = ' . $this->projectId : '') .'
+  GROUP BY n.n',
+        'filters' => null,
+      ]);
     $this->addSlug('voice', $opts['fdd']['voice']);
 
     // required quantity
@@ -283,6 +300,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Registered'),
+        'options' => 'VDLFCP',
         'input'  => 'VR',
         'sort'   => $sort,
         'select' => 'N',
@@ -295,6 +313,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Confirmed'),
+        'options' => 'VDLFCP',
         'input'  => 'VR',
         'sort'   => $sort,
         'select' => 'N',
@@ -313,6 +332,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // @todo tooltips
     $opts['fdd']['missing'] = [
       'name'   => $this->l->t('Balance'),
+      'options' => 'VDLFCP',
       'input'  => 'VR',
       'sort'   => $sort,
       'select' => 'N',
@@ -335,7 +355,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $this->addSlug('balance', $opts['fdd']['missing']);
 
     if ($projectMode) {
-      $opts['filters'] = $joinTables[self::TABLE].'.project_id = '.$projectId;
+      $opts['filters'] = '$table.project_id = '.$projectId;
     }
 
     // trigger
