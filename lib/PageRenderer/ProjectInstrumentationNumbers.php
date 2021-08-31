@@ -280,7 +280,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   n.n AS voice
   FROM ' . self::TABLE . ' t
   JOIN numbers n
-    ON n.n <= GREATEST(4, (t.voice +1))
+    ON n.n <= GREATEST(4, (t.voice + 1))
   ' . ($projectMode ? 'WHERE t.project_id = ' . $this->projectId : '') .'
   GROUP BY n.n',
         'filters' => null,
