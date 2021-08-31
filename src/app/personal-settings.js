@@ -24,14 +24,20 @@ import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme-selectors.js';
+import * as Notification from './notification.js';
 import selectValues from './select-values.js';
 
-console.info('JQUERY ', $.fn.jquery);
+// console.info('JQUERY ', $.fn.jquery);
 
 const documentReady = function() {
 
   const container = $('.personal-settings');
   let msgElement = $('form.personal-settings .statusmessage');
+
+  const showMessage = function(message) {
+    msgElement.html(message).show();
+    Notification.messages(message);
+  };
 
   const chosenInit = function(container) {
     container.find('select.pagerows').each(function(index) {
@@ -95,11 +101,12 @@ const documentReady = function() {
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
     $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
+        Notification.messages(data.message);
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
@@ -111,16 +118,32 @@ const documentReady = function() {
     return false;
   });
 
+  container.on('change', '.restorehistory', function(event) {
+    const self = $(this);
+    const checked = self.prop('checked');
+    $.post(setPersonalUrl('restorehistory'), { value: checked })
+      .done(function(data) {
+        showMessage(data.message);
+        console.log(data);
+      })
+      .fail(function(xhr, status, errorThrown) {
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        // console.error(data);
+      });
+    $('.personal-settings input[type="checkbox"].restorehistory').prop('checked', checked);
+    return false;
+  });
+
   container.on('change', '.filtervisibility', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
     $.post(setPersonalUrl('filtervisibility'), { value: checked })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     if (checked) {
@@ -137,11 +160,11 @@ const documentReady = function() {
     const checked = self.prop('checked');
     $.post(setPersonalUrl('directchange'), { value: checked })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     if (globalState.PHPMyEdit !== undefined) {
@@ -156,7 +179,7 @@ const documentReady = function() {
     const checked = self.prop('checked');
     $.post(setPersonalUrl('showdisabled'), { value: checked })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
         if (globalState.PHPMyEdit !== undefined) {
           const pmeForm = $('#content ' + PHPMyEdit.formSelector() + '.show-hide-disabled');
@@ -180,7 +203,7 @@ const documentReady = function() {
         return false;
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     if (globalState.PHPMyEdit !== undefined) {
@@ -195,7 +218,7 @@ const documentReady = function() {
     const checked = self.prop('checked');
     $.post(setPersonalUrl('expertmode'), { value: checked })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
         if (globalState.PHPMyEdit !== undefined) {
           const pmeForm = $('#content ' + PHPMyEdit.formSelector());
@@ -206,7 +229,7 @@ const documentReady = function() {
         }
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     if (checked) {
@@ -228,11 +251,11 @@ const documentReady = function() {
     const value = $self.val();
     $.post(setPersonalUrl('pagerows'), { value })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     $('.personal-settings select.pagerows').each(function(index) {
@@ -249,12 +272,12 @@ const documentReady = function() {
     console.log(post);
     $.post(setPersonalUrl('debugmode'), { value: post })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         console.log(data);
         globalState.debugModes = data.value;
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     $('.personal-settings select.debugmode').each(function(index) {
@@ -270,12 +293,12 @@ const documentReady = function() {
     const value = $self.val();
     $.post(setPersonalUrl('wysiwygEditor'), { value })
       .done(function(data) {
-        msgElement.html(data.message).show();
+        showMessage(data.message);
         globalState.wysiwygEditor = value;
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
-        msgElement.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
     $('.personal-settings select.wysiwyg-editor').each(function(index) {
