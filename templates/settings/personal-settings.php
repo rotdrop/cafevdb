@@ -31,17 +31,26 @@ namespace OCA\CAFEVDB;
            type="checkbox"
            class="checkbox tooltips <?php p($toolTipClass); ?>"
            name="tooltips" <?php echo $showToolTips == 'on' ? 'checked="checked"' : ''; ?>
-           title="<?php echo $toolTips['show-tool-tips']; ?>"
     />
     <label for="tooltips" class="<?php p($toolTipClass); ?>" title="<?php echo $tooltipstitle; ?>">
       <?php echo $l->t('Tool-Tips') ?>
+    </label>
+    <br />
+    <input id="restorehistory"
+           type="checkbox"
+           class="checkbox restorehistory <?php p($toolTipClass); ?>"
+           name="restorehistory" <?php echo $_['restorehistory'] == 'on' ? 'checked="checked"' : ''; ?>
+    />
+    <label for="restorehistory"
+           class="<?php p($toolTipClass); ?>"
+           title="<?php echo $restorehistorytitle; ?>">
+      <?php echo $l->t('Restore Last View') ?>
     </label>
     <br />
     <input id="filtervisibility"
            type="checkbox"
            class="checkbox filtervisibility <?php p($toolTipClass); ?>"
            name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
-           title="<?php echo $filtervistitle ?>"
     />
     <label for="filtervisibility"
            class="<?php p($toolTipClass); ?>"
@@ -53,7 +62,6 @@ namespace OCA\CAFEVDB;
            type="checkbox"
            class="checkbox directchange <?php p($toolTipClass); ?>"
            name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
-           title="<?php echo $directchgtitle ?>"
     />
     <label for="directchange"
            class="<?php p($toolTipClass); ?>"
@@ -66,7 +74,6 @@ namespace OCA\CAFEVDB;
               data-placeholder="<?php echo $l->t('#Rows'); ?>"
               class="table-pagerows pagerows <?php p($toolTipClass); ?>"
               id="table-pagerows"
-              title="<?php echo $pagerowstitle; ?>">
         <?php
         foreach($pageRowsOptions as $value => $text) {
           $selected = $value == $pageRows ? ' selected="selected"' : '';
@@ -85,7 +92,6 @@ namespace OCA\CAFEVDB;
               data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
               class="wysiwyg-editor <?php p($toolTipClass); ?>"
               id="wysiwyg-editor"
-              title="<?php echo $toolTips['wysiwyg-editor']; ?>">
         <?php
         foreach ($wysiwygOptions as $key => $value) {
           $disabled = $value['enabled'] ? '' : ' disabled ';
@@ -103,7 +109,6 @@ namespace OCA\CAFEVDB;
            type="checkbox"
            class="checkbox expertmode <?php p($toolTipClass); ?>"
            name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
-           id="expertmode" title="<?php echo $experttitle ?>"
     />
     <label for="expertmode"
            class="<?php p($toolTipClass); ?>"
@@ -116,7 +121,6 @@ namespace OCA\CAFEVDB;
              type="checkbox"
              class="checkbox showdisabled <?php p($toolTipClass); ?>"
              name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
-             title="<?php echo $showdistitle ?>"
       />
       <label for="showdisabled"
              class="<?php p($toolTipClass); ?>"

@@ -27,6 +27,7 @@ script($appName, 'settings');
 style($appName, 'settings');
 
 $tooltipstitle  = $toolTips['show-tool-tips'];
+$restorehistorytitle = $toolTips['restore-history'];
 $filtervistitle = $toolTips['filter-visibility'];
 $directchgtitle = $toolTips['direct-change'];
 $showdistitle   = $toolTips['show-disabled'];
@@ -79,6 +80,7 @@ $toolTipClass = "tooltip-right";
       'tabNr' => $tabNo++,
       'toolTipClass' => $toolTipClass,
       'tooltipstitle' => $tooltipstitle,
+      'restorehistorytitle' => $restorehistorytitle,
       'filtervistitle' => $filtervistitle,
       'directchgtitle' => $directchgtitle,
       'showdistitle' => $showdistitle,

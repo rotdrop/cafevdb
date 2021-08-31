@@ -46,19 +46,6 @@ if (isset($_['css-class'])) {
 
 $redoDisabled = $_['historyPosition'] == 0;
 $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
-if (!isset($_['navBarInfo'])) {
-    $_['navBarInfo'] = '';
-}
-
-$pageRows = floor($_['pagerows'] / 10) * 10;
-$pageRowsOptions = array(-1 => '&infin;');
-$maxRows = 100;
-for ($i = 10; $i <= $maxRows; $i += 10) {
-    $pageRowsOptions[$i] = $i;
-}
-if ($pageRows > $maxRows) {
-    $pageRows = 0;
-}
 
 $navigationControls = $pageNavigation->buttonsFromArray(
     array(
@@ -115,9 +102,6 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
     $header = '';
 }
 
-$expertClass = 'expertmode'.($expertMode != 'on' ? ' hidden' : '');
-
-$sideBarToolTipPos = 'auto';
 ?>
 
 <div id="app-navigation" class="personal-settings app-navigation snapper-enabled">
@@ -130,7 +114,7 @@ $sideBarToolTipPos = 'auto';
     <?php echo $_['navigationcontrols']; ?>
   </ul>
   <div id="app-settings">
-    <?php echo $this->inc('settings/part.side-menu-settings', [ 'toolTipsPos' => $sideBarToolTipPos ]); ?>
+    <?php echo $this->inc('settings/part.side-menu-settings', []); ?>
   </div>
 </div>
 <div id="app-content">
