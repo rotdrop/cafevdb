@@ -28,6 +28,7 @@ import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
+import pmeRec from './pme-record-id.js';
 import './lock-input.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
@@ -52,7 +53,6 @@ const ready = function(selector, resizeCB) {
     if (!data) {
       return;
     }
-
     const multiplicityClass = 'multiplicity-' + data.multiplicity;
     const dataTypeClass = 'data-type-' + data.dataType;
     const depositDueDateClass = 'deposit-due-date-' + data.depositDueDate;
@@ -211,7 +211,7 @@ const ready = function(selector, resizeCB) {
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
-          fieldId: PHPMyEdit.rec(container),
+          fieldId: pmeRec(container),
           key,
         },
       })
@@ -484,6 +484,7 @@ const ready = function(selector, resizeCB) {
         if (!allowed.hasClass('readonly')) {
           allowed.prop('readonly', false);
         }
+        setFieldTypeCssClass(fieldTypeData());
         submitDefer.resolve();
       };
 
