@@ -28,7 +28,7 @@ import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
-import pmeRec from './pme-record-id.js';
+import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 
 require('jquery-ui/ui/widgets/autocomplete');

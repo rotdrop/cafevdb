@@ -31,7 +31,7 @@ import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
 import { data as pmeData } from './pme-selectors.js';
-import { recordValue as pmeRecordValue } from './pme-record-id.js';
+import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
@@ -149,7 +149,7 @@ const validateInstrumentChoices = function(
 
   Notification.hide(function() {
     $.post(ajaxScript, {
-      recordId: PHPMyEdit.rec(container),
+      recordId: pmeRec(container),
       instrumentValues: selectMusicianInstrument.val(),
     })
       .fail(function(xhr, status, errorThrown) {
