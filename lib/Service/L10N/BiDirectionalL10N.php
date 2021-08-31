@@ -86,7 +86,7 @@ class BiDirectionalL10N
       $this->loadLanguageData();
     }
 
-    $backTranslation = $this->translations[self::REVERSE][$translation];
+    $backTranslation = $this->translations[self::REVERSE][$translation]??null;
     if (!empty($backTranslation)) {
       return $backTranslation;
     }
@@ -96,7 +96,7 @@ class BiDirectionalL10N
       $backTranslation = array_search($translation, $cloudTranslations);
     }
 
-    return $backTranslation ? $backTranslation : $translation;
+    return !empty($backTranslation) ? $backTranslation : $translation;
   }
 
   protected function loadLanguageData()

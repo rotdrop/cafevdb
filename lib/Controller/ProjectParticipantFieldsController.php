@@ -350,7 +350,7 @@ class ProjectParticipantFieldsController extends Controller {
         }
         $default = $data['default'];
         $index = $data['index'];
-        $used  = $data['used'] === 'used';
+        $used  = ($data['used']??null) === 'used';
         $dataOptions = $projectValues['data_options'];
 
         $dataOptions = array_values($dataOptions); // get rid of -1 index
@@ -370,7 +370,7 @@ class ProjectParticipantFieldsController extends Controller {
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
-        switch ($data['data-type']) {
+        switch ($data['data-type']??null) {
         case 'service-fee':
         case 'money':
           // see that it is a valid decimal number ...

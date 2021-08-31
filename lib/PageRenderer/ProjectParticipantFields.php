@@ -839,6 +839,12 @@ class ProjectParticipantFields extends PMETableViewBase
    */
   public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
+    if ($op === PHPMyEdit::SQL_QUERY_INSERT) {
+      // populate the empty $oldvals array with null in order to have
+      // less undefined array key accesses.
+      $oldvals = array_fill_keys(array_keys($newvals), null);
+    }
+
     $this->debug('BEFORE OLD '.print_r($oldvals, true));
     $this->debug('BEFORE NEW '.print_r($newvals, true));
     $this->debug('BEFORE CHG '.print_r($changed, true));
@@ -861,7 +867,7 @@ class ProjectParticipantFields extends PMETableViewBase
     if (empty($newvals[$tag])) {
       $newvals[$tag] = null;
       Util::unsetValue($changed, $tag);
-      if ($newvals[$tag] !== $oldvals[$tag]??null) {
+      if ($newvals[$tag] !== ($oldvals[$tag]??null)) {
         $changed[] = $tag;
       }
     }
@@ -914,7 +920,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $tag = 'default_multi_value';
     if ($newvals['multiplicity'] === 'multiple' ||
         $newvals['multiplicity'] === 'parallel') {
-      $value = $newvals[$tag];
+      $value = $newvals[$tag]??null;
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
@@ -1057,7 +1063,7 @@ class ProjectParticipantFields extends PMETableViewBase
      */
 
     Util::unsetValue($changed, 'default_value');
-    if ($newvals['default_value'] !== $oldvals['default_value']) {
+    if ($newvals['default_value'] !== ($oldvals['default_value']??null)) {
       $changed[] = 'default_value';
     }
 
@@ -1118,7 +1124,7 @@ class ProjectParticipantFields extends PMETableViewBase
     }
     foreach ($optionValues as $field => $fieldData) {
       $newvals[$field] = implode(',', $fieldData);
-      if ($oldvals[$field] != $newvals[$field]) {
+      if ($newvals[$field] != ($oldvals[$field]??null)) {
         $changed[] = $field;
       }
     }
