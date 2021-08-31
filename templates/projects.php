@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,8 +28,9 @@ $nav = '';
 //$nav .= $pageNavigation->pageControlElement('projectinstrumets');
 $nav .= $pageNavigation->pageControlElement('all');
 $nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('instruments');
 $nav .= $pageNavigation->pageControlElement('project-participant-fields');
+$nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 $nav .= $pageNavigation->pageControlElement('blog');
 
 echo $this->inc('part.common.header', [
