@@ -447,6 +447,8 @@ field. If left blank, every logged in user is allowed to change this field.'),
 
       'file-attachments-select' => $this->l->t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
+      'restore-history' => $this->l->t('Try to restore the last visited table view whenreloading the entire page with the web-browser. If unchecked either the musician\'s view or the blog-page is loaded.'),
+
       'filter-visibility' => $this->l->t('Toggle the initial display of the search-filters for data-base tables
 in order to make the table view a little less crowded. Search-filters
 can be reenabled at any time by clicking the ``Search\'\' button in

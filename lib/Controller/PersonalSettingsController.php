@@ -164,6 +164,7 @@ class PersonalSettingsController extends Controller {
   public function set($parameter, $value) {
     switch ($parameter) {
     case 'tooltips':
+    case 'restorehistory':
     case 'filtervisibility':
     case 'directchange':
     case 'showdisabled':

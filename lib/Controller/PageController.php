@@ -120,8 +120,13 @@ class PageController extends Controller {
    * @NoCSRFRequired
    * @UseSession
    */
-  public function index() {
-    return $this->remember('user');
+  public function index()
+  {
+    if ($this->getUserValue('restorehistory') === 'on') {
+      return $this->history(0, 'user');
+    } else {
+      return $this->remember('user');
+    }
   }
 
   /**
@@ -149,13 +154,14 @@ class PageController extends Controller {
    * @NoAdminRequired
    * @UseSession
    */
-  public function history($level = 0)
+  public function history($level = 0, $renderAs = 'blank')
   {
     try {
       $originalParams = $this->parameterService->getParams();
       $this->parameterService->setParams($this->historyService->fetch($level));
       $this->parameterService['originalRequestParameters'] = $originalParams;
-      $_POST = $this->parameterService->getParams(); // oh oh
+      $this->parameterService->setParam('renderAs', $renderAs);
+      $_POST = $this->parameterService->getParams();
     } catch(\OutOfBoundsException $e) {
       return new DataResponse(['message' => $e->getMessage(),
                                'history' => ['size' => $this->historyService->size(),
@@ -163,7 +169,7 @@ class PageController extends Controller {
                               Http::STATUS_NOT_FOUND);
     }
     return $this->loader(
-      'blank', // history loading is always injected into the DOM
+      $renderAs,
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -228,6 +234,7 @@ class PageController extends Controller {
 
     $showToolTips = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
+    $restoreHist  = $this->getUserValue('restorehistory', 'off');
     $directChg    = $this->getUserValue('directchange', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
     $expertMode   = $this->getUserValue('expertmode', false);
@@ -301,6 +308,7 @@ class PageController extends Controller {
       'historyPosition' => $historyPosition,
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'csrfToken' => \OCP\Util::callRegister(), // @todo: check
+      'restorehistory' => $restoreHist,
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
       'showdisabled' => $showDisabled,
@@ -319,7 +327,7 @@ class PageController extends Controller {
     $policy->addAllowedFrameDomain('*');
     $response->setContentSecurityPolicy($policy);
 
-    if ($renderer->needPhpSession()) {
+    if ($renderer->needPhpSession() && $renderAs !== 'user') {
       $response->preRender();
     }
 
@@ -328,7 +336,9 @@ class PageController extends Controller {
     try {
       $this->logInfo('Closing session');
       $this->historyService->store();
-      $this->session->close();
+      if (!$renderer->needPhpSession() || $renderAs !== 'user') {
+        $this->session->close();
+      }
     } catch (\Throwable $t) {
       // log, but ignore otherwise
       $this->logException($t);
