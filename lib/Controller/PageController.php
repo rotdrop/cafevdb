@@ -255,7 +255,7 @@ class PageController extends Controller {
       'user');
     };
 
-    $template = $this->getTemplate($template);
+    $template = $this->getTemplate($template, $renderAs);
     $this->logDebug("Try load template ".$template);
     try {
       /** @var IPageRenderer $renderer */
@@ -347,18 +347,17 @@ class PageController extends Controller {
     return $response;
   }
 
-  private function getTemplate($template)
+  private function getTemplate(string $template, string $renderAs)
   {
     if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
       return 'maintenance/configcheck';
     }
-    if (empty($template)) {
+    $template = $template ?: 'all-musicians';
+    if ($renderAs === 'user') {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
         return 'blog/blog';
       }
-
-      return 'all-musicians';
     }
     return $template;
   }

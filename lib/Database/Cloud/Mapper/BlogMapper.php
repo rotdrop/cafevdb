@@ -25,7 +25,8 @@ class BlogMapper extends Mapper
     $this->l = $l10n;
   }
 
-  /**Create a new note.
+  /**
+   * Create a new note.
    *
    * @param $author The author of this mess.
    *
@@ -91,6 +92,8 @@ class BlogMapper extends Mapper
       }
       if ($note->getReader() != '' && $reader != '') {
         $note->setReader($reader.','.$note->getReader());
+      } else {
+        $note->setReader($reader);
       }
     }
 
@@ -113,15 +116,16 @@ class BlogMapper extends Mapper
     $note->setId($blogId);
 
     $updated = $note->getUpdatedFields();
-    if (count($update) == 1 && is_set($updated['id'])) {
-      $this->logError(__METHOD__.': no fields to update, args: '.print_r(func_get_args()));
+    if (count($updated) == 1 && isset($updated['id'])) {
+      $this->logError('No fields to update, args: '.print_r(func_get_args(), true));
       return null;
     }
 
     return $this->update($note);
   }
 
-  /**Delete the given Note and the entire thread referring to
+  /**
+   * Delete the given Note and the entire thread referring to
    * it. There is intentionally no security.
    *
    * @param $blogId The unique Id of the note to delete.
@@ -142,7 +146,7 @@ class BlogMapper extends Mapper
 
     $note->setId($blogId);
     if (!$drop) {
-      $note->setDelete(true);
+      $note->setDeleted(true);
       $note->setModified(time());
       return $this->update($note);
     } else {
@@ -251,7 +255,7 @@ class BlogMapper extends Mapper
     return $row;
   }
 
-  /**Obtain "some popup notice is pending" for the given user / all users */
+  /** Obtain "some popup notice is pending" for the given user / all users */
   public function notificationPending(string $userId)
   {
     $qb = $this->db->getQueryBuilder();
@@ -261,11 +265,10 @@ class BlogMapper extends Mapper
     $cursor = $qb->execute();
     $userPendingNotifications = false;
     while ($row = $cursor->fetch()) {
-      $pendingNotifications = true;
       $re = '/(^|[,])+'.$userId.'($|[,])+/';
-      if (preg_match($re, $reader) !== 1) {
-        if (!$usePendingNotifications) {
-          $this->logInfo(__METHOD__.': '."User `$userId' has pending notifications");
+      if (preg_match($re, $row['reader']) !== 1) {
+        if (!$userPendingNotifications) {
+          $this->logInfo('User "' . $userId . '" has pending notifications.');
         }
         $userPendingNotifications = true;
       }

@@ -106,7 +106,7 @@ class BlogController extends Controller {
     $popup    = $this->parameterService->getParam('popup', false);
     $reader   = $this->parameterService->getParam('reader', '');
 
-    if (empty(author)) {
+    if (empty($author)) {
       return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
     }
 
@@ -222,7 +222,7 @@ class BlogController extends Controller {
       if ($blogId < 0) {
         return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
       }
-      $result = $this->blogMapper->modifyNote($author, $blogId, '', false, false, $author);
+      $result = $this->blogMapper->modifyNote($author, $blogId, '', false, null, $author);
       $generateContents = false;
       break;
     case 'delete':
@@ -240,7 +240,7 @@ class BlogController extends Controller {
       $templateParameters = [
         'timezone' => $this->timeZone->getTimeZone(time())->getName(),
         'locale' => $this->l->getLocaleCode(),
-        'user' => $this->userid,
+        'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogMapper,
         'toolTips' => $this->toolTipsService,
