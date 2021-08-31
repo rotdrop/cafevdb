@@ -1080,7 +1080,7 @@ class phpMyEdit
 	protected function join_table_index(int $field)
 	{
 		$fdd = $this->fdd[$field];
-		if (!isset($fdd[self::FDD_VALUES]['join'])) {
+		if (empty(($fdd[self::FDD_VALUES]['join']))) {
 			return false;
 		}
 		if (!isset($fdd[self::FDD_VALUES]['join']['reference'])) {
@@ -1095,7 +1095,7 @@ class phpMyEdit
 	protected function join_table_alias(int $field)
 	{
 		$fdd = $this->fdd[$field];
-		if (!isset($fdd[self::FDD_VALUES]['join'])) {
+		if (!isset($fdd[self::FDD_VALUES]['join']) || $fdd[self::FDD_VALUES]['join'] === false) {
 			return self::MAIN_ALIAS;
 		}
 		return self::JOIN_ALIAS.$this->join_table_index($field);
@@ -1162,7 +1162,7 @@ class phpMyEdit
 
 		$main_table = $this->sd.self::MAIN_ALIAS.$this->ed;
 		$join_table = $this->sd.$values['join_table'].$this->ed;
-		$join_column = $values['column'];
+		$join_column = empty($values['join']) ? $this->fds[$field] : $values['column'];
 		$join_col_fqn = $join_table.'.'.$this->sd.$join_column.$this->ed;
 
 		if ($vanilla) {
@@ -5931,9 +5931,7 @@ class phpMyEdit
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
-			if (empty($this->rec)) {
-				$this->operation = $this->labels['Add']; // to force add operation
-			}
+			$this->operation = $this->labels['Add']; // to force add operation
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
