@@ -20,9 +20,12 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** @var \OCP\Template $this */
+
 namespace OCA\CAFEVDB;
 
-$css_pfx = $renderer->cssPrefix();
+$cssPrefix = $renderer->cssPrefix();
+$cssClass = $renderer->cssClass();
 
 $nav = '';
 //$nav .= $pageNavigation->pageControlElement('projectinstrumets');
@@ -34,13 +37,13 @@ $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 $nav .= $pageNavigation->pageControlElement('blog');
 
 echo $this->inc('part.common.header', [
-  'css-prefix' => $css_pfx,
+  'css-prefix' => $cssPrefix,
+  'css-class' => $cssClass,
   'navigationcontrols' => $nav,
   'header' => $renderer->headerText()
 ]);
 
-// Issue the main part. The method will echo itself
-$renderer->render();
+echo $this->inc('pme-table', []);// 'renderer' => $renderer ]);
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
+echo $this->inc('part.common.footer', [ 'css-prefix' => $cssPrefix, 'css-class' => $cssClass ]);
