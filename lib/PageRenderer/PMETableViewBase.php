@@ -906,6 +906,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($identifier[$multiple][$operation] as $idKey) {
             ${$operation.'Identifier'}[$idKey] = $identifier;
             ${$operation.'Identifier'}[$idKey][$multiple] = $idKey;
+            // wrap into just another array in order to handle 'self' key-value provider
+            ${$operation.'Identifier'}[$idKey] = [ ${$operation.'Identifier'}[$idKey] ];
           }
           $this->debug('IDENTIFIER '.$operation.': '.print_r(${$operation.'Identifier'}, true));
         }
@@ -922,29 +924,130 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           if (empty($value['self'])) {
             continue;
           }
-          // $selfField == ProjectInstruments:voice
+
+          // e.g. $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
+
+          // initialize self-key values
           foreach ($dataSets as $operation => $dataSet) {
             foreach (${$operation.'Identifier'} as $key => &$idValues) {
-              $idValues[$selfKey] = null;
-            }
-            $dataValues = ${$dataSet.'vals'};
-            foreach (Util::explodeIndexed($dataValues[$selfField]) as $key => $value) {
-              if (isset(${$operation.'Identifier'}[$key])) {
-                ${$operation.'Identifier'}[$key][$selfKey] = $value;
-              }
-            }
-            foreach (${$operation.'Identifier'} as $key => &$idValues) {
-              if (empty($idValues[$selfKey])) {
-                $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
-              }
-              if ($idValues[$selfKey] === null) {
-                throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+              foreach ($idValues as &$idValueTuple) {
+                $idValueTuple[$selfKey] = null;
               }
             }
           }
+
+          // explode key values
+          foreach (['old', 'new'] as $dataSet) {
+            $dataValues = ${$dataSet.'vals'};
+            $selfValues[$dataSet] = Util::explode(',', $dataValues[$selfField]);
+          }
+          $selfValues['del'] = array_diff($selfValues['old'], $selfValues['new']);
+          $selfValues['add'] = array_diff($selfValues['new'], $selfValues['old']);
+          $selfValues['rem'] = array_intersect($selfValues['new'], $selfValues['old']);
+          foreach(['old', 'new', 'del', 'add', 'rem'] as $tag) {
+            $selfValues[$tag] = Util::explodeIndexedMulti(implode(',',  $selfValues[$tag]));
+          }
+          $this->logInfo('SELF VALUES ' . print_r($selfValues, true));
+
+          // $selfValues['del'] adds to the 'del' key values, but does
+          // not change add and rem
+          $operation = 'del';
+          foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
+            // make sure we have a $delIdentifier
+            if (!isset(${$operation.'Identifier'}[$key])) {
+              if (!isset($remIdentifier[$key])) {
+                throw new \RuntimeException($this->l->t('Inconsistent removal request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
+              }
+              ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
+              if (array_search($key, $identifier[$multiple]['del']) === false) {
+                $identifier[$multiple]['del'][] = $key;
+              }
+            }
+
+            // blow up the delete identifiers
+            $idValues = ${$operation.'Identifier'}[$key];
+            ${$operation.'Identifier'}[$key] = [];
+            foreach ($idValues as $idValueTuple) {
+              foreach ($selfValuesTuple as $selfValue) {
+                $idValueTuple[$selfKey] = $selfValue;
+                ${$operation.'Identifier'}[$key][] = $idValueTuple;
+              }
+            }
+          }
+
+          // $selfValues['add'] adds to the 'add' key values and
+          // removes from the 'rem' key values if no other self-values
+          // are in the "remaining" set.
+          $operation = 'add';
+          foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
+            $this->logInfo('SELF VALUES FOR KEY ' . $key . ' are ' . print_r($selfValuesTuple, true));
+            // make sure we have an $addIdentifier
+            if (!isset(${$operation.'Identifier'}[$key])) {
+              if (!isset($remIdentifier[$key])) {
+                throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
+              }
+              ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
+              if (empty($selfValues['rem'][$key])) {
+                $this->logInfo('REMOVING REM IDS for ' . $key);
+                unset($remIdentifier[$key]);
+              }
+              if (array_search($key, $identifier[$multiple]['new']) === false) {
+                $identifier[$multiple]['new'][] = $key;
+              }
+            }
+
+            // blow up the add identifiers
+            $idValues = ${$operation.'Identifier'}[$key];
+            ${$operation.'Identifier'}[$key] = [];
+            foreach ($idValues as $idValueTuple) {
+              foreach ($selfValuesTuple as $selfValue) {
+                $idValueTuple[$selfKey] = $selfValue;
+                ${$operation.'Identifier'}[$key][] = $idValueTuple;
+              }
+            }
+          }
+
+          // $selfValues['rem'] just blows up the 'rem' key values
+          $operation = 'rem';
+          foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
+            // make sure we have an $addIdentifier
+            if (!isset(${$operation.'Identifier'}[$key])) {
+              $this->logInfo('REM KEYS ' . print_r(array_keys($remIdentifier), true));
+              throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s", key "%2$s, major key = "%3$s" ".', [$selfField, $selfKey, $key]));
+            }
+
+            // blow up the rem identifiers
+            $idValues = ${$operation.'Identifier'}[$key];
+            ${$operation.'Identifier'}[$key] = [];
+            foreach ($idValues as $idValuesTuple) {
+              foreach ($selfValuesTuple as $selfValue) {
+                $idValueTuple[$selfKey] = $selfValue;
+                ${$operation.'Identifier'}[$key][] = $idValuesTuple;
+              }
+            }
+          }
+
+          // just make sure that the self-value has a value in any case
+          foreach ($dataSets as $operation => $dataSet) {
+            foreach (${$operation.'Identifier'} as $key => &$idValues) {
+              foreach ($idValues as &$idValuesTuple) {
+                if (empty($idValuesTuple[$selfKey])) {
+                  $idValuesTuple[$selfKey] = $pme->fdd[$selfField]['default'];
+                }
+                if ($idValuesTuple[$selfKey] === null) {
+                  throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+                }
+              }
+            }
+          }
+
+          // remove the her handled key-column from the changeset
+          unset($changeSet[$selfKey]);
+          Util::unsetValue($changed, $selfField);
         }
 
+        $this->debug('IDENTIFIER '.print_r($identifier, true));
         $this->debug('ADDIDS '.print_r($addIdentifier, true));
         $this->debug('REMIDS '.print_r($remIdentifier, true));
         $this->debug('DELIDS '.print_r($delIdentifier, true));
@@ -969,19 +1072,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // Delete entities by criteria matching Note: this needs
           // that the entity implements the \ArrayAccess interface
           foreach ($identifier[$multiple]['del'] as $del) {
-            $id = $delIdentifier[$del];
-            $entityId = $meta->extractKeyValues($id);
-            foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
-              $association->removeElement($entity);
+            $ids = $delIdentifier[$del];
+            foreach ($ids as $id) {
+              $entityId = $meta->extractKeyValues($id);
+              foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
+                $association->removeElement($entity);
+              }
             }
           }
 
           // add entries by adding them to the association of the
           // master entity
           foreach ($identifier[$multiple]['add'] as $add) {
-            $id = $addIdentifier[$add];
-            $entityId = $meta->extractKeyValues($id);
-            $association->add($this->getReference($entityClass, $entityId));
+            $ids = $addIdentifier[$add];
+            foreach ($ids as $id) {
+              $entityId = $meta->extractKeyValues($id);
+              $association->add($this->getReference($entityClass, $entityId));
+            }
           }
 
           $masterEntity[$joinInfo['association']] = $association;
@@ -991,36 +1098,39 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // Delete removed entities
         foreach ($identifier[$multiple]['del'] as $del) {
-          $id = $delIdentifier[$del];
-          $entityId = $meta->extractKeyValues($id);
-          $entity = $this->find($entityId);
-          $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
-          $this->debug('Usage is '.$usage);
-          $softDeleteable = method_exists($entity, 'isDeleted')
-                         && method_exists($entity, 'setDeleted');
+          $ids = $delIdentifier[$del];
+          foreach ($ids as $id) {
+            $entityId = $meta->extractKeyValues($id);
+            $this->logInfo('TRY REMOVE ' . print_r($entityId, true));
+            $entity = $this->find($entityId);
+            $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
+            $this->debug('Usage is '.$usage);
+            $softDeleteable = method_exists($entity, 'isDeleted')
+                            && method_exists($entity, 'setDeleted');
 
-          $this->debug('SOFT-DELETEABLE '.(int)$softDeleteable.' HAS USAGE '.(int)method_exists($entity, 'usage'));
+            $this->debug('SOFT-DELETEABLE '.(int)$softDeleteable.' HAS USAGE '.(int)method_exists($entity, 'usage'));
 
-          if ($usage > 0) {
-            /**
-             * @todo needs more logic: disabled things would need to
-             * be reenabled instead of adding new stuff. One
-             * possibility would be to add disabled things as hidden
-             * elements in order to keep them out of the way of the
-             * select boxes of the user interface.
-             */
-            if ($softDeleteable && !$entity->isDeleted()) {
-              $this->remove($entity);
+            if ($usage > 0) {
+              /**
+               * @todo needs more logic: disabled things would need to
+               * be reenabled instead of adding new stuff. One
+               * possibility would be to add disabled things as hidden
+               * elements in order to keep them out of the way of the
+               * select boxes of the user interface.
+               */
+              if ($softDeleteable && !$entity->isDeleted()) {
+                $this->remove($entity);
+              }
+            } else {
+              if ($softDeleteable && !$entity->isDeleted()) {
+                $this->debug('SOFT DELETE');
+                $this->remove($entity, true); // soft, need flush
+              }
+              $this->debug('HARD DELETE '.($softDeleteable && (int)$entity->isDeleted()));
+              $this->remove($entity); // hard
             }
-          } else {
-            if ($softDeleteable && !$entity->isDeleted()) {
-              $this->debug('SOFT DELETE');
-              $this->remove($entity, true); // soft, need flush
-            }
-            $this->debug('HARD DELETE '.($softDeleteable && (int)$entity->isDeleted()));
-            $this->remove($entity); // hard
+            $this->flush();
           }
-          $this->flush();
         }
 
         $multipleValues = [];
@@ -1048,38 +1158,46 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple]['new'] as $new) {
           if (isset($addIdentifier[$new])) {
             $this->debug('TRY ADD '.$new);
-            $id = $addIdentifier[$new];
-            $entityId = $meta->extractKeyValues($id);
-            $entity = $entityClass::create();
-            foreach ($entityId as $key => $value) {
-              $entity[$key] = $value;
+            $ids = $addIdentifier[$new];
+            foreach ($ids as $id) {
+              $entityId = $meta->extractKeyValues($id);
+              $entity = $entityClass::create();
+              foreach ($entityId as $key => $value) {
+                $entity[$key] = $value;
+              }
+              // set further properties ...
+              foreach (($multipleValues[$new] ?? [])as $column => $value) {
+                $meta->setSimpleColumnValue($entity, $column, $value);
+              }
+              // persist
+              $this->persist($entity);
             }
           } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $this->debug('TRY MOD '.$new);
-            $id = $remIdentifier[$new];
-            $this->debug('REM IDS '.print_r($id, true));
-            $entityId = $meta->extractKeyValues($id);
-            $this->debug('ENTITIY ID '.print_r($entityId, true));
-            $entity = $this->find($entityId);
-            if (empty($entity)) {
-              throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
-                                               [ $table, print_r($entityId, true) ]));
-            }
-            if (method_exists($entity, 'setDeleted')) {
-              $entity['deleted'] = null;
-              $this->flush();
+            $ids = $remIdentifier[$new];
+            foreach ($ids as $id) {
+              $this->debug('REM IDS '.print_r($id, true));
+              $entityId = $meta->extractKeyValues($id);
+              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $entity = $this->find($entityId);
+              if (empty($entity)) {
+                throw new \Exception($this->l->t('Unable to find entity in table %s given id %s',
+                                                 [ $table, print_r($entityId, true) ]));
+              }
+              if (method_exists($entity, 'setDeleted')) {
+                $entity['deleted'] = null;
+                $this->flush();
+              }
+              // set further properties ...
+              foreach (($multipleValues[$new] ?? [])as $column => $value) {
+                $meta->setSimpleColumnValue($entity, $column, $value);
+              }
+              // persist
+              $this->persist($entity);
             }
           } else {
             continue;
           }
-
-          // set further properties ...
-          foreach (($multipleValues[$new] ?? [])as $column => $value) {
-            $meta->setSimpleColumnValue($entity, $column, $value);
-          }
-
-          // persist
-          $this->persist($entity);
         }
         foreach ($changeSet as $column => $field) {
           Util::unsetValue($changed, $field);
@@ -1709,6 +1827,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
     $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    if (isset($fdd['decoration'])) {
+      if (!empty($fdd['decoration']['slug'])) {
+        $this->addSlug($fdd['decoration']['slug'], $fieldDescriptionData[$fieldName]);
+      }
+      unset($fieldDescriptionData[$fieldName]['decoration']);
+    }
     return [ $index, $fieldName ];
   }
 
