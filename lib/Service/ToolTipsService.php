@@ -755,34 +755,43 @@ Suchkriterien anzuzeigen.'),
         'operation' => $this->l->t('Einzelnen Datensatz anzeigen'),
       ),
 
-      'project-action-debit-mandates' => $this->l->t('Load a new page with all debit-mandates for project-fees'),
+      'projects' => [
+        'participant-fields' => $this->l->t('Define participant-fields for the instrumentation table. E.g.: surcharge
+fields for double-/single-room preference, room-mates and such.'),
 
-      'project-action-project-participants' => $this->l->t('Display all registered musicians for the selected project. The table
+        'instrumentation-voices' => $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
+      ],
+
+      'project-actions' => $this->l->t('Pull-down menu with entries to move on
+to pages with the instrumentation, events, instrumentation numbers etc.'),
+
+      'project-action' => [
+        'debit-mandates' => $this->l->t('Load a new page with all debit-mandates for project-fees'),
+
+        'project-participants' => $this->l->t('Display all registered musicians for the selected project. The table
         shows project related details as well as all stored personal
         "information about the respective musician'),
 
-      'project-action-email' => $this->l->t('Opens the email-form for the project inside a dialog window.'),
+        'email' => $this->l->t('Opens the email-form for the project inside a dialog window.'),
 
-      'project-action-events' => $this->l->t('Open a dialog with all known
+        'events' => $this->l->t('Open a dialog with all known
 events associated to the project.
 Events can be added and modified
 as needed.'),
 
-      'project-action-participant-fields' => $this->l->t('Define participant-fields for the instrumentation table. E.g.: surcharge
+        'participant-fields' => $this->l->t('Define participant-fields for the instrumentation table. E.g.: surcharge
 fields for double-/single-room preference, room-mates and such.'),
 
-      'project-action-files' => $this->l->t('Change to the folder with project related files.'),
+        'files' => $this->l->t('Change to the folder with project related files.'),
 
-      'project-action-financial-balance' => $this->l->t('Change to the folder with the financial balance
+        'financial-balance' => $this->l->t('Change to the folder with the financial balance
 sheets for the project (only available after the project
 has been ``closed\'\'.'),
 
-      'project-action-project-instrumentation-numbers' => $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
+        'project-instrumentation-numbers' => $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
 
-      'project-action-wiki' => $this->l->t('Change to the DokuWiki-page for this project (if there is one)'),
-
-      'project-actions' => $this->l->t('Pull-down menu with entries to move on
-to pages with the instrumentation, events, instrumentation numbers etc.'),
+        'wiki' => $this->l->t('Change to the DokuWiki-page for this project (if there is one)'),
+      ],
 
       'project-direct-debit-allowed' => $this->l->t('Some people gave us debit mandates but still want to pay by bank-transfer. Uncheck in order to exclude the person from direct debits transfers.'),
 

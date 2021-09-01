@@ -37,7 +37,7 @@ import * as ncRouter from '@nextcloud/router';
 import * as DialogUtils from './dialog-utils.js';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 
-require('projects.css');
+require('projects.scss');
 
 // /**
 //  * Strip any digit from the end of name and attach the four digit
@@ -215,7 +215,7 @@ const instrumentationNumbersPopup = function(containerSel, post) {
  * @param {Object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const extraFieldsPopup = function(containerSel, post) {
+const participantFieldsPopup = function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -315,8 +315,6 @@ const actions = function(select, containerSel) {
   case 'project-participants':
   case 'sepa-bank-accounts':
   case 'project-payments':
-  case 'project-participant-fields':
-    // @TODO: this really could be a popup
     post.template = selectedValue;
     CAFEVDB.formSubmit('', $.param(post), 'post');
     break;
@@ -339,6 +337,9 @@ const actions = function(select, containerSel) {
   case 'project-instrumentation-numbers':
     instrumentationNumbersPopup(containerSel, post);
     break;
+  case 'project-participant-fields':
+    participantFieldsPopup(containerSel, post);
+    break
   case 'project-wiki':
     post.wikiPage = selected.data('wikiPage');
     post.popupTitle = selected.data('wikiTitle');
@@ -1110,8 +1111,9 @@ const documentReady = function() {
       }
 
       const linkPopups = {
-        projectextra: extraFieldsPopup,
-        projectinstrumentation: instrumentationNumbersPopup,
+        'projects-participant-fields': participantFieldsPopup,
+        'projects-instrumentation': instrumentationNumbersPopup,
+        'projects-instrumentation-voices': instrumentationNumbersPopup,
       };
 
       for (const [css, popup] of Object.entries(linkPopups)) {

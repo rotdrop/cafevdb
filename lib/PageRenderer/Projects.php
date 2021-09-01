@@ -67,11 +67,7 @@ class Projects extends PMETableViewBase
       'identifier' => [
         'project_id' => 'id',
         'instrument_id' => false,
-        // TODO: allow adding instruments by voice. But for now just
-        // inject the value 0
-        'voice' => [
-          'value' => 'self',
-        ],
+        'voice' => [ 'self' => true, ],
       ],
       'column' => 'instrument_id',
     ],
@@ -114,7 +110,7 @@ class Projects extends PMETableViewBase
     $this->imagesService = $imagesService;
 
     if (empty($this->projectId) || $this->projectId < 0 || empty($this->projectName)) {
-      $this->projectId = $this->pmeRecordId;
+      $this->projectId = $this->pmeRecordId['id'] ?? $this->pmeRecordId;
       if ($this->projectId > 0) {
         $this->projectName = $this->projectService->fetchName($this->projectId);
       }
@@ -315,24 +311,190 @@ class Projects extends PMETableViewBase
       'escape'   => false
     ];
 
-    $this->makeJoinTableField(
+    $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'identifier' => [ 'id' => true ], // just need the key
+    ], 'name');
+
+    list($index, $name) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
       [
-        'name' => $this->l->t('Instrumentation'),
-        'select' => 'M',
-        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'display|LF'  => ["popup" => 'data',
-                          "prefix" => '<div class="projectinstrumentation">',
-                          "postfix" => '</div>'],
-        'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
-        'values' => [
-          'column' => 'id',
-          'description' => self::trivialDescription('name'),
-          'orderby' => '$table.sort_order ASC',
-          'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'name'        => $this->l->t('Instrumentation'),
+        'decoration'  => [ 'slug' => 'instrumentation' ],
+        'options'     => 'CAP',
+        'display|LF'  => [
+          'popup' => 'data',
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
         ],
-        'values2' => $this->instrumentInfo['byId'],
+        'css'         => ['postfix' => [ 'tooltip-top', ], ],
+        'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'select'      => 'M',
+        'values|ACP' => [
+          'table'       => $l10nInstrumentsTable,
+          'column'      => 'id',
+          'description' => [
+            'columns' => [ 'l10n_name' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
+          'orderby'     => '$table.sort_order ASC',
+          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
+        ],
+        'values|LFVD' => [
+          'table'       => $l10nInstrumentsTable,
+          'column'      => 'id',
+          'description' => [
+            'columns' => [ '$table.l10n_name' ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
+          'orderby'     => '$table.sort_order ASC',
+          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
+          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id
+  FROM '.self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE.' pi
+  WHERE '.$this->projectId.' <= 0 OR '.$this->projectId.' = pi.project_id)',
+        ],
         'valueGroups' => $this->instrumentInfo['idGroups'],
+        'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
+          $this->logInfo('ROW ' . print_r($row, true));
+          $post = [
+            'projectInstruments' => $value,
+            'template' => 'project-instrumentation-numbers',
+            'projectName' => $row[$this->queryField('name', $pme->fdd)],
+            'project_id' => $recordId['id'],
+            'projectId' => $recordId['id'],
+          ];
+          $json = json_encode($post);
+          $post = http_build_query($post, '', '&');
+          $title = $this->toolTipsService['project-action:project-instrumentation-numbers'];
+          $link =<<<__EOT__
+                <li class="nav tooltip-top" title="$title">
+                <a class="nav" href="#" data-post="$post" data-json='$json'>
+                $value
+                </a>
+                </li>
+                __EOT__;
+          return $link;
+        },
+        'filter' => [
+          'having' => true,
+        ],
+      ]);
+    // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
+
+    // Blow up the value-groups for the voices ...
+    $voicesValueGroups = [];
+    foreach ($this->instrumentInfo['idGroups'] as $instrumentId => $groupName) {
+      for ($i = 0; $i < 16; ++$i) {
+        $voicesValueGroups[$instrumentId . self::JOIN_KEY_SEP . $i] = $groupName;
+      }
+    }
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
+      [
+        'name|CAP'  => $this->l->t('Voices'),
+        'name|LFVD' => $this->l->t('Instrumentation'),
+        'decoration' => [ 'slug' => 'instrumentation-voices' ],
+        'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
+        'select'   => 'M',
+        'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', ], ],
+        'display|LF' => [
+          'popup' => 'data',
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
+        ],
+        'sql' => "GROUP_CONCAT(
+  DISTINCT
+  IF(".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice >= 0,
+    CONCAT_WS(
+      '".self::JOIN_KEY_SEP."',
+      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
+    NULL
+  )
+  ORDER BY
+    " . $this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC,
+    " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
+        // Values for copy and change, including excess voices to select
+        'values|CP' => [
+          'table' => "SELECT
+  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
+  pin.project_id,
+  i.id AS instrument_id,
+  i.name,
+  COALESCE(ft.content, i.name) AS l10n_name,
+  i.sort_order,
+  pin.quantity,
+  n.n
+  FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+    ON i.id = pin.instrument_id
+  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
+      AND ft.field = 'name'
+      AND ft.foreign_key = i.id
+  JOIN numbers n
+    ON n.n <= GREATEST(2, (pin.voice+1)) AND n.n > 0
+  WHERE
+    pin.project_id = $this->projectId OR $this->projectId <= 0
+  GROUP BY
+    project_id, instrument_id, n
+  HAVING
+    MAX(pin.voice) = 0 OR n.n > 0
+  ORDER BY
+    i.sort_order ASC, n.n ASC",
+          'column' => 'value',
+          'description' => [
+            'columns' => [ 'l10n_name', 'IF($table.n > 0, CONCAT(" ", $table.n), "")' ],
+            'divs' => '',
+          ],
+          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'join' => false,
+        ],
+        // Values for for view mode, without excess voices.
+        'values|LFVD' => [
+          'table' => "SELECT
+  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
+  pin.project_id,
+  i.id AS instrument_id,
+  i.name,
+  COALESCE(ft.content, i.name) AS l10n_name,
+  i.sort_order,
+  pin.quantity,
+  n.n
+  FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+    ON i.id = pin.instrument_id
+  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
+      AND ft.field = 'name'
+      AND ft.foreign_key = i.id
+  JOIN numbers n
+    ON n.n <= pin.voice AND n.n >= 0
+  WHERE
+    pin.project_id = $this->projectId OR $this->projectId <= 0
+  GROUP BY
+    project_id, instrument_id, n
+  HAVING
+    MAX(pin.voice) = 0 OR n.n > 0
+  ORDER BY
+    i.sort_order ASC, n.n ASC",
+          'column' => 'value',
+          'description' => [
+            'columns' => [ 'l10n_name', 'IF($table.n > 0, CONCAT(" ", $table.n), "")' ],
+            'divs' => '',
+          ],
+          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'join' => false,
+        ],
+        //'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+        'align|LF' => 'center',
+        'valueGroups' => $voicesValueGroups,
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
           $post = [
             'projectInstruments' => $value,
@@ -343,30 +505,32 @@ class Projects extends PMETableViewBase
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
-          $title = $this->toolTipsService['project-action-project-instrumentation-numbers'];
+          $title = $this->toolTipsService['project-action:project-instrumentation-numbers'];
           $link =<<<__EOT__
-<li class="nav tooltip-top" title="$title">
-  <a class="nav" href="#" data-post="$post" data-json='$json'>
-$value
-  </a>
-</li>
-__EOT__;
+                <li class="nav tooltip-top" title="$title">
+                <a class="nav" href="#" data-post="$post" data-json='$json'>
+                $value
+                </a>
+                </li>
+                __EOT__;
           return $link;
         },
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
-      [
-        'input' => 'RH',
-        'options' => 'A',
-        'default' => 0,
+        'filter' => [
+          'having' => true,
+        ],
       ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'name',
       [
         'name' => $this->l->t('Extra Member Data'),
+        'decoration' => [ 'slug' => 'participant-fields' ],
+        'display|LF'  => [
+          'popup' => 'data',
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
+        ],
+        'css'         => ['postfix' => [ 'tooltip-top', ], ],
         'options'  => 'FLCVD',
         'input'    => 'VR',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
@@ -381,9 +545,8 @@ __EOT__;
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
-          $title = $this->toolTipsService['project-action-participant-fields'];
           $link =<<<__EOT__
-<li class="nav tooltip-top" title="$title">
+<li class="nav">
   <a class="nav" href="#" data-post="$post" data-json='$json'>
 $value
   </a>
@@ -393,10 +556,8 @@ __EOT__;
         },
         'select'   => 'T',
         'maxlen'   => 30,
-        'css'      => ['postfix' => ' projectextra'],
         'sort'     => false,
         'escape'   => false,
-        'display|LF' => ['popup' => 'data'],
       ]);
 
     $opts['fdd']['program'] = [
@@ -585,17 +746,17 @@ project without a poster first.");
                'post' => '</optgroup>',
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-project-participants'],
+                 'title' => $this->toolTipsService['project-action:project-participants'],
                  'value' => 'project-participants',
                  'name' => $this->l->t('Participants') ],
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-project-instrumentation-numbers'],
+                 'title' => $this->toolTipsService['project-action:project-instrumentation-numbers'],
                  'value' => 'project-instrumentation-numbers',
                  'name' => $this->l->t('Instrumentation Numbers') ],
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-participant-fields'],
+                 'title' => $this->toolTipsService['project-action:participant-fields'],
                  'value' => 'project-participant-fields',
                  'name' => $this->l->t('Extra Member Data') ], ])
              .$this->pageNavigation->htmlTagsFromArray([
@@ -603,14 +764,14 @@ project without a poster first.");
                'post' => '</optgroup>',
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-files'],
+                 'title' => $this->toolTipsService['project-action:files'],
                  'value' => 'project-files',
                  'data' => [ 'projectFiles' => $projectPaths['project'] ],
                  'name' => $this->l->t('Project Files')
                ],
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-wiki'],
+                 'title' => $this->toolTipsService['project-action:wiki'],
                  'value' => 'project-wiki',
                  'data' => [
                    'wikiPage' => $this->projectService->projectWikiLink($projectName),
@@ -620,13 +781,13 @@ project without a poster first.");
                ],
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-events'],
+                 'title' => $this->toolTipsService['project-action:events'],
                  'value' => 'events',
                  'name' => $this->l->t('Events')
                ],
                [
                  'type' => 'option',
-                 'title' => $this->toolTipsService['project-action-email'],
+                 'title' => $this->toolTipsService['project-action:email'],
                  'value' => 'project-email',
                  'name' => $this->l->t('Em@il')
                ], ])
@@ -635,21 +796,21 @@ project without a poster first.");
               'post' => '</optgroup>',
               [
                 'type' => 'option',
-                'title' => $this->toolTipsService['project-action-debit-mandates'],
+                'title' => $this->toolTipsService['project-action:debit-mandates'],
                 'value' => 'sepa-bank-accounts',
                 'disabled' => false, // @todo !Config::isTreasurer(),
                 'name' => $this->l->t('Debit Mandates')
               ],
               [
                 'type' => 'option',
-                'title' => $this->toolTipsService['project-action-payments'],
+                'title' => $this->toolTipsService['project-action:payments'],
                 'value' => 'project-payments',
                 'disabled' => false, // @todo !Config::isTreasurer(),
                 'name' => $this->l->t('Payments')
               ],
               [
                 'type' => 'option',
-                'title' => $this->toolTipsService['project-action-financial-balance'],
+                'title' => $this->toolTipsService['project-action:financial-balance'],
                 'value' => 'profit-and-loss',
                 'data' => [ 'projectFiles' => $projectPaths['balance'] ],
                 'name' => $this->l->t('Profit and Loss Account')
@@ -673,7 +834,7 @@ project without a poster first.");
                   'data-project-name="'.htmlentities($projectName).'">'), // @todo: standard way to do this
         'post' => '</fieldset>',
         [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action-wiki'],
+          'title' => $this->toolTipsService['project-action:wiki'],
           'data' => [
             'wikiPage' => $this->projectService->projectWikiLink($projectName),
             'wikiTitle' => $this->l->t('Project Wiki for %s', [ $projectName ])
@@ -683,19 +844,19 @@ project without a poster first.");
           'name' => $this->l->t('Project Notes')
         ],
         [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action-events'],
+          'title' => $this->toolTipsService['project-action:events'],
           'class' => 'events tooltip-top',
           'value' => 'events',
           'name' => $this->l->t('Events')
         ],
         [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action-email'],
+          'title' => $this->toolTipsService['project-action:email'],
           'class' => 'project-email tooltip-top',
           'value' => 'project-email',
           'name' => $this->l->t('Em@il')
         ],
         [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action-instrumentation-numbers'],
+          'title' => $this->toolTipsService['project-action:project-instrumentation-numbers'],
           'class' => 'project-instrumentation-numbers tooltip-top',
           'value' => 'project-instrumentation-numbers',
           'name' => $this->l->t('Instrumentation Numbers')
@@ -791,17 +952,42 @@ project without a poster first.");
    *
    * @bug Convert this to a function triggering a "user-friendly" error message.
    */
-  public function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeUpdateTrigger(&$pme, $op, $step, &$oldVals, &$changed, &$newVals)
   {
-    if (array_search('name', $changed) === false) {
-      return true;
-    }
-    if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
-      if ($newvals['name'] === false) {
-        return false;
+    if (array_search('name', $changed) !== false) {
+
+      if (isset($newVals['name']) && $newVals['name']) {
+        $newVals['name'] = $this->projectService->sanitizeName($newVals['name']);
+        if ($newVals['name'] === false) {
+          return false;
+        }
       }
     }
+
+    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    if (array_search($instrumentsColumn, $changed) !== false
+        || array_search($voicesColumn, $changed) !== false) {
+      // Add zeros to the voices data as the "0" voice is needed for
+      // convenience in either case, otherwise adding musicians to the
+      // ProjectParticipants table fails.
+      foreach (['oldVals', 'newVals'] as $dataSet) {
+        foreach (Util::explode(',', ${$dataSet}[$instrumentsColumn]??[]) as $instrument) {
+          ${$dataSet}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
+                                     . (${$dataSet}[$voicesColumn]??'');
+        }
+        $items = Util::explode(',', ${$dataSet}[$voicesColumn]);
+        sort($items, SORT_NATURAL);
+        ${$dataSet}[$voicesColumn] = implode(',', array_unique($items));
+      }
+      foreach ([$instrumentsColumn, $voicesColumn] as $column) {
+        Util::unsetValue($changed, $column);
+        if  ($oldVals[$column] != $newVals[$column]) {
+          $changed[] = $column;
+        }
+      }
+    }
+
     return true;
   }
 
