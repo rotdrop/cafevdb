@@ -30,28 +30,39 @@
 
 namespace OCA\CAFEVDB;
 
-$css   = $template;
-if (!empty($class)) {
-  $css .= ' '.$class;
+/**
+ * Expected parameters:
+ *
+ * @param \OCA\CAFEVDB\PageRenderer\IPageRenderer $renderer
+ *
+ * @param string $template The plain template name $template.php
+ * resides in this directory.
+ */
+
+$css = $template;
+$css .= ' ' . $renderer->cssClass();
+
+if ($outputBufferWorkAround) {
+  // This is here because otherwise PHP leaks content to stdout (and
+  // thus to the client) on fatal errors.
+  try {
+    ob_start(function() { return''; });
+    $renderer->render();
+    $pmeTable = ob_get_contents();
+    ob_end_clean();
+  } catch (\Throwable $t) {
+    ob_end_clean();
+    throw new \Exception($l->t('Renderer failed: %s', $t->getMessage()), $t->getCode(), $t);
+  }
+} else {
+  $pmeTable = null;
 }
+?>
 
-// This is here because otherwise PHP leaks content to stdout (and
-// thus to the client) on fatal errors.
-try {
-  ob_start(function() { return''; });
-  $renderer->render();
-  $pmeTable = ob_get_contents();
-  ob_end_clean();
-} catch (\Throwable $t) {
-  ob_end_clean();
-  throw new \Exception($l->t('Renderer failed: %s', $t->getMessage()), $t->getCode(), $t);
-}
+<div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
+  <?php if (empty($pmeTable)) { $renderer->render(); } else { echo $pmeTable; } ?>
+</div>
 
-//echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
-echo '<div id="pme-table-container" class="pme-table-container '.$css.'">';
-//$renderer->render();
-echo $pmeTable;
-echo '</div>';
-
-// add a hidden "short title" span
-echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$renderer->shortTitle().'</span>';
+<span id="pme-short-title" class="pme-short-title" style="display:none;">
+  <?php echo $renderer->shortTitle(); ?>
+</span>
