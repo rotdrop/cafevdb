@@ -172,6 +172,35 @@ class Util
     return array_column($matrix, 1, 0);
   }
 
+  /**
+   * Explode a string of the form
+   * ```
+   * A:B,C:D,E,C:F...
+   * ```
+   * into an array of the shape
+   * ```
+   * [
+   *   A => [ B ],
+   *   C => [ D, F ],
+   *   E => [ $default ],
+   *   ...
+   * ]
+   * ```
+   * Only the first $keyDelimiter is taken into account.
+   */
+  static public function explodeIndexedMulti(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
+  {
+    $matrix = [];
+    foreach (self::explode($delimiter, $data, self::TRIM|self::OMIT_EMPTY_FIELDS) as $item) {
+      $row = explode($keyDelimiter, $item, 2);
+      if (!isset($row[1]) || $row[1] === '') {
+        $row[1] = $default;
+      }
+      $matrix[$row[0]][] = $row[1];
+    }
+    return $matrix;
+  }
+
   /**Return the maximum upload file size.*/
   public static function maxUploadSize($target = 'temporary')
   {
