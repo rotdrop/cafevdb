@@ -2355,10 +2355,13 @@ class phpMyEdit
 				}
 				$css_postfix = @$this->fdd[$k]['css']['postfix'];
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
-				echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'">';
+				echo '<td'
+					. ' class="' . $this->getCSSclass('key', null, true, $css_postfix).'"'
+					. (!empty($helptip) ? ' title="' . $this->enc($helptip) . '"' : '')
+					. '>';
 				echo $this->fdd[$k]['name'],'</td>',"\n";
 				if ($this->password($k)) {
-					echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
+					echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix) ,'"';
 					echo $this->getColAttributes($k),'>',$this->labels['hidden'],'</td>',"\n";
 				} else {
 					$this->display_delete_field($row, $k, $helptip);
