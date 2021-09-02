@@ -977,6 +977,18 @@ th.pme-header.mandate-project, td.pme-cell.mandate-project {
 
 table.pme-main {
 
+  .pme-text-align-center {
+    text-align:center;
+  }
+
+  .pme-text-align-left {
+    text-align:left;
+  }
+
+  .pme-text-align-right {
+    text-align:right;
+  }
+
   .full-line-width {
     max-width:72ex;
   }

@@ -177,6 +177,7 @@ class phpMyEdit
 	var $savecopy;
 	var $applycopy;
 	var $cancelcopy;
+	var $reloadcopy;
 	var $savedelete;
 	var $canceldelete;
 	var $reloaddelete;
@@ -230,7 +231,7 @@ class phpMyEdit
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
-		'P' => array('save','apply','cancel'),
+		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
@@ -241,7 +242,7 @@ class phpMyEdit
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
-		'P' => array('save','apply','cancel'),
+		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
@@ -252,7 +253,7 @@ class phpMyEdit
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
-		'P' => array('save','apply','cancel'),
+		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
@@ -263,7 +264,7 @@ class phpMyEdit
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
-		'P' => array('save','apply','cancel'),
+		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
 		'V' => array('change','copy','delete','cancel','reload')
 		);
@@ -2124,10 +2125,7 @@ class phpMyEdit
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-			$helptip = NULL;
-			if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-				$helptip = $this->fdd[$k]['tooltip'];
-			}
+			$helptip        = $this->fieldTooltip($k);
 			$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('input', null, 'next', $css_postfix);
@@ -2144,7 +2142,7 @@ class phpMyEdit
 				continue;
 			}
 			echo '<tr class="',$this->getCSSclass('row', null, true, $css_postfix),'">',"\n";
-			echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'">';
+			echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'"',$this->printTooltip($helptip),'>';
 			echo $this->fdd[$k]['name'],'</td>',"\n";
 			echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 			echo $this->getColAttributes($k),">\n";
@@ -2207,9 +2205,7 @@ class phpMyEdit
 					$len_props .= ' maxlength="'.$maxlen.'"';
 				}
 				echo '<input class="',$css_class_name,'" ';
-				if ($helptip) {
-					echo 'title="'.$this->enc($helptip).'" ';
-				}
+				echo $this->printTooltip($helptip);
 
 				$type = $this->fdd[$k][self::FDD_SELECT] == 'N' ? 'number' : 'text';
 				echo ($this->password($k) ? 'type="password"' : 'type="'.$type.'"');
@@ -2304,7 +2300,8 @@ class phpMyEdit
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-			$helptip = $this->fetchCellPopup($k, $row);
+			$cell_popup = $this->fetchCellPopup($k, $row);
+			$helptip = $this->fieldTooltip($k, true);
 			if (!empty($this->fdd[$k]['encryption'])) {
 				if (!isset($row["qf${k}_encrypted"])) {
 					$row["qf${k}_encrypted"] = $row["qf$k"];
@@ -2330,18 +2327,18 @@ class phpMyEdit
 				}
 				$css_postfix = @$this->fdd[$k]['css']['postfix'];
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
-				echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'">';
+				echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'"',$helptip,'>';
 				echo $this->fdd[$k]['name'],'</td>',"\n";
 				/* There are two possibilities of readonly fields handling:
 				   1. Display plain text for readonly timestamps, dates and URLs.
 				   2. Display disabled input field
 				   In all cases particular readonly field will NOT be saved. */
 				if ($this->disabled($k) && ($this->col_has_datemask($k) || $this->col_has_URL($k))) {
-					echo $this->display_delete_field($row, $k, $helptip);
+					echo $this->display_delete_field($row, $k, $cell_popup);
 				} elseif ($this->password($k)) {
-					echo $this->display_password_field($row, $k, $helptip);
+					echo $this->display_password_field($row, $k, $cell_popup);
 				} else {
-					echo $this->display_change_field($row, $k, $helptip);
+					echo $this->display_change_field($row, $k, $cell_popup);
 				}
 				if ($this->guidance) {
 					$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
@@ -2355,16 +2352,16 @@ class phpMyEdit
 				}
 				$css_postfix = @$this->fdd[$k]['css']['postfix'];
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
-				echo '<td'
-					. ' class="' . $this->getCSSclass('key', null, true, $css_postfix).'"'
-					. (!empty($helptip) ? ' title="' . $this->enc($helptip) . '"' : '')
-					. '>';
+				echo '<td',
+					' ', 'class="' . $this->getCSSclass('key', null, true, $css_postfix) . '"',
+					$helptip,
+					'>';
 				echo $this->fdd[$k]['name'],'</td>',"\n";
 				if ($this->password($k)) {
 					echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix) ,'"';
 					echo $this->getColAttributes($k),'>',$this->labels['hidden'],'</td>',"\n";
 				} else {
-					$this->display_delete_field($row, $k, $helptip);
+					$this->display_delete_field($row, $k, $cell_popup);
 				}
 				if ($this->guidance) {
 					$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
@@ -2604,11 +2601,11 @@ class phpMyEdit
 		echo '</td>',"\n";
 	} /* }}} */
 
-	function display_delete_field($row, $k, $helptip) /* {{{ */
+	function display_delete_field($row, $k, $cell_popup) /* {{{ */
 	{
 		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
-		$title          = !empty($helptip) ? ' title="'.$this->enc($helptip).'"' : '';
+		$title          = !empty($cell_popup) ? ' title="'.$this->enc($cell_popup).'"' : '';
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			$prefix = $this->fdd[$k]['display']['prefix'];
@@ -2685,7 +2682,7 @@ class phpMyEdit
 			if (is_array($this->fdd[$k]['colattrs'])) {
 				foreach($this->fdd[$k]['colattrs'] as $name => $value) {
 					$colattrs .= ' ';
-					$colattrs .= $name.'="'.htmlspecialchars($value).'"';
+					$colattrs .= $name.'="'.$this->enc($value).'"';
 				}
 			} else {
 				$colattrs .= ' ';
@@ -2701,11 +2698,13 @@ class phpMyEdit
 	/**
 	 * Returns field cell align
 	 */
-	function getColAlign($k) /* {{{ */
+	function getColAlign($k, $cssClass = true) /* {{{ */
 	{
 		if (isset($this->fdd[$k]['align'])) {
 			/*return 'align="'.$this->fdd[$k]['align'].'"'; */
-			return 'style="text-align:'.$this->fdd[$k]['align'].'"';
+			return $cssClass
+				? ' '.$this->css['prefix'].'-text-align-'.$this->fdd[$k]['align']
+				: ' style="text-align:'.$this->fdd[$k]['align'].'"';
 		} else {
 			return '';
 		}
@@ -2953,16 +2952,32 @@ class phpMyEdit
 		return $escape ? nl2br($value) : $value;
 	} /* }}} */
 
+	protected function fieldTooltip($k, $print = false)
+	{
+		if ($print === false) {
+			return $this->fdd[$k]['tooltip']??'';
+		}
+		return $this->printTooltip($this->fieldTooltip($k));
+	}
+
+	protected function printTooltip($tooltip)
+	{
+		if (!empty($tooltip)) {
+			return ' title="' . $this->enc($tooltip) . '"';
+		}
+		return '';
+	}
+
 	function fetchCellPopup($k, $row, $cell_data = null)
 	{
-		$helptip = null;
+		$cell_popup = null;
 		if (isset($this->fdd[$k]['display']['popup'])) {
 			$popup = $this->fdd[$k]['display']['popup'];
 			if (is_callable($popup)) {
 				if (empty($cell_data)) {
 					$cell_data = $this->cellDisplay($k, $row);
 				}
-				$helptip = call_user_func($popup, $cell_data);
+				$cell_popup = call_user_func($popup, $cell_data);
 			} else if (is_string($popup)) {
 				switch ($popup) {
 				case 'data'.substr($popup, strlen('data')):
@@ -2971,7 +2986,7 @@ class phpMyEdit
 						if (empty($cell_data)) {
 							$cell_data = $this->cellDisplay($k, $row);
 						}
-						$helptip = $cell_data;
+						$cell_popup = $cell_data;
 					} else {
 						if ($cell == 'previous') {
 							$cell = $k - 1;
@@ -2982,23 +2997,23 @@ class phpMyEdit
 							$cell = $this->fdn[$cell];
 						}
 						if (!empty($this->fdd[$cell])) {
-							$helptip = $this->cellDisplay($cell, $row);
+							$cell_popup = $this->cellDisplay($cell, $row);
 						}
 					}
 					break;
 				case 'tooltip':
 					if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-						$helptip = $this->fdd[$k]['tooltip'];
+						$cell_popup = $this->fdd[$k]['tooltip'];
 					}
 					break;
 				default:
 					break;
 				}
 			}
-		} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-			$helptip = $this->fdd[$k]['tooltip'];
+		} else if (isset($this->fdd[$k]['tooltip']) && !empty($this->fdd[$k]['tooltip'])) {
+			$cell_popup = $this->fdd[$k]['tooltip'];
 		}
-		return $helptip;
+		return $cell_popup;
 	}
 
 	function fetchToolTip($css_class_name, $name, $label = false)
@@ -3666,6 +3681,7 @@ class phpMyEdit
 		echo 'savedelete=',$this->savedelete,'	 ';
 		echo 'canceldelete=',$this->canceldelete,'	 ';
 		echo 'reloaddelete=',$this->reloaddelete,'	 ';
+		echo 'reloadcopy=',$this->reloadcopy,'	 ';
 		echo 'cancelview=',$this->cancelview,'	 ';
 		echo 'reloadview=',$this->reloadview,'	 ';
 		echo 'operation=',$this->operation,'   ';
@@ -4449,11 +4465,12 @@ class phpMyEdit
 			$css_class_name = $this->getCSSclass('header', null, null, $css_postfix);
 			$css_sort_class = $this->getCSSclass('sortfield');
 			$css_nosort_class = $this->getCSSclass('nosort');
+			$css_align = $this->getColAlign($k);
 			$fdn = $this->fdd[$fd]['name'];
 			if (/* !empty($this->fdd[$k]['encryption']) || */
-				empty($this->fdd[$k]['sort']) ||
-				$this->password($k)) {
-				echo '<th class="',$css_class_name,' ',$css_nosort_class,'"';
+				empty($this->fdd[$k]['sort'])
+				|| $this->password($k)) {
+				echo '<th class="',$css_class_name,' ',$css_nosort_class,$css_align,'"';
 				if (!empty($this->fdd[$k]['tooltip'])) {
 					echo ' ','title="'.$this->fdd[$k]['tooltip'].'"',' ';
 				}
@@ -4463,7 +4480,7 @@ class phpMyEdit
 				// Generate a button and a check
 				// box. The check box is activated if the field is selected for sorting
 
-				echo '<th class="'.$css_class_name.' '.$css_sort_class.'"';
+				echo '<th class="'.$css_class_name.' '.$css_sort_class.$css_align.'"';
 				if (!empty($this->fdd[$k]['tooltip'])) {
 					echo 'title="'.$this->fdd[$k]['tooltip'].'"';
 				}
@@ -4761,14 +4778,11 @@ class phpMyEdit
 				}
 				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
+				$css_align = $this->getColAlign($k);
 				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
-				$title = '';
-				$helptip = $this->fetchCellPopup($k, $row, $cell_data);
-				if (!empty($helptip)) {
-					$title = ' title="'.$this->enc($helptip).'"';
-				}
-				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
-				echo $this->getColAlign($fd),$title,'>';
+				$cell_popup = $this->fetchCellPopup($k, $row, $cell_data);
+				$title = $this->printTooltip($cell_popup);
+				echo '<td class="',$css_class_name,$css_align,'"',$this->getColAttributes($fd),$title,'>';
 				if (isset($this->fdd[$k]['display']['prefix'])) {
 					$prefix = $this->fdd[$k]['display']['prefix'];
 					if (is_callable($prefix)) {
@@ -5975,6 +5989,12 @@ class phpMyEdit
 			$this->backward_compatibility();
 			$this->recreate_displayed();
 		}
+		elseif ($this->label_cmp($this->reloadcopy, 'Reload')) {
+			$this->operation = $this->labels['Copy']; // to force copy operation
+			$this->recreate_fdd();
+			$this->backward_compatibility();
+			$this->recreate_displayed();
+		}
 
 
 		/*
@@ -6428,6 +6448,7 @@ class phpMyEdit
 		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');
 		$this->reloaddelete = $this->get_sys_cgi_var('reloaddelete');
+		$this->reloadcopy   = $this->get_sys_cgi_var('reloadcopy');
 		$this->cancelview	= $this->get_sys_cgi_var('cancelview');
 		$this->reloadview	= $this->get_sys_cgi_var('reloadview');
 
