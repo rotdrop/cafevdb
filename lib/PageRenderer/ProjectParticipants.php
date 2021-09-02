@@ -1051,7 +1051,8 @@ class ProjectParticipants extends PMETableViewBase
     $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
     $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
-    if (array_search($voiceField, $changed) === false && array_search($instrumentField, $changed) === false) {
+    if (array_search($voiceField, $changed) === false
+        && array_search($instrumentField, $changed) === false) {
       // nothing to do
       $this->debug('UNCHANGED INSTRUMENTS');
       return true;
