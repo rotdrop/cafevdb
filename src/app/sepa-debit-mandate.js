@@ -55,7 +55,7 @@ require('jquery-ui/themes/base/autocomplete.css');
 
 require('sepa-debit-mandate.scss');
 require('project-participant-fields-display.scss');
-require('lock-input.css');
+require('lock-input.scss');
 
 /**
  * Initialize the mess with contents. The "mess" is a dialog window
