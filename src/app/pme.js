@@ -223,6 +223,11 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   // general styling
   pmeInit(containerSel);
 
+  const title = container.find(pmeClassSelector('span', 'short-title')).html();
+  if (title) {
+    container.dialog('option', 'title', title);
+  }
+
   // attach the WYSIWYG editor, if any
   // editors may cause additional resizing
   container.dialog('option', 'height', 'auto');
@@ -1206,7 +1211,7 @@ const installInputChosen = function(containerSel, onlyClass) {
 
   // Set title explicitly
   container.find('td.' + pmeInput + ' div.chosen-container, td.' + pmeValue + ' div.chosen-container')
-    .not('[title][title!=""]')
+    .filter('[title=""],[title^="***DEBUG***"]')
     .each(function(index) {
       $(this).attr('title', PHPMyEdit.inputSelectChosenTitle);
     });

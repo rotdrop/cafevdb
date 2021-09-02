@@ -39,6 +39,8 @@ namespace OCA\CAFEVDB;
  * resides in this directory.
  */
 
+/** @var \OCA\CAFEVDB\PageRenderer\IPageRenderer $renderer */
+
 $css = $template;
 $css .= ' ' . $renderer->cssClass();
 
@@ -57,6 +59,12 @@ if ($outputBufferWorkAround) {
 } else {
   $pmeTable = null;
 }
+
+$operation = $renderer->operation();
+if (!empty($operation)) {
+  $operation = $l->t($operation) . ': ';
+}
+
 ?>
 
 <div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
@@ -64,5 +72,5 @@ if ($outputBufferWorkAround) {
 </div>
 
 <span id="pme-short-title" class="pme-short-title" style="display:none;">
-  <?php echo $renderer->shortTitle(); ?>
+  <?php echo $operation . $renderer->shortTitle(); ?>
 </span>
