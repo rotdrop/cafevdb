@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,18 +25,18 @@
  *
  */
 
-table.pme-main td.project-instrumentation-numbers-required {
+table.pme-main td.project-instrumentation-numbers--required {
     color:blue;
     font-weight:bold;
 }
 
-table.pme-main td.project-instrumentation-numbers-balance .negative {
+table.pme-main td.project-instrumentation-numbers--balance .negative {
     font-weight:bold;
     color:red;
     /* font-size:140%; */
 }
 
-table.pme-main td.project-instrumentation-numbers-balance {
+table.pme-main td.project-instrumentation-numbers--balance {
     color:green;
 }
 

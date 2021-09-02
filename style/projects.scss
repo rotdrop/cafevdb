@@ -63,13 +63,16 @@
   }
 
   td.pme-value {
-    &.projects-instrumentation div.chosen-container,
-    &.projects-instrumentation-voices div.chosen-container {
-      max-width:40em;
-      min-width:20em;
-      width:auto !important;
+    &.projects--instrumentation,
+    &.projects--instrumentation-voices,
+    &.projects--participant-fields {
+      div.chosen-container {
+        max-width:40em;
+        min-width:20em;
+        width:auto !important;
+      }
     }
-    &.projects-participant-fields {
+    &.projects--participant-fields {
       width:38em;
       max-width:38em;
       max-height:1em;
@@ -80,9 +83,9 @@
   }
 
   td.pme-cell {
-    &.projects-instrumentation div.cell-wrapper,
-    &.projects-participant-fields div.cell-wrapper,
-    &.projects-instrumentation-voices div.cell-wrapper {
+    &.projects--instrumentation div.cell-wrapper,
+    &.projects--participant-fields div.cell-wrapper,
+    &.projects--instrumentation-voices div.cell-wrapper {
       width:12em;
       max-width:12em;
       /* max-height:1em; */
