@@ -56,6 +56,7 @@ class DefaultOptions extends \ArrayObject implements IOptions
         //'Sort Field' => 'Sortierfeld',
       ],
       'css' => [
+        'prefix' => 'pme',
         'separator' => ' ',
         'textarea' => '',
         'position' => true,

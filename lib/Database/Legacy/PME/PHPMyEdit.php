@@ -467,6 +467,9 @@ class PHPMyEdit extends \phpMyEdit
     $result = parent::doFetchToolTip($css_class_name, $name, $label);
     if ($this->tooltips instanceof \OCA\CAFEVDB\Service\ToolTipsService) {
       $this->tooltips->debug($oldDebug);
+      if (empty($result) && $oldDebug) {
+        return '***DEBUG*** '.$this->l->t('Unknown Tooltip for css-classes "%1$s" and name "%2$s" requested.', [ $css_class_name, $name ]);
+      }
     }
     return $result;
   }
