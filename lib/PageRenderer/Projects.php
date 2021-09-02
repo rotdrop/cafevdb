@@ -703,6 +703,15 @@ __EOT__;
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this , 'deleteTrigger' ];
 
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, &$row) {
+      if ($this->copyOperation()) {
+        // tweak the name
+        $row['qf'.$pme->fdn['name']] = $this->l->t('Copy of %s', $row['qf'.$pme->fdn['name']]);
+      }
+      return true;
+    };
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
