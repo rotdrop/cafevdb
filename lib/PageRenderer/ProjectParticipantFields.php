@@ -476,7 +476,7 @@ class ProjectParticipantFields extends PMETableViewBase
             required
             />
             </div>
-            __EOT__;
+__EOT__;
           return $html;
         },
         'input' => 'VSR',
