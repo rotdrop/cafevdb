@@ -457,6 +457,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $this->shortTitle();
   }
 
+  public function operation()
+  {
+    return $this->pme->operation??'';
+  }
+
   /** Show the underlying table. */
   // public function render();
 
@@ -893,6 +898,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       if (!empty($multiple)) {
+
+        // needed later to slice entity ids
+        $multipleKeys = [ $multiple ];
+
         $this->debug('IDS '.print_r($identifier, true));
         $this->debug('CHG '.print_r($changeSet, true));
 
@@ -924,6 +933,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           if (empty($value['self'])) {
             continue;
           }
+          $multipleKeys[] = $selfKey;
 
           // e.g. $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
@@ -948,7 +958,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach(['old', 'new', 'del', 'add', 'rem'] as $tag) {
             $selfValues[$tag] = Util::explodeIndexedMulti(implode(',',  $selfValues[$tag]));
           }
-          $this->logInfo('SELF VALUES ' . print_r($selfValues, true));
 
           // $selfValues['del'] adds to the 'del' key values, but does
           // not change add and rem
@@ -981,7 +990,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // are in the "remaining" set.
           $operation = 'add';
           foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
-            $this->logInfo('SELF VALUES FOR KEY ' . $key . ' are ' . print_r($selfValuesTuple, true));
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
               if (!isset($remIdentifier[$key])) {
@@ -989,7 +997,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (empty($selfValues['rem'][$key])) {
-                $this->logInfo('REMOVING REM IDS for ' . $key);
                 unset($remIdentifier[$key]);
               }
               if (array_search($key, $identifier[$multiple]['new']) === false) {
@@ -1013,7 +1020,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
-              $this->logInfo('REM KEYS ' . print_r(array_keys($remIdentifier), true));
               throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s", key "%2$s, major key = "%3$s" ".', [$selfField, $selfKey, $key]));
             }
 
@@ -1101,7 +1107,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $ids = $delIdentifier[$del];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
-            $this->logInfo('TRY REMOVE ' . print_r($entityId, true));
             $entity = $this->find($entityId);
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
             $this->debug('Usage is '.$usage);
@@ -1139,16 +1144,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $this->debug('GET MULTIPLE FOR ' . $column . ' / ' . $field);
           // convention for multiple change-sets:
           //
-          // KEY0:VALUE0,KEY1:VALUE1,...
+          // KEY00-KEY01:VALUE0,KEY10-KEY11:VALUE1,...
           //
+          // VALUE_N must not contain commas and colons
+          $multipleValues[$column] = [
+            'data' => [],
+            'default' => $pme->fdd[$field]['default']??null,
+          ];
           foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
-            $multipleValues[$key][$column] = $value;
-          }
-          foreach ($identifier[$multiple]['new'] as $new) {
-            if (!isset($multipleValues[$new][$column])) {
-              $multipleValues[$new][$column] =
-                isset($pme->fdd[$field]['default']) ? $pme->fdd[$field]['default'] : null;
-            }
+            $multipleValues[$column]['data'][$key] = $value;
           }
         }
 
@@ -1165,14 +1169,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               foreach ($entityId as $key => $value) {
                 $entity[$key] = $value;
               }
+
               // set further properties ...
-              foreach (($multipleValues[$new] ?? [])as $column => $value) {
+              $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+              foreach ($multipleValues as $column => $dataItem) {
+                $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
                 $meta->setSimpleColumnValue($entity, $column, $value);
               }
+
               // persist
               $this->persist($entity);
             }
-          } else if (isset($remIdentifier[$new]) && !empty($changeSet)) {
+          }
+          if (isset($remIdentifier[$new]) && !empty($changeSet)) {
             $this->debug('TRY MOD '.$new);
             $ids = $remIdentifier[$new];
             foreach ($ids as $id) {
@@ -1188,15 +1197,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 $entity['deleted'] = null;
                 $this->flush();
               }
+
               // set further properties ...
-              foreach (($multipleValues[$new] ?? [])as $column => $value) {
+              $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+              foreach ($multipleValues as $column => $dataItem) {
+                $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
                 $meta->setSimpleColumnValue($entity, $column, $value);
               }
+
               // persist
               $this->persist($entity);
             }
-          } else {
-            continue;
           }
         }
         foreach ($changeSet as $column => $field) {
@@ -1377,6 +1388,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
       }
       if (!empty($multiple)) {
+
+        // needed later to slice entity ids
+        $multipleKeys = [ $multiple ];
+
         $this->debug('IDS '.print_r($identifier, true));
         $this->debug('CHG '.print_r($changeSet, true));
 
@@ -1384,28 +1399,61 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($identifier[$multiple] as $addKey) {
           $addIdentifier[$addKey] = $identifier;
           $addIdentifier[$addKey][$multiple] = $addKey;
+          // wrap into just another array in order to handle 'self' key-value provider
+          $addIdentifier[$addKey] = [ $addIdentifier[$addKey] ];
         }
+
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
             continue;
           }
+          $multipleKeys[] = $selfKey;
+
+          // e.g. $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
+
           foreach ($addIdentifier as $key => &$idValues) {
-            $idValues[$selfKey] = null;
-          }
-          foreach (Util::explodeIndexd($newvals[$selfField]) as $key => $value) {
-            if (isset($addIdentifier[$key])) {
-              $addIdentifier[$key][$selfKey] = $value;
+            foreach ($idValues as &$idValueTuple) {
+              $idValueTuple[$selfKey] = null;
             }
           }
+
+          // explode key values
+          $selfValues = Util::explodeIndexedMulti($newvals[$selfField]);
+
+          // $selfValues potentially adds to the 'add' key values
+          foreach ($selfValues as $key => $selfValuesTuple) {
+            // make sure we have an $addIdentifier
+            if (!isset($addIdentifier[$key])) {
+              throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
+            }
+
+            // blow up the add identifiers
+            $idValues = $addIdentifier[$key];
+            $addIdentifier[$key] = [];
+            foreach ($idValues as $idValueTuple) {
+              foreach ($selfValuesTuple as $selfValue) {
+                $idValueTuple[$selfKey] = $selfValue;
+                $addIdentifier[$key][] = $idValueTuple;
+              }
+            }
+          }
+
+          // just make sure that the self-value has a value in any case
           foreach ($addIdentifier as $key => &$idValues) {
-            if (empty($idValues[$selfKey])) {
-              $idValues[$selfKey] = $pme->fdd[$selfField]['default'];
-            }
-            if ($idValues[$selfKey] === null) {
-              throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+            foreach ($idValues as &$idValuesTuple) {
+              if (empty($idValuesTuple[$selfKey])) {
+                $idValuesTuple[$selfKey] = $pme->fdd[$selfField]['default'];
+              }
+              if ($idValuesTuple[$selfKey] === null) {
+                throw new \RuntimeException($this->l->t('No value for identifier field "%s / %s".', [$selfKey, $selfField]));
+              }
             }
           }
+
+          // remove the her handled key-column from the changeset
+          unset($changeSet[$selfKey]);
+          Util::unsetValue($changed, $selfField);
         }
 
         $this->debug('ADDIDS '.print_r($addIdentifier, true));
@@ -1425,9 +1473,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // add entries by adding them to the association of the
           // master entity
           foreach ($identifier[$multiple] as $add) {
-            $id = $addIdentifier[$add];
-            $entityId = $meta->extractKeyValues($id);
-            $association->add($this->getReference($entityClass, $entityId));
+            $ids = $addIdentifier[$add];
+            foreach ($ids as $id) {
+              $entityId = $meta->extractKeyValues($id);
+              $association->add($this->getReference($entityClass, $entityId));
+            }
           }
 
           $masterEntity[$joinInfo['association']] = $association;
@@ -1437,20 +1487,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         $multipleValues = [];
         foreach ($changeSet as $column => $field) {
+          $this->debug('GET MULTIPLE FOR ' . $column . ' / ' . $field);
           // convention for multiple change-sets:
           //
-          // - the values start with the key
-          // - boolean false values are omitted
-          // - optional values are omitted
-          // - values are separated by a colon from the key
+          // KEY00-KEY01:VALUE0,KEY10-KEY11:VALUE1,...
+          //
+          // VALUE_N must not contain commas and colons
+          $multipleValues[$column] = [
+            'data' => [],
+            'default' => $pme->fdd[$field]['default']??null,
+          ];
           foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
-            $multipleValues[$key][$column] = $value;
-          }
-          foreach ($identifier[$multiple] as $new) {
-            if (!isset($multipleValues[$new][$column])) {
-              $multipleValues[$new][$column] =
-                isset($pme->fdd[$field]['default']) ? $pme->fdd[$field]['default'] : null;
-            }
+            $multipleValues[$column]['data'][$key] = $value;
           }
         }
 
@@ -1459,20 +1507,24 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
           $this->debug('TRY MOD '.$new);
-          $id = $addIdentifier[$new];
-          $entityId = $meta->extractKeyValues($id);
-          $entity = $entityClass::create();
-          foreach ($entityId as $key => $value) {
-            $entity[$key] = $value;
-          }
+          $ids = $addIdentifier[$new];
+          foreach ($ids as $id) {
+            $entityId = $meta->extractKeyValues($id);
+            $entity = $entityClass::create();
+            foreach ($entityId as $key => $value) {
+              $entity[$key] = $value;
+            }
 
-          // set further properties ...
-          foreach ($multipleValues[$new] as $column => $value) {
-            $meta->setSimpleColumnValue($entity, $column, $value);
-          }
+            // set further properties ...
+            $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+            foreach ($multipleValues as $column => $dataItem) {
+              $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
+              $meta->setSimpleColumnValue($entity, $column, $value);
+            }
 
-          // persist
-          $this->persist($entity);
+            // persist
+            $this->persist($entity);
+          }
         }
         foreach ($changeSet as $column => $field) {
           Util::unsetValue($changed, $field);
@@ -1687,6 +1739,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * Slice the given entity id by the given keys and return a
+   * composite key joined with self::COMP_KEY_SEP
+   */
+  protected function compositeKeySlice(array $keys, array $entityId):string
+  {
+    $slice = [];
+    foreach ($keys as $idKey) {
+      $slice[] = $entityId[$idKey];
+    }
+    $slice = implode(self::COMP_KEY_SEP, $slice);
+  }
+
+  /**
    * The name of the master join table field which triggers PME to
    * actually do the join.
    *
@@ -1874,13 +1939,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function addSlug(string $slug, array &$fdd)
   {
-    $cssSlug = $this->cssClass().'-'.$slug;
-    $tooltipSlug = $this->cssClass().ToolTipsService::SUB_KEY_SEP.$slug;
+    $cssSlug = $this->cssClass().'--'.$slug;
+    $tooltipSlug = $this->tooltipSlug($slug);
     if (!isset($fdd['css']['postfix'])) {
       $fdd['css'] = [ 'postfix' => [] ];
     }
+    if (0 == count(preg_grep('/^tooltip-/', $fdd['css']['postfix']))) {
+      $fdd['css']['postfix'][] = 'tooltip-auto';
+    }
     $fdd['css']['postfix'][] = $cssSlug;
+    $fdd['css']['postfix'][] = $this->appName() . '-' . 'slugged';
     $fdd['tooltip'] = $this->toolTipsService[$tooltipSlug];
+    $fdd['colattrs'] = $fdd['colattrs']??[];
+    $fdd['colattrs']['data-slug'] = $tooltipSlug;
+  }
+
+  /**
+   * Generate a "unified" tooltip-slug in order to obtain tool-tips
+   * from the ToolTipsService.
+   */
+  protected function tooltipSlug(string $slug)
+  {
+    return $this->cssClass().ToolTipsService::SUB_KEY_SEP.$slug;
   }
 
   protected function queryFieldIndex(string $key, array $fdd)
