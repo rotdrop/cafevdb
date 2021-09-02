@@ -33,6 +33,7 @@ use OCP\AppFramework\IAppContainer;
  */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
+  const SUBKEY_PREFIXES = [ 'pme' ];
   const SUB_KEY_SEP = ':';
 
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -123,47 +124,42 @@ class ToolTipsService implements \ArrayAccess, \Countable
     throw new \RuntimeException($l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
 
-  /**Return a translated tool-tip for the given key.
+  private function preProcessKey($key)
+  {
+    foreach (self::SUBKEY_PREFIXES as $prefix) {
+      if (strpos($key, $prefix . '-') === 0) {
+        return $prefix.self::SUB_KEY_SEP.substr($key, strlen($prefix)+1);
+      }
+    }
+    return $key;
+  }
+
+  /**
+   * Return a translated tool-tip for the given key.
+   *
+   * @param string $key
    */
   private function fetch($key)
   {
     $origKey = $key;
     $this->makeToolTips();
+    $toolTipsData = $this->toolTipsData;
+
+    $key = $this->preprocessKey($key);
 
     $keys = explode(self::SUB_KEY_SEP, $key);
-    if (count($keys) == 2) {
-      $key = $keys[0];
-      $subKey = $keys[1];
-    } else {
-      $subKey = null;
+    while (count($keys) > 0) {
+      $key = array_shift($keys);
+      $toolTipsData = $toolTipsData[$key]??($toolTipsData['default']??null);
     }
-
-    $tip = '';
-    if (!empty($subKey)) {
-      if (isset($this->toolTipsData[$key][$subKey])) {
-        $tip = $this->toolTipsData[$key][$subKey];
-      } else if (isset($this->toolTipsData[$key]['default'])) {
-        $tip = $this->toolTipsData[$key]['default'];
-      } else if (isset($this->toolTipsData[$key]) && is_scalar($this->toolTipsData[$key])) {
-        $tip = $this->toolTipsData[$key];
-      }
-    } else if (isset($this->toolTipsData[$key])) {
-      $tip = $this->toolTipsData[$key];
-      !empty($tip['default']) && $tip = $tip['default'];
-    }
+    $tip = $toolTipsData['default']??$toolTipsData;
 
     if (!is_scalar($tip)) {
-      $tip = '';
+      $tip = null;
     }
 
     if ($this->debug && empty($tip)) {
-      if (!empty($subKey)) {
-        $tip = $this->l->t('Unknown Tooltip for key "%s%s%s" requested.',
-                           [$key, self::SUB_KEY_SEP, $subKey]);
-      } else {
-        $tip = $this->l->t('Unknown Tooltip for key "%s" requested.',
-                           [$key]);
-      }
+      $tip = $this->l->t('Unknown Tooltip for key "%s" requested.', $origKey);
     }
 
     return empty($tip) ? null : htmlspecialchars($tip);
@@ -539,82 +535,83 @@ the event.'),
 
       'phpmyadminoc-link' => $this->l->t('Link to the documentation for the database-management tool.'),
 
-      'pme-add' => $this->l->t('  Click me to add a new
+      'pme' => [
+        'add' => $this->l->t('  Click me to add a new
 row to the current table.'),
 
-      'pme-apply' => $this->l->t('Saves the current values; the current input form will remain active.'),
+        'apply' => $this->l->t('Saves the current values; the current input form will remain active.'),
 
-      'pme-bulkcommit' => $this->l->t('  Click me to add all selected musicians
+        'bulkcommit' => $this->l->t('  Click me to add all selected musicians
 to the selected project. All selected
 musicians on all pages will be added.'),
 
-      'pme-bulkcommit+' => $this->l->t('  Click me to pre-select
+        'bulkcommit+' => $this->l->t('  Click me to pre-select
 all musicians on all pages
 for the current project.
 Please click the ``Add all\'\'-button to
 actually add them.'),
 
-      'pme-bulkcommit-' => $this->l->t('  Click me to remove
+        'bulkcommit-' => $this->l->t('  Click me to remove
 all musicians on all pages
 from the pre-selection for
 the current project.'),
 
-      'pme-bulkcommit-check' => $this->l->t('  Check me to pre-select
+        'bulkcommit-check' => $this->l->t('  Check me to pre-select
 this musician for the current
 project. Please click the
  ``Add all\'\'-button to
 actually add all selected
 musicians.'),
 
-      'pme-cancel' => array(
+        'cancel' => array(
         'default' => $this->l->t('Stop the current operation. Settings which already have been stored by
 hitting an "Apply" button are maintained, though. You will be returned
 to the previous view.'),
         'canceldelete' => $this->l->t('Stop the current operation. You will be returned to the previous view.'),
       ),
 
-      'pme-change' => $this->l->t('Directs you to a form with input fields. From there you can return to
+        'change' => $this->l->t('Directs you to a form with input fields. From there you can return to
 this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
 
-      'pme-change-navigation' => array(
-        'operation' => $this->l->t('Einzelnen Datensatz anzeigen,
+        'change-navigation' => [
+          'operation' => $this->l->t('Einzelnen Datensatz anzeigen,
 zeigt ein neues Formular mit
 detaillierten Eingabefeldern
 und Abbruchmöglichkeit.'),
-      ),
+          ],
 
-      'pme-clear' => array(
-        'sfn' => $this->l->t('  Klick mich, um die
+        'clear' => [
+          'sfn' => $this->l->t('  Klick mich, um die
 Sortierreihenfolge auf die
 Voreinstellung zurückzusetzen.'),
-        'sw' => $this->l->t('  Klick mich, um den
+          'sw' => $this->l->t('  Klick mich, um den
 aktuellen Filter zu löschen.'),
-      ),
+        ],
 
-      'pme-copy-navigation' => array(
-        'operation' => $this->l->t('Einzelnen Datensatz kopieren,
+        'copy-navigation' => [
+          'operation' => $this->l->t('Einzelnen Datensatz kopieren,
 zeigt ein neues Formular mit
 detaillierten Eingabefeldern
 und Abbruchmöglichkeit.'),
-      ),
+        ],
 
-      'pme-debit-note' => $this->l->t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+        'debit-note' => $this->l->t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
 
-      'pme-debit-note+' => $this->l->t('Select all displayed debit-notes for export.'),
+        'debit-note+' => $this->l->t('Select all displayed debit-notes for export.'),
 
-      'pme-debit-note-' => $this->l->t('Deselect all displayed debit-notes from export selection.'),
+        'debit-note-' => $this->l->t('Deselect all displayed debit-notes from export selection.'),
 
-      'pme-debit-note-check' => $this->l->t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+        'debit-note-check' => $this->l->t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
 
-      'pme-delete-navigation' => array(
-        'operation' => $this->l->t('Einzelnen Datensatz löschen,
+        'delete-navigation' => [
+          'operation' => $this->l->t('Einzelnen Datensatz löschen,
 zeigt den aktuellen Datensatz zunächst an.
 Gelöscht wird der erst nach einer
 weiteren Bestätigung. Trotzdem:
 VORSICHT!.'),
-      ),
+        ],
 
-      'pme-misc-email' => $this->l->t('Klick mich, um eine Em@il an die ausgewählten
+        'misc-email' => $this->l->t('Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
 `ausgewält\' bedeutet: nicht
@@ -623,7 +620,7 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-      'pme-misc+-email' => $this->l->t('Klick mich, um alle gerade
+        'misc+-email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
 `angezeigt\' bedeutet: nicht
@@ -632,37 +629,37 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-      'pme-misc--email' => $this->l->t('Klick mich, um alle gerade
+        'misc--email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker von der
 Em@il-Auswahl zu entfernen'),
 
-      'pme-misc-check-email' => $this->l->t('Adressaten in potentielle
+        'misc-check-email' => $this->l->t('Adressaten in potentielle
 Massenmail Adressliste aufnehmen.
 Die Adressaten kann man
 vor dem Senden der Em@il noch
 korrigieren.'),
 
-      'pme-misc-debit-note' => $this->l->t('Click to generate bulk-transactions for the selected musicians and receivables.'),
+        'misc-debit-note' => $this->l->t('Click to generate bulk-transactions for the selected musicians and receivables.'),
 
-      'pme-misc+-debit-note' => $this->l->t('Click to select all displayed participants for bulk-transaction generation.'),
+        'misc+-debit-note' => $this->l->t('Click to select all displayed participants for bulk-transaction generation.'),
 
-      'pme-misc--debit-note' => $this->l->t('Click to deselect all displayed participants from the bulk-transaction generation.'),
+        'misc--debit-note' => $this->l->t('Click to deselect all displayed participants from the bulk-transaction generation.'),
 
-      'pme-misc-check-debit-note' => $this->l->t('Select and deselect this participant and bank-acccount to and from bulk-transaction generation.'),
+        'misc-check-debit-note' => $this->l->t('Select and deselect this participant and bank-acccount to and from bulk-transaction generation.'),
 
-      'pme-export-choice' => $this->l->t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
+        'export-choice' => $this->l->t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
 
-      'pme-export-csv' => $this->l->t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
+        'export-csv' => $this->l->t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
 
-      'pme-export-ods' => $this->l->t('Export in OpenDocument-format (LibreOffice/OpenOffice)'),
+        'export-ods' => $this->l->t('Export in OpenDocument-format (LibreOffice/OpenOffice)'),
 
-      'pme-export-pdf' => $this->l->t('Export as PDF in A3/Landscape, scaled to fit the page size'),
+        'export-pdf' => $this->l->t('Export as PDF in A3/Landscape, scaled to fit the page size'),
 
-      'pme-export-excel' => $this->l->t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
+        'export-excel' => $this->l->t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
 
-      'pme-export-html' => $this->l->t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
+        'export-html' => $this->l->t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
 
-      'pme-filter' => $this->l->t('Field for filter/search criteria.
+        'filter' => $this->l->t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
@@ -694,72 +691,81 @@ It is also possible to match empty fields, in particular:
 <dd>match any row with empty search-field</dd>
 </dl>'),
 
-      'pme-filter-negate' => $this->l->t('Negate the filter, i.e. search for anything not matching the selected options.'),
+        'filter-negate' => $this->l->t('Negate the filter, i.e. search for anything not matching the selected options.'),
 
-      'pme-gotoselect' => $this->l->t('Jumps directly to the given page'),
+        'gotoselect' => $this->l->t('Jumps directly to the given page'),
 
-      'pme-hide' => array(
-        'sw' => $this->l->t('  Klick mich, um die
+        'hide' => [
+          'sw' => $this->l->t('  Klick mich, um die
 Suchkriterien zu verstecken.'),
-      ),
+        ],
 
-      'pme-input-lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
+        'input-lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
 
-      'pme-input-lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
+        'input-lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
 
-      'pme-instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
+        'instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
 
-      'pme-lock-unlock' => $this->l->t('Lock and unlock the underlying input-field.'),
+        'lock-unlock' => $this->l->t('Lock and unlock the underlying input-field.'),
 
-      'pme-more' => array(
-        'moreadd' => $this->l->t('Saves the current values and start to generate another new data-set.'),
-        'morecopy' => $this->l->t('Saves the current values and continues to make yet another copy of the source data-set.'),
-        'morechange' => $this->l->t('Saves the current values; the current input form will remain active.'),
-      ),
+        'more' => [
+          'moreadd' => $this->l->t('Saves the current values and start to generate another new data-set.'),
+          'morecopy' => $this->l->t('Saves the current values and continues to make yet another copy of the source data-set.'),
+          'morechange' => $this->l->t('Saves the current values; the current input form will remain active.'),
+        ],
 
-      'pme-pagerowsselect' => $this->l->t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
+        'pagerowsselect' => $this->l->t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
 
-      'pme-query' => $this->l->t('  Klick mich, um die
+        'query' => $this->l->t('  Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man `%%\'.'),
 
-      'pme-reload' => array(
-        'reloadview' => $this->l->t('Refreshes the current view by reloading all data from the data-base.'),
-        'reloadchange' => $this->l->t('Discards all unsaved data and reloads all fields form the
-data-base. Settings which already have been stored by hitting an
+        'reload' => [
+          'reloadview' => $this->l->t('Refreshes the current view by reloading all data from the data-base.'),
+          'reloadchange' => $this->l->t('Discards all unsaved data and reloads all fields form the data-base. Settings which already have been stored by hitting an
 "Apply" button are maintained, though.'),
-      ),
+          'reloadcopy' => $this->l->t('Discards all unsaved data and reloads all fields from the data-base. Settings which already have been stored by hitting an
+"Apply" button are maintained, though.'),
+        ],
 
-      'pme-save' => array(
-        'default' => $this->l->t('Saves the current values and returns to the previous view.'),
-        'savedelete' => $this->l->t('Deletes the current record and returns to the previous view.'),
-      ),
+        'save' => [
+          'default' => $this->l->t('Saves the current values and returns to the previous view.'),
+          'savedelete' => $this->l->t('Deletes the current record and returns to the previous view.'),
+        ],
 
-      'pme-search' => array(
-        'sw' => $this->l->t('  Klick mich, um die
+        'search' => [
+          'sw' => $this->l->t('  Klick mich, um die
 Suchkriterien anzuzeigen.'),
-      ),
+        ],
 
-      'pme-showall-tab' => $this->l->t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+        'showall-tab' => $this->l->t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
 
-      'pme-sort' => $this->l->t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
+        'sort' => $this->l->t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
 
-      'pme-sort-rvrt' => $this->l->t('Click me to reverse the sort order by this field!'),
+        'sort-rvrt' => $this->l->t('Click me to reverse the sort order by this field!'),
 
-      'pme-sort-off' => $this->l->t('Click me to remove this field from the sorting criteria!'),
+        'sort-off' => $this->l->t('Click me to remove this field from the sorting criteria!'),
 
-      'pme-transpose' => $this->l->t('Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!'),
+        'transpose' => $this->l->t('Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!'),
 
-      'pme-view-navigation' => array(
-        'operation' => $this->l->t('Einzelnen Datensatz anzeigen'),
-      ),
+        'view-navigation' => [
+          'operation' => $this->l->t('Einzelnen Datensatz anzeigen'),
+        ],
+      ], // pme:
 
       'projects' => [
         'participant-fields' => $this->l->t('Define participant-fields for the instrumentation table. E.g.: surcharge
 fields for double-/single-room preference, room-mates and such.'),
 
         'instrumentation-voices' => $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
+
+        'type' => $this->l->t('Either "temporary" -- the regular case -- or "permanent" -- the
+exceptional case for "virtual pseudo projects". The latter in
+particular includes the pseudo-project for the administative board and
+the members of the registered orchestra association. Non-permanents
+always have per-force the project-year attached to their name,
+permanent "pseudo-projects" don\'t, as it does not make any sense.'),
       ],
 
       'project-actions' => $this->l->t('Pull-down menu with entries to move on
@@ -803,13 +809,6 @@ mandates.'),
       'project-infopage' => $this->l->t('Opens a dialog-window which gives access to all stored informations for the project.'),
 
       'project-instrumentation-tab' => $this->l->t('Displays the columns directly related to the instrumentation for the project.'),
-
-      'project-kind' => $this->l->t('Either "temporary" -- the regular case -- or "permanent" -- the
-exceptional case for "virtual pseudo projects". The latter in
-particular includes the pseudo-project for the administative board and
-the members of the registered orchestra association. Non-permanents
-always have per-force the project-year attached to their name,
-permanent "pseudo-projects" don\'t, as it does not make any sense.'),
 
       'project-metadata-tab' => $this->l->t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
 
