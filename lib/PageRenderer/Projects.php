@@ -219,18 +219,19 @@ class Projects extends PMETableViewBase
 
     $yearIdx = count($opts['fdd']);
     $opts['fdd']['year'] = [
-      'name'     => 'year',
+      'name'     => $this->l->t('year'),
       'select'   => 'N',
       //'options'  => 'LAVCPDF'
       'maxlen'   => 5,
       'default'  => $currentYear,
       'sort'     => true,
       'values'   => $yearValues,
+      'align'    => 'center',
     ];
 
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['name'] = [
-      'name'     => $this->l->t('Projekt-Name'),
+      'name'     => $this->l->t('Project-Name'),
       'php|LF'  => function($value, $op, $field, $row, $recordId, $pme) {
         //error_log('project-id: '.$recordId);
         $projectId = $recordId['id'];
@@ -268,12 +269,13 @@ class Projects extends PMETableViewBase
       'select'   => 'D',
       'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
-      'css'      => ['postfix' => ' tooltip-right'],
+      'css'      => ['postfix' => [ 'tooltip-right', ], ],
       'values2'  => $this->projectTypeNames,
       'default'  => 'temporary',
       'sort'     => true,
-      'tooltip' => $this->toolTipsService['project-kind'],
+      'align'    => 'center',
     ];
+    $this->addSlug('type', $opts['fdd']['type']);
 
     $opts['fdd']['actions'] = [
       'name'     => $this->l->t('Actions'),
@@ -328,6 +330,12 @@ class Projects extends PMETableViewBase
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
+        'display|VDCP'  => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
+        ],
+        'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation').'-ACP'],
         'css'         => ['postfix' => [ 'tooltip-top', ], ],
         'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
@@ -375,14 +383,13 @@ class Projects extends PMETableViewBase
                 $value
                 </a>
                 </li>
-                __EOT__;
+__EOT__;
           return $link;
         },
         'filter' => [
           'having' => true,
         ],
       ]);
-    // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     // Blow up the value-groups for the voices ...
     $voicesValueGroups = [];
@@ -406,6 +413,12 @@ class Projects extends PMETableViewBase
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
+        'display|VDACP' => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
+        ],
+        'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation-voices').'-ACP'],
         'sql' => "GROUP_CONCAT(
   DISTINCT
   IF(".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice >= 0,
@@ -505,14 +518,14 @@ class Projects extends PMETableViewBase
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
-          $title = $this->toolTipsService['project-action:project-instrumentation-numbers'];
+          $title = Util::htmlEscape($value);
           $link =<<<__EOT__
                 <li class="nav tooltip-top" title="$title">
                 <a class="nav" href="#" data-post="$post" data-json='$json'>
                 $value
                 </a>
                 </li>
-                __EOT__;
+__EOT__;
           return $link;
         },
         'filter' => [
@@ -521,20 +534,50 @@ class Projects extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'quantity',
+      [
+        'name' => $this->l->t('Quantity'),
+        'input' => 'RH',
+        'sql' => "GROUP_CONCAT(
+  DISTINCT
+  CONCAT_WS(
+    '".self::JOIN_KEY_SEP."',
+    CONCAT_WS(
+      '".self::COMP_KEY_SEP."',
+      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
+    \$join_col_fqn)
+  ORDER BY
+    " . $this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC,
+    " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
+        'default' => 0,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'name',
       [
-        'name' => $this->l->t('Extra Member Data'),
+        'name' => $this->l->t('Participant Fields'),
         'decoration' => [ 'slug' => 'participant-fields' ],
+        'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('participant-fields').'-ACP'],
         'display|LF'  => [
           'popup' => 'data',
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'css'         => ['postfix' => [ 'tooltip-top', ], ],
-        'options'  => 'FLCVD',
-        'input'    => 'VR',
+        'display|VDC'  => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '</div>'
+        ],
+        'css'      => ['postfix' => [ 'tooltip-top', ], ],
+        'options'  => 'LFCPVD',
+        'input'    => 'R',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
-        'php|VDCP'  => function($value, $op, $field, $row, $recordId, $pme) {
+        'sql|P'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \',\')',
+        'select|P' => 'M',
+        'values2|P' => [],
+        'input|P' => '',
+        'php|VDC'  => function($value, $op, $field, $row, $recordId, $pme) {
           $projectId = $recordId['id'];
           $post = [
             'ProjectParticipantFields' => $value,
@@ -545,8 +588,9 @@ class Projects extends PMETableViewBase
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
+          $tooltip = Util::htmlEscape($value);
           $link =<<<__EOT__
-<li class="nav">
+<li class="nav tooltip-top" title="$tooltip">
   <a class="nav" href="#" data-post="$post" data-json='$json'>
 $value
   </a>
@@ -554,11 +598,26 @@ $value
 __EOT__;
           return $link;
         },
-        'select'   => 'T',
+        'select|VDCLF'   => 'T',
         'maxlen'   => 30,
         'sort'     => false,
         'escape'   => false,
       ]);
+
+    $opts['fdd']['participants'] = [
+      'name'       => $this->l->t('Participants'),
+      // 'css'        => ['postfix' => [ 'tooltip-top', ], ],
+      'options'    => 'P',
+      'input'      => '',
+      'select'     => 'O',
+      'sql'        => '$main_table.id - $main_table.id',
+      'values2'    => [
+        1 => $this->l->t('Copy participants'),
+        0 => $this->l->t('Do not copy participants'),
+      ],
+      'default' => 0,
+    ];
+    $this->addSlug('participants', $opts['fdd']['participants']);
 
     $opts['fdd']['program'] = [
       'name'     => $this->l->t('Program'),
@@ -924,12 +983,35 @@ project without a poster first.");
    */
   public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    if (isset($newvals['name']) && $newvals['name']) {
-      $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
-      if ($newvals['name'] === false) {
-        return false;
+    if (empty($newvals['name'])) {
+      return false;
+    }
+    $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
+    if (empty($newvals['name'])) {
+      return false;
+    }
+
+    // sanitize instrumentation numbers
+    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+
+    // Add zeros to the voices data as the "0" voice is needed for
+    // convenience in either case, otherwise adding musicians to the
+    // ProjectParticipants table fails.
+    foreach (Util::explode(',', $newvale[$instrumentsColumn]??[]) as $instrument) {
+      $newvals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
+                              . (newvals[$voicesColumn]??'');
+    }
+    $items = Util::explode(',', newvals[$voicesColumn]);
+    sort($items, SORT_NATURAL);
+    $newvals[$voicesColumn] = implode(',', array_unique($items));
+    foreach ([$instrumentsColumn, $voicesColumn] as $column) {
+      Util::unsetValue($changed, $column);
+      if  (!empty($newVals[$column])) {
+        $changed[] = $column;
       }
     }
+
     return true;
   }
 
