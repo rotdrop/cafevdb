@@ -138,11 +138,13 @@ class ProjectsController extends Controller {
             }
 
             // Strip the year from the name and replace with the given year
-            $projectName = preg_replace('/\d+$/', "", $projectName);
+            $origName = $origName??$projectName;
+            $strippedName = preg_replace('/\d+$/', '', $projectName);
             if ($attachYear) {
-              $origName     = $projectName;
-              $projectName .= $projectYear;
-              $infoMessage .= $this->l->t("The year %s has been appended to the project-slug %s.", [ $projectYear, $origName ]);
+              $projectName = $strippedName . $projectYear;
+              if ($projectName != $origName) {
+                $infoMessage .= $this->l->t("The year %s has been appended to the project-slug %s.", [ $projectYear, $strippedName ]);
+              }
             }
             // Project name may be empty at this point. Why not
             break;
