@@ -553,6 +553,12 @@ trait ConfigTrait {
     return $this->configService->formatTimeStamp($date, $format, $timeZone);
   }
 
+  /** Return the current Unix timestamp */
+  protected function getTimeStamp()
+  {
+    return $this->configService->getTimeFactory()->getTime();
+  }
+
   protected function generateUUID() {
     \Sabre\VObject\UUIDUtil::getUUID();
   }

@@ -35,6 +35,7 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IDateTimeZone;
 use OCP\Security\ISecureRandom;
 use OCP\AppFramework\IAppContainer;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDateTimeFormatter;
 use OCP\ILogger;
 
@@ -202,6 +203,9 @@ class ConfigService {
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;
 
+  /** @var ITimeFactory */
+  protected $timeFactory;
+
   /** @var IAppContainer */
   private $appContainer;
 
@@ -218,8 +222,9 @@ class ConfigService {
     , IL10NFactory $l10NFactory
     , IDateTimeZone $dateTimeZone
     , ILogger $logger
-    , IDateTimeFormatter $dateTimeFormatter
     , IAppContainer $appContainer
+    , IDateTimeFormatter $dateTimeFormatter
+    , ITimeFactory $timeFactory
     , IL10N $l
   ) {
 
@@ -237,6 +242,7 @@ class ConfigService {
     $this->logger = $logger;
     $this->dateTimeFormatter = $dateTimeFormatter;
     $this->appContainer = $appContainer;
+    $this->timeFactory = $timeFactory;
     $this->l = $l;
 
     if (defined('OC_CONSOLE') && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
@@ -253,6 +259,11 @@ class ConfigService {
   public function getAppContainer():IAppContainer
   {
     return $this->appContainer;
+  }
+
+  public function getTimeFactory()
+  {
+    return $this->timeFactory;
   }
 
   public function getAppConfig()
