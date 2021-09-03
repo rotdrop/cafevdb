@@ -462,34 +462,31 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $this->pme->operation??'';
   }
 
-  /** Show the underlying table. */
-  // public function render();
-
-  /**Are we in add mode? */
+  /** Are we in add mode? */
   public function addOperation()
   {
     return $this->pme->add_operation();
   }
 
-  /**Are we in change mode? */
+  /** Are we in change mode? */
   public function changeOperation()
   {
     return $this->pme->change_operation();
   }
 
-  /**Are we in copy mode? */
+  /** Are we in copy mode? */
   public function copyOperation()
   {
     return $this->pme->copy_operation();
   }
 
-  /**Are we in view mode? */
+  /** Are we in view mode? */
   public function viewOperation()
   {
     return $this->pme->view_operation();
   }
 
-  /**Are we in delete mode?*/
+  /** Are we in delete mode?*/
   public function deleteOperation()
   {
     return $this->pme->delete_operation();
@@ -815,6 +812,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->debug('OLDVALS '.print_r($oldvals, true));
     $this->debug('NEWVALS '.print_r($newvals, true));
     $this->debug('CHANGED '.print_r($changed, true));
+
     $changeSets = [];
     foreach ($changed as $field) {
       $fieldInfo = $this->joinTableField($field);
@@ -1293,6 +1291,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     Util::unsetValue($changed, 'created');
     Util::unsetValue($changed, 'updated');
 
+    $this->debug('OLDVALS '.print_r($oldvals, true));
+    $this->debug('NEWVALS '.print_r($newvals, true));
+    $this->debug('CHANGED '.print_r($changed, true));
+
     $missingKeys = [];
     foreach ($pme->key as $key => $type) {
       if (!isset($newvals[$key])) {
@@ -1402,6 +1404,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // wrap into just another array in order to handle 'self' key-value provider
           $addIdentifier[$addKey] = [ $addIdentifier[$addKey] ];
         }
+        $this->debug('ADDIDS INITIAL: '.print_r($addIdentifier, true));
 
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
@@ -1413,16 +1416,22 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $selfField = $value['self'];
 
           foreach ($addIdentifier as $key => &$idValues) {
-            foreach ($idValues as &$idValueTuple) {
-              $idValueTuple[$selfKey] = null;
+            foreach ($idValues as &$idValuesTuple) {
+              $idValuesTuple[$selfKey] = null;
             }
           }
+          unset($idValues); // break reference
+          unset($idValuesTuple); // break reference
+          $this->debug('ADDIDS INITIALIZED: '.print_r($addIdentifier, true));
 
           // explode key values
           $selfValues = Util::explodeIndexedMulti($newvals[$selfField]);
 
           // $selfValues potentially adds to the 'add' key values
           foreach ($selfValues as $key => $selfValuesTuple) {
+
+            $this->debug('SELF VALUES FOR ' . $selfKey . '@' . $key . ': ' . print_r($selfValuesTuple, true));
+
             // make sure we have an $addIdentifier
             if (!isset($addIdentifier[$key])) {
               throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
@@ -1431,12 +1440,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // blow up the add identifiers
             $idValues = $addIdentifier[$key];
             $addIdentifier[$key] = [];
-            foreach ($idValues as $idValueTuple) {
+            $this->debug('ID-VALUES FOR ' . $key . ': ' . print_r($idValues, true));
+            foreach ($idValues as $idValuesTuple) {
               foreach ($selfValuesTuple as $selfValue) {
-                $idValueTuple[$selfKey] = $selfValue;
-                $addIdentifier[$key][] = $idValueTuple;
+                $idValuesTuple[$selfKey] = $selfValue;
+                $addIdentifier[$key][] = $idValuesTuple;
               }
             }
+            $this->debug('ADDIDS SO FAR: '.print_r($addIdentifier, true));
           }
 
           // just make sure that the self-value has a value in any case
@@ -1456,7 +1467,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $selfField);
         }
 
-        $this->debug('ADDIDS '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS FINALLY: '.print_r($addIdentifier, true));
 
         if (!empty($joinInfo['association'])) {
           // Many-to-many or similar through join table. We modify the
@@ -1506,7 +1517,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
-          $this->debug('TRY MOD '.$new);
+          $this->debug('TRY MOD ' . $new . ' ' . print_r($addIdentifier[$new], true));
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
@@ -1516,6 +1527,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
 
             // set further properties ...
+            $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
+            $this->debug('ENTITY ID ' . print_r($entityId, true));
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
             foreach ($multipleValues as $column => $dataItem) {
               $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
@@ -1749,6 +1762,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $slice[] = $entityId[$idKey];
     }
     $slice = implode(self::COMP_KEY_SEP, $slice);
+    return $slice;
   }
 
   /**
