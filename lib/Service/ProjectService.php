@@ -96,6 +96,7 @@ class ProjectService
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
+    $this->participantFieldsService = $participantFieldsService;
     $this->eventDispatcher = $eventDispatcher;
 
     $this->wikiRPC = $wikiRPC;
@@ -430,16 +431,16 @@ class ProjectService
   /**
    * Remove the folder for the given project.
    *
-   * @param Project|array Project entity or plain query result.
+   * @param Project|array $oldProject Project entity or plain query result.
    *
    * @return bool Status
    *
    * @todo It is probably not necessary to remove the sub-folders separately
    */
-  public function removeProjectFolders($oldProject)
+  public function removeProjectFolders($project):bool
   {
     $pathSep = UserStorage::PATH_SEP;
-    $yearName = $pathSep.$oldProject['year'].$pathSep.$oldProject['name'];
+    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
 
     $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
@@ -463,6 +464,71 @@ class ProjectService
     }
 
     return true;
+  }
+
+  /**
+   * Restore the folders for the given project in order to undelete or
+   * during error recovery.
+   *
+   * @param Project|array $project Project entity or plain query result.
+   *
+   * @param null|array $timeInterval Unfortunately the time-stamp in
+   * the trash bin is hard to get hold of. If $timeInterval is given,
+   * only try to restore folders in the given interval.
+   *
+   * @return bool Status
+   */
+  public function restoreProjectFolders($project, ?array $timeInterval = null):bool
+  {
+    /** @var OCA\Files_Trashbin\Trash\TrashManager $trashManager */
+    $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
+
+    $pathSep = UserStorage::PATH_SEP;
+    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
+
+    $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+    $balanceFolder  = $sharedFolder
+                    . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+                    . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+                    . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+                    . $yearName;
+
+    $projectPaths = [
+      self::FOLDER_TYPE_PROJECT => $projectsFolder,
+      self::FOLDER_TYPE_BALANCE => $balanceFolder,
+    ];
+
+    $candidates = [
+      self::FOLDER_TYPE_PROJECT => [ 'time' => 0, 'trashPath' => null ],
+      self::FOLDER_TYPE_BALANCE => [ 'time' => 0, 'trashPath' => null ],
+    ];
+
+    /** @var OCA\Files_Trashbin\Trash\TrashItem $trashItem */
+    foreach ($trashManager->listTrashRoot($this->user()) as $trashItem) {
+      $originalLocation = $trashItem->getOriginalLocation();
+      $deletedTime = $trashItem->getDeletedTime();
+      $trashPath = $trashItem->getTrashPath();
+
+      foreach ($projectPaths as $key => $path) {
+        $this->logInfo('ORIG ' . $originalLocation
+                       . ' PATH ' . $path
+                       . ' TIME ' . (new \DateTimeImmutable)->setTimestamp($deletedTime)->format('Ymd-his-T'));
+        if ($originalLocation == $path) {
+          if (empty($timeInterval)
+              || ($deletedTime >= $timeInterval[0] && $deletedTime <= $timeInterval[1])) {
+            if ($candidates[$key]['time'] < $deletedTime) {
+              $candidates[$key]['time'] = $deletedTime;
+              $candidates[$key]['trashPath'] = $trashPath;
+            }
+          }
+        }
+      }
+    }
+
+    $this->logInfo('RESTORE CANDIDATES ' . print_r($candidates, true));
+
+    return false;
   }
 
   /**
@@ -1462,19 +1528,16 @@ Whatever.',
     $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
        ->register(new GenericUndoable(
          function() use ($project) {
+           $startTime = $this->getTimeStamp();
            $this->removeProjectFolders($project);
-
-           throw new \Exception("DEBUG BLOCKER");
+           $entTime = $this->getTimeStamp();
          },
-         function() {
-           $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
-           $this->logInfo('TRASH ' . (int)empty($trashManager));
-           $trashManager = $this->di(\OCA\Files_Trashbin\Trash\ITrashManager::class);
-           $this->logInfo('TRASH ' . (int)empty($trashManager));
-           $this->logWarn('No undo mechanism for removeProjectFolders()');
+         function($timeInterval) use ($project) {
+           $this->restoreProjectFolders($project, null /* $timeInterval */);
          }))
        ->register(new GenericUndoable(
          function() use ($project) {
+           throw new \Exception("DEBUG BLOCKER");
            try {
              $pageVersion = $this->deleteProjectWikiPage($project);
            } catch (\Throwable $t) {
