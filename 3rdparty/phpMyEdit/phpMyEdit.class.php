@@ -509,17 +509,19 @@ class phpMyEdit
 	function add_canceled()	   { return $this->label_cmp($this->canceladd	, 'Cancel'); }
 	function view_canceled()   { return $this->label_cmp($this->cancelview	, 'Cancel'); }
 	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
-	function change_reloaded() { return $this->label_cmp($this->reloadchange, 'Reload'); }
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
+
+	function add_reloaded()	   { return $this->label_cmp($this->reloadadd	, 'Reload'); }
+	function view_reloaded()   { return $this->label_cmp($this->reloadview	, 'Reload'); }
+	function change_reloaded() { return $this->label_cmp($this->reloadchange, 'Reload'); }
+	function copy_reloaded()   { return $this->label_cmp($this->reloadcopy	, 'Reload'); }
+	function delete_reloaded() { return $this->label_cmp($this->reloaddelete, 'Reload'); }
 
 	function view_nav_displayed() { return stristr($this->display['navigation'], 'V'); }
 	function change_nav_displayed() { return stristr($this->display['navigation'], 'C'); }
 	function copy_nav_displayed() { return stristr($this->display['navigation'], 'P'); }
 	function delete_nav_displayed() { return stristr($this->display['navigation'], 'D'); }
-
-
-	function view_reloaded()   { return $this->label_cmp($this->reloadview	, 'Reload'); }
 
 	/**Return a normalized english name ... */
 	public function operationName()
@@ -4572,17 +4574,7 @@ class phpMyEdit
 			}
 			$this->exec_data_triggers(self::SQL_QUERY_SELECT, $row);
 
-			switch (count($key_rec)) {
-				case 0:
-					$recordData = '';
-					break;
-				case 1:
-					$recordData = array_values($key_rec)[0];
-					break;
-				default:
-					$recordData = json_encode($key_rec);
-					break;
-			}
+			$recordData = empty($key_rec) ? '' : json_encode($key_rec);
 			$recordQueryData = $this->key_record_query_data($key_rec);
 
 			if (!empty($this->groupby)) {
@@ -4956,10 +4948,8 @@ class phpMyEdit
 		echo $this->get_origvars_html($this->qfn);
 		echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		echo $this->htmlHiddenSys('qfn', $this->qfn);
-		if ($this->copy_operation() || empty($this->rec)) {
+		if (empty($this->rec)) {
 			echo $this->htmlHiddenSys('rec', '');
-		} else if (count($this->rec) == 1) {
-			echo $this->htmlHiddenSys('rec', array_values($this->rec)[0]);
 		} else {
 			foreach ($this->rec as $key => $value) {
 				echo $this->htmlHiddenSys('rec['.$key.']', $value);
@@ -5921,18 +5911,27 @@ class phpMyEdit
 		// Save/More Button - database operations
 		if ($this->label_cmp($this->saveadd, 'Save')
 			|| $this->label_cmp($this->savecopy, 'Save')) {
-			$this->add_enabled() && $this->do_add_record();
+			if ($this->add_enabled()) {
+				// make sure that respective triggers get and idea about the operation in progress
+				$this->operation = $this->labels[$this->label_cmp($this->saveadd, 'Save') ? 'Add' : 'Copy'];
+				$this->do_add_record();
+			}
 			if (empty($this->rec)) {
 				$this->operation = $this->labels['Add']; // to force add operation
 			} else {
 				$this->saveadd	= null; // unset($this->saveadd)
 				$this->savecopy = null; // unset($this->savecopy)
+				$this->operation = $this->labels['View']; // force view operation.
 			}
 			$this->recreate_fdd();
 		}
 		elseif ($this->label_cmp($this->applyadd, 'Apply')
 				|| $this->label_cmp($this->applycopy, 'Apply')) {
-			$this->add_enabled() && $this->do_add_record();
+			if ($this->add_enabled()) {
+				// make sure that respective triggers get and idea about the operation in progress
+				$this->operation = $this->labels[$this->label_cmp($this->applyadd, 'Apply') ? 'Add' : 'Copy'];
+				$this->do_add_record();
+			}
 			if (empty($this->rec)) {
 				$this->operation = $this->labels['Add']; // to force add operation
 			} else {
@@ -5947,27 +5946,31 @@ class phpMyEdit
 			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
-			$this->add_enabled() && $this->do_add_record();
 			$this->operation = $this->labels['Add']; // to force add operation
+			$this->add_enabled() && $this->do_add_record();
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->savechange, 'Save')) {
+			$this->operation = $this->labels['Change'];
 			$this->change_enabled() && $this->do_change_record();
 			$this->savechange = null; // unset($this->savechange)
+			$this->operation = $this->labels['View']; // force view operation.
 			$this->recreate_fdd();
 		}
 		elseif ($this->label_cmp($this->morechange, 'Apply')) {
-			$this->change_enabled() && $this->do_change_record();
 			$this->operation = $this->labels['Change']; // to force change operation
+			$this->change_enabled() && $this->do_change_record();
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->savedelete, 'Delete')) {
+			$this->operation = $this->labels['Delete']; // force view operation.
 			$this->delete_enabled() && $this->do_delete_record();
 			$this->savedelete = null; // unset($this->savedelete)
+			$this->operation = null;
 			$this->recreate_fdd();
 		}
 		elseif ($this->label_cmp($this->reloadview, 'Reload')) {
