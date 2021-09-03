@@ -232,7 +232,9 @@ form.pme-form {
 	display:table-cell;
       }
     }
+
   } /* table.pme-main */
+
 } /* form.pme-form */
 
 /*******************************************************************************
@@ -1263,63 +1265,76 @@ form.pme-form {
   td.pme-navigation * {
     cursor:inherit;
   }
-}
 
-table.pme-main {
-  tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
-    display:none;
+  table.pme-main {
+    tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
+      display:none;
+    }
   }
-}
 
-/* Disable some inputs with a checkbox */
+  /* Disable some inputs with a checkbox */
 
-/* Style checkbox with label and lock icon */
-input[type="checkbox"].pme-input.pme-input-lock-empty + label.pme-input-lock-empty {
-  position: absolute !important;
-  margin-top: 12px;
-  margin-left: -36px;
-  height: 16px;
-  width: 24px;
-  background-image: url('../img/lock.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.8;
-  text-indent: -10000em;
-}
+  /* Style checkbox with label and lock icon */
+  input[type="checkbox"].pme-input.pme-input-lock {
+    + label.pme-input-lock {
+      position: absolute !important;
+      margin-top: 12px;
+      margin-left: -36px;
+      height: 16px;
+      width: 24px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.8;
+      text-indent: -10000em;
+      z-index:1;
+      /* variant sitting before the input, displaying the lock on the left side of the input*/
+      &.left-of-input {
+        margin-left: 4px;
+      }
+      &.lock-empty {
+        background-image: url('../img/lock.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+      }
+    }
 
-input[type="checkbox"].pme-input.pme-input-lock-empty:checked + label.pme-input-lock-empty {
-  background-image: url('../img/cafevdb-delete.svg');
-  opacity: 0.8;
-}
+    &:checked + label.pme-input-lock {
+      opacity: 0.8;
+      &.lock-empty {
+        background-image: url('../img/cafevdb-delete.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+      }
+    }
+  }
 
-/* Style checkbox with label and lock icon */
-input[type="checkbox"].pme-input.pme-input-lock-unlock + label.pme-input-lock-unlock {
-  position: absolute !important;
-  margin-top: 12px;
-  margin-left: -36px;
-  height: 16px;
-  width: 24px;
-  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.8;
-  text-indent: -10000em;
-}
+  /* clear large input field with button */
+  td.pme-value {
 
-/* variant sitting before the input, displaying the lock on the left side of the input*/
-input[type="checkbox"].pme-input.pme-input-lock-empty + label.pme-input-lock-empty.left-lock,
-input[type="checkbox"].pme-input.pme-input-lock-unlock + label.pme-input-lock-unlock.left-lock {
-  margin-left: 4px;
-  z-index:1;
-}
+    .cell-wrapper input.clear-field {
+      position:absolute;
+      min-width:0;
+      min-height:0;
+      padding:0;
+      border-radius:3px;
+      margin-top:2px;
+      margin-left:-20px;
+      text-indent:-10000ex;
+      z-index:1;
+      background-repeat:no-repeat;
+      background-size: 16px 16px;
+      background-position: center;
+      width:18px;
+      height:18px;
+      background-image:url('../../../core/img/actions/delete.svg');
+      &.left-of-input {
+        margin-left: 4px;
+      }
+    }
+  }
 
-input[type="checkbox"].pme-input.pme-input-lock-unlock:checked + label.pme-input-lock-unlock {
-  background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
-  opacity: 0.8;
-}
-
-/* show/hide deleted data */
-form.pme-form {
   &.hide-disabled table.pme-main > {
     thead > tr > .hide-disabled-hidden,
     tbody > tr > .hide-disabled-hidden {
@@ -1333,13 +1348,11 @@ form.pme-form {
       display:none!important;
     }
   }
-}
 
-form.pme-form {
   span.query-log {
     margin-left:1ex;
   }
-}
+} /* form.pme-form */
 
 .oc-dialog .query-log-container {
   * {

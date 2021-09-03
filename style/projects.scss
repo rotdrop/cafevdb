@@ -24,132 +24,142 @@
 
 #pme-table-container.projects {
 
-  /*******************************************************************************
-   *
-   * Further chosen stuff
-   *
-   */
+  form.pme-form {
 
-  .project-actions-block {
-    div {
-      vertical-align:middle;
-    font-weight:bold;
-    }
+    /***************************************************************************
+     *
+     * Further chosen stuff
+     *
+     */
 
-    .chosen-container .chosen-results {
-      max-height:300px;
-    }
-
-    a.chosen-default span {
-      /*font-weight:bold;*/
-      color:#555;
-    }
-
-    a.chosen-default span:hover,
-    a.chosen-default span:focus,
-    a.chosen-default span:active {
-      /*font-weight:bold;*/
-      color:#333;
-    }
-
-    /* inter-item lines to group things together */
-    ul.chosen-results li.group-result {
-      display: block;
-      height: 1px;
-      padding: 0px;
-      margin: 0px;
-      border-top: 1px solid #ccc;
-    }
-  }
-
-  td.pme-value {
-    &.projects--instrumentation,
-    &.projects--instrumentation-voices,
-    &.projects--participant-fields {
-      div.chosen-container {
-        max-width:40em;
-        min-width:20em;
-        width:auto !important;
-      }
-    }
-    &.projects--participant-fields {
-      width:38em;
-      max-width:38em;
-      max-height:1em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:elliepsis;
-    }
-  }
-
-  td.pme-cell {
-    &.projects--instrumentation div.cell-wrapper,
-    &.projects--participant-fields div.cell-wrapper,
-    &.projects--instrumentation-voices div.cell-wrapper {
-      width:12em;
-      max-width:12em;
-      /* max-height:1em; */
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-  }
-
-  div.cmsarticlecontainer {
-    padding: 0 !important;
-    /*height:0px;*/
-    overflow:hidden;
-  }
-
-  #projectWebArticles {
-    height: 0;
-    overflow: hidden;
-  }
-
-  #cmsFrameLoader {
-    position: relative;
-    top: -7px;
-    height: 0;
-    width: 100%;
-    overflow: visible;
-    text-align: center;
-
-    img {}
-  }
-
-  #projectArticle-linkpage {
-    overflow:visible; /* for chosen */
-    min-height:10em;
-
-    [class^="chosen"] {
-      border-radius:3px !important;
-      /*  border:1px solid #AAA;*/
-      background-color: #FFF !important;
-    }
-  }
-
-  #cmsarticleselect_chosen {
-    min-width:20em !important;
-    width:auto;
-  }
-
-  ul#cmsarticletabs {
-    li {
-      box-sizing:border-box;
-      max-width:25%; /* concert and rehearsals */
-
-      &.ui-tabs-active.ui-state-active {
-        max-width:45%;
+    .project-actions-block {
+      div {
+        vertical-align:middle;
+        font-weight:bold;
       }
 
-      a {
-        box-sizing:border-box;
-        max-width:100%;
+      .chosen-container .chosen-results {
+        max-height:300px;
+      }
+
+      a.chosen-default span {
+        /*font-weight:bold;*/
+        color:#555;
+      }
+
+      a.chosen-default span:hover,
+      a.chosen-default span:focus,
+      a.chosen-default span:active {
+        /*font-weight:bold;*/
+        color:#333;
+      }
+
+      /* inter-item lines to group things together */
+      ul.chosen-results li.group-result {
+        display: block;
+        height: 1px;
+        padding: 0px;
+        margin: 0px;
+        border-top: 1px solid #ccc;
+      }
+    }
+
+    td.pme-value {
+      &.projects--instrumentation,
+      &.projects--instrumentation-voices,
+      &.projects--participant-fields {
+        div.chosen-container {
+          max-width:40em;
+          min-width:20em;
+          width:auto !important;
+        }
+      }
+      &.projects--participant-fields {
+        width:38em;
+        max-width:38em;
+        max-height:1em;
+        white-space:nowrap;
         overflow:hidden;
         text-overflow:ellipsis;
       }
     }
-  }
+
+    &.pme-copyadd td.pme-value.projects--participant-fields {
+      overflow:inherit;
+      text-overflow:inherit;
+    }
+
+    td.pme-cell {
+      &.projects--instrumentation div.cell-wrapper,
+      &.projects--participant-fields div.cell-wrapper,
+      &.projects--instrumentation-voices div.cell-wrapper {
+        width:12em;
+        max-width:12em;
+        /* max-height:1em; */
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+    }
+
+    div.cmsarticlecontainer {
+      padding: 0 !important;
+      /*height:0px;*/
+      overflow:hidden;
+    }
+
+    #projectWebArticles {
+      height: 0;
+      overflow: hidden;
+    }
+
+    #cmsFrameLoader {
+      position: relative;
+      top: -7px;
+      height: 0;
+      width: 100%;
+      overflow: visible;
+      text-align: center;
+
+      img {}
+    }
+
+    #projectArticle-linkpage {
+      overflow:visible; /* for chosen */
+      min-height:10em;
+
+      [class^="chosen"] {
+        border-radius:3px !important;
+        /*  border:1px solid #AAA;*/
+        background-color: #FFF !important;
+      }
+    }
+
+    #cmsarticleselect_chosen {
+      min-width:20em !important;
+      width:auto;
+    }
+
+    ul#cmsarticletabs {
+      li {
+        box-sizing:border-box;
+        max-width:25%; /* concert and rehearsals */
+
+        &.ui-tabs-active.ui-state-active {
+          max-width:45%;
+        }
+
+        a {
+          box-sizing:border-box;
+          max-width:100%;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+      }
+    }
+
+  } /* form.pme-form */
+
 } /* page container */
 
 /*******************************************************************************
