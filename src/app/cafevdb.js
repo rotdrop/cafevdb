@@ -25,7 +25,7 @@ import generateUrl from './generate-url.js';
 import { urlDecode } from './url-decode.js';
 import { chosenActive } from './select-utils.js';
 
-require('cafevdb.css');
+require('cafevdb.scss');
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
