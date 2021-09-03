@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\MappedSuperclass\AbstractTrans
  *       "locale", "object_class", "field", "foreign_key"
  *   })}
  * )
- * @ORM\Entity(repositoryClass="Gedmo\Translatable\Entity\Repository\TranslationRepository")
+ * @ORM\Entity(repositoryClass="OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository")
  */
 class TableFieldTranslation extends AbstractTranslation implements \ArrayAccess
 {
