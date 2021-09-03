@@ -475,23 +475,20 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       const deleteSelector = pmeSysNameSelector('input', 'savedelete');
 
       reloadDeferred(container).then(function() {
-        let name, value;
+
+        let post = $(container).find(pmeFormSelector()).serialize();
+        post += '&' + $.param(options);
 
         const deleteButton = container.find(deleteSelector);
         if (deleteButton.length > 0) {
-          name = deleteButton.attr('name');
-          value = deleteButton.val();
-          options[pmeSys('operation')] = 'Null'; // end-point, don't ouptput
+          post += '&' + $.param(deleteButton);
+          post += '&' + $.param({ [pmeSys('operation')]: 'Null' }); // end-point, don't ouptput
         } else {
           const applyButton = container.find(applySelector);
           if (applyButton.length > 0) {
-            name = applyButton.attr('name');
-            value = applyButton.val();
+            post += '&' + $.param(applyButton);
           }
         }
-        let post = $(container).find(pmeFormSelector()).serialize();
-        post += '&' + $.param(options);
-        post += '&' + $.param({ [name]: value });
 
         Notification.hide(function() {
           const dialogWidget = container.dialog('widget');
@@ -859,12 +856,10 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   const template = Page.templateFromRenderer(templateRenderer);
 
   let post = form.serialize();
-  post += '&templateRenderer=' + templateRenderer;
+  post += '&' + $.param({ templateRenderer });
   if (element.attr('name')
       && (!element.is(':checkbox') || element.is(':checked'))) {
-    const name = element.attr('name');
-    const value = element.val();
-    post += '&' + $.param({ [name]: value });
+    post += '&' + $.param(element);
   }
 
   pmePost(post, {

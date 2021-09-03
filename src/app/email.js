@@ -211,10 +211,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       post += '&' + $.param({ emailRecipients: { HistorySnapshot: 'snapshot' } });
     } else {
       post += '&' + form.find('fieldset.form-data').serialize();
-      if ($(this).is(':button')) {
-        const tmp = {};
-        tmp[$(this).attr('name')] = $(this).val();
-        post += '&' + $.param(tmp);
+      const $this = $(this);
+      if ($this.is(':button')) {
+        post += '&' + $.param($this);
       }
     }
     $.post(generateUrl('recipients-filter'), post)
@@ -453,10 +452,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         post = fieldset.serialize();
         post += '&' + form.find('fieldset.form-data').serialize();
       }
-      if ($(this).is(':button') || $(this).is(':submit')) {
-        const tmp = {};
-        tmp[$(this).attr('name')] = $(this).val();
-        post += '&' + $.param(tmp);
+      const $this = $(this);
+      if ($this.is(':button') || $this.is(':submit')) {
+        post += '&' + $.param($this);
       }
       // add the request itself as data
       post += '&' + $.param({ emailComposer: request });

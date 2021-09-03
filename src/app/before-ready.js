@@ -30,7 +30,6 @@ import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
 import * as ProjectPayments from './project-payments.js';
-import { data as pmeData } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
@@ -193,9 +192,7 @@ const documentReady = function() {
     }
     let post = form.serialize();
     if (self.attr('name')) {
-      const obj = {};
-      obj[self.attr('name')] = self.val();
-      post += '&' + $.param(obj);
+      post += '&' + $.param(self);
     }
     // alert('post: '+post);
     Page.loadPage(post);
