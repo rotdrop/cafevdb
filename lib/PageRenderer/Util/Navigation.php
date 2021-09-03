@@ -490,7 +490,7 @@ class Navigation
    */
   public function pageControlElement($id = 'projects',
                                      $projectName = '',
-                                     $projectId = -1)
+                                     $projectId = 0)
   {
     $controlid = $id.'-control';
     $controlclass = '';
@@ -577,10 +577,6 @@ if something has changed in the orchestra app.");
       break;
 
     case 'projectlabel':
-      $sysPfx = $this->pmeOptions['cgi']['prefix']['sys'];
-      $opname = $sysPfx.'operation';
-      $opwhat = 'View?'.$sysPfx.'rec='.$projectId;
-      $opclass  = 'pme-view';
       $title = $this->l->t("Display an overview page for the currently active project.
 The overview-page gives the possibility to add events, change the instrumentation
 and even edit the public web-pages for the project and other things.");
@@ -628,7 +624,7 @@ and even edit the public web-pages for the project and other things.");
       break;
 
     case 'sepa-bank-accounts':
-      if ($projectId > 0) {
+      if (!empty($projectId)) {
         $value = $this->l->t('Create Bulk Transactions');
         $title = $this->l->t('Display a table with the bank accounts of the project participants,
 with the possibility to issued money transfers as well as debit-notes
