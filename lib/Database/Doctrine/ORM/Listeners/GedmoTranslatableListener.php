@@ -37,6 +37,7 @@ class GedmoTranslatableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\
 
   public function __construct(BiDirectionalL10N $musicL10n)
   {
+    parent::__construct();
     $this->musicL10n = $musicL10n;
   }
 
