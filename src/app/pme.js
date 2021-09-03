@@ -38,6 +38,7 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
+import { deselectAll as selectDeselectAll } from './select-utils.js';
 import {
   sys as pmeSys,
   data as pmeData,
@@ -135,7 +136,6 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
   const args = [selector, parameters, resizeReadyCB];
   $.merge(args, cbHandle.parameters);
 
-  console.info('Run table load callback for ' + template, callback);
   return callback.apply(context, args);
 };
 
@@ -220,8 +220,8 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   container.html(content);
   container.find(pmeNavigationSelector('reload')).addClass('loading');
 
-  // general styling
-  pmeInit(containerSel);
+  // general styling, avoid submit handlers by second argument
+  pmeInit(containerSel, true);
 
   const title = container.find(pmeClassSelector('span', 'short-title')).html();
   if (title) {
@@ -291,9 +291,7 @@ const tableDialogReload = function(options, callback, triggerData) {
     post += '&' + $.param(options);
 
     // add name and value of the "submit" button.
-    const obj = {};
-    obj[reloadName] = reloadValue;
-    post += '&' + $.param(obj);
+    post += '&' + $.param({ [reloadName]: reloadValue });
 
     pmePost(post, {
       fail(xhr, status, errorThrown) {
@@ -344,6 +342,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
    * pme-delete
    * pme-copyadd
    */
+
   if (container.find(pmeClassSelector('form', 'list')).length) {
     // main list view, just leave as is.
     const resize = function(reason) {
@@ -362,8 +361,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     });
     return;
   }
-
-  container.off('click', '**');
 
   installTabHandler(container, function() {
     changeCallback({ reason: 'tabChange' });
@@ -494,9 +491,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         }
         let post = $(container).find(pmeFormSelector()).serialize();
         post += '&' + $.param(options);
-        const obj = {};
-        obj[name] = value;
-        post += '&' + $.param(obj);
+        post += '&' + $.param({ [name]: value });
 
         Notification.hide(function() {
           const dialogWidget = container.dialog('widget');
@@ -583,9 +578,7 @@ const tableDialog = function(form, element, containerSel) {
   const initialName = element.attr('name');
   const initialValue = element.val();
   if (initialName) {
-    const obj = {};
-    obj[initialName] = initialValue;
-    post += '&' + $.param(obj);
+    post += '&' + $.param({ [initialName]: initialValue });
   }
 
   const cssClass = element.attr('class');
@@ -656,6 +649,10 @@ const pmeTableDialogOpen = function(tableOptions, post) {
   } else {
     post += '&' + $.param(tableOptions);
   }
+  if (!tableOptions[tableOptions.initialName]) {
+    post += '&' + $.param({ [tableOptions.initialName]: tableOptions.initialValue });
+  }
+
   pmePost(post, {
     fail(xhr, status, errorThrown) {
       Page.busyIcon(false);
@@ -712,8 +709,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
           dialogWidget.addClass(pmeToken('table-dialog-blocked'));
 
-          // general styling
-          pmeInit(containerSel);
+          // general styling, avoid :submit handlers in dialog mode
+          pmeInit(containerSel, true);
 
           const resizeHandler = function(parameters) {
             dialogHolder.dialog('option', 'height', 'auto');
@@ -867,9 +864,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       && (!element.is(':checkbox') || element.is(':checked'))) {
     const name = element.attr('name');
     const value = element.val();
-    const obj = {};
-    obj[name] = value;
-    post += '&' + $.param(obj);
+    post += '&' + $.param({ [name]: value });
   }
 
   pmePost(post, {
@@ -1325,6 +1320,8 @@ const pmeOpenRowDialog = function(element, event, container) {
       recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
     }
   } else {
+    console.error('SCALAR RECORD ID', recordKey, recordId);
+    console.trace('SCALAR RECORD ID');
     recordQuery.push(recordKey + '=' + recordId);
   }
 
@@ -1359,7 +1356,15 @@ const pmeOpenRowDialog = function(element, event, container) {
   }
 };
 
-const pmeInit = function(containerSel) {
+/**
+ * @param {object} containerSel Selector of jQuery element of the
+ * container around the form.
+ *
+ * @param {boolean} noSubmitHandlers Do not attach any handlers to the
+ * submit buttons. This is used by the popup-dialogs which install
+ * their own handlers.
+ */
+const pmeInit = function(containerSel, noSubmitHandlers) {
 
   containerSel = pmeSelector(containerSel);
   const container = pmeContainer(containerSel);
@@ -1375,6 +1380,8 @@ const pmeInit = function(containerSel) {
   const pmeHide = pmeToken('hide');
   const pmeGoto = pmeToken('goto');
   const pmePageRows = pmeToken('pagerows');
+
+  noSubmitHandlers = noSubmitHandlers || false;
 
   container.find('tr.' + pmeToken('navigation') + '.' + pmeToken('down')).find('select, select + .chosen-container').addClass('chosen-dropup');
 
@@ -1452,7 +1459,7 @@ const pmeInit = function(containerSel) {
   // view/change/copy/delete buttons lead to a a popup
   if (form.find('input[name="templateRenderer"]').length > 0) {
     const submitSel = formSel + ' input[class$="navigation"]:submit' + ','
-        + formSel + ' input.' + pmeToken('add') + ':submit';
+          + formSel + ' input.' + pmeToken('add') + ':submit';
     container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
@@ -1475,14 +1482,16 @@ const pmeInit = function(containerSel) {
       });
   }
 
-  // All remaining submit event result in a reload
-  const submitSel = formSel + ' :submit';
-  container
-    .off('click', submitSel)
-    .on('click', submitSel, function(event) {
+  if (!noSubmitHandlers) {
+    // All remaining submit event result in a reload
+    const submitSel = formSel + ' :submit';
+    container
+      .off('click', submitSel)
+      .on('click', submitSel, function(event) {
 
-      return pseudoSubmit($(this.form), $(this), containerSel);
-    });
+        return pseudoSubmit($(this.form), $(this), containerSel);
+      });
+  }
 
   installTabHandler(container);
 
@@ -1580,11 +1589,11 @@ const pmeInit = function(containerSel) {
 
   // Handle some special check-boxes disabling text-input fields
   container.on(
-    'change', 'input[type="checkbox"].' + pmeToken('input-lock-empty'),
+    'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-empty',
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
-      const $input = $this.hasClass('left-lock') ? $this.next().next() : $this.prev();
+      const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', !checked);
       if (!checked) {
         $input.val('');
@@ -1593,16 +1602,29 @@ const pmeInit = function(containerSel) {
     });
 
   container.on(
-    'change', 'input[type="checkbox"].' + pmeToken('input-lock-unlock'),
+    'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-unlock',
     function(event) {
       const $this = $(this);
       const checked = $this.prop('checked');
-      const $input = $this.hasClass('left-lock') ? $this.next().next() : $this.prev();
+      const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', checked);
       if (checked) {
         $input.addClass('readonly');
       } else {
         $input.removeClass('readonly');
+      }
+      return false;
+    });
+
+  container.on(
+    'change click', 'td.' + pmeToken('value') + ' input.clear-field',
+    function(event) {
+      const $this = $(this);
+      const $element = $this.parent().find('.' + pmeToken('input')).first();
+      if ($element.is('select')) {
+        selectDeselectAll($element);
+      } else if ($element.is('input')) {
+        $element.val('');
       }
       return false;
     });
