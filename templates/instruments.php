@@ -24,19 +24,19 @@
 namespace OCA\CAFEVDB;
 
 $css_pfx = $renderer->cssPrefix();
-$project = $renderer->getProjectName();
+$projectName = $renderer->getProjectName();
 $projectId = $renderer->getProjectId();
 
 $nav = '';
-if ($projectId >= 0) {
-  $nav .= $pageNavigation->pageControlElement('projectlabel', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('detailed', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $project, $projectId);
+if (!empty($projectId)) {
+  $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   if ($roles->inTreasurerGroup()) {
-    $nav .= $pageNavigation->pageControlElement('project-payments', $project, $projectId);
-    $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $project, $projectId);
-    $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $project, $projectId);
+    $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+    $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
+    $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
     if ($projectId === $appConfig->getConfigValue('memberProjectid', false)) {
       $nav .= $pageNavigation->pageControlElement('insurances');
     }
@@ -44,8 +44,8 @@ if ($projectId >= 0) {
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('all');
   $nav .= $pageNavigation->pageControlElement('blog');
-  $nav .= $pageNavigation->pageControlElement('instruments', $project, $projectId);
-  $nav .= $pageNavigation->pageControlElement('instrument-families', $project, $projectId);
+  $nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('instrument-families', $projectName, $projectId);
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('all');

@@ -28,7 +28,7 @@ $projectName = $renderer->getProjectName();
 $projectId = $renderer->getProjectId();
 
 $nav = '';
-if ($projectId >= 0) {
+if (!empty($projectId)) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
