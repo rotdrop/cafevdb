@@ -700,13 +700,13 @@ It is also possible to match empty fields, in particular:
 Suchkriterien zu verstecken.'),
         ],
 
-        'input-lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
+        'input' => [
+          'lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
 
-        'input-lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
+          'lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
+        ],
 
         'instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
-
-        'lock-unlock' => $this->l->t('Lock and unlock the underlying input-field.'),
 
         'more' => [
           'moreadd' => $this->l->t('Saves the current values and start to generate another new data-set.'),
