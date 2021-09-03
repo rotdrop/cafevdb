@@ -133,6 +133,8 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $this->arrayCTOR();
     $this->fieldData = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->key = null;
+    $this->field = null;
   }
 
   public function __clone()
@@ -140,9 +142,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     if (empty($this->field) || empty($this->key)) {
       return;
     }
+    $oldKey = $this->key;
     $this->__construct();
-    $this->field = null;
-    $this->key = Uuid::create();
+    $this->key = $oldKey == Uuid::nil()
+               ? $oldKey
+               : Uuid::create();
   }
 
   /**
@@ -338,6 +342,30 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return ProjectParticipantPaymentsOption
+   */
+  public function setPayments($payments):ProjectParticipantFieldDataOption
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
   }
 
   /**

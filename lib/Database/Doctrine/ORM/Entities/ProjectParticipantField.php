@@ -103,7 +103,7 @@ class ProjectParticipantField implements \ArrayAccess
   private $dataType = 'text';
 
   /**
-   * @var ProjectParticipantFieldDataOption
+   * @var Collection
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, orphanRemoval=true)
    * @ORM\OrderBy({"label" = "ASC", "key" = "ASC"})
@@ -128,7 +128,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var null|ProjectParticipantFieldDataOption
    *
-   * @ORM\OneToOne(targetEntity="ProjectParticipantFieldDataOption")
+   * @ORM\OneToOne(targetEntity="ProjectParticipantFieldDataOption", cascade={"persist"})
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="id", referencedColumnName="field_id"),
    *   @ORM\JoinColumn(name="default_value", referencedColumnName="key", nullable=true)
@@ -181,6 +181,9 @@ class ProjectParticipantField implements \ArrayAccess
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->id = null;
+    $this->project = null;
+    $this->defaultValue = null;
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
   }
@@ -191,10 +194,8 @@ class ProjectParticipantField implements \ArrayAccess
       return;
     }
     $oldDataOptions = $this->dataOptions;
-    $oldDefalutValue = $this->defaultValue;
+    $oldDefaultValue = $this->defaultValue;
     $this->__construct();
-    $this->id = null;
-    $this->project = null;
     foreach ($oldDataOptions as $oldDataOption) {
       $dataOption = clone $oldDataOption;
       $dataOption->setField($this);
@@ -208,9 +209,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get id.
    *
-   * @return int
+   * @return null|int
    */
-  public function getId():int
+  public function getId():?int
   {
     return $this->id;
   }
