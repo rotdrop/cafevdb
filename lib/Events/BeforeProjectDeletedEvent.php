@@ -1,11 +1,11 @@
 <?php
-/*
+/**
  * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,30 +21,34 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Listener;
+namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
-use OCA\CAFEVDB\Events\BeforePojectDeletedEvent as HandledEvent;
 
-use OCA\CAFEVDB\Service\EventsService;
+class BeforeProjectDeletedEvent extends Event {
 
-class ProjectDeletedEventListener implements IEventListener
-{
-  const EVENT = HandledEvent::class;
+  /** @var int */
+  private $projectId;
 
-  /** @var EventsService */
-  private $eventsService;
+  /**
+   * @var bool
+   *
+   * Set to true if the project was kept but disabled.
+   */
+  private $disabled;
 
-  public function __construct(EventsService $eventsService) {
-    $this->eventsService = $eventsService;
+  public function __construct($projectId, $disabled) {
+    parent::__construct();
+    $this->projectId = $projectId;
+    $this->diabled = $disabled;
   }
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
-      return;
-    }
-    $this->eventsService->onProjectDeleted($event);
+  public function getProjectId(): int {
+    return $this->projectId;
+  }
+
+  public function getDisabled(): bool {
+    return $this->disabled;
   }
 }
 

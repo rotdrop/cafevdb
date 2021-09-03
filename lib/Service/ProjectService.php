@@ -72,7 +72,7 @@ class ProjectService
   /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
 
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
+  /** @var WikiRPC */
   private $wikiRPC;
 
   /** @var OCA\Redaxo4Embedded\Service\RPC */
@@ -433,6 +433,8 @@ class ProjectService
    * @param Project|array Project entity or plain query result.
    *
    * @return bool Status
+   *
+   * @todo It is probably not necessary to remove the sub-folders separately
    */
   public function removeProjectFolders($oldProject)
   {
@@ -450,8 +452,8 @@ class ProjectService
                     . $yearName;
 
     $projectPaths = [
-      self::FOLDER_TYPE_POSTERS => $postersFolder,
-      self::FOLDER_TYPE_PARTICIPANTS => $participantsFolder,
+      // self::FOLDER_TYPE_POSTERS => $postersFolder,
+      // self::FOLDER_TYPE_PARTICIPANTS => $participantsFolder,
       self::FOLDER_TYPE_PROJECT => $projectsFolder,
       self::FOLDER_TYPE_BALANCE => $balanceFolder,
     ];
@@ -707,17 +709,49 @@ Whatever.',
   }
 
   /**
-   * Delete the wiki page after the project has been deleted.
+   * Delete the wiki page.
    *
    * @param array|Entities\Project $project
+   *
+   * @return int Page version deleted.
    */
-  public function deleteProjectWikiPage($project)
+  public function deleteProjectWikiPage($project):int
   {
     $projectName = $project['name'];
     $pagename = $this->projectWikiLink($projectName);
+
+    list('version' => $pageVersion) = $this->wikiRPC->getPageInfo($pagename);
     $this->wikiRPC->putPage($pagename, '',
                             [ "sum" => "Automatic CAFEVDB synchronization, project deleted.",
                               "minor" => true ]);
+    return $pageVersion;
+  }
+
+  /**
+   * Restore the wiki page to the given or lastest version.
+   *
+   * @param array|Entities\Project $project
+   *
+   * @param null|int $version
+   */
+  public function restoreProjectWikiPage($project, ?int $version = null)
+  {
+    $projectName = $project['name'];
+    $pagename = $this->projectWikiLink($projectName);
+
+    if (empty($version)) {
+      $pageVersions = $this->wikiRPC->getPageVersions($pagename);
+      $version = $pageVersions[0]['version']??null;
+      if (empty($version)) {
+        return false;
+      }
+    }
+    $page = $this->wikiRPC->getPage($pagename, $version);
+    $this->wikiRPC->putPage(
+      $pagename, $page,
+      [ "sum" => "Automatic CAFEVDB synchronization, undo project deletion.",
+        "minor" => true ]);
+    return true;
   }
 
   /**
@@ -974,6 +1008,21 @@ Whatever.',
       }
       throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
+  }
+
+  /**
+   * Restore the web-pages previously deleted by deleteProjectWebPage()
+   *
+   * @param int $projectId
+   *
+   * @param mixed $article Either an array or Entities\ProjectWebPage
+   */
+  public function restoreProjectWebPage($projectId, $article)
+  {
+    $trashCategory = $this->getConfigValue('redaxoTrashbin');
+    $result = $this->webPagesRPC->moveArticle($article['articleId'], $article['categoryId']);
+    $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
+    $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $article);
   }
 
   /**
@@ -1399,12 +1448,14 @@ Whatever.',
    */
   public function deleteProject($projectOrId):? Entities\Project
   {
+    /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
       throw new \RuntimeException($this->l->t('Unable to find the project to delete (id = %d)', $projectOrId));
     }
 
-    $projectId = $project['id'];
+    $projectId = $project->getId();
+    $projectName = $project->getName();
 
     $softDelete  = count($project['payments']??[]) > 0;
 
@@ -1414,17 +1465,26 @@ Whatever.',
            $this->removeProjectFolders($project);
          },
          function() {
+           $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
+           $this->logInfo('TRASH ' . (int)empty($trashManager));
+           $trashManager = $this->di(\OCA\Files_Trashbin\Trash\ITrashManager::class);
+           $this->logInfo('TRASH ' . (int)empty($trashManager));
            $this->logWarn('No undo mechanism for removeProjectFolders()');
          }))
        ->register(new GenericUndoable(
          function() use ($project) {
-           $projectId = $project->getId();
-           $this->deleteProjectWikiPage($project);
+           try {
+             $pageVersion = $this->deleteProjectWikiPage($project);
+           } catch (\Throwable $t) {
+             $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
+             $pageVersion = null;
+           }
            $this->generateWikiOverview([ $projectId ]);
+           return $pageVersion;
          },
-         function() {
+         function($pageVersion) use ($project) {
+           $this->restoreProjectWikiPage($project, $pageVersion);
            $this->generateWikiOverview();
-           $this->logWarn('No undo mechanism for deleteProjectWikiPage()');
          }))
        ->register(new GenericUndoable(
          function() use ($project) {
@@ -1434,16 +1494,23 @@ Whatever.',
              // ignore errors
              $this->deleteProjectWebPage($projectId, $page);
            }
+           return $webPages;
          },
-         function() {
-           $this->logWarn('No undo mechanism for deleteProjectWebPage()');
+         function($webPages) use ($project) {
+           foreach ($webPages as $webPage) {
+             try {
+               $this->restoreProjectWebPage($project->getId(), $webPage);
+             } catch (\Throwable $t) {
+               $this->logException($t, 'Unable to restore web-article with id ' . $webPage['articleId']);
+             }
+           }
          }));
 
     $this->entityManager->beginTransaction();
     try {
 
       $this->eventDispatcher->dispatchTyped(
-        new Events\ProjectDeletedEvent($project->getId(), $softDelete));
+        new Events\BeforeProjectDeletedEvent($project->getId(), $softDelete));
 
       $preCommitActions->executeActions();
 
@@ -1453,17 +1520,11 @@ Whatever.',
         }
       } else {
 
-        if (!$project->isDeleted()) {
-          $this->remove($project, true); // soft
-        }
-        $this->remove($project, true); // hard
-
         // @todo: use cascading to remove
         $deleteTables = [
           Entities\ProjectParticipant::class,
           Entities\ProjectInstrument::class,
           Entities\ProjectWebPage::class,
-          Entities\ProjectParticipantField::class,
           Entities\ProjectEvent::class,
         ];
 
@@ -1476,7 +1537,33 @@ Whatever.',
             ->setParameter('projectId', $projectId)
             ->getQuery()
             ->execute();
+          $this->flush();
         }
+
+        /** @var Entities\ProjectParticipantField $participantField */
+        foreach ($project->getParticipantFields() as $participantField) {
+
+          $participantField->setDefaultValue(null);
+          $this->flush();
+
+          /** @var Entities\ProjectParticipantFieldDataOption $option */
+          foreach ($participantField->getDataOptions() as $option) {
+            if (!$option->isDeleted()) {
+              $this->remove($option, true);
+            }
+            $this->remove($option, true);
+          }
+          if (!$participantField->isDeleted()) {
+            $this->remove($participantField, true);
+          }
+          $this->remove($participantField, true);
+        }
+
+        if (!$project->isDeleted()) {
+          $this->remove($project, true); // soft
+        }
+        $this->remove($project, true); // hard
+
       }
 
       $this->entityManager->commit();
@@ -1494,6 +1581,9 @@ Whatever.',
         $t->getCode(),
         $t);
     }
+
+    $this->eventDispatcher->dispatchTyped(
+      new Events\AfterProjectDeletedEvent($project->getId(), $softDelete));
 
     return $softDelete ? $project : null;
   }
