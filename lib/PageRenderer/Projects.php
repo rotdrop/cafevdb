@@ -664,15 +664,16 @@ __EOT__;
     ];
     $this->addSlug('copy-participants', $opts['fdd']['copy_participants']);
 
+    $programDisplay = 'VC';
     $opts['fdd']['program'] = [
       'name'     => $this->l->t('Program'),
       'input'    => 'V',
-      'options'  => 'VCD',
+      'options'  => $programDisplay,
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projectprogram'],
       'sql'      => '$main_table.id',
-      'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
+      'php|' . $programDisplay => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id']; // and also $value
         return $this->projectProgram($projectId, $action);
       },
@@ -680,15 +681,16 @@ __EOT__;
       'escape' => false
     ];
 
+    $posterDisplay = 'VC';
     $opts['fdd']['poster'] = [
       'name'     => $this->l->t('Posters'),
       'input'    => 'V',
-      'options'  => 'VCD',
+      'options'  => $posterDisplay,
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => ['postfix' => ' projectposters'],
       'sql'      => '$main_table.id',
-      'php|CV'    => function($value, $action, $field, $row, $recordId, $pme) {
+      'php|' . $posterDisplay => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id']; // and also $value
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
         $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
