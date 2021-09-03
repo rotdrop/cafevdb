@@ -638,8 +638,8 @@ trait ParticipantFieldsTrait
     '.$label.'
   </td>
   <td class="input">
-    <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock-unlock left-lock"/>
-    <label class="pme-input pme-input-lock-unlock left-lock" title="'.$this->toolTipsService['pme-lock-unlock'].'" for="receivable-input-'.$key.'"></label>
+    <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock lock-unlock left-of-input"/>
+    <label class="pme-input pme-input-lock lock-unlock left-of-input" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$key.'"></label>
     <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
      <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>

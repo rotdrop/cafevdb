@@ -405,8 +405,8 @@ class ProjectParticipants extends PMETableViewBase
             return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
-  class="pme-input pme-input-lock-empty"/>
-<label class="pme-input pme-input-lock-empty" for="pme-musician-nickname"></label>';
+  class="pme-input pme-input-lock lock-empty"/>
+<label class="pme-input pme-input-lock lock-empty" for="pme-musician-nickname"></label>';
           },
         ],
       ]);
@@ -432,8 +432,8 @@ class ProjectParticipants extends PMETableViewBase
             return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
-  class="pme-input pme-input-lock-empty"
-/><label class="pme-input pme-input-lock-empty" for="pme-musician-displayname"></label>';
+  class="pme-input pme-input-lock lock-empty"
+/><label class="pme-input pme-input-lock lock-empty" for="pme-musician-displayname"></label>';
           },
         ],
       ]);
@@ -464,8 +464,8 @@ class ProjectParticipants extends PMETableViewBase
             return '<input id="pme-musician-user-id-slug"
   type="checkbox"
   '.$checked.'
-  class="pme-input pme-input-lock-unlock"
-/><label class="pme-input pme-input-lock-unlock" for="pme-musician-user-id-slug"></label>';
+  class="pme-input pme-input-lock lock-unlock"
+/><label class="pme-input pme-input-lock lock-unlock" for="pme-musician-user-id-slug"></label>';
           },
         ],
       ]);
