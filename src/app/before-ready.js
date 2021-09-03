@@ -44,6 +44,10 @@ const documentReady = function() {
     $('.oc-dialog').toggleClass('maximize-width');
   });
 
+  $('body').on('click',  '.oc-dialog .exception.error.name', function() {
+    $(this).next().toggleClass('visible');
+  });
+
   // @TODO move to global state context
   window.oldWidth = -1;
   window.oldHeight = -1;
