@@ -192,7 +192,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
-      'recordsPerPage' => $recordsPerPage,
     ];
 
     // Name of field which is the unique key

@@ -258,7 +258,6 @@ class ProjectParticipants extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.self::TEMPLATE,
-      'recordsPerPage' => $recordsPerPage,
     ];
 
     // Name of field which is the unique key

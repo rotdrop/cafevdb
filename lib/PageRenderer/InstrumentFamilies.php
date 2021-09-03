@@ -149,7 +149,6 @@ class InstrumentFamilies extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
-      'recordsPerPage' => $recordsPerPage,
       );
 
     // Name of field which is the unique key
