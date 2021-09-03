@@ -1175,12 +1175,17 @@ __EOT__;
 
     /** @var Entities\ProjectParticipantFieldDataOption $option */
     foreach ($field->getDataOptions() as $option) {
-      $this->remove($option, true);
+      if ($option === $field->getDefaultValue()) {
+        $this->debug('Try remove default value');
+        $field->setDefaultValue(null);
+        //$this->flush();
+      }
       if ($option->unused()) {
         $this->remove($option, true);
       } else {
         $used = true;
       }
+      $this->remove($option, true);
     }
 
     $this->remove($field, true); // this should be soft-delete
@@ -1193,22 +1198,9 @@ __EOT__;
     return true; // but run further triggers if appropriate
   }
 
-  private function usedFields($projectId = -1, $fieldId = -1)
-  {
-    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
-                ->usedFields($projectId, $fieldId);
-  }
-
-  private function fieldValues($fieldId)
-  {
-    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
-                ->fieldValues($fieldId);
-  }
-
   private function optionKeys($fieldId)
   {
-    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
-                ->optionKeys($fieldId);
+    return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->optionKeys($fieldId);
   }
 
   /**
