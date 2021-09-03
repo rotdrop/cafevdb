@@ -35,6 +35,8 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -201,8 +203,8 @@ class Projects extends PMETableViewBase
       'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
-      'input|AP' => 'RH', // always auto-increment
-      'options'  => 'AVCPD',
+      'input|LFAP' => 'RH', // always auto-increment
+      'options'  => 'LFAVCPD',
       'maxlen'   => 11,
       'default'  => '0', // auto increment
       'sort'     => true,
@@ -330,10 +332,21 @@ class Projects extends PMETableViewBase
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'display|VDCP'  => [
+        'display|VDC'  => [
           'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
+        ],
+        'display|P' => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '<input type="button"
+       id="projects--clear-participant-fields"
+       title="'.$this->toolTipsService['pme:clear-input-field'].'"
+       class="clear-field"
+       value="'.$this->l->t('Clear').'"
+/>
+</div>',
         ],
         'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation').'-ACP'],
         'css'         => ['postfix' => [ 'tooltip-top', ], ],
@@ -413,10 +426,21 @@ __EOT__;
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'display|VDACP' => [
+        'display|VDAC' => [
           'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
+        ],
+        'display|P' => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '<input type="button"
+       id="projects--clear-participant-fields"
+       title="'.$this->toolTipsService['pme:clear-input-field'].'"
+       class="clear-field"
+       value="'.$this->l->t('Clear').'"
+/>
+</div>',
         ],
         'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation-voices').'-ACP'],
         'sql' => "GROUP_CONCAT(
@@ -554,11 +578,17 @@ __EOT__;
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'name',
+      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
       [
-        'name' => $this->l->t('Participant Fields'),
-        'decoration' => [ 'slug' => 'participant-fields' ],
-        'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('participant-fields').'-ACP'],
+        'name'         => $this->l->t('Participant Fields'),
+        'decoration'   => [ 'slug' => 'participant-fields' ],
+        'tooltip|ACP'  => $this->toolTipsService[$this->tooltipSlug('participant-fields').'-ACP'],
+        'filter' => [
+          'having' => true,
+        ],
+        'select'       => 'M',
+        'input|P'      => '',
+        'values2|P'    => [],
         'display|LF'  => [
           'popup' => 'data',
           'prefix' => '<div class="cell-wrapper">',
@@ -569,14 +599,26 @@ __EOT__;
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'css'      => ['postfix' => [ 'tooltip-top', ], ],
+        'display|P'  => [
+          'popup' => false,
+          'prefix' => '<div class="cell-wrapper">',
+          'postfix' => '<input type="button"
+       id="projects--clear-participant-fields"
+       title="'.$this->toolTipsService['pme:clear-input-field'].'"
+       class="clear-field"
+       value="'.$this->l->t('Clear').'"
+/>
+</div>',
+        ],
+        'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', 'tooltip-top', ], ],
         'options'  => 'LFCPVD',
         'input'    => 'R',
-        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \', \')',
-        'sql|P'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_col_fqn ASC SEPARATOR \',\')',
-        'select|P' => 'M',
-        'values2|P' => [],
-        'input|P' => '',
+        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.name ASC)',
+        'values' => [
+          'description' => [
+            'columns' => '$table.name',
+          ],
+        ],
         'php|VDC'  => function($value, $op, $field, $row, $recordId, $pme) {
           $projectId = $recordId['id'];
           $post = [
@@ -598,26 +640,29 @@ $value
 __EOT__;
           return $link;
         },
-        'select|VDCLF'   => 'T',
         'maxlen'   => 30,
-        'sort'     => false,
         'escape'   => false,
       ]);
 
-    $opts['fdd']['participants'] = [
+    /**
+     * @var array $opts['fdd']['copy_participants'] An articifical
+     * flag values which indicates whether also the participants
+     * should be copied.
+     */
+    $opts['fdd']['copy_participants'] = [
       'name'       => $this->l->t('Participants'),
-      // 'css'        => ['postfix' => [ 'tooltip-top', ], ],
+      'css'        => ['postfix' => [ 'tooltip-top', ], ],
       'options'    => 'P',
       'input'      => '',
       'select'     => 'O',
-      'sql'        => '$main_table.id - $main_table.id',
+      'sql'        => 'CONCAT_WS("' . self::JOIN_KEY_SEP . '", $main_table.id, 0)',
       'values2'    => [
-        1 => $this->l->t('Copy participants'),
-        0 => $this->l->t('Do not copy participants'),
+        $this->projectId.self::JOIN_KEY_SEP.'1' => $this->l->t('Copy participants'),
+        $this->projectId.self::JOIN_KEY_SEP.'0' => $this->l->t('Do not copy participants'),
       ],
       'default' => 0,
     ];
-    $this->addSlug('participants', $opts['fdd']['participants']);
+    $this->addSlug('copy-participants', $opts['fdd']['copy_participants']);
 
     $opts['fdd']['program'] = [
       'name'     => $this->l->t('Program'),
@@ -659,7 +704,7 @@ __EOT__;
         }
         return $html;
       },
-      'css' => ['postfix' => ' projectposter'],
+      'css' => ['postfix' => [ 'projectposter', ], ],
       'default' => '',
       'sort'     => false,
       'escape' => false
@@ -986,17 +1031,17 @@ project without a poster first.");
    *
    * @param &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param &$newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeInsertTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
   {
-    if (empty($newvals['name'])) {
+    if (empty($newVals['name'])) {
       return false;
     }
-    $newvals['name'] = $this->projectService->sanitizeName($newvals['name']);
-    if (empty($newvals['name'])) {
+    $newVals['name'] = $this->projectService->sanitizeName($newVals['name']);
+    if (empty($newVals['name'])) {
       return false;
     }
 
@@ -1007,19 +1052,23 @@ project without a poster first.");
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
     // ProjectParticipants table fails.
-    foreach (Util::explode(',', $newvale[$instrumentsColumn]??[]) as $instrument) {
-      $newvals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
-                              . (newvals[$voicesColumn]??'');
+    foreach (Util::explode(',', $newVals[$instrumentsColumn]??[]) as $instrument) {
+      $newVals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
+                              . ($newVals[$voicesColumn]??'');
     }
-    $items = Util::explode(',', newvals[$voicesColumn]);
+    $items = Util::explode(',', $newVals[$voicesColumn]);
     sort($items, SORT_NATURAL);
-    $newvals[$voicesColumn] = implode(',', array_unique($items));
+    $newVals[$voicesColumn] = implode(',', array_unique($items));
+
     foreach ([$instrumentsColumn, $voicesColumn] as $column) {
       Util::unsetValue($changed, $column);
       if  (!empty($newVals[$column])) {
         $changed[] = $column;
       }
     }
+
+    // unset 'copy_participants'
+    Util::unsetValue($changed, 'copy_participants');
 
     return true;
   }
@@ -1033,11 +1082,11 @@ project without a poster first.");
    *
    * @param $step 'before' or 'after'
    *
-   * @param $oldvals Self-explanatory.
+   * @param $oldVals Self-explanatory.
    *
    * @param &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param &$newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    *
@@ -1091,31 +1140,121 @@ project without a poster first.");
    *
    * @param $step 'before' or 'after'
    *
-   * @param $oldvals Self-explanatory.
+   * @param $oldVals Self-explanatory.
    *
    * @param &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param &$newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function afterInsertTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
   {
-    $this->projectService->createProjectInfraStructure($newvals);
+    $this->debug('OLDVALS '.print_r($oldVals, true));
+    $this->debug('NEWVALS '.print_r($newVals, true));
+    $this->debug('CHANGED '.print_r($changed, true));
+
+    $newProjectId = $newVals['id'];
+    if (empty($newProjectId)) {
+      throw new \RuntimeException($this->l->t('Copying participants is requested, but the new project id is not given.'));
+    }
+
+    if ($this->copyOperation()) {
+      $oldProjectId = $this->pmeRecordId['id']??null;
+      if (empty($oldProjectId))  {
+        throw new \RuntimeException($this->l->t('Copying is requested, but the old project id is not given.'));
+      }
+
+      $this->debug('Operation: ' . $this->operation());
+      $this->debug('OLD PROJECT ID ' . $oldProjectId);
+      $this->debug('NEW PROJECT ID ' . $newProjectId);
+
+      // clone participants fields if not empty, list of names is given
+      $participantFields = $newVals[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
+      $participantFields = Util::explode(',', $participantFields);
+      $this->debug('PARTICIPANT FIELDS ' . print_r($participantFields, true));
+
+      if (!empty($participantFields)) {
+        list(, $copyParticipants) = explode(self::JOIN_KEY_SEP, $newVals['copy_participants']);
+
+        /** @var Repositories\ProjectsRepository $repository */
+        $repository = $this->getDatabaseRepository(self::ENTITY);
+
+        /** @var Entities\Project $oldProject */
+        $oldProject = $repository->find($oldProjectId);
+
+        /** @var Entities\Project $newProject */
+        $newProject = $repository->find($newProjectId);
+
+        $this->debug('FIELDS NEW PROJECT ' . $newProject->getParticipantFields()->count());
+
+        /** @var Entities\ProjectParticipantField $oldField */
+        foreach ($oldProject->getParticipantFields()->matching(DBUtil::criteriaWhere([ 'id' => $participantFields ])) as $oldField) {
+          /** @var Entities\ProjectParticipantField $newField */
+          $newField = clone $oldField;
+          $newField->setProject($newProject);
+          $this->persist($newField);
+          $newProject->getParticipantFields()->add($newField);
+        }
+        $this->flush();
+      }
+
+      // clone participants if requested
+      if ($copyParticipants) {
+
+        /** @var Repositories\ProjectsRepository $repository */
+        $repository = $this->getDatabaseRepository(self::ENTITY);
+
+        /** @var Entities\Project $oldProject */
+        $oldProject = $repository->find($oldProjectId);
+
+        /** @var Entities\Project $oldProject */
+        $newProject = $repository->find($newProjectId);
+
+        /** @var Entities\ProjectParticipant $oldParticipant */
+        foreach ($oldProject->getParticipants() as $oldParticipant) {
+          /** @var Entities\Musician $musician */
+          $musician = $oldParticipant->getMusician();
+
+          /** @var Entities\ProjectParticipant $newParticipant */
+          $newParticipant = new Entities\ProjectParticipant;
+          $newParticipant->setMusician($musician)
+                         ->setProject($newProject);
+
+          /** @var Entities\ProjectInstrument $oldProjectInstrument */
+          foreach ($oldParticipant->getProjectInstruments() as $oldProjectInstrument) {
+            /** @var Entities\ProjectInstrument $newProjectInstrument */
+            $newProjectInstrument = new Entities\ProjectInstrument;
+            $newProjectInstrument->setProject($newProject)
+                                 ->setMusician($musician)
+                                 ->setInstrument($oldProjectInstrument->getInstrument())
+                                 ->setVoice($oldProjectInstrument->getVoice())
+                                 ->setSectionLeader($oldProjectInstrument->getVoice())
+                                 ->setProjectParticipant($newParticipant);
+            $newParticipant->getProjectInstruments()->add($newProjectInstrument);
+          }
+        }
+        $this->flush();
+      }
+    }
+
+    //throw new \RuntimeException('DEBUG STOPPER');
+
+    $this->projectService->createProjectInfraStructure($newVals);
     return true;
   }
 
   /**
    * @copydoc Projects::afterInsertTrigger()
    */
-  public function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function afterUpdateTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
   {
     if (array_search('name', $changed) === false) {
       // Nothing more has to be done if the name stays the same
       return true;
     }
 
-    $this->projectService->renameProject($oldvals,  $newvals);
+    $this->projectService->renameProject($oldVals,  $newVals);
 
     return true;
   }
@@ -1127,7 +1266,7 @@ project without a poster first.");
    * "side-effects" the existance of the project had. However, there
    * is some data which must not be removed automatically
    */
-  public function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public function deleteTrigger(&$pme, $op, $step, &$oldVals, &$changed, &$newVals)
   {
     $this->projectService->deleteProject($pme->rec);
 
