@@ -60,17 +60,19 @@ if ($outputBufferWorkAround) {
   $pmeTable = null;
 }
 
-$operation = $renderer->operation();
-if (!empty($operation)) {
-  $operation = explode('?', $operation)[0];
-  $operation = $l->t($operation) . ': ';
-}
-
 ?>
 
 <div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
   <?php if (empty($pmeTable)) { $renderer->render(); } else { echo $pmeTable; } ?>
 </div>
+
+<?php
+$operation = $renderer->operation();
+if (!empty($operation)) {
+  $operation = explode('?', $operation)[0];
+  $operation = $l->t($operation) . ': ';
+}
+?>
 
 <span id="pme-short-title" class="pme-short-title" style="display:none;">
   <?php echo $operation . $renderer->shortTitle(); ?>
