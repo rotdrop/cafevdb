@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,14 +26,15 @@
  */
 
 import { appName, $ } from './globals.js';
-import { fixupNoChosenMenu, selectMenuReset } from './cafevdb.js';
+import { deselectAll as selectDeselectAll } from './select-utils.js';
+import { fixupNoChosenMenu } from './cafevdb.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 
 /**
  * Handle the export menu actions.
  *
- * @param {jQuery} select TBD.
+ * @param {jQuery} $select TBD.
  */
 const handleQueryLogMenu = function($select) {
   const $logOption = $select.find('option:selected');
@@ -60,21 +61,20 @@ const handleQueryLogMenu = function($select) {
 
   $('body')
     .off('click', '.query-log-container a.copy')
-    .on('click', '.query-log-container a.copy',
-        function(event) {
-          navigator.clipboard.writeText(queryData.query).then(function() {
-            Notification.showTemporary(t(appName, 'Query has been copied to the clipboard.'));
-          }, function(err) {
-            Notification.showTemporary(t(appName, 'Failed copying query to the clipboard.'));
-          });
-          return false;
-        });
+    .on('click', '.query-log-container a.copy', function(event) {
+      navigator.clipboard.writeText(queryData.query).then(function() {
+        Notification.showTemporary(t(appName, 'Query has been copied to the clipboard.'));
+      }, function(reason) {
+        Notification.showTemporary(t(appName, 'Failed copying query to the clipboard: {reason}.', { reason }));
+      });
+      return false;
+    });
 
   // Cheating. In principle we mis-use this as a simple pull-down
   // menu, so let the text remain at its default value. Make sure to
   // also remove and re-attach the tool-tips, otherwise some of the
   // tips remain, because chosen() removes the element underneath.
-  selectMenuReset($select);
+  selectDeselectAll($select);
   $.fn.cafevTooltip.remove();
 
   $('div.chosen-container').cafevTooltip({ placement: 'auto' });

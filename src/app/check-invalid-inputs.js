@@ -22,6 +22,7 @@
 import { $, appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Dialogs from './dialogs.js';
+import { chosenActive } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 
 /**
@@ -71,7 +72,7 @@ function checkInvalidInputs(container, cleanup, labelCallback) {
         if (!$input.is(':visible') && $input.is('select')) {
           if ($input[0].selectize) {
             $effectInput = $input.next().find('.selectize-input');
-          } else if (CAFEVDB.chosenActive($input)) {
+          } else if (chosenActive($input)) {
             $effectInput = $input.next();
           }
         } else {

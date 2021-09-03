@@ -33,6 +33,7 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
+import { deselectAll as selectDeselectAll } from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -493,7 +494,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         switch (operation) {
         case 'send':
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
+          selectDeselectAll(storedEmailsSelector);
           if (data.message !== undefined && data.caption !== undefined) {
             Dialogs.alert(data.message, data.caption, undefined, true, true);
           }
@@ -621,7 +622,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           // deselect menu item
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
+          selectDeselectAll(storedEmailsSelector);
           break; // load
         case 'save':
           switch (topic) {
@@ -635,7 +636,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
+          selectDeselectAll(storedEmailsSelector);
           break; // save
         case 'delete':
           switch (topic) {
@@ -650,7 +651,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          CAFEVDB.selectMenuReset(storedEmailsSelector);
+          selectDeselectAll(storedEmailsSelector);
           break; // delete
         default:
           postponeEnable = true;
@@ -1107,7 +1108,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           t(appName, 'There are currently no stored draft messages available.'),
           t(appName, 'No Drafts Available'),
           function() {
-            CAFEVDB.selectMenuReset(storedEmailsSelector);
+            selectDeselectAll(storedEmailsSelector);
           });
       } else {
         applyComposerControls.call(this, event, { operation: 'load', topic: 'template' });

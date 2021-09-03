@@ -21,12 +21,26 @@
  */
 
 // find an option by its value
-const findOptionByValue = function(select, value) {
-  return select.find('option[value="' + value + '"]');
+const findOptionByValue = function($select, value) {
+  return $select.find('option[value="' + value + '"]');
+};
+
+const chosenActive = function(select) {
+  return select.data('chosen') !== undefined;
+};
+
+const deselectAll = function($select) {
+  // deselect option items
+  $select.find('option').prop('selected', false);
+  if (chosenActive($select)) {
+    $select.trigger('chosen:updated');
+  }
 };
 
 export {
   findOptionByValue as optionByValue,
+  deselectAll,
+  chosenActive,
 };
 
 // Local Variables: ***

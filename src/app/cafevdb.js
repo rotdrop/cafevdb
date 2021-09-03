@@ -23,6 +23,7 @@
 import { globalState, appName, $, jQuery } from './globals.js';
 import generateUrl from './generate-url.js';
 import { urlDecode } from './url-decode.js';
+import { chosenActive } from './select-utils.js';
 
 require('cafevdb.css');
 
@@ -123,16 +124,6 @@ const stopRKey = function(evt) {
     return false;
   }
   return true;
-};
-
-const selectMenuReset = function(select) {
-  // deselect menu item
-  select.find('option').prop('selected', false);
-  select.trigger('chosen:updated');
-};
-
-const chosenActive = function(select) {
-  return select.data('chosen') !== undefined;
 };
 
 const fixupNoChosenMenu = function(select) {
@@ -479,8 +470,6 @@ export {
   unfocus,
   modalWaitNotification,
   stopRKey,
-  selectMenuReset,
-  chosenActive,
   fixupNoChosenMenu,
   formSubmit,
   appSettings,

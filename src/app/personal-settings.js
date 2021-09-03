@@ -25,6 +25,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
+import { chosenActive } from './select-utils.js';
 import selectValues from './select-values.js';
 
 // console.info('JQUERY ', $.fn.jquery);
@@ -43,7 +44,7 @@ const documentReady = function() {
     container.find('select.pagerows').each(function(index) {
       const self = $(this);
       // console.log("chosen pagerows", self);
-      if (CAFEVDB.chosenActive(self)) {
+      if (chosenActive(self)) {
         self.chosen('destroy');
       }
       self.chosen({
@@ -55,7 +56,7 @@ const documentReady = function() {
 
     container.find('select.wysiwyg-editor').each(function(index) {
       const self = $(this);
-      if (CAFEVDB.chosenActive(self)) {
+      if (chosenActive(self)) {
         console.debug('destroy chosen', self);
         self.chosen('destroy');
       }
@@ -72,7 +73,7 @@ const documentReady = function() {
     container.find('select.debugmode').each(function(index) {
       const self = $(this);
       // console.log("chosen debugmode", self);
-      if (CAFEVDB.chosenActive(self)) {
+      if (chosenActive(self)) {
         self.chosen('destroy');
       }
       self.chosen({
