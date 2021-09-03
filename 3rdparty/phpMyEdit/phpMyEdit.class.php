@@ -6383,7 +6383,7 @@ class phpMyEdit
 
 		foreach ($opts['cgi']['persist'] as $key => $val) {
 			if (is_array($val)) {
-				// We need to handle sys_recs in a special way: never
+				// We need to handle sys_mrecs in a special way: never
 				// use absolute indices, because this kills the
 				// information submitted by the user (checkboxes)
 				if ($key == $this->cgi['prefix']['sys'].'mrecs') {
