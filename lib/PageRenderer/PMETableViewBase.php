@@ -216,9 +216,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $cgiDefault = [
       'template' => 'blog',
-      'musicianId' => -1,
-      'projectId' => -1,
-      'projectName' => false,
+      'musicianId' => 0,
+      'projectId' => 0,
+      'projectName' => '',
       'recordsPerPage' => $this->getUserValue('pagerows', 20),
     ];
 
