@@ -161,7 +161,6 @@ class PageController extends Controller {
       $this->parameterService->setParams($this->historyService->fetch($level));
       $this->parameterService['originalRequestParameters'] = $originalParams;
       $this->parameterService->setParam('renderAs', $renderAs);
-      $_POST = $this->parameterService->getParams();
     } catch(\OutOfBoundsException $e) {
       return new DataResponse(['message' => $e->getMessage(),
                                'history' => ['size' => $this->historyService->size(),

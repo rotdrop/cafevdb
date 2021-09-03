@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -32,6 +33,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -45,7 +47,7 @@ class PHPMyEdit extends \phpMyEdit
   /** @var Connection */
   private $connection;
 
-  /** @var IRequest */
+  /** @var RequestParameterService */
   private $request;
 
   private $defaultOptions;
@@ -79,7 +81,7 @@ class PHPMyEdit extends \phpMyEdit
   public function __construct(
     EntityManager $entityManager
     , IOptions $options
-    , IRequest $request
+    , RequestParameterService $request
     , ILogger $logger
     , IL10N $l10n
   )
@@ -361,14 +363,31 @@ class PHPMyEdit extends \phpMyEdit
   }
 
   /**
+   * Override parent::get_cgi_var to use RequestParameterService
+   */
+  public function get_cgi_var($name, $default_value = null)
+  {
+    if (isset($this) && isset($this->cgi['overwrite'][$name])) {
+      return $this->cgi['overwrite'][$name];
+    }
+
+    $var = $this->request->getParam($name, $default_value);
+
+    if ($var === null && isset($this->cgi['append'][$name])) {
+      return $this->cgi['append'][$name];
+    }
+    return $var;
+  }
+
+  /**
    * Decode the record idea from the CGI data, return -1 if none
    * found.
    */
   public function getCGIRecordId()
   {
     $key = 'rec';
-    $recordId = $this->get_sys_cgi_var($key, -1);
-    if ($recordId > 0) {
+    $recordId = $this->get_sys_cgi_var($key, []);
+    if (!empty($recordId)) {
       return $recordId;
     }
     $opRecord = $this->get_sys_cgi_var('operation');
@@ -377,7 +396,7 @@ class PHPMyEdit extends \phpMyEdit
     parse_str(parse_url($opRecord, PHP_URL_QUERY), $opArgs);
     $recordKey = $this->cgi['prefix']['sys'].$key;
     $recordId = !empty($opArgs[$recordKey]) ? $opArgs[$recordKey] : -1;
-    return $recordId > 0 ? $recordId : -1;
+    return $recordId?:[];
   }
 
   /**
