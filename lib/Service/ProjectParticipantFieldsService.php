@@ -686,6 +686,50 @@ class ProjectParticipantFieldsService
             ->setField($field);
     $field->getDataOptions()->set($option->getKey(), $option);
   }
+
+  /**
+   * Delete the given field, taking default values and soft-deletion into account.
+   *
+   * @param int|Entities\ProjectParticipantField $fieldOrId
+   *
+   * @return bool true if the field was really deleted, false if it
+   * was kept.
+   */
+  public function deleteField($fieldOrId)
+  {
+    if (!($fieldOrId instanceof Entities\ProjectParticipantField)) {
+      $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldOrId);
+      if (empty($field)) {
+        throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
+      }
+    } else {
+      $field = $fieldOrId;
+    }
+
+    $used = false;
+
+    /** @var Entities\ProjectParticipantFieldDataOption $option */
+    foreach ($field->getDataOptions() as $option) {
+      if ($option === $field->getDefaultValue()) {
+        $field->setDefaultValue(null);
+        //$this->flush();
+      }
+      if ($option->unused()) {
+        $this->remove($option, true);
+      } else {
+        $used = true;
+      }
+      $this->remove($option, true);
+    }
+
+    $this->remove($field, true); // this should be soft-delete
+    if (!$used && $field->unused()) {
+      $this->remove($field, true); // this should be hard-delete
+    }
+
+    return !$used;
+  }
+
 }
 
 // Local Variables: ***

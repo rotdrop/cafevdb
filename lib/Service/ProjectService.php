@@ -1463,6 +1463,8 @@ Whatever.',
        ->register(new GenericUndoable(
          function() use ($project) {
            $this->removeProjectFolders($project);
+
+           throw new \Exception("DEBUG BLOCKER");
          },
          function() {
            $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
@@ -1542,21 +1544,7 @@ Whatever.',
 
         /** @var Entities\ProjectParticipantField $participantField */
         foreach ($project->getParticipantFields() as $participantField) {
-
-          $participantField->setDefaultValue(null);
-          $this->flush();
-
-          /** @var Entities\ProjectParticipantFieldDataOption $option */
-          foreach ($participantField->getDataOptions() as $option) {
-            if (!$option->isDeleted()) {
-              $this->remove($option, true);
-            }
-            $this->remove($option, true);
-          }
-          if (!$participantField->isDeleted()) {
-            $this->remove($participantField, true);
-          }
-          $this->remove($participantField, true);
+          $this->participantFieldsService->deleteField($participantField);
         }
 
         if (!$project->isDeleted()) {

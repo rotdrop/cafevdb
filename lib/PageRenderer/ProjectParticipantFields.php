@@ -1164,34 +1164,7 @@ __EOT__;
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    /** @var Entities\ProjectParticipantField $field */
-    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($pme->rec);
-
-    if (empty($field)) {
-      throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
-    }
-
-    $used = false;
-
-    /** @var Entities\ProjectParticipantFieldDataOption $option */
-    foreach ($field->getDataOptions() as $option) {
-      if ($option === $field->getDefaultValue()) {
-        $this->debug('Try remove default value');
-        $field->setDefaultValue(null);
-        //$this->flush();
-      }
-      if ($option->unused()) {
-        $this->remove($option, true);
-      } else {
-        $used = true;
-      }
-      $this->remove($option, true);
-    }
-
-    $this->remove($field, true); // this should be soft-delete
-    if (!$used && $field->unused()) {
-      $this->remove($field, true); // this should be soft-delete
-    }
+    $this->participantFieldsService->deleteField($pme->rec);
 
     $changed = []; // disable PME delete query
 
