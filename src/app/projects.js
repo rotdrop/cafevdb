@@ -31,6 +31,7 @@ import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
 import * as Events from './events.js';
 import * as Email from './email.js';
+import { chosenActive } from './select-utils.js';
 import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
@@ -235,7 +236,7 @@ const participantFieldsPopup = function(containerSel, post) {
     initialValue: false, // 'View',
     reloadName: false, // 'PME_sys_operation',
     reloadValue: false, // 'View',
-    [pmeSys('operation')]: false, // 'View',
+    // [pmeSys('operation')]: false, // 'View',
     modalDialog: false,
     modified: false,
   };
@@ -269,8 +270,8 @@ const projectViewPopup = function(containerSel, post) {
     initialValue: 'View',
     reloadName: pmeSys('operation'),
     reloadValue: 'View',
-    [pmeSys('operation')]: 'View',
-    [pmeSys('rec')]: post.projectId,
+    // [pmeSys('operation')]: 'View',
+    [pmeSys('rec')]: { id: post.projectId },
     modalDialog: true,
     modified: false,
   };
@@ -339,7 +340,7 @@ const actions = function(select, containerSel) {
     break;
   case 'project-participant-fields':
     participantFieldsPopup(containerSel, post);
-    break
+    break;
   case 'project-wiki':
     post.wikiPage = selected.data('wikiPage');
     post.popupTitle = selected.data('wikiTitle');
@@ -399,7 +400,7 @@ const actionMenu = function(containerSel) {
   // alert('max: '+projectActions.maxOuterWidth(true));
   // alert('max: '+projectActions.maxWidth());
   projectActions.chosen(chosenOptions);
-  if (CAFEVDB.chosenActive(projectActions)) {
+  if (chosenActive(projectActions)) {
     projectActions.find('option:first').html('');
     projectActions.trigger('chosen:updated');
   }
@@ -421,7 +422,6 @@ const pmeFormInit = function(containerSel) {
     ['save', 'apply', 'more']);
 
   if (form.find(submitSel).length > 0) {
-
     const nameSelector = 'input.projectname';
     const yearSelector = 'select[name="' + pmeData('year') + '"]';
     const typeSelector = 'select[name="' + pmeData('temporal_type') + '"]';
@@ -1111,9 +1111,9 @@ const documentReady = function() {
       }
 
       const linkPopups = {
-        'projects-participant-fields': participantFieldsPopup,
-        'projects-instrumentation': instrumentationNumbersPopup,
-        'projects-instrumentation-voices': instrumentationNumbersPopup,
+        'projects--participant-fields': participantFieldsPopup,
+        'projects--instrumentation': instrumentationNumbersPopup,
+        'projects--instrumentation-voices': instrumentationNumbersPopup,
       };
 
       for (const [css, popup] of Object.entries(linkPopups)) {
@@ -1122,7 +1122,6 @@ const documentReady = function() {
           .off('click')
           .on('click', function(event) {
             const data = $(this).data('json');
-            // console.info('DATA', data, selector);
             popup(selector, data);
             return false;
           });
