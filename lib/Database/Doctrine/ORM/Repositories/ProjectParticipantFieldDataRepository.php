@@ -32,65 +32,6 @@ class ProjectParticipantFieldDataRepository extends EntityRepository
   const ALIAS = 'pexfd';
 
   /**
-   * Fetch all ids which already have data associated to it.
-   *
-   * @param int|Entities\Project $project Project id or entity
-   *
-   * @param int|Entities\ProjectParticipantfield $field Project participant-field
-   * entity or id.
-   *
-   * @return array Flat array of id's
-   */
-  public function usedFields($project = null, $field = null)
-  {
-
-  //     $query = "SELECT DISTINCT d.`FieldId`
-  // FROM `".self::DATA_TABLE."` d
-  // LEFT JOIN `Besetzungen` b
-  // ON d.`BesetzungenId` = b.`Id`
-  // WHERE
-  //   d.`FieldValue` > ''";
-  //     if ($projectId > 0) {
-  //       $query .= "AND b.`ProjektId` = ".$projectId;
-  //     }
-  //     if ($fieldId > 0) {
-  //       $query .= "AND d.`FieldId` = ".$fieldId;
-  //     }
-
-    $qb = $this->createQueryBuilder(self::ALIAS)
-               ->select('identity('.self::ALIAS.'.field)')
-               ->leftJoin(self::ALIAS.'.projectParticipant', 'p')
-               ->where(self::ALIAS.".fieldValue > ''");
-    if ($projectId > 0) {
-      $qb->andWhere('p.project = :project')
-         ->setParameter('project', $project);
-    }
-    if (!empty($filed)) {
-      $qb->andWhere(self::ALIAS.'.field = :field')
-         ->setParameter('field', $field);
-    }
-    return $qb->distinct()
-              ->getQuery()
-              ->getResult('COLUMN_HYDRATOR');
-  }
-
-
-  /**
-   * Fetch all values stored for the given participant-field, e.g. in order
-   * to recover or generate select boxes.
-   *
-   * @param int|Entities\ProjectParticipantField
-   */
-  public function fieldValues($field)
-  {
-    $qb = $this->createQueryBuilder(self::ALIAS)
-               ->select(self::ALIAS.'.optionValue')
-               ->where(self::ALIAS.'.field = :field')
-               ->setParameter('field', $field);
-    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
-  }
-
-  /**
    * Fetch all values stored for the given participant-field, e.g. in order
    * to recover or generate select boxes.
    *
