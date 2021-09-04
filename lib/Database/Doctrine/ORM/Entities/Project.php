@@ -85,7 +85,7 @@ class Project implements \ArrayAccess
   private $instrumentationNumbers;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @todo this should cascade deletes
    */
   private $webPages;
