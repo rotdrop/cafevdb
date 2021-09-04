@@ -380,6 +380,21 @@ class PHPMyEdit extends \phpMyEdit
   }
 
   /**
+   * Add an entry to the underlying persistent CGI values. The
+   * settings will overwrite all previous settings of the same name.
+   */
+  public function addPersistentCgi($name, $value = null)
+  {
+    if (is_array($name) && $value === null) {
+      foreach ($name as $key => $value) {
+        $this->addPersistentCgi($key, $value);
+      }
+    } else {
+      $this->cgi['persist'] .= '&' . http_build_query([ $name => $value ]);
+    }
+  }
+
+  /**
    * Decode the record idea from the CGI data, return -1 if none
    * found.
    */
@@ -395,8 +410,7 @@ class PHPMyEdit extends \phpMyEdit
     $opArgs    = [];
     parse_str(parse_url($opRecord, PHP_URL_QUERY), $opArgs);
     $recordKey = $this->cgi['prefix']['sys'].$key;
-    $recordId = !empty($opArgs[$recordKey]) ? $opArgs[$recordKey] : -1;
-    return $recordId?:[];
+    return $opArgs[$recordKey]??[];
   }
 
   /**

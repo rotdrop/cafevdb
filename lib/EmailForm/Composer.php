@@ -2757,7 +2757,7 @@ Störung.';
     unset($draftData[self::POST_TAG]['saveMessage']);
 
     if (empty($draftData['bulkTransactionId'])) {
-      $draftData['bulkTransactionId'] = -1;
+      $draftData['bulkTransactionId'] = null;
     }
 
     $this->draftId = $draftId;

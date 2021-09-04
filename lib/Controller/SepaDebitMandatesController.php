@@ -126,7 +126,7 @@ class SepaDebitMandatesController extends Controller {
 
     $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
 
-    $memberProjectId = $this->getConfigValue('memberProjectId', -1);
+    $memberProjectId = $this->getConfigValue('memberProjectId', null);
     $mandateSequenceType = 'permanent';
 
 

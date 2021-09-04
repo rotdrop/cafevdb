@@ -53,8 +53,8 @@ class RequestParameterService implements \ArrayAccess, \Countable
     $this->request = $request;
     $this->parameters = array_merge([ 'renderAs' => 'user',
                                       'projectName' => '',
-                                      'projectId' => -1,
-                                      'musicianId' => -1 ],
+                                      'projectId' => null,
+                                      'musicianId' => null ],
                                     $this->request->getParams());
   }
 
@@ -99,8 +99,8 @@ class RequestParameterService implements \ArrayAccess, \Countable
     $this->parameters = Util::arrayMergeRecursive(
       [ 'renderAs' => 'user',
         'projectName' => '',
-        'projectId' => -1,
-        'musicianId' => -1 ],
+        'projectId' => null,
+        'musicianId' => null ],
       $this->request->getParams(),
       $parameters);
 

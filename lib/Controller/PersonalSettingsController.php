@@ -703,7 +703,7 @@ class PersonalSettingsController extends Controller {
       $realValue = Util::normalizeSpaces($value);
       // fetch existing values
       $currentProjectName = $this->getConfigValue($parameter, '');
-      $currentProjectId = $this->getConfigValue($parameter.'Id', -1);
+      $currentProjectId = $this->getConfigValue($parameter.'Id', null);
       $data = [
         'message' => [],
         'project' =>  $currentProjectName,
@@ -719,7 +719,7 @@ class PersonalSettingsController extends Controller {
         $data['message'][] = $this->l->t('Erased config value for parameter "%s".', $parameter);
 
         // ask to also remove the project if applicable
-        if ($currentProjectId != -1
+        if (!empty($currentProjectId)
             && !empty($this->projectService->findById($currentProjectId))) {
           $data['feedback']['Delete'] = [
             'title' => $this->l->t('Delete old Project?'),
@@ -729,7 +729,7 @@ class PersonalSettingsController extends Controller {
           ];
         } else {
           $data['project'] = '';
-          $data['projectId'] = -1;
+          $data['projectId'] = null;
         }
         return self::dataResponse($data);
       }
@@ -800,7 +800,7 @@ class PersonalSettingsController extends Controller {
       $projectParameter = preg_replace('/Validate$/', '', $parameter);
 
       $currentProjectName = $this->getConfigValue($projectParameter, '');
-      $currentProjectId = $this->getConfigValue($projectParameter.'Id', 0);
+      $currentProjectId = $this->getConfigValue($projectParameter.'Id', null);
 
       $data = [ 'message' => [] ];
 
@@ -870,7 +870,7 @@ class PersonalSettingsController extends Controller {
       break;
     case 'memberProjectRename':
     case 'executiveBoardProjectRename':
-      $projectId = -1;
+      $projectId = null;
       $projectName = '';
       $newName = '';
       try  {

@@ -178,7 +178,7 @@ class BlogMapper extends Mapper
     $qb = $this->db->getQueryBuilder();
     $qb->select('*')
        ->from($this->tableName)
-       ->where($qb->expr()->eq('in_reply_to', $qb->createNamedParameter(-1, IQueryBuilder::PARAM_INT)))
+       ->where($qb->expr()->eq('in_reply_to', $qb->createNamedParameter(null, IQueryBuilder::PARAM_INT)))
        ->orderBy('priority', 'DESC')
        ->orderBy('created', 'DESC');
 

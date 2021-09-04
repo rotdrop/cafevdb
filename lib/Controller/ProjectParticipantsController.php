@@ -99,7 +99,7 @@ class ProjectParticipantsController extends Controller {
     // projectName: NAME
     // musicianId: 1
     $musicianIds = [];
-    if (!empty($musicianId) && $musicianId > 0) {
+    if (!empty($musicianId)) {
       $musicianIds[] = $musicianId;
     } else {
       $musicianIds = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);

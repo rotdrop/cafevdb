@@ -183,7 +183,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'select|ACPFL' => 'D',  // add, change, copy, filter, list
       'maxlen'   => 20,
       'size'     => 16,
-      'default'  => ($projectMode ? $projectId : -1),
+      'default'  => ($projectMode ? $projectId : null),
       'sort'     => $sort,
       'values|ACP' => [
         'table'       => self::PROJECTS_TABLE,

@@ -99,8 +99,8 @@ class BlogController extends Controller {
   {
     $author   = $this->parameterService->getParam('author', $this->userId);
 
-    $blogId   = $this->parameterService->getParam('blogId', -1);
-    $inReplyTo  = $this->parameterService->getParam('inReplyTo', -1);
+    $blogId   = $this->parameterService->getParam('blogId', null);
+    $inReplyTo  = $this->parameterService->getParam('inReplyTo', null);
     $content  = $this->parameterService->getParam('content', '');
     $priority = $this->parameterService->getParam('priority', false);
     $popup    = $this->parameterService->getParam('popup', false);
@@ -110,7 +110,7 @@ class BlogController extends Controller {
       return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
     }
 
-    if ($blogId >= 0 && $inReplyTo == -1 && $content == '') {
+    if (!empty($blogId) && empty($inReplyTo) && $content == '') {
       // This is an edit attempt.
       try {
         $entry = $this->blogMapper->find($blogId);
@@ -169,8 +169,8 @@ class BlogController extends Controller {
   public function action($operation)
   {
     $author    = $this->parameterService->getParam('author', $this->userId);
-    $blogId    = $this->parameterService->getParam('blogId', -1);
-    $inReplyTo = $this->parameterService->getParam('inReplyTo', -1);
+    $blogId    = $this->parameterService->getParam('blogId', null);
+    $inReplyTo = $this->parameterService->getParam('inReplyTo', null);
     $content   = $this->parameterService->getParam('content', '');
     $priority  = $this->parameterService->getParam('priority', false);
     $popup     = $this->parameterService->getParam('popup', false);

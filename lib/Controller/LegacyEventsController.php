@@ -152,7 +152,7 @@ class LegacyEventsController extends Controller {
     $protectCategories = $this->parameterService['protectCategories'];
     $calendarUri  = $eventKind.'calendar';
     $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));
-    $calendarId   = $this->getConfigValue($calendarUri.'id', -1);
+    $calendarId   = $this->getConfigValue($calendarUri.'id', null);
     $shareOwner   = $this->getConfigValue('shareowner');
 
     // Default title for the event

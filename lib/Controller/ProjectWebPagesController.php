@@ -57,7 +57,7 @@ class ProjectWebPagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $projectId = -1, $articleId = -1, $articleData = [])
+  public function serviceSwitch($topic, $projectId = null, $articleId = null, $articleData = [])
   {
     if ($topic != 'ping' && $projectId <= 0) {
       return self::grumble($this->l->t("Invalid or unset project-id: `%s'", [ $projectId ]));

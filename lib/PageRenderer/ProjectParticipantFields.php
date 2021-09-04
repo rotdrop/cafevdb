@@ -250,7 +250,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'select|ACPFL' => 'D',  // add, change, copy
       'maxlen'   => 20,
       'size'     => 16,
-      'default'  => ($projectMode ? $projectId : -1),
+      'default'  => ($projectMode ? $projectId : null),
       'sort'     => true,
       'values|ACP' => [
         'column'      => 'id',

@@ -219,8 +219,8 @@ class PageController extends Controller {
     $renderAs,
     $template,
     $projectName = '',
-    $projectId = -1,
-    $musicianId = -1) {
+    $projectId = null,
+    $musicianId = null) {
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());

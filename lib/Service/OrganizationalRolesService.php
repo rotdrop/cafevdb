@@ -86,8 +86,8 @@ class OrganizationalRolesService
 
   private function dedicatedBoardMemberParticipant(string $role):?Entities\ProjectParticipant
   {
-    $musicianId = $this->getConfigValue($role.'Id', 0);
-    if ($musicianId == -1) {
+    $musicianId = $this->getConfigValue($role.'Id', null);
+    if (empty($musicianId)) {
       return null;
     }
     /** @var ProjectService $projectService */
@@ -170,8 +170,8 @@ class OrganizationalRolesService
   private function isDedicatedBoardMember(string $role, $uid, bool $allowGroupAccess)
   {
     empty($uid) && $uid = $this->userId();
-    $musicianId = $this->getConfigValue($role.'Id', -1);
-    if ($musicianId == -1) {
+    $musicianId = $this->getConfigValue($role.'Id', null);
+    if (empty($musicianId)) {
       return false;
     }
     $roleUid = $this->getConfigValue($role.'UserId', null);

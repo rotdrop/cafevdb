@@ -108,7 +108,7 @@ class EmailFormController extends Controller {
    * @NoAdminRequired
    * @UseSession
    */
-  public function webForm($projectId = -1, $projectName = '', $bulkTransactionId = -1, $emailTemplate = null)
+  public function webForm($projectId = null, $projectName = '', $bulkTransactionId = null, $emailTemplate = null)
   {
     $composer = $this->appContainer->query(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();

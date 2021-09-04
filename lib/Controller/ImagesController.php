@@ -205,8 +205,8 @@ class ImagesController extends Controller {
         Array (
         [renderAs] => user
         [projectName] =>
-        [projectId] => -1
-        [musicianId] => -1
+        [projectId] => null
+        [musicianId] => null
         [ownerId] => 2
         [joinTable] => MusicianPhoto
         [imageSize] => 400
