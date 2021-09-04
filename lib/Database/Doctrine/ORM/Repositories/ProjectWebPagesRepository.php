@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use Doctrine\Common\Proxy\Proxy;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 class ProjectWebPagesRepository extends EntityRepository
@@ -48,6 +50,7 @@ class ProjectWebPagesRepository extends EntityRepository
    */
   public function attachProjectWebPage($projectOrId, $webArticle):Entities\ProjectWebPage
   {
+    /** @var Entities\Project $project */
     if ($projectOrId instanceof Entities\Project) {
       $project = $projectOrId;
       $projectId = $project->getId();
@@ -71,8 +74,15 @@ class ProjectWebPagesRepository extends EntityRepository
     $projectWebPage->setArticlename($webArticle['articleName'])
                    ->setCategoryId($webArticle['categoryId'])
                    ->setPriority($webArticle['priority']);
-    $projectWebPage = $entityManager->merge($projectWebPage);
-    $entityManager->flush($projectWebPage);
+    $project = $projectWebPage->getProject();
+
+    if (!($project instanceof Proxy) || $project->__isInitialized()) {
+      // also update the project entity
+      $project->getWebPages()->add($projectWebPage);
+    }
+
+    $entityManager->persist($projectWebPage);
+    $entityManager->flush();
 
     return $projectWebPage;
   }
