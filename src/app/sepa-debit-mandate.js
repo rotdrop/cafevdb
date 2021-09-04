@@ -36,6 +36,7 @@ import * as FileUpload from './file-upload.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
+import modalizer from './modalizer.js';
 import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import './lock-input.js';
 import {
@@ -648,7 +649,7 @@ const mandatesInit = function(data, onChangeCallback) {
     close(event, ui) {
       $.fn.cafevTooltip.remove();
       $(this).dialog('destroy').remove();
-      CAFEVDB.modalizer(false);
+      modalizer(false);
     },
   });
   return false;
@@ -1151,11 +1152,11 @@ const mandateExportHandler = function(event) {
 
   event.stopImmediatePropagation(); // why?
 
-  CAFEVDB.modalizer(true);
+  modalizer(true);
   Page.busyIcon(true);
 
   const clearBusyState = function() {
-    CAFEVDB.modalizer(false);
+    modalizer(false);
     Page.busyIcon(false);
     console.log('after init');
     return true;
@@ -1301,11 +1302,11 @@ const mandateReady = function(selector) {
 
       const cleanup = function() {
         Page.busyIcon(false);
-        CAFEVDB.modalizer(false);
+        modalizer(false);
       };
 
       Page.busyIcon(true);
-      CAFEVDB.modalizer(true);
+      modalizer(true);
 
       const request = 'generator/run-all';
       const projectId = $this.data('projectId');

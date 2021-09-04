@@ -1,9 +1,10 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,6 +26,7 @@ import generateUrl from './generate-url.js';
 import * as Notification from './notification.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
+import modalizer from './modalizer.js';
 
 globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
 
@@ -51,7 +53,7 @@ const busyIcon = function(on) {
  */
 const loadPage = function(post, afterLoadCallback) {
   $('body').removeClass('dialog-titlebar-clicked');
-  CAFEVDB.modalizer(true);
+  modalizer(true);
   busyIcon(true);
   let action;
   let parameter;
@@ -74,7 +76,7 @@ const loadPage = function(post, afterLoadCallback) {
           updateHistoryControls(0, 0);
         }
       }
-      CAFEVDB.modalizer(false);
+      modalizer(false);
       busyIcon(false);
     })
     .done(function(htmlContent, textStatus, request) {
@@ -109,7 +111,7 @@ const loadPage = function(post, afterLoadCallback) {
       $('#' + appGeneralId).empty().prepend(newAppContent);
 
       CAFEVDB.snapperClose();
-      CAFEVDB.modalizer(false);
+      modalizer(false);
       busyIcon(false);
 
       CAFEVDB.runReadyCallbacks();

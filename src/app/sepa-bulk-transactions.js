@@ -27,6 +27,7 @@ import * as Email from './email.js';
 import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
 import fileDownload from './file-download.js';
+import modalizer from './modalizer.js';
 
 require('sepa-bulk-transactions.scss');
 
@@ -56,12 +57,12 @@ const ready = function(container, resizeCB) {
     .on('click', '.bulk-transaction-actions a.download', function(event) {
       const self = $(this);
 
-      CAFEVDB.modalizer(true);
+      modalizer(true);
       Page.busyIcon(true);
 
       const clearBusyState = function() {
         console.info('CLEANUP');
-        CAFEVDB.modalizer(false);
+        modalizer(false);
         Page.busyIcon(false);
         return true;
       };

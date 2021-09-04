@@ -24,6 +24,7 @@ import { globalState, appName, $, jQuery } from './globals.js';
 import generateUrl from './generate-url.js';
 import { urlDecode } from './url-decode.js';
 import { chosenActive } from './select-utils.js';
+import { token as pmeToken } from './pme-selectors.js';
 
 require('cafevdb.scss');
 
@@ -206,78 +207,6 @@ const appSettings = function(route, callback) {
       .fail(function(data) {
         console.log(data);
       });
-  }
-};
-
-/**
- * Open one invisible modal dialog in order to have a persistent
- * overlay for a group of dialogs.
- *
- * @param {bool} open TBD.
- *
- * @returns {bool|jQuery}
- */
-const modalizer = function(open) {
-  const modalizer = $('#cafevdb-modalizer');
-  if (open) {
-    if (modalizer.length > 0) {
-      $('body').addClass('cafevdb-modalizer');
-      return modalizer;
-    }
-    const dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
-    $('body').append(dialogHolder);
-    dialogHolder.cafevDialog({
-      title: '',
-      position: {
-        my: 'top left',
-        at: 'top-100% left-100%',
-        of: window,
-      },
-      width: '0px',
-      height: '0px',
-      modal: true,
-      closeOnEscape: false,
-      dialogClass: 'transparent no-close zero-size cafevdb-modalizer',
-      resizable: false,
-      open() {
-        // This one must be ours.
-        globalState.dialogOverlay = $('.ui-widget-overlay:last');
-        $('body').addClass('cafevdb-modalizer');
-      },
-      close() {
-        globalState.dialogOverlay = false;
-        dialogHolder.dialog('close');
-        dialogHolder.dialog('destroy').remove();
-        $('body').removeClass('cafevdb-modalizer');
-      },
-    });
-    return dialogHolder;
-  } else {
-    if (modalizer.length <= 0) {
-      $('body').removeClass('cafevdb-modalizer');
-      return true;
-    }
-    const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
-    console.info('overlay index: ', overlayIndex);
-    let numDialogs = 0;
-    $('.ui-dialog.ui-widget').each(function(index) {
-      const thisIndex = parseInt($(this).css('z-index'));
-      console.info('that index: ', thisIndex);
-      if (thisIndex >= overlayIndex) {
-        ++numDialogs;
-      }
-    });
-
-    console.info('num dialogs open: ', numDialogs);
-    if (numDialogs > 1) {
-      // one is the modalizer itself, of course.
-      return modalizer;
-    }
-
-    modalizer.dialog('close');
-    $('body').removeClass('cafevdb-modalizer');
-
-    return true;
   }
 };
 
@@ -473,7 +402,6 @@ export {
   fixupNoChosenMenu,
   formSubmit,
   appSettings,
-  modalizer,
   snapperClose,
   attachToolTip,
   applyToolTips,

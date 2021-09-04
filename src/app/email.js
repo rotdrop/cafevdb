@@ -40,6 +40,7 @@ import { setPersonalUrl } from './settings-urls.js';
 import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
 import queryData from './query-data.js';
+import modalizer from './modalizer.js';
 
 require('bootstrap4-duallistbox');
 require('emailform.scss');
@@ -1531,7 +1532,7 @@ function emailFormPopup(post, modal, single, afterInit) {
       }
 
       if (modal) {
-        CAFEVDB.modalizer(true);
+        modalizer(true);
       }
 
       let recipientsAlertText;
@@ -1689,7 +1690,7 @@ function emailFormPopup(post, modal, single, afterInit) {
           dialogHolder.dialog('close');
           dialogHolder.dialog('destroy').remove();
 
-          CAFEVDB.modalizer(false);
+          modalizer(false);
           Email.active = false;
         },
       });

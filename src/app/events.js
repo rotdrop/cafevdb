@@ -28,6 +28,7 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
+import modalizer from './modalizer.js';
 
 require('events.css');
 
@@ -159,7 +160,7 @@ const init = function(htmlContent, textStatus, request) {
       $(this).dialog('destroy').remove();
 
       // Remove modal plane if appropriate
-      CAFEVDB.modalizer(false);
+      modalizer(false);
     },
   });
 };

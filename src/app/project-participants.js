@@ -37,6 +37,7 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
+import modalizer from './modalizer.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
@@ -755,10 +756,10 @@ const myReady = function(selector, resizeCB) {
       $deleteUndelete.on('click', function(event) {
         const cleanup = function() {
           Page.busyIcon(false);
-          CAFEVDB.modalizer(false);
+          modalizer(false);
         };
 
-        CAFEVDB.modalizer(true);
+        modalizer(true);
         Page.busyIcon(true);
 
         $.post(
