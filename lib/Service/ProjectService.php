@@ -469,6 +469,10 @@ class ProjectService
 
     foreach($projectPaths as $key => $path) {
       $this->userStorage->delete($path);
+      // throttle deletion in order to have distinct file-names in the
+      // trash-bin. Currently a file's MTIME in NextCloud has only
+      // second resolution, so ...
+      sleep(1);
     }
 
     return true;
@@ -494,7 +498,7 @@ class ProjectService
     $pathSep = UserStorage::PATH_SEP;
     $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
 
-    $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
     $balanceFolder  = $sharedFolder
                     . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
@@ -507,36 +511,13 @@ class ProjectService
       self::FOLDER_TYPE_BALANCE => $balanceFolder,
     ];
 
-    $candidates = [
-      self::FOLDER_TYPE_PROJECT => [ 'time' => 0, 'trashPath' => null ],
-      self::FOLDER_TYPE_BALANCE => [ 'time' => 0, 'trashPath' => null ],
-    ];
-
-    /** @var OCA\Files_Trashbin\Trash\TrashItem $trashItem */
-    foreach ($trashManager->listTrashRoot($this->user()) as $trashItem) {
-      $originalLocation = $trashItem->getOriginalLocation();
-      $deletedTime = $trashItem->getDeletedTime();
-      $trashPath = $trashItem->getTrashPath();
-
-      foreach ($projectPaths as $key => $path) {
-        $this->logInfo('ORIG ' . $originalLocation
-                       . ' PATH ' . $path
-                       . ' TIME ' . (new \DateTimeImmutable)->setTimestamp($deletedTime)->format('Ymd-his-T'));
-        if ($originalLocation == $path) {
-          if (empty($timeInterval)
-              || ($deletedTime >= $timeInterval[0] && $deletedTime <= $timeInterval[1])) {
-            if ($candidates[$key]['time'] < $deletedTime) {
-              $candidates[$key]['time'] = $deletedTime;
-              $candidates[$key]['trashPath'] = $trashPath;
-            }
-          }
-        }
-      }
+    $count = 0;
+    foreach ($projectPaths as $key => $path) {
+      $result = $this->userStorage->restore($path, $timeInterval);
+      $count += (int)!!$result;
     }
 
-    $this->logInfo('RESTORE CANDIDATES ' . print_r($candidates, true));
-
-    return false;
+    return $count == count($projectPaths);
   }
 
   /**
@@ -1571,14 +1552,14 @@ Whatever.',
          function() use ($project) {
            $startTime = $this->getTimeStamp();
            $this->removeProjectFolders($project);
-           $entTime = $this->getTimeStamp();
+           $endTime = $this->getTimeStamp();
+           return [ $startTime, $endTime ];
          },
          function($timeInterval) use ($project) {
-           $this->restoreProjectFolders($project, null /* $timeInterval */);
+           $this->restoreProjectFolders($project, $timeInterval);
          }))
        ->register(new GenericUndoable(
          function() use ($project) {
-           //throw new \Exception("DEBUG BLOCKER");
            try {
              $pageVersion = $this->deleteProjectWikiPage($project);
            } catch (\Throwable $t) {

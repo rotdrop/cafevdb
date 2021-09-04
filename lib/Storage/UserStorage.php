@@ -23,13 +23,18 @@
 
 namespace OCA\CAFEVDB\Storage;
 
+use OCP\IUser;
+use OCP\IUserSession;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
+use OCA\Files_Trashbin\Trash\ITrashManager;
+use OCA\Files_Trashbin\Trash\ITrashItem;
 
 /**
  * Some tweaks to for the user-folder stuff.
@@ -41,8 +46,11 @@ class UserStorage
   const PATH_SEP = '/';
   const CACHE_DIRECTORY = self::PATH_SEP.'cache';
 
-  /** @var string */
-  protected $userId;
+  /** @var IUser */
+  protected $user;
+
+  /** @var IAppContainer */
+  private $appContainer;
 
   /** @var Folder */
   protected $rootFolder;
@@ -51,18 +59,28 @@ class UserStorage
   protected $userFolder;
 
   public function __construct(
-    $userId
+    IUserSession $userSession
+    , IAppContainer $appContainer
     , IRootFolder $rootFolder
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->userId = $userId;
+    $this->user = $userSession->getUser();
+    $this->appContainer = $appContainer;
     $this->rootFolder = $rootFolder;
     $this->logger = $logger;
     $this->l = $l10n;
-    if (!empty($this->userId)) {
-      $this->userFolder = $this->rootFolder->getUserFolder($this->userId);
+    if (!empty($this->user)) {
+      $this->userFolder = $this->rootFolder->getUserFolder($this->user->getUID());
     }
+  }
+
+  /**
+   * @return IUser The current user
+   */
+  public function user():IUser
+  {
+    return $this->user;
   }
 
   /**
@@ -70,7 +88,7 @@ class UserStorage
    */
   public function userId():string
   {
-    return $this->userId;
+    return $this->user->getUID();
   }
 
   /**
@@ -124,6 +142,12 @@ class UserStorage
     return $this->rootFolder;
   }
 
+  /**
+   * Gracefully try to delete $path. If $path does not exist, a notice
+   * is written to the log but otherwise the error is ignored.
+   *
+   * @param string $path
+   */
   public function delete($path)
   {
     try {
@@ -131,6 +155,66 @@ class UserStorage
     } catch (\OCP\Files\NotFoundException $t) {
       $this->logInfo("Not deleting non-existing path $path");
     }
+  }
+
+  /**
+   * Try to restore the given path from the files_trashbin app.
+   *
+   * @param string $path Path to restore, relative to the user's home
+   * folder. It may or may not start with a slash.
+   *
+   * @param null|array $timeInterval If not null, restore the most recent
+   * version in the given interval. Otherwise restore the most recent
+   * version found in the trashbin.
+   *
+   * @param bool $overwriteExisting If true delete any existing
+   * destination file before restoring.
+   *
+   * @bug This method uses internal APIs.
+   */
+  public function restore($path, ?array $timeInterval = null, bool $overwriteExisting = false):bool
+  {
+    /** @var ITrashManager $trashManager */
+    $trashManager = $this->appContainer->get(ITrashManager::class);
+
+    if (empty($trashManager)) {
+      throw new \RuntimeException($this->l->t('Unable to restore "%s": TrashManager cannot be loaded', $path));
+    }
+
+    $path = trim($path, self::PATH_SEP);
+
+    $candidate = [ 'time' => 0, 'trashItem' => null ];
+
+    /** @var ITrashItem $trashItem */
+    foreach ($trashManager->listTrashRoot($this->user()) as $trashItem) {
+      $originalLocation = trim($trashItem->getOriginalLocation(), self::PATH_SEP);
+      $deletedTime = $trashItem->getDeletedTime();
+
+      if ($originalLocation == $path) {
+        if (empty($timeInterval)
+            || ($deletedTime >= $timeInterval[0] && $deletedTime <= $timeInterval[1])) {
+          if ($candidate['time'] < $deletedTime) {
+            $candidate['time'] = $deletedTime;
+            $candidate['trashItem'] = $trashItem;
+          }
+        }
+      }
+    }
+
+    if (empty($candidate['trashItem'])) {
+      $this->logInfo('Unable to find trash-bin item to undelete');
+      return false;
+    }
+
+    if ($overwriteExisting) {
+      $this->logInfo('Try delete ' . $path);
+      $this->delete($path);
+    }
+
+    $this->logInfo('Try restore ' . $candidate['trashItem']->getOriginalLocation());
+    $trashManager->restoreItem($candidate['trashItem']);
+
+    return true;
   }
 
   /**
