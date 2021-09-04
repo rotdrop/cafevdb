@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -58,6 +59,9 @@ class ProjectService
   const FOLDER_TYPE_PARTICIPANTS = 'participants';
   const FOLDER_TYPE_POSTERS = 'posters';
   const FOLDER_TYPE_BALANCE = 'balance';
+
+  const WEBPAGE_TYPE_CONCERT = 'concert';
+  const WEBPAGE_TYPE_REHEARSALS = 'rehearsals';
 
   private const PROJECT_FOLDER_CONFIG_KEYS = [
     ConfigService::PROJECTS_FOLDER,
@@ -431,16 +435,20 @@ class ProjectService
   /**
    * Remove the folder for the given project.
    *
-   * @param Project|array $oldProject Project entity or plain query result.
+   * @param int|Entities\Project|array $projectOrId Project entity or
+   * plain query result or project id.
    *
    * @return bool Status
    *
    * @todo It is probably not necessary to remove the sub-folders separately
    */
-  public function removeProjectFolders($project):bool
+  public function removeProjectFolders($projectOrId):bool
   {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+
     $pathSep = UserStorage::PATH_SEP;
-    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
+    $yearName = $pathSep.$project->getYear().$pathSep.$project->getName();
 
     $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
@@ -949,20 +957,20 @@ Whatever.',
    *
    * @param $projectId Id of the project
    *
-   * @param $kind One of 'concert' or 'rehearsals'
+   * @param $kind One of self::WEBPAGE_TYPE_CONCERT or self::WEBPAGE_TYPE_REHEARSALS
    *
    * @param $handle Optional active data-base handle.
    */
-  public function createProjectWebPage($projectId, $kind = 'concert')
+  public function createProjectWebPage($projectId, $kind = self::WEBPAGE_TYPE_CONCERT)
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
-      throw new \Exception($this->l->t('Empty project-id'));
+      throw new \Exception($this->l->t('Empty project.'));
     }
     $projectName = $project->getName();
 
     switch ($kind) {
-    case 'rehearsals':
+    case self::WEBPAGE_TYPE_REHEARSALS:
       $prefix = $this->l->t('Rehearsals').' ';
       $category = $this->getConfigValue('redaxoRehearsals');
       $module = $this->getConfigValue('redaxoRehearsalsModule');
@@ -1433,27 +1441,60 @@ Whatever.',
   }
 
   /**
-   * Create the infra-structure to the given project.
+   * Create the infra-structure to the given project. The function
+   * assumes that the infrastructure does not yet exist and will
+   * remove any existing parts of the infrastructure on error.
    *
-   * @param array|Entities\Project $project Either the project entity
+   * @param array|int|Entities\Project $projectOdId Either the project entity
    * or an array with at least the entries for the id and name fields.
    *
    */
-  public function createProjectInfraStructure($project)
+  public function createProjectInfraStructure($projectOrId)
   {
-    // $newvals contains the new values
-    $projectId   = $project['id'];
-    $projectName = $project['name'];
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
 
-    // Also create the project folders.
-    $projectPaths = $this->ensureProjectFolders($projectId, $projectName);
+    $runQueue = (new UndoableRunQueue($this->Logger(), $this->l10n()))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          $projectPaths = $this->ensureProjectFolders($project->getId(), $project->getName());
+        },
+        function() use ($project) {
+          $this->logInfo('TRY REMOVE FOLDERS FOR ' . $project->getId());
+          $this->removeProjectFolders($project->getId());
+        }))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          $this->generateProjectWikiPage($project->getId(), $project->getName());
+          $this->generateWikiOverview();
+        },
+        function() use ($project) {
+          $this->logInfo('TRY DELETE WIKI PAGE FOR ' . $project->getId());
+          $this->deleteProjectWikiPage($project);
+          $this->generateWikiOverview([ $project->getId(), ]);
+        }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          // Generate an empty offline page template in the public web-space
+          $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_CONCERT);
+          $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_REHEARSALS);
+        },
+        function() use ($project) {
+           $webPages = $project->getWebPages();
+           foreach ($webPages as $page) {
+             // ignore errors
+             $this->deleteProjectWebPage($project->getId(), $page);
+           }
+        }
+      ));
 
-    $this->generateWikiOverview();
-    $this->generateProjectWikiPage($projectId, $projectName);
-
-    // Generate an empty offline page template in the public web-space
-    $this->createProjectWebPage($projectId, 'concert');
-    $this->createProjectWebPage($projectId, 'rehearsals');
+    try {
+      $runQueue->executeActions();
+    } catch (Exceptions\UndoableRunQueueException $qe) {
+      $qe->getRunQueue()->executeUndo();
+      throw new \RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId(I)), $qe->getCode(), $qe);
+    }
   }
 
   /**
@@ -1537,7 +1578,7 @@ Whatever.',
          }))
        ->register(new GenericUndoable(
          function() use ($project) {
-           throw new \Exception("DEBUG BLOCKER");
+           //throw new \Exception("DEBUG BLOCKER");
            try {
              $pageVersion = $this->deleteProjectWikiPage($project);
            } catch (\Throwable $t) {
