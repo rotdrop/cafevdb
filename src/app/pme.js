@@ -33,7 +33,7 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
-
+import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import pmeTweaks from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
@@ -257,6 +257,17 @@ const pmePost = function(post, callbacks) {
     });
 };
 
+const blockTableDialog = function(dialogHolder) {
+  const $dialogWidget = dialogHolder.dialog('widget');
+  $dialogWidget.data('z-index', parseInt($dialogWidget.css('z-index')));
+  $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+};
+
+const unblockTableDialog = function(dialogHolder) {
+  dialogHolder.dialog('widget').removeClass(pmeToken('table-dialog-blocked'));
+  dialogHolder.removeData('z-index');
+};
+
 /**
  * Reload the current PME-dialog.
  *
@@ -279,7 +290,12 @@ const tableDialogReload = function(options, callback, triggerData) {
   const containerSel = '#' + options.dialogHolderCSSId;
   const container = $(containerSel);
 
-  container.dialog('widget').addClass(pmeToken('table-dialog-blocked'));
+  if (container.data(pmeToken('reloading'))) {
+    return;
+  }
+  container.data(pmeToken('reloading'), true);
+
+  blockTableDialog(container);
   container.find(pmeNavigationSelector('reload')).addClass('loading');
 
   // Possibly delay reload until validation handlers have done their
@@ -295,14 +311,14 @@ const tableDialogReload = function(options, callback, triggerData) {
 
     pmePost(post, {
       fail(xhr, status, errorThrown) {
-        const dialogWidget = container.dialog('widget');
-
         Page.busyIcon(false);
-        dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
+        unblockTableDialog(container);
         container.find(pmeNavigationSelector('reload')).removeClass('loading');
+        container.data(pmeToken('reloading'), false);
       },
       done(htmlContent, historySize, historyPosition) {
         tableDialogReplace(container, htmlContent, options, callback, triggerData);
+        container.data(pmeToken('reloading'), false);
       },
     });
   });
@@ -408,6 +424,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       'click',
       ReloadButtonSel,
       function(event, triggerData) {
+
         const submitButton = $(this);
 
         const reloadName = submitButton.attr('name');
@@ -427,8 +444,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           options.modified = true;
         }
         tableDialogReload(options, changeCallback, triggerData);
-        // might be costly?
-        // pmeSubmitOuterForm(options.ambientContainerSelector);
 
         return false;
       });
@@ -455,14 +470,21 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     .off('click', saveButtonSel)
     .on('click', saveButtonSel, function(event, triggerData) {
 
+      if (container.data(pmeToken('saving'))) {
+        return false;
+      }
+      container.data(pmeToken('saving'), true);
+
       const reloadButton = container.find(pmeNavigationSelector('reload'));
       reloadButton.addClass('loading');
+      Page.busyIcon(true);
 
       // Brief front-end-check for empty required fields.
       if (!checkInvalidInputs(
         container, function() {
           reloadButton.removeClass('loading');
           Page.busyIcon(false);
+          container.data(pmeToken('saving'), false);
         })) {
         return false;
       }
@@ -490,46 +512,51 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           }
         }
 
-        Notification.hide(function() {
-          const dialogWidget = container.dialog('widget');
+        blockTableDialog(container);
 
-          dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+        // @todo Error handling is flaky
+        pmePost(post, {
+          fail(xhr, status, errorThrown) {
+            unblockTableDialog(container);
+            reloadButton.removeClass('loading');
+            Page.busyIcon(false);
+            container.data(pmeToken('saving'), false);
+          },
+          done(htmlContent, historySize, historyPosition) {
+            const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
+            if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
+              // Some error occured. Stay in the given mode.
 
-          // @todo Error handling is flaky
-          pmePost(post, {
-            fail(xhr, status, errorThrown) {
-              dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-              reloadButton.removeClass('loading');
-              Page.busyIcon(false);
-            },
-            done(htmlContent, historySize, historyPosition) {
-              const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
-              if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
-                // Some error occured. Stay in the given mode.
+              Notification.show(t(appName, 'An error occurred.'
+                                  + ' The data has not been saved.'
+                                  + ' Unfortunately, no further information is available.'
+                                  + ' Sorry for that.'), { timeout: 15 });
+              tableDialogReplace(container, htmlContent, options, changeCallback);
+              container.data(pmeToken('saving'), false);
+              return;
+            }
 
-                Notification.show(t(appName, 'An error occurred.'
-                                    + ' The data has not been saved.'
-                                    + ' Unfortunately, no further information is available.'
-                                    + ' Sorry for that.'), { timeout: 15 });
-                tableDialogReplace(container, htmlContent, options, changeCallback);
-                return;
-              }
-
-              if (options.initialViewOperation && deleteButton.length <= 0) {
-                // return to initial view, but not after deletion
-                dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
-                options.reloadName = options.initialName;
-                options.reloadValue = options.initialValue;
-                tableDialogReload(options, changeCallback, triggerData);
-              } else {
-                if (container.hasClass('ui-dialog-content')) {
-                  container.dialog('close');
+            if (options.initialViewOperation && deleteButton.length <= 0) {
+              // return to initial view, but not after deletion
+              unblockTableDialog(container);
+              options.reloadName = options.initialName;
+              options.reloadValue = options.initialValue;
+              tableDialogReload(options, changeCallback, triggerData);
+            } else {
+              if (container.hasClass('ui-dialog-content')) {
+                container.dialog('close');
+                if (!options.modified) {
+                  // otherwise the close() method will reload the
+                  // form which in turn will update the icon state.
+                  Page.busyIcon(false);
                 }
+              } else {
+                reloadButton.removeClass('loading');
+                Page.busyIcon(false);
               }
-              reloadButton.removeClass('loading');
-              Page.busyIcon(false);
-            },
-          });
+            }
+            container.data(pmeToken('saving'), false);
+          },
         });
       });
       return false;
@@ -540,6 +567,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     reason: 'dialogOpen',
     triggerData,
   });
+
+  if (options.modified && options.ambientContainerSelector) {
+    // might be costly?
+    pmeSubmitOuterForm(options.ambientContainerSelector);
+  }
 };
 
 /**
@@ -663,7 +695,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
       dialogHolder.find(pmeNavigationSelector('reload')).addClass('loading');
       if (tableOptions.modalDialog) {
-        CAFEVDB.modalizer(true);
+        modalizer(true);
       }
 
       dialogHolder.cafevDialog({
@@ -704,7 +736,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             return false;
           });
 
-          dialogWidget.addClass(pmeToken('table-dialog-blocked'));
+          blockTableDialog(dialogHolder);
 
           // general styling, avoid :submit handlers in dialog mode
           pmeInit(containerSel, true);
@@ -750,7 +782,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                   // installInputChosen(containerSel);
                   resizeHandler(parameters);
                   parameters.triggerData.postOpen(dialogHolder);
-                  dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
+                  unblockTableDialog(dialogHolder);
                   CAFEVDB.toolTipsInit(containerSel);
                   Page.busyIcon(false);
                   dialogHolder.find(pmeNavigationSelector('reload')).removeClass('loading');
@@ -794,12 +826,16 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           dialogHolder.find('form input[type="submit"]').remove();
           dialogHolder.remove();
 
-          // Remove modal plane if appropriate
-          CAFEVDB.modalizer(false);
-
           pmeOpenDialogs[containerCSSId] = false;
 
           CAFEVDB.unfocus();
+
+          if (!tableOptions.modified) {
+            // Remove modal plane if appropriate
+            modalizer(false);
+          }
+
+          Notification.hide();
 
           return false;
         },
@@ -850,7 +886,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   }
 
   Page.busyIcon(true);
-  CAFEVDB.modalizer(true);
+  modalizer(true);
 
   templateRenderer = templateRenderer.val();
   const template = Page.templateFromRenderer(templateRenderer);
@@ -865,7 +901,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   pmePost(post, {
     fail(xhr, status, errorThrown) {
       Page.busyIcon(false);
-      CAFEVDB.modalizer(false);
+      modalizer(false);
     },
     done(htmlContent, historySize, historyPosition) {
 
@@ -886,7 +922,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
         /* kill the modalizer */
         Page.busyIcon(false);
-        CAFEVDB.modalizer(false);
+        modalizer(false);
         CAFEVDB.unfocus(); // move focus away from submit button
 
         container.trigger('pmetable:layoutchange');
