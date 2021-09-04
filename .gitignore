@@ -29,3 +29,5 @@ dependencygraph.svg
 /*.html
 stats.json
 dev-scripts/composer.phar
+secrets.csv
+wrapper-build-hash

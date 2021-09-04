@@ -35,6 +35,12 @@ COMPOSER_OPTIONS=--prefer-dist
 
 WRAPPER_NAMESPACE = OCA\\CAFEVDB\\Wrapped
 
+# hash dependencies which occasionally are hacked
+WRAPPER_GIT_DEPENDENCIES =\
+ 3rdparty/doctrine-orm\
+ 3rdparty/gedmo-doctrine-extensions\
+ 3rdparty/mediamonks-doctrine-extensions
+
 NAMESPACE_WRAPPER_DIRS =\
  lib/Database/Doctrine\
  lib/Database/Legacy
@@ -136,10 +142,19 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
+WRAPPER_PREV_BUILD_HASH = $(shell cat wrapper-build-hash 2> /dev/null || echo)
+WRAPPER_GIT_BUILD_HASH = $(shell git rev-parse $(subst %,HEAD:,$(WRAPPER_GIT_DEPENDENCIES))\
+ | git hash-object --stdin)
+
+wrapper-build-hash:
+ifneq ($(WRAPPER_PREV_BUILD_HASH), $(WRAPPER_GIT_BUILD_HASH))
+	echo $(WRAPPER_GIT_BUILD_HASH) > $@
+endif
+
 composer-wrapped.lock: composer-wrapped.json
 	rm -f composer-wrapped.lock
 
-$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	mkdir -p $(BUILDDIR)
 	ln -fs ../3rdparty $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
