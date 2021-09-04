@@ -233,24 +233,6 @@ class CalDavService
     return null;
   }
 
-  /** Get a calendar with the given its uri.
-   *
-   * @return ICalendar[]
-   *
-   * @bug This function uses internal APIs.
-   */
-  public function calendarByUri($uri, $userId = null)
-  {
-    empty($userId) && $userId = $this->userId();
-    $principal = "principals/users/$userId";
-
-    $calendar = $this->calDavBackend->getCalendarByUri($principal, $uri);
-    if (!empty($calendar) && isset($calendar['id']))  {
-      return $this->calendarById($calendar['id']);
-    }
-    return null;
-  }
-
   private function calendarWritable(ICalendar $calendar)
   {
     $perms = $calendar->getPermissions();
