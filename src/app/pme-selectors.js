@@ -28,8 +28,6 @@
 import { $, jQuery } from './globals.js';
 import * as PHPMyEdit from './pme-state.js';
 
-const camelCase = require('camelcase');
-
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.prefix;
 const PMEPrefix = PHPMyEdit.ucPrefix;
