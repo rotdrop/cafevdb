@@ -37,6 +37,7 @@ import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
 import * as DialogUtils from './dialog-utils.js';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
+import modalizer from './modalizer.js';
 
 require('projects.scss');
 
@@ -108,7 +109,7 @@ const wikiPopup = function(post, reopen) {
     function() {
       // close callback
       // Remove modal plane if appropriate
-      CAFEVDB.modalizer(false);
+      modalizer(false);
     });
 };
 
@@ -443,53 +444,56 @@ const pmeFormInit = function(containerSel) {
      * @param {Object} button TBD.
      */
     const verifyYearName = function(postAddOn, button) {
+
+      if (container.data('project-validating')) {
+        return;
+      }
+      container.data('project-validating', true);
+
       /* Forward the request to the server via Ajax
        * technologies.
        */
       let post = form.serialize();
       post += '&control=' + postAddOn;
 
-      Notification.hide(function() {
-        const cleanup = function() {
-          if (name.val() === '') {
-            name.val(oldprojectName);
-          }
-          if (year.val() === '') {
-            year.val(oldProjectYear);
-            year.trigger('chosen:updated');
-          }
-        };
-        $.post(generateUrl('validate/projects/name'), post)
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown);
+      const cleanup = function() {
+        if (name.val() === '') {
+          name.val(oldprojectName);
+        }
+        if (year.val() === '') {
+          year.val(oldProjectYear);
+          year.trigger('chosen:updated');
+        }
+        container.data('project-validating', false);
+      };
+      Notification.hide();
+      $.post(generateUrl('validate/projects/name'), post)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+          cleanup();
+        })
+        .done(function(rqData) {
+          if (!Ajax.validateResponse(rqData, [
+            'projectName', 'projectYear',
+          ])) {
             cleanup();
-          })
-          .done(function(rqData) {
-            if (!Ajax.validateResponse(rqData, [
-              'projectName', 'projectYear',
-            ])) {
-              cleanup();
+          }
+          Notification.messages(rqData.message);
+          name.val(rqData.projectName);
+          year.val(rqData.projectYear);
+          year.trigger('chosen:updated');
+          oldProjectYear = rqData.projectYear;
+          oldprojectName = rqData.projectName;
+          if (postAddOn === 'submit') {
+            if (typeof button !== 'undefined') {
+              $(form).off('click', submitSel);
+              button.trigger('click');
+            } else {
+              form.submit();
             }
-            if (rqData.message !== '') {
-              Notification.showTemporary(
-                rqData.message, { isHTML: true, timeout: 300 }
-              );
-            }
-            name.val(rqData.projectName);
-            year.val(rqData.projectYear);
-            year.trigger('chosen:updated');
-            oldProjectYear = rqData.projectYear;
-            oldprojectName = rqData.projectName;
-            if (postAddOn === 'submit') {
-              if (typeof button !== 'undefined') {
-                $(form).off('click', submitSel);
-                button.trigger('click');
-              } else {
-                form.submit();
-              }
-            }
-          });
-      });
+          }
+          container.data('project-validating', false);
+        });
     };
 
     projectType.off('change').on('change', function(event) {
@@ -563,6 +567,7 @@ const pmeFormInit = function(containerSel) {
  */
 const projectWebPageRequest = function(post, container) {
 
+  Notification.hide();
   $.post(generateUrl('projects/webpages/' + post.action), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
