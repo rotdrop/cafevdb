@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -87,7 +88,7 @@ class ProjectsController extends Controller {
           }
         }
         $control = $this->parameterService->getParam('control', 'name');
-        $projectId = $this->pme->getCGIRecordId();
+        list('id' => $projectId,) = $this->pme->getCGIRecordId();
         $projectName = $projectValues['name'];
         $projectYear = $projectValues['year'];
         $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == 'temporary';
@@ -156,9 +157,8 @@ class ProjectsController extends Controller {
         $projects = $repository->shortDescription();
         foreach ($projects['projects'] as $id => $nameYear) {
           if ($id != $projectId && $nameYear['name'] == $projectName && $nameYear['year'] == $projectYear) {
-            return self::grumble($this->l->t("A project with the name ``%s'' already exists in the year %s. "
-                                             . "Please choose a different name or year.",
-                                             [ $projectName, $projectYear ]));
+            return self::grumble($this->l->t('A project with the name "%1$s" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year.',
+                                             [ $projectName, $projectYear, $id, $projectId ]));
           }
         }
         return self::dataResponse(['projectYear' => $projectYear,
