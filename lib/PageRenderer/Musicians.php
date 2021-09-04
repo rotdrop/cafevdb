@@ -147,6 +147,10 @@ class Musicians extends PMETableViewBase
     $this->phoneNumberService = $phoneNumberService;
     $this->insuranceService = $insuranceService;
     $this->projectMode = false;
+
+    if (empty($this->musicianId)) {
+      $this->musicianId = $this->pmeRecordId['id']??null;
+    }
   }
 
   public function cssClass():string { return self::CSS_CLASS; }
@@ -224,6 +228,8 @@ make sure that the musicians are also automatically added to the
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      // overwrite to catch copy/insert
+      'musicianId' => $this->musicianId,
     ];
 
     // Name of field which is the unique key
@@ -836,6 +842,13 @@ make sure that the musicians are also automatically added to the
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][] = function(&$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+      // add the new musician id to the persistent CGI array
+      $pme->addPersistentCgi([
+        'musicianId' => $newVals['id'],
+      ]);
+      return true;
+    };
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
 

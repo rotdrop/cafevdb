@@ -111,9 +111,9 @@ class Projects extends PMETableViewBase
     $this->eventsService = $eventsService;
     $this->imagesService = $imagesService;
 
-    if (empty($this->projectId) || $this->projectId < 0 || empty($this->projectName)) {
-      $this->projectId = $this->pmeRecordId['id'] ?? $this->pmeRecordId;
-      if ($this->projectId > 0) {
+    if (empty($this->projectId)) {
+      $this->projectId = $this->pmeRecordId['id']??null;
+      if (!empty($this->projectId)) {
         $this->projectName = $this->projectService->fetchName($this->projectId);
       }
     }
@@ -163,6 +163,9 @@ class Projects extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      // overwrite with record id to catch changes after copy/insert
+      'projectId' => $this->projectId,
+      'projectName' => $this->projectName,
     ];
 
     // Name of field which is the unique key
@@ -379,7 +382,6 @@ class Projects extends PMETableViewBase
         ],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
-          $this->logInfo('ROW ' . print_r($row, true));
           $post = [
             'projectInstruments' => $value,
             'template' => 'project-instrumentation-numbers',
@@ -477,7 +479,7 @@ __EOT__;
   JOIN numbers n
     ON n.n <= GREATEST(2, (pin.voice+1)) AND n.n > 0
   WHERE
-    pin.project_id = $this->projectId OR $this->projectId <= 0
+    pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
     project_id, instrument_id, n
   HAVING
@@ -514,7 +516,7 @@ __EOT__;
   JOIN numbers n
     ON n.n <= pin.voice AND n.n >= 0
   WHERE
-    pin.project_id = $this->projectId OR $this->projectId <= 0
+    pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
     project_id, instrument_id, n
   HAVING
@@ -1136,17 +1138,17 @@ project without a poster first.");
   /**
    * phpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param $pme The phpMyEdit instance
+   * @param OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $pme The phpMyEdit instance
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $step 'before' or 'after'
+   * @param string $step 'before' or 'after'
    *
-   * @param $oldVals Self-explanatory.
+   * @param array $oldVals Self-explanatory.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
+   * @param array &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newVals Set of new values, which may also be modified.
+   * @param array &$newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
@@ -1160,6 +1162,12 @@ project without a poster first.");
     if (empty($newProjectId)) {
       throw new \RuntimeException($this->l->t('Copying participants is requested, but the new project id is not given.'));
     }
+
+    // add the new project id to the persistent CGI array
+    $pme->addPersistentCgi([
+      'projectId' => $newProjectId,
+      'projectName' => $newVals['name'],
+    ]);
 
     if ($this->copyOperation()) {
       $oldProjectId = $this->pmeRecordId['id']??null;
@@ -1188,7 +1196,7 @@ project without a poster first.");
         /** @var Entities\Project $newProject */
         $newProject = $repository->find($newProjectId);
 
-        $this->debug('FIELDS NEW PROJECT ' . $newProject->getParticipantFields()->count());
+        $this->debug('#EXISTING FIELDS NEW PROJECT ' . $newProject->getParticipantFields()->count());
 
         /** @var Entities\ProjectParticipantField $oldField */
         foreach ($oldProject->getParticipantFields()->matching(DBUtil::criteriaWhere([ 'id' => $participantFields ])) as $oldField) {
