@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,25 +21,28 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Common;
+namespace OCA\CAFEVDB\Exceptions;
 
-/**
- * Simplistic do-undo interface in order to be stacked into a
- * do-undo-list.
- */
-interface IUndoable
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+
+class UndoableRunQueueException extends \RuntimeException
 {
-  /** Do something. */
-  public function do();
+  /** @var UndoableRunQueue */
+  protected $runQueue;
 
-  /** Undo that what was done by do(). */
-  public function undo();
+  public function __construct(UndoableRunQueue $queue, string $message, int $code = 0, $previous = null)
+  {
+    parent::__construct($message, $code, $previous);
+    $this->runQueue = $queue;
+  }
 
-  /** Reset initial state */
-  public function reset();
+  public function getRunQueue():UndoableRunQueue
+  {
+    return $this->runQueue;
+  }
+
+  public function setRunQueue(UndoableRunQueue $queue)
+  {
+    $this->runQueue = $queue;
+  }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

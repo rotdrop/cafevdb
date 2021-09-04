@@ -54,6 +54,11 @@ class GenericUndoable implements IUndoable
     if (!empty($this->undoCallback)) {
       call_user_func($this->undoCallback, $this->done);
     }
+    $this->reset();
+  }
+
+  /** {@inheritdoc} */
+  public function reset() {
     $this->done = null;
   }
 }

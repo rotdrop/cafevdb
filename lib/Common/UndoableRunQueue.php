@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Common;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Exceptions\UndoableRunQueueException;
+
 /**
  * Implement a stack of actions with undo-actions.
  */
@@ -74,12 +76,49 @@ class UndoableRunQueue
         array_unshift($this->undoStack, $action); // at front
       };
     } catch (\Throwable $t) {
-      throw new \Exception(
+      throw new UndoableRunQueueException(
+        $this,
         $this->l->t(
           'Exception during execution of run-queue; number of successful actions: %d.', count($this->undoStack)),
         $t->getCode(),
         $t);
     }
+  }
+
+  /** @return int The total number of registered actions. */
+  public function size():int
+  {
+    return count($this->actionQueue);
+  }
+
+  /** @return bool Whether the queue has been run. */
+  public function active():bool
+  {
+    return is_array($this->undoStack);
+  }
+
+  /**
+   * @return null|int The number of successfully executed actions, or
+   * null if the queue has not yet been executed.
+   */
+  public function executionCount():?int
+  {
+    return $this->undoStack === null ? null : count($this->undoStack);
+  }
+
+  /**
+   * Reset the queue in order to be executed again.
+   */
+  public function reset()
+  {
+    if ($this->undoStack === null) {
+      return;
+    }
+    while (!empty($this->undoStack)) {
+      $action = array_shift($this->undoStack); // from front
+      $action->reset();
+      array_unshift($this->actionQueue, $action); // at front
+    };
   }
 
   /**

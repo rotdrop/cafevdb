@@ -105,6 +105,11 @@ class UndoableFolderRename implements IUndoable
   public function undo() {
     $this->rename($this->newName, $this->oldName);
   }
+
+  /** {@inheritdoc} */
+  public function reset() {
+  }
+
 }
 
 // Local Variables: ***
