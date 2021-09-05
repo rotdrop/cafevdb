@@ -736,6 +736,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return true;
   }
 
+  protected function debugPrintValues($oldValues, $changed, $newValues, $onlyKeys = null, $prefix = null)
+  {
+    $prefix = $prefix ? strtoupper($prefix) . ' ' : '';
+    $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 3);
+    $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 3);
+    $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 3);
+  }
+
   /**
    * The ranking of the mussician's instruments is implicitly stored
    * in the order of the instrument ids. Change the coressponding
@@ -745,6 +753,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   {
     $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
     $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
+
+    $this->debug('FIELDS: ' . $keyField . ' / ' . $rankingField);
+    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);
+
     foreach (['old', 'new'] as $dataSet) {
       $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
       $ranking = [];
@@ -759,6 +771,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     if (array_search($keyField, $changed) !== false) {
       $changed[] = $rankingField;
     }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ], 'after');
 
     return true;
   }
@@ -809,9 +823,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
-    $this->debug('OLDVALS '.print_r($oldvals, true));
-    $this->debug('NEWVALS '.print_r($newvals, true));
-    $this->debug('CHANGED '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     $changeSets = [];
     foreach ($changed as $field) {
@@ -1051,10 +1063,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           Util::unsetValue($changed, $selfField);
         }
 
-        $this->debug('IDENTIFIER '.print_r($identifier, true));
-        $this->debug('ADDIDS '.print_r($addIdentifier, true));
-        $this->debug('REMIDS '.print_r($remIdentifier, true));
-        $this->debug('DELIDS '.print_r($delIdentifier, true));
+        $this->debug('IDENTIFIER ' . print_r($identifier, true));
+        $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
+        $this->debug('ADDIDS ' . print_r($addIdentifier, true));
+        $this->debug('REMIDS ' . print_r($remIdentifier, true));
+        $this->debug('DELIDS ' . print_r($delIdentifier, true));
 
         if (!empty($joinInfo['association'])) {
           // Many-to-many or similar through join table. We modify the
@@ -1159,17 +1172,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // Add new entities
         foreach ($identifier[$multiple]['new'] as $new) {
           if (isset($addIdentifier[$new])) {
-            $this->debug('TRY ADD '.$new);
+            $this->debug('TRY ADD ' . $new);
             $ids = $addIdentifier[$new];
             foreach ($ids as $id) {
+              $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
+              $this->debug('ENTITIY ID '.print_r($entityId, true));
               $entity = $entityClass::create();
               foreach ($entityId as $key => $value) {
                 $entity[$key] = $value;
               }
 
               // set further properties ...
-              $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+              $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
+              $this->debug('MULTIPLE KEYS ' . $multipleIndex);
               foreach ($multipleValues as $column => $dataItem) {
                 $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
                 $meta->setSimpleColumnValue($entity, $column, $value);
@@ -1183,7 +1199,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('TRY MOD '.$new);
             $ids = $remIdentifier[$new];
             foreach ($ids as $id) {
-              $this->debug('REM IDS '.print_r($id, true));
+              $this->debug('REM ID '.print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
               $this->debug('ENTITIY ID '.print_r($entityId, true));
               $entity = $this->find($entityId);
@@ -1197,7 +1213,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               }
 
               // set further properties ...
-              $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+              $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
+              $this->debug('MULTIPLE KEYS ' . $multipleIndex);
               foreach ($multipleValues as $column => $dataItem) {
                 $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
                 $meta->setSimpleColumnValue($entity, $column, $value);
@@ -1242,10 +1259,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
-
-    $this->debug('AFTER OLD '.print_r($oldvals, true));
-    $this->debug('AFTER NEW '.print_r($newvals, true));
-    $this->debug('AFTER CHG '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
     if (!empty($changed)) {
       throw new \RuntimeException($this->l->t('Change-set %s should be empty.', print_r($changed, true)));
@@ -1291,9 +1305,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     Util::unsetValue($changed, 'created');
     Util::unsetValue($changed, 'updated');
 
-    $this->debug('OLDVALS '.print_r($oldvals, true));
-    $this->debug('NEWVALS '.print_r($newvals, true));
-    $this->debug('CHANGED '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     $missingKeys = [];
     foreach ($pme->key as $key => $type) {
@@ -1468,6 +1480,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
 
         $this->debug('ADDIDS FINALLY: '.print_r($addIdentifier, true));
+        $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
 
         if (!empty($joinInfo['association'])) {
           // Many-to-many or similar through join table. We modify the
@@ -1529,7 +1542,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // set further properties ...
             $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
             $this->debug('ENTITY ID ' . print_r($entityId, true));
-            $multipleIndex = $this->compositeKeySlice($multipleKeys, $entityId);
+            $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
+            $this->debug('MULTIPLE KEYS ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
               $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
               $meta->setSimpleColumnValue($entity, $column, $value);
