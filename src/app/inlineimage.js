@@ -621,6 +621,7 @@ const photoPopup = function(image) {
       if ($photoPopup) {
         $photoPopup.dialog('close');
         $appContent.removeData('photoPopup');
+        $appContent.removeClass('has-photo-popup');
       }
     });
     $appContent.data('hasPhotoPopupCloser', true);
