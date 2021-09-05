@@ -497,8 +497,8 @@ class Navigation
     $form = '';
     $value = '';
     $title = '';
-    $post = [];
-    $json = [];
+    $post = null;
+    $json = null;
 
     switch ($id) {
 
@@ -621,6 +621,7 @@ and even edit the public web-pages for the project and other things.");
       $json = ['template' => 'project-instrumentation-numbers',
                'projectName' => $projectName,
                'projectId' => $projectId];
+
       break;
 
     case 'sepa-bank-accounts':
@@ -662,6 +663,9 @@ to and from the registered bank accounts.');
       $post = ['template' => 'insurance-brokers'];
       break;
     }
+
+    $json = $json ?? $post;
+    $post = $post ?? $json;
 
     $post = http_build_query($post, '', '&');
     $json = htmlspecialchars(json_encode($json));
