@@ -673,7 +673,7 @@ __EOT__;
       'options'  => $programDisplay,
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => ['postfix' => ' projectprogram'],
+      'css'      => ['postfix' => [ 'projectprogram', ], ],
       'sql'      => '$main_table.id',
       'php|' . $programDisplay => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id']; // and also $value
@@ -690,10 +690,10 @@ __EOT__;
       'options'  => $posterDisplay,
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => ['postfix' => ' projectposters'],
+      'css'      => ['postfix' => [ 'projectposters', ], ],
       'sql'      => '$main_table.id',
       'php|' . $posterDisplay => function($value, $action, $field, $row, $recordId, $pme) {
-        $projectId = $recordId['id']; // and also $value
+        $projectId = $recordId['id'];
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
         $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
         if (empty($imageIds) || ($action != 'display')) {
@@ -702,6 +702,7 @@ __EOT__;
         $numImages = count($imageIds);
         $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
         $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
+        $columns = self::MAX_POSTER_COLUMNS;
         $html = '';
         for ($i = 0; $i < $numImages; ++$i) {
           $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);
@@ -1273,6 +1274,10 @@ project without a poster first.");
     //throw new \RuntimeException('DEBUG STOPPER');
 
     $this->projectService->createProjectInfraStructure($newVals);
+
+    $this->projectId = $newProjectId;
+    $this->projectName = $newVals['name'];
+
     return true;
   }
 
@@ -1287,6 +1292,7 @@ project without a poster first.");
     }
 
     $this->projectService->renameProject($oldVals,  $newVals);
+    $this->projectName = $newVals['name'];
 
     return true;
   }
@@ -1303,6 +1309,8 @@ project without a poster first.");
     $this->projectService->deleteProject($pme->rec);
 
     $changed = []; // signal nothing more to delete
+
+    $this->projectName = $this->l->t('%s (deleted)', $this->projectName);
 
     return true;
   }
