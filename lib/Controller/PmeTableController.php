@@ -148,6 +148,7 @@ class PmeTableController extends Controller {
    */
   private function load()
   {
+    $this->logInfo('Start');
     try {
       $templateRenderer = $this->parameterService->getParam('templateRenderer');
       $template = $this->parameterService->getParam('template');
@@ -205,6 +206,9 @@ class PmeTableController extends Controller {
 
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
+      }
+
+      if ($renderer->needPhpSession()) {
         $this->logInfo('Closing session');
         $this->session->close();
       }
