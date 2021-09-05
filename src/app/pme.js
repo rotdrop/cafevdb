@@ -218,6 +218,13 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   $.fn.cafevTooltip.remove();
   container.off(); // remove ALL delegate handlers
   container.html(content);
+  container.find('iframe').on('load', function(event) {
+    const $this = $(this);
+    const $data = $this.data();
+    $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
+    console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+  });
+
   container.find(pmeNavigationSelector('reload')).addClass('loading');
 
   // general styling, avoid submit handlers by second argument
@@ -435,7 +442,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             && !submitButton.hasClass(pmeToken('delete'))
             && !submitButton.hasClass(pmeToken('copy'))
             && !submitButton.hasClass(pmeToken('reload'))) {
-          // so this is pme-more, morechange
+          // so this is pme-more, morechange, apply
 
           if (!checkInvalidInputs(container)) {
             return false;
@@ -691,6 +698,13 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       const containerSel = '#' + containerCSSId;
       const dialogHolder = $('<div id="' + containerCSSId + '" class="resize-target"></div>');
       dialogHolder.html(htmlContent);
+      dialogHolder.find('iframe').on('load', function(event) {
+        const $this = $(this);
+        const $data = $this.data();
+        $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+      });
+
       dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
 
       dialogHolder.find(pmeNavigationSelector('reload')).addClass('loading');
@@ -912,6 +926,14 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
       WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
       pmeInner(container).html(htmlContent);
+
+      container.find('iframe').on('load', function(event) {
+        const $this = $(this);
+        const $data = $this.data();
+        $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+      });
+
       pmeInit(selector);
       WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
