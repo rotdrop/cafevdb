@@ -793,6 +793,7 @@ project without a poster first.");
         $url .= '?timeStamp='.time();
         if ((int)$imageId >= ImagesService::IMAGE_ID_PLACEHOLDER) {
           $url .= '&imageId='.urlencode($imageId);
+          $url .= '&preview=128';
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
@@ -807,6 +808,7 @@ project without a poster first.");
           'ownerId' => urlencode($postersFolder),
           'imageId' => urlencode($imageId),
           'imageSize' => -1,
+          'preview' => 128,
         ]);
         $imagearea = ''
           .'<div data-image-info=\''.$imageInfo.'\' class="tip project-poster propertycontainer cafevdb_inline_image_wrapper image-wrapper multi '.$sizeCss.'" title="'
