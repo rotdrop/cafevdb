@@ -69,18 +69,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       ],
       'column' => 'id',
     ],
-    // [
-    //   'table' => self::PROJECT_PARTICIPANTS_TABLE,
-    //   'entity' => Entities\ProjectParticipant::class,
-    //   'identifier' => [
-    //     'project_id' => 'project_id',
-    //     'musician_id' => [
-    //       'table' => self::PROJECT_INSTRUMENTS_TABLE,
-    //       'column' => 'musician_id',
-    //     ],
-    //   ],
-    //   'column' => 'registration',
-    // ],
   ];
 
   public function __construct(
@@ -189,7 +177,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'table'       => self::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
-          'columns' => [ 'name' ],
+          'columns' => [ '$table.name' ],
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
@@ -201,7 +189,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'table'       => self::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
-          'columns'   => [ 'name' ],
+          'columns'   => [ '$table.name' ],
           'cast'   => [ false ],
           'ifnull' => [ false ],
         ],
@@ -209,10 +197,17 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'orderby'     => '$table.year DESC',
         'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
         'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
-        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
       ],
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      [
+        'name'  => $this->l->t('Project Name'),
+        'input' => 'VHR',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'year',
@@ -239,7 +234,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order',
-        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
       //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -285,6 +280,22 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'filters' => null,
       ]);
     $this->addSlug('voice', $opts['fdd']['voice']);
+
+    $opts['fdd']['num_voices'] = [
+      'name' => $this->l->t('#Voices'),
+      'select' => 'N',
+      'sql' => 'MAX($join_col_fqn)',
+      'values' => [
+        'table' => self::TABLE,
+        'column' => 'voice',
+        'join' => '$main_table.instrument_id = $join_table.instrument_id',
+      ],
+      'align' => 'right',
+      'sort' => $sort,
+      'filter'       => [
+        'having' => true,
+      ],
+    ];
 
     // required quantity
     $opts['fdd']['quantity'] = [
