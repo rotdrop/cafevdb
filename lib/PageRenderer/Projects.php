@@ -529,7 +529,7 @@ __EOT__;
             'divs' => '',
           ],
           'orderby' => '$table.sort_order ASC, $table.n ASC',
-          'join' => false,
+          'join' => '$join_table.project_id = $main_table.id',
         ],
         //'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
         'align|LF' => 'center',
@@ -1098,6 +1098,8 @@ project without a poster first.");
    */
   public function beforeUpdateTrigger(&$pme, $op, $step, &$oldVals, &$changed, &$newVals)
   {
+    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
+
     if (array_search('name', $changed) !== false) {
 
       if (isset($newVals['name']) && $newVals['name']) {
@@ -1112,18 +1114,34 @@ project without a poster first.");
     $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
     if (array_search($instrumentsColumn, $changed) !== false
         || array_search($voicesColumn, $changed) !== false) {
+
       // Add zeros to the voices data as the "0" voice is needed for
       // convenience in either case, otherwise adding musicians to the
       // ProjectParticipants table fails.
-      foreach (['oldVals', 'newVals'] as $dataSet) {
-        foreach (Util::explode(',', ${$dataSet}[$instrumentsColumn]??[]) as $instrument) {
-          ${$dataSet}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
-                                     . (${$dataSet}[$voicesColumn]??'');
+      foreach (['old', 'new'] as $dataSet) {
+        $dataArray = $dataSet . 'Vals';
+        ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??[]);
+        foreach (${$dataSet . 'Instruments'} as $instrument) {
+          ${$dataArray}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
+                                     . (${$dataArray}[$voicesColumn]??'');
         }
-        $items = Util::explode(',', ${$dataSet}[$voicesColumn]);
+        $items = Util::explode(',', ${$dataArray}[$voicesColumn]);
         sort($items, SORT_NATURAL);
-        ${$dataSet}[$voicesColumn] = implode(',', array_unique($items));
+        ${$dataArray}[$voicesColumn] = implode(',', array_unique($items));
       }
+
+      // Remove the voices definitions for removed instruments
+      $newVoiceItems = Util::explode(',', $newVals[$voicesColumn]??[]);
+      foreach ($newVoiceItems as $key => $voiceItem) {
+        list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
+        if (array_search($instrument, $newInstruments) === false) {
+          $this->debug('REMOVE VOICE ' . $voice . ' FOR INSTRUMENT ' . $instrument);
+          unset($newVoiceItems[$key]);
+        }
+      }
+      $newVals[$voicesColumn] = implode(',', $newVoiceItems);
+
+      // Update changed to reflect the manipulation
       foreach ([$instrumentsColumn, $voicesColumn] as $column) {
         Util::unsetValue($changed, $column);
         if  ($oldVals[$column] != $newVals[$column]) {
@@ -1131,6 +1149,8 @@ project without a poster first.");
         }
       }
     }
+
+    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'after');
 
     return true;
   }
