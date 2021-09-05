@@ -176,6 +176,7 @@ div.cfgerror {
   }
 
   &.exception {
+
     &.name {
       display:block;
       font-weight:bold;
@@ -199,6 +200,31 @@ div.cfgerror {
     &.trace p {
       /* white-space:nowrap; */
     }
+
+    /* Exception extracted from Nextcloud HTML response */
+    h3 {
+      font-weight:bold;
+    }
+    .trace {
+      display:none;
+      &.visible {
+        display: block;
+      }
+      color:blue;
+      margin: 0 2em 0 2em;
+      max-width:100%;
+      overflow:auto;
+    }
+    ul.technical li {
+      &.class, &.code, &.file, &.line {
+        display:inline;
+      }
+      &.message {
+        color:red;
+        font-weight:bold;
+      }
+    }
+
   }
 
   a {
@@ -225,6 +251,7 @@ div.cfgerror {
 
 .cafevdb.error-page .error-wide {
   margin-left: 0px !important;
+  width:auto!important;
 }
 
 /*******************************************************************************

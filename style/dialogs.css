@@ -120,6 +120,7 @@
 .oc-dialog.maximize-width .error-wide {
   width: auto;
   white-space: nowrap;
+  max-width: unset;
 }
 
 .oc-dialog.maximize-width .error-wide pre {

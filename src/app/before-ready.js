@@ -44,8 +44,19 @@ const documentReady = function() {
     $('.oc-dialog').toggleClass('maximize-width');
   });
 
-  $('body').on('click',  '.oc-dialog .exception.error.name', function() {
+  $('body').on('click', '.oc-dialog .exception.error.name', function() {
     $(this).next().toggleClass('visible');
+  });
+
+  $('body').on('click', '.oc-dialog .error.exception ul.technical', function() {
+    $(this).nextAll('.trace').toggleClass('visible');
+  });
+
+  $('body').on('click', '.oc-dialog .error.exception .trace.visible', function() {
+    const $this = $(this);
+    $this.removeClass('visible');
+    $this.next('.trace').removeClass('visible');
+    $this.prev('.trace').removeClass('visible');
   });
 
   // @TODO move to global state context
@@ -93,14 +104,14 @@ const documentReady = function() {
     });
 
   // Display the instrumentation numbers in a dialog widget
-  content.on(
-    'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
-    function(event) {
-      event.stopImmediatePropagation(); // this is vital
-      const data = $(this).data('json');
-      Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
-      return false;
-    });
+  // content.on(
+  //   'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
+  //   function(event) {
+  //     event.stopImmediatePropagation(); // this is vital
+  //     const data = $(this).data('json');
+  //     Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
+  //     return false;
+  //   });
 
   CAFEVDB.addReadyCallback(function() {
     $('input.alertdata.cafevdb-page').each(function(index) {
