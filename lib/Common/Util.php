@@ -127,6 +127,21 @@ class Util
     return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
   }
 
+  public static function arraySliceKeys($array, $keys = null)
+  {
+    if ($keys === null) {
+      return is_array($array) ? $array : [];
+    }
+    if (!is_array($keys)) {
+      $keys = [ $keys ];
+    }
+    if (!is_array($array)) {
+      return [];
+    } else {
+      return array_intersect_key($array, array_fill_keys($keys, '1'));
+    }
+  }
+
   /**
    * Explode, but omit empty array members, i.e. return empty array
    * for empty string.
