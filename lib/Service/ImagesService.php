@@ -24,6 +24,8 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\ICache;
+use OCP\IPreview;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -47,14 +49,19 @@ class ImagesService
   /** @var ICache */
   private $fileCache;
 
+  /** @var IPreview */
+  private $previewGenerator;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
     , ICache $fileCache
+    , IPreview $previewGenerator
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->fileCache = $fileCache;
+    $this->previewGenerator = $previewGenerator;
     $this->l = $this->l10n();
   }
 
@@ -113,6 +120,56 @@ EOT;
   public function deleteTemporaryImage(string $tmpKey)
   {
     $this->fileCache->remove($tmpKey);
+  }
+
+  /**
+   * Generate a preview image. Redirect to self::getImage() if the image is not file-based.
+   */
+  public function getPreviewImage($joinTable, $ownerId, $imageId = self::IMAGE_ID_ANY, $width = -1 , $height = -1)
+  {
+    if ($joinTable != self::USER_STORAGE) {
+      return $this->getImage($joinTable, $ownerId, $imageId);
+    }
+
+    $image = null;
+    $fileName = null;
+
+    try {
+      // $ownerId is a directory, $imageId a file in that directory
+      /** @var UserStorage $storage */
+      $storage = $this->di(UserStorage::class);
+      $directory = $storage->getFolder($ownerId);
+      /** @var \OCP\Files\File $file */
+      if ($imageId == self::IMAGE_ID_ANY) {
+        /** @var \OCP\Files\Node $node */
+        foreach ($directory->getDirectoryListing() as $node) {
+          if ($node->getType() == \OCP\Files\Node::TYPE_FILE) {
+            $file = $node;
+            break;
+          }
+        }
+      } else {
+        $file = $directory->get($imageId);
+      }
+      if (empty($file)) {
+        throw new \RuntimeException($this->l->t('File "%s" not found.', $imageId));
+      }
+
+      /** @var ISimpleFile $previewFile */
+      $previewFile = $this->previewGenerator->getPreview($file, $width, $height);
+      if (empty($previewFile)) {
+        throw new \RuntimeException($this->l->t('Failed to generate preview for file "%s".', $imageId));
+      }
+
+      $image = new \OCP\Image();
+      $image->loadFromData($previewFile->getContent());
+      $fileName = $file->getName();
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+
+    return [ $image, $fileName ];
   }
 
   /**

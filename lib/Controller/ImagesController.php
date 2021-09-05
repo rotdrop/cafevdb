@@ -78,7 +78,7 @@ class ImagesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function get($joinTable, $ownerId, $imageId = ImagesService::IMAGE_ID_ANY, $imageSize = -1)
+  public function get($joinTable, $ownerId, $imageId = ImagesService::IMAGE_ID_ANY, $imageSize = -1, $preview = null)
   {
     $ownerId = urldecode($ownerId);
 
@@ -88,7 +88,11 @@ class ImagesController extends Controller {
     }
 
     $image = null;
-    list($image, $fileName) = $this->imagesService->getImage($joinTable, $ownerId, $imageId);
+    if (!empty($preview)) {
+      list($image, $fileName) = $this->imagesService->getPreviewImage($joinTable, $ownerId, $imageId, $preview);
+    } else {
+      list($image, $fileName) = $this->imagesService->getImage($joinTable, $ownerId, $imageId);
+    }
 
     if (empty($image)) {
       return $this->getPlaceHolder($joinTable, $imageSize);
