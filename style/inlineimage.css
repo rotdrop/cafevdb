@@ -108,6 +108,7 @@ div#photooverlay {
   display:inline-block !important;
 }
 
+#app-content.has-photo-popup .ui-widget-overlay:hover,
 div#photooverlay:hover,
 div#photooverlay .cafevdb_inline_image:hover {
   cursor: zoom-out;

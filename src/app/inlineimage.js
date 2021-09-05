@@ -513,19 +513,23 @@ const photoReady = function(container, callback) {
   attachHandlers(wrapper);
 };
 
-const photoPopup = function(image) {
-  const overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
-  const imgClone = $(image).clone();
-  imgClone.removeClass('zoomable');
-  overlay.append(imgClone);
+const onPopupLoad = function(event) {
+  const $imgClone = $(this);
+  const $dialogHolder = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
+
+  $imgClone.removeClass('zoomable');
+  $dialogHolder.append($imgClone);
   $.fn.cafevTooltip.remove(); // get rid of disturbing tooltips.
-  overlay.cafevDialog({
+
+  const dialogPosition = {
+    my: 'center top',
+    at: 'center top + 5%',
+    of: '#app-content',
+  };
+
+  $dialogHolder.cafevDialog({
     title: t(appName, 'Photo Zoom'),
-    position: {
-      my: 'middle top+5%',
-      at: 'middle top',
-      of: '#app-content',
-    },
+    position: dialogPosition,
     width: 'auto',
     height: 'auto',
     modal: true,
@@ -533,27 +537,23 @@ const photoPopup = function(image) {
     dialogClass: 'photo-zoom no-close transparent-titlebar no-border content-box',
     resizable: false,
     open() {
-      const dialogHolder = $(this);
-      const dialogWidget = dialogHolder.dialog('widget');
-      dialogHolder.on('click', function() {
-        // @TODO should close when clicking anywhere apart from the move handle
-        dialogHolder.dialog('close');
-      });
-      dialogHolder.imagesLoaded(function() {
-        const title = dialogWidget.find('.ui-dialog-titlebar');
+      const $dialogHolder = $(this);
+      const $dialogWidget = $dialogHolder.dialog('widget');
+      $dialogHolder.imagesLoaded(function() {
+        const title = $dialogWidget.find('.ui-dialog-titlebar');
         const titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
-        const newHeight = dialogWidget.height() - titleBarHeight;
-        const newWidth = dialogWidget.width();
+        const newHeight = $dialogWidget.height() - titleBarHeight;
+        const newWidth = $dialogWidget.width();
 
-        const height = dialogHolder.height();
-        const width = dialogHolder.width();
-        const outerHeight = dialogHolder.outerHeight(true);
-        const outerWidth = dialogHolder.outerWidth(true);
+        const height = $dialogHolder.height();
+        const width = $dialogHolder.width();
+        const outerHeight = $dialogHolder.outerHeight(true);
+        const outerWidth = $dialogHolder.outerWidth(true);
 
-        let imageHeight = imgClone.height();
-        const imageWidth = imgClone.width();
-        const imageOuterHeight = imgClone.outerHeight(true);
-        const imageOuterWidth = imgClone.outerWidth(true);
+        const imageHeight = $imgClone.height();
+        const imageWidth = $imgClone.width();
+        const imageOuterHeight = $imgClone.outerHeight(true);
+        const imageOuterWidth = $imgClone.outerWidth(true);
 
         console.log('inner w/h', width, height);
         console.log('outer w/h', outerWidth, outerHeight);
@@ -580,35 +580,58 @@ const photoPopup = function(image) {
           if (imageMaxHeight * imageRatio > imageMaxWidth) {
             // scale width
             console.log('scale width to', imageMaxWidth);
-            imgClone.width(imageMaxWidth);
+            $imgClone.width(imageMaxWidth);
           } else {
             // scale height
             console.log('scale height to', imageMaxHeight);
-            imgClone.height(imageMaxHeight);
+            $imgClone.height(imageMaxHeight);
           }
         } else if (imageWidth > imageMaxWidth) {
           console.log('scale width to', imageMaxWidth);
-          imgClone.width(imageMaxWidth);
+          $imgClone.width(imageMaxWidth);
         }
 
-        console.log('new image w/h', imgClone.width(), imgClone.height());
+        console.log('new image w/h', $imgClone.width(), $imgClone.height());
 
-        imageHeight = imgClone.height();
-        if (imageHeight < imageMaxHeight) {
-          console.log('shift image down by', (imageMaxHeight - imageHeight) / 2);
-          // imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
-        }
-        // dialogWidget.css('width', imgClone.width() + imgHOffset + hOffset);
-        // dialogWidget.css('width', 'auto');
+        // imageHeight = $imgClone.height();
+        // if (imageHeight < imageMaxHeight) {
+        //   console.log('shift image down by', (imageMaxHeight - imageHeight) / 2);
+        //   $imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
+        // }
+        // $dialogWidget.css('width', $imgClone.width() + imgHOffset + hOffset);
+        // $dialogWidget.css('width', 'auto');
+
+        $dialogHolder.dialog('option', 'position', dialogPosition);
+
+        $('#app-content').data('photoPopup', $dialogHolder).addClass('has-photo-popup');
       });
     },
     close() {
-      const dialogHolder = $(this);
-      // container.html(img);
-      dialogHolder.dialog('close');
-      dialogHolder.dialog('destroy').remove();
+      $dialogHolder.dialog('destroy').remove();
     },
   });
+
+};
+
+const photoPopup = function(image) {
+  const $appContent = $('#app-content');
+  if (!$appContent.data('hasPhotoPopupCloser')) {
+    $appContent.on('click', function(event) {
+      const $photoPopup = $appContent.data('photoPopup');
+      if ($photoPopup) {
+        $photoPopup.dialog('close');
+        $appContent.removeData('photoPopup');
+      }
+    });
+    $appContent.data('hasPhotoPopupCloser', true);
+  }
+  const $image = $(image);
+  const $imgClone = $('<img class="' + $image.attr('class') + '" src="">');
+  $imgClone.on('load', onPopupLoad);
+  $imgClone.attr('src', $image.attr('src').replace(/&preview=[0-9]+/i, ''));
+
+
+
 };
 
 export {
