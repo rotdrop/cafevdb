@@ -52,20 +52,17 @@ class phpMyEdit_timer /* {{{ */
 
 	function start()
 	{
-		$startMtime		 = explode(' ', microtime());
-		$this->startTime = (double) $startMtime[0] + (double) $startMtime[1];
+		$this->startTime =  hrtime(true);
 		$this->started	 = true;
 	}
 
 	function end($iterations = 1)
 	{
 		// get the time, check whether the timer was started later
-		$endMtime = explode(' ', microtime());
+		$endTime = hrtime(true);
 		if ($this->started) {
-			$endTime = (double)($endMtime[0])+(double)($endMtime[1]);
 			$dur = $endTime - $this->startTime;
-			$avg = 1000 * $dur / $iterations;
-			$avg = round(1000 * $avg) / 1000;
+			$avg = $dur / $iterations / 1e6;
 			return $avg;
 		} else {
 			return 'phpMyEdit_timer ERROR: timer not started';
@@ -119,6 +116,7 @@ class phpMyEdit
 	const TRIGGER_CANCEL = 'cancel';
 
 	const OPERATION_FILTER = 'filter';
+	const OPERATION_LIST = 'list';
 
 	const TRIVIAL_ENCODE = '%s';
 	const TRIVIAL_DESCRIPION = '$table.$column';
@@ -4322,6 +4320,8 @@ class phpMyEdit
 	 */
 	function list_table() /* {{{ */
 	{
+		$this->exec_triggers_simple(self::OPERATION_LIST, self::TRIGGER_PRE);
+
 		if ($this->fm == '') {
 			$this->fm = 0;
 		}
@@ -4559,14 +4559,11 @@ class phpMyEdit
 			$this->error('invalid SQL query', $query);
 			return false;
 		}
-		$row = $this->sql_fetch($res);
 
-		$fetched  = true;
 		$first	  = true;
 		$rowCount = 0;
-		while ((!$fetched && ($row = $this->sql_fetch($res)) != false)
-			   || ($fetched && $row != false)) {
-			$fetched = false;
+		while (($row = $this->sql_fetch($res)) != false) {
+
 			$key_rec = [];
 			foreach ($this->key_num as $key => $key_num) {
 				if ($this->col_has_description($key_num)) {
@@ -4766,7 +4763,8 @@ class phpMyEdit
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
 				}
 			} /* }}} */
-			for ($k = 0; $k < $this->num_fds; $k++) { /* {{{ */
+
+			for ($k = 0; $k < $this->num_fds; $k++) {
 				$fd = $this->fds[$k];
 				if (! $this->displayed[$k] || $this->hidden($k)) {
 					continue;
@@ -4796,53 +4794,10 @@ class phpMyEdit
 					}
 				}
 				echo '</td>',"\n";
-			} /* }}} */
-			echo '</tr>',"\n";
-		}
-
-		/*
-		 * Display and accumulate column aggregation info, do totalling query
-		 * XXX this feature does not work yet!!!
-		 */
-		// aggregates listing (if any)
-		if (false && $$var_to_total) {
-			// do the aggregate query if necessary
-			//if ($vars_to_total) {
-			$qp = array();
-			$qp[self::QPARTS_TYPE] = self::QPARTS_SELECT;
-			$qp[self::QPARTS_SELECT] = $aggr_from_clause;
-			$qp[self::QPARTS_FROM]	  = @$this->get_SQL_join_clause();
-			$qp[self::QPARTS_WHERE]  = @$this->get_SQL_where_from_query_opts();
-			$tot_query	  = @$this->get_SQL_query($qp);
-			$totals_result = $this->myquery($tot_query,__LINE__);
-			$tot_row	   = $this->sql_fetch($totals_result);
-			//}
-			$qp_aggr = $qp;
-			echo "\n",'<tr class="TODO-class">',"\n",'<td class="TODO-class">&nbsp;</td>',"\n";
-			/*
-			  echo '<td>';
-			  echo printarray($qp_aggr);
-			  echo printarray($vars_to_total);
-			  echo '</td>';
-			  echo '<td colspan="'.($this->num_fds-1).'">'.$var_to_total.' '.$$var_to_total.'</td>';
-			*/
-			// display the results
-			for ($k=0;$k<$this->num_fds;$k++) {
-				$fd = $this->fds[$k];
-				if (stristr($this->fdd[$fd]['options'],'L') or !isset($this->fdd[$fd]['options'])) {
-					echo '<td>';
-					$aggr_var  = 'qf'.$k.'_aggr';
-					$$aggr_var = $this->get_sys_cgi_var($aggr_var);
-					if ($$aggr_var) {
-						echo $this->sql_aggrs[$$aggr_var],': ',$tot_row[$aggr_var];
-					} else {
-						echo '&nbsp;';
-					}
-					echo '</td>',"\n";
-				}
 			}
 			echo '</tr>',"\n";
 		}
+
 		echo '</tbody></table>',"\n"; // end of table rows listing
 		echo '</div>'."\n"; // end of scroll container
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'down').'">'."\n";
@@ -5934,7 +5889,7 @@ class phpMyEdit
 		elseif ($this->label_cmp($this->applyadd, 'Apply')
 				|| $this->label_cmp($this->applycopy, 'Apply')) {
 			if ($this->add_enabled()) {
-				// make sure that respective triggers get and idea about the operation in progress
+				// make sure that respective triggers get an idea about the operation in progress
 				$this->operation = $this->labels[$this->label_cmp($this->applyadd, 'Apply') ? 'Add' : 'Copy'];
 				$this->do_add_record();
 			}
