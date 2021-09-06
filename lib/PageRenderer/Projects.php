@@ -460,14 +460,14 @@ __EOT__;
         // Values for copy and change, including excess voices to select
         'values|CP' => [
           'table' => "SELECT
-  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
+  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.seq) AS value,
   pin.project_id,
   i.id AS instrument_id,
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
-  n.n
+  n.seq
   FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
@@ -476,35 +476,35 @@ __EOT__;
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
-  JOIN numbers n
-    ON n.n <= GREATEST(2, (pin.voice+1)) AND n.n > 0 AND n.n <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
+  JOIN ".self::SEQUENCE_TABLE." n
+    ON n.seq <= GREATEST(2, (pin.voice+1)) AND n.seq > 0
   WHERE
-    pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
+    pin.project_id = \$record_id[id]
   GROUP BY
-    project_id, instrument_id, n
+    project_id, instrument_id, n.seq
   HAVING
-    MAX(pin.voice) = 0 OR n.n > 0
+    MAX(pin.voice) = 0 OR n.seq > 0
   ORDER BY
-    i.sort_order ASC, n.n ASC",
+    i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'l10n_name', 'IF($table.n > 0, CONCAT(" ", $table.n), "")' ],
+            'columns' => [ 'l10n_name', 'IF($table.seq > 0, CONCAT(" ", $table.seq), "")' ],
             'divs' => '',
           ],
-          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'orderby' => '$table.sort_order ASC, $table.seq ASC',
           'join' => false,
         ],
         // Values for for view mode, without excess voices.
         'values|LFVD' => [
           'table' => "SELECT
-  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
+  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.seq) AS value,
   pin.project_id,
   i.id AS instrument_id,
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
-  n.n
+  n.seq
   FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
@@ -513,22 +513,22 @@ __EOT__;
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
-  JOIN numbers n
-    ON n.n <= pin.voice AND n.n >= 0 AND n.n <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
+  JOIN ".self::SEQUENCE_TABLE." n
+    ON n.seq <= pin.voice AND n.seq >= 0 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
     pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
-    pin.project_id, pin.instrument_id, n.n
+    pin.project_id, pin.instrument_id, n.seq
   HAVING
-    MAX(pin.voice) = 0 OR n.n > 0
+    MAX(pin.voice) = 0 OR n.seq > 0
   ORDER BY
-    pin.project_id ASC, i.sort_order ASC, n.n ASC",
+    pin.project_id ASC, i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'l10n_name', 'IF($table.n > 0, CONCAT(" ", $table.n), "")' ],
-            'divs' => '',
+            'columns' => [ 'l10n_name', 'IF($table.seq > 0, CONCAT(" ", $table.seq), "")' ],
+            'divs' => ''
           ],
-          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'orderby' => '$table.sort_order ASC, $table.seq ASC',
           'join' => '$join_table.project_id = $main_table.id',
         ],
         //'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),

@@ -271,12 +271,12 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['fdd']['voice']['values|ACP'] = array_merge(
       $opts['fdd']['voice']['values'], [
         'table' => 'SELECT
-  n.n AS voice
+  t.project_id, t.instrument_id, n.seq AS voice
   FROM ' . self::TABLE . ' t
-  JOIN numbers n
-    ON n.n <= GREATEST(4, (t.voice + 1))
-  ' . ($projectMode ? 'WHERE t.project_id = ' . $this->projectId : '') .'
-  GROUP BY n.n',
+  JOIN '.self::SEQUENCE_TABLE.' n
+    ON n.seq <= GREATEST(4, (t.voice + 1))
+  WHERE t.project_id = $record_id[project_id] AND t.instrument_id = $record_id[instrument_id]
+  GROUP BY n.seq',
         'filters' => null,
       ]);
     $this->addSlug('voice', $opts['fdd']['voice']);
@@ -288,7 +288,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'values' => [
         'table' => self::TABLE,
         'column' => 'voice',
-        'join' => '$main_table.instrument_id = $join_table.instrument_id',
+        'join' => '$main_table.instrument_id = $join_table.instrument_id AND $main_table.project_id = $join_table.project_id',
       ],
       'align' => 'right',
       'sort' => $sort,

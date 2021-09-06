@@ -565,7 +565,7 @@ class ProjectParticipants extends PMETableViewBase
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
-  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.n) AS value,
+  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.seq) AS value,
   pi.project_id,
   pi.musician_id,
   i.id AS instrument_id,
@@ -573,7 +573,7 @@ class ProjectParticipants extends PMETableViewBase
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
-  n.n
+  n.seq
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
@@ -584,20 +584,20 @@ class ProjectParticipants extends PMETableViewBase
       AND ft.foreign_key = i.id
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id
-  JOIN numbers n
-    ON n.n <= pin.voice AND n.n >= 1
+  JOIN ".self::SEQUENCE_TABLE." n
+    ON n.seq <= pin.voice AND n.seq >= 1
   WHERE
-    pi.project_id = $this->projectId
+    pi.project_id = \$record_id[project_id]
   GROUP BY
     project_id, musician_id, instrument_id, n
   ORDER BY
-    i.sort_order ASC, n.n ASC",
+    i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
             'columns' => [ 'l10n_name', 'n' ],
             'divs' => ' ',
           ],
-          'orderby' => '$table.sort_order ASC, $table.n ASC',
+          'orderby' => '$table.sort_order ASC, $table.seq ASC',
           'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
           //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
           'join' => false,
