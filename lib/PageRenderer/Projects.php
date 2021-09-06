@@ -477,7 +477,7 @@ __EOT__;
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN numbers n
-    ON n.n <= GREATEST(2, (pin.voice+1)) AND n.n > 0
+    ON n.n <= GREATEST(2, (pin.voice+1)) AND n.n > 0 AND n.n <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
     pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
@@ -514,15 +514,15 @@ __EOT__;
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN numbers n
-    ON n.n <= pin.voice AND n.n >= 0
+    ON n.n <= pin.voice AND n.n >= 0 AND n.n <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
     pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
-    project_id, instrument_id, n
+    pin.project_id, pin.instrument_id, n.n
   HAVING
     MAX(pin.voice) = 0 OR n.n > 0
   ORDER BY
-    i.sort_order ASC, n.n ASC",
+    pin.project_id ASC, i.sort_order ASC, n.n ASC",
           'column' => 'value',
           'description' => [
             'columns' => [ 'l10n_name', 'IF($table.n > 0, CONCAT(" ", $table.n), "")' ],
