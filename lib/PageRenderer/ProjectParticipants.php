@@ -589,12 +589,12 @@ class ProjectParticipants extends PMETableViewBase
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
-    project_id, musician_id, instrument_id, n
+    pi.project_id, pi.musician_id, pi.instrument_id, n.seq
   ORDER BY
     i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'l10n_name', 'n' ],
+            'columns' => [ '$table.l10n_name', '$table.seq' ],
             'divs' => ' ',
           ],
           'orderby' => '$table.sort_order ASC, $table.seq ASC',
