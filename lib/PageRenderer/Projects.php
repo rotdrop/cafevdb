@@ -121,7 +121,7 @@ class Projects extends PMETableViewBase
 
   public function needPhpSession():bool
   {
-    return true;
+    return !$this->listOperation();
   }
 
   /** Short title for heading. */
