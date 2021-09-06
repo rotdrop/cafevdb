@@ -114,10 +114,6 @@ class PHPMyEdit extends \phpMyEdit
   {
     $options = $this->defaultOptions = Util::arrayMergeRecursive($this->defaultOptions, $options);
 
-    if (isset($options['cgi']['prefix']['sys'])) {
-      $this->cgi = $options['cgi'];
-      $this->operation = $this->get_sys_cgi_var('operation');
-    }
     if (isset($options['options'])) {
       $this->options = $options['options'];
     }
@@ -131,9 +127,81 @@ class PHPMyEdit extends \phpMyEdit
 
     // Needs lang path
     $this->labels = $this->make_language_labels($options['language']?:null);
+
     if (isset($options['debug'])) {
       $this->debug = $options['debug'];
     }
+
+    // after lang initialization
+    if (isset($options['cgi']['prefix']['sys'])) {
+      $this->cgi = $options['cgi'];
+      $this->operation = $this->get_sys_cgi_var('operation');
+      $this->determineOperation();
+    }
+  }
+
+  protected function determineOperation()
+  {
+    $this->saveadd		= $this->get_sys_cgi_var('saveadd');
+    $this->moreadd		= $this->get_sys_cgi_var('moreadd');
+    $this->applyadd		= $this->get_sys_cgi_var('applyadd');
+    $this->canceladd	= $this->get_sys_cgi_var('canceladd');
+    $this->savechange	= $this->get_sys_cgi_var('savechange');
+    $this->morechange	= $this->get_sys_cgi_var('morechange');
+    $this->cancelchange = $this->get_sys_cgi_var('cancelchange');
+    $this->reloadchange = $this->get_sys_cgi_var('reloadchange');
+    $this->savecopy		= $this->get_sys_cgi_var('savecopy');
+    $this->applycopy	= $this->get_sys_cgi_var('applycopy');
+    $this->cancelcopy	= $this->get_sys_cgi_var('cancelcopy');
+    $this->savedelete	= $this->get_sys_cgi_var('savedelete');
+    $this->canceldelete = $this->get_sys_cgi_var('canceldelete');
+    $this->reloaddelete = $this->get_sys_cgi_var('reloaddelete');
+    $this->reloadcopy   = $this->get_sys_cgi_var('reloadcopy');
+    $this->cancelview	= $this->get_sys_cgi_var('cancelview');
+    $this->reloadview	= $this->get_sys_cgi_var('reloadview');
+
+    // determine the initial operation from the status of the submitted buttons
+
+    // Save/More Button - database operations
+    if ($this->label_cmp($this->saveadd, 'Save')
+        || $this->label_cmp($this->savecopy, 'Save')) {
+      $this->operation = $this->labels[$this->label_cmp($this->saveadd, 'Save') ? 'Add' : 'Copy'];
+    }
+    elseif ($this->label_cmp($this->applyadd, 'Apply')
+            || $this->label_cmp($this->applycopy, 'Apply')) {
+      $this->operation = $this->labels[$this->label_cmp($this->applyadd, 'Apply') ? 'Add' : 'Copy'];
+    }
+    elseif ($this->label_cmp($this->moreadd, 'More')) {
+      $this->operation = $this->labels['Add']; // to force add operation
+    }
+    elseif ($this->label_cmp($this->savechange, 'Save')) {
+      $this->operation = $this->labels['Change'];
+    }
+    elseif ($this->label_cmp($this->morechange, 'Apply')) {
+      $this->operation = $this->labels['Change']; // to force change operation
+    }
+    elseif ($this->label_cmp($this->savedelete, 'Delete')) {
+      $this->operation = $this->labels['Delete']; // force view operation.
+    }
+    elseif ($this->label_cmp($this->reloadview, 'Reload')) {
+      $this->operation = $this->labels['View']; // force view operation.
+    }
+    elseif ($this->label_cmp($this->reloadchange, 'Reload')) {
+      $this->operation = $this->labels['Change']; // to force change operation
+    }
+    elseif ($this->label_cmp($this->reloaddelete, 'Reload')) {
+      $this->operation = $this->labels['Delete']; // to force delete operation
+    }
+    elseif ($this->label_cmp($this->reloadcopy, 'Reload')) {
+      $this->operation = $this->labels['Copy']; // to force copy operation
+    }
+
+    $this->logDebug('NULL OPERATION ' . (int)$this->null_operation());
+    $this->logDebug('COPY OPERATION ' . (int)$this->copy_operation());
+    $this->logDebug('ADD OPERATION ' . (int)$this->add_operation());
+    $this->logDebug('CHANGE OPERATION ' . (int)$this->change_operation());
+    $this->logDebug('VIEW OPERATION ' . (int)$this->view_operation());
+    $this->logDebug('LIST OPERATION ' . (int)$this->list_operation());
   }
 
   public function getOptions()
