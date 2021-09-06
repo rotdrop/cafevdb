@@ -77,7 +77,7 @@ class BiDirectionalL10N
     if (isset($this->translations[self::FORWARD][$phrase])) {
       return $this->translations[self::FORWARD][$phrase];
     }
-    return $this->l->t($phrase);
+    return $this->l->t(str_replace('%', '%%', $phrase));
   }
 
   public function backTranslate($translation)
