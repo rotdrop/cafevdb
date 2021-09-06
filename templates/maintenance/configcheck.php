@@ -214,7 +214,7 @@ group-administrator for the group `%s\'.',
       $status = $cfgchk[$key]['status'];
       $ok     = $status ? 'set' : 'missing';
       $tok    = $status ? $l->t('not needed') : $l->t('data needs migration');
-      $text   = $status ? '' : $missingtext[$key];
+      $text   = $status ? '' : ($missingtext[$key]??'');
       $error  = $cfgchk[$key]['message'];
       if ($error != '') {
         $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
@@ -222,7 +222,7 @@ group-administrator for the group `%s\'.',
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.$_[$key].'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.($_[$key]??'').'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
@@ -232,14 +232,14 @@ group-administrator for the group `%s\'.',
       $ok     = $status ? 'set' : 'missing';
       $tok    = $status ? $l->t('is set') : $l->t('is missing');
       $text   = $status ? '' : $missingtext[$key];
-      $error  = $cfgchk[$key]['message'];
+      $error  = $cfgchk[$key]['message']??'';
       if ($error != '') {
         $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
       }
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.$_[$key].'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.($_[$key]??).'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
