@@ -5151,13 +5151,11 @@ class phpMyEdit
 				}
 			}
 		}
-		//$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
 		$joinTables = $this->get_SQL_join_clause();
 		$query_newrec  = $query_oldrec.' FROM ' . $joinTables;
-		//$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
 		$query_oldrec .= ' FROM ' . $joinTables . $where_part;
+
 		// Additional query (must go before real query)
-		//error_log('old query '.$query_oldrec);
 		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -5202,6 +5200,9 @@ class phpMyEdit
 			}
 		}
 
+		// save the unmodified old-values in order to be able to
+		// compute the change-set for the after-triggers.
+		$beforeOldVals = $oldvals;
 
 		// Before trigger
 		if ($this->exec_triggers(self::SQL_QUERY_UPDATE, self::TRIGGER_BEFORE, $oldvals, $changed, $newvals) === false) {
@@ -5213,7 +5214,7 @@ class phpMyEdit
 		foreach($oldvals as $fd => $value) {
 			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
 			$fdn = $this->fdn[$fd]; // $fdn == field number
-			if (emtpy($fdn)) {
+			if (empty($fdn)) {
 				continue;
 			}
 			$fdd = $this->fdd[$fdn];
@@ -5328,7 +5329,9 @@ class phpMyEdit
 		}
 		$newvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
+
 		// Creating array of changed keys ($changed)
+		$oldvals = $beforeOldVals;
 		$changed = array();
 		foreach ($newvals as $fd => $value) {
 			$k = $this->fdn[$fd];
