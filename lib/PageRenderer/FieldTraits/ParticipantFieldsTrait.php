@@ -645,7 +645,7 @@ trait ParticipantFieldsTrait
   </td>
   <td>
      <a class="download-link'.(empty($downloadLink) ? ' hidden' : '').'"
-        href="'.$downloadLink.'">
+        href="'.($downloadLink??'').'">
        '.$this->l->t('download').'
      </a>
  </td>

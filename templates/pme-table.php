@@ -44,7 +44,7 @@ namespace OCA\CAFEVDB;
 $css = $template;
 $css .= ' ' . $renderer->cssClass();
 
-if ($outputBufferWorkAround) {
+if ($outputBufferWorkAround??false) {
   // This is here because otherwise PHP leaks content to stdout (and
   // thus to the client) on fatal errors.
   try {
