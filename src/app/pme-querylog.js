@@ -47,6 +47,8 @@ const handleQueryLogMenu = function($select) {
       + '<a class="copy button" href="#">' + t(appName, 'copy') + '</a>'
       + '</dt>'
       + '<dd>' + queryData.query + '</dd>'
+      + '<dt>' + t(appName, 'Duration') + '</dt>'
+      + '<dd>' + queryData.duration + ' ' + 'ms' + '</dd>'
       + '<dt>' + t(appName, 'Affected Rows') + '</dt>'
       + '<dd>' + queryData.affectedRows + '</dd>'
       + '<dt>' + t(appName, 'Error Code') + '</dt>'

@@ -178,7 +178,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $joinTables = null;
 
   /** @var int Minimum numbers value to generate by self::preTrigger(). */
-  protected $minimumNumbersValue = 128;
+  protected $minimumNumbersValue = 64;
 
   protected function __construct(
     string $template
@@ -276,7 +276,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       //$html .= '<option value="" hidden>' . $this->l->t('Query Log') . '</option>';
       $html .= '<option value="" hidden></option>';
       $cnt = 0;
-      foreach ($this->pme->queryLog() as $logEntry) {
+      $queryLog = $this->pme->queryLog();
+      usort($queryLog, function($a, $b) {
+        $aVal = (double)$a['duration'];
+        $bVal = (double)$b['duration'];
+        return (($aVal == $bVal) ? 0 : ($aVal < $bVal ? +1 : -1));
+      });
+      foreach ($queryLog as $logEntry) {
         $label = htmlspecialchars(substr($logEntry['query'], 0, 24));
         if (strlen($logEntry['query']) > 24) {
           $label .= ' &#8230;';

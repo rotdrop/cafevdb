@@ -319,17 +319,23 @@ class PHPMyEdit extends \phpMyEdit
     if ($debug || $this->debug) {
       $this->logInfo("DEBUG QUERY: ".$query, [], 2);
     }
-    $logEntry = [ 'query' => $query, ];
+    $logEntry = [
+      'query' => $query,
+    ];
+    $startTime = hrtime(true);
     try {
       $stmt = $this->dbh->executeQuery($query);
+      $endTime = hrtime(true);
       $this->affectedRows = $stmt->rowCount();
       $this->errorCode = $stmt->errorCode();
       $this->errorInfo = $stmt->errorInfo();
       $logEntry['affectedRows'] = $this->affectedRows;
       $logEntry['errorCode'] = $this->errorCode;
       $logEntry['errorInfo'] = $this->errorInfo;
+      $logEntry['duration'] = ($endTime - $startTime) / 1e6;
       $this->queryLog[] = $logEntry;
     } catch (DBALException $t) {
+      $endTime = hrtime(true);
       $this->logException($t);
       throw $t;
       $this->exception = $t;
@@ -338,6 +344,7 @@ class PHPMyEdit extends \phpMyEdit
       $logEntry['affectedRows'] = $this->affectedRows;
       $logEntry['errorCode'] = $this->errorCode;
       $logEntry['errorInfo'] = $this->errorInfo;
+      $logEntry['duration'] = ($endTime - $startTime) / 1e6;
       $this->queryLog[] = $logEntry;
       return false;
     }
