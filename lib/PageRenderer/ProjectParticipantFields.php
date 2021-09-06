@@ -682,7 +682,7 @@ __EOT__;
 
     $opts['fdd']['tab'] = [
       'name' => $this->l->t('Table Tab'),
-      'css' => [ 'postfix' => ' tab allow-empty' ],
+      'css' => [ 'postfix' => [ 'tab', 'allow-empty', ], ],
       'select' => 'D',
       'values' => [
         'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ]),
@@ -690,7 +690,7 @@ __EOT__;
         'join' => '$join_table.id = $main_table.id',
       ],
       'values2' => $tableTabValues2,
-      'default' => -1,
+      'default' => null,
       'maxlen' => 128,
       'size' => 30,
       'sort' => true,
@@ -701,15 +701,16 @@ __EOT__;
     // has to be emptied (in order to avoid conflicts).
     $opts['fdd']['new_tab'] = [
       'name' => $this->l->t('New Tab Name'),
-      'input' => 'S',
+      'input' => 'S', // skip during update
       'options' => 'CPA',
       'sql' => "''",
-      'css' => [ 'postfix' => ' new-tab' ],
+      'css' => [ 'postfix' => [ 'new-tab', ], ],
       'select' => 'T',
       'maxlen' => 20,
       'size' => 30,
       'sort' => false,
       'tooltip' => $this->toolTipsService['participant-fields-new-tab'],
+      'default' => null,
       'display' => [
         'attributes' => [
           'placeholder' => $this->l->t('name of new tab'),
@@ -845,9 +846,7 @@ __EOT__;
       $oldvals = array_fill_keys(array_keys($newvals), null);
     }
 
-    $this->debug('BEFORE OLD '.print_r($oldvals, true));
-    $this->debug('BEFORE NEW '.print_r($newvals, true));
-    $this->debug('BEFORE CHG '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -887,7 +886,9 @@ __EOT__;
 
     if (empty($newvals['tab']) && ($newvals['tab']??null) !== null) {
       $newvals['tab'] = null;
-      $changed[] = 'tab';
+      if (($oldvals['tab']??null) !== null) {
+        $changed[] = 'tab';
+      }
     }
 
     /************************************************************************
@@ -1049,7 +1050,7 @@ __EOT__;
       $newvals['data_options'] = $newvals[$tag];
 
       $newvals['default_value'] = $first;
-      if ($op != PHPMyEdit::SQL_QUERY_INSERT && PHPMyEdit::empty(Uuid::asUuid($first))) {
+      if ($op != PHPMyEdit::SQL_QUERY_INSERT && empty(Uuid::asUuid($first))) {
         throw new \RuntimeException(
           $this->l->t('Simple field-option key is not an UUID: "%s".', $key));
       }
@@ -1106,10 +1107,14 @@ __EOT__;
     // our PME legacy join table stuff.
     $optionValues = [];
     foreach ($newvals['data_options'] as $key => $allowedValue) {
-      $field = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
-      $optionValues[$field][] = $key;
+      $keyField = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
+      $optionValues[$keyField][] = $key;
       foreach ($allowedValue as $field => $value) {
         if ($field == 'key') {
+          continue;
+        }
+        if (empty($value)) {
+          // empty values are set to null
           continue;
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
@@ -1132,9 +1137,7 @@ __EOT__;
     $changed = array_values(array_unique($changed));
     self::unsetRequestValue('data_options', $oldvals, $changed, $newvals);
 
-    $this->debug('AFTER OLD '.print_r($oldvals, true));
-    $this->debug('AFTER NEW '.print_r($newvals, true));
-    $this->debug('AFTER CHG '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
     $this->changeSetSize = count($changed);
 
