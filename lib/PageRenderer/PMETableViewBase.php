@@ -895,8 +895,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $identifier[$key]['add'] = array_diff($identifier[$key]['new'], $identifier[$key]['old']);
           $identifier[$key]['rem'] = array_intersect($identifier[$key]['new'], $identifier[$key]['old']);
 
-          Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
-          unset($changeSet[$joinInfo['column']]);
+          if (isset($changeSet[$joinInfo['column']])) {
+            Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
+            unset($changeSet[$joinInfo['column']]);
+          }
           $multiple = $key;
         } else {
           if (!is_array($pivotColumn)) {
@@ -1382,8 +1384,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = Util::explode(',', $newvals[$keyField]);
 
-          Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
-          unset($changeSet[$joinInfo['column']]);
+          if (isset($changeSet[$joinInfo['column']])) {
+            Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
+            unset($changeSet[$joinInfo['column']]);
+          }
           $multiple = $key;
         } else {
           if (!is_array($pivotColumn)) {
