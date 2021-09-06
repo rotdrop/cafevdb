@@ -208,7 +208,7 @@ class PmeTableController extends Controller {
         $this->historyService->store();
       }
 
-      if ($renderer->needPhpSession()) {
+      if (!$this->session->isClosed()) {
         $this->logInfo('Closing session');
         $this->session->close();
       }
