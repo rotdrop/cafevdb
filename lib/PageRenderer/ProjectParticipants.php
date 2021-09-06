@@ -792,7 +792,7 @@ class ProjectParticipants extends PMETableViewBase
       'select' => 'M',
       'name' => $this->l->t('Projects'),
       'sort' => true,
-      'css'      => ['postfix' => ' projects tooltip-top'],
+      'css'      => ['postfix' => [ 'projects', 'tooltip-top', ], ],
       'display|LVF' => ['popup' => 'data'],
       'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
       'filter' => [
@@ -804,7 +804,7 @@ class ProjectParticipants extends PMETableViewBase
         'column' => 'name',
         'orderby' => '$table.year ASC, $table.name ASC',
         'groups' => 'year',
-        'join' => '$join_table.id = '.$this->joinTables[self::TABLE].'.project_id'
+        'join' => '$join_table.id = '.$this->joinTables[self::TABLE.self::VALUES_TABLE_SEP.'allProjects'].'.project_id'
       ],
     ];
 
