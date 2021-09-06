@@ -239,7 +239,7 @@ group-administrator for the group `%s\'.',
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.($_[$key]??).'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.($_[$key]??'').'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
