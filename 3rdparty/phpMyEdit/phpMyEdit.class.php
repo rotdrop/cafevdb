@@ -946,14 +946,7 @@ class phpMyEdit
 
 		$qparts[self::QPARTS_TYPE] = self::QPARTS_SELECT;
 
-		$subquery = stripos($table, self::SQL_SELECT) !== false;
 		$table_name = self::TABLE_ALIAS.$field_num;
-		if ($subquery) {
-			$from_table = '('.$table.') '.$table_name;
-		} else {
-			$table      = $this->sd.$table.$this->ed;
-			$from_table = $dbp.$table.' '.$table_name;
-		}
 
 		if (!empty($desc)) {
 			$descSubs = [
@@ -1003,6 +996,16 @@ class phpMyEdit
 		} else if ($column) {
 			$qparts[self::QPARTS_ORDERBY] = $this->sd.$column.$this->ed;
 		}
+
+		$table = $this->substituteVars($table, $subs);
+		$subquery = stripos($table, self::SQL_SELECT) !== false;
+		if ($subquery) {
+			$from_table = '('.$table.') '.$table_name;
+		} else {
+			$table      = $this->sd.$table.$this->ed;
+			$from_table = $dbp.$table.' '.$table_name;
+		}
+
 		$qparts[self::QPARTS_FROM] = $from_table;
 		if (!empty($filters)) {
 			$qparts[self::QPARTS_WHERE] = $this->substituteVars($filters, $subs);
