@@ -831,7 +831,7 @@ project without a poster first.");
 
   public function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
   {
-    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName);
+    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName, null, true);
 
     if ($placeHolder === false) {
       // Strip the 4-digit year from the end, if present
