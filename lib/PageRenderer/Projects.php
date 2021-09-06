@@ -1059,7 +1059,7 @@ project without a poster first.");
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
     // ProjectParticipants table fails.
-    foreach (Util::explode(',', $newVals[$instrumentsColumn]??[]) as $instrument) {
+    foreach (Util::explode(',', $newVals[$instrumentsColumn]??'') as $instrument) {
       $newVals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
                               . ($newVals[$voicesColumn]??'');
     }
@@ -1208,8 +1208,6 @@ project without a poster first.");
       $this->debug('PARTICIPANT FIELDS ' . print_r($participantFields, true));
 
       if (!empty($participantFields)) {
-        list(, $copyParticipants) = explode(self::JOIN_KEY_SEP, $newVals['copy_participants']);
-
         /** @var Repositories\ProjectsRepository $repository */
         $repository = $this->getDatabaseRepository(self::ENTITY);
 
@@ -1233,6 +1231,7 @@ project without a poster first.");
       }
 
       // clone participants if requested
+      list(, $copyParticipants) = explode(self::JOIN_KEY_SEP, $newVals['copy_participants']);
       if ($copyParticipants) {
 
         /** @var Repositories\ProjectsRepository $repository */
