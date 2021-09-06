@@ -1527,10 +1527,10 @@ class phpMyEdit
 			}
 
 			$join_column = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['column'].$this->ed;
-			$join_desc	 = $this->sd.($this->fdd[$main_column][self::FDD_VALUES]['description']??'').$this->ed;
-			if ($join_desc == $this->sd.$this->ed) {
-				$join_desc = $join_column;
-			}
+			// $join_desc	 = $this->sd.($this->fdd[$main_column][self::FDD_VALUES]['description']??'').$this->ed;
+			// if ($join_desc == $this->sd.$this->ed) {
+			// 	$join_desc = $join_column;
+			// }
 			if ($join_column != $this->sd.$this->ed) {
 
 				$table = trim($this->fdd[$main_column][self::FDD_VALUES]['table']);
@@ -1549,8 +1549,8 @@ class phpMyEdit
 					'join_table'	   => $join_table,
 					'join_column'	   => $join_column,
 					'join_col_fqn'     => $join_table.'.'.$join_column,
-					'join_description' => $join_desc,
-					'join_desc_fqn'    => $join_table.'.'.$join_desc,
+					// 'join_description' => $join_desc,
+					// 'join_desc_fqn'    => $join_table.'.'.$join_desc,
 				);
 				$join_clause .= " LEFT JOIN ".$table." AS $join_table ON (";
 				$join_clause .= !empty($join)
@@ -5255,6 +5255,9 @@ class phpMyEdit
 		foreach($oldvals as $fd => $value) {
 			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
 			$fdn = $this->fdn[$fd]; // $fdn == field number
+			if (emtpy($fdn)) {
+				continue;
+			}
 			$fdd = $this->fdd[$fdn];
 			if (isset($fdd['querygroup'])) {
 				$queryGroup = $fdd['querygroup'];
