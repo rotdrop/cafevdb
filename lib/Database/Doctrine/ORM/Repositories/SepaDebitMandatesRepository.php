@@ -112,7 +112,7 @@ class SepaDebitMandatesRepository extends EntityRepository
     if (!empty($mandate)) {
       $usage = $this->usage($mandate, true);
       $this->ban($mandate);
-      if (!empty($usage['lastUsed'])) {
+      if (empty($usage['lastUsed'])) {
         // second removal should really remove it
         $this->getEntityManager()->remove($mandate);
         $this->getEntityManager()->flush($mandate);
