@@ -30,9 +30,8 @@ $cssClass = $renderer->cssClass();
 $nav = '';
 //$nav .= $pageNavigation->pageControlElement('projectinstrumets');
 $nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('project-participant-fields');
 $nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('project-participant-fields');
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 $nav .= $pageNavigation->pageControlElement('blog');
 

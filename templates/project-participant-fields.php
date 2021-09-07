@@ -31,18 +31,18 @@ $nav = '';
 if (!empty($projectId)) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   if ($roles->inTreasurerGroup()) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
     $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
   }
   $nav .= $pageNavigation->pageControlElement('projects');
   $nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
 } else {
   $nav .= $pageNavigation->pageControlElement('projects');
-  $nav .= $pageNavigation->pageControlElement('instruments');
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields');
   $nav .= $pageNavigation->pageControlElement('all');
+  $nav .= $pageNavigation->pageControlElement('instruments');
+  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 }
 
 echo $this->inc('part.common.header',
