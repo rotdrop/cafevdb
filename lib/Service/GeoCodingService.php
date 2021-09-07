@@ -612,6 +612,7 @@ class GeoCodingService
           if ($hasChanged) {
             $entity->setTranslation($translation);
             $this->persist($entity);
+            $this->flush();
           }
         }
 
