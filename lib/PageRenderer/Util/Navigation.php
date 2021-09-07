@@ -580,7 +580,7 @@ if something has changed in the orchestra app.");
       $title = $this->l->t("Display an overview page for the currently active project.
 The overview-page gives the possibility to add events, change the instrumentation
 and even edit the public web-pages for the project and other things.");
-      $value = $projectName;
+      $value = $this->l->t('Overview %s', $projectName);
       $json = ['projectName' => $projectName,
                'projectId' => $projectId];
       break;
