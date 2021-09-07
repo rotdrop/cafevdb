@@ -147,28 +147,28 @@ class SepaDebitMandatesRepository extends EntityRepository
    */
   public function usage($identifier, $brief = false)
   {
-
-    // @todo find about multiple incremental selects ...
     $selects = [
       'm.mandateReference',
       'm.deleted',
-      "GREATEST(COALESCE(MAX(d.dueDate), ''), COALESCE(MAX(m.lastUsedDate), '')) AS lastUsed",
+      "GREATEST(COALESCE(MAX(t.dueDate), ''), COALESCE(MAX(m.lastUsedDate), '')) AS lastUsed",
       'm.mandateDate AS mandateIssued',
     ];
     if (!$brief) {
       $selects = array_merge($selects, [
         'm.lastUsedDate AS mandateLastUsed',
-        'MAX(d.dateIssued) AS debitNoteLastIssued',
-        'MAX(d.submitDate) AS debitNoteLastSubmitted',
-        'IF(p.dateOfReceipt = MAX(d.dueDate), p.debitMessageId, NULL) AS debitNoteLastNotified',
+        'MAX(p.dateOfReceipt) AS dateOfLastReceipt',
+        'MAX(t.created) AS dateOfLastCreatedTransaction',
+        'MAX(t.submitDate) AS dateOfLastSubmittedDebitNote',
+        // 'IF(p.dateOfReceipt = MAX(t.dueDate), p.debitMessageId, NULL) AS debitNoteLastNotified',
+        'CASE WHEN p.dateOfReceipt = MAX(t.dueDate) THEN p.notificationMessageId ELSE \'\' END AS debitNoteLastNotified',
       ]);
     }
 
     // the what part ...
     $qb = $this->createQueryBuilder('m')
                ->select(implode(',', $selects))
-               ->leftJoin('m.projectPayments', 'p')
-               ->leftJoin('p.sepaTransaction', 'd')
+               ->leftJoin('m.payments', 'p')
+               ->leftJoin('p.sepaTransaction', 't')
                ->groupBy('m.mandateReference');
 
     // the where part ...
@@ -181,7 +181,7 @@ class SepaDebitMandatesRepository extends EntityRepository
          ->andWhere('m.sequence = :sequence')
          ->setParameter('project', $identifier['project'])
          ->setParameter('musician', $identifier['musician'])
-         ->setParameter('sequence', $identifeir['sequence']);
+         ->setParameter('sequence', $identifier['sequence']);
     } else {
       throw new \Exception('Mandate identifier is '.(empty($identifier) ? 'empty' : 'unsupported'));
     }

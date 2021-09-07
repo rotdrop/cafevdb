@@ -51,6 +51,7 @@ class SepaDebitMandatesController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   /** @var ReqeuestParameterService */
   private $parameterService;
@@ -623,6 +624,9 @@ class SepaDebitMandatesController extends Controller {
                            . '&fileName=' . urlencode($writtenMandateFileName);
     }
 
+    $mandateUsage = $this->debitMandatesRepository->usage($mandate, true);
+    $lastUsedDate = self::convertToDateTime($mandateUsage['lastUsed']);
+
     $templateParameters = [
       'projectId' => $projectId,
       'projectName' => $project ? $project->getName() : null,
@@ -645,7 +649,7 @@ class SepaDebitMandatesController extends Controller {
       'mandateReference' => $mandate->getMandateReference(),
       'mandateExpired' => $mandateExpired, // @todo
       'mandateDate' => $mandate->getMandateDate(),
-      'mandateLastUsedDate' => $mandate->getLastUsedDate(),
+      'mandateLastUsedDate' => $lastUsedDate, // $mandate->getLastUsedDate(),
       'mandateNonRecurring' => $mandate->getNonRecurring(),
       'mandateInUse' => $mandate->inUse(),
       'mandateDeleted' => $mandate->getDeleted(),
