@@ -274,7 +274,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   t.project_id, t.instrument_id, n.seq AS voice
   FROM ' . self::TABLE . ' t
   JOIN '.self::SEQUENCE_TABLE.' n
-    ON n.seq <= GREATEST(4, (t.voice + 1))
+    ON n.seq <= GREATEST(4, (t.voice + 1)) AND n.seq <= GREATEST(4, 1 + (SELECT MAX(t2.voice) FROM ' . self::TABLE . ' t2))
   WHERE t.project_id = $record_id[project_id] AND t.instrument_id = $record_id[instrument_id]
   GROUP BY n.seq',
         'filters' => null,

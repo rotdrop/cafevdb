@@ -477,7 +477,7 @@ __EOT__;
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= GREATEST(2, (pin.voice+1)) AND n.seq > 0
+    ON n.seq <= GREATEST(2, (pin.voice + 1)) AND n.seq > 0 AND n.seq <= GREATEST(2, (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2) + 1)
   WHERE
     pin.project_id = \$record_id[id]
   GROUP BY

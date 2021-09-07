@@ -585,7 +585,7 @@ class ProjectParticipants extends PMETableViewBase
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= pin.voice AND n.seq >= 1
+    ON n.seq <= pin.voice AND n.seq >= 1 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
