@@ -61,7 +61,7 @@ trait PerMusicianSequenceTrait
     // in order not to have "other" exceptions in our try block
     $entityManager->flush();
 
-    if ($entity->getSequence() == null) {
+    if ($entity->getSequence() === null) {
       $musician = $entity->getMusician();
       if (!($musician instanceof Entities\Musician)) {
         $musician = $entityManager->getReference(Entities\Musician::class, [ 'id' => $musician ]);
