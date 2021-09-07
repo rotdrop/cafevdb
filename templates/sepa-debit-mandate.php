@@ -26,7 +26,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
 
 $title = $l->t("SEPA Bank Information for %s", $musicianName);
 
-$expiredTip = $toolTips['sepa-mandate-expired'];
+$mandateExpiredTip = $toolTips['sepa-mandate-expired'];
 
 $mandateSequenceType = $mandateNonRecurring ? 'once' : 'permanent';
 

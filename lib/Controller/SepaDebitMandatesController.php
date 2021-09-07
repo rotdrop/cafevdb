@@ -495,6 +495,9 @@ class SepaDebitMandatesController extends Controller {
     , $mandateSequence
     ) {
 
+    // @todo
+    $mandateExpired = false;
+
     if (empty($musicianId)) {
       return self::grumble($this->l->t('Parameter musicianId must be set, but is empty.'));
     }
@@ -570,7 +573,7 @@ class SepaDebitMandatesController extends Controller {
     }
 
     $memberProjectId = $this->getConfigValue('memberProjectId', 0);
-    $isClubMember = ($memberProjectid == $projectId) || $musician->isMemberOf($memberProjectId);
+    $isClubMember = ($memberProjectId == $projectId) || $musician->isMemberOf($memberProjectId);
 
     $projectOptions = [];
     if (empty($project)) {
@@ -656,9 +659,9 @@ class SepaDebitMandatesController extends Controller {
       'bankAccountInUse' => $bankAccount->inUse(),
       'bankAccountDeleted' => $bankAccount->getDeleted(),
 
-      'writtenMandateId' => $writtenMandateId,
-      'writtenMandateDownloadLink' => $writtenMandateDownloadLink,
-      'writtenMandateFileName' => $writtenMandateFileName,
+      'writtenMandateId' => $writtenMandateId??null,
+      'writtenMandateDownloadLink' => $writtenMandateDownloadLink??null,
+      'writtenMandateFileName' => $writtenMandateFileName??null,
 
       'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
       'toolTips' => $this->toolTipsService(),
