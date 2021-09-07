@@ -42,6 +42,7 @@ class GeoCodingService
   const JSON = 1;
   const XML = 2;
   const RDF = 3;
+  const DRY = 99;
   const GEONAMES_TAG = "geonames";
   const POSTALCODESLOOKUP_TAG = "postalcodes";
   const POSTALCODESSEARCH_TAG = "postalCodes";
@@ -66,8 +67,17 @@ class GeoCodingService
     $this->userName = $this->getConfigValue('orchestra').'_'.$this->appName();
   }
 
-  /**Recurse to the backend and place one single request. This
+  /**
+   * Recurse to the backend and place one single request. This
    * should be abstracted further, but should do for the moment.
+   *
+   * @param string $command
+   *
+   * @param mixed $parameters
+   *
+   * @param string $type
+   *
+   * @return null|array
    */
   private function request($command, $parameters, $type = self::JSON)
   {
@@ -85,9 +95,13 @@ class GeoCodingService
     } else {
       $query = http_build_query($parameters, '', '&');
     }
-    if ($type === self::JSON) {
+    if ($type === self::JSON || $type === self::DRY) {
       $url = self::PROVIDER_URL.'/'.$command.'JSON'.'?username='.$this->userName.'&'.$query;
-      $this->logDebug($url);
+      if ($type === self::DRY) {
+        return $url;
+      } else {
+        $this->logDebug($url);
+      }
       $response = file_get_contents($url);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
@@ -520,7 +534,7 @@ class GeoCodingService
           !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
           count($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) == 0) {
         $this->stampPostalCode($postalCode, $country);
-        $this->error("No remote information for ".$postalCode.'@'.$country);
+        $this->error("No remote information for ".$postalCode.'@'.$country. ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY));
         continue;
       }
 
