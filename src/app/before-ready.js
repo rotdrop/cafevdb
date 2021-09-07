@@ -103,15 +103,19 @@ const documentReady = function() {
       return false;
     });
 
-  // Display the instrumentation numbers in a dialog widget
-  // content.on(
-  //   'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
-  //   function(event) {
-  //     event.stopImmediatePropagation(); // this is vital
-  //     const data = $(this).data('json');
-  //     Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
-  //     return false;
-  //   });
+  // Display the instrumentation numbers in a dialog widget if in project-mode
+  content.on(
+    'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
+    function(event) {
+      const $this = $(this);
+      const jsonData = $this.data('json');
+      if (parseInt(jsonData.projectId) > 0) {
+        event.stopImmediatePropagation(); // this is vital
+        const data = $(this).data('json');
+        Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
+        return false;
+      }
+    });
 
   CAFEVDB.addReadyCallback(function() {
     $('input.alertdata.cafevdb-page').each(function(index) {
@@ -122,7 +126,7 @@ const documentReady = function() {
 
   });
 
-  // fire an event when this have been finished
+  // fire an event when this has been finished
   console.debug('trigger loaded');
   $(document).trigger('cafevdb:donecafevdbjs');
 
