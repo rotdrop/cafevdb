@@ -92,10 +92,19 @@ class Navigation
     if (!is_array($selectedValues)) {
       $selectedValues = [ $selectedValues ];
     }
-    $oldGroup = isset($options[0]['group']) ? Util::htmlEscape($options[0]['group']) : false;
+    $option = $options[0]; // initialize option groups
+    $oldGroup = isset($option['group']) ? Util::htmlEscape($option['group']) : false;
     if ($oldGroup) {
-      $groupClass = isset($options[0]['groupClass']) ? ' class="'.$options[0]['groupClass'].'"' : '';
-      $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.'>
+      $groupClass = isset($option['groupClass']) ? ' class="'.$option['groupClass'].'"' : '';
+      $groupId = 0;
+      $groupInfoData = [
+        'id' => $groupId,
+        'default' => false,
+      ];
+      $groupData = " data-group-info='".json_encode($groupInfoData, JSON_FORCE_OBJECT)."'"
+                 . ' data-group-id="'.$groupId.'"'
+                 . (isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '');
+      $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.$groupData.'>
       ';
       $indent = '  ';
     }
@@ -127,17 +136,24 @@ class Navigation
         $result .= '</optgroup>
         ';
         $oldGroup = $group;
+        ++$groupId;
         $indent = '';
         if ($group) {
           $groupClass = isset($option['groupClass']) ? ' class="'.$option['groupClass'].'"' : '';
-          $groupData = isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '';
+          $groupInfoData = [
+            'id' => $groupId,
+            'default' => false,
+          ];
+          $groupData = " data-group-info='".json_encode($groupInfoData, JSON_FORCE_OBJECT)."'"
+                     . ' data-group-id="'.$groupId.'"'
+                     . isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '';
           $result .= '<optgroup label="'.$group.'"'.$groupClass.$groupData.'>
           ';
           $indent = '  ';
         }
       }
       $result .= $indent.'<option value="'.Util::htmlEscape((string)$value).'"'.
-              $disabled.$selected.$label.$title.$data.
+              $disabled.$selected.$label.$title.(isset($groupId) ? ' data-group-id="'.$groupId.'"' : '').$data.
               '>'.
               Util::htmlEscape($option['name']).
               '</option>
