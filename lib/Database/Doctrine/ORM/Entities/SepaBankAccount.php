@@ -68,6 +68,10 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var int
    *
+   * This is a POSITIVE per-musician sequence count. It currently is
+   * incremented using
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
+   *
    * @ORM\Column(type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="NONE")
