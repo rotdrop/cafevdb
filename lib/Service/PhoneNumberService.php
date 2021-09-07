@@ -194,8 +194,14 @@ class PhoneNumberService
    */
   public function metaData($number = null, $region = null, string $nl = "\n")
   {
-    if ($number !== null && !$this->validate($number, $region)) {
-      return '';
+    if ($number !== null) {
+      try {
+        if (!$this->validate($number, $region)) {
+          return '';
+        }
+      } catch (\Throwable $t) {
+        return '';
+      }
     }
 
     $carrierMapper = \libphonenumber\PhoneNumberToCarrierMapper::getInstance();
