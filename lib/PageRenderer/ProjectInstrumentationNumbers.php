@@ -195,9 +195,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
-        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
         'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
-        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
       ],
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
@@ -225,7 +224,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'default'  => '0',
       'sort'     => $sort,
       'sql'      => '$main_table.instrument_id',
-      'values'   => [
+      'values|ACP'   => [
         'table' => self::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
@@ -234,7 +233,19 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order',
-        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+      ],
+      'values|DVFL'   => [
+        'table' => self::INSTRUMENTS_TABLE,
+        'column' => 'id',
+        'description' => [
+          'columns' => [ 'name' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
+        'orderby' => '$table.sort_order',
+        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'filters' => '$table.id in (SELECT instrument_id FROM $main_table)',
       ],
       //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
@@ -266,9 +277,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'filters' => $projectMode ? '$table.project_id = ' . $this->projectId : null,
         'join' => false,
       ],
-      //'values2' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+      'values2|A' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
     ];
-    $opts['fdd']['voice']['values|ACP'] = array_merge(
+    $opts['fdd']['voice']['values|CP'] = array_merge(
       $opts['fdd']['voice']['values'], [
         'table' => 'SELECT
   t.project_id, t.instrument_id, n.seq AS voice
@@ -315,7 +326,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'sort'   => $sort,
         'select' => 'N',
         'align' => 'right',
-        'sql'    => 'COUNT($join_col_fqn)',
+        'sql'    => 'COUNT(DISTINCT $join_col_fqn)',
       ]);
     $this->addSlug('registered', $opts['fdd'][$name]);
 
@@ -373,6 +384,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
+    // @todo: here we need still delete triggers etc.
     // go
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
