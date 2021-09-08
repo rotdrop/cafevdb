@@ -213,7 +213,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['css']['postfix'] = [
       self::CSS_TAG_DIRECT_CHANGE,
       self::CSS_TAG_SHOW_HIDE_DISABLED,
-      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS,
+      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
     ];
 
     // Number of records to display on the screen
