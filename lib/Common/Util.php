@@ -201,7 +201,6 @@ class Util
    *   ...
    * ]
    * ```
-   * Only the first $keyDelimiter is taken into account.
    */
   static public function explodeIndexedMulti(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
   {
@@ -214,6 +213,24 @@ class Util
       $matrix[$row[0]][] = $row[1];
     }
     return $matrix;
+  }
+
+  /**
+   * Undo self::explodeIndexedMulti().
+   */
+  static public function implodeIndexedMulti(?array $data, string $delimiter = ',', string $keyDelimiter = ':'):string
+  {
+    if (empty($data)) {
+      return '';
+    }
+    $result = [];
+    foreach ($data as $key => $values) {
+      foreach ($values as &$value) {
+        $value = $key.$keyDelimiter.$value;
+      }
+      $result[] = implode($delimiter, $values);
+    }
+    return implode($delimiter, $result);
   }
 
   /**Return the maximum upload file size.*/
