@@ -5160,14 +5160,22 @@ class phpMyEdit
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 
+		foreach ($oldvals as $fd => $value) {
+			// newvals is passed-in unencrypted, so we should also
+			// decrypt the old values.
+			$fdn = $this->fdn[$fd];
+			$fdd = $this->fdd[$fdn];
+			if (!empty($fdd['encryption']['decrypt'])) {
+				// encrypt the value
+				$oldvals[$fd] = call_user_func($fdd['encryption']['decrypt'], $value);
+			}
+		}
+
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
-			// echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
 			if (isset($stamps[$fd])) {
 				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
-				//$this->logInfo($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
 				if ($oldstamp != $stamps[$fd]) {
-					//$this->logInfo('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
 					$changed[] = $fd;
 				} else {
 					$oldvals[$fd] = $value; // force equal, no reason to change.
@@ -5176,13 +5184,10 @@ class phpMyEdit
 				if (intval($value) !== intval($oldvals[$fd])) {
 					// checkboxes, empty means unchecked, but the DB
 					// may as well store nothing or 0.
-					// $this->logInfo('Changed check '.$fd.' "'.intval($oldvals[$fd]).'" "'.intval($value));
 					$changed[] = $fd;
 					$newvals[$fd] = $defaults[$fd];
 				}
 			} else if ($value != $oldvals[$fd]) {
-				//error_log('Changed '.$fd.' "'.$oldvals[$fd].'" "'.$value.'"');
-				//error_log($fd.' old: '.$oldvals[$fd].' '.$value);
 				$fdn = $this->fdn[$fd]; // $fdn == field number
 				if ($this->col_has_multiple($fdn) && !$this->skipped($fdn)) {
 					$tmpval1 = explode(',',$value);
@@ -5242,7 +5247,6 @@ class phpMyEdit
 				// just means: not settable by the user.
 				continue;
 			}
-			//error_log($fd.' old: '.$oldvals[$fd].' new: '.$newvals[$fd]);
 			$fdd = $this->fdd[$fdn];
 			$table = '';
 			$tablename = '';
