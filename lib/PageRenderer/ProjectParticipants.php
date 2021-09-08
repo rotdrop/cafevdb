@@ -1122,6 +1122,9 @@ class ProjectParticipants extends PMETableViewBase
     $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
     $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
+    // $debugColumns = [ $instrumentField, $voiceField, ];
+    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
+
     if (array_search($voiceField, $changed) === false
         && array_search($instrumentField, $changed) === false) {
       // nothing to do
@@ -1130,31 +1133,40 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     // only the new values should matter ...
-    $instrumentValues = Util::explodeIndexed($newValues[$instrumentField], 0);
-    $voiceValues = Util::explodeIndexed($newValues[$voiceField]);
-
-    $instrumentationNumbers = $this->project->getInstrumentationNumbers();
-
-    $voices = array_replace($voiceValues, $instrumentValues);
+    $instrumentVoices = [];
+    $instruments = Util::explode(',', $newValues[$instrumentField]);
+    foreach ($instruments as $instrument) {
+      $instrumentVoices[$instrument] = [ 0 ];
+    }
+    $voiceValues = Util::explodeIndexedMulti($newValues[$voiceField]);
+    foreach ($voiceValues as $instrument => $newVoices) {
+      $instrumentVoices[$instrument] = array_merge($instrumentVoices[$instrument], $newVoices);
+    }
 
     $this->debug('INSTRUMENTS '.print_r($instrumentValues, true));
     $this->debug('VOICE VALUES '.print_r($voiceValues, true));
-    $this->debug('VOICES '.print_r($voices, true));
+    $this->debug('VOICES '.print_r($instrumentVoices, true));
 
-    foreach ($voices as $instrumentId => $voice) {
-      if (!$instrumentationNumbers->exists(function($dummy, Entities\ProjectInstrumentationNumber $instrumentationNumber) use ($instrumentId, $voice) {
-        return ($instrumentationNumber->getInstrument()->getId() == $instrumentId
-                &&
-                $instrumentationNumber->getVoice() == $voice);
-      })) {
-        $instrumentationNumber = (new Entities\ProjectInstrumentationNumber)
-                               ->setProject($this->project)
-                               ->setInstrument($instrumentId)
-                               ->setVoice($voice)
-                               ->setQuantity(0);
-        $this->persist($instrumentationNumber);
+    $instrumentationNumbers = $this->project->getInstrumentationNumbers();
+    foreach ($instrumentVoices as $instrumentId => $voices) {
+      foreach ($voices as $voice) {
+        if (!$instrumentationNumbers->exists(function($dummy, Entities\ProjectInstrumentationNumber $instrumentationNumber) use ($instrumentId, $voice) {
+          return ($instrumentationNumber->getInstrument()->getId() == $instrumentId
+                  &&
+                  $instrumentationNumber->getVoice() == $voice);
+        })) {
+          $instrumentationNumber = (new Entities\ProjectInstrumentationNumber)
+                                 ->setProject($this->project)
+                                 ->setInstrument($instrumentId)
+                                 ->setVoice($voice)
+                                 ->setQuantity(0);
+          $this->persist($instrumentationNumber);
+          $this->flush();
+        }
       }
     }
+
+    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
 
     return true;
   }
