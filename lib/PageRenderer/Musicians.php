@@ -151,6 +151,10 @@ class Musicians extends PMETableViewBase
     if (empty($this->musicianId)) {
       $this->musicianId = $this->pmeRecordId['id']??null;
     }
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Musician'));
+    }
   }
 
   public function cssClass():string { return self::CSS_CLASS; }
