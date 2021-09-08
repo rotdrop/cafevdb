@@ -84,7 +84,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const COL_QUOTE = '`';
 
   /** CSS tag for displaying participant fields */
-  const CSS_TAG_PROJECT_PARTICIPANT_FIELDS = 'project-participant-fields';
+  const CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY = 'project-participant-fields-display';
   const CSS_TAG_SHOW_HIDE_DISABLED = 'show-hide-disabled';
   const CSS_TAG_DIRECT_CHANGE = 'direct-change';
 
@@ -406,8 +406,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** Run underlying table-manager (phpMyEdit for now). */
   public function execute($opts = [])
   {
-    // keep outside the transaction as seemingly this can cause a
-    // strange "autocommit" with mysql.
     $this->pme->beginTransaction();
     try {
       $this->pme->execute($opts);
@@ -957,10 +955,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // initialize self-key values
           foreach ($dataSets as $operation => $dataSet) {
             foreach (${$operation.'Identifier'} as $key => &$idValues) {
-              foreach ($idValues as &$idValueTuple) {
-                $idValueTuple[$selfKey] = null;
+              foreach ($idValues as &$idValuesTuple) {
+                $idValuesTuple[$selfKey] = null;
               }
+              unset($idValuesTuple); // break reference
             }
+            unset($idValues); // break reference
           }
 
           // explode key values
@@ -975,6 +975,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $selfValues[$tag] = Util::explodeIndexedMulti(implode(',',  $selfValues[$tag]));
           }
 
+          $this->debug('SELFVALUES ' . print_r($selfValues, true));
+
           // $selfValues['del'] adds to the 'del' key values, but does
           // not change add and rem
           $operation = 'del';
@@ -982,7 +984,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // make sure we have a $delIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
               if (!isset($remIdentifier[$key])) {
-                throw new \RuntimeException($this->l->t('Inconsistent removal request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
+                throw new \RuntimeException($this->l->t('Inconsistent removal request for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(',', $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (array_search($key, $identifier[$multiple]['del']) === false) {
@@ -1009,7 +1011,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
               if (!isset($remIdentifier[$key])) {
-                throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s", major key "%2$s".', [$selfField, $selfKey]));
+                throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s" (%3$%s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(',', $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (empty($selfValues['rem'][$key])) {
@@ -1036,7 +1038,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
-              throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s", key "%2$s, major key = "%3$s" ".', [$selfField, $selfKey, $key]));
+              throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $muliple, implode(',', $selfValuesTuple), $key]));
             }
 
             // blow up the rem identifiers
@@ -1148,7 +1150,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 $this->debug('SOFT DELETE');
                 $this->remove($entity, true); // soft, need flush
               }
-              $this->debug('HARD DELETE '.($softDeleteable && (int)$entity->isDeleted()));
+              $this->debug('HARD DELETE '.(int)($softDeleteable && (int)$entity->isDeleted()));
               $this->remove($entity); // hard
             }
             $this->flush();

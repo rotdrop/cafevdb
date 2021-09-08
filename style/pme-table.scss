@@ -264,33 +264,25 @@ form.pme-form {
  */
 .pme-table-dialog-blocked {
   z-index: 90 !important;
-}
-
-.pme-table-dialog-blocked .ui-dialog-titlebar {
-  animation: busyfading 3s ease infinite alternate;
-}
-
-.ui-dialog #pme-table-container tr.pme-navigation div.chosen-container,
-.ui-dialog #pme-table-container tr.pme-navigation select,
-.ui-dialog #pme-table-container tr.pme-navigation input {
-  float:left;
+  .ui-dialog-titlebar {
+    animation: busyfading 3s ease infinite alternate;
+  }
 }
 
 .ui-dialog .pme-table-container tr.pme-navigation {
-  position: relative;
-}
-
-.ui-dialog .pme-table-container tr.pme-navigation input.pme-reload {
-  position: absolute;
-  right: 0px;
-  width: 34px;
-  height: 34px;
-  background-size: 24px 24px;
-  margin: 0px;
-}
-
-.ui-dialog #pme-table-container table.pme-navigation {
   width: 100%;
+  position: relative;
+  div.chosen-container, select, input {
+    float:left;
+  }
+  input.pme-reload {
+    position: absolute;
+    right: 0px;
+    width: 34px;
+    height: 34px;
+    background-size: 24px 24px;
+    margin: 0px;
+  }
 }
 
 /*******************************************************************************
@@ -311,30 +303,29 @@ tr.pme-navigation {
 }
 
 .pme-export-block select,
-.pme-export-block select option,
-.pme-menu-block select,
-.pme-menu-block select option {
-  vertical-align:middle;
-  font-weight:bold;
-  padding-right:1.5em!important;
+.pme-menu-block select {
+  &, option {
+    vertical-align:middle;
+    font-weight:bold;
+    padding-right:1.5em!important;
+  }
 }
 
 tr.pme-navigation {
   td.pme-buttons span .chosen-container {
     height:28px;
-  }
 
-  td.pme-buttons span .chosen-container-multi .chosen-choices li.search-choice {
-    line-height:12px;
-  }
+    &.chosen-container-multi {
+      height:28px;
+      .chosen-choices li.search-choice {
+        line-height:12px;
+      }
+    }
 
-  td.pme-buttons span .chosen-container.chosen-container-multi {
-    height:28px;
-  }
-
-  td.pme-buttons span .chosen-container .chosen-search-input {
-    height: 24px!important;
-    min-height:unset;
+    .chosen-search-input {
+      height: 24px!important;
+      min-height:unset;
+    }
   }
 } /* tr.pme-navigation */
 
@@ -1310,9 +1301,17 @@ form.pme-form {
     }
   }
 
-  /* clear large input field with button */
   td.pme-value {
 
+    /* Hacks for some select stylers. The unhacked select is left as is. */
+    &.select-wide {
+      .chosen-container, .selectize-control {
+        min-width:50%;
+        width:auto;
+      }
+    }
+
+    /* clear large input field with button */
     .cell-wrapper input.clear-field {
       position:absolute;
       min-width:0;
