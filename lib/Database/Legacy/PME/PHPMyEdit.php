@@ -274,6 +274,7 @@ class PHPMyEdit extends \phpMyEdit
   public function overrideLabel($label, $override)
   {
     $this->labelOverride[$label] = $this->l->t($override);
+    $this->labels = array_merge($this->labels, $this->labelOverride);
   }
 
   /**
