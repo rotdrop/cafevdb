@@ -337,9 +337,14 @@ trait ParticipantFieldsTrait
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
                 $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
-                $downloadLink = $this->userStorage->getDownloadLink($filePath);
                 $fileBase = $field['name'];
-                return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
+                try {
+                  $downloadLink = $this->userStorage->getDownloadLink($filePath);
+                  return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
+                } catch (\OCP\Files\NotFoundException $e) {
+                  $this->logException($e);
+                  return '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
+                }
               }
               return null;
             };
@@ -1090,10 +1095,16 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     }
     if (!empty($value)) {
       $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
-      $downloadLink = $this->userStorage->getDownloadLink($filePath);
-      $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
-      if (!empty($subDir)) {
-        $value = str_replace($subDir.UserStorage::PATH_SEP, '', $value);
+      try {
+        $downloadLink = $this->userStorage->getDownloadLink($filePath);
+        $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
+        if (!empty($subDir)) {
+          $value = str_replace($subDir.UserStorage::PATH_SEP, '', $value);
+        }
+      } catch (\OCP\Files\NotFoundException $e) {
+        $downloadLink = '#';
+        $filesAppLink = '#';
+        $value = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $value) . '</span>';
       }
     } else {
       $downloadLink = '';
