@@ -1182,9 +1182,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
    */
   public function beforeUpdateSanitizeParticipantFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
-    $this->debug('OLDVALUES '.print_r($oldValues, true));
-    $this->debug('NEWVALUES '.print_r($newValues, true));
-    $this->debug('CHANGED '.print_r($changed, true));
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project['participantFields'] as $participantField) {
@@ -1341,6 +1339,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     }
     $changed = array_values(array_unique($changed));
     $this->changeSetSize = count($changed);
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
+
     return true;
   }
 
@@ -1358,6 +1359,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       foreach ($participantField->getDataOptions() as $dataOption) {
         if ((string)$dataOption->getKey() != Uuid::NIL
             && count($dataOption->getFieldData()) == 0) {
+          $this->debug('Remove data-option ' . $dataOption->getKey());
           $participantField->getDataOptions()->removeElement($dataOption);
           $this->remove($dataOption);
           $this->flush();
