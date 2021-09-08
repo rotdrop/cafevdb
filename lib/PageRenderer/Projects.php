@@ -48,6 +48,9 @@ class Projects extends PMETableViewBase
   const ENTITY = Entities\Project::class;
   const NAME_LENGTH_MAX = 20;
 
+  const NUM_VOICES_MIN = 2;
+  const NUM_VOICES_EXTRA = 1;
+
   private const MAX_POSTER_COLUMNS = 4;
 
   /** @var ProjectService */
@@ -117,6 +120,10 @@ class Projects extends PMETableViewBase
         $this->projectName = $this->projectService->fetchName($this->projectId);
       }
     }
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Project'));
+    }
   }
 
   public function needPhpSession():bool
@@ -142,7 +149,6 @@ class Projects extends PMETableViewBase
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
-    $expertMode      = $this->expertMode;
 
     $opts            = [];
 
@@ -406,20 +412,25 @@ __EOT__;
         ],
       ]);
 
-    // Blow up the value-groups for the voices ...
+    // Blow up the value-groups for the voices ... actually does not
+    // matter too much, this is just a lookup table.
     $voicesValueGroups = [];
     foreach ($this->instrumentInfo['idGroups'] as $instrumentId => $groupName) {
-      for ($i = 0; $i < 16; ++$i) {
+      for ($i = 0; $i < 32; ++$i) {
         $voicesValueGroups[$instrumentId . self::JOIN_KEY_SEP . $i] = $groupName;
       }
     }
 
-    $this->makeJoinTableField(
+    list($index, $name) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
       [
         'name|CAP'  => $this->l->t('Voices'),
         'name|LFVD' => $this->l->t('Instrumentation'),
         'decoration' => [ 'slug' => 'instrumentation-voices' ],
+        'default|A' => '',
+        'values|A' => null,
+        'values2|A' => [],
+        'input|A' => 'R',
         'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
         'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', ], ],
@@ -477,7 +488,7 @@ __EOT__;
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= GREATEST(2, (pin.voice + 1)) AND n.seq > 0 AND n.seq <= GREATEST(2, (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2) + 1)
+    ON n.seq <= GREATEST(".self::NUM_VOICES_MIN.", (pin.voice + ".self::NUM_VOICES_EXTRA.")) AND n.seq > 0 AND n.seq <= GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pin.project_id = \$record_id[id]
   GROUP BY
@@ -531,7 +542,6 @@ __EOT__;
           'orderby' => '$table.sort_order ASC, $table.seq ASC',
           'join' => '$join_table.project_id = $main_table.id',
         ],
-        //'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
         'align|LF' => 'center',
         'valueGroups' => $voicesValueGroups,
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
@@ -1044,6 +1054,8 @@ project without a poster first.");
    */
   public function beforeInsertTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
   {
+    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
+
     if (empty($newVals['name'])) {
       return false;
     }
@@ -1059,23 +1071,33 @@ project without a poster first.");
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
     // ProjectParticipants table fails.
+    $instruments = Util::explode(',', $newVals[$instrumentsColumn]??'');
     foreach (Util::explode(',', $newVals[$instrumentsColumn]??'') as $instrument) {
       $newVals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
                               . ($newVals[$voicesColumn]??'');
     }
-    $items = Util::explode(',', $newVals[$voicesColumn]);
-    sort($items, SORT_NATURAL);
-    $newVals[$voicesColumn] = implode(',', array_unique($items));
+    $voiceItems = Util::explode(',', $newVals[$voicesColumn]);
+    foreach ($voiceItems as $key => $voiceItem) {
+       list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
+       if (array_search($instrument, $instruments) === false) {
+         $this->debug('REMOVE VOICE ' . $voice . ' FOR INSTRUMENT ' . $instrument);
+         unset($voiceItems[$key]);
+       }
+    }
+    sort($voiceItems, SORT_NATURAL);
+    $newVals[$voicesColumn] = implode(',', array_unique($voiceItems));
 
     foreach ([$instrumentsColumn, $voicesColumn] as $column) {
       Util::unsetValue($changed, $column);
-      if  (!empty($newVals[$column])) {
+      if (!empty($newVals[$column])) {
         $changed[] = $column;
       }
     }
 
     // unset 'copy_participants'
     Util::unsetValue($changed, 'copy_participants');
+
+    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'after');
 
     return true;
   }
@@ -1123,7 +1145,7 @@ project without a poster first.");
       // ProjectParticipants table fails.
       foreach (['old', 'new'] as $dataSet) {
         $dataArray = $dataSet . 'Vals';
-        ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??[]);
+        ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??'');
         foreach (${$dataSet . 'Instruments'} as $instrument) {
           ${$dataArray}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
                                      . (${$dataArray}[$voicesColumn]??'');

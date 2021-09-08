@@ -673,467 +673,503 @@ const projectWebPageTabHandler = function(event, ui, container) {
   }
 };
 
-const documentReady = function() {
-
-  PHPMyEdit.addTableLoadCallback('projects', {
-    callback(selector, parameters, resizeCB) {
-      const container = PHPMyEdit.container(selector);
-      const containerNode = container[0];
-      actionMenu(selector);
-      pmeFormInit(selector);
-      let imagesReady = false;
-      const imagePoller = function(callback) {
-        if (!imagesReady) {
-          const poller = setInterval(function() {
-            if (imagesReady) {
-              clearInterval(poller);
-              callback();
-            }
-          }, 100);
-        } else {
+const tableLoadCallback = function(selector, parameters, resizeCB)
+{
+  const container = PHPMyEdit.container(selector);
+  const containerNode = container[0];
+  actionMenu(selector);
+  pmeFormInit(selector);
+  let imagesReady = false;
+  const imagePoller = function(callback) {
+    if (!imagesReady) {
+      const poller = setInterval(function() {
+        if (imagesReady) {
+          clearInterval(poller);
           callback();
         }
-      };
+      }, 100);
+    } else {
+      callback();
+    }
+  };
 
-      const posterContainer = container.find('.project-poster');
-      if (posterContainer.length > 0) {
-        let readyCountDown = posterContainer.length;
-        posterContainer.each(function(index) {
-          Photo.ready($(this), function() {
-            imagesReady = --readyCountDown <= 0;
-          });
-        });
-      } else {
-        container.find('div.photo, span.photo').imagesLoaded(function() {
-          imagesReady = true;
-        });
-      }
-
-      // Intercept app-navigation events here and redirect to the page
-      // loader
-      container.on('click', 'li.nav > a.nav', function(event) {
-        const post = $(this).data('post');
-        Page.loadPage(post);
-        // alert('post: '+post);
-        return false;
+  const posterContainer = container.find('.project-poster');
+  if (posterContainer.length > 0) {
+    let readyCountDown = posterContainer.length;
+    posterContainer.each(function(index) {
+      Photo.ready($(this), function() {
+        imagesReady = --readyCountDown <= 0;
       });
+    });
+  } else {
+    container.find('div.photo, span.photo').imagesLoaded(function() {
+      imagesReady = true;
+    });
+  }
 
-      // projectWebPageRequest({ action: 'ping' }, container);
+  // Intercept app-navigation events here and redirect to the page
+  // loader
+  container.on('click', 'li.nav > a.nav', function(event) {
+    const post = $(this).data('post');
+    Page.loadPage(post);
+    // alert('post: '+post);
+    return false;
+  });
 
-      const articleBox = container.find('#projectWebArticles');
+  // projectWebPageRequest({ action: 'ping' }, container);
 
-      const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
-      let numDisplayFrames = displayFrames.length; // count-down variable
+  const articleBox = container.find('#projectWebArticles');
 
-      const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
-      let numChangeFrames = changeFrames.length;
-      // console.info('NUM CHANGE FRAMES', numChangeFrames);
+  const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
+  let numDisplayFrames = displayFrames.length; // count-down variable
 
-      // allFrames also contains some div + all available iframes
-      const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
-      const allChangeFrames = articleBox.find('.cmsarticleframe.change');
-      // const allContainers = articleBox.find('.cmsarticlecontainer');
+  const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
+  let numChangeFrames = changeFrames.length;
+  // console.info('NUM CHANGE FRAMES', numChangeFrames);
 
-      const articleSelect = container.find('#cmsarticleselect');
-      articleSelect.chosen({
+  // allFrames also contains some div + all available iframes
+  const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
+  const allChangeFrames = articleBox.find('.cmsarticleframe.change');
+  // const allContainers = articleBox.find('.cmsarticlecontainer');
+
+  const articleSelect = container.find('#cmsarticleselect');
+  articleSelect.chosen({
+    width: 'auto',
+    disable_search_threshold: 10,
+    no_results_text: t(appName, 'No values match'),
+  });
+  articleSelect.on('chosen:showing_dropdown', function() {
+    articleBox.css('overflow', 'visible');
+    return true;
+  });
+  articleSelect.on('chosen:hiding_dropdown', function() {
+    articleBox.css('overflow', 'hidden');
+    return true;
+  });
+
+  articleSelect.on('change', function(event) {
+    event.preventDefault();
+
+    const projectId = articleSelect.data('projectId');
+    const selected = articleSelect.find('option:selected');
+    const articleId = selected.val();
+    const articleData = selected.data('article');
+    // just do it ...
+    projectWebPageRequest({
+      action: 'link',
+      articleId,
+      projectId,
+      articleData,
+    }, container);
+
+    return false;
+  });
+
+  const scrollbarAdjust = function() {
+    const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
+    articleBox.css('margin-right', scrollBarWidth + 'px');
+  };
+
+  const forceSize = function(iframe) {
+    const domFrame = iframe[0];
+    const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
+    const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
+    iframe.css({
+      width: scrollWidth + 'px',
+      height: scrollHeight + 'px',
+      overflow: 'hidden',
+    });
+    imagePoller(function() {
+      resizeCB();
+      scrollbarAdjust();
+    });
+  };
+
+  const displayArticleLoad = function(frame) {
+    if (typeof frame !== 'undefined') {
+      const self = frame;
+      const iframe = $(self);
+      const contents = iframe.contents();
+
+      // For the pretty-print version. We remove everything
+      // except the article itself
+      contents.find('div#header').remove();
+      contents.find('div#footer').remove();
+      contents.find('div.navi').remove();
+      contents.find('body').css({
+        'min-width': 'unset',
+        width: 'unset',
+      });
+      contents.find('#content').css({
         width: 'auto',
-        disable_search_threshold: 10,
-        no_results_text: t(appName, 'No values match'),
+        height: '100%',
       });
-      articleSelect.on('chosen:showing_dropdown', function() {
-        articleBox.css('overflow', 'visible');
-        return true;
+      const itemText = contents.find('div.item-text');
+      itemText.css({
+        width: '700px',
+        // 'min-width': '600px',
+        'margin-left': '10px',
+        left: 'unset',
+        position: 'unset',
       });
-      articleSelect.on('chosen:hiding_dropdown', function() {
-        articleBox.css('overflow', 'hidden');
-        return true;
-      });
+      itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
 
-      articleSelect.on('change', function(event) {
-        event.preventDefault();
-
-        const projectId = articleSelect.data('projectId');
-        const selected = articleSelect.find('option:selected');
-        const articleId = selected.val();
-        const articleData = selected.data('article');
-        // just do it ...
-        projectWebPageRequest({
-          action: 'link',
-          articleId,
-          projectId,
-          articleData,
-        }, container);
-
-        return false;
+      const scrollWidth = self.contentWindow.document.body.scrollWidth;
+      const scrollHeight = self.contentWindow.document.body.scrollHeight;
+      iframe.css({
+        width: scrollWidth + 'px',
+        height: scrollHeight + 'px',
       });
 
-      const scrollbarAdjust = function() {
-        const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
-        articleBox.css('margin-right', scrollBarWidth + 'px');
-      };
+      // alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
 
-      const forceSize = function(iframe) {
-        const domFrame = iframe[0];
-        const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
-        const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
-        iframe.css({
-          width: scrollWidth + 'px',
-          height: scrollHeight + 'px',
-          overflow: 'hidden',
-        });
-        imagePoller(function() {
-          resizeCB();
-          scrollbarAdjust();
-        });
-      };
+      --numDisplayFrames;
+    }
 
-      const displayArticleLoad = function(frame) {
-        if (typeof frame !== 'undefined') {
-          const self = frame;
-          const iframe = $(self);
-          const contents = iframe.contents();
+    // alert('Display Frames: ' + numDisplayFrames);
+    if (numDisplayFrames === 0) {
+      $('#cmsFrameLoader').fadeOut(function() {
+        articleBox.tabs({
+          active: 0,
+          heightStyle: 'auto',
+          activate(event, ui) {
+            // nothing
+          },
+          create(event, ui) {
+            articleBox.height('auto');
 
-          // For the pretty-print version. We remove everything
-          // except the article itself
-          contents.find('div#header').remove();
-          contents.find('div#footer').remove();
-          contents.find('div.navi').remove();
-          contents.find('body').css({
-            'min-width': 'unset',
-            width: 'unset',
-          });
-          contents.find('#content').css({
-            width: 'auto',
-            height: '100%',
-          });
-          const itemText = contents.find('div.item-text');
-          itemText.css({
-            width: '700px',
-            // 'min-width': '600px',
-            'margin-left': '10px',
-            left: 'unset',
-            position: 'unset',
-          });
-          itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
+            const forcedWidth = articleBox.width();
+            const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
 
-          const scrollWidth = self.contentWindow.document.body.scrollWidth;
-          const scrollHeight = self.contentWindow.document.body.scrollHeight;
-          iframe.css({
-            width: scrollWidth + 'px',
-            height: scrollHeight + 'px',
-          });
+            allDisplayFrames.width(forcedWidth);
+            allDisplayFrames.height(forcedHeight);
 
-          // alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
-
-          --numDisplayFrames;
-        }
-
-        // alert('Display Frames: ' + numDisplayFrames);
-        if (numDisplayFrames === 0) {
-          $('#cmsFrameLoader').fadeOut(function() {
-            articleBox.tabs({
-              active: 0,
-              heightStyle: 'auto',
-              activate(event, ui) {
-                // nothing
-              },
-              create(event, ui) {
-                articleBox.height('auto');
-
-                const forcedWidth = articleBox.width();
-                const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-
-                allDisplayFrames.width(forcedWidth);
-                allDisplayFrames.height(forcedHeight);
-
-                imagePoller(function() {
-                  resizeCB();
-                  scrollbarAdjust();
-                });
-              },
-              beforeActivate(event, ui) {
-                return projectWebPageTabHandler(event, ui, container);
-              },
+            imagePoller(function() {
+              resizeCB();
+              scrollbarAdjust();
             });
-          });
-        } else if (numDisplayFrames < 0) {
-          // can happen, moving dialogs around causes
-          // reloads, at least with FF.
+          },
+          beforeActivate(event, ui) {
+            return projectWebPageTabHandler(event, ui, container);
+          },
+        });
+      });
+    } else if (numDisplayFrames < 0) {
+      // can happen, moving dialogs around causes
+      // reloads, at least with FF.
 
-          const forcedWidth = articleBox.width();
-          const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+      const forcedWidth = articleBox.width();
+      const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
 
-          allDisplayFrames.width(forcedWidth);
-          allDisplayFrames.height(forcedHeight);
+      allDisplayFrames.width(forcedWidth);
+      allDisplayFrames.height(forcedHeight);
 
-          // if (false) {
-          //   // In principle, this should not be necessary
-          //   // as the height of the articleBox should not change.
-          //   imagePoller(function() {
-          //     resizeCB();
-          //     scrollbarAdjust();
-          //   });
-          // }
-        }
-      };
+      // if (false) {
+      //   // In principle, this should not be necessary
+      //   // as the height of the articleBox should not change.
+      //   imagePoller(function() {
+      //     resizeCB();
+      //     scrollbarAdjust();
+      //   });
+      // }
+    }
+  };
 
-      const changeArticleLoad = function(frame) {
-        // console.info('HELLO LOAD');
-        if (typeof frame !== 'undefined') {
-          const self = frame;
-          const iframe = $(self);
-          const contents = iframe.contents();
+  const changeArticleLoad = function(frame) {
+    // console.info('HELLO LOAD');
+    if (typeof frame !== 'undefined') {
+      const self = frame;
+      const iframe = $(self);
+      const contents = iframe.contents();
 
-          // in order to be prepared for automatic reloads
-          // caused by resize or redraw events we have to
-          // update the src-uri of the iframe.
-          // alert('src: '+ self.contentWindow.location.href);
+      // in order to be prepared for automatic reloads
+      // caused by resize or redraw events we have to
+      // update the src-uri of the iframe.
+      // alert('src: '+ self.contentWindow.location.href);
 
-          const wrapper = contents.find('#rex-wrapper');
-          const website = contents.find('#rex-website');
-          const rexForm = wrapper.find('form#REX_FORM');
+      const wrapper = contents.find('#rex-wrapper');
+      const website = contents.find('#rex-website');
+      const rexForm = wrapper.find('form#REX_FORM');
 
-          // set to auto and fix later for correct size and
-          // scrollbars when necessary.
-          container.css({
-            height: 'auto',
-            width: 'auto',
-          });
+      // set to auto and fix later for correct size and
+      // scrollbars when necessary.
+      container.css({
+        height: 'auto',
+        width: 'auto',
+      });
 
-          // The below lines style the edit window.
-          contents.find('#rex-navi-logout').remove();
-          contents.find('#rex-navi-main').remove();
-          contents.find('#rex-redaxo-link').remove();
-          contents.find('#rex-footer').remove();
-          contents.find('#rex-header').remove();
-          contents.find('#rex-title').remove();
-          contents.find('#rex-a256-searchbar').remove();
-          contents.find('body').css({
-            margin: 0,
-            'background-image': 'none',
-          });
-          contents.find('#rex-output').css({ margin: 0 });
-          contents.find('#rex-navi-path a').removeAttr('href');
+      // The below lines style the edit window.
+      contents.find('#rex-navi-logout').remove();
+      contents.find('#rex-navi-main').remove();
+      contents.find('#rex-redaxo-link').remove();
+      contents.find('#rex-footer').remove();
+      contents.find('#rex-header').remove();
+      contents.find('#rex-title').remove();
+      contents.find('#rex-a256-searchbar').remove();
+      contents.find('body').css({
+        margin: 0,
+        'background-image': 'none',
+      });
+      contents.find('#rex-output').css({ margin: 0 });
+      contents.find('#rex-navi-path a').removeAttr('href');
 
-          wrapper.css({
-            padding: 0,
-            margin: 0,
-            float: 'left',
-          });
-          website.css({
-            width: '100%', // wrapper.css('width'),
-            'background-image': 'none',
-          });
-          contents.find('textarea').css({ 'max-width': '720px' });
+      wrapper.css({
+        padding: 0,
+        margin: 0,
+        float: 'left',
+      });
+      website.css({
+        width: '100%', // wrapper.css('width'),
+        'background-image': 'none',
+      });
+      contents.find('textarea').css({ 'max-width': '720px' });
 
-          const scrollWidth = self.contentWindow.document.body.scrollWidth;
-          const scrollHeight = self.contentWindow.document.body.scrollHeight;
-          iframe.css({
-            width: scrollWidth + 'px',
-            height: scrollHeight + 'px',
-          });
+      const scrollWidth = self.contentWindow.document.body.scrollWidth;
+      const scrollHeight = self.contentWindow.document.body.scrollHeight;
+      iframe.css({
+        width: scrollWidth + 'px',
+        height: scrollHeight + 'px',
+      });
 
-          const articleContainer = iframe.parent();
-          articleContainer.css({
-            height: 'unset',
-            width: 'unset',
-          });
+      const articleContainer = iframe.parent();
+      articleContainer.css({
+        height: 'unset',
+        width: 'unset',
+      });
 
-          const editArea = rexForm.find('textarea');
-          if (editArea.length > 0) {
-            textareaResize(editArea);
+      const editArea = rexForm.find('textarea');
+      if (editArea.length > 0) {
+        textareaResize(editArea);
 
-            rexForm
-              .off('resize', 'textarea')
-              .on('resize', 'textarea', function() {
-                forceSize(iframe);
-                return false;
-              });
-          }
-
-          rexForm.off('resize', '.mceEditor');
-          rexForm.on('resize', '.mceEditor', function() {
+        rexForm
+          .off('resize', 'textarea')
+          .on('resize', 'textarea', function() {
             forceSize(iframe);
             return false;
           });
-
-          --numChangeFrames;
-          // console.info('NUM CHANGE FRAMES', numChangeFrames);
-        }
-        // alert('Change Frames: ' + numChangeFrames);
-        if (numChangeFrames === 0) {
-          // console.info('NUM CHANGE FRAMES', numChangeFrames);
-          $('#cmsFrameLoader').fadeOut(function() {
-            container.find('#projectWebArticles').tabs({
-              active: 0,
-              create(event, ui) {
-                articleBox.height('auto');
-                imagePoller(function() {
-                  resizeCB();
-                  scrollbarAdjust();
-                  // $('#cmsarticleselect_chosen').width('80%');
-                });
-              },
-              activate(event, ui) {
-                const iframe = ui.newPanel.find('iframe');
-                if (iframe.length === 1) {
-                  forceSize(iframe);
-                } else {
-                  resizeCB();
-                  scrollbarAdjust();
-                }
-              },
-              beforeActivate(event, ui) {
-                return projectWebPageTabHandler(event, ui, container);
-              },
-            });
-            $('#projectWebArticles').css({ opacity: 1.0 });
-          });
-        } else if (numChangeFrames < 0) {
-          // < 0 happens when inside the frame a reload
-          // is triggered, after the initial loading of all frames.
-          imagePoller(function() {
-            resizeCB();
-            scrollbarAdjust();
-            $('#projectWebArticles').css({ opacity: 1.0 });
-          });
-        }
-      };
-
-      if (allDisplayFrames.length > 0) {
-        // alert('all dpy frames: '+allDisplayFrames.length);
-        if (displayFrames.length > 0) {
-          // alert('dpy frames: '+displayFrames.length);
-          displayFrames.on('load', function(event) {
-            displayArticleLoad(this);
-            // alert('Load');
-          });
-        } else {
-          displayArticleLoad();
-        }
-      } else if (allChangeFrames.length > 0) {
-        if (changeFrames.length > 0) {
-          $('#projectWebArticles').css({ opacity: 0.0 });
-          changeFrames.on('load', function(event) {
-            changeArticleLoad(this);
-          });
-        } else {
-          changeArticleLoad();
-        }
-      } else {
-        // Just execute the resize callback:
-        imagePoller(function() {
-          resizeCB();
-          scrollbarAdjust();
-        });
       }
 
-      container.find('div.photo, .cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
-        event.preventDefault();
-        Photo.popup(this);
+      rexForm.off('resize', '.mceEditor');
+      rexForm.on('resize', '.mceEditor', function() {
+        forceSize(iframe);
         return false;
       });
 
-      const toolbox = container.find('fieldset.projectToolbox');
-      if (toolbox.length > 0) {
-        // If any of the 3 dialogs is already open, move it to top.
-        let popup;
-        if ((popup = $('#events')).dialog('isOpen') === true) {
-          popup.dialog('moveToTop');
-          popup.dialog('option', 'position', {
-            my: 'left top',
-            at: 'left+20px top+60px',
-            of: window,
-          });
-        }
-        if ((popup = $('#event')).dialog('isOpen') === true) {
-          popup.dialog('moveToTop');
-          popup.dialog('option', 'position', {
-            my: 'left top',
-            at: 'left+40px top+40px',
-            of: window,
-          });
-        }
-        if ((popup = $('#emailformdialog')).dialog('isOpen') === true) {
-          popup.dialog('moveToTop');
-          popup.dialog('option', 'position', {
-            my: 'left top',
-            at: 'left+60px top+60px',
-            of: window,
-          });
-        }
-        if ((popup = $('#dokuwiki_popup')).dialog('isOpen') === true) {
-          popup.dialog('moveToTop');
-          popup.dialog('option', 'position', {
-            my: 'center top',
-            at: 'center top+20px',
-            of: window,
-          });
-        }
-        if ((popup = $('#project-instrumentation-numbers-dialog')).dialog('isOpen') === true) {
-          popup.dialog('moveToTop');
-          popup.dialog('option', 'position', {
-            my: 'right top',
-            at: 'right-20px top+30px',
-            of: window,
-          });
-        }
+      --numChangeFrames;
+      // console.info('NUM CHANGE FRAMES', numChangeFrames);
+    }
+    // alert('Change Frames: ' + numChangeFrames);
+    if (numChangeFrames === 0) {
+      // console.info('NUM CHANGE FRAMES', numChangeFrames);
+      $('#cmsFrameLoader').fadeOut(function() {
+        container.find('#projectWebArticles').tabs({
+          active: 0,
+          create(event, ui) {
+            articleBox.height('auto');
+            imagePoller(function() {
+              resizeCB();
+              scrollbarAdjust();
+              // $('#cmsarticleselect_chosen').width('80%');
+            });
+          },
+          activate(event, ui) {
+            const iframe = ui.newPanel.find('iframe');
+            if (iframe.length === 1) {
+              forceSize(iframe);
+            } else {
+              resizeCB();
+              scrollbarAdjust();
+            }
+          },
+          beforeActivate(event, ui) {
+            return projectWebPageTabHandler(event, ui, container);
+          },
+        });
+        $('#projectWebArticles').css({ opacity: 1.0 });
+      });
+    } else if (numChangeFrames < 0) {
+      // < 0 happens when inside the frame a reload
+      // is triggered, after the initial loading of all frames.
+      imagePoller(function() {
+        resizeCB();
+        scrollbarAdjust();
+        $('#projectWebArticles').css({ opacity: 1.0 });
+      });
+    }
+  };
 
-        const projectId = toolbox.data('projectId');
-        const projectName = toolbox.data('projectName');
-        const post = {
-          projectId,
-          projectName,
-        };
-        toolbox.off('click', '**'); // safeguard
-        toolbox.on(
-          'click', 'button.project-wiki',
-          function(event) {
-            const self = $(this);
-            post.wikiPage = self.data('wikiPage');
-            post.popupTitle = self.data('wikiTitle');
-            wikiPopup(post);
-            return false;
-          });
-        toolbox.on(
-          'click', 'button.events',
-          function(event) {
-            eventsPopup(post);
-            return false;
-          });
-        toolbox.on(
-          'click', 'button.project-email',
-          function(event) {
-            emailPopup(post);
-            return false;
-          });
-        toolbox.on(
-          'click', 'button.project-instrumentation-numbers',
-          function(event) {
-            instrumentationNumbersPopup(selector, post);
-            return false;
-          });
-      }
+  if (allDisplayFrames.length > 0) {
+    // alert('all dpy frames: '+allDisplayFrames.length);
+    if (displayFrames.length > 0) {
+      // alert('dpy frames: '+displayFrames.length);
+      displayFrames.on('load', function(event) {
+        displayArticleLoad(this);
+        // alert('Load');
+      });
+    } else {
+      displayArticleLoad();
+    }
+  } else if (allChangeFrames.length > 0) {
+    if (changeFrames.length > 0) {
+      $('#projectWebArticles').css({ opacity: 0.0 });
+      changeFrames.on('load', function(event) {
+        changeArticleLoad(this);
+      });
+    } else {
+      changeArticleLoad();
+    }
+  } else {
+    // Just execute the resize callback:
+    imagePoller(function() {
+      resizeCB();
+      scrollbarAdjust();
+    });
+  }
 
-      const linkPopups = {
-        'projects--participant-fields': participantFieldsPopup,
-        'projects--instrumentation': instrumentationNumbersPopup,
-        'projects--instrumentation-voices': instrumentationNumbersPopup,
-      };
+  container.find('div.photo, .cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
+    event.preventDefault();
+    Photo.popup(this);
+    return false;
+  });
 
-      for (const [css, popup] of Object.entries(linkPopups)) {
-        const element = container.find('td.pme-value.' + css + ' a.nav');
-        element
-          .off('click')
-          .on('click', function(event) {
-            const data = $(this).data('json');
-            popup(selector, data);
-            return false;
-          });
-      }
+  const toolbox = container.find('fieldset.projectToolbox');
+  if (toolbox.length > 0) {
+    // If any of the 3 dialogs is already open, move it to top.
+    let popup;
+    if ((popup = $('#events')).dialog('isOpen') === true) {
+      popup.dialog('moveToTop');
+      popup.dialog('option', 'position', {
+        my: 'left top',
+        at: 'left+20px top+60px',
+        of: window,
+      });
+    }
+    if ((popup = $('#event')).dialog('isOpen') === true) {
+      popup.dialog('moveToTop');
+      popup.dialog('option', 'position', {
+        my: 'left top',
+        at: 'left+40px top+40px',
+        of: window,
+      });
+    }
+    if ((popup = $('#emailformdialog')).dialog('isOpen') === true) {
+      popup.dialog('moveToTop');
+      popup.dialog('option', 'position', {
+        my: 'left top',
+        at: 'left+60px top+60px',
+        of: window,
+      });
+    }
+    if ((popup = $('#dokuwiki_popup')).dialog('isOpen') === true) {
+      popup.dialog('moveToTop');
+      popup.dialog('option', 'position', {
+        my: 'center top',
+        at: 'center top+20px',
+        of: window,
+      });
+    }
+    if ((popup = $('#project-instrumentation-numbers-dialog')).dialog('isOpen') === true) {
+      popup.dialog('moveToTop');
+      popup.dialog('option', 'position', {
+        my: 'right top',
+        at: 'right-20px top+30px',
+        of: window,
+      });
+    }
 
-      return false; // table load callback
-    },
+    const projectId = toolbox.data('projectId');
+    const projectName = toolbox.data('projectName');
+    const post = {
+      projectId,
+      projectName,
+    };
+    toolbox.off('click', '**'); // safeguard
+    toolbox.on(
+      'click', 'button.project-wiki',
+      function(event) {
+        const self = $(this);
+        post.wikiPage = self.data('wikiPage');
+        post.popupTitle = self.data('wikiTitle');
+        wikiPopup(post);
+        return false;
+      });
+    toolbox.on(
+      'click', 'button.events',
+      function(event) {
+        eventsPopup(post);
+        return false;
+      });
+    toolbox.on(
+      'click', 'button.project-email',
+      function(event) {
+        emailPopup(post);
+        return false;
+      });
+    toolbox.on(
+      'click', 'button.project-instrumentation-numbers',
+      function(event) {
+        instrumentationNumbersPopup(selector, post);
+        return false;
+      });
+  }
+
+  const linkPopups = {
+    'projects--participant-fields': participantFieldsPopup,
+    'projects--instrumentation': instrumentationNumbersPopup,
+    'projects--instrumentation-voices': instrumentationNumbersPopup,
+  };
+
+  for (const [css, popup] of Object.entries(linkPopups)) {
+    const element = container.find('td.pme-value.' + css + ' a.nav');
+    element
+      .off('click')
+      .on('click', function(event) {
+        const data = $(this).data('json');
+        popup(selector, data);
+        return false;
+      });
+  }
+
+  // Instrumentation and instrumentation numbers on add/copy/change
+  // pages. The idea is to provide enough but not too much excess
+  // voices to select.
+
+  container.on('change', 'select.projects--instrumentation, select.projects--instrumentation-voices', function(event) {
+    const $instrumentsSelect = container.find('select.projects--instrumentation');
+    const $instrumentationVoicesSelect = container.find('select.projects--instrumentation-voices');
+    const cleanup = function() {};
+    const post = $.param({
+      instruments: $instrumentsSelect.attr('name'),
+      voices: $instrumentationVoicesSelect.attr('name'),
+    })
+          + '&' + $instrumentsSelect.serialize()
+          + '&' + $instrumentationVoicesSelect.serialize();
+    $.post(generateUrl('projects/change-instrumentation'), post)
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown);
+        cleanup();
+      })
+      .done(function(rqData) {
+        if (!Ajax.validateResponse(rqData, ['voices'])) {
+          cleanup();
+        }
+        $instrumentationVoicesSelect
+          .empty()
+          .append(rqData.voices);
+        $instrumentationVoicesSelect
+          .prop('disabled', !rqData.voices)
+          .trigger('chosen:updated');
+        Notification.messages(rqData.message);
+      });
+  });
+
+  return false; // table load callback
+};
+
+const documentReady = function() {
+
+  PHPMyEdit.addTableLoadCallback('projects', {
+    callback: tableLoadCallback,
     context: globalState,
     parameters: [],
   });

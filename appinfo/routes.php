@@ -339,6 +339,17 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Project instruments and voices
+     *
+     * The end-point expects the the instrument and voices selection
+     * as input and returns selection-options for the voices.
+     */
+    [
+      'name' => 'projects#change_instrumentation',
+      'url' => '/projects/change-instrumentation',
+      'verb' => 'POST',
+    ],
+    /**
      * Musicians
      */
     [

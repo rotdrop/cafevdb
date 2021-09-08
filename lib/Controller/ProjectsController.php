@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 class ProjectsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -88,7 +90,8 @@ class ProjectsController extends Controller {
           }
         }
         $control = $this->parameterService->getParam('control', 'name');
-        list('id' => $projectId,) = $this->pme->getCGIRecordId();
+        $record = $this->pme->getCGIRecordId();
+        $projectId = $record['id']??null;
         $projectName = $projectValues['name'];
         $projectYear = $projectValues['year'];
         $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == 'temporary';
@@ -168,6 +171,46 @@ class ProjectsController extends Controller {
         break;
     }
     return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * @param string $instrumentsKey The name of the instruments select.
+   *
+   * @param string $voicesKey The name of the voices select.
+   */
+  public function changeInstrumentation(string $instruments, string $voices)
+  {
+    $instrumentsKey = str_replace('[]', '', $instruments);
+    $instruments = array_filter($this->parameterService[$instrumentsKey]);
+
+    $voicesKey = str_replace('[]', '', $voices);
+    $voices = array_filter($this->parameterService[$voicesKey]);
+
+    $instrumentInfo =
+      $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
+
+    // convert voices array to instrumentId => [ voices ]
+    $voicesByInstrument = Util::explodeIndexedMulti(implode(',', $voices));
+
+    $voicesSelectArray = [];
+    foreach ($instruments as $instrument) {
+      $highest = max($voicesByInstrument[$instrument]??[1]);
+      $highest = max(Renderer::NUM_VOICES_MIN, $highest + Renderer::NUM_VOICES_EXTRA);
+      for ($i = 1; $i <= $highest; ++$i) {
+        $voiceOption = [
+          'value' => $instrument . Renderer::JOIN_KEY_SEP . $i,
+          'name' => $instrumentInfo['byId'][$instrument] . ' ' . $i,
+          'group' => $instrumentInfo['idGroups'][$instrument],
+        ];
+        $voicesSelectArray[] = $voiceOption;
+      }
+    }
+
+    $voicesSelectOptions = PageNavigation::selectOptions($voicesSelectArray, $voices);
+
+    return self::dataResponse([ 'voices' => $voicesSelectOptions ]);
   }
 
 }
