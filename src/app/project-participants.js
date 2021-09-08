@@ -123,57 +123,35 @@ const myPersonalRecordDialog = function(record, options) {
 /**
  * Trigger server-side validation and fetch the result.
  *
- * @param {jQuery} container object for the curren active
- * form-container (i.e. the div the form is wrapped into)
- *
- * @param {jQuery} selectMusicianInstrument The select box with the list of
- * the musicians arguments.
- *
- * @param {String} ajaxScript The URL to the script that actually validates the
- * data.
- *
- * @param {Function} finalizeCB Callback called at the end, before submitting
- * the current form to the servre.
- *
- * @param {Function} errorCB TBD.
+ * @param {object} options
  *
  * Would perhaps be snappier to only submit the form to the
  * server if something changed. However, the validation is triggered
  * by a change event. So what.
  */
-const validateInstrumentChoices = function(
-  container,
-  selectMusicianInstrument,
-  ajaxScript,
-  finalizeCB,
-  errorCB) {
+const validateInstrumentChoices = function(options) {
+  const container = options.container;
+  const selectMusicianInstrument = options.selectElement;
+  const ajaxScript = options.validationUrl;
+  const finalizeCB = options.done;
+  const errorCB = options.fail;
 
-  Notification.hide(function() {
-    $.post(ajaxScript, {
+  Notification.hide();
+  $
+    .post(ajaxScript, {
       recordId: pmeRec(container),
       instrumentValues: selectMusicianInstrument.val(),
     })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, errorCB);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, ['message'], errorCB)) {
-          return;
-        }
-        let timeout = 10;
-
-        // Oops. Perhaps only submit on success.
-        finalizeCB();
-
-        if (data.notice !== '') {
-          timeout = 15;
-        }
-        const info = (data.message + (data.notice ? ' ' + data.notice : '')).trim();
-        if (info !== '') {
-          Notification.show(info, { timeout });
-        }
-      });
-  });
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, errorCB);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['message'], errorCB)) {
+        return;
+      }
+      finalizeCB();
+      Notification.messages(data.message);
+    });
 };
 
 /**
@@ -366,55 +344,57 @@ const myReady = function(selector, resizeCB) {
   // a per-group single select for the unlikely case that a musician
   // has multiple instruments for the project.
   selectVoices.off('change').on('change', function(event) {
-    const self = $(this);
-    if (!self.prop('multiple')) {
+    const $self = $(this);
+
+    if (!$self.prop('multiple')) {
       return true;
     }
 
-    let selected = self.val();
+    let selected = SelectUtils.selected($self);
     if (!selected) {
       selected = [];
     }
-    const prevSelected = self.data('selected');
-    const instruments = selectProjectInstruments.val();
+    const prevSelected = $self.data('selected');
+    const instruments = SelectUtils.selected(selectProjectInstruments);
 
     const prevVoices = {};
     const voices = {};
-    for (let i = 0; i < instruments.length; ++i) {
-      voices[instruments[i]] = [];
-      prevVoices[instruments[i]] = [];
+    for (const instrument of instruments) {
+      voices[instrument] = [];
+      prevVoices[instrument] = [];
     }
 
-    for (let i = 0; i < selected.length; ++i) {
-      const item = selected[i].split(':');
+    for (const voiceItem of selected) {
+      const item = voiceItem.split(':');
       voices[item[0]].push(item[1]);
     }
 
-    for (let i = 0; i < prevSelected.length; ++i) {
-      const item = prevSelected[i].split(':');
+    for (const voiceItem of prevSelected) {
+      const item = voiceItem.split(':');
       prevVoices[item[0]].push(item[1]);
     }
 
     // Now loop over old values. Unset multiple selections.
-    let changed = false;
     for (const instrument in voices) {
       const values = voices[instrument];
       const prevValues = prevVoices[instrument];
       if (values.length < 2) {
         continue;
       }
-      for (let i = 0; i < prevValues.length; ++i) {
-        console.debug('option: ' + 'option[value="' + instrument + ':' + i + '"]');
-        self.find('option[value="' + instrument + ':' + prevValues[i] + '"]').prop('selected', false);
-        changed = true;
+      for (const prevValue of prevValues) {
+        const voiceItem = instrument + ':' + prevValue;
+        const index = selected.findIndex((v) => voiceItem === v);
+        if (index > -1) {
+          selected.splice(index, 1);
+        }
       }
     }
+    console.debug('SELECTED', selected);
+    SelectUtils.selected($self, selected);
+    $self.data('selected', selected);
 
-    self.data('selected', self.val() ? self.val() : []);
-
-    if (changed) {
-      self.trigger('chosen:updated');
-    }
+    // selected project instruments affect voices and section-leader:
+    PHPMyEdit.submitOuterForm(selector);
 
     return false;
   });
@@ -425,44 +405,34 @@ const myReady = function(selector, resizeCB) {
       ? selectProjectInstruments.val()
       : []);
   selectProjectInstruments.on('change', function(event) {
-    const self = $(this);
+    const $self = $(this);
 
-    selectMusicianInstruments.prop('disabled', true);
-    selectMusicianInstruments.trigger('chosen:updated');
+    SelectUtils.locked(selectMusicianInstruments, true);
 
-    validateInstrumentChoices(
-      container, selectProjectInstruments,
-      generateUrl('projects/participants/change-instruments/project'),
-      function() {
+    validateInstrumentChoices({
+      container,
+      selectElement: selectProjectInstruments,
+      validationUrl: generateUrl('projects/participants/change-instruments/project'),
+      done() {
         // Reenable, otherwise the value will not be submitted
-        selectMusicianInstruments.prop('disabled', false);
-        selectMusicianInstruments.trigger('chosen:updated');
+        SelectUtils.locked(selectMusicianInstruments, false);
 
         // save current instruments
-        self.data('selected', self.val() ? self.val() : []);
+        $self.data('selected', $self.val() ? $self.val() : []);
 
-        // should we?
+        // selected project instruments affect voices and section-leader:
         PHPMyEdit.submitOuterForm(selector);
       },
-      function(data) {
-        const oldInstruments = data.oldInstruments || self.data('selected');
+      fail(data) {
+        const oldInstruments = data.oldInstruments || $self.data('selected');
+
         // failure case
-        const selected = {};
-        for (let i = 0; i < oldInstruments.length; ++i) {
-          selected[oldInstruments[i]] = true;
-        }
-        self.find('option').each(function(idx) {
-          const self = $(this);
-          if (typeof selected[self.val()] !== 'undefined') {
-            self.prop('selected', true);
-          } else {
-            self.prop('selected', false);
-          }
-        });
+        SelectUtils.selected($self, oldInstruments);
+
         // Reenable, otherwise the value will not be submitted
-        selectMusicianInstruments.prop('disabled', false);
-        selectMusicianInstruments.trigger('chosen:updated');
-      });
+        SelectUtils.locked(selectMusicianInstruments, false);
+      },
+    });
 
     return false;
   });
@@ -473,21 +443,21 @@ const myReady = function(selector, resizeCB) {
       ? selectMusicianInstruments.val()
       : []);
   selectMusicianInstruments.on('change', function(event) {
-    const self = $(this);
+    const $self = $(this);
 
     selectProjectInstruments.prop('disabled', true);
     selectProjectInstruments.trigger('chosen:updated');
 
-    validateInstrumentChoices(
-      container, selectMusicianInstruments,
-      generateUrl('projects/participants/change-instruments/musician'),
-      function() {
+    validateInstrumentChoices({
+      container,
+      selectElement: selectMusicianInstruments,
+      validationUrl: generateUrl('projects/participants/change-instruments/musician'),
+      done() {
         // Reenable, otherwise the value will not be submitted
-        selectProjectInstruments.prop('disabled', false);
-        selectProjectInstruments.trigger('chosen:updated');
+        SelectUtils.locked(selectProjectInstruments, false);
 
         // save current instruments
-        self.data('selected', self.val() ? self.val() : []);
+        $self.data('selected', $self.val() ? $self.val() : []);
 
         // submit the form with the "right" button,
         // i.e. save any possible changes already
@@ -496,26 +466,16 @@ const myReady = function(selector, resizeCB) {
         // list of instruments
         PHPMyEdit.submitOuterForm(selector);
       },
-      function(data) {
-        const oldInstruments = data.oldInstruments || self.data('selected');
+      fail(data) {
         // failure case
-        const selected = {};
-        for (let i = 0; i < oldInstruments.length; ++i) {
-          selected[oldInstruments[i]] = true;
-        }
-        self.find('option').each(function(idx) {
-          const self = $(this);
-          if (typeof selected[self.val()] !== 'undefined') {
-            self.prop('selected', true);
-          } else {
-            self.prop('selected', false);
-          }
-        });
+
+        const oldInstruments = data.oldInstruments || $self.data('selected');
+        SelectUtils.selected($self, oldInstruments);
+
         // Reenable, otherwise the value will not be submitted
-        selectProjectInstruments.prop('disabled', false);
-        selectProjectInstruments.trigger('chosen:updated');
-        selectMusicianInstruments.trigger('chosen:updated');
-      });
+        SelectUtils.locked(selectProjectInstruments, false);
+      },
+    });
 
     return false;
   });

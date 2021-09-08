@@ -232,7 +232,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts['css']['postfix'] = [
       self::CSS_TAG_DIRECT_CHANGE,
       self::CSS_TAG_SHOW_HIDE_DISABLED,
-      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS,
+      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
     ];
 
     if (empty($projectName) || empty($this->projectId)) {
@@ -490,7 +490,13 @@ class ProjectParticipants extends PMETableViewBase
       [
         'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
         'name'        => $this->l->t('Project Instrument'),
-        'css'         => ['postfix' => ' project-instruments tooltip-top'],
+        'css'         => [
+          'postfix' => [
+            'project-instruments',
+            'tooltip-top',
+            'select-wide',
+          ],
+        ],
         'display|LVF' => ['popup' => 'data'],
         'sql|VDCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
@@ -544,7 +550,14 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Voice'),
         'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
-        'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
+        'css'      => [
+          'postfix' => [
+            'allow-empty',
+            'no-search',
+            'instrument-voice',
+            'select-wide',
+          ],
+        ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,
      CONCAT(".$this->joinTables[self::INSTRUMENTS_TABLE].".l10n_name,
@@ -698,7 +711,16 @@ class ProjectParticipants extends PMETableViewBase
     $fdd = [
       'name'        => $this->l->t('All Instruments'),
       'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
-      'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
+      'css'         => [
+        'postfix' => [
+          'musician-instruments',
+          'tooltip-top',
+          'no-chosen',
+          'selectize',
+          'drag-drop',
+          'select-wide',
+        ],
+      ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => ($expertMode
                         ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
@@ -723,8 +745,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
-        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn IS NULL, NULL, \$join_table.instrument_id))",
-        'default' => false,
+        'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
         'select'  => 'T',
         'input'   => ($expertMode ? 'R' : 'RH'),
         'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
@@ -1025,6 +1046,7 @@ class ProjectParticipants extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateRemoveDependentVoices' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
@@ -1039,6 +1061,56 @@ class ProjectParticipants extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * When removing an instrument any pending voice(s) have to be removed, too.
+   */
+  public function beforeUpdateRemoveDependentVoices($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    // sanitize instrumentation numbers
+    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+
+    $debugColumns = [ $instrumentsColumn, $voicesColumn ];
+    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
+
+    // [ProjectInstruments:instrument_id] => 3 [ProjectInstruments:voice] => 5:1
+
+    foreach (['old', 'new'] as $dataSet) {
+      $dataArray = $dataSet . 'Values';
+      ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??'');
+      ${$dataSet . 'Voices'} =  Util::explodeIndexedMulti(${$dataArray}[$voicesColumn]??'', null, ',', self::JOIN_KEY_SEP);
+
+      // Add the zero "unvoice" to the voices if no other voices are configured
+      foreach (${$dataSet . 'Instruments'} as $instrument) {
+        if (empty(${$dataSet . 'Voices'}[$instrument])) {
+          ${$dataSet . 'Voices'}[$instrument] = [ 0 ];
+        }
+      }
+
+      // Remove any voice for which no instrument is configured in the
+      // respective data set
+      foreach (${$dataSet . 'Voices'} as $instrument => $voices) {
+        if (array_search($instrument, ${$dataSet . 'Instruments'}) === false) {
+          $this->debug('REMOVE VOICES ' . implode(',', $voices) . ' FOR INSTRUMENT ' . $instrument);
+          unset(${$dataSet . 'Voices'}[$instrument]);
+        }
+      }
+
+      // implode things again, instruments remains unchanged
+      ${$dataArray}[$voicesColumn] = Util::implodeIndexedMulti(${$dataSet . 'Voices'}, ',', self::JOIN_KEY_SEP);
+    }
+
+    // recompute changeset
+    Util::unsetValue($changed, $voicesColumn);
+    if ($oldValues[$voicesColumn] !== $newValues[$voicesColumn]) {
+      $changed[] = $voicesColumn;
+    }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
+
+    return true;
   }
 
   /**
