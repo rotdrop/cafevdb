@@ -624,7 +624,7 @@ class ProjectParticipants extends PMETableViewBase
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
-    ON pin.instrument_id = pi.instrument_id
+    ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
   JOIN ".self::SEQUENCE_TABLE." n
     ON n.seq <= pin.voice AND n.seq >= 1 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
