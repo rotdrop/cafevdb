@@ -288,14 +288,16 @@ class EventsService
     $timeZone = $this->getDateTimezone();
     if (!$allDay) {
       if ($dtStart->isFloating()) {
-        $start->setTimezone($timeZone);
+        $start = $start->setTimezone($timeZone);
       }
       if ($dtEnd->isFloating()) {
-        $end->setTimezone($timeZone);
+        $end = $end->setTimezone($timeZone);
       }
     } else {
-      $start->setTimezone($timeZone);
-      $end->setTimezone($timeZone);
+      // the following is not overly correct, but make a prettier
+      // display:
+      $start = new \DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
+      $end = new \DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
     }
 
     $event['start'] = $start;
