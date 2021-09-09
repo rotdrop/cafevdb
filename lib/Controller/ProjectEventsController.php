@@ -124,16 +124,10 @@ class ProjectEventsController extends Controller {
           break;
         case 'download':
           $calendarIds = $this->parameterService['CalendarId'];
-          $cookieName = $this->parameterService['DownloadCookieName'];
-          $cookieValue = $this->parameterService['DownloadCookieValue'];
-
-          if (empty($cookieName) || empty($cookieValue)) {
-            return self::grumble($this->l->t('Download-cookies have not been submitted'));
-          }
 
           if (count($selected) > 0) {
             $exports = [];
-            foreach ($selected as $eventUri) {
+            foreach ($selected as $eventUri => $select) {
               $exports[$eventUri] = $calendarIds[$eventUri];
             }
           } else {
@@ -144,10 +138,14 @@ class ProjectEventsController extends Controller {
 
           $response = new DataDownloadResponse(
             $this->eventsService->exportEvents($exports, $projectName),
-            $fileName,
+            $this->transliterate($fileName),
             'text/calendar');
 
-          $response->addCookie($cookieName, $cookieValue);
+          $response->addHeader(
+            'Content-Disposition',
+            'attachment; '
+            . 'filename="' . $this->transliterate($fileName) . '"; '
+            . 'filename*=UTF-8\'\'' . rawurlencode($fileName));
 
           return $response;
 

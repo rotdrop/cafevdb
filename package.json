@@ -36,6 +36,7 @@
     "bootstrap": "^4.6.0",
     "bootstrap4-duallistbox": "^4.0.2",
     "camelcase": "^5.2.0",
+    "content-disposition": "*",
     "copy-webpack-plugin": "^v6.0.0",
     "css-loader": "^5.0.1",
     "css-minimizer-webpack-plugin": "^1.2.0",

@@ -29,6 +29,7 @@ import { appName, webRoot, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import generateId from './generate-id.js';
 import * as Ajax from './ajax.js';
+import { parse as parseContentDisposition } from 'content-disposition';
 
 require('jquery-file-download');
 
@@ -119,12 +120,10 @@ const download = function(url, post, options) {
       .done(function(data, textStatus, xhr) {
         let fileName = 'download';
         const contentDisposition = xhr.getResponseHeader('Content-Disposition');
-        if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
-          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          const matches = filenameRegex.exec(contentDisposition);
-          if (matches != null && matches[1]) {
-            fileName = matches[1].replace(/['"]/g, '');
-          }
+        if (contentDisposition) {
+          const contentMeta = parseContentDisposition(contentDisposition);
+          fileName = contentMeta.parameters.filename || fileName;
+          console.info('CONTEN', contentMeta);
         }
         let contentType = xhr.getResponseHeader('Content-Type');
         if (contentType) {
@@ -132,7 +131,7 @@ const download = function(url, post, options) {
         } else {
           contentType ='application/octetstream';
         }
-        console.info('DATA', data);
+
         // Convert the Byte Data to BLOB object.
         const blob = new Blob([data], { type: contentType });
 
@@ -149,6 +148,7 @@ const download = function(url, post, options) {
           a.attr('href', link);
           $('body').append(a);
           a[0].click();
+          console.info('DOWNLOAD A', a);
           $('body').remove(a);
           options.done(downloadUrl, data);
         }
