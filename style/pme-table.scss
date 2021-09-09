@@ -629,78 +629,86 @@ input.register-musician {
 
 /******************************************/
 
-input.pme-misc-[type=submit],
-input.pme-misc+[type=submit] {
-  width:28px;
-  font-size:0pt;
-  background-position:0px center;
-}
-input.pme-misc[type=submit] {
-  background-position:0px center;
-  padding-left:24px;
-}
+td.pme-buttons {
 
-input.email.pme-misc-[type=submit] {
-  background-image:url('../img/e_mail_X.png');
-}
-input.email.pme-misc+[type=submit] {
-  background-image:url('../img/e_mail_checked.png');
-}
-input.email.pme-misc[type=submit] {
-  background-image:url('../img/e_mail.png');
-}
+  input[type=submit].pme-misc {
 
-input.bulkcommit.pme-misc-[type=submit] {
-  background-image:url('../img/eighthrest24.png');
-}
-input.bulkcommit.pme-misc+[type=submit] {
-  background-image:url('../img/eighthnote24.png');
-}
-input.pme-bulkcommit[type=submit] {
-  background-image:url('../img/eighthnote24.png');
-}
+    &.pme-commit {
+      background-position:0px center;
+      padding-left:24px;
+      &.email {
+        background-image:url('../img/e_mail.png');
+      }
+      &.bulkcommit {
+        background-image:url('../img/eighthnote24.png');
+      }
+    }
 
-td.pme-buttons > .pme-email {
-  white-space:nowrap;
-}
-td.pme-buttons > .pme-bulkcommit {
-  white-space:nowrap;
-}
+    &.pme-all {
+      width:28px;
+      font-size:0pt;
+      padding:6px;
+      background-position:0px center;
 
-td.pme-buttons > .pme-goto {
-  white-space:nowrap;
-}
+      &.email {
+        &.pme-all- {
+          background-image:url('../img/e_mail_X.png');
+        }
+        &.pme-all\+ {
+          background-image:url('../img/e_mail_checked.png');
+        }
+      }
 
-td.pme-buttons > .pme-pagerows {
-  white-space:nowrap;
+      &.bulkcommit {
+        &.pme-all- {
+          background-image:url('../img/eighthrest24.png');
+        }
+        &.pme-all\+ {
+          background-image:url('../img/eighthnote24.png');
+        }
+      }
+    }
+  }
+
+  > {
+    .pme-misc, .pme-goto, .pme-pagerows {
+      white-space:nowrap;
+    }
+  }
 }
 
 /* misc check-boxes */
 
-:not(.lt-ie9) input.pme-misc-check[type=checkbox] {
-  display:none;
-}
+td.pme-navigation {
+  &.pme-misc {
+    :not(.lt-ie9) {
+      input[type=checkbox] {
+        display:none;
+        &:checked ~ div.pme-check {
+          &.email {
+            background-image:url(../img/e_mail_checked.png);
+          }
+          &.bulkcommit {
+            background-image:url(../img/eighthnote24.png);
+          }
+        }
+      }
+      div.pme-check {
+        width:24px;
+        height:24px;
+        background-size: 24px 24px;
+        cursor:pointer;
+        vertical-align:middle;
 
-:not(.lt-ie9) div.pme-misc-check {
-  width:24px;
-  height:24px;
-  background-size: 24px 24px;
-  cursor:pointer;
-  vertical-align:middle;
-}
-
-:not(.lt-ie9) div.email.pme-misc-check {
-  background-image:url(../img/e_mail.png);
-}
-:not(.lt-ie9) div.bulkcommit.pme-misc-check {
-  background-image:url(../img/eighthrest24.png);
-}
-
-:not(.lt-ie9) input.pme-misc-check[type=checkbox]:checked ~ div.email.pme-misc-check {
-  background-image:url(../img/e_mail_checked.png);
-}
-:not(.lt-ie9) input.pme-misc-check[type=checkbox]:checked ~ div.bulkcommit.pme-misc-check {
-  background-image:url(../img/eighthnote24.png);
+        &.email {
+          background-image:url(../img/e_mail.png);
+        }
+        &.bulkcommit {
+          background-image:url(../img/eighthrest24.png);
+        }
+      }
+    }
+  }
 }
 
 /*******************************************************************************

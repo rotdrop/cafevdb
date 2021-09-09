@@ -399,24 +399,32 @@ form.pme-form {
    *
    */
 
-  input.debit-note {
-    &.pme-misc-[type=submit] {
-      background-image:url('../img/euro-x.png');
-    }
-    &.pme-misc+[type=submit] {
-      background-image:url('../img/euro-yes.png');
-    }
-    &.pme-misc[type=submit] {
-      background-image:url('../img/euro.png');
+  td.pme-buttons {
+    input[type=submit].pme-misc.debit-node {
+      &.pme-commit {
+        background-image:url('../img/euro.png');
+      }
+      &.pme-all {
+        &.pme-all- {
+          background-image:url('../img/euro-x.png');
+        }
+        &.pme-all\+ {
+          background-image:url('../img/euro-yes.png');
+        }
+      }
     }
   }
 
   /* row check-boxes */
-  :not(.lt-ie9) div.debit-note.pme-misc-check {
-    background:url(../img/euro.png);
-  }
-  :not(.lt-ie9) input.debit-note.pme-misc-check[type=checkbox]:checked ~ div.debit-note.pme-misc-check {
-    background:url(../img/euro-yes.png);
+  td.pme-navigation.pme-misc {
+    :not(.lt-ie9) {
+      div.pme-check.debit-note {
+        background:url(../img/euro.png);
+      }
+      input[type=checkbox]:checked ~ div.pme-check.debit-note {
+        background:url(../img/euro-yes.png);
+      }
+    }
   }
 
   /****************************************************************************

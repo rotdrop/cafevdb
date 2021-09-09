@@ -27,6 +27,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
+import { token as pmeToken } from './pme-selectors.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -484,9 +485,9 @@ const ready = function(container) {
       return false;
     });
 
-  // container.find('input.bulkcommit.pme-misc').addClass('formsubmit');
+  // container.find('input.bulkcommit.' + pmeToken('misc')).addClass('formsubmit');
   container
-    .find('input.bulkcommit.pme-misc')
+    .find(['input', 'bulkcommit', pmeToken('misc'), pmeToken('commit')].join('.'))
     .addClass('pme-custom')
     .prop('disabled', false)
     .off('click')

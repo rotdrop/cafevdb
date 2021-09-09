@@ -28,6 +28,7 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
+import { token as pmeToken } from './pme-selectors.js';
 import modalizer from './modalizer.js';
 
 require('events.css');
@@ -148,8 +149,8 @@ const init = function(htmlContent, textStatus, request) {
           return false;
         });
       dialogHolder
-        .off('change', 'input.email.pme-misc-check')
-        .on('change', 'input.email.pme-misc-check', function(event) {
+        .off('change', ['input', 'email', pmeToken('misc'), pmeToken('check')].join('.'))
+        .on('change', ['input', 'email', pmeToken('misc'), pmeToken('check')].join('.'), function(event) {
           updateEmailForm();
           return false;
         });

@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -21,6 +22,7 @@
 
 import { globalState, $ } from './globals.js';
 import * as Email from './email.js';
+import { token as pmeToken } from './pme-selectors.js';
 
 /**
  * Some general PME tweaks.
@@ -46,7 +48,7 @@ const pmeTweaks = function(container) {
     return $.trim($(this).text()).indexOf('-') === 0;
   }).addClass('negative');
 
-  $(globalState.PHPMyEdit.defaultSelector + ' input.email.pme-misc')
+  $(globalState.PHPMyEdit.defaultSelector + ' input.email.' + pmeToken('misc') + '.' + pmeToken('commit'))
     .off('click')
     .on('click', function(event) {
       event.stopImmediatePropagation();
@@ -54,7 +56,7 @@ const pmeTweaks = function(container) {
       return false;
     });
 
-  const form = container.find('form.pme-form').first();
+  const form = container.find('form.' + pmeToken('form')).first();
   form.find('a.email').off('click').on('click', function(event) {
     event.preventDefault();
     const href = $(this).attr('href');
@@ -76,7 +78,7 @@ const pmeTweaks = function(container) {
 
   // This could also be wrapped into a popup maybe, and lead back to
   // the brief-instrumentation table on success.
-  // $(PHPMyEdit.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
+  // $(PHPMyEdit.defaultSelector + ' input.' + pmeToken('bulkcommit')).addClass('formsubmit');
 };
 
 export default pmeTweaks;

@@ -1337,13 +1337,13 @@ const pmeOpenRowDialog = function(element, event, container) {
       return;
     }
 
-    if (target.is('.' + pmeToken('misc-check') + '.email')) {
+    if (target.is(['', pmeToken('misc'), pmeToken('check'), 'email'].join('.'))) {
       return;
     }
-    if (target.is('.' + pmeToken('misc-check') + '.debit-note')) {
+    if (target.is(['', pmeToken('misc'), pmeToken('check'), 'debit-note'].join('.'))) {
       return;
     }
-    if (target.is('.' + pmeToken('misc-check') + '.bulkcommit')) {
+    if (target.is(['', pmeToken('misc'), pmeToken('check'), 'bulkcommit'].join('.'))) {
       return;
     }
     if (target.is('.graphic-links')) {
@@ -1651,6 +1651,9 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
       if (!checked) {
         $input.val('');
       }
+      const dataPlaceholder = $input.data('placeholder');
+      $input.data('placeholder', $input.attr('placeholder'));
+      $input.attr('placeholder', dataPlaceholder);
       return false;
     });
 
