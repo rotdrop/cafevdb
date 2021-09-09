@@ -70,7 +70,11 @@ if ($outputBufferWorkAround??false) {
 $operation = $renderer->operation();
 if (!empty($operation)) {
   $operation = explode('?', $operation)[0];
-  $operation = $l->t($operation) . ': ';
+  if ($operation === 'false' || $operation === $l->t('false')) {
+    $operation = '';
+  } else {
+    $operation = $l->t($operation) . ': ';
+  }
 }
 ?>
 
