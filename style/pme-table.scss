@@ -532,7 +532,7 @@ a.pme-cell:hover {
   font-weight:bold;
 }
 
-.pme-cellg>a:not(.ui-tabs-anchor):link {
+.pme-cell>a:not(.ui-tabs-anchor):link {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
@@ -1003,7 +1003,7 @@ table.pme-main {
   }
 
   td.pme-cell.restrict-height {
-    pme-cell-wrapper {
+    .pme-cell-wrapper {
       display:block;
       max-height:24px;
       overflow:hidden;
