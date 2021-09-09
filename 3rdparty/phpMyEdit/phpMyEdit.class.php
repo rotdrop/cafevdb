@@ -5213,7 +5213,7 @@ class phpMyEdit
 		// it may even have added things.
 		foreach($oldvals as $fd => $value) {
 			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
-			$fdn = $this->fdn[$fd]; // $fdn == field number
+			$fdn = $this->fdn[$fd]??null; // $fdn == field number
 			if (empty($fdn)) {
 				continue;
 			}
