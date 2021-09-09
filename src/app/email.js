@@ -1536,14 +1536,14 @@ function emailFormPopup(post, modal, single, afterInit) {
       }
 
       let recipientsAlertText;
-      if (data.projectId >= 0) {
+      if (data.projectId > 0) {
         recipientsAlertText = t(appName, 'Email will be sent with an open recipients list!');
       } else {
         recipientsAlertText = t(appName, 'Email will be sent with a hidden recipients list!');
       }
       // Dialogs.alert(recipientsAlertText, t(appName, 'Notice'), undefined, true);
       Notification.hide();
-      Notification.show(recipientsAlertText, { timeout: 30 });
+      Notification.show(recipientsAlertText, { timeout: 15 });
 
       dialogHolder.cafevDialog({
         title: dlgTitle,
