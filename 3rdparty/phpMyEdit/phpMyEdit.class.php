@@ -3723,29 +3723,10 @@ class phpMyEdit
 			echo '&nbsp; ',$this->labels['Records'],':&nbsp;',$this->total_recs;
 		if($this->display['num_pages'] || $this->display['num_records']) echo '</td>';
 		echo '</tr>',"\n";
-		if ($position == 'up' && $this->tabs_enabled()) {
-			echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
-			echo '<td colspan="'.$num_nav_cols.'" class="table-tabs">'."\n";
-			echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs pme-container">'."\n";
-			echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
-			foreach($this->tabs as $idx => $name) {
-				$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
-				if (isset($this->tabs_help[$idx])) {
-					$title = ' title="'.$this->tabs_help[$idx].'"';
-				} else {
-					$title = '';
-				}
-				$class = $this->getCSSclass('navigation', $position).' table-tabs tab-menu'.$selected;
-				echo '<li class="'.$class.'"'.$title.'>'."\n";
-				echo '<a href="#tab-'.$idx.'">'.$name.'</a>'."\n";
-				echo '</li>'."\n";
-			}
-			echo '</ul>'."\n";
-			echo '</div>'."\n";
-			echo '</td>'."\n";
-			echo '</tr>'."\n";
-		}
 		echo '</table>',"\n";
+		if ($position == 'up' && $this->tabs_enabled()) {
+			$this->display_tab_labels($position);
+		}
 		if($position == 'up') echo '<hr size="1" class="'.$this->getCSSclass('hr', 'up').'" />'."\n";
 	} /* }}} */
 
