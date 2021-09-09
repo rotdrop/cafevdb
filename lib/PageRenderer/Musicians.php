@@ -760,7 +760,7 @@ make sure that the musicians are also automatically added to the
          $bval = $this->l->t(
            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
          $tip = $this->toolTipsService['musician-instrument-insurance'];
-         $button = "<div class=\"pme-cell-wrapper musician-instrument-insurance\">"
+         $button = "<div class=\"pme-cell-wrapper restrict-height musician-instrument-insurance\">"
                  ."<input type=\"button\" "
                  ."value=\"$bval\" "
                  ."title=\"$tip\" "
