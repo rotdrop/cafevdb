@@ -87,7 +87,7 @@ class ProjectParticipantsController extends Controller {
    */
   public function addMusicians($projectId, $projectName, $musicianId = null)
   {
-    $this->logInfo($projectId.' '.$projectName.' '.$muicianId);
+    $this->logInfo($projectId.' '.$projectName.' '.$musicianId);
 
     // Multi-mode:
     // projectId: ID
@@ -138,12 +138,12 @@ class ProjectParticipantsController extends Controller {
 
     } else {
 
-      $notice = '';
+      $aggregateNotice = '';
       $musicians = [];
       foreach ($addedMusicians as $id => $notices) {
         $musicians[] = $id;
         foreach ($notices as $notice) {
-          $notice .= $notice['notice'];
+          $aggregateNotice .= $notice['notice'];
         }
       }
 
@@ -153,7 +153,7 @@ class ProjectParticipantsController extends Controller {
           'message' => ($notice == ''
                         ? '' // don't annoy the user with success messages.
                         : $this->l->t("Operation succeeded with the following notifications:")),
-          'notice' => $notice,
+          'notice' => $aggregateNotice,
         ]);
     }
 
@@ -197,7 +197,7 @@ class ProjectParticipantsController extends Controller {
         /** @var Entities\MusicianInstrument $b */
         $ra = $a->getRanking();
         $rb = $b->getRanking();
-        return (($ra === $rb) ? 0 : ($ra <= $rb) ? -1 : 1);
+        return (($ra === $rb) ? 0 : (($ra <= $rb) ? -1 : 1));
       });
 
       $projectInstruments = [];
