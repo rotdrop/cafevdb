@@ -331,22 +331,22 @@ const toolTipsInit = function(containerSel) {
   container.find('option').cafevTooltip({ placement: 'right' });
   container.find('div.chosen-container').cafevTooltip({ placement: 'top' });
   container.find('button.settings').cafevTooltip({ placement: 'bottom' });
-  container.find('.pme-sort').cafevTooltip({ placement: 'bottom' });
-  container.find('.pme-misc-check').cafevTooltip({ placement: 'bottom' });
+  container.find('.' + pmeToken('sort')).cafevTooltip({ placement: 'bottom' });
+  container.find(['', pmeToken('check'), pmeToken('misc')].join('.')).cafevTooltip({ placement: 'bottom' });
   container.find('label').cafevTooltip({ placement: 'top' });
   container.find('.header-right img').cafevTooltip({ placement: 'bottom' });
   container.find('img').cafevTooltip({ placement: 'bottom' });
   container.find('button').cafevTooltip({ placement: 'right' });
-  container.find('li.pme-navigation.table-tabs').cafevTooltip({ placement: 'bottom' });
+  container.find('li.' + pmeToken('navigation') + '.table-tabs').cafevTooltip({ placement: 'bottom' });
 
   // pme input stuff and tables.
-  container.find('textarea.pme-input').cafevTooltip(
+  container.find('textarea.' + pmeToken('input')).cafevTooltip(
     { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('input.pme-input').cafevTooltip(
+  container.find('input.' + pmeToken('input')).cafevTooltip(
     { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.pme-main td').cafevTooltip(
+  container.find('table.' + pmeToken('main') + ' td').cafevTooltip(
     { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.pme-main th').cafevTooltip(
+  container.find('table.' + pmeToken('main') + ' th').cafevTooltip(
     { placement: 'bottom' });
 
   // original tipsy stuff
@@ -370,7 +370,7 @@ const toolTipsInit = function(containerSel) {
   container.find('input[class*="pme-filter"]').cafevTooltip(
     { placement: 'bottom', cssclass: 'tooltip-wide' }
   );
-  container.find('td.pme-sys ~ td.pme-data .info').cafevTooltip(
+  container.find('td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info').cafevTooltip(
     { placement: 'bottom', cssclass: 'tooltip-wide' }
   );
 
