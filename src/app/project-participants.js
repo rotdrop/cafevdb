@@ -140,7 +140,7 @@ const validateInstrumentChoices = function(options) {
   $
     .post(ajaxScript, {
       recordId: pmeRec(container),
-      instrumentValues: selectMusicianInstrument.val(),
+      instrumentValues: SelectUtils.selected(selectMusicianInstrument),
     })
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, errorCB);
@@ -439,14 +439,11 @@ const myReady = function(selector, resizeCB) {
 
   selectMusicianInstruments.data(
     'selected',
-    selectMusicianInstruments.val()
-      ? selectMusicianInstruments.val()
-      : []);
+    SelectUtils.selected(selectMusicianInstruments));
   selectMusicianInstruments.on('change', function(event) {
     const $self = $(this);
 
-    selectProjectInstruments.prop('disabled', true);
-    selectProjectInstruments.trigger('chosen:updated');
+    SelectUtils.locked(selectProjectInstruments, true);
 
     validateInstrumentChoices({
       container,
@@ -457,7 +454,7 @@ const myReady = function(selector, resizeCB) {
         SelectUtils.locked(selectProjectInstruments, false);
 
         // save current instruments
-        $self.data('selected', $self.val() ? $self.val() : []);
+        $self.data('selected', SelectUtils.selected($self));
 
         // submit the form with the "right" button,
         // i.e. save any possible changes already
