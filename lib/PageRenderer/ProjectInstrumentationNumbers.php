@@ -215,6 +215,12 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'input' => 'VHR',
       ]);
 
+    $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
+      'table' => self::INSTRUMENTS_TABLE,
+      'entity' => Entities\Instrument::class,
+      'identifier' => [ 'id' => true ], // just need the key
+    ], 'name');
+
     $opts['fdd']['instrument_id'] = [
       'name'     => $this->l->t('Instrument'),
       'select'   => 'D',
@@ -225,10 +231,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'     => $sort,
       'sql'      => '$main_table.instrument_id',
       'values|ACP'   => [
-        'table' => self::INSTRUMENTS_TABLE,
+        'table' => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
-          'columns' => [ 'name' ],
+          'columns' => [ 'l10n_name' ],
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
@@ -236,10 +242,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
       ],
       'values|DVFL'   => [
-        'table' => self::INSTRUMENTS_TABLE,
+        'table' => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
-          'columns' => [ 'name' ],
+          'columns' => [ 'l10n_name' ],
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
@@ -295,6 +301,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['fdd']['num_voices'] = [
       'name' => $this->l->t('#Voices'),
       'select' => 'N',
+      'input' => 'VSR',
       'sql' => 'MAX($join_col_fqn)',
       'values' => [
         'table' => self::TABLE,
