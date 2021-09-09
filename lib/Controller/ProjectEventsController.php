@@ -25,7 +25,6 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -136,18 +135,10 @@ class ProjectEventsController extends Controller {
 
           $fileName = $projectName.'-'.$this->timeStamp().'.ics';
 
-          $response = new DataDownloadResponse(
+          return $this->dataDownloadResponse(
             $this->eventsService->exportEvents($exports, $projectName),
-            $this->transliterate($fileName),
+            $fileName,
             'text/calendar');
-
-          $response->addHeader(
-            'Content-Disposition',
-            'attachment; '
-            . 'filename="' . $this->transliterate($fileName) . '"; '
-            . 'filename*=UTF-8\'\'' . rawurlencode($fileName));
-
-          return $response;
 
         case 'email':
         default:

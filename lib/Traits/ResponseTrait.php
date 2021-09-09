@@ -31,6 +31,18 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 trait ResponseTrait
 {
 
+  private function dataDownloadResponse($data, $fileName, $contentType)
+  {
+    $response = new Http\DataDownloadResponse($data, $fileName, $contentType);
+    $response->addHeader(
+      'Content-Disposition',
+      'attachment; '
+      . 'filename="' . $this->transliterate($fileName) . '"; '
+      . 'filename*=UTF-8\'\'' . rawurlencode($fileName));
+
+    return $response;
+  }
+
   private function exceptionResponse(\Throwable $throwable, string $renderAs, string $method = null)
   {
     if (empty($method)) {

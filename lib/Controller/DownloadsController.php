@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -78,7 +77,7 @@ class DownloadsController extends Controller {
         $letterGenerator = $this->di(\OCA\CAFEVDB\Documents\PDFLetter::class);
         $fileName = 'cafevdb-test-letter.pdf';
         $letter = $letterGenerator->testLetter($fileName, 'S');
-        return new DataDownloadResponse($letter, $fileName, 'application/pdf');
+        return $this->dataDownloadResponse($letter, $fileName, 'application/pdf');
       }
       break;
     case 'database':
@@ -96,7 +95,7 @@ class DownloadsController extends Controller {
           $fileName = $this->appName() . '-' . 'download' . $fileId;
         }
       }
-      return new DataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
+      return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
     }
     return self::grumble($this->l->t('Unknown Request'));
   }

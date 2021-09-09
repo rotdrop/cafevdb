@@ -621,7 +621,8 @@ class EventsService
 
     foreach ($events as $eventURI => $calendarId) {
       $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
-      $vObject = VCalendarService::getVObject(VCalendarService::getVCalendar($event));
+      $vCalendar = VCalendarService::getVCalendar($event);
+      $vObject = VCalendarService::getVObject($vCalendar);
       if (empty($vObject)) {
         continue;
       }

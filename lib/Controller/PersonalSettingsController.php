@@ -27,7 +27,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -1540,7 +1539,7 @@ class PersonalSettingsController extends Controller {
 
       $fileName = $this->appName().'-'.$this->timeStamp().'.pot';
 
-      $response = new DataDownloadResponse($pot, $fileName, 'text/plain');
+      $response = $this->dataDownloadResponse($pot, $fileName, 'text/plain');
 
       $response->addCookie($cookieName, $cookieValue);
 
@@ -1581,7 +1580,7 @@ class PersonalSettingsController extends Controller {
         'auto-fill-test',
       ]) . '.' . $pathInfo['extension'];
 
-      return new DataDownloadResponse($fileData, $fileName, $mimeType);
+      return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
     default:
       break;
     }

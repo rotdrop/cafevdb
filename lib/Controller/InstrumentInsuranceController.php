@@ -29,7 +29,6 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -320,7 +319,7 @@ class InstrumentInsuranceController extends Controller {
     $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
     $mimeType = $mimeTypeDetector->detectString($fileData);
 
-    return new DataDownloadResponse($fileData, $fileName, $mimeType);
+    return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
   }
 
 }

@@ -39,7 +39,6 @@ use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
@@ -264,7 +263,7 @@ class PmeTableController extends Controller {
       Util::normalizeSpaces($this->transliterate($fileMeta['name']), '-'),
     ]) . '.' .  $fileMeta['extension'];
 
-    return new DataDownloadResponse($data, $fileName, $fileMeta['mimeType']);
+    return $this->dataDownloadResponse($data, $fileName, $fileMeta['mimeType']);
   }
 
 }

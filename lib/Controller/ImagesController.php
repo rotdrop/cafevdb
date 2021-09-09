@@ -98,7 +98,7 @@ class ImagesController extends Controller {
       return $this->getPlaceHolder($joinTable, $imageSize);
     }
 
-    return new Http\DataDownloadResponse($image->data(), $fileName, $image->mimeType());
+    return $this->dataDownloadResponse($image->data(), $fileName, $image->mimeType());
   }
 
   /**
@@ -344,7 +344,7 @@ class ImagesController extends Controller {
       $imageData = $this->imagesService->fallbackPlaceholder($imageSize);
       $imageFileName = 'placeholder.svg';
       $imageMimeType = 'image/svg+xml';
-      return new Http\DataDownloadResponse($imageData, $imageFileName, $imageMimeType);
+      return $this->dataDownloadResponse($imageData, $imageFileName, $imageMimeType);
     }
     return new Http\RedirectResponse($placeHolderUrl);
   }

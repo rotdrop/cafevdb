@@ -26,7 +26,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\Constants;
@@ -730,7 +729,7 @@ class LegacyEventsController extends Controller {
 
     $this->logError("Permissions: " . $permissions);
 
-    return new DataDownloadResponse(
+    return $this->dataDownloadResponse(
       $this->generateEvent($uri, $object, $ownerId, $permissions),
       $uri,
       'text/calendar');
