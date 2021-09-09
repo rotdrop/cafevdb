@@ -146,7 +146,7 @@ class Navigation
           ];
           $groupData = " data-group-info='".json_encode($groupInfoData, JSON_FORCE_OBJECT)."'"
                      . ' data-group-id="'.$groupId.'"'
-                     . isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '';
+                     . (isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '');
           $result .= '<optgroup label="'.$group.'"'.$groupClass.$groupData.'>
           ';
           $indent = '  ';
