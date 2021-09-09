@@ -27,6 +27,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
+import * as Notification from './notification.js';
 import { token as pmeToken } from './pme-selectors.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
@@ -56,6 +57,7 @@ const addMusicians = function(form, post) {
         return;
       }
       console.log(data);
+      // Notification.messages(data.message);
       if (data.musicians.length === 1) {
         // open single person change dialog
         const musicianId = data.musicians[0];
@@ -64,6 +66,7 @@ const addMusicians = function(form, post) {
           form,
           undefined,
           function() {
+            Notification.messages(data.message);
             ProjectParticipants.personalRecordDialog(
               {
                 projectId,
@@ -78,7 +81,9 @@ const addMusicians = function(form, post) {
           });
       } else {
         // load the instrumentation table, initially restricted to the new musicians
-        ProjectParticipants.loadProjectParticipants(form, data.musicians);
+        ProjectParticipants.loadProjectParticipants(form, data.musicians, function() {
+          Notification.messages(data.message);
+        });
       }
     });
 };

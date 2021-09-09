@@ -1288,13 +1288,12 @@ Whatever.',
 
     $musician = $musiciansRepository->find($id);
     if (empty($musician)) {
-      if (!empty($status)) {
-        $status[] = [
-          'id' => $id,
-          'notice' => $this->l->t(
-            'Unable to fetch musician\'s personal information for id %d.', $id),
-        ];
-      }
+      $status[] = [
+        'id' => $id,
+        'notice' => $this->l->t(
+          'Unable to fetch the data for the musician-id "%s".', (string)$id),
+      ];
+      $this->logInfo('STATUS '. print_r($status,true));
       return false;
     }
 
@@ -1311,6 +1310,7 @@ Whatever.',
           'The musician %s is already registered with project %s.',
           [ $musicianName, $project['name'] ]),
       ];
+      $this->logInfo('MUSICIAN EXISTS');
       return false;
     }
 

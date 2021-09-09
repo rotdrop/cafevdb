@@ -102,7 +102,11 @@ class ProjectParticipantsController extends Controller {
     if (!empty($musicianId)) {
       $musicianIds[] = $musicianId;
     } else {
-      $musicianIds = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+      $musicianIds = array_map(
+        function($value) { $id = json_decode($value, true); return $id['id']??$id; },
+        $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), [])
+      );
+
     }
 
     $this->logInfo('Requested participants '.print_r($musicianIds, true));
@@ -125,35 +129,33 @@ class ProjectParticipantsController extends Controller {
 
     if ($numRecords == count($failedMusicians)) {
 
-      $message = $this->l->t('No musician could be added to the project, #failures: %d.',
-                             count($failedMusicians));
+      $messages[] = $this->l->t('No musician could be added to the project, #failures: %d.',
+                                count($failedMusicians));
 
       foreach ($failedMusicians as $id => $failures) {
         foreach ($failures as $failure) {
-          $message .= ' '.$failure['notice'];
+          $messages[] = ' '.$failure['notice'];
         }
       }
 
-      return self::grumble($message);
+      return self::grumble([ 'message' => $messages ]);
 
     } else {
 
+      $messages = [];
       $aggregateNotice = '';
       $musicians = [];
       foreach ($addedMusicians as $id => $notices) {
         $musicians[] = $id;
         foreach ($notices as $notice) {
-          $aggregateNotice .= $notice['notice'];
+          $messages[] = $notice['notice'];
         }
       }
 
       return self::dataResponse(
         [
           'musicians' => $musicians,
-          'message' => ($notice == ''
-                        ? '' // don't annoy the user with success messages.
-                        : $this->l->t("Operation succeeded with the following notifications:")),
-          'notice' => $aggregateNotice,
+          'message' => $messages,
         ]);
     }
 
