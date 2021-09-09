@@ -2416,7 +2416,7 @@ class phpMyEdit
 			if (!empty($vals)) {
 				if ($this->col_has_multiple($k)) {
 					$value = array();
-					foreach(explode(',', $row["qf$k"]) as $key) {
+					foreach(array_filter(explode(',', $row["qf$k"])) as $key) {
 						$value[] = $vals[$key];
 					}
 					$value = implode(',', $value);
