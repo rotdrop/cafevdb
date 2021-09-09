@@ -191,6 +191,14 @@ class ProjectParticipantsController extends Controller {
       foreach ($projectParticipant['musician']['instruments'] as $musicianInstrument) {
         $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument;
       }
+      // sort by musician's instrument ranking
+      uasort($musicianInstruments, function($a, $b) {
+        /** @var Entities\MusicianInstrument $a */
+        /** @var Entities\MusicianInstrument $b */
+        $ra = $a->getRanking();
+        $rb = $b->getRanking();
+        return (($ra === $rb) ? 0 : ($ra <= $rb) ? -1 : 1);
+      });
 
       $projectInstruments = [];
       foreach ($projectParticipant['projectInstruments'] as $projectInstrument) {
@@ -202,9 +210,9 @@ class ProjectParticipantsController extends Controller {
         $allInstruments[$instrument['id']] = $instrument;
       }
 
-      $this->logDebug('PRJ INST '.print_r(array_keys($projectInstruments), true));
-      $this->logDebug('MUS INST '.print_r(array_keys($musicianInstruments), true));
-      $this->logDebug('AJX INST '.print_r($instrumentValues, true));
+      $this->logInfo('PRJ INST '.print_r(array_keys($projectInstruments), true));
+      $this->logInfo('MUS INST '.print_r(array_keys($musicianInstruments), true));
+      $this->logInfo('AJX INST '.print_r($instrumentValues, true));
 
       switch ($context) {
       case 'musician':
@@ -223,12 +231,12 @@ class ProjectParticipantsController extends Controller {
             // soft-delete works, but we still want to dis-allow
             // deleting instrument used in _this_ project.
             $message[] = $this->l->t(
-              'Just marking the instrument %s as disabled because it is still used in %s other contexts.',
+              'Just marking the instrument "%1$s" as disabled because it is still used in %2$d other contexts.',
                 [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]);
           }
 
           $message[]  = $this->l->t(
-            'Removing instrument %s from the list of instruments played by %s',
+            'Removing instrument "%1$s" from the list of instruments played by %2$s.',
             [ $musicianInstruments[$removedId]['instrument']['name'],
               $projectParticipant['musician']['firstName'] ]);
 
@@ -240,13 +248,21 @@ class ProjectParticipantsController extends Controller {
                                              $addedId));
           }
           $message[] = $this->l->t(
-            'Adding instrument %s to the list of instruments played by %s',
+            'Adding instrument "%s" to the list of instruments played by "%s"',
             [ $allInstruments[$addedId]['name'],
               $projectParticipant['musician']['firstName'] ]);
         }
 
+        // see if the primary instrument has been changed
+        if (count($instrumentValues) > 1
+            && $instrumentValues[0] != (array_keys($musicianInstruments)[0]??0)) {
+          $message[] = $this->l->t(
+            'Setting "%1$s" as the primary instrument of %2$s.',
+            [ $allInstruments[$instrumentValues[0]]['name'], $projectParticipant['musician']['firstName'], ]);
+        }
+
         // all ok
-        return self::response(implode('; ', $message));
+        return self::response($message);
 
       case 'project':
 
@@ -257,7 +273,7 @@ class ProjectParticipantsController extends Controller {
 
           if (!isset($allInstruments[$addedId])) {
             return self::grumble(
-              $this->l->t('Denying the attempt to add an unknown instrument (id = %s)',
+              $this->l->t('Denying the attempt to add an unknown instrument (id = %s).',
                           $addedId));
           }
 
@@ -271,7 +287,7 @@ class ProjectParticipantsController extends Controller {
           }
 
           $message[] = $this->l->t(
-            'Adding instrument %s to the list of project-instruments of %s',
+            'Adding instrument "%1$s" to the list of project-instruments of %s.',
             [ $allInstruments[$addedId]['name'],
               $projectParticipant['musician']['firstName'] ]);
         }
