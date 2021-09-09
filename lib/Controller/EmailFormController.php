@@ -143,7 +143,7 @@ class EmailFormController extends Controller {
         'bulkTransactionId' => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(), // @todo: check
         'csrfToken' => \OCP\Util::callRegister(), // @todo: check
-        $emailKey => $this->pme->cgiSysName('mrecs'),
+        'emailKey' => $this->pme->cgiSysName('mrecs'),
 
       ],
       'emailDraftAutoSave' => $emailDraftAutoSave,
