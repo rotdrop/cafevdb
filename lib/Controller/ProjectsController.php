@@ -183,10 +183,10 @@ class ProjectsController extends Controller {
   public function changeInstrumentation(string $instruments, string $voices)
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
-    $instruments = array_filter($this->parameterService[$instrumentsKey]);
+    $instruments = array_filter($this->parameterService[$instrumentsKey]??[]);
 
     $voicesKey = str_replace('[]', '', $voices);
-    $voices = array_filter($this->parameterService[$voicesKey]);
+    $voices = array_filter($this->parameterService[$voicesKey]??[]);
 
     $instrumentInfo =
       $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
