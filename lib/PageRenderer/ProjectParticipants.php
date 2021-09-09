@@ -394,10 +394,21 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $row, $k, $pme) {
             $firstName = $row['qf'.($k-1)];
-            return [
-              'placeholder' => $firstName,
-                'readonly' => empty($row['qf'.$k]),
-            ];
+            $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
+            $unlockedPlaceholder = $this->l->t('e.g. Cathy');
+            if (empty($row['qf'.$k])) {
+              return [
+                'placeholder' => $lockedPlaceholder,
+                'readonly' => true,
+                'data-placeholder' => $unlockedPlaceholder,
+              ];
+            } else {
+              return [
+                'placeholder' => $unlockedPlaceholder,
+                'readonly' => false,
+                'data-placeholder' => $lockedPlaceholder,
+              ];
+            }
           },
           'postfix' => function($op, $pos, $row, $k, $pme) {
             $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
@@ -405,7 +416,9 @@ class ProjectParticipants extends PMETableViewBase
   '.$checked.'
   type="checkbox"
   class="pme-input pme-input-lock lock-empty"/>
-<label class="pme-input pme-input-lock lock-empty" for="pme-musician-nickname"></label>';
+<label class="pme-input pme-input-lock lock-empty"
+       title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+       for="pme-musician-nickname"></label>';
           },
         ],
       ]);
@@ -421,10 +434,21 @@ class ProjectParticipants extends PMETableViewBase
             $surName = $row['qf'.($k-3)];
             $firstName = $row['qf'.($k-2)];
             $nickName = $row['qf'.($k-1)];
-            return [
-              'placeholder' => $surName.', '.($nickName?:$firstName),
-              'readonly' => empty($row['qf'.$k]),
-            ];
+            $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
+            $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
+            if (empty($row['qf'.$k])) {
+              return [
+                'placeholder' => $lockedPlaceholder,
+                'readonly' => true,
+                'data-placeholder' => $unlockedPlaceholder,
+              ];
+            } else {
+              return [
+                'placeholder' => $unlockedPlaceholder,
+                'readonly' => false,
+                'data-placeholder' => $lockedPlaceholder,
+              ];
+            }
           },
           'postfix' => function($op, $pos, $row, $k, $pme) {
             $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
@@ -432,7 +456,9 @@ class ProjectParticipants extends PMETableViewBase
   type="checkbox"
   '.$checked.'
   class="pme-input pme-input-lock lock-empty"
-/><label class="pme-input pme-input-lock lock-empty" for="pme-musician-displayname"></label>';
+/><label class="pme-input pme-input-lock lock-empty"
+         title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+         for="pme-musician-displayname"></label>';
           },
         ],
       ]);
@@ -464,7 +490,9 @@ class ProjectParticipants extends PMETableViewBase
   type="checkbox"
   '.$checked.'
   class="pme-input pme-input-lock lock-unlock"
-/><label class="pme-input pme-input-lock lock-unlock" for="pme-musician-user-id-slug"></label>';
+/><label class="pme-input pme-input-lock lock-unlock"
+         title="'.$this->toolTipsService['pme:input:lock-unlock'].'"
+         for="pme-musician-user-id-slug"></label>';
           },
         ],
       ]);
@@ -625,7 +653,7 @@ class ProjectParticipants extends PMETableViewBase
        'name|LF' => ' &alpha;',
        'name|CAPVD' => $this->l->t("Section Leader"),
        'tab' => [ 'id' => 'instrumentation' ],
-       'css'      => [ 'postfix' => ' section-leader tooltip-top' ],
+       'css'      => [ 'postfix' => [ 'section-leader', 'tooltip-top', ], ],
        'default' => false,
        'options'  => 'LAVCPDF',
        'select' => 'C',
@@ -679,8 +707,9 @@ class ProjectParticipants extends PMETableViewBase
        ],
        'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
        'align|LF' => 'center',
-       'tooltip' => $this->l->t('Set to "%s" in order to mark the section leader',
-                                [ "&alpha;" ]),
+       'tooltip|LFVD' => $this->l->t('Set to "%s" in order to mark the section leader.',
+                                     [ "&alpha;" ]),
+       'tooltip|CAP' => $this->l->t('Check in order to mark the section leader.'),
       ]);
 
     $opts['fdd']['registration'] = [
@@ -698,8 +727,9 @@ class ProjectParticipants extends PMETableViewBase
         0 => '',
         1 => '&#10004;'
       ],
-      'tooltip' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
+      'tooltip|LFDV' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                                [ "&#10004;" ]),
+      'tooltip|CAP' => $this->l->t("Check in order to mark participants who passed a personally signed registration form to us."),
       'display|LF' => [
         'popup' => function($data) {
           return $this->toolTipsService['registration-mark'];
@@ -746,11 +776,16 @@ class ProjectParticipants extends PMETableViewBase
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
         'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
-        'select'  => 'T',
+        'select'  => 'M',
         'input'   => ($expertMode ? 'R' : 'RH'),
         'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'values2' => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'filter' => [
+          'having' => true,
+          // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+        ],
       ]);
-
 
     /*
      *

@@ -400,10 +400,21 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $row, $k, $pme) {
           $firstName = $row['qf'.($k-1)] ?? '';
-          return [
-            'placeholder' => $firstName ?: '',
-            'readonly' => empty($row['qf'.$k]),
-          ];
+          $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
+          $unlockedPlaceholder = $this->l->t('e.g. Cathy');
+          if (empty($row['qf'.$k])) {
+            return [
+              'placeholder' => $lockedPlaceholder,
+              'readonly' => true,
+              'data-placeholder' => $unlockedPlaceholder,
+            ];
+          } else {
+            return [
+              'placeholder' => $unlockedPlaceholder,
+              'readonly' => false,
+              'data-placeholder' => $lockedPlaceholder,
+            ];
+          }
         },
         'postfix' => function($op, $pos, $row, $k, $pme) {
           $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
@@ -433,10 +444,21 @@ make sure that the musicians are also automatically added to the
           $surName = $row['qf'.($k-3)] ?? '';
           $firstName = $row['qf'.($k-2)] ?? '';
           $nickName = $row['qf'.($k-1)] ?? '';
-          return [
-            'placeholder' => $op == 'add' ? '' : $surName.', '.($nickName?:$firstName),
-            'readonly' => empty($row['qf'.$k]),
-          ];
+          $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
+          $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
+          if (empty($row['qf'.$k])) {
+            return [
+              'placeholder' => $lockedPlaceholder,
+              'readonly' => true,
+              'data-placeholder' => $unlockedPlaceholder,
+            ];
+          } else {
+            return [
+              'placeholder' => $unlockedPlaceholder,
+              'readonly' => false,
+              'data-placeholder' => $lockedPlaceholder,
+            ];
+          }
         },
         'postfix' => function($op, $pos, $row, $k, $pme) {
           $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
@@ -551,6 +573,12 @@ make sure that the musicians are also automatically added to the
         'select'  => 'T',
         'input'   => ($expertMode ? 'S' : 'SH'),
         'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'values2' => $this->instrumentInfo['byId'],
+        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'filter' => [
+          'having' => true,
+          // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+        ],
       ]);
 
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
@@ -835,7 +863,7 @@ make sure that the musicians are also automatically added to the
       $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
       $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
       $opts['having']['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
-      $opts['misc']['css']['major']   = 'bulkcommit';
+      $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }
 
