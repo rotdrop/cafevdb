@@ -405,22 +405,13 @@ class phpMyEdit
 	private function emit_misc_recs()
 	{
 		echo $this->htmlHiddenSys('mtable', $this->tb);
-		switch (count($this->key)) {
-			case 0:
-				echo $this->htmlHiddenSys('mkey', '');
-				echo $this->htmlHiddenSys('mkeytype', '');
-				break;
-			case 1:
-				foreach ($this->key as $key => $key_type) {
-					echo $this->htmlHiddenSys('mkey', $key);
-					echo $this->htmlHiddenSys('mkeytype', $key_type);
-				}
-				break;
-			default:
-				foreach ($this->key as $key => $key_type) {
-					echo $this->htmlHiddenSys('mkey['.$key.']', $key_type);
-				}
-				break;
+		if (count($this->key) == 0) {
+			echo $this->htmlHiddenSys('mkey', '');
+			echo $this->htmlHiddenSys('mkeytype', '');
+		} else {
+			foreach ($this->key as $key => $key_type) {
+				echo $this->htmlHiddenSys('mkey['.$key.']', $key_type);
+			}
 		}
 		foreach ($this->mrecs as $mrec) {
 			echo $this->htmlHiddenSys('mrecs[]', $mrec);
@@ -2636,12 +2627,16 @@ class phpMyEdit
 	function getCSSclass($name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
 	{
 		static $div_idx = -1;
+		if (!is_array($name)) {
+			$name = [ $name ];
+		}
 		$pfx = '';
 		if ($this->css['separator'] === ' ') {
 			$pfx = $this->css['prefix'].'-';
-			$elements = array($name);
+			$elements = $name;
 		} else {
-			$elements = array($this->css['prefix'], $name);
+			// ????
+			$elements = array_merge([ $this->css['prefix'] ], $name);
 		}
 		if ($this->page_type && $this->css['page_type']) {
 			if ($this->page_type != 'L' && $this->page_type != 'F') {
@@ -3847,15 +3842,15 @@ class phpMyEdit
 			$nav = '<span class="'.$this->getCSSclass($cssname, $position, null, $this->misccss2).'">';
 			$nav .= $this->htmlSubmit(
 				'operation', ucfirst($name),
-				$this->getCSSclass($cssname, $position, null, $this->misccss2), $enabled ? 0 : $disabled);
+				$this->getCSSclass([ $cssname, 'commit' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '+',
-				$this->getCSSclass($cssname.'+', $position, null, $this->misccss2), $enabled ? 0 : $disabled);
+				$this->getCSSclass([ $cssname, 'all', 'all+' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '-',
-				$this->getCSSclass($cssname.'-', $position, null, $this->misccss2), $enabled ? 0 : $disabled);
+				$this->getCSSclass([ $cssname, 'all', 'all-' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			$nav .= '</span>';
 			return $nav;
 		}
@@ -4723,7 +4718,7 @@ class phpMyEdit
 						echo ' /></td>',"\n";
 					}
 					if ($this->nav_custom_multi()) {
-						$css	  = $this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2);
+						$css	  = $this->getCSSclass([ $this->misccss, 'check' ], null, null, $this->misccss2);
 						$misccss  = $this->getCSSclass('misc');
 						$namebase = $this->cgi['prefix']['sys'].'mrecs';
 						$name	  = $namebase.'[]';
@@ -4751,7 +4746,7 @@ class phpMyEdit
 						// 	unset($this->mrecs[$mrecs_key]);
 						// }
 
-						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2).'"></div></label></td>'."\n";
+						echo ' /><div class="'.$css.'"></div></label></td>'."\n";
 
 						// remove all displayed misc records as these
 						// are handled by the check-boxes.
@@ -6133,10 +6128,15 @@ class phpMyEdit
 		$this->miscphp	 = @$opts['misc']['php'];
 		$this->misccss   = @$opts['misc']['css']['major'];
 		$this->misccss2  = @$opts['misc']['css']['minor'];
-		if (!$this->misccss) {
+		if (empty($this->misccss)) {
 			$this->misccss = 'misc';
+		} else if (is_array($this->misccss)) {
+			$this->misccss = implode(' ', $this->misccss);
 		}
 		if ($this->misccss2) {
+			if (is_array($this->misccss2)) {
+				$this->misccss2 = implode(' ', $this->misccss2);
+			}
 			$this->misccss2 = ' '.$this->misccss2;
 		}
 		$this->page_name = @$opts['page_name'];
