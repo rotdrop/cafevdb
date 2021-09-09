@@ -554,7 +554,7 @@ make sure that the musicians are also automatically added to the
       'tab'         => [ 'id' => [ 'orchestra' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'       => 'HRS',
+      'input'       => 'HRV',
       'select'      => 'M',
       'sort'     => true,
       'values' => [
