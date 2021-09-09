@@ -47,6 +47,12 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var bool */
   private $debug = false;
 
+  /** @var string */
+  private $lastKey = null;
+
+  /** @var array */
+  private $failedKeys = [];
+
   public function __construct(
     IAppContainer $appContainer
     , IL10N $l
@@ -72,6 +78,16 @@ class ToolTipsService implements \ArrayAccess, \Countable
       $this->debug = $debug;
     }
     return $this->debug;
+  }
+
+  public function getLastKey()
+  {
+    return $this->lastKey;
+  }
+
+  public function getFailedKeys()
+  {
+    return $this->failedKeys;
   }
 
   public function toolTips() {
@@ -141,7 +157,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    */
   private function fetch($key)
   {
-    $origKey = $key;
+    $this->lastKey = $key;
     $this->makeToolTips();
     $toolTipsData = $this->toolTipsData;
 
@@ -158,8 +174,16 @@ class ToolTipsService implements \ArrayAccess, \Countable
       $tip = null;
     }
 
-    if ($this->debug && empty($tip)) {
-      $tip = $this->l->t('Unknown Tooltip for key "%s" requested.', $origKey);
+    if (empty($tip)) {
+      $this->failedKeys[] = $this->lastKey;
+      if ($this->debug) {
+        $tip = $this->l->t('Unknown Tooltip for key "%s" requested.', $this->lastKey);
+      }
+    } else {
+      $this->failedKeys = [];
+      if ($this->debug) {
+        $tip .= ' (' . $this->l->t('ToolTip-Key "%s"', $this->lastKey) . ')';
+      }
     }
 
     return empty($tip) ? null : htmlspecialchars($tip);
@@ -714,15 +738,17 @@ Suchkriterien zu verstecken.'),
           'morechange' => $this->l->t('Saves the current values; the current input form will remain active.'),
         ],
 
-        'pagerowsselect' => $this->l->t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
+        'pagerows' => $this->l->t('Limits the number of rows per page to the given value. A "∞" means to display all records on one large page.'),
 
-        'query' => $this->l->t('  Klick mich, um die
+        'query' => [
+          'default' => $this->l->t('Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man `%%\'.'),
+        ],
 
         'reload' => [
-          'reloadview' => $this->l->t('Refreshes the current view by reloading all data from the data-base.'),
+          'default' => $this->l->t('Refreshes the current view by reloading all data from the data-base.'),
           'reloadchange' => $this->l->t('Discards all unsaved data and reloads all fields form the data-base. Settings which already have been stored by hitting an
 "Apply" button are maintained, though.'),
           'reloadcopy' => $this->l->t('Discards all unsaved data and reloads all fields from the data-base. Settings which already have been stored by hitting an

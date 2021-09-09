@@ -576,8 +576,13 @@ class PHPMyEdit extends \phpMyEdit
     $result = parent::doFetchToolTip($css_class_name, $name, $label);
     if ($this->tooltips instanceof \OCA\CAFEVDB\Service\ToolTipsService) {
       $this->tooltips->debug($oldDebug);
-      if (empty($result) && $oldDebug) {
-        return '***DEBUG*** '.$this->l->t('Unknown Tooltip for css-classes "%1$s" and name "%2$s" requested.', [ $css_class_name, $name ]);
+      if ($oldDebug) {
+        $failedKeys = implode(';', $this->tooltips->getFailedKeys());
+        if (empty($result)) {
+          return '***DEBUG*** '.$this->l->t('Unknown Tooltip for css-classes "%1$s" and name "%2$s" requested, failed keys in detail: %3$s.', [ $css_class_name, $name, $failedKeys ]);
+        } else {
+          $result .= ' (' . $this->l->t('ToolTip-Key "%1$s", failed keys %2$s', [ $this->tooltips->getLastKey(), $failedKeys ]) . ')';
+        }
       }
     }
     return $result;

@@ -3037,21 +3037,6 @@ class phpMyEdit
 				$css_classes),
 			$css_classes);
 		array_unshift($css_classes, $first_css);
-		foreach ($css_classes as $css_class_name) {
-			// If we have an array for the class, use it.
-			if (isset($this->tooltips[$css_class_name])
-				&& is_array($this->tooltips[$css_class_name])) {
-				$tips = $this->tooltips[$css_class_name];
-				if (isset($tips[$name])) {
-					return $tips[$name];
-				} else if (isset($tips['default'])) {
-					return $tips['default'];
-				} else {
-					return 'Tooltip-lookup failed for '.
-						$css_class_name.', '.$name.($label ? ', '.$label : '');
-				}
-			}
-		}
 
 		// otherwise use name, label, css in that order
 		if(isset($this->tooltips[$name])) {
