@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -141,7 +142,7 @@ class EventsService
 
     $this->queryBuilder()
          ->delete(ProjectEvent::class, 'e')
-         ->where('e.CalendarId = :calendarId')
+         ->where('e.calendarId = :calendarId')
          ->setParameter('calendarId', $event->getCalendarId())
          ->getQuery()
          ->execute();
@@ -264,12 +265,14 @@ class EventsService
     $event['calendarid'] = $projectEvent->getCalendarId();
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
-      // clean up orphaned events
-      try {
-        $this->unregister($event['projectid'], $event['uri']);
-      } catch  (\Throwable $t) {
-        $this->logException($t);
+      $this->logInfo('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
+      if (false) {
+        // clean up orphaned events
+        try {
+          $this->unregister($event['projectid'], $event['uri']);
+        } catch  (\Throwable $t) {
+          $this->logException($t);
+        }
       }
       return null;
     }
@@ -282,18 +285,17 @@ class EventsService
     $end = $dtEnd->getDateTime();
     $allDay = !$dtStart->hasTime();
 
+    $timeZone = $this->getDateTimezone();
     if (!$allDay) {
       if ($dtStart->isFloating()) {
-        $timeZone = $this->getDateTimezone();
-        $start->setTimezone($timezone);
+        $start->setTimezone($timeZone);
       }
       if ($dtEnd->isFloating()) {
-          $timeZone = $this->getDateTimezone();
-          $end->setTimezone($timezone);
+        $end->setTimezone($timeZone);
       }
     } else {
-      $start->setTimezone($timezone);
-      $end->setTimezone($timezone);
+      $start->setTimezone($timeZone);
+      $end->setTimezone($timeZone);
     }
 
     $event['start'] = $start;
@@ -402,12 +404,16 @@ class EventsService
       'timezone' => $timezone,
       'locale' => $locale,
       'allday' => $allDay,
-      'start' => array('stamp' => $startStamp,
-                       'date' => $startdate,
-                       'time' => $starttime),
-      'end' => array('stamp' => $endStamp,
-                     'date' => $enddate,
-                     'time' => $endtime)
+      'start' => [
+        'stamp' => $startStamp,
+        'date' => $startdate,
+        'time' => $starttime,
+      ],
+      'end' => [
+        'stamp' => $endStamp,
+        'date' => $enddate,
+        'time' => $endtime,
+      ],
     ];
   }
 
@@ -418,6 +424,7 @@ class EventsService
 
     if ($times['start']['date'] == $times['end']['date']) {
       $datestring = $times['start']['date'].($times['allday'] ? '' : ', '.$times['start']['time']);
+    } else {
       $datestring = $times['start']['date'].' - '.$times['end']['date'];
     }
     return $datestring;
