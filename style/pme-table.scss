@@ -55,9 +55,9 @@ input[type="radio"].pme-input {
  *
  */
 .ui-widget form.pme-form.pme-list input {
-  font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
+  font-family: var(--font-face);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 /*******************************************************************************
