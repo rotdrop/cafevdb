@@ -61,6 +61,12 @@ class RecipientsFilter
   private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
   private const NO_MUSICIANS = 0;
 
+  // MUSICIAN_KEY[PME_sys_mtable]
+  private const MUSICIAN_KEY = [
+    'Musicians' => 'id',
+    'ProjectParticipants' => 'musician_id',
+  ];
+
   /** @var null|Entities\Project */
   private $project;
   private $projectId;   // Project id or NULL or -1 or ''
@@ -168,6 +174,7 @@ class RecipientsFilter
 
     // See wether we were passed specific variables ...
     $this->emailKey  = $this->pme->cgiSysName('mrecs');
+    $this->mkeyKey   = $this->pme->cgiSysName('mkey');
     $this->mtabKey   = $this->pme->cgiSysName('mtable');
     $this->emailRecs = []; // avoid null
 
@@ -189,6 +196,7 @@ class RecipientsFilter
 
     // "sane" default setttings
     $this->emailRecs = $this->parameterService->getParam($this->emailKey, []);
+    $this->emailTable = $this->parameterService->getParam($this->mtabKey, '');
     $this->reload = false;
     $this->snapshot = false;
 
@@ -434,16 +442,17 @@ class RecipientsFilter
       $this->frozen = true; // restrict to initial set of recipients
 
       return;
-    } else if ($this->projectId > 0) {
+    } else {
+      $musicianKey = self::MUSICIAN_KEY[$this->emailTable];
       $this->emailRecs = array_filter(
         array_map(
-          function($keyRecord) {
+          function($keyRecord) use ($musicianKey) {
             // @todo Quite inefficient
             $musicianId = filter_var($keyRecord, FILTER_VALIDATE_INT);
             if ($musicianId !== false) {
               return $musicianId;
             }
-            return json_decode($keyRecord, true)['musician_id'];
+            return json_decode($keyRecord, true)[$musicianKey];
           },
           $this->emailRecs));
     }
