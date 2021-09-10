@@ -30,6 +30,7 @@ import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
+import { instrumentationNumbersPopup } from './projects.js';
 import { data as pmeData } from './pme-selectors.js';
 import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
@@ -339,6 +340,15 @@ const myReady = function(selector, resizeCB) {
 
   const selectedVoices = selectVoices.val();
   selectVoices.data('selected', selectedVoices || []);
+
+  container.find('.pme-value li.nav.instrumentation-voices a.nav')
+    .off('click')
+    .on('click', function(event) {
+      const data = $(this).data('json');
+      console.info('INSTRUMENTATION NUMBERS');
+      instrumentationNumbersPopup(selector, data);
+      return false;
+    });
 
   // This overly complicated piece of code turns a multi-select into
   // a per-group single select for the unlikely case that a musician

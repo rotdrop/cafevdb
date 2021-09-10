@@ -258,6 +258,9 @@ class ProjectParticipants extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.self::TEMPLATE,
+      'dataPrefix' => [
+        'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
+      ],
     ];
 
     // Name of field which is the unique key
@@ -585,6 +588,35 @@ class ProjectParticipants extends PMETableViewBase
             'instrument-voice',
             'select-wide',
           ],
+        ],
+        'display|CAP' => [
+          'prefix' => function($op, $when, $row, $k, $pme) {
+            $hidden = empty($row['qf'.$k]) ? 'hidden' : '';
+            return '<div class="cell-wrapper">
+  <div class="'.$hidden.'">';
+          },
+          'postfix' => function($op, $when, $row, $k, $pme) {
+            $post = [
+              'template' => 'project-instrumentation-numbers',
+              'projectName' => $this->projectName,
+              'projectId' => $this->projectId,
+            ];
+            $json = htmlspecialchars(json_encode($post));
+            $post = http_build_query($post);
+            $title = $this->toolTipsService['project-participants:instrumentation-numbers'];
+            $value = $this->l->t('No sub-division, configure voices?');
+            $hidden = empty($row['qf'.$k]) ? '' : ' hidden';
+            $link =<<<__EOT__
+  </div>
+  <li class="nav tooltip-top instrumentation-voices$hidden" title="$title">
+    <a class="nav" href="#" data-post="$post" data-json='$json'>
+      $value
+    </a>
+  </li>
+</div>
+__EOT__;
+            return $link;
+          },
         ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,

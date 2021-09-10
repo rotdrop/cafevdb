@@ -63,6 +63,9 @@ class MusiciansController extends Controller {
   /** @var MusiciansRepository */
   protected $musiciansRepository;
 
+  /** @var string */
+  protected $dataPrefix = '';
+
   public function __construct(
     $appName
     , IRequest $request
@@ -84,6 +87,13 @@ class MusiciansController extends Controller {
     $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+    $this->dataPrefix = $this->parameterService['dataPrefix']['musicians']??'';
+  }
+
+  private function requestParameter($name)
+  {
+    return Util::normalizeSpaces(
+      $this->parameterService[$this->pme->cgiDataName($this->dataPrefix . $name)]?:'');
   }
 
   /**
@@ -97,17 +107,18 @@ class MusiciansController extends Controller {
    */
   public function validate($topic)
   {
+    $message = [];
     switch ($topic) {
     case 'phone':
       $numbers = [
         'mobile' => [
-          'number' => Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('mobile_phone')]),
+          'number' => $this->requestParameter('mobile_phone'),
           'isMobile' => false,
           'valid' => false,
           'meta' => false,
         ],
         'fixed' => [
-          'number' => Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('fixed_line_phone')]),
+          'number' => $this->requestParameter('fixed_line_phone'),
           'isMobile' => false,
           'valid' => false,
           'meta' => false,
@@ -117,34 +128,37 @@ class MusiciansController extends Controller {
       $fixed = &$numbers['fixed'];
       $mobile = &$numbers['mobile'];
 
-      $this->logInfo(print_r($numbers, true));
-
-
       // validata phone numbers
       foreach ($numbers as &$number) {
-        if ($this->phoneNumberService->validate($number['number'])) {
-          $number['number'] = $this->phoneNumberService->format();
-          $number['meta'] = $this->phoneNumberService->metaData();
-          $number['isMobile'] = $this->phoneNumberService->isMobile();
-          $number['valid'] = true;
-        } else if (!empty($number['number'])) {
-          $message .= $this->l->t('The phone number %s does not appear to be a valid phone number. ',
+        try {
+          if ($this->phoneNumberService->validate($number['number'])) {
+            $number['number'] = $this->phoneNumberService->format();
+            $number['meta'] = $this->phoneNumberService->metaData();
+            $number['isMobile'] = $this->phoneNumberService->isMobile();
+            $number['valid'] = true;
+          }
+        } catch (\libphonenumber\NumberParseException $e) {
+        }
+        if (!$number['valid'] && !empty($number['number'])) {
+          $message[] = $this->l->t('The phone number %s does not appear to be a valid phone number. ',
                                   [ $number['number'], ]);
         }
       }
+
+      $this->logInfo(print_r($numbers, true));
 
       if (!$fixed['valid'] && $mobile['valid'] && !$mobile['isMobile']) {
         $tmp = $fixed;
         $fixed = $mobile;
         $mobile = $tmp;
-        $message = $this->l->t('This (%s) is a fixed line phone number, injecting it in the correct column.',
-                               [ $fixed['number'] ]);
+        $message[] = $this->l->t('This (%s) is a fixed line phone number, injecting it in the correct column.',
+                                 [ $fixed['number'] ]);
       }
       if (!$mobile['valid'] && $fixed['valid'] && $fixed['isMobile']) {
         $tmp = $mobile;
         $mobile = $fixed;
         $fixed = $tmp;
-        $message = $this->l->t('This (%s) is a mobile phone number, injecting it in the correct column.',
+        $message[] = $this->l->t('This (%s) is a mobile phone number, injecting it in the correct column.',
                                [ $mobile['number'] ]);
       }
       if (!empty($mobile['number']) && !empty($fixed['number']) && !$mobile['isMobile'] && $fixed['isMobile']) {
@@ -152,12 +166,12 @@ class MusiciansController extends Controller {
         $fixed = $mobile;
         $mobile = $tmp;
       } else if ($mobile['valid'] && !$mobile['isMobile']) {
-        $message .= $this->l->t('The phone number %s does not appear to be a mobile phone number. ',
+        $message[] = $this->l->t('The phone number %s does not appear to be a mobile phone number. ',
                                 [ $mobile['number'] ]);
       }
 
       return self::dataResponse([
-        'message' => nl2br($message),
+        'message' => $message,
         'mobilePhone' => $mobile['number'],
         'mobileMeta' => nl2br($mobile['meta']),
         'fixedLinePhone' => $fixed['number'],
@@ -166,7 +180,7 @@ class MusiciansController extends Controller {
 
       break;
     case 'email':
-      $email = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('email')]);
+      $email = $this->requestParameter('email');
 
       if (empty($email)) {
         return self::dataResponse([ 'message' => '', 'email' => '' ]);
@@ -179,18 +193,18 @@ class MusiciansController extends Controller {
       $parseError = $parser->parseError();
 
       if ($parseError !== false) {
-        $message .= htmlspecialchars($this->l->t($parseError['message'], $parseError['data'])).'. ';
+        $message[] = htmlspecialchars($this->l->t($parseError['message'], $parseError['data']));
       } else {
         $emailArray = [];
         foreach ($parsedEmail as $emailRecord) {
           if ($emailRecord->host === 'localhost') {
-            $message .= $this->l->t('Missing host for email-address: %s. ',
-                                    [ htmlspecialchars($emailRecord->mailbox) ]);
+            $message[] = $this->l->t('Missing host for email-address: %s. ',
+                                     [ htmlspecialchars($emailRecord->mailbox) ]);
             continue;
           }
           $recipient = $emailRecord->mailbox.'@'.$emailRecord->host;
           if (!$phpMailer->validateAddress($recipient)) {
-            $message .= $this->l->t('Validation failed for: %s. ',
+            $message[] = $this->l->t('Validation failed for: %s. ',
                                     [ htmlspecialchars($recipient) ]);
             continue;
           }
@@ -198,22 +212,21 @@ class MusiciansController extends Controller {
         }
       }
 
-      if ($message === '') {
+      if (empty($message)) {
         $email = implode(', ', $emailArray);
       }
 
       return self::dataResponse([
-        'message' => nl2br($message),
+        'message' => $message,
         'email' => $email,
       ]);
 
     case 'address':
-      $country = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('country')]);
-      $city = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('city')]);
-      $street = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('street')]);
-      $zip = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('postal_code')]);
+      $country = $this->requestParameter('country');
+      $city = $this->requestParameter('city');
+      $street = $this->requestParameter('street');
+      $zip = $this->requestParameter('postal_code');
       $active = $this->parameterService['activeElement'];
-
 
       $locations = $this->geoCodingService->cachedLocations($zip, $city, $country);
       $streets = $this->geoCodingService->autoCompleteStreet($street, $country, $city, $zip);
@@ -268,8 +281,8 @@ class MusiciansController extends Controller {
 
       break;
     case 'duplicates':
-      $surName = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('sur_name')]?:'');
-      $firstName = Util::normalizeSpaces($this->parameterService[$this->pme->cgiDataName('first_name')]?:'');
+      $surName = $this->requestParameter('sur_name');
+      $firstName = $this->requestParameter('first_name');
 
       $musicians = $this->musiciansRepository->findByName($firstName, $surName);
 
@@ -280,13 +293,13 @@ class MusiciansController extends Controller {
         $duplicates[$musician['id']] = $musician['firstName'].' '.$musician['name'];
       }
 
-      $message = '';
+      $message = [];
       if (count($duplicates) > 0) {
-        $message = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
+        $message[] = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
       }
 
       return self::dataResponse([
-        'message' => nl2br($message),
+        'message' => $message,
         'duplicates' => $duplicates,
       ]);
       break;

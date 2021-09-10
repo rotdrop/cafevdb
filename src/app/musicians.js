@@ -147,9 +147,12 @@ const contactValidation = function(container) {
             fixedLine.attr('title', data.fixedLineMeta);
             fixedLine.cafevTooltip();
           }
-          if (data.message !== '') {
+          const message = Array.isArray(data.message)
+            ? data.message.join('<br>')
+            : data.message;
+          if (message !== '') {
             Dialogs.alert(
-              data.message,
+              message,
               t(appName, 'Phone Number Validation'),
               function() {
                 phones.prop('disabled', false);
@@ -195,9 +198,12 @@ const contactValidation = function(container) {
           }
           // inject the sanitized value into their proper input fields
           form.find('input[name$="email"]').val(data.email);
-          if (data.message !== '') {
+          const message = Array.isArray(data.message)
+            ? data.message.join('<br>')
+            : data.message;
+          if (message !== '') {
             Dialogs.alert(
-              data.message,
+              message,
               t(appName, 'Email Validation'),
               cleanup, true, true);
             Dialogs.debugPopup(data);
@@ -360,9 +366,12 @@ const contactValidation = function(container) {
         lockCountry = false;
 
         // data.message += CAFEVDB.print_r(citySuggestions, true);
-        if (data.message !== '') {
+        const message = Array.isArray(data.message)
+          ? data.message.join('<br>')
+          : data.message;
+        if (message !== '') {
           Dialogs.alert(
-            data.message, t(appName, 'Address Validation'), cleanup, true, true);
+            message, t(appName, 'Address Validation'), cleanup, true, true);
           Dialogs.debugPopup(data);
         } else {
           cleanup();
@@ -463,8 +472,11 @@ const ready = function(container) {
             }
             return false;
           }
-          if (data.message !== '') {
-            Dialogs.alert(data.message, t(appName, 'Possible Duplicate!'), cleanup, true, true);
+          const message = Array.isArray(data.message)
+            ? data.message.join('<br>')
+            : data.message;
+          if (message !== '') {
+            Dialogs.alert(message, t(appName, 'Possible Duplicate!'), cleanup, true, true);
           } else {
             cleanup();
           }
