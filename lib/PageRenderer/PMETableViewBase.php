@@ -1766,6 +1766,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // use simple field grouping for list and filter operation
         $opts['fdd'][$fieldName]['sql|FL'] = '$join_col_fqn';
+      } else if ($group) {
+        $opts['fdd'][$fieldName]['filter'] = [
+          'having' => true,
+        ];
       }
       //$this->debug('JOIN '.print_r($opts['fdd'][$fieldName], true));
     }
