@@ -122,7 +122,8 @@ class PageController extends Controller {
    */
   public function index()
   {
-    if ($this->getUserValue('restorehistory') === 'on') {
+    if ($this->getUserValue('restorehistory') === 'on'
+        && empty($this->parameterService->getParam('template'))) {
       return $this->history(0, 'user');
     } else {
       return $this->remember('user');
