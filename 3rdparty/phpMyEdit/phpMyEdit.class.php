@@ -2421,7 +2421,7 @@ class phpMyEdit
 					}
 					$value = implode(',', $value);
 				} else {
-					$value = $vals[$row["qf$k"]];
+					$value = $vals[$row["qf$k"]]??null;
 				}
 			} else {
 				$value = $row["qf$k"];
