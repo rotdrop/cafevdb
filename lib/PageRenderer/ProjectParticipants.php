@@ -667,7 +667,10 @@ class ProjectParticipants extends PMETableViewBase
     NULL,
     CONCAT_WS(
       '".self::JOIN_KEY_SEP."',
-      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+      CONCAT_WS('".self::COMP_KEY_SEP."',
+        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice
+      ),
       ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
   )
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
@@ -676,7 +679,7 @@ class ProjectParticipants extends PMETableViewBase
        }],
        'values|CAPDV' => [
          'table' => "SELECT
-  CONCAT_WS('".self::JOIN_KEY_SEP."', pi.instrument_id, 1) AS value,
+  CONCAT_WS('".self::JOIN_KEY_SEP."', CONCAT_WS('".self::COMP_KEY_SEP."', pi.instrument_id, pi.voice), 1) AS value,
   pi.project_id,
   pi.musician_id,
   pi.instrument_id,
