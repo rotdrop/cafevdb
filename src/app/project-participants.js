@@ -346,9 +346,14 @@ const myReady = function(selector, resizeCB) {
   selectVoices.off('change').on('change', function(event) {
     const $self = $(this);
 
-    if (!$self.prop('multiple')) {
-      return true;
-    }
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
+    PHPMyEdit.tableDialogLock(container, true);
+
+    const lockOther = function(lock) {
+      SelectUtils.locked(selectMusicianInstruments, lock);
+      SelectUtils.locked(selectProjectInstruments, lock);
+    };
+    lockOther(true);
 
     let selected = SelectUtils.selected($self);
     if (!selected) {
@@ -393,6 +398,8 @@ const myReady = function(selector, resizeCB) {
     SelectUtils.selected($self, selected);
     $self.data('selected', selected);
 
+    lockOther(false);
+
     // selected project instruments affect voices and section-leader:
     PHPMyEdit.submitOuterForm(selector);
 
@@ -407,7 +414,11 @@ const myReady = function(selector, resizeCB) {
   selectProjectInstruments.on('change', function(event) {
     const $self = $(this);
 
-    SelectUtils.locked(selectMusicianInstruments, true);
+    const lockOther = function(lock) {
+      SelectUtils.locked(selectMusicianInstruments, lock);
+      SelectUtils.locked(selectVoices, lock);
+    };
+    lockOther(true);
 
     validateInstrumentChoices({
       container,
@@ -415,7 +426,7 @@ const myReady = function(selector, resizeCB) {
       validationUrl: generateUrl('projects/participants/change-instruments/project'),
       done() {
         // Reenable, otherwise the value will not be submitted
-        SelectUtils.locked(selectMusicianInstruments, false);
+        lockOther(false);
 
         // save current instruments
         $self.data('selected', $self.val() ? $self.val() : []);
@@ -430,7 +441,7 @@ const myReady = function(selector, resizeCB) {
         SelectUtils.selected($self, oldInstruments);
 
         // Reenable, otherwise the value will not be submitted
-        SelectUtils.locked(selectMusicianInstruments, false);
+        lockOther(false);
       },
     });
 
@@ -443,7 +454,11 @@ const myReady = function(selector, resizeCB) {
   selectMusicianInstruments.on('change', function(event) {
     const $self = $(this);
 
-    SelectUtils.locked(selectProjectInstruments, true);
+    const lockOther = function(lock) {
+      SelectUtils.locked(selectProjectInstruments, lock);
+      SelectUtils.locked(selectVoices, lock);
+    };
+    lockOther(true);
 
     validateInstrumentChoices({
       container,
@@ -451,7 +466,7 @@ const myReady = function(selector, resizeCB) {
       validationUrl: generateUrl('projects/participants/change-instruments/musician'),
       done() {
         // Reenable, otherwise the value will not be submitted
-        SelectUtils.locked(selectProjectInstruments, false);
+        lockOther(false);
 
         // save current instruments
         $self.data('selected', SelectUtils.selected($self));
@@ -470,7 +485,7 @@ const myReady = function(selector, resizeCB) {
         SelectUtils.selected($self, oldInstruments);
 
         // Reenable, otherwise the value will not be submitted
-        SelectUtils.locked(selectProjectInstruments, false);
+        lockOther(false);
       },
     });
 
@@ -635,7 +650,7 @@ const myReady = function(selector, resizeCB) {
 
   if (typeof resizeCB === 'function') {
     container.on('chosen:update', 'select', function(event) {
-      resizeCB();
+      resizeCB(true); // keep locks
       return false;
     });
   }

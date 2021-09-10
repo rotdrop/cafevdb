@@ -143,15 +143,15 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  * Submit the base form in order to synchronize any changes caused
  * by the dialog form.
  *
- * @param {String} selector TBD.
+ * @param {String} outerSelector TBD.
  */
-const pmeSubmitOuterForm = function(selector) {
-  const outerSel = pmeSelector(selector);
+const pmeSubmitOuterForm = function(outerSelector) {
+  outerSelector = pmeSelector(outerSelector);
 
   // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
   // on. Be careful not to trigger top and bottom buttons.
-  const outerForm = $(outerSel + ' ' + pmeFormSelector());
+  const outerForm = $(outerSelector + ' ' + pmeFormSelector());
 
   const submitNames = [
     'morechange',
@@ -168,7 +168,7 @@ const pmeSubmitOuterForm = function(selector) {
   } else {
     // submit the outer form
     // outerForm.submit();
-    pseudoSubmit(outerForm, $(), outerSel, 'pme');
+    pseudoSubmit(outerForm, $(), outerSelector, 'pme');
   }
 };
 
@@ -225,7 +225,7 @@ const tableDialogReplace = function(container, content, options, callback, trigg
     console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
   });
 
-  container.find(pmeNavigationSelector('reload')).addClass('loading');
+  tableDialogLoadIndicator(container, true);
 
   // general styling, avoid submit handlers by second argument
   pmeInit(containerSel, true);
@@ -275,6 +275,20 @@ const unblockTableDialog = function(dialogHolder) {
   dialogHolder.removeData('z-index');
 };
 
+const lockTableDialog = (container, state) => (state ? blockTableDialog(container) : unblockTableDialog(container));
+
+const tableDialogLoadIndicator = function(container, state) {
+  let reloadButton = container.data('reloadButton');
+  if (!reloadButton) {
+    reloadButton = container.find(pmeNavigationSelector('reload'));
+  }
+  if (state) {
+    reloadButton.addClass('loading');
+  } else {
+    reloadButton.removeClass('loading');
+  }
+};
+
 /**
  * Reload the current PME-dialog.
  *
@@ -301,9 +315,10 @@ const tableDialogReload = function(options, callback, triggerData) {
     return;
   }
   container.data(pmeToken('reloading'), true);
+  container.removeData('reloadButton');
 
   blockTableDialog(container);
-  container.find(pmeNavigationSelector('reload')).addClass('loading');
+  tableDialogLoadIndicator(container, true);
 
   // Possibly delay reload until validation handlers have done their
   // work.
@@ -320,7 +335,7 @@ const tableDialogReload = function(options, callback, triggerData) {
       fail(xhr, status, errorThrown) {
         Page.busyIcon(false);
         unblockTableDialog(container);
-        container.find(pmeNavigationSelector('reload')).removeClass('loading');
+        tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
       },
       done(htmlContent, historySize, historyPosition) {
@@ -432,16 +447,16 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       ReloadButtonSel,
       function(event, triggerData) {
 
-        const submitButton = $(this);
+        const $submitButton = $(this);
 
-        const reloadName = submitButton.attr('name');
-        const reloadValue = submitButton.val();
+        const reloadName = $submitButton.attr('name');
+        const reloadValue = $submitButton.val();
         options.reloadName = reloadName;
         options.reloadValue = reloadValue;
-        if (!submitButton.hasClass(pmeToken('change'))
-            && !submitButton.hasClass(pmeToken('delete'))
-            && !submitButton.hasClass(pmeToken('copy'))
-            && !submitButton.hasClass(pmeToken('reload'))) {
+        if (!$submitButton.hasClass(pmeToken('change'))
+            && !$submitButton.hasClass(pmeToken('delete'))
+            && !$submitButton.hasClass(pmeToken('copy'))
+            && !$submitButton.hasClass(pmeToken('reload'))) {
           // so this is pme-more, morechange, apply
 
           if (!checkInvalidInputs(container)) {
@@ -482,14 +497,13 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       }
       container.data(pmeToken('saving'), true);
 
-      const reloadButton = container.find(pmeNavigationSelector('reload'));
-      reloadButton.addClass('loading');
+      tableDialogLoadIndicator(container, true);
       Page.busyIcon(true);
 
       // Brief front-end-check for empty required fields.
       if (!checkInvalidInputs(
         container, function() {
-          reloadButton.removeClass('loading');
+          tableDialogLoadIndicator(container, false);
           Page.busyIcon(false);
           container.data(pmeToken('saving'), false);
         })) {
@@ -525,7 +539,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         pmePost(post, {
           fail(xhr, status, errorThrown) {
             unblockTableDialog(container);
-            reloadButton.removeClass('loading');
+            tableDialogLoadIndicator(container, false);
             Page.busyIcon(false);
             container.data(pmeToken('saving'), false);
           },
@@ -558,7 +572,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                   Page.busyIcon(false);
                 }
               } else {
-                reloadButton.removeClass('loading');
+                tableDialogLoadIndicator(container, false);
                 Page.busyIcon(false);
               }
             }
@@ -707,7 +721,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
       dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
 
-      dialogHolder.find(pmeNavigationSelector('reload')).addClass('loading');
+      tableDialogLoadIndicator(dialogHolder, true);
+
       if (tableOptions.modalDialog) {
         modalizer(true);
       }
@@ -791,15 +806,18 @@ const pmeTableDialogOpen = function(tableOptions, post) {
               WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
                 transposeReady(containerSel);
                 pmeQueryLogMenu(containerSel);
-                tableLoadCallback(template, containerSel, parameters, function() {
+                tableLoadCallback(template, containerSel, parameters, function(arg) {
+                  const keepLocked = arg === true;
                   // console.trace();
                   // installInputChosen(containerSel);
                   resizeHandler(parameters);
                   parameters.triggerData.postOpen(dialogHolder);
-                  unblockTableDialog(dialogHolder);
                   CAFEVDB.toolTipsInit(containerSel);
-                  Page.busyIcon(false);
-                  dialogHolder.find(pmeNavigationSelector('reload')).removeClass('loading');
+                  if (!keepLocked) {
+                    unblockTableDialog(dialogHolder);
+                    Page.busyIcon(false);
+                    tableDialogLoadIndicator(dialogHolder, false);
+                  }
                 });
                 pmeTweaks(dialogHolder);
                 $.fn.cafevTooltip.remove();
@@ -1710,6 +1728,8 @@ export {
   pmeIdSelector as idSelector,
   pmeTriggerSubmit as triggerSubmit,
   pmeTableDialogOpen as tableDialogOpen,
+  lockTableDialog as tableDialogLock,
+  tableDialogLoadIndicator,
   pmeSysNameSelector as sysNameSelector,
   pmeSubmitOuterForm as submitOuterForm,
   pmeClassSelectors as classSelectors,
