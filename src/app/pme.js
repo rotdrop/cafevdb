@@ -379,13 +379,15 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
    * pme-view
    * pme-delete
    * pme-copyadd
+   * pme-query
    */
 
   if (container.find(pmeClassSelector('form', 'list')).length) {
     // main list view, just leave as is.
     const resize = function(reason) {
+      console.info('callling change callback');
       changeCallback({ reason });
-      const reloadSel = pmeClassSelector('input', 'reload');
+      const reloadSel = pmeClassSelectors('input', ['reload', 'query']);
       container.find(reloadSel)
         .off('click')
         .on('click', function(event, triggerData) {
@@ -395,7 +397,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     };
     resize('dialogOpen');
     container.on('pmetable:layoutchange', function(event) {
-      resize(null);
+      console.info('layout change handler');
+      resize('layoutChange');
     });
     return;
   }
@@ -405,7 +408,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
   });
 
   // The easy one, but for changed content
-  const cancelButton = $(container).find(pmeClassSelector('input', 'cancel'));
+  const cancelButton = container.find(pmeClassSelector('input', 'cancel'));
   cancelButton
     .off('click')
     .on('click', function(event, triggerData) {
@@ -432,7 +435,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
   const ReloadButtonSel = pmeClassSelectors(
     'input',
     ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
-  const reloadingButton = $(container).find(ReloadButtonSel);
+  const reloadingButton = container.find(ReloadButtonSel);
 
   // remove non-delegate handlers and stop default actions in any case.
   reloadingButton.off('click');
@@ -485,7 +488,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
    *
    */
   const saveButtonSel = 'input.' + pmeToken('save');
-  const saveButton = $(container).find(saveButtonSel);
+  const saveButton = container.find(saveButtonSel);
   saveButton.off('click');
 
   container
@@ -519,7 +522,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
       reloadDeferred(container).then(function() {
 
-        let post = $(container).find(pmeFormSelector()).serialize();
+        let post = container.find(pmeFormSelector()).serialize();
         post += '&' + $.param(options);
 
         const deleteButton = container.find(deleteSelector);
@@ -825,6 +828,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
               break;
             case 'tabChange':
               installInputChosen(containerSel, 'chosen-invisible');
+              resizeHandler(parameters);
+              break;
+            case 'layoutChange':
               resizeHandler(parameters);
               break;
             }
