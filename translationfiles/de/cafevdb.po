@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2021-09-09 23:09+0200\n"
-"PO-Revision-Date: 2021-09-09 23:09+0200\n"
+"PO-Revision-Date: 2021-09-10 07:48+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/AddressBook/MusicianCardBackend.php:71
 #, php-format
 msgid "%s Musicians"
-msgstr "%s Musiker"
+msgstr "%s Musizierende"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Command/HelloWorld.php:82
 msgid "Hello!"
@@ -1116,12 +1116,12 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1246
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
-msgstr "Anzeigename des Musiker-Adressbuchs auf \"%s\" zurückgesetzt."
+msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" zurückgesetzt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1248
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
-msgstr "Anzeigename des Musiker-Adressbuchs auf \"%s\" gesetzt."
+msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" gesetzt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:1251
 #, php-format
@@ -1513,7 +1513,7 @@ msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:433
 #, php-format
 msgid "Unable to find musician with id \"%d\" in project \"%s\"."
-msgstr "Kann den Musiker mit der Id \"%d\" nicht im Projekt \"%s\" nicht."
+msgstr "Kann die Person mit der Id \"%d\" nicht im Projekt \"%s\" nicht."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantFieldsController.php:442
 #, php-format
@@ -1527,7 +1527,7 @@ msgstr "Unbekannte Anfrage \"%s/%s\""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:116
 msgid "Missing Musician Ids"
-msgstr "Fehlende Musiker-Ids"
+msgstr "Fehlende Musizierende-Ids"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:120
 msgid "Missing Project Id"
@@ -1542,7 +1542,7 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:183
 #, php-format
 msgid "Project- or musician-id is missing (%s/%s)"
-msgstr "Projekt- oder Musiker-Id fehlt (%s/%s)"
+msgstr "Projekt- oder Musizierende-Id fehlt (%s/%s)"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:189
 #, php-format
@@ -1554,9 +1554,7 @@ msgstr "Kann den Projekt-Teilnehmenden mit der Id %s nicht laden"
 msgid ""
 "Denying the attempt to remove the instrument %s because it is used in the "
 "current project."
-msgstr ""
-"Erfolgloser Versuch, dem Musiker das Instrument %s zu entziehen, dass er bei "
-"diesem Projekt spielt. "
+msgstr "Erfolgloser Versuch, der Person das Instrument %s zu entziehen, dass er bei diesem Projekt spielt. "
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:236
 #, php-format
@@ -1824,17 +1822,13 @@ msgstr "Konnte das Projekt mit der Id %d nicht aus der Datenbank laden."
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:176
 #, php-format
 msgid "Bank account for musician-id %d, sequence %d not found."
-msgstr ""
-"Die Bankverbindung für den Musiker mit Id %d, lfd. Nr. %d, wurde nicht "
-"gefunden."
+msgstr "Die Bankverbindung für die Person mit Id %d, lfd. Nr. %d, wurde nicht gefunden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:181
 #, php-format
 msgid ""
 "More than one bank account submitted for musician %s, multiple IBANs %s, %s."
-msgstr ""
-"Mehrere Bankverbindungen des Musikers %s wurden übermittelt, insbesondere "
-"%s, %s."
+msgstr "Mehrere Bankverbindungen der Person %s wurden übermittelt, insbesondere %s, %s."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:193
 #, php-format
@@ -1853,9 +1847,7 @@ msgstr ""
 msgid ""
 "More than one debit-mandate submitted for musician %s, multiple references "
 "%s, %s."
-msgstr ""
-"Mehrere Lastschriftmandate des Musiker %s wurden übermittelt, insbesondere "
-"%s, %s."
+msgstr "Mehrere Lastschriftmandate der Person %s wurden übermittelt, insbesondere %s, %s."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:220
 #, php-format
@@ -1912,8 +1904,7 @@ msgid ""
 msgstr ""
 "Das Lastschriftmandats für den Sammelauftag müssen entweder all\n"
 "mehrfach verwendbar oder alle einmalig sein. Das kollidierende Mandat\n"
-"des Musikers \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang "
-"verarbeiteten Mandate waren %s.;\n"
+"der Person \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten Mandate waren %s.;\n"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:417
 #, php-format
@@ -2453,7 +2444,7 @@ msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2213
 msgid "musicians"
-msgstr "Musiker"
+msgstr "Personen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2305
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:2320
@@ -2787,7 +2778,7 @@ msgstr ""
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:522
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:356
 msgid "Musician"
-msgstr "Musiker"
+msgstr "Person"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:118
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:102
@@ -2823,7 +2814,7 @@ msgstr "Versicherungssumme des Zubehörs"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:124
 msgid "Musician Insurance Total"
-msgstr "Gesamtversicherungssumme des Musikers"
+msgstr "Gesamtversicherungssumme der Person"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:172
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:202
@@ -2858,7 +2849,7 @@ msgstr "Gesamtversicherungssumme: "
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:96
 msgid "Musicians"
-msgstr "Musiker"
+msgstr "Personen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:101
 #, php-format
@@ -2878,7 +2869,7 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:295
 msgid "Missing Musicians"
-msgstr "Fehlende Musiker"
+msgstr "Fehlende Personen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:321
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:320
@@ -2916,9 +2907,7 @@ msgstr "nein"
 msgid ""
 "Photos or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
-msgstr ""
-"Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
-"hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
+msgstr "Portraits oder Avatar-Bilder können nur zu existierenden Personen-Daten hinzugefügt werden; bitte zuerst die Person ohne Bild hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/MusicianPhotoTrait.php:54
 msgid "Photo, if available"
@@ -3128,7 +3117,7 @@ msgstr "Übersicht über die Instrumentensammelversicherungen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:201
 msgid "Insurance brief, item, musician, broker"
-msgstr "Kurzinformation; Makler, Musiker, versicherter Gegenstand"
+msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:202
 msgid "Overview"
@@ -3296,32 +3285,32 @@ msgstr "Neue Person"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:177
 msgid "Remove all data of the displayed musician?"
-msgstr "Alle Daten des angezeigten Musikers entfernen?"
+msgstr "Alle Daten der angezeigten Person entfernen?"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:179
 msgid "Copy the displayed musician?"
-msgstr "Den angezeigten Musiker kopieren?"
+msgstr "Die angezeigten Personen kopieren?"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:181
 msgid "Display of all stored personal data for the shown musician."
-msgstr "Ansicht aller zum angezeigten Musiker gespeicherten Daten."
+msgstr "Ansicht aller zur angezeigten Person gespeicherten Daten."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:183
 msgid "Edit the personal data of the displayed musician."
-msgstr "Bearbeiten der Daten des angezeigten Musikers."
+msgstr "Bearbeiten der Daten der angezeigten Person."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:185
 msgid "Add a new musician to the data-base."
-msgstr "Einen neuen Musiker zur Datenbank hinzufügen."
+msgstr "Eine neue Person zur Datenbank hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:187
 msgid "Overview over all registered musicians"
-msgstr "Übersicht über alle Musiker"
+msgstr "Übersicht über alle Personen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:189
 #, php-format
 msgid "Add musicians to the project `%s'"
-msgstr "Musiker zum Projekt `%s' hinzufügen."
+msgstr "Musizierende zum Projekt `%s' hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:197
 msgid ""
@@ -3329,9 +3318,9 @@ msgid ""
 "make sure that the musicians are also automatically added to the\n"
 "`global' musicians data-base (and not only to the project)."
 msgstr ""
-"Diese Seite ist die einzige Möglichkeit, Musiker zu Projekten\n"
-"hinzuzufügen. Dies stellt sicher, dass Musiker auch automatisch zu dem\n"
-"globalen Musiker-Fundus hinzugefügt werden und nicht nur zum aktuellen\n"
+"Diese Seite ist die einzige Möglichkeit, Personen zu Projekten\n"
+"hinzuzufügen. Dies stellt sicher, dass Personen auch automatisch zu dem\n"
+"globalen Musizierenden-Fundus hinzugefügt werden und nicht nur zum aktuellen\n"
 "Projekt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:292
@@ -3353,7 +3342,7 @@ msgstr "Zu %s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:341
 msgid "Add Musicians"
-msgstr "Musiker hinzufügen"
+msgstr "Musizierende hinzufügen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:372
 msgid "Surname"
@@ -3652,7 +3641,7 @@ msgid ""
 msgstr ""
 "Die \"Soll\"-Besetzungzahl kann hier eingetragen werden, die\n"
 "\"Haben\"-Besetzungszahl ist die Anzahl der bereits registrierten\n"
-"Musiker."
+"Personen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:167
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:246
@@ -3900,15 +3889,15 @@ msgstr "Person hinzufügen"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:207
 #, php-format
 msgid "Remove the musician from %s?"
-msgstr "Musiker vom Projekt %s austragen?"
+msgstr "Person vom Projekt %s austragen?"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:209
 msgid "Display of all stored data for the shown musician."
-msgstr "Ansicht aller zum angezeigten Musiker gespeicherten Daten."
+msgstr "Ansicht aller zur angezeigten Person gespeicherten Daten."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:211
 msgid "Edit the data of the displayed musician."
-msgstr "Bearbeiten der Daten des angezeigten Musikers."
+msgstr "Bearbeiten der Daten der angezeigten Person."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:213
 #, php-format
@@ -3923,7 +3912,7 @@ msgstr "Projekt-Id"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:334
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:414
 msgid "Musician-Id"
-msgstr "Musiker-Id"
+msgstr "Musizierenden-Id"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:380
 msgid "First Name"
@@ -4441,21 +4430,17 @@ msgstr "Sammelaufträge"
 msgid ""
 "A table holding all bulk bank-transactions issued from the orchestra-"
 "software."
-msgstr ""
-"Eine Tabelle mit allen Sammelaufträgen, die aus der Musiker-DB heraus "
-"erzeugt wurden."
+msgstr "Eine Tabelle mit allen Sammelaufträgen, die aus der Musizierenden-DB heraus erzeugt wurden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:566
 msgid "Display all Musicians"
-msgstr "Alle Musiker"
+msgstr "Alle Personen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:567
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
-msgstr ""
-"Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
-"ausführliche Such- und Auswahlfunktionalität."
+msgstr "Alle Personen anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei ausführliche Such- und Auswahlfunktionalität."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:573
 msgid "Frontpage Blog"
@@ -5377,7 +5362,7 @@ msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
-"Der Musiker \"%s\" spielt kein einziges Instrument, das in der "
+"Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ProjectService.php:1409
@@ -5740,9 +5725,9 @@ msgid ""
 "or from the complement set. Obviously, selecting both options will\n"
 "give you the choice to select any musician as recipient."
 msgstr ""
-"Wähle Empfänger unter allen Musikern, die für das Projekt registriert\n"
-"sind oder nicht. Offensichtlich hat man die Wahl unter allen Musikern,\n"
-"wenn man sich für beide Optionen entscheidet."
+"Wähle Empfänger unter allen Personen, die für das Projekt registriert\n"
+"sind oder nicht. Offensichtlich hat man die Wahl unter allen\n"
+"registrierten Personen, wenn man sich für beide Optionen entscheidet."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:281
 msgid ""
@@ -5750,7 +5735,7 @@ msgid ""
 "on the names in order to open a dialog with the personal data of the "
 "respective musician and correct the email addresses there."
 msgstr ""
-"Liste der Musiker mit fehlender oder offensichtlich ungültiger\n"
+"Liste der Personen mit fehlender oder offensichtlich ungültiger\n"
 "Em@il-Adresse. Wenn man auf den Namen klickt, öffnet sich ein\n"
 "Formular, in dem man (unter anderem) die Em@il-Adresse korrigieren\n"
 "könnte."
@@ -5763,7 +5748,7 @@ msgstr "Wähle die Empfänger Deiner Email aus!"
 msgid ""
 "Choose among all musicians currently <b>NOT</b> registered for this project."
 msgstr ""
-"Wähle Empfänger unter allen Musikern, die <b>NICHT</b> für dieses\n"
+"Wähle Empfänger unter allen Personen, die <b>NICHT</b> für dieses\n"
 "Projekt registriert sind."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:287
@@ -5797,9 +5782,7 @@ msgstr ""
 msgid ""
 "Undo the last recipient filter operation and restore the previous selection "
 "of musicians."
-msgstr ""
-"Macht die letzte Filter-Operation rückgängig und stellt die vorherige "
-"Musiker-Auswahl wieder her."
+msgstr "Macht die letzte Filter-Operation rückgängig und stellt die vorherige Musizierenden-Auswahl wieder her."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:300
 msgid "Add arbitrary further hidden recipients."
@@ -5811,9 +5794,7 @@ msgstr "Beliebige weitere Empfänger hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:304
 msgid "Choose among all musicians currently registered for this project."
-msgstr ""
-"Wähle Empfänger unter allen Musikern, die für dieses Projekt registriert "
-"sind."
+msgstr "Wähle Empfänger unter allen Musizierenden, die für dieses Projekt registriert sind."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:306
 msgid ""
@@ -5823,8 +5804,8 @@ msgid ""
 msgstr ""
 "Beschränkt die Adressaten-Grundmenge auf die Instrumente, die hier\n"
 "ausgewählt werden. Wird mehr als ein Instrument ausgewählt, werden\n"
-"alle Musiker eingeschlossen, die eines der Instrumente spielen. Der\n"
-"Filter ist inaktive, wenn kein Instrument ausgewählt ist."
+"alle Personen eingeschlossen, die eines der Instrumente spielen. Der\n"
+"Filter ist inaktiv, wenn kein Instrument ausgewählt ist."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:310
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:312
@@ -5846,7 +5827,7 @@ msgid ""
 "are excluded from receiving mass-email. Please be careful when modifying the "
 "default selection!"
 msgstr ""
-"Beschränkt die Grundauswahl auf Musiker mit den gewählten\n"
+"Beschränkt die Grundauswahl auf Musizierende mit den gewählten\n"
 "Mitspieler-Status. Normalerweise werden Dirigenten und Solisten von\n"
 "Massenmail verschont. Bitte sorgsam mit dieser Auswahlmöglichkeit\n"
 "umgehen."
@@ -6022,7 +6003,7 @@ msgid ""
 "but clicking this button again."
 msgstr ""
 "Diesen Knopf anklicken um Optionen zu löschen oder wieder her zu\n"
-"stellen. Optionen, die bereits für Musiker eingetragen sind, werden\n"
+"stellen. Optionen, die bereits für Musizierende eingetragen sind, werden\n"
 "lediglich als inaktiv markiert und ausgeblendet. Optionen, die noch\n"
 "nicht \"verwendet\" wurden, werden tatsächlich gelöscht. Eine als\n"
 "inaktiv markierte Option kann durch erneutes Anklicken dieses Buttons\n"
@@ -6050,7 +6031,7 @@ msgid ""
 "is always possible."
 msgstr ""
 "Bitte hier einen kurzen und prägnanten Schlüssel eingeben. Der\n"
-"Schlüssel kann nicht mehr geändert werden, sobald für einen Musiker\n"
+"Schlüssel kann nicht mehr geändert werden, sobald für eine Person\n"
 "diese Option in die DB eingetragen wurde. Den Anzeige-Namen (einfach\n"
 "das Feld rechts) kann man aber jederzeit ändern."
 
@@ -6070,7 +6051,7 @@ msgid ""
 msgstr ""
 "Für kostenpflichtige Zusatzoptionen wird hier die Höhe des\n"
 "Zusatzbetrags eingetragen. Anhand dieser Beträge wird aus den Tabellen\n"
-"automatisch der Gesamtbetrag berechnet, den der Musiker zahlen muss."
+"automatisch der Gesamtbetrag berechnet, den die Person zahlen muss."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:393
 msgid ""
@@ -6090,7 +6071,7 @@ msgid ""
 "deleted when hitting the \"save\"-button of the form. Undelete is only "
 "possible until the \"save\"-button has been clicked."
 msgstr ""
-"Die Forderung für diesen Musiker löschen. Die Daten werden erst dann\n"
+"Die Forderung für diese Person löschen. Die Daten werden erst dann\n"
 "tatsächlich gelöscht, wenn der \"Speichern\"-Knopf aktiviert wird. Ein\n"
 "Wiederherstellen der Daten ist nur solange möglich, bis der\n"
 "\"Speichern\"-Knopf betätigt wurde."
@@ -6236,7 +6217,7 @@ msgid ""
 "them visible and\n"
 "clicking the \"recover\" button to the left of each deleted entry."
 msgstr ""
-"Optionen, die bereits bei Musikern eingetragen wurden, können nicht\n"
+"Optionen, die bereits bei Personen eingetragen wurden, können nicht\n"
 "mehr tatsächlich gelöscht werden um Datenverlust\n"
 "vorzubeugen. Stattdessen werden sie als inaktiv markiert und\n"
 "ausgeblendet. WIrd dieser Haken jedoch gesetzt, werden die\n"
@@ -6287,9 +6268,7 @@ msgid ""
 "page is loaded."
 msgstr ""
 "Versuche die zuletzt gezeigte Tabellen-Ansicht wieder her zu stellen,\n"
-"wenn die Seite im Web-Browser neu geladen wird. Falls diese Einstellung "
-"nicht aktiviert ist, wird entweder die Gesamtansichte der registrierten "
-"Musiker und Musikerinngen oder eine Blog-Seite gezeigt."
+"wenn die Seite im Web-Browser neu geladen wird. Falls diese Einstellung nicht aktiviert ist, wird entweder die Gesamtansichte der registrierten Musizierenden oder eine Blog-Seite gezeigt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:472
 msgid ""
@@ -6358,7 +6337,7 @@ msgid ""
 "projects cannot be deleted; instead \"deleting\" them flags them as "
 "\"Disabled\"."
 msgstr ""
-"Instrumente, die bereits von Musikern verwendet oder in die\n"
+"Instrumente, die bereits von Musizierenden verwendet oder in die\n"
 "Instrumentierung von Projekten eingetragen sind, können nicht gelöscht\n"
 "werden. Stattdessen führt ein \"Löschen\" dazu, dass die als inaktiv\n"
 "markiert werden und für künftige Eintragungen nicht mehr zur Verfügung\n"
@@ -6421,7 +6400,7 @@ msgid ""
 "deleted in order not to loose track of the payments. Instead, they are\n"
 "simply marked as \"disabled\" and normally are hidden from sight."
 msgstr ""
-"Musiker, die bereits Zahlungen für das Projekt geleistet haben, können\n"
+"Personen, die bereits Zahlungen für das Projekt geleistet haben, können\n"
 "nicht gelöscht werden. Ein \"Löschen\" führt stattdessen dazu, dass die\n"
 "als \"inaktiv\" markiert und normalerweise nicht angezeigt werden."
 
@@ -6442,7 +6421,7 @@ msgid ""
 "Opens a new table view with the insured items for the respective musician."
 msgstr ""
 "Öffnet eine neue Tabellenansicht mit allen versicherten Gegenständen\n"
-"des Musikers."
+"der Person."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:522
 msgid "Further information like birthday, a photo, date of last change."
@@ -6450,9 +6429,7 @@ msgstr "Weitere Information wie Geburtstag, Foto, Datum der letzten Änderung."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:524
 msgid "Display name, pre-name, instruments, status, general remarks."
-msgstr ""
-"Name, Vorname, Instrumente, Status (Aushilfe, Musiker ...), allgemeine "
-"Bemerkungen."
+msgstr "Name, Vorname, Instrumente, Status (Aushilfe, regulär, ...), allgemeine Bemerkungen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:526
 msgid ""
@@ -6557,9 +6534,8 @@ msgid ""
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
-"  Klick mich an, um alle ausgewählten\n"
-"Musiker auf allen Seiten zum aktuellen\n"
-"Projekt hinzuzufügen."
+"Klick mich an, um alle ausgewählten Musizierenden auf allen Seiten zum\n"
+"aktuellen Projekt hinzuzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:572
 msgid ""
@@ -6569,11 +6545,10 @@ msgid ""
 "Please click the ``Add all''-button to\n"
 "actually add them."
 msgstr ""
-"  Klick mich an, um alle Musiker der\n"
-"aktuellen Ansicht (betrifft aber alle Seiten)\n"
-"für das aktuelle Projekte auszuwählen. Bitte\n"
-"den ``Alle zu ...''-Knopf links anklicken, um\n"
-"die Musiker tatsächlich zum Projekt hinzufügen."
+"Klick mich an, um alle Personen der aktuellen Ansicht (betrifft aber\n"
+"alle Seiten) für das aktuelle Projekte auszuwählen. Bitte den ``Alle\n"
+"zu ...''-Knopf links anklicken, um die Personen tatsächlich zum\n"
+"Projekt hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:578
 msgid ""
@@ -6582,10 +6557,8 @@ msgid ""
 "from the pre-selection for\n"
 "the current project."
 msgstr ""
-"  Klick mich an, um alle Musiker\n"
-"der aktuellen Ansicht von der\n"
-"Vorauswahl für das aktuelle\n"
-"Projekt zu entfernen."
+"Klick mich an, um alle Personen der aktuellen Ansicht von der\n"
+"Vorauswahl für das aktuelle Projekt zu entfernen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:583
 msgid ""
@@ -6596,11 +6569,9 @@ msgid ""
 "actually add all selected\n"
 "musicians."
 msgstr ""
-"  Klick mich an, um diesen Musiker für das\n"
-"aktuelle Projekte vor-auszuwählen. Bitte\n"
-"den ``Alle zu ...''-Knopf ober- bzw.\n"
-"unterhalb der Tabelle anklicken, um alle\n"
-"ausgewählten Musiker tatsächlich zum\n"
+"Klick mich an, um diese Person für das aktuelle Projekte\n"
+"vor-auszuwählen. Bitte den ``Alle zu ...''-Knopf ober- bzw.  unterhalb\n"
+"der Tabelle anklicken, um alle ausgewählten Personen tatsächlich zum\n"
 "Projekt hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:591
@@ -6681,7 +6652,7 @@ msgstr ""
 "Anklicken, um eine CSV-Tabelle mit den ausgewählten Lastschriften zu\n"
 "erzeugen. Bitte im HOWTO im Wiki nachlesen, was da genau\n"
 "passiert. Neben dem Tabellenexport wird außerdem das Email-Formular\n"
-"geöffnet, um die ausgewählten Musiker über die anstehende Belastung\n"
+"geöffnet, um die ausgewählten Personen über die anstehende Belastung\n"
 "ihres Kontos zu informieren."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:624
@@ -6723,7 +6694,7 @@ msgid ""
 "alle, die den Such-Kriterien\n"
 "entsprechen."
 msgstr ""
-"Anklicken, um eine Em@il an die ausgewählten Musiker zu versenden. Auf\n"
+"Anklicken, um eine Em@il an die ausgewählten Personen zu versenden. Auf\n"
 "der folgenden Seite kann die Auswahl dann noch modifiziert werden.\n"
 "`angezeigt' bedeutet: nicht nur die auf der aktuellen Anzeige-Seite,\n"
 "sondern alle, die den Such-Kriterien entsprechen."
@@ -6739,7 +6710,7 @@ msgid ""
 "alle, die den Such-Kriterien\n"
 "entsprechen."
 msgstr ""
-"Klick mich, um alle gerade angezeigten Musiker zu der Em@il-Auswahl\n"
+"Klick mich, um alle gerade angezeigten Personen zu der Em@il-Auswahl\n"
 "hinzuzufügen. `angezeigt' bedeutet: nicht nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern alle, die den Such-Kriterien entsprechen."
 
@@ -6749,8 +6720,7 @@ msgid ""
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
-"Klick mich, um alle gerade\n"
-"angezeigten Musiker von der\n"
+"Klick mich, um alle gerade angezeigten Personen von der\n"
 "Em@il-Auswahl zu entfernen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:660
@@ -7090,7 +7060,7 @@ msgid ""
 "        \"information about the respective musician"
 msgstr ""
 "Detaillierte Ansicht der Besetzung für das aktuelle Projekt. Die\n"
-"Tabelle zeigt alle für das Projekt registrierten Musiker mit allen\n"
+"Tabelle zeigt alle für das Projekt registrierten Musizierenden mit allen\n"
 "gespeicherten personenbezogenen Daten."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:807
@@ -7217,7 +7187,7 @@ msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
-"Zeigt die persönlichen Daten der Musiker, wie Adresse, Telefonnummern,\n"
+"Zeigt die persönlichen Daten der Musizierenden, wie Adresse, Telefonnummern,\n"
 "Em@il, Geburtstag, gespielte Instrumente."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:856
@@ -7426,16 +7396,14 @@ msgstr ""
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
-msgstr ""
-"Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
-"eingetragen werden."
+msgstr "Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details eingetragen werden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:938
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
-"Der Haken ist bei offiziell angemeldeten Musikern gesetzt: solche, die\n"
+"Der Haken ist bei offiziell angemeldeten Personen gesetzt: solche, die\n"
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
@@ -7620,7 +7588,7 @@ msgstr ""
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1003
 msgid "Personal application settings."
-msgstr "Persönliche Einstellung für die Musiker-DB Anwendung."
+msgstr "Persönliche Einstellung für die Musizierendne-DB Anwendung."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1005
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
@@ -7767,8 +7735,9 @@ msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
-"Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
-"eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
+"Die Instrumente der bereits registrierten Musizierenden in die\n"
+"Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
+"allerdings nicht angepasst."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:1049
 msgid ""
@@ -8855,10 +8824,10 @@ msgid ""
 "you will be redirected to a web form in order to bring\n"
 "the personal data of the respective musician up-to-date."
 msgstr ""
-"Du willst ganz sicher keinen Musiker doppelt eintragen! Bitte \"nein\"\n"
-"antworten um trotzdem einen neuen Musiker gleichen Namens\n"
+"Du willst ganz sicher keine Person doppelt eintragen! Bitte \"nein\"\n"
+"antworten um trotzdem eine neue Person gleichen Namens\n"
 "hinzuzufügen. Im Zweifel aber bitte mit \"ja\" antworten. Im Folgenden\n"
-"wird dann der bereits eingetragene Musiker angezeigt."
+"wird dann die bereits eingetragene Person angezeigt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:438
 msgid "Avoid Possible Duplicate?"
@@ -9027,7 +8996,7 @@ msgid ""
 msgstr ""
 "Lösche die Bankverbindung aus der Datenbank. Normalerweise\n"
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
-"den Musikern nötig sein."
+"der Person nötig sein."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/sepa-debit-mandate.js:595
 msgid "Reactivate"
@@ -9417,12 +9386,11 @@ msgstr "Email-Vorschau für das Projekt %s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.recipients.php:55
 msgid "No Musician without or obviously broken email-address found :)"
-msgstr ""
-"Keine Musiker ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
+msgstr "Keine Personen ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.recipients.php:56
 msgid "Musicians without or obviously broken email-address"
-msgstr "Musiker ohne oder mit offensichtlich ungültiger Em@il"
+msgstr "Personen ohne oder mit offensichtlich ungültiger Em@il"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.recipients.php:78
 msgid "Basic Recipients Set"
@@ -9629,7 +9597,7 @@ msgstr ""
 "Es wurden überhaupt keine Adressaten ausgewählt (Cc: und Bcc: zählt\n"
 "hier nicht!). Bitte im `Em@il Empfänger'-Reiter wenigstens einen\n"
 "Adressaten auswählen vor erneutem Sende-Versuch. Bitte auch die Liste\n"
-"der Musiker ohne oder mit ungültige Em@il-Adresse beachten, die unten\n"
+"der Personen ohne oder mit ungültige Em@il-Adresse beachten, die unten\n"
 "im `Em@il Empfänger'-Reiter angezeigt wird. Die Namen kann man auch\n"
 "anklicken, um deren Em@il-Adressen einzutragen oder zu `reparieren'."
 
@@ -10432,7 +10400,7 @@ msgstr "abgelaufen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/sepa-debit-mandate.php:121
 msgid "owner of the bank account, probably same as musician"
-msgstr "Kontoinhaber, in der Regel identisch mit dem Musiker"
+msgstr "Kontoinhaber, in der Regel identisch mit der Person"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/sepa-debit-mandate.php:124
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:104
@@ -11255,7 +11223,7 @@ msgstr "Allgemeines Adressbuch"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:87
 msgid "Addresbook for Musicians"
-msgstr "Adressbuch für Musiker"
+msgstr "Adressbuch für Musizierende"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/share-settings.php:91
 msgid "Shared folder"
