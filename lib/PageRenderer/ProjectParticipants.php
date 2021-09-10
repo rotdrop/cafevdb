@@ -604,7 +604,7 @@ class ProjectParticipants extends PMETableViewBase
             $json = htmlspecialchars(json_encode($post));
             $post = http_build_query($post);
             $title = $this->toolTipsService['project-participants:instrumentation-numbers'];
-            $value = $this->l->t('No sub-division, configure voices?');
+            $value = $this->l->t('No sub-division! Configure voices?');
             $hidden = empty($row['qf'.$k]) ? '' : ' hidden';
             $link =<<<__EOT__
   </div>
