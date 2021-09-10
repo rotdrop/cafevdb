@@ -995,10 +995,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // blow up the delete identifiers
             $idValues = ${$operation.'Identifier'}[$key];
             ${$operation.'Identifier'}[$key] = [];
-            foreach ($idValues as $idValueTuple) {
+            foreach ($idValues as $idValuesTuple) {
               foreach ($selfValuesTuple as $selfValue) {
-                $idValueTuple[$selfKey] = $selfValue;
-                ${$operation.'Identifier'}[$key][] = $idValueTuple;
+                $idValuesTuple[$selfKey] = $selfValue;
+                ${$operation.'Identifier'}[$key][] = $idValuesTuple;
               }
             }
           }
@@ -1025,10 +1025,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // blow up the add identifiers
             $idValues = ${$operation.'Identifier'}[$key];
             ${$operation.'Identifier'}[$key] = [];
-            foreach ($idValues as $idValueTuple) {
+            foreach ($idValues as $idValuesTuple) {
               foreach ($selfValuesTuple as $selfValue) {
-                $idValueTuple[$selfKey] = $selfValue;
-                ${$operation.'Identifier'}[$key][] = $idValueTuple;
+                $idValuesTuple[$selfKey] = $selfValue;
+                ${$operation.'Identifier'}[$key][] = $idValuesTuple;
               }
             }
           }
@@ -1041,12 +1041,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $muliple, implode(',', $selfValuesTuple), $key]));
             }
 
+            $this->debug('SELF VALUES TUPLE ' . $key . ' => ' . print_r($selfValuesTuple, true));
+
             // blow up the rem identifiers
             $idValues = ${$operation.'Identifier'}[$key];
             ${$operation.'Identifier'}[$key] = [];
             foreach ($idValues as $idValuesTuple) {
+              $this->debug('ID VALUES TUPLE ' . $key . ' => ' . print_r($idValuesTuple, true));
               foreach ($selfValuesTuple as $selfValue) {
-                $idValueTuple[$selfKey] = $selfValue;
+                $idValuesTuple[$selfKey] = $selfValue;
                 ${$operation.'Identifier'}[$key][] = $idValuesTuple;
               }
             }
@@ -1225,6 +1228,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('MULTIPLE KEYS ' . $multipleIndex);
               foreach ($multipleValues as $column => $dataItem) {
                 $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
+                $this->debug('SET MULTIPLE VALUE ' .  $column . ' => ' . $value);
                 $meta->setSimpleColumnValue($entity, $column, $value);
               }
 
