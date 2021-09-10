@@ -552,7 +552,7 @@ __EOT__;
             'project_id' => $recordId['id'],
             'projectId' => $recordId['id'],
           ];
-          $json = json_encode($post);
+          $json = htmlspecialchars(json_encode($post));
           $post = http_build_query($post, '', '&');
           $title = Util::htmlEscape($value);
           $link =<<<__EOT__
@@ -740,8 +740,7 @@ __EOT__;
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
     if (!empty($this->requestParameters[$this->pme->cgiSysName('qf'.$nameIdx.'_idx')])) {
       // unset the year filter, as it does not make sense
-      unset($_POST[$this->pme->cgiSysName('qf'.$yearIdx)]);
-      unset($_GET[$this->pme->cgiSysName('qf'.$yearIdx)]);
+      unset($this->parameterService[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
       $opts['filters']['OR'][] = "\$table.type = 'permanent'";
     }
