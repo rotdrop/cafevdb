@@ -41,6 +41,9 @@ class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
+  const DEFAULT_TEMPLATE = 'projects';
+  const HOME_TEMPLATE = 'home';
+
   /** @var ISession */
   private $session;
 
@@ -352,7 +355,9 @@ class PageController extends Controller {
     if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
       return 'maintenance/configcheck';
     }
-    $template = $template ?: 'all-musicians';
+    if (empty($template) || $template == self::HOME_TEMPLATE) {
+      $template = self::DEFAULT_TEMPLATE;
+    }
     if ($renderAs === 'user') {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
