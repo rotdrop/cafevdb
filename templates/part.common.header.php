@@ -48,38 +48,46 @@ $redoDisabled = $_['historyPosition'] == 0;
 $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
 
 $navigationControls = $pageNavigation->buttonsFromArray(
-    array(
-        'undo' => array(
-            'name' => $l->t('Back'),
-            'title' => $l->t('Navigate back to the previous view in the recorded history.'),
-            'image' => image_path($appName, 'undo-solid.svg'),
-            'class' => 'undo navigation history tooltip-auto',
-            'id' => 'undobutton',
-            'disabled' => $undoDisabled,
-            'type' => 'submitbutton'),
-        'reload' => array(
-            'name' => $l->t('Reload'),
-            'title' => $l->t('Reload the current view.'),
-            'image' => array(image_path($appName, 'reload-solid.svg'),
-                             image_path('core', 'loading.gif')),
-            'class' => 'reload navigation history tooltip-auto',
-            'id' => 'reloadbutton',
-            'type' => 'submitbutton'),
-        'redo' => array(
-            'name' => $l->t('Next'),
-            'title' => $l->t('Navigate to the next view in the recorded history.'),
-            'image' => image_path($appName, 'redo-solid.svg'),
-            'class' => 'redo navigation history tooltip-auto',
-            'id' => 'redobutton',
-            'disabled' => $redoDisabled,
-            'type' => 'submitbutton'),
-        'home' => array(
-            'name' => $l->t('Startpage'),
-            'title' => $l->t('Navigate back to the start-page.'),
-            'image' => image_path($appName, 'home-solid.svg'),
-            'class' => 'settings navigation home tooltip-auto',
-            'id' => 'homebutton',
-            'type' => 'submitbutton')));
+  [
+    'undo' => [
+      'name' => $l->t('Back'),
+      'title' => $l->t('Navigate back to the previous view in the recorded history.'),
+      'image' => image_path($appName, 'undo-solid.svg'),
+      'class' => 'undo navigation history tooltip-auto',
+      'id' => 'undobutton',
+      'disabled' => $undoDisabled,
+      'type' => 'submitbutton',
+    ],
+    'reload' => [
+      'name' => $l->t('Reload'),
+      'title' => $l->t('Reload the current view.'),
+      'image' => [
+	image_path($appName, 'reload-solid.svg'),
+	image_path('core', 'loading.gif'),
+      ],
+      'class' => 'reload navigation history tooltip-auto',
+      'id' => 'reloadbutton',
+      'type' => 'submitbutton',
+    ],
+    'redo' => [
+      'name' => $l->t('Next'),
+      'title' => $l->t('Navigate to the next view in the recorded history.'),
+      'image' => image_path($appName, 'redo-solid.svg'),
+      'class' => 'redo navigation history tooltip-auto',
+      'id' => 'redobutton',
+      'disabled' => $redoDisabled,
+      'type' => 'submitbutton',
+    ],
+    'home' => [
+      'name' => $l->t('Startpage'),
+      'title' => $l->t('Navigate back to the start-page.'),
+      'image' => image_path($appName, 'home-solid.svg'),
+      'class' => 'settings navigation home tooltip-auto',
+      'id' => 'homebutton',
+      'type' => 'submitbutton',
+      // 'method' => 'post',
+    ],
+  ]);
 
 $settingsControls = '
 <input id="tooltipbutton-checkbox"
@@ -120,8 +128,6 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 <div id="app-content">
   <div id="app-inner-content">
     <form id="personalsettings" class="visible personal-settings" method="post" action="?app=<?php echo $_['appName']; ?>">
-      <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" />
-      <input type="hidden" name="template" value="<?php p($template); ?>" />
       <?php echo $navigationControls; ?>
       <div class="buttonseparator"></div>
       <?php echo $settingsControls; ?>
