@@ -188,24 +188,30 @@ const updateEmailForm = function(post, emailFormDialog) {
 
 const adjustSize = function(dialogHolder, dialogWidget) {
   const scrollElement = dialogHolder.find('.scroller');
+  const dimensionElement = dialogHolder.find('.size-holder');
 
-  const width = dialogWidget.width();
-  const height = dialogWidget.height();
+  const top = scrollElement.position().top
+        + dialogHolder.position().top;
+  const width = dimensionElement.outerWidth(true);
+  const height = dimensionElement.outerHeight(true);
 
-  dialogWidget.height(height);
-  dialogWidget.width(width);
+  // const width = dialogWidget.width();
+  // const height = dialogWidget.height();
+
+  dialogWidget.innerHeight(top + height);
+  dialogWidget.innerWidth(width);
 
   if (scrollElement.hasVerticalScrollbar()) {
     const scroll = scrollElement.verticalScrollbarWidth();
     if (scroll > 0) {
-      dialogWidget.width(width + scroll);
+      dialogWidget.innerWidth(width + scroll);
     }
   }
 
   if (scrollElement.hasHorizontalScrollbar()) {
     const scroll = scrollElement.horizontalScrollbarHeight();
     if (scroll > 0) {
-      dialogWidget.height(height + scroll);
+      dialogWidget.innerHeight(top + height + scroll);
     }
   }
 
