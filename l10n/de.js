@@ -741,6 +741,7 @@ OC.L10N.register(
     "Musician-Id" : "Musizierenden-Id",
     "First Name" : "Vorname",
     "Project Instrument" : "Instrument",
+    "No sub-division! Configure voices?" : "Ohne Stimmen-Unterteilung! Stimmen konfigurieren?",
     "Section Leader" : "Stimmführer",
     "Set to \"%s\" in order to mark the section leader." : "Auf \"%s\" setzen, um die Person als Stimmführer zu markieren.",
     "Check in order to mark the section leader." : "Anklicken, um die Person als Stimmführer zu markieren.",

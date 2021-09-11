@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-09-09 23:09+0200\n"
-"PO-Revision-Date: 2021-09-10 07:48+0200\n"
+"POT-Creation-Date: 2021-09-11 11:31+0200\n"
+"PO-Revision-Date: 2021-09-11 11:38+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -118,7 +118,7 @@ msgstr "Setze den Wiki-Namensraum auf `%s'"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/DownloadsController.php:100
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ExpertModeController.php:155
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ImagesController.php:331
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:296
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:309
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:263
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProgressStatusController.php:147
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectEventsController.php:145
@@ -568,61 +568,61 @@ msgstr "Methode %s is noch nicht implementiert."
 msgid "Unknown Request \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:131
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:143
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:519
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr "Die Rufnummer %s scheint keine gültige Telefonnummer zu sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:140
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:154
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 "Die Nummer %s ist eine Festnetznummer, schiebe die in die richtige Spalte."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:147
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:161
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 "Die Nummer %s ist eine Mobilfunknummer, schiebe die in die richtige Spalte."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:155
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:169
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr "Die Rufnummer %s scheint keine Mobilfunknummer zu sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:187
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:201
 #, php-format
 msgid "Missing host for email-address: %s. "
 msgstr "Fehlender Hostname (`@' fehlt!) in der Email-Adresse: %s. "
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:193
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:207
 #, php-format
 msgid "Validation failed for: %s. "
 msgstr "Validierung von `%s' fehlgeschlagen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:285
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/MusiciansController.php:298
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen: %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:143
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:144
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr "Abfragen an die Adresse \"%s\" sind nicht implementiert."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:146
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:147
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr "Abfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:264
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:265
 #, php-format
 msgid "Template-renderer for template `%s' is empty."
 msgstr "Inhalts-Erzeuger für Schablone `%s' ist leer."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:377
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PageController.php:378
 #, php-format
 msgid "Page `%s\\' not found."
 msgstr "Seite `%s' nicht gefunden."
@@ -1554,7 +1554,9 @@ msgstr "Kann den Projekt-Teilnehmenden mit der Id %s nicht laden"
 msgid ""
 "Denying the attempt to remove the instrument %s because it is used in the "
 "current project."
-msgstr "Erfolgloser Versuch, der Person das Instrument %s zu entziehen, dass er bei diesem Projekt spielt. "
+msgstr ""
+"Erfolgloser Versuch, der Person das Instrument %s zu entziehen, dass er bei "
+"diesem Projekt spielt. "
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/ProjectParticipantsController.php:236
 #, php-format
@@ -1822,13 +1824,17 @@ msgstr "Konnte das Projekt mit der Id %d nicht aus der Datenbank laden."
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:176
 #, php-format
 msgid "Bank account for musician-id %d, sequence %d not found."
-msgstr "Die Bankverbindung für die Person mit Id %d, lfd. Nr. %d, wurde nicht gefunden."
+msgstr ""
+"Die Bankverbindung für die Person mit Id %d, lfd. Nr. %d, wurde nicht "
+"gefunden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:181
 #, php-format
 msgid ""
 "More than one bank account submitted for musician %s, multiple IBANs %s, %s."
-msgstr "Mehrere Bankverbindungen der Person %s wurden übermittelt, insbesondere %s, %s."
+msgstr ""
+"Mehrere Bankverbindungen der Person %s wurden übermittelt, insbesondere %s, "
+"%s."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:193
 #, php-format
@@ -1847,7 +1853,9 @@ msgstr ""
 msgid ""
 "More than one debit-mandate submitted for musician %s, multiple references "
 "%s, %s."
-msgstr "Mehrere Lastschriftmandate der Person %s wurden übermittelt, insbesondere %s, %s."
+msgstr ""
+"Mehrere Lastschriftmandate der Person %s wurden übermittelt, insbesondere "
+"%s, %s."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:220
 #, php-format
@@ -1904,7 +1912,8 @@ msgid ""
 msgstr ""
 "Das Lastschriftmandats für den Sammelauftag müssen entweder all\n"
 "mehrfach verwendbar oder alle einmalig sein. Das kollidierende Mandat\n"
-"der Person \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten Mandate waren %s.;\n"
+"der Person \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten "
+"Mandate waren %s.;\n"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/SepaBulkTransactionsController.php:417
 #, php-format
@@ -2907,7 +2916,9 @@ msgstr "nein"
 msgid ""
 "Photos or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
-msgstr "Portraits oder Avatar-Bilder können nur zu existierenden Personen-Daten hinzugefügt werden; bitte zuerst die Person ohne Bild hinzufügen."
+msgstr ""
+"Portraits oder Avatar-Bilder können nur zu existierenden Personen-Daten "
+"hinzugefügt werden; bitte zuerst die Person ohne Bild hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/FieldTraits/MusicianPhotoTrait.php:54
 msgid "Photo, if available"
@@ -2951,7 +2962,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Instruments.php:300
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:515
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:312
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:504
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:507
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:272
 msgid "Deleted"
 msgstr "Gelöscht"
@@ -3149,7 +3160,7 @@ msgstr "Veschiedenes"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InstrumentInsurances.php:222
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:304
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:212
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1269
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1304
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:313
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:393
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBulkTransactions.php:243
@@ -3253,7 +3264,7 @@ msgid "Short Name"
 msgstr "Kurzbezeichnung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/InsuranceBrokers.php:147
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:371
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:374
 msgid "Name"
 msgstr "Name"
 
@@ -3320,7 +3331,8 @@ msgid ""
 msgstr ""
 "Diese Seite ist die einzige Möglichkeit, Personen zu Projekten\n"
 "hinzuzufügen. Dies stellt sicher, dass Personen auch automatisch zu dem\n"
-"globalen Musizierenden-Fundus hinzugefügt werden und nicht nur zum aktuellen\n"
+"globalen Musizierenden-Fundus hinzugefügt werden und nicht nur zum "
+"aktuellen\n"
 "Projekt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:292
@@ -3353,87 +3365,87 @@ msgid "Forename"
 msgstr "Vorname"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:393
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:389
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:392
 msgid "Nickname"
 msgstr "Rufname"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:404
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:398
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:401
 msgid "e.g. Cathy"
 msgstr "z.B. Michi"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:435
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:428
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:431
 msgid "Display-Name"
 msgstr "Anzeigename"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:448
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:438
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:441
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:479
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:469
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:472
 msgid "User Id"
 msgstr "Benutzerkennung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:555
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:562
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:565
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:569
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:776
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:811
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:588
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:804
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:839
 msgid "Member Status"
 msgstr "Status"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:603
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:849
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:884
 msgid "Projects"
 msgstr "Projekte"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:624
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:874
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:909
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:638
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:889
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:924
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:656
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:904
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:939
 msgid "Street"
 msgstr "Straße"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:665
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:913
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:948
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:674
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:922
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:957
 msgid "City"
 msgstr "Stadt"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:686
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:934
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:969
 msgid "Country"
 msgstr "Land"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:701
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:952
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:987
 msgid "Remarks"
 msgstr "Bemerkungen"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:719
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:972
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1007
 msgid "Language"
 msgstr "Sprache"
 
@@ -3442,18 +3454,18 @@ msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:780
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:982
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1017
 msgid "Photo"
 msgstr "Foto"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:842
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1042
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1077
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:733
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Musicians.php:854
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1054
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1089
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/ajax.js:29
 msgid "Created"
 msgstr "Erzeugt"
@@ -3465,8 +3477,8 @@ msgstr "Alle zu %s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PME/Config.php:55
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:574
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:922
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:986
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:921
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:985
 msgid "Em@il"
 msgstr "Em@il"
 
@@ -3517,7 +3529,7 @@ msgstr ""
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:910
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1410
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1414
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -3546,28 +3558,28 @@ msgid ""
 msgstr ""
 "Inkonsister verbleibende Daten für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1063
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1482
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1066
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1486
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1090
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1093
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1215
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1218
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1273
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1277
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1383
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1387
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -3575,49 +3587,49 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1459
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1463
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr "Inkonsister Einfüge-Versuch für \"%1$s\", Haupt-Id \"%2$s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1501
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1505
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1605
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1609
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1726
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1730
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1858
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1866
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1914
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:1922
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2028
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2036
 msgid ""
 "Composite keys are not yet supported for translated database table fields."
 msgstr ""
 "Zusammengesetzte Schlüssel-Felder werden für Übersetzungen von Datenbank-"
 "Tabellenfeldern noch nicht unterstützt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2149
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2157
 #, php-format
 msgid "New suggested user-id is but must not be empty, old id was \"%s\"."
 msgstr ""
 "Die neue vorgeschlagene Benutzerkennung ist leer, darf es jedoch nicht sein. "
 "Die alte Kennung war \"%s\"."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2163
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/PMETableViewBase.php:2171
 #, php-format
 msgid "Unable to retrieve musician for id \"%s\" from database."
 msgstr "Kann das Musizierende \"%s\" nicht aus der Datenbank laden."
@@ -3628,8 +3640,8 @@ msgid "Instrumentation Numbers for `%s'"
 msgstr "Besetzungszahlen für `%s'"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:90
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:886
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:992
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:885
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:991
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:635
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
@@ -3662,7 +3674,7 @@ msgid "Orchestral Sorting"
 msgstr "Orchestersortierung"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:269
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:578
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:581
 msgid "Voice"
 msgstr "Stimme"
 
@@ -3670,7 +3682,7 @@ msgstr "Stimme"
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectInstrumentationNumbers.php:286
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:555
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipantFields.php:561
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:646
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:678
 msgid "n/a"
 msgstr "n/a"
 
@@ -3904,42 +3916,46 @@ msgstr "Bearbeiten der Daten der angezeigten Person."
 msgid "Instrumentation for Project `%s'"
 msgstr "Besetzung für das Projekt `%s'"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:344
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:347
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:356
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:359
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectPayments.php:334
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/SepaBankAccounts.php:414
 msgid "Musician-Id"
 msgstr "Musizierenden-Id"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:380
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:383
 msgid "First Name"
 msgstr "Vorname"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:520
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:523
 msgid "Project Instrument"
 msgstr "Instrument"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:654
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:607
+msgid "No sub-division! Configure voices?"
+msgstr "Ohne Stimmen-Unterteilung! Stimmen konfigurieren?"
+
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:686
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:710
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:745
 #, php-format
 msgid "Set to \"%s\" in order to mark the section leader."
 msgstr "Auf \"%s\" setzen, um die Person als Stimmführer zu markieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:712
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:747
 msgid "Check in order to mark the section leader."
 msgstr "Anklicken, um die Person als Stimmführer zu markieren."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:717
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:752
 msgid "Registration"
 msgstr "Anmeldung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:730
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:765
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -3948,7 +3964,7 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Teilnehmende zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:732
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:767
 msgid ""
 "Check in order to mark participants who passed a personally signed "
 "registration form to us."
@@ -3956,31 +3972,31 @@ msgstr ""
 "Anklicken um offiziell angemeldete Teilnehmende zu markieren "
 "(unterschriebene Anmeldung liegt vor)."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:742
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:777
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1238
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1273
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:136
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1243
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1278
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:141
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1250
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1285
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:148
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1257
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1292
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/InstrumentationService.php:155
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1264
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/ProjectParticipants.php:1299
 msgid "Miscinfo"
 msgstr "Verschiedenes"
 
@@ -4104,7 +4120,7 @@ msgid "Participant Fields"
 msgstr "Teilnehmenden Felder"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:665
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:881
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:880
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:605
 msgid "Participants"
 msgstr "Teilnehmende"
@@ -4125,12 +4141,12 @@ msgstr "Programm"
 msgid "Posters"
 msgstr "Plakate"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:770
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:769
 #, php-format
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:796
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:795
 msgid ""
 "Posters can only be added to existing projects, please add the new\n"
 "project without a poster first."
@@ -4138,28 +4154,28 @@ msgstr ""
 "Plakate leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Plakate anlegen."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:826
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:825
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:829
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:828
 msgid "Delete current poster"
 msgstr "Aktuelles Plakat löschen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:830
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:829
 msgid "Edit current poster"
 msgstr "Aktuelles Plakat editieren"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:831
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:830
 msgid "Upload new poster"
 msgstr "Neues Poster hochladen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:832
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:831
 msgid "Select image from Cloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:838
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:837
 msgid ""
 "Internal error, don't know what to do concerning project-posters in the "
 "given context."
@@ -4167,59 +4183,59 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Postern "
 "umgegangen werden sollte."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:870
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:869
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:891
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:890
 msgid "Extra Member Data"
 msgstr "Teilnehmenden-Daten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:900
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:899
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:908
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:970
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:907
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:969
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:910
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:974
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:909
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:973
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:916
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:980
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:915
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:979
 msgid "Events"
 msgstr "Termine"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:932
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:931
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:939
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:938
 msgid "Payments"
 msgstr "Zahlungen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:946
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:945
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1208
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1207
 msgid "Copying participants is requested, but the new project id is not given."
 msgstr ""
 "Das Kopieren der alten Teilnehmenden wurde verlangt, aber die Projekt-Id für "
 "das neue Projekt fehlt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1220
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1219
 msgid "Copying is requested, but the old project id is not given."
 msgstr ""
 "Das Projekt soll kopiert werden, aber die Id vom existierenden Projekt wurde "
 "nicht angegeben."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1334
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Projects.php:1333
 #, php-format
 msgid "%s (deleted)"
 msgstr "%s (gelöscht)"
@@ -4430,7 +4446,9 @@ msgstr "Sammelaufträge"
 msgid ""
 "A table holding all bulk bank-transactions issued from the orchestra-"
 "software."
-msgstr "Eine Tabelle mit allen Sammelaufträgen, die aus der Musizierenden-DB heraus erzeugt wurden."
+msgstr ""
+"Eine Tabelle mit allen Sammelaufträgen, die aus der Musizierenden-DB heraus "
+"erzeugt wurden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:566
 msgid "Display all Musicians"
@@ -4440,7 +4458,9 @@ msgstr "Alle Personen"
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
-msgstr "Alle Personen anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei ausführliche Such- und Auswahlfunktionalität."
+msgstr ""
+"Alle Personen anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
+"ausführliche Such- und Auswahlfunktionalität."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/PageRenderer/Util/Navigation.php:573
 msgid "Frontpage Blog"
@@ -5782,7 +5802,9 @@ msgstr ""
 msgid ""
 "Undo the last recipient filter operation and restore the previous selection "
 "of musicians."
-msgstr "Macht die letzte Filter-Operation rückgängig und stellt die vorherige Musizierenden-Auswahl wieder her."
+msgstr ""
+"Macht die letzte Filter-Operation rückgängig und stellt die vorherige "
+"Musizierenden-Auswahl wieder her."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:300
 msgid "Add arbitrary further hidden recipients."
@@ -5794,7 +5816,9 @@ msgstr "Beliebige weitere Empfänger hinzufügen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:304
 msgid "Choose among all musicians currently registered for this project."
-msgstr "Wähle Empfänger unter allen Musizierenden, die für dieses Projekt registriert sind."
+msgstr ""
+"Wähle Empfänger unter allen Musizierenden, die für dieses Projekt "
+"registriert sind."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:306
 msgid ""
@@ -6268,7 +6292,9 @@ msgid ""
 "page is loaded."
 msgstr ""
 "Versuche die zuletzt gezeigte Tabellen-Ansicht wieder her zu stellen,\n"
-"wenn die Seite im Web-Browser neu geladen wird. Falls diese Einstellung nicht aktiviert ist, wird entweder die Gesamtansichte der registrierten Musizierenden oder eine Blog-Seite gezeigt."
+"wenn die Seite im Web-Browser neu geladen wird. Falls diese Einstellung "
+"nicht aktiviert ist, wird entweder die Gesamtansichte der registrierten "
+"Musizierenden oder eine Blog-Seite gezeigt."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:472
 msgid ""
@@ -6429,7 +6455,9 @@ msgstr "Weitere Information wie Geburtstag, Foto, Datum der letzten Änderung."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:524
 msgid "Display name, pre-name, instruments, status, general remarks."
-msgstr "Name, Vorname, Instrumente, Status (Aushilfe, regulär, ...), allgemeine Bemerkungen."
+msgstr ""
+"Name, Vorname, Instrumente, Status (Aushilfe, regulär, ...), allgemeine "
+"Bemerkungen."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:526
 msgid ""
@@ -7187,7 +7215,8 @@ msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
-"Zeigt die persönlichen Daten der Musizierenden, wie Adresse, Telefonnummern,\n"
+"Zeigt die persönlichen Daten der Musizierenden, wie Adresse, "
+"Telefonnummern,\n"
 "Em@il, Geburtstag, gespielte Instrumente."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:856
@@ -7396,7 +7425,9 @@ msgstr ""
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
-msgstr "Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details eingetragen werden."
+msgstr ""
+"Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details "
+"eingetragen werden."
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Service/ToolTipsService.php:938
 msgid ""
@@ -8640,11 +8671,11 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/events.js:294
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/events.js:291
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/events.js:329
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/events.js:326
 msgid "Unable to download calendar events."
 msgstr "Kann die Kalender-Einträge nicht laden."
 
@@ -8800,23 +8831,23 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:153
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:156
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:201
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:207
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:241
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:247
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:365
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:374
 msgid "Address Validation"
 msgstr "Anschrifts-Validierung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:428
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:437
 msgid ""
 "You definitely do not want to add duplicates to the database.\n"
 "Please answer \"no\" in order to add a new musician,\n"
@@ -8829,11 +8860,11 @@ msgstr ""
 "hinzuzufügen. Im Zweifel aber bitte mit \"ja\" antworten. Im Folgenden\n"
 "wird dann die bereits eingetragene Person angezeigt."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:438
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:447
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:467
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/musicians.js:479
 msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
@@ -8878,7 +8909,7 @@ msgid "Failed copying query to the clipboard: {reason}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {reason}."
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:537
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:554
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -8887,11 +8918,11 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1077
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1101
 msgid "#columns"
 msgstr "#Spalten"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1086
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/pme.js:1110
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -8907,7 +8938,7 @@ msgstr ""
 msgid "Revert to default value?"
 msgstr "Auf Voreinstellung zurücksetzen?"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/project-participants.js:609
+#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/src/app/project-participants.js:634
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
@@ -9386,7 +9417,8 @@ msgstr "Email-Vorschau für das Projekt %s"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.recipients.php:55
 msgid "No Musician without or obviously broken email-address found :)"
-msgstr "Keine Personen ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
+msgstr ""
+"Keine Personen ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
 
 #: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/emailform/part.emailform.recipients.php:56
 msgid "Musicians without or obviously broken email-address"
