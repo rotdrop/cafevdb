@@ -31,7 +31,7 @@ import * as DialogUtils from './dialog-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import modalizer from './modalizer.js';
 
-require('events.css');
+require('events.scss');
 
 const Events = globalState.Events = {
   projectId: -1,
@@ -65,11 +65,11 @@ const init = function(htmlContent, textStatus, request) {
     open() {
       // $.fn.cafevTooltip.remove();
       const dialogHolder = $(this);
-      // const dialogWidget = dialogHolder.dialog('widget');
+      const dialogWidget = dialogHolder.dialog('widget');
 
       /* Adjust dimensions to do proper scrolling. */
       // @TODO this really needs to be reworked
-      // adjustSize(dialogHolder, dialogWidget);
+      adjustSize(dialogHolder, dialogWidget);
 
       const eventForm = dialogHolder.find('#eventlistform');
       const eventMenu = eventForm.find('select.event-menu');
@@ -186,33 +186,30 @@ const updateEmailForm = function(post, emailFormDialog) {
   }
 };
 
-// const adjustSize = function(dialogHolder, dialogWidget) {
-//   const dimensionElement = dialogHolder.find('.size-holder');
-//   const scrollElement = dialogHolder.find('.scroller');
-//   const top = scrollElement.position().top;
-//   const width = dimensionElement.outerWidth(true);
-//   const height = dimensionElement.outerHeight(true);
-//   dialogWidget.innerHeight(top+height);
-//   dialogWidget.innerWidth(width);
+const adjustSize = function(dialogHolder, dialogWidget) {
+  const scrollElement = dialogHolder.find('.scroller');
 
-//   const needScroll = scrollElement.needScrollbars();
-//   if (!needScroll.horizontal) {
-//     scrollElement.addClass('inhibit-overflow-x');
-//   }
-//   if (!needScroll.vertical) {
-//     scrollElement.addClass('inhibit-overflow-y');
-//   }
+  const width = dialogWidget.width();
+  const height = dialogWidget.height();
 
-//   let scroll;
-//   scroll = scrollElement.horizontalScrollbarHeight();
-//   if (scroll > 0) {
-//     dialogWidget.innerHeight(top+height+scroll);
-//   }
-//   scroll = scrollElement.verticalScrollbarWidth();
-//   if (scroll > 0) {
-//     dialogWidget.innerWidth(width+scroll);
-//   }
-// };
+  dialogWidget.height(height);
+  dialogWidget.width(width);
+
+  if (scrollElement.hasVerticalScrollbar()) {
+    const scroll = scrollElement.verticalScrollbarWidth();
+    if (scroll > 0) {
+      dialogWidget.width(width + scroll);
+    }
+  }
+
+  if (scrollElement.hasHorizontalScrollbar()) {
+    const scroll = scrollElement.horizontalScrollbarHeight();
+    if (scroll > 0) {
+      dialogWidget.height(height + scroll);
+    }
+  }
+
+};
 
 const relist = function(htmlContent, textStatus, xhr) {
 
@@ -224,8 +221,8 @@ const relist = function(htmlContent, textStatus, xhr) {
   listing.html(htmlContent);
 
   /* Adjust dimensions to do proper scrolling. */
-  // const dialogWidget = events.dialog('widget');
-  // adjustSize(events, dialogWidget);
+  const dialogWidget = events.dialog('widget');
+  adjustSize(events, dialogWidget);
 
   $.fn.cafevTooltip.remove();
 

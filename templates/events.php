@@ -66,10 +66,8 @@
                title="<?php echo $toolTips['projectevents-download']; ?>"/>
       </span>
     </div>
-    <div id="eventlist" class="container">
-      <div id="eventlistholder" class="container scroller">
-        <?php echo $this->inc('eventslisting', $_); ?>
-      </div>
+    <div id="eventlistholder" class="container scroller eventlist">
+      <?php echo $this->inc('eventslisting', $_); ?>
     </div>
   </form>
   <div id="debug"></div>
