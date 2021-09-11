@@ -355,7 +355,8 @@ class Navigation
     return self::htmlTagsFromArray($buttons);
   }
 
-  /**Generate some html tags. Up to now only buttons and option
+  /**
+   * Generate some html tags. Up to now only buttons and option
    * elements.
    */
   public function htmlTagsFromArray($tags)
@@ -407,9 +408,10 @@ class Navigation
         } else {
           $buttonType = 'button';
         }
+        $method = isset($tag['method']) ? ' formmethod="'.$tag['method'].'"' : '';
         $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
         $html .= ''
-              .'<button type="'.$buttonType.'" '.$disabled.$class.$value.$title.$data.$id.$style.'>';
+              .'<button type="'.$buttonType.'" '.$method.$disabled.$class.$value.$title.$data.$id.$style.'>';
         if (isset($tag['image'])) {
           $images = false;
           if (!is_array($tag['image'])) {
