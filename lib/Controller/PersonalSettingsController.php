@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -1567,6 +1568,10 @@ class PersonalSettingsController extends Controller {
           $musician->getSepaBankAccounts()->first(),
           $this->getClubMembersProjectId());
         break;
+      case 'instrumentInsuranceRecord':
+        /** @var InstrumentInsuranceService $insuranceService */
+        $insuranceService = $this->di(InstrumentInsuranceService::class);
+        $insuranceOverview = $insuranceService->musicianOverview($musician);
       default:
         return self::grumble(
           $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',

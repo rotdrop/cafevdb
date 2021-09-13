@@ -23,6 +23,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-class EncryptionException extends \Exception
+class EncryptionException extends Exception
 {
 }

@@ -23,6 +23,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-class MissingProjectsFolderException extends Exception
+class Exception extends \Exception
 {
 }

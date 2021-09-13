@@ -23,6 +23,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-class SubstitutionException extends \Exception
+class SubstitutionException extends Exception
 {
 }

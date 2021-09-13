@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Documents;
 
+use clsOpenTBS as OpenDocumentFillerBackend;
+
 use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -30,10 +32,19 @@ class OpenDocumentFiller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var PdfTk */
-  private $openTBS;
+  /** @var OpenDocumentFillerBackend */
+  private $backend;
 
-  public function __construct()
+  public function __construct(
+    ConfigService $configService
+    , OpenDocumentFillerBackend $backend
+  ) {
+    $this->configService = $configService;
+    $this->backend = $backend;
+    $this->l = $this->l10n();
+  }
+
+  public function fill($templateFile, $templateData)
   {
   }
 }

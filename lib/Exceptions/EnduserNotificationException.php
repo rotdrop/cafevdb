@@ -23,6 +23,14 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-class MissingProjectsFolderException extends Exception
+/**
+ * This exception should provide an error message which informs an
+ * end-user about an error.
+ *
+ * The intended use is the finally have an error template which scans
+ * the chain of thrown exceptions searching for
+ * EnduserNotificationExceptions and display their error text only.
+ */
+class EnduserNotificationException extends Exception
 {
 }
