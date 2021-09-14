@@ -52,6 +52,7 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -1572,6 +1573,21 @@ class PersonalSettingsController extends Controller {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
         $insuranceOverview = $insuranceService->musicianOverview($musician);
+
+        /** @var OpenDocumentFiller $documentFiller */
+        $documentFiller = $this->di(OpenDocumentFiller::class);
+        $templateFileName = $this->getConfigValue($templateName);
+
+        $templatesFolder = $this->getDocumentTemplatesPath();
+        if (empty($templatesFolder)) {
+          return  [];
+        }
+        $templateFileName = UserStorage::pathCat($templatesFolder, $formFileName);
+
+        $documentFiller->fill($templateFileName, $insuranceOverview);
+
+        // break;
+
       default:
         return self::grumble(
           $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',
