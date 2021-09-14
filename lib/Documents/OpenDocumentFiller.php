@@ -27,6 +27,7 @@ use clsOpenTBS as OpenDocumentFillerBackend;
 
 use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Exceptions;
 
 class OpenDocumentFiller
 {
@@ -46,5 +47,6 @@ class OpenDocumentFiller
 
   public function fill($templateFile, $templateData)
   {
+    throw new Exceptions\EnduserNotificationException($this->l->t('This functionality is not yet implemented.'));
   }
 }
