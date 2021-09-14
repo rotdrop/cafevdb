@@ -74,13 +74,6 @@ class ProjectParticipantField implements \ArrayAccess
   private $project;
 
   /**
-   * @var int|null
-   *
-   * @ORM\Column(type="integer", nullable=true)
-   */
-  private $displayOrder = null;
-
-  /**
    * @var string
    *
    * @Gedmo\Translatable
@@ -151,6 +144,13 @@ class ProjectParticipantField implements \ArrayAccess
    * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the project tab is used."})
    */
   private $tab = null;
+
+  /**
+   * @var int|null
+   *
+   * @ORM\Column(type="integer", nullable=true)
+   */
+  private $displayOrder = null;
 
   /**
    * @var bool|null
