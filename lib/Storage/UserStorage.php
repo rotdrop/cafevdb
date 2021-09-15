@@ -395,6 +395,25 @@ class UserStorage
     return $filesUrl;
   }
 
+  /**
+   * Create a data-uri from the given file.
+   *
+   * @param string|\OCP\Files\File $pathOrNode.
+   *
+   */
+  public function createDataUri($pathOrNode):?string
+  {
+    /** @var \OCP\Files\File $node */
+    if (is_string($pathOrNode)) {
+      $node = $this->userFolder->get($pathOrNode);
+    } else if ($pathOrNode instanceof \OCP\Files\Node) {
+      $node = $pathOrNode;
+    } else {
+      throw new \InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
+    }
+    $dataUri = 'data:'.$node->getMimeType().';base64,' . base64_encode($node->getContent());
+    return $dataUri;
+  }
 }
 
 // Local Variables: ***

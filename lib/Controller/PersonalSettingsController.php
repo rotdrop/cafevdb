@@ -1582,11 +1582,11 @@ class PersonalSettingsController extends Controller {
         if (empty($templatesFolder)) {
           return  [];
         }
-        $templateFileName = UserStorage::pathCat($templatesFolder, $formFileName);
+        $templateFileName = UserStorage::pathCat($templatesFolder, $templateFileName);
 
-        $documentFiller->fill($templateFileName, $insuranceOverview);
+        list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview);
 
-        // break;
+        break;
 
       default:
         return self::grumble(

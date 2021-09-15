@@ -272,6 +272,7 @@ class Musician implements \ArrayAccess
     $this->projectParticipation = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
+    $this->payableInsurances = new ArrayCollection();
     $this->sepaBankAccounts = new ArrayCollection();
     $this->payments = new ArrayCollection();
 

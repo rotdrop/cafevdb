@@ -23,9 +23,10 @@
 
 namespace OCA\CAFEVDB\Documents;
 
-use clsOpenTBS as OpenDocumentFillerBackend;
+use clsTinyButStrong as OpenDocumentFillerBackend;
 
 use OCP\IL10N;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;
 
@@ -36,17 +37,84 @@ class OpenDocumentFiller
   /** @var OpenDocumentFillerBackend */
   private $backend;
 
+  /** @var UserStorage */
+  private $userStorage;
+
+  /** @var TemplateService */
+  private $templateService;
+
   public function __construct(
     ConfigService $configService
+    , UserStorage $userStorage
+    , TemplateService $templateService
     , OpenDocumentFillerBackend $backend
   ) {
     $this->configService = $configService;
+    $this->userStorage = $userStorage;
+    $this->templateService = $templateService;
     $this->backend = $backend;
+    $this->di(\clsOpenTBS::class);
+    ob_start();
+    $this->backend->NoErr = true;
+    $this->backend->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
+    $output = ob_get_contents();
+    ob_end_clean();
+    if (!empty($output)) {
+      throw new Exceptions\Exception($output);
+    }
     $this->l = $this->l10n();
   }
 
-  public function fill($templateFile, $templateData)
+  public function fill($templateFileName, $templateData)
   {
-    throw new Exceptions\EnduserNotificationException($this->l->t('This functionality is not yet implemented.'));
+    ob_start();
+
+    $this->logInfo('TEMPLATE ' . $templateFileName);
+
+    $this->backend->ResetVarRef(false);
+    $this->backend->VarRef = array_merge(
+      $this->getOrchestraSubstitutions(),
+      $templateData);
+    $this->backend->VarRef['test'] = 'Test Replacement Value';
+
+    $this->logInfo('REPLACEMENTS ' . print_r(array_keys($this->backend->VarRef), true));
+    $this->backend->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
+
+    $templateFile = $this->userStorage->getFile($templateFileName);
+
+    $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
+    $this->backend->show(OPENTBS_STRING);
+
+    $output = ob_get_contents();
+    ob_end_clean();
+
+    if (!empty($output)) {
+      throw new Exceptions\Exception($output);
+    }
+
+    return [
+      $this->backend->Source,
+      $templateFile->getMimeType(),
+      basename($templateFileName),
+    ];
   }
+
+  /**
+   * Generate a set of substitutions variables, taking some values
+   * from the config-space, like logo, addresses, bank account etc.
+   */
+  public function getOrchestraSubstitutions()
+  {
+    $substitutions = [];
+
+    // Logo
+    $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
+
+    $substitutions[ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+
+    $this->logInfo('SUBSTITUTIONS ' . print_r(array_keys($substitutions), true));
+
+    return $substitutions;
+  }
+
 }

@@ -111,13 +111,16 @@ class ConfigService {
   const DOCUMENT_TYPE_CONSTANT = 'constant';
   const DOCUMENT_TYPE_TEMPLATE = 'template';
 
+  const DOCUMENT_TEMPLATE_LOGO = 'logo';
+  const DOCUMENT_TEMPLATE_SEAL = 'seal';
+
   /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
-    'logo' => [
+    self::DOCUMENT_TEMPLATE_LOGO => [
       'name' => 'orchestra logo',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
     ],
-    'seal' => [
+    self::DOCUMENT_TEMPLATE_SEAL => [
       'name' => 'orchestra seal',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
     ],
