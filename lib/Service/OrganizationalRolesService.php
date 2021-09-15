@@ -55,6 +55,12 @@ class OrganizationalRolesService
     self::BOARD_MEMBER_ROLE,
   ];
 
+  const BOARD_MEMBERS = [
+    self::PRESIDENT_ROLE,
+    self::SECRETARY_ROLE,
+    self::TREASURER_ROLE,
+  ];
+
   public function __construct(
     ConfigService $configService
   ) {
