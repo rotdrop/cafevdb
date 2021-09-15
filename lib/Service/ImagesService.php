@@ -498,20 +498,25 @@ EOT;
     }
   }
 
-  static public function rasterize(\OCP\Image $image, int $maxX, int $maxY = -1, string $mimeType = 'image/png'):?\OCP\Image
+  static public function rasterize(string $imageData, int $maxX, int $maxY = -1, string $mimeType = 'image/png'):?\OCP\Image
   {
+    if ($maxY < 0) {
+      $maxY = $maxX;
+    }
+
     $svg = new \Imagick();
     $svg->setBackgroundColor(new \ImagickPixel('transparent'));
-    $svg->readImageBlob($image->data());
+    $svg->setResolution(300,300);
+    $svg->readImageBlob($imageData);
     $svg->setImageFormat('png32');
 
     //new image object
-    $image = new \OC_Image();
+    $image = new \OCP\Image();
     $image->loadFromData($svg);
+
     //check if image object is valid
     if ($image->valid()) {
       $image->scaleDownToFit($maxX, $maxY);
-
       return $image;
     }
     return null;
