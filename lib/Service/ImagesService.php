@@ -497,6 +497,25 @@ EOT;
       break;
     }
   }
+
+  static public function rasterize(\OCP\Image $image, int $maxX, int $maxY = -1, string $mimeType = 'image/png'):?\OCP\Image
+  {
+    $svg = new \Imagick();
+    $svg->setBackgroundColor(new \ImagickPixel('transparent'));
+    $svg->readImageBlob($image->data());
+    $svg->setImageFormat('png32');
+
+    //new image object
+    $image = new \OC_Image();
+    $image->loadFromData($svg);
+    //check if image object is valid
+    if ($image->valid()) {
+      $image->scaleDownToFit($maxX, $maxY);
+
+      return $image;
+    }
+    return null;
+  }
 }
 
 // Local Variables: ***
