@@ -28,6 +28,8 @@ use clsTinyButStrong as OpenDocumentFillerBackend;
 use OCP\IL10N;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Exceptions;
 
 class OpenDocumentFiller
@@ -110,9 +112,29 @@ class OpenDocumentFiller
     // Logo
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
 
-    $substitutions[ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+    $logoData = $logo->getContent();
+    $logoImage = ImagesService::rasterize($logoData, 1200);
+    // $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+    $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
 
     $this->logInfo('SUBSTITUTIONS ' . print_r(array_keys($substitutions), true));
+
+    /** @var OrganizationalRolesService $rolesService */
+    $rolesService = $this->di(OrganizationalRolesService::class);
+
+    foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
+
+      /** @var \OCP\Image $signature */
+      $signature = $rolesService->{$boardMember . 'Signature'}();
+
+      if (!empty($signature)) {
+        // if ($signature->mimeType() != 'image/png') {
+        //   $signature = ImagesService::rasterize($signature, 1200, 1200);
+        // }
+        $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+      }
+      $substitutions['orchestra:'.$boardMember.':signature'] = $signature;
+    }
 
     return $substitutions;
   }
