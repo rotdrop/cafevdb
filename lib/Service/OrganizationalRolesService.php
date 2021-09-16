@@ -76,7 +76,7 @@ class OrganizationalRolesService
   {
     $roleUid = $this->getConfigValue($role.'UserId', null);
     if (!empty($roleUid)) {
-      $user = $this->getUser($roleUid);
+      $user = $this->user($roleUid);
       $name = $user->getDisplayName();
       $email = $user->getEMailAddress();
       return [ 'name' => $name, 'email' => $email ];
