@@ -619,352 +619,356 @@ Störung.';
       return $this->dateSubstitution($keyArg, self::MEMBER_NAMESPACE, $musician);
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
-      if (empty($musician)) {
-        return $keyArg[0];
-      }
-      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
-      return $this->moneyValue($obligations['sum']);
-    };
+    if (!empty($this->project)) {
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
-      if (empty($musician)) {
-        return $keyArg[0];
-      }
-      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
-      return $this->moneyValue($obligations['received']);
-    };
-
-    $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
-      if (empty($musician)) {
-        return $keyArg[0];
-      }
-      $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
-      return $this->moneyValue($obligations['sum'] - $obligations['received']);
-    };
-
-    // per-participant project-data
-    $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
-      if (empty($musician)) {
-        return $keyArg[0];
-      }
-
-      /** @var Entities\ProjectParticipant $projectParticipant */
-      $projectParticipant = $musician->getProjectParticipantOf($this->project);
-
-      $participantFields = $this->project->getParticipantFields();
-      $fieldsByType = [
-        'monetary' => $participantFields->filter(function($field) {
-          /** @var Entities\ProjectParticipantField $field */
-          return $field->getDataType() == FieldType::SERVICE_FEE;
-        }),
-        'deposit' => $participantFields->filter(function($field) {
-          /** @var Entities\ProjectParticipantField $field */
-          return $field->getDataType() == FieldType::SERVICE_FEE && !empty($field->getDepositDueDate());
-        }),
-        'files' => $participantFields->filter(function($field) {
-          /** @var Entities\ProjectParticipantField $field */
-          return ($field->getDataType() == FieldType::CLOUD_FILE
-                  || $field->getDataType() == FieldType::DB_FILE);
-        }),
-        'other' => $participantFields->filter(function($field) {
-          /** @var Entities\ProjectParticipantField $field */
-          return ($field->getDataType() != FieldType::SERVICE_FEE
-                  && $field->getDataType() != FieldType::CLOUD_FILE
-                  && $field->getDataType() != FieldType::DB_FILE);
-        }),
-      ];
-
-      $doSpecificField = false;
-      $doSpecificType = false;
-
-      if (count($keyArg) == 2) {
-        $found = false;
-        $selector = strtolower($keyArg[1]);
-        $specificField = $participantFields->filter(function($field) use ($selector) {
-          /** @var Entities\ProjectParticipantField $field */
-          return strtolower($field->getName()) == $selector;
-        });
-        if ($specificField->count() == 1) {
-          $doSpecificField = true;
-          $found = true;
-          switch ($specificField->first()->getDataType()) {
-          case FieldType::SERVICE_FEE:
-            $fieldsByType = ['monetary' => $specificField ];
-            if (!empty($specificField->first()->getDepositDueDate())) {
-              $fieldsByType['deposit'] = $specificField;
-            }
-            break;
-          case FieldType::CLOUD_FILE:
-          case FieldType::DB_FILE:
-            $fieldsByType = [ 'file' => $specificField ];
-            break;
-          default:
-            $fieldsByType = [ 'other' => $specificField ];
-            break;
-          }
-        } else {
-          foreach (array_keys($fieldsByType) as $type) {
-            $variants = $this->translationVariants($type);
-            if (array_search($selector, $variants) !== false) {
-              $fieldsByType = [ $type => $fieldsByType[$type] ];
-              $doSpecificType = true;
-              $found = true;
-              break;
-            }
-          }
-        }
-        if (!$found) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+        if (empty($musician)) {
           return $keyArg[0];
         }
-      }
+        $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+        return $this->moneyValue($obligations['sum']);
+      };
 
-      $html = '';
-      foreach ($fieldsByType as $type => $fields) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+        $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+        return $this->moneyValue($obligations['received']);
+      };
 
-        $numberOfFields = $fields->count();
+      $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+        $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
+        return $this->moneyValue($obligations['sum'] - $obligations['received']);
+      };
 
-        // First output the simple options, then the ones with
-        // multiple options, then the recurring options. Also sort by
-        // name.
-        $fieldsByMultiplicity = [
-          // only one possible option
-          'single' => (function($fields) {
-            $fieldArray = $fields->filter(function($field) {
-              /** @var Entities\ProjectParticipantField $field */
-              return ($field->getMultiplicity() == FieldMultiplicity::SIMPLE
-                      || $field->getMultiplicity() == FieldMultiplicity::SINGLE
-                      || $field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE);
-            })->toArray();
-            usort($fieldArray, function($a, $b) {
-              return strcmp($a->getName(), $b->getName());
-            });
-            return $fieldArray;
-          })($fields),
-          // possibly multiple options
-          'multiple' => (function($fields) {
-            $fieldArray = $fields->filter(function($field) {
-              /** @var Entities\ProjectParticipantField $field */
-              return ($field->getMultiplicity() == FieldMultiplicity::MULTIPLE
-                      || $field->getMultiplicity() == FieldMultiplicity::PARALLEL
-                      || $field->getMultiplicity() == FieldMultiplicity::RECURRING
-                      || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE);
-            })->toArray();
-            usort($fieldArray, function($a, $b) {
-              return strcmp($a->getName(), $b->getName());
-            });
-            return $fieldArray;
-          })($fields),
+      // per-participant project-data
+      $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\ProjectParticipant $projectParticipant */
+        $projectParticipant = $musician->getProjectParticipantOf($this->project);
+
+        $participantFields = $this->project->getParticipantFields();
+        $fieldsByType = [
+          'monetary' => $participantFields->filter(function($field) {
+            /** @var Entities\ProjectParticipantField $field */
+            return $field->getDataType() == FieldType::SERVICE_FEE;
+          }),
+          'deposit' => $participantFields->filter(function($field) {
+            /** @var Entities\ProjectParticipantField $field */
+            return $field->getDataType() == FieldType::SERVICE_FEE && !empty($field->getDepositDueDate());
+          }),
+          'files' => $participantFields->filter(function($field) {
+            /** @var Entities\ProjectParticipantField $field */
+            return ($field->getDataType() == FieldType::CLOUD_FILE
+                    || $field->getDataType() == FieldType::DB_FILE);
+          }),
+          'other' => $participantFields->filter(function($field) {
+            /** @var Entities\ProjectParticipantField $field */
+            return ($field->getDataType() != FieldType::SERVICE_FEE
+                    && $field->getDataType() != FieldType::CLOUD_FILE
+                    && $field->getDataType() != FieldType::DB_FILE);
+          }),
         ];
 
-        // PLAN: table for monetary fields, perhaps file-downloads for file fields.
+        $doSpecificField = false;
+        $doSpecificType = false;
 
-        /** @var IDateTimeFormatter $formatter */
-        $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
-
-        if ($type == 'files' || $type == 'other') {
-          $html .= '<ul class="participant-fields">';
-
-          /** @var Entities\ProjectParticipantField $field */
-          foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
-            foreach ($fields as $field) {
-              $html .= '<li>'.$field->getName().'</li>';
+        if (count($keyArg) == 2) {
+          $found = false;
+          $selector = strtolower($keyArg[1]);
+          $specificField = $participantFields->filter(function($field) use ($selector) {
+            /** @var Entities\ProjectParticipantField $field */
+            return strtolower($field->getName()) == $selector;
+          });
+          if ($specificField->count() == 1) {
+            $doSpecificField = true;
+            $found = true;
+            switch ($specificField->first()->getDataType()) {
+            case FieldType::SERVICE_FEE:
+              $fieldsByType = ['monetary' => $specificField ];
+              if (!empty($specificField->first()->getDepositDueDate())) {
+                $fieldsByType['deposit'] = $specificField;
+              }
+              break;
+            case FieldType::CLOUD_FILE:
+            case FieldType::DB_FILE:
+              $fieldsByType = [ 'file' => $specificField ];
+              break;
+            default:
+              $fieldsByType = [ 'other' => $specificField ];
+              break;
+            }
+          } else {
+            foreach (array_keys($fieldsByType) as $type) {
+              $variants = $this->translationVariants($type);
+              if (array_search($selector, $variants) !== false) {
+                $fieldsByType = [ $type => $fieldsByType[$type] ];
+                $doSpecificType = true;
+                $found = true;
+                break;
+              }
             }
           }
-          $html .= '</ul>';
-        } else if ($type == 'monetary' || $type == 'deposit') {
-
-          $headerReplacements = [
-            'option' => $this->l->t('Option'),
-            'totals' => $type == 'monetary' ? $this->l->t('Total Amount') : $this->l->t('Deposit'),
-            'received' => $this->l->t('Received'),
-            'remaining' => $this->l->t('Remaining'),
-            'dueDate' => $this->l->t('Due Date'),
-          ];
-          $replacementKeys = array_keys($headerReplacements);
-          $header = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['header'];
-          foreach ($headerReplacements as $key => $replacement) {
-            $keyVariants = array_map(
-              function($key) { return '['.$key.']'; },
-              $this->translationVariants($key)
-            );
-            $header = str_ireplace($keyVariants, $replacement, $header);
+          if (!$found) {
+            return $keyArg[0];
           }
-          $cssClass = implode(' ', [
-            self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['header'],
-            'number-of-fields-'.$numberOfFields,
-          ]);
-          $header = str_replace('[CSSCLASS]', $cssClass, $header);
-          $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
+        }
 
-          $totalSum = array_fill_keys($replacementKeys, 0.0);
-          $totalSum['label'] = $this->l->t('Total Amount');
-          $totalSum['dueDate'] = null;
+        $html = '';
+        foreach ($fieldsByType as $type => $fields) {
 
-          foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+          $numberOfFields = $fields->count();
+
+          // First output the simple options, then the ones with
+          // multiple options, then the recurring options. Also sort by
+          // name.
+          $fieldsByMultiplicity = [
+            // only one possible option
+            'single' => (function($fields) {
+              $fieldArray = $fields->filter(function($field) {
+                /** @var Entities\ProjectParticipantField $field */
+                return ($field->getMultiplicity() == FieldMultiplicity::SIMPLE
+                        || $field->getMultiplicity() == FieldMultiplicity::SINGLE
+                        || $field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE);
+              })->toArray();
+              usort($fieldArray, function($a, $b) {
+                return strcmp($a->getName(), $b->getName());
+              });
+              return $fieldArray;
+            })($fields),
+            // possibly multiple options
+            'multiple' => (function($fields) {
+              $fieldArray = $fields->filter(function($field) {
+                /** @var Entities\ProjectParticipantField $field */
+                return ($field->getMultiplicity() == FieldMultiplicity::MULTIPLE
+                        || $field->getMultiplicity() == FieldMultiplicity::PARALLEL
+                        || $field->getMultiplicity() == FieldMultiplicity::RECURRING
+                        || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE);
+              })->toArray();
+              usort($fieldArray, function($a, $b) {
+                return strcmp($a->getName(), $b->getName());
+              });
+              return $fieldArray;
+            })($fields),
+          ];
+
+          // PLAN: table for monetary fields, perhaps file-downloads for file fields.
+
+          /** @var IDateTimeFormatter $formatter */
+          $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
+
+          if ($type == 'files' || $type == 'other') {
+            $html .= '<ul class="participant-fields">';
+
             /** @var Entities\ProjectParticipantField $field */
-            foreach ($fields as $field) {
-
-              $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
-              if (!empty($dueDate)) {
-                if (empty($totalSum['dueDate'])) {
-                  $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
-                } else {
-                  $totalSum['dueDate']['min'] = min($totalSum['dueDate']['min'], $dueDate);
-                  $totalSum['dueDate']['max'] = max($totalSum['dueDate']['max'], $dueDate);
-                }
-
-                $dueDate = $dueDate
-                         ? $formatter->formatDate($dueDate, 'medium')
-                         : '';
+            foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+              foreach ($fields as $field) {
+                $html .= '<li>'.$field->getName().'</li>';
               }
+            }
+            $html .= '</ul>';
+          } else if ($type == 'monetary' || $type == 'deposit') {
 
-              $numberOfOptions = $field->getSelectableOptions()->count();
+            $headerReplacements = [
+              'option' => $this->l->t('Option'),
+              'totals' => $type == 'monetary' ? $this->l->t('Total Amount') : $this->l->t('Deposit'),
+              'received' => $this->l->t('Received'),
+              'remaining' => $this->l->t('Remaining'),
+              'dueDate' => $this->l->t('Due Date'),
+            ];
+            $replacementKeys = array_keys($headerReplacements);
+            $header = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['header'];
+            foreach ($headerReplacements as $key => $replacement) {
+              $keyVariants = array_map(
+                function($key) { return '['.$key.']'; },
+                $this->translationVariants($key)
+              );
+              $header = str_ireplace($keyVariants, $replacement, $header);
+            }
+            $cssClass = implode(' ', [
+              self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['header'],
+              'number-of-fields-'.$numberOfFields,
+            ]);
+            $header = str_replace('[CSSCLASS]', $cssClass, $header);
+            $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
 
-              // generate a field-header for multiple options
-              $replacements = [
-                'field-name' => $field->getName(),
-                'dueDate' => $dueDate,
-              ];
+            $totalSum = array_fill_keys($replacementKeys, 0.0);
+            $totalSum['label'] = $this->l->t('Total Amount');
+            $totalSum['dueDate'] = null;
 
-              $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
-              foreach ($replacements as $key => $replacement) {
-                $keyVariants = array_map(
-                  function($key) { return '['.$key.']'; },
-                  $this->translationVariants($key)
-                );
-                $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
-              }
-              $cssClass = implode(' ', [
-                self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['fieldHeader'],
-                'number-of-options-' . $numberOfOptions,
-              ]);
-              $cssRowClass = implode(' ', [
-                self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['row'],
-                'number-of-options-'.$numberOfOptions,
-              ]);
-              $fieldHeader = str_replace(
-                [ '[CSSCLASS]', '[CSSROWCLASS]' ], [ $cssClass, $cssRowClass ], $fieldHeader);
-              $html .= $fieldHeader;
+            foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+              /** @var Entities\ProjectParticipantField $field */
+              foreach ($fields as $field) {
 
-              /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
-              foreach ($field->getSelectableOptions() as $fieldOption) {
-
-                $option = $fieldOption->getLabel() ?: $field->getName();
-
-                $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
-
-                $totals = '--';
-                $received = '--';
-                $remaining = '--';
-                $memberNames = [];
-
-                if (!empty($fieldData)) {
-                  switch ($type) {
-                  case 'monetary':
-                    $totals = $fieldData->amountPayable();
-                    $received = $fieldData->amountPaid();
-                    break;
-                  case 'deposit':
-                    $totals = $fieldData->depositAmount();
-                    $received = min($totals, $fieldData->amountPaid());
-                    break;
-                  }
-                  $remaining = $totals - $received;
-
-                  if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
-                      || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE) {
-                    $groupMembers = $this->participantFieldsService->findGroupMembersOf($fieldData);
-                    /** @var Entities\ProjectParticipantFieldDatum $groupMember */
-                    foreach ($groupMembers as $groupMember) {
-                      $memberNames[] = $groupMember->getMusician()->getPublicName(true);
-                    }
-                  }
-                } else if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE) {
-                  if ($fieldOption != $field->getSelectableOptions()->last()) {
-                    // make sure we only include the option the participant has booked.
-                    continue;
-                  }
-                }
-
-                // compute substitution values
-                $replacements = [];
-                foreach ($replacementKeys as $key) {
-                  if ($key == 'option' || $key == 'dueDate' ) {
-                    $replacements[$key] = ${$key};
-                    continue;
-                  }
-                  if (${$key} != '--') {
-                    $totalSum[$key] += ${$key};
-                    $replacements[$key] = $this->moneyValue(${$key});
+                $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
+                if (!empty($dueDate)) {
+                  if (empty($totalSum['dueDate'])) {
+                    $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
                   } else {
-                    $replacements[$key] = ${$key};
+                    $totalSum['dueDate']['min'] = min($totalSum['dueDate']['min'], $dueDate);
+                    $totalSum['dueDate']['max'] = max($totalSum['dueDate']['max'], $dueDate);
                   }
+
+                  $dueDate = $dueDate
+                           ? $formatter->formatDate($dueDate, 'medium')
+                           : '';
                 }
 
-                // inject into template
-                $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
-                foreach ($replacementKeys as $key) {
+                $numberOfOptions = $field->getSelectableOptions()->count();
+
+                // generate a field-header for multiple options
+                $replacements = [
+                  'field-name' => $field->getName(),
+                  'dueDate' => $dueDate,
+                ];
+
+                $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
+                foreach ($replacements as $key => $replacement) {
                   $keyVariants = array_map(
                     function($key) { return '['.$key.']'; },
                     $this->translationVariants($key)
                   );
-                  $row = str_ireplace($keyVariants, $replacements[$key], $row);
+                  $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
                 }
-                $cssClass = $cssRowClass;
-                if (!empty($memberNames)) {
-                  $cssClass .= ' has-data';
-                  $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
-                } else {
-                  $rowData = [ $cssClass, '', '', ];
+                $cssClass = implode(' ', [
+                  self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['fieldHeader'],
+                  'number-of-options-' . $numberOfOptions,
+                ]);
+                $cssRowClass = implode(' ', [
+                  self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['row'],
+                  'number-of-options-'.$numberOfOptions,
+                ]);
+                $fieldHeader = str_replace(
+                  [ '[CSSCLASS]', '[CSSROWCLASS]' ], [ $cssClass, $cssRowClass ], $fieldHeader);
+                $html .= $fieldHeader;
+
+                /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+                foreach ($field->getSelectableOptions() as $fieldOption) {
+
+                  $option = $fieldOption->getLabel() ?: $field->getName();
+
+                  $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
+
+                  $totals = '--';
+                  $received = '--';
+                  $remaining = '--';
+                  $memberNames = [];
+
+                  if (!empty($fieldData)) {
+                    switch ($type) {
+                    case 'monetary':
+                      $totals = $fieldData->amountPayable();
+                      $received = $fieldData->amountPaid();
+                      break;
+                    case 'deposit':
+                      $totals = $fieldData->depositAmount();
+                      $received = min($totals, $fieldData->amountPaid());
+                      break;
+                    }
+                    $remaining = $totals - $received;
+
+                    if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
+                        || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE) {
+                      $groupMembers = $this->participantFieldsService->findGroupMembersOf($fieldData);
+                      /** @var Entities\ProjectParticipantFieldDatum $groupMember */
+                      foreach ($groupMembers as $groupMember) {
+                        $memberNames[] = $groupMember->getMusician()->getPublicName(true);
+                      }
+                    }
+                  } else if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE) {
+                    if ($fieldOption != $field->getSelectableOptions()->last()) {
+                      // make sure we only include the option the participant has booked.
+                      continue;
+                    }
+                  }
+
+                  // compute substitution values
+                  $replacements = [];
+                  foreach ($replacementKeys as $key) {
+                    if ($key == 'option' || $key == 'dueDate' ) {
+                      $replacements[$key] = ${$key};
+                      continue;
+                    }
+                    if (${$key} != '--') {
+                      $totalSum[$key] += ${$key};
+                      $replacements[$key] = $this->moneyValue(${$key});
+                    } else {
+                      $replacements[$key] = ${$key};
+                    }
+                  }
+
+                  // inject into template
+                  $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
+                  foreach ($replacementKeys as $key) {
+                    $keyVariants = array_map(
+                      function($key) { return '['.$key.']'; },
+                      $this->translationVariants($key)
+                    );
+                    $row = str_ireplace($keyVariants, $replacements[$key], $row);
+                  }
+                  $cssClass = $cssRowClass;
+                  if (!empty($memberNames)) {
+                    $cssClass .= ' has-data';
+                    $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
+                  } else {
+                    $rowData = [ $cssClass, '', '', ];
+                  }
+                  $rowKeys = [ '[CSSROWCLASS]', '[ROWDATALABEL]', '[ROWDATACONTENTS]',  ];
+                  $row = str_replace($rowKeys, $rowData, $row);
+                  $html .= $row;
                 }
-                $rowKeys = [ '[CSSROWCLASS]', '[ROWDATALABEL]', '[ROWDATACONTENTS]',  ];
-                $row = str_replace($rowKeys, $rowData, $row);
-                $html .= $row;
               }
             }
-          }
 
-          $footer = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['footer'];
-          foreach ($replacementKeys as $key) {
-            switch ($key) {
-            case 'option':
-              $key = 'label';
-              break;
-            case 'dueDate':
-              if (!empty($totalSum['dueDate'])) {
-                $minDate = $formatter->formatDate($totalSum['dueDate']['min'], 'short');
-                $maxDate = $formatter->formatDate($totalSum['dueDate']['max'], 'short');
-                if (true || $minDate == $maxDate) {
-                  $totalSum['dueDate'] = $formatter->formatDate($totalSum['dueDate']['max'], 'medium');
-                } else {
-                  $totalSum['dueDate'] = $minDate . ' - ' . $maxDate;
+            $footer = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['footer'];
+            foreach ($replacementKeys as $key) {
+              switch ($key) {
+              case 'option':
+                $key = 'label';
+                break;
+              case 'dueDate':
+                if (!empty($totalSum['dueDate'])) {
+                  $minDate = $formatter->formatDate($totalSum['dueDate']['min'], 'short');
+                  $maxDate = $formatter->formatDate($totalSum['dueDate']['max'], 'short');
+                  if (true || $minDate == $maxDate) {
+                    $totalSum['dueDate'] = $formatter->formatDate($totalSum['dueDate']['max'], 'medium');
+                  } else {
+                    $totalSum['dueDate'] = $minDate . ' - ' . $maxDate;
+                  }
                 }
+                break;
+              default:
+                $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+                break;
               }
-              break;
-            default:
-              $totalSum[$key] = $this->moneyValue($totalSum[$key]);
-              break;
+              $keyVariants = array_map(
+                function($key) { return '['.$key.']'; },
+                $this->translationVariants($key)
+              );
+              $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
             }
-            $keyVariants = array_map(
-              function($key) { return '['.$key.']'; },
-              $this->translationVariants($key)
-            );
-            $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+            $cssClass = implode(' ', [
+              self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
+            ]);
+            $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
+            $html .= $footer;
           }
-          $cssClass = implode(' ', [
-            self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
-          ]);
-          $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
-          $html .= $footer;
+          if ($numberOfFields > 0 && !$doSpecificType && !$doSpecificField) {
+            $html .= '<p>';
+          }
         }
-        if ($numberOfFields > 0 && !$doSpecificType && !$doSpecificField) {
-          $html .= '<p>';
-        }
-      }
 
-      return $html;
-    };
+        return $html;
+      };
+
+    }
 
     if (!empty($this->bulkTransaction)) {
 
