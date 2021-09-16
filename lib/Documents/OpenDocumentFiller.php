@@ -112,10 +112,11 @@ class OpenDocumentFiller
     // Logo
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
 
-    $logoData = $logo->getContent();
-    $logoImage = ImagesService::rasterize($logoData, 1200);
-    // $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
-    $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
+    $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+
+    // $logoData = $logo->getContent();
+    // $logoImage = ImagesService::rasterize($logoData, 1200);
+    // $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
 
     $this->logInfo('SUBSTITUTIONS ' . print_r(array_keys($substitutions), true));
 
@@ -123,6 +124,11 @@ class OpenDocumentFiller
     $rolesService = $this->di(OrganizationalRolesService::class);
 
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
+
+      $contact = $rolesService->{$boardMember . 'Contact'}();
+      foreach (['name', 'email'] as $tag) {
+        $substitutions['orchestra:'.$boardMember.':'.$tag] = $contact[$tag]??$this->l->t('unknown');
+      }
 
       /** @var \OCP\Image $signature */
       $signature = $rolesService->{$boardMember . 'Signature'}();
