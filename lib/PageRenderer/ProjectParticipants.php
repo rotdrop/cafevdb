@@ -574,6 +574,32 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
+    $opts['fdd']['number_of_voices'] = [
+      'tab'      => [ 'id' => 'instrumentation' ],
+      'input' => 'VRH',
+      'options' => 'VCDP',
+      'select' => 'T',
+      'name' => $this->l->t('Number of Voices'),
+      'sort' => true,
+      'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\''.self::JOIN_KEY_SEP.'\', $join_table.instrument_id, $join_col_fqn))',
+      'filter' => [
+        'having' => false,
+        'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+      ],
+      'values' => [
+        'table' => 'SELECT
+  MAX(pin.voice) AS number_of_voices,
+  pin.instrument_id,
+  pin.project_id
+  FROM '.self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE.' pin
+  WHERE pin.project_id = '.$this->projectId.'
+  GROUP BY pin.instrument_id',
+        'column' => 'number_of_voices',
+        'orderby' => '$table.instrument_id',
+        'join' => '$join_table.instrument_id = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id AND $join_table.project_id = ' . $this->projectId,
+      ],
+    ];
+
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
       [
@@ -591,7 +617,7 @@ class ProjectParticipants extends PMETableViewBase
         ],
         'display|CAP' => [
           'prefix' => function($op, $when, $row, $k, $pme) {
-            $hidden = empty($row['qf'.$k]) ? 'hidden' : '';
+            $hidden = empty($row['qf'.($k-1)]) ? 'hidden' : '';
             return '<div class="cell-wrapper">
   <div class="'.$hidden.'">';
           },
@@ -605,7 +631,7 @@ class ProjectParticipants extends PMETableViewBase
             $post = http_build_query($post);
             $title = $this->toolTipsService['project-participants:instrumentation-numbers'];
             $value = $this->l->t('No sub-division! Configure voices?');
-            $hidden = empty($row['qf'.$k]) ? '' : ' hidden';
+            $hidden = empty($row['qf'.($k-1)]) ? '' : ' hidden';
             $link =<<<__EOT__
   </div>
   <li class="nav tooltip-top instrumentation-voices$hidden" title="$title">
