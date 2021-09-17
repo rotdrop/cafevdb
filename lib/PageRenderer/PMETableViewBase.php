@@ -1573,12 +1573,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       } else {
         // !$multiple, simply insert. The "master-"table can only
         // "land" here
+        $this->debug('IDENTIFIER ' . print_r($identifier, true));
         $entityId = $meta->extractKeyValues($identifier);
         $entity = $entityClass::create();
         foreach ($entityId as $key => $value) {
+          $this->debug('TRY SET ID ' . $key . ' => ' . $value);
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
+          $this->debug('TRY SET ' . $column . ' => ' . $newvals[$field]);
           $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
@@ -1614,6 +1617,84 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     return true; // in order to update key-fields
   }
+
+  /**
+   * Convert the given legacy PHPMyEdit record id as given by the
+   * member variable PHPMyEdit::rec to something understood by
+   * Doctrine\ORM.
+   *
+   * @param array $pmeRecordId
+   *
+   * @return array
+   */
+  protected function legacyRecordToEntityId(array $pmeRecordId, string $table = null):array
+  {
+    if (empty($table)) {
+      $entityName = null;
+      foreach ($this->joinStructure as $table => $joinInfo) {
+        if (($joinInfo['flags']??self::JOIN_FLAGS_NONE) & self::JOIN_MASTER) {
+          $entityName = $joinInfo['entity'];
+          break;
+        }
+      }
+    } else {
+      $entityName = $this->joinStructure[$table]['entity'];
+    }
+    $repository = $this->getDatabaseRepository($entityName);
+    $meta = $this->classMetadata($entityName);
+    $entityId = $meta->extractKeyValues($pmeRecordId);
+
+    return $entityId;
+  }
+
+  /**
+   * Convert the given legacy PHPMyEdit record id as given by the
+   * member variable PHPMyEdit::rec to something understood by
+   * Doctrine\ORM.
+   *
+   * @param array $pmeRecordId
+   *
+   * @return Object
+   */
+  protected function legacyRecordToEntity(array $pmeRecordId)
+  {
+    $entityId = $this->legacyRecordToEntity($pmeRecordId);
+
+    return $this->find($entityId);
+  }
+
+  /**
+   * This trigger simply deletes the given entity and prevents the
+   * legacy PHPMyEdit class to do the deletion in order to benefit
+   * from ORM. No fancy things are done, simply the deletion.
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldValues Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newValues Set of new values, which may also be modified.
+   *
+   * @return boolean If returning @c false the operation will be terminated
+   */
+  public function beforeDeleteSimplyDoDelete(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $entityId = $this->legacyRecordToEntityId($pme->rec);
+    $this->remove($entityId, true);
+
+    $changed = []; // disable PME delete query
+
+    return true; // but run further triggers if appropriate
+  }
+
 
   /**
    * Define a basic join-structure for phpMyEdit by using the

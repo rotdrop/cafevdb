@@ -49,8 +49,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ],
     self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
-      'identifier' => [ 'id' => 'project_id' ],
+      'identifier' => [
+        'id' => 'project_id',
+      ],
       'column' => 'id',
+      'flags' => self::JOIN_READONLY,
     ],
     self::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
@@ -61,6 +64,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'musician_id' => false,
       ],
       'column' => 'musician_id',
+      'flags' => self::JOIN_READONLY,
     ],
     self::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
@@ -68,6 +72,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'id' => 'instrument_id',
       ],
       'column' => 'id',
+      'flags' => self::JOIN_READONLY,
     ],
   ];
 
@@ -165,7 +170,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['fdd']['project_id'] = [
       'name'      => $this->l->t('Project'),
-      'input'     => ($projectMode ? 'HR' : ''),
+      'input'     => ($projectMode ? 'R' : ''),
       'css' => [ 'postfix' => [ 'project-instrument-project-name', ], ],
       'select|DV' => 'T', // delete, view
       'select|ACPFL' => 'D',  // add, change, copy, filter, list
@@ -390,6 +395,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     // @todo: here we need still delete triggers etc.
     // go

@@ -915,8 +915,7 @@ make sure that the musicians are also automatically added to the
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    $entity = $this->getDatabaseRepository($this->joinStructure[self::TABLE]['entity'])
-                   ->find($pme->rec);
+    $entity = $this->legacyRecordToEntity($pme->rec);
 
     /** @var Entities\Musician $entity */
     $this->remove($entity, true); // this should be soft-delete
