@@ -581,7 +581,7 @@ class ProjectParticipants extends PMETableViewBase
       'select' => 'T',
       'name' => $this->l->t('Number of Voices'),
       'sort' => true,
-      'sql' => 'GROUP_CONCAT(DISTINCT CONCAT_WS(\''.self::JOIN_KEY_SEP.'\', $join_table.instrument_id, $join_col_fqn))',
+      'sql' => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn > 0, CONCAT_WS(\''.self::JOIN_KEY_SEP.'\', $join_table.instrument_id, $join_col_fqn), NULL))',
       'filter' => [
         'having' => false,
         'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
@@ -1397,11 +1397,7 @@ __EOT__;
    */
   public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    $entity = $this->getDatabaseRepository($this->joinStructure[self::TABLE]['entity'])
-                   ->find([
-                     'project' => $pme->rec['project_id'],
-                     'musician' => $pme->rec['musician_id'],
-                   ]);
+    $entity = $this->legacyRecordToEntity($pme->rec);
 
     /** @var Entities\ProjectParticipant $entity */
     $this->remove($entity, true); // this should be soft-delete
