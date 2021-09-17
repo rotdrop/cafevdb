@@ -784,7 +784,7 @@ make sure that the musicians are also automatically added to the
         $musicianId = $recordId['id'] ?? 0;
         return $this->photoImageLink($musicianId, $action, $imageId);
       },
-      'css' => ['postfix' => ' photo'],
+      'css' => ['postfix' => ['photo'], ],
       'default' => '',
       'sort' => false
     ]);

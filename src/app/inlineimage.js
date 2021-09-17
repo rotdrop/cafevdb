@@ -90,12 +90,10 @@ const photoUpload = function(wrapper, filelist) {
 const photoLoadHandlers = function(wrapper) {
   const imageInfo = wrapper.data('imageInfo');
   const phototools = wrapper.find('.phototools');
-  if ('' + imageInfo.imageId !== '' + IMAGE_ID_PLACEHOLDER) {
-    phototools.find('.delete').show();
-    phototools.find('.edit').show();
+  if (parseInt(imageInfo.imageId) > IMAGE_ID_PLACEHOLDER) {
+    phototools.find('.delete, .edit').show();
   } else {
-    phototools.find('.delete').hide();
-    phototools.find('.edit').hide();
+    phototools.find('.delete, .edit').hide();
   }
 };
 
@@ -630,8 +628,6 @@ const photoPopup = function(image) {
   const $imgClone = $('<img class="' + $image.attr('class') + '" src="">');
   $imgClone.on('load', onPopupLoad);
   $imgClone.attr('src', $image.attr('src').replace(/&preview=[0-9]+/i, ''));
-
-
 
 };
 

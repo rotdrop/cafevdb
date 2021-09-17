@@ -99,6 +99,15 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
+    self::MUSICIAN_PHOTO_JOIN_TABLE => [
+      'entity' => Entities\MusicianPhoto::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'owner_id' => 'musician_id',
+        'image_id' => false,
+      ],
+      'column' => 'image_id',
+    ],
     // in order to get the participation in all projects
     self::TABLE . self::VALUES_TABLE_SEP . 'allProjects' => [
       'entity' => Entities\ProjectParticipant::class,
@@ -1037,21 +1046,21 @@ __EOT__;
         'values2'  => $this->localeLanguageNames(),
       ]);
 
-    $opts['fdd']['photo'] = [
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
       'tab'      => ['id' => 'miscinfo'],
-      'input' => 'V',
+      'input' => 'VRS',
       'name' => $this->l->t('Photo'),
       'select' => 'T',
       'options' => 'APVCD',
-      'sql' => '$main_table.musician_id', // @todo: needed?
-      'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-        $stamp = strtotime($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'updated', $pme->fdd)]);
-        return $this->photoImageLink($musicianId, $action, $stamp);
+      'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
+        $musicianId = $recordId['musician_id'] ?? 0;
+        return $this->photoImageLink($musicianId, $action, $imageId);
       },
-      'css' => ['postfix' => ' photo'],
+      'css' => ['postfix' => [ 'photo', ], ],
       'default' => '',
       'sort' => false
-    ];
+    ]);
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],

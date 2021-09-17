@@ -813,14 +813,12 @@ const myDocumentReady = function() {
           return false;
         });
 
-      if (container.find('#contact_photo_upload').length > 0) {
-        const idField = container.find('input[name="' + pmeData('musician_id') + '"]');
-        let recordId = -1;
-        if (idField.length > 0) {
-          recordId = idField.val();
-        }
-        const imageId = -1;
-        Photo.ready(recordId, imageId, 'MusicianPhoto', resizeCB);
+      const photoContainer = container.find('.musician-portrait');
+      if (photoContainer.length > 0) {
+        photoContainer.each(function(index) {
+          console.info('CALL PHOTO READY');
+          Photo.ready($(this), resizeCB);
+        });
       } else {
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
