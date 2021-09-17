@@ -333,6 +333,7 @@ const myReady = function(selector, resizeCB) {
   const selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
   const inputGroupOfPeopleId = container.find('input.pme-input.groupofpeople-id');
   const selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
+  const inputVoices = container.find('.pme-value div.instrument-voice.request.container');
   const form = container.find(PHPMyEdit.classSelector('form', 'form'));
 
   const musicianId = pmeRecordValue(form, 'musicianId');
@@ -345,7 +346,6 @@ const myReady = function(selector, resizeCB) {
     .off('click')
     .on('click', function(event) {
       const data = $(this).data('json');
-      console.info('INSTRUMENTATION NUMBERS');
       instrumentationNumbersPopup(selector, data);
       return false;
     });
@@ -389,10 +389,27 @@ const myReady = function(selector, resizeCB) {
       prevVoices[item[0]].push(item[1]);
     }
 
+    let doSubmitOuterForm = true;
+
     // Now loop over old values. Unset multiple selections.
     for (const instrument in voices) {
       const values = voices[instrument];
       const prevValues = prevVoices[instrument];
+      for (const voice of values) {
+        if (voice === '?') {
+          doSubmitOuterForm = false;
+          const selectCombo = selectVoices.parent();
+          const inputCombo = inputVoices.filter('div.instrument-' + instrument);
+          SelectUtils.locked(selectVoices, true);
+          selectCombo.hide();
+          inputCombo.show();
+          const voiceItem = instrument + ':' + voice;
+          const index = selected.findIndex((v) => voiceItem === v);
+          if (index > -1) {
+            selected.splice(index, 1);
+          }
+        }
+      }
       if (values.length < 2) {
         continue;
       }
@@ -404,16 +421,68 @@ const myReady = function(selector, resizeCB) {
         }
       }
     }
-    console.debug('SELECTED', selected);
     SelectUtils.selected($self, selected);
     $self.data('selected', selected);
 
     lockOther(false);
 
-    // selected project instruments affect voices and section-leader:
-    PHPMyEdit.submitOuterForm(selector);
+    if (doSubmitOuterForm) {
+      // selected project instruments affect voices and section-leader:
+      PHPMyEdit.submitOuterForm(selector);
+    } else {
+      PHPMyEdit.tableDialogLoadIndicator(container, false);
+      PHPMyEdit.tableDialogLock(container, false);
+    }
 
     return false;
+  });
+
+  const inputVoicesHandler = function(event, input) {
+    const $this = $(input);
+
+    const lockOther = function(lock) {
+      SelectUtils.locked(selectMusicianInstruments, lock);
+      SelectUtils.locked(selectProjectInstruments, lock);
+      SelectUtils.locked(selectVoices, lock);
+    };
+    lockOther(true);
+
+    let doSubmitOuterForm = true;
+
+    if ($this.val() === '') {
+      doSubmitOuterForm = false;
+    } else {
+      const dataHolder = $this.closest('.container').find('input.data');
+      const instrument = dataHolder.data('instrument');
+      const voice = parseInt($this.val());
+
+      dataHolder.val(instrument + ':' + voice);
+      dataHolder.prop('disabled', false);
+      // $this.prop('disabled', true);
+    }
+
+    if (doSubmitOuterForm) {
+      // selected project instruments affect voices and section-leader:
+      PHPMyEdit.submitOuterForm(selector);
+    } else {
+      PHPMyEdit.tableDialogLoadIndicator(container, false);
+      PHPMyEdit.tableDialogLock(container, false);
+      selectVoices.parent().show();
+      $this.closest('.container').hide();
+    }
+
+    lockOther(false);
+
+    return false;
+  };
+
+  inputVoices.on('blur', 'input.instrument-voice', function(event) {
+    return inputVoicesHandler(event, this);
+  });
+
+  inputVoices.on('click', 'input.confirm', function(event) {
+    const instrument = $(this).data('instrument');
+    return inputVoicesHandler(event, inputVoices.find('input.input.instrument-' + instrument));
   });
 
   selectProjectInstruments.data(
@@ -816,7 +885,6 @@ const myDocumentReady = function() {
       const photoContainer = container.find('.musician-portrait');
       if (photoContainer.length > 0) {
         photoContainer.each(function(index) {
-          console.info('CALL PHOTO READY');
           Photo.ready($(this), resizeCB);
         });
       } else {

@@ -626,31 +626,49 @@ class ProjectParticipants extends PMETableViewBase
         ],
         'display|CAP' => [
           'prefix' => function($op, $when, $row, $k, $pme) {
-            $hidden = empty($row['qf'.($k-1)]) ? 'hidden' : '';
             return '<div class="cell-wrapper">
-  <div class="'.$hidden.'">';
+  <div class="dropdown-menu">';
           },
           'postfix' => function($op, $when, $row, $k, $pme) {
-            $post = [
-              'template' => 'project-instrumentation-numbers',
-              'projectName' => $this->projectName,
-              'projectId' => $this->projectId,
-            ];
-            $json = htmlspecialchars(json_encode($post));
-            $post = http_build_query($post);
-            $title = $this->toolTipsService['project-participants:instrumentation-numbers'];
-            $value = $this->l->t('No sub-division! Configure voices?');
-            $hidden = empty($row['qf'.($k-1)]) ? '' : ' hidden';
-            $link =<<<__EOT__
-  </div>
-  <li class="nav tooltip-top instrumentation-voices$hidden" title="$title">
-    <a class="nav" href="#" data-post="$post" data-json='$json'>
-      $value
-    </a>
-  </li>
-</div>
-__EOT__;
-            return $link;
+            $instrumentsIndex = $k - 3;
+            $numberOfVoicesIndex = $k - 1;
+            $numberOfVoices = Util::explodeIndexed($row['qf'.$numberOfVoicesIndex]);
+            $instruments = explode(',', $row['qf'.$instrumentsIndex]);
+            $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
+            $html = '</div>
+';
+            $html .= '<div class="instrument-voice request">';
+            foreach ($instruments as $instrument) {
+              $html .= '
+  <div class="instrument-voice container request instrument-'.$instrument.' hidden">
+    <label for="instrument-voice-request-'.$instrument.'"
+           class="instrument-'.$instrument.' tooltip-auto"
+           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request')]).'">
+      '.$instrumentNames[$instrument].'
+      <input type="number"
+             id="instrument-voice-request-'.$instrument.'"
+             min="'.($numberOfVoices[$instrument]??1).'"
+             name="instrumentVoiceRequest['.$instrument.']"
+             placeholder="'.$this->l->t('e.g. %s', 3).'"
+             data-instrument="'.$instrument.'"
+             class="instrument-voice instrument-'.$instrument.' input"/>
+    </label>
+    <input type="button"
+           name="instrumentVoiceRequestConfirm"
+           data-instrument="'.$instrument.'"
+           class="instrument-voice instrument-'.$instrument.' confirm"
+           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request:confirm')]).'"
+           value="'.$this->l->t('ok').'"/>
+    <input type="hidden"
+           name="'.$pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]').'"
+           value=""
+           class="instrument-voice instrument-'.$instrument.' data"
+           data-instrument="'.$instrument.'"
+           disabled/>
+  </div>';
+            }
+            $html .= '</div>';
+            return $html;
           },
         ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
@@ -673,14 +691,15 @@ __EOT__;
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
-  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', n.seq) AS value,
+  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', IF(n.seq <= MAX(pin.voice), n.seq, '?')) AS value,
   pi.project_id,
   pi.musician_id,
   i.id AS instrument_id,
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
-  pin.quantity,
+  GROUP_CONCAT(IF(pin.voice = n.seq, pin.quantity, NULL)) AS quantity,
+  MAX(pin.voice) AS number_of_voices,
   n.seq
   FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
@@ -693,7 +712,7 @@ __EOT__;
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= pin.voice AND n.seq >= 1 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
+    ON n.seq <= (1+pin.voice) AND n.seq >= 1 AND n.seq <= (1+(SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
@@ -702,7 +721,7 @@ __EOT__;
     i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ '$table.l10n_name', '$table.seq' ],
+            'columns' => [ '$table.l10n_name', 'IF($table.seq <= $table.number_of_voices, $table.seq, \'?\')' ],
             'divs' => ' ',
           ],
           'orderby' => '$table.sort_order ASC, $table.seq ASC',
