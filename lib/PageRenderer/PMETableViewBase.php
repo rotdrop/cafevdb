@@ -1658,7 +1658,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function legacyRecordToEntity(array $pmeRecordId)
   {
-    $entityId = $this->legacyRecordToEntity($pmeRecordId);
+    $entityId = $this->legacyRecordToEntityId($pmeRecordId);
 
     return $this->find($entityId);
   }
