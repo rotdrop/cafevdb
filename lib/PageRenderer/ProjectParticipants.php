@@ -1267,7 +1267,6 @@ class ProjectParticipants extends PMETableViewBase
       $instrumentVoices[$instrument] = array_merge($instrumentVoices[$instrument], $newVoices);
     }
 
-    $this->debug('INSTRUMENTS '.print_r($instrumentValues, true));
     $this->debug('VOICE VALUES '.print_r($voiceValues, true));
     $this->debug('VOICES '.print_r($instrumentVoices, true));
 
