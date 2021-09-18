@@ -24,7 +24,9 @@ import { globalState, $ } from './globals.js';
 
 /**
  * Open one invisible modal dialog in order to have a persistent
- * overlay for a group of dialogs.
+ * overlay for a group of dialogs. Note that the overlay blocking the
+ * rest of the UI is the standard modal overlay of jquery-ui. This
+ * dialog just has zero width and is just an anchor.
  *
  * @param {bool} open TBD.
  *
