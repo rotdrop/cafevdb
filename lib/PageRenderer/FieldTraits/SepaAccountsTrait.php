@@ -251,6 +251,9 @@ trait SepaAccountsTrait
             'grouped' => true,
             'orderby' => '$table.musician_id ASC, $table.sequence ASC',
           ],
+          'filter' => [
+            'having' => true,
+          ],
           'php' => function($value, $op, $k, $row, $recordId, $pme) use ($musicianIdField, $projectRestrictions) {
             if (empty($row)) {
               return '';
