@@ -70,7 +70,6 @@ class InstrumentFamilies extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
     ],
     self::INSTRUMENTS_TABLE => [
-      'table' => self::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => [
@@ -193,6 +192,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     // set the locale into the join-structure
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
       switch ($table) {
       case self::FIELD_TRANSLATIONS_TABLE:
         $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
