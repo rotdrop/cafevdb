@@ -2128,8 +2128,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     AND $jt.foreign_key = t.$id
 ";
     }
+    $table = explode(self::VALUES_TABLE_SEP, $joinInfo['table'])[0];
     $query = 'SELECT t.*, '.implode(', ', $l10nFields).'
-  FROM '.$joinInfo['table'].' t
+  FROM '.$table.' t
 '.implode('', $l10nJoins);
     return $query;
   }
