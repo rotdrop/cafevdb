@@ -1301,7 +1301,7 @@ Whatever.',
 
     // check for already registered
     $exists = $project['participants']->exists(function($key, $participant) use ($musician) {
-      return $participant['musician']['id'] == $musicion['id'];
+      return $participant['musician']['id'] == $musician['id'];
     });
     if ($exists) {
       $status[$id][] = [
@@ -1350,7 +1350,7 @@ Whatever.',
           $ranking = $musicianInstrument['ranking'];
 
           // if voice == -1 exist, use it (no voice), otherwise use
-          // the one with the lest registerd musicians or the
+          // the one with the least registerd musicians or the
           // potentially less demanding (highest numbered) voice.
           $voice = 0;
           $neededMost = PHP_INT_MIN;
