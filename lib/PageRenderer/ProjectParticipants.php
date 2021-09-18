@@ -647,7 +647,7 @@ class ProjectParticipants extends PMETableViewBase
       '.$instrumentNames[$instrument].'
       <input type="number"
              id="instrument-voice-request-'.$instrument.'"
-             min="'.($numberOfVoices[$instrument]??1).'"
+             min="1"
              name="instrumentVoiceRequest['.$instrument.']"
              placeholder="'.$this->l->t('e.g. %s', 3).'"
              data-instrument="'.$instrument.'"
