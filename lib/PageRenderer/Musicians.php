@@ -88,18 +88,17 @@ class Musicians extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    // [
-    //   'table' => self::PROJECTS_TABLE,
-    //   'entity' => Entities\Project::class,
-    //   'identifier' => [
-    //     'id' => [
-    //       'table' => self::PROJECT_PARTICIPANTS_TABLE,
-    //       'column' => 'project_id',
-    //     ],
-    //   ],
-    //   'column' => 'name',
-    //   'flags' => self::JOIN_READONLY,
-    // ],
+    self::INSTRUMENTS_TABLE => [
+      'entity' => Entities\Instrument::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+          'column' => 'instrument_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
     self::INSTRUMENT_INSURANCES_TABLE => [
       'entity' => Entities\InstrumentInsurance::class,
       'identifier' => [
@@ -330,6 +329,17 @@ make sure that the musicians are also automatically added to the
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts();
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
+      switch ($table) {
+      case self::INSTRUMENTS_TABLE:
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+        break;
+      default:
+        break;
+      }
+    });
+
     // must come after the key-def fdd
     $joinTables = $this->defineJoinStructure($opts);
 
@@ -528,17 +538,15 @@ make sure that the musicians are also automatically added to the
                         : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
       'values' => [
-        'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
         'description' => [
-          'columns' => [ 'name' ],
+          'columns' => [ 'l10n_name', ],
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
         'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
-      'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
@@ -548,7 +556,6 @@ make sure that the musicians are also automatically added to the
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
-    $joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'orchestra' ] ],
