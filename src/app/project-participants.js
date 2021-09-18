@@ -356,8 +356,8 @@ const myReady = function(selector, resizeCB) {
   selectVoices.off('change').on('change', function(event) {
     const $self = $(this);
 
-    PHPMyEdit.tableDialogLoadIndicator(container, true);
     PHPMyEdit.tableDialogLock(container, true);
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
 
     const lockOther = function(lock) {
       SelectUtils.locked(selectMusicianInstruments, lock);
@@ -440,6 +440,9 @@ const myReady = function(selector, resizeCB) {
   const inputVoicesHandler = function(event, input) {
     const $this = $(input);
 
+    PHPMyEdit.tableDialogLock(container, true);
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
+
     const lockOther = function(lock) {
       SelectUtils.locked(selectMusicianInstruments, lock);
       SelectUtils.locked(selectProjectInstruments, lock);
@@ -490,8 +493,12 @@ const myReady = function(selector, resizeCB) {
     selectProjectInstruments.val()
       ? selectProjectInstruments.val()
       : []);
+
   selectProjectInstruments.on('change', function(event) {
     const $self = $(this);
+
+    PHPMyEdit.tableDialogLock(container, true);
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
 
     const lockOther = function(lock) {
       SelectUtils.locked(selectMusicianInstruments, lock);
@@ -521,6 +528,9 @@ const myReady = function(selector, resizeCB) {
 
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
+
+        PHPMyEdit.tableDialogLoadIndicator(container, false);
+        PHPMyEdit.tableDialogLock(container, false);
       },
     });
 
@@ -530,8 +540,12 @@ const myReady = function(selector, resizeCB) {
   selectMusicianInstruments.data(
     'selected',
     SelectUtils.selected(selectMusicianInstruments));
+
   selectMusicianInstruments.on('change', function(event) {
     const $self = $(this);
+
+    PHPMyEdit.tableDialogLock(container, true);
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
 
     const lockOther = function(lock) {
       SelectUtils.locked(selectProjectInstruments, lock);
@@ -565,6 +579,9 @@ const myReady = function(selector, resizeCB) {
 
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
+
+        PHPMyEdit.tableDialogLoadIndicator(container, false);
+        PHPMyEdit.tableDialogLock(container, false);
       },
     });
 
