@@ -91,6 +91,17 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
+    self::INSTRUMENTS_TABLE => [
+      'entity' => Entities\Instrument::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::PROJECT_INSTRUMENTS_TABLE,
+          'column' => 'instrument_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
     self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
@@ -98,6 +109,17 @@ class ProjectParticipants extends PMETableViewBase
         'musician_id' => 'musician_id',
       ],
       'column' => 'instrument_id',
+    ],
+    self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians' => [
+      'entity' => Entities\Instrument::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+          'column' => 'instrument_id',
+        ],
+      ],
+      'column' => 'id',
     ],
     self::MUSICIAN_PHOTO_JOIN_TABLE => [
       'entity' => Entities\MusicianPhoto::class,
@@ -375,7 +397,21 @@ class ProjectParticipants extends PMETableViewBase
       'sort'     => true,
     ];
 
-    $joinTables = $this->defineJoinStructure($opts);
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
+      switch ($table) {
+      case self::INSTRUMENTS_TABLE:
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+        break;
+      case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+        break;
+      default:
+        break;
+      }
+    });
+
+    $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
@@ -519,55 +555,44 @@ class ProjectParticipants extends PMETableViewBase
       );
     }
 
-    $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
-      'table' => self::INSTRUMENTS_TABLE,
-      'entity' => Entities\Instrument::class,
-      'identifier' => [ 'id' => true ], // just need the key
-    ], 'name');
+    $fdd = [
+      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+      'name'        => $this->l->t('Project Instrument'),
+      'css'         => [
+        'postfix' => [
+          'project-instruments',
+          'tooltip-top',
+          'select-wide',
+        ],
+      ],
+      'display|LVF' => ['popup' => 'data'],
+      'sql|VDCP'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+      'select'      => 'M',
+      'values' => [
+        'column'      => 'id',
+        'description' => [
+          'columns' => [ '$table.l10n_name' ],
+          'ifnull' => [ false ],
+          'cast' => [ false ],
+        ],
+        'orderby'     => '$table.sort_order ASC',
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
+      ],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
+    ];
+    $fdd['values|VDPC'] = array_merge($fdd['values'], [
+      'filters' => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
+    ]);
+    $fdd['values|LFV'] = array_merge($fdd['values'], [
+      'filters' => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi WHERE '.$this->projectId.' = pi.project_id)',
+    ]);
 
+    // Use $fdd defined above after tweaking its values
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id',
-      [
-        'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
-        'name'        => $this->l->t('Project Instrument'),
-        'css'         => [
-          'postfix' => [
-            'project-instruments',
-            'tooltip-top',
-            'select-wide',
-          ],
-        ],
-        'display|LVF' => ['popup' => 'data'],
-        'sql|VDCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-        'select'      => 'M',
-        'values|VDPC' => [
-          'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
-          'column'      => 'id',
-          'description' => [
-            'columns' => [ 'l10n_name' ],
-            'ifnull' => [ false ],
-            'cast' => [ false ],
-          ],
-          'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
-       ],
-        'values|LFV' => [
-          'table'       => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
-          'column'      => 'id',
-          'description' => [
-            'columns' => [ '$table.l10n_name' ],
-            'ifnull' => [ false ],
-            'cast' => [ false ],
-          ],
-          'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id',
-          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi WHERE '.$this->projectId.' = pi.project_id)',
-        ],
-        //'values2' => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
-      ]);
-    $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
+      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
+
+    // kind of a hack, in principle this should go to the global join structure
+    // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
@@ -579,7 +604,7 @@ class ProjectParticipants extends PMETableViewBase
       'values' => [
         'column' => 'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
     ];
 
@@ -828,9 +853,9 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     $fdd = [
-      'name'        => $this->l->t('All Instruments'),
-      'tab'         => [ 'id' => [ 'musician', 'instrumentation' ] ],
-      'css'         => [
+      'name' => $this->l->t('All Instruments'),
+      'tab'  => [ 'id' => [ 'musician', 'instrumentation' ] ],
+      'css'  => [
         'postfix' => [
           'musician-instruments',
           'tooltip-top',
@@ -846,17 +871,17 @@ class ProjectParticipants extends PMETableViewBase
                         : 'GROUP_CONCAT(DISTINCT IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
       'select'      => 'M',
       'values' => [
-        'table'       => self::INSTRUMENTS_TABLE,
         'column'      => 'id',
         'description' => 'name',
         'orderby'     => '$table.sort_order ASC',
-        'join'        => '$join_col_fqn = '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.instrument_id'
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
       ],
       'values2' => $this->instrumentInfo['byId'],
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
+    // Use $fdd defined above after tweaking its values
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
