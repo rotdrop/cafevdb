@@ -143,15 +143,23 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  * Submit the base form in order to synchronize any changes caused
  * by the dialog form.
  *
- * @param {String} outerSelector TBD.
+ * @param {string} outerSelector The CSS selector identifying the form
+ * to reload.
+ *
+ * @param {Object} options Further options. Currently:
+ * @param {bool} options.keepLocked Do not destroy "locking" modal
+ * planes.
+ * @param {bool} options.keepBusy Do not reset the busy indicators.
  */
-const pmeSubmitOuterForm = function(outerSelector) {
+const pmeSubmitOuterForm = function(outerSelector, options) {
   outerSelector = pmeSelector(outerSelector);
+  options = $.extend({}, { keepLocked: false, keepBusy: false }, options);
 
   // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
   // on. Be careful not to trigger top and bottom buttons.
-  const outerForm = $(outerSelector + ' ' + pmeFormSelector());
+  const $outerForm = $(outerSelector + ' ' + pmeFormSelector());
+  $outerForm.data('submitOptions', options);
 
   const submitNames = [
     'morechange',
@@ -162,13 +170,13 @@ const pmeSubmitOuterForm = function(outerSelector) {
     'reloadlist',
   ];
 
-  const button = $(outerForm).find(pmeSysNameSelectors('input', submitNames)).first();
+  const button = $outerForm.find(pmeSysNameSelectors('input', submitNames)).first();
   if (button.length > 0) {
     button.trigger('click');
   } else {
     // submit the outer form
-    // outerForm.submit();
-    pseudoSubmit(outerForm, $(), outerSelector, 'pme');
+    // $outerForm.submit();
+    pseudoSubmit($outerForm, $(), outerSelector, 'pme');
   }
 };
 
@@ -266,7 +274,9 @@ const pmePost = function(post, callbacks) {
 
 const blockTableDialog = function(dialogHolder) {
   const $dialogWidget = dialogHolder.dialog('widget');
-  $dialogWidget.data('z-index', parseInt($dialogWidget.css('z-index')));
+  if (!dialogHolder.data('z-index')) {
+    $dialogWidget.data('z-index', parseInt($dialogWidget.css('z-index')));
+  }
   $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
 };
 
@@ -385,7 +395,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
   if (container.find(pmeClassSelector('form', 'list')).length) {
     // main list view, just leave as is.
     const resize = function(reason) {
-      console.info('callling change callback');
       changeCallback({ reason });
       const reloadSel = pmeClassSelectors('input', ['reload', 'query']);
       container.find(reloadSel)
@@ -397,7 +406,6 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     };
     resize('dialogOpen');
     container.on('pmetable:layoutchange', function(event) {
-      console.info('layout change handler');
       resize('layoutChange');
     });
     return;
@@ -594,7 +602,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
   if (options.modified && options.ambientContainerSelector) {
     // might be costly?
-    pmeSubmitOuterForm(options.ambientContainerSelector);
+    pmeSubmitOuterForm(options.ambientContainerSelector, { keepLocked: true });
   }
 };
 
@@ -901,6 +909,8 @@ const pmeTableDialogOpen = function(tableOptions, post) {
  */
 const pseudoSubmit = function(form, element, selector, resetFilter) {
 
+  const submitOptions = form.data('submitOptions') || {};
+
   if (resetFilter === true) {
     form.append('<input type="hidden"'
                 + ' name="' + pmeSys('sw') + '"'
@@ -919,12 +929,22 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
           + 'name="' + element.attr('name') + '" '
           + 'value="' + element.val() + '"/>');
     }
+    for (const [name, value] of Object.entries(submitOptions)) {
+      form.append(
+        '<input type="hidden" '
+          + 'name="' + name + '" '
+          + 'value="' + value + '"/>');
+    }
     form.submit();
     return false;
   }
 
-  Page.busyIcon(true);
-  modalizer(true);
+  if (!submitOptions.keepBusy) {
+    Page.busyIcon(true);
+  }
+  if (!submitOptions.keepLocked) {
+    modalizer(true);
+  }
 
   templateRenderer = templateRenderer.val();
   const template = Page.templateFromRenderer(templateRenderer);
@@ -966,9 +986,13 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
         pmeTweaks(container);
         CAFEVDB.toolTipsInit(selector);
 
-        /* kill the modalizer */
-        Page.busyIcon(false);
-        modalizer(false);
+        // kill the busy indicators and modalizer if appropriate
+        if (!submitOptions.keepBusy) {
+          Page.busyIcon(false);
+        }
+        if (!submitOptions.keepLocked) {
+          modalizer(false);
+        }
         CAFEVDB.unfocus(); // move focus away from submit button
 
         container.trigger('pmetable:layoutchange');
@@ -1565,7 +1589,6 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
-
         return pseudoSubmit($(this.form), $(this), containerSel);
       });
   }
