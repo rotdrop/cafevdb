@@ -673,66 +673,30 @@ const projectWebPageTabHandler = function(event, ui, container) {
   }
 };
 
-const tableLoadCallback = function(selector, parameters, resizeCB)
+const articleSelectOnChange = function(event, container) {
+  const $this = $(this);
+
+  const projectId = $this.data('projectId');
+  const selected = $this.find('option:selected');
+  const articleId = selected.val();
+  const articleData = selected.data('article');
+  // just do it ...
+  projectWebPageRequest({
+    action: 'link',
+    articleId,
+    projectId,
+    articleData,
+  }, container);
+
+  return false;
+};
+
+const attachArticleSelectHandlers = function(containerContext)
 {
-  const container = PHPMyEdit.container(selector);
-  const containerNode = container[0];
-  actionMenu(selector);
-  pmeFormInit(selector);
-  let imagesReady = false;
-  const imagePoller = function(callback) {
-    if (!imagesReady) {
-      const poller = setInterval(function() {
-        if (imagesReady) {
-          clearInterval(poller);
-          callback();
-        }
-      }, 100);
-    } else {
-      callback();
-    }
-  };
-
-  const posterContainer = container.find('.project-poster');
-  if (posterContainer.length > 0) {
-    let readyCountDown = posterContainer.length;
-    posterContainer.each(function(index) {
-      Photo.ready($(this), function() {
-        imagesReady = --readyCountDown <= 0;
-      });
-    });
-  } else {
-    container.find('div.photo, span.photo').imagesLoaded(function() {
-      imagesReady = true;
-    });
-  }
-
-  // Intercept app-navigation events here and redirect to the page
-  // loader
-  container.on('click', 'li.nav > a.nav', function(event) {
-    const post = $(this).data('post');
-    Page.loadPage(post);
-    // alert('post: '+post);
-    return false;
-  });
-
-  // projectWebPageRequest({ action: 'ping' }, container);
-
-  const articleBox = container.find('#projectWebArticles');
-
-  const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
-  let numDisplayFrames = displayFrames.length; // count-down variable
-
-  const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
-  let numChangeFrames = changeFrames.length;
-  // console.info('NUM CHANGE FRAMES', numChangeFrames);
-
-  // allFrames also contains some div + all available iframes
-  const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
-  const allChangeFrames = articleBox.find('.cmsarticleframe.change');
-  // const allContainers = articleBox.find('.cmsarticlecontainer');
-
+  const container = containerContext.container;
+  const articleBox = containerContext.articleSelect;
   const articleSelect = container.find('#cmsarticleselect');
+
   articleSelect.chosen({
     width: 'auto',
     disable_search_threshold: 10,
@@ -748,283 +712,358 @@ const tableLoadCallback = function(selector, parameters, resizeCB)
   });
 
   articleSelect.on('change', function(event) {
-    event.preventDefault();
-
-    const projectId = articleSelect.data('projectId');
-    const selected = articleSelect.find('option:selected');
-    const articleId = selected.val();
-    const articleData = selected.data('article');
-    // just do it ...
-    projectWebPageRequest({
-      action: 'link',
-      articleId,
-      projectId,
-      articleData,
-    }, container);
-
-    return false;
+    return articleSelectOnChange(event, container);
   });
+};
 
-  const scrollbarAdjust = function() {
-    const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
-    articleBox.css('margin-right', scrollBarWidth + 'px');
-  };
+const imagePoller = function(containerContext, callback) {
+  if (!containerContext.imagesReady) {
+    const poller = setInterval(function() {
+      if (containerContext.imagesReady) {
+        clearInterval(poller);
+        callback();
+      }
+    }, 100);
+  } else {
+    callback();
+  }
+};
 
-  const forceSize = function(iframe) {
-    const domFrame = iframe[0];
-    const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
-    const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
-    iframe.css({
+const scrollbarAdjust = function(containerContext) {
+  const containerNode = containerContext.container[0];
+  const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
+  containerContext.articleBox.css('margin-right', scrollBarWidth + 'px');
+};
+
+const forceSize = function(containerContext, iframe) {
+  const domFrame = iframe[0];
+  const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
+  const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
+  iframe.css({
+    width: scrollWidth + 'px',
+    height: scrollHeight + 'px',
+    overflow: 'hidden',
+  });
+  imagePoller(containerContext, function() {
+    containerContext.resizeCB();
+    scrollbarAdjust(containerContext);
+  });
+};
+
+const displayArticleLoad = function(containerContext, iframe) {
+  if (typeof iframe !== 'undefined') {
+    const $iframe = $(iframe);
+    const contents = $iframe.contents();
+
+    // For the pretty-print version. We remove everything
+    // except the article itself
+    contents.find('div#header').remove();
+    contents.find('div#footer').remove();
+    contents.find('div.navi').remove();
+    contents.find('body').css({
+      'min-width': 'unset',
+      width: 'unset',
+    });
+    contents.find('#content').css({
+      width: 'auto',
+      height: '100%',
+    });
+    const itemText = contents.find('div.item-text');
+    itemText.css({
+      width: '700px',
+      // 'min-width': '600px',
+      'margin-left': '10px',
+      left: 'unset',
+      position: 'unset',
+    });
+    itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
+
+    const scrollWidth = iframe.contentWindow.document.body.scrollWidth;
+    const scrollHeight = iframe.contentWindow.document.body.scrollHeight;
+    $iframe.css({
       width: scrollWidth + 'px',
       height: scrollHeight + 'px',
-      overflow: 'hidden',
     });
-    imagePoller(function() {
-      resizeCB();
-      scrollbarAdjust();
-    });
-  };
 
-  const displayArticleLoad = function(frame) {
-    if (typeof frame !== 'undefined') {
-      const self = frame;
-      const iframe = $(self);
-      const contents = iframe.contents();
+    // alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
 
-      // For the pretty-print version. We remove everything
-      // except the article itself
-      contents.find('div#header').remove();
-      contents.find('div#footer').remove();
-      contents.find('div.navi').remove();
-      contents.find('body').css({
-        'min-width': 'unset',
-        width: 'unset',
-      });
-      contents.find('#content').css({
-        width: 'auto',
-        height: '100%',
-      });
-      const itemText = contents.find('div.item-text');
-      itemText.css({
-        width: '700px',
-        // 'min-width': '600px',
-        'margin-left': '10px',
-        left: 'unset',
-        position: 'unset',
-      });
-      itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
+    --containerContext.numDisplayFrames;
+  }
 
-      const scrollWidth = self.contentWindow.document.body.scrollWidth;
-      const scrollHeight = self.contentWindow.document.body.scrollHeight;
-      iframe.css({
-        width: scrollWidth + 'px',
-        height: scrollHeight + 'px',
-      });
+  const articleBox = containerContext.articleBox;
+  if (containerContext.numDisplayFrames === 0) {
+    $('#cmsFrameLoader').fadeOut(function() {
+      articleBox.tabs({
+        active: 0,
+        heightStyle: 'auto',
+        activate(event, ui) {
+          // nothing
+        },
+        create(event, ui) {
+          containerContext.articleBox.height('auto');
 
-      // alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
+          const forcedWidth = articleBox.width();
+          const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
 
-      --numDisplayFrames;
-    }
+          containerContext.allDisplayFrames.width(forcedWidth).height(forcedHeight);
 
-    // alert('Display Frames: ' + numDisplayFrames);
-    if (numDisplayFrames === 0) {
-      $('#cmsFrameLoader').fadeOut(function() {
-        articleBox.tabs({
-          active: 0,
-          heightStyle: 'auto',
-          activate(event, ui) {
-            // nothing
-          },
-          create(event, ui) {
-            articleBox.height('auto');
-
-            const forcedWidth = articleBox.width();
-            const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-
-            allDisplayFrames.width(forcedWidth);
-            allDisplayFrames.height(forcedHeight);
-
-            imagePoller(function() {
-              resizeCB();
-              scrollbarAdjust();
-            });
-          },
-          beforeActivate(event, ui) {
-            return projectWebPageTabHandler(event, ui, container);
-          },
-        });
-      });
-    } else if (numDisplayFrames < 0) {
-      // can happen, moving dialogs around causes
-      // reloads, at least with FF.
-
-      const forcedWidth = articleBox.width();
-      const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-
-      allDisplayFrames.width(forcedWidth);
-      allDisplayFrames.height(forcedHeight);
-
-      // if (false) {
-      //   // In principle, this should not be necessary
-      //   // as the height of the articleBox should not change.
-      //   imagePoller(function() {
-      //     resizeCB();
-      //     scrollbarAdjust();
-      //   });
-      // }
-    }
-  };
-
-  const changeArticleLoad = function(frame) {
-    // console.info('HELLO LOAD');
-    if (typeof frame !== 'undefined') {
-      const self = frame;
-      const iframe = $(self);
-      const contents = iframe.contents();
-
-      // in order to be prepared for automatic reloads
-      // caused by resize or redraw events we have to
-      // update the src-uri of the iframe.
-      // alert('src: '+ self.contentWindow.location.href);
-
-      const wrapper = contents.find('#rex-wrapper');
-      const website = contents.find('#rex-website');
-      const rexForm = wrapper.find('form#REX_FORM');
-
-      // set to auto and fix later for correct size and
-      // scrollbars when necessary.
-      container.css({
-        height: 'auto',
-        width: 'auto',
-      });
-
-      // The below lines style the edit window.
-      contents.find('#rex-navi-logout').remove();
-      contents.find('#rex-navi-main').remove();
-      contents.find('#rex-redaxo-link').remove();
-      contents.find('#rex-footer').remove();
-      contents.find('#rex-header').remove();
-      contents.find('#rex-title').remove();
-      contents.find('#rex-a256-searchbar').remove();
-      contents.find('body').css({
-        margin: 0,
-        'background-image': 'none',
-      });
-      contents.find('#rex-output').css({ margin: 0 });
-      contents.find('#rex-navi-path a').removeAttr('href');
-
-      wrapper.css({
-        padding: 0,
-        margin: 0,
-        float: 'left',
-      });
-      website.css({
-        width: '100%', // wrapper.css('width'),
-        'background-image': 'none',
-      });
-      contents.find('textarea').css({ 'max-width': '720px' });
-
-      const scrollWidth = self.contentWindow.document.body.scrollWidth;
-      const scrollHeight = self.contentWindow.document.body.scrollHeight;
-      iframe.css({
-        width: scrollWidth + 'px',
-        height: scrollHeight + 'px',
-      });
-
-      const articleContainer = iframe.parent();
-      articleContainer.css({
-        height: 'unset',
-        width: 'unset',
-      });
-
-      const editArea = rexForm.find('textarea');
-      if (editArea.length > 0) {
-        textareaResize(editArea);
-
-        rexForm
-          .off('resize', 'textarea')
-          .on('resize', 'textarea', function() {
-            forceSize(iframe);
-            return false;
+          imagePoller(containerContext, function() {
+            containerContext.resizeCB();
+            scrollbarAdjust(containerContext);
           });
-      }
-
-      rexForm.off('resize', '.mceEditor');
-      rexForm.on('resize', '.mceEditor', function() {
-        forceSize(iframe);
-        return false;
+        },
+        beforeActivate(event, ui) {
+          return projectWebPageTabHandler(event, ui, containerContext.container);
+        },
       });
+    });
+  } else if (containerContext.numDisplayFrames < 0) {
+    // can happen, moving dialogs around causes
+    // reloads, at least with FF.
 
-      --numChangeFrames;
-      // console.info('NUM CHANGE FRAMES', numChangeFrames);
-    }
-    // alert('Change Frames: ' + numChangeFrames);
-    if (numChangeFrames === 0) {
-      // console.info('NUM CHANGE FRAMES', numChangeFrames);
-      $('#cmsFrameLoader').fadeOut(function() {
-        container.find('#projectWebArticles').tabs({
-          active: 0,
-          create(event, ui) {
-            articleBox.height('auto');
-            imagePoller(function() {
-              resizeCB();
-              scrollbarAdjust();
-              // $('#cmsarticleselect_chosen').width('80%');
-            });
-          },
-          activate(event, ui) {
-            const iframe = ui.newPanel.find('iframe');
-            if (iframe.length === 1) {
-              forceSize(iframe);
-            } else {
-              resizeCB();
-              scrollbarAdjust();
-            }
-          },
-          beforeActivate(event, ui) {
-            return projectWebPageTabHandler(event, ui, container);
-          },
+    const forcedWidth = articleBox.width();
+    const forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+
+    containerContext.allDisplayFrames.width(forcedWidth).height(forcedHeight);
+  }
+};
+
+const changeArticleLoad = function(containerContext, iframe) {
+  const container = containerContext.container;
+
+  if (typeof iframe !== 'undefined') {
+    const $iframe = $(iframe);
+    const contents = $iframe.contents();
+
+    // in order to be prepared for automatic reloads
+    // caused by resize or redraw events we have to
+    // update the src-uri of the iframe.
+    // alert('src: '+ self.contentWindow.location.href);
+
+    const wrapper = contents.find('#rex-wrapper');
+    const website = contents.find('#rex-website');
+    const rexForm = wrapper.find('form#REX_FORM');
+
+    // set to auto and fix later for correct size and
+    // scrollbars when necessary.
+    container.css({
+      height: 'auto',
+      width: 'auto',
+    });
+
+    // The below lines style the edit window.
+    contents.find('#rex-navi-logout').remove();
+    contents.find('#rex-navi-main').remove();
+    contents.find('#rex-redaxo-link').remove();
+    contents.find('#rex-footer').remove();
+    contents.find('#rex-header').remove();
+    contents.find('#rex-title').remove();
+    contents.find('#rex-a256-searchbar').remove();
+    contents.find('body').css({
+      margin: 0,
+      'background-image': 'none',
+    });
+    contents.find('#rex-output').css({ margin: 0 });
+    contents.find('#rex-navi-path a').removeAttr('href');
+
+    wrapper.css({
+      padding: 0,
+      margin: 0,
+      float: 'left',
+    });
+    website.css({
+      width: '100%', // wrapper.css('width'),
+      'background-image': 'none',
+    });
+    contents.find('textarea').css({ 'max-width': '720px' });
+
+    const scrollWidth = iframe.contentWindow.document.body.scrollWidth;
+    const scrollHeight = iframe.contentWindow.document.body.scrollHeight;
+    $iframe.css({
+      width: scrollWidth + 'px',
+      height: scrollHeight + 'px',
+    });
+
+    const articleContainer = $iframe.parent();
+    articleContainer.css({
+      height: 'unset',
+      width: 'unset',
+    });
+
+    const editArea = rexForm.find('textarea');
+    if (editArea.length > 0) {
+      textareaResize(editArea);
+
+      rexForm
+        .off('resize', 'textarea')
+        .on('resize', 'textarea', function() {
+          forceSize(containerContext, $iframe);
+          return false;
         });
-        $('#projectWebArticles').css({ opacity: 1.0 });
-      });
-    } else if (numChangeFrames < 0) {
-      // < 0 happens when inside the frame a reload
-      // is triggered, after the initial loading of all frames.
-      imagePoller(function() {
-        resizeCB();
-        scrollbarAdjust();
-        $('#projectWebArticles').css({ opacity: 1.0 });
-      });
     }
+
+    rexForm.off('resize', '.mceEditor');
+    rexForm.on('resize', '.mceEditor', function() {
+      forceSize(containerContext, $iframe);
+      return false;
+    });
+
+    --containerContext.numChangeFrames;
+  }
+
+  const articleBox = containerContext.articleBox;
+  if (containerContext.numChangeFrames === 0) {
+    $('#cmsFrameLoader').fadeOut(function() {
+      container.find('#projectWebArticles').tabs({
+        active: 0,
+        create(event, ui) {
+          articleBox.height('auto');
+          imagePoller(containerContext, function() {
+            containerContext.resizeCB();
+            scrollbarAdjust(containerContext);
+          });
+        },
+        activate(event, ui) {
+          const $iframe = ui.newPanel.find('iframe');
+          if ($iframe.length === 1) {
+            forceSize(containerContext, $iframe);
+          } else {
+            containerContext.resizeCB();
+            scrollbarAdjust(containerContext);
+          }
+        },
+        beforeActivate(event, ui) {
+          return projectWebPageTabHandler(event, ui, container);
+        },
+      });
+      $('#projectWebArticles').css({ opacity: 1.0 });
+    });
+  } else if (containerContext.numChangeFrames < 0) {
+    // < 0 happens when inside the frame a reload
+    // is triggered, after the initial loading of all frames.
+    imagePoller(containerContext, function() {
+      containerContext.resizeCB();
+      scrollbarAdjust(containerContext);
+      $('#projectWebArticles').css({ opacity: 1.0 });
+    });
+  }
+};
+
+const tableLoadCallback = function(selector, parameters, resizeCB) {
+  const container = PHPMyEdit.container(selector);
+  actionMenu(selector);
+  pmeFormInit(selector);
+
+  const articleBox = container.find('#projectWebArticles');
+  const displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
+  const changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
+  const allDisplayFrames = articleBox.find('.cmsarticleframe.display');
+  const allChangeFrames = articleBox.find('.cmsarticleframe.change');
+
+  const containerContext = {
+    container,
+    resizeCB,
+    imagesReady: false,
+    articleBox,
+    displayFrames,
+    numDisplayFrames: displayFrames.length,
+    allDisplayFrames,
+    changeFrames,
+    numChangeFrames: changeFrames.length,
+    allChangeFrames,
   };
 
   if (allDisplayFrames.length > 0) {
-    // alert('all dpy frames: '+allDisplayFrames.length);
     if (displayFrames.length > 0) {
-      // alert('dpy frames: '+displayFrames.length);
-      displayFrames.on('load', function(event) {
-        displayArticleLoad(this);
-        // alert('Load');
+      displayFrames.each(function(index) {
+        const $this = $(this);
+        if ($this.data('cafevdbLoadEvent') === 1) {
+          console.warn('DISPLAY FRAME LOAD EVENT LOST; TOO LATE');
+          displayArticleLoad(containerContext, this);
+        } else {
+          const iframeLoadDeferred = $.Deferred()
+            .done(function() {
+              console.info('IFRAME LOAD CAUGHT IN TIME');
+            })
+            .fail(function() {
+              console.warn('IFRAME LOAD LOST, PROBABLY TOO LATE');
+              $this.trigger('load');
+            });
+          $this.on('load', function(event) {
+            iframeLoadDeferred.resolve();
+            displayArticleLoad(containerContext, this);
+          });
+          const timeout = 10;
+          setTimeout(function() {
+            iframeLoadDeferred.reject();
+          }, timeout * 1000);
+        }
       });
     } else {
-      displayArticleLoad();
+      displayArticleLoad(containerContext);
     }
   } else if (allChangeFrames.length > 0) {
     if (changeFrames.length > 0) {
       $('#projectWebArticles').css({ opacity: 0.0 });
-      changeFrames.on('load', function(event) {
-        changeArticleLoad(this);
+      changeFrames.each(function(index) {
+        const $this = $(this);
+        if ($this.data('cafevdbLoadEvent') === 1) {
+          console.warn('DISPLAY FRAME LOAD EVENT LOST; TOO LATE');
+          changeArticleLoad(containerContext, this);
+        } else {
+          const iframeLoadDeferred = $.Deferred()
+            .done(function() {
+              console.info('IFRAME LOAD CAUGHT IN TIME');
+            })
+            .fail(function() {
+              console.warn('IFRAME LOAD LOST, PROBABLY TOO LATE');
+              $this.trigger('load');
+            });
+          $this.on('load', function(event) {
+            iframeLoadDeferred.resolve();
+            changeArticleLoad(containerContext, this);
+          });
+          const timeout = 10;
+          setTimeout(function() {
+            iframeLoadDeferred.reject();
+          }, timeout * 1000);
+        }
       });
     } else {
-      changeArticleLoad();
+      changeArticleLoad(containerContext);
     }
   } else {
     // Just execute the resize callback:
-    imagePoller(function() {
+    imagePoller(containerContext, function() {
       resizeCB();
-      scrollbarAdjust();
+      scrollbarAdjust(containerContext);
     });
   }
+
+  const posterContainer = container.find('.project-poster');
+  if (posterContainer.length > 0) {
+    let readyCountDown = posterContainer.length;
+    posterContainer.each(function(index) {
+      Photo.ready($(this), function() {
+        containerContext.imagesReady = --readyCountDown <= 0;
+      });
+    });
+  } else {
+    container.find('div.photo, span.photo').imagesLoaded(function() {
+      containerContext.imagesReady = true;
+    });
+  }
+
+  // Intercept app-navigation events here and redirect to the page
+  // loader
+  container.on('click', 'li.nav > a.nav', function(event) {
+    const post = $(this).data('post');
+    Page.loadPage(post);
+    // alert('post: '+post);
+    return false;
+  });
+
+  attachArticleSelectHandlers(containerContext);
 
   container.find('div.photo, .cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
     event.preventDefault();
