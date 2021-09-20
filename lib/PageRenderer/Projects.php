@@ -439,12 +439,12 @@ __EOT__;
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'display|VDAC' => [
+        'display|VD' => [
           'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'display|P' => [
+        'display|P' => [ // P == paste, copy
           'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '<input type="button"
@@ -454,6 +454,54 @@ __EOT__;
        value="'.$this->l->t('Clear').'"
 />
 </div>',
+        ],
+        'display|AC' => [ // add, copy
+          'popup' => false,
+          'prefix' => function($op, $when, $row, $k, $pme) {
+            return '<div class="cell-wrapper">
+  <div class="dropdown-menu">';
+          },
+          'postfix' => function($op, $when, $row, $k, $pme) {
+            $html = '</div>
+'; // close dropdown-menu
+
+            $instrumentsIndex = $k - 1;
+            $instruments = explode(',', $row['qf'.$instrumentsIndex]);
+            $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
+
+            $html .= '<div class="instrument-voice request">';
+            foreach ($instruments as $instrument) {
+              $html .= '
+  <div class="instrument-voice container request instrument-'.$instrument.' hidden">
+    <label for="instrument-voice-request-'.$instrument.'"
+           class="instrument-'.$instrument.' tooltip-auto"
+           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request')]).'">
+      '.$this->l->t('%1$s, #voices', $instrumentNames[$instrument]).'
+      <input type="number"
+             id="instrument-voice-request-'.$instrument.'"
+             min="1"
+             name="instrumentVoiceRequest['.$instrument.']"
+             placeholder="'.$this->l->t('e.g. %s', 3).'"
+             data-instrument="'.$instrument.'"
+             class="instrument-voice instrument-'.$instrument.' input"/>
+    </label>
+    <input type="button"
+           name="instrumentVoiceRequestConfirm"
+           data-instrument="'.$instrument.'"
+           class="instrument-voice instrument-'.$instrument.' confirm"
+           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request:confirm')]).'"
+           value="'.$this->l->t('ok').'"/>
+    <input type="hidden"
+           name="'.$pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]').'"
+           value=""
+           class="instrument-voice instrument-'.$instrument.' data"
+           data-instrument="'.$instrument.'"
+           disabled/>
+  </div>';
+            }
+            $html .= '</div>'; // number input field
+            return $html;
+          },
         ],
         'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation-voices').'-ACP'],
         'sql' => "GROUP_CONCAT(

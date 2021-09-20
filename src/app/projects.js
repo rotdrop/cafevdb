@@ -36,6 +36,7 @@ import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
 import * as DialogUtils from './dialog-utils.js';
+import * as SelectUtils from './select-utils.js';
 import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
 import modalizer from './modalizer.js';
 
@@ -124,7 +125,6 @@ const wikiPopup = function(post, reopen) {
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
-  // console.info('POST', post);
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -1173,16 +1173,28 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   // pages. The idea is to provide enough but not too much excess
   // voices to select.
 
-  container.on('change', 'select.projects--instrumentation, select.projects--instrumentation-voices', function(event) {
+  /**
+   * Update the instrument-voices select with data from an Ajax call
+   *
+   * @param {Object} additionalVoices Array of additional voices to add
+   * in the form { INSTRUMENT: VOICE }.
+   */
+  const updateInstrumentVoices = function(additionalVoices) {
     const $instrumentsSelect = container.find('select.projects--instrumentation');
     const $instrumentationVoicesSelect = container.find('select.projects--instrumentation-voices');
+
     const cleanup = function() {};
-    const post = $.param({
-      instruments: $instrumentsSelect.attr('name'),
-      voices: $instrumentationVoicesSelect.attr('name'),
+    const instrumentsName = $instrumentsSelect.attr('name');
+    const voicesName = $instrumentationVoicesSelect.attr('name');
+    let post = $.param({
+      instruments: instrumentsName,
+      voices: voicesName,
     })
           + '&' + $instrumentsSelect.serialize()
           + '&' + $instrumentationVoicesSelect.serialize();
+    for (const [instrument, voice] of Object.entries(additionalVoices || {})) {
+      post += '&' + $.param({ [voicesName]: instrument + ':' + voice });
+    }
     $.post(generateUrl('projects/change-instrumentation'), post)
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
@@ -1200,6 +1212,63 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
           .trigger('chosen:updated');
         Notification.messages(rqData.message);
       });
+  };
+
+  const inputVoicesHandler = function(event, input) {
+    const $this = $(input);
+
+    const $instrumentationVoicesSelect = container.find('select.projects--instrumentation-voices');
+    const selectCombo = $instrumentationVoicesSelect.parent();
+    selectCombo.show();
+    $this.closest('.container').hide();
+
+    SelectUtils.locked($instrumentationVoicesSelect, false);
+
+    if ($this.val() !== '') {
+      const dataHolder = $this.closest('.container').find('input.data');
+      const instrument = dataHolder.data('instrument');
+      const voice = parseInt($this.val());
+      updateInstrumentVoices({ [instrument]: voice });
+    }
+
+    return false;
+  };
+
+  container.on('blur', 'div.instrument-voice.request.container input.instrument-voice.input', function(event) {
+    return inputVoicesHandler(event, this);
+  });
+
+  container.on('click', 'div.instrument-voice.request.container input.instrument-voice.confirm', function(event) {
+    const instrument = $(this).data('instrument');
+    return inputVoicesHandler(event, $(this).parent().find('input.input.instrument-' + instrument));
+  });
+
+  container.on('change', 'select.projects--instrumentation, select.projects--instrumentation-voices', function(event) {
+    const $instrumentationVoicesSelect = container.find('select.projects--instrumentation-voices');
+
+    // intercept request to enter voices-number manually
+    const selectedVoices = SelectUtils.selected($instrumentationVoicesSelect);
+    for (const voiceItem of selectedVoices) {
+      const [instrument, voice] = voiceItem.split(':');
+      if (voice === '?') {
+        const inputVoices = container.find('.pme-value div.instrument-voice.request.container');
+        const selectCombo = $instrumentationVoicesSelect.parent();
+        const inputCombo = inputVoices.filter('div.instrument-' + instrument);
+        SelectUtils.locked($instrumentationVoicesSelect, true);
+        selectCombo.hide();
+        inputCombo.show();
+        const index = selectedVoices.findIndex((v) => voiceItem === v);
+        if (index > -1) {
+          selectedVoices.splice(index, 1);
+        }
+        SelectUtils.selected($instrumentationVoicesSelect, selectedVoices);
+        return false;
+      }
+    }
+
+    updateInstrumentVoices();
+
+    return false; // select handler
   });
 
   return false; // table load callback
