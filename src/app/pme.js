@@ -228,9 +228,9 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   container.html(content);
   container.find('iframe').on('load', function(event) {
     const $this = $(this);
-    const $data = $this.data();
-    $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
-    console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+    const data = $this.data();
+    data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
+    console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
   });
 
   tableDialogLoadIndicator(container, true);
@@ -725,9 +725,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       dialogHolder.html(htmlContent);
       dialogHolder.find('iframe').on('load', function(event) {
         const $this = $(this);
-        const $data = $this.data();
-        $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
-        console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+        const data = $this.data();
+        data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
       });
 
       dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
@@ -973,9 +973,9 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
       container.find('iframe').on('load', function(event) {
         const $this = $(this);
-        const $data = $this.data();
-        $data.cafevdbLoadEvent = ($data.cafevdbLoadEvent || 0) + 1;
-        console.info('IFRAME LOAD', $this.attr('class'), $data.cafevdbLoadEvent);
+        const data = $this.data();
+        data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
       });
 
       pmeInit(selector);
