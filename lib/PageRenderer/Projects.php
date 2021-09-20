@@ -471,13 +471,18 @@ __EOT__;
         // Values for copy and change, including excess voices to select
         'values|CP' => [
           'table' => "SELECT
-  CONCAT(pin.instrument_id,'".self::JOIN_KEY_SEP."', n.seq) AS value,
+  CONCAT(
+    pin.instrument_id,
+   '".self::JOIN_KEY_SEP."',
+   IF(n.seq <= GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + MAX(pin.voice)), n.seq, '?')
+  ) AS value,
   pin.project_id,
   i.id AS instrument_id,
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order,
   pin.quantity,
+  GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + MAX(pin.voice)) AS voices_limit,
   n.seq
   FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
@@ -488,7 +493,7 @@ __EOT__;
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= GREATEST(".self::NUM_VOICES_MIN.", (pin.voice + ".self::NUM_VOICES_EXTRA.")) AND n.seq > 0 AND n.seq <= GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
+    ON n.seq <= 1+GREATEST(".self::NUM_VOICES_MIN.", (pin.voice + ".self::NUM_VOICES_EXTRA.")) AND n.seq > 0 AND n.seq <= 1+GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pin.project_id = \$record_id[id]
   GROUP BY
@@ -499,7 +504,7 @@ __EOT__;
     i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ 'l10n_name', 'IF($table.seq > 0, CONCAT(" ", $table.seq), "")' ],
+            'columns' => [ 'l10n_name', 'IF($table.seq > 0, CONCAT(" ", IF($table.seq <= $table.voices_limit, $table.seq, \'?\')), "")' ],
             'divs' => '',
           ],
           'orderby' => '$table.sort_order ASC, $table.seq ASC',

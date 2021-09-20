@@ -196,15 +196,22 @@ class ProjectsController extends Controller {
 
     $voicesSelectArray = [];
     foreach ($instruments as $instrument) {
-      $highest = max($voicesByInstrument[$instrument]??[1]);
-      $highest = max(Renderer::NUM_VOICES_MIN, $highest + Renderer::NUM_VOICES_EXTRA);
-      for ($i = 1; $i <= $highest; ++$i) {
+      $highestConfigured = empty($voicesByInstrument[$instrument]) ? 0 : max($voicesByInstrument[$instrument]);
+      $highest = max(Renderer::NUM_VOICES_MIN, $highestConfigured + Renderer::NUM_VOICES_EXTRA);
+      for ($i = 1; $i <= $highest+1; ++$i) {
+        $voiceIndicator = ($i <= $highest) ? $i : '?';
+        $value = $instrument . Renderer::JOIN_KEY_SEP . $voiceIndicator;
         $voiceOption = [
-          'value' => $instrument . Renderer::JOIN_KEY_SEP . $i,
-          'name' => $instrumentInfo['byId'][$instrument] . ' ' . $i,
+          'value' => $value,
+          'name' => $instrumentInfo['byId'][$instrument] . ' ' . $voiceIndicator,
           'group' => $instrumentInfo['idGroups'][$instrument],
         ];
         $voicesSelectArray[] = $voiceOption;
+        // make sure there are no holes, all voices up to the maximum are
+        // selected
+        if ($i <= $highestConfigured) {
+          $voices[] = $value;
+        }
       }
     }
 
