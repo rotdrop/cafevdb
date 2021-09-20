@@ -608,32 +608,6 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
-    $opts['fdd']['number_of_voices'] = [
-      'tab'      => [ 'id' => 'instrumentation' ],
-      'input' => 'VRH',
-      'options' => 'VCDP',
-      'select' => 'T',
-      'name' => $this->l->t('Number of Voices'),
-      'sort' => true,
-      'sql' => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn > 0, CONCAT_WS(\''.self::JOIN_KEY_SEP.'\', $join_table.instrument_id, $join_col_fqn), NULL))',
-      'filter' => [
-        'having' => false,
-        'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
-      ],
-      'values' => [
-        'table' => 'SELECT
-  MAX(pin.voice) AS number_of_voices,
-  pin.instrument_id,
-  pin.project_id
-  FROM '.self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE.' pin
-  WHERE pin.project_id = '.$this->projectId.'
-  GROUP BY pin.instrument_id',
-        'column' => 'number_of_voices',
-        'orderby' => '$table.instrument_id',
-        'join' => '$join_table.instrument_id = '.$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.instrument_id AND $join_table.project_id = ' . $this->projectId,
-      ],
-    ];
-
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
       [
@@ -655,13 +629,12 @@ class ProjectParticipants extends PMETableViewBase
   <div class="dropdown-menu">';
           },
           'postfix' => function($op, $when, $row, $k, $pme) {
-            $instrumentsIndex = $k - 3;
-            $numberOfVoicesIndex = $k - 1;
-            $numberOfVoices = Util::explodeIndexed($row['qf'.$numberOfVoicesIndex]);
+            $html = '</div>
+'; // close dropdown-menu
+
+            $instrumentsIndex = $k - 2;
             $instruments = explode(',', $row['qf'.$instrumentsIndex]);
             $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
-            $html = '</div>
-';
             $html .= '<div class="instrument-voice request">';
             foreach ($instruments as $instrument) {
               $html .= '
