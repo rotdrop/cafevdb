@@ -479,11 +479,11 @@ const myReady = function(selector, resizeCB) {
     return false;
   };
 
-  inputVoices.on('blur', 'input.instrument-voice', function(event) {
+  inputVoices.on('blur', 'input.instrument-voice.input', function(event) {
     return inputVoicesHandler(event, this);
   });
 
-  inputVoices.on('click', 'input.confirm', function(event) {
+  inputVoices.on('click', 'input.instrument-voice.confirm', function(event) {
     const instrument = $(this).data('instrument');
     return inputVoicesHandler(event, inputVoices.find('input.input.instrument-' + instrument));
   });
