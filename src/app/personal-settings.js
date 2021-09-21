@@ -103,7 +103,6 @@ const documentReady = function() {
     $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
       .done(function(data) {
         showMessage(data.message);
-        Notification.messages(data.message);
         console.log(data);
       })
       .fail(function(xhr, status, errorThrown) {
