@@ -22,11 +22,11 @@
  */
 
 /*
- * @param mixed $toolTips
  * @param array $instruments
  * @param array $inputLabel
- * @param string $toolTipSlug
  * @param string $dataName
+ * @param mixed $toolTips
+ * @param string $toolTipSlug
  */
 
 ?>
@@ -37,12 +37,12 @@
     <label for="instrument-voice-request-<?php p($instrument); ?>"
            class="instrument-'.$instrument.' tooltip-auto"
            title="<?php p($toolTips[$toolTipSlug]); ?>">
-      <?php p($inputLabel); ?>
+      <?php p(call_user_func($inputLabel, $instrument)); ?>
       <input type="number"
              id="instrument-voice-request-<?php p($instrument); ?>"
              min="1"
              name="instrumentVoiceRequest[<?php p($instrument); ?>]"
-             placeholder="<?php $l->t('e.g. %s', 3); ?>"
+             placeholder="<?php p($l->t('e.g. %s', 3)); ?>"
              data-instrument="<?php p($instrument); ?>"
              class="instrument-voice instrument-<?php p($instrument); ?> input"/>
     </label>
@@ -50,10 +50,10 @@
            name="instrumentVoiceRequestConfirm"
            data-instrument="<?php p($instrument); ?>"
            class="instrument-voice instrument-<?php p($instrument); ?> confirm"
-           title="<?php p($toolTips[$toolTipSlug - ':confirm']); ?>"
+           title="<?php p($toolTips[$toolTipSlug . ':confirm']); ?>"
            value="<?php p($l->t('ok')); ?>"/>
     <input type="hidden"
-           name="<?php p($dataName . '[]'); ?>"
+           name="<?php p($dataName); ?>"
            value=""
            class="instrument-voice instrument-<?php p($instrument); ?> data"
            data-instrument="<?php p($instrument); ?>"

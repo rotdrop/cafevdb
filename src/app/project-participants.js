@@ -369,6 +369,7 @@ const myReady = function(selector, resizeCB) {
     if (!selected) {
       selected = [];
     }
+
     const prevSelected = $self.data('selected');
     const instruments = SelectUtils.selected(selectProjectInstruments);
 
@@ -395,19 +396,20 @@ const myReady = function(selector, resizeCB) {
     for (const instrument in voices) {
       const values = voices[instrument];
       const prevValues = prevVoices[instrument];
-      for (const voice of values) {
-        if (voice === '?') {
-          doSubmitOuterForm = false;
-          const selectCombo = selectVoices.parent();
-          const inputCombo = inputVoices.filter('div.instrument-' + instrument);
-          SelectUtils.locked(selectVoices, true);
-          selectCombo.hide();
-          inputCombo.show();
-          const voiceItem = instrument + ':' + voice;
-          const index = selected.findIndex((v) => voiceItem === v);
-          if (index > -1) {
-            selected.splice(index, 1);
-          }
+      const inputIndex = values.findIndex((v) => v === '?');
+      if (inputIndex > -1) {
+        const voice = '?';
+        const selectCombo = selectVoices.parent();
+        const inputCombo = inputVoices.filter('div.instrument-' + instrument);
+        values.splice(inputIndex, 1);
+        doSubmitOuterForm = false;
+        SelectUtils.locked(selectVoices, true);
+        selectCombo.hide();
+        inputCombo.show();
+        const voiceItem = instrument + ':' + voice;
+        const index = selected.findIndex((v) => voiceItem === v);
+        if (index > -1) {
+          selected.splice(index, 1);
         }
       }
       if (values.length < 2) {
@@ -461,7 +463,14 @@ const myReady = function(selector, resizeCB) {
 
       dataHolder.val(instrument + ':' + voice);
       dataHolder.prop('disabled', false);
-      // $this.prop('disabled', true);
+
+      // remove any other voice for the same instrument:
+      const selectedVoices = SelectUtils.selected(selectVoices);
+      const instrumentIndex = selectedVoices.findIndex((v) => ('' + instrument === '' + v.split(':')[0]));
+      if (instrumentIndex >= 0) {
+        selectedVoices.splice(instrumentIndex, 1);
+        SelectUtils.selected(selectVoices, selectedVoices);
+      }
     }
 
     if (doSubmitOuterForm) {
@@ -475,6 +484,7 @@ const myReady = function(selector, resizeCB) {
     }
 
     lockOther(false);
+    SelectUtils.refreshWidget(selectVoices);
 
     return false;
   };

@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
+use OCP\AppFramework\Http\TemplateResponse;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -635,37 +637,20 @@ class ProjectParticipants extends PMETableViewBase
             $instrumentsIndex = $k - 2;
             $instruments = explode(',', $row['qf'.$instrumentsIndex]);
             $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
-            $html .= '<div class="instrument-voice request">';
-            foreach ($instruments as $instrument) {
-              $html .= '
-  <div class="instrument-voice container request instrument-'.$instrument.' hidden">
-    <label for="instrument-voice-request-'.$instrument.'"
-           class="instrument-'.$instrument.' tooltip-auto"
-           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request')]).'">
-      '.$instrumentNames[$instrument].'
-      <input type="number"
-             id="instrument-voice-request-'.$instrument.'"
-             min="1"
-             name="instrumentVoiceRequest['.$instrument.']"
-             placeholder="'.$this->l->t('e.g. %s', 3).'"
-             data-instrument="'.$instrument.'"
-             class="instrument-voice instrument-'.$instrument.' input"/>
-    </label>
-    <input type="button"
-           name="instrumentVoiceRequestConfirm"
-           data-instrument="'.$instrument.'"
-           class="instrument-voice instrument-'.$instrument.' confirm"
-           title="'.htmlspecialchars($this->toolTipsService[$this->toolTipSlug('instrument-voice-request:confirm')]).'"
-           value="'.$this->l->t('ok').'"/>
-    <input type="hidden"
-           name="'.$pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]').'"
-           value=""
-           class="instrument-voice instrument-'.$instrument.' data"
-           data-instrument="'.$instrument.'"
-           disabled/>
-  </div>';
-            }
-            $html .= '</div>';
+
+            $templateParameters = [
+              'instruments' => $instruments,
+              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'inputLabel' => function($instrument) use ($instrumentNames) {
+                return $instrumentNames[$instrument];
+              },
+              'toolTips' => $this->toolTipsService,
+              'toolTipSlug' => $this->toolTipSlug('instrument-voice-request'),
+            ];
+
+            $template = new TemplateResponse($this->appName(), 'fragments/instrument-voices', $templateParameters, 'blank');
+            $html .= $template->render();
+
             return $html;
           },
         ],
