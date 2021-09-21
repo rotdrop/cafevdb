@@ -176,7 +176,10 @@ class PersonalSettingsController extends Controller {
       }
       $stringValue = $realValue ? 'on' : 'off';
       $this->setUserValue($parameter, $stringValue);
-      return self::response($this->l->t('Switching %2$s %1$s', [$stringValue, $parameter]));
+      return self::response($this->l->t('Switching %2$s %1$s', [
+        $this->l->t($stringValue),
+        $this->l->t($parameter),
+      ]));
     case 'pagerows':
       $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
       if ($realValue === false) {
@@ -1543,7 +1546,7 @@ class PersonalSettingsController extends Controller {
 
       $response = $this->dataDownloadResponse($pot, $fileName, 'text/plain');
 
-      $response->addCookie($cookieName, $cookieValue);
+      // $response->addCookie($cookieName, $cookieValue);
 
       return $response;
     case 'auto-fill-test':
