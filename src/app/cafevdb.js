@@ -118,15 +118,6 @@ const modalWaitNotification = function(message) {
   return dialogHolder;
 };
 
-const stopRKey = function(evt) {
-  evt = evt || event;
-  const node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-  if ((evt.keyCode === 13) && (node.type === 'text')) {
-    return false;
-  }
-  return true;
-};
-
 const fixupNoChosenMenu = function(select) {
   if (!chosenActive(select)) {
     // restore the data-placeholder as first option if chosen
@@ -398,7 +389,6 @@ export {
   runReadyCallbacks,
   unfocus,
   modalWaitNotification,
-  stopRKey,
   fixupNoChosenMenu,
   formSubmit,
   appSettings,

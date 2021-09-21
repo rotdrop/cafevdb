@@ -34,11 +34,12 @@ import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import pmeTweaks from './pme-tweaks.js';
 import pmeExportMenu from './pme-export.js';
+import stopEnterSubmit from './stop-enter-submit.js';
 
 const documentReady = function() {
 
   // @@TODO perhaps collects these things in before-ready.js
-  document.onkeypress = CAFEVDB.stopRKey;
+  document.onkeypress = stopEnterSubmit;
 
   $('body').on('dblclick', '.oc-dialog', function() {
     $('.oc-dialog').toggleClass('maximize-width');
