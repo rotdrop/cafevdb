@@ -2372,12 +2372,13 @@ class phpMyEdit
 		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
 		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		$operation      = $this->copy_operation() ? 'copy' : 'change';
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			$prefix = $this->fdd[$k]['display']['prefix'];
 			if (is_callable($prefix)) {
-				echo call_user_func($prefix, 'change', 'prefix', $row, $k, $this);
+				echo call_user_func($prefix, $operation, 'prefix', $row, $k, $this);
 			} else {
 				echo $this->fdd[$k]['display']['prefix'];
 			}
@@ -2431,7 +2432,7 @@ class phpMyEdit
 				echo call_user_func($php, $value, 'change',  $k, $row, $this->rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				echo call_user_func($php['function'], $value, $opts, 'change', $k, $row, $this->rec, $this);
+				echo call_user_func($php['function'], $value, $opts, $operation, $k, $row, $this->rec, $this);
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
@@ -2503,7 +2504,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['attributes'])) {
 				$attributes = $this->fdd[$k]['display']['attributes'];
 				if (is_callable($attributes)) {
-					$attributes = call_user_func($attributes, 'change', $row, $k, $this);
+					$attributes = call_user_func($attributes, $operation, $row, $k, $this);
 				}
 				if (!is_array($attributes)) {
 					$attributes= [ $attributes ];
@@ -2547,7 +2548,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['postfix'])) {
 			$postfix = $this->fdd[$k]['display']['postfix'];
 			if (is_callable($postfix)) {
-				echo call_user_func($postfix, 'change', 'postfix', $row, $k, $this);
+				echo call_user_func($postfix, $operation, 'postfix', $row, $k, $this);
 			} else {
 				echo $this->fdd[$k]['display']['postfix'];
 			}
