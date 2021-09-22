@@ -649,10 +649,11 @@ class ProjectService
 
   public function projectWikiLink($pageName)
   {
-    $orchestra = $this->getConfigValue('orchestra');
+    $wikiNameSpace = $this->getConfigValue('orchestra');
+    $wikiNameSpace = $this->getAppValue('wikinamespace', $wikiNameSpace);
     $projectsNamespace = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
 
-    return $orchestra . ':' . $projectsNamespace . ':' . $pageName;
+    return $wikiNameSpace . ':' . $projectsNamespace . ':' . $pageName;
   }
 
   /**
