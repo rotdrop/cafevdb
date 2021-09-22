@@ -80,7 +80,6 @@ class OpenDocumentFiller
     $this->backend->VarRef['test'] = 'Test Replacement Value';
 
     $this->logInfo('REPLACEMENTS ' . print_r(array_keys($this->backend->VarRef), true));
-    $this->backend->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
 
     $templateFile = $this->userStorage->getFile($templateFileName);
 
