@@ -4449,7 +4449,7 @@ class phpMyEdit
 
 				echo '<th class="'.$css_class_name.' '.$css_sort_class.$css_align.'"';
 				if (!empty($this->fdd[$k]['tooltip'])) {
-					echo 'title="'.$this->fdd[$k]['tooltip'].'"';
+					echo ' ','title="'.$this->fdd[$k]['tooltip'].'"';
 				}
 				echo '>';
 				// tri-state: sort off - > sort fwrd -> sort rvrs -> sort off
