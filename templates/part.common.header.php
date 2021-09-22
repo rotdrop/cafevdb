@@ -94,16 +94,16 @@ $settingsControls = '
 <input id="tooltipbutton-checkbox"
        type="checkbox"
        class="tooltips left-infinity-shift"
-       '.($showToolTips == 'on' ? 'checked="checked"' :'').'>
-  <div id="tooltipbutton"
-       class="button tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled">
-    <label id="tooltipbutton-label"
-           for="tooltipbutton-checkbox"
-           title="'.$l->t('Toggle Tooltips').'"
-           class="table-cell centered tooltip-auto">
+       '.($showToolTips == 'on' ? 'checked="checked"' :'').'/>
+<div id="tooltipbutton"
+     class="button tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled">
+  <label id="tooltipbutton-label"
+         for="tooltipbutton-checkbox"
+         title="'.$l->t('Toggle Tooltips').'"
+         class="table-cell centered tooltip-auto">
     <img src="'.image_path($appName, 'info-solid.svg').'" class="svg">
-  </div>
-</label>';
+  </label>
+</div>';
 
 if (!isset($_['headerblock']) && isset($_['header'])) {
     $header = $_['header'];
@@ -133,7 +133,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
       <div class="buttonseparator"></div>
       <?php echo $settingsControls; ?>
     </form>
-    <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"><?php/* used to eliminate the pixel-size of the control bar */?>
+    <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"><!-- /* used to eliminate the pixel-size of the control bar -->
       <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
       <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
         <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
@@ -142,6 +142,6 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
       </div>
       <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
       <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-      <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
+      <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100% height for scrollbars -->
         <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
           <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
