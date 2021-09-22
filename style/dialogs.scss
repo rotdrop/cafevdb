@@ -113,24 +113,37 @@
   box-sizing:border-box;
 }
 
-.oc-dialog.maximize-width .oc-dialog-content {
-  max-width:calc(100vw - 20px);
-}
+.oc-dialog {
 
-.oc-dialog.maximize-width .error-wide {
-  width: auto;
-  white-space: nowrap;
-  max-width: unset;
-}
+  &.maximize-width {
+    .oc-dialog-content {
+      max-width:calc(100vw - 20px);
+    }
 
-.oc-dialog.maximize-width .error-wide pre {
-  white-space:pre-wrap;
-}
+    .error-wide {
+      width: auto;
+      white-space: nowrap;
+      max-width: unset;
+    }
 
-.oc-dialog.maximize-width .error-wide li {
-  white-space:normal;
-  max-width:calc(100vw - 20px);
-  width:calc(100vw - 60px);
+    .error-wide pre {
+      white-space:pre-wrap;
+    }
+
+    .error-wide li {
+      white-space:normal;
+      max-width:calc(100vw - 20px);
+      width:calc(100vw - 60px);
+    }
+  }
+
+  .exception.error {
+    &.name, ul.technical, .trace.visible {
+      &, * {
+        cursor:pointer;
+      }
+    }
+  }
 }
 
 /*

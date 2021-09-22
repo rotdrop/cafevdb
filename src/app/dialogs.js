@@ -27,7 +27,7 @@
 // Compatibility
 import { appName } from './globals.js';
 
-require('dialogs.css');
+require('dialogs.scss');
 
 const alert = function(text, title, callback, modal, allowHtml) {
   return OC.dialogs.message(
@@ -89,12 +89,37 @@ const filePicker = function(title, callback, multiselect, mimetypeFilter, modal,
   return OC.dialogs.filepicker(title, callback, multiselect, mimetypeFilter, modal, type, path, options);
 };
 
+const attachDialogHandlers = function(container) {
+
+  const $container = $(container || 'body');
+
+  $container.on('dblclick', '.oc-dialog', function() {
+    $('.oc-dialog').toggleClass('maximize-width');
+  });
+
+  $container.on('click', '.oc-dialog .exception.error.name', function() {
+    $(this).next().toggleClass('visible');
+  });
+
+  $container.on('click', '.oc-dialog .error.exception ul.technical', function() {
+    $(this).nextAll('.trace').toggleClass('visible');
+  });
+
+  $container.on('click', '.oc-dialog .error.exception .trace.visible', function() {
+    const $this = $(this);
+    $this.removeClass('visible');
+    $this.next('.trace').removeClass('visible');
+    $this.prev('.trace').removeClass('visible');
+  });
+};
+
 export {
   alert,
   info,
   confirm,
   debugPopup,
   filePicker,
+  attachDialogHandlers,
 };
 
 // Local Variables: ***

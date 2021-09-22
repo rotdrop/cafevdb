@@ -678,10 +678,10 @@ body.cafevdb-modalizer {
     z-index: 1;
 
     &.dropdown-align-right {
-      right:5px;
+      right:0; /* 5px; */
     }
     &.dropdown-align-left {
-      left:5px;
+      left:0; /* 5px; */
     }
 
     /* Links inside the dropdown */

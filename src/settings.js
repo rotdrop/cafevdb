@@ -24,15 +24,12 @@ import { runReadyCallbacks } from './app/cafevdb.js';
 import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';
 import './app/jquery-extensions.js';
+import { attachDialogHandlers } from './app/dialogs.js';
 
 require('settings.scss');
 
 $(function() {
-
-  $('body').on('dblclick', '.oc-dialog', function() {
-    $('.oc-dialog').toggleClass('maximize-width');
-  });
-
+  attachDialogHandlers();
   appSettings();
   personalSettings();
   runReadyCallbacks();
