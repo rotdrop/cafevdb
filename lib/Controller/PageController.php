@@ -287,6 +287,7 @@ class PageController extends Controller {
 
       'configcheck' => $this->configCheck,
       'orchestra' => $this->getConfigValue('orchestra'),
+      'wikinamespace' => $this->getAppValue('wikinamespace'),
       'usergroup' => $this->groupId(),
       'shareowner' => $this->getConfigValue('shareowner'),
       'sharedfolder' => $this->getConfigValue('sharedfolder'),

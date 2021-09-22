@@ -646,10 +646,79 @@ body.cafevdb-modalizer {
   }
 }
 
-/*************************************/
+/******************************************************************************
+ *
+ * This styles the inset tooltip toggle button
+ */
 
 #tooltipbutton.tooltips-enabled {
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+}
+
+.dropdown-container {
+  position: relative;
+
+  &.tooltips-disabled .dropdown-content li a img.tooltips-checkmark {
+    opacity:0.3;
+  }
+
+  &.tooltips-enabled .dropdown-content li a img.tooltips-checkmark {
+    opacity:1;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display:none;
+    position:absolute;
+    background-color: var(--color-main-background);
+    min-width: 160px;
+    filter: drop-shadow(0 1px 5px var(--color-box-shadow));
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    z-index: 1;
+
+    &.dropdown-align-right {
+      right:5px;
+    }
+    &.dropdown-align-left {
+      left:5px;
+    }
+
+    /* Links inside the dropdown */
+    li a {
+      color: var(--color-main-text);
+      padding: 10px 12px;
+      text-decoration: none;
+      display: block;
+
+      img {
+        opacity:0.7;
+        margin-right:10px;
+        height:16px;
+        width:16px;
+        vertical-align:baseline;
+        border:0;
+      }
+
+      img[src=""] {
+        display: none;
+      }
+
+      /* Change color of dropdown links on hover */
+      &:hover {
+        background-color: var(--color-background-hover);
+      }
+
+      &:active {
+        background-color: var(--color-primary-light);
+      }
+    }
+  }
+
+  /* Show the dropdown menu on hover */
+  &:hover .dropdown-content {
+    display: block;
+  }
 }
 
 /**************************************************

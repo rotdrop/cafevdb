@@ -35,84 +35,10 @@ import { chosenActive } from './select-utils.js';
 import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
-import * as DialogUtils from './dialog-utils.js';
 import * as SelectUtils from './select-utils.js';
-import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
-import modalizer from './modalizer.js';
+import wikiPopup from './wiki-popup.js';
 
 require('projects.scss');
-
-// /**
-//  * Strip any digit from the end of name and attach the four digit
-//  * year to the end of name.
-//  *
-//  * @param {String} name TBD.
-//  *
-//  * @param {int} year TBD.
-//  *
-//  * @returns {String}
-//  */
-// const attachYear = function(name, year) {
-//   name = name.replace(/\d+$/, '');
-//   return name + year;
-// };
-
-// /**
-//  *Check whether exactly four digits are attached to the end of
-//  * name and return those as a four digit year. If not exactly four
-//  * digits are attached to the end of name return false.
-//  *
-//  * @param {String} name TBD.
-//  *
-//  * @returns {bool}
-//  */
-// const extractYear = function(name) {
-//   const year = name.match(/[^\d](\d{4})$/);
-//   return year !== null ? year[1] : false;
-// };
-
-/**
- * Generate a popup-dialog with a wiki-page. Not to much project
- * related, rather general. Page and page-title are assumed to be
- * attached to the "post"-object
- *
- * @param {Object} post Arguments object:
- * { projectName: 'NAME', projectId: XX }
- *
- * @param {bool} reopen If true, close any already dialog and re-open it
- * (the default). If false, only raise an existing dialog to top.
- */
-const wikiPopup = function(post, reopen) {
-  if (typeof reopen === 'undefined') {
-    reopen = false;
-  }
-  const wikiDlg = $('#dokuwiki_popup');
-  if (wikiDlg.dialog('isOpen') === true) {
-    if (reopen === false) {
-      wikiDlg.dialog('moveToTop');
-      return;
-    }
-    wikiDlg.dialog('close').remove();
-  }
-  dokuWikiPopup(
-    {
-      wikiPage: post.wikiPage,
-      popupTitle: post.popupTitle,
-      cssClass: appName,
-      modal: false,
-    },
-    function(dwDialog, dwDialogWidget) {
-      // open callback
-      dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
-      // Custom shuffle button
-      DialogUtils.toBackButton(dwDialog);
-    },
-    function() {
-      // close callback
-      // Remove modal plane if appropriate
-      modalizer(false);
-    });
-};
 
 /**
  * Generate a popup-dialog for the events-listing for the given

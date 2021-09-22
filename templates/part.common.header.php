@@ -94,15 +94,42 @@ $settingsControls = '
 <input id="tooltipbutton-checkbox"
        type="checkbox"
        class="tooltips left-infinity-shift"
-       '.($showToolTips == 'on' ? 'checked="checked"' :'').'/>
+       '.($showToolTips == 'on' ? 'checked="checked"' :'').'
+/>
 <div id="tooltipbutton"
-     class="button tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled">
+     class="button dropdown-container tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled">
   <label id="tooltipbutton-label"
          for="tooltipbutton-checkbox"
          title="'.$l->t('Toggle Tooltips').'"
          class="table-cell centered tooltip-auto">
     <img src="'.image_path($appName, 'info-solid.svg').'" class="svg">
   </label>
+  <nav class="help-dropdown dropdown-content dropdown-align-right">
+    <ul>
+      <li class="toggle-tooltips tooltip-auto" data-id="tooltips" title="'.$l->t('Toggle Tooltips').'">
+        <a href="#">
+          <img class="tooltips-checkmark" alt="" src="'.$urlGenerator->imagePath('core', 'actions/checkmark.svg').'">
+            '.$l->t('Tooltips').'
+        </a>
+      </li>
+      <li data-id="manual_window"
+          data-template="'.$template.'"
+          data-namespace="'.$wikinamespace.'">
+        <a href="#">
+          <img alt="" src="">
+            '.$l->t('Manual (other tab)').'
+        </a>
+      </li>
+      <li data-id="manual_dialog"
+          data-template="'.$template.'"
+          data-namespace="'.$wikinamespace.'">
+        <a href="#">
+          <img alt="" src="">
+            '.$l->t('Manual (popup)').'
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>';
 
 if (!isset($_['headerblock']) && isset($_['header'])) {
