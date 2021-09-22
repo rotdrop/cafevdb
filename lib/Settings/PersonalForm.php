@@ -161,6 +161,7 @@ class PersonalForm {
         'pagerows' => $this->getUserValue('pagerows', 20),
         'toolTips' => $this->toolTipsService(),
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
+        'restorehistory' => $this->getUserValue('restorehistory', 'off'),
         'directchange' => $this->getUserValue('directchange', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
         'expertMode' => $this->getUserValue('expertmode', 'off'),
