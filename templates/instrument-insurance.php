@@ -48,7 +48,7 @@ echo $this->inc(
 
 // Issue the main part. The method will echo itself
 if ($roles->inTreasurerGroup()) {
-  $renderer->render();
+  echo $this->inc('pme-table', []);
 } else {
   echo '<div class="specialrole error">'.
        $l->t("Sorry, this view is only available to the %s.",

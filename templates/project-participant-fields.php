@@ -50,7 +50,7 @@ echo $this->inc('part.common.header',
                   'navigationcontrols' => $nav,
                   'header' => $renderer->headerText() ]);
 
-$renderer->render();
+echo $this->inc('pme-table', []);
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

@@ -60,9 +60,7 @@ echo $this->inc('part.common.header',
                   'header' => $renderer->headerText() ]);
 
 // Issue the main part. The method will echo itself
-$renderer->render();
+echo $this->inc('pme-table', []);
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
-
-?>

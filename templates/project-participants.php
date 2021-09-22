@@ -57,7 +57,8 @@ echo $this->inc(
   ]);
 
 try {
-  $renderer->render();
+  // Issue the main part
+  echo $this->inc('pme-table', []);
 } catch (\Throwable $t) {
   $keys = [
     'projectId' => true,

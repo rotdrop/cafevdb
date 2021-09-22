@@ -43,7 +43,7 @@ echo $this->inc('part.common.header', [
   'header' => $renderer->headerText()
 ]);
 
-echo $this->inc('pme-table', []);// 'renderer' => $renderer ]);
+echo $this->inc('pme-table', []);
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', [ 'css-prefix' => $cssPrefix, 'css-class' => $cssClass ]);
