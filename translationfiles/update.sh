@@ -31,5 +31,7 @@ else
     exit 1
 fi
 
+sed -i 's|'$APPDIR'/||g' "${TEMPLATE}"
+
 msgmerge -vU --previous --backup=numbered "${TRANSLATION}" "${TEMPLATE}"
 ${CLOUDTOOL} convert-po-files
