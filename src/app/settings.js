@@ -918,6 +918,7 @@ const afterLoad = function(container) {
     const $cloudSelectors = $fieldset.find('input.select-cloud');
     const $deleters = $fieldset.find('input.delete');
     const $autofillers = $fieldset.find('input.auto-fill-test');
+    const $autofillersdata = $fieldset.find('input.auto-fill-test-data');
 
     if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
       $fieldset.find('input').prop('disabled', true);
@@ -984,6 +985,22 @@ const afterLoad = function(container) {
 
       fileDownload(
         'settings/app/get/auto-fill-test', {
+          documentTemplate: $self.data('template'),
+        }, {
+          errorMessage(data, url) {
+            return t(appName, 'Unable to download auto-fill result.');
+          },
+        });
+
+      return false;
+    });
+
+    // get the test-data set as JSON for offline testing
+    $autofillersdata.on('click', function(event) {
+      const $self = $(this);
+
+      fileDownload(
+        'settings/app/get/auto-fill-test-data', {
           documentTemplate: $self.data('template'),
         }, {
           errorMessage(data, url) {

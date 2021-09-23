@@ -1559,8 +1559,6 @@ class PersonalSettingsController extends Controller {
       $instrumentationService = $this->di(InstrumentationService::class);
       $musician = $instrumentationService->getDummyMusician();
 
-      $fileName = implode('-', [ $this->timeStamp(), $templateName, 'auto-fill-test' ]);
-
       switch ($templateName) {
       case 'projectDebitNoteMandateForm':
         list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
@@ -1603,6 +1601,55 @@ class PersonalSettingsController extends Controller {
         $pathInfo['filename'],
         'auto-fill-test',
       ]) . '.' . $pathInfo['extension'];
+
+      return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+    case 'auto-fill-test-data':
+      $templateName = $this->parameterService->getParam('documentTemplate');
+      if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
+          ||ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE ) {
+        return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
+      }
+
+      /** @var InstrumentationService $instrumentationService */
+      $instrumentationService = $this->di(InstrumentationService::class);
+      $musician = $instrumentationService->getDummyMusician();
+
+      switch ($templateName) {
+      // case 'projectDebitNoteMandateForm':
+      //   list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+      //     $musician->getSepaBankAccounts()->first(),
+      //     $this->getExecutiveBoardProjectId());
+      //   break;
+      // case 'generalDebitNoteMandateForm':
+      //   list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+      //     $musician->getSepaBankAccounts()->first(),
+      //     $this->getClubMembersProjectId());
+      //   break;
+      case 'instrumentInsuranceRecord':
+        /** @var InstrumentInsuranceService $insuranceService */
+        $insuranceService = $this->di(InstrumentInsuranceService::class);
+        $insuranceOverview = $insuranceService->musicianOverview($musician);
+
+        /** @var OpenDocumentFiller $documentFiller */
+        $documentFiller = $this->di(OpenDocumentFiller::class);
+
+        $fillData = $documentFiller->fillData($insuranceOverview);
+        break;
+
+      default:
+        return self::grumble(
+          $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',
+                      $templateName));
+      }
+
+      $fileData = json_encode($fillData);
+      $fileName = implode('-', [
+        $this->timeStamp(),
+        $templateName,
+        'auto-fill-test-data'
+      ])
+                . '.' . 'json';
+      $mimeType = 'application/json';
 
       return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
     default:

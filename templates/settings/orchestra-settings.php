@@ -170,8 +170,14 @@ foreach ($localeCountryNames as $country => $name) {
                    name="<?php p($documentTemplate); ?>AutoFillTest"
                    data-template="<?php p($documentTemplate); ?>"
                    title="<?php p($toolTips['templates:auto-fill-test']); ?>"
-                   class="operation auto-fill-test document-template <?php p($documentTemplate); ?><?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
+                   class="operation right auto-fill-test document-template <?php p($documentTemplate); ?><?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
                    <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
+            />
+            <input type="Button"
+                   name0"<?php p($documentTemplate); ?>FillTestData"
+                   data-template="<?php p($documentTemplate); ?>"
+                   title="<?php p($toolTips['templates:auto-fill-data']); ?>"
+                   class="operation right auto-fill-test-data document-template <?php p($documentTemplate); ?>"
             />
           <?php } ?>
         </div>

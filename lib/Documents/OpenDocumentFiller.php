@@ -67,6 +67,15 @@ class OpenDocumentFiller
     $this->l = $this->l10n();
   }
 
+  /**
+   * Fill the given template file which must exist in the cloud
+   * file-system with the given template-data.
+   *
+   * @param string $templateFileName Name of the template file in the
+   * user-storage of the current user.
+   *
+   * @param array $templateData The template-data to substitute.
+   */
   public function fill($templateFileName, $templateData)
   {
     ob_start();
@@ -74,13 +83,7 @@ class OpenDocumentFiller
     $this->logInfo('TEMPLATE ' . $templateFileName);
 
     $this->backend->ResetVarRef(false);
-    $this->backend->VarRef = array_merge(
-      $this->getOrchestraSubstitutions(),
-      $templateData);
-    $this->backend->VarRef['test'] = 'Test Replacement Value';
-
-    $this->logInfo('REPLACEMENTS ' . print_r(array_keys($this->backend->VarRef), true));
-
+    $this->backend->VarRef = $this->fillData($templateData);
     $templateFile = $this->userStorage->getFile($templateFileName);
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
@@ -98,6 +101,25 @@ class OpenDocumentFiller
       $templateFile->getMimeType(),
       basename($templateFileName),
     ];
+  }
+
+  /**
+   * Return the data which would be filled into the template. This is
+   * a merge of the $templateData with a couple of orchestra things.
+   *
+   * @param array $templateData The given template data to augment.
+   *
+   * @return array A merge of $templateData with global information
+   * like orchestra address, logs etc.
+   */
+  public function fillData($templateData)
+  {
+    $fillData = array_merge(
+      $this->getOrchestraSubstitutions(),
+      $templateData);
+    $fillData['test'] = 'Test Replacement Value';
+
+    return $fillData;
   }
 
   /**

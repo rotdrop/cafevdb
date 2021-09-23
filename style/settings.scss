@@ -126,32 +126,49 @@ input.bankAccountCreditorIdentifier {
   width: 40em;
 }
 
-input.document-template.operation {
-  background-repeat:no-repeat;
-  background-size: 24px 24px;
-  background-position: center;
-  width:28px;
-  height:28px;
-  vertical-align:middle;
-  margin-right:1em;
-}
+fieldset.document-template {
 
-input.delete {
-  background-image:url('../../../core/img/actions/delete.svg');
-}
+  input.upload-placeholder {
+    width:22em;
+  }
 
-input.upload-replace {
-  background-image:url('../../../core/img/actions/upload.svg');
-}
+  input.operation {
 
-input.select-cloud {
-  background-image:url('../img/cloud-icon.svg');
-}
+    $button-distance: 0.5em;
 
-input.auto-fill-test {
-  background-image:url('../../../core/img/actions/details.svg');
-  margin-right:0;
-  margin-left:1em;
+    background-repeat:no-repeat;
+    background-size: 24px 24px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:$button-distance;
+
+    &.right {
+      margin-right:0;
+      margin-left:$button-distance;
+    }
+
+    &.delete {
+      background-image:url('../../../core/img/actions/delete.svg');
+    }
+
+    &.upload-replace {
+      background-image:url('../../../core/img/actions/upload.svg');
+    }
+
+    &.select-cloud {
+      background-image:url('../img/cloud-icon.svg');
+    }
+
+
+    &.auto-fill-test {
+      background-image:url('../../../core/img/actions/details.svg');
+    }
+    &.auto-fill-test-data {
+      background-image:url('../../../core/img/actions/download.svg');
+    }
+  }
 }
 
 a.sharedfolder-view {
@@ -165,10 +182,6 @@ a.sharedfolder-view {
   background-image:url('../../../core/img/filetypes/folder-external.svg');
 }
 
-
-input.document-template.upload-placeholder {
-  width:22em;
-}
 
 input.specialMemberProjects {
   width: 20em;
