@@ -424,10 +424,13 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceRate($insuranceRate):InstrumentInsurance
+  public function setInsuranceRate(?InsuranceRate $insuranceRate):InstrumentInsurance
   {
     $this->insuranceRate = $insuranceRate;
-
+    if (!empty($insuranceRate)) {
+      $this->geographicalScope = $insuranceRate->getGeographicalScope();
+      $this->broker = $insuranceRate->getBroker();
+    }
     return $this;
   }
 
