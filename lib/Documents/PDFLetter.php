@@ -52,6 +52,7 @@ class PDFLetter extends \TCPDF
   const FOOTER_HEIGHT = 20;
   const FIRST_FOOTER_HEIGHT = 20;
   const PT = 0.3527777777777777;
+  const FONT_NAME = 'dejavusans';
 
   /** IL10N */
   private $l10n;
@@ -93,16 +94,24 @@ class PDFLetter extends \TCPDF
 
     $executiveMember = $addr1.'<br>'.$executiveMember;
     $this->SetCellPadding(0);
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_HEADER);
-    $this->writeHtmlCell(self::ADDRESS_WIDTH, self::ADDRESS_TOP-self::TOP_MARGIN,
+    $this->SetFont(self::FONT_NAME, '', self::FONT_HEADER);
+    $this->writeHtmlCell(self::ADDRESS_WIDTH, self::ADDRESS_TOP - self::TOP_MARGIN,
                          self::LEFT_MARGIN, self::TOP_MARGIN,
                          $executiveMember,
                          0 /*border*/);
+    $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
     $this->ImageSVG(
       // __DIR__.'/../../img/'.'logo-greyf1024x1024.png',
       __DIR__.'/../../img/'.'logo-greyf-large.svg',
-      self::PAGE_WIDTH - self::RIGHT_TEXT_MARGIN - self::LOGO_SIZE, self::TOP_MARGIN,
-      self::LOGO_SIZE
+      self::PAGE_WIDTH - self::RIGHT_TEXT_MARGIN - self::LOGO_SIZE,
+      self::TOP_MARGIN,
+      self::LOGO_SIZE, // width
+      '', // height
+      '', // link
+      '', // align
+      '', // palign
+      0, // border
+      false // fitonpage
     );
 
     $this->writeHtmlCell(self::SUB_LOGO_WIDTH, 0,
@@ -126,7 +135,7 @@ class PDFLetter extends \TCPDF
   public function Footer() {
     $this->SetCellPadding(0);
 
-    $this->SetFont(PDF_FONT_NAME_MAIN, 'I', self::FONT_FOOTER);
+    $this->SetFont(self::FONT_NAME, 'I', self::FONT_FOOTER);
     $fontHeight = $this->getStringHeight(0, 'Camerata');
     $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
 
@@ -182,23 +191,23 @@ class PDFLetter extends \TCPDF
       $this->Cell($textWidth, 0, $pages, 0, false, 'C');
     }
 
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_SIZE);
   }
 
   public function addressFieldSender($sender)
   {
     $this->SetCellPadding(0);
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SENDER);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_SENDER);
     $fontHeight = self::FONT_SENDER*self::PT;
 
     $this->SetXY(self::LEFT_MARGIN, self::ADDRESS_TOP+$fontHeight);
     $this->Cell($this->GetStringWidth($sender), 0, $sender, 'B');
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_SIZE);
   }
 
   public function addressFieldRecipient($recipient)
   {
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_RECIPIENT);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_RECIPIENT);
     $fontHeight = self::PT * self::FONT_RECIPIENT;
     if (false)
       $this->writeHtmlCell(self::ADDRESS_WIDTH, self::ADDRESS_HEIGHT-3*$fontHeight,
@@ -207,7 +216,7 @@ class PDFLetter extends \TCPDF
     $this->SetXY(self::LEFT_MARGIN, self::ADDRESS_TOP+4*$fontHeight);
     $this->MultiCell(self::ADDRESS_WIDTH, self::ADDRESS_HEIGHT-4*$fontHeight,
                      $recipient, 0, 'L');
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_SIZE);
   }
 
   /**Folding marks. */
@@ -233,11 +242,11 @@ class PDFLetter extends \TCPDF
   {
     $this->SetCellPadding(0);
     $this->SetXY(self::LEFT_TEXT_MARGIN, 100);
-    $this->SetFont(PDF_FONT_NAME_MAIN, 'B', self::FONT_SIZE);
+    $this->SetFont(self::FONT_NAME, 'B', self::FONT_SIZE);
     $this->Cell(self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN,
                 $this->fontSize(),
                 $subject, 0, false, 'L');
-    $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
+    $this->SetFont(self::FONT_NAME, '', self::FONT_SIZE);
   }
 
   public function letterOpen($startFormula)
