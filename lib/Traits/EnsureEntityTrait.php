@@ -40,13 +40,12 @@ trait EnsureEntityTrait
    */
   protected function ensureProject($projectOrId):?Entities\Project
   {
-    if (empty($projectOrId) || (int)$projectOrId < 0) {
-      return null;
-    }
-    if (!($projectOrId instanceof Entities\Project)) {
-      return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
-    } else {
+    if ($projectOrId instanceof Entities\Project) {
       return $projectOrId;
+    } else if (empty($projectOrId) || (int)$projectOrId < 0) {
+      return null;
+    } else {
+      return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
     }
   }
 
@@ -60,13 +59,12 @@ trait EnsureEntityTrait
    */
   protected function ensureMusician($musicianOrId):?Entities\Musician
   {
-    if (empty($musicianOrId) || (int)$musicianOrId < 0) {
-        return null;
-    }
-    if (!($musicianOrId instanceof Entities\Musician)) {
-      return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
-    } else {
+    if ($musicianOrId instanceof Entities\Musician) {
       return $musicianOrId;
+    } else if (empty($musicianOrId) || (int)$musicianOrId < 0) {
+      return null;
+    } else {
+      return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
     }
   }
 }
