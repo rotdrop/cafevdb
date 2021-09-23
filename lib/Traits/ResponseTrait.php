@@ -56,6 +56,7 @@ trait ResponseTrait
     $templateParameters = [
       'error' => 'exception',
       'exception' => $throwable->getMessage(),
+      'code' => $throwable->getCode(),
       'trace' => $this->exceptionChainData($throwable),
       'debug' => true,
       'admin' => 'bofh@nowhere.com',
@@ -67,11 +68,13 @@ trait ResponseTrait
   private function exceptionChainData(\Throwable $throwable, bool $top = true)
   {
     $previous = $throwable->getPrevious();
+    $shortException = (new \ReflectionClass($throwable))->getShortName();
     return [
       'message' => ($top
-                    ? $this->l->t('Error, caught an exception')
+                    ? $this->l->t('Error, caught an exception.')
                     : $this->l->t('Caused by previous exception')),
-      'exception' => $throwable->getFile().':'.$throwable->getLine().' '.$throwable->getMessage(),
+      'exception' => $throwable->getFile().':'.$throwable->getLine().' '.$shortException.': '.$throwable->getMessage(),
+      'code' => $throwable->getCode(),
       'trace' => $throwable->getTraceAsString(),
       'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
     ];

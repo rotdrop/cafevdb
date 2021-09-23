@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,26 +21,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
+class Version20210923180000 extends UpdateGeographicalScopes {};
 
-/**
- * Geographical scope for insurances.
- *
- * @method static EnumGeographicalScope DOMESTIC()
- * @method static EnumGeographicalScope CONTINENT()
- * @method static EnumGeographicalScope GERMANY()
- * @method static EnumGeographicalScope EUROPE()
- * @method static EnumGeographicalScope WORLD()
- *
- * @todo Perhaps should be renamed to "COUNTRY/CONTINENT/WORLD"
- */
-class EnumGeographicalScope extends EnumType
-{
-  public const DOMESTIC = 'Domestic';
-  public const CONTINENT = 'Continent';
-  public const GERMANY = 'Germany';
-  public const EUROPE = 'Europe';
-  public const WORLD = 'World';
-}
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
