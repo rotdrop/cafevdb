@@ -168,6 +168,9 @@ fieldset.document-template {
     &.auto-fill-test-data {
       background-image:url('../../../core/img/actions/download.svg');
     }
+    &.auto-fill-test.legacy {
+      background-image:url('../img/dont.svg');
+    }
   }
 }
 

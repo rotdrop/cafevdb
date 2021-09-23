@@ -113,6 +113,7 @@ class ConfigService {
 
   const DOCUMENT_TEMPLATE_LOGO = 'logo';
   const DOCUMENT_TEMPLATE_SEAL = 'seal';
+  const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD = 'instrumentInsuranceRecord';
 
   /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
@@ -132,7 +133,7 @@ class ConfigService {
       'name' => 'general debit-note mandate',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
     ],
-    'instrumentInsuranceRecord' => [
+    self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
       'name' => 'instrument insurance record template',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
     ],

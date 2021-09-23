@@ -604,7 +604,7 @@ if something changes.'), '', 1);
     $html .= '
 <table class="totals no-page-break">
   <tr>
-    <td width="220" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
+    <td width="280" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
     <td width="80" class="money">'.$this->moneyValue($totals).'</td>
   </tr>
   <tr>
@@ -615,8 +615,9 @@ if something changes.'), '', 1);
     <td class="summary">'.$this->l->t('Total amount to pay:').'</td>
     <td class="money">'.$this->moneyValue($totals+$taxes).'</td>
   </tr>
-</table>'
-                                                          ;
+</table>';
+    $this->logInfo('TOTAL AMOUNT ' . (string)$this->l->t('Total amount to pay:'));
+
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0*$pdf->fontSize(),
@@ -651,24 +652,24 @@ fee. Partial insurance years are rounded up to full months.'),
                       $this->orgaRolesService->treasurerSignature());
 
     // Slightly smaller for table
-    $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
+    $pdf->SetFont(PDFLetter::FONT_NAME, '', 8);
 
     $html = '<table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr class="hidden collapsed">
     <td class="header" widtd="70"></td>
+    <td class="header" width="70"></td>
+    <td class="header" width="100"></td>
+    <td class="header" width="100"></td>
+    <td class="header" width="65"></td>
+    <td class="header" width="45"></td>
+    <td class="header" width="65"></td>
+    <td class="header" width="65"></td>
     <td class="header" width="50"></td>
-    <td class="header" width="100"></td>
-    <td class="header" width="100"></td>
-    <td class="header" width="60"></td>
-    <td class="header" width="45"></td>
-    <td class="header" width="60"></td>
-    <td class="header" width="60"></td>
-    <td class="header" width="45"></td>
     <td class="header" width="50"></td>
   </tr>
 ';
     foreach($overview['musicians'] as $id => $insurance) {
-      $this->logInfo(Functions\dump($insurance));
+      // $this->logInfo(Functions\dump($insurance));
       // <div class="no-page-break">
       // <h3>'.$this->l->t('Insured Person: %s', array($insurance['name'])).'</h3>
       $html .= '
@@ -696,7 +697,7 @@ fee. Partial insurance years are rounded up to full months.'),
     <td class="tag">'.$this->l->t($item['scope']).'</td>
     <td class="text">'.$item['object'].'</td>
     <td class="text">'.$item['manufacturer'].'</td>
-    <td class="money">'.money_format('%n', $item['amount']).'</td>
+    <td class="money">'.$this->moneyValue($item['amount']).'</td>
     <td class="percentage">'.($item['rate']*100.0).' %'.'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['start']->getTimestamp(), 'medium').'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['due']->getTimestamp(), 'medium').'</td>
@@ -776,7 +777,6 @@ fee. Partial insurance years are rounded up to full months.'),
     $billToParty->setId(PHP_INT_MAX);
     $instrumentHolder->setId(PHP_INT_MAX-1);
     $instrumentHolder->setFirstName($this->l->t('Jane')); // in order to distinguish from the bill-to-party
-    $billToParty->setFirstName('blah');
 
     $oneInsuranceBroker = (new Entities\InsuranceBroker)
                         ->setShortName('LaInsurance')

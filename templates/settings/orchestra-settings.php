@@ -179,6 +179,14 @@ foreach ($localeCountryNames as $country => $name) {
                    title="<?php p($toolTips['templates:auto-fill-data']); ?>"
                    class="operation right auto-fill-test-data document-template <?php p($documentTemplate); ?>"
             />
+            <?php if ($documentTemplate === ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD) { ?>
+              <input type="button"
+                     name="<?php p($documentTemplate); ?>LegacyAutoFillTest"
+                     data-template="<?php p($documentTemplate); ?>Legacy"
+                     title="<?php p($toolTips['templates:auto-fill-test:legacy']); ?>"
+                     class="operation right auto-fill-test legacy document-template <?php p($documentTemplate); ?>Legacy"
+              />
+            <?php } ?>
           <?php } ?>
         </div>
       <?php } ?>
