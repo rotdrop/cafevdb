@@ -604,19 +604,18 @@ if something changes.'), '', 1);
     $html .= '
 <table class="totals no-page-break">
   <tr>
-    <td width="280" class="summary">'.$this->l->t('Annual amount excluding taxes:').'</td>
+    <td width="280" class="summary">'.$this->l->t('Annual amount excluding taxes').':'.'</td>
     <td width="80" class="money">'.$this->moneyValue($totals).'</td>
   </tr>
   <tr>
-    <td class="summary">'.$this->l->t('%s %% insurance taxes:', $this->floatValue($taxRate*100.0)).'</td>
+    <td class="summary">'.$this->l->t('%s %% insurance taxes', $this->floatValue($taxRate*100.0)).':'.'</td>
     <td class="money">'.$this->moneyValue($taxes).'</td>
   </tr>
   <tr>
-    <td class="summary">'.$this->l->t('Total amount to pay:').'</td>
+    <td class="summary">'.$this->l->t('Total amount to pay').':'.'</td>
     <td class="money">'.$this->moneyValue($totals+$taxes).'</td>
   </tr>
 </table>';
-    $this->logInfo('TOTAL AMOUNT ' . (string)$this->l->t('Total amount to pay:'));
 
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
