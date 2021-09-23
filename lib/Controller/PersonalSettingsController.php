@@ -1555,24 +1555,32 @@ class PersonalSettingsController extends Controller {
           ||ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE ) {
         return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
       }
-      /** @var InstrumentationService $instrumentationService */
-      $instrumentationService = $this->di(InstrumentationService::class);
-      $musician = $instrumentationService->getDummyMusician();
 
       switch ($templateName) {
-      case 'projectDebitNoteMandateForm':
+      case 'projectDebitNoteMandateForm': {
+        /** @var InstrumentationService $instrumentationService */
+        $instrumentationService = $this->di(InstrumentationService::class);
+        $musician = $instrumentationService->getDummyMusician();
+
         list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
           $musician->getSepaBankAccounts()->first(),
           $this->getExecutiveBoardProjectId());
         break;
-      case 'generalDebitNoteMandateForm':
+      }
+      case 'generalDebitNoteMandateForm': {
+        /** @var InstrumentationService $instrumentationService */
+        $instrumentationService = $this->di(InstrumentationService::class);
+        $musician = $instrumentationService->getDummyMusician();
+
         list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
           $musician->getSepaBankAccounts()->first(),
           $this->getClubMembersProjectId());
         break;
-      case 'instrumentInsuranceRecord':
+      }
+      case 'instrumentInsuranceRecord': {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
+        $musician = $insuranceService->getDummyMusician();
         $insuranceOverview = $insuranceService->musicianOverview($musician);
 
         /** @var OpenDocumentFiller $documentFiller */
@@ -1588,6 +1596,7 @@ class PersonalSettingsController extends Controller {
         list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview);
 
         break;
+      }
 
       default:
         return self::grumble(
@@ -1610,11 +1619,10 @@ class PersonalSettingsController extends Controller {
         return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
       }
 
-      /** @var InstrumentationService $instrumentationService */
-      $instrumentationService = $this->di(InstrumentationService::class);
-      $musician = $instrumentationService->getDummyMusician();
-
       switch ($templateName) {
+        // /** @var InstrumentationService $instrumentationService */
+        // $instrumentationService = $this->di(InstrumentationService::class);
+        // $musician = $instrumentationService->getDummyMusician();
       // case 'projectDebitNoteMandateForm':
       //   list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
       //     $musician->getSepaBankAccounts()->first(),
@@ -1625,9 +1633,10 @@ class PersonalSettingsController extends Controller {
       //     $musician->getSepaBankAccounts()->first(),
       //     $this->getClubMembersProjectId());
       //   break;
-      case 'instrumentInsuranceRecord':
+      case 'instrumentInsuranceRecord': {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
+        $musician = $insuranceService->getDummyMusician();
         $insuranceOverview = $insuranceService->musicianOverview($musician);
 
         /** @var OpenDocumentFiller $documentFiller */
@@ -1635,7 +1644,7 @@ class PersonalSettingsController extends Controller {
 
         $fillData = $documentFiller->fillData($insuranceOverview);
         break;
-
+      }
       default:
         return self::grumble(
           $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',

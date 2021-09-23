@@ -59,18 +59,26 @@ class InstrumentationService
    * Generate a dummy musician entity which can be used during
    * (email-)form validation and similar things.
    *
-   * The musician will be created as disabled or soft deleted.
+   * The musician will be created as disabled or soft deleted.e
+   *
+   * @param null|Entities\Project $project A project to attach the dummy to.
+   *
+   * @param bool $persist Whether to persist the dummy to the
+   * data-base. If true the dummy person will be persisted as deleted
+   * in order not to interfere with the real data.
    *
    * @return Entities\Musician
    */
-  public function getDummyMusician(?Entities\Project $project = null):Entities\Musician
+  public function getDummyMusician(?Entities\Project $project = null, bool $persist = true):Entities\Musician
   {
     // disable "deleted" filter
     $this->disableFilter('soft-deleteable');
 
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    /** @var Entities\Musician $dummy */
-    $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
+    if ($persist) {
+      /** @var Entities\Musician $dummy */
+      $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
+    }
     if (empty($dummy)) {
       $dummy = Entities\Musician::create()
              ->setUuid(Uuid::NIL)
@@ -82,7 +90,9 @@ class InstrumentationService
              ->setPostalCode('Z-7')
              ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
              ->setDeleted(new \DateTimeImmutable);
-      $this->persist($dummy);
+      if ($persist) {
+        $this->persist($dummy);
+      }
     }
     if ($dummy->getSepaBankAccounts()->count() == 0) {
       // also generate a dummy bank account
@@ -95,9 +105,13 @@ class InstrumentationService
                    ->setSequence(1)
                    ->setDeleted(new \DateTimeImmutable);
       $dummy->getSepaBankAccounts()->add($bankAccount);
-      $this->persist($bankAccount);
+      if ($persist) {
+        $this->persist($bankAccount);
+      }
     }
-    $this->flush();
+    if ($persist) {
+      $this->flush();
+    }
 
     if (!empty($project)) {
       $participant = (new Entities\ProjectParticipant)

@@ -25,11 +25,13 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable as DateTime;
 
+use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Documents\PDFLetter;
 
 use OCA\CAFEVDB\Common\Util;
@@ -750,6 +752,83 @@ fee. Partial insurance years are rounded up to full months.'),
     //Close and output PDF document
     $name = $name ?? $this->musicianOverviewFileName($overview);
     return $pdf->Output($name, $dest);
+  }
+
+  /**
+   * Create fake insurance data for testing.
+   *
+   * @todo This should be move alongside
+   * InstrumentationService::getDummyMusisican() to some extra
+   * fake-provider class.
+   *
+   * @return Entities\Musician An unpersistent Entities\Musician
+   * filled with enough dummy data to generate an insurance overview
+   * letter.
+   */
+  public function getDummyMusician()
+  {
+    /** @var Service\InstrumentationService $instrumentationService */
+    $instrumentationService = $this->di(Service\InstrumentationService::class);
+    $billToParty = $instrumentationService->getDummyMusician(null, false);
+    $instrumentHolder = $instrumentationService->getDummyMusician(null, false);
+
+    // fake ids
+    $billToParty->setId(PHP_INT_MAX);
+    $instrumentHolder->setId(PHP_INT_MAX-1);
+    $instrumentHolder->setFirstName($this->l->t('Jane')); // in order to distinguish from the bill-to-party
+    $billToParty->setFirstName('blah');
+
+    $oneInsuranceBroker = (new Entities\InsuranceBroker)
+                        ->setShortName('LaInsurance')
+                        ->setLongName('La Insurance KG')
+                        ->setAddress($this->l->t('unknown'));
+    $otherInsuranceBroker = (new Entities\InsuranceBroker)
+                          ->setShortName('InsuRance')
+                          ->setLongName('Insolventus Maximus')
+                          ->setAddress($this->l->t('unknown'));
+    $germanyRate = (new Entities\InsuranceRate)
+                 ->setBroker($oneInsuranceBroker)
+                 ->setGeographicalScope(Types\EnumGeographicalScope::GERMANY())
+                 ->setRate(0.0043)
+                 ->setDueDate('2014-07-01')
+                 ->setPolicyNumber('1234567890');
+    $europeRate = (new Entities\InsuranceRate)
+                ->setBroker($oneInsuranceBroker)
+                ->setGeographicalScope(Types\EnumGeographicalScope::EUROPE())
+                ->setRate(0.0051)
+                ->setDueDate('2014-07-01')
+                ->setPolicyNumber('1234567890');
+    $worldRate = (new Entities\InsuranceRate)
+               ->setBroker($otherInsuranceBroker)
+               ->setGeographicalScope(Types\EnumGeographicalScope::WORLD())
+               ->setRate(0.0068)
+               ->setDueDate('2014-04-01')
+               ->setPolicyNumber('1234567890');
+
+    $dataItems = [
+      [ "instrument_holder","bill_to_party","insurance_rate","object","accessory","manufacturer","year_of_construction","insurance_amount","start_of_insurance"],
+      [ $billToParty,$billToParty,$europeRate,"Violoncello",false,"unbekannt","Ende 19. Jhdt.","15000","2013-06-11"],
+      [ $billToParty,$billToParty,$europeRate,"Bogen Violoncello",true,"Seifert","unbekannt","2500","2013-06-11"],
+      [ $billToParty,$billToParty,$worldRate,"Bogen Violincello, Sartory-Modell",true,"Seifert","unbekannt","4500","2013-06-11"],
+      [ $billToParty,$billToParty,$worldRate,"Cellokoffer",true,"","unbekannt","1500","2013-06-11"],
+      [ $instrumentHolder,$billToParty,$germanyRate,"Violine",false,"","unbekannt","2500","2013-06-11"],
+      [ $instrumentHolder,$billToParty,$europeRate,"Bogen Violine",true,"","unbekannt","500","2013-06-11"],
+      [ $instrumentHolder,$billToParty,$worldRate,"Geigenkasten",true,"","unbekannt","300","2013-06-11"],
+    ];
+    $keys = array_shift($dataItems);
+    foreach ($dataItems as $data) {
+      $data = array_combine($keys, $data);
+      /** @var Entities\InstrumentInsurance $insuranceItem */
+      $insuranceItem = new Entities\InstrumentInsurance;
+      foreach ($data as $key => $value) {
+        $insuranceItem[$key] = $value;
+      }
+
+      $insuranceItem->getBillToParty()->getPayableInsurances()->add($insuranceItem);
+      $insuranceItem->getInstrumentHolder()->getInstrumentInsurances()->add($insuranceItem);
+    }
+
+    return $billToParty;
   }
 
 };
