@@ -471,7 +471,7 @@ class InstrumentInsuranceService
     // particular padding and min-width are ignored at all.
     $year = $overview['date']->format('Y');
     $css = "insurance-overview-table";
-    $parSkip = 0.7;
+    $parSkip = 0.5;
     $style = '<style>
   .no-page-break {
     page-break-inside:avoid;
@@ -592,7 +592,7 @@ place; further insurance-charts may only be sent automatically to you
 if something changes.'), '', 1);
 
     $html = '<h4>'.$this->l->t('Total Insurance Fees %s', $year).'</h4>';
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH - PDFLetter::LEFT_TEXT_MARGIN - PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
@@ -617,9 +617,9 @@ if something changes.'), '', 1);
   </tr>
 </table>';
 
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH - PDFLetter::LEFT_TEXT_MARGIN - PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0*$pdf->fontSize(),
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY() + -0.8* $pdf->fontSize(),
                         $style.$html, '', 1);
     $html = implode(' ', [
       $this->l->t('The insurance fee is always paid in advance for the next insurance period.'),
@@ -628,20 +628,20 @@ fee. Partial insurance years are rounded up to full months.'),
       $this->l->t('This is detailed in the table on the following page.'),
     ]);
 
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH - PDFLetter::LEFT_TEXT_MARGIN - PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $html = $this->l->t('The insurance always rolls over to the next year unless explicitly terminated by you.');
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH - PDFLetter::LEFT_TEXT_MARGIN - PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $html = $this->l->t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit in good time in advance of the bank transaction.');
 
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH - PDFLetter::LEFT_TEXT_MARGIN - PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
                         PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+$parSkip*$pdf->fontSize(),
                         $style.$html, '', 1);

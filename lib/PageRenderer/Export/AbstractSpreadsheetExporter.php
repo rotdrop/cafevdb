@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\PageRenderer\Export;
 use PhpOffice\PhpSpreadsheet;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\FontService;
 
 abstract class AbstractSpreadsheetExporter
 {
@@ -125,11 +126,7 @@ abstract class AbstractSpreadsheetExporter
     $valueBinder = \OC::$server->query(PhpSpreadsheetValueBinder::class);
     PhpSpreadsheet\Cell\Cell::setValueBinder($valueBinder);
 
-    $fontPaths = [
-      'gentoo' => '/usr/share/fonts/corefonts/',
-      'debian/ubuntu' => '/usr/share/fonts/truetype/msttcorefonts/',
-    ];
-    foreach ($fontPaths as $distro => $fontPath) {
+    foreach (FontService::MS_TTF_CORE_FONTS as $distro => $fontPath) {
       try {
         /** @todo Make the font path configurable, disable feature if fonts not found. */
         PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);

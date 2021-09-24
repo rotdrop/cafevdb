@@ -26,9 +26,12 @@ namespace OCA\CAFEVDB\Documents;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\FontService;
 
-/** Din 5008 format B
- */
+define('PDF_FONT_NAME_MAIN', 'dejavusans');
+define('PDF_FONT_NAME_DATA', 'dejavusans');
+
+/** Din 5008 format B */
 class PDFLetter extends \TCPDF
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -67,10 +70,15 @@ class PDFLetter extends \TCPDF
     $diskcache = false,
     $pdfa = false) {
     parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-    $this->SetAutoPageBreak(true, self::FIRST_FOOTER_HEIGHT+10);
+    $this->SetAutoPageBreak(true, self::FIRST_FOOTER_HEIGHT/*+10*/);
 
     $this->configService = $configService;
     $this->l10n = $this->configService->getL10n();
+
+    $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf'));
+    $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf') . ' / ' . \TCPDF_FONTS::addTTFfont(
+      FontService::findTrueTypeFontFile('arial.ttf'),
+      'TrueTypeUnicode'));
   }
 
   /**Return the font-size converted to mm. */
@@ -137,7 +145,7 @@ class PDFLetter extends \TCPDF
 
     $this->SetFont(self::FONT_NAME, 'I', self::FONT_FOOTER);
     $fontHeight = $this->getStringHeight(0, 'Camerata');
-    $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
+    $textWidth = self::PAGE_WIDTH - self::LEFT_MARGIN - self::RIGHT_TEXT_MARGIN;
 
     $page = $this->getAliasNumPage();
     $total = $this->getAliasNbPages();
@@ -158,12 +166,12 @@ class PDFLetter extends \TCPDF
       $this->SetXY(self::LEFT_MARGIN, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
       $this->Cell(60, 0, 'Mitglied im BDLO, 1087C', 0, false, 'L');
 
-      $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
-      $this->Cell(60, 0, 'IBAN: DE95680900000020213507', 0, false, 'L');
-      $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(1.5)*$fontHeight));
-      $this->Cell(60, 0, 'BIC: GENODE61FR1', 0, false, 'L');
-      $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
-      $this->Cell(60, 0, 'Volksbank Freiburg e.G.', 0, false, 'L');
+      // $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
+      // $this->Cell(60, 0, 'IBAN: DE95680900000020213507', 0, false, 'L');
+      // $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(1.5)*$fontHeight));
+      // $this->Cell(60, 0, 'BIC: GENODE61FR1', 0, false, 'L');
+      // $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
+      // $this->Cell(60, 0, 'Volksbank Freiburg e.G.', 0, false, 'L');
 
       $this->SetXY(self::LEFT_MARGIN+120, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
       $this->Cell(60, 0, 'IBAN: DE08680501010010114285', 0, false, 'L');
@@ -262,25 +270,32 @@ class PDFLetter extends \TCPDF
     $this->startTransaction();
     $startPage = $this->getPage();
 
-    $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
-    //$this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize());
-    //$this->Cell($textWidth, $this->fontSize(), $endFormula, 0, false, 'L');
+    $textWidth = self::PAGE_WIDTH - self::LEFT_TEXT_MARGIN - self::RIGHT_TEXT_MARGIN;
     $this->writeHtmlCell($textWidth, $this->fontSize(),
                          self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize(),
                          $endFormula, '', 1);
     $y = $this->GetY();
     if (!empty($signatureImage) && $signatureImage->valid()) {
       $this->Image('@'.$signatureImage->data(),
-                   self::LEFT_TEXT_MARGIN+10,
-                   $this->GetY()+1*$this->fontSize(),
+                   self::LEFT_TEXT_MARGIN + 10,
+                   $this->GetY() + 0.5 * $this->fontSize(),
                    0, 4*$this->fontSize());
     }
-    $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 4*$this->fontSize());
-    $this->Cell($textWidth, $this->fontSize(), $signature, 0, false, 'L');
+    $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 4 * $this->fontSize());
+    $this->Cell(
+      $textWidth, $this->fontSize(), $signature,
+      0, // border
+      false,
+      'L', // align
+      0, // fill
+      null, // link
+      0, // stretch
+      true // ignore min height
+    );
 
     $endPage = $this->getPage();
 
-    if ($startPage != $endPage) {
+    if (false && $startPage != $endPage) {
       $this->rollbackTransaction(true);
       $this->addPage();
       $this->letterClose($endFormula, $signature, $signatureImage);
