@@ -75,10 +75,10 @@ class PDFLetter extends \TCPDF
     $this->configService = $configService;
     $this->l10n = $this->configService->getL10n();
 
-    $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf'));
-    $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf') . ' / ' . \TCPDF_FONTS::addTTFfont(
-      FontService::findTrueTypeFontFile('arial.ttf'),
-      'TrueTypeUnicode'));
+    // $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf'));
+    // $this->logInfo('FontName ' . FontService::findTrueTypeFontFile('arial.ttf') . ' / ' . \TCPDF_FONTS::addTTFfont(
+    //   FontService::findTrueTypeFontFile('arial.ttf'),
+    //   'TrueTypeUnicode'));
   }
 
   /**Return the font-size converted to mm. */
@@ -152,6 +152,8 @@ class PDFLetter extends \TCPDF
     $pages = $this->l10n->t('page').' '.$page.' '.$this->l10n->t('of').' '.$total;
     $pagesDummy = $this->l10n->t('page').' '.'9'.' '.$this->l10n->t('of').' '.'9';
     $pagesWidth = $this->GetStringWidth($pagesDummy);
+
+    $this->logInfo('PAGES WIDTH ' . $pagesDummy . ': ' . $pagesWidth);
 
     if ($this->getPage() == 1) {
 

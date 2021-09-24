@@ -529,9 +529,7 @@ class InstrumentInsuranceService
 </style>';
 
     // create a PDF object
-    $pdf = new PDFLetter(
-      $this->configService,
-      PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new PDFLetter($this->configService, 'P', 'mm', 'A4', true, 'UTF-8', false);
 
     // set document (meta) information
     $pdf->SetCreator(PDF_CREATOR);
@@ -651,22 +649,42 @@ fee. Partial insurance years are rounded up to full months.'),
                       $this->orgaRolesService->treasurerSignature());
 
     // Slightly smaller for table
-    $pdf->SetFont(PDFLetter::FONT_NAME, '', 8);
+    $pdf->SetFont(PDFLetter::FONT_NAME, '', 10);
+    $this->logInfo('TEST WIDTH ' . $pdf->getStringWidth('hello world and so on'));
+
+    $columnInfo = [
+      $this->l->t('Vendor') => [ 'min' => 70, ],
+      $this->l->t('Scope') => [ 'min' => 70, ],
+      $this->l->t('Object') => [ 'min' => 100 ],
+      $this->l->t('Manufacturer') => [ 'min' => 100, ],
+      $this->l->t('Amount') => [ 'min' => 65, ],
+      $this->l->t('Rate') => [ 'min' => 45, ],
+      $this->l->t('Start') => [ 'min' => 65, ],
+      $this->l->t('Valid until') => [ 'min' => 65, ],
+      $this->l->t('Months') => [ 'min' => 50, ],
+      $this->l->t('Fee') => [ 'min' => 50, ],
+    ];
+
+    $pdf->SetFont(PDFLetter::FONT_NAME, 'BI', 10);
+    foreach ($columnInfo as $key => &$info) {
+      $info['heading'] = ($pdf->GetStringWidth($key) / PDFLetter::PT + 4) * $pdf->getImageScale();
+      $info['min'] = max($info['min'], $info['heading']);
+    }
+    unset($info);
+    $pdf->SetFont(PDFLetter::FONT_NAME, '', 10);
+    $this->logInfo('COLUMN INFO ' . print_r($columnInfo, true));
 
     $html = '<table class="no-page-break" cellpadding="2" class="'.$css.'">
-  <tr class="hidden collapsed">
-    <td class="header" widtd="70"></td>
-    <td class="header" width="70"></td>
-    <td class="header" width="100"></td>
-    <td class="header" width="100"></td>
-    <td class="header" width="65"></td>
-    <td class="header" width="45"></td>
-    <td class="header" width="65"></td>
-    <td class="header" width="65"></td>
-    <td class="header" width="50"></td>
-    <td class="header" width="50"></td>
+  <tr class="hidden collapsed">';
+    foreach ($columnInfo as $key => $info) {
+      $html .= '
+    <td class="header" width="'.$info['min'].'"></td>';
+    }
+    $html .= '
   </tr>
 ';
+    $this->logInfo('HTML '  . $html);
+
     foreach($overview['musicians'] as $id => $insurance) {
       // $this->logInfo(Functions\dump($insurance));
       // <div class="no-page-break">
@@ -675,17 +693,12 @@ fee. Partial insurance years are rounded up to full months.'),
   <tr>
     <td colspan="10" class="musician-head">'.$this->l->t('Insured Person: %s', array($insurance['name'])).'</td>
   </tr>
-  <tr>
-    <td class="header">'.$this->l->t('Vendor').'</td>
-    <td class="header">'.$this->l->t('Scope').'</td>
-    <td class="header">'.$this->l->t('Object').'</td>
-    <td class="header">'.$this->l->t('Manufacturer').'</td>
-    <td class="header">'.$this->l->t('Amount').'</td>
-    <td class="header">'.$this->l->t('Rate').'</td>
-    <td class="header">'.$this->l->t('Start').'</td>
-    <td class="header">'.$this->l->t('Valid until').'</td>
-    <td class="header">'.$this->l->t('Months').'</td>
-    <td class="header">'.$this->l->t('Fee').'</td>
+  <tr>';
+      foreach ($columnInfo as $key => $info) {
+        $html .= '
+    <td class="header">'.$key.'</td>';
+      }
+      $html .= '
   </tr>
 ';
       foreach($insurance['items'] as $item) {
