@@ -422,7 +422,7 @@ class InstrumentInsuranceService
         $subTotals += $itemInfo['fee'];
       }
       $insuranceOverview['musicians'][$id]['subTotals'] = $subTotals;
-      $this->logInfo('SUBTOTALS '.$subTotals);
+      // $this->logInfo('SUBTOTALS '.$subTotals);
       $annual += $subTotals;
     }
     $insuranceOverview['annual'] = $annual;
@@ -498,21 +498,24 @@ class InstrumentInsuranceService
   }
   table.'.$css.' td {
     border: 0.3mm solid #000;
-    min-width:5em;
+    /* min-width:5em; */
     padding: 0.1em 0.5em 0.1em 0.5em;
+    margin:0;
   }
   table.'.$css.' th, table.'.$css.' td.header {
     border: 0.3mm solid #000;
-    min-width:5em;
+    /* min-width:5em; */
     padding: 0.1em 0.5em 0.1em 0.5em;
     text-align:center;
     font-weight:bold;
     font-style:italic;
+    margin:0;
   }
   table.'.$css.' td.musician-head {
     font-weight:bold;
     font-style:italic;
     padding: 0.1em 0.5em 0.1em 0.5em;
+    margin:0;
   }
   table.'.$css.' td.summary {
     text-align:right;
@@ -650,41 +653,47 @@ fee. Partial insurance years are rounded up to full months.'),
 
     // Slightly smaller for table
     $pdf->SetFont(PDFLetter::FONT_NAME, '', 10);
-    $this->logInfo('TEST WIDTH ' . $pdf->getStringWidth('hello world and so on'));
 
     $columnInfo = [
-      $this->l->t('Vendor') => [ 'min' => 70, ],
-      $this->l->t('Scope') => [ 'min' => 70, ],
-      $this->l->t('Object') => [ 'min' => 100 ],
-      $this->l->t('Manufacturer') => [ 'min' => 100, ],
-      $this->l->t('Amount') => [ 'min' => 65, ],
-      $this->l->t('Rate') => [ 'min' => 45, ],
-      $this->l->t('Start') => [ 'min' => 65, ],
-      $this->l->t('Valid until') => [ 'min' => 65, ],
+      $this->l->t('Vendor') => [ 'min' => 90, ],
+      $this->l->t('Scope') => [ 'min' => 60, 'sample' => array_map(function($v) { return $this->l->t((string)$v); }, Types\EnumGeographicalScope::values()), ],
+      $this->l->t('Object') => [ 'min' => 180 ],
+      $this->l->t('Manufacturer') => [ 'min' => 120, ],
+      $this->l->t('Amount') => [ 'min' => 65, 'sample' => $this->moneyValue(99999.99), ],
+      $this->l->t('Rate') => [ 'min' => 45, 'sample' => $this->floatValue(0.0055*100.0).' %', ],
+      $this->l->t('Start') => [ 'min' => 65, 'sample' => $this->dateTimeFormatter()->formatDate(time(), 'medium'), ],
+      $this->l->t('Valid until') => [ 'min' => 65, 'sample' => $this->dateTimeFormatter()->formatDate(time(), 'medium'), ],
       $this->l->t('Months') => [ 'min' => 50, ],
-      $this->l->t('Fee') => [ 'min' => 50, ],
+      $this->l->t('Fee') => [ 'min' => 50, 'sample' => $this->moneyValue(999.99), ],
     ];
 
     $pdf->SetFont(PDFLetter::FONT_NAME, 'BI', 10);
     foreach ($columnInfo as $key => &$info) {
+      if ($info['min'] < 0) {
+        continue;
+      }
       $info['heading'] = ($pdf->GetStringWidth($key) / PDFLetter::PT + 4) * $pdf->getImageScale();
-      $info['min'] = max($info['min'], $info['heading']);
+      if (!is_array($info['sample'])) {
+        $info['sample'] = [ $info['sample']??'' ];
+      }
+      $info['sample'] = array_map(function($v) use ($pdf) {
+          return ($pdf->GetStringWidth($v) / PDFLetter::PT + 4) * $pdf->getImageScale();
+        }, $info['sample']);
+      $info['min'] = max(array_merge([ $info['min'], $info['heading'], ], $info['sample']));
     }
     unset($info);
     $pdf->SetFont(PDFLetter::FONT_NAME, '', 10);
-    $this->logInfo('COLUMN INFO ' . print_r($columnInfo, true));
 
     $html = '<table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr class="hidden collapsed">';
     foreach ($columnInfo as $key => $info) {
+      $width = $info['min'] < 0 ? '' : ' width="'.$info['min'].'"';
       $html .= '
-    <td class="header" width="'.$info['min'].'"></td>';
+    <td class="header"'.$width.'></td>';
     }
     $html .= '
   </tr>
 ';
-    $this->logInfo('HTML '  . $html);
-
     foreach($overview['musicians'] as $id => $insurance) {
       // $this->logInfo(Functions\dump($insurance));
       // <div class="no-page-break">
@@ -710,7 +719,7 @@ fee. Partial insurance years are rounded up to full months.'),
     <td class="text">'.$item['object'].'</td>
     <td class="text">'.$item['manufacturer'].'</td>
     <td class="money">'.$this->moneyValue($item['amount']).'</td>
-    <td class="percentage">'.($item['rate']*100.0).' %'.'</td>
+    <td class="percentage">'.$this->floatValue($item['rate']*100.0).' %'.'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['start']->getTimestamp(), 'medium').'</td>
     <td class="date">'.$this->dateTimeFormatter()->formatDate($item['due']->getTimestamp(), 'medium').'</td>
     <td class="number">'.$item['fraction']*12.0.'</td>

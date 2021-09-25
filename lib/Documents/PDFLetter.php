@@ -138,7 +138,8 @@ class PDFLetter extends \TCPDF
   /**
    * Generate the letter footer.
    *
-   * @todo Use data base value to fill out the fields.
+   * @todo Use data base value to fill out the fields and use the
+   * current page's actual dimensions.
    */
   public function Footer() {
     $this->SetCellPadding(0);
