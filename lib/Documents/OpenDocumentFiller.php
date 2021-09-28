@@ -87,6 +87,15 @@ class OpenDocumentFiller
     $templateFile = $this->userStorage->getFile($templateFileName);
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
+
+    // Do an opportunistic block-merge for every key with is an array
+
+    foreach ($this->backend->VarRef as $key => $value) {
+      if (is_array($value)) {
+        $this->backend->MergeBlock($key, $value);
+      }
+    }
+
     $this->backend->show(OPENTBS_STRING);
 
     $output = ob_get_contents();
