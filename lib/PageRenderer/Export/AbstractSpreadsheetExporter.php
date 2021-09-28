@@ -131,6 +131,7 @@ abstract class AbstractSpreadsheetExporter
         /** @todo Make the font path configurable, disable feature if fonts not found. */
         PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);
         PhpSpreadsheet\Shared\Font::setAutoSizeMethod(PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
+        break;
       } catch (\Throwable $t) {
         $this->logException($t);
       }
