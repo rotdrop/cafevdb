@@ -88,6 +88,17 @@ class OpenDocumentFiller
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 
+    // OpenTBS does not support DateTimeInterface or time-zones, so
+    // convert everything to a time-stamp and add the timezone-offset
+    // to get correct dates and times.
+    array_walk_recursive($this->backend->VarRef, function(&$value, $key) {
+      if ($value instanceof \DateTimeInterface) {
+        $stamp = $value->getTimestamp();
+        $stamp -= $value->getOffset();
+        $value = $stamp;
+      }
+    });
+
     // Do an opportunistic block-merge for every key with is an array
 
     foreach ($this->backend->VarRef as $key => $value) {
