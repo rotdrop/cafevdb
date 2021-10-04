@@ -973,6 +973,13 @@ class PersonalSettingsController extends Controller {
       $templatesFolder = UserStorage::PATH_SEP
                        . $sharedFolder . UserStorage::PATH_SEP
                        . $templatesFolder . UserStorage::PATH_SEP;
+      $subFolder = ConfigService::DOCUMENT_TEMPLATES[$parameter]['folder']??null;
+      if (!empty($subFolder)) {
+        $subFolder = $this->getConfigValue($subFolder);
+        if (!empty($subFolder)) {
+          $templatesFolder .= $subFolder . UserStorage::PATH_SEP;
+        }
+      }
       if (empty($value)) {
         $this->deleteConfigValue($parameter);
         $messages[] = $this->l->t(
@@ -1558,7 +1565,7 @@ class PersonalSettingsController extends Controller {
       }
 
       switch ($templateName) {
-      case 'projectDebitNoteMandateForm': {
+      case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE: {
         /** @var InstrumentationService $instrumentationService */
         $instrumentationService = $this->di(InstrumentationService::class);
         $musician = $instrumentationService->getDummyMusician();
@@ -1568,7 +1575,7 @@ class PersonalSettingsController extends Controller {
           $this->getExecutiveBoardProjectId());
         break;
       }
-      case 'generalDebitNoteMandateForm': {
+      case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE: {
         /** @var InstrumentationService $instrumentationService */
         $instrumentationService = $this->di(InstrumentationService::class);
         $musician = $instrumentationService->getDummyMusician();
@@ -1578,7 +1585,7 @@ class PersonalSettingsController extends Controller {
           $this->getClubMembersProjectId());
         break;
       }
-      case 'instrumentInsuranceRecordLegacy': {
+      case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy': {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
         $musician = $insuranceService->getDummyMusician();
@@ -1589,7 +1596,7 @@ class PersonalSettingsController extends Controller {
         $fileName = 'legacy-insurance-overview.pdf';
         break;
       }
-      case 'instrumentInsuranceRecord': {
+      case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD: {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
         $musician = $insuranceService->getDummyMusician();
@@ -1597,13 +1604,12 @@ class PersonalSettingsController extends Controller {
 
         /** @var OpenDocumentFiller $documentFiller */
         $documentFiller = $this->di(OpenDocumentFiller::class);
-        $templateFileName = $this->getConfigValue($templateName);
-
-        $templatesFolder = $this->getDocumentTemplatesPath();
-        if (empty($templatesFolder)) {
-          return  [];
+        $templateFileName = $this->getDocumentTemplatesPath($templateName);
+        if (empty($templateFileName)) {
+          return self::grumble(
+            $this->l->t('There is no template file for template "%s"',
+                        $templateName));
         }
-        $templateFileName = UserStorage::pathCat($templatesFolder, $templateFileName);
 
         list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview);
 

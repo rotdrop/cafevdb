@@ -114,28 +114,35 @@ class ConfigService {
   const DOCUMENT_TEMPLATE_LOGO = 'logo';
   const DOCUMENT_TEMPLATE_SEAL = 'seal';
   const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD = 'instrumentInsuranceRecord';
+  const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE = 'projectDebitNoteMandateForm';
+  const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE = 'generalDebitNoteMandateForm';
 
   /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
     self::DOCUMENT_TEMPLATE_LOGO => [
       'name' => 'orchestra logo',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
+      'folder' => null,
     ],
     self::DOCUMENT_TEMPLATE_SEAL => [
       'name' => 'orchestra seal',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
+      'folder' => null,
     ],
-    'projectDebitNoteMandateForm' => [
+    self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
       'name' => 'project debit-note mandate',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
     ],
-    'generalDebitNoteMandateForm' => [
+    self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
       'name' => 'general debit-note mandate',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
     ],
     self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
       'name' => 'instrument insurance record template',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
     ],
   ];
 

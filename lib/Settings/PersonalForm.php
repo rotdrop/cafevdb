@@ -309,13 +309,20 @@ class PersonalForm {
           $folder = UserStorage::PATH_SEP
                   . $sharedFolder . UserStorage::PATH_SEP
                   . $documentTemplatesFolder . UserStorage::PATH_SEP;
-          foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $documentTemplate) {
+          foreach (ConfigService::DOCUMENT_TEMPLATES as $documentTemplate => $templateInfo) {
             $fileName = $this->getConfigValue($documentTemplate);
-            // $this->logInfo('TEMPLATE '.$documentTemplate.': '.$folder.$fileName);
             $templateParameters[$documentTemplate . 'FileName'] = $fileName;
+            $subFolder = $templateInfo['folder']??'';
+            if (!empty($subFolder)) {
+              $subFolderName = $this->getConfigValue($subFolder) . UserStorage::PATH_SEP;
+            } else {
+              $subFolderName = '';
+            }
+            $templateParameters[$documentTemplate . 'SubFolder'] = $subFolder;
+            $templateParameters[$documentTemplate . 'SubFolderName'] = $subFolderName;
             if (!empty($fileName)) {
               try {
-                $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $fileName);
+                $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $subFolderName . $fileName);
               } catch (\Throwable $t) {
                 $this->logException($t);
               }

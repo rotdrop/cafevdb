@@ -924,10 +924,12 @@ const afterLoad = function(container) {
       $fieldset.find('input').prop('disabled', true);
     }
 
-    const moveInPlace = function(file, $container) {
+    const moveIntoPlace = function(file, $container) {
+      const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
             '/' + $('#sharedfolder').val()
             + '/' + $('#documenttemplatesfolder').val()
+            + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
             + '/' + file.original_name;
 
       $.post(
@@ -1019,7 +1021,7 @@ const afterLoad = function(container) {
         url: generateUrl('upload/stash'),
         doneCallback(file, index, container) {
           console.info('FILE', file, container);
-          moveInPlace(file, $container);
+          moveIntoPlace(file, $container);
         },
         stopCallback: null,
         dropZone: $container,
@@ -1054,7 +1056,7 @@ const afterLoad = function(container) {
                   t(appName, 'Unable to copy selected file {file}.', { file: paths[0] }),
                   t(appName, 'Error'));
               }
-              moveInPlace(files[0], $container);
+              moveIntoPlace(files[0], $container);
             });
         },
         false, // multi-select

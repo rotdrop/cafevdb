@@ -85,6 +85,9 @@ class OpenDocumentFiller
     $this->backend->ResetVarRef(false);
     $this->backend->VarRef = $this->fillData($templateData);
     $templateFile = $this->userStorage->getFile($templateFileName);
+    if (empty($templateFile)) {
+      throw new \RuntimeException($this->l->t('Unable to obtain file-handle for path "%s"', $templateFileName));
+    }
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 

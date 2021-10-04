@@ -198,20 +198,19 @@ class FinanceService
     }
 
     if ($this->isClubMembersProject($project)) {
-      $formFileName = $this->getConfigValue('generalDebitNoteMandateForm');
+      $formName = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
     } else {
-      $formFileName = $this->getConfigValue('projectDebitNoteMandateForm');
+      $formName = ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
     }
 
-    if (empty($formFileName)) {
+    if (empty($formName)) {
       return [];
     }
 
-    $templatesFolder = $this->getDocumentTemplatesPath();
-    if (empty($templatesFolder)) {
+    $formFileName = $this->getDocumentTemplatesPath($formName);
+    if (empty($formFileName)) {
       return  [];
     }
-    $formFileName = UserStorage::pathCat($templatesFolder, $formFileName);
 
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);

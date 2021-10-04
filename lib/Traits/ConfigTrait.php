@@ -363,18 +363,44 @@ trait ConfigTrait {
 
   /**
    * Return the full path to the document templates folder.
+   *
+   * @param string $templateName If given return the full path to the
+   * given document template which can be one of the array-keys of
+   * ConfigService::DOCUMENT_TEMPLATES.
+   *
+   * @param bool $dirName If $templateName is given return only the
+   * dirname part of the path.
+   *
+   * @return string Cloud file-system path as requested.
    */
-  protected function getDocumentTemplatesPath()
+  protected function getDocumentTemplatesPath(string $templateName = null, bool $dirName = false)
   {
+    $pathComponents = [''];
     $sharedFolder = $this->getSharedFolderPath();
     if (empty($sharedFolder)) {
       return null;
     }
+    $pathComponents[] = $sharedFolder;
     $templatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
     if (empty($templatesFolder)) {
       return null;
     }
-    return '/' . $sharedFolder . '/' . $templatesFolder;
+    $pathComponents[] = $templatesFolder;
+    if (!empty($templateName)) {
+      $subFolder = ConfigService::DOCUMENT_TEMPLATES[$templateName]['folder']??null;
+      if (!empty($subFolder)) {
+        $subFolder = $this->getConfigValue($subFolder);
+        if (!empty($subFolder)) {
+          $pathComponents[] = $subFolder;
+        }
+      }
+      $templateFileName = $this->getConfigValue($templateName);
+      if (empty($templateFileName)) {
+        return null;
+      }
+      $pathComponents[] = $dirName ? '' : $templateFileName ;
+    }
+    return implode('/', $pathComponents);
   }
 
   /**

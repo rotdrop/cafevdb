@@ -102,7 +102,7 @@ class FileNodeListener implements IEventListener
       if (empty($path)) {
         return;
       }
-      $templateKey = $this->matchDocumentTemplates($path, $configService);
+      list($templateKey,) = $this->matchDocumentTemplates($path, $configService);
       if (empty($templateKey)) {
         return;
       }
@@ -122,12 +122,12 @@ class FileNodeListener implements IEventListener
         return;
       }
 
-      $templateKey = $this->matchDocumentTemplates($sourcePath, $configService);
+      list($templateKey, $subFolder) = $this->matchDocumentTemplates($sourcePath, $configService);
       if (empty($templateKey)) {
         return;
       }
 
-      $targetPath = self::matchPrefixDirectory($targetPath, $templatesFolder);
+      $targetPath = self::matchPrefixDirectory($targetPath, $templatesFolder . $subFolder);
       if (empty($targetPath)) {
         $this->logInfo('REMOVE CONFIG VALUE FOR '.$templateKey);
         $configService->deleteConfigValue($templateKey);
@@ -140,17 +140,44 @@ class FileNodeListener implements IEventListener
     }
   }
 
+  /**
+   * Find the template key $path is referring to by looking at the
+   * configured (i.e. uploaded) template files.
+   *
+   * @param string $path The relative path w.r.t. to the templates
+   * folder.
+   *
+   * @param ConfigService $configService Global config-service object.
+   *
+   * @return null|string The config-key $path is referring to or null
+   * if no key could be determine.
+   */
   private function matchDocumentTemplates($path, $configService)
   {
-    foreach (array_keys(ConfigService::DOCUMENT_TEMPLATES) as $templateKey) {
-      if ($path === $configService->getConfigValue($templateKey)) {
-        return $templateKey;
+    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateKey => $templateInfo) {
+      $subFolder = $templateInfo['folder']??'';
+      $subFolderName = empty($subFolder) ? '' : $configService->getConfigValue($subFolder);
+      if (!empty($subFolderName)) {
+        $subFolderName .= '/';
+      }
+      $templateFile = $subFolderName . $configService->getConfigValue($templateKey);
+      if ($path === $templateFile) {
+        return [ $templateKey, $subFolderName ];
       }
     }
     $this->logInfo('NOT A SPECIAL FILE '.$sourcePath);
-    return null;
+    return [];
   }
 
+  /**
+   * @param string $path The path to match
+   *
+   * @param string $folderPrefix The folder-prefix to compare the
+   * first part of the string to.
+   *
+   * @return null|string The sub-string after remove the $folderPrefix
+   * or null if $folderPrefix is not the first part of the string.
+   */
   private static function matchPrefixDirectory($path, $folderPrefix)
   {
     if (strpos($path, $folderPrefix) !== 0) {

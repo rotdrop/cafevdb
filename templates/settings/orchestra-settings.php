@@ -134,7 +134,9 @@ foreach ($localeCountryNames as $country => $name) {
         $placeholder = $templateInfo['name'];
         $type = $templateInfo['type'];
       ?>
-        <div class="template-upload" data-document-template="<?php p($documentTemplate); ?>">
+        <div class="template-upload"
+             data-document-template="<?php p($documentTemplate); ?>"
+             data-document-template-sub-folder="<?php p(${$documentTemplate . 'SubFolder'}); ?>">
           <input type="button"
                  name="<?php p($documentTemplate); ?>Delete"
                  title="<?php p($toolTips['templates:delete']); ?>"
@@ -174,7 +176,7 @@ foreach ($localeCountryNames as $country => $name) {
                    <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
             />
             <input type="Button"
-                   name0"<?php p($documentTemplate); ?>FillTestData"
+                   name="<?php p($documentTemplate); ?>FillTestData"
                    data-template="<?php p($documentTemplate); ?>"
                    title="<?php p($toolTips['templates:auto-fill-data']); ?>"
                    class="operation right auto-fill-test-data document-template <?php p($documentTemplate); ?>"

@@ -306,6 +306,7 @@ class UserStorage
         $file = $this->userFolder->get($path);
         $file->putContent($content);
       } catch(\OCP\Files\NotFoundException $e) {
+        $this->ensureFolder(dirname($path));
         $this->userFolder->newFile($path, $content);
       }
     } catch (\Throwable $t) {
