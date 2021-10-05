@@ -341,6 +341,32 @@ foreach ($localeCountryNames as $country => $name) {
               </select>
             </td>
           </tr>
+          <tr>
+            <td>
+              <input type="text"
+                     id="presidentEmail"
+                     placeholder="<?php p($l->t('e.g. president@me.tld')); ?>"
+                     name="presidentEmail"
+                     class="executive-board-ids tooltip-left"
+              />
+            </td>
+            <td>
+              <input type="text"
+                     id="secretaryEmail"
+                     placeholder="<?php p($l->t('e.g. secretary@me.tld')); ?>"
+                     name="secretaryEmail"
+                     class="executive-board-ids tooltip-left"
+              />
+            </td>
+            <td>
+              <input type="text"
+                     id="treasurerEmail"
+                     placeholder="<?php p($l->t('e.g. treasurer@me.tld')); ?>"
+                     name="treasurerEmail"
+                     class="executive-board-ids tooltip-left"
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
     </fieldset>
