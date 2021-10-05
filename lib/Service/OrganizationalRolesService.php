@@ -81,6 +81,20 @@ class OrganizationalRolesService
       $email = $user->getEMailAddress();
       return [ 'name' => $name, 'email' => $email ];
     }
+    // or the project participant
+    if (false) {
+       $participant = $this->dedicatedBoardMemberParticipant($role);
+       if (empty($participant)) {
+         return null;
+       }
+       $musician = $participant->getMusician();
+       $email = $musician->getEmail();
+       // etc.
+    }
+    // and the configured email-address:
+    if (false) {
+      $email = $this->getConfigValue($role . 'Email', null);
+    }
   }
 
   private function executiveBoardProject():?Entities\Project
