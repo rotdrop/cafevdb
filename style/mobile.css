@@ -32,7 +32,7 @@
   #body-user #header,
   #body-settings #header,
   #body-public #header {
-    z-index:1000;
+    /* z-index:1000; */
   }
 
   #appsettings_popup {
@@ -41,7 +41,7 @@
 
   /* Display in full-screen, unless the nav-snapper is activated */
   body:not(.snapjs-left) #content {
-    padding-top:0px;
+    /* padding-top:0px; */
   }
 
   #app-content {
