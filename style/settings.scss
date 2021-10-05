@@ -341,14 +341,6 @@ input.randomkey {
   height:34px;
 }
 
-form.orchestra table.executive-board-members {
-  margin-top:1ex;
-  width:100%;
-  th {
-    font-weight:bold;
-  }
-}
-
 #email-settings {
   form.mailing-list {
     input[type="text"], input[type="password"] {
@@ -358,5 +350,13 @@ form.orchestra table.executive-board-members {
 }
 
 .executive-board-members {
+  margin-top:1ex;
+  width:100%;
+  .heading {
+    font-weight:bold;
+  }
+  .email input {
+    width:100%;
+  }
   @import 'bootstrap/scss/bootstrap';
 }

@@ -915,9 +915,12 @@ class PersonalSettingsController extends Controller {
     case 'presidentGroupId':
     case 'secretaryGroupId':
     case 'treasurerGroupId':
+    case 'presidentEmail':
+    case 'secretaryEmail':
+    case 'treasurerEmail':
       $executiveBoardMembers = ['president', 'secretary', 'treasurer'];
       foreach ($executiveBoardMembers as $prefix) {
-        foreach(['Id', 'UserId', 'GroupId'] as $postfix) {
+        foreach(['Id', 'UserId', 'GroupId', 'Email'] as $postfix) {
           $official = $prefix.$postfix;
           if ($parameter === $official) {
             // @todo validate

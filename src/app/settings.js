@@ -857,6 +857,7 @@ const afterLoad = function(container) {
     });
     selectPlaceholder(executiveBoardIds);
     simpleSetValueHandler(executiveBoardIds, 'change', msg);
+    simpleSetValueHandler($('input.executive-board-ids'), 'blur', msg);
 
     /**************************************************************************
      *
