@@ -22,6 +22,12 @@
 
 /* Special settings for small devices */
 
+@media only screen and (max-width: 1024px) {
+  div.popup-title {
+    padding-left: 44px !important;
+  }
+}
+
 @media only screen and (max-width: 768px) {
 
   body {
