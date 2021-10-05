@@ -236,17 +236,13 @@ foreach ($localeCountryNames as $country => $name) {
         <?php echo $l->t('Executive Board Project'); ?>
       </label>
       <br/>
-      <table class="executive-board-members">
-        <thead>
-          <tr>
-            <th><?php p($l->t('President')); ?></th>
-            <th><?php p($l->t('Secretary')); ?></th>
-            <th><?php p($l->t('Treasurer')); ?></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
+      <div class="executive-board-members">
+        <div class="row">
+          <div class="president col-xs-4 col-sm-4">
+            <div class="heading row">
+              <?php p($l->t('President')); ?>
+            </div>
+            <div class="musician-id row">
               <select id="presidentSelect"
                       data-placeholder="<?php echo $l->t('Select the President'); ?>"
                       title="<?php echo $l->t('President of the orchestra'); ?>"
@@ -255,30 +251,8 @@ foreach ($localeCountryNames as $country => $name) {
                 <option></option>
                 <?php echo PageNavigation::selectOptions($executiveBoardMembers, $presidentId); ?>
               </select>
-            </td>
-            <td>
-              <select id="secretarySelect"
-                      data-placeholder="<?php echo $l->t('Select the Secretary'); ?>"
-                      title="<?php echo $l->t('Secretary of the orchestra'); ?>"
-                      name="secretaryId"
-                      class="executive-board-ids tooltip-left">
-                <option></option>
-                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
-              </select>
-            </td>
-            <td>
-              <select id="treasurerSelect"
-                      data-placeholder="<?php echo $l->t('Select the Treasurer'); ?>"
-                      title="<?php echo $l->t('Treasurer of the orchestra'); ?>"
-                      name="treasurerId"
-                      class="executive-board-ids tooltip-left">
-                <option></option>
-                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
+            </div>
+            <div class="cloud-uid row">
               <select id="presidentUserSelect"
                       data-placeholder="<?php echo $l->t('Cloud President-User'); ?>"
                       title="<?php echo $l->t('Cloud user-id of the president of the orchestra'); ?>"
@@ -287,8 +261,41 @@ foreach ($localeCountryNames as $country => $name) {
                 <option></option>
                 <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']); ?>
               </select>
-            </td>
-            <td>
+            </div>
+            <div class="cloud-group row">
+              <select id="presidentGroupSelect"
+                      data-placeholder="<?php echo $l->t('Cloud President-Group'); ?>"
+                      title="<?php echo $l->t('Cloud group-id of the president of the orchestra'); ?>"
+                      name="presidentGroupId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
+              </select>
+            </div>
+            <div class="email row">
+              <input type="text"
+                     id="presidentEmail"
+                     placeholder="<?php p($l->t('e.g. president@me.tld')); ?>"
+                     name="presidentEmail"
+                     class="executive-board-ids tooltip-left"
+              />
+            </div>
+          </div>
+          <div class="secretary col-xs-4 col-sm-4">
+            <div class="heading">
+              <?php p($l->t('Secretary')); ?>
+            </div>
+            <div class="musician-id">
+              <select id="secretarySelect"
+                      data-placeholder="<?php echo $l->t('Select the Secretary'); ?>"
+                      title="<?php echo $l->t('Secretary of the orchestra'); ?>"
+                      name="secretaryId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
+              </select>
+            </div>
+            <div class="cloud-uid">
               <select id="secretaryUserSelect"
                       data-placeholder="<?php echo $l->t('Cloud Secretary-User'); ?>"
                       title="<?php echo $l->t('Cloud user-id of the secretary of the orchestra'); ?>"
@@ -297,30 +304,8 @@ foreach ($localeCountryNames as $country => $name) {
                 <option></option>
                 <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']); ?>
               </select>
-            </td>
-            <td>
-              <select id="treasurerUserSelect"
-                      data-placeholder="<?php echo $l->t('Cloud Treasurer-User'); ?>"
-                      title="<?php echo $l->t('Cloud user-id of the treasurer of the orchestra'); ?>"
-                      name="treasurerUserId"
-                      class="executive-board-ids tooltip-left">
-                <option></option>
-                <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']); ?>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="presidentGroupSelect"
-                      data-placeholder="<?php echo $l->t('Cloud President-Group'); ?>"
-                      title="<?php echo $l->t('Cloud group-id of the president of the orchestra'); ?>"
-                  name="presidentGroupId"
-                      class="executive-board-ids tooltip-left">
-                <option></option>
-                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
-              </select>
-            </td>
-            <td>
+            </div>
+            <div class="cloud-group">
               <select id="secretaryGroupSelect"
                       data-placeholder="<?php echo $l->t('Cloud Secretary-Group'); ?>"
                       title="<?php echo $l->t('Cloud group-id of the secretary of the orchestra'); ?>"
@@ -329,8 +314,41 @@ foreach ($localeCountryNames as $country => $name) {
                 <option></option>
                 <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
               </select>
-            </td>
-            <td>
+            </div>
+            <div class="email">
+              <input type="text"
+                     id="secretaryEmail"
+                     placeholder="<?php p($l->t('e.g. secretary@me.tld')); ?>"
+                     name="secretaryEmail"
+                     class="executive-board-ids tooltip-left"
+              />
+            </div>
+          </div>
+          <div class="treasurer col-xs-4 col-sm-4">
+            <div class="heading">
+              <?php p($l->t('Treasurer')); ?>
+            </div>
+            <div class="musician-id">
+              <select id="treasurerSelect"
+                      data-placeholder="<?php echo $l->t('Select the Treasurer'); ?>"
+                      title="<?php echo $l->t('Treasurer of the orchestra'); ?>"
+                      name="treasurerId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo PageNavigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
+              </select>
+            </div>
+            <div class="cloud-uid">
+              <select id="treasurerUserSelect"
+                      data-placeholder="<?php echo $l->t('Cloud Treasurer-User'); ?>"
+                      title="<?php echo $l->t('Cloud user-id of the treasurer of the orchestra'); ?>"
+                      name="treasurerUserId"
+                      class="executive-board-ids tooltip-left">
+                <option></option>
+                <?php echo PageNavigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']); ?>
+              </select>
+            </div>
+            <div class="cloud-group">
               <select id="treasurerGroupSelect"
                       data-placeholder="<?php echo $l->t('Cloud Treasurer-Group'); ?>"
                       title="<?php echo $l->t('Cloud group-id of the treasurer of the orchestra'); ?>"
@@ -339,36 +357,18 @@ foreach ($localeCountryNames as $country => $name) {
                 <option></option>
                 <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="text"
-                     id="presidentEmail"
-                     placeholder="<?php p($l->t('e.g. president@me.tld')); ?>"
-                     name="presidentEmail"
-                     class="executive-board-ids tooltip-left"
-              />
-            </td>
-            <td>
-              <input type="text"
-                     id="secretaryEmail"
-                     placeholder="<?php p($l->t('e.g. secretary@me.tld')); ?>"
-                     name="secretaryEmail"
-                     class="executive-board-ids tooltip-left"
-              />
-            </td>
-            <td>
+            </div>
+            <div class="email">
               <input type="text"
                      id="treasurerEmail"
                      placeholder="<?php p($l->t('e.g. treasurer@me.tld')); ?>"
                      name="treasurerEmail"
                      class="executive-board-ids tooltip-left"
               />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </fieldset>
   </form>
   <div class="statuscontainer">
