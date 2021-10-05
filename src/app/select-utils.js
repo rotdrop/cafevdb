@@ -20,6 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require('select-utils.scss');
+
 // find an option by its value
 const findOptionByValue = function($select, value) {
   return $select.find('option[value="' + value + '"]');
@@ -32,6 +34,25 @@ const findOptionByValue = function($select, value) {
  */
 const chosenActive = function($select) {
   return $select.data('chosen') !== undefined;
+};
+
+const makePlaceholder = function($select) {
+  if (!chosenActive($select) && !selectizeActive($select)) {
+    // restore the data-placeholder as first option if chosen
+    // is not active
+    $select.each(function(index) {
+      const $self = $(this);
+      const placeHolder = $self.data('placeholder');
+      $self.prop('required', true)
+        .addClass('emulated-placeholder');
+      $self.find('option:first')
+        .attr('value', '')
+        .prop('hidden', true)
+        .prop('disabled', true)
+//        .prop('selected', true)
+        .html(placeHolder);
+    });
+  }
 };
 
 /**
@@ -140,6 +161,7 @@ export {
   refreshSelectWidget as refreshWidget,
   selectedValues as selected,
   locked,
+  makePlaceholder,
 };
 
 // Local Variables: ***

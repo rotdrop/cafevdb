@@ -27,8 +27,7 @@
 
 import { appName, $ } from './globals.js';
 import fileDownload from './file-download.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
-import { fixupNoChosenMenu } from './cafevdb.js';
+import { deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 
 /**
  * Handle the export menu actions.
@@ -80,7 +79,7 @@ const pmeExportMenu = function(containerSel) {
   });
 
   // install placeholder as first item if chosen is not active
-  fixupNoChosenMenu(exportSelect);
+  selectPlaceholder(exportSelect);
 
   exportSelect
     .off('change')

@@ -26,8 +26,7 @@
  */
 
 import { appName, $ } from './globals.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
-import { fixupNoChosenMenu } from './cafevdb.js';
+import { deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 
@@ -98,7 +97,7 @@ const pmeQueryLogMenu = function(containerSel) {
   });
 
   // install placeholder as first item if chosen is not active
-  fixupNoChosenMenu($queryLogSelect);
+  selectPlaceholder($queryLogSelect);
 
   $queryLogSelect
     .off('change')

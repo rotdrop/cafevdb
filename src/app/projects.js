@@ -320,7 +320,7 @@ const actionMenu = function(containerSel) {
   };
 
   // Install placeholder for proper sizing
-  CAFEVDB.fixupNoChosenMenu(projectActions);
+  SelectUtils.makePlaceholder(projectActions);
   const maxWidth = projectActions.maxOuterWidth(true);
   chosenOptions.width = maxWidth + 'px';
 

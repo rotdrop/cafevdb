@@ -30,6 +30,7 @@ import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
+import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-file-download');
@@ -854,6 +855,7 @@ const afterLoad = function(container) {
       inherit_select_classes: true,
       width: '100%',
     });
+    selectPlaceholder(executiveBoardIds);
     simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
     /**************************************************************************

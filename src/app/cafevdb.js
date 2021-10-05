@@ -118,18 +118,6 @@ const modalWaitNotification = function(message) {
   return dialogHolder;
 };
 
-const fixupNoChosenMenu = function(select) {
-  if (!chosenActive(select)) {
-    // restore the data-placeholder as first option if chosen
-    // is not active
-    select.each(function(index) {
-      const self = $(this);
-      const placeHolder = self.data('placeholder');
-      self.find('option:first').html(placeHolder);
-    });
-  }
-};
-
 /**
  * Create and submit a form with a POST request and given
  * parameters.
@@ -389,7 +377,6 @@ export {
   runReadyCallbacks,
   unfocus,
   modalWaitNotification,
-  fixupNoChosenMenu,
   formSubmit,
   appSettings,
   snapperClose,
