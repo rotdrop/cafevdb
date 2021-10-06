@@ -102,6 +102,9 @@ class OpenDocumentFiller
       }
     });
 
+    // do a serialize - unserialize
+    $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
+
     // Do an opportunistic block-merge for every key with is an array
 
     foreach ($this->backend->VarRef as $key => $value) {
