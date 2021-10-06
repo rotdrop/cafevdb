@@ -329,6 +329,7 @@ class InstrumentInsuranceService
    * ```
    * [
    *   'billToParty' => MUSICIAN_ENTITY
+   *   'annual' => TOTAL_FEE_EXCLUDING_TAXES,
    *   'totals' => TOTAL_FEE_INCLUDING_TAXES,
    *   'musicians' => [
    *     MusID => [
@@ -355,7 +356,7 @@ class InstrumentInsuranceService
 
     $insuranceOverview = [
       'billToParty' => $billToParty,
-      'totals' => 0.0,
+      'taxRate' => floatval(self::TAXES),
       'musicians' => [],
       'date' => $date,
     ];
