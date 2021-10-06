@@ -140,6 +140,8 @@ class OpenDocumentFiller
     $fillData = array_merge(
       $this->getOrchestraSubstitutions(),
       $templateData);
+    $fillData['now'] = (new \DateTimeImmutable())->setTimezone($this->getDateTimeZone());
+
     $fillData['test'] = 'Test Replacement Value';
 
     return $fillData;
@@ -152,6 +154,14 @@ class OpenDocumentFiller
   public function getOrchestraSubstitutions()
   {
     $substitutions = [];
+
+    $substitutions['orchestra:name1'] = $this->getConfigValue('streetAddressName01');
+    $substitutions['orchestra:name2'] = $this->getConfigValue('streetAddressName02');
+    $substitutions['orchestra:street'] = $this->getConfigValue('streetAddressStreet');
+    $substitutions['orchestra:streetNumber'] = $this->getConfigValue('streetAddressHouseNumber');
+    $substitutions['orchestra:city'] = $this->getConfigValue('streetAddressCity');
+    $substitutions['orchestra:postalCode'] = $this->getConfigValue('streetAddressZIP');
+    $substitutions['orchestra:country'] = $this->getConfigValue('streetAddressCountry');
 
     // Logo
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
