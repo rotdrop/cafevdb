@@ -24,6 +24,8 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\Accounts\IAccountManager;
+use OCP\Accounts\IAccount;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -74,27 +76,59 @@ class OrganizationalRolesService
    */
   private function dedicatedBoardMemberContact(string $role)
   {
-    $roleUid = $this->getConfigValue($role.'UserId', null);
-    if (!empty($roleUid)) {
-      $user = $this->user($roleUid);
-      $name = $user->getDisplayName();
-      $email = $user->getEMailAddress();
-      return [ 'name' => $name, 'email' => $email ];
+    $participant = $this->dedicatedBoardMemberParticipant($role);
+    if (empty($participant)) {
+      return null;
     }
-    // or the project participant
-    if (false) {
-       $participant = $this->dedicatedBoardMemberParticipant($role);
-       if (empty($participant)) {
-         return null;
-       }
-       $musician = $participant->getMusician();
-       $email = $musician->getEmail();
-       // etc.
+    $musician = $participant->getMusician();
+    $data = [
+      'email' => $musician->getEmail(),
+      'name' => $musician->getPublicName(true),
+      'street' => $musician->getStreet(),
+      'postalCode' => $musician->getPostalCode(),
+      'city' => $musician->getCity(),
+      'phone' => $musician->getFixedLinePhone(),
+      'mobile' => $musician->getMobilePhone(),
+    ];
+
+    // Override with configured functional address
+    $roleEmail = $this->getConfigValue($role . 'Email', null);
+    if (!empty($roleEmail)) {
+      $data['email'] = $roleEmail;
     }
-    // and the configured email-address:
-    if (false) {
-      $email = $this->getConfigValue($role . 'Email', null);
+
+    $missingFields = array_keys(array_filter($data, function($value) { empty($value); }));
+
+    // if some field are missing try to fill in from the cloud data
+    if (!empty($missingFields)) {
+
+      $roleUid = $this->getConfigValue($role.'UserId', null);
+      if (!empty($roleUid)) {
+        $user = $this->user($roleUid);
+        /** @var IAccountManager $accountManager */
+        $accountManager = $this->di(IAccountManager::class);
+        /** @var IAccount $account */
+        $account = $accountManager->getAccount($user);
+
+        foreach ($missingFields as $key) {
+          switch ($key) {
+          case 'email': $item = $user->getEMailAddress(); break;
+          case 'name': $item =  $name = $user->getDisplayName(); break;
+          case 'street': $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS); break;
+          case 'phone': $item = $account->getProperty(IAccountManager::PROPERTY_PHONE); break;
+          case 'postalCode':
+          case 'city':
+          case 'mobile':
+            $item = null;
+          }
+          if (!empty($item)) {
+            $data[$key] = $item;
+          }
+        }
+      }
     }
+
+    return $data;
   }
 
   private function executiveBoardProject():?Entities\Project

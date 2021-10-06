@@ -170,8 +170,8 @@ class OpenDocumentFiller
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
 
       $contact = $rolesService->{$boardMember . 'Contact'}();
-      foreach (['name', 'email'] as $tag) {
-        $substitutions['orchestra:'.$boardMember.':'.$tag] = $contact[$tag]??$this->l->t('unknown');
+      foreach ($contact as $tag => $value) {
+        $substitutions['orchestra:'.$boardMember.':'.$tag] = $value??$this->l->t('unknown');
       }
 
       /** @var \OCP\Image $signature */
