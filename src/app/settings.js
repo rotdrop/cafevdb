@@ -723,13 +723,13 @@ const afterLoad = function(container) {
   {
     /**************************************************************************
      *
-     * street address settings
+     * street address and other address settings
      *
      *************************************************************************/
 
     const msg = $('#orchestra #msg');
 
-    simpleSetValueHandler($('input[class^="streetAddress"]'), 'blur', msg);
+    simpleSetValueHandler($('input[class^="streetAddress"], input[class^="register"]'), 'blur', msg);
 
     simpleSetValueHandler(
       $('input.phoneNumber'),
@@ -876,6 +876,7 @@ const afterLoad = function(container) {
       'bankAccountIBAN',
       'bankAccountBLZ',
       'bankAccountBIC',
+      'bankAccountBankName',
     ];
 
     simpleSetValueHandler(

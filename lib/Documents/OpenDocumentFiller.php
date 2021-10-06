@@ -29,6 +29,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Exceptions;
 
@@ -158,22 +159,26 @@ class OpenDocumentFiller
   {
     $substitutions = [];
 
-    $substitutions['orchestra:name1'] = $this->getConfigValue('streetAddressName01');
-    $substitutions['orchestra:name2'] = $this->getConfigValue('streetAddressName02');
-    $substitutions['orchestra:street'] = $this->getConfigValue('streetAddressStreet');
-    $substitutions['orchestra:streetNumber'] = $this->getConfigValue('streetAddressHouseNumber');
-    $substitutions['orchestra:city'] = $this->getConfigValue('streetAddressCity');
-    $substitutions['orchestra:postalCode'] = $this->getConfigValue('streetAddressZIP');
-    $substitutions['orchestra:country'] = $this->getConfigValue('streetAddressCountry');
+    $substitutions['org'] = [
+      'addr' => [
+        'name1' => $this->getConfigValue('streetAddressName01'),
+        'name2' => $this->getConfigValue('streetAddressName02'),
+        'street' => $this->getConfigValue('streetAddressStreet'),
+        'streetNumber' => $this->getConfigValue('streetAddressHouseNumber'),
+        'city' => $this->getConfigValue('streetAddressCity'),
+        'postalCode' => $this->getConfigValue('streetAddressZIP'),
+        'country' => $this->getConfigValue('streetAddressCountry'),
+      ],
+    ];
 
     // Logo
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
 
-    $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
 
     // $logoData = $logo->getContent();
     // $logoImage = ImagesService::rasterize($logoData, 1200);
-    // $substitutions['orchestra:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
+    // $substitutions['org:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
 
     $this->logInfo('SUBSTITUTIONS ' . print_r(array_keys($substitutions), true));
 
@@ -182,9 +187,11 @@ class OpenDocumentFiller
 
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
 
+      $substitutions['org'][$boardMember] = [];
+
       $contact = $rolesService->{$boardMember . 'Contact'}();
       foreach ($contact as $tag => $value) {
-        $substitutions['orchestra:'.$boardMember.':'.$tag] = $value??$this->l->t('unknown');
+        $substitutions['org'][$boardMember][$tag] = $value??$this->l->t('unknown');
       }
 
       /** @var \OCP\Image $signature */
@@ -196,8 +203,23 @@ class OpenDocumentFiller
         // }
         $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
       }
-      $substitutions['orchestra:'.$boardMember.':signature'] = $signature;
+      $substitutions['org'][$boardMember]['signature'] = $signature;
     }
+
+    // bank account information
+    $iban = $this->getConfigValue('bankAccountIBAN');
+    $substitutions['org']['iban'] = $iban??$this->l->t('unknown');
+
+    $bank = $this->getConfigValue('bankAccountBankName');
+    if (empty($bank)) {
+      /** @var FinanceService $financeService */
+      $financeService = $this->di(FinanceService::class);
+      if (!empty($iban)) {
+        $ibanInfo = $financeService->getIbanInfo($iban);
+        $bank = $ibanInfo['bank'];
+      }
+    }
+    $substitutions['org']['bank'] = $bank??$this->l->t('unknown');
 
     return $substitutions;
   }

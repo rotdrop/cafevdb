@@ -54,6 +54,19 @@ foreach ($localeCountryNames as $country => $name) {
              value="<?php echo $_['streetAddressName02']; ?>"
              title="<?php echo $l->t('The name of the orchestra (line 2)'); ?>"
              placeholder="<?php echo $l->t('name of orchestra'); ?>"><br/>
+      <input class="registerName" type="text"
+             id="registerName"
+             name="registerName"
+             value="<?php echo $_['registerName']; ?>"
+             title="<?php echo $l->t('Name of the authority where the orchestra association is registered.'); ?>"
+             placeholder="<?php echo $l->t('e.g. Local Court Denver'); ?>">
+      <input class="registerNumber" type="text"
+             id="registerNumber"
+             name="registerNumber"
+             value="<?php echo $_['registerNumber']; ?>"
+             title="<?php echo $l->t('Registration number of the orchestra association.'); ?>"
+             placeholder="<?php echo $l->t('e.g. VR1234'); ?>">
+      <br/>
       <input class="streetAddressStreet" type="text"
              id="streetAddressStreet"
              name="streetAddressStreet"
@@ -120,6 +133,12 @@ foreach ($localeCountryNames as $country => $name) {
              value="<?php echo $_['bankAccountBIC']; ?>"
              title="<?php echo $l->t('Optional BIC of the orchestra\'s bank account'); ?>"
              placeholder="<?php echo $l->t('BIC of bank account'); ?>"/><br/>
+      <input class="bankAccountBankName" type="text"
+             id="bankAccountBankName"
+             name="bankAccountBankName"
+             value="<?php echo $_['bankAccountBankName']; ?>"
+             title="<?php echo $l->t('Name of the bank holding the orchestra\'s bank account'); ?>"
+             placeholder="<?php echo $l->t('e.g. Bank of Scotland'); ?>"/><br/>
       <input class="bankAccountCreditorIdentifier" type="text"
              id="bankAccountCreditorIdentifier"
              name="bankAccountCreditorIdentifier"

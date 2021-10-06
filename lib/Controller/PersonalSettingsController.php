@@ -466,6 +466,8 @@ class PersonalSettingsController extends Controller {
     case 'streetAddressCity':
     case 'streetAddressZIP':
     case 'streetAddressCountry':
+    case 'registerName':
+    case 'registerNumber':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
       return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
@@ -529,6 +531,7 @@ class PersonalSettingsController extends Controller {
     case 'bankAccountBLZ':
     case 'bankAccountIBAN':
     case 'bankAccountBIC':
+    case 'bankAccountBankName':
     case 'bankAccountCreditorIdentifier':
     {
       $realValue = Util::normalizeSpaces($value);
@@ -553,6 +556,13 @@ class PersonalSettingsController extends Controller {
         if ($realValue !== $address) {
           $data['suggestions'] = [ $address, ];
         }
+        if (!empty($realValue)) {
+          $this->setConfigValue($parameter, $realValue);
+          $data[$parameter] = $realValue;
+          $data['message'] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
+        }
+        return self::dataResponse($data);
+      case 'bankAccountBankName':
         if (!empty($realValue)) {
           $this->setConfigValue($parameter, $realValue);
           $data[$parameter] = $realValue;
@@ -614,6 +624,16 @@ class PersonalSettingsController extends Controller {
               $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             $data[$parameter] = $realValue;
+
+            $parameter = 'bankAccountBankName';
+            $suggestedBankName = $bav->getMainAgency($blz)->getName();
+            $realValue = $this->getConfigValue($parameter);
+            if (empty($realValue) || $realValue != $suggestedBankName) {
+              $realValue = $suggestedBankName;
+              $this->setConfigValue($parameter, $realValue);
+              $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
+              $data[$parameter] = $realValue;
+            }
           } else {
             unset($data['bankAccountBLZ']);
             unset($data['bankAccountBIC']);

@@ -86,6 +86,10 @@ input.streetAddressName {
   width: 40em;
 }
 
+input.registerName, input.registerNumber {
+  width: 19em;
+}
+
 input.streetAddressStreet {
   width: 34em;
 }
@@ -120,6 +124,10 @@ input.bankAccountBIC {
 
 input.bankAccountBLZ {
   width: 6em;
+}
+
+input.bankAccountBankName {
+  width: 40em;
 }
 
 input.bankAccountCreditorIdentifier {
