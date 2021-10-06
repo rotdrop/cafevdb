@@ -221,6 +221,13 @@ class OpenDocumentFiller
     }
     $substitutions['org']['bank'] = $bank??$this->l->t('unknown');
 
+    // association registration
+    $registrationAuthority = $this->getConfigValue('registerName');
+    $registrationNumber = $this->getConfigValue('registerNumber');
+
+    $substitutions['org']['regName'] = $registrationAuthority??$this->l->t('unknown');
+    $substitutions['org']['regNumber'] = $registrationNumber??$this->l->t('unknown');
+
     return $substitutions;
   }
 
