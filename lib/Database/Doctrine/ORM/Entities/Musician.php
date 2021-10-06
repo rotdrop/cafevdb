@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * )
  * @ORM\HasLifecycleCallbacks
  */
-class Musician implements \ArrayAccess
+class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -267,6 +267,7 @@ class Musician implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->keys[] = 'publicName';
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -274,6 +275,7 @@ class Musician implements \ArrayAccess
     $this->instrumentInsurances = new ArrayCollection();
     $this->payableInsurances = new ArrayCollection();
     $this->sepaBankAccounts = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
@@ -894,6 +896,30 @@ class Musician implements \ArrayAccess
   }
 
   /**
+   * Set sepaDebitMandates.
+   *
+   * @param Collection $sepaDebitMandates
+   *
+   * @return Musician
+   */
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Musician
+  {
+    $this->sepaDebitMandates = $sepaDebitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandates.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandates():Collection
+  {
+    return $this->sepaDebitMandates;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
@@ -959,6 +985,30 @@ class Musician implements \ArrayAccess
   }
 
   /**
+   * Set userPassphrase.
+   *
+   * @param string|null $userPassphrase
+   *
+   * @return Musician
+   */
+  public function setUserPassphrase(?string $userPassphrase):Musician
+  {
+    $this->userPassphrase = $userPassphrase;
+
+    return $this;
+  }
+
+  /**
+   * Get userPassphrase.
+   *
+   * @return string
+   */
+  public function getUserPassphrase():?string
+  {
+    return $this->userPassphrase;
+  }
+
+  /**
    * Set userIdSlug.
    *
    * @param string|null $userIdSlug
@@ -993,4 +1043,12 @@ class Musician implements \ArrayAccess
   {
     return $this->payments->count();
   }
+
+  public function jsonSerialize():array
+  {
+    return array_merge($this->toArray(), [
+      'publicName' => $this->getPublicName(true),
+    ]);
+  }
+
 }
