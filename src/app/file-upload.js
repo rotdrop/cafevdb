@@ -65,6 +65,7 @@ function init(options) {
   const defaultOptions = {
     doneCallback: defaultDoneCallback,
     stopCallback: null,
+    failCallback: null,
     dropZone: $(document),
     containerSelector: '#file_upload_wrapper',
     inputSelector: '#file_upload_start',
@@ -157,13 +158,11 @@ function init(options) {
         } else {
           Ajax.handleError(data.jqXHR, data.textStatus, data.errorThrown);
         }
-        $('#notification').fadeIn();
-        // hide notification after 5 sec
-        setTimeout(function() {
-          $('#notification').fadeOut();
-        }, 10000);
       }
       delete globalState.FileUpload.uploadingFiles[data.files[0].name];
+      if (typeof options.failCallback === 'function') {
+        options.failCallback(event, data);
+      }
       $(window).off('beforeunload');
     },
     progress(e, data) {

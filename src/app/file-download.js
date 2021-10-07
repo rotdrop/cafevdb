@@ -27,8 +27,8 @@
 
 import { appName, webRoot, $ } from './globals.js';
 import generateUrl from './generate-url.js';
-import generateId from './generate-id.js';
 import * as Ajax from './ajax.js';
+import * as Notification from './notification.js';
 import { parse as parseContentDisposition } from 'content-disposition';
 
 require('jquery-file-download');
@@ -49,7 +49,8 @@ const download = function(url, post, options) {
   const defaultOptions = {
     done(url) { console.info('DONE downloading', url); },
     fail(data) {},
-    errorMessage(data, url) {
+    always() {},
+    errorMessage(url, data) {
       return t(appName, 'Unable to download data from "{url}": ', { url });
     },
   };
@@ -57,10 +58,17 @@ const download = function(url, post, options) {
   if (typeof options === 'string') { // error message
     const errorMessage = options;
     options = {
-      errorMessage(data, url) { return errorMessage; },
+      errorMessage(url, data) {
+        return errorMessage;
+      },
     };
   }
   options = $.extend({}, defaultOptions, options);
+  const fail = options.fail;
+  options.fail = function(data) {
+    Notification.showTemporary(options.errorMessage(url, data));
+    fail(data);
+  };
 
   if (post === undefined) {
     post = [];
@@ -70,25 +78,6 @@ const download = function(url, post, options) {
       newPost.push({ name, value });
     }
     post = newPost;
-  }
-  const cookiePost = [];
-  // eslint-disable-next-line no-constant-condition
-  if (false) {
-    const cookieValue = generateId();
-    const cookieName = appName + '_' + url.replace(/\W+/g, '_') + '_' + 'download';
-    cookiePost.push({ name: 'DownloadCookieName', value: cookieName });
-    cookiePost.push({ name: 'DownloadCookieValue', value: cookieValue });
-    cookiePost.push({ name: 'requesttoken', value: OC.requestToken });
-  }
-
-  if (Array.isArray(post)) {
-    post = post.concat(cookiePost);
-  } else if (typeof post === 'string') {
-    post += '&' + $.param(cookiePost, false);
-  } else if (typeof post === 'object') {
-    for (const param of cookiePost) {
-      post[param.name] = param.value;
-    }
   }
 
   const downloadUrl = generateUrl(url);
@@ -114,6 +103,7 @@ const download = function(url, post, options) {
   })
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, options.fail);
+      options.always();
     })
     .done(function(data, textStatus, xhr) {
       let fileName = 'download';
@@ -148,8 +138,9 @@ const download = function(url, post, options) {
         a[0].click();
         console.info('DOWNLOAD A', a);
         $('body').remove(a);
-        options.done(downloadUrl, data);
       }
+      options.done(downloadUrl, data);
+      options.always();
     });
 
 };
