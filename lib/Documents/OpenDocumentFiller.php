@@ -24,6 +24,8 @@
 namespace OCA\CAFEVDB\Documents;
 
 use clsTinyButStrong as OpenDocumentFillerBackend;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\IL10N;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -77,7 +79,7 @@ class OpenDocumentFiller
    *
    * @param array $templateData The template-data to substitute.
    */
-  public function fill($templateFileName, $templateData)
+  public function fill(string $templateFileName, array $templateData = [], bool $asPdf = false)
   {
     ob_start();
 
@@ -123,10 +125,33 @@ class OpenDocumentFiller
       throw new Exceptions\Exception($output);
     }
 
+    $fileData = $this->backend->Source;
+    $mimeType = $templateFile->getMimeType();
+    $fileName = basename($templateFileName);
+
+    if ($asPdf) {
+      $unoconv = (new ExecutableFinder)->find('unoconv');
+      if (empty($unoconv)) {
+        throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "unoconv" program on the server.'));
+      }
+      $pdfConvert = new Process([
+        $unoconv,
+        '-f', 'pdf',
+        '--stdin', '--stdout',
+        '-e', 'ExportNotes=False'
+      ]);
+      $pdfConvert->setInput($fileData);
+      $pdfConvert->run();
+      $fileData = $pdfConvert->getOutput();
+      $mimeType = 'application/pdf';
+      $pathInfo = pathinfo($fileName);
+      $fileName = $pathInfo['filename'] . '.pdf';
+    }
+
     return [
-      $this->backend->Source,
-      $templateFile->getMimeType(),
-      basename($templateFileName),
+      $fileData,
+      $mimeType,
+      $fileName,
     ];
   }
 
@@ -179,8 +204,6 @@ class OpenDocumentFiller
     // $logoData = $logo->getContent();
     // $logoImage = ImagesService::rasterize($logoData, 1200);
     // $substitutions['org:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
-
-    $this->logInfo('SUBSTITUTIONS ' . print_r(array_keys($substitutions), true));
 
     /** @var OrganizationalRolesService $rolesService */
     $rolesService = $this->di(OrganizationalRolesService::class);
