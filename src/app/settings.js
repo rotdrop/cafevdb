@@ -928,7 +928,7 @@ const afterLoad = function(container) {
       $fieldset.find('input').prop('disabled', true);
     }
 
-    const moveIntoPlace = function(file, $container) {
+    const moveIntoPlace = function(file, $container, $trigger) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
             '/' + $('#sharedfolder').val()
@@ -943,9 +943,11 @@ const afterLoad = function(container) {
         })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
+          $trigger.removeClass('busy');
         })
         .done(function(data) {
           if (!Ajax.validateResponse(data, ['message', 'fileName', 'downloadLink'])) {
+            $trigger.removeClass('busy');
             return;
           }
           Notification.messages(data.message);
@@ -955,9 +957,11 @@ const afterLoad = function(container) {
             setAppUrl($container.data('documentTemplate')), { value: fileName })
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
+              $trigger.removeClass('busy');
             })
             .done(function(data) {
               if (!Ajax.validateResponse(data, ['message'])) {
+                $trigger.removeClass('busy');
                 return;
               }
               Notification.messages(data.message);
@@ -969,6 +973,7 @@ const afterLoad = function(container) {
                 .show();
               $container.find('.auto-fill-test').prop('disabled', false).show();
               $container.find('.delete').prop('disabled', false);
+              $trigger.removeClass('busy');
               console.info(data);
             });
         });
@@ -989,10 +994,16 @@ const afterLoad = function(container) {
     $autofillers.on('click', function(event) {
       const $self = $(this);
 
+      $self.addClass('busy');
+
       fileDownload(
         'settings/app/get/auto-fill-test', {
           documentTemplate: $self.data('template'),
+          format: $self.data('format'),
         }, {
+          always() {
+            $self.removeClass('busy');
+          },
           errorMessage(data, url) {
             return t(appName, 'Unable to download auto-fill result.');
           },
@@ -1005,10 +1016,15 @@ const afterLoad = function(container) {
     $autofillersdata.on('click', function(event) {
       const $self = $(this);
 
+      $self.addClass('busy');
+
       fileDownload(
         'settings/app/get/auto-fill-test-data', {
           documentTemplate: $self.data('template'),
         }, {
+          always() {
+            $self.removeClass('busy');
+          },
           errorMessage(data, url) {
             return t(appName, 'Unable to download auto-fill result.');
           },
@@ -1021,13 +1037,16 @@ const afterLoad = function(container) {
       const $this = $(this);
       const $container = $this.parent();
 
+      $this.addClass('busy');
+
       FileUpload.init({
         url: generateUrl('upload/stash'),
         doneCallback(file, index, container) {
           console.info('FILE', file, container);
-          moveIntoPlace(file, $container);
+          moveIntoPlace(file, $container, $this);
         },
         stopCallback: null,
+        failCallback(event, data) { $this.removeClass('busy'); },
         dropZone: $container,
         containerSelector: '.document-template-upload-wrapper',
         inputSelector: 'input[type="file"]',
@@ -1042,16 +1061,20 @@ const afterLoad = function(container) {
       const $this = $(this);
       const $container = $this.closest('.template-upload');
 
+      $this.addClass('busy');
+
       Dialogs.filePicker(
         $this.data('placeholder'),
         function(path) {
           if (!path) {
             Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+            $this.removeClass('busy');
             return;
           }
           $.post(generateUrl('upload/stash'), { cloudPaths: [path] })
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
+              $this.removeClass('busy');
             })
             .done(function(files) {
               console.info('FILES', files);
@@ -1060,7 +1083,7 @@ const afterLoad = function(container) {
                   t(appName, 'Unable to copy selected file {file}.', { file: paths[0] }),
                   t(appName, 'Error'));
               }
-              moveIntoPlace(files[0], $container);
+              moveIntoPlace(files[0], $container, $this);
             });
         },
         false, // multi-select
