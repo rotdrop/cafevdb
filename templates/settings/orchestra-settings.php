@@ -190,14 +190,23 @@ foreach ($localeCountryNames as $country => $name) {
             <input type="button"
                    name="<?php p($documentTemplate); ?>AutoFillTest"
                    data-template="<?php p($documentTemplate); ?>"
+                   data-format="native"
                    title="<?php p($toolTips['templates:auto-fill-test']); ?>"
                    class="operation right auto-fill-test document-template <?php p($documentTemplate); ?><?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
+                   <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
+            />
+            <input type="button"
+                   name="<?php p($documentTemplate); ?>AutoFillTestPdf"
+                   data-template="<?php p($documentTemplate); ?>"
+                   data-format="pdf"
+                   title="<?php p($toolTips['templates:auto-fill-test:pdf']); ?>"
+                   class="operation right auto-fill-test pdf document-template <?php p($documentTemplate); ?><?php empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
                    <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
             />
             <input type="Button"
                    name="<?php p($documentTemplate); ?>FillTestData"
                    data-template="<?php p($documentTemplate); ?>"
-                   title="<?php p($toolTips['templates:auto-fill-data']); ?>"
+                   title="<?php p($toolTips['templates:auto-fill-test:data']); ?>"
                    class="operation right auto-fill-test-data document-template <?php p($documentTemplate); ?>"
             />
             <?php if ($documentTemplate === ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD) { ?>

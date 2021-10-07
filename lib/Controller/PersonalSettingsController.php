@@ -1586,6 +1586,7 @@ class PersonalSettingsController extends Controller {
               || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE )) {
         return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
       }
+      $format = $this->parameterService->getParam('format');
 
       switch ($templateName) {
       case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE: {
@@ -1634,7 +1635,7 @@ class PersonalSettingsController extends Controller {
                         $templateName));
         }
 
-        list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview);
+        list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview, $format == 'pdf');
 
         break;
       }
