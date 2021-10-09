@@ -23,36 +23,46 @@
 
 namespace OCA\CAFEVDB\Documents;
 
-use OCP\IL10N;
-use OCA\CAFEVDB\Service\ConfigService;
-
 use mikehaertl\pdftk\Pdf as PdfTk;
+
+use OCP\Files\File;
 
 class PDFFormFiller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
-
   /** @var PdfTk */
   private $pdfTk;
 
-  public function __construct($pdfData)
+  public function __construct()
   {
     // @todo check what $pdfData is ...
     $this->pdfTk = new PdfTk('-');
-    $this->pdfTk
-      ->getCommand()
-      ->setStdIn($pdfData->getContent());
   }
 
   /**
    * Fill in the given fields.
    *
+   * @parm mixed $data
+   *
    * @param array $fields Array of simple KEY => VALUE pairs.
    *
    * @return PDFFormFiller
    */
-  public function fill($fields):PDFFormFiller
+  public function fill($data, array $fields):PDFFormFiller
   {
+    $command = $this->pdfTk->getCommand();
+
+    if ($data instanceof File) {
+      $data = $data->getContent();
+    } else if (!is_string($data)) {
+      $data = (string)$data;
+    }
+
+    if (!is_string($data)) {
+      throw new \RuntimeException('$data argument not convertible to string');
+    }
+
+    $command->setStdIn($data);
+
     $this->pdfTk
       ->fillForm($fields)
       ->needAppearances()
@@ -62,7 +72,7 @@ class PDFFormFiller
 
   public function getContent()
   {
-    $this->pdfTk->execute();
+    // $this->pdfTk->execute();
     return file_get_contents((string)$this->pdfTk->getTmpFile());
   }
 }

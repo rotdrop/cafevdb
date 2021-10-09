@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\EventsService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Documents\PDFFormFiller;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 /** Finance and bank related stuff. */
 class FinanceService
@@ -212,18 +213,6 @@ class FinanceService
       return  [];
     }
 
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->di(UserStorage::class);
-
-    $formFile = $userStorage->getFile($formFileName);
-    if (empty($formFile)) {
-      return [];
-    }
-
-    if (empty(strrchr($formFile->getMimeType(), 'pdf'))) {
-      return [ $formFile->getContent(), $formFile->getMimeType(), $formFile->getName() ];
-    }
-
     $formData = [
       'projectName' => $project->getName(),
       'bankAccountOwner' => $musician->getPublicName(),
@@ -242,7 +231,27 @@ class FinanceService
       ]);
     }
 
-    $formFiller = (new PDFFormFiller($formFile))->fill($formData);
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $formFile = $userStorage->getFile($formFileName);
+    if (empty($formFile)) {
+      return [];
+    }
+
+    if ($formFile->getMimeType() != 'application/pdf') {
+      /** @var OpenDocumentFiller $odf */
+      $odf = $this->di(OpenDocumentFiller::class);
+      list($fileData,) = $odf->ffill($formFile, [], true);
+      $this->logInfo('FILEDATA ' . strlen($fileData));
+    } else {
+      $fileData = $formFile->getContent();
+      $this->logInfo('FILEDATA DIRECT ' . strlen($fileData));
+      $this->logInfo('FILEDATA FILEMIME ' . strrchr($formFile->getMimeType(), 'pdf'));
+      $this->logInfo('FILEDATA FILEMIME ' . $formFile->getMimeType());
+   }
+
+    $formFiller = (new PDFFormFiller)->fill($fileData, $formData);
 
     $fileParts = [
       $this->timeStamp('Ymd'),
