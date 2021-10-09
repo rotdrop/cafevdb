@@ -91,6 +91,17 @@ class UserStorage
     return $this->user->getUID();
   }
 
+  /** Return the path relative to user-folder */
+  public function getUserPath(Node $node)
+  {
+    $path = $node->getPath();
+    $userFolderPath = $this->userFolder->getPath();
+    if (strpos($path, $userFolderPath) !== 0) {
+      return null;
+    }
+    return substr($path, strlen($userFolderPath));
+  }
+
   /**
    * @param string|null $path Path to lookup.
    *
