@@ -28,6 +28,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\IL10N;
+use OCP\Files\File;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ImagesService;
@@ -79,18 +80,37 @@ class OpenDocumentFiller
    *
    * @param array $templateData The template-data to substitute.
    */
+  public function ffill(File $templateFile, array $templateData = [], bool $asPdf = false)
+  {
+    $templateFileName =  $this->userStorage->getUserPath($templateFile);
+
+    return $this->fillInternal($templateFile, $templateFileName, $templateData, $asPdf);
+  }
+
+  /**
+   * Fill the given template file which must exist in the cloud
+   * file-system with the given template-data.
+   *
+   * @param string $templateFileName Name of the template file in the
+   * user-storage of the current user.
+   *
+   * @param array $templateData The template-data to substitute.
+   */
   public function fill(string $templateFileName, array $templateData = [], bool $asPdf = false)
   {
-    ob_start();
-
-    $this->logInfo('TEMPLATE ' . $templateFileName);
-
-    $this->backend->ResetVarRef(false);
-    $this->backend->VarRef = $this->fillData($templateData);
     $templateFile = $this->userStorage->getFile($templateFileName);
     if (empty($templateFile)) {
       throw new \RuntimeException($this->l->t('Unable to obtain file-handle for path "%s"', $templateFileName));
     }
+    return $this->fillInternal($templateFile, $templateFileName, $templateData, $asPdf);
+  }
+
+  private function fillInternal(File $templateFile, string $templateFileName, array $templateData, bool $asPdf)
+  {
+    ob_start();
+
+    $this->backend->ResetVarRef(false);
+    $this->backend->VarRef = $this->fillData($templateData);
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 
@@ -250,6 +270,9 @@ class OpenDocumentFiller
 
     $substitutions['org']['regName'] = $registrationAuthority??$this->l->t('unknown');
     $substitutions['org']['regNumber'] = $registrationNumber??$this->l->t('unknown');
+
+    // creditor identifier
+    $substitutions['org']['CI'] = $this->getConfigValue('bankAccountCreditorIdentifier')??$this->l->t('unknown');
 
     return $substitutions;
   }
