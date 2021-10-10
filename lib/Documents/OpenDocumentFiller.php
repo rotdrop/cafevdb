@@ -79,12 +79,16 @@ class OpenDocumentFiller
    * user-storage of the current user.
    *
    * @param array $templateData The template-data to substitute.
+   *
+   * @param array $blocks Block definitions where NAME => 'A.B.C'
+   * defines a pointer into $templateData['A']['B']['C'] available
+   * under the name NAME.
    */
-  public function ffill(File $templateFile, array $templateData = [], bool $asPdf = false)
+  public function ffill(File $templateFile, array $templateData = [], array $blocks = [], bool $asPdf = false)
   {
     $templateFileName =  $this->userStorage->getUserPath($templateFile);
 
-    return $this->fillInternal($templateFile, $templateFileName, $templateData, $asPdf);
+    return $this->fillInternal($templateFile, $templateFileName, $templateData, $blocks, $asPdf);
   }
 
   /**
@@ -95,17 +99,21 @@ class OpenDocumentFiller
    * user-storage of the current user.
    *
    * @param array $templateData The template-data to substitute.
+   *
+   * @param array $blocks Block definitions where NAME => 'A.B.C'
+   * defines a pointer into $templateData['A']['B']['C'] available
+   * under the name NAME.
    */
-  public function fill(string $templateFileName, array $templateData = [], bool $asPdf = false)
+  public function fill(string $templateFileName, array $templateData = [], array $blocks = [], bool $asPdf = false)
   {
     $templateFile = $this->userStorage->getFile($templateFileName);
     if (empty($templateFile)) {
       throw new \RuntimeException($this->l->t('Unable to obtain file-handle for path "%s"', $templateFileName));
     }
-    return $this->fillInternal($templateFile, $templateFileName, $templateData, $asPdf);
+    return $this->fillInternal($templateFile, $templateFileName, $templateData, $blocks, $asPdf);
   }
 
-  private function fillInternal(File $templateFile, string $templateFileName, array $templateData, bool $asPdf)
+  private function fillInternal(File $templateFile, string $templateFileName, array $templateData, array $blocks, bool $asPdf)
   {
     ob_start();
 
@@ -129,12 +137,36 @@ class OpenDocumentFiller
     $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
 
     // Do an opportunistic block-merge for every key with is an array
-
     foreach ($this->backend->VarRef as $key => $value) {
       if (is_array($value)) {
-        $this->logInfo('Merge block ' . $key);
+        // try to do a block-merge primarily to have shorter names in
+        // the tempalte. If the array is not a numeric array, then
+        // wrap it into a single element numeric array in order to
+        // please TBS.
+        $keys = array_keys($value);
+        if ($keys != array_filter($keys, 'is_int')) {
+          $value = [ $value ];
+        }
         $this->backend->MergeBlock($key, $value);
       }
+    }
+
+    // Do a block-merge for every explicitly defined block
+    foreach ($blocks as $key => $reference) {
+      $indices = explode('.', $reference);
+      $value = $this->backend->VarRef;
+      while (!empty($indices) && !empty($value)) {
+        $index = array_shift($indices);
+        $value = $value[$index]??null;
+      }
+      if (empty($value)) {
+        throw new \RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
+      }
+      $keys = array_keys($value);
+      if ($keys != array_filter($keys, 'is_int')) {
+        $value = [ $value ];
+      }
+      $this->backend->MergeBlock($key, $value);
     }
 
     $this->backend->show(OPENTBS_STRING);
@@ -214,6 +246,7 @@ class OpenDocumentFiller
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
+        'email' => $this->getConfigValue('emailfromaddress'),
       ],
     ];
 

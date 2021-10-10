@@ -1607,7 +1607,9 @@ class PersonalSettingsController extends Controller {
               $this->l->t('There is no template file for template "%s"',
                           $templateName));
           }
-          list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName);
+          list($fileData, $mimeType, $fileName) = $documentFiller->fill(
+            $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
+          );
         }
 
         break;
@@ -1630,7 +1632,9 @@ class PersonalSettingsController extends Controller {
               $this->l->t('There is no template file for template "%s"',
                           $templateName));
           }
-          list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName);
+          list($fileData, $mimeType, $fileName) = $documentFiller->fill(
+            $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
+          );
         }
         break;
       }
@@ -1660,7 +1664,14 @@ class PersonalSettingsController extends Controller {
                         $templateName));
         }
 
-        list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName, $insuranceOverview, $format == 'pdf');
+        list($fileData, $mimeType, $fileName) = $documentFiller->fill(
+          $templateFileName,
+          $insuranceOverview,
+          [
+            'sender' => 'org.treasurer',
+            'recipient' => 'billToParty',
+          ], $format == 'pdf'
+        );
 
         break;
       }

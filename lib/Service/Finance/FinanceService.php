@@ -242,14 +242,10 @@ class FinanceService
     if ($formFile->getMimeType() != 'application/pdf') {
       /** @var OpenDocumentFiller $odf */
       $odf = $this->di(OpenDocumentFiller::class);
-      list($fileData,) = $odf->ffill($formFile, [], true);
-      $this->logInfo('FILEDATA ' . strlen($fileData));
+      list($fileData,) = $odf->ffill($formFile, [], [ 'sender' => 'org.treasurer' ], true);
     } else {
       $fileData = $formFile->getContent();
-      $this->logInfo('FILEDATA DIRECT ' . strlen($fileData));
-      $this->logInfo('FILEDATA FILEMIME ' . strrchr($formFile->getMimeType(), 'pdf'));
-      $this->logInfo('FILEDATA FILEMIME ' . $formFile->getMimeType());
-   }
+    }
 
     $formFiller = (new PDFFormFiller)->fill($fileData, $formData);
 
