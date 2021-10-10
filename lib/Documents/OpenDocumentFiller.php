@@ -132,6 +132,7 @@ class OpenDocumentFiller
 
     foreach ($this->backend->VarRef as $key => $value) {
       if (is_array($value)) {
+        $this->logInfo('Merge block ' . $key);
         $this->backend->MergeBlock($key, $value);
       }
     }

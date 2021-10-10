@@ -1594,9 +1594,22 @@ class PersonalSettingsController extends Controller {
         $instrumentationService = $this->di(InstrumentationService::class);
         $musician = $instrumentationService->getDummyMusician();
 
-        list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-          $musician->getSepaBankAccounts()->first(),
-          $this->getExecutiveBoardProjectId());
+        if ($format == 'pdf') {
+          list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+            $musician->getSepaBankAccounts()->first(),
+            $this->getExecutiveBoardProjectId());
+        } else {
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $templateFileName = $this->getDocumentTemplatesPath($templateName);
+          if (empty($templateFileName)) {
+            return self::grumble(
+              $this->l->t('There is no template file for template "%s"',
+                          $templateName));
+          }
+          list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName);
+        }
+
         break;
       }
       case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE: {
@@ -1604,9 +1617,21 @@ class PersonalSettingsController extends Controller {
         $instrumentationService = $this->di(InstrumentationService::class);
         $musician = $instrumentationService->getDummyMusician();
 
-        list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-          $musician->getSepaBankAccounts()->first(),
-          $this->getClubMembersProjectId());
+        if ($format == 'pdf') {
+          list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+            $musician->getSepaBankAccounts()->first(),
+            $this->getClubMembersProjectId());
+        } else {
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $templateFileName = $this->getDocumentTemplatesPath($templateName);
+          if (empty($templateFileName)) {
+            return self::grumble(
+              $this->l->t('There is no template file for template "%s"',
+                          $templateName));
+          }
+          list($fileData, $mimeType, $fileName) = $documentFiller->fill($templateFileName);
+        }
         break;
       }
       case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy': {
@@ -1665,16 +1690,13 @@ class PersonalSettingsController extends Controller {
         // /** @var InstrumentationService $instrumentationService */
         // $instrumentationService = $this->di(InstrumentationService::class);
         // $musician = $instrumentationService->getDummyMusician();
-      // case 'projectDebitNoteMandateForm':
-      //   list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-      //     $musician->getSepaBankAccounts()->first(),
-      //     $this->getExecutiveBoardProjectId());
-      //   break;
-      // case 'generalDebitNoteMandateForm':
-      //   list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-      //     $musician->getSepaBankAccounts()->first(),
-      //     $this->getClubMembersProjectId());
-      //   break;
+      case 'projectDebitNoteMandateForm':
+      case 'generalDebitNoteMandateForm':
+        /** @var InstrumentInsuranceService $insuranceService */
+        /** @var OpenDocumentFiller $documentFiller */
+        $documentFiller = $this->di(OpenDocumentFiller::class);
+        $fillData = $documentFiller->fillData([]);
+        break;
       case 'instrumentInsuranceRecord': {
         /** @var InstrumentInsuranceService $insuranceService */
         $insuranceService = $this->di(InstrumentInsuranceService::class);
@@ -1689,7 +1711,7 @@ class PersonalSettingsController extends Controller {
       }
       default:
         return self::grumble(
-          $this->l->t('Auto-fill test for template "%s: not yet implemented, sorry.',
+          $this->l->t('Download of auto-fill test-data for template "%s" is not yet implemented, sorry.',
                       $templateName));
       }
 
