@@ -246,6 +246,8 @@ class PersonalForm {
             'streetAddressCity' => $this->getConfigValue('streetAddressCity'),
             'streetAddressZIP' => $this->getConfigValue('streetAddressZIP'),
             'streetAddressCountry' => $this->getConfigValue('streetAddressCountry'),
+            'registerName' => $this->getConfigValue('registerName'),
+            'registerNumber' => $this->getConfigValue('registerNumber'),
 
             'phoneNumber' => $this->getConfigValue('phoneNumber'),
 
