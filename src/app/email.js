@@ -924,11 +924,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       });
   };
 
-  const confirmAutoSaveDelete = function() {
+  const confirmAutoSaveDelete = function(doDelete) {
     const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
-    console.info('DRAFT ID', draftId, draftAutoSave.prop('checked'));
-    if (draftAutoSave.prop('checked') && parseInt(draftId) > 0) {
-      console.info('CONFIRM');
+    console.debug('DRAFT ID', draftId, draftAutoSave.prop('checked'));
+    doDelete = doDelete || draftAutoSave.prop('checked');
+    if (doDelete && parseInt(draftId) > 0) {
       Dialogs.confirm(
         t(appName,
           'Do you want to delete the auto-save backup copy of the current message (id = {id})?',
@@ -984,7 +984,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             Notification.show(message, { timeout: 15 });
           }
           if (!$this.prop('checked')) {
-            confirmAutoSaveDelete();
+            confirmAutoSaveDelete(true);
           }
         });
       return false;
