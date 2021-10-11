@@ -216,7 +216,7 @@ $containerClass = $appName.'-'.'container';
     </tr>
     <tr>
       <td class="caption"><?php echo $l->t('Sender-Email'); ?></td>
-      <td colspan="2"><?php echo $l->t('Tied to'); ?> "<?php echo $catchAllEmail; ?>"</td>
+      <td colspan="2"><?php echo $l->t('Tied to "%s"', $catchAllEmail); ?></td>
     </tr>
     <tr class="attachments">
       <td class="attachments caption"><?php echo $l->t('Add Attachment'); ?></td>
