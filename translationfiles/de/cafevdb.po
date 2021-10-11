@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-11 10:51+0200\n"
-"PO-Revision-Date: 2021-10-11 11:00+0200\n"
+"POT-Creation-Date: 2021-10-11 11:43+0200\n"
+"PO-Revision-Date: 2021-10-11 11:44+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1307,7 +1307,9 @@ msgstr ""
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
-msgstr "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht implementiert."
+msgstr ""
+"Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht "
+"implementiert."
 
 #: lib/Controller/PersonalSettingsController.php:1742
 #: lib/Controller/PmeTableController.php:142
@@ -2379,7 +2381,9 @@ msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
 "substitution data."
-msgstr "Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen gefunden."
+msgstr ""
+"Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen "
+"gefunden."
 
 #: lib/Documents/OpenDocumentFiller.php:188
 msgid "Please install the \"unoconv\" program on the server."
@@ -2413,7 +2417,7 @@ msgstr "Unterschrift"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:505 src/app/email.js:1060
+#: lib/EmailForm/Composer.php:505 src/app/email.js:1064
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -8485,11 +8489,11 @@ msgstr ""
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: src/app/email.js:604 src/app/email.js:1529
+#: src/app/email.js:604 src/app/email.js:1533
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:606 src/app/email.js:1531
+#: src/app/email.js:606 src/app/email.js:1535
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
@@ -8517,7 +8521,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:930
+#: src/app/email.js:907
+msgid "Dummy Autosave Subject"
+msgstr "Pro-forma Autosave-Betreff"
+
+#: src/app/email.js:934
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message (id = "
 "{id})?"
@@ -8525,19 +8533,19 @@ msgstr ""
 "Möchten Sie die automatische Sicherungskopie der aktuellen Nachricht (id = "
 "{id}) löschen?"
 
-#: src/app/email.js:932
+#: src/app/email.js:936
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:978
+#: src/app/email.js:982
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:979
+#: src/app/email.js:983
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1011
+#: src/app/email.js:1015
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -8545,11 +8553,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1013
+#: src/app/email.js:1017
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1044
+#: src/app/email.js:1048
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -8557,17 +8565,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1046
+#: src/app/email.js:1050
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1058
+#: src/app/email.js:1062
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1068
+#: src/app/email.js:1072
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -8575,59 +8583,59 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1070
+#: src/app/email.js:1074
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1107
+#: src/app/email.js:1111
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1108
+#: src/app/email.js:1112
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1232
+#: src/app/email.js:1236
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1233 src/app/email.js:1330
+#: src/app/email.js:1237 src/app/email.js:1334
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1313
+#: src/app/email.js:1317
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1329
+#: src/app/email.js:1333
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1373 templates/emailform/part.emailform.composer.php:167
+#: src/app/email.js:1377 templates/emailform/part.emailform.composer.php:167
 #: templates/emailform/part.emailform.composer.php:185
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1374
+#: src/app/email.js:1378
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: src/app/email.js:1377
+#: src/app/email.js:1381
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1380
+#: src/app/email.js:1384
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/email.js:1540
+#: src/app/email.js:1544
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: src/app/email.js:1542
+#: src/app/email.js:1546
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
@@ -9329,8 +9337,9 @@ msgid "Sender-Email"
 msgstr "Absender-Email"
 
 #: templates/emailform/part.emailform.composer.php:219
-msgid "Tied to"
-msgstr "Vorgegeben:"
+#, php-format
+msgid "Tied to \"%s\""
+msgstr "Vorgegeben als \"%s\""
 
 #: templates/emailform/part.emailform.composer.php:222
 msgid "Add Attachment"
