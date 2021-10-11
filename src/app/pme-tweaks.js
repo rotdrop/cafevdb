@@ -22,7 +22,11 @@
 
 import { globalState, $ } from './globals.js';
 import * as Email from './email.js';
-import { token as pmeToken } from './pme-selectors.js';
+import { token as pmeToken, sys as PMEsys } from './pme-selectors.js';
+
+// const qs = require('qs');
+// require('qs/lib/index.js');
+import * as qs from 'qs';
 
 /**
  * Some general PME tweaks.
@@ -57,17 +61,23 @@ const pmeTweaks = function(container) {
     });
 
   const form = container.find('form.' + pmeToken('form')).first();
+
+  // open the email-form when clicking on a musician's or project
+  // participant's email address.
   form.find('a.email').off('click').on('click', function(event) {
     event.preventDefault();
-    const href = $(this).attr('href');
-    let recordId = href.match(/[?]recordId=(\d+)$/);
-    if (typeof recordId[1] !== 'undefined') {
-      recordId = recordId[1];
-    } else {
-      return false; // Mmmh, echo error diagnostics to the user?
+    const href = $(this).attr('href').split('?');
+    if (href.length != 2) {
+      return false;
+    }
+    const recordKey = PMEsys('rec');
+    const params = qs.parse(href[1]);
+    console.info('QUERY DATA', params);
+    if (params[recordKey] === undefined) {
+      return false;
     }
     let post = form.serialize();
-    post += '&PME_sys_mrecs[]=' + recordId;
+    post += '&' + PMEsys('mrecs') + '[]=' + JSON.stringify(params[recordKey]);
     post += '&emailRecipients[MemberStatusFilter][0]=regular';
     post += '&emailRecipients[MemberStatusFilter][1]=passive';
     post += '&emailRecipients[MemberStatusFilter][2]=soloist';
