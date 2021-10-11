@@ -404,7 +404,7 @@ form#cafevdb-email-form {
     text-overflow:ellipsis;
   }
 
-  td.subject.input  span.subject.tag {
+  td.subject.input span.subject.tag {
     font-family:monospace;
     font-size:100%;
     width:auto;
@@ -432,6 +432,10 @@ form#cafevdb-email-form {
 
   td.messagetext {
     padding: 0.5em 0;
+  }
+
+  td input.sender-name {
+    width:100%;
   }
 
   /*****************************************************************************

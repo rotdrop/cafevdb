@@ -22,6 +22,8 @@
  * Some tweaks for jQuery dialogs in order to fix scrollbar issues etc.
  */
 
+$full-screen-zindex: 9000;
+
 .ui-dialog.ui-widget.cafevdb-full-screen {
   position: absolute !important;
   padding: 0 !important;
@@ -32,8 +34,20 @@
   min-width: 100vw !important;
   height: 100vh !important;
   min-height: 100vh !important;
-  z-index: 9000 !important;
+  z-index: $full-screen-zindex !important;
   cursor: pointer !important;
+
+  & ~ .tox-silver-sink.tox-tinymce-aux {
+    z-index: $full-screen-zindex + 1 !important;
+  }
+
+  .tox-tinymce.tox-fullscreen {
+    top:0px!important;
+  }
+}
+
+.tox-tinymce.tox-fullscreen {
+  top:50px!important;
 }
 
 .cafevdb-full-screen .ui-dialog-titlebar .ui-dialog-title {

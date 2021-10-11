@@ -80,9 +80,10 @@ function dialogToBackButton(dialogHolder) {
  *
  * @Param {jQuery} dialogHolder TBD.
  */
-function dialogFullScreenButton(dialogHolder) {
+function dialogFullScreenButton(dialogHolder, onChangeCallback) {
   const dialogWidget = dialogHolder.dialog('widget');
   const parent = dialogWidget.parent();
+  const fullScreenClass = appName + '-full-screen';
   const buttonTitle = t(
     appName,
     'Maximize this dialog to cover the entire browser window.');
@@ -98,14 +99,23 @@ function dialogFullScreenButton(dialogHolder) {
   button
     .off('click')
     .on('click', function() {
-      const $this = $(this);
       $.fn.cafevTooltip.remove(); // remove any left-over items
-      if (dialogWidget.parent().is('body')) {
-        dialogWidget.detach().prependTo(parent);
-        dialogWidget.removeClass(appName + '-full-screen');
+      if (onChangeCallback !== undefined) {
+        onChangeCallback(dialogWidget.hasClass(fullScreenClass) ? 'fullscreen' : 'dialog', 'before');
+      }
+      if (dialogWidget.hasClass(fullScreenClass)) {
+        dialogWidget.removeClass(fullScreenClass);
+        if (!parent.is('body')) {
+          dialogWidget.detach().prependTo(parent);
+        }
       } else {
-        dialogWidget.detach().prependTo('body');
-        dialogWidget.addClass(appName + '-full-screen');
+        dialogWidget.addClass(fullScreenClass);
+        if (!parent.is('body')) {
+          dialogWidget.detach().prependTo('body');
+        }
+      }
+      if (onChangeCallback !== undefined) {
+        onChangeCallback(dialogWidget.hasClass(fullScreenClass) ? 'fullscreen' : 'dialog', 'after');
       }
     });
 }

@@ -1565,7 +1565,15 @@ function emailFormPopup(post, modal, single, afterInit) {
         open() {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton(dialogHolder);
-          DialogUtils.fullScreenButton(dialogHolder);
+          DialogUtils.fullScreenButton(dialogHolder, function(mode, when) {
+            console.info('FS MODE', mode);
+            if (when === 'before') {
+              WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+            }
+            if (when === 'after') {
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+            }
+          });
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
             event.stopImmediatePropagation();
             dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
