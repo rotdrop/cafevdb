@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-08 00:58+0200\n"
-"PO-Revision-Date: 2021-10-08 01:11+0200\n"
+"POT-Creation-Date: 2021-10-11 10:51+0200\n"
+"PO-Revision-Date: 2021-10-11 11:00+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -181,14 +181,14 @@ msgid "File width id %d not found in database-storage."
 msgstr "Datei \"%s\" konnte nicht im Datenbank-Speicher gefunden werden."
 
 #: lib/Controller/EmailFormController.php:202
-#: templates/emailform/part.emailform.composer.php:36
-#: templates/emailform/part.emailform.composer.php:50
+#: templates/emailform/part.emailform.composer.php:37
+#: templates/emailform/part.emailform.composer.php:51
 msgid "Drafts"
 msgstr "Entwürfe"
 
 #: lib/Controller/EmailFormController.php:211
-#: templates/emailform/part.emailform.composer.php:36
-#: templates/emailform/part.emailform.composer.php:70
+#: templates/emailform/part.emailform.composer.php:37
+#: templates/emailform/part.emailform.composer.php:71
 msgid "Templates"
 msgstr "Vorlagen"
 
@@ -451,11 +451,12 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:268
-#: lib/Database/EntityManager.php:190 lib/Documents/OpenDocumentFiller.php:217
-#: lib/Documents/OpenDocumentFiller.php:234
-#: lib/Documents/OpenDocumentFiller.php:245
-#: lib/Documents/OpenDocumentFiller.php:251
-#: lib/Documents/OpenDocumentFiller.php:252
+#: lib/Database/EntityManager.php:190 lib/Documents/OpenDocumentFiller.php:271
+#: lib/Documents/OpenDocumentFiller.php:288
+#: lib/Documents/OpenDocumentFiller.php:299
+#: lib/Documents/OpenDocumentFiller.php:305
+#: lib/Documents/OpenDocumentFiller.php:306
+#: lib/Documents/OpenDocumentFiller.php:309
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:216
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1281
 #: lib/PageRenderer/Instruments.php:377
@@ -809,7 +810,7 @@ msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
 #: lib/Controller/PersonalSettingsController.php:550
 #: lib/Controller/PersonalSettingsController.php:743
-#: lib/Controller/PersonalSettingsController.php:1719
+#: lib/Controller/PersonalSettingsController.php:1752
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
@@ -1282,61 +1283,69 @@ msgid "Unknown link target %s"
 msgstr "Unbekanntes Verknüpfungs-Ziel %s"
 
 #: lib/Controller/PersonalSettingsController.php:1587
-#: lib/Controller/PersonalSettingsController.php:1661
+#: lib/Controller/PersonalSettingsController.php:1697
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: lib/Controller/PersonalSettingsController.php:1634
+#: lib/Controller/PersonalSettingsController.php:1607
+#: lib/Controller/PersonalSettingsController.php:1632
+#: lib/Controller/PersonalSettingsController.php:1663
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1645
-#: lib/Controller/PersonalSettingsController.php:1692
+#: lib/Controller/PersonalSettingsController.php:1681
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: lib/Controller/PersonalSettingsController.php:1709
+#: lib/Controller/PersonalSettingsController.php:1725
+#, php-format
+msgid ""
+"Download of auto-fill test-data for template \"%s\" is not yet implemented, "
+"sorry."
+msgstr "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht implementiert."
+
+#: lib/Controller/PersonalSettingsController.php:1742
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/SepaBulkTransactionsController.php:129
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1729
+#: lib/Controller/PersonalSettingsController.php:1762
 #, php-format
 msgid "Value for \"%s\" set to \"%s\""
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1745
+#: lib/Controller/PersonalSettingsController.php:1778
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: lib/Controller/PersonalSettingsController.php:1766
+#: lib/Controller/PersonalSettingsController.php:1799
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:1768
+#: lib/Controller/PersonalSettingsController.php:1801
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:1771
+#: lib/Controller/PersonalSettingsController.php:1804
 #, php-format
 msgid "Public SSL key missing for %s, key distribution failed."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel kann nicht gesetzt werden, denn er "
 "öffentliche SSL-Schlüssel für %s fehlt."
 
-#: lib/Controller/PersonalSettingsController.php:1776
+#: lib/Controller/PersonalSettingsController.php:1809
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2360,12 +2369,19 @@ msgstr ""
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr "Hilfe-Tag \"%1$s\", unauffindbare Tags %2$s"
 
-#: lib/Documents/OpenDocumentFiller.php:92
+#: lib/Documents/OpenDocumentFiller.php:111
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 
-#: lib/Documents/OpenDocumentFiller.php:135
+#: lib/Documents/OpenDocumentFiller.php:163
+#, php-format
+msgid ""
+"Data for block \"%s\" using the path \"%s\" could not be found in the "
+"substitution data."
+msgstr "Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen gefunden."
+
+#: lib/Documents/OpenDocumentFiller.php:188
 msgid "Please install the \"unoconv\" program on the server."
 msgstr "Bitte das \"unoconv\" Programm auf dem Server installieren."
 
@@ -3005,7 +3021,7 @@ msgstr "Aktionen"
 #: lib/PageRenderer/ProjectPayments.php:399
 #: lib/PageRenderer/ProjectPayments.php:412
 #: lib/PageRenderer/SepaBulkTransactions.php:442
-#: templates/emailform/part.emailform.composer.php:188
+#: templates/emailform/part.emailform.composer.php:189
 msgid "Subject"
 msgstr "Betreff"
 
@@ -4737,7 +4753,7 @@ msgstr "Weitere Kalender"
 msgid "Unsupported bulk-transaction class: \"%s\"."
 msgstr "Nicht unterstützte Sammelauftrags-Klasse: \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:120
+#: lib/Service/Finance/FinanceService.php:121
 #, php-format
 msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
@@ -4745,7 +4761,7 @@ msgstr ""
 "Die Fristen für Werktage und Kalendertage müssen das gleiche Vorzeichen "
 "haben (%d / %d)"
 
-#: lib/Service/Finance/FinanceService.php:180
+#: lib/Service/Finance/FinanceService.php:181
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
@@ -4753,49 +4769,49 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:277
-#: lib/Service/Finance/FinanceService.php:318
+#: lib/Service/Finance/FinanceService.php:282
+#: lib/Service/Finance/FinanceService.php:323
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:407
+#: lib/Service/Finance/FinanceService.php:412
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:423
+#: lib/Service/Finance/FinanceService.php:428
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:447
+#: lib/Service/Finance/FinanceService.php:452
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:735
+#: lib/Service/Finance/FinanceService.php:740
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/Service/Finance/FinanceService.php:746
+#: lib/Service/Finance/FinanceService.php:751
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:755
+#: lib/Service/Finance/FinanceService.php:760
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:761
+#: lib/Service/Finance/FinanceService.php:766
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:765
+#: lib/Service/Finance/FinanceService.php:770
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:770
+#: lib/Service/Finance/FinanceService.php:775
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
@@ -5307,7 +5323,7 @@ msgstr "Vorschau"
 
 #: lib/Service/ProjectService.php:904 lib/Service/ProjectService.php:956
 #: lib/Service/ProjectService.php:1121 lib/Service/ProjectService.php:1159
-#: lib/Service/ProjectService.php:1216 lib/Settings/PersonalForm.php:276
+#: lib/Service/ProjectService.php:1216 lib/Settings/PersonalForm.php:278
 msgid "Rehearsals"
 msgstr "Proben"
 
@@ -7772,23 +7788,23 @@ msgstr "Vereinsmitglieder"
 msgid "ExecutiveBoardMembers"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:275
+#: lib/Settings/PersonalForm.php:277
 msgid "Concerts"
 msgstr "Konzerte"
 
-#: lib/Settings/PersonalForm.php:277
+#: lib/Settings/PersonalForm.php:279
 msgid "Other"
 msgstr "Sonstiges"
 
-#: lib/Settings/PersonalForm.php:278 templates/events.php:37
+#: lib/Settings/PersonalForm.php:280 templates/events.php:37
 msgid "Management"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:279 templates/events.php:38
+#: lib/Settings/PersonalForm.php:281 templates/events.php:38
 msgid "Finance"
 msgstr "Kasse"
 
-#: lib/Settings/PersonalForm.php:282 templates/events.php:36
+#: lib/Settings/PersonalForm.php:284 templates/events.php:36
 msgid "Miscellaneous"
 msgstr "Sonstiges"
 
@@ -7805,40 +7821,40 @@ msgstr ""
 msgid "documents"
 msgstr "Dokumente"
 
-#: lib/Storage/UserStorage.php:181
+#: lib/Storage/UserStorage.php:192
 #, php-format
 msgid "Unable to restore \"%s\": TrashManager cannot be loaded"
 msgstr ""
 "Konnte \"%s\" nicht wiederherstellen: der \"TrashManager\" konnte nicht "
 "geladen werden."
 
-#: lib/Storage/UserStorage.php:230
+#: lib/Storage/UserStorage.php:241
 #, php-format
 msgid "Rename of \"%s\" to \"%s\" failed."
 msgstr "Umbenennen von \"%s\" zu \"%s\" fehlgeschlagen."
 
-#: lib/Storage/UserStorage.php:254
+#: lib/Storage/UserStorage.php:265
 #, php-format
 msgid "Deleted non-directory %s"
 msgstr "Datei %s gelöscht"
 
-#: lib/Storage/UserStorage.php:313
+#: lib/Storage/UserStorage.php:324
 #, php-format
 msgid "Unable to set content of file \"%s\"."
 msgstr "Kann den Inhalt der Datei \"%s\" nicht speichern."
 
-#: lib/Storage/UserStorage.php:328
+#: lib/Storage/UserStorage.php:339
 #, php-format
 msgid "Cannot read from folder \"%s\"."
 msgstr "Kann den Ordner \"%s\" nicht lesen."
 
-#: lib/Storage/UserStorage.php:331
+#: lib/Storage/UserStorage.php:342
 #, php-format
 msgid "Unable to get content of file \"%s\"."
 msgstr "Kann den Inhalt der Datei \"%s\" nicht laden."
 
-#: lib/Storage/UserStorage.php:353 lib/Storage/UserStorage.php:385
-#: lib/Storage/UserStorage.php:413
+#: lib/Storage/UserStorage.php:364 lib/Storage/UserStorage.php:396
+#: lib/Storage/UserStorage.php:424
 msgid "Argument must be a valid path or already a file-system node."
 msgstr ""
 "Der Parameter muss entweder ein gültiger Dateipfad oder bereits ein "
@@ -8340,7 +8356,7 @@ msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück.
 
 #: src/app/chosen-popup.js:42 src/app/inlineimage.js:245
 #: templates/blog/blogedit.php:40
-#: templates/emailform/part.emailform.composer.php:308
+#: templates/emailform/part.emailform.composer.php:309
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -8587,8 +8603,8 @@ msgstr "Anhang auswählen"
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1373 templates/emailform/part.emailform.composer.php:166
-#: templates/emailform/part.emailform.composer.php:184
+#: src/app/email.js:1373 templates/emailform/part.emailform.composer.php:167
+#: templates/emailform/part.emailform.composer.php:185
 msgid "Address Book"
 msgstr "Adressbuch"
 
@@ -9226,7 +9242,7 @@ msgid "Select Em@il Recipients"
 msgstr "Em@il Adressaten"
 
 #: templates/emailform/form.php:34
-#: templates/emailform/part.emailform.composer.php:141
+#: templates/emailform/part.emailform.composer.php:142
 msgid "Recipients"
 msgstr "Adressaten"
 
@@ -9250,108 +9266,115 @@ msgstr "Sendevorgang"
 msgid "Copy to Sent"
 msgstr "Privatkopie"
 
-#: templates/emailform/part.emailform.composer.php:32
+#: templates/emailform/part.emailform.composer.php:33
 msgid "Compose Em@il"
 msgstr "Email verfassen"
 
-#: templates/emailform/part.emailform.composer.php:44
+#: templates/emailform/part.emailform.composer.php:45
 msgid "Select draft or template"
 msgstr "Vorlagen/Entwürfe"
 
-#: templates/emailform/part.emailform.composer.php:55
+#: templates/emailform/part.emailform.composer.php:60
+#: templates/emailform/part.emailform.composer.php:62
+#: templates/emailform/part.emailform.composer.php:80
+#: templates/emailform/part.emailform.composer.php:82
+msgid "Anonymous"
+msgstr "Anonymous"
+
+#: templates/emailform/part.emailform.composer.php:56
 #, php-format
 msgid "Subject: %s<br/>Created by %s on %s<br/>Updated by %s on %s"
 msgstr "Betreff: %s<br/>Erzeugt von %s, %s<br/>Geändert von %s, %s"
 
-#: templates/emailform/part.emailform.composer.php:75
+#: templates/emailform/part.emailform.composer.php:76
 #, php-format
 msgid "Name: %s<br/>Created by %s on %s<br/>Updated by %s on %s"
 msgstr "Name: %s<br/>Erzeugt von %s, %s<br/>Geändert von %s, %s"
 
-#: templates/emailform/part.emailform.composer.php:95
+#: templates/emailform/part.emailform.composer.php:96
 msgid "New Template Name"
 msgstr "Neue Vorlage"
 
-#: templates/emailform/part.emailform.composer.php:118
+#: templates/emailform/part.emailform.composer.php:119
 msgid "Save Message"
 msgstr "Em@il speichern"
 
-#: templates/emailform/part.emailform.composer.php:136
+#: templates/emailform/part.emailform.composer.php:137
 msgid "Delete Message"
 msgstr "Em@il löschen"
 
-#: templates/emailform/part.emailform.composer.php:144
-#: templates/emailform/part.emailform.composer.php:147
+#: templates/emailform/part.emailform.composer.php:145
+#: templates/emailform/part.emailform.composer.php:148
 msgid "No recipients selected."
 msgstr "Keine Adressaten ausgewählt"
 
-#: templates/emailform/part.emailform.composer.php:152
+#: templates/emailform/part.emailform.composer.php:153
 msgid "Carbon Copy"
 msgstr "Durchschlag"
 
-#: templates/emailform/part.emailform.composer.php:170
+#: templates/emailform/part.emailform.composer.php:171
 msgid "Blind CC"
 msgstr "Blind-Kopie"
 
-#: templates/emailform/part.emailform.composer.php:204
+#: templates/emailform/part.emailform.composer.php:205
 msgid "Message-Body"
 msgstr "Nachricht"
 
-#: templates/emailform/part.emailform.composer.php:208
+#: templates/emailform/part.emailform.composer.php:209
 msgid "Sender-Name"
 msgstr "Absender-Name"
 
-#: templates/emailform/part.emailform.composer.php:217
+#: templates/emailform/part.emailform.composer.php:218
 msgid "Sender-Email"
 msgstr "Absender-Email"
 
-#: templates/emailform/part.emailform.composer.php:218
+#: templates/emailform/part.emailform.composer.php:219
 msgid "Tied to"
 msgstr "Vorgegeben:"
 
-#: templates/emailform/part.emailform.composer.php:221
+#: templates/emailform/part.emailform.composer.php:222
 msgid "Add Attachment"
 msgstr "Anhang hinzufügen"
 
-#: templates/emailform/part.emailform.composer.php:226
-#: templates/emailform/part.emailform.composer.php:229
+#: templates/emailform/part.emailform.composer.php:227
+#: templates/emailform/part.emailform.composer.php:230
 msgid "Upload new File"
 msgstr "Datei hochladen"
 
-#: templates/emailform/part.emailform.composer.php:234
-#: templates/emailform/part.emailform.composer.php:237
+#: templates/emailform/part.emailform.composer.php:235
+#: templates/emailform/part.emailform.composer.php:238
 msgid "Select from Owncloud"
 msgstr "Datei aus der `Cloud'"
 
-#: templates/emailform/part.emailform.composer.php:243
+#: templates/emailform/part.emailform.composer.php:244
 msgid "Project Events"
 msgstr "Projekt-Termine"
 
-#: templates/emailform/part.emailform.composer.php:246
+#: templates/emailform/part.emailform.composer.php:247
 msgid "Select Events"
 msgstr "Termine auswählen"
 
-#: templates/emailform/part.emailform.composer.php:253
+#: templates/emailform/part.emailform.composer.php:254
 msgid "Attached Events"
 msgstr "Angehängte Termine"
 
-#: templates/emailform/part.emailform.composer.php:267
+#: templates/emailform/part.emailform.composer.php:268
 msgid "Delete Event Attachments"
 msgstr "Termin Anhänge auswählen"
 
-#: templates/emailform/part.emailform.composer.php:273
+#: templates/emailform/part.emailform.composer.php:274
 msgid "Attached Files"
 msgstr "Angehängte Dateien"
 
-#: templates/emailform/part.emailform.composer.php:287
+#: templates/emailform/part.emailform.composer.php:288
 msgid "Delete All Attachments"
 msgstr "Alle Anhänge löschen"
 
-#: templates/emailform/part.emailform.composer.php:296
+#: templates/emailform/part.emailform.composer.php:297
 msgid "Send Em@il"
 msgstr "Em@il verschicken"
 
-#: templates/emailform/part.emailform.composer.php:302
+#: templates/emailform/part.emailform.composer.php:303
 msgid "Message Preview"
 msgstr "Email-Vorschau"
 
