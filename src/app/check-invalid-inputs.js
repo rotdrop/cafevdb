@@ -62,7 +62,16 @@ function checkInvalidInputs(container, cleanup, labelCallback) {
   const searchBase = containedForms.length === 0 ? container : containedForms;
 
   // exclude fieldsets, as the contained items are also included.
-  const invalidInputs = searchBase.find(':invalid').not('fieldset');
+  const invalidInputs = searchBase.find(':invalid').filter(function() {
+    const $this = $(this);
+    if ($this.is('fieldset')) {
+      return false;
+    }
+    if ($this.hasClass('emulated-placeholder') && !$this.hasClass('value-required')) {
+      return false;
+    }
+    return true;
+  });
 
   if (invalidInputs.length !== 0) {
     const highlightInvalid = function(afterDialog) {

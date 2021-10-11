@@ -319,13 +319,9 @@ const actionMenu = function(containerSel) {
     disable_search: true,
   };
 
-  // Install placeholder for proper sizing
-  SelectUtils.makePlaceholder(projectActions);
   const maxWidth = projectActions.maxOuterWidth(true);
   chosenOptions.width = maxWidth + 'px';
 
-  // alert('max: '+projectActions.maxOuterWidth(true));
-  // alert('max: '+projectActions.maxWidth());
   projectActions.chosen(chosenOptions);
   if (chosenActive(projectActions)) {
     projectActions.find('option:first').html('');
@@ -338,6 +334,8 @@ const actionMenu = function(containerSel) {
       event.preventDefault();
       return actions($(this), containerSel);
     });
+
+  SelectUtils.makePlaceholder(projectActions);
 };
 
 const pmeFormInit = function(containerSel) {

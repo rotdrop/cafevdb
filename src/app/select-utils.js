@@ -43,6 +43,15 @@ const makePlaceholder = function($select) {
     $select.each(function(index) {
       const $self = $(this);
       const placeHolder = $self.data('placeholder');
+      if (!placeHolder) {
+        return;
+      }
+      if ($self.hasClass('emulated-placeholder')) {
+        return;
+      }
+      if ($self.prop('required')) {
+        $self.addClass('value-required');
+      }
       $self.prop('required', true)
         .addClass('emulated-placeholder');
       $self.find('option:first')
