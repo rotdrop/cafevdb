@@ -902,6 +902,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       clearTimeout(Email.autoSaveTimer);
     }
     Email.autoSaveTimer = null;
+    // add a dummy subject in order to please the save-validator
+    if (fieldset.find('input.email-subject').val() === '') {
+      fieldset.find('input.email-subject').val(t(appName, 'Dummy Autosave Subject'));
+    }
     applyComposerControls(
       null, {
         operation: 'save',
