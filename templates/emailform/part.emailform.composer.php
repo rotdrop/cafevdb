@@ -23,6 +23,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 $containerClass = $appName.'-'.'container';
 
@@ -50,15 +51,15 @@ $containerClass = $appName.'-'.'container';
             <optgroup label="'.$l->t('Drafts').'">
 ';
             foreach ($storedEmails['drafts'] as $draft) {
-              $createdAt = $draft['created']->locale($locale);
-              $updatedAt = $draft['updated']->locale($locale);
+              $createdAt = ($template['created']??(new DateTime)->setTimestamp(0))->locale($locale);
+              $updatedAt = ($template['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
               $title = $l->t("Subject: %s<br/>"
                             ."Created by %s on %s<br/>"
                             ."Updated by %s on %s",
                              [ $draft['name'],
-                               $draft['createdBy'],
+                               $draft['createdBy']??$l->t('Anonymous'),
                                $createdAt->isoFormat('lll'),
-                               $draft['updatedBy'],
+                               $draft['updatedBy']??$l->t('Anonymous'),
                                $createdAt->isoFormat('lll'), ]);
               $name = $updatedAt->isoFormat('L LT').': '.$draft['name'];
               echo '
@@ -70,15 +71,15 @@ $containerClass = $appName.'-'.'container';
             echo '<optgroup label="'.$l->t('Templates').'">
 ';
             foreach ($storedEmails['templates'] as $template) {
-              $createdAt = $template['created']->locale($locale);
-              $updatedAt = $template['updated']->locale($locale);
+              $createdAt = ($template['created']??(new DateTime)->setTimestamp(0))->locale($locale);
+              $updatedAt = ($template['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
               $title = $l->t("Name: %s<br/>"
                             ."Created by %s on %s<br/>"
                             ."Updated by %s on %s",
                              [ $template['name'],
-                               $template['createdBy'],
+                               $template['createdBy']??$l->t('Anonymous'),
                                $createdAt->isoFormat('lll'),
-                               $template['updatedBy'],
+                               $template['updatedBy']??$l->t('Anonymous'),
                                $updatedAt->isoFormat('lll'), ]);
               echo '
               <option value="'.$template['id'].'" title="'.$title.'">'.$template['name'].'</option>
