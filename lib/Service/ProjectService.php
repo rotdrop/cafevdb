@@ -1608,9 +1608,18 @@ Whatever.',
         }
       } else {
 
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($project->getParticipants() as $participant) {
+          $this->deleteProjectParticipant($participant);
+        }
+
+        /** @var Entities\ProjectParticipantField $participantField */
+        foreach ($project->getParticipantFields() as $participantField) {
+          $this->participantFieldsService->deleteField($participantField);
+        }
+
         // @todo: use cascading to remove
         $deleteTables = [
-          Entities\ProjectParticipant::class,
           Entities\ProjectInstrument::class,
           Entities\ProjectWebPage::class,
           Entities\ProjectEvent::class,
@@ -1626,11 +1635,6 @@ Whatever.',
             ->getQuery()
             ->execute();
           $this->flush();
-        }
-
-        /** @var Entities\ProjectParticipantField $participantField */
-        foreach ($project->getParticipantFields() as $participantField) {
-          $this->participantFieldsService->deleteField($participantField);
         }
 
         if (!$project->isDeleted()) {
@@ -1951,6 +1955,25 @@ Whatever.',
       }
     } else {
       throw new \RuntimeException($this->l->t('Validation of projects not yet implemented.'));
+    }
+  }
+
+  public function deleteProjectParticipant(Entities\ProjectParticipant $participant)
+  {
+    /** @var Entities\ProjectParticipant $participant */
+    $this->remove($participant, true); // this should be soft-delete
+    if ($participant->unused()) {
+      $this->logInfo('Project participant ' . $participant->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
+
+      // For now rather cascade manually. Could also use ORM, of course ...
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      foreach ($participant->getParticipantFieldsData() as $fieldDatum) {
+        $this->remove($fieldDatum, true);
+        if ($fieldDatum->unused()) {
+          $this->remove($fieldDatum, true);
+        }
+      }
+      $this->remove($participant, true); // this should be hard-delete
     }
   }
 

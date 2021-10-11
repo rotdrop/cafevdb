@@ -1409,21 +1409,8 @@ class ProjectParticipants extends PMETableViewBase
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
-    /** @var Entities\ProjectParticipant $entity */
-    $this->remove($entity, true); // this should be soft-delete
-    if ($entity->unused()) {
-      $this->logInfo('Project participant ' . $entity->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
+    $this->projectService->deleteProjectParticipant($entity);
 
-      // For now rather cascade manually. Could also use ORM, of course ...
-      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      foreach ($entity->getParticipantFieldsData() as $fieldDatum) {
-        $this->remove($fieldDatum, true);
-        if ($fieldDatum->unused()) {
-          $this->remove($fieldDatum, true);
-        }
-      }
-      $this->remove($entity, true); // this should be hard-delete
-    }
     $changed = []; // disable PME delete query
 
     return true; // but run further triggers if appropriate
