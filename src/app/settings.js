@@ -736,7 +736,6 @@ const afterLoad = function(container) {
       'blur',
       msg, {
         success(element, data, value, msgElement) {
-          console.info(data);
           element.val(data.number);
         },
       });
@@ -759,7 +758,6 @@ const afterLoad = function(container) {
     const specialMemberProjects = $('input[type="text"].specialMemberProjects');
 
     const projectsData = specialMemberProjects.data('projects');
-    console.info('PROJECTS', projectsData);
     let autocompleteProjects = projectsData
       ? specialMemberProjects.data('projects').map(v => v.name)
       : [];
@@ -897,10 +895,8 @@ const afterLoad = function(container) {
           if (data.value) {
             element.val(data.value);
           }
-          console.info('BK DATA', data);
           for (const property of bankAccountProperties) {
             if (data[property]) {
-              console.info('SET BK PROP', data[property], $('input.' + property));
               $('input.' + property).val(data[property]);
             }
           }
@@ -974,7 +970,6 @@ const afterLoad = function(container) {
               $container.find('.auto-fill-test').prop('disabled', false).show();
               $container.find('.delete').prop('disabled', false);
               $trigger.removeClass('busy');
-              console.info(data);
             });
         });
     };
@@ -1042,7 +1037,6 @@ const afterLoad = function(container) {
       FileUpload.init({
         url: generateUrl('upload/stash'),
         doneCallback(file, index, container) {
-          console.info('FILE', file, container);
           moveIntoPlace(file, $container, $this);
         },
         stopCallback: null,
@@ -1077,7 +1071,6 @@ const afterLoad = function(container) {
               $this.removeClass('busy');
             })
             .done(function(files) {
-              console.info('FILES', files);
               if (!Array.isArray(files) || files.length !== 1) {
                 Dialogs.alert(
                   t(appName, 'Unable to copy selected file {file}.', { file: paths[0] }),
@@ -1149,7 +1142,6 @@ const afterLoad = function(container) {
       });
       translationKeys.trigger('chosen:updated');
       translationKeys.trigger('change');
-      console.info('update options');
     };
 
     translationKeys.chosen({
@@ -1254,7 +1246,6 @@ const afterLoad = function(container) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
         .done(function(data) {
-          console.info('Open dev-link', data.value.link, data.value.target);
           window.open(data.value.link, data.value.target);
         });
     });
