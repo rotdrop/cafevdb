@@ -123,9 +123,10 @@ class ContactsService
       $bookName = $addressBook->getDisplayName();
       $contacts = $addressBook->search('', [ 'FN', 'EMAIL' ], [] /* options */);
       foreach ($contacts as $contact) {
-        $id = $contact['id'];
-        $fn = $contact['FN'];
-        $emails = $contact['EMAIL'];
+        // $this->logInfo('CONTACT: ' . print_r($contact, true));
+        $uid = $contact['UID'];
+        $fn = $contact['FN']??'';
+        $emails = $contact['EMAIL']??null;
         if (empty($emails)) {
           continue;
         }
@@ -138,7 +139,7 @@ class ContactsService
             continue;
           }
           $theseContacts[] = [
-            'id'    => $id,
+            'uid'    => $uid,
             'email' => $email,
             'name'  => $fn,
             'addressBook' => $bookName,
