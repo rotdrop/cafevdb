@@ -685,39 +685,47 @@ body.cafevdb-modalizer {
     }
 
     /* Links inside the dropdown */
-    li a {
-      color: var(--color-main-text);
-      padding: 10px 12px;
-      text-decoration: none;
-      display: block;
+    li {
+      margin:0!important;
+      padding:0!important;
+      float:none!important;
+      a {
+        color: var(--color-main-text);
+        padding: 10px 12px;
+        text-decoration: none;
+        display: block;
 
-      img {
-        opacity:0.7;
-        margin-right:10px;
-        height:16px;
-        width:16px;
-        vertical-align:baseline;
-        border:0;
-      }
+        img {
+          opacity:0.7;
+          margin-right:10px;
+          height:16px;
+          width:16px;
+          vertical-align:baseline;
+          border:0;
+        }
 
-      img[src=""] {
-        display: none;
-      }
+        img[src=""] {
+          display: none;
+        }
 
-      /* Change color of dropdown links on hover */
-      &:hover {
-        background-color: var(--color-background-hover);
-      }
+        /* Change color of dropdown links on hover */
+        &:hover {
+          background-color: var(--color-background-hover);
+        }
 
-      &:active {
-        background-color: var(--color-primary-light);
+        &:active {
+          background-color: var(--color-primary-light);
+        }
       }
     }
   }
 
   /* Show the dropdown menu on hover */
-  &:hover .dropdown-content {
-    display: block;
+  &:hover {
+    overflow:visible!important;
+    .dropdown-content {
+      display: block;
+    }
   }
 }
 

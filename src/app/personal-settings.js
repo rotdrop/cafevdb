@@ -1,4 +1,5 @@
-/* Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -27,8 +28,7 @@ import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
 import { chosenActive } from './select-utils.js';
 import selectValues from './select-values.js';
-import wikiPopup from './wiki-popup.js';
-import * as ncRouter from '@nextcloud/router';
+import { handleMenu as handleUserManualMenu } from './user-manual.js';
 
 // console.info('JQUERY ', $.fn.jquery);
 
@@ -100,49 +100,9 @@ const documentReady = function() {
   });
 
   // help-menu entries
-
-  container.on('click', '.help-dropdown li a', function(event) {
-    const $this = $(this);
-    const $item = $this.parent();
-    const menuId = $item.data('id');
-    switch (menuId) {
-    case 'tooltips': {
-      // const $checkbox = container.find('input[type="checkbox"].tooltips').first();
-      const $checkbox = container.find('#tooltipbutton-checkbox');
-      $checkbox.trigger('click');
-      break;
-    }
-    case 'manual_window':
-    case 'manual_dialog': {
-      const template = $item.data('template');
-      const namespace = $item.data('namespace');
-      const wikiPage = [
-        namespace,
-        appName,
-        'documentation',
-        'user_manual',
-        template,
-      ].join(':');
-      const $titleProvider = $('#pme-short-title');
-      const section = $titleProvider.length > 0 ? $titleProvider.html() : template;
-      if (menuId === 'manual_dialog') {
-        wikiPopup({ wikiPage, popupTitle: t(appName, 'User Manual: {section}', { section }) });
-      } else {
-        const wikiUrl = ncRouter.generateUrl('/apps/dokuwikiembedded/page/index')
-              + '?wikiPage=' + wikiPage;
-        window.open(wikiUrl, 'user_manual');
-      }
-      break;
-    }
-    default:
-      break;
-    }
-
-    return false;
-  });
+  handleUserManualMenu(container);
 
   // tool-tips toggle
-
   container.on('change', '.tooltips', function(event) {
     const self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));

@@ -113,7 +113,6 @@ $settingsControls = '
         </a>
       </li>
       <li data-id="manual_window"
-          data-template="'.$template.'"
           data-namespace="'.$wikinamespace.'">
         <a href="#">
           <img alt="" src="">
@@ -121,7 +120,6 @@ $settingsControls = '
         </a>
       </li>
       <li data-id="manual_dialog"
-          data-template="'.$template.'"
           data-namespace="'.$wikinamespace.'">
         <a href="#">
           <img alt="" src="">
