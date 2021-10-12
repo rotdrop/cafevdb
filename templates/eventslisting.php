@@ -19,6 +19,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+use OCA\CAFEVDB\Common\Util;
+
 ?>
 <table id="table" class="nostyle listing size-holder">
 <?php
@@ -81,11 +84,12 @@ __EOT__;
     }
     $title = $toolTips['projectevents-selectevent'];
     $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
+    $emailValue = Util::htmlEscape(json_encode([ 'uri' => $evtUri, 'calendarId' => $calId ]));
     echo <<<__EOT__
       </td>
       <td class="eventemail">
         <label class="email-check" for="email-check-$evtUri"  title="$title" >
-        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$evtUri" $checked />
+        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$emailValue" $checked />
         <div class="email-check" /></label>
       </td>
       <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>

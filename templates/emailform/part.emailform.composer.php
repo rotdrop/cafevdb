@@ -249,7 +249,7 @@ $containerClass = $appName.'-'.'container';
       </td>
     </tr>
     <tr class="event-attachments"
-      <?php echo empty($eventAttachmentOptions) ? 'style="display:none;"' : ''; ?>">
+      <?php echo empty($eventAttachmentOptions) ? 'style="display:none;"' : ''; ?>>
       <td class="event-attachments caption">
         <?php echo $l->t('Attached Events'); ?>
       </td>
@@ -269,7 +269,7 @@ $containerClass = $appName.'-'.'container';
       </td>
     </tr>
     <tr class="file-attachments"
-      <?php echo count($fileAttachmentOptions) == 0 ? 'style="display:none;"' : ''; ?>">
+      <?php echo count($fileAttachmentOptions) == 0 ? 'style="display:none;"' : ''; ?>>
       <td class="file-attachments caption">
         <?php echo $l->t('Attached Files'); ?>
       </td>

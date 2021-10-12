@@ -1714,7 +1714,7 @@ Störung.';
     $events = $this->eventAttachments();
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
-    foreach($events as $eventUri) {
+    foreach($events as $eventUri => $calendarId) {
       $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
       $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
@@ -2194,10 +2194,10 @@ Störung.';
 
     // event attachment
     $events = $this->eventAttachments();
-    foreach ($events as $eventUri) {
+    foreach ($events as $eventUri => $calendarId) {
       if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
         $this->executionStatus = false;
-        $this->diagnostics['AttachmentValidation']['Events'][] = $eventId;
+        $this->diagnostics['AttachmentValidation']['Events'][] = $eventUri;
       }
     }
 
@@ -3143,16 +3143,24 @@ Störung.';
   }
 
   /**
-   * Return the file attachment data. This function checks for the
-   * cgi-values of EventSelect or the "local" cgi values
-   * emailComposer[AttachedEvents]. The "legacy" values take
-   * precedence.
+   * Return the calendar attachment data.
+   *
+   * @return array
+   * ```
+   * [ URI => CAL_ID, ... ]
+   * ```
    */
   public function eventAttachments()
   {
     $attachedEvents = $this->parameterService->getParam(
       'eventSelect', $this->cgiValue('attachedEvents', []));
-    return $attachedEvents;
+    $events = [];
+    foreach ($attachedEvents as $event) {
+      $event = json_decode($event, true);
+      $events[$event['uri']] = $event['calendarId'];
+    }
+
+    return $events;
   }
 
   /**
@@ -3179,22 +3187,19 @@ Störung.';
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
 
-    // transpose for faster lookup
-    $attachedEvents = array_flip($attachedEvents);
-
     // build the select option control array
     $selectOptions = [];
-    foreach($eventMatrix as $eventGroup) {
+    foreach ($eventMatrix as $eventGroup) {
       $group = $eventGroup['name'];
-      foreach($eventGroup['events'] as $event) {
+      foreach ($eventGroup['events'] as $event) {
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;
-        $value = $event['uri'];
+        $value = json_encode([ 'uri' => $event['uri'], 'calendarId' => $event['calendarid'], ]);
         $selectOptions[] = [
           'value' => $value,
           'name' => $name,
           'group' => $group,
-          'flags' => isset($attachedEvents[$value]) ? PageNavigation::SELECTED : 0
+          'flags' => isset($attachedEvents[$event['uri']]) ? PageNavigation::SELECTED : 0
         ];
       }
     }

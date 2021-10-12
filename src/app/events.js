@@ -137,7 +137,7 @@ const init = function(htmlContent, textStatus, request) {
       dialogHolder
         .off('cafevdb:events_changed')
         .on('cafevdb:events_changed', function(event, events) {
-          // @TODO
+          console.info('EVENTS', events);
           $.post(
             generateUrl('projects/events/redisplay'),
             {

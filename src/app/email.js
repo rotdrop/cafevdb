@@ -543,12 +543,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             }
             case 'eventAttachments': {
               const options = requestData.elementData.options;
-              const eventAttachments = requestData.elementData.attachments;
-              // alert('options: '+JSON.stringify(options));
-              // alert('options: '+JSON.stringify(requestData.elementData.eventAttachments));
+              // const eventAttachments = requestData.elementData.attachments;
               eventAttachmentsSelector.html(options);
 
-              if (/* options.length */ eventAttachments.length > 0) {
+              if (options.length > 0) {
                 fieldset.find('tr.event-attachments').show();
               } else {
                 fieldset.find('tr.event-attachments').hide();
@@ -1209,6 +1207,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   dialogHolder
     .off('cafevdb:events_changed')
     .on('cafevdb:events_changed', function(event, events) {
+      console.info('EVENTS', events);
       const formData = form.find('fieldset.form-data');
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
@@ -1243,7 +1242,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           eventAttachmentsSelector.val('');
           eventAttachmentsSelector.trigger('change');
           eventAttachmentsSelector.trigger('chosen:updated');
-          fieldset.find('tr.event-attachments').hide();
+          if (eventAttachmentsSelector.find('option').length === 0) {
+            console.info('HIDE EVENT ATTACHMENT SELECTOR');
+            fieldset.find('tr.event-attachments').hide();
+          }
           return false;
         },
         true);
@@ -1256,10 +1258,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .on('change', function(event) {
       const eventDialog = $('.cafevdb-project-events #events');
       let events = $(this).val();
-      if (!events) {
+      if (events.length === 0) {
         events = [];
-        fieldset.find('tr.event-attachments').hide();
+        // fieldset.find('tr.event-attachments').hide();
       }
+      events = events.map(item => JSON.parse(item).uri);
       eventDialog.trigger('cafevdb:events_changed', [events]);
       return false;
     });
