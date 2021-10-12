@@ -704,7 +704,7 @@ class RecipientsFilter
   {
     return [
       'historyPosition' => $this->historyPosition,
-      'historySize' => count($this->filterHistory),
+      'historySize' => count($this->filterHistory??[]),
     ];
   }
 
@@ -715,7 +715,7 @@ class RecipientsFilter
   public function memberStatusFilter()
   {
     $memberStatus = $this->cgiValue('memberStatusFilter',
-                                    $this->submitted ? '' : $this->defaultByStatus());
+                                    $this->submitted ? [] : $this->defaultByStatus());
     $memberStatus = array_flip($memberStatus);
     $result = [];
     foreach($this->memberStatusNames as $tag => $name) {
