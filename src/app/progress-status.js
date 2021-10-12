@@ -25,6 +25,7 @@ import * as Ajax from './ajax.js';
 import generateUrl from './generate-url.js';
 
 globalState.progressTimer = null;
+globalState.progressTimerStopped = true;
 
 function createProgressStatus(target, current, data) {
   return $.post(
@@ -42,26 +43,38 @@ function pollProgressStatus(id, options) {
   const interval = options.interval;
 
   const poll = function() {
+    if (globalState.progressTimerStopped) {
+      clearTimeout(globalState.progressTimer);
+      globalState.progressTimer = false;
+      return;
+    }
     $.get(generateUrl('foregroundjob/progress/' + id))
       .done(function(data) {
+        clearTimeout(globalState.progressTimer);
+        globalState.progressTimer = false;
+        if (globalState.progressTimerStopped) {
+          return;
+        }
         if (!Ajax.validateResponse(data, ['id', 'current', 'target', 'data'])) {
-          clearTimeout(globalState.progressTimer);
-          globalState.progressTimer = false;
           return;
         }
         if (!options.update(data.id, data.current, data.target, data.data)) {
-          clearTimeout(globalState.progressTimer);
-          globalState.progressTimer = false;
           return;
         }
-        globalState.progressTimer = setTimeout(poll, interval);
+        if (!globalState.progressTimerStopped) {
+          globalState.progressTimer = setTimeout(poll, interval);
+          console.log('FIRED PROGRESS TIMER', globalState.progressTimer);
+        }
       })
       .fail(function(xhr, status, errorThrown) {
         clearTimeout(globalState.progressTimer);
         globalState.progressTimer = false;
-        options.fail(xhr, status, errorThrown);
+        if (!globalState.progressTimerStopped) {
+          options.fail(xhr, status, errorThrown);
+        }
       });
   };
+  globalState.progressTimerStopped = false;
   poll();
 }
 
@@ -71,8 +84,7 @@ const deleteProgressStatus = function(id) {
 };
 
 pollProgressStatus.stop = function() {
-  clearTimeout(globalState.progressTimer);
-  globalState.progressTimer = false;
+  globalState.progressTimerStopped = true;
 };
 
 pollProgressStatus.active = function() {

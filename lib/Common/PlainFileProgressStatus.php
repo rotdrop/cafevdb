@@ -9,6 +9,7 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\IProgressStatus;
+use OCA\CAFEVDB\Exceptions;
 
 class PlainFileProgressStatus implements IProgressStatus
 {
@@ -88,11 +89,14 @@ class PlainFileProgressStatus implements IProgressStatus
         $this->file = $this->storage->getFile(self::DATA_DIR, $id);
         $this->sync();
       } catch (\Throwable $t) {
-        $this->logException($t);
         $this->reset();
+        // $this->logException($t);
+        throw (new Exceptions\ProgressStatusNotFoundException(
+          $this->l->t('Unable to find progress status for job id "%s"', $id),
+          $t->getCode(),
+          $t))->setId($i);
       }
-    }
-    if (empty($this->file)) {
+    } else {
       $this->file = $this->storage->newTemporaryFile(self::DATA_DIR);
       $this->reset();
       $this->file->putContent(json_encode($this->data));

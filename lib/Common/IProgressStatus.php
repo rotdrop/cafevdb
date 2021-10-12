@@ -35,7 +35,7 @@ interface IProgressStatus
   public function delete();
 
   /**
-   * Bind to the given storage object.
+   * Bind to the given storage object. Create a new object if $id is null.
    */
   public function bind($id);
 

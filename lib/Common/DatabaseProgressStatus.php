@@ -12,6 +12,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCA\CAFEVDB\Database\Cloud\Mapper;
 use OCA\CAFEVDB\Database\Cloud\Entities;
 use OCA\CAFEVDB\Common\IProgressStatus;
+use OCA\CAFEVDB\Exceptions;
 
 class DatabaseProgressStatus implements IProgressStatus
 {
@@ -68,10 +69,13 @@ class DatabaseProgressStatus implements IProgressStatus
       try {
         $this->entity = $this->mapper->find($id);
       } catch (\Throwable $t) {
-        $this->logException($t);
+        // $this->logException($t);
+        throw (new Exceptions\ProgressStatusNotFoundException(
+          $this->l->t('Unable to find progress status for job id "%s"', $id),
+          $t->getCode(),
+          $t))->setId($i);
       }
-    }
-    if (empty($this->entity)) {
+    } else {
       $this->entity = new Entities\ProgressStatus;
       $this->entity->setCurrent(0);
       $this->entity->setTarget(0);
