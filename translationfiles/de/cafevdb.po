@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-11 11:43+0200\n"
-"PO-Revision-Date: 2021-10-11 11:44+0200\n"
+"POT-Creation-Date: 2021-10-13 00:25+0200\n"
+"PO-Revision-Date: 2021-10-13 00:27+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -36,7 +36,13 @@ msgstr "Anmeldung erfolgreich."
 msgid "Login failed."
 msgstr "Anmelden fehlgeschlagen."
 
-#: lib/Common/PlainFileProgressStatus.php:129
+#: lib/Common/DatabaseProgressStatus.php:74
+#: lib/Common/PlainFileProgressStatus.php:95
+#, php-format
+msgid "Unable to find progress status for job id \"%s\""
+msgstr "Kann den Zustand der Aufgabe \"%s\" nicht finden"
+
+#: lib/Common/PlainFileProgressStatus.php:133
 #, php-format
 msgid "Unable to read progress status file \"%s\" after %d retries."
 msgstr ""
@@ -127,12 +133,12 @@ msgstr "Setze den Wiki-Namensraum auf `%s'"
 msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
 
-#: lib/Controller/BackgroundJobController.php:59
+#: lib/Controller/BackgroundJobController.php:72
 #, php-format
 msgid "User \"%s\" not in orchestra group \"%s"
 msgstr "Die Nutzer-Id \"%s\" ist kein Mitglied der Orchestergruppe \"%s\""
 
-#: lib/Controller/BackgroundJobController.php:67
+#: lib/Controller/BackgroundJobController.php:81
 #, php-format
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr "Ausnahme `aufgefangen': \\`%s' bei %s:%s."
@@ -632,7 +638,7 @@ msgid "Switching %2$s %1$s"
 msgstr "Schalte %2$s %1$s"
 
 #: lib/Controller/PersonalSettingsController.php:186
-#: lib/Controller/PersonalSettingsController.php:1294
+#: lib/Controller/PersonalSettingsController.php:1295
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr "Wert \\\"%1$s\\\" für \\\"%2$s\\\" ist nicht im erlaubten Bereich."
@@ -682,8 +688,8 @@ msgstr ""
 "Wahrheitswert \"fasch\" sein."
 
 #: lib/Controller/PersonalSettingsController.php:288
-#: lib/Controller/PersonalSettingsController.php:777
-#: lib/Controller/PersonalSettingsController.php:800
+#: lib/Controller/PersonalSettingsController.php:778
+#: lib/Controller/PersonalSettingsController.php:801
 #, php-format
 msgid "\"%s\" set to \"%s\"."
 msgstr "\"%s\" als \"%s\" konfiguriert."
@@ -761,20 +767,20 @@ msgstr ""
 "Benutzende verteilt werden."
 
 #: lib/Controller/PersonalSettingsController.php:473
-#: lib/Controller/PersonalSettingsController.php:1501
+#: lib/Controller/PersonalSettingsController.php:1502
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr "\"%s\" auf \"%s\" eingestellt."
 
 #: lib/Controller/PersonalSettingsController.php:479
-#: lib/Controller/PersonalSettingsController.php:1048
-#: lib/Controller/PersonalSettingsController.php:1124
+#: lib/Controller/PersonalSettingsController.php:1049
+#: lib/Controller/PersonalSettingsController.php:1125
 msgid "Invalid request parameters: "
 msgstr "Ungültige Anfrage-Parameter: "
 
 #: lib/Controller/PersonalSettingsController.php:488
-#: lib/Controller/PersonalSettingsController.php:1058
-#: lib/Controller/PersonalSettingsController.php:1134
+#: lib/Controller/PersonalSettingsController.php:1059
+#: lib/Controller/PersonalSettingsController.php:1135
 #, php-format
 msgid "Submitted \"%s\" != \"%s\" (stored)"
 msgstr "Eingegeber Wert \"%s\" != \"%s\" (gespeichert)"
@@ -808,78 +814,78 @@ msgstr "Share-Strohpuppe \"%s\" in Ordnung"
 msgid "Orchestra Phone Number set to %s"
 msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
-#: lib/Controller/PersonalSettingsController.php:550
-#: lib/Controller/PersonalSettingsController.php:743
-#: lib/Controller/PersonalSettingsController.php:1752
+#: lib/Controller/PersonalSettingsController.php:551
+#: lib/Controller/PersonalSettingsController.php:744
+#: lib/Controller/PersonalSettingsController.php:1753
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:562
-#: lib/Controller/PersonalSettingsController.php:569
-#: lib/Controller/PersonalSettingsController.php:579
-#: lib/Controller/PersonalSettingsController.php:603
-#: lib/Controller/PersonalSettingsController.php:615
-#: lib/Controller/PersonalSettingsController.php:624
-#: lib/Controller/PersonalSettingsController.php:634
-#: lib/Controller/PersonalSettingsController.php:667
-#: lib/Controller/PersonalSettingsController.php:679
-#: lib/Controller/PersonalSettingsController.php:700
-#: lib/Controller/PersonalSettingsController.php:715
+#: lib/Controller/PersonalSettingsController.php:563
+#: lib/Controller/PersonalSettingsController.php:570
+#: lib/Controller/PersonalSettingsController.php:580
+#: lib/Controller/PersonalSettingsController.php:604
+#: lib/Controller/PersonalSettingsController.php:616
+#: lib/Controller/PersonalSettingsController.php:625
+#: lib/Controller/PersonalSettingsController.php:635
+#: lib/Controller/PersonalSettingsController.php:668
+#: lib/Controller/PersonalSettingsController.php:680
+#: lib/Controller/PersonalSettingsController.php:701
+#: lib/Controller/PersonalSettingsController.php:716
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:643
+#: lib/Controller/PersonalSettingsController.php:644
 #, php-format
 msgid "Invalid IBAN: \"%s\"."
 msgstr "Ungültige IBAN: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:722
+#: lib/Controller/PersonalSettingsController.php:723
 #, php-format
 msgid "Value for \"%s\" invalid: \"%s\"."
 msgstr "Der Wert für \"%s\" ist ungültig: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:749
+#: lib/Controller/PersonalSettingsController.php:750
 msgid "Delete old Project?"
 msgstr "Altes Projekt löschen?"
 
-#: lib/Controller/PersonalSettingsController.php:751
+#: lib/Controller/PersonalSettingsController.php:752
 #, php-format
 msgid "Delete old project \"%s\" (%d) and all its associated data?"
 msgstr "Altes Projekt \"%s\" (%d) und alle verknüpften Daten löschen?"
 
-#: lib/Controller/PersonalSettingsController.php:767
+#: lib/Controller/PersonalSettingsController.php:768
 #, php-format
 msgid "Sanitized project name from \"%s\" to \"%s\"."
 msgstr "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: lib/Controller/PersonalSettingsController.php:788
+#: lib/Controller/PersonalSettingsController.php:789
 msgid "Rename Project?"
 msgstr "Projekt umbenennen?"
 
-#: lib/Controller/PersonalSettingsController.php:790
+#: lib/Controller/PersonalSettingsController.php:791
 #, php-format
 msgid "\"%s\" project already exists, rename it from \"%s\" to \"%s?"
 msgstr ""
 "Ein Projekt \"%s\" existiert bereits, soll es von \"%s\" nach \"%s\" "
 "umbenannt werden?"
 
-#: lib/Controller/PersonalSettingsController.php:806
+#: lib/Controller/PersonalSettingsController.php:807
 #, php-format
 msgid "Type of project \"%s\" set to \"%s\"."
 msgstr "Art des Projekts \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:811
+#: lib/Controller/PersonalSettingsController.php:812
 msgid "Create project?"
 msgstr "Projekt erzeugen?"
 
-#: lib/Controller/PersonalSettingsController.php:813
+#: lib/Controller/PersonalSettingsController.php:814
 #, php-format
 msgid "A project with name \"%s\" does not exist, shall we create it?"
 msgstr "Ein Projekt mit Namen \"%s\" existiert nicht, soll es erzeugt werden?"
 
-#: lib/Controller/PersonalSettingsController.php:832
+#: lib/Controller/PersonalSettingsController.php:833
 #, php-format
 msgid ""
 "Configured project-id %d and submitted project id %d differ, please reload "
@@ -888,32 +894,32 @@ msgstr ""
 "Die Projekt-Id %d in der Konfigurationsdatenbank und die übermittelte "
 "Projekt-Id %d sind verschieden. Bitte die Seite im Browser neu laden."
 
-#: lib/Controller/PersonalSettingsController.php:846
+#: lib/Controller/PersonalSettingsController.php:847
 #, php-format
 msgid "Unable to create project with name \"%s\"."
 msgstr "Konnte das Projekt mit dem Namen \"%s\" nicht laden"
 
-#: lib/Controller/PersonalSettingsController.php:850
+#: lib/Controller/PersonalSettingsController.php:851
 #, php-format
 msgid "Created Project \"%s\" with id \"%d\"."
 msgstr "Projekt erzeugt mit Namen \"%s\" und Id \"%d\""
 
-#: lib/Controller/PersonalSettingsController.php:860
+#: lib/Controller/PersonalSettingsController.php:861
 #, php-format
 msgid "Unable to find project with id %d."
 msgstr "Konnte kein Projekt mit der Id %d finden."
 
-#: lib/Controller/PersonalSettingsController.php:869
+#: lib/Controller/PersonalSettingsController.php:870
 #, php-format
 msgid "Project \"%s\" successfully validated."
 msgstr "Das Projekt \"%s\" wurde erfolgreich validiert."
 
-#: lib/Controller/PersonalSettingsController.php:882
+#: lib/Controller/PersonalSettingsController.php:883
 #, php-format
 msgid "Deleted project \"%s\" with id \"%d\"."
 msgstr "Projekt \"%s\" mit Id \"%d\" gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:884
+#: lib/Controller/PersonalSettingsController.php:885
 #, php-format
 msgid ""
 "Project \"%s\", id \"%d\" has been marked as disabled as it is still needed "
@@ -922,209 +928,209 @@ msgstr ""
 "Das Projekt \"%s\", Id \"%d\", wurde als deaktiviert markiert; es wird nach "
 "wie vor für die Finanzbuchhaltung benötigt."
 
-#: lib/Controller/PersonalSettingsController.php:890
-#: lib/Service/ProjectService.php:1653
+#: lib/Controller/PersonalSettingsController.php:891
+#: lib/Service/ProjectService.php:1657
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
 
-#: lib/Controller/PersonalSettingsController.php:910
+#: lib/Controller/PersonalSettingsController.php:911
 msgid "Result of rename is empty without throwing an exception."
 msgstr ""
 "Ergebnis des Umbenennens scheint ungültig, aber es wurde keine Fehlerausgabe "
 "erzeugt."
 
-#: lib/Controller/PersonalSettingsController.php:915
+#: lib/Controller/PersonalSettingsController.php:916
 #, php-format
 msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
-#: lib/Controller/PersonalSettingsController.php:923
-#: lib/Service/ProjectService.php:1838
+#: lib/Controller/PersonalSettingsController.php:924
+#: lib/Service/ProjectService.php:1842
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
 "Fehler beim Umbennen des Projekts \"%s\", Id \"%d\" zum neuen Namen \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:951
+#: lib/Controller/PersonalSettingsController.php:952
 #, php-format
 msgid "SETTING %s NOT YET IMPLEMENTED"
 msgstr "EINSTELLUNG %s NOCH IMPLEMENTIERT WERDEN"
 
-#: lib/Controller/PersonalSettingsController.php:957
+#: lib/Controller/PersonalSettingsController.php:958
 msgid "Please create the share-owner user first."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/Controller/PersonalSettingsController.php:961
+#: lib/Controller/PersonalSettingsController.php:962
 msgid "Share-owner does not seem to exist, please recreate."
 msgstr "Teilen-Strohpuppe scheint nicht zu existieren, bitte neu erzeugen."
 
-#: lib/Controller/PersonalSettingsController.php:964
+#: lib/Controller/PersonalSettingsController.php:965
 msgid "Authentication backend does not support changing passwords."
 msgstr ""
 "Authentifizierungs-Maschinerie erlaubt nicht das Ändern von Passwörtern."
 
-#: lib/Controller/PersonalSettingsController.php:968
+#: lib/Controller/PersonalSettingsController.php:969
 msgid "Password must not be empty"
 msgstr "Password darf nicht leer sein"
 
-#: lib/Controller/PersonalSettingsController.php:971
+#: lib/Controller/PersonalSettingsController.php:972
 #, php-format
 msgid "Unable to set password for \"%s\"."
 msgstr "Ingültiges Passwort für \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:974
+#: lib/Controller/PersonalSettingsController.php:975
 #, php-format
 msgid "Successfully changed passsword for \"%s\"."
 msgstr "Passwort für \"%s\" erfolgreich geändert."
 
-#: lib/Controller/PersonalSettingsController.php:989
+#: lib/Controller/PersonalSettingsController.php:990
 msgid "Shared folder is not configured, cannot store templates."
 msgstr ""
 "Gemeinsamer Ordner ist nicht konfiguriert, kann Vorlagen nicht speichern."
 
-#: lib/Controller/PersonalSettingsController.php:994
+#: lib/Controller/PersonalSettingsController.php:995
 msgid "Document template folder is not configured, cannot store templates."
 msgstr ""
 "Ort für Vorlagen-Ordner ist nicht konfiguriert, kann Dokumentenvorlagen "
 "nicht speichern."
 
-#: lib/Controller/PersonalSettingsController.php:1009
+#: lib/Controller/PersonalSettingsController.php:1010
 #, php-format
 msgid "Removed setting for document-template \"%s\"."
 msgstr "Einstellung für Dokumentenvorlage \"%s\" gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:1014
+#: lib/Controller/PersonalSettingsController.php:1015
 #, php-format
 msgid "Unable to find file \"%s\"."
 msgstr "Kann die Datei \"%s\" nicht finden."
 
-#: lib/Controller/PersonalSettingsController.php:1018
+#: lib/Controller/PersonalSettingsController.php:1019
 #, php-format
 msgid "Document-template \"%s\" successfully set to \"%s\"."
 msgstr "Dokumenten-Vorlage \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1027
+#: lib/Controller/PersonalSettingsController.php:1028
 #, php-format
 msgid "Successfully deleted old document-template \"%s\"."
 msgstr "Dokumentenvorlage \"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:1039
-#: lib/Controller/PersonalSettingsController.php:1111
+#: lib/Controller/PersonalSettingsController.php:1040
+#: lib/Controller/PersonalSettingsController.php:1112
 msgid "App user-group is not set."
 msgstr "Anwender-Gruppe nicht gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1043
-#: lib/Controller/PersonalSettingsController.php:1115
+#: lib/Controller/PersonalSettingsController.php:1044
+#: lib/Controller/PersonalSettingsController.php:1116
 msgid "Share-owner is not set."
 msgstr "Share-Strohpuppe ist nicht eingestellt"
 
-#: lib/Controller/PersonalSettingsController.php:1055
-#: lib/Controller/PersonalSettingsController.php:1131
+#: lib/Controller/PersonalSettingsController.php:1056
+#: lib/Controller/PersonalSettingsController.php:1132
 msgid "Folder must not be empty."
 msgstr "Ordner darf nicht leer sein."
 
-#: lib/Controller/PersonalSettingsController.php:1072
-#: lib/Controller/PersonalSettingsController.php:1183
+#: lib/Controller/PersonalSettingsController.php:1073
+#: lib/Controller/PersonalSettingsController.php:1184
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr "Neuen Ordner \"%s\" erzeugt und `geteilt'."
 
-#: lib/Controller/PersonalSettingsController.php:1076
-#: lib/Controller/PersonalSettingsController.php:1187
+#: lib/Controller/PersonalSettingsController.php:1077
+#: lib/Controller/PersonalSettingsController.php:1188
 #, php-format
 msgid "Failed to create new shared folder \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1088
-#: lib/Controller/PersonalSettingsController.php:1210
+#: lib/Controller/PersonalSettingsController.php:1089
+#: lib/Controller/PersonalSettingsController.php:1211
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 "\"%s\" -- konfiguriert als \"%s\" -- existiert und kann verwendet werden."
 
-#: lib/Controller/PersonalSettingsController.php:1092
-#: lib/Controller/PersonalSettingsController.php:1214
+#: lib/Controller/PersonalSettingsController.php:1093
+#: lib/Controller/PersonalSettingsController.php:1215
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr "\"%s\" existiert nicht oder ist nicht erreichbar."
 
-#: lib/Controller/PersonalSettingsController.php:1097
-#: lib/Controller/PersonalSettingsController.php:1219
+#: lib/Controller/PersonalSettingsController.php:1098
+#: lib/Controller/PersonalSettingsController.php:1220
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Ordner \"%s\", Ausnahme \"%s\" `gefangen'."
 
-#: lib/Controller/PersonalSettingsController.php:1119
+#: lib/Controller/PersonalSettingsController.php:1120
 msgid "Shared folder is not set."
 msgstr "Gemeinsamer Ordner ist nicht festgelegt."
 
-#: lib/Controller/PersonalSettingsController.php:1140
+#: lib/Controller/PersonalSettingsController.php:1141
 #, php-format
 msgid "Participants-folder set to \"%s\"."
 msgstr "Teilnehmenden-Order auf \"%s\" eingestellt."
 
-#: lib/Controller/PersonalSettingsController.php:1143
+#: lib/Controller/PersonalSettingsController.php:1144
 #, php-format
 msgid "Posters-folder set to \"%s\"."
 msgstr "Poster-Ordner auf \"%s\" eingestellt."
 
-#: lib/Controller/PersonalSettingsController.php:1150
+#: lib/Controller/PersonalSettingsController.php:1151
 #, php-format
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr "\"%s\" muss angegeben werden bevor \"%s\" spezifiziert werden kann."
 
-#: lib/Controller/PersonalSettingsController.php:1240
+#: lib/Controller/PersonalSettingsController.php:1241
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr "Kalender \"%s\" erzeugt und `geteilt'."
 
-#: lib/Controller/PersonalSettingsController.php:1241
+#: lib/Controller/PersonalSettingsController.php:1242
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr "Gemeinsamer Kalender \"%s\" erfolgreich validiert."
 
-#: lib/Controller/PersonalSettingsController.php:1244
+#: lib/Controller/PersonalSettingsController.php:1245
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1249
+#: lib/Controller/PersonalSettingsController.php:1250
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
 "\"."
 
-#: lib/Controller/PersonalSettingsController.php:1261
+#: lib/Controller/PersonalSettingsController.php:1262
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr "Fehler beim erzeugen des gemeinsamen Adressbuchs \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1267
+#: lib/Controller/PersonalSettingsController.php:1268
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr "Neues Adressbuch \"%s\" erzeugt und geteilt."
 
-#: lib/Controller/PersonalSettingsController.php:1271
+#: lib/Controller/PersonalSettingsController.php:1272
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf das Adressbuch \"%s\", Ausnahme \"%s\" "
 "\"aufgefangen\"."
 
-#: lib/Controller/PersonalSettingsController.php:1281
+#: lib/Controller/PersonalSettingsController.php:1282
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" zurückgesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1283
+#: lib/Controller/PersonalSettingsController.php:1284
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1286
+#: lib/Controller/PersonalSettingsController.php:1287
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
@@ -1133,93 +1139,93 @@ msgstr ""
 "Kann den Anzeigenamen des Musker-Adressbhuchs nicht auf \"%s\" setzen, es "
 "bleibt bei \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1297
+#: lib/Controller/PersonalSettingsController.php:1298
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr "Setze `%2$s' auf `%1$s' Minuten."
 
-#: lib/Controller/PersonalSettingsController.php:1323
+#: lib/Controller/PersonalSettingsController.php:1324
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr "Email-Zugangsdaten erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:1325
+#: lib/Controller/PersonalSettingsController.php:1326
 msgid "Unable to distribute the email credentials to any user."
 msgstr "Konnte die Email-Zugangsdaten an keinen einzigen Benutzer verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:1328
+#: lib/Controller/PersonalSettingsController.php:1329
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr "Die Email-Zugangsdaten für %s konnten nicht installiert werden."
 
-#: lib/Controller/PersonalSettingsController.php:1331
+#: lib/Controller/PersonalSettingsController.php:1332
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 "Setzen der Email-Zugangsdaten für %s ist endgültig fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1351
+#: lib/Controller/PersonalSettingsController.php:1352
 #, php-format
 msgid "%s connection seems functional."
 msgstr "%s Verbindung scheint zu funktionieren."
 
-#: lib/Controller/PersonalSettingsController.php:1352
+#: lib/Controller/PersonalSettingsController.php:1353
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr "Kann keine %s-Verbindung zu %s@%s:%d herstellen."
 
-#: lib/Controller/PersonalSettingsController.php:1373
+#: lib/Controller/PersonalSettingsController.php:1374
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr "Der Server-Name \"%s\" hat weder eine IPV4- noch eine IPV6-Adresse."
 
-#: lib/Controller/PersonalSettingsController.php:1384
+#: lib/Controller/PersonalSettingsController.php:1385
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr "\"%s\" ist keine Ganzzahl im Bereicht [%d, %d]."
 
-#: lib/Controller/PersonalSettingsController.php:1393
+#: lib/Controller/PersonalSettingsController.php:1394
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr "Unbekannter Transport-Sicherheits-Typ: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1399
+#: lib/Controller/PersonalSettingsController.php:1400
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr "Verwende Transport-Verschlüsselung \"%s\" für das Protokoll \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1409
+#: lib/Controller/PersonalSettingsController.php:1410
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 "Wert \\\"%s\\\" für \\\"%s\\\" kann nicht als Wahrheitswert interpretiert "
 "werden."
 
-#: lib/Controller/PersonalSettingsController.php:1417
+#: lib/Controller/PersonalSettingsController.php:1418
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr "\"%s\" scheint keine gültige Email-Adresse zu sein."
 
-#: lib/Controller/PersonalSettingsController.php:1444
-#: lib/Controller/PersonalSettingsController.php:1450
+#: lib/Controller/PersonalSettingsController.php:1445
+#: lib/Controller/PersonalSettingsController.php:1451
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr "Kann keine Verbindung zum Mailing-List-Service unter \"%s\" aufnehmen."
 
-#: lib/Controller/PersonalSettingsController.php:1457
+#: lib/Controller/PersonalSettingsController.php:1458
 msgid "Empty translation phrase or language"
 msgstr "Leere Übersetzung oder Sprache"
 
-#: lib/Controller/PersonalSettingsController.php:1460
+#: lib/Controller/PersonalSettingsController.php:1461
 msgid "Missing translation"
 msgstr "Fehlende Übersetzung"
 
-#: lib/Controller/PersonalSettingsController.php:1464
+#: lib/Controller/PersonalSettingsController.php:1465
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr "Leere Übersetzung der Phrase \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1468
+#: lib/Controller/PersonalSettingsController.php:1469
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
@@ -1227,82 +1233,82 @@ msgstr ""
 "Sprachkürzel (%s) müsste eine Länge zweischen 2 und 5 Buchstaben haben (e.g. "
 "de or en_US)"
 
-#: lib/Controller/PersonalSettingsController.php:1472
+#: lib/Controller/PersonalSettingsController.php:1473
 msgid "Recording the translation failed"
 msgstr "Speichern der Übersetzung fehlgeschlagen"
 
-#: lib/Controller/PersonalSettingsController.php:1474
+#: lib/Controller/PersonalSettingsController.php:1475
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr "Übersetzung für Sprache \"%s\" erfolgreich gespeichert."
 
-#: lib/Controller/PersonalSettingsController.php:1477
+#: lib/Controller/PersonalSettingsController.php:1478
 msgid "Failed to erase all recorded translations."
 msgstr "Das Löschen aller aufgezeichneter Übersetzungen ist fehlgeschlagen."
 
-#: lib/Controller/PersonalSettingsController.php:1479
+#: lib/Controller/PersonalSettingsController.php:1480
 msgid "All recorded translations have been erased."
 msgstr "Alle aufgezeichneten Übersetzungen wurden gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:1491
+#: lib/Controller/PersonalSettingsController.php:1492
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist keine gültige URL."
 
-#: lib/Controller/PersonalSettingsController.php:1495
+#: lib/Controller/PersonalSettingsController.php:1496
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 "\"%1$s\" muss eine http(s)-URL sein, Schema \"%2$s\" nicht unterstützt."
 
-#: lib/Controller/PersonalSettingsController.php:1516
+#: lib/Controller/PersonalSettingsController.php:1517
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr "Unbekannter Konfigurationseintrag `%s'"
 
-#: lib/Controller/PersonalSettingsController.php:1520
+#: lib/Controller/PersonalSettingsController.php:1521
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr "Wert \"%s\" für \"%s\" ist nicht im erlaubten Bereich."
 
-#: lib/Controller/PersonalSettingsController.php:1525
+#: lib/Controller/PersonalSettingsController.php:1526
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr "Redaxo-Kategorie für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1529
-#: lib/Controller/PersonalSettingsController.php:1561
+#: lib/Controller/PersonalSettingsController.php:1530
+#: lib/Controller/PersonalSettingsController.php:1562
 #: lib/Controller/ProjectParticipantsController.php:621
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1553
+#: lib/Controller/PersonalSettingsController.php:1554
 #, php-format
 msgid "Unknown link target %s"
 msgstr "Unbekanntes Verknüpfungs-Ziel %s"
 
-#: lib/Controller/PersonalSettingsController.php:1587
-#: lib/Controller/PersonalSettingsController.php:1697
+#: lib/Controller/PersonalSettingsController.php:1588
+#: lib/Controller/PersonalSettingsController.php:1698
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: lib/Controller/PersonalSettingsController.php:1607
-#: lib/Controller/PersonalSettingsController.php:1632
-#: lib/Controller/PersonalSettingsController.php:1663
+#: lib/Controller/PersonalSettingsController.php:1608
+#: lib/Controller/PersonalSettingsController.php:1633
+#: lib/Controller/PersonalSettingsController.php:1664
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1681
+#: lib/Controller/PersonalSettingsController.php:1682
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: lib/Controller/PersonalSettingsController.php:1725
+#: lib/Controller/PersonalSettingsController.php:1726
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
@@ -1311,43 +1317,43 @@ msgstr ""
 "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht "
 "implementiert."
 
-#: lib/Controller/PersonalSettingsController.php:1742
+#: lib/Controller/PersonalSettingsController.php:1743
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/SepaBulkTransactionsController.php:129
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1762
+#: lib/Controller/PersonalSettingsController.php:1763
 #, php-format
 msgid "Value for \"%s\" set to \"%s\""
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1778
+#: lib/Controller/PersonalSettingsController.php:1779
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: lib/Controller/PersonalSettingsController.php:1799
+#: lib/Controller/PersonalSettingsController.php:1800
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:1801
+#: lib/Controller/PersonalSettingsController.php:1802
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:1804
+#: lib/Controller/PersonalSettingsController.php:1805
 #, php-format
 msgid "Public SSL key missing for %s, key distribution failed."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel kann nicht gesetzt werden, denn er "
 "öffentliche SSL-Schlüssel für %s fehlt."
 
-#: lib/Controller/PersonalSettingsController.php:1809
+#: lib/Controller/PersonalSettingsController.php:1810
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2417,7 +2423,7 @@ msgstr "Unterschrift"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:505 src/app/email.js:1064
+#: lib/EmailForm/Composer.php:505 src/app/email.js:1063
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -2471,80 +2477,80 @@ msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2067
+#: lib/EmailForm/Composer.php:2068
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2204
+#: lib/EmailForm/Composer.php:2205
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:2217
+#: lib/EmailForm/Composer.php:2218
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:2309 lib/EmailForm/Composer.php:2324
+#: lib/EmailForm/Composer.php:2310 lib/EmailForm/Composer.php:2325
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:2408 lib/EmailForm/Composer.php:2461
-#: lib/EmailForm/Composer.php:2471
+#: lib/EmailForm/Composer.php:2409 lib/EmailForm/Composer.php:2462
+#: lib/EmailForm/Composer.php:2472
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:2436
+#: lib/EmailForm/Composer.php:2437
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:2745
+#: lib/EmailForm/Composer.php:2746
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:2752
+#: lib/EmailForm/Composer.php:2753
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:2790
+#: lib/EmailForm/Composer.php:2791
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:2822 lib/EmailForm/Composer.php:2925
+#: lib/EmailForm/Composer.php:2823 lib/EmailForm/Composer.php:2926
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:2850
+#: lib/EmailForm/Composer.php:2851
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:2871
+#: lib/EmailForm/Composer.php:2872
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3132
+#: lib/EmailForm/Composer.php:3133
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:3132
+#: lib/EmailForm/Composer.php:3133
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/RecipientsFilter.php:409
+#: lib/EmailForm/RecipientsFilter.php:414
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:435
+#: lib/EmailForm/RecipientsFilter.php:440
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:621
+#: lib/EmailForm/RecipientsFilter.php:626
 #: lib/PageRenderer/PMETableViewBase.php:312
 msgid "member status "
 msgstr "Mitglieds-Status"
@@ -3940,8 +3946,8 @@ msgstr "Bearbeiten der Daten der angezeigten Person."
 
 #: lib/PageRenderer/ProjectParticipants.php:246
 #, php-format
-msgid "Instrumentation for Project `%s'"
-msgstr "Besetzung für das Projekt `%s'"
+msgid "Instrumentation for Project \"%s\""
+msgstr "Besetzung für das Projekt \"%s\""
 
 #: lib/PageRenderer/ProjectParticipants.php:380
 msgid "Project-Id"
@@ -5425,26 +5431,26 @@ msgstr "Konnte kein Projekt \"%s\" erzeugen."
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:1689
+#: lib/Service/ProjectService.php:1693
 #, php-format
 msgid "Unable to find the project to copy (id = %d)"
 msgstr "Konnte das zu kopierende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:1699
+#: lib/Service/ProjectService.php:1703
 #, php-format
 msgid "copy of %s"
 msgstr "Kopie von %s"
 
-#: lib/Service/ProjectService.php:1729
+#: lib/Service/ProjectService.php:1733
 #, php-format
 msgid "Unable to copy project \"%1$s\" to \"%2$s\"."
 msgstr "Konnte das Projekt \"%1$s\" nicht nach \"%2$s\" kopieren.\n"
 
-#: lib/Service/ProjectService.php:1916
+#: lib/Service/ProjectService.php:1920
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:1948
+#: lib/Service/ProjectService.php:1952
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -5454,7 +5460,7 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:1953
+#: lib/Service/ProjectService.php:1957
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
@@ -8180,10 +8186,10 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 #: src/app/ajax.js:157 src/app/ajax.js:342 src/app/blog.js:180
 #: src/app/blog.js:228 src/app/blog.js:278 src/app/blog.js:298
 #: src/app/blog.js:315 src/app/blog.js:336 src/app/blog.js:362
-#: src/app/blog.js:385 src/app/email.js:71 src/app/email.js:565
-#: src/app/email.js:659 src/app/inlineimage.js:54 src/app/inlineimage.js:61
+#: src/app/blog.js:385 src/app/email.js:72 src/app/email.js:564
+#: src/app/email.js:658 src/app/inlineimage.js:54 src/app/inlineimage.js:61
 #: src/app/inlineimage.js:156 src/app/inlineimage.js:427
-#: src/app/settings.js:1070 src/app/settings.js:1084
+#: src/app/settings.js:1064 src/app/settings.js:1077
 #: src/legacy/calendar/calendar.js:303
 msgid "Error"
 msgstr "Fehler"
@@ -8316,55 +8322,55 @@ msgstr "Den Beitrag wirklich löschen?"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/app/check-invalid-inputs.js:122
+#: src/app/check-invalid-inputs.js:131
 msgid "Unknown input element"
 msgstr "Unbekanntes Eingabefeld"
 
-#: src/app/check-invalid-inputs.js:129
+#: src/app/check-invalid-inputs.js:138
 msgid "invalid data \"{value}\""
 msgstr "ungültige Eingabedaten: \"{value}\""
 
-#: src/app/check-invalid-inputs.js:130
+#: src/app/check-invalid-inputs.js:139
 msgid "no or invalid data"
 msgstr "Keine oder ungültige Daten"
 
-#: src/app/check-invalid-inputs.js:136
+#: src/app/check-invalid-inputs.js:145
 msgid ""
 "The following required fields are empty or contain otherwise invalid data:"
 msgstr ""
 "Die folgenden erforderlichen Eingabefelder sind leer oder enthalten "
 "ungültige Eingabedaten:"
 
-#: src/app/check-invalid-inputs.js:140
+#: src/app/check-invalid-inputs.js:149
 msgid "Please add the missing data!"
 msgstr "Bitte die fehlenden Daten ergänzen!"
 
-#: src/app/check-invalid-inputs.js:142
+#: src/app/check-invalid-inputs.js:151
 msgid "Missing Input Data"
 msgstr "Fehlende Eingabedaten"
 
-#: src/app/chosen-popup.js:31
+#: src/app/chosen-popup.js:32
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:38 src/app/sepa-debit-mandate.js:533
+#: src/app/chosen-popup.js:39 src/app/sepa-debit-mandate.js:533
 #: templates/settings/share-settings.php:196
 #: templates/settings/share-settings.php:219
 msgid "Save"
 msgstr "Speichern"
 
-#: src/app/chosen-popup.js:41
+#: src/app/chosen-popup.js:42
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: src/app/chosen-popup.js:42 src/app/inlineimage.js:245
+#: src/app/chosen-popup.js:43 src/app/inlineimage.js:245
 #: templates/blog/blogedit.php:40
 #: templates/emailform/part.emailform.composer.php:309
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/app/chosen-popup.js:45
+#: src/app/chosen-popup.js:46
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
@@ -8410,13 +8416,13 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: src/app/dialog-utils.js:88
+#: src/app/dialog-utils.js:89
 msgid "Maximize this dialog to cover the entire browser window."
 msgstr ""
 "Maximiert das aktuelle Fenster, so dass es das gesamte Browser-Fenster "
 "ausfüllt."
 
-#: src/app/dialog-utils.js:133
+#: src/app/dialog-utils.js:143
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -8431,89 +8437,89 @@ msgstr ""
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: src/app/email.js:71
+#: src/app/email.js:72
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: src/app/email.js:152
+#: src/app/email.js:153
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: src/app/email.js:153
+#: src/app/email.js:154
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: src/app/email.js:154
+#: src/app/email.js:155
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: src/app/email.js:155
+#: src/app/email.js:156
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: src/app/email.js:156
+#: src/app/email.js:157
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: src/app/email.js:157
+#: src/app/email.js:158
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: src/app/email.js:160
+#: src/app/email.js:161
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:162 templates/legacy/calendar/part.eventform.php:38
+#: src/app/email.js:163 templates/legacy/calendar/part.eventform.php:38
 msgid "from"
 msgstr "aus"
 
-#: src/app/email.js:164
+#: src/app/email.js:165
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: src/app/email.js:165
+#: src/app/email.js:166
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: src/app/email.js:166
+#: src/app/email.js:167
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: src/app/email.js:173
+#: src/app/email.js:174
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:564
+#: src/app/email.js:563
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: src/app/email.js:604 src/app/email.js:1533
+#: src/app/email.js:603 src/app/email.js:1545
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:606 src/app/email.js:1535
+#: src/app/email.js:605 src/app/email.js:1547
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:658
+#: src/app/email.js:657
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:718
+#: src/app/email.js:717
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht %d von %d"
 
-#: src/app/email.js:720
+#: src/app/email.js:719
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:749
+#: src/app/email.js:748
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:783
+#: src/app/email.js:782
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -8521,11 +8527,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:907
+#: src/app/email.js:906
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:934
+#: src/app/email.js:933
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message (id = "
 "{id})?"
@@ -8533,19 +8539,19 @@ msgstr ""
 "Möchten Sie die automatische Sicherungskopie der aktuellen Nachricht (id = "
 "{id}) löschen?"
 
-#: src/app/email.js:936
+#: src/app/email.js:935
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:982
+#: src/app/email.js:981
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:983
+#: src/app/email.js:982
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1015
+#: src/app/email.js:1014
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -8553,11 +8559,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1017
+#: src/app/email.js:1016
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1048
+#: src/app/email.js:1047
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -8565,17 +8571,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1050
+#: src/app/email.js:1049
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1062
+#: src/app/email.js:1061
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1072
+#: src/app/email.js:1071
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -8583,15 +8589,15 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1074
+#: src/app/email.js:1073
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1111
+#: src/app/email.js:1110
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1112
+#: src/app/email.js:1111
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
@@ -8599,43 +8605,43 @@ msgstr "Kein Entwürfe vorhanden"
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1237 src/app/email.js:1334
+#: src/app/email.js:1237 src/app/email.js:1338
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1317
+#: src/app/email.js:1321
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1333
+#: src/app/email.js:1337
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1377 templates/emailform/part.emailform.composer.php:167
+#: src/app/email.js:1388 templates/emailform/part.emailform.composer.php:167
 #: templates/emailform/part.emailform.composer.php:185
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1378
+#: src/app/email.js:1389
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: src/app/email.js:1381
+#: src/app/email.js:1392
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1384
+#: src/app/email.js:1395
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/email.js:1544
+#: src/app/email.js:1556
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: src/app/email.js:1546
+#: src/app/email.js:1558
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
@@ -8842,10 +8848,6 @@ msgstr "Doppelter Datenbankeintag?"
 msgid "Display the application menu and settings side-bar"
 msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 
-#: src/app/personal-settings.js:129
-msgid "User Manual: {section}"
-msgstr "Benutzerhandbuch: {section}"
-
 #: src/app/pme-export.js:52
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr "Kann die Tabelle nicht als \"{format}\" von \"{url}\" laden: "
@@ -8932,26 +8934,26 @@ msgstr "Nicht implementiert"
 msgid "Select an Action"
 msgstr "Aktionen"
 
-#: src/app/projects.js:555
+#: src/app/projects.js:553
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: src/app/projects.js:556
+#: src/app/projects.js:554
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:581
+#: src/app/projects.js:579
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: src/app/projects.js:582
+#: src/app/projects.js:580
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:629
+#: src/app/projects.js:627
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -9075,21 +9077,25 @@ msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1008 src/app/settings.js:1029
+#: src/app/settings.js:1003 src/app/settings.js:1024
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1070
+#: src/app/settings.js:1064
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
-#: src/app/settings.js:1083
+#: src/app/settings.js:1076
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: src/app/settings.js:1224
+#: src/app/settings.js:1216
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
+
+#: src/app/user-manual.js:60
+msgid "User Manual: {section}"
+msgstr "Benutzerhandbuch: {section}"
 
 #: src/legacy/calendar/calendar.js:21
 msgid "Missing or invalid fields"
@@ -9262,15 +9268,31 @@ msgstr "Verfassen der Nachricht"
 msgid "Status and Preview"
 msgstr "Vorschau und Fehler-Infos"
 
-#: templates/emailform/form.php:77
+#: templates/emailform/form.php:43
+msgid "Manual"
+msgstr "Handbuch"
+
+#: templates/emailform/form.php:51 templates/part.common.header.php:119
+msgid "Manual (other tab)"
+msgstr "Handbuch (anderes Fenster/Tab)"
+
+#: templates/emailform/form.php:55
+msgid "Email Form"
+msgstr "Em@il Formular"
+
+#: templates/emailform/form.php:60 templates/part.common.header.php:126
+msgid "Manual (popup)"
+msgstr "Handbuch (dieses Fenster, Popup)"
+
+#: templates/emailform/form.php:101
 msgid "Cancel upload"
 msgstr "Hochladen abbrechen"
 
-#: templates/emailform/form.php:84
+#: templates/emailform/form.php:108
 msgid "Message Delivery"
 msgstr "Sendevorgang"
 
-#: templates/emailform/form.php:88
+#: templates/emailform/form.php:112
 msgid "Copy to Sent"
 msgstr "Privatkopie"
 
@@ -9441,28 +9463,28 @@ msgstr "Filter `Redo'"
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
-#: templates/emailform/part.emailform.statuspage.php:75
+#: templates/emailform/part.emailform.statuspage.php:82
 msgid "The mailing software did not signal an error."
 msgstr "Die Em@il-Software hat keinen Fehler signalisiert."
 
-#: templates/emailform/part.emailform.statuspage.php:77
+#: templates/emailform/part.emailform.statuspage.php:84
 msgid "The message was propably sent out successfully."
 msgstr "Die Nachricht wurde vermutlich erfolgreich versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:84
+#: templates/emailform/part.emailform.statuspage.php:91
 msgid "The mailing software did not signal an error. "
 msgstr "Die Em@il-Software hat keinen Fehler signalisiert."
 
-#: templates/emailform/part.emailform.statuspage.php:86
+#: templates/emailform/part.emailform.statuspage.php:93
 #, php-format
 msgid "%d messages were propably sent out successfully."
 msgstr "%d Nachrichten wurden vermutlich erfolgreich versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:96
+#: templates/emailform/part.emailform.statuspage.php:103
 msgid "The mailing software encountered errors."
 msgstr "The Em@il-Software wurde mit Fehlern konfrontiert."
 
-#: templates/emailform/part.emailform.statuspage.php:100
+#: templates/emailform/part.emailform.statuspage.php:107
 #, php-format
 msgid ""
 "Sending of all %d messages has failed, propably no message has been sent."
@@ -9470,33 +9492,33 @@ msgstr ""
 "Das Senden aller %d Nachrichten ist wahrscheinlich fehlgeschlagen; mit\n"
 "hoher Wahrscheinlichkeit wurde keine einzige Nachricht versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:104
+#: templates/emailform/part.emailform.statuspage.php:111
 #, php-format
 msgid "One (out of %d) message has probably not been sent."
 msgstr "Eine (von %d) Nachrichten konnte nicht versendet werden."
 
-#: templates/emailform/part.emailform.statuspage.php:108
+#: templates/emailform/part.emailform.statuspage.php:115
 #, php-format
 msgid "%d (out of %d) messages have probably not been sent."
 msgstr "%d (von %d) Nachrichten konnten nicht versendet werden."
 
-#: templates/emailform/part.emailform.statuspage.php:113
+#: templates/emailform/part.emailform.statuspage.php:120
 msgid "The message has probably not been sent."
 msgstr "Die Nachricht wurde vermutlich nicht versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:131
+#: templates/emailform/part.emailform.statuspage.php:138
 msgid "Failed individual substitutions"
 msgstr "Fehlgeschlagene Individual-Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:132
+#: templates/emailform/part.emailform.statuspage.php:139
 msgid "Failed global substitutions"
 msgstr "Fehlgeschlagene Global-Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:133
+#: templates/emailform/part.emailform.statuspage.php:140
 msgid "Other failed substitutions"
 msgstr "Sonstige fehlgeschlagene Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:138
+#: templates/emailform/part.emailform.statuspage.php:145
 msgid ""
 "The operation failed due to template validation errors. The following "
 "template substitutions could not be resolved:"
@@ -9504,7 +9526,7 @@ msgstr ""
 "Die Vorlage wurde nicht gespeichert, da die folgenden Variablen-Ersetzungen\n"
 "nicht aufgelöst werden konnten:"
 
-#: templates/emailform/part.emailform.statuspage.php:156
+#: templates/emailform/part.emailform.statuspage.php:163
 #, php-format
 msgid ""
 "Please understand that the software is really `picky'; names have to match "
@@ -9525,7 +9547,7 @@ msgstr ""
 "Beispiel-Vorlage `%s' an, die eine vollständige Liste aller möglichen\n"
 "Ersetzungen enthält."
 
-#: templates/emailform/part.emailform.statuspage.php:193
+#: templates/emailform/part.emailform.statuspage.php:200
 msgid ""
 "The following email addresses appear to be syntactically incorrect, meaning "
 "that they have not the form of an email address:"
@@ -9533,12 +9555,12 @@ msgstr ""
 "Die folgenden Em@il-Adressen scheinen ein ungültiges Format zu haben;\n"
 "die sehen nicht wie Em@il-Adressen aus."
 
-#: templates/emailform/part.emailform.statuspage.php:204
+#: templates/emailform/part.emailform.statuspage.php:211
 #, php-format
 msgid "Broken `%s' addresses"
 msgstr "Ungültige `%s' Adressen"
 
-#: templates/emailform/part.emailform.statuspage.php:218
+#: templates/emailform/part.emailform.statuspage.php:225
 msgid ""
 "No email will be sent out unless these errors are corrected. Please separate "
 "individual emails by commas. Please use standard-address notation (see "
@@ -9554,20 +9576,20 @@ msgstr ""
 "enthalten (z.B. `NACHNAME, VORNAME' statt `VORNAME NACHNAME'). Einige\n"
 "Beispiele für zulässige Em@il-Adressen sind:"
 
-#: templates/emailform/part.emailform.statuspage.php:233
-#: templates/emailform/part.emailform.statuspage.php:333
-#: templates/emailform/part.emailform.statuspage.php:379
-#: templates/emailform/part.emailform.statuspage.php:427
-#: templates/emailform/part.emailform.statuspage.php:497
-#: templates/emailform/part.emailform.statuspage.php:556
+#: templates/emailform/part.emailform.statuspage.php:240
+#: templates/emailform/part.emailform.statuspage.php:340
+#: templates/emailform/part.emailform.statuspage.php:386
+#: templates/emailform/part.emailform.statuspage.php:434
+#: templates/emailform/part.emailform.statuspage.php:504
+#: templates/emailform/part.emailform.statuspage.php:564
 msgid "Explanations"
 msgstr "Erläuterungen:"
 
-#: templates/emailform/part.emailform.statuspage.php:253
+#: templates/emailform/part.emailform.statuspage.php:260
 msgid "Empty Subject"
 msgstr "Leere Betreff-Zeile"
 
-#: templates/emailform/part.emailform.statuspage.php:254
+#: templates/emailform/part.emailform.statuspage.php:261
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part. Please correct that "
@@ -9577,11 +9599,11 @@ msgstr ""
 "Die Betreffzeile sollte nicht nur aus `%s' bestehen. Bitte vor\n"
 "erneutem Sende- oder Speicher-Versuch korrigieren."
 
-#: templates/emailform/part.emailform.statuspage.php:268
+#: templates/emailform/part.emailform.statuspage.php:275
 msgid "Empty Sender Name"
 msgstr "Der Absender-Name ist leer"
 
-#: templates/emailform/part.emailform.statuspage.php:269
+#: templates/emailform/part.emailform.statuspage.php:276
 #, php-format
 msgid ""
 "The sender name should not be empty. Originally, it used to be %s, but "
@@ -9592,11 +9614,11 @@ msgstr ""
 "auch %s, aber das scheint ja nicht gepasst zu haben. Bitte einen\n"
 "nicht-leeren Absender-Namen vor erneutem Sende-Versuch einfügen."
 
-#: templates/emailform/part.emailform.statuspage.php:283
+#: templates/emailform/part.emailform.statuspage.php:290
 msgid "No Recipients"
 msgstr "Keine Adressaten ausgewählt"
 
-#: templates/emailform/part.emailform.statuspage.php:284
+#: templates/emailform/part.emailform.statuspage.php:291
 msgid ""
 "You did not specify any recipients (Cc: and Bcc: does not count here!)."
 "Please got to the `Em@il Recipients' panel and select some before hitting "
@@ -9610,7 +9632,7 @@ msgstr ""
 "im `Em@il Empfänger'-Reiter angezeigt wird. Die Namen kann man auch\n"
 "anklicken, um deren Em@il-Adressen einzutragen oder zu `reparieren'."
 
-#: templates/emailform/part.emailform.statuspage.php:313
+#: templates/emailform/part.emailform.statuspage.php:320
 msgid ""
 "The event(s) with the following id(s) could not be attached; they do not "
 "seem to exists:"
@@ -9618,7 +9640,7 @@ msgstr ""
 "Die Veranstaltung(en) zu den folgenden Id(s) konnten nicht angehängt\n"
 "werden; die scheinen gar nicht zu existieren:"
 
-#: templates/emailform/part.emailform.statuspage.php:327
+#: templates/emailform/part.emailform.statuspage.php:334
 #, php-format
 msgid ""
 "This is probably an internal error. Please contact %s. It may be possible to "
@@ -9630,13 +9652,13 @@ msgstr ""
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:355
+#: templates/emailform/part.emailform.statuspage.php:362
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 "Während des Sendeversuchs wurden die folgenden PHP-Ausnahmen `gefangen':"
 
-#: templates/emailform/part.emailform.statuspage.php:368
+#: templates/emailform/part.emailform.statuspage.php:375
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to %s."
@@ -9648,13 +9670,13 @@ msgstr ""
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:403
+#: templates/emailform/part.emailform.statuspage.php:410
 msgid ""
 "While trying to send the message(s), the following error(s) have been "
 "encountered:"
 msgstr "Während des Sendeversuchs wurden traten die folgenden Fehler auf:"
 
-#: templates/emailform/part.emailform.statuspage.php:416
+#: templates/emailform/part.emailform.statuspage.php:423
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to "
@@ -9666,18 +9688,18 @@ msgstr ""
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:448
+#: templates/emailform/part.emailform.statuspage.php:455
 msgid "Message Duplicates Detected!"
 msgstr "Nachrichten-Duplikat entdeckt!"
 
-#: templates/emailform/part.emailform.statuspage.php:462
+#: templates/emailform/part.emailform.statuspage.php:469
 #, php-format
 msgid "Message already sent at time %s to the following recipient(s):"
 msgstr ""
 "Die Nachricht wurde zum Zeitpunkt %s bereits schon einmal versendet,\n"
 "und zwar an die folgenden Adressaten:"
 
-#: templates/emailform/part.emailform.statuspage.php:487
+#: templates/emailform/part.emailform.statuspage.php:494
 #, php-format
 msgid ""
 "The email-form refuses to send email twice to the same recipients. In order "
@@ -9698,21 +9720,21 @@ msgstr ""
 "kontaktieren. Aber bitte vorher noch einmal darüber nachdenken, ob es\n"
 "nicht vielleicht doch ein Duplikat ist ..."
 
-#: templates/emailform/part.emailform.statuspage.php:518
+#: templates/emailform/part.emailform.statuspage.php:525
 msgid "Copy to Sent-Folder has Failed"
 msgstr "Das Kopieren in `Gesendete Nachrichten' ist fehlgeschlagen."
 
-#: templates/emailform/part.emailform.statuspage.php:527
+#: templates/emailform/part.emailform.statuspage.php:534
 #, php-format
 msgid "Could not authenticate with IMAP-server: %s"
 msgstr "Anmeldung am IMAP-Server fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:537
+#: templates/emailform/part.emailform.statuspage.php:544
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr "Das Kopieren in den Ordner %s ist fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:547
+#: templates/emailform/part.emailform.statuspage.php:555
 #, php-format
 msgid ""
 "If no other error messages are echoed on this page, then the emails have "
@@ -9729,19 +9751,19 @@ msgstr ""
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:577
+#: templates/emailform/part.emailform.statuspage.php:585
 msgid "The Following Events have been attached to the Message:"
 msgstr "Die folgenden Termin-Einträge wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:605
+#: templates/emailform/part.emailform.statuspage.php:613
 msgid "The following files have been attached to the message:"
 msgstr "Die folgenden Dateien wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:633
+#: templates/emailform/part.emailform.statuspage.php:641
 msgid "First Few Lines of Sent Message"
 msgstr "Die ersten paar Zeilen der gesendeten Nachricht"
 
-#: templates/emailform/part.emailform.statuspage.php:649
+#: templates/emailform/part.emailform.statuspage.php:657
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
@@ -9825,7 +9847,7 @@ msgstr "Probe"
 msgid "Download"
 msgstr "Herunterladen"
 
-#: templates/eventslisting.php:48
+#: templates/eventslisting.php:51
 msgid "no events"
 msgstr "keine Termine"
 
@@ -10365,15 +10387,7 @@ msgstr "Führt zurück zur Start-Seite der `App'."
 msgid "Tooltips"
 msgstr "Kontext-Hilfe"
 
-#: templates/part.common.header.php:120
-msgid "Manual (other tab)"
-msgstr "Handbuch (anderes Fenster/Tab)"
-
-#: templates/part.common.header.php:128
-msgid "Manual (popup)"
-msgstr "Handbuch (dieses Fenster, Popup)"
-
-#: templates/part.common.header.php:147
+#: templates/part.common.header.php:145
 msgid "Close Side-Bar Menu"
 msgstr "Seitenmenü schließen"
 
