@@ -21,6 +21,7 @@
  */
 
 import { appName, $ } from './globals.js';
+import { toolTipsInit } from './cafevdb.js';
 import './jquery-extensions.js';
 
 /*
