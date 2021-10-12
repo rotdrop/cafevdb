@@ -130,6 +130,7 @@ class EmailFormController extends Controller {
       'csrfToken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
+      'wikinamespace' => $this->getAppValue('wikinamespace'),
       'bulkTransactionId' => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
@@ -144,7 +145,6 @@ class EmailFormController extends Controller {
         'requesttoken' => \OCP\Util::callRegister(), // @todo: check
         'csrfToken' => \OCP\Util::callRegister(), // @todo: check
         'emailKey' => $this->pme->cgiSysName('mrecs'),
-
       ],
       'emailDraftAutoSave' => $emailDraftAutoSave,
       // Needed for the editor

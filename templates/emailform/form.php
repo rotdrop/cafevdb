@@ -39,8 +39,29 @@ $rowClass = $appName.'-'.'row';
     <li id="emailformdebug-tab">
       <a href="#emailformdebug"><?php echo $l->t('Status and Preview'); ?></a>
     </li>
-    <li id="emailformhelp-tab">
+    <li id="emailformhelp-tab" class="dropdown-container">
       <a href="#emailformhelp"><?php echo $l->t('Manual'); ?></a>
+      <nav class="help-dropdown dropdown-content dropdown-align-right">
+        <ul>
+          <li data-id="manual_window"
+              data-manual-page="emailform"
+              data-namespace="<?php p($wikinamespace); ?>">
+            <a href="#">
+              <img alt="" src="">
+              <?php p($l->t('Manual (other tab)')) ?>
+            </a>
+          </li>
+          <li data-id="manual_dialog"
+              data-dialog-title="<?php p($l->t('Email Form')); ?>"
+              data-manual-page="emailform"
+              data-namespace="<?php p($wikinamespace); ?>">
+            <a href="#">
+              <img alt="" src="">
+              <?php p($l->t('Manual (popup)')) ?>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </li>
   </ul>
   <form method="post"

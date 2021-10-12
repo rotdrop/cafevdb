@@ -56,7 +56,7 @@ echo $this->inc('part.common.header',
 
 <div id="blogframe">
   <form id="blogform" method="post">
-    <input type="hidden" name="app" value="<?php echo $appName; ?>" />
+    <input type="hidden" name="template" value="<?php p($template); ?>" />
     <input
       type="submit"
       title="<?php echo $toolTips['blog-newentry'];?>"

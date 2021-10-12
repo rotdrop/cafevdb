@@ -41,6 +41,7 @@ import print_r from './print-r.js';
 import chosenPopup from './chosen-popup.js';
 import queryData from './query-data.js';
 import modalizer from './modalizer.js';
+import { handleMenu as handleUserManualMenu } from './user-manual.js';
 
 require('bootstrap4-duallistbox');
 require('emailform.scss');
@@ -1642,6 +1643,11 @@ function emailFormPopup(post, modal, single, afterInit) {
               const newTabId = ui.newTab.attr('id');
               const oldTabId = ui.oldTab.attr('id');
 
+              if (newTabId === 'emailformhelp-tab') {
+                event.preventDefault();
+                return true;
+              }
+
               ui.newPanel.css('max-height', '');
               ui.newPanel.css('height', 'auto');
 
@@ -1679,6 +1685,8 @@ function emailFormPopup(post, modal, single, afterInit) {
               return true;
             },
           });
+
+          handleUserManualMenu(dialogHolder);
 
           const recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
           const composerFieldSet = emailForm.find('fieldset.email-composition.page');

@@ -39,21 +39,6 @@
  *
  */
 
-div#emailformwrapper {
-  padding:0;
-  background-color:#F2F8FF;
-
-  .ui-tabs-nav {
-    margin-bottom: 0;
-  }
-
-  > div {
-    height:auto !important;
-    overflow-y:auto;
-    overflow-x:hidden;
-  }
-}
-
 .ui-dialog.emailform {
   overflow:hidden;
   max-height: 90%; /* !important;*/
@@ -69,14 +54,44 @@ div#emailformwrapper {
   }
 }
 
-ul#emailformtabs {
-  padding-top:0;
-  border-top-right-radius:0;
-  border-top-left-radius:0;
-  border-top:0;
-}
-
 #emailformdialog {
+  div#emailformwrapper {
+    padding:0;
+    background-color:#F2F8FF;
+
+    .ui-tabs-nav {
+      margin-bottom: 0;
+    }
+
+    > div {
+      height:auto !important;
+      overflow-y:auto;
+      overflow-x:hidden;
+    }
+
+    ul#emailformtabs {
+      padding-top:0;
+      border-top-right-radius:0;
+      border-top-left-radius:0;
+      border-top:0;
+
+      li.dropdown-container {
+        &:hover {
+          font-weight:bold;
+          background-color: var(--color-background-hover);
+        }
+
+        &:active {
+          background-color: var(--color-primary-light);
+        }
+
+        nav {
+          top:30px;
+        }
+      }
+    }
+  }
+
   padding:0;
   border-top-right-radius:0;
   border-top-left-radius:0;
