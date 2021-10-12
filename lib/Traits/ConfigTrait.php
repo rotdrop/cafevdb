@@ -493,7 +493,7 @@ trait ConfigTrait {
       $timestamp = $date;
     }
     return $this->dateTimeFormatter()->formatDate(
-      $timestamp, $format, $timeZone, $$l);
+      $timestamp, $format, $timeZone, $l);
   }
 
   /**
