@@ -558,8 +558,8 @@ class EmailFormController extends Controller {
       $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
       break;
     case 'validateEmailRecipients':
-      $composer->validateFreeFormAddresses($requestData['Header'],
-                                           $requestData['Recipients']);
+      $composer->validateFreeFormAddresses($requestData['header'],
+                                           $requestData['recipients']);
       $requestData['errorStatus'] = $composer->errorStatus();
       $requestData['diagnostics'] = $composer->statusDiagnostics();
       if ($requestData['errorStatus']) {
