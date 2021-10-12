@@ -204,7 +204,7 @@ class RecipientsFilter
     if ($this->submitted) {
       $this->loadHistory(); // Fetch the filter-history from the session, if any.
       $this->emailRecs = $this->cgiValue($this->emailKey, []);
-      $this->emailTable = $this->cgiValue($this->mtabKey, []);
+      $this->emailTable = $this->cgiValue($this->mtabKey);
       if ($this->cgiValue('resetInstrumentsFilter', false) !== false) {
         $this->submitted = false; // fall back to defaults for everything
         $this->cgiData = [];
