@@ -243,7 +243,7 @@ class ProjectParticipants extends PMETableViewBase
     } else if ($this->changeOperation()) {
       return $this->l->t('Edit the data of the displayed musician.');
     }
-    return $this->l->t("Instrumentation for Project `%s'", [ $this->projectName ]);
+    return $this->l->t('Instrumentation for Project "%s"', [ $this->projectName ]);
   }
 
   /**
