@@ -541,6 +541,7 @@ class PersonalSettingsController extends Controller {
         'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
         'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifer'),
         'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
+        'bankAccountBankName' => $this->getConfigValue('bankAccountBankName'),
         'message' => '',
       ];
       if (empty($realValue) && !empty($data[$parameter])) {
