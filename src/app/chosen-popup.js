@@ -98,7 +98,7 @@ const chosenPopup = function(contents, userOptions) {
     position: options.position,
     dialogClass: cssClass,
     modal: true,
-    draggable: false,
+    draggable: true,
     closeOnEscape: false,
     width: 'auto',
     height: 'auto',
