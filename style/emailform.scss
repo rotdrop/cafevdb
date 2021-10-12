@@ -358,6 +358,9 @@ form#cafevdb-email-form {
     background-image:url('../img/contacts-dark.svg');
     /*  background-color:#000;*/
     float:right;
+    &.loading {
+      background-image:url('../../../core/img/loading.gif');
+    }
   }
 
   .stored-messages-choose .chosen-container {

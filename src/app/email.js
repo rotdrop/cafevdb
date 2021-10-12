@@ -1355,10 +1355,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .find('input.address-book-emails')
     .off('click')
     .on('click', function(event) {
-      event.preventDefault();
 
       const self = $(this);
       const input = fieldset.find(self.data('for'));
+
+      self.addClass('loading');
+      const cleanup = function() {
+        self.removeClass('loading');
+      };
 
       if (input.val().trim() !== '') {
         // We trigger validation before we pop-up, but no need to do
@@ -1368,9 +1372,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       const post = { freeFormRecipients: input.val() };
       $.post(generateUrl('contacts/list'), post)
-        .fail(Ajax.handleError)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
         .done(function(data) {
           if (!Ajax.validateResponse(data, ['contents'])) {
+            cleanup();
             return;
           }
           chosenPopup(data.contents, {
@@ -1425,6 +1432,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               of: self,
             },
             openCallback(selectElement) {
+              cleanup();
               if (selectElement.find('optgroup.free-form').length === 0) {
                 $(this).dialog('widget')
                   .find('button.save-contacts').prop('disabled', true);
