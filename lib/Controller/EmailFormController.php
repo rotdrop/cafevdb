@@ -238,7 +238,7 @@ class EmailFormController extends Controller {
       'topic' => self::TOPIC_UNSPECIFIC,
       'projectId' => $projectId,
       'projectName' => $projectName,
-      'bulkTransactionId' => $bulkTransactionId,
+      'bulkTransactionId' => -1,
     ];
     $requestData = array_merge($defaultData, $this->parameterService->getParam('emailComposer', []));
     $projectId   = $requestData['projectId'];

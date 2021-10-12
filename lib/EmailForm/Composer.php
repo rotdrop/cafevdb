@@ -621,7 +621,7 @@ Störung.';
 
     if (!empty($this->project)) {
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -629,7 +629,7 @@ Störung.';
         return $this->moneyValue($obligations['sum']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -637,7 +637,7 @@ Störung.';
         return $this->moneyValue($obligations['received']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -646,7 +646,7 @@ Störung.';
       };
 
       // per-participant project-data
-      $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) use ($obligations) {
+      $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1679,6 +1679,7 @@ Störung.';
       $this->executionStatus = false;
       $this->diagnostics['MailerExceptions'][] =
         $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
+      $this->logException($t);
 
       return false;
     }

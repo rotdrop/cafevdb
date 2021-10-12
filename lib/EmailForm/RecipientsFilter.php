@@ -197,12 +197,14 @@ class RecipientsFilter
     // "sane" default setttings
     $this->emailRecs = $this->parameterService->getParam($this->emailKey, []);
     $this->emailTable = $this->parameterService->getParam($this->mtabKey, '');
+
     $this->reload = false;
     $this->snapshot = false;
 
     if ($this->submitted) {
       $this->loadHistory(); // Fetch the filter-history from the session, if any.
       $this->emailRecs = $this->cgiValue($this->emailKey, []);
+      $this->emailTable = $this->cgiValue($this->mtabKey, []);
       if ($this->cgiValue('resetInstrumentsFilter', false) !== false) {
         $this->submitted = false; // fall back to defaults for everything
         $this->cgiData = [];
@@ -222,6 +224,9 @@ class RecipientsFilter
         $this->storeHistory();
         return;
       }
+    } else if (empty($this->emailTable)) {
+      // nothing we can do, bail out
+      return;
     }
 
     $this->remapEmailRecords();
@@ -508,14 +513,14 @@ class RecipientsFilter
               'email'   => $emailVal,
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
-              'project' => $projectId,
+              'project' => $projectId??-1,
               'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
           }
         }
       } else {
-        $this->brokenEMail[$rec] = htmlspecialchars($name);
+        $this->brokenEMail[$rec] = htmlspecialchars($displayName);
       }
     }
 
@@ -568,6 +573,8 @@ class RecipientsFilter
    */
   private function getInstrumentsFromDb()
   {
+    $instrumentInfo =
+      $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
     // Get the current list of instruments for the filter
     if ($this->projectId > 0 && $this->userBase == self::MUSICIANS_FROM_PROJECT) {
       $this->instruments = [];
@@ -577,11 +584,9 @@ class RecipientsFilter
         $this->instruments[$instrument['id']] = $instrument['name'];
       }
     } else {
-      $instrumentInfo =
-        $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
       $this->instruments = $instrumentInfo['byId'];
     }
-    $this->instrumentGroups = $instrumentInfo['idGroups'];
+    $this->instrumentGroups = $instrumentInfo['idGroups']??[];
 
     $this->instruments[0] = '*';
   }
@@ -684,6 +689,7 @@ class RecipientsFilter
   public function formData()
   {
     return [
+      $this->mtabKey => $this->emailTable,
       $this->emailKey => $this->emailRecs,
       'frozenRecipients' => $this->frozen,
       'formStatus' => 'submitted',
