@@ -1240,7 +1240,7 @@ Störung.';
         $variable  = array_map(function($value) {
           return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
-        $handler = $this->substitutions[$nameSpace][$variable[0]];
+        $handler = $this->substitutions[$nameSpace][$variable[0]]??null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
             throw new Exceptions\SubstitutionException($this->l->t('No substitution handler found for "%s%s%s".', [ $nameSpace, $separator.$separator, $variable[0] ]));
@@ -2380,7 +2380,7 @@ Störung.';
   {
     try {
       $dateString = $arg[1];
-      $dateFormat = $arg[2]?:'long';
+      $dateFormat = $arg[2]??'long';
 
       // allow other global replacement variables as date-time source
       if (!empty($this->substitutions[$nameSpace][$dateString])) {
