@@ -38,6 +38,7 @@ class EmailDraftsRepository extends EntityRepository
         'ed.updatedBy as updatedBy',
         'ed.createdBy as createdBy',
       ])
+      ->orderBy('ed.updated', 'DESC')
       ->getQuery()
       ->execute();
   }

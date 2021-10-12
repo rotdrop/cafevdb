@@ -38,6 +38,8 @@ class EmailTemplatesRepository extends EntityRepository
         'et.updatedBy as updatedBy',
         'et.createdBy as createdBy',
       ])
+      ->orderBy('et.tag', 'ASC')
+      ->addOrderBy('et.updated', 'DESC')
       ->getQuery()
       ->execute();
   }
