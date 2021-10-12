@@ -330,7 +330,7 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
   </div>';
   $mailto = $adminMailto
     . '?subject=' . rawurlencode('[CAFEVDB-InternalError] Event Attachments Do not Exist');
-  $mailto = '<span class="error email"><a href="mailto:' . $mailto . '">' . $adminName . '</a></span>';
+  $mailto = '<span class="error cafevdb email"><a href="mailto:' . $mailto . '">' . $adminName . '</a></span>';
   $explanations = $l->t('This is probably an internal error. Please contact %s. '.
                         'It may be possible to simply click on the red, underlined text '.
                         'in order to compose a usefull message.',
@@ -376,7 +376,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
                         'Please copy this page and send it via email to %s.'.
                         'It may be possible to simply click on the red, underlined text '.
                         'in order to compose a usefull message.',
-                        [ '<span class="error email">'
+                        [ '<span class="error cafevdb email">'
                         . '<a href="mailto:' . $mailto . '">'
                         . $adminName
                         . '</a>'
@@ -424,7 +424,7 @@ if (!empty($diagnostics['MailerErrors'])) {
                         'Please copy this page and send it via email to %s. '.
                         'It may be possible to simply click on the red, underlined text '.
                         'in order to compose a usefull message.',
-                        [ '<span class="error email">'
+                        [ '<span class="error cafevdb email">'
                         . '<a href="mailto:' . $mailto . '">'
                         . $adminName
                         . '</a>'
@@ -489,7 +489,7 @@ if (!empty($diagnostics['Duplicates'])) {
   $mailto = $adminMailto
     . '?subject='.rawurlencode('[CAFEVDB-EmailDuplicate] Probably False Positive')
     . '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$adminName.'</a></span>';
+  $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$adminName.'</a></span>';
   $explanations =
     $l->t('The email-form refuses to send email twice to the same recipients. '.
           'In order to send out your email you have either to change the subject '.
@@ -550,7 +550,7 @@ if (!empty($diagnostics['CopyToSent'])) {
   $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-CopyToSent] IMAP Error').
             '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
+  $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
   $explanations =
     $l->t('If no other error messages are echoed on this page, then '.
           'the emails have probably been sent successfully. However, copying '.
