@@ -710,14 +710,14 @@ form#cafevdb-email-form {
  *
  */
 
-.file_upload_form {
+.file-upload-form {
   width:0;
   height:0;
 }
-.file_upload_target {
+.file-upload-target {
   display:none;
 }
-.file_upload_start {
+.file-upload-start {
   ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter:alpha(opacity=0);
   opacity:0;

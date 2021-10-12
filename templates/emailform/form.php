@@ -39,6 +39,9 @@ $rowClass = $appName.'-'.'row';
     <li id="emailformdebug-tab">
       <a href="#emailformdebug"><?php echo $l->t('Status and Preview'); ?></a>
     </li>
+    <li id="emailformhelp-tab">
+      <a href="#emailformhelp"><?php echo $l->t('Manual'); ?></a>
+    </li>
   </ul>
   <form method="post"
         name="cafevdb-email-form"
@@ -53,7 +56,7 @@ $rowClass = $appName.'-'.'row';
   </form>
 
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
-  <div id="attachment_upload_wrapper" class="data_upload_wrapper">
+  <div id="attachment_upload_wrapper" class="data-upload-wrapper">
     <form data-upload-id='1'
           id="attachment_upload_form"
           class="file-upload-form"
@@ -69,7 +72,7 @@ $rowClass = $appName.'-'.'row';
       <input type="hidden" name="requesttoken" value="<?php p($requesttoken) ?>" id="requesttoken">
       <input type="hidden" class="max_human_file_size"
 	     value="(max <?php p($uploadMaxHumanFilesize); ?>)">
-      <input type="file" class="file_upload_start" id="attachment_upload_start" name="files[]" multiple="multiple">
+      <input type="file" class="file-upload-start" id="attachment_upload_start" name="files[]" multiple="multiple">
     </form>
     <div class="uploadprogresswrapper">
       <div class="uploadprogressbar"></div>
