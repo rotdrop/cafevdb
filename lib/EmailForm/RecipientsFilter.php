@@ -276,7 +276,7 @@ class RecipientsFilter
       'memberStatusFilter' => $this->defaultByStatus(),
       'instrumentsFilter' => [],
       'selectedRecipients' => array_intersect($this->emailRecs,
-                                              array_keys($this->eMailsDpy))
+                                              array_keys($this->eMailsDpy??[]))
     ];
 
     // tweak: sort the selected recipients by key
