@@ -37,6 +37,14 @@ class BackgroundJobController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
+  /**
+   * @var int
+   *
+   * Do not run more often than this.
+   */
+  public const INTERVAL_SECONDS = 600;
+  private const BACKGROUND_JOB_LAST_RUN = 'backgroundJobLastRun';
+
   public function __construct(
     $appName
     , IRequest $request
@@ -54,12 +62,18 @@ class BackgroundJobController extends Controller
   public function trigger()
   {
     try {
+      $now = time();
+      $lastRun = $this->getConfigValue(self::BACKGROUND_JOB_LAST_RUN, 0);
+      if ($now - $lastRun < self::INTERVAL_SECONDS) {
+        return;
+      }
       if (!$this->inGroup()) {
         return self::grumble(
           $this->l->t('User "%s" not in orchestra group "%s',
                       [ $this->userId(), $this->groupId() ]));
       }
       $this->di(LazyUpdateGeoCoding::class)->run();
+      $this->setConfigValue(self::BACKGROUND_JOB_LAST_RUN, $now);
       return self::response('Ran background jobs');
     } catch (\Throwable $t) {
       $this->logException($t);
