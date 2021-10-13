@@ -57,8 +57,16 @@ class ProjectParticipantsRepository extends EntityRepository
         'm.id as musicianId',
         'm.firstName AS firstName',
         'm.surName AS surName',
-        "COALESCE(m.displayName, CONCAT(m.surName, ', ', COALESCE(m.nickName, m.firstName))) AS displayName",
-        "COALESCE(m.nickName, m.firstName) AS nickName",
+        //"COALESCE(m.displayName, CONCAT(m.surName, ', ', COALESCE(m.nickName, m.firstName))) AS displayName",
+        "CASE WHEN m.displayName IS NULL OR m.displayName = ''
+  THEN
+    CONCAT(m.surName, CASE WHEN m.nickName IS NULL OR m.nickName = '' THEN m.firstName ELSE m.nickName END)
+  ELSE
+    m.displayName
+  END
+AS displayName",
+        // "COALESCE(m.nickName, m.firstName) AS nickName",
+        "CASE WHEN m.nickName IS NULL OR m.nickName = '' THEN m.firstName ELSE m.nickName END AS nickName",
       );
     foreach ($orderBy as $field => $dir) {
       $qb->addOrderBy('m.'.$field, $dir);
