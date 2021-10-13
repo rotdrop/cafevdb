@@ -48,7 +48,7 @@ const userManualMenuHandler = function(event) {
       namespace,
       appName,
       'documentation',
-      'user_manual',
+      'user-manual',
       manualPage,
     ].join(':');
     if (menuId === 'manual_dialog') {
@@ -61,7 +61,7 @@ const userManualMenuHandler = function(event) {
     } else {
       const wikiUrl = ncRouter.generateUrl('/apps/dokuwikiembedded/page/index')
             + '?wikiPage=' + wikiPage;
-      window.open(wikiUrl, 'user_manual');
+      window.open(wikiUrl, appName + ':user-manual');
     }
     break;
   }
