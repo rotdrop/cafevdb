@@ -51,8 +51,8 @@ $containerClass = $appName.'-'.'container';
             <optgroup label="'.$l->t('Drafts').'">
 ';
             foreach ($storedEmails['drafts'] as $draft) {
-              $createdAt = ($template['created']??(new DateTime)->setTimestamp(0))->locale($locale);
-              $updatedAt = ($template['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
+              $createdAt = ($draft['created']??(new DateTime)->setTimestamp(0))->locale($locale);
+              $updatedAt = ($draft['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
               $title = $l->t("Subject: %s<br/>"
                             ."Created by %s on %s<br/>"
                             ."Updated by %s on %s",
