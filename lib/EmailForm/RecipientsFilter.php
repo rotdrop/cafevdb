@@ -475,6 +475,10 @@ class RecipientsFilter
     // add the instruments filter
     if (!empty($this->instrumentsFilter)) {
       $criteria['instruments.instrument'] = $this->instrumentsFilter;
+      if ($this->projectId > 0 && $this->userBase == self::MUSICIANS_FROM_PROJECT) {
+        $criteria['projectInstruments.instrument'] = $this->instrumentsFilter;
+        $criteria['projectInstruments.project'] = $this->projectId;
+      }
     }
     if ($this->frozen && $this->projectId > 0) {
       $criteria['id'] = $this->emailRecs;
