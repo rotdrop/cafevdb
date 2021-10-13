@@ -224,9 +224,6 @@ class RecipientsFilter
         $this->storeHistory();
         return;
       }
-    } else if (empty($this->emailTable)) {
-      // nothing we can do, bail out
-      return;
     }
 
     $this->remapEmailRecords();
@@ -447,7 +444,7 @@ class RecipientsFilter
       $this->frozen = true; // restrict to initial set of recipients
 
       return;
-    } else {
+    } else if (!empty($this->emailTable)) {
       $musicianKey = self::MUSICIAN_KEY[$this->emailTable];
       $this->emailRecs = array_filter(
         array_map(
