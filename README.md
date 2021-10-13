@@ -1,7 +1,4 @@
-BE WARNED: THIS BEAST -- unfortunately -- IS NOT YET IN A SHAPE THAT
-IT COULD BE INSTALLED EASILY BY MERE MORTALS.
-
-So what is this about? The goal is a group-ware application which aids
+The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
 other frustrations. The web-site of the concrete orchestra in question
