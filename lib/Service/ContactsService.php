@@ -28,11 +28,13 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
+use OCP\IAddressBook;
 use OCP\Constants;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
+use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -112,14 +114,20 @@ class ContactsService
    * As of now categories are not exported for shared address-books,
    * so we simply group the entries by addressbook-name.
    *
-   * @todo Check for musicians address book
+   * The static musicians address-book of the orchestra app is excluded.
    */
   public function emailContacts()
   {
+    /** @var MusicianCardBackend $musicianCardBackend */
+    $musicianCardBackend = $this->di(MusicianCardBackend::class);
+    $musiciansKey = $musicianCardBackend->getURI();
     $result = [];
     $addressBooks = $this->contactsManager->getUserAddressBooks();
+    /** @var IAddressBook $addressBook */
     foreach ($addressBooks as $addressBook) {
-      // @todo skip musicians address book
+      if ($addressBook->getKey() == $musiciansKey) {
+        continue;
+      }
       $bookName = $addressBook->getDisplayName();
       $contacts = $addressBook->search('', [ 'FN', 'EMAIL' ], [] /* options */);
       foreach ($contacts as $contact) {
@@ -139,7 +147,7 @@ class ContactsService
             continue;
           }
           $theseContacts[] = [
-            'uid'    => $uid,
+            'uid'   => $uid,
             'email' => $email,
             'name'  => $fn,
             'addressBook' => $bookName,
