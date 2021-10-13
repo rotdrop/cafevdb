@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 $locale = $l->getLocaleCode();
@@ -47,7 +48,7 @@ foreach ($storedEmails['drafts'] as $draft) {
                                $updatedAt->isoFormat('lll'), ]);
   $name = $updatedAt->isoFormat('L LT').': '.$draft['name'];
   echo '
-              <option value="__draft-'.$draft['id'].'" title="'.$title.'">'.$name.'</option>
+              <option value="__draft-'.$draft['id'].'" title="' . Util::htmlEscape($title) . '">'.$name.'</option>
               ';
 }
 echo '
@@ -66,7 +67,7 @@ foreach ($storedEmails['templates'] as $template) {
                                $template['updatedBy']??$l->t('Anonymous'),
                                $updatedAt->isoFormat('lll'), ]);
               echo '
-              <option value="'.$template['id'].'" title="'.$title.'">'.$template['name'].'</option>
+              <option value="'.$template['id'].'" title="' . Util::htmlEscape($title) . '">'.$template['name'].'</option>
               ';
 }
 echo '
