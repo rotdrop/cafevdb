@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -45,49 +46,7 @@ $containerClass = $appName.'-'.'container';
                   data-placeholder="<?php echo $l->t("Select draft or template"); ?>"
                   name="emailComposer[storedMessagesSelector]"
                   id="cafevdb-stored-messages-selector">
-            <?php
-            $locale = $l->getLocaleCode();
-            echo '
-            <optgroup label="'.$l->t('Drafts').'">
-';
-            foreach ($storedEmails['drafts'] as $draft) {
-              $createdAt = ($draft['created']??(new DateTime)->setTimestamp(0))->locale($locale);
-              $updatedAt = ($draft['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
-              $title = $l->t("Subject: %s<br/>"
-                            ."Created by %s on %s<br/>"
-                            ."Updated by %s on %s",
-                             [ $draft['name'],
-                               $draft['createdBy']??$l->t('Anonymous'),
-                               $createdAt->isoFormat('lll'),
-                               $draft['updatedBy']??$l->t('Anonymous'),
-                               $createdAt->isoFormat('lll'), ]);
-              $name = $updatedAt->isoFormat('L LT').': '.$draft['name'];
-              echo '
-              <option value="__draft-'.$draft['id'].'" title="'.$title.'">'.$name.'</option>
-';
-            }
-            echo '
-            </optgroup>';
-            echo '<optgroup label="'.$l->t('Templates').'">
-';
-            foreach ($storedEmails['templates'] as $template) {
-              $createdAt = ($template['created']??(new DateTime)->setTimestamp(0))->locale($locale);
-              $updatedAt = ($template['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
-              $title = $l->t("Name: %s<br/>"
-                            ."Created by %s on %s<br/>"
-                            ."Updated by %s on %s",
-                             [ $template['name'],
-                               $template['createdBy']??$l->t('Anonymous'),
-                               $createdAt->isoFormat('lll'),
-                               $template['updatedBy']??$l->t('Anonymous'),
-                               $updatedAt->isoFormat('lll'), ]);
-              echo '
-              <option value="'.$template['id'].'" title="'.$title.'">'.$template['name'].'</option>
-';
-            }
-            echo '
-            </optgroup>';
-            ?>
+            <?php echo $this->inc('emailform/part.stored-email-options', []); ?>
           </select>
         </label>
       </td>

@@ -122,6 +122,7 @@ class EmailFormController extends Controller {
       'appName' => $this->appName(),
       'urlGenerator' => $this->urlGenerator,
       'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
+      'dateTimeZone' => $this->getDateTimeZone(),
       'pageNavigation' => $this->pageNavigation,
       'emailComposer' => $composer,
       'uploadMaxFilesize' => Util::maxUploadSize(),
@@ -194,31 +195,24 @@ class EmailFormController extends Controller {
     return self::dataResponse($responseData);
   }
 
-  private function storedEmailOptions($composer)
+  /**
+   * Regenerate the stored-email options after updating drafts or
+   * templates.
+   */
+  private function storedEmailOptions(Composer $composer)
   {
-    $stored = $composer->storedEmails();
-    $options = '';
-    $options .= '
-            <optgroup label="'.$this->l->t('Drafts').'">
-';
-    foreach ($stored['drafts'] as $draft) {
-      $options .= '
-              <option value="__draft-'.$draft['id'].'">'.$draft['name'].'</option>
-';
-    }
-    $options .= '
-            </optgroup>';
-    $options .= '<optgroup label="'.$this->l->t('Templates').'">
-';
-    foreach ($stored['templates'] as $template) {
-      $options .= '
-              <option value="'.$template['id'].'">'.$template['name'].'</option>
-';
-    }
-    $options .= '
-            </optgroup>';
+    $templateParamters = [
+      'storedEmails' => $composer->storedEmails(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+      'dateTimeZone' => $this->getDateTimeZone(),
+    ];
 
-    return $options;
+    $tmpl = new TemplateResponse(
+      $this->appName,
+      'emailform/part.stored-email-options',
+      $templateParamters,
+      'blank');
+    return $tmpl->render();
   }
 
   /**
