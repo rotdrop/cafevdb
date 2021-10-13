@@ -213,7 +213,7 @@ class Navigation
           .'title="'.$this->toolTipsService['pme-export-choice'].'" '
           .'name="export" >
   <option value=""></option>
-  <option '
+  <option disabled '
     .'title="'.$this->toolTipsService['pme-export-ods'].'" '
     .'value="ODS">'.$this->l->t('LibreOffice Export').'</option>
   <option '
