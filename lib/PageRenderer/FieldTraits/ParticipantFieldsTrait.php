@@ -373,7 +373,8 @@ trait ParticipantFieldsTrait
           ];
           $keyFdd['select'] = 'C';
           // make sure we get 0 not null
-          $keyFdd['sql'] = 'COALESCE(' . $keyFdd['sql'] . ', 0)';
+          $keyFdd['sql|LVDF'] = 'COALESCE(' . $keyFdd['sql'] . ', 0)';
+          $keyFdd['sql|CAP'] = $keyFdd['sql'];
           $keyFdd['default'] = $field->getDefaultValue() === null ? false : $key;
           $keyFdd['css']['postfix'][] = 'boolean';
           $keyFdd['css']['postfix'][] = 'single-valued';
@@ -383,12 +384,13 @@ trait ParticipantFieldsTrait
               'filters' => ('$table.field_id = '.$fieldId
                             .' AND $table.project_id = '.$this->projectId),
             ]);
+          $dataValue = reset($valueData);
           switch ($dataType) {
           case FieldType::BOOLEAN:
             break;
           case 'money':
           case FieldType::SERVICE_FEE:
-            $money = $this->moneyValue(reset($valueData));
+            $money = $this->moneyValue($dataValue);
             $noMoney = $this->moneyValue(0);
             // just use the amount to pay as label
             $keyFdd['values2|LVDF'] = [
@@ -403,7 +405,14 @@ trait ParticipantFieldsTrait
             };
             break;
           default:
-            $keyFdd['values2|CAP'] = [ $key => reset($valueData) ];
+            if (!empty($dataValue)) {
+              $keyFdd['values2|LVDF'] = [
+                '' => '',
+                0 => '',
+                $key => $dataValue,
+              ];
+            }
+            $keyFdd['values2|CAP'] = [ $key => $dataValue ];
             break;
           } // data-type switch
           break;
