@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -41,8 +41,9 @@
 
     div.eventcontrols {
       padding:0.3em 0.3em 0 0.3em;
-      max-height: $event-controls-height;
+      min-height: $event-controls-height;
       height: $event-controls-height;
+      min-width:360px;
     }
 
     div.eventlist {
@@ -52,13 +53,33 @@
       scrollbar-width: auto;
     }
 
+    div.event-list-container {
+      display:inline-block;
+      width:auto;
+      min-width:100%;
+      padding:0.3em;
+      .heading.listing.empty {
+        font-weight:normal;
+        opacity:0.3;
+      }
+      .heading.listing {
+        font-weight:bold;
+      }
+    }
+    div.table-container {
+      display:inline-block;
+      width:auto;
+      min-width:100%;
+      padding:0;
+      margin:0;
+      overflow:hidden;
+      border:0;
+    }
     table.listing {
       border:0px solid #004d9c;
       border-collapse:collapse;
       border-spacing:0px;
-      margin:1px; /* otherwise the cell-borders are hidden.*/
-      display:inline-block; /* otherwise no padding */
-      padding:0.3em 0.3em 0.3em 0.3em; /* should match padding of controls */
+      /* margin:1px; /  otherwise the cell-borders are hidden.*/
     }
 
     select, input, option, button {

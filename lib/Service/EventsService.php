@@ -476,11 +476,14 @@ class EventsService
 
     $result = [];
 
+    $shareOwnerId = $this->shareOwnerId();
+
     foreach ($calendarIds as $calendarId) {
       $cal = $this->calDavService->calendarById($calendarId);
       $displayName = !empty($cal)
                    ? $cal->getDisplayName()
                    : strval($this->l->t('Unknown Calendar').' '.$calendarId);
+      $displayName = str_replace(' (' . $shareOwnerId . ')', '', $displayName);
 
       $result[$calendarId] = [
         'name' => $displayName,

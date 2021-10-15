@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, webRoot, $ } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import fileDownload from './file-download.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
@@ -31,6 +31,8 @@ import * as DialogUtils from './dialog-utils.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import modalizer from './modalizer.js';
+
+require('jquery-ui/ui/widgets/accordion');
 
 require('events.scss');
 
@@ -44,6 +46,31 @@ const Events = globalState.Events = {
     select: '',
     deselect: '',
   },
+};
+
+const accordionList = function(selector, $dialogHolder) {
+  const $element = $dialogHolder.find(selector);
+  if ($element.find('tr').length <= 10) {
+    // FIXME: this should perhaps be decided in the template or elsewhere.
+    return;
+  }
+  $element.accordion({
+    heightStyle: 'content',
+    collapsible: true,
+    animate: 0,
+    active: false,
+    beforeActivate(event, ui) {
+
+      if ($(ui.newHeader).hasClass('empty')) {
+        return false;
+      }
+
+      return true;
+    },
+    activate(event, ui) {
+      adjustSize($dialogHolder);
+    },
+  });
 };
 
 const init = function(htmlContent, textStatus, request) {
@@ -65,14 +92,14 @@ const init = function(htmlContent, textStatus, request) {
     resizable: false,
     open() {
       // $.fn.cafevTooltip.remove();
-      const dialogHolder = $(this);
-      const dialogWidget = dialogHolder.dialog('widget');
+      const $dialogHolder = $(this);
+
+      accordionList('.event-list-container', $dialogHolder);
 
       /* Adjust dimensions to do proper scrolling. */
-      // @TODO this really needs to be reworked
-      adjustSize(dialogHolder, dialogWidget);
+      adjustSize($dialogHolder);
 
-      const eventForm = dialogHolder.find('#eventlistform');
+      const eventForm = $dialogHolder.find('#eventlistform');
       const eventMenu = eventForm.find('select.event-menu');
 
       // style the menu with chosen
@@ -134,7 +161,7 @@ const init = function(htmlContent, textStatus, request) {
           return false;
         });
 
-      dialogHolder
+      $dialogHolder
         .off('cafevdb:events_changed')
         .on('cafevdb:events_changed', function(event, events) {
           console.info('EVENTS', events);
@@ -149,7 +176,7 @@ const init = function(htmlContent, textStatus, request) {
             .done(relist);
           return false;
         });
-      dialogHolder
+      $dialogHolder
         .off('change', ['input', 'email', pmeToken('misc'), pmeToken('check')].join('.'))
         .on('change', ['input', 'email', pmeToken('misc'), pmeToken('check')].join('.'), function(event) {
           updateEmailForm();
@@ -187,32 +214,37 @@ const updateEmailForm = function(post, emailFormDialog) {
   }
 };
 
-const adjustSize = function(dialogHolder, dialogWidget) {
-  const scrollElement = dialogHolder.find('.scroller');
-  const dimensionElement = dialogHolder.find('.size-holder');
+const adjustSize = function($dialogHolder) {
+  const $dialogWidget = $dialogHolder.dialog('widget');
+  const $controls = $dialogHolder.find('.event-controls');
+  const $scrollElement = $dialogHolder.find('.scroller');
+  const $dimensionElement = $dialogHolder.find('.size-holder');
 
-  const top = scrollElement.position().top
-        + dialogHolder.position().top;
-  const width = dimensionElement.outerWidth(true);
-  const height = dimensionElement.outerHeight(true);
+  const top = $scrollElement.position().top
+        + $dialogHolder.position().top;
+  const width = Math.max(
+    $dimensionElement.outerWidth(true),
+    $controls.outerWidth(true)
+  );
+  const height = $dimensionElement.outerHeight(true);
 
   // const width = dialogWidget.width();
   // const height = dialogWidget.height();
 
-  dialogWidget.innerHeight(top + height);
-  dialogWidget.innerWidth(width);
+  $dialogWidget.innerHeight(top + height);
+  $dialogWidget.innerWidth(width);
 
-  if (scrollElement.hasVerticalScrollbar()) {
-    const scroll = scrollElement.verticalScrollbarWidth();
+  if ($scrollElement.hasVerticalScrollbar()) {
+    const scroll = $scrollElement.verticalScrollbarWidth();
     if (scroll > 0) {
-      dialogWidget.innerWidth(width + scroll);
+      $dialogWidget.innerWidth(width + scroll);
     }
   }
 
-  if (scrollElement.hasHorizontalScrollbar()) {
-    const scroll = scrollElement.horizontalScrollbarHeight();
+  if ($scrollElement.hasHorizontalScrollbar()) {
+    const scroll = $scrollElement.horizontalScrollbarHeight();
     if (scroll > 0) {
-      dialogWidget.innerHeight(top + height + scroll);
+      $dialogWidget.innerHeight(top + height + scroll);
     }
   }
 
@@ -223,13 +255,13 @@ const relist = function(htmlContent, textStatus, xhr) {
   // globalState.Events.projectId = parseInt(xhr.getResponseHeader('X-' + appName + '-project-id'));
   // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
 
-  const events = $('#events');
-  const listing = events.find('#eventlistholder');
+  const $dialogHolder = $('#events');
+  const listing = $dialogHolder.find('#eventlistholder');
   listing.html(htmlContent);
 
-  /* Adjust dimensions to do proper scrolling. */
-  const dialogWidget = events.dialog('widget');
-  adjustSize(events, dialogWidget);
+  accordionList('.event-list-container', $dialogHolder);
+
+  adjustSize($dialogHolder);
 
   $.fn.cafevTooltip.remove();
 

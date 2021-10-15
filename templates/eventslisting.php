@@ -23,7 +23,7 @@
 use OCA\CAFEVDB\Common\Util;
 
 ?>
-<table id="table" class="nostyle listing size-holder">
+<div class="size-holder event-list-container">
 <?php
 
 $evtButtons = [
@@ -43,14 +43,22 @@ $evtButtons = [
 
 $n = 0;
 foreach ($eventMatrix as $key => $eventGroup) {
+  $class = [ 'listing', ];
   $dpyName = $eventGroup['name'];
-  $events   = $eventGroup['events'];
+  $events  = $eventGroup['events'];
   if (!empty($events)) {
-    echo "<tr><th colspan=\"4\">$dpyName</th></tr>";
+    // nothing
   } else if ($key >= 0) {
-    $noEvents = empty($events) ? $l->t('no events') : '';
-    echo "<tr><th colspan=\"4\">$dpyName ($noEvents)</th></tr>";
+    $dpyName .= ' (' . $l->t('no events') . ')';
+    $class[] = 'empty';
+  } else {
+    continue;
   }
+  echo '<h4 class="heading ' . implode(' ', $class). '">' . $dpyName . '</h4>';
+  echo '<div class="table-container">
+  <table class="' . implode(' ', $class) . '">
+    <tbody>
+';
   foreach ($eventGroup['events'] as $event) {
     $evtUri  = $event['uri'];
     $calId  = $event['calendarid'];
@@ -63,41 +71,45 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $description = $longDate.'<br/>'.$brief.$description;
 
     echo <<<__EOT__
-    <tr class="$cssClass step-$n">
-      <td class="eventbuttons">
-      <input type="hidden" id="calendarid-$evtUri" name="CalendarId[$evtUri]" value="$calId"/>
+      <tr class="$cssClass step-$n">
+        <td class="eventbuttons">
+          <input type="hidden" id="calendarid-$evtUri" name="CalendarId[$evtUri]" value="$calId"/>
 __EOT__;
     foreach ($evtButtons as $btn => $values) {
       $tag   = $values['tag'];
       $title = $values['title'];
       $name  = $tag."[$evtUri]";
       echo <<<__EOT__
-        <input class="$tag event-action"
-               id="$tag-$evtUri"
-               type="button"
-               name="$tag"
-               title="$title"
-               value="$evtUri"
-               data-calendar-id="$calId"
-        />
+          <input class="$tag event-action"
+                 id="$tag-$evtUri"
+                 type="button"
+                 name="$tag"
+                 title="$title"
+                 value="$evtUri"
+                 data-calendar-id="$calId"
+          />
 __EOT__;
     }
     $title = $toolTips['projectevents-selectevent'];
     $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
     $emailValue = Util::htmlEscape(json_encode([ 'uri' => $evtUri, 'calendarId' => $calId ]));
     echo <<<__EOT__
-      </td>
-      <td class="eventemail">
-        <label class="email-check" for="email-check-$evtUri"  title="$title" >
-        <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$emailValue" $checked />
-        <div class="email-check" /></label>
-      </td>
-      <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>
-      <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtUri" title="$description">$datestring</td>
-    </tr>
+        </td>
+        <td class="eventemail">
+          <label class="email-check" for="email-check-$evtUri"  title="$title" >
+          <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$emailValue" $checked />
+          <div class="email-check" /></label>
+        </td>
+        <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>
+        <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtUri" title="$description">$datestring</td>
+      </tr>
 __EOT__;
     $n = ($n + 1) & 1;
   }
+  echo '    </tbody>
+  </table>
+</div>
+';
 }
 ?>
-</table>
+</div>
