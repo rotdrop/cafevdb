@@ -234,6 +234,12 @@ const adjustSize = function($dialogHolder) {
   $dialogWidget.innerHeight(top + height);
   $dialogWidget.innerWidth(width);
 
+  if ($dimensionElement.outerHeight() <= $scrollElement.innerHeight()) {
+    $scrollElement.css('overflow', 'hidden');
+  } else {
+    $scrollElement.css('overflow', 'auto');
+  }
+
   if ($scrollElement.hasVerticalScrollbar()) {
     const scroll = $scrollElement.verticalScrollbarWidth();
     if (scroll > 0) {
