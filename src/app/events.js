@@ -71,6 +71,9 @@ const accordionList = function(selector, $dialogHolder) {
     activate(event, ui) {
       adjustSize($dialogHolder);
     },
+    create(event, ui) {
+      adjustSize($dialogHolder);
+    },
   });
 };
 
@@ -97,7 +100,7 @@ const init = function(htmlContent, textStatus, request) {
 
       accordionList('.event-list-container', $dialogHolder);
 
-      //revertTableRows($dialogHolder.find('table.listing'));
+      // revertTableRows($dialogHolder.find('table.listing'));
 
       /* Adjust dimensions to do proper scrolling. */
       adjustSize($dialogHolder);
