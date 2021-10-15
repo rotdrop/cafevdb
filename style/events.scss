@@ -250,25 +250,15 @@
     }
 
     tr.projectevents:hover td {
-      background-color: #9BAFC8;
+      background-color: #9BAFC8!important;
     }
 
-    tr.step-0 td.eventdata {
-      /*text-align:inherit;*/
+    tr.step-0 td {
       background:#B7CEEC;
-      /* vertical-align:middle; */
     }
 
-    tr.step-1 td.eventdata {
-      /*text-align:inherit;*/
+    tr.step-1 td {
       background:#C6DEFF;
-      /* vertical-align:middle; */
-    }
-
-    td.eventbuttons, td.eventemail {
-      /*text-align:left;*/
-      background:#C6DEFF;
-      /*vertical-align:middle;*/
     }
 
     td.eventdata-date {

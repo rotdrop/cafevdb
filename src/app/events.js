@@ -30,6 +30,7 @@ import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
+import { revertRows as revertTableRows } from './table-utils.js';
 import modalizer from './modalizer.js';
 
 require('jquery-ui/ui/widgets/accordion');
@@ -95,6 +96,8 @@ const init = function(htmlContent, textStatus, request) {
       const $dialogHolder = $(this);
 
       accordionList('.event-list-container', $dialogHolder);
+
+      //revertTableRows($dialogHolder.find('table.listing'));
 
       /* Adjust dimensions to do proper scrolling. */
       adjustSize($dialogHolder);
@@ -164,7 +167,6 @@ const init = function(htmlContent, textStatus, request) {
       $dialogHolder
         .off('cafevdb:events_changed')
         .on('cafevdb:events_changed', function(event, events) {
-          console.info('EVENTS', events);
           $.post(
             generateUrl('projects/events/redisplay'),
             {
@@ -216,7 +218,7 @@ const updateEmailForm = function(post, emailFormDialog) {
 
 const adjustSize = function($dialogHolder) {
   const $dialogWidget = $dialogHolder.dialog('widget');
-  const $controls = $dialogHolder.find('.event-controls');
+  const $controls = $dialogHolder.find('.eventcontrols');
   const $scrollElement = $dialogHolder.find('.scroller');
   const $dimensionElement = $dialogHolder.find('.size-holder');
 
@@ -327,7 +329,6 @@ const buttonClick = function(event) {
     post.push({ name: 'EventURI', value: $(this).val() });
 
     const really = globalState.Events.confirmText[name];
-    console.info('really', name, really);
     if (really !== undefined && really !== '') {
       // Attention: dialogs do not block, so the action needs to be
       // wrapped into the callback.
