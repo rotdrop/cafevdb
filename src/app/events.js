@@ -53,7 +53,7 @@ const accordionList = function(selector, $dialogHolder) {
   const $element = $dialogHolder.find(selector);
   if ($element.find('tr').length <= 10) {
     // FIXME: this should perhaps be decided in the template or elsewhere.
-    return;
+    return false;
   }
   $element.accordion({
     heightStyle: 'content',
@@ -75,6 +75,7 @@ const accordionList = function(selector, $dialogHolder) {
       adjustSize($dialogHolder);
     },
   });
+  return true;
 };
 
 const init = function(htmlContent, textStatus, request) {
@@ -98,12 +99,18 @@ const init = function(htmlContent, textStatus, request) {
       // $.fn.cafevTooltip.remove();
       const $dialogHolder = $(this);
 
-      accordionList('.event-list-container', $dialogHolder);
+      $dialogHolder.find('table.listing').each(function(index) {
+        // sort newest-first for large numbers of events.
+        const $table = $(this);
+        if ($table.find('tr').length > 10) {
+          revertTableRows($table);
+        }
+      });
 
-      // revertTableRows($dialogHolder.find('table.listing'));
-
-      /* Adjust dimensions to do proper scrolling. */
-      adjustSize($dialogHolder);
+      if (!accordionList('.event-list-container', $dialogHolder)) {
+        /* Adjust dimensions to do proper scrolling. */
+        adjustSize($dialogHolder);
+      }
 
       const eventForm = $dialogHolder.find('#eventlistform');
       const eventMenu = eventForm.find('select.event-menu');
@@ -270,9 +277,17 @@ const relist = function(htmlContent, textStatus, xhr) {
   const listing = $dialogHolder.find('#eventlistholder');
   listing.html(htmlContent);
 
-  accordionList('.event-list-container', $dialogHolder);
+  $dialogHolder.find('table.listing').each(function(index) {
+    // sort newest-first for large numbers of events.
+    const $table = $(this);
+    if ($table.find('tr').length > 10) {
+      revertTableRows($table);
+    }
+  });
 
-  adjustSize($dialogHolder);
+  if (!accordionList('.event-list-container', $dialogHolder)) {
+    adjustSize($dialogHolder);
+  }
 
   $.fn.cafevTooltip.remove();
 
