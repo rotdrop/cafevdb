@@ -227,7 +227,7 @@ class ProjectParticipantFieldsController extends Controller {
             $this->l->t('No management option in field "%s".', $field->getName()));
         }
 
-        // if we have a start date, then set it as time-stampe into
+        // if we have a start date, then set it as time-stamp into
         // the limit-field of the management option
         if (!empty($data['startDate'])) {
           /** @var \DateTimeInterface $managementDate */
