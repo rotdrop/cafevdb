@@ -99,9 +99,10 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $deposit;
 
   /**
-   * @var int
-   * Limit on number of group members for
-   * Multiplicity::GROUPSOFPEOPLE, Multiplicity::GROUPOFPEOPLE fields.
+   * @var int Limit on number of group members for
+   * Multiplicity::GROUPSOFPEOPLE, Multiplicity::GROUPOFPEOPLE
+   * fields. Misused as starting date for recurring receivables
+   * generators.
    *
    * @ORM\Column(type="bigint", nullable=true)
    */
