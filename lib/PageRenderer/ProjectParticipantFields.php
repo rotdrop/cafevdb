@@ -49,6 +49,8 @@ use OCA\CAFEVDB\Common\Uuid;
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   const TEMPLATE = 'project-participant-fields';
   const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;
   const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
@@ -919,8 +921,8 @@ __EOT__;
      */
 
     $tag = 'default_multi_value';
-    if ($newvals['multiplicity'] === 'multiple' ||
-        $newvals['multiplicity'] === 'parallel') {
+    if ($newvals['multiplicity'] === Multiplicity::MULTIPLE ||
+        $newvals['multiplicity'] === Multiplicity::PARALLEL) {
       $value = $newvals[$tag]??null;
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
     }
@@ -1084,6 +1086,11 @@ __EOT__;
 
         // sanitize
         $allowed[-1]['data'] = $this->participantFieldsService->resolveReceivableGenerator($allowed[-1]['data']);
+
+        // limit is the start date, convert to time-stamp
+        $newStartDate = self::convertToDateTime($allowed[-1]['limit']);
+        $allowed[-1]['limit'] = empty($newStartDate) ? null : $newStartDate->getTimestamp();
+
 
         // re-index
         $allowed = array_values($allowed);
@@ -1393,7 +1400,7 @@ __EOT__;
       title="'.$this->toolTipsService['participant-fields-data-options:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
       size="33"
-      maxlength="32"
+      maxlength="1024"
       '.(empty($generator) ? '' : 'readonly="readonly"').'
     />';
     foreach (['key', 'limit', 'deposit', 'label', 'tooltip'] as $prop) {

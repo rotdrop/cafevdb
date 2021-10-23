@@ -84,6 +84,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $label;
 
   /**
+   * Multi-purpose field. For Multiplicity::RECURRING the PHP class
+   * name of the generator class.
+   *
    * @var string
    *
    * @ORM\Column(type="string", length=1024, nullable=true)
