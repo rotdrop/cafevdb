@@ -117,7 +117,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
     for ($year = $startingYear; $year <= $endingYear; ++$year) {
-      if ($receivableOptions->matching(self::criteriaWhere(['data' => $year]))->count() == 0) {
+      if ($receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]))->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
