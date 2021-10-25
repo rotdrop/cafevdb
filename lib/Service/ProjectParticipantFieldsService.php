@@ -714,6 +714,15 @@ class ProjectParticipantFieldsService
         $field->setDefaultValue(null);
         //$this->flush();
       }
+
+      /** @var Entities\ProjectParticipantFieldDatum $datum */
+      foreach ($option->getFieldData() as $datum) {
+        if ($datum->unused()) {
+          $this->remove($datum, true);
+        }
+        $this->remove($datum, true);
+      }
+
       if ($option->unused()) {
         $this->remove($option, true);
       } else {
