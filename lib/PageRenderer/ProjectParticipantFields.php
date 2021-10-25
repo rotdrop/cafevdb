@@ -1220,11 +1220,11 @@ __EOT__;
     $html .= '<td class="operations">
   <input
     class="operation delete-undelete notnot-multiplicity-recurring"
-    title="'.$this->toolTipsService['participant-fields-data-options:delete-undelete'].'"
+    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:delete-undelete']).'"
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
-    title="'.$this->toolTipsService['participant-fields-data-options:regenerate'].'"
+    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:regenerate']).'"
     '.($deleted ? ' disabled' : '').'
     type="button"/>
     </td>';
@@ -1237,7 +1237,7 @@ __EOT__;
           .' class="field-key expert-mode-only"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' size="9"'
           .' maxlength="8"'
           .'/>'
@@ -1258,7 +1258,7 @@ __EOT__;
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' size="33"'
           .' maxlength="32"'
           .'/>'
@@ -1271,7 +1271,7 @@ __EOT__;
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1292,7 +1292,7 @@ __EOT__;
           .' required'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1304,7 +1304,7 @@ __EOT__;
           .' type="number"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1315,7 +1315,7 @@ __EOT__;
           .($deleted ? ' readonly="readonly"' : '')
           .' class="field-'.$prop.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
+          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' cols="32"'
           .' rows="1"'
           .'>'
@@ -1354,7 +1354,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1][label]"
       value=""
-      title="'.$this->toolTipsService['participant-fields-data-options:placeholder'].'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:placeholder']).'"
       placeholder="'.$this->l->t('new option').'"
       size="33"
       maxlength="32"
@@ -1385,7 +1385,7 @@ __EOT__;
   <td class="operations">
     <input
       class="operation generator-run"
-      title="'.$this->toolTipsService['participant-fields-data-options:generator-run'].'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator-run']).'"
       type="button"
       '.(empty($generator) ? 'disabled' : '').'
     />
@@ -1397,7 +1397,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
-      title="'.$this->toolTipsService['participant-fields-data-options:generator'].'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator']).'"
       placeholder="'.$this->l->t('field generator').'"
       size="33"
       maxlength="1024"
@@ -1421,7 +1421,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1]['.$prop.']"
       value="'.$value.'"
-      title="'.$this->toolTipsService['participant-fields-data-options:generator-startdate'].'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator-startdate']).'"
       placeholder="'.$this->l->t('start date').'"
       size="10"
       maxlength="10"
@@ -1474,9 +1474,9 @@ __EOT__;
       // controls for showing soft-deleted options or normally
       // unneeded inputs
       $showDeletedLabel = $this->l->t("Show deleted items.");
-      $showDeletedTip = $this->toolTipsService['participant-fields-show-deleted'];
+      $showDeletedTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-deleted']);
       $showDataLabel = $this->l->t("Show data-fields.");
-      $showDataTip = $this->toolTipsService['participant-fields-show-data'];
+      $showDataTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-data']);
       $html .=<<<__EOT__
 <div class="field-display-options notnot-multiplicity-recurring">
   <div class="show-deleted">
@@ -1549,7 +1549,7 @@ __EOT__;
       $html .=
             '<th'
             .' class="'.$css.'"'
-            .' title="'.$this->toolTipsService['participant-fields-data-options:'.$key].'"'
+            .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$key]).'"'
             .'>'
             .$value
             .'</th>';
