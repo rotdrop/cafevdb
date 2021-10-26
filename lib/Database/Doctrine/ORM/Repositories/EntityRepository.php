@@ -23,9 +23,35 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Translation as TranslationEntity;
+use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository;
+
 class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+
+  /** @var TranslationRepository */
+  protected $translationRepository;
+
+  /**
+   * Convenience, forward potential translation attempts to the
+   * underlying translation backend. The idea is to hide the underlying backend.
+   *
+   * @param object $entity
+   * @param string $field
+   * @param string $locale
+   * @param mixed  $value
+   *
+   * @return EntityRepository $this
+   */
+  public function translate($entity, string $field, string $locale, $value)
+  {
+    if (empty($this->translationRepository)) {
+      $this->translationRepository = $this->getEntityManager()->getRepository(TranslationEntity::class);
+    }
+    $this->translationRepository->translate($entity, $field, $locale, $value);
+    return $this;
+  }
 }
 
 // Local Variables: ***
