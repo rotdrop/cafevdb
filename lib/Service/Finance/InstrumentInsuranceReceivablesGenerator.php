@@ -117,27 +117,30 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
     for ($year = $startingYear; $year <= $endingYear; ++$year) {
+      $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
+      $tooltipTemplate = $this->toolTipsService['instrument-insurance-annual-service-fee']??'';
+      $tooltipText = $this->l->t($tooltipTemplate);
       $yearReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]));
       if ($yearReceivables->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
                     ->setKey(Uuid::create())
-                    ->setLabel($this->l->t('Insurance Fee %d', $year))
-                    ->setToolTip($this->toolTipsService['instrument-insurance-annual-service-fee'])
+                    ->setLabel($labelText)
+                    ->setToolTip($tooltipText)
                     ->setData($year) // may change in the future
                     ->setLimit(null); // may change in the future
         $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
       } else {
         // update display things, but keep the essential data untouched
         /** @var Entities\ProjectParticipantFieldDataOption $receivable */
-        foreach ($yearReceivables as $receivable) {
-          $receivable->setLabel($this->l->t('Insurance Fee %d', $year))
-                     ->setTooltip($this->toolTipsService['instrument-insurance-annual-service-fee']);
-        }
+        $receivable = $yearReceivables->first();
+        $receivable->setLabel($labelText)
+                   ->setTooltip($tooltipText);
       }
+      $this->insurancesRepository->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
+                                 ->translate($receivable, 'tooltip', null, $tooltipTemplate);
     }
-
     return $this->serviceFeeField->getSelectableOptions();
   }
 
@@ -146,7 +149,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
    */
   protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
-    // @todo
+    // cook-book:
     // * find list of insurance years
     // * walk years from start until now
     //   - add missing items if insurance fee != 0

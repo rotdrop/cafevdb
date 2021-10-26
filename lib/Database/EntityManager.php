@@ -511,7 +511,7 @@ class EntityManager extends EntityManagerDecorator
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
     $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
-    $translatableListener->setDefaultLocale('en_US');
+    $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
     $translatableListener->setAnnotationReader($cachedAnnotationReader);

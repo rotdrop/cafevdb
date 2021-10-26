@@ -23,8 +23,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Translation as TranslationEntity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TableFieldTranslation as TranslationEntity;
 use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository;
+
+use OCA\CAFEVDB\Service\ConfigService;
 
 class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository
 {
@@ -39,15 +41,18 @@ class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepositor
    *
    * @param object $entity
    * @param string $field
-   * @param string $locale
+   * @param string|null $locale If null the default locale is used.
    * @param mixed  $value
    *
    * @return EntityRepository $this
    */
-  public function translate($entity, string $field, string $locale, $value)
+  public function translate($entity, string $field, ?string $locale, $value)
   {
     if (empty($this->translationRepository)) {
       $this->translationRepository = $this->getEntityManager()->getRepository(TranslationEntity::class);
+    }
+    if (empty($locale)) {
+      $locale = ConfigService::DEFAULT_LOCALE;
     }
     $this->translationRepository->translate($entity, $field, $locale, $value);
     return $this;

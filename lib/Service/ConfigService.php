@@ -66,6 +66,8 @@ class ConfigService {
   const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
   const DEBUG_NONE      = 0;
 
+  const DEFAULT_LOCALE = 'en_US';
+
   /*
    ****************************************************************************
    *
