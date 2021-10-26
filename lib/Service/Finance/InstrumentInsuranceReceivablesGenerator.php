@@ -117,7 +117,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
     for ($year = $startingYear; $year <= $endingYear; ++$year) {
-      if ($receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]))->count() == 0) {
+      $yearReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]));
+      if ($yearReceivables->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
@@ -127,6 +128,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
                     ->setData($year) // may change in the future
                     ->setLimit(null); // may change in the future
         $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+      } else {
+        // update display things, but keep the essential data untouched
+        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+        foreach ($yearReceivables as $receivable) {
+          $receivable->setLabel($this->l->t('Insurance Fee %d', $year))
+                     ->setTooltip($this->toolTipsService['instrument-insurance-annual-service-fee']);
+        }
       }
     }
 
