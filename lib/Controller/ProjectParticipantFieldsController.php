@@ -274,6 +274,60 @@ class ProjectParticipantFieldsController extends Controller {
             $managementOption->getLimit(), 'medium'),
           'dataOptionFormInputs' => $inputRows,
         ]);
+      case self::REQUEST_SUB_TOPIC_REGENERATE:
+        foreach (['fieldId'] as $parameter) {
+          if (empty($data[$parameter])) {
+            return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
+                                             [ $topic, $parameter ]));
+          }
+        }
+
+        // fetch the field
+        $fieldId = $data['fieldId'];
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+        }
+
+        $fieldsAffected = 0;
+        $messages = [];
+        $this->entityManager->beginTransaction();
+        try {
+          /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
+          $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+          if (empty($generator)) {
+            throw new \RuntimeException(
+              $this->l->t('Unable to load generator for recurring receivables "%s".',
+                          $field->getName()));
+          }
+
+          /** @todo Make strategy selectable from UI */
+          list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
+                       $generator->updateAll(ReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION);
+          $this->flush();
+
+          $messages[] = $this->l->t(
+            'Field "%s", options addded/removed/changed: %d/%d/%d.',
+            [ $field->getName(), $added, $removed, $changed ]);
+          $fieldsAffected += $added + $removed + $changed;
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        return self::dataResponse([
+          'message' => $messages,
+          'fieldsAffected' => $fieldsAffected,
+        ]);
+
+        break;
       case self::REQUEST_SUB_TOPIC_RUN_ALL:
         // for the given project (re-)generate all generated receivables
         foreach (['projectId'] as $parameter) {

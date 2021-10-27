@@ -211,11 +211,14 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('click', 'tr.data-options input.regenerate', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    const key = row.find('input.field-key').val();
-    const cleanup = function() {};
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const key = $row.find('input.field-key').val();
+    const cleanup = function() {
+      $self.removeClass('busy');
+    };
     const request = 'option/regenerate';
+    $self.addClass('busy');
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -236,13 +239,44 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
+  container.on('click', 'tr.data-options input.regenerate-all', function(event) {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = $row.data('fieldId');
+    const cleanup = function() {
+      $self.removeClass('busy');
+    };
+    const request = 'generator/regenerate';
+    $self.addClass('busy');
+    $.post(
+      generateUrl('projects/participant-fields/' + request), {
+        data: {
+          fieldId,
+        },
+      })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, cleanup);
+      })
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, ['fieldsAffected'], cleanup)) {
+          return;
+        }
+        Notification.messages(data.message);
+        cleanup();
+      });
+    return false;
+  });
+
   container.on('click', 'tr.data-options input.generator-run', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    const fieldId = row.data('fieldId');
-    const cleanup = function() {};
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = $row.data('fieldId');
+    const cleanup = function() {
+      $self.removeClass('busy');
+    };
     const request = 'generator/run';
-    const startDate = self.closest('tr').find('.field-limit');
+    const startDate = $self.closest('tr').find('.field-limit');
+    $self.addClass('busy');
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -257,7 +291,7 @@ const ready = function(selector, resizeCB) {
         if (!Ajax.validateResponse(data, ['startDate', 'dataOptionFormInputs'], cleanup)) {
           return;
         }
-        const body = self.closest('tbody');
+        const body = $self.closest('tbody');
         body.find('tr').not('.generator, .placeholder').remove();
         body.parents('table').find('thead').show();
         const tail = body.children().first();
@@ -274,38 +308,38 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('click', 'tr.data-options input.delete-undelete', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    let used = row.data('used');
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    let used = $row.data('used');
     used = !(!used || used === 'unused');
-    if (row.data('deleted') !== '') {
+    if ($row.data('deleted') !== '') {
       // undelete
-      row.data('deleted', '');
-      row.switchClass('deleted', 'active');
-      row.find('input.field-deleted').val('');
-      row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
-      row.find('input.operation').prop('disabled', false);
-      const key = row.find('input.field-key');
-      const label = row.find('input.field-label');
+      $row.data('deleted', '');
+      $row.switchClass('deleted', 'active');
+      $row.find('input.field-deleted').val('');
+      $row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
+      $row.find('input.operation').prop('disabled', false);
+      const key = $row.find('input.field-key');
+      const label = $row.find('input.field-label');
       const dfltSelect = container.find('select.default-multi-value');
       const option = '<option value="' + key.val() + '">' + label.val() + '</option>';
       dfltSelect.children('option').first().after(option);
       dfltSelect.trigger('chosen:updated');
     } else {
-      const key = row.find('input.field-key').val();
+      const key = $row.find('input.field-key').val();
       if (!used) {
         // just remove the row
-        row.remove();
+        $row.remove();
         $.fn.cafevTooltip.remove();
         allowedHeaderVisibility();
         resizeCB();
       } else {
         // must not delete, mark as inactive
-        row.data('deleted', Date.now() / 1000.0);
-        row.switchClass('active', 'deleted');
-        row.find('input.field-deleted').val(row.data('deleted'));
-        row.find('input[type="text"], textarea').prop('readonly', true);
-        row.find('input.operation.regenerate').prop('disabled', true);
+        $row.data('deleted', Date.now() / 1000.0);
+        $row.switchClass('active', 'deleted');
+        $row.find('input.field-deleted').val($row.data('deleted'));
+        $row.find('input[type="text"], textarea').prop('readonly', true);
+        $row.find('input.operation.regenerate').prop('disabled', true);
       }
       const dfltSelect = container.find('select.default-multi-value');
       dfltSelect.find('option[value="' + key + '"]').remove();

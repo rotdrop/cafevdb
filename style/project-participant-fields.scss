@@ -84,35 +84,49 @@ table.pme-main tr.multiplicity {
     display:none;
   }
 }
-.project-participant-fields table.pme-main tr:not(.pme-filter) .chosen-container {
+
+.project-participant-fields table.pme-main {
+  tr:not(.pme-filter) .chosen-container {
     box-sizing:border-box;
     min-width:50%;
-}
-.project-participant-fields table.pme-main tr.data-options td {
-    input, textarea {
-        vertical-align:middle;
+  }
+  tr.data-options {
+    &.generator {
+      border-top: 1px solid black;
     }
-}
-.project-participant-fields table.pme-main tr.data-options td.operations input.operation {
-    background-repeat:no-repeat;
-    background-size: 24px 24px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    vertical-align:middle;
-    margin-right:1em;
-}
-.project-participant-fields table.pme-main tr.data-options input.regenerate {
-    background-image:url('../img/reload-solid.svg');
-}
-.project-participant-fields table.pme-main tr.data-options.active input.generator-run {
-    background-image:url('../../../core/img/actions/play.svg');
-}
-.project-participant-fields table.pme-main tr.data-options.active input.delete-undelete {
-    background-image:url('../img/cafevdb-delete.svg');
-}
-.project-participant-fields table.pme-main tr.data-options.deleted input.delete-undelete {
-    background-image:url('../img/history.svg');
+    td {
+      input, textarea {
+        vertical-align:middle;
+      }
+    }
+    td.operations input.operation {
+      background-repeat:no-repeat;
+      background-size: 24px 24px;
+      background-position: center;
+      width:28px;
+      height:28px;
+      vertical-align:middle;
+      margin-right:1em;
+      &.regenerate {
+        background-image:url('../img/reload-solid.svg');
+      }
+      &.regenerate-all {
+        background-image:url('../img/reload-solid.svg');
+      }
+      &.generator-run {
+        background-image:url('../../../core/img/actions/play.svg');
+      }
+      &.delete-undelete {
+        background-image:url('../img/cafevdb-delete.svg');
+      }
+      &.busy {
+        background-image:url('../../../core/img/loading.gif') !important;
+      }
+    }
+    &.deleted td.operations input.delete-undelete {
+      background-image:url('../img/history.svg');
+    }
+  }
 }
 form.pme-form.pme-copyadd .show-deleted {
     display:none;
