@@ -1706,6 +1706,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *   SQL_TABLE_NAME = [
    *     'table' => SQL_TABLE_NAME, // optional, will be added if not present
    *     'entity' => ENTITY_CLASS_NAME,
+   *     'sql' => OPTIONAL_SUBQUERY_OR_CALLABLE_RETURNING_SUBQUERY,
    *     'flags'  => self::JOIN_READONLY|self::JOIN_MASTER|self::JOIN_REMOVE_EMPTY|self::JOIN_GROUP_BY
    *     'identifier' => [
    *        COLUMN_NAME => ID_COLUMN_DESCRIPTION, // see below
@@ -1765,7 +1766,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $joinTables[$table] = 'PMEtable0';
         continue;
       }
-      $valuesTable = $joinInfo['sql'] ?? explode(self::VALUES_TABLE_SEP, $table)[0];
+      if (!empty($joinInfo['sql'])) {
+        if (is_callable($joinInfo['sql'])) {
+          $valueTable = call_user_func($joinInfo['sql'], $joinInfo);
+        } else {
+          $valuesTable = $joinInfo['sql'];
+        }
+      } else {
+        $valuesTable = explode(self::VALUES_TABLE_SEP, $table)[0];
+      }
 
       $opts['fdd'] = $opts['fdd'] ?? [];
       $joinIndex[$table] = count($opts['fdd']);
@@ -2113,20 +2122,33 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
     }
     $entity = addslashes($joinInfo['entity']);
-    if (count($joinInfo['identifier']) > 1) {
-      throw new \RuntimeException($this->l->t('Composite keys are not yet supported for translated database table fields.'));
-    }
-    $id = array_keys($joinInfo['identifier'])[0];
+    // if (count($joinInfo['identifier']) > 1) {
+    //   throw new \RuntimeException($this->l->t('Composite keys are not yet supported for translated database table fields.'));
+    // }
+    // $id = array_keys($joinInfo['identifier'])[0];
     $lang = $this->l10n()->getLanguageCode();
     $l10nJoins = [];
     foreach ($fields as $field) {
       $jt = 'jt_'.$field;
-      $l10nJoins[] = "  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." $jt
+      $l10nJoin = "  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." $jt
   ON $jt.locale = '$lang'
     AND $jt.object_class = '$entity'
     AND $jt.field = '$field'
-    AND $jt.foreign_key = t.$id
-";
+    AND $jt.foreign_key =";
+      if (count($joinInfo['identifier']) > 1) {
+        $l10nJoin .= " CONCAT_WS(' ', ";
+      }
+      $l10nJoin .= implode(' ,', array_map(function($id) use ($joinInfo) {
+        $column = 't.' . $id;
+        if ($id === $joinInfo['column'] && !empty($joinInfo['encode'])) {
+          $column = sprintf($joinInfo['encode'], $column);
+        }
+        return $column;
+      }, array_keys($joinInfo['identifier'])));
+      if (count($joinInfo['identifier']) > 1) {
+        $l10nJoin .= ')';
+      }
+      $l10nJoins[] = $l10nJoin;
     }
     $table = explode(self::VALUES_TABLE_SEP, $joinInfo['table'])[0];
     $query = 'SELECT t.*, '.implode(', ', $l10nFields).'

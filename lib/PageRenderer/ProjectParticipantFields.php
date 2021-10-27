@@ -58,6 +58,12 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
 
+  /**
+   * @var string
+   * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
+   */
+  protected $optionsTable;
+
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
@@ -216,16 +222,19 @@ class ProjectParticipantFields extends PMETableViewBase
       ],
     ];
 
-    /************************************************************************
-     *
-     * Bug: the following is just too complicated.
-     *
-     * Goal:
-     * Display a list of projects, sorted by year, then by name, constraint:
-     *
-     */
 
     // field definitions
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
+      switch ($table) {
+      case self::OPTIONS_TABLE:
+        $this->optionsTable =
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, ['label', 'tooltip']);
+        break;
+      default:
+        break;
+      }
+    });
 
     $joinTables = $this->defineJoinStructure($opts);
 
@@ -406,11 +415,11 @@ class ProjectParticipantFields extends PMETableViewBase
       'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
   JSON_OBJECT(
     "key", BIN2UUID($join_table.key)
-    , "label", $join_table.label
+    , "label", $join_table.l10n_label
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
-    , "tooltip", $join_table.tooltip
+    , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
 ) ORDER BY $join_table.label ASC, $join_table.data ASC),"]")',
       'values' => [
@@ -592,11 +601,11 @@ __EOT__;
       'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
       'select' => 'D', // @todo should be multi for "parallel".
       'values' => [
-        'table' => self::OPTIONS_TABLE,
+        'table' => $this->optionsTable,
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
         'description' => [
-          'columns' => [ 'label' ],
+          'columns' => [ 'l10n_label' ],
           'cast' => [ false ],
         ],
         'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
@@ -618,10 +627,10 @@ __EOT__;
       'values2|A' => [ 0 => $this->l->t('no'), 1 => $this->l->t('yes') ],
       'default' => false,
       'values' => [
-        'table' => self::OPTIONS_TABLE,
+        'table' => $this->optionsTable,
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
-        'description' => 'IFNULL($table.label, \''.$this->l->t('yes').'\')',
+        'description' => 'IFNULL($table.l10n_label, \''.$this->l->t('yes').'\')',
         'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_col_fqn = $main_table.default_value',
       ],
@@ -639,7 +648,7 @@ __EOT__;
       'select' => 'D',
       'values2|ACP' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
       'values' => [
-        'table' => self::OPTIONS_TABLE,
+        'table' => $this->optionsTable,
         'column' => 'data',
         'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
         'join' => '$join_table.field_id = $main_table.id',
@@ -1383,6 +1392,13 @@ __EOT__;
   ).'\'
   data-field-id="'.$fieldId.'">
   <td class="operations">
+    <input
+      class="operation regenerate-all"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:regenerate-all']).'"
+      '.($deleted ? ' disabled' : '').'
+      type="button"
+      '.(empty($generator) ? 'disabled' : '').'
+    />
     <input
       class="operation generator-run"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator-run']).'"
