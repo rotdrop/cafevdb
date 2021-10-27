@@ -340,7 +340,7 @@ make sure that the musicians are also automatically added to the
       }
     });
 
-    // must come after the key-def fdd
+    // @todo still true? must come after the key-def fdd
     $joinTables = $this->defineJoinStructure($opts);
 
     $bval = strval($this->l->t('Add to %s', [ $projectName ]));
