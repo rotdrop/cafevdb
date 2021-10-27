@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -156,19 +157,20 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     //   - remove items without payment when insurance fee == 0
     //   - update all existing items with newly computed insurance sum
 
-    $year = $receivable->getLimit();
+    $year = $receivable->getData();
     /** @var Entities\Musician $musician */
     $musician = $participant->getMusician();
     /** @var Entities\Project $project */
     $project = $participant->getProject();
 
     // "now" should in principle just do ...
-    $referenceDate = new \DateTimeImmutable(); // $year.'-06-01');
+    $referenceDate = new \DateTimeImmutable($year.'-06-01');
 
     // Compute the actual fee
     $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
 
     // Generate the overview letter as supporting document
+    // @todo: use new OpenDocument stuff
     $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
     $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
     $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
@@ -210,9 +212,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         case self::UPDATE_STRATEGY_REPLACE:
           break;
         case self::UPDATE_STRATEGY_EXCEPTION:
-          throw new \RuntimeException(
-            $this->l->t('Data inconsistency, old fee %f, new fee %f.',
-                        [ (float)$datum->getOptionValue(), $fee ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.',
+                        [ $musician->getPublicName(true), $year, $this->moneyValue((float)$datum->getOptionValue()), $this->moneyValue($fee) ]));
           break;
         default:
           throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
