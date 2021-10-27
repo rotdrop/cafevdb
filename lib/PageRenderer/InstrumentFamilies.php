@@ -151,7 +151,7 @@ class InstrumentFamilies extends PMETableViewBase
       );
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'id' => int ];
+    $opts['key'] = [ 'id' => 'int' ];
 
     // Sorting field(s)
     $opts['sort_field'] = [ 'Family' ];
