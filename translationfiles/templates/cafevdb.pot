@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-27 12:21+0200\n"
+"POT-Creation-Date: 2021-10-28 10:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -316,7 +316,7 @@ msgid "TO BE IMPLEMENTED"
 msgstr ""
 
 #: lib/Controller/ExpertModeController.php:152
-#: lib/PageRenderer/ProjectParticipantFields.php:1484
+#: lib/PageRenderer/ProjectParticipantFields.php:1489
 #: templates/expertmode.php:117
 #: templates/expertmode.php:118
 msgid "empty"
@@ -443,8 +443,8 @@ msgstr ""
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:216
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1290
 #: lib/PageRenderer/Instruments.php:377
-#: lib/Service/Finance/InstrumentInsuranceService.php:806
-#: lib/Service/Finance/InstrumentInsuranceService.php:810
+#: lib/Service/Finance/InstrumentInsuranceService.php:834
+#: lib/Service/Finance/InstrumentInsuranceService.php:838
 #: lib/Service/PhoneNumberService.php:88
 #: lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:43
@@ -2269,8 +2269,8 @@ msgstr ""
 #: lib/EmailForm/Composer.php:781
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:274
 #: lib/PageRenderer/ProjectParticipantFields.php:458
-#: lib/PageRenderer/ProjectParticipantFields.php:1546
-#: lib/PageRenderer/ProjectParticipantFields.php:1555
+#: lib/PageRenderer/ProjectParticipantFields.php:1551
+#: lib/PageRenderer/ProjectParticipantFields.php:1560
 msgid "Deposit"
 msgstr ""
 
@@ -2663,7 +2663,7 @@ msgstr ""
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:119
 #: lib/PageRenderer/InstrumentInsurances.php:403
-#: lib/Service/Finance/InstrumentInsuranceService.php:662
+#: lib/Service/Finance/InstrumentInsuranceService.php:690
 msgid "Manufacturer"
 msgstr ""
 
@@ -2711,7 +2711,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:371
 #: lib/PageRenderer/ProjectParticipantFields.php:575
 #: lib/PageRenderer/ProjectParticipantFields.php:741
-#: lib/PageRenderer/ProjectParticipantFields.php:1480
+#: lib/PageRenderer/ProjectParticipantFields.php:1485
 #: templates/pme-table.php:73
 msgid "false"
 msgstr ""
@@ -2765,7 +2765,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:372
 #: lib/PageRenderer/ProjectParticipantFields.php:575
 #: lib/PageRenderer/ProjectParticipantFields.php:740
-#: lib/PageRenderer/ProjectParticipantFields.php:1480
+#: lib/PageRenderer/ProjectParticipantFields.php:1485
 msgid "true"
 msgstr ""
 
@@ -3135,12 +3135,12 @@ msgid "Broker"
 msgstr ""
 
 #: lib/PageRenderer/InsuranceRates.php:158
-#: lib/Service/Finance/InstrumentInsuranceService.php:660
+#: lib/Service/Finance/InstrumentInsuranceService.php:688
 msgid "Scope"
 msgstr ""
 
 #: lib/PageRenderer/InsuranceRates.php:167
-#: lib/Service/Finance/InstrumentInsuranceService.php:664
+#: lib/Service/Finance/InstrumentInsuranceService.php:692
 msgid "Rate"
 msgstr ""
 
@@ -3596,8 +3596,8 @@ msgid "Default"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:438
-#: lib/PageRenderer/ProjectParticipantFields.php:1545
-#: lib/PageRenderer/ProjectParticipantFields.php:1554
+#: lib/PageRenderer/ProjectParticipantFields.php:1550
+#: lib/PageRenderer/ProjectParticipantFields.php:1559
 msgid "Data"
 msgstr ""
 
@@ -3624,8 +3624,8 @@ msgid "replace"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:667
-#: lib/PageRenderer/ProjectParticipantFields.php:1548
-#: lib/PageRenderer/ProjectParticipantFields.php:1557
+#: lib/PageRenderer/ProjectParticipantFields.php:1553
+#: lib/PageRenderer/ProjectParticipantFields.php:1562
 msgid "Tooltip"
 msgstr ""
 
@@ -3672,46 +3672,46 @@ msgstr ""
 msgid "new option"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1417
+#: lib/PageRenderer/ProjectParticipantFields.php:1422
 msgid "field generator"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1441
+#: lib/PageRenderer/ProjectParticipantFields.php:1446
 msgid "start date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1492
+#: lib/PageRenderer/ProjectParticipantFields.php:1497
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1494
+#: lib/PageRenderer/ProjectParticipantFields.php:1499
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1543
-#: lib/PageRenderer/ProjectParticipantFields.php:1552
+#: lib/PageRenderer/ProjectParticipantFields.php:1548
+#: lib/PageRenderer/ProjectParticipantFields.php:1557
 msgid "Key"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1544
-#: lib/PageRenderer/ProjectParticipantFields.php:1553
+#: lib/PageRenderer/ProjectParticipantFields.php:1549
+#: lib/PageRenderer/ProjectParticipantFields.php:1558
 msgid "Label"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1547
+#: lib/PageRenderer/ProjectParticipantFields.php:1552
 msgid "Start Date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1556
+#: lib/PageRenderer/ProjectParticipantFields.php:1561
 msgid "Limit"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1771
+#: lib/PageRenderer/ProjectParticipantFields.php:1776
 #: lib/PageRenderer/ProjectPayments.php:380
 #: lib/PageRenderer/ProjectPayments.php:389
 #: lib/PageRenderer/SepaBankAccounts.php:388
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: lib/Service/Finance/InstrumentInsuranceService.php:663
+#: lib/Service/Finance/InstrumentInsuranceService.php:691
 msgid "Amount"
 msgstr ""
 
@@ -4561,12 +4561,12 @@ msgstr ""
 msgid "Insurance Fee %d"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:216
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:213
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:220
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:229
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr ""
@@ -4577,16 +4577,16 @@ msgstr ""
 msgid "insurance"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:541
+#: lib/Service/Finance/InstrumentInsuranceService.php:569
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:545
+#: lib/Service/Finance/InstrumentInsuranceService.php:573
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:560
+#: lib/Service/Finance/InstrumentInsuranceService.php:588
 #: templates/instrument-insurance.php:55
 #: templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62
@@ -4594,17 +4594,17 @@ msgstr ""
 msgid "treasurer"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:582
+#: lib/Service/Finance/InstrumentInsuranceService.php:610
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:583
+#: lib/Service/Finance/InstrumentInsuranceService.php:611
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:588
+#: lib/Service/Finance/InstrumentInsuranceService.php:616
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -4615,48 +4615,48 @@ msgid ""
 "if something changes."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:596
+#: lib/Service/Finance/InstrumentInsuranceService.php:624
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:609
+#: lib/Service/Finance/InstrumentInsuranceService.php:637
 msgid "Annual amount excluding taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:613
-#: lib/Service/Finance/InstrumentInsuranceService.php:753
+#: lib/Service/Finance/InstrumentInsuranceService.php:641
+#: lib/Service/Finance/InstrumentInsuranceService.php:781
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:617
+#: lib/Service/Finance/InstrumentInsuranceService.php:645
 msgid "Total amount to pay"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:627
+#: lib/Service/Finance/InstrumentInsuranceService.php:655
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:628
+#: lib/Service/Finance/InstrumentInsuranceService.php:656
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
 "fee. Partial insurance years are rounded up to full months."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:630
+#: lib/Service/Finance/InstrumentInsuranceService.php:658
 msgid "This is detailed in the table on the following page."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:638
+#: lib/Service/Finance/InstrumentInsuranceService.php:666
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:644
+#: lib/Service/Finance/InstrumentInsuranceService.php:672
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -4664,57 +4664,57 @@ msgid ""
 "of the bank transaction."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:651
+#: lib/Service/Finance/InstrumentInsuranceService.php:679
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:652
+#: lib/Service/Finance/InstrumentInsuranceService.php:680
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:659
+#: lib/Service/Finance/InstrumentInsuranceService.php:687
 msgid "Vendor"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:661
+#: lib/Service/Finance/InstrumentInsuranceService.php:689
 msgid "Object"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:665
+#: lib/Service/Finance/InstrumentInsuranceService.php:693
 msgid "Start"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:666
+#: lib/Service/Finance/InstrumentInsuranceService.php:694
 msgid "Valid until"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:667
+#: lib/Service/Finance/InstrumentInsuranceService.php:695
 msgid "Months"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:668
+#: lib/Service/Finance/InstrumentInsuranceService.php:696
 msgid "Fee"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:704
+#: lib/Service/Finance/InstrumentInsuranceService.php:732
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:737
+#: lib/Service/Finance/InstrumentInsuranceService.php:765
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:747
+#: lib/Service/Finance/InstrumentInsuranceService.php:775
 msgid "Totals excluding taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:760
+#: lib/Service/Finance/InstrumentInsuranceService.php:788
 msgid "Totals including taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:801
+#: lib/Service/Finance/InstrumentInsuranceService.php:829
 msgid "Jane"
 msgstr ""
 

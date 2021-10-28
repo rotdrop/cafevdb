@@ -918,7 +918,7 @@
     "Probably invalid BIC: %s. Computed: %s. " : "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s.",
     "Unable to find management option for participant field \"%s\"." : "Kann die Definitionsdaten für den Forderungen-Generator \"%s\" nicht finden.",
     "Insurance Fee %d" : "Versicherungs-Beitrag %d",
-    "Data inconsistency for musician %s in year %d: old fee %s, new fee %s." : "Inkonsistente Daten für %s, Jahr %D: alter Betrag %s, neuer Betrag %s.",
+    "Data inconsistency for musician %s in year %d: old fee %s, new fee %s." : "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s.",
     "Unknonw update strategy: \"%s\"." : "Unbekannte Aktualisierungsstrategie: \"%s\".",
     "insurance" : "Versicherung",
     "Annual Insurance Fees for %s, %d. %s" : "Versicherungs-Jahresbeitrag für %s, %d. %s",
