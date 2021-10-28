@@ -50,15 +50,24 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
-    $added = $removed = $changed = 0;
+    $added = $removed = $changed = $skipped = 0;
+    $notices = [];
     foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
-      list('added' => $a, 'removed' => $r, 'changed' => $c) =
+      list('added' => $a, 'removed' => $r, 'changed' => $c, 'skipped' => $s, 'notices' => $n) =
                    $this->updateReceivable($receivable);
       $added += $a;
       $removed += $r;
       $changed += $c;
+      $skipped += $s;
+      $notices = array_merge($notices, $n);
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => $added,
+      'removed' => $removed,
+      'changed' => $changed,
+      'skipped' => $skipped,
+      'notices' => $notices,
+    ];
   }
 
   /**
@@ -85,22 +94,31 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    $added = $removed = $changed = $skipped = 0;
+    $notices = [];
     if (!empty($participant)) {
-      list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
-                   $this->updateOne($receivable, $participant, $updateStrategy);
+      list('added' => $added, 'removed' => $removed, 'changed' => $changed, 'skipped' => $skipped, 'notices' => $notices) =
+        $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       $participants = $receivable->getField()->getProject()->getParticipants();
-      $added = $removed = $changed = 0;
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
-        list('added' => $a, 'removed' => $r, 'changed' => $c) =
+        list('added' => $a, 'removed' => $r, 'changed' => $c, 'skipped' => $s, 'notices' => $n) =
                      $this->updateOne($receivable, $participant, $updateStrategy);
         $added += $a;
         $removed += $r;
         $changed += $c;
+        $skipped += $s;
+        $notices = array_merge($notices, $n);
       }
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => $added,
+      'removed' => $removed,
+      'changed' => $changed,
+      'skipped' => $skipped,
+      'notices' => $notices,
+    ];
   }
 
   /**
@@ -108,20 +126,29 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    $added = $removed = $changed = $skipped = 0;
+    $notices = [];
     if (!empty($receivable)) {
-      list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
-                   $this->updateOne($receivable, $participant, $updateStrategy);
+      list('added' => $added, 'removed' => $removed, 'changed' => $changed, 'skipped' => $skipped, 'notices' => $notices) =
+        $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
-      $added = $removed = $changed = 0;
       foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
         list('added' => $a, 'removed' => $r, 'changed' => $c) =
                      $this->updateOne($receivable, $participant, $updateStrategy);
         $added += $a;
         $removed += $r;
         $changed += $c;
+        $skipped += $s;
+        $notices = array_merge($notices, $n);
       }
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => $added,
+      'removed' => $removed,
+      'changed' => $changed,
+      'skipped' => $skipped,
+      'notices' => $notices,
+    ];
   }
 
 }

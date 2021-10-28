@@ -175,9 +175,11 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
     $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
 
-    $remove = 0;
-    $added = 0;
-    $changed = 0;
+    $removed = false;
+    $added = false;
+    $changed = false;
+    $skipped = false;
+    $notices = [];
 
     $participantFieldsData = $participant->getParticipantFieldsData();
     $optionKey = $receivable->getKey();
@@ -203,57 +205,72 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         $musician->getProjectParticipantFieldsData()->set($optionKey->getBytes(), $datum);
         $receivable->getFieldData()->set($musician->getId(), $datum);
         $project->getParticipantFieldsData()->add($datum);
-        ++$added;
+        $added = true;
       }
     } else { // !empty($datum)
       if (!$datum->isDeleted() && $fee != $datum->getOptionValue()) {
         // @todo also change overview letter
+        $notices[] = $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.', [
+          $musician->getPublicName(true),
+          $year,
+          $this->moneyValue((float)$datum->getOptionValue()),
+          $this->moneyValue($fee),
+        ]);
         switch ($updateStrategy) {
         case self::UPDATE_STRATEGY_REPLACE:
           break;
         case self::UPDATE_STRATEGY_EXCEPTION:
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.',
-                        [ $musician->getPublicName(true), $year, $this->moneyValue((float)$datum->getOptionValue()), $this->moneyValue($fee) ]));
+          throw new Exceptions\EnduserNotificationException(end($notices));
+          break;
+        case self::UPDATE_STRATEGY_SKIP:
+          $skipped = true;
           break;
         default:
           throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
         }
       }
-      if ($fee == 0.0) {
-        // remove current option
-        $this->remove($datum);
-        $this->remove($datum);
-        $participantFieldsData->removeElement($datum);
-        $musician->getProjectParticipantFieldsData()->removeElement($datum);
-        $receivable->getFieldData()->removeElement($datum);
-        $project->getParticipantFieldsData()->removeElement($datum);
-        ++$removed;
-      } else {
-        /** @var Entities\EncryptedFile $supportingDocument */
-        $supportingDocument = $datum->getSupportingDocument();
-        if (empty($supportingDocument)) {
-          // create overview letter
-          $supportingDocument = new Entities\EncryptedFile(
-            $overviewFilename, $overviewLetter, 'application/pdf');
-          $datum->setSupportingDocument($supportingDocument);
-        } else if ($fee != $datum->getOptionValue()) {
-          $supportingDocument->setFileName($overviewFilename)
-                             ->setMimeType('application/pdf')
-                             ->setSize(strlen($overviewLetter))
-                             ->getFileData()->setData($overviewLetter);
-        }
-        // just update current data to the computed value
-        if ($datum->isDeleted()) {
-          $datum->setDeleted(null);
-          $datum->setOptionValue($fee);
-          ++$added;
-        } else if ($fee != $datum->getOptionValue()) {
-          $datum->setOptionValue($fee);
-          ++$changed;
+      if (!$skipped) {
+        if ($fee == 0.0) {
+          // remove current option
+          $this->remove($datum);
+          $this->remove($datum);
+          $participantFieldsData->removeElement($datum);
+          $musician->getProjectParticipantFieldsData()->removeElement($datum);
+          $receivable->getFieldData()->removeElement($datum);
+          $project->getParticipantFieldsData()->removeElement($datum);
+          $removed = true;
+        } else {
+          /** @var Entities\EncryptedFile $supportingDocument */
+          $supportingDocument = $datum->getSupportingDocument();
+          if (empty($supportingDocument)) {
+            // create overview letter
+            $supportingDocument = new Entities\EncryptedFile(
+              $overviewFilename, $overviewLetter, 'application/pdf');
+            $datum->setSupportingDocument($supportingDocument);
+          } else if ($fee != $datum->getOptionValue()) {
+            $supportingDocument->setFileName($overviewFilename)
+                               ->setMimeType('application/pdf')
+                               ->setSize(strlen($overviewLetter))
+                               ->getFileData()->setData($overviewLetter);
+          }
+          // just update current data to the computed value
+          if ($datum->isDeleted()) {
+            $datum->setDeleted(null);
+            $datum->setOptionValue($fee);
+            $added = true;
+          } else if ($fee != $datum->getOptionValue()) {
+            $datum->setOptionValue($fee);
+            $changed = true;
+          }
         }
       }
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => (int)$added,
+      'removed' => (int)$removed,
+      'changed' => (int)$changed,
+      'skipped' => (int)$skipped,
+      'notices' => $notices,
+    ];
   }
 }

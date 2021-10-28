@@ -140,7 +140,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   {
     $participantFieldsData = $participant->getParticipantFieldsData();
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
-    $added = $removed = $changed = 0;
+    $added = $removed = $changed = $skipped = false;
+    $notices = [];
     if ($existingReceivableData->count() == 0) {
       $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
@@ -152,14 +153,20 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
       $receivable->getFieldData()->add($datum);
       $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
       $participant->getProject()->getParticipantFieldsData()->add($datum);
-      ++$added;
+      $added = true;
     } else {
       // there is at most one ...
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $datum = $existingReceivableData->first();
       $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
-      ++$changed;
+      $changed = true;
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => (int)$added,
+      'removed' => (int)$removed,
+      'changed' => (int)$changed,
+      'skipped' => (int)$skipped,
+      'notices' => $notices,
+    ];
   }
 }

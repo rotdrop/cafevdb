@@ -367,14 +367,16 @@ class ProjectParticipantFieldsController extends Controller {
             $this->flush();
 
             /** @todo Make strategy selectable from UI */
-            list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
+            list('added' => $added, 'removed' => $removed, 'changed' => $changed, 'skipped' => $skipped, 'notices' => $notices) =
                          $generator->updateAll(ReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION);
             $this->flush();
 
             $messages[] = $this->l->t(
-              'Field "%s", options addded/removed/changed: %d/%d/%d.',
-              [ $field->getName(), $added, $removed, $changed ]);
-            $fieldsAffected += $added + $removed + $changed;
+              'Field "%s", options addded/removed/changed/skipped: %d/%d/%d/%d.',
+              [ $field->getName(), $added, $removed, $changed, $skipped ]);
+            $fieldsAffected += $added + $removed + $changed; // $skipped are not affected
+            // display further messages if present
+            $messages += $notices;
           }
 
           $this->entityManager->commit();
