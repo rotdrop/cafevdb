@@ -20,12 +20,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
+import * as Dialogs from './dialogs.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
@@ -37,6 +38,17 @@ require('jquery-ui/themes/base/autocomplete.css');
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
+
+const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
+  if (updateStrategy === 'replace') {
+    Dialogs.confirm(
+      t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', { updateStrategy }),
+      t(appName, 'Overwrite Existing Records?'),
+      (answer) => (answer && requestHandler()));
+  } else {
+    requestHandler();
+  }
+};
 
 const ready = function(selector, resizeCB) {
   const container = $(selector);
@@ -213,29 +225,35 @@ const ready = function(selector, resizeCB) {
   container.on('click', 'tr.data-options input.regenerate', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
+    const fieldId = pmeRec(container);
     const key = $row.find('input.field-key').val();
+    const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
     const cleanup = function() {
       $self.removeClass('busy');
     };
-    const request = 'option/regenerate';
-    $self.addClass('busy');
-    $.post(
-      generateUrl('projects/participant-fields/' + request), {
-        data: {
-          fieldId: pmeRec(container),
-          key,
-        },
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, [], cleanup)) {
-          return;
-        }
-        cleanup();
-        Notification.messages(data.message);
-      });
+    const requestHandler = function() {
+      const request = 'option/regenerate';
+      $self.addClass('busy');
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            key,
+            updateStrategy,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, [], cleanup)) {
+            return;
+          }
+          cleanup();
+          Notification.messages(data.message);
+        });
+    };
+    confirmedReceivablesUpdate(updateStrategy, requestHandler);
     return false;
   });
 
@@ -243,27 +261,32 @@ const ready = function(selector, resizeCB) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
+    const updateStrategy = $row.find('select.recurring-receivables-update-strategy').val();
     const cleanup = function() {
       $self.removeClass('busy');
     };
-    const request = 'generator/regenerate';
-    $self.addClass('busy');
-    $.post(
-      generateUrl('projects/participant-fields/' + request), {
-        data: {
-          fieldId,
-        },
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, ['fieldsAffected'], cleanup)) {
-          return;
-        }
-        Notification.messages(data.message);
-        cleanup();
-      });
+    const requestHandler = function() {
+      const request = 'generator/regenerate';
+      $self.addClass('busy');
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            updateStrategy,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['fieldsAffected'], cleanup)) {
+            return;
+          }
+          Notification.messages(data.message);
+          cleanup();
+        });
+    };
+    confirmedReceivablesUpdate(updateStrategy, requestHandler);
     return false;
   });
 
@@ -682,7 +705,11 @@ const documentReady = function() {
 
 };
 
-export { ready, documentReady };
+export {
+  ready,
+  documentReady,
+  confirmedReceivablesUpdate,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

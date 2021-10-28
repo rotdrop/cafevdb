@@ -1417,8 +1417,12 @@ __EOT__;
     />
   </td>
   <td class="generator" colspan="5">
+    <label for="recurring-receivables-update-strategy" class="recurring-receivables-update-strategy">
+      '.$this->l->t('In case of Conflict').'
+    </label>
     <select
-      class="recurring-multiplicity-required"
+      id="recurring-receivables-update-strategy"
+      class="recurring-multiplicity-required recurring-receivables-update-strategy"
       name="recurringReceivablesUpdateStrategy"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
     >
