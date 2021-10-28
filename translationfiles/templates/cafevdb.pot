@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-28 10:52+0200\n"
+"POT-Creation-Date: 2021-10-28 11:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10705,6 +10705,16 @@ msgstr ""
 #: lib/Controller/PersonalSettingsController.php:181
 #, php-format
 msgid "tooltips"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "skip"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "exception"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235

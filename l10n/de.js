@@ -2135,6 +2135,8 @@ OC.L10N.register(
     "on" : "an",
     "off" : "aus",
     "tooltips" : "Kontext-Hilfe",
+    "skip" : "überspringen",
+    "exception" : "abbrechen",
     "BIRTHDAY" : "GEBURTSTAG",
     "CITY" : "STADT",
     "COUNTRY" : "LAND",

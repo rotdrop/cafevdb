@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-28 10:47+0200\n"
-"PO-Revision-Date: 2021-10-28 10:52+0200\n"
+"POT-Creation-Date: 2021-10-28 10:58+0200\n"
+"PO-Revision-Date: 2021-10-28 11:00+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1501,7 +1501,8 @@ msgstr "Das Projekt \"%s\" hat keine automatisch erzeugten Felder."
 #: lib/Controller/ProjectParticipantFieldsController.php:375
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed/skipped: %d/%d/%d/%d."
-msgstr "Feld \"%s\", Optionen erzeugt/gelöscht/geändert/übersprungen: %d/%d/%d/%d."
+msgstr ""
+"Feld \"%s\", Optionen erzeugt/gelöscht/geändert/übersprungen: %d/%d/%d/%d."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:405
 #, php-format
@@ -11857,6 +11858,16 @@ msgstr "aus"
 #, php-format
 msgid "tooltips"
 msgstr "Kontext-Hilfe"
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "skip"
+msgstr "überspringen"
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "exception"
+msgstr "abbrechen"
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
