@@ -1248,7 +1248,7 @@ const mandateInsuranceReady = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
 
-  container.find('input.debit-note.' + pmeToken('misc'))
+  container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
     .on('click', mandateExportHandler);
 };
@@ -1360,7 +1360,7 @@ const mandateReady = function(selector) {
     return;
   }
 
-  container.find('input.debit-note.' + pmeToken('misc'))
+  container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
     .on('click', mandateExportHandler);
 
