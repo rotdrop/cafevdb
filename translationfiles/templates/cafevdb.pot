@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-28 10:19+0200\n"
+"POT-Creation-Date: 2021-10-28 10:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -316,7 +316,7 @@ msgid "TO BE IMPLEMENTED"
 msgstr ""
 
 #: lib/Controller/ExpertModeController.php:152
-#: lib/PageRenderer/ProjectParticipantFields.php:1489
+#: lib/PageRenderer/ProjectParticipantFields.php:1502
 #: templates/expertmode.php:117
 #: templates/expertmode.php:118
 msgid "empty"
@@ -1401,20 +1401,19 @@ msgstr ""
 #: lib/Controller/ProjectParticipantFieldsController.php:243
 #: lib/Controller/ProjectParticipantFieldsController.php:301
 #: lib/Controller/ProjectParticipantFieldsController.php:362
-#: lib/Controller/ProjectParticipantFieldsController.php:503
+#: lib/Controller/ProjectParticipantFieldsController.php:505
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:272
-#: lib/Controller/ProjectParticipantFieldsController.php:462
-#: lib/Controller/ProjectParticipantFieldsController.php:550
+#: lib/Controller/ProjectParticipantFieldsController.php:464
+#: lib/Controller/ProjectParticipantFieldsController.php:552
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:311
-#: lib/Controller/ProjectParticipantFieldsController.php:375
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed: %d/%d/%d."
 msgstr ""
@@ -1429,44 +1428,49 @@ msgstr ""
 msgid "Project \"%s\" has no generated fields."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:403
+#: lib/Controller/ProjectParticipantFieldsController.php:375
+#, php-format
+msgid "Field \"%s\", options addded/removed/changed/skipped: %d/%d/%d/%d."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:405
 #, php-format
 msgid "Missing parameters in request %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:418
+#: lib/Controller/ProjectParticipantFieldsController.php:420
 #, php-format
 msgid "No or too many items available: %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:434
-#: lib/Controller/ProjectParticipantFieldsController.php:441
+#: lib/Controller/ProjectParticipantFieldsController.php:436
+#: lib/Controller/ProjectParticipantFieldsController.php:443
 #: lib/Controller/ValidationController.php:71
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:468
+#: lib/Controller/ProjectParticipantFieldsController.php:470
 #, php-format
 msgid "Missing parameters in request \"%s/%s\""
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:476
+#: lib/Controller/ProjectParticipantFieldsController.php:478
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:487
+#: lib/Controller/ProjectParticipantFieldsController.php:489
 #, php-format
 msgid "Unable to find musician with id \"%d\" in project \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:496
+#: lib/Controller/ProjectParticipantFieldsController.php:498
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:560
+#: lib/Controller/ProjectParticipantFieldsController.php:562
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr ""
@@ -2269,8 +2273,8 @@ msgstr ""
 #: lib/EmailForm/Composer.php:781
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:274
 #: lib/PageRenderer/ProjectParticipantFields.php:458
-#: lib/PageRenderer/ProjectParticipantFields.php:1551
-#: lib/PageRenderer/ProjectParticipantFields.php:1560
+#: lib/PageRenderer/ProjectParticipantFields.php:1564
+#: lib/PageRenderer/ProjectParticipantFields.php:1573
 msgid "Deposit"
 msgstr ""
 
@@ -2711,7 +2715,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:371
 #: lib/PageRenderer/ProjectParticipantFields.php:575
 #: lib/PageRenderer/ProjectParticipantFields.php:741
-#: lib/PageRenderer/ProjectParticipantFields.php:1485
+#: lib/PageRenderer/ProjectParticipantFields.php:1498
 #: templates/pme-table.php:73
 msgid "false"
 msgstr ""
@@ -2765,7 +2769,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:372
 #: lib/PageRenderer/ProjectParticipantFields.php:575
 #: lib/PageRenderer/ProjectParticipantFields.php:740
-#: lib/PageRenderer/ProjectParticipantFields.php:1485
+#: lib/PageRenderer/ProjectParticipantFields.php:1498
 msgid "true"
 msgstr ""
 
@@ -3596,8 +3600,8 @@ msgid "Default"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:438
-#: lib/PageRenderer/ProjectParticipantFields.php:1550
-#: lib/PageRenderer/ProjectParticipantFields.php:1559
+#: lib/PageRenderer/ProjectParticipantFields.php:1563
+#: lib/PageRenderer/ProjectParticipantFields.php:1572
 msgid "Data"
 msgstr ""
 
@@ -3624,8 +3628,8 @@ msgid "replace"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:667
-#: lib/PageRenderer/ProjectParticipantFields.php:1553
-#: lib/PageRenderer/ProjectParticipantFields.php:1562
+#: lib/PageRenderer/ProjectParticipantFields.php:1566
+#: lib/PageRenderer/ProjectParticipantFields.php:1575
 msgid "Tooltip"
 msgstr ""
 
@@ -3672,41 +3676,41 @@ msgstr ""
 msgid "new option"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1422
+#: lib/PageRenderer/ProjectParticipantFields.php:1435
 msgid "field generator"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1446
+#: lib/PageRenderer/ProjectParticipantFields.php:1459
 msgid "start date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1497
+#: lib/PageRenderer/ProjectParticipantFields.php:1510
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1499
+#: lib/PageRenderer/ProjectParticipantFields.php:1512
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1548
-#: lib/PageRenderer/ProjectParticipantFields.php:1557
+#: lib/PageRenderer/ProjectParticipantFields.php:1561
+#: lib/PageRenderer/ProjectParticipantFields.php:1570
 msgid "Key"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1549
-#: lib/PageRenderer/ProjectParticipantFields.php:1558
+#: lib/PageRenderer/ProjectParticipantFields.php:1562
+#: lib/PageRenderer/ProjectParticipantFields.php:1571
 msgid "Label"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1552
+#: lib/PageRenderer/ProjectParticipantFields.php:1565
 msgid "Start Date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1561
+#: lib/PageRenderer/ProjectParticipantFields.php:1574
 msgid "Limit"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1776
+#: lib/PageRenderer/ProjectParticipantFields.php:1789
 #: lib/PageRenderer/ProjectPayments.php:380
 #: lib/PageRenderer/ProjectPayments.php:389
 #: lib/PageRenderer/SepaBankAccounts.php:388
@@ -5539,32 +5543,6 @@ msgstr ""
 
 #: lib/Service/ToolTipsService.php:370
 msgid ""
-"Name of a the generator for this field. Can be be a fully-qualified PHP "
-"class-name or one of the known short-cuts."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:371
-msgid ""
-"Starting date for the receivable generation. Maybe overridden by the "
-"concrete generator framework."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:372
-msgid ""
-"Run the value generator. Depending on the generator this might result in new "
-"fields or just does nothing if all relevant fields are already there."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:373
-msgid "Recompute the values of all recurring fields."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:375
-msgid "Recompute the values of this particular recurring field."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:376
-msgid ""
 "Hit this button to delete or undelete each item. Note that items that\n"
 "already have been associated with musicians in the data-base can no\n"
 "longer be \"really\" deleted. Instead, an attempt to delete them will\n"
@@ -5575,18 +5553,18 @@ msgid ""
 "but clicking this button again."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:385
+#: lib/Service/ToolTipsService.php:379
 msgid "Table with all admissible values for this multiple choice option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:386
+#: lib/Service/ToolTipsService.php:380
 msgid ""
 "In order to add a new option just enter its name here and hit enter or\n"
 "just click somewhere else. Further attributes can be changed later (data-"
 "base key, label, data, context help)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:388
+#: lib/Service/ToolTipsService.php:382
 msgid ""
 "Please enter here a unique short non-nonsense key. You will no longer\n"
 "be able to change this db-key once this option has be attached to a\n"
@@ -5594,57 +5572,79 @@ msgid ""
 "is always possible."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:391
+#: lib/Service/ToolTipsService.php:385
 msgid ""
 "Just the display-label shown in the select-boxes in the instrumentation "
 "table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:392
+#: lib/Service/ToolTipsService.php:386
 msgid ""
 "For surcharge-items this is just the surcharge-amount associated with\n"
 "the option. For other multi-choice items this is just one arbitrary\n"
 "string. Please entry the surcharge amount for surcharge items here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:395
+#: lib/Service/ToolTipsService.php:389
 msgid ""
 "An extra-tooltip which can be associated to this specific option. A\n"
 "help text in order to inform others what this option is about."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:397
+#: lib/Service/ToolTipsService.php:391
 msgid "The maximum allowed number of people in a \"group of people\" field"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:399
-#: lib/Service/ToolTipsService.php:400
+#: lib/Service/ToolTipsService.php:393
+#: lib/Service/ToolTipsService.php:394
 msgid ""
 "For a yes/no option please enter here the single item to select, e.g. the "
 "surcharge amount for a service-fee field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:401
+#: lib/Service/ToolTipsService.php:395
 msgid "Please enter the default value for this free-text option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:406
+#: lib/Service/ToolTipsService.php:400
 msgid ""
 "Delete or undelete the receivable for this musician. The data will only be "
 "deleted when hitting the \"save\"-button of the form. Undelete is only "
 "possible until the \"save\"-button has been clicked."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:407
+#: lib/Service/ToolTipsService.php:401
 msgid ""
 "Recompute the values of this particular recurring field. The action will be "
 "performed immediately."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:408
+#: lib/Service/ToolTipsService.php:403
 msgid ""
 "Recompute all receivables for the musician. Note that this will reload the "
 "input-form discarding all changes which have not been saved yet."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:404
+msgid "Recompute the values of all recurring fields for all participants."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:406
+msgid ""
+"Name of a the generator for this field. Can be be a fully-qualified PHP "
+"class-name or one of the known short-cuts."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:407
+msgid ""
+"Starting date for the receivable generation. Maybe overridden by the "
+"concrete generator framework."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:408
+msgid ""
+"Run the value generator. Depending on the generator this might result in new "
+"fields or just does nothing if all relevant fields are already there."
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:411

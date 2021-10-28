@@ -367,12 +367,6 @@ different maximal number of people fitting in the group. For example to define r
       ],
 
       'participant-fields-data-options' => [
-        'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
-        'generator-startdate' => $this->l->t('Starting date for the receivable generation. Maybe overridden by the concrete generator framework.'),
-        'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
-        'regenerate-all' => $this->l->t('Recompute the values of all recurring fields.'),
-
-        'regenerate' => $this->l->t('Recompute the values of this particular recurring field.'),
         'delete-undelete' => $this->l->t('Hit this button to delete or undelete each item. Note that items that
 already have been associated with musicians in the data-base can no
 longer be "really" deleted. Instead, an attempt to delete them will
@@ -405,7 +399,13 @@ help text in order to inform others what this option is about.'),
       'participant-fields-recurring-data' => [
         'delete-undelete' => $this->l->t('Delete or undelete the receivable for this musician. The data will only be deleted when hitting the "save"-button of the form. Undelete is only possible until the "save"-button has been clicked.'),
         'regenerate' => $this->l->t('Recompute the values of this particular recurring field. The action will be performed immediately.'),
-        'regenerate-all' => $this->l->t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
+        'regenerate-all' => [
+          'default' => $this->l->t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
+          'everybody' => $this->l->t('Recompute the values of all recurring fields for all participants.'),
+        ],
+        'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
+        'generator-startdate' => $this->l->t('Starting date for the receivable generation. Maybe overridden by the concrete generator framework.'),
+        'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
       ],
 
       'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),
