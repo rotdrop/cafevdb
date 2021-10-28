@@ -808,7 +808,20 @@ class ConfigService {
     return $result;
   }
 
-  public function formatTimeStamp(\DateTimeInterface $date, $format = null, $timeZone = null)
+  /**
+   * Format the given date according to $format and $timeZone to a
+   * human readable time-stampe, providing defaults for $format and
+   * using the default time-zone of none is specified.
+   *
+   * @param \DateTimeInterface $date
+   *
+   * @param null|string $format
+   *
+   * @param null|\DateTimeZone $timeZone
+   *
+   * @return string
+   */
+  public function formatTimeStamp(\DateTimeInterface $date, ?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
     if (empty($format)) {
       $format = 'Ymd-his-T';
@@ -819,7 +832,16 @@ class ConfigService {
     return $date->setTimeZone($timeZone)->format($format);
   }
 
-  public function timeStamp($format = null, $timeZone = null)
+  /**
+   * Call ConfigService::formatTimeStamp() with the current date and time.
+   *
+   * @param null|string $format
+   *
+   * @param null|\DateTimeZone $timeZone
+   *
+   * @return string
+   */
+  public function timeStamp(?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
     return $this->formatTimeStamp(new \DateTimeImmutable, $format, $timeZone);
   }
