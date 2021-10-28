@@ -38,7 +38,7 @@
   #body-user #header,
   #body-settings #header,
   #body-public #header {
-    /* z-index:1000; */
+    z-index:1000;
   }
 
   #appsettings_popup {
@@ -47,7 +47,7 @@
 
   /* Display in full-screen, unless the nav-snapper is activated */
   body:not(.snapjs-left) #content {
-    /* padding-top:0px; */
+    padding-top:0px;
   }
 
   #app-content {
@@ -120,6 +120,10 @@
     padding-top:0px!important;
   }
 
+  div.tox-tinymce.tox-fullscreen {
+    top:0!important;
+  }
+
   .cafevdb-page-container.instruments .pme-sys,
   .cafevdb-page-container.instruments .pme-main .pme-navigation  {
     display:none;
@@ -134,12 +138,18 @@
     width: 100% !important;
     min-height: 100% !important;
     min-width: 100% !important;
+    padding: 0 !important;
+    border: 0 !important;
+    .fullScreenButton {
+      display: none !important;
+    }
   }
 
   .ui-dialog .ui-dialog-content,
   .ui-dialog.pme-table-dialog .ui-dialog-content {
     overflow:auto !important;
-    padding:0.3em !important;
+    /* padding:0.3em !important; */
+    padding:0 !important;
   }
 
   #emailformcomposer, #emailformrecipients {

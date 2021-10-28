@@ -62,7 +62,7 @@ require('@nextcloud/dialogs/styles/toast.scss');
 // CSS unrelated to particular modules
 
 require('oc-fixes.css');
-require('mobile.css');
+require('mobile.scss');
 require('config-check.scss');
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
