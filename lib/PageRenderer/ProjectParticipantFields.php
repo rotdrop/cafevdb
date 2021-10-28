@@ -1233,7 +1233,7 @@ __EOT__;
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
-    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:regenerate']).'"
+    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate']).'"
     '.($deleted ? ' disabled' : '').'
     type="button"/>
     </td>';
@@ -1381,6 +1381,16 @@ __EOT__;
   </td>
 </tr>';
     $generator = $generatorItem['data']??null;
+    foreach (IRecurringReceivablesGenerator::UPDATE_STRATEGIES as $tag) {
+      $option = [
+        'value' => $tag,
+        'name' => $this->l->t($tag),
+        'flags' => ($tag === IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION ? PageNavigation::SELECTED : 0),
+        'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
+      ];
+      $updateStrategies[] = $option;
+    }
+    $updateStrategies = PageNavigation::selectOptions($updateStrategies);
     $html .= '
 <tr
   class="data-line data-options generator active only-multiplicity-recurring"
@@ -1394,26 +1404,34 @@ __EOT__;
   <td class="operations">
     <input
       class="operation regenerate-all"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:regenerate-all']).'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody']).'"
       '.($deleted ? ' disabled' : '').'
       type="button"
       '.(empty($generator) ? 'disabled' : '').'
     />
     <input
       class="operation generator-run"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator-run']).'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator-run']).'"
       type="button"
       '.(empty($generator) ? 'disabled' : '').'
     />
   </td>
   <td class="generator" colspan="5">
+    <select
+      class="recurring-multiplicity-required"
+      name="recurringReceivablesUpdateStrategy"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
+    >
+' . $updateStrategies
+. '
+    </select>
     <input
       class="field-data recurring-multiplicity-required"
       spellcheck="true"
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator']).'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator']).'"
       placeholder="'.$this->l->t('field generator').'"
       size="33"
       maxlength="1024"
@@ -1437,7 +1455,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1]['.$prop.']"
       value="'.$value.'"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:generator-startdate']).'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator-startdate']).'"
       placeholder="'.$this->l->t('start date').'"
       size="10"
       maxlength="10"
