@@ -515,7 +515,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
-        'tab'      => [ 'id' => 'tab-all' ],
+        'tab'      => [ 'id' => 'musician' ],
         'name'     => $this->l->t('User Id'),
         'css'      => [ 'postfix' => ' musician-name' ],
         'input|LF' => 'H',
