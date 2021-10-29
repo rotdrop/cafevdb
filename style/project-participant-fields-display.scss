@@ -32,6 +32,7 @@ form.pme-form.project-participant-fields-display {
     display:inline-block;
     width:100%;
     position:relative;
+    text-align:justify;
   }
 
   &:not(.pme-change) {
@@ -107,11 +108,12 @@ form.pme-form.project-participant-fields-display {
 
     span.allowed-option-name {
       max-width:5em;
-      /* float:left; */
+      /*float:left;*/
+      white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      position:absolute; /* needs position != static on parent */
-      left:0;
+      /*position:absolute;*/ /* needs position != static on parent */
+      /*left:0;*/
     }
   }
 
@@ -122,9 +124,10 @@ form.pme-form.project-participant-fields-display {
 
   &:not(.pme-change) span.allowed-option-value.money {
     font-family:monospace;
-    /* float:right; */
-    position:absolute;
-    right:0;
+    float:right;
+    white-space:nowrap;
+    /*position:absolute;*/
+    /*right:0;*/
   }
 
   &:not(.pme-change) span.allowed-option.group {
