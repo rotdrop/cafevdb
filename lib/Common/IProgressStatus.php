@@ -36,6 +36,8 @@ interface IProgressStatus
 
   /**
    * Bind to the given storage object. Create a new object if $id is null.
+   *
+   * @param mixed $id
    */
   public function bind($id);
 
