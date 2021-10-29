@@ -196,7 +196,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
                ->setOptionKey($receivable->getKey())
                ->setOptionValue($fee);
 
-        // create overview letter
+        // store overview letter
         $supportingDocument = new Entities\EncryptedFile(
           $overviewFilename, $overviewLetter, 'application/pdf');
         $datum->setSupportingDocument($supportingDocument);
@@ -210,7 +210,6 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       }
     } else { // !empty($datum)
       if (!$datum->isDeleted() && $fee != $datum->getOptionValue()) {
-        // @todo also change overview letter
         $notices[] = $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.', [
           $musician->getPublicName(true),
           $year,
@@ -248,7 +247,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $supportingDocument = new Entities\EncryptedFile(
               $overviewFilename, $overviewLetter, 'application/pdf');
             $datum->setSupportingDocument($supportingDocument);
-          } else if ($fee != $datum->getOptionValue()) {
+          } else if (true || $fee != $datum->getOptionValue()) {
+            // @todo FIXME: only update letter if fee changes?
             $supportingDocument->setFileName($overviewFilename)
                                ->setMimeType('application/pdf')
                                ->setSize(strlen($overviewLetter))
