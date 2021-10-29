@@ -359,6 +359,8 @@ class InstrumentInsuranceService
     /** @var Entities\Musician $musician */
     $billToParty = $this->ensureMusician($musicianOrId);
 
+    $this->logInfo('BTP class ' . get_class($billToParty));
+
     $payableInsurances = $billToParty->getPayableInsurances();
 
     $insuranceOverview = [
@@ -484,6 +486,13 @@ class InstrumentInsuranceService
     if (empty($templateFileName)) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('There is no document template for the insurance overview letter. Please upload one in the application\'s orchestra settings, sub-section "Document Templates".'));
+    }
+
+    // Prepare the date doing some translations first
+    foreach($overview['musicians'] as $id => &$insurance) {
+      foreach($insurance['items'] as &$item) {
+        $item['scope'] = $this->l->t($item['scope']);
+      }
     }
 
     list($fileData, $mimeType, $generatedFileName) = $this->documentFiller->fill(
