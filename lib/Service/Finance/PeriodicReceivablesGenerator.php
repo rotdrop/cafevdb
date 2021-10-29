@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Common\Util;
 class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
   /** @var float */
   protected $amount;
@@ -118,17 +119,31 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     $endingSeconds = (new \DateTimeImmutable)->getTimestamp();
 
     for (; $seconds <= $endingSeconds; $seconds += $this->intervalSeconds) {
-      if ($receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]))->count() == 0) {
+      $timeStamp = $this->formatTimeStamp($seconds);
+      $labelText = $this->l->t($labelTemplate = 'Option %s', $timeStamp);
+      $tooltipTemplate = $this->toolTipsService['periodic-recurring-receivable-option']??'';
+      $tooltipText = $this->l->t($tooltipTemplate);
+
+      $existingReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]));
+      if ($existingReceivables->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
                     ->setKey(Uuid::create())
-                    ->setLabel($this->l->t('Option %d', $seconds))
-                    ->setToolTip($this->toolTipsService['periodic-recurring-receivable-option'])
+                    ->setLabel($labelText)
+                    ->setToolTip($tooltipText)
                     ->setData($seconds) // may change in the future
                     ->setLimit(null); // may change in the future
         $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+      } else {
+        // update display things, but keep the essential data untouched
+        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+        $receivable = $existingReceivables->first();
+        $receivable->setLabel($labelText)
+                   ->setTooltip($tooltipText);
       }
+      $this->translate($receivable, 'label', null, sprintf($labelTemplate, $timeStamp))
+           ->translate($receivable, 'tooltip', null, $tooltipTemplate);
     }
     return $this->serviceFeeField->getSelectableOptions();
   }
