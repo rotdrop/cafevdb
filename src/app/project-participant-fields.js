@@ -294,8 +294,12 @@ const ready = function(selector, resizeCB) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
+    // defer submit until after validation.
+    const submitDefer = PHPMyEdit.deferReload(container);
     const cleanup = function() {
       $self.removeClass('busy');
+      setFieldTypeCssClass(fieldTypeData());
+      submitDefer.resolve();
     };
     const request = 'generator/run';
     const startDate = $self.closest('tr').find('.field-limit');
