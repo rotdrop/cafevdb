@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
   /** @var InstrumentInsuranceService */
   private $insuranceService;
@@ -139,8 +140,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         $receivable->setLabel($labelText)
                    ->setTooltip($tooltipText);
       }
-      $this->insurancesRepository->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
-                                 ->translate($receivable, 'tooltip', null, $tooltipTemplate);
+      $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
+           ->translate($receivable, 'tooltip', null, $tooltipTemplate);
     }
     return $this->serviceFeeField->getSelectableOptions();
   }
