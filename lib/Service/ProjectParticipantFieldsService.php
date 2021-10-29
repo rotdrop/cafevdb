@@ -175,7 +175,7 @@ class ProjectParticipantFieldsService
     //   'multiplicity' => Multiplicity::RECURRING
     // ]));
     return $project->getParticipantFields()->filter(function($field) {
-      return $field->getMuliplicity() == Multiplicity::RECURRING;
+      return $field->getMultiplicity() == Multiplicity::RECURRING;
     });
   }
 
