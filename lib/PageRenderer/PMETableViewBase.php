@@ -27,6 +27,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
@@ -38,6 +39,8 @@ use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
+
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -397,10 +400,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /**
    * Common case of pre-commit action: rename a folder or file to
    * reflect changes in the data-base.
+   *
+   * @see UndoableFolderRename
    */
-  public function registerPreCommitRename(string $oldNode, string $newNode)
+  public function registerPreCommitRename(string $oldNode, string $newNode, bool $gracefully = false)
   {
-    $this->registerPreCommitAction(new UndoableFolderRename($oldNode, $newNode));
+    $this->registerPreCommitAction(new UndoableFolderRename($oldNode, $newNode, $gracefully));
   }
 
   /** Run underlying table-manager (phpMyEdit for now). */
@@ -2266,13 +2271,21 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       return true; // nothing to do
     }
 
+    $musicianId = !empty($pme->rec['musician_id'])
+      ? $pme->rec['musician_id']
+      : $pme->rec['id'];
+
     // register a pre-commit callback to rename the user folder
 
-    /** @var Entities\Musician $musician */
-    $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($pme->rec);
+    $message = $this->l->t('Unable to retrieve musician for id "%s" from database.', $musicianId);
+    try {
+      /** @var Entities\Musician $musician */
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
+    } catch (\Throwable $t) {
+      throw new \RuntimeException($message, $t->getCode(), $t);
+    }
     if (empty($musician)) {
-      throw new \RuntimeException(
-        $this->l->t('Unable to retrieve musician for id "%s" from database.', $pme->rec));
+      throw new \RuntimeException($message);
     }
 
     /** @var Entities\ProjectParticipant $projectParticipant */
@@ -2287,7 +2300,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $oldName = $oldUserIdSlug ? $participantsFolder.UserStorage::PATH_SEP.$oldUserIdSlug : null;
       $newName = $participantsFolder.UserStorage::PATH_SEP.$newUserIdSlug;
 
-      $this->registerPreCommitRename($oldName, $newName);
+      $this->registerPreCommitRename($oldName, $newName, true);
     }
 
     return true;
