@@ -1,4 +1,25 @@
 <?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Common;
 
@@ -44,6 +65,9 @@ class PlainFileProgressStatus implements IProgressStatus
     $this->file = null;
   }
 
+  /**
+   * Reset the initial state.
+   */
   protected function reset()
   {
     $this->data = [
@@ -54,12 +78,16 @@ class PlainFileProgressStatus implements IProgressStatus
     ];
   }
 
+  /**
+   * Flush the initial state to disk.
+   */
   protected function flush()
   {
     $this->data['lastModified'] = time();
     $this->file->putContent(json_encode($this->data));
   }
 
+  /** @{inheritdoc} */
   public function delete()
   {
     if (!empty($this->file)) {
@@ -68,6 +96,7 @@ class PlainFileProgressStatus implements IProgressStatus
     }
   }
 
+  /** @{inheritdoc} */
   public function bind($id = null)
   {
     if (!empty($this->file) && $this->file->getName() == $id) {
@@ -103,11 +132,13 @@ class PlainFileProgressStatus implements IProgressStatus
     }
   }
 
+  /** @{inheritdoc} */
   public function getId()
   {
     return $this->file->getName();
   }
 
+  /** @{inheritdoc} */
   public function update(int $current, ?int $target = null, ?array $data = null)
   {
     $this->data['current'] = $current;
@@ -120,6 +151,7 @@ class PlainFileProgressStatus implements IProgressStatus
     $this->flush();
   }
 
+  /** @{inheritdoc} */
   public function sync()
   {
     for ($i = 0; $i < self::READ_RETRY_LIMIT; $i++) {
@@ -133,21 +165,25 @@ class PlainFileProgressStatus implements IProgressStatus
     throw new \RuntimeException($this->l->t('Unable to read progress status file "%s" after %d retries.', $this->file->getName(), $i));
   }
 
+  /** @{inheritdoc} */
   public function getCurrent():int
   {
     return $this->data['current'];
   }
 
+  /** @{inheritdoc} */
   public function getTarget():int
   {
     return $this->data['target'];
   }
 
+  /** @{inheritdoc} */
   public function getLastModified():\DateTimeinterface
   {
     return (new \DateTimeImmutable)->setTimestamp($this->data['lastModified']);
   }
 
+  /** @{inheritdoc} */
   public function getData():?array
   {
     return $this->data['data'];
