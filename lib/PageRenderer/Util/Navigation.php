@@ -334,6 +334,7 @@ class Navigation
               $replacement = true;
               if (isset($button['code'])) { // 'code' is a magic PME thing
                 $button = preg_replace('/\sid="([^"]*)"/', ' id="$1-'.$verticalPosition.'"', $button);
+                $button = preg_replace('/\sfor="([^"]*)"/', ' for="$1-'.$verticalPosition.'"', $button);
                 $button = preg_replace('/class="([^"]*)"/', 'class="$1 '.$cssPositions[$verticalPosition].' '.$verticalPosition.'"', $button);
                 $button = str_replace('{POSITION}', $cssPositions[$verticalPosition], $button);
               }

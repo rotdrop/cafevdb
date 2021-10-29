@@ -1296,6 +1296,20 @@ const mandateReady = function(selector) {
       return false;
     });
 
+  const $recurringReceivablesUpdateStrategy = container.find('input.recurring-receivables-update-strategy');
+
+  // synchronize top and bottom update-strategy radio buttons´
+  $recurringReceivablesUpdateStrategy
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      const otherId = $this.hasClass('top')
+        ? $this.attr('id').replace(/-up$/, '-down')
+        : $this.attr('id').replace(/-down$/, '-up');
+      $('#' + otherId).prop('checked', true);
+      return false;
+    });
+
   container.find('input.regenerate-receivables')
     .off('click')
     .on('click', function(event) {
@@ -1304,15 +1318,19 @@ const mandateReady = function(selector) {
       const cleanup = function() {
         Page.busyIcon(false);
         modalizer(false);
+        $this.removeClass('busy');
       };
 
-      Page.busyIcon(true);
-      modalizer(true);
+      const updateStrategy = $recurringReceivablesUpdateStrategy.val();
 
-      const updateStrategy = 'exception';
       const requestHandler = function() {
         const request = 'generator/run-all';
         const projectId = $this.data('projectId');
+
+        Page.busyIcon(true);
+        modalizer(true);
+        $this.addClass('busy');
+
         $.post(
           generateUrl('projects/participant-fields/' + request), {
             request,

@@ -54,7 +54,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     $notices = [];
     foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
       list('added' => $a, 'removed' => $r, 'changed' => $c, 'skipped' => $s, 'notices' => $n) =
-                   $this->updateReceivable($receivable);
+                   $this->updateReceivable($receivable, null, $updateStrategy);
       $added += $a;
       $removed += $r;
       $changed += $c;
@@ -97,14 +97,24 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
     if (!empty($participant)) {
-      list('added' => $added, 'removed' => $removed, 'changed' => $changed, 'skipped' => $skipped, 'notices' => $notices) =
-        $this->updateOne($receivable, $participant, $updateStrategy);
+      list(
+        'added' => $added,
+        'removed' => $removed,
+        'changed' => $changed,
+        'skipped' => $skipped,
+        'notices' => $notices,
+      ) = $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       $participants = $receivable->getField()->getProject()->getParticipants();
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
-        list('added' => $a, 'removed' => $r, 'changed' => $c, 'skipped' => $s, 'notices' => $n) =
-                     $this->updateOne($receivable, $participant, $updateStrategy);
+        list(
+          'added' => $a,
+          'removed' => $r,
+          'changed' => $c,
+          'skipped' => $s,
+          'notices' => $n,
+        ) = $this->updateOne($receivable, $participant, $updateStrategy);
         $added += $a;
         $removed += $r;
         $changed += $c;
@@ -133,8 +143,13 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         $this->updateOne($receivable, $participant, $updateStrategy);
     } else {
       foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
-        list('added' => $a, 'removed' => $r, 'changed' => $c) =
-                     $this->updateOne($receivable, $participant, $updateStrategy);
+        list(
+          'added' => $a,
+          'removed' => $r,
+          'changed' => $c,
+          'skipped' => $s,
+          'notices' => $n,
+        ) = $this->updateOne($receivable, $participant, $updateStrategy);
         $added += $a;
         $removed += $r;
         $changed += $c;
