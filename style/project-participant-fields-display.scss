@@ -247,7 +247,8 @@ form.pme-form.project-participant-fields-display {
             height:unset;
             min-height:unset;
             margin-right:unset;
-            background-image:url('../img/reload-solid.svg');
+            /*background-image:url('../img/reload-solid.svg');*/
+            background-image:url('../img/actions/compute-red.svg');
             background-size: 24px 24px;
             background-position: 2px center;
             background-repeat:no-repeat;
@@ -265,7 +266,8 @@ form.pme-form.project-participant-fields-display {
             vertical-align:middle;
             margin-right:1em;
             &.regenerate {
-              background-image:url('../img/reload-solid.svg');
+              /*background-image:url('../img/reload-solid.svg');*/
+              background-image:url('../img/actions/compute-red.svg');
             }
             &.delete-undelete {
               background-image:url('../img/cafevdb-delete.svg');

@@ -108,10 +108,12 @@ table.pme-main tr.multiplicity {
       vertical-align:middle;
       margin-right:1em;
       &.regenerate {
-        background-image:url('../img/reload-solid.svg');
+        /* background-image:url('../img/reload-solid.svg'); */
+        background-image:url('../img/actions/compute-red.svg');
       }
       &.regenerate-all {
-        background-image:url('../img/reload-solid.svg');
+        /* background-image:url('../img/reload-solid.svg'); */
+        background-image:url('../img/actions/compute-red.svg');
       }
       &.generator-run {
         background-image:url('../../../core/img/actions/play.svg');
