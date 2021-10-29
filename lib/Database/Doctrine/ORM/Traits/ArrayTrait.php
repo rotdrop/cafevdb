@@ -52,6 +52,11 @@ trait ArrayTrait
     $this->keys = array_filter($this->keys);
   }
 
+  public function __wakeup()
+  {
+    $this->arrayCTOR();
+  }
+
   public function toArray()
   {
     $result = [];
