@@ -435,6 +435,8 @@ class EmailFormController extends Controller {
           'projectId' => $projectId,
           'urlGenerator' => $this->urlGenerator,
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
+          'dateTimeZone' => $this->getDateTimeZone(),
+
           'emailTemplateName' => $composer->currentEmailTemplate(),
           'storedEmails' => $composer->storedEmails(),
           'TO' => $composer->toString(),
@@ -565,7 +567,7 @@ class EmailFormController extends Controller {
       return self::grumble($this->l->t("Unknown request: `%s'.", $request));
     }
 
-    //$this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
+    // $this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
 
     if ($requestData['errorStatus']) {
       $caption = $requestData['diagnostics']['caption'];
@@ -582,6 +584,9 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->dateTimeFormatter(),
         ],
         'blank'))->render();
+
+      // $this->logInfo('STATUS TEXT ' . $messageText);
+
       return self::grumble([
         'operation' => $operation,
         'topic' => $topic,
