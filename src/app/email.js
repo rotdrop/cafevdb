@@ -812,6 +812,15 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         .fail(function(xhr, textStatus, errorThrown) {
           Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
             Page.busyIcon(false);
+            let debugText = '';
+            if (data.caption !== undefined) {
+              debugText += '<div class="error caption">' + data.caption + '</div>';
+            }
+            if (data.message !== undefined) {
+              debugText += data.message;
+            }
+            debugOutput.html(debugText);
+
             if (data.message) {
               debugOutput.html(data.message);
             }
