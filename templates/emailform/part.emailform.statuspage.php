@@ -30,23 +30,24 @@
  * @param $_['Diagnostics'] array, all fields are optional, recognized
  * records are:
  *
- * array(
+ * [
  *   'Explanations' => TEXT,
- *   'AddressValidation' => array(
+ *   'AddressValidation' => [
  *     'CC' => array(LIST_OF_BROKEN_EMAILS),
  *     'BCC' => array(LIST_OF_BROKEN_EMAILS),
  *     'Empty' => true (no recipients not allowed)
- *     ),
- *   'TemplateValidation' => array(
+ *     ],
+ *   'TemplateValidation' => [
  *     'MemberErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS),
  *     'GlobalErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS),
  *     'SpuriousErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS)
- *     )
- *   ),
+ *     ],
+ *   ],
  *   'SubjectValidation' => true/false (empty subject not allowed),
  *   'FromValidation' => true/false (empty name not allowed),
  *   'MailerException' => EXCEPTION_MESSAGE_FROM_PHP_MAILER,
- *   'Message' => FIRST_FEW_LINES_OF_SENT_MESSAGE
+ *   'Message' => FIRST_FEW_LINES_OF_SENT_MESSAGE,
+ * ]
  */
 
 namespace OCA\CAFEVDB;
@@ -90,8 +91,7 @@ if ($numTotal > 0 && $numFailed == 0) {
   <span class="error caption messagecount">
     '.$l->t('The mailing software did not signal an error. ').
          ' '.
-         $l->t('%d messages were propably sent out successfully.',
-               array($numTotal)).'
+         $l->t('%d messages were propably sent out successfully.', $numTotal).'
   </span>
 </div>';
   }
@@ -104,21 +104,18 @@ if ($numTotal > 0 && $numFailed == 0) {
   if ($numTotal > 1) {
     if ($numFailed == $numTotal) {
       echo '
-      '.$l->t('Sending of all %d messages has failed, propably no message has been sent.',
-              array($numTotal));
+      '.$l->t('Sending of all %d messages has failed, propably no message has been sent.', $numTotal);
     } else if ($numFailed == 1) {
       echo '
-      '.$l->t('One (out of %d) message has probably not been sent.',
-              array($numTotal));
+      '.$l->t('One (out of %d) message has probably not been sent.', $numTotal);
     } else {
       echo '
       '.$l->t('%d (out of %d) messages have probably not been sent.',
-              array($numFailed, $numTotal));
+              [ $numFailed, $numTotal, ]);
     }
   } else {
     echo '
-    '.$l->t('The message has probably not been sent.',
-            array($numTotal));
+    '.$l->t('The message has probably not been sent.', $numTotal);
   }
   echo '
   </span>
@@ -170,13 +167,15 @@ if (!empty($templateDiag)) {
           "`%s'. ".
           "Please have a look at the example template `%s' which contains ".
           "a complete list of all known substitutions.",
-          array('<span class="error code">$</span>',
-                '<span class="error code">{...}</span>',
-                '<span class="error code">GLOBAL</span>',
-                '<span class="error code">::</span>',
-                '<span class="error code">ORGANIZER</span>',
-                '<span class="error code">${GLOBAL::ORGANIZER}</span>',
-                '<span class="error code">All Variables</span>'));
+          [
+	    '<span class="error code">$</span>',
+            '<span class="error code">{...}</span>',
+            '<span class="error code">GLOBAL</span>',
+            '<span class="error code">::</span>',
+            '<span class="error code">ORGANIZER</span>',
+            '<span class="error code">${GLOBAL::ORGANIZER}</span>',
+            '<span class="error code">All Variables</span>',
+	  ]);
   echo ' <div class="error contents explanations">
   '.$explanations.'
   </div>';
@@ -201,14 +200,14 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
           'meaning that they have not the form of an email address:').'
     </span>
   </div>';
-  foreach(array('CC', 'BCC') as $header) {
+  foreach([ 'CC', 'BCC', ] as $header) {
     $addresses = $addressDiag[$header];
     if (!empty($addresses)) {
       $lcHeader = strtolower($header);
       echo '
   <div class="error contents addresses '.$lcHeader.'">
     <span class="error heading">
-  '.$l->t("Broken `%s' addresses", array(ucfirst($lcHeader).':')).'
+  '.$l->t("Broken `%s' addresses", ucfirst($lcHeader).':').'
     </span>
     <ul>';
       foreach($addresses as $address) {
@@ -258,9 +257,8 @@ if ($diagnostics['SubjectValidation'] !== true) {
 <div class="emailform error group emptysubject">
   <div class="error contents emptysubject">
     <div class="error caption emptysubject">'.$l->t('Empty Subject').'</div>
-    '.$l->t('The subject must not consist of `%s\' as only part. '.
-            'Please correct that before trying send the message out, and also before trying to save the message as draft. Thanks.',
-            array($subjectTag)).'
+    '.$l->t('The subject must not consist of "%s" as only part. '.
+            'Please correct that before trying send the message out, and also before trying to save the message as draft. Thanks.', $subjectTag).'
   </div>
 </div>';
 }
@@ -275,8 +273,8 @@ if ($diagnostics['FromValidation'] !== true) {
     <div class="error caption emptyfrom">'.$l->t('Empty Sender Name').'</div>
     '.$l->t('The sender name should not be empty. '.
             'Originally, it used to be %s, but seemingly this did not suite your needs. '.
-            'Please fill in a non-empty sender name before hitting the `Send\'-button again.',
-            array($defaultSender)).'
+            'Please fill in a non-empty sender name before hitting the "Send"-button again.',
+            $defaultSender).'
   </div>
 </div>';
 }
@@ -302,6 +300,37 @@ if ($diagnostics['AddressValidation']['Empty']) {
  *
  */
 if (!empty($diagnostics['AttachmentValidation']['Files'])) {
+  $output = true;
+
+  $failedFiles = $diagnostics['AttachmentValidation']['Files'];
+  echo '
+<div class="emailform error group attachments files">
+  <div class="error contents attachments files">
+    <span class="error caption attachments files">
+  '.$l->t('The files(s) with the following name(s) could not be attached; '.
+          'they do not seem to exists:').'
+    </span>
+    <ul>';
+  foreach($failedFiles as $file) {
+    echo '
+      <li><span class="error item contents">
+        <span class="file original-name">'.$file['original_name'].'</span>
+        <span class="file tmp-name">('.$file['tmp_name'].')</span>
+      </span></li>';
+  }
+  echo '
+    </ul>
+  </div>';
+  $explanations = $l->t('This is probably an internal error. '
+		      . 'It may be possible to simply click on the red, underlined text '
+		      . 'in order to compose a useful message.');
+  echo '
+  <div class="error contents explanations">
+    <div class="error heading">'.$l->t('Explanations').'</div>
+    '.$explanations.'
+  </div>';
+  echo '
+</div>';
 }
 
 /*****************************************************************************
@@ -328,13 +357,9 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
   echo '
     </ul>
   </div>';
-  $mailto = $adminMailto
-    . '?subject=' . rawurlencode('[CAFEVDB-InternalError] Event Attachments Do not Exist');
-  $mailto = '<span class="error cafevdb email"><a href="mailto:' . $mailto . '">' . $adminName . '</a></span>';
-  $explanations = $l->t('This is probably an internal error. Please contact %s. '.
-                        'It may be possible to simply click on the red, underlined text '.
-                        'in order to compose a usefull message.',
-                        [ $mailto ]);
+  $explanations = $l->t('This is probably an internal error. '
+		      . 'It may be possible to simply click on the red, underlined text '
+		      . 'in order to compose a useful message.');
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
@@ -375,7 +400,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
   $explanations = $l->t('This is an internal error. '.
                         'Please copy this page and send it via email to %s.'.
                         'It may be possible to simply click on the red, underlined text '.
-                        'in order to compose a usefull message.',
+                        'in order to compose a useful message.',
                         [ '<span class="error cafevdb email">'
                         . '<a href="mailto:' . $mailto . '">'
                         . $adminName
@@ -423,7 +448,7 @@ if (!empty($diagnostics['MailerErrors'])) {
   $explanations = $l->t('This is an internal error. '.
                         'Please copy this page and send it via email to %s. '.
                         'It may be possible to simply click on the red, underlined text '.
-                        'in order to compose a usefull message.',
+                        'in order to compose a useful message.',
                         [ '<span class="error cafevdb email">'
                         . '<a href="mailto:' . $mailto . '">'
                         . $adminName
@@ -531,8 +556,7 @@ if (!empty($diagnostics['CopyToSent'])) {
     $errorBody .= "Authentication Error:\n".$loginError."\n";
     echo '
   <div class="error contents copytosent">'.
-         $l->t('Could not authenticate with IMAP-server: %s',
-               array($loginError)).'
+         $l->t('Could not authenticate with IMAP-server: %s', $loginError).'
   </div>';
   }
   if (isset($copyErrors['copy'])) {
@@ -542,7 +566,7 @@ if (!empty($diagnostics['CopyToSent'])) {
       echo '
   <div class="error contents copytosent">'.
            $l->t('Copy to folder %s has failed: %s',
-                 array($folder, $error)).'
+                 [ $folder, $error, ]).'
   </div>';
     }
   }
@@ -557,8 +581,7 @@ if (!empty($diagnostics['CopyToSent'])) {
           'the sent-out message to the sent-folder on the email-server has failed. '.
           'This is nothing you can solve on your own, please contact %s. '.
           'It may be possible to simply click on the red, underlined text '.
-          'in order to compose a usefull message.',
-          array($mailto));
+          'in order to compose a useful message.', $mailto);
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
