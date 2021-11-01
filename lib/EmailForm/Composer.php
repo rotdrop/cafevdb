@@ -1608,7 +1608,7 @@ Störung.';
         } else {
           $encoding = 'base64';
         }
-        $file = $this->appStorage->getDraftsFile($attachment['tmp_name']);
+        $file = $this->appStorage->getFile($attachment['tmp_name']);
         $phpMailer->AddStringAttachment(
           $file->getContent(),
           basename($attachment['name']),
@@ -1958,10 +1958,17 @@ Störung.';
         if ($attachment['status'] != 'selected') {
           continue;
         }
-        $phpMailer->AddAttachment($attachment['tmp_name'],
-                                  basename($attachment['name']),
-                                  'base64',
-                                  $attachment['type']);
+        if ($attachment['type'] == 'message/rfc822') {
+          $encoding = '8bit';
+        } else {
+          $encoding = 'base64';
+        }
+        $file = $this->appStorage->getFile($attachment['tmp_name']);
+        $phpMailer->AddStringAttachment(
+          $file->getContent(),
+          basename($attachment['name']),
+          $encoding,
+          $attachment['type']);
       }
 
       // Finally possibly to-be-attached events. This cannot throw,
@@ -2082,6 +2089,9 @@ Störung.';
     // @todo yield needs more care concerning error management
     $messages = [];
 
+    $this->diagnostics['totalCount'] =
+      $this->diagnostics['failedCount'] = 0;
+
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
 
@@ -2147,7 +2157,7 @@ Störung.';
    * - subject, must not be empty
    * - message-text, variable substitutions
    * - sender name, must not be empty
-   * - file attchments, temporary local copy must exist
+   * - file attachments, temporary local copy must exist
    * - events, must exist
    */
   private function preComposeValidation()
@@ -2185,10 +2195,10 @@ Störung.';
       if ($attachment['status'] != 'selected') {
         continue; // don't bother
       }
-      if (!is_readable($attachment['tmp_name'])) {
+      if (!$this->appStorage->fileExists($attachment['tmp_name'])) {
         $this->executionStatus = false;
-        $attachment->status = 'unreadable';
-        $this->diagnostics['AttchmentValidation']['Files'][] = $attachment;
+        $attachment['status'] = 'unreadable';
+        $this->diagnostics['AttachmentValidation']['Files'][] = $attachment;
       }
     }
 
