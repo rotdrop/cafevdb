@@ -266,8 +266,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $updated;
 
   public function __construct() {
-    $this->arrayCTOR();
-    $this->keys[] = 'publicName';
+    $this->__wakeup();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -279,6 +278,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->payments = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+  }
+
+  public function __wakeup()
+  {
+    $this->arrayCTOR();
+    $this->keys[] = 'publicName';
   }
 
   /**

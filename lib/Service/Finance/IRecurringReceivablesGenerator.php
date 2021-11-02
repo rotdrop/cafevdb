@@ -53,11 +53,25 @@ interface IRecurringReceivablesGenerator
   /**
    * @var string
    *
+   * During update of receivables skip the update of existing records
+   * and record inconsistencies for later processing.
+   */
+  const UPDATE_STRATEGY_SKIP = 'skip';
+
+  /**
+   * @var string
+   *
    * During update of receivables compare with the newly computed
    * value and throw an exception if the values differ. This is the
    * default.
    */
   const UPDATE_STRATEGY_EXCEPTION = 'exception';
+
+  const UPDATE_STRATEGIES = [
+    self::UPDATE_STRATEGY_REPLACE,
+    self::UPDATE_STRATEGY_SKIP,
+    self::UPDATE_STRATEGY_EXCEPTION,
+  ];
 
   /**
    * A unique short slug which can be used to identify the generator.
@@ -69,8 +83,14 @@ interface IRecurringReceivablesGenerator
    * constructor which allowes for dependency injection. This,
    * however, means that the DB entities must not be passed through
    * the constructor.
+   *
+   * @param Entities\ProjectParticipantField $serviceFeeField
+   *
+   * @param mixed $progressToken Optional token which identifies an
+   * instance of \OCA\CAFEVDB\Common\IProgressStatus in order to give
+   * feedback during long running updates.
    */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField);
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null);
 
   /**
    * Update the list of receivables for the bound service-fee field,
@@ -97,7 +117,13 @@ interface IRecurringReceivablesGenerator
    *
    * @return array<string, int>
    * ```
-   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * [
+   *   'added' => #ADDED,
+   *   'removed' => #REMOVED,
+   *   'changed' => #CHANGED,
+   *   'skipped' => #SKIPPED,
+   *   'notices' => [ MSG1, MSG2, ... ],
+   * ]
    * ```
    * where the numbers reflect the respective actions performed on the
    * field-data for the given option.
@@ -115,7 +141,13 @@ interface IRecurringReceivablesGenerator
    *
    * @return array<string, int>
    * ```
-   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * [
+   *   'added' => #ADDED,
+   *   'removed' => #REMOVED,
+   *   'changed' => #CHANGED,
+   *   'skipped' => #SKIPPED,
+   *   'notices' => [ MSG1, MSG2, ... ],
+   * ]
    * ```
    * where the numbers reflect the respective actions performed on the
    * field-data for the participant.
@@ -128,7 +160,13 @@ interface IRecurringReceivablesGenerator
    *
    * @return array<string, int>
    * ```
-   * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
+   * [
+   *   'added' => #ADDED,
+   *   'removed' => #REMOVED,
+   *   'changed' => #CHANGED,
+   *   'skipped' => #SKIPPED,
+   *   'notices' => [ MSG1, MSG2, ... ],
+   * ]
    * ```
    * where the number reflect the respective actions performed on the
    * field-data for all participants.

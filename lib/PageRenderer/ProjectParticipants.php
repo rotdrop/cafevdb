@@ -515,7 +515,7 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
-        'tab'      => [ 'id' => 'tab-all' ],
+        'tab'      => [ 'id' => 'musician' ],
         'name'     => $this->l->t('User Id'),
         'css'      => [ 'postfix' => ' musician-name' ],
         'input|LF' => 'H',
@@ -1285,9 +1285,9 @@ class ProjectParticipants extends PMETableViewBase
    */
   private function tableTabId($idOrName)
   {
-    $dflt = $this->defaultTableTabs();
+    $dflt = $this->defaultTableTabs(true);
     foreach($dflt as $tab) {
-      if ($idOrName === $tab['name']) {
+      if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
         return $tab['id'];
       }
     }
@@ -1366,7 +1366,7 @@ class ProjectParticipants extends PMETableViewBase
 
       $extraTab = $field['tab'];
       foreach ($dfltTabs as $tab) {
-        if ($extraTab === $tab['id'] || $extraTab === (string)$tab['name']) {
+        if ($extraTab === $tab['name'] || $extraTab === $this->l->t($tab['id'])) {
           $extraTab = null;
           break;
         }

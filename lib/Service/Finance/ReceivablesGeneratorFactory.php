@@ -58,11 +58,17 @@ class ReceivablesGeneratorFactory
    *
    * @param Entities\ProjectParticipantField $serviceFeeField
    *
+   * @param null|mixed $progressToken Optional id for communicating
+   * progress-status to the frontend.
+   *
    * @return IRecurringReceivablesGenerator
    *
    * @todo This is too complicated.
    */
-  public function getGenerator(Entities\ProjectParticipantField $serviceFeeField):IRecurringReceivablesGenerator
+  public function getGenerator(
+    Entities\ProjectParticipantField $serviceFeeField
+    , $progressToken = null
+  ):IRecurringReceivablesGenerator
   {
     if ($serviceFeeField->getMultiplicity() != Multiplicity::RECURRING()
         || $serviceFeeField->getDataType() != FieldDataType::SERVICE_FEE()) {
@@ -96,7 +102,7 @@ class ReceivablesGeneratorFactory
       throw new \RuntimeException($this->l->t('Unable to construct generator class "%s".', $class));
     }
 
-    $generatorInstance->bind($serviceFeeField);
+    $generatorInstance->bind($serviceFeeField, $progressToken);
 
     return $generatorInstance;
   }

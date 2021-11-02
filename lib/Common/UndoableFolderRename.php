@@ -44,10 +44,28 @@ class UndoableFolderRename implements IUndoable
   /** @var string */
   protected $newName;
 
-  public function __construct(string $oldName, string $newName)
+  protected const GRACELESS = 0;
+  protected const GRACEFULLY_REQUESTED = 1;
+  protected const GRACEFULLY_PERFORMED = 2;
+
+  /** @var int */
+  protected $gracefully;
+
+  /**
+   * Undoable folder rename, optionally ignoring non-existing source folder.
+   *
+   * @param string $oldName
+   *
+   * @param string $newName
+   *
+   * @param bool $gracefully Do not throw if the source-folder given
+   * as $oldName does not exist.
+   */
+  public function __construct(string $oldName, string $newName, bool $gracefully = false)
   {
     $this->oldName = self::normalizePath($oldName);
     $this->newName = self::normalizePath($newName);
+    $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
     $this->userStorage = \OC::$server->get(UserStorage::class);
   }
 
@@ -78,7 +96,7 @@ class UndoableFolderRename implements IUndoable
     if (!empty($from)) {
       $fromDir = $this->userStorage->get($from);
       if (empty($fromDir)) {
-        throw new \Exception('Cannot find old directory at location "'.$from.'".');
+        throw new \OCP\Files\NotFoundException(sprintf('Cannot find old directory at location "%s".', $from));
       }
     }
 
@@ -98,16 +116,30 @@ class UndoableFolderRename implements IUndoable
 
   /** {@inheritdoc} */
   public function do() {
-    $this->rename($this->oldName, $this->newName);
+    try {
+      $this->rename($this->oldName, $this->newName);
+    } catch (\OCP\Files\NotFoundException $e) {
+      if ($this->gracefully === self::GRACEFULLY_REQUESTED) {
+        $this->rename(null, $this->newName);
+        $this->gracefully = self::GRACEFULLY_PERFORMED;
+      } else {
+        throw $e;
+      }
+    }
   }
 
   /** {@inheritdoc} */
   public function undo() {
-    $this->rename($this->newName, $this->oldName);
+    if ($this->gracefully === self::GRACEFULLY_PERFORMED) {
+      $this->rename($this->newName, null);
+    } else {
+      $this->rename($this->newName, $this->oldName);
+    }
   }
 
   /** {@inheritdoc} */
   public function reset() {
+    $this->gracefully = $this->gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
   }
 
 }

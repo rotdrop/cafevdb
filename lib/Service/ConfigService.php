@@ -66,6 +66,8 @@ class ConfigService {
   const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
   const DEBUG_NONE      = 0;
 
+  const DEFAULT_LOCALE = 'en_US';
+
   /*
    ****************************************************************************
    *
@@ -806,8 +808,25 @@ class ConfigService {
     return $result;
   }
 
-  public function formatTimeStamp(\DateTimeInterface $date, $format = null, $timeZone = null)
+  /**
+   * Format the given date according to $format and $timeZone to a
+   * human readable time-stampe, providing defaults for $format and
+   * using the default time-zone of none is specified.
+   *
+   * @param int|\DateTimeInterface $date
+   *
+   * @param null|string $format
+   *
+   * @param null|\DateTimeZone $timeZone
+   *
+   * @return string
+   */
+  public function formatTimeStamp($date, ?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
+    if (!($date instanceof \DateTimeInterface)) {
+      $date = (new \DateTimeImmutable())->setTimestamp($date);
+    }
+
     if (empty($format)) {
       $format = 'Ymd-his-T';
     }
@@ -817,7 +836,16 @@ class ConfigService {
     return $date->setTimeZone($timeZone)->format($format);
   }
 
-  public function timeStamp($format = null, $timeZone = null)
+  /**
+   * Call ConfigService::formatTimeStamp() with the current date and time.
+   *
+   * @param null|string $format
+   *
+   * @param null|\DateTimeZone $timeZone
+   *
+   * @return string
+   */
+  public function timeStamp(?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
     return $this->formatTimeStamp(new \DateTimeImmutable, $format, $timeZone);
   }

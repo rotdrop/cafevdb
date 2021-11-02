@@ -20,23 +20,104 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
+import * as Dialogs from './dialogs.js';
+import * as ProgressStatus from './progress-status.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 
+require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
+require('./jquery-ui-progressbar.js');
 
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
+
+const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
+  const handlerWithProgress = function() {
+    ProgressStatus.create(-1, 0, { field: null, musician: null, receivable: null })
+      .fail(Ajax.handleError)
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, ['id'])) {
+          return;
+        }
+        const progressToken = data.id;
+        const progressWrapperTemplate = $('#progressWrapperTemplate');
+        const progressWrapperId = 'project-participant-fields-progress';
+        const progressWrapper = progressWrapperTemplate.octemplate({
+          wrapperId: progressWrapperId,
+          caption: '',
+          label: '',
+        });
+        const oldProgressWrapper = $('#' + progressWrapperId);
+        if (oldProgressWrapper.length === 0) {
+          $('body').append(progressWrapper);
+        } else {
+          oldProgressWrapper.replaceWith(progressWrapper);
+        }
+        progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
+        let progressOpen = false;
+        progressWrapper.cafevDialog({
+          title: t(appName, 'Updating recurring receivables'),
+          width: 'auto',
+          height: 'auto',
+          modal: true,
+          closeOnEscape: false,
+          resizable: false,
+          dialogClass: 'progress-status progress no-close',
+          open() {
+            const dialogHolder = $(this);
+            progressOpen = true;
+            ProgressStatus.poll(progressToken, {
+              update(id, current, target, data) {
+                if (data.field) {
+                  dialogHolder.dialog(
+                    'option', 'title',
+                    t(appName, 'Updating receivables for {field}, {receivable}, {musician}', data),
+                  );
+                }
+                progressWrapper.find('.progressbar .label').text(
+                  t(appName, '{current} of {target}', { current, target }));
+                progressWrapper.find('.progressbar').progressbar('option', 'value', current / target * 100.0);
+                return current < 0 || current !== target;
+              },
+              fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
+              interval: 500,
+            });
+          },
+          close() {
+            progressOpen = false;
+            ProgressStatus.poll.stop();
+            ProgressStatus.delete(progressToken);
+            progressWrapper.dialog('destroy');
+            progressWrapper.hide();
+          },
+        });
+        requestHandler(progressToken, function() {
+          if (progressOpen) {
+            progressWrapper.dialog('close');
+          }
+        });
+      });
+  };
+  if (updateStrategy === 'replace') {
+    Dialogs.confirm(
+      t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', { updateStrategy }),
+      t(appName, 'Overwrite Existing Records?'),
+      (answer) => (answer && handlerWithProgress()));
+  } else {
+    handlerWithProgress();
+  }
+};
 
 const ready = function(selector, resizeCB) {
   const container = $(selector);
@@ -148,7 +229,7 @@ const ready = function(selector, resizeCB) {
     dataTypeSelect.trigger('chosen:updated');
     setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
     allowedHeaderVisibility();
-    console.info('RESIZECB');
+    console.debug('RESIZECB');
     resizeCB();
 
     if (dataType === 'service-fee') {
@@ -211,38 +292,91 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('click', 'tr.data-options input.regenerate', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    const key = row.find('input.field-key').val();
-    const cleanup = function() {};
-    const request = 'option/regenerate';
-    $.post(
-      generateUrl('projects/participant-fields/' + request), {
-        data: {
-          fieldId: pmeRec(container),
-          key,
-        },
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, [], cleanup)) {
-          return;
-        }
-        cleanup();
-        Notification.messages(data.message);
-      });
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = pmeRec(container);
+    const key = $row.find('input.field-key').val();
+    const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
+    const requestHandler = function(progressToken, progressCleanup) {
+      const cleanup = function() {
+        progressCleanup();
+        $self.removeClass('busy');
+      };
+      const request = 'option/regenerate';
+      $self.addClass('busy');
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            key,
+            updateStrategy,
+            progressToken,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, [], cleanup)) {
+            return;
+          }
+          cleanup();
+          Notification.messages(data.message);
+        });
+    };
+    confirmedReceivablesUpdate(updateStrategy, requestHandler);
+    return false;
+  });
+
+  container.on('click', 'tr.data-options input.regenerate-all', function(event) {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = $row.data('fieldId');
+    const updateStrategy = $row.find('select.recurring-receivables-update-strategy').val();
+    const requestHandler = function(progressToken, progressCleanup) {
+      const cleanup = function() {
+        progressCleanup();
+        $self.removeClass('busy');
+      };
+      const request = 'generator/regenerate';
+      $self.addClass('busy');
+      $.post(
+        generateUrl('projects/participant-fields/' + request), {
+          data: {
+            fieldId,
+            updateStrategy,
+            progressToken,
+          },
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['fieldsAffected'], cleanup)) {
+            return;
+          }
+          Notification.messages(data.message);
+          cleanup();
+        });
+    };
+    confirmedReceivablesUpdate(updateStrategy, requestHandler);
     return false;
   });
 
   container.on('click', 'tr.data-options input.generator-run', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    const fieldId = row.data('fieldId');
-    const cleanup = function() {};
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = $row.data('fieldId');
+    // defer submit until after validation.
+    const submitDefer = PHPMyEdit.deferReload(container);
+    const cleanup = function() {
+      $self.removeClass('busy');
+      setFieldTypeCssClass(fieldTypeData());
+      submitDefer.resolve();
+    };
     const request = 'generator/run';
-    const startDate = self.closest('tr').find('.field-limit');
+    const startDate = $self.closest('tr').find('.field-limit');
+    $self.addClass('busy');
     $.post(
       generateUrl('projects/participant-fields/' + request), {
         data: {
@@ -257,7 +391,7 @@ const ready = function(selector, resizeCB) {
         if (!Ajax.validateResponse(data, ['startDate', 'dataOptionFormInputs'], cleanup)) {
           return;
         }
-        const body = self.closest('tbody');
+        const body = $self.closest('tbody');
         body.find('tr').not('.generator, .placeholder').remove();
         body.parents('table').find('thead').show();
         const tail = body.children().first();
@@ -274,38 +408,38 @@ const ready = function(selector, resizeCB) {
   });
 
   container.on('click', 'tr.data-options input.delete-undelete', function(event) {
-    const self = $(this);
-    const row = self.closest('tr.data-options');
-    let used = row.data('used');
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    let used = $row.data('used');
     used = !(!used || used === 'unused');
-    if (row.data('deleted') !== '') {
+    if ($row.data('deleted') !== '') {
       // undelete
-      row.data('deleted', '');
-      row.switchClass('deleted', 'active');
-      row.find('input.field-deleted').val('');
-      row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
-      row.find('input.operation').prop('disabled', false);
-      const key = row.find('input.field-key');
-      const label = row.find('input.field-label');
+      $row.data('deleted', '');
+      $row.switchClass('deleted', 'active');
+      $row.find('input.field-deleted').val('');
+      $row.find('input[type="text"]:not(.field-key), textarea').prop('readonly', false);
+      $row.find('input.operation').prop('disabled', false);
+      const key = $row.find('input.field-key');
+      const label = $row.find('input.field-label');
       const dfltSelect = container.find('select.default-multi-value');
       const option = '<option value="' + key.val() + '">' + label.val() + '</option>';
       dfltSelect.children('option').first().after(option);
       dfltSelect.trigger('chosen:updated');
     } else {
-      const key = row.find('input.field-key').val();
+      const key = $row.find('input.field-key').val();
       if (!used) {
         // just remove the row
-        row.remove();
+        $row.remove();
         $.fn.cafevTooltip.remove();
         allowedHeaderVisibility();
         resizeCB();
       } else {
         // must not delete, mark as inactive
-        row.data('deleted', Date.now() / 1000.0);
-        row.switchClass('active', 'deleted');
-        row.find('input.field-deleted').val(row.data('deleted'));
-        row.find('input[type="text"], textarea').prop('readonly', true);
-        row.find('input.operation.regenerate').prop('disabled', true);
+        $row.data('deleted', Date.now() / 1000.0);
+        $row.switchClass('active', 'deleted');
+        $row.find('input.field-deleted').val($row.data('deleted'));
+        $row.find('input[type="text"], textarea').prop('readonly', true);
+        $row.find('input.operation.regenerate').prop('disabled', true);
       }
       const dfltSelect = container.find('select.default-multi-value');
       dfltSelect.find('option[value="' + key + '"]').remove();
@@ -632,7 +766,7 @@ const ready = function(selector, resizeCB) {
   // synthesize resize events for textareas.
   textareaResize(container, 'textarea.field-tooltip, textarea.participant-field-tooltip');
 
-  console.info('before resizeCB');
+  console.debug('before resizeCB');
   resizeCB();
 };
 
@@ -648,7 +782,11 @@ const documentReady = function() {
 
 };
 
-export { ready, documentReady };
+export {
+  ready,
+  documentReady,
+  confirmedReceivablesUpdate,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

@@ -65,12 +65,34 @@ return [
       }
       return $content;
     },
-    // Gedmo behaviours, multiplex with ODM
+    // Gedmo behaviours
     function(string $filePath, string $prefix, string $content): string {
       if (strpos($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php') !== false) {
         return preg_replace(
           "%'Gedmo\\\\%",
           "'" . $prefix . "\\\\Gedmo\\\\",
+          $content
+        );
+      }
+      return $content;
+    },
+    // Gedmo behaviours again
+    function(string $filePath, string $prefix, string $content): string {
+      if (strpos($filePath, 'gedmo/doctrine-extensions/src/DoctrineExtensions.php') !== false) {
+        return preg_replace(
+          "%'Gedmo'%",
+          "'" . $prefix . "\\\\Gedmo'",
+          $content
+        );
+      }
+      return $content;
+    },
+    // and Gedmo behaviours again
+    function(string $filePath, string $prefix, string $content): string {
+      if (strpos($filePath, 'gedmo/doctrine-extensions/src') !== false) {
+        return preg_replace(
+          '%repositoryClass="Gedmo%',
+          'repositoryClass="' . $prefix . '\\Gedmo',
           $content
         );
       }

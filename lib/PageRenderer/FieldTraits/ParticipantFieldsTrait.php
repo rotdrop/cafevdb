@@ -28,10 +28,12 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /** Participant-fields. */
 trait ParticipantFieldsTrait
@@ -624,9 +626,26 @@ trait ParticipantFieldsTrait
     </tr>
   </thead>
   <tbody>';
+            $options = [];
+            foreach (array_keys($values) as $key) {
+              $options[$key] = $field->getDataOption($key);
+            }
+            // sort by label and data ascending order like in ProjectParticipantFields
+            uasort($options, function($a, $b) {
+              /** @var Entities\ProjectParticipantFieldDataOption $a */
+              /** @var Entities\ProjectParticipantFieldDataOption $b */
+              $cmp = strcmp($a->getLabel(), $b->getLabel());
+              if ($cmp === 0) {
+                $aData = $a->getData();
+                $bData = $b->getData();
+                $cmp = strcmp($aData, $bData);
+              }
+              return $cmp;
+            });
+
             $idx = 0;
-            foreach ($values as $key => $value) {
-              $option =  $field->getDataOption($key);
+            foreach ($options as $key => $option) {
+              $value = $values[$key];
               $label = $option ? $option->getLabel() : '';
               if (!empty($invoices[$key])) {
                 $downloadLink = $this->urlGenerator()
@@ -637,7 +656,7 @@ trait ParticipantFieldsTrait
                               . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
               }
               $html .= '
-<tr data-option-key="'.$key.'" data-field-id="'.$field['id'].'">
+<tr class="field-datum" data-option-key="'.$key.'" data-field-id="'.$field['id'].'">
   <td class="operations">
     <input
       class="operation delete-undelete"
@@ -655,7 +674,7 @@ trait ParticipantFieldsTrait
     <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock lock-unlock left-of-input"/>
     <label class="pme-input pme-input-lock lock-unlock left-of-input" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$key.'"></label>
     <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
-     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
+    <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
   <td>
      <a class="download-link'.(empty($downloadLink) ? ' hidden' : '').'"
@@ -666,9 +685,19 @@ trait ParticipantFieldsTrait
 </tr>';
               $idx++;
             }
+            foreach (IRecurringReceivablesGenerator::UPDATE_STRATEGIES as $tag) {
+              $option = [
+                'value' => $tag,
+                'name' => $this->l->t($tag),
+                'flags' => ($tag === IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION ? PageNavigation::SELECTED : 0),
+                'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
+              ];
+              $updateStrategies[] = $option;
+            }
+            $updateStrategies = PageNavigation::selectOptions($updateStrategies);
             $html .= '
-    <tr data-field-id="'.$field['id'].'">
-      <td class="operations" colspan="2">
+    <tr class="generator" data-field-id="'.$field['id'].'">
+      <td class="operations" colspan="4">
         <input
           class="operation regenerate-all"
           title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
@@ -676,6 +705,18 @@ trait ParticipantFieldsTrait
           value="'.$this->l->t('Recompute all Receivables').'"
           title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
         />
+        <label for="recurring-receivables-update-strategy" class="recurring-receivables-update-strategy">
+          '.$this->l->t('In case of Conflict').'
+        </label>
+        <select
+          id="recurring-receivables-update-strategy"
+          class="recurring-multiplicity-required recurring-receivables-update-strategy"
+          name="recurringReceivablesUpdateStrategy"
+          title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
+        >
+' . $updateStrategies
+. '
+        </select>
       </td>
     </tr>
   </tbody>

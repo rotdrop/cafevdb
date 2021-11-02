@@ -89,11 +89,37 @@ table.pme-main td.pme-value.sepa-bank-accounts div.display-options {
   right:0px;
 }
 
-.sepa-bank-accounts .pme-navigation input.regenerate-receivables {
-  background-image:url('../img/actions/compute-red.svg');
-  background-size:24px;
-  background-position: 4px center;
-  padding-left:32px;
+.sepa-bank-accounts .pme-navigation {
+  span.regenerate-receivables {
+    display:inline-block; /* dropdown does not work well otherwise */
+    input.regenerate-receivables {
+      background-image:url('../img/actions/compute-red.svg');
+      background-size:24px;
+      background-position: 4px center;
+      padding-left:32px;
+      &.busy {
+        background-image:url('../../../core/img/loading.gif') !important;
+      }
+    }
+    &:hover input.regenerate-receivables {
+      &.top {
+        border-radius: 14px 14px 0 0;
+      }
+      &.bottom {
+        border-radius: 0 0 14px 14px;
+      }
+    }
+    .dropdown-content.bottom {
+      bottom: 34px; /* needs to be adjusted if layout changes */
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    .dropdown-content .caption {
+      display:inline-block;
+      padding: 10px 12px;
+      font-weight:bold;
+      font-style:italic;
+    }
+  }
 }
 
 /*

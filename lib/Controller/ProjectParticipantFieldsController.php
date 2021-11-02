@@ -205,12 +205,15 @@ class ProjectParticipantFieldsController extends Controller {
           'value' => $generatorClass,
         ]);
       case self::REQUEST_SUB_TOPIC_RUN:
-        foreach (['fieldId', 'startDate'] as $parameter) {
+        foreach (['fieldId', 'startDate', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
             return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
                                              [ $topic, $parameter ]));
           }
         }
+
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
 
         // fetch the field
         $fieldId = $data['fieldId'];
@@ -237,7 +240,7 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
         if (empty($generator)) {
           return self::grumble(
             $this->l->t('Unable to load generator for recurring receivables "%s".',
@@ -274,14 +277,101 @@ class ProjectParticipantFieldsController extends Controller {
             $managementOption->getLimit(), 'medium'),
           'dataOptionFormInputs' => $inputRows,
         ]);
-      case self::REQUEST_SUB_TOPIC_RUN_ALL:
-        // for the given project (re-)generate all generated receivables
-        foreach (['projectId'] as $parameter) {
+      case self::REQUEST_SUB_TOPIC_REGENERATE:
+        $missing = [];
+        foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
-            return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
-                                             [ $topic, $parameter ]));
+            $missing[] = $parameter;
           }
         }
+        if (!empty($missing)) {
+          return self::grumble(
+            $this->l->t('Missing parameters in request "%s/%s": "%s".', [
+              $topic, $subTopic, implode('", "', $missing),
+            ]));
+        }
+        $updateStrategy = $data['updateStrategy'];
+        if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
+          return self::grumble(
+            $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
+        }
+        $this->logInfo('Update Strategy ' . $updateStrategy);
+
+        // fetch the field
+        $fieldId = $data['fieldId'];
+        /** @var Entities\ProjectParticipantField $field */
+        $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+        if (empty($field)) {
+          return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+        }
+
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
+        $fieldsAffected = 0;
+        $messages = [];
+        $this->entityManager->beginTransaction();
+        try {
+          /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
+          $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
+          if (empty($generator)) {
+            throw new \RuntimeException(
+              $this->l->t('Unable to load generator for recurring receivables "%s".',
+                          $field->getName()));
+          }
+
+          /** @todo Make strategy selectable from UI */
+          list(
+            'added' => $added,
+            'removed' => $removed,
+            'changed' => $changed,
+            'skipped' => $skipped,
+            'notices' => $notices,
+          ) = $generator->updateAll($updateStrategy);
+          $this->flush();
+
+          $messages[] = $this->l->t(
+            'Field "%s", options addded/removed/changed: %d/%d/%d/%d.',
+            [ $field->getName(), $added, $removed, $changed, $skipped ]);
+          $fieldsAffected += $added + $removed + $changed;
+          $messages += (array)$notices;
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if (!$this->entityManager->isTransactionActive()) {
+            $this->entityManager->close();
+            $this->entityManager->reopen();
+          }
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        return self::dataResponse([
+          'message' => $messages,
+          'fieldsAffected' => $fieldsAffected,
+        ]);
+
+        break;
+      case self::REQUEST_SUB_TOPIC_RUN_ALL:
+        // for the given project (re-)generate all generated receivables
+        $missing = [];
+        foreach (['projectId', 'updateStrategy', 'progressToken'] as $parameter) {
+          if (empty($data[$parameter])) {
+            $missing[] = $parameter;
+          }
+        }
+        if (!empty($missing)) {
+          return self::grumble(
+            $this->l->t('Missing parameters in request "%s/%s": "%s".', [
+              $topic, $subTopic, implode('", "', $missing),
+            ]));
+        }
+        $updateStrategy = $data['updateStrategy'];
+        if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
+          return self::grumble(
+            $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
+        }
+        $this->logInfo('Update Strategy ' . $updateStrategy);
 
         /**  @var Entities\Project $project */
         $projectId = $data['projectId'];
@@ -295,6 +385,9 @@ class ProjectParticipantFieldsController extends Controller {
             $this->l->t('Project "%s" has no generated fields.', $project->getName()));
         }
 
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
         $fieldsAffected = 0;
         $messages = [];
         $this->entityManager->beginTransaction();
@@ -302,7 +395,7 @@ class ProjectParticipantFieldsController extends Controller {
           foreach ($generatedFields as $field) {
 
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
             if (empty($generator)) {
               throw new \RuntimeException(
                 $this->l->t('Unable to load generator for recurring receivables "%s".',
@@ -313,14 +406,21 @@ class ProjectParticipantFieldsController extends Controller {
             $this->flush();
 
             /** @todo Make strategy selectable from UI */
-            list('added' => $added, 'removed' => $removed, 'changed' => $changed) =
-                         $generator->updateAll(ReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION);
+            list(
+              'added' => $added,
+              'removed' => $removed,
+              'changed' => $changed,
+              'skipped' => $skipped,
+              'notices' => $notices,
+            ) = $generator->updateAll($updateStrategy);
             $this->flush();
 
             $messages[] = $this->l->t(
-              'Field "%s", options addded/removed/changed: %d/%d/%d.',
-              [ $field->getName(), $added, $removed, $changed ]);
-            $fieldsAffected += $added + $removed + $changed;
+              'Field "%s", options addded/removed/changed/skipped: %d/%d/%d/%d.',
+              [ $field->getName(), $added, $removed, $changed, $skipped ]);
+            $fieldsAffected += $added + $removed + $changed; // $skipped are not affected
+            // display further messages if present
+            $messages += (array)$notices;
           }
 
           $this->entityManager->commit();
@@ -410,10 +510,27 @@ class ProjectParticipantFieldsController extends Controller {
           'dataOptionSelectOption' => $options,
         ]);
       case self::REQUEST_SUB_TOPIC_REGENERATE:
-        if (empty($data['fieldId']) || (empty($data['key']) && empty($data['musicianId']))) {
-          return self::grumble($this->l->t('Missing parameters in request "%s/%s"',
-                                           [ $topic, $subTopic, ]));
+        $missing = [];
+        foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
+          if (empty($data[$parameter])) {
+            $missing[] = $parameter;
+          }
         }
+        if (empty($data['key']) && empty($data['musicianId'])) {
+          $missing += [ 'key', 'musicianId' ];
+        }
+        if (!empty($missing)) {
+          return self::grumble(
+            $this->l->t('Missing parameters in request "%s/%s": "%s".', [
+              $topic, $subTopic, implode('", "', $missing),
+            ]));
+        }
+        $updateStrategy = $data['updateStrategy'];
+        if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
+          return self::grumble(
+            $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
+        }
+        $this->logInfo('Update Strategy ' . $updateStrategy);
 
         $fieldId = $data['fieldId'];
         /** @var Entities\ProjectParticipantField $field */
@@ -435,6 +552,9 @@ class ProjectParticipantFieldsController extends Controller {
           }
         }
 
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
         $receivable = null;
         if (!empty($data['key'])) {
           $receivable = $field->getDataOption($data['key']);
@@ -444,23 +564,36 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
         if (empty($generator)) {
           return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
                                            $field->getName()));
         }
 
+        $messages = [];
         $this->entityManager->beginTransaction();
         try {
           if (!empty($receivable)) {
-            $generator->updateReceivable($receivable, $participant);
+            list(
+              'added' => $added,
+              'removed' => $removed,
+              'changed' => $changed,
+              'skipped' => $skipped,
+              'notices' => $notices,
+            ) = $generator->updateReceivable($receivable, $participant, $updateStrategy);
             foreach ($receivable->getFieldData() as $receivableDatum) {
               // unfortunately cascade does not work with multiple
               // "complicated" associations.
               $this->persist($receivableDatum);
             }
           } else {
-            $generator->updateParticipant($participant, $receivable);
+            list(
+              'added' => $added,
+              'removed' => $removed,
+              'changed' => $changed,
+              'skipped' => $skipped,
+              'notices' => $notices,
+            ) = $generator->updateParticipant($participant, $receivable, $updateStrategy);
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($participant->getParticipantFieldsData() as $datum) {
               if ($datum->getField()->getId() == $fieldId) {
@@ -468,6 +601,7 @@ class ProjectParticipantFieldsController extends Controller {
               }
             }
           }
+          $messages += $notices;
           $this->flush();
           $this->entityManager->commit();
         } catch (\Throwable $t) {
@@ -492,8 +626,9 @@ class ProjectParticipantFieldsController extends Controller {
           }
         }
 
+        array_unshift($messages, $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]));
         return self::dataResponse([
-          'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
+          'message' => $messages,
           'amounts' => $receivableAmounts,
         ]);
       default:

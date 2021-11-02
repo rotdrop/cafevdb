@@ -5354,10 +5354,7 @@ class phpMyEdit
 		}
 
 		// remove deleted record from misc selection
-		$recordData =
-			(count($this->rec) == 1)
-			? array_values($this->rec)[0]
-			: $recordData = json_encode($this->rec);
+		$recordData = json_encode($this->rec);
 		while (($mrecs_key = array_search($recordData, $this->mrecs)) !== false) {
 			unset($this->mrecs[$mrecs_key]);
 		}
@@ -5388,7 +5385,7 @@ class phpMyEdit
 			$kparts = [];
 			foreach ($this->rec as $key => $rec) {
 				$delim = $this->key_delim[$key];
-				$kparts[] = $this->fdd[$this->key]['name'].' = '.$this->key_delim.$this->rec.$this->key_delim;
+				$kparts[] = $this->fdd[$this->key]['name'].' = '.$this->key_delim.$rec.$this->key_delim;
 			}
 			$body	 = 'An item with '.implode(', ', $kparts).' was updated in';
 			$vals	 = $new_vals;

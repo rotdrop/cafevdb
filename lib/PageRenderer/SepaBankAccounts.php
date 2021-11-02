@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Functions;
@@ -305,14 +306,41 @@ class SepaBankAccounts extends PMETableViewBase
 </span>';
       $buttons[] = [ 'code' => $sepaDueDeadline, 'name' => 'due-deadline' ];
 
+
+
       $regenerateReceivables = '
-<span id="regenerate-receivables" class="'.(!$haveGenerators ? 'hidden ' : '').'regenerate-receivables">
+<span id="regenerate-receivables" class="'.(!$haveGenerators ? 'hidden ' : '').'regenerate-receivables dropdown-container">
   <input type="button"
          value="'.$this->l->t('Recompute').'"
          title="'.$this->toolTipsService['bulk-transactions-regenerate-receivables'].'"
          class="regenerate-receivables"
          data-project-id="'.$this->projectId.'"
   />
+  <nav class="dropdown-content dropdown-align-left">
+    <ul>
+      <li><span class="caption">'.$this->l->t('In case of Conflict').'</span></li>';
+      foreach (IRecurringReceivablesGenerator::UPDATE_STRATEGIES as $tag) {
+        $cssId = 'recurring-receivables-update-strategy-' . $tag;
+        $checked = $tag === 'exception' ? 'checked' : '';
+        $regenerateReceivables .= '
+      <li data-id="'.$tag.'">
+        <a href="#">
+          <input id="'.$cssId.'"
+                 type="radio"
+                 class="checkbox recurring-receivables-update-strategy"
+                 name="recurringReceivablesUpdateStrategy-{POSITION}"
+                 value="'.$tag.'"
+                 '.$checked.'
+          />
+          <label for="'.$cssId.'">
+          '.$this->l->t($tag).'
+          </label>
+        </a>
+      </li>';
+      }
+      $regenerateReceivables .= '
+    </ul>
+  </nav>
 </span>';
       $buttons[] = [ 'code' => $regenerateReceivables, 'name' => 'regenerate-receivables' ];
 

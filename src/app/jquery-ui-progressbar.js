@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,22 +19,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
- * Decode HTML entities in input.
+ * @file
  *
- * @returns {string}
+ * Collect some jQuery tweaks in this file.
+ *
  */
-function htmlDecode(input) {
-  const doc = new DOMParser().parseFromString(input, 'text/html');
-  return doc.documentElement.textContent;
-}
 
-export {
-  htmlDecode,
-};
+import { $ } from './globals.js';
+
+require('jquery-ui/ui/widgets/progressbar');
+
+$.widget('ui.progressbar', $.ui.progressbar, {
+  _create() {
+    console.debug('OVERRIDE PROGRESSBAR');
+    this._super();
+  },
+  _refreshValue() {
+    this._super();
+    const percentage = this._percentage();
+    this.valueDiv.width(percentage.toFixed(6) + '%');
+  },
+});
 
 // Local Variables: ***
-// js-indent-level: 2 ***
 // indent-tabs-mode: nil ***
+// js-indent-level: 2 ***
 // End: ***

@@ -1,0 +1,9 @@
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "skip"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
+msgid "exception"
+msgstr ""

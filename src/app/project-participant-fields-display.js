@@ -25,6 +25,7 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
+import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import generateUrl from './generate-url.js';
 
 const participantOptionHandlers = function(container, musicianId) {
@@ -98,29 +99,41 @@ const participantOptionHandlers = function(container, musicianId) {
       const row = $this.closest('tr');
       const fieldId = row.data('fieldId');
       const optionKey = row.data('optionKey');
-      const cleanup = function() {};
-      const request = 'option/regenerate';
-      $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            key: optionKey,
-            musicianId,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['amounts'], cleanup)) {
-            return;
-          }
-          if (data.amounts[musicianId]) {
-            row.find('input.pme-input.service-fee').val(data.amounts[musicianId]);
-          }
-          cleanup();
-          Notification.messages(data.message);
-        });
+      const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          $this.removeClass('busy');
+        };
+        const request = 'option/regenerate';
+        $this.addClass('busy');
+        $.post(
+          generateUrl('projects/participant-fields/' + request), {
+            data: {
+              fieldId,
+              key: optionKey,
+              musicianId,
+              updateStrategy,
+              progressToken,
+            },
+          })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          })
+          .done(function(data) {
+            if (!Ajax.validateResponse(data, ['amounts'], cleanup)) {
+              return;
+            }
+            if (data.amounts[musicianId]) {
+              row.find('input.pme-input.service-fee').val(data.amounts[musicianId]);
+            }
+            Notification.messages(data.message);
+            cleanup();
+          });
+      };
+
+      confirmedReceivablesUpdate(updateStrategy, requestHandler);
+
       return false;
     });
 
@@ -156,27 +169,37 @@ const participantOptionHandlers = function(container, musicianId) {
       const $this = $(this);
       const row = $this.closest('tr');
       const fieldId = row.data('fieldId');
-      const cleanup = function() {};
-      const request = 'option/regenerate';
-      $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            musicianId,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, [], cleanup)) {
-            return;
-          }
-          // just trigger reload
-          container.find('form.pme-form input.pme-reload').first().trigger('click');
-          cleanup();
-          Notification.messages(data.message);
-        });
+      const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          $this.removeClass('busy');
+        };
+        const request = 'option/regenerate';
+        $this.addClass('busy');
+        $.post(
+          generateUrl('projects/participant-fields/' + request), {
+            data: {
+              fieldId,
+              musicianId,
+              updateStrategy,
+              progressToken,
+            },
+          })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          })
+          .done(function(data) {
+            if (!Ajax.validateResponse(data, [], cleanup)) {
+              return;
+            }
+            // just trigger reload
+            container.find('form.pme-form input.pme-reload').first().trigger('click');
+            cleanup();
+            Notification.messages(data.message);
+          });
+      };
+      confirmedReceivablesUpdate(updateStrategy, requestHandler);
       return false;
     });
 };

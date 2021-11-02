@@ -29,6 +29,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
@@ -43,6 +44,7 @@ use OCA\CAFEVDB\Common\Util;
 class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
   /** @var float */
   protected $amount;
@@ -60,9 +62,10 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     ConfigService $configService
     , EntityManager $entityManager
     , ToolTipsService $toolTipsService
+    , ProgressStatusService $progressStatusService
     , ?\DateInterval $interval = null
   ) {
-    parent::__construct($entityManager);
+    parent::__construct($entityManager, $progressStatusService);
     $this->configService = $configService;
     $this->l = $this->l10n();
 
@@ -118,17 +121,31 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     $endingSeconds = (new \DateTimeImmutable)->getTimestamp();
 
     for (; $seconds <= $endingSeconds; $seconds += $this->intervalSeconds) {
-      if ($receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]))->count() == 0) {
+      $timeStamp = $this->formatTimeStamp($seconds);
+      $labelText = $this->l->t($labelTemplate = 'Option %s', $timeStamp);
+      $tooltipTemplate = $this->toolTipsService['periodic-recurring-receivable-option']??'';
+      $tooltipText = $this->l->t($tooltipTemplate);
+
+      $existingReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]));
+      if ($existingReceivables->count() == 0) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
                     ->setKey(Uuid::create())
-                    ->setLabel($this->l->t('Option %d', $seconds))
-                    ->setToolTip($this->toolTipsService['periodic-recurring-receivable-option'])
+                    ->setLabel($labelText)
+                    ->setToolTip($tooltipText)
                     ->setData($seconds) // may change in the future
                     ->setLimit(null); // may change in the future
         $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+      } else {
+        // update display things, but keep the essential data untouched
+        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+        $receivable = $existingReceivables->first();
+        $receivable->setLabel($labelText)
+                   ->setTooltip($tooltipText);
       }
+      $this->translate($receivable, 'label', null, sprintf($labelTemplate, $timeStamp))
+           ->translate($receivable, 'tooltip', null, $tooltipTemplate);
     }
     return $this->serviceFeeField->getSelectableOptions();
   }
@@ -140,7 +157,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   {
     $participantFieldsData = $participant->getParticipantFieldsData();
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
-    $added = $removed = $changed = 0;
+    $added = $removed = $changed = $skipped = false;
+    $notices = [];
     if ($existingReceivableData->count() == 0) {
       $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
@@ -152,14 +170,20 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
       $receivable->getFieldData()->add($datum);
       $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
       $participant->getProject()->getParticipantFieldsData()->add($datum);
-      ++$added;
+      $added = true;
     } else {
       // there is at most one ...
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $datum = $existingReceivableData->first();
       $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
-      ++$changed;
+      $changed = true;
     }
-    return [ 'added' => $added, 'removed' => $removed, 'changed' => $changed ];
+    return [
+      'added' => (int)$added,
+      'removed' => (int)$removed,
+      'changed' => (int)$changed,
+      'skipped' => (int)$skipped,
+      'notices' => $notices,
+    ];
   }
 }

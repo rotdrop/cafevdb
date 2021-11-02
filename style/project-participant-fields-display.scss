@@ -32,25 +32,30 @@ form.pme-form.project-participant-fields-display {
     display:inline-block;
     width:100%;
     position:relative;
+    text-align:justify;
   }
 
-  &:not(.pme-change) span.allowed-option-name:empty,
-  &:not(.pme-change) span.allowed-option-name:empty ~ span {
-    display:none;
+  &:not(.pme-change) {
+    span.allowed-option-name:empty,
+    span.allowed-option-name:empty ~ span {
+      display:none;
+    }
+
+    td.groupofpeople:not(.pme-key),
+    td.groupofpeople-id:not(.pme-key),
+    td.service-fee.set:not(.pme-key),
+    td.service-fee.enum:not(.pme-key) {
+      min-width:12em;
+    }
   }
 
-  &:not(.pme-change) td.groupofpeople:not(.pme-key),
-  &:not(.pme-change) td.groupofpeople-id:not(.pme-key),
-  &:not(.pme-change) td.service-fee.set:not(.pme-key),
-  &:not(.pme-change) td.service-fee.enum:not(.pme-key) {
-    min-width:12em;
-  }
-
-  &:not(.pme-change,.pme-list) td.groupofpeople:not(.pme-key),
-  &:not(.pme-change,.pme-list) td.groupofpeople-id:not(.pme-key),
-  &:not(.pme-change,.pme-list) td.service-fee.set:not(.pme-key),
-  &:not(.pme-change,.pme-list) td.service-fee.enum:not(.pme-key) {
-    width:32em;
+  &:not(.pme-change,.pme-list) {
+    td.groupofpeople:not(.pme-key),
+    td.groupofpeople-id:not(.pme-key),
+    td.service-fee.set:not(.pme-key),
+    td.service-fee.enum:not(.pme-key) {
+      width:32em;
+    }
   }
 
   td.pme-value.simple-valued.money input {
@@ -96,17 +101,20 @@ form.pme-form.project-participant-fields-display {
     padding-right:0.5em;
   }
 
-  &:not(.pme-change) td.service-fee.enum {
-    font-family:inherit;
-  }
+  &:not(.pme-change) {
+    td.service-fee.enum {
+      font-family:inherit;
+    }
 
-  &:not(.pme-change) span.allowed-option-name {
-    max-width:5em;
-    /* float:left; */
-    overflow:hidden;
-    text-overflow:ellipsis;
-    position:absolute; /* needs position != static on parent */
-    left:0;
+    span.allowed-option-name {
+      max-width:5em;
+      /*float:left;*/
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      /*position:absolute;*/ /* needs position != static on parent */
+      /*left:0;*/
+    }
   }
 
   &.pme-view span.allowed-option-name,
@@ -116,9 +124,10 @@ form.pme-form.project-participant-fields-display {
 
   &:not(.pme-change) span.allowed-option-value.money {
     font-family:monospace;
-    /* float:right; */
-    position:absolute;
-    right:0;
+    float:right;
+    white-space:nowrap;
+    /*position:absolute;*/
+    /*right:0;*/
   }
 
   &:not(.pme-change) span.allowed-option.group {
@@ -170,28 +179,31 @@ form.pme-form.project-participant-fields-display {
     float:right;
   }
 
-  &:not(.pme-change) td.money.single-valued,
-  &:not(.pme-change) td.money.simple-valued {
-    font-family:monospace;
-  }
-
-  &:not(.pme-change) td.money.single-valued.groupofpeople {
-    font-family:inherit;
+  &:not(.pme-change) {
+    td.money.single-valued,
+    td.money.simple-valued {
+      font-family:monospace;
+    }
+    td.money.single-valued.groupofpeople {
+      font-family:inherit;
+    }
   }
 
   span.allowed-option-name ~ span.allowed-option-value {
     /* margin-left:1ex; */
   }
 
-  label.groupofpeople span.allowed-option {
-    margin-left:1ex;
-    display:none;
-  }
+  label.groupofpeople {
+    span.allowed-option {
+      margin-left:1ex;
+      display:none;
+    }
 
-  label.groupofpeople.single-valued span.allowed-option,
-  label.groupofpeople.predefined span.allowed-option.selected {
-    display:unset;
-    font-weight:bold;
+    &.single-valued span.allowed-option,
+    &.predefined span.allowed-option.selected {
+      display:unset;
+      font-weight:bold;
+    }
   }
 
   td.pme-value input.sepa-debit-mandate,
@@ -204,82 +216,130 @@ form.pme-form.project-participant-fields-display {
   /**
    * Style first and subsequence lines in list-view
    */
-  &.pme-list td.pme-value div.allowed-option-wrapper,
-  &.pme-list td.pme-cell div.allowed-option-wrapper {
-    max-height:24px; /* hard restriction on table row height */
-    /* line-height:12px; */
-    line-height:7px;
-    font-size:66.67%;
-    overflow:hidden;
-    position:relative;
+  &.pme-list {
+    td.pme-value div.allowed-option-wrapper,
+    td.pme-cell div.allowed-option-wrapper {
+      max-height:24px; /* hard restriction on table row height */
+      /* line-height:12px; */
+      line-height:7px;
+      font-size:66.67%;
+      overflow:hidden;
+      position:relative;
+    }
+
+    td.pme-value div.allowed-option-wrapper::first-line,
+    td.pme-cell div.allowed-option-wrapper::first-line {
+      line-height:12px;
+      font-size:150%; /* this is relative to the 2/3 above */
+    }
+
+    td.pme-value div.allowed-option-wrapper > *,
+    td.pme-cell div.allowed-option-wrapper > *{
+      /* -moz-transform: scale(0.5);
+         zoom: 0.5; */
+    }
   }
 
-  &.pme-list td.pme-value div.allowed-option-wrapper::first-line,
-  &.pme-list td.pme-cell div.allowed-option-wrapper::first-line {
-    line-height:12px;
-    font-size:150%; /* this is relative to the 2/3 above */
-  }
-
-  &.pme-list td.pme-value div.allowed-option-wrapper > *,
-  &.pme-list td.pme-cell div.allowed-option-wrapper > *{
-    /* -moz-transform: scale(0.5);
-       zoom: 0.5; */
-  }
-
-  tr.participant-field.recurring td.pme-value td.operations input.operation.regenerate-all {
-    width:100%;
-    height:unset;
-    min-height:unset;
-    margin-right:unset;
-  }
-
-  tr.participant-field.recurring table.row-count-0 thead  {
-    display:none;
+  tr.participant-field.recurring {
+    td.pme-value {
+      table {
+        border-collapse:collapse;
+        td.operations {
+          input.operation.regenerate-all {
+            width:auto;
+            height:unset;
+            min-height:unset;
+            margin-right:unset;
+            /*background-image:url('../img/reload-solid.svg');*/
+            background-image:url('../img/actions/compute-red.svg');
+            background-size: 24px 24px;
+            background-position: 2px center;
+            background-repeat:no-repeat;
+            padding-left:32px;
+          }
+          label.recurring-receivables-update-strategy {
+            margin-left:1em;
+          }
+          input.operation {
+            background-repeat:no-repeat;
+            background-size: 24px 24px;
+            background-position: center;
+            width:28px;
+            height:28px;
+            vertical-align:middle;
+            margin-right:1em;
+            &.regenerate {
+              /*background-image:url('../img/reload-solid.svg');*/
+              background-image:url('../img/actions/compute-red.svg');
+            }
+            &.delete-undelete {
+              background-image:url('../img/cafevdb-delete.svg');
+            }
+            &.busy {
+              background-image:url('../../../core/img/loading.gif') !important;
+            }
+          }
+        }
+        tr.deleted {
+          input.operation.delete-undelete {
+            background-image:url('../img/history.svg');
+          }
+          td.input * {
+            opacity:0.5;
+          }
+        }
+        &.row-count-0 thead  {
+          display:none;
+        }
+        tr.generator {
+          border-top: 1px solid black;
+        }
+      }
+    }
   }
 
   td.pme-value.cloud-file table.file-upload {
     width:100%;
   }
 
-  tr.file-upload-row td.cloud-file {
-    width:100%;
-    padding-right:3px;
-  }
+  tr.file-upload-row {
+    td.cloud-file {
+      width:100%;
+      padding-right:3px;
+    }
 
-  tr.file-upload-row td.operations .operation {
-    display:inline-block;
-    background-repeat:no-repeat;
-    background-size: 24px 24px;
-    background-position: center;
-    width:28px;
-    height:28px;
-    vertical-align:middle;
-    margin-right:0.5em;
-  }
+    td.operations .operation {
+      display:inline-block;
+      background-repeat:no-repeat;
+      background-size: 24px 24px;
+      background-position: center;
+      width:28px;
+      height:28px;
+      vertical-align:middle;
+      margin-right:0.5em;
+      &.delete-undelete {
+        background-image:url('../img/cafevdb-delete.svg');
+      }
+      &.upload-replace {
+        background-image:url('../../../core/img/actions/upload.svg');
+      }
+      &.open-parent {
+        background-image:url('../../../core/img/filetypes/folder-external.svg');
+      }
+    }
 
-  tr.file-upload-row .operation.delete-undelete {
-    background-image:url('../img/cafevdb-delete.svg');
-  }
+    a[href=""] {
+      display:none;
+    }
 
-  tr.file-upload-row .operation.upload-replace {
-    background-image:url('../../../core/img/actions/upload.svg');
-  }
+    a ~ .upload-placeholder {
+      display:none;
+    }
 
-  tr.file-upload-row .operation.open-parent {
-    background-image:url('../../../core/img/filetypes/folder-external.svg');
-  }
-
-  tr.file-upload-row a[href=""] {
-    display:none;
-  }
-
-  tr.file-upload-row a ~ .upload-placeholder {
-    display:none;
-  }
-
-  tr.file-upload-row a[href=""] ~ .upload-placeholder {
-    display:inline-block;
-    width:100%;
+    a[href=""] ~ .upload-placeholder {
+      display:inline-block;
+      width:100%;
+    }
   }
 }
 

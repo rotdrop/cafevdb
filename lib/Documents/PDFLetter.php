@@ -154,8 +154,6 @@ class PDFLetter extends \TCPDF
     $pagesDummy = $this->l10n->t('page').' '.'9'.' '.$this->l10n->t('of').' '.'9';
     $pagesWidth = $this->GetStringWidth($pagesDummy);
 
-    $this->logInfo('PAGES WIDTH ' . $pagesDummy . ': ' . $pagesWidth);
-
     if ($this->getPage() == 1) {
 
       $this->Line(self::LEFT_MARGIN, self::PAGE_HEIGHT-self::FIRST_FOOTER_HEIGHT,

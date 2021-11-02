@@ -1,14 +1,14 @@
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:180
+#: lib/Controller/PersonalSettingsController.php:180
 #, php-format
 msgid "on"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:180
+#: lib/Controller/PersonalSettingsController.php:180
 #, php-format
 msgid "off"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/Controller/PersonalSettingsController.php:181
+#: lib/Controller/PersonalSettingsController.php:181
 #, php-format
 msgid "tooltips"
 msgstr ""

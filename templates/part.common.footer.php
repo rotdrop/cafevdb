@@ -111,3 +111,14 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
     </div>
   </div>
 </script>
+<!-- generic progress-wrapper -->
+<script id="progressWrapperTemplate" type="text/template">
+ <div class="progress-wrapper" id="{wrapperId}">
+   <div class="caption">{caption}</div>
+   <div class="progress">
+     <span class="progressbar">
+       <span class="label">{label}</span>
+     </span>
+   </div>
+ </div>
+</script>

@@ -38,6 +38,7 @@ import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import modalizer from './modalizer.js';
 import { recordValue as pmeRecordValue } from './pme-record-id.js';
+import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import './lock-input.js';
 import {
   data as pmeData,
@@ -1247,7 +1248,7 @@ const mandateInsuranceReady = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
 
-  container.find('input.debit-note.' + pmeToken('misc'))
+  container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
     .on('click', mandateExportHandler);
 };
@@ -1295,47 +1296,75 @@ const mandateReady = function(selector) {
       return false;
     });
 
+  const $recurringReceivablesUpdateStrategy = container.find('input.recurring-receivables-update-strategy');
+
+  // synchronize top and bottom update-strategy radio buttons´
+  $recurringReceivablesUpdateStrategy
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      const otherId = $this.hasClass('top')
+        ? $this.attr('id').replace(/-up$/, '-down')
+        : $this.attr('id').replace(/-down$/, '-up');
+      $('#' + otherId).prop('checked', true);
+      return false;
+    });
+
   container.find('input.regenerate-receivables')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
 
-      const cleanup = function() {
-        Page.busyIcon(false);
-        modalizer(false);
+      const updateStrategy = $recurringReceivablesUpdateStrategy.filter(':checked').val();
+
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          Page.busyIcon(false);
+          // modalizer(false);
+          $this.removeClass('busy');
+        };
+
+        const request = 'generator/run-all';
+        const projectId = $this.data('projectId');
+
+        Page.busyIcon(true);
+        // modalizer(true);
+        $this.addClass('busy');
+
+        $.post(
+          generateUrl('projects/participant-fields/' + request), {
+            request,
+            data: {
+              projectId,
+              updateStrategy,
+              progressToken,
+            },
+          })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          })
+          .done(function(data) {
+            if (!Ajax.validateResponse(
+              data,
+              ['fieldsAffected'],
+              cleanup)) {
+              return;
+            }
+
+            Notification.messages(data.message);
+            cleanup();
+
+            if (data.fieldsAffected > 0) {
+              // reload surrounding form
+              if (pmeReload.length > 0) {
+                pmeReload.trigger('click');
+              }
+            }
+          });
       };
 
-      Page.busyIcon(true);
-      modalizer(true);
-
-      const request = 'generator/run-all';
-      const projectId = $this.data('projectId');
-      $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          request,
-          data: { projectId },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(
-            data,
-            ['fieldsAffected'],
-            cleanup)) {
-            return;
-          }
-
-          Notification.messages(data.message);
-          cleanup();
-
-          if (data.fieldsAffected > 0) {
-            // reload surrounding form
-            if (pmeReload.length > 0) {
-              pmeReload.trigger('click');
-            }
-          }
-        });
+      confirmedReceivablesUpdate(updateStrategy, requestHandler);
 
       return false;
     });
@@ -1351,7 +1380,7 @@ const mandateReady = function(selector) {
     return;
   }
 
-  container.find('input.debit-note.' + pmeToken('misc'))
+  container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
     .on('click', mandateExportHandler);
 

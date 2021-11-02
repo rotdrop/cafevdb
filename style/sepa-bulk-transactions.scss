@@ -22,34 +22,39 @@
 
 .pme-form.pme-list.sepa-bulk-transactions {
 
-  tr.pme-row.bulk-transaction:not(.following-hidden,.composite-payment) td {
-    font-weight:bold;
+  tr.pme-row.bulk-transaction {
+    &:not(.following-hidden,.composite-payment) td {
+      font-weight:bold;
+    }
+
+    &.following-hidden {
+      &.odd:not(:hover) td {
+        background:#B7CEEC;
+      }
+
+      &.even:not(:hover) td {
+        background:#C6DEFF;
+      }
+
+      &.first ~ tr.pme-row.bulk-transaction.following {
+        display:none;
+      }
+    }
   }
 
-  tr.pme-row.bulk-transaction.odd.following-hidden:not(:hover) td {
-    background:#B7CEEC;
-  }
+  tr.pme-row.composite-payment {
+    &.odd:not(:hover) td {
+      background:#bfdeb9;
+    }
 
-  tr.pme-row.bulk-transaction.even.following-hidden:not(:hover) td {
-    background:#C6DEFF;
-  }
+    &.even:not(:hover) td {
+      background:#f6ffda;
+    }
 
-  tr.pme-row.bulk-transaction.first.following-hidden ~ tr.pme-row.bulk-transaction.following {
-    display:none;
+    &:hover td {
+      background:#96b183;
+    }
   }
-
-  tr.pme-row.composite-payment.odd:not(:hover) td {
-    background:#bfdeb9;
-  }
-
-  tr.pme-row.composite-payment.even:not(:hover) td {
-    background:#f6ffda;
-  }
-
-  tr.pme-row.composite-payment:hover td {
-    background:#96b183;
-  }
-
 }
 
 /* GnuCash dark green #bfdeb9 */
