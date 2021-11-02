@@ -359,8 +359,6 @@ class InstrumentInsuranceService
     /** @var Entities\Musician $musician */
     $billToParty = $this->ensureMusician($musicianOrId);
 
-    $this->logInfo('BTP class ' . get_class($billToParty));
-
     $payableInsurances = $billToParty->getPayableInsurances();
 
     $insuranceOverview = [
