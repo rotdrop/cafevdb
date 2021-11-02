@@ -42,9 +42,9 @@ require('./jquery-ui-progressbar.js');
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
 
-const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
+const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, single) {
   const handlerWithProgress = function() {
-    ProgressStatus.create(-1, 0, { field: null, musician: null, receivable: null })
+    ProgressStatus.create(-1, 0, { field: null, musician: '', receivable: '' })
       .fail(Ajax.handleError)
       .done(function(data) {
         if (!Ajax.validateResponse(data, ['id'])) {
@@ -80,13 +80,20 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
             ProgressStatus.poll(progressToken, {
               update(id, current, target, data) {
                 if (data.field) {
-                  dialogHolder.dialog(
-                    'option', 'title',
-                    t(appName, 'Updating receivables for {field}, {receivable}, {musician}', data),
-                  );
+                  try {
+                    dialogHolder.dialog(
+                      'option', 'title',
+                      t(appName, 'Updating receivables for {field}, {receivable}, {musician}',
+                        { field: data.field || '', receivable: data.receivable || '', musician: data.musician || '' })
+                    );
+                  } catch (e) {
+                    // don't care
+                  }
                 }
-                progressWrapper.find('.progressbar .label').text(
-                  t(appName, '{current} of {target}', { current, target }));
+                if (current >= 0 && target > 0) {
+                  progressWrapper.find('.progressbar .label').text(
+                    t(appName, '{current} of {target}', { current, target }));
+                }
                 progressWrapper.find('.progressbar').progressbar('option', 'value', current / target * 100.0);
                 return current < 0 || current !== target;
               },
@@ -104,18 +111,25 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
         });
         requestHandler(progressToken, function() {
           if (progressOpen) {
-            progressWrapper.dialog('close');
+            try {
+              progressWrapper.dialog('close');
+            } catch (e) {
+              // don't care
+            }
           }
         });
       });
   };
+  const handler = single
+    ? function() { requestHandler(null, function() {}); }
+    : handlerWithProgress;
   if (updateStrategy === 'replace') {
     Dialogs.confirm(
       t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', { updateStrategy }),
       t(appName, 'Overwrite Existing Records?'),
-      (answer) => (answer && handlerWithProgress()));
+      (answer) => (answer && handler()));
   } else {
-    handlerWithProgress();
+    handler();
   }
 };
 

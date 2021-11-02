@@ -37,6 +37,8 @@ class EmailAttachment implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
 
   /**
    * @var string
@@ -51,13 +53,6 @@ class EmailAttachment implements \ArrayAccess
    * @ORM\JoinColumn(onDelete="CASCADE")
    */
   private $draft;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
-   */
-  private $user;
 
   /**
    * Set messageId.
@@ -81,30 +76,6 @@ class EmailAttachment implements \ArrayAccess
   public function getDraft()
   {
     return $this->draft;
-  }
-
-  /**
-   * Set user.
-   *
-   * @param string $user
-   *
-   * @return EmailAttachment
-   */
-  public function setUser(string $user):EmailAttachment
-  {
-    $this->user = $user;
-
-    return $this;
-  }
-
-  /**
-   * Get user.
-   *
-   * @return string
-   */
-  public function getUser():string
-  {
-    return $this->user;
   }
 
   /**

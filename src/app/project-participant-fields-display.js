@@ -132,7 +132,7 @@ const participantOptionHandlers = function(container, musicianId) {
           });
       };
 
-      confirmedReceivablesUpdate(updateStrategy, requestHandler);
+      confirmedReceivablesUpdate(updateStrategy, requestHandler, 'single');
 
       return false;
     });
