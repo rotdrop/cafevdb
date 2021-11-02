@@ -2895,8 +2895,7 @@ Störung.';
         ]);
       if (empty($attachment)) {
         $attachment = (new Entities\EmailAttachment())
-          ->setFileName($tmpFile)
-          ->setUser($this->userId());
+                    ->setFileName($tmpFile);
       }
       if ($this->draftId > 0) {
         $attachment->setDraft($this->getReference(Entities\EmailDraft::class, $this->draftId));
