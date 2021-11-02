@@ -1315,13 +1315,13 @@ const mandateReady = function(selector) {
     .on('click', function(event) {
       const $this = $(this);
 
-      const updateStrategy = $recurringReceivablesUpdateStrategy.val();
+      const updateStrategy = $recurringReceivablesUpdateStrategy.filter(':checked').val();
 
       const requestHandler = function(progressToken, progressCleanup) {
         const cleanup = function() {
           progressCleanup();
           Page.busyIcon(false);
-          modalizer(false);
+          // modalizer(false);
           $this.removeClass('busy');
         };
 
@@ -1329,7 +1329,7 @@ const mandateReady = function(selector) {
         const projectId = $this.data('projectId');
 
         Page.busyIcon(true);
-        modalizer(true);
+        // modalizer(true);
         $this.addClass('busy');
 
         $.post(
