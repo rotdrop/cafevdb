@@ -205,7 +205,7 @@ class ProjectParticipantFieldsController extends Controller {
           'value' => $generatorClass,
         ]);
       case self::REQUEST_SUB_TOPIC_RUN:
-        foreach (['fieldId', 'startDate', 'progressToken'] as $parameter) {
+        foreach (['fieldId', 'startDate',] as $parameter) {
           if (empty($data[$parameter])) {
             return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
                                              [ $topic, $parameter ]));
@@ -511,13 +511,16 @@ class ProjectParticipantFieldsController extends Controller {
         ]);
       case self::REQUEST_SUB_TOPIC_REGENERATE:
         $missing = [];
-        foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
+        foreach (['fieldId', 'updateStrategy'] as $parameter) {
           if (empty($data[$parameter])) {
             $missing[] = $parameter;
           }
         }
         if (empty($data['key']) && empty($data['musicianId'])) {
           $missing += [ 'key', 'musicianId' ];
+        }
+        if ((empty($data['key']) || empty($data['musicianId'])) && empty($data['progressToken'])) {
+          $missing[] = 'progressToken';
         }
         if (!empty($missing)) {
           return self::grumble(
