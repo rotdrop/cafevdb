@@ -1315,15 +1315,16 @@ const mandateReady = function(selector) {
     .on('click', function(event) {
       const $this = $(this);
 
-      const cleanup = function() {
-        Page.busyIcon(false);
-        modalizer(false);
-        $this.removeClass('busy');
-      };
-
       const updateStrategy = $recurringReceivablesUpdateStrategy.val();
 
-      const requestHandler = function() {
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          Page.busyIcon(false);
+          modalizer(false);
+          $this.removeClass('busy');
+        };
+
         const request = 'generator/run-all';
         const projectId = $this.data('projectId');
 
@@ -1337,6 +1338,7 @@ const mandateReady = function(selector) {
             data: {
               projectId,
               updateStrategy,
+              progressToken,
             },
           })
           .fail(function(xhr, status, errorThrown) {

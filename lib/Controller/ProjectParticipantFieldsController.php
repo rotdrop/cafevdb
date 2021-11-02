@@ -205,12 +205,15 @@ class ProjectParticipantFieldsController extends Controller {
           'value' => $generatorClass,
         ]);
       case self::REQUEST_SUB_TOPIC_RUN:
-        foreach (['fieldId', 'startDate'] as $parameter) {
+        foreach (['fieldId', 'startDate', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
             return self::grumble($this->l->t('Missing parameters in request "%s": "%s".',
                                              [ $topic, $parameter ]));
           }
         }
+
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
 
         // fetch the field
         $fieldId = $data['fieldId'];
@@ -237,7 +240,7 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
         if (empty($generator)) {
           return self::grumble(
             $this->l->t('Unable to load generator for recurring receivables "%s".',
@@ -276,7 +279,7 @@ class ProjectParticipantFieldsController extends Controller {
         ]);
       case self::REQUEST_SUB_TOPIC_REGENERATE:
         $missing = [];
-        foreach (['fieldId', 'updateStrategy'] as $parameter) {
+        foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
             $missing[] = $parameter;
           }
@@ -302,12 +305,15 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
         }
 
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
         $fieldsAffected = 0;
         $messages = [];
         $this->entityManager->beginTransaction();
         try {
           /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-          $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+          $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
           if (empty($generator)) {
             throw new \RuntimeException(
               $this->l->t('Unable to load generator for recurring receivables "%s".',
@@ -349,7 +355,7 @@ class ProjectParticipantFieldsController extends Controller {
       case self::REQUEST_SUB_TOPIC_RUN_ALL:
         // for the given project (re-)generate all generated receivables
         $missing = [];
-        foreach (['projectId', 'updateStrategy'] as $parameter) {
+        foreach (['projectId', 'updateStrategy', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
             $missing[] = $parameter;
           }
@@ -379,6 +385,9 @@ class ProjectParticipantFieldsController extends Controller {
             $this->l->t('Project "%s" has no generated fields.', $project->getName()));
         }
 
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
         $fieldsAffected = 0;
         $messages = [];
         $this->entityManager->beginTransaction();
@@ -386,7 +395,7 @@ class ProjectParticipantFieldsController extends Controller {
           foreach ($generatedFields as $field) {
 
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
             if (empty($generator)) {
               throw new \RuntimeException(
                 $this->l->t('Unable to load generator for recurring receivables "%s".',
@@ -502,7 +511,7 @@ class ProjectParticipantFieldsController extends Controller {
         ]);
       case self::REQUEST_SUB_TOPIC_REGENERATE:
         $missing = [];
-        foreach (['fieldId', 'updateStrategy'] as $parameter) {
+        foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
           if (empty($data[$parameter])) {
             $missing[] = $parameter;
           }
@@ -543,6 +552,9 @@ class ProjectParticipantFieldsController extends Controller {
           }
         }
 
+        // id for progress-bar
+        $progressToken = $data['progressToken'];
+
         $receivable = null;
         if (!empty($data['key'])) {
           $receivable = $field->getDataOption($data['key']);
@@ -552,7 +564,7 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+        $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
         if (empty($generator)) {
           return self::grumble($this->l->t('Unable to load generator for recurring receivables "%s".',
                                            $field->getName()));

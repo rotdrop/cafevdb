@@ -31,7 +31,6 @@ import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
 import { instrumentationNumbersPopup } from './projects.js';
-import { data as pmeData } from './pme-selectors.js';
 import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';

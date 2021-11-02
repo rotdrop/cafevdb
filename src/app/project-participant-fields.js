@@ -27,26 +27,95 @@ import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.js';
+import * as ProgressStatus from './progress-status.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 
+require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
+require('./jquery-ui-progressbar.js');
 
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
 
 const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
+  const handlerWithProgress = function() {
+    ProgressStatus.create(0, 0, { field: null, musician: null, receivable: null })
+      .fail(Ajax.handleError)
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, ['id'])) {
+          return;
+        }
+        const progressToken = data.id;
+        const progressWrapperTemplate = $('#progressWrapperTemplate');
+        const progressWrapperId = 'project-participant-fields-progress';
+        const progressWrapper = progressWrapperTemplate.octemplate({
+          wrapperId: progressWrapperId,
+          caption: '',
+          label: '',
+        });
+        const oldProgressWrapper = $('#' + progressWrapperId);
+        if (oldProgressWrapper.length === 0) {
+          $('body').append(progressWrapper);
+        } else {
+          oldProgressWrapper.replaceWith(progressWrapper);
+        }
+        progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
+        let progressOpen = false;
+        progressWrapper.cafevDialog({
+          title: t(appName, 'Updating recurring receivables'),
+          width: 'auto',
+          height: 'auto',
+          modal: true,
+          closeOnEscape: false,
+          resizable: false,
+          dialogClass: 'progress-status progress no-close',
+          open() {
+            const dialogHolder = $(this);
+            progressOpen = true;
+            ProgressStatus.poll(progressToken, {
+              update(id, current, target, data) {
+                if (data.field) {
+                  dialogHolder.dialog(
+                    'option', 'title',
+                    t(appName, 'Updating receivables for {field}, {receivable}, {musician}', data),
+                  );
+                }
+                progressWrapper.find('.progressbar .label').text(
+                  t(appName, '{current} of {target}', { current, target }));
+                progressWrapper.find('.progressbar').progressbar('option', 'value', current / target * 100.0);
+                return current !== target;
+              },
+              fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
+              interval: 500,
+            });
+          },
+          close() {
+            progressOpen = false;
+            ProgressStatus.poll.stop();
+            ProgressStatus.delete(progressToken);
+            progressWrapper.dialog('destroy');
+            progressWrapper.hide();
+          },
+        });
+        requestHandler(progressToken, function() {
+          if (progressOpen) {
+            progressWrapper.dialog('close');
+          }
+        });
+      });
+  };
   if (updateStrategy === 'replace') {
     Dialogs.confirm(
       t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', { updateStrategy }),
       t(appName, 'Overwrite Existing Records?'),
-      (answer) => (answer && requestHandler()));
+      (answer) => (answer && handlerWithProgress()));
   } else {
-    requestHandler();
+    handlerWithProgress();
   }
 };
 
@@ -160,7 +229,7 @@ const ready = function(selector, resizeCB) {
     dataTypeSelect.trigger('chosen:updated');
     setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
     allowedHeaderVisibility();
-    console.info('RESIZECB');
+    console.debug('RESIZECB');
     resizeCB();
 
     if (dataType === 'service-fee') {
@@ -228,10 +297,11 @@ const ready = function(selector, resizeCB) {
     const fieldId = pmeRec(container);
     const key = $row.find('input.field-key').val();
     const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
-    const cleanup = function() {
-      $self.removeClass('busy');
-    };
-    const requestHandler = function() {
+    const requestHandler = function(progressToken, progressCleanup) {
+      const cleanup = function() {
+        progressCleanup();
+        $self.removeClass('busy');
+      };
       const request = 'option/regenerate';
       $self.addClass('busy');
       $.post(
@@ -240,6 +310,7 @@ const ready = function(selector, resizeCB) {
             fieldId,
             key,
             updateStrategy,
+            progressToken,
           },
         })
         .fail(function(xhr, status, errorThrown) {
@@ -262,10 +333,11 @@ const ready = function(selector, resizeCB) {
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
     const updateStrategy = $row.find('select.recurring-receivables-update-strategy').val();
-    const cleanup = function() {
-      $self.removeClass('busy');
-    };
-    const requestHandler = function() {
+    const requestHandler = function(progressToken, progressCleanup) {
+      const cleanup = function() {
+        progressCleanup();
+        $self.removeClass('busy');
+      };
       const request = 'generator/regenerate';
       $self.addClass('busy');
       $.post(
@@ -273,6 +345,7 @@ const ready = function(selector, resizeCB) {
           data: {
             fieldId,
             updateStrategy,
+            progressToken,
           },
         })
         .fail(function(xhr, status, errorThrown) {
@@ -693,7 +766,7 @@ const ready = function(selector, resizeCB) {
   // synthesize resize events for textareas.
   textareaResize(container, 'textarea.field-tooltip, textarea.participant-field-tooltip');
 
-  console.info('before resizeCB');
+  console.debug('before resizeCB');
   resizeCB();
 };
 

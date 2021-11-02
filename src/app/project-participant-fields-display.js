@@ -100,10 +100,11 @@ const participantOptionHandlers = function(container, musicianId) {
       const fieldId = row.data('fieldId');
       const optionKey = row.data('optionKey');
       const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
-      const cleanup = function() {
-        $this.removeClass('busy');
-      };
-      const requestHandler = function() {
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          $this.removeClass('busy');
+        };
         const request = 'option/regenerate';
         $this.addClass('busy');
         $.post(
@@ -113,6 +114,7 @@ const participantOptionHandlers = function(container, musicianId) {
               key: optionKey,
               musicianId,
               updateStrategy,
+              progressToken,
             },
           })
           .fail(function(xhr, status, errorThrown) {
@@ -168,10 +170,11 @@ const participantOptionHandlers = function(container, musicianId) {
       const row = $this.closest('tr');
       const fieldId = row.data('fieldId');
       const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
-      const cleanup = function() {
-        $this.removeClass('busy');
-      };
-      const requestHandler = function() {
+      const requestHandler = function(progressToken, progressCleanup) {
+        const cleanup = function() {
+          progressCleanup();
+          $this.removeClass('busy');
+        };
         const request = 'option/regenerate';
         $this.addClass('busy');
         $.post(
@@ -180,6 +183,7 @@ const participantOptionHandlers = function(container, musicianId) {
               fieldId,
               musicianId,
               updateStrategy,
+              progressToken,
             },
           })
           .fail(function(xhr, status, errorThrown) {

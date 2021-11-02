@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
@@ -64,8 +65,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     , InstrumentInsuranceService $insuranceService
     , ToolTipsService $toolTipsService
     , EntityManager $entityManager
+    , ProgressStatusService $progressStatusService
   ) {
-    parent::__construct($entityManager);
+    parent::__construct($entityManager, $progressStatusService);
 
     $this->insuranceService = $insuranceService;
     $this->configService = $configService;

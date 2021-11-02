@@ -25,6 +25,9 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Common\IProgressStatus;
+use OCA\CAFEVDB\Common\DoNothingProgressStatus;
 
 abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGenerator
 {
@@ -33,16 +36,42 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /** @var Entities\ProjectParticipantField */
   protected $serviceFeeField;
 
-  public function __construct(EntityManager $entityManager) {
+  /** @var ProgressStatusService */
+  protected $progressStatusService;
+
+  /** @var IProgressStatus */
+  protected $progressStatus;
+
+  /** @var array */
+  protected $progressData;
+
+  public function __construct(
+    EntityManager $entityManager
+    , ProgressStatusService $progressStatusService
+  ) {
     $this->entityManager = $entityManager;
+    $this->progressStatusService = $progressStatusService;
+    $this->progressStatus = new DoNothingProgressStatus;
+    $this->progressData = [
+      'field' => null,
+      'musician' => null,
+      'receivable' => null,
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField)
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null)
   {
     $this->serviceFeeField = $serviceFeeField;
+    if (!empty($progressToken)) {
+      $this->progressStatus = $this->progressStatusService->get($progressToken);
+    } else {
+      $this->progressStatus = new DoNothingProgressStatus;
+    }
+    $this->progressData['field'] = $serviceFeeField->getName();
+    $this->progressStatus->update(-1, -1, $this->progressData);
   }
 
   /**
@@ -52,9 +81,19 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   {
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
-    foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
-      list('added' => $a, 'removed' => $r, 'changed' => $c, 'skipped' => $s, 'notices' => $n) =
-                   $this->updateReceivable($receivable, null, $updateStrategy);
+    $receivables = $this->serviceFeeField->getSelectableOptions();
+    $participants = $this->serviceFeeField->getProject()->getParticipants();
+    $totals = $receivables->count() * $participants->count();
+    $this->progressStatus->update(0, $totals);
+    /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+    foreach ($receivables as $receivable) {
+      list(
+        'added' => $a,
+        'removed' => $r,
+        'changed' => $c,
+        'skipped' => $s,
+        'notices' => $n
+      ) = $this->updateReceivable($receivable, null, $updateStrategy);
       $added += $a;
       $removed += $r;
       $changed += $c;
@@ -92,11 +131,17 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /**
    * {@inheritdoc}
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
+  public function updateReceivable(
+    Entities\ProjectParticipantFieldDataOption $receivable
+    , ?Entities\ProjectParticipant $participant = null
+    , $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
+    $this->progressData['receivable'] = $receivable->getLabel();
     if (!empty($participant)) {
+      $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
+      $this->progressStatus->update(0, 1, $this->progressData);
       list(
         'added' => $added,
         'removed' => $removed,
@@ -104,10 +149,16 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'skipped' => $skipped,
         'notices' => $notices,
       ) = $this->updateOne($receivable, $participant, $updateStrategy);
+      $this->progressStatus->increment();
     } else {
       $participants = $receivable->getField()->getProject()->getParticipants();
+      if ($this->progressStatus->getTarget() <= 0) {
+        $this->progressStatus->update(0, $participants->count());
+      }
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
+        $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
+        $this->progressStatus->setData($this->progressData);
         list(
           'added' => $a,
           'removed' => $r,
@@ -115,6 +166,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'skipped' => $s,
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
+        $this->progressStatus->increment();
         $added += $a;
         $removed += $r;
         $changed += $c;
@@ -136,13 +188,27 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
     if (!empty($receivable)) {
-      list('added' => $added, 'removed' => $removed, 'changed' => $changed, 'skipped' => $skipped, 'notices' => $notices) =
-        $this->updateOne($receivable, $participant, $updateStrategy);
+      $this->progressData['receivable'] = $receivable->getLabel();
+      $this->progressStatus->update(0, 1, $this->progressData);
+      list(
+        'added' => $added,
+        'removed' => $removed,
+        'changed' => $changed,
+        'skipped' => $skipped,
+        'notices' => $notices) = $this->updateOne($receivable, $participant, $updateStrategy);
+      $this->progressStatus->increment();
     } else {
-      foreach ($this->serviceFeeField->getSelectableOptions() as $receivable) {
+      $receivables = $this->serviceFeeField->getSelectableOptions();
+      if ($this->progressStatus->getTarget() <= 0) {
+        $this->progressStatus->update(0, $receivables->count());
+      }
+      foreach ($receivables as $receivable) {
+        $this->progressData['receivable'] = $receivable->getLabel();
+        $this->progressStatus->setData($this->progressData);
         list(
           'added' => $a,
           'removed' => $r,
@@ -150,6 +216,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'skipped' => $s,
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
+        $this->progressStatus->increment();
         $added += $a;
         $removed += $r;
         $changed += $c;

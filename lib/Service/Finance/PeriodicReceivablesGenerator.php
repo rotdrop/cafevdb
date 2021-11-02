@@ -29,6 +29,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Uuid;
@@ -61,9 +62,10 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     ConfigService $configService
     , EntityManager $entityManager
     , ToolTipsService $toolTipsService
+    , ProgressStatusService $progressStatusService
     , ?\DateInterval $interval = null
   ) {
-    parent::__construct($entityManager);
+    parent::__construct($entityManager, $progressStatusService);
     $this->configService = $configService;
     $this->l = $this->l10n();
 

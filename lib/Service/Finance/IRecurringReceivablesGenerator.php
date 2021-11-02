@@ -83,8 +83,14 @@ interface IRecurringReceivablesGenerator
    * constructor which allowes for dependency injection. This,
    * however, means that the DB entities must not be passed through
    * the constructor.
+   *
+   * @param Entities\ProjectParticipantField $serviceFeeField
+   *
+   * @param mixed $progressToken Optional token which identifies an
+   * instance of \OCA\CAFEVDB\Common\IProgressStatus in order to give
+   * feedback during long running updates.
    */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField);
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null);
 
   /**
    * Update the list of receivables for the bound service-fee field,
