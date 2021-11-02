@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-10-29 17:32+0200\n"
+"POT-Creation-Date: 2021-11-02 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,13 +42,13 @@ msgstr ""
 msgid "Login failed."
 msgstr ""
 
-#: lib/Common/DatabaseProgressStatus.php:74
-#: lib/Common/PlainFileProgressStatus.php:95
+#: lib/Common/DatabaseProgressStatus.php:97
+#: lib/Common/PlainFileProgressStatus.php:124
 #, php-format
 msgid "Unable to find progress status for job id \"%s\""
 msgstr ""
 
-#: lib/Common/PlainFileProgressStatus.php:133
+#: lib/Common/PlainFileProgressStatus.php:165
 #, php-format
 msgid "Unable to read progress status file \"%s\" after %d retries."
 msgstr ""
@@ -443,8 +443,8 @@ msgstr ""
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:216
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1331
 #: lib/PageRenderer/Instruments.php:377
-#: lib/Service/Finance/InstrumentInsuranceService.php:868
-#: lib/Service/Finance/InstrumentInsuranceService.php:872
+#: lib/Service/Finance/InstrumentInsuranceService.php:866
+#: lib/Service/Finance/InstrumentInsuranceService.php:870
 #: lib/Service/PhoneNumberService.php:88
 #: lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:43
@@ -1346,8 +1346,8 @@ msgid "Missing parameters in request \"%s\": \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:122
-#: lib/Controller/ProjectParticipantFieldsController.php:220
-#: lib/Controller/ProjectParticipantFieldsController.php:302
+#: lib/Controller/ProjectParticipantFieldsController.php:223
+#: lib/Controller/ProjectParticipantFieldsController.php:305
 #, php-format
 msgid "Unable to fetch field with id \"%d\"."
 msgstr ""
@@ -1391,93 +1391,93 @@ msgstr ""
 msgid "Generator \"%s\" successfully mapped to PHP-class \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:227
+#: lib/Controller/ProjectParticipantFieldsController.php:230
 #, php-format
 msgid "No management option in field \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:243
-#: lib/Controller/ProjectParticipantFieldsController.php:313
-#: lib/Controller/ProjectParticipantFieldsController.php:392
-#: lib/Controller/ProjectParticipantFieldsController.php:557
+#: lib/Controller/ProjectParticipantFieldsController.php:246
+#: lib/Controller/ProjectParticipantFieldsController.php:319
+#: lib/Controller/ProjectParticipantFieldsController.php:401
+#: lib/Controller/ProjectParticipantFieldsController.php:569
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:272
-#: lib/Controller/ProjectParticipantFieldsController.php:499
-#: lib/Controller/ProjectParticipantFieldsController.php:617
+#: lib/Controller/ProjectParticipantFieldsController.php:275
+#: lib/Controller/ProjectParticipantFieldsController.php:508
+#: lib/Controller/ProjectParticipantFieldsController.php:629
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:286
-#: lib/Controller/ProjectParticipantFieldsController.php:359
-#: lib/Controller/ProjectParticipantFieldsController.php:515
+#: lib/Controller/ProjectParticipantFieldsController.php:289
+#: lib/Controller/ProjectParticipantFieldsController.php:365
+#: lib/Controller/ProjectParticipantFieldsController.php:524
 #, php-format
 msgid "Missing parameters in request \"%s/%s\": \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:293
-#: lib/Controller/ProjectParticipantFieldsController.php:366
-#: lib/Controller/ProjectParticipantFieldsController.php:522
+#: lib/Controller/ProjectParticipantFieldsController.php:296
+#: lib/Controller/ProjectParticipantFieldsController.php:372
+#: lib/Controller/ProjectParticipantFieldsController.php:531
 #, php-format
 msgid "Unknown update strategy: \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:328
+#: lib/Controller/ProjectParticipantFieldsController.php:334
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed: %d/%d/%d/%d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:374
+#: lib/Controller/ProjectParticipantFieldsController.php:380
 #, php-format
 msgid "Unable to find a project with id %d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:379
+#: lib/Controller/ProjectParticipantFieldsController.php:385
 #, php-format
 msgid "Project \"%s\" has no generated fields."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:410
+#: lib/Controller/ProjectParticipantFieldsController.php:419
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed/skipped: %d/%d/%d/%d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:440
+#: lib/Controller/ProjectParticipantFieldsController.php:449
 #, php-format
 msgid "Missing parameters in request %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:455
+#: lib/Controller/ProjectParticipantFieldsController.php:464
 #, php-format
 msgid "No or too many items available: %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:471
-#: lib/Controller/ProjectParticipantFieldsController.php:478
+#: lib/Controller/ProjectParticipantFieldsController.php:480
+#: lib/Controller/ProjectParticipantFieldsController.php:487
 #: lib/Controller/ValidationController.php:71
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:530
+#: lib/Controller/ProjectParticipantFieldsController.php:539
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:541
+#: lib/Controller/ProjectParticipantFieldsController.php:550
 #, php-format
 msgid "Unable to find musician with id \"%d\" in project \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:550
+#: lib/Controller/ProjectParticipantFieldsController.php:562
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:629
+#: lib/Controller/ProjectParticipantFieldsController.php:641
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr ""
@@ -2674,7 +2674,7 @@ msgstr ""
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:119
 #: lib/PageRenderer/InstrumentInsurances.php:403
-#: lib/Service/Finance/InstrumentInsuranceService.php:724
+#: lib/Service/Finance/InstrumentInsuranceService.php:722
 msgid "Manufacturer"
 msgstr ""
 
@@ -3152,12 +3152,12 @@ msgid "Broker"
 msgstr ""
 
 #: lib/PageRenderer/InsuranceRates.php:158
-#: lib/Service/Finance/InstrumentInsuranceService.php:722
+#: lib/Service/Finance/InstrumentInsuranceService.php:720
 msgid "Scope"
 msgstr ""
 
 #: lib/PageRenderer/InsuranceRates.php:167
-#: lib/Service/Finance/InstrumentInsuranceService.php:726
+#: lib/Service/Finance/InstrumentInsuranceService.php:724
 msgid "Rate"
 msgstr ""
 
@@ -3728,7 +3728,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:389
 #: lib/PageRenderer/SepaBankAccounts.php:416
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: lib/Service/Finance/InstrumentInsuranceService.php:725
+#: lib/Service/Finance/InstrumentInsuranceService.php:723
 msgid "Amount"
 msgstr ""
 
@@ -4567,50 +4567,50 @@ msgstr ""
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:99
-#: lib/Service/Finance/PeriodicReceivablesGenerator.php:102
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:101
+#: lib/Service/Finance/PeriodicReceivablesGenerator.php:104
 #, php-format
 msgid "Unable to find management option for participant field \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:122
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:124
 #, php-format
 msgid "Insurance Fee %d"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:214
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:215
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:230
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:231
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:460
+#: lib/Service/Finance/InstrumentInsuranceService.php:458
 #: :-1
 #, php-format
 msgid "insurance"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:488
+#: lib/Service/Finance/InstrumentInsuranceService.php:486
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
 "Templates\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:603
+#: lib/Service/Finance/InstrumentInsuranceService.php:601
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:607
+#: lib/Service/Finance/InstrumentInsuranceService.php:605
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:622
+#: lib/Service/Finance/InstrumentInsuranceService.php:620
 #: templates/instrument-insurance.php:55
 #: templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62
@@ -4618,17 +4618,17 @@ msgstr ""
 msgid "treasurer"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:644
+#: lib/Service/Finance/InstrumentInsuranceService.php:642
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:645
+#: lib/Service/Finance/InstrumentInsuranceService.php:643
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:650
+#: lib/Service/Finance/InstrumentInsuranceService.php:648
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -4639,48 +4639,48 @@ msgid ""
 "if something changes."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:658
+#: lib/Service/Finance/InstrumentInsuranceService.php:656
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:671
+#: lib/Service/Finance/InstrumentInsuranceService.php:669
 msgid "Annual amount excluding taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:675
-#: lib/Service/Finance/InstrumentInsuranceService.php:815
+#: lib/Service/Finance/InstrumentInsuranceService.php:673
+#: lib/Service/Finance/InstrumentInsuranceService.php:813
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:679
+#: lib/Service/Finance/InstrumentInsuranceService.php:677
 msgid "Total amount to pay"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:689
+#: lib/Service/Finance/InstrumentInsuranceService.php:687
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:690
+#: lib/Service/Finance/InstrumentInsuranceService.php:688
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
 "fee. Partial insurance years are rounded up to full months."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:692
+#: lib/Service/Finance/InstrumentInsuranceService.php:690
 msgid "This is detailed in the table on the following page."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:700
+#: lib/Service/Finance/InstrumentInsuranceService.php:698
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:706
+#: lib/Service/Finance/InstrumentInsuranceService.php:704
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -4688,82 +4688,82 @@ msgid ""
 "of the bank transaction."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:713
+#: lib/Service/Finance/InstrumentInsuranceService.php:711
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:714
+#: lib/Service/Finance/InstrumentInsuranceService.php:712
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:721
+#: lib/Service/Finance/InstrumentInsuranceService.php:719
 msgid "Vendor"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:723
+#: lib/Service/Finance/InstrumentInsuranceService.php:721
 msgid "Object"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:727
+#: lib/Service/Finance/InstrumentInsuranceService.php:725
 msgid "Start"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:728
+#: lib/Service/Finance/InstrumentInsuranceService.php:726
 msgid "Valid until"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:729
+#: lib/Service/Finance/InstrumentInsuranceService.php:727
 msgid "Months"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:730
+#: lib/Service/Finance/InstrumentInsuranceService.php:728
 msgid "Fee"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:766
+#: lib/Service/Finance/InstrumentInsuranceService.php:764
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:799
+#: lib/Service/Finance/InstrumentInsuranceService.php:797
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:809
+#: lib/Service/Finance/InstrumentInsuranceService.php:807
 msgid "Totals excluding taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:822
+#: lib/Service/Finance/InstrumentInsuranceService.php:820
 msgid "Totals including taxes"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:863
+#: lib/Service/Finance/InstrumentInsuranceService.php:861
 msgid "Jane"
 msgstr ""
 
-#: lib/Service/Finance/PeriodicReceivablesGenerator.php:123
+#: lib/Service/Finance/PeriodicReceivablesGenerator.php:125
 #, php-format
 msgid "Option %s"
 msgstr ""
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:71
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:77
 #, php-format
 msgid ""
 "Can only auto-generate receivables for recurring service-fee entities, "
 "multiplicity/data-type = %s/%s"
 msgstr ""
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:82
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:88
 msgid "Unable to find the management option."
 msgstr ""
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:89
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:95
 #, php-format
 msgid "Option label should be \"%s\", got \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:96
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:102
 #, php-format
 msgid "Unable to construct generator class \"%s\"."
 msgstr ""
@@ -7946,17 +7946,29 @@ msgstr ""
 msgid "Revert to default value?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:45
+#: src/app/project-participant-fields.js:70
+msgid "Updating recurring receivables"
+msgstr ""
+
+#: src/app/project-participant-fields.js:85
+msgid "Updating receivables for {field}, {receivable}, {musician}"
+msgstr ""
+
+#: src/app/project-participant-fields.js:89
+msgid "{current} of {target}"
+msgstr ""
+
+#: src/app/project-participant-fields.js:114
 msgid ""
 "Update strategy \"{updateStrategy}\" replaces the value of existing "
 "receivables, please confirm that you want to continue."
 msgstr ""
 
-#: src/app/project-participant-fields.js:46
+#: src/app/project-participant-fields.js:115
 msgid "Overwrite Existing Records?"
 msgstr ""
 
-#: src/app/project-participants.js:730
+#: src/app/project-participants.js:729
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
