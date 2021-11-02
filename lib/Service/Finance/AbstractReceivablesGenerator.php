@@ -71,7 +71,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       $this->progressStatus = new DoNothingProgressStatus;
     }
     $this->progressData['field'] = $serviceFeeField->getName();
-    $this->progressStatus->update(-1, -1, $this->progressData);
+    $this->progressStatus->update(-1, 0, $this->progressData);
   }
 
   /**

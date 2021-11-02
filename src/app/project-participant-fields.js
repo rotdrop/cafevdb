@@ -44,7 +44,7 @@ require('project-participant-fields.scss');
 
 const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
   const handlerWithProgress = function() {
-    ProgressStatus.create(0, 0, { field: null, musician: null, receivable: null })
+    ProgressStatus.create(-1, 0, { field: null, musician: null, receivable: null })
       .fail(Ajax.handleError)
       .done(function(data) {
         if (!Ajax.validateResponse(data, ['id'])) {
@@ -88,7 +88,7 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
                 progressWrapper.find('.progressbar .label').text(
                   t(appName, '{current} of {target}', { current, target }));
                 progressWrapper.find('.progressbar').progressbar('option', 'value', current / target * 100.0);
-                return current !== target;
+                return current < 0 || current !== target;
               },
               fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
               interval: 500,
