@@ -24,6 +24,8 @@ import { globalState, $ } from './globals.js';
 import * as Ajax from './ajax.js';
 import generateUrl from './generate-url.js';
 
+require('progressbar.scss');
+
 globalState.progressTimer = null;
 globalState.progressTimerStopped = true;
 
@@ -46,6 +48,7 @@ function pollProgressStatus(id, options) {
     if (globalState.progressTimerStopped) {
       clearTimeout(globalState.progressTimer);
       globalState.progressTimer = false;
+      console.info('PROGRESS STOPPED');
       return;
     }
     $.get(generateUrl('foregroundjob/progress/' + id))
@@ -75,6 +78,7 @@ function pollProgressStatus(id, options) {
       });
   };
   globalState.progressTimerStopped = false;
+  console.info('INIT POLL', id);
   poll();
 }
 

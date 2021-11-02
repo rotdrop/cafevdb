@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Exceptions;
 
-class PlainFileProgressStatus implements IProgressStatus
+class PlainFileProgressStatus extends AbstractProgressStatus
 {
   private const READ_RETRY_LIMIT = 10;
 

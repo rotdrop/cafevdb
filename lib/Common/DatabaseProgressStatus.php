@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Database\Cloud\Entities;
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Exceptions;
 
-class DatabaseProgressStatus implements IProgressStatus
+class DatabaseProgressStatus extends AbstractProgressStatus
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
