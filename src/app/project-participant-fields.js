@@ -80,10 +80,14 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
             ProgressStatus.poll(progressToken, {
               update(id, current, target, data) {
                 if (data.field) {
-                  dialogHolder.dialog(
-                    'option', 'title',
-                    t(appName, 'Updating receivables for {field}, {receivable}, {musician}', data),
-                  );
+                  try {
+                    dialogHolder.dialog(
+                      'option', 'title',
+                      t(appName, 'Updating receivables for {field}, {receivable}, {musician}', data),
+                    );
+                  } catch (e) {
+                    // don't care
+                  }
                 }
                 progressWrapper.find('.progressbar .label').text(
                   t(appName, '{current} of {target}', { current, target }));
@@ -104,7 +108,11 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler) {
         });
         requestHandler(progressToken, function() {
           if (progressOpen) {
-            progressWrapper.dialog('close');
+            try {
+              progressWrapper.dialog('close');
+            } catch (e) {
+              // don't care
+            }
           }
         });
       });
