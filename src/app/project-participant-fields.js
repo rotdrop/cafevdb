@@ -488,7 +488,7 @@ const ready = function(selector, resizeCB) {
     'blur',
     'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input[type="text"]'
       + ','
-      + 'tr.multiplicity.data-type-service-fee ~ tr.data-options tr.data-options:not(.generator) input.field-data[type="text"]',
+      + 'tr.multiplicity.data-type-service-fee:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data[type="text"]',
     function(event) {
       const self = $(this);
       if (self.prop('readonly')) {
