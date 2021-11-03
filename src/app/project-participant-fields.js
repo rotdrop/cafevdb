@@ -27,6 +27,7 @@ import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.js';
+import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
@@ -65,6 +66,7 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
           oldProgressWrapper.replaceWith(progressWrapper);
         }
         progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
+        let ajaxRequest = null;
         let progressOpen = false;
         progressWrapper.cafevDialog({
           title: t(appName, 'Updating recurring receivables'),
@@ -73,9 +75,28 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
           modal: true,
           closeOnEscape: false,
           resizable: false,
-          dialogClass: 'progress-status progress no-close',
+          dialogClass: 'progress-status progress',
+          buttons: [
+            {
+              text: t(appName, 'cancel'),
+              title: t(appName, 'Cancel the operation in progress.'),
+              class: 'cancel',
+              click() {
+                // if (ajaxRequest) {
+                //   ajaxRequest.abort('cancelled');
+                //   ajaxRequest = null;
+                // }
+                $(this).dialog('close');
+              },
+            },
+          ],
           open() {
             const dialogHolder = $(this);
+            DialogUtils.toBackButton(dialogHolder);
+            DialogUtils.customCloseButton(dialogHolder, function(event, container) {
+              dialogHolder.dialog('widget').find('.cancel.ui-button').trigger('click');
+              return false;
+            });
             progressOpen = true;
             ProgressStatus.poll(progressToken, {
               update(id, current, target, data) {
@@ -109,7 +130,7 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
             progressWrapper.hide();
           },
         });
-        requestHandler(progressToken, function() {
+        ajaxRequest = requestHandler(progressToken, function() {
           if (progressOpen) {
             try {
               progressWrapper.dialog('close');
@@ -318,7 +339,7 @@ const ready = function(selector, resizeCB) {
       };
       const request = 'option/regenerate';
       $self.addClass('busy');
-      $.post(
+      return $.post(
         generateUrl('projects/participant-fields/' + request), {
           data: {
             fieldId,
@@ -354,7 +375,7 @@ const ready = function(selector, resizeCB) {
       };
       const request = 'generator/regenerate';
       $self.addClass('busy');
-      $.post(
+      return $.post(
         generateUrl('projects/participant-fields/' + request), {
           data: {
             fieldId,

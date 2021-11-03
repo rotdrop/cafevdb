@@ -1332,7 +1332,7 @@ const mandateReady = function(selector) {
         // modalizer(true);
         $this.addClass('busy');
 
-        $.post(
+        return $.post(
           generateUrl('projects/participant-fields/' + request), {
             request,
             data: {

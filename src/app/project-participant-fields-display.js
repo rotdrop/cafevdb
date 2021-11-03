@@ -107,7 +107,7 @@ const participantOptionHandlers = function(container, musicianId) {
         };
         const request = 'option/regenerate';
         $this.addClass('busy');
-        $.post(
+        return $.post(
           generateUrl('projects/participant-fields/' + request), {
             data: {
               fieldId,
@@ -177,7 +177,7 @@ const participantOptionHandlers = function(container, musicianId) {
         };
         const request = 'option/regenerate';
         $this.addClass('busy');
-        $.post(
+        return $.post(
           generateUrl('projects/participant-fields/' + request), {
             data: {
               fieldId,
