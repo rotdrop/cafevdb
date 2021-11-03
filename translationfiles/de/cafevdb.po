@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-02 14:46+0100\n"
-"PO-Revision-Date: 2021-11-02 14:48+0100\n"
+"POT-Creation-Date: 2021-11-03 18:28+0100\n"
+"PO-Revision-Date: 2021-11-03 18:36+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -37,12 +37,12 @@ msgid "Login failed."
 msgstr "Anmelden fehlgeschlagen."
 
 #: lib/Common/DatabaseProgressStatus.php:97
-#: lib/Common/PlainFileProgressStatus.php:124
+#: lib/Common/PlainFileProgressStatus.php:136
 #, php-format
 msgid "Unable to find progress status for job id \"%s\""
 msgstr "Kann den Zustand der Aufgabe \"%s\" nicht finden"
 
-#: lib/Common/PlainFileProgressStatus.php:165
+#: lib/Common/PlainFileProgressStatus.php:177
 #, php-format
 msgid "Unable to read progress status file \"%s\" after %d retries."
 msgstr ""
@@ -196,9 +196,9 @@ msgid "Unknown form element: `%s'."
 msgstr "Unbekanntes Formularfeld: `%s'."
 
 #: lib/Controller/EmailFormController.php:377
-#: lib/Controller/EmailFormController.php:496
-#: lib/Controller/EmailFormController.php:522
-#: lib/Controller/EmailFormController.php:550
+#: lib/Controller/EmailFormController.php:498
+#: lib/Controller/EmailFormController.php:524
+#: lib/Controller/EmailFormController.php:552
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\""
@@ -213,77 +213,77 @@ msgstr "Kann die Schablone \"%s\" nicht laden."
 msgid "Invalid draft name \"%s\"."
 msgstr "Ungültiger Entwurf-Name \"%s\"."
 
-#: lib/Controller/EmailFormController.php:492
+#: lib/Controller/EmailFormController.php:494
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr "Entwurf mit Id %d geladen"
 
-#: lib/Controller/EmailFormController.php:504
+#: lib/Controller/EmailFormController.php:506
 msgid "Email template name must not be empty"
 msgstr "Email-Vorlagen-Name darf nicht leer sein."
 
-#: lib/Controller/EmailFormController.php:526
+#: lib/Controller/EmailFormController.php:528
 #, php-format
 msgid "%s could not be saved"
 msgstr "%s konnte nicht gespeichert werden."
 
-#: lib/Controller/EmailFormController.php:542
+#: lib/Controller/EmailFormController.php:544
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr "Enwurf mit Id %d wurde gelöscht."
 
-#: lib/Controller/EmailFormController.php:561
+#: lib/Controller/EmailFormController.php:563
 msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
-#: lib/Controller/EmailFormController.php:565
+#: lib/Controller/EmailFormController.php:567
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: lib/Controller/EmailFormController.php:699
+#: lib/Controller/EmailFormController.php:704
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr "Analysieren der folgenden Email-Empfänger ist fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/EmailFormController.php:729
+#: lib/Controller/EmailFormController.php:734
 msgid "Form Input"
 msgstr "Formular Eingabe"
 
-#: lib/Controller/EmailFormController.php:804
+#: lib/Controller/EmailFormController.php:809
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr "Die folgenden Kontakte konnten leider nicht gespeichert werden: %s"
 
-#: lib/Controller/EmailFormController.php:810
+#: lib/Controller/EmailFormController.php:815
 msgid "UNIMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
-#: lib/Controller/EmailFormController.php:833
+#: lib/Controller/EmailFormController.php:838
 msgid "Attachment file-names were not submitted"
 msgstr "Dateinamen für Anhänge wurden nicht übermittelt"
 
-#: lib/Controller/EmailFormController.php:842
+#: lib/Controller/EmailFormController.php:847
 #: lib/Controller/UploadsController.php:106
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr "Datei \"%s\" konnte nicht im Cloud-Storage gefunden werden."
 
-#: lib/Controller/EmailFormController.php:845
+#: lib/Controller/EmailFormController.php:850
 #: lib/Controller/UploadsController.php:109
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 "Die Datei \"%s\" ist keine normale Datei, das ist nocht nicht implementiert."
 
-#: lib/Controller/EmailFormController.php:859
-#: lib/Controller/EmailFormController.php:917
+#: lib/Controller/EmailFormController.php:864
+#: lib/Controller/EmailFormController.php:922
 #: lib/Controller/UploadsController.php:185
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr "Konnte folgende Datei nicht zwischen-speichern: %s"
 
-#: lib/Controller/EmailFormController.php:877
+#: lib/Controller/EmailFormController.php:882
 #: lib/Controller/ProjectParticipantsController.php:436
 #: lib/Controller/UploadsController.php:141
 #, php-format
@@ -292,26 +292,26 @@ msgstr ""
 "Dateigröße %s sprengt das Hochlade-Limit %s, bitte den System-Administrator "
 "kontaktieren."
 
-#: lib/Controller/EmailFormController.php:885
+#: lib/Controller/EmailFormController.php:890
 #: lib/Controller/ProjectParticipantsController.php:444
 #: lib/Controller/UploadsController.php:149
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr "Es wurde keine Datei hochgeladen, Fehlermeldung war \"%s\"."
 
-#: lib/Controller/EmailFormController.php:887
+#: lib/Controller/EmailFormController.php:892
 #: lib/Controller/ProjectParticipantsController.php:446
 #: lib/Controller/UploadsController.php:151
 msgid "No file was uploaded. Unknown error"
 msgstr "Unbekannter Fehler. Es wurde keine Datei hochgeladen."
 
-#: lib/Controller/EmailFormController.php:899
+#: lib/Controller/EmailFormController.php:904
 #: lib/Controller/ProjectParticipantsController.php:464
 #: lib/Controller/UploadsController.php:163
 msgid "Not enough storage available"
 msgstr "Nicht genug Speicherplatz vorhanden."
 
-#: lib/Controller/EmailFormController.php:923
+#: lib/Controller/EmailFormController.php:928
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr "Unbekannte Quelle für Anhänge: \"%s\"."
@@ -1468,7 +1468,7 @@ msgstr "Keine Definitionsdaten im Feld \"%s\"."
 #: lib/Controller/ProjectParticipantFieldsController.php:246
 #: lib/Controller/ProjectParticipantFieldsController.php:319
 #: lib/Controller/ProjectParticipantFieldsController.php:401
-#: lib/Controller/ProjectParticipantFieldsController.php:569
+#: lib/Controller/ProjectParticipantFieldsController.php:572
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
@@ -1476,21 +1476,21 @@ msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:275
 #: lib/Controller/ProjectParticipantFieldsController.php:508
-#: lib/Controller/ProjectParticipantFieldsController.php:629
+#: lib/Controller/ProjectParticipantFieldsController.php:632
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr "Anfrage \"%s/%s\" erfolgreich"
 
 #: lib/Controller/ProjectParticipantFieldsController.php:289
 #: lib/Controller/ProjectParticipantFieldsController.php:365
-#: lib/Controller/ProjectParticipantFieldsController.php:524
+#: lib/Controller/ProjectParticipantFieldsController.php:527
 #, php-format
 msgid "Missing parameters in request \"%s/%s\": \"%s\"."
 msgstr "Fehlende Anfrage-Parameter \"%s/%s\": \"%s\"."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:296
 #: lib/Controller/ProjectParticipantFieldsController.php:372
-#: lib/Controller/ProjectParticipantFieldsController.php:531
+#: lib/Controller/ProjectParticipantFieldsController.php:534
 #, php-format
 msgid "Unknown update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -1534,22 +1534,22 @@ msgstr "Keine oder zu viele Einträge vorhanden: %s"
 msgid "Could not parse number: \"%s\""
 msgstr "Kann die Zahlangabe \"%s\" nicht interpretieren."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:539
+#: lib/Controller/ProjectParticipantFieldsController.php:542
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:550
+#: lib/Controller/ProjectParticipantFieldsController.php:553
 #, php-format
 msgid "Unable to find musician with id \"%d\" in project \"%s\"."
 msgstr "Kann die Person mit der Id \"%d\" nicht im Projekt \"%s\" nicht."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:562
+#: lib/Controller/ProjectParticipantFieldsController.php:565
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr "Kann die Forderung mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:641
+#: lib/Controller/ProjectParticipantFieldsController.php:644
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr "Unbekannte Anfrage \"%s/%s\""
@@ -2428,7 +2428,7 @@ msgstr "Unterschrift"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:505 src/app/email.js:1063
+#: lib/EmailForm/Composer.php:505 src/app/email.js:1072
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -2482,66 +2482,66 @@ msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2068
+#: lib/EmailForm/Composer.php:2075
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2205
+#: lib/EmailForm/Composer.php:2215
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:2218
+#: lib/EmailForm/Composer.php:2228
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:2310 lib/EmailForm/Composer.php:2325
+#: lib/EmailForm/Composer.php:2320 lib/EmailForm/Composer.php:2335
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:2409 lib/EmailForm/Composer.php:2462
-#: lib/EmailForm/Composer.php:2472
+#: lib/EmailForm/Composer.php:2419 lib/EmailForm/Composer.php:2472
+#: lib/EmailForm/Composer.php:2482
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:2437
+#: lib/EmailForm/Composer.php:2447
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:2746
+#: lib/EmailForm/Composer.php:2756
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:2753
+#: lib/EmailForm/Composer.php:2763
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:2791
+#: lib/EmailForm/Composer.php:2801
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:2823 lib/EmailForm/Composer.php:2926
+#: lib/EmailForm/Composer.php:2833 lib/EmailForm/Composer.php:2935
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:2851
+#: lib/EmailForm/Composer.php:2861
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:2872
+#: lib/EmailForm/Composer.php:2882
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3133
+#: lib/EmailForm/Composer.php:3142
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:3133
+#: lib/EmailForm/Composer.php:3142
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -2778,6 +2778,16 @@ msgstr ""
 "Konnte das Bild mit der Id \"%1$d\" des Projekts \"%2$s\" nicht aus der\n"
 "Datenbank in den Datensystem-Speicher mit Dateinamen \"%3$s\" verschieben."
 
+#: lib/Maintenance/Migrations/MultiUserEmailAttachments.php:45
+msgid "Add multi-user support for email-attachments."
+msgstr "Multi-User Unterstützung für Email-Anhänge."
+
+#: lib/Maintenance/Migrations/MultiUserEmailAttachments.php:83
+#: lib/Maintenance/Migrations/UpdateGeographicalScopes.php:84
+#, php-format
+msgid "Migration \"%s\" failed."
+msgstr "Datenmigration \"%s\" fehlgeschlagen."
+
 #: lib/Maintenance/Migrations/RemoveGenerateNumbers.php:43
 msgid "Remove obsolete generateNumbers() stored procedure."
 msgstr "Lösche nicht mehr benötige SQL-Prozedur \"generateNumbers()\"."
@@ -2785,11 +2795,6 @@ msgstr "Lösche nicht mehr benötige SQL-Prozedur \"generateNumbers()\"."
 #: lib/Maintenance/Migrations/UpdateGeographicalScopes.php:44
 msgid "Adjust geographical scopes enum."
 msgstr "Geltungsbereiche anpassen."
-
-#: lib/Maintenance/Migrations/UpdateGeographicalScopes.php:84
-#, php-format
-msgid "Migration \"%s\" failed."
-msgstr "Datenmigration \"%s\" fehlgeschlagen."
 
 #: lib/Maintenance/Migrations/Version00000000000000.php:60
 msgid "Initial database setup."
@@ -4761,6 +4766,14 @@ msgstr "Unbekannter Kalender."
 #: lib/Service/EventsService.php:494
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
+
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:157
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:177
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:213
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:232
+#, php-format
+msgid "Operation has been cancelled by user, last processed data was %s / %s."
+msgstr "Anwender:in hat die Datenverarbeitung abgebrochen, der letzte verarbeitete Datensatz war %s - %s."
 
 #: lib/Service/Finance/AqBankingBulkTransactionExporter.php:100
 #, php-format
@@ -8197,7 +8210,15 @@ msgstr "Netzwerk Lese-Zeitüberschreitung"
 msgid "Network connect timeout error"
 msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 
-#: src/app/ajax.js:157 src/app/ajax.js:342 src/app/blog.js:180
+#: src/app/ajax.js:149
+msgid "Operation cancelled by user."
+msgstr "Benutzer:in hat den Vorgang abgebrochen"
+
+#: src/app/ajax.js:152
+msgid "Aborted"
+msgstr "Abgebrochen"
+
+#: src/app/ajax.js:165 src/app/ajax.js:350 src/app/blog.js:180
 #: src/app/blog.js:228 src/app/blog.js:278 src/app/blog.js:298
 #: src/app/blog.js:315 src/app/blog.js:336 src/app/blog.js:362
 #: src/app/blog.js:385 src/app/email.js:72 src/app/email.js:564
@@ -8208,19 +8229,19 @@ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 msgid "Error"
 msgstr "Fehler"
 
-#: src/app/ajax.js:182
+#: src/app/ajax.js:190
 msgid "System Administrator"
 msgstr "System-Administrator"
 
-#: src/app/ajax.js:207
+#: src/app/ajax.js:215
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
 
-#: src/app/ajax.js:235
+#: src/app/ajax.js:243
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: src/app/ajax.js:237
+#: src/app/ajax.js:245
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -8229,7 +8250,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: src/app/ajax.js:242
+#: src/app/ajax.js:250
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -8238,7 +8259,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: src/app/ajax.js:290
+#: src/app/ajax.js:298
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -8246,19 +8267,19 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: src/app/ajax.js:292
+#: src/app/ajax.js:300
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: src/app/ajax.js:299
+#: src/app/ajax.js:307
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: src/app/ajax.js:308
+#: src/app/ajax.js:316
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: src/app/ajax.js:320
+#: src/app/ajax.js:328
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
@@ -8268,11 +8289,11 @@ msgstr ""
 "Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
 "Verfügung stellt."
 
-#: src/app/ajax.js:323
+#: src/app/ajax.js:331
 msgid "Error: plain string received"
 msgstr "Fehler: einfache Zeichenkette empfangen"
 
-#: src/app/ajax.js:328
+#: src/app/ajax.js:336
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
@@ -8280,15 +8301,15 @@ msgstr ""
 "Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
 "die oben aufgeführten benötigten Eigentschaften."
 
-#: src/app/ajax.js:331
+#: src/app/ajax.js:339
 msgid "Error: not a plain object"
 msgstr "Fehler: kein einfaches Objekt"
 
-#: src/app/ajax.js:370
+#: src/app/ajax.js:378
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
-#: src/app/ajax.js:377
+#: src/app/ajax.js:385
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
@@ -8509,11 +8530,11 @@ msgstr ""
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: src/app/email.js:603 src/app/email.js:1545
+#: src/app/email.js:603 src/app/email.js:1554
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:605 src/app/email.js:1547
+#: src/app/email.js:605 src/app/email.js:1556
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
@@ -8541,11 +8562,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:906
+#: src/app/email.js:915
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:933
+#: src/app/email.js:942
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message (id = "
 "{id})?"
@@ -8553,19 +8574,19 @@ msgstr ""
 "Möchten Sie die automatische Sicherungskopie der aktuellen Nachricht (id = "
 "{id}) löschen?"
 
-#: src/app/email.js:935
+#: src/app/email.js:944
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:981
+#: src/app/email.js:990
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:982
+#: src/app/email.js:991
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1014
+#: src/app/email.js:1023
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -8573,11 +8594,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1016
+#: src/app/email.js:1025
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1047
+#: src/app/email.js:1056
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -8585,17 +8606,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1049
+#: src/app/email.js:1058
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1061
+#: src/app/email.js:1070
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1071
+#: src/app/email.js:1080
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -8603,59 +8624,59 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1073
+#: src/app/email.js:1082
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1110
+#: src/app/email.js:1119
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1111
+#: src/app/email.js:1120
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1236
+#: src/app/email.js:1245
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1237 src/app/email.js:1338
+#: src/app/email.js:1246 src/app/email.js:1347
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1321
+#: src/app/email.js:1330
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1337
+#: src/app/email.js:1346
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1388 templates/emailform/part.emailform.composer.php:126
+#: src/app/email.js:1397 templates/emailform/part.emailform.composer.php:126
 #: templates/emailform/part.emailform.composer.php:144
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1389
+#: src/app/email.js:1398
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: src/app/email.js:1392
+#: src/app/email.js:1401
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1395
+#: src/app/email.js:1404
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/email.js:1556
+#: src/app/email.js:1565
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: src/app/email.js:1558
+#: src/app/email.js:1567
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
@@ -8928,19 +8949,27 @@ msgstr ""
 msgid "Revert to default value?"
 msgstr "Auf Voreinstellung zurücksetzen?"
 
-#: src/app/project-participant-fields.js:70
+#: src/app/project-participant-fields.js:72
 msgid "Updating recurring receivables"
 msgstr "Akualisiere wiederkehrende Forderungen"
 
-#: src/app/project-participant-fields.js:85
+#: src/app/project-participant-fields.js:81
+msgid "cancel"
+msgstr "Abbrechen"
+
+#: src/app/project-participant-fields.js:82
+msgid "Cancel the operation in progress."
+msgstr "Die Aktuelle Operation abbrechen."
+
+#: src/app/project-participant-fields.js:107
 msgid "Updating receivables for {field}, {receivable}, {musician}"
 msgstr "Akutalisiere Forderungen für {field}, {receivable}, {musician}"
 
-#: src/app/project-participant-fields.js:89
+#: src/app/project-participant-fields.js:116
 msgid "{current} of {target}"
 msgstr "{current} von {target}"
 
-#: src/app/project-participant-fields.js:114
+#: src/app/project-participant-fields.js:149
 msgid ""
 "Update strategy \"{updateStrategy}\" replaces the value of existing "
 "receivables, please confirm that you want to continue."
@@ -8948,7 +8977,7 @@ msgstr ""
 "\"{updateStrategy}\" führt dazu, dass die Werte bereits berechneter\n"
 "Forderungen überschrieben werden. Bitte Bestätigen, dass das so gewollt ist."
 
-#: src/app/project-participant-fields.js:115
+#: src/app/project-participant-fields.js:150
 msgid "Overwrite Existing Records?"
 msgstr "Existierende Daten überschreiben?"
 
@@ -9494,19 +9523,19 @@ msgstr "Filter `Redo'"
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
-#: templates/emailform/part.emailform.statuspage.php:82
+#: templates/emailform/part.emailform.statuspage.php:83
 msgid "The mailing software did not signal an error."
 msgstr "Die Em@il-Software hat keinen Fehler signalisiert."
 
-#: templates/emailform/part.emailform.statuspage.php:84
+#: templates/emailform/part.emailform.statuspage.php:85
 msgid "The message was propably sent out successfully."
 msgstr "Die Nachricht wurde vermutlich erfolgreich versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:91
+#: templates/emailform/part.emailform.statuspage.php:92
 msgid "The mailing software did not signal an error. "
 msgstr "Die Em@il-Software hat keinen Fehler signalisiert."
 
-#: templates/emailform/part.emailform.statuspage.php:93
+#: templates/emailform/part.emailform.statuspage.php:94
 #, php-format
 msgid "%d messages were propably sent out successfully."
 msgstr "%d Nachrichten wurden vermutlich erfolgreich versendet."
@@ -9523,33 +9552,33 @@ msgstr ""
 "Das Senden aller %d Nachrichten ist wahrscheinlich fehlgeschlagen; mit\n"
 "hoher Wahrscheinlichkeit wurde keine einzige Nachricht versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:111
+#: templates/emailform/part.emailform.statuspage.php:110
 #, php-format
 msgid "One (out of %d) message has probably not been sent."
 msgstr "Eine (von %d) Nachrichten konnte nicht versendet werden."
 
-#: templates/emailform/part.emailform.statuspage.php:115
+#: templates/emailform/part.emailform.statuspage.php:113
 #, php-format
 msgid "%d (out of %d) messages have probably not been sent."
 msgstr "%d (von %d) Nachrichten konnten nicht versendet werden."
 
-#: templates/emailform/part.emailform.statuspage.php:120
+#: templates/emailform/part.emailform.statuspage.php:118
 msgid "The message has probably not been sent."
 msgstr "Die Nachricht wurde vermutlich nicht versendet."
 
-#: templates/emailform/part.emailform.statuspage.php:138
+#: templates/emailform/part.emailform.statuspage.php:135
 msgid "Failed individual substitutions"
 msgstr "Fehlgeschlagene Individual-Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:139
+#: templates/emailform/part.emailform.statuspage.php:136
 msgid "Failed global substitutions"
 msgstr "Fehlgeschlagene Global-Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:140
+#: templates/emailform/part.emailform.statuspage.php:137
 msgid "Other failed substitutions"
 msgstr "Sonstige fehlgeschlagene Ersetzungen"
 
-#: templates/emailform/part.emailform.statuspage.php:145
+#: templates/emailform/part.emailform.statuspage.php:142
 msgid ""
 "The operation failed due to template validation errors. The following "
 "template substitutions could not be resolved:"
@@ -9557,7 +9586,7 @@ msgstr ""
 "Die Vorlage wurde nicht gespeichert, da die folgenden Variablen-Ersetzungen\n"
 "nicht aufgelöst werden konnten:"
 
-#: templates/emailform/part.emailform.statuspage.php:163
+#: templates/emailform/part.emailform.statuspage.php:160
 #, php-format
 msgid ""
 "Please understand that the software is really `picky'; names have to match "
@@ -9578,7 +9607,7 @@ msgstr ""
 "Beispiel-Vorlage `%s' an, die eine vollständige Liste aller möglichen\n"
 "Ersetzungen enthält."
 
-#: templates/emailform/part.emailform.statuspage.php:200
+#: templates/emailform/part.emailform.statuspage.php:199
 msgid ""
 "The following email addresses appear to be syntactically incorrect, meaning "
 "that they have not the form of an email address:"
@@ -9586,12 +9615,12 @@ msgstr ""
 "Die folgenden Em@il-Adressen scheinen ein ungültiges Format zu haben;\n"
 "die sehen nicht wie Em@il-Adressen aus."
 
-#: templates/emailform/part.emailform.statuspage.php:211
+#: templates/emailform/part.emailform.statuspage.php:210
 #, php-format
 msgid "Broken `%s' addresses"
 msgstr "Ungültige `%s' Adressen"
 
-#: templates/emailform/part.emailform.statuspage.php:225
+#: templates/emailform/part.emailform.statuspage.php:224
 msgid ""
 "No email will be sent out unless these errors are corrected. Please separate "
 "individual emails by commas. Please use standard-address notation (see "
@@ -9607,49 +9636,50 @@ msgstr ""
 "enthalten (z.B. `NACHNAME, VORNAME' statt `VORNAME NACHNAME'). Einige\n"
 "Beispiele für zulässige Em@il-Adressen sind:"
 
-#: templates/emailform/part.emailform.statuspage.php:240
-#: templates/emailform/part.emailform.statuspage.php:340
-#: templates/emailform/part.emailform.statuspage.php:386
-#: templates/emailform/part.emailform.statuspage.php:434
-#: templates/emailform/part.emailform.statuspage.php:504
-#: templates/emailform/part.emailform.statuspage.php:564
+#: templates/emailform/part.emailform.statuspage.php:239
+#: templates/emailform/part.emailform.statuspage.php:329
+#: templates/emailform/part.emailform.statuspage.php:365
+#: templates/emailform/part.emailform.statuspage.php:411
+#: templates/emailform/part.emailform.statuspage.php:459
+#: templates/emailform/part.emailform.statuspage.php:529
+#: templates/emailform/part.emailform.statuspage.php:587
 msgid "Explanations"
 msgstr "Erläuterungen:"
 
-#: templates/emailform/part.emailform.statuspage.php:260
+#: templates/emailform/part.emailform.statuspage.php:259
 msgid "Empty Subject"
 msgstr "Leere Betreff-Zeile"
 
-#: templates/emailform/part.emailform.statuspage.php:261
+#: templates/emailform/part.emailform.statuspage.php:260
 #, php-format
 msgid ""
-"The subject must not consist of `%s' as only part. Please correct that "
+"The subject must not consist of \"%s\" as only part. Please correct that "
 "before trying send the message out, and also before trying to save the "
 "message as draft. Thanks."
 msgstr ""
-"Die Betreffzeile sollte nicht nur aus `%s' bestehen. Bitte vor\n"
+"Die Betreffzeile sollte nicht nur aus \"%s\" bestehen. Bitte vor\n"
 "erneutem Sende- oder Speicher-Versuch korrigieren."
 
-#: templates/emailform/part.emailform.statuspage.php:275
+#: templates/emailform/part.emailform.statuspage.php:273
 msgid "Empty Sender Name"
 msgstr "Der Absender-Name ist leer"
 
-#: templates/emailform/part.emailform.statuspage.php:276
+#: templates/emailform/part.emailform.statuspage.php:274
 #, php-format
 msgid ""
 "The sender name should not be empty. Originally, it used to be %s, but "
 "seemingly this did not suite your needs. Please fill in a non-empty sender "
-"name before hitting the `Send'-button again."
+"name before hitting the \"Send\"-button again."
 msgstr ""
 "Der Absender-Name sollte nicht leer sein. Ursprünglich war dass ja\n"
 "auch %s, aber das scheint ja nicht gepasst zu haben. Bitte einen\n"
 "nicht-leeren Absender-Namen vor erneutem Sende-Versuch einfügen."
 
-#: templates/emailform/part.emailform.statuspage.php:290
+#: templates/emailform/part.emailform.statuspage.php:288
 msgid "No Recipients"
 msgstr "Keine Adressaten ausgewählt"
 
-#: templates/emailform/part.emailform.statuspage.php:291
+#: templates/emailform/part.emailform.statuspage.php:289
 msgid ""
 "You did not specify any recipients (Cc: and Bcc: does not count here!)."
 "Please got to the `Em@il Recipients' panel and select some before hitting "
@@ -9663,7 +9693,26 @@ msgstr ""
 "im `Em@il Empfänger'-Reiter angezeigt wird. Die Namen kann man auch\n"
 "anklicken, um deren Em@il-Adressen einzutragen oder zu `reparieren'."
 
-#: templates/emailform/part.emailform.statuspage.php:320
+#: templates/emailform/part.emailform.statuspage.php:310
+msgid ""
+"The files(s) with the following name(s) could not be attached; they do not "
+"seem to exists:"
+msgstr ""
+"Die Dateien mit den folgenden Namen konnten nicht angehängt werden;\n"
+"weil sie scheinbar nicht auf dem Server zu finden sind:"
+
+#: templates/emailform/part.emailform.statuspage.php:324
+#: templates/emailform/part.emailform.statuspage.php:360
+msgid ""
+"This is probably an internal error. It may be possible to simply click on "
+"the red, underlined text in order to compose a useful message."
+msgstr ""
+"Das ist mit hoher Wahrscheinlichkeit ein \"interne\"\n"
+"Fehler. Wahrscheinlich kann man einfach auf den roten, unterstrichenen\n"
+"Text klicken, um eine sinnvoll vor-formulierte Em@il zu verfassen. Das\n"
+"Ding bitte einfach so absenden."
+
+#: templates/emailform/part.emailform.statuspage.php:349
 msgid ""
 "The event(s) with the following id(s) could not be attached; they do not "
 "seem to exists:"
@@ -9671,66 +9720,54 @@ msgstr ""
 "Die Veranstaltung(en) zu den folgenden Id(s) konnten nicht angehängt\n"
 "werden; die scheinen gar nicht zu existieren:"
 
-#: templates/emailform/part.emailform.statuspage.php:334
-#, php-format
-msgid ""
-"This is probably an internal error. Please contact %s. It may be possible to "
-"simply click on the red, underlined text in order to compose a usefull "
-"message."
-msgstr ""
-"Das ist mit hoher Wahrscheinlichkeit ein `internen' Fehler. Bitte %s\n"
-"kontaktieren. Wahrscheinlich kann man einfach auf den roten,\n"
-"unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
-"zu verfassen. Das Ding bitte einfach so absenden."
-
-#: templates/emailform/part.emailform.statuspage.php:362
+#: templates/emailform/part.emailform.statuspage.php:387
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 "Während des Sendeversuchs wurden die folgenden PHP-Ausnahmen `gefangen':"
 
-#: templates/emailform/part.emailform.statuspage.php:375
+#: templates/emailform/part.emailform.statuspage.php:400
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to %s."
 "It may be possible to simply click on the red, underlined text in order to "
-"compose a usefull message."
+"compose a useful message."
 msgstr ""
-"Das ist ein `interner' Fehler. Bitte die Ausgabe kopieren und per\n"
+"Das ist ein \"interner: Fehler.  Bitte die Ausgabe kopieren und per\n"
 "Em@il an %s schicken. Wahrscheinlich kann man einfach auf den roten,\n"
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:410
+#: templates/emailform/part.emailform.statuspage.php:435
 msgid ""
 "While trying to send the message(s), the following error(s) have been "
 "encountered:"
 msgstr "Während des Sendeversuchs wurden traten die folgenden Fehler auf:"
 
-#: templates/emailform/part.emailform.statuspage.php:423
+#: templates/emailform/part.emailform.statuspage.php:448
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to "
 "%s. It may be possible to simply click on the red, underlined text in order "
-"to compose a usefull message."
+"to compose a useful message."
 msgstr ""
-"Das ist ein `interner' Fehler. Bitte die Ausgabe kopieren und per\n"
+"Das ist ein \"interner\" Fehler. Bitte die Ausgabe kopieren und per\n"
 "Em@il an %s schicken. Wahrscheinlich kann man einfach auf den roten,\n"
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:455
+#: templates/emailform/part.emailform.statuspage.php:480
 msgid "Message Duplicates Detected!"
 msgstr "Nachrichten-Duplikat entdeckt!"
 
-#: templates/emailform/part.emailform.statuspage.php:469
+#: templates/emailform/part.emailform.statuspage.php:494
 #, php-format
 msgid "Message already sent at time %s to the following recipient(s):"
 msgstr ""
 "Die Nachricht wurde zum Zeitpunkt %s bereits schon einmal versendet,\n"
 "und zwar an die folgenden Adressaten:"
 
-#: templates/emailform/part.emailform.statuspage.php:494
+#: templates/emailform/part.emailform.statuspage.php:519
 #, php-format
 msgid ""
 "The email-form refuses to send email twice to the same recipients. In order "
@@ -9751,50 +9788,50 @@ msgstr ""
 "kontaktieren. Aber bitte vorher noch einmal darüber nachdenken, ob es\n"
 "nicht vielleicht doch ein Duplikat ist ..."
 
-#: templates/emailform/part.emailform.statuspage.php:525
+#: templates/emailform/part.emailform.statuspage.php:550
 msgid "Copy to Sent-Folder has Failed"
 msgstr "Das Kopieren in `Gesendete Nachrichten' ist fehlgeschlagen."
 
-#: templates/emailform/part.emailform.statuspage.php:534
+#: templates/emailform/part.emailform.statuspage.php:559
 #, php-format
 msgid "Could not authenticate with IMAP-server: %s"
 msgstr "Anmeldung am IMAP-Server fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:544
+#: templates/emailform/part.emailform.statuspage.php:568
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr "Das Kopieren in den Ordner %s ist fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:555
+#: templates/emailform/part.emailform.statuspage.php:579
 #, php-format
 msgid ""
 "If no other error messages are echoed on this page, then the emails have "
 "probably been sent successfully. However, copying the sent-out message to "
 "the sent-folder on the email-server has failed. This is nothing you can "
 "solve on your own, please contact %s. It may be possible to simply click on "
-"the red, underlined text in order to compose a usefull message."
+"the red, underlined text in order to compose a useful message."
 msgstr ""
 "Falls keine anderen Fehlermeldungen erscheinen, dann wurden die\n"
 "Nachrichten vermutlich erfolgreich versendet. Allerdings konnte die\n"
 "Nachricht danach nicht in den Ordner für gesendete Nachrichten kopiert\n"
 "werden. Den Fehler kann man nicht selbst beheben, bitte %s\n"
-"kontaktieren.  Wahrscheinlich kann man einfach auf den roten,\n"
+"kontaktieren. Wahrscheinlich kann man einfach auf den roten,\n"
 "unterstrichenen Text klicken, um eine sinnvoll vor-formulierte Em@il\n"
 "zu verfassen. Das Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:585
+#: templates/emailform/part.emailform.statuspage.php:608
 msgid "The Following Events have been attached to the Message:"
 msgstr "Die folgenden Termin-Einträge wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:613
+#: templates/emailform/part.emailform.statuspage.php:636
 msgid "The following files have been attached to the message:"
 msgstr "Die folgenden Dateien wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:641
+#: templates/emailform/part.emailform.statuspage.php:664
 msgid "First Few Lines of Sent Message"
 msgstr "Die ersten paar Zeilen der gesendeten Nachricht"
 
-#: templates/emailform/part.emailform.statuspage.php:657
+#: templates/emailform/part.emailform.statuspage.php:680
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
