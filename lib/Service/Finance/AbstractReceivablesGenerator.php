@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Common\DoNothingProgressStatus;
+use OCA\CAFEVDB\Exceptions;
 
 abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGenerator
 {
@@ -65,9 +66,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null)
   {
     $this->serviceFeeField = $serviceFeeField;
+    $this->progressStatus = null;
     if (!empty($progressToken)) {
       $this->progressStatus = $this->progressStatusService->get($progressToken);
-    } else {
+    }
+    if (empty($this->progressStatus)) { // handles also invalid token
       $this->progressStatus = new DoNothingProgressStatus;
     }
     $this->progressData['field'] = $serviceFeeField->getName();
@@ -79,6 +82,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    */
   public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    ignore_user_abort(false);
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
     $receivables = $this->serviceFeeField->getSelectableOptions();
@@ -149,8 +153,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'skipped' => $skipped,
         'notices' => $notices,
       ) = $this->updateOne($receivable, $participant, $updateStrategy);
-      $this->progressStatus->increment();
+      if ($this->progressStatus->increment() === false) {
+        throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+      }
     } else {
+      ignore_user_abort(false);
       $participants = $receivable->getField()->getProject()->getParticipants();
       if ($this->progressStatus->getTarget() <= 0) {
         $this->progressStatus->update(0, $participants->count());
@@ -166,7 +173,9 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'skipped' => $s,
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
-        $this->progressStatus->increment();
+        if ($this->progressStatus->increment() === false) {
+          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+        }
         $added += $a;
         $removed += $r;
         $changed += $c;
@@ -200,8 +209,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'changed' => $changed,
         'skipped' => $skipped,
         'notices' => $notices) = $this->updateOne($receivable, $participant, $updateStrategy);
-      $this->progressStatus->increment();
+        if ($this->progressStatus->increment() === false) {
+          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+        }
     } else {
+      ignore_user_abort(false);
       $receivables = $this->serviceFeeField->getSelectableOptions();
       if ($this->progressStatus->getTarget() <= 0) {
         $this->progressStatus->update(0, $receivables->count());
@@ -216,7 +228,9 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'skipped' => $s,
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
-        $this->progressStatus->increment();
+        if ($this->progressStatus->increment() === false) {
+          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+        }
         $added += $a;
         $removed += $r;
         $changed += $c;
