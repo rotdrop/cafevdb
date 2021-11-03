@@ -62,7 +62,7 @@ class DoNothingProgressStatus extends AbstractProgressStatus
   public function getId() { return -1; }
 
   /** @{inheritdoc} */
-  public function update(int $current, ?int $target = null, ?array $data = null)
+  public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->current = $current;
     if ($target !== null) {
@@ -72,6 +72,7 @@ class DoNothingProgressStatus extends AbstractProgressStatus
       $this->applicationData = $data;
     }
     $this->lastModified = new \DateTimeImmutable;
+    return true;
   }
 
   /** @{inheritdoc} */

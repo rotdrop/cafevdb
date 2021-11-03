@@ -43,6 +43,9 @@ class PlainFileProgressStatus extends AbstractProgressStatus
   /** @var AppStorage */
   protected $storage;
 
+  /** @var ISimpleFolder */
+  protected $folder;
+
   /** @var ISimpleFile */
   protected $file;
 
@@ -63,6 +66,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     $this->l = $l10n;
     $this->storage = $storage;
     $this->file = null;
+    $this->folder = $this->storage->getFolder(self::DATA_DIR);
   }
 
   /**
@@ -80,11 +84,19 @@ class PlainFileProgressStatus extends AbstractProgressStatus
 
   /**
    * Flush the initial state to disk.
+   *
+   * @return bool true on success, false if the data-file has been
+   * deleted.
    */
-  protected function flush()
+  protected function flush():bool
   {
-    $this->data['lastModified'] = time();
-    $this->file->putContent(json_encode($this->data));
+    if ($this->folder->fileExists($this->file->getName())) {
+      $this->data['lastModified'] = time();
+      $this->file->putContent(json_encode($this->data));
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /** @{inheritdoc} */
@@ -104,7 +116,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
       return;
     }
 
-    if (!empty($file)) {
+    if (!empty($this->file)) {
       try {
         $this->file->delete();
       } catch (\Throwable $t) {
@@ -115,7 +127,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
 
     if (!empty($id)) {
       try {
-        $this->file = $this->storage->getFile(self::DATA_DIR, $id);
+        $this->file = $this->folder->getFile($id);
         $this->sync();
       } catch (\Throwable $t) {
         $this->reset();
@@ -123,7 +135,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
         throw (new Exceptions\ProgressStatusNotFoundException(
           $this->l->t('Unable to find progress status for job id "%s"', $id),
           $t->getCode(),
-          $t))->setId($i);
+          $t))->setId($id);
       }
     } else {
       $this->file = $this->storage->newTemporaryFile(self::DATA_DIR);
@@ -139,7 +151,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
   }
 
   /** @{inheritdoc} */
-  public function update(int $current, ?int $target = null, ?array $data = null)
+  public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->data['current'] = $current;
     if (!empty($target)) {
@@ -148,7 +160,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     if (!empty($data)) {
       $this->data['data'] = $data;
     }
-    $this->flush();
+    return $this->flush();
   }
 
   /** @{inheritdoc} */

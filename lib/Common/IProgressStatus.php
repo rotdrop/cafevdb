@@ -61,8 +61,11 @@ interface IProgressStatus
    * @param null|$data "user"-data stored in the progress-status
    * object. Can be retrieved later via getData(). If null then the
    * currently stored data remains unchanged.
+   *
+   * @return bool true on success, false if the underlying storage has
+   * been deleted.
    */
-  public function update(int $current, ?int $target = null, ?array $data = null);
+  public function update(int $current, ?int $target = null, ?array $data = null):bool;
 
   /**
    * Add the given amount to the progress-status counter.
@@ -70,9 +73,10 @@ interface IProgressStatus
    * @param int $delta Amount to add, defaults to 1. Negative values
    * are allowed.
    *
-   * @return int Current value of the counter.
+   * @return bool|int Current value of the counter or false if the
+   * underlying storage has been deleted.
    */
-  public function increment(int $delta = 1):int;
+  public function increment(int $delta = 1);
 
   /**
    * Synchronize with the underlying storage, i.e. read the data into

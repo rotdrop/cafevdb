@@ -114,7 +114,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
   }
 
   /** @{inheritdoc} */
-  public function update(int $current, ?int $target = null, ?array $data = null)
+  public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->entity->setCurrent($current);
     if (!empty($target)) {
@@ -123,7 +123,13 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     if (!empty($data)) {
       $this->entity->setData(json_encode($data));
     }
-    $this->mapper->update($this->entity);
+    try {
+      $this->mapper->update($this->entity);
+      return true;
+    } catch (\Throwabled $t) {
+      $this->logException($t);
+      return false;
+    }
   }
 
   /** @{inheritdoc} */

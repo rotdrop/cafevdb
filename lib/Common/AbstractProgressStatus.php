@@ -29,12 +29,12 @@ namespace OCA\CAFEVDB\Common;
 abstract class AbstractProgressStatus implements IProgressStatus
 {
   /** @{inheritdoc} */
-  public function increment(int $delta = 1):int
+  public function increment(int $delta = 1)
   {
     $current = $this->getCurrent();
     $current += $delta;
-    $this->update($current);
-    return $current;
+    $result = $this->update($current);
+    return $result ? $current : false;
   }
 
   /** @{inheritdoc} */
