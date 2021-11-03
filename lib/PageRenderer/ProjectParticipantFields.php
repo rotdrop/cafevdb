@@ -421,7 +421,7 @@ class ProjectParticipantFields extends PMETableViewBase
     , "limit", $join_table.`limit`
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
-) ORDER BY $join_table.label ASC, $join_table.data ASC),"]")',
+) ORDER BY $join_table.l10n_label ASC, $join_table.data ASC),"]")',
       'values' => [
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
