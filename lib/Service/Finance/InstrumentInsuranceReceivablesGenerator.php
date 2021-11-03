@@ -120,10 +120,23 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $startingYear = $startingDate->format('Y');
     $endingYear   = (new DateTime)->setTimezone($this->timeZone)->format('Y');
 
-    for ($year = $startingYear; $year <= $endingYear; ++$year) {
-      $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
-      $tooltipTemplate = $this->toolTipsService['instrument-insurance-annual-service-fee']??'';
-      $tooltipText = $this->l->t($tooltipTemplate);
+    // We (mis-)use year 0 for the initial value, if any
+    $years = array_map(
+      function($value) {
+        return sprintf('%04d', $value);
+      },
+      array_merge([0], range($startingYear, $endingYear)));
+
+    foreach ($years as $year) {
+      if ($year == '0000') {
+        $labelText = $this->l->t($labelTemplate = 'Opening Balance');
+        $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance']??'';
+        $tooltipText = $this->l->t($tooltipTemplate);
+      } else {
+        $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
+        $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee']??'';
+        $tooltipText = $this->l->t($tooltipTemplate);
+      }
       $yearReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]));
       if ($yearReceivables->count() == 0) {
         // add a new option
@@ -161,22 +174,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     //   - update all existing items with newly computed insurance sum
 
     $year = $receivable->getData();
-    /** @var Entities\Musician $musician */
-    $musician = $participant->getMusician();
-    /** @var Entities\Project $project */
-    $project = $participant->getProject();
 
-    // "now" should in principle just do ...
-    $referenceDate = new \DateTimeImmutable($year.'-06-01');
-
-    // Compute the actual fee
-    $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
-
-    // Generate the overview letter as supporting document
-    // @todo: use new OpenDocument stuff
-    $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
-    $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
-    $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
+    $openingBalance = $year === '0000';
 
     $removed = false;
     $added = false;
@@ -184,11 +183,43 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $skipped = false;
     $notices = [];
 
+    /** @var Entities\Musician $musician */
+    $musician = $participant->getMusician();
+    /** @var Entities\Project $project */
+    $project = $participant->getProject();
+
+    if (!$openingBalance) {
+      // "now" should in principle just do ...
+      $referenceDate = new \DateTimeImmutable($year.'-06-01');
+
+      // Compute the actual fee
+      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
+
+      // Generate the overview letter as supporting document
+      // @todo: use new OpenDocument stuff
+      $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
+      $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+      $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
+    } else {
+      if (0 == count($this->insuranceService->billableInsurances($musician))) {
+        // bail out early, DO NOT ADD an opening balance
+        return [
+          'added' => 0,
+          'removed' => 0,
+          'changed' => 0,
+          'skipped' => 1,
+          'notices' => [], // no insurance, no message
+        ];
+      }
+      $fee = null;
+      $updateStrategy = self::UPDATE_STRATEGY_SKIP; // set only manually
+    }
+
     $participantFieldsData = $participant->getParticipantFieldsData();
     $optionKey = $receivable->getKey();
     $datum = $participant->getParticipantFieldsDatum($optionKey);
     if (empty($datum)) {
-      if ($fee != 0.0) {
+      if ($openingBalance || $fee != 0.0) {
         // add a new option
         /** @var Entities\ProjectParticipantFieldDatum $datum */
         $datum = (new Entities\ProjectParticipantFieldDatum)
@@ -198,10 +229,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
                ->setOptionKey($receivable->getKey())
                ->setOptionValue($fee);
 
-        // store overview letter
-        $supportingDocument = new Entities\EncryptedFile(
-          $overviewFilename, $overviewLetter, 'application/pdf');
-        $datum->setSupportingDocument($supportingDocument);
+        if (!$openingBalance) {
+          // store overview letter
+          $supportingDocument = new Entities\EncryptedFile(
+            $overviewFilename, $overviewLetter, 'application/pdf');
+          $datum->setSupportingDocument($supportingDocument);
+        }
 
         // @todo Too much connectivity
         $participantFieldsData->set($optionKey->getBytes(), $datum);
@@ -211,13 +244,18 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         $added = true;
       }
     } else { // !empty($datum)
-      if (!$datum->isDeleted() && $fee != $datum->getOptionValue()) {
-        $notices[] = $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.', [
-          $musician->getPublicName(true),
-          $year,
-          $this->moneyValue((float)$datum->getOptionValue()),
-          $this->moneyValue($fee),
-        ]);
+      $optionValue = (float)$datum->getOptionValue();
+      if (!$datum->isDeleted() && $fee != $optionValue) {
+        if ($openingBalance) {
+          $notices[] = $this->l->t('Keeping opening balance of %s.', $this->moneyValue($optionValue));
+        } else {
+          $notices[] = $this->l->t('Data inconsistency for musician %s in year %d: old fee %s, new fee %s.', [
+            $musician->getPublicName(true),
+            $year,
+            $this->moneyValue($optionValue),
+            $this->moneyValue($fee),
+          ]);
+        }
         switch ($updateStrategy) {
         case self::UPDATE_STRATEGY_REPLACE:
           break;

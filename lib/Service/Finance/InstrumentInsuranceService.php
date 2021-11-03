@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use \DateTimeImmutable as DateTime;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -187,7 +188,7 @@ class InstrumentInsuranceService
 
     $result = [];
 
-    $insurances = $this->insurancesRepository->findBy([ 'billToParty' => $musicianOrId ]);
+    $insurances = $this->billableInsurances($musicianOrId);
     /** @var Entities\InstrumentInsurance $insurance */
     foreach ($insurances as $insurance) {
       $amount = $insurance->getInsuranceAmount();
@@ -217,6 +218,18 @@ class InstrumentInsuranceService
   }
 
   /**
+   * Return all insurance items which are billable to the given musician.
+   *
+   * @param int|Entities\Musician $musicianOrId
+   *
+   * @return Collection
+   */
+  public function billableInsurances($musicianOrId)
+  {
+    return $this->insurancesRepository->findBy([ 'billToParty' => $musicianOrId ]);
+  }
+
+  /**
    * Compute the annual insurance fee for the respective musician up
    * to the year containing the given date.
    *
@@ -241,7 +254,7 @@ class InstrumentInsuranceService
     }
     $date = $date->setTimezone($timeZone);
 
-    $payables = $this->insurancesRepository->findBy([ 'billToParty' => $musicianId ]);
+    $payables = $this->billableInsurances($musicianId);
 
     $fee = 0.0;
     /** @var Entities\InstrumentInsurance $insurance */
