@@ -143,19 +143,27 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
   callbacks.preProcess(failData);
 
+  let decodedStatus;
   switch (textStatus) {
+  case 'cancelled':
+    decodedStatus = t(appName, 'Operation cancelled by user.');
+    break;
+  case 'abort':
+    decodedStatus = t(appName, 'Aborted');
+    break;
   case 'notmodified':
   case 'nocontent':
   case 'error':
   case 'timeout':
-  case 'abort':
   case 'parsererror':
   case 'success': // this should not happen here
   default:
+    decodedStatus = ajaxHttpStatus[xhr.status];
+    break;
   }
 
   const caption = t(appName, 'Error');
-  let info = '<span class="bold toastify http-status error">' + ajaxHttpStatus[xhr.status] + '</span>';
+  let info = '<span class="bold toastify http-status error">' + decodedStatus + '</span>';
   // console.info(xhr.status, info, errorThrown, textStatus);
 
   let autoReport = '<a href="mailto:'
@@ -173,7 +181,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
           + globalState.phpUserAgent
           + '\n'
           + '\n'
-          + 'Error Code: ' + ajaxHttpStatus[xhr.status]
+          + 'Error Code: ' + decodedStatus
           + '\n'
           + '\n'
           + 'Error Data: ' + print_r(failData, true)
