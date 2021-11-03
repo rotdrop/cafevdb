@@ -20,9 +20,9 @@ SHELL := $(BASH)
 npm=$(shell which npm 2> /dev/null)
 COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
-COMPOSER=php $(build_tools_directory)/composer.phar
+COMPOSER_TOOL=php $(build_tools_directory)/composer.phar
 else
-COMPOSER=$(COMPOSER_SYSTEM)
+COMPOSER_TOOL=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
 
@@ -108,10 +108,10 @@ stamp.composer-core-versions: composer.lock
 composer.lock: DRY:=
 composer.lock: composer.json composer.json.in
 	rm -f composer.lock
-	$(COMPOSER) install $(COMPOSER_OPTIONS)
+	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 	env DRY=$(DRY) dev-scripts/tweak-composer-json.sh || {\
  rm -f composer.lock;\
- $(COMPOSER) install $(COMPOSER_OPTIONS);\
+ $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
 }
 
 pre-build:
@@ -140,7 +140,7 @@ composer-download:
 # a copy is fetched from the web
 .PHONY: composer
 composer: stamp.composer-core-versions
-	$(COMPOSER) install $(COMPOSER_OPTIONS)
+	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 WRAPPER_PREV_BUILD_HASH = $(shell cat wrapper-build-hash 2> /dev/null || echo)
 WRAPPER_GIT_BUILD_HASH = $(shell git rev-parse $(subst %,HEAD:,$(WRAPPER_GIT_DEPENDENCIES))\
@@ -159,18 +159,18 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	ln -fs ../3rdparty $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
 	rm -rf $(BUILDDIR)/vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
 .PHONY: composer-wrapped-suggest
 composer-wrapped-suggest:
 	@echo -e "\n*** Wrapped Composer Suggestions ***\n"
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) suggest --all
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) suggest --all
 
 .PHONY: composer-suggest
 composer-suggest: composer-wrapped-suggest
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
-	$(COMPOSER) suggest --all
+	$(COMPOSER_TOOL) suggest --all
 
 vendor/bin/php-scoper: composer
 
@@ -182,7 +182,7 @@ vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 
 vendor-wrapped/autoload.php: vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) dump-autoload
 
 .PHONY: namespace-wrapper
 namespace-wrapper: vendor-wrapped/autoload.php
@@ -269,7 +269,7 @@ $(BUILDDIR)/core-exclude:
 .PHONY: cleanup
 cleanup: $(BUILDDIR)/core-exclude
 	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
-	$(COMPOSER) dump-autoload
+	$(COMPOSER_TOOL) dump-autoload
 
 .PHONY: doc
 doc: phpdoc doxygen jsdoc
@@ -321,7 +321,7 @@ source:
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
 appstore: $(BUILDDIR)/core-exclude
-	$(COMPOSER) update --no-dev $(COMPOSER_OPTIONS)
+	$(COMPOSER_TOOL) update --no-dev $(COMPOSER_OPTIONS)
 	ls -l vendor
 	rm -rf $(appstore_build_directory)
 	mkdir -p $(appstore_build_directory)
@@ -349,7 +349,7 @@ appstore: $(BUILDDIR)/core-exclude
  --exclude="../$(app_name)/js/.*" \
  --exclude-from="$(BUILDDIR)/core-exclude" \
  ../$(app_name)
-	$(COMPOSER) install $(COMPOSER_OPTIONS)
+	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
