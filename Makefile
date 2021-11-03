@@ -162,6 +162,16 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
+.PHONY: composer-wrapped-suggest
+composer-wrapped-suggest:
+	@echo -e "\n*** Wrapped Composer Suggestions ***\n"
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) suggest --all
+
+.PHONY: composer-suggest
+composer-suggest: composer-wrapped-suggest
+	@echo -e "\n*** Regular Composer Suggestions ***\n"
+	$(COMPOSER) suggest --all
+
 vendor/bin/php-scoper: composer
 
 vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor-wrapped
