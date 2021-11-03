@@ -251,10 +251,15 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $datum->setSupportingDocument($supportingDocument);
           } else if (true || $fee != $datum->getOptionValue()) {
             // @todo FIXME: only update letter if fee changes?
-            $supportingDocument->setFileName($overviewFilename)
-                               ->setMimeType('application/pdf')
-                               ->setSize(strlen($overviewLetter))
-                               ->getFileData()->setData($overviewLetter);
+            $fileData = $supportingDocument->setFileName($overviewFilename)
+                                           ->setMimeType('application/pdf')
+                                           ->setSize(strlen($overviewLetter))
+                                           ->getFileData();
+            if (empty($fileData)) {
+              $fileData = (new Entities\EncryptedFileData)->setFile($supportingDocument);
+              $supportingDocument->setFileData($fileData);
+            }
+            $fileData->setData($overviewLetter);
           }
           // just update current data to the computed value
           if ($datum->isDeleted()) {
