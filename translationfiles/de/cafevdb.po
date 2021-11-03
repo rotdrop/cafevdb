@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-03 18:28+0100\n"
-"PO-Revision-Date: 2021-11-03 18:36+0100\n"
+"POT-Creation-Date: 2021-11-03 23:48+0100\n"
+"PO-Revision-Date: 2021-11-03 23:51+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -454,8 +454,8 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:216
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1331
 #: lib/PageRenderer/Instruments.php:377
-#: lib/Service/Finance/InstrumentInsuranceService.php:866
-#: lib/Service/Finance/InstrumentInsuranceService.php:870
+#: lib/Service/Finance/InstrumentInsuranceService.php:879
+#: lib/Service/Finance/InstrumentInsuranceService.php:883
 #: lib/Service/PhoneNumberService.php:88 lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:43 src/app/cafevdb.js:44
 msgid "unknown"
@@ -2849,7 +2849,7 @@ msgstr "Instrument"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:119
 #: lib/PageRenderer/InstrumentInsurances.php:403
-#: lib/Service/Finance/InstrumentInsuranceService.php:722
+#: lib/Service/Finance/InstrumentInsuranceService.php:735
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -3335,12 +3335,12 @@ msgid "Broker"
 msgstr "Anbieter"
 
 #: lib/PageRenderer/InsuranceRates.php:158
-#: lib/Service/Finance/InstrumentInsuranceService.php:720
+#: lib/Service/Finance/InstrumentInsuranceService.php:733
 msgid "Scope"
 msgstr "Bereich"
 
 #: lib/PageRenderer/InsuranceRates.php:167
-#: lib/Service/Finance/InstrumentInsuranceService.php:724
+#: lib/Service/Finance/InstrumentInsuranceService.php:737
 msgid "Rate"
 msgstr "Rate"
 
@@ -3932,7 +3932,7 @@ msgstr "Obergrenze"
 #: lib/PageRenderer/ProjectPayments.php:389
 #: lib/PageRenderer/SepaBankAccounts.php:416
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: lib/Service/Finance/InstrumentInsuranceService.php:723
+#: lib/Service/Finance/InstrumentInsuranceService.php:736
 msgid "Amount"
 msgstr "Betrag"
 
@@ -4773,7 +4773,9 @@ msgstr "Weitere Kalender"
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:232
 #, php-format
 msgid "Operation has been cancelled by user, last processed data was %s / %s."
-msgstr "Anwender:in hat die Datenverarbeitung abgebrochen, der letzte verarbeitete Datensatz war %s - %s."
+msgstr ""
+"Anwender:in hat die Datenverarbeitung abgebrochen, der letzte verarbeitete "
+"Datensatz war %s - %s."
 
 #: lib/Service/Finance/AqBankingBulkTransactionExporter.php:100
 #, php-format
@@ -4850,27 +4852,36 @@ msgid "Unable to find management option for participant field \"%s\"."
 msgstr ""
 "Kann die Definitionsdaten für den Forderungen-Generator \"%s\" nicht finden."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:124
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:132
+msgid "Opening Balance"
+msgstr "Anfangsbestand"
+
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:136
 #, php-format
 msgid "Insurance Fee %d"
 msgstr "Versicherungs-Beitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:215
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:250
+#, php-format
+msgid "Keeping opening balance of %s."
+msgstr "Anfangsbestand %s unverändert beibehalten."
+
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:252
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:231
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:269
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:458 :-1
+#: lib/Service/Finance/InstrumentInsuranceService.php:471 :-1
 #, php-format
 msgid "insurance"
 msgstr "Versicherung"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:486
+#: lib/Service/Finance/InstrumentInsuranceService.php:499
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
@@ -4880,32 +4891,32 @@ msgstr ""
 "Versicherungsübersicht. Bitte ein passendes Dokument bei den\n"
 "App-Einstellungen (Orchester->Dokumentenvorlagen) einstellen."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:601
+#: lib/Service/Finance/InstrumentInsuranceService.php:614
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:605
+#: lib/Service/Finance/InstrumentInsuranceService.php:618
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:620
+#: lib/Service/Finance/InstrumentInsuranceService.php:633
 #: templates/instrument-insurance.php:55 templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:642
+#: lib/Service/Finance/InstrumentInsuranceService.php:655
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:643
+#: lib/Service/Finance/InstrumentInsuranceService.php:656
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:648
+#: lib/Service/Finance/InstrumentInsuranceService.php:661
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -4924,33 +4935,33 @@ msgstr ""
 "dann, wenn sich an der Versicherung etwas ändern\n"
 "sollte."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:656
+#: lib/Service/Finance/InstrumentInsuranceService.php:669
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr "Gesamtversicherungsbeitrag %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:669
+#: lib/Service/Finance/InstrumentInsuranceService.php:682
 msgid "Annual amount excluding taxes"
 msgstr "Jahresbeitrag ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:673
-#: lib/Service/Finance/InstrumentInsuranceService.php:813
+#: lib/Service/Finance/InstrumentInsuranceService.php:686
+#: lib/Service/Finance/InstrumentInsuranceService.php:826
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr "%s %% Versicherungssteuer"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:677
+#: lib/Service/Finance/InstrumentInsuranceService.php:690
 msgid "Total amount to pay"
 msgstr "Rechnungsbetrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:687
+#: lib/Service/Finance/InstrumentInsuranceService.php:700
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 "Der Versicherungsbeitrag wird immer im voraus für das nächste "
 "Versicherungsjahr gezahlt."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:688
+#: lib/Service/Finance/InstrumentInsuranceService.php:701
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
@@ -4960,11 +4971,11 @@ msgstr ""
 "reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
 "Versicherungsjahre auf Monatsbasis berechnet wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:690
+#: lib/Service/Finance/InstrumentInsuranceService.php:703
 msgid "This is detailed in the table on the following page."
 msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:698
+#: lib/Service/Finance/InstrumentInsuranceService.php:711
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
@@ -4972,7 +4983,7 @@ msgstr ""
 "Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
 "nicht gekündigt wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:704
+#: lib/Service/Finance/InstrumentInsuranceService.php:717
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -4984,57 +4995,57 @@ msgstr ""
 "rechtzeitig im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:711
+#: lib/Service/Finance/InstrumentInsuranceService.php:724
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:712
+#: lib/Service/Finance/InstrumentInsuranceService.php:725
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:719
+#: lib/Service/Finance/InstrumentInsuranceService.php:732
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:721
+#: lib/Service/Finance/InstrumentInsuranceService.php:734
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:725
+#: lib/Service/Finance/InstrumentInsuranceService.php:738
 msgid "Start"
 msgstr "Beginn"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:726
+#: lib/Service/Finance/InstrumentInsuranceService.php:739
 msgid "Valid until"
 msgstr "Laufzeit bis"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:727
+#: lib/Service/Finance/InstrumentInsuranceService.php:740
 msgid "Months"
 msgstr "Monate"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:728
+#: lib/Service/Finance/InstrumentInsuranceService.php:741
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:764
+#: lib/Service/Finance/InstrumentInsuranceService.php:777
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:797
+#: lib/Service/Finance/InstrumentInsuranceService.php:810
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:807
+#: lib/Service/Finance/InstrumentInsuranceService.php:820
 msgid "Totals excluding taxes"
 msgstr "Gesamtsumme ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:820
+#: lib/Service/Finance/InstrumentInsuranceService.php:833
 msgid "Totals including taxes"
 msgstr "Gesamtsumme mit Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:861
+#: lib/Service/Finance/InstrumentInsuranceService.php:874
 msgid "Jane"
 msgstr "Susanne"
 
@@ -12083,6 +12094,9 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#~ msgid "Skipping automatic update of opening balance"
+#~ msgstr "Berechnung-Anfangsbestand wurde übersprungen."
 
 #~ msgid "Missing parameters in request \"%s/%s\""
 #~ msgstr "Fehlende Anfrage-Parameter \"%s/%s\""
