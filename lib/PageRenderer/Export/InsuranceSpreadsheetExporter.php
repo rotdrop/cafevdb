@@ -32,6 +32,36 @@ use OCA\CAFEVDB\Service\ConfigService;
 
 class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
+  use \OCA\CAFEVDB\Traits\SloppyTrait;
+
+  protected const MUSICIAN_KEY = 'musician';
+  protected const OBJECT_KEY = 'object';
+  protected const ACCESSORY_KEY = 'accessory';
+  protected const MANUFACTURER_KEY = 'manufacturer';
+  protected const YEAR_OF_CONSTRUCTION_KEY = 'year';
+  protected const AMOUNT_KEY = 'amount';
+  protected const TOTALS_KEY = 'totals';
+
+  protected const EXPORT_COLUMNS = [
+    self::MUSICIAN_KEY,
+    self::OBJECT_KEY,
+    self::ACCESSORY_KEY,
+    self::MANUFACTURER_KEY,
+    self::YEAR_OF_CONSTRUCTION_KEY,
+    self::AMOUNT_KEY,
+    self::TOTALS_KEY,
+  ];
+
+  protected const INPUT_INDEX_MUSICIAN = 0;
+  protected const INPUT_INDEX_BILL_TO = 1;
+  protected const INPUT_INDEX_BROKER = 2;
+  protected const INPUT_INDEX_SCOPE = 3;
+  protected const INPUT_INDEX_OBJECT = 4;
+  protected const INPUT_INDEX_IS_ACCESSORY = 5;
+  protected const INPUT_INDEX_MANUFACTURER = 6;
+  protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = 7;
+  protected const INPUT_INDEX_INSURED_AMOUNT = 8;
+
   /** @var PageRenderer\PMETableViewBase */
   protected $renderer;
 
@@ -97,6 +127,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $email = $meta['email'];
     $date = $meta['date'];
 
+    $name  = $this->l->t('Instrument Insurances');
+
     $template = $this->renderer->template();
 
     $offset = $headerOffset = 6;
@@ -114,14 +146,13 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $numRecords    = 0;
 
     $headerLine  = [
-      $this->l->t('Musician'),
-      $this->l->t('Instrument'),
-      $this->l->t('Manufacturer'),
-      $this->l->t('Year of Construction'),
-      $this->l->t('Instrument Insurance Amount'),
-      $this->l->t('Accessory'),
-      $this->l->t('Accessory Insurance Amount'),
-      $this->l->t('Musician Insurance Total')
+      self::MUSICIAN_KEY => $this->l->t('Musician'),
+      self::OBJECT_KEY => $this->l->t('Insured Object'),
+      self::ACCESSORY_KEY => $this->l->t('Accessory'),
+      self::MANUFACTURER_KEY => $this->l->t('Manufacturer'),
+      self::YEAR_OF_CONSTRUCTION_KEY => $this->l->t('Year of Construction'),
+      self::AMOUNT_KEY => $this->l->t('Insurance Amount'),
+      self::TOTALS_KEY => $this->l->t('Musician Insurance Total'),
     ];
 
     $brokerNames = $this->insuranceService->getBrokers();
@@ -159,30 +190,31 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $newMusician = false;
 
         if ($brokerScope === false) { // setup
-          $musician    = $lineData[0];
-          $broker      = $lineData[2];
-          $scope       = $lineData[3];
+          $musician    = $lineData[self::INPUT_INDEX_MUSICIAN];
+          // $billTo      = $lineData[1];
+          $broker      = $lineData[self::INPUT_INDEX_BROKER];
+          $scope       = $lineData[self::INPUT_INDEX_SCOPE];
           $brokerScope = $broker.$scope;
           $newMusician = true;
 
-          $sheet->setTitle($broker.' '.$scope);
+          $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
 
-          $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
+          $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']);
           $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
           $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
-          $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[3]);
+          $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
           $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
         } else {
-          $broker   = $lineData[2];
-          $scope    = $lineData[3];
+          $broker   = $lineData[self::INPUT_INDEX_BROKER];
+          $scope    = $lineData[self::INPUT_INDEX_SCOPE];
           $newScope = $broker.$scope;
 
-          if ($musician != $lineData[0] || $newScope != $brokerScope) {
+          if ($musician != $lineData[self::INPUT_INDEX_MUSICIAN] || $newScope != $brokerScope) {
             $this->dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
             $total += $musicianTotal;
             $musicianTotal = 0.0;
             $newMusician = true;
-            $musician = $lineData[0];
+            $musician = $lineData[self::INPUT_INDEX_MUSICIAN];
           }
 
           if ($newScope != $brokerScope) {
@@ -191,36 +223,42 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $spreadSheet->createSheet();
             $spreadSheet->setActiveSheetIndex($spreadSheet->getSheetCount() - 1);
             $sheet = $spreadSheet->getActiveSheet();
-            $sheet->setTitle($broker.' '.$scope);
+            $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
             $brokerScope = $newScope;
             $offset = $headerOffset - $i + 2;
             $rowCnt = 0;
             $this->dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
 
-            $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
+            $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']);
             $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
             $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
-            $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[3]);
+            $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
             $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
           }
         }
 
-        $exportData[0] = $newMusician ? $lineData[0] : '';
-        if ($lineData[5] == $this->l->t('false')) {
-          $exportData[1] = $lineData[4];
-          $exportData[2] = $lineData[6];
-          $exportData[3] = $lineData[7];
-          $exportData[4] = $lineData[8];
-        } else {
-          $exportData[5] = $lineData[4]." ".$lineData[6];
-          if ($lineData[7] != $this->l->t('unknown')) {
-            $exportData[5] .= ", ".$lineData[7];
-          }
-          $exportData[6] = $lineData[8];
-        }
-        $exportData[7] = '';
+        //  0: musician
+        //  1: bill-to
+        //  2: broker
+        //  3: scope
+        //  4: object
+        //  5: is-accessory
+        //  6: manufacturer
+        //  7: year-of-construction
+        //  8: insured amount
+        //  9: insurance rate
+        // 10: amount-to-pay with taxes
+        // 11: start of insurance
 
-        $monetary = $this->fuzzyInputService->parseCurrency($lineData[8]);
+        $exportData[self::MUSICIAN_KEY] = $newMusician ? $lineData[self::INPUT_INDEX_MUSICIAN] : '';
+        $exportData[self::OBJECT_KEY] = $lineData[self::INPUT_INDEX_OBJECT];
+        $exportData[self::ACCESSORY_KEY] = $lineData[self::INPUT_INDEX_IS_ACCESSORY];
+        $exportData[self::MANUFACTURER_KEY] = $lineData[self::INPUT_INDEX_MANUFACTURER];
+        $exportData[self::YEAR_OF_CONSTRUCTION_KEY] = $lineData[self::INPUT_INDEX_YEAR_OF_CONSTRUCTION];
+        $exportData[self::AMOUNT_KEY] = $lineData[self::INPUT_INDEX_INSURED_AMOUNT];
+        $exportData[self::TOTALS_KEY] = '';
+
+        $monetary = $this->fuzzyInputService->parseCurrency($lineData[self::INPUT_INDEX_INSURED_AMOUNT]);
         if ($monetary !== false) {
           $musicianTotal += $monetary['amount'];
         }
@@ -254,11 +292,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           'wrapText' => true,
         ],
         'borders' => [
-          'allborders' => [
-            'style' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          'allBorders' => [
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
           ],
           'bottom' => [
-            'style' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
           ],
         ],
         'fill' => [
@@ -273,7 +311,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
       $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray([
         'borders' => [
-          'allborders' => [
+          'allBorders' => [
             'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
           ],
         ],
@@ -338,9 +376,10 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
   private function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
   {
-    $moneyColumns = ['E', 'G', 'H']; // aligned right
+    $moneyColumns = ['E', 'F', 'G']; // aligned right
     $column = 'A';
-    foreach ($exportData as $cellValue) {
+    foreach (self::EXPORT_COLUMNS as $columnKey) {
+      $cellValue = $exportData[$columnKey];
       $sheet->setCellValue($column.($row+$offset), $cellValue);
       if ($header) {
         $sheet->getColumnDimension($column)->setAutoSize(true);
@@ -371,22 +410,26 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
   private function dumpMusicianTotal($sheet, $row, $offset, &$rowCnt, $musicianTotal)
   {
-    $exportData = array_fill(0, 8, '');
-    $exportData[7] = $musicianTotal.preg_quote('€');
+    $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
+    $exportData[self::TOTALS_KEY] = $musicianTotal.preg_quote('€');
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
   }
 
   private function dumpTotal($sheet, $row, $offset, &$rowCnt, &$total)
   {
-    $exportData = array_fill(0, 8, '');
-    $exportData[0]  = $this->l->t('Total Insurance Amount: ');
-    $exportData[7]  = $total.preg_quote('€');
+    $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
+    $exportData[self::MUSICIAN_KEY] = $this->l->t('Total Insurance Amount');
+    $exportData[self::TOTALS_KEY] = $total.preg_quote('€');
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
     $total = 0.0;
-    $exportData[7] = '';
     $highRow = $sheet->getHighestRow();
-    $sheet->mergeCells("A".$highRow.":"."G".$highRow);
-    $sheet->getStyle("A".$highRow.":"."H".$highRow)->applyFromArray([
+    $lastColumnChr = $sheet->getHighestColumn();
+    $preLastColumnChr = chr(ord($lastColumnChr)-1);
+    $sheet->mergeCells("A".$highRow.":".$preLastColumnChr.$highRow);
+    $sheet->getStyle("A".$highRow.":".$lastColumnChr.$highRow)->applyFromArray([
+      'font' => [
+        'bold' => true
+      ],
       'alignment' => [
         'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
         'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
