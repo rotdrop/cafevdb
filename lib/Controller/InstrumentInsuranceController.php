@@ -94,7 +94,7 @@ class InstrumentInsuranceController extends Controller {
       ];
       $values = [];
       foreach($cgiKeys as $key => $cgiKey) {
-        $values[$key] = $pmeData[$cgiKey]?:false;
+        $values[$key] = $pmeData[$cgiKey]?:null;
         if (is_string($values[$key])) {
           $values[$key] = trim($values[$key]);
         }
