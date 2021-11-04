@@ -96,13 +96,16 @@ class Util
   }
 
   /** Normalize spaces and commas after and before spaces. */
-  public static function normalizeSpaces($name, $singleSpace = ' ')
+  public static function normalizeSpaces($name, $singleSpace = ' ', $stripLinebreaks = false)
   {
-    /* Normalize name and translation */
     $name = str_replace("\xc2\xa0", "\x20", $name);
     $name = trim($name);
-    $name = preg_replace('/\s*,/', ',', $name);
-    $name = preg_replace('/\s+/', $singleSpace, $name);
+    $name = str_replace("\r\n", "\n", $name);
+    if ($stripLinebreaks) {
+      $name = str_replace("\n", $singleSpace, $name);
+    }
+    $name = preg_replace('/\h+/', $singleSpace, $name);
+    $name = preg_replace('/\h+([\n.,;:?!])/', '$1', $name);
 
     return $name;
   }
