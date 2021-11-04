@@ -76,7 +76,7 @@ class FuzzyInputService
    */
   public function parseCurrency($value, $noThrow = false)
   {
-    $value = trim($value);
+    $value = Util::normalizeSpaces($value, ' ', true);
     if (strstr($value, '€') !== false) {
       $currencyCode = '€';
     } else if (strstr($value, '$') !== false) {
@@ -95,10 +95,10 @@ class FuzzyInputService
     switch ($currencyCode) {
     case '€':
       // Allow either comma or decimal point as separator
-      if (preg_match('/^(€)? *([+-]?) *(\d{1,3}(\.\d{3})*|(\d+))(\,(\d{2}))? *(€)?$/',
+      if (preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\.\d{3})*|(\d+))(\,(\d{2}))?\h*(€)?$/',
                      $value, $matches)
           ||
-          preg_match('/^(€)? *([+-]?) *(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))? *(€)?$/',
+          preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))?\h*(€)?$/',
                      $value, $matches)) {
         //print_r($matches);
         // Convert value to number
@@ -111,7 +111,7 @@ class FuzzyInputService
       } else if ($noThrow) {
         return false;
       } else {
-        throw new \InvalidArgumentException($this->l->t("Cannot parse number string `%s'", (string)$value));
+        throw new \InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
       }
       break;
     case '$':
@@ -126,7 +126,7 @@ class FuzzyInputService
       } else if ($noThrow) {
         return false;
       } else {
-        throw new \InvalidArgumentException($this->l->t("Cannot parse number string `%s'", (string)$value));
+        throw new \InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
       }
       break;
     }
