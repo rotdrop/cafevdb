@@ -129,7 +129,7 @@ abstract class AbstractSpreadsheetExporter
     foreach (FontService::MS_TTF_CORE_FONTS as $distro => $fontPath) {
       try {
         /** @todo Make the font path configurable, disable feature if fonts not found. */
-        if (!file_exists($fontPath) || !is_dir(self::$fontPath)) {
+        if (!file_exists($fontPath) || !is_dir($fontPath)) {
           continue;
         }
         PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);
