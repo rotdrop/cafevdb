@@ -175,7 +175,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['key'] = [ 'id' => 'int', ];
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'broker', 'geographical_scope', 'musician_id', 'accessory', ];
+    $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -352,7 +352,7 @@ LEFT JOIN '.self::RATES_TABLE.' r
 GROUP BY b.short_name',
         'column' => 'short_name',
         'description' => [
-          'columns' => [ 'long_name', 'address' ],
+          'columns' => [ 'long_name', 'REPLACE($table.address, "\n", ", ")' ],
           'divs' => '; ',
           'cast' => [ false, false ],
         ],
@@ -534,7 +534,7 @@ __EOT__;
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
-
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
     // merge default options
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
