@@ -47,6 +47,8 @@ class SepaBankAccounts extends PMETableViewBase
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
 
+  const AMOUNT_TAB_ID = 'amount';
+
   const TEMPLATE = 'sepa-bank-accounts';
   const TABLE = self::SEPA_BANK_ACCOUNTS_TABLE;
   const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
@@ -395,35 +397,9 @@ class SepaBankAccounts extends PMETableViewBase
       'form'  => true,
       'sort'  => true,
       'time'  => true,
-      'tabs'  => [
-        [
-          'id' => 'account',
-          'tooltip' => $this->l->t('Bank account associated to this debit mandate.'),
-          'name' => $this->l->t('Bank Account'),
-        ],
-        [
-          'id' => 'mandate',
-          'tooltip' => $this->l->t('Debit mandate, mandate-id, last used date, recurrence'),
-          'name' => $this->l->t('Mandate'),
-        ],
-      ],
+      'tabs'  => $this->tableTabs($monetary),
       'navigation' => 'VCD', // 'VCPD',
     ];
-    $amountTab = [
-      'id' => 'amount',
-      'tooltip' => $this->l->t('Show the amounts to draw by debit transfer, including sum of payments
-received so far'),
-      'name' => $this->l->t('Amount')
-    ];
-    $allTab = [
-      'id' => 'tab-all',
-      'tooltip' => $this->toolTipsService['pme-showall-tab'],
-      'name' => $this->l->t('Display all columns'),
-    ];
-    if ($projectMode && $projectId !== $this->membersProjectId) {
-      $opts['display']['tabs'][] = $amountTab;
-    }
-    $opts['display']['tabs'][] = $allTab;
 
     if ($this->addOperation()){
       $opts['display']['tabs'] = false;
@@ -496,7 +472,7 @@ received so far'),
             'table' => self::PROJECT_PARTICIPANTS_TABLE,
             'column' => 'project_id',
           ],
-          $amountTab['id']);
+          self::AMOUNT_TAB_ID);
       $this->joinStructure = array_merge($this->joinStructure, $participantFieldsJoin);
     }
 
@@ -744,7 +720,7 @@ received so far'),
 
     if (!$this->addOperation() && $projectMode) {
       if ($monetary->count() > 0) {
-        $this->makeTotalFeesField($opts['fdd'], $monetary, $amountTab['id']);
+        $this->makeTotalFeesField($opts['fdd'], $monetary, self::AMOUNT_TAB_ID);
       }
       $participantFieldsGenerator($opts['fdd']);
     }
@@ -780,20 +756,59 @@ received so far'),
     }
   }
 
-  private function tableTabs()
+  private function tableTabs($participantFields = [])
   {
-    return [
+    $tabs = [
       [
         'id' => 'account',
         'tooltip' => $this->l->t('Bank account associated to this debit mandate.'),
         'name' => $this->l->t('Bank Account'),
-        ],
+      ],
       [
         'id' => 'mandate',
         'tooltip' => $this->l->t('Debit mandate, mandate-id, last used date, recurrence'),
         'name' => $this->l->t('Mandate'),
       ],
     ];
+    if ($this->projectId > 0) {
+      $tabs[] = [
+        'id' => self::AMOUNT_TAB_ID,
+        'tooltip' => $this->l->t('Show the amounts to draw by debit transfer, including sum of payments
+received so far'),
+        'name' => $this->l->t('Amount')
+      ];
+    }
+
+    $extraTabs = [];
+    foreach ($participantFields as $field) {
+      if (empty($field['tab'])) {
+        continue;
+      }
+
+      $extraTab = $field['tab'];
+      foreach ($tabs as $tab) {
+        if ($extraTab === $tab['name'] || $extraTab === $this->l->t($tab['id'])) {
+          $extraTab = null;
+          break;
+        }
+      }
+      if (!empty($extraTab)) {
+        $newTab = [
+          'id' => $extraTab,
+          'name' => $this->l->t($extraTab),
+          'tooltip' => $this->toolTipsService['participant-fields-extra-tab'],
+        ];
+        $tabs[] = $newTab;
+      }
+    }
+
+    $tabs[] = [
+      'id' => 'tab-all',
+      'tooltip' => $this->toolTipsService['pme-showall-tab'],
+      'name' => $this->l->t('Display all columns'),
+    ];
+
+    return $tabs;
   }
 
   /**
@@ -806,8 +821,8 @@ received so far'),
   {
     $dflt = $this->tableTabs();
     foreach($dflt as $tab) {
-      if ($idOrName === $tab['name']) {
-        return $idOrName;
+      if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
+        return $tab['id'];
       }
     }
     return $idOrName;
