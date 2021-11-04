@@ -46,7 +46,7 @@ const handleTableExportMenu = function(select) {
   fileDownload(
     'page/pme/export',
     post, {
-      errorMessage(data, url) {
+      errorMessage(url, data) {
         return t(
           appName,
           'Unable to download table in format "{format}" from "{url}": ',
