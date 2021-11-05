@@ -328,6 +328,7 @@ class Projects extends PMETableViewBase
       'table' => self::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
       'identifier' => [ 'id' => true ], // just need the key
+      'column' => 'id',
     ], 'name');
 
     list($index, $name) = $this->makeJoinTableField(
