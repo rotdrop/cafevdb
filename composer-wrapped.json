@@ -18,7 +18,7 @@
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/orm": "dev-production/2.10.x/cafevdb",
     "symfony/cache": "*",
-    "gedmo/doctrine-extensions": "dev-production/cafevdb",
+    "gedmo/doctrine-extensions": "dev-production/orm-2.10.x/cafevdb",
     "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
