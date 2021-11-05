@@ -237,7 +237,11 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['key'] = [ 'musician_id' => 'int', 'sequence' => 'int' ];
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'musician_id', 'sequence' ];
+    $opts['sort_field'] = [
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
+      $this->joinTableFieldName(self::PROJECTS_TABLE, 'id'),
+      'sequence',
+    ];
 
     // Group by for to-many joins
     $opts['groupby_fields'] = $opts['sort_field'];
@@ -269,9 +273,9 @@ class SepaBankAccounts extends PMETableViewBase
     $buttons = [];
     if ($projectMode) {
       // check whether we have fields with generated receivables
-      $monetary = $this->participantFieldsService->monetaryFields($this->project);
+      $monetaryFields = $this->participantFieldsService->monetaryFields($this->project);
       /** @var Entities\ProjectParticipantField $field */
-      $haveGenerators = $monetary->exists(function($key, $field) {
+      $haveGenerators = $monetaryFields->exists(function($key, $field) {
         return $field->getMultiplicity() == FieldMultiplicity::RECURRING();
       });
       $this->logInfo('HAVE GENERATORS: '.(int)$haveGenerators);
@@ -397,7 +401,7 @@ class SepaBankAccounts extends PMETableViewBase
       'form'  => true,
       'sort'  => true,
       'time'  => true,
-      'tabs'  => $this->tableTabs($monetary),
+      'tabs'  => $this->tableTabs($monetaryFields),
       'navigation' => 'VCD', // 'VCPD',
     ];
 
@@ -416,7 +420,8 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts['fdd']['musician_id'] = [
       'name'     => $this->l->t('Musician-Id'),
-      'input'    => 'H',
+      'tab'      => $this->expertMode ? [ 'id' => 'miscinfo' ] : null,
+      'input'    => $this->expertMode ? 'R' : 'RH',
       'select'   => 'N',
       'options'  => 'LACPDV',
       'maxlen'   => 5,
@@ -427,7 +432,8 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts['fdd']['sequence'] = [
       'name'     => $this->l->t('Bank-Account-Sequence'),
-      'input'    => 'H',
+      'tab'      => $this->expertMode ? [ 'id' => 'miscinfo' ] : null,
+      'input'    => $this->expertMode ? 'R' : 'RH',
       'select'   => 'N',
       'options'  => 'LACPDV',
       'maxlen'   => 5,
@@ -468,7 +474,7 @@ class SepaBankAccounts extends PMETableViewBase
     if ($projectMode) {
       list($participantFieldsJoin, $participantFieldsGenerator) =
         $this->renderParticipantFields(
-          $monetary, [
+          $monetaryFields, [
             'table' => self::PROJECT_PARTICIPANTS_TABLE,
             'column' => 'project_id',
           ],
@@ -487,9 +493,9 @@ class SepaBankAccounts extends PMETableViewBase
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
       Util::arrayMergeRecursive(
         [
-          'tab' => [ 'id' => 'mandate' ],
+          'tab' => $this->expertMode ? [ 'id' => [ 'mandate', 'miscinfo', ], ] : [ 'id' => 'mandate' ],
           'name'     => $this->l->t('Mandate Project'),
-          'input'    => 'RH',
+          'input'    => ($projectMode && !$this->expertMode) ? 'H' : 'R',
           'input|A'  => $projectMode ? 'R' : null,
           'select'   => 'D',
           'maxlen'   => 11,
@@ -532,10 +538,10 @@ class SepaBankAccounts extends PMETableViewBase
         'sort'     => true,
         'values' => [
           'description' => [
-            'columns' => [ '$table.id', self::musicianPublicNameSql() ],
-            'divs' => [ ': ' ],
-            'ifnull' => [ false, false ],
-            'cast' => [ 'CHAR', false ],
+            'columns' => [ self::musicianPublicNameSql() ],
+            'divs' => [],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
           ],
           'filters' => (!$projectMode
                         ? null
@@ -719,8 +725,8 @@ class SepaBankAccounts extends PMETableViewBase
     ///////////////
 
     if (!$this->addOperation() && $projectMode) {
-      if ($monetary->count() > 0) {
-        $this->makeTotalFeesField($opts['fdd'], $monetary, self::AMOUNT_TAB_ID);
+      if ($monetaryFields->count() > 0) {
+        $this->makeTotalFeesField($opts['fdd'], $monetaryFields, self::AMOUNT_TAB_ID);
       }
       $participantFieldsGenerator($opts['fdd']);
     }
@@ -800,6 +806,14 @@ received so far'),
         ];
         $tabs[] = $newTab;
       }
+    }
+
+    if ($this->expertMode) {
+      $tabs[] = [
+        'id' => 'miscinfo',
+        'tooltip' => $this->toolTipsService['misc-tab'],
+        'name' => $this->l->t('Miscinfo'),
+      ];
     }
 
     $tabs[] = [
