@@ -80,19 +80,22 @@ class InstrumentationService
       $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
     }
     if (empty($dummy)) {
-      $dummy = Entities\Musician::create()
-             ->setUuid(Uuid::NIL)
-             ->setSurName($this->l->t('Doe'))
-             ->setFirstName($this->l->t('John'))
-             ->setCountry('AQ')
-             ->setCity($this->l->t('Nowhere'))
-             ->setStreet($this->l->t('42, Undiscoverable'))
-             ->setPostalCode('Z-7')
-             ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
-             ->setDeleted(new \DateTimeImmutable);
-      if ($persist) {
-        $this->persist($dummy);
-      }
+      $dummy = Entities\Musician::create();
+    }
+    $dummy->setSurName($this->l->t('Doe'))
+          ->setFirstName($this->l->t('John'))
+          ->setCountry('AQ')
+          ->setCity($this->l->t('Nowhere'))
+          ->setStreet($this->l->t('42, Undiscoverable'))
+          ->setPostalCode('Z-7')
+          ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
+          ->setBirthday(new \DateTimeImmutable)
+          ->setMobilePhone('0815')
+          ->setFixedLinePhone('4711')
+          ->setDeleted(new \DateTimeImmutable)
+          ->setUuid(Uuid::NIL);
+    if ($persist) {
+      $this->persist($dummy);
     }
     if ($dummy->getSepaBankAccounts()->count() == 0) {
       // also generate a dummy bank account
