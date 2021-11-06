@@ -25,17 +25,20 @@ namespace OCA\CAFEVDB\Documents;
 
 use mikehaertl\pdftk\Pdf as PdfTk;
 
+use OCP\ILogger;
 use OCP\Files\File;
 
 class PDFFormFiller
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var PdfTk */
   private $pdfTk;
 
-  public function __construct()
+  public function __construct(ILogger $logger)
   {
-    // @todo check what $pdfData is ...
     $this->pdfTk = new PdfTk('-');
+    $this->logger = $logger;
   }
 
   /**
@@ -63,10 +66,15 @@ class PDFFormFiller
 
     $command->setStdIn($data);
 
-    $this->pdfTk
+    $result = $this->pdfTk
       ->fillForm($fields)
       ->needAppearances()
       ->execute();
+
+    if ($result === false) {
+      $this->logError('ERROR? ' . $this->pdfTk->getError());
+    }
+
     return $this;
   }
 

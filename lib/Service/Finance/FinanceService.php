@@ -217,6 +217,12 @@ class FinanceService
       'projectName' => $project->getName(),
       'bankAccountOwner' => $musician->getPublicName(),
       'projectParticipant' => $musician->getPublicName(),
+      'memberName' => $musician->getPublicName(),
+      'memberBirthday' => $musician->getBirthday(),
+      'memberAddress' => implode(', ', [ $musician->getStreet(), $musician->getPostalCode(), $musician->getCity(), ]),
+      'memberEmail' => $musician->getEmail(),
+      'memberFixedLinePhone' => $musician->getFixedLinePhone(),
+      'memberMobilePhone' => $musician->getMobilePhone(),
     ];
 
     if (!empty($bankAccount)) {
@@ -227,7 +233,7 @@ class FinanceService
         'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
         'bankAccountIBAN' => $bankAccount->getIban(),
         'bankAccountBIC' => $bankAccount->getBic(),
-        'bank' => $bank,
+        'bankAccountBank' => $bank,
       ]);
     }
 
@@ -247,7 +253,7 @@ class FinanceService
       $fileData = $formFile->getContent();
     }
 
-    $formFiller = (new PDFFormFiller)->fill($fileData, $formData);
+    $formFiller = $this->di(PDFFormFiller::class)->fill($fileData, $formData);
 
     $fileParts = [
       $this->timeStamp('Ymd'),
