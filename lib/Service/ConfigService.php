@@ -828,7 +828,7 @@ class ConfigService {
     }
 
     if (empty($format)) {
-      $format = 'Ymd-his-T';
+      $format = 'Ymd-His-T';
     }
     if (empty($timeZone)) {
       $timeZone = $this->getDateTimeZone();
