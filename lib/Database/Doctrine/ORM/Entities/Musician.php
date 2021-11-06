@@ -317,7 +317,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setSurName($surName)
+  public function setSurName($surName):Musician
   {
     $this->surName = $surName;
 
@@ -341,7 +341,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setFirstName($firstName)
+  public function setFirstName($firstName):Musician
   {
     $this->firstName = $firstName;
 
@@ -365,7 +365,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setCity($city)
+  public function setCity($city):Musician
   {
     $this->city = $city;
 
@@ -389,7 +389,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setStreet($street)
+  public function setStreet($street):Musician
   {
     $this->street = $street;
 
@@ -413,7 +413,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setPostalCode($postalCode = null)
+  public function setPostalCode($postalCode = null):Musician
   {
     $this->postalCode = $postalCode;
 
@@ -437,7 +437,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setCountry($country)
+  public function setCountry($country):Musician
   {
     $this->country = $country;
 
@@ -461,7 +461,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setLanguage($language)
+  public function setLanguage($language):Musician
   {
     $this->language = $language;
 
@@ -485,7 +485,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setMobilePhone($mobilePhone)
+  public function setMobilePhone($mobilePhone):Musician
   {
     $this->mobilePhone = $mobilePhone;
 
@@ -509,7 +509,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setFixedLinePhone($fixedLinePhone)
+  public function setFixedLinePhone($fixedLinePhone):Musician
   {
     $this->fixedLinePhone = $fixedLinePhone;
 
@@ -533,7 +533,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setBirthday($birthday)
+  public function setBirthday($birthday):Musician
   {
     $this->birthday = self::convertToDateTime($birthday);
 
@@ -557,7 +557,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setEmail($email)
+  public function setEmail($email):Musician
   {
     $this->email = $email;
 
