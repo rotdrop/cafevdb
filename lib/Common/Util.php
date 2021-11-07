@@ -104,8 +104,8 @@ class Util
     if ($stripLinebreaks) {
       $name = str_replace("\n", $singleSpace, $name);
     }
-    $name = preg_replace('/\h+/', $singleSpace, $name);
-    $name = preg_replace('/\h+([\n.,;:?!])/', '$1', $name);
+    $name = preg_replace('/\h+/u', $singleSpace, $name);
+    $name = preg_replace('/\h+([\n.,;:?!])/u', '$1', $name);
 
     return $name;
   }
