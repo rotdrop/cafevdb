@@ -218,7 +218,7 @@ class FinanceService
       'bankAccountOwner' => $musician->getPublicName(),
       'projectParticipant' => $musician->getPublicName(),
       'memberName' => $musician->getPublicName(),
-      'memberBirthday' => $musician->getBirthday(),
+      'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
       'memberAddress' => implode(', ', [ $musician->getStreet(), $musician->getPostalCode(), $musician->getCity(), ]),
       'memberEmail' => $musician->getEmail(),
       'memberFixedLinePhone' => $musician->getFixedLinePhone(),
