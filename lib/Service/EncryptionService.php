@@ -280,6 +280,24 @@ class EncryptionService
     return [ $privKey, $pubKey ];
   }
 
+  /**
+   * Remove the SSL key-pair for the given login. This is needed if an
+   * administrator changes the password. This will make all other
+   * encrypted data unavailable, so as a side-effect all encrypted
+   * data is removed.
+   *
+   * @param string $login
+   */
+  public function deleteUserKeyPair($login)
+  {
+    $this->logDebug('REMOVING ENCRYPTION DATA FOR USER ' . $login);
+    $this->containerConfig->deleteUserValue($login, $this->appName, 'publicSSLKey');
+    $this->containerConfig->deleteUserValue($login, $this->appName, 'privateSSLKey');
+    foreach (self::SHARED_PRIVATE_VALUES as $key) {
+      $this->containerConfig->deleteUserValue($login, $this->appName, $key);
+    }
+  }
+
   public function getUserEncryptionKey()
   {
     return $this->getSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, null);

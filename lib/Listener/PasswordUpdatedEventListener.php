@@ -25,7 +25,9 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\User\Events\PasswordUpdatedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\Group\ISubAdmin;
 use OCP\ILogger;
 use OCP\IL10N;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -37,6 +39,12 @@ class PasswordUpdatedEventListener implements IEventListener
   const EVENT = HandledEvent::class;
 
   /** @var ISubAdmin */
+  private $subAdmin;
+
+  /** @var IUserManager */
+  private $userManager;
+
+  /** @var IGroupManager */
   private $groupManager;
 
   /** @var EncryptionService */
@@ -44,12 +52,15 @@ class PasswordUpdatedEventListener implements IEventListener
 
   public function __construct(
     $appName
+    , ISubAdmin $subAdmin
+    , IUserManager $userManager
     , IGroupManager $groupManager
     , EncryptionService $encryptionService
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->appName = $appName;
+    $this->appName = $appName;    $this->subAdmin = $subAdmin;
+    $this->userManager = $userManager;
     $this->groupManager = $groupManager;
     $this->encryptionService = $encryptionService;
     $this->logger = $logger;
@@ -67,11 +78,34 @@ class PasswordUpdatedEventListener implements IEventListener
     if (empty($groupId) || !$this->groupManager->isInGroup($userId, $groupId)) {
       return;
     }
-    if ($userId != $this->encryptionService->getUserId()) {
-      $this->logError('Mismatching users: '.$userId.' / '.$this->encryptionService->getUserId());
-      return;
+    $encUserId = $this->encryptionService->getUserId();
+    if ($userId != $encUserId) {
+      // This potentially means that a group manager or admin has
+      // changed the password. In this case the encrypted personal
+      // values are lost and must be reset.
+      $this->logInfo('Mismatching users: '.$userId.' / '.$this->encryptionService->getUserId());
+      if (!empty($encUserId)) {
+        $encUser = $this->userManager->get($encUserId);
+        $group = $this->groupManager->get($groupId);
+        if ($this->groupManager->isAdmin($encUserId) || $this->subAdmin->isSubAdminOfGroup($encUser, $group)) {
+          $this->logInfo('Admin password change for user ' . $userId . ', removing personal encrypted data.');
+          $this->encryptionService->deleteUserKeyPair($userId);
+        }
+      } else {
+        $this->logInfo('EncryptionService service is not bound, assuming password was forgotten by ' . $userId . ', removing personal encrypted data.');
+        $this->encryptionService->deleteUserKeyPair($userId);
+      }
+    } else if (!$this->encryptionService->bound()) {
+      $this->logInfo('Encryption service is not bound, assuming password was forgotten by ' . $userId . ', removing personal encrypted data.');
+      $this->encryptionService->deleteUserKeyPair($userId);
+    } else {
+      $this->logInfo('Trying to recrypt personal encrypted data for ' . $userId);
+      try {
+        $this->encryptionService->recryptSharedPrivateValues($event->getPassword());
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
     }
-    $this->encryptionService->recryptSharedPrivateValues($event->getPassword());
   }
 }
 
