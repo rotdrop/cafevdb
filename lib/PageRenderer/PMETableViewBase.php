@@ -2145,7 +2145,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
       $l10nJoin .= implode(' ,', array_map(function($id) use ($joinInfo) {
         $column = 't.' . $id;
-        if ($id === $joinInfo['column'] && !empty($joinInfo['encode'])) {
+        if (isset($joinInfo['column']) && $id === $joinInfo['column'] && !empty($joinInfo['encode'])) {
           $column = sprintf($joinInfo['encode'], $column);
         }
         return $column;
