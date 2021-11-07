@@ -255,6 +255,7 @@ class PersonalForm {
             'bankAccountIBAN' => $this->getConfigValue('bankAccountIBAN'),
             'bankAccountBLZ' => $this->getConfigValue('bankAccountBLZ'),
             'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
+            'bankAccountBankName' => $this->getConfigValue('bankAccountBankName'),
             'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifier'),
 
             'projectOptions' => $projectOptions,
