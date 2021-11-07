@@ -1405,7 +1405,6 @@ __EOT__;
     <input
       class="operation regenerate-all"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody']).'"
-      '.($deleted ? ' disabled' : '').'
       type="button"
       '.(empty($generator) ? 'disabled' : '').'
     />
