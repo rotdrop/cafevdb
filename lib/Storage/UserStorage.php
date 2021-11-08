@@ -125,6 +125,11 @@ class UserStorage
     return $this->get($path, FileInfo::TYPE_FILE);
   }
 
+  /**
+   * @param string $path
+   *
+   * @return null|Folder
+   */
   public function getFolder(string $path):?Folder
   {
     return $this->get($path, FileInfo::TYPE_FOLDER);
@@ -350,6 +355,10 @@ class UserStorage
    *
    * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/remote.php/webdav/camerata/projects/2020/Test2020/participants/claus-justus.heine/DateiUpload-ClausJustusHeine.zip?downloadStartSecret=uwq0q4j24sb
    *
+   * Folders seemingly are still piped through a legacy Ajax call, e.g.
+   *
+   * https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/index.php/apps/files/ajax/download.php?dir=%2Fcamerata%2Fprojects%2F1997%2FVereinsmitglieder%2Fparticipants%2Fclaus.heine%2FVersicherungsunterlagen&files=Blah&downloadStartSecret=yur5m66p6lm
+   *
    * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
    *
    * @return null|string The download URL or null.
@@ -367,13 +376,24 @@ class UserStorage
 
     // Internal path is mount-point specific and in particular
     // relative to the share-root if sharing a folder. getPath()
-    // containers the /USERID/files/ prefix. We use that for the
+    // contains the /USERID/files/ prefix. We use that for the
     // moment ...
-
-    $webDAVRoot = \OCP\Util::linkToRemote('webdav/');
     $nodePath = substr(strchr($node->getPath(), 'files/'), strlen('files/'));
 
-    return $webDAVRoot.$nodePath;
+    if ($node->getType() == FileInfo::TYPE_FILE) {
+      $webDAVRoot = \OCP\Util::linkToRemote('webdav/');
+      return $webDAVRoot.$nodePath;
+    } else if ($node->getType() == FileInfo::TYPE_FOLDER) {
+      $parent = $node->getParent();
+      $parentPath = substr(strchr($parent->getPath(), 'files/'), strlen('files/'));
+      return \OCP\Util::linkToAbsolute('files', 'ajax/download.php', [
+        'dir' => $parentPath,
+        'files' => $node->getName(),
+      ]);
+    } else {
+      throw new \InvalidArgumentException($this->l->t('Unknown file type "%s" for download file "%s".', [ $node->getType(), $node->getName() ]));
+    }
+
   }
 
   /**
@@ -384,9 +404,12 @@ class UserStorage
    *
    * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
    *
+   * @param bool $subDir If the $pathOrNode refers to a folder then
+   * open this folder. Otherwise open the parent.
+   *
    * @return string|null URL to the files app.
    */
-  public function getFilesAppLink($pathOrNode):?string
+  public function getFilesAppLink($pathOrNode, $subDir = false):?string
   {
     if (is_string($pathOrNode)) {
       $node = $this->userFolder->get($pathOrNode);
@@ -395,7 +418,7 @@ class UserStorage
     } else {
       throw new \InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
-    if ($node->getType() != FileInfo::TYPE_FOLDER) {
+    if ($subDir === false || $node->getType() != FileInfo::TYPE_FOLDER) {
       $node = $node->getParent();
     }
 
