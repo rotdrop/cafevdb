@@ -52,16 +52,16 @@ class DoNothingProgressStatus extends AbstractProgressStatus
     $this->lastModified = new \DateTimeImmutable;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function delete() {}
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function bind($id = null) {}
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getId() { return -1; }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->current = $current;
@@ -75,28 +75,28 @@ class DoNothingProgressStatus extends AbstractProgressStatus
     return true;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function sync() {}
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getCurrent():int
   {
     return $this->current;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getTarget():int
   {
     return $this->target;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getLastModified():\DateTimeinterface
   {
     return $this->lastModified;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getData():?array
   {
     return $this->applicationData;

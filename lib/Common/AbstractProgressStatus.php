@@ -28,7 +28,7 @@ namespace OCA\CAFEVDB\Common;
  */
 abstract class AbstractProgressStatus implements IProgressStatus
 {
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function increment(int $delta = 1)
   {
     $current = $this->getCurrent();
@@ -37,19 +37,19 @@ abstract class AbstractProgressStatus implements IProgressStatus
     return $result ? $current : false;
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function setCurrent(int $current)
   {
     $this->update($current);
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function setTarget(int $target)
   {
     $this->update($this->getCurrent(), $target);
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function setData(array $data)
   {
     $this->update($this->getCurrent(), $this->getTarget(), $data);

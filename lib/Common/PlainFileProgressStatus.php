@@ -99,7 +99,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function delete()
   {
     if (!empty($this->file)) {
@@ -108,7 +108,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function bind($id = null)
   {
     if (!empty($this->file) && $this->file->getName() == $id) {
@@ -144,13 +144,13 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getId()
   {
     return $this->file->getName();
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->data['current'] = $current;
@@ -163,7 +163,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     return $this->flush();
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function sync()
   {
     for ($i = 0; $i < self::READ_RETRY_LIMIT; $i++) {
@@ -177,25 +177,25 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     throw new \RuntimeException($this->l->t('Unable to read progress status file "%s" after %d retries.', $this->file->getName(), $i));
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getCurrent():int
   {
     return $this->data['current'];
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getTarget():int
   {
     return $this->data['target'];
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getLastModified():\DateTimeinterface
   {
     return (new \DateTimeImmutable)->setTimestamp($this->data['lastModified']);
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getData():?array
   {
     return $this->data['data'];

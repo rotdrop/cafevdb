@@ -62,7 +62,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     $this->mapper = new Mapper\ProgressStatusMapper($db, $appName);
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function delete()
   {
     if (!empty($this->entity)) {
@@ -71,7 +71,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function bind($id)
   {
     if (!empty($this->entity) && $this->entity->getId() == $id) {
@@ -107,13 +107,13 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getId()
   {
     return $this->entity->getId();
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function update(int $current, ?int $target = null, ?array $data = null):bool
   {
     $this->entity->setCurrent($current);
@@ -132,31 +132,31 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     }
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function sync()
   {
     $this->entity = $this->mapper->find($this->entity->getId());
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getCurrent():int
   {
     return $this->entity->getCurrent();
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getTarget():int
   {
     return $this->entity->getTarget();
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getLastModified():\DateTimeinterface
   {
     return (new \DateTimeImmutable)->setTimestamp($this->entity()->getLastModified());
   }
 
-  /** @{inheritdoc} */
+  /** {@inheritdoc} */
   public function getData():?array
   {
     $dbData = $this->entity->getData();
