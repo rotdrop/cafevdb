@@ -50,13 +50,56 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  /**
+   * Hard-coded sequence table name. This relies on
+   * @link https://mariadb.com/kb/en/sequence-storage-engine/
+   */
   protected const SEQUENCE_TABLE = 'seq_0_to_100000_step_1';
 
   protected const JOIN_FLAGS_NONE = 0x00;
+
+  /**
+   * This entry of self::$joinStructure refers to the "master" table.
+   */
   protected const JOIN_MASTER = 0x01;
+
+  /**
+   * Do not add/change/delete any joined entities.
+   */
   protected const JOIN_READONLY = 0x02;
+
+  /**
+   * Adds an SQL `GROUP BY` using the configured join-key and the keys
+   * of the master table.
+   */
   protected const JOIN_GROUP_BY = 0x04;
+
+  /**
+   * Remove entities when the value of the join-column is changed to
+   * something for which empty() returns true.
+   */
   protected const JOIN_REMOVE_EMPTY = 0x08;
+
+  /**
+   * Assume the join is (at most) single valued. Otherwise the values
+   * are split by PMETableViewBase::VALUES_SEP (comma). If this flag
+   * is set, then the expected format of the data field is
+   *
+   * ```
+   * JOIN_KEY:VALUES
+   * ```
+   *
+   * and VALUES may contain self::VALUES_SEP (comma) and
+   * self::JOIN_KEY_SEP (colon). If this flag is not set then the expected format is
+   *
+   * ```
+   * KEY1:VALUE1,KEY2:VALUE2,...
+   * ```
+   *
+   * Consequently, the VALUEX must not contain commas and colons in
+   * the absence of this flag.
+   */
+  protected const JOIN_SINGLE_VALUED = 0x10;
 
   const MUSICIANS_TABLE = 'Musicians';
   const PROJECTS_TABLE = 'Projects';
@@ -84,6 +127,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const JOIN_KEY_SEP = ':';
   const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
+
+  /**
+   * MySQL/MariaDB column quote.
+   */
   const COL_QUOTE = '`';
 
   /** CSS tag for displaying participant fields */
@@ -721,7 +768,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
       $fdn = $pme->fdn[$key];
       if ($pme->col_has_multiple($fdn)) {
-        $value = preg_replace('/\s*,\s*/', ',', $value);
+        $value = preg_replace('/\s*,\s*/', self::VALUES_SEP, $value);
       }
 
       // @todo what is this
@@ -770,7 +817,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       foreach ($keys as $key) {
         $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
       }
-      ${$dataSet.'Values'}[$rankingField] = implode(',', $ranking);
+      ${$dataSet.'Values'}[$rankingField] = implode(self::VALUES_SEP, $ranking);
     }
 
     // as the ordering is implied by the ordering of keys the ranking
@@ -842,6 +889,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
+      $this->debug('TABLE ' . $table);
       $changeSet = $changeSets[$table]??[];
       if (empty($changeSet)) {
         continue;
@@ -879,19 +927,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
-            'old' => Util::explode(',', Util::removeSpaces($oldvals[$keyField])),
-            'new' => Util::explode(',', Util::removeSpaces($newvals[$keyField])),
+            'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldvals[$keyField])),
+            'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newvals[$keyField])),
           ];
           // handle "deleted" information if present. This is meant for disabled instruments and the like
           $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
           if (!empty($oldvals[$deletedField])) {
-            $deletedKeys = Util::explode(',', $oldvals[$deletedField]);
+            $deletedKeys = Util::explode(self::VALUES_SEP, $oldvals[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
               $identifier[$key]['old'][] = $deletedKey;
               $changeSet['deleted'] = $deletedField;
             }
             $identifier[$key]['old'] = array_values(array_unique($identifier[$key]['old']));
-            $newvals[$deletedField] = implode(',', array_diff($deletedKeys, $identifier[$key]['new']));
+            $newvals[$deletedField] = implode(self::VALUES_SEP, array_diff($deletedKeys, $identifier[$key]['new']));
           }
 
           $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
@@ -903,6 +951,18 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             unset($changeSet[$joinInfo['column']]);
           }
           $multiple = $key;
+          if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
+            if (count($identifier[$key]['old']) > 1 || count($identifier[$key]['old']) > 1) {
+              throw new \RuntimeException(
+                $this->l->t(
+                  'Identifier column "%s" for single-valued join-table "%s" contains more than one key: "%s" / "%s".', [
+                    $key,
+                    $table,
+                    implode(',', $identifier[$key]['old']),
+                    implode(',', $identifier[$key]['new']),
+                  ]));
+            }
+          }
         } else {
           if (!is_array($pivotColumn)) {
             $identifier[$key] = $oldvals[$pivotColumn];
@@ -971,13 +1031,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // explode key values
           foreach (['old', 'new'] as $dataSet) {
             $dataValues = ${$dataSet.'vals'};
-            $selfValues[$dataSet] = Util::explode(',', $dataValues[$selfField]);
+            $selfValues[$dataSet] = Util::explode(self::VALUES_SEP, $dataValues[$selfField]);
           }
           $selfValues['del'] = array_diff($selfValues['old'], $selfValues['new']);
           $selfValues['add'] = array_diff($selfValues['new'], $selfValues['old']);
           $selfValues['rem'] = array_intersect($selfValues['new'], $selfValues['old']);
           foreach(['old', 'new', 'del', 'add', 'rem'] as $tag) {
-            $selfValues[$tag] = Util::explodeIndexedMulti(implode(',',  $selfValues[$tag]));
+            $selfValues[$tag] = Util::explodeIndexedMulti(implode(self::VALUES_SEP,  $selfValues[$tag]));
           }
 
           $this->debug('SELFVALUES ' . print_r($selfValues, true));
@@ -989,7 +1049,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // make sure we have a $delIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
               if (!isset($remIdentifier[$key])) {
-                throw new \RuntimeException($this->l->t('Inconsistent removal request for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(',', $selfValuesTuple), $key]));
+                throw new \RuntimeException($this->l->t('Inconsistent removal request for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (array_search($key, $identifier[$multiple]['del']) === false) {
@@ -1016,7 +1076,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
               if (!isset($remIdentifier[$key])) {
-                throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s" (%3$%s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(',', $selfValuesTuple), $key]));
+                throw new \RuntimeException($this->l->t('Inconsistent add request for "%1$s" (%3$%s), major key "%2$s" (%4$s).', [$selfField, $multiple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (empty($selfValues['rem'][$key])) {
@@ -1043,7 +1103,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($selfValues[$operation] as $key => $selfValuesTuple) {
             // make sure we have an $addIdentifier
             if (!isset(${$operation.'Identifier'}[$key])) {
-              throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $muliple, implode(',', $selfValuesTuple), $key]));
+              throw new \RuntimeException($this->l->t('Inconsistent remaining data for "%1$s" (%3$s), major key "%2$s" (%4$s).', [$selfField, $muliple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
             }
 
             $this->debug('SELF VALUES TUPLE ' . $key . ' => ' . print_r($selfValuesTuple, true));
@@ -1178,8 +1238,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'data' => [],
             'default' => $pme->fdd[$field]['default']??null,
           ];
-          foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
+          if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
+            // assume everything after the first self::JOIN_KEY_SEP is
+            // the one and only value
+            list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
             $multipleValues[$column]['data'][$key] = $value;
+          } else {
+            foreach (Util::explodeIndexed($newvals[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
+              $multipleValues[$column]['data'][$key] = $value;
+            }
           }
         }
 
@@ -1393,13 +1460,25 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
           // assume that the 'column' component contains the keys.
           $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
-          $identifier[$key] = Util::explode(',', $newvals[$keyField]);
+          $identifier[$key] = Util::explode(self::VALUES_SEP, $newvals[$keyField]);
 
           if (isset($changeSet[$joinInfo['column']])) {
             Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
             unset($changeSet[$joinInfo['column']]);
           }
           $multiple = $key;
+          if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
+            if (count($identifier[$key]['old']) > 1 || count($identifier[$key]['old']) > 1) {
+              throw new \RuntimeException(
+                $this->l->t(
+                  'Identifier column "%s" for single-valued join-table "%s" contains more than one key: "%s" / "%s".', [
+                    $key,
+                    $table,
+                    implode(',', $identifier[$key]['old']),
+                    implode(',', $identifier[$key]['new']),
+                  ]));
+            }
+          }
         } else {
           if (!is_array($pivotColumn)) {
             $idKey = $pivotColumn;
@@ -1540,8 +1619,15 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'data' => [],
             'default' => $pme->fdd[$field]['default']??null,
           ];
-          foreach (Util::explodeIndexed($newvals[$field], null) as $key => $value) {
+          if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
+            // assume everything after the first self::JOIN_KEY_SEP is
+            // the one and only value
+            list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
             $multipleValues[$column]['data'][$key] = $value;
+          } else {
+            foreach (Util::explodeIndexed($newvals[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
+              $multipleValues[$column]['data'][$key] = $value;
+            }
           }
         }
 
@@ -1815,7 +1901,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $values = array_map(function($value) {
                 return is_numeric($value) ? $value : "'".addslashes($value)."'";
               }, is_array($values) ? $values : [ $values ]);
-              $joinCondition .= 'IN (' . implode(',', $values) . ')';
+              $joinCondition .= 'IN (' . implode(self::VALUES_SEP, $values) . ')';
             } else if (!empty($joinTableValue['condition'])) {
               $joinCondition .= $joinTableValue['condition'];
             } else if (!empty($joinTableValue['self'])) {
@@ -2351,10 +2437,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       switch ($key) {
       case 'all_projects':
       case 'projects':
-        $categories = array_merge($categories, explode(',', Util::removeSpaces($value)));
+        $categories = array_merge($categories, explode(self::VALUES_SEP, Util::removeSpaces($value)));
         break;
       case 'MusicianInstrument:instrument_id':
-        foreach (explode(',', Util::removeSpaces($value)) as $instrumentId) {
+        foreach (explode(self::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
           $categories[] = $this->instrumentInfo['byId'][$instrumentId];
         }
         break;
