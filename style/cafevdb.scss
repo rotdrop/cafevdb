@@ -1193,6 +1193,11 @@ input[type=checkbox].cafevdb-password-show {
   }
 }
 
+a.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***
