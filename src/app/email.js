@@ -1336,6 +1336,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     });
 
   fieldset
+    .find('.attachment.personal')
+    .off('click')
+    .on('click', function() {
+      alert('NOT IMPLEMENTED YET');
+    });
+
+  fieldset
     .find('input.delete-all-file-attachments')
     .off('click')
     .on('click', function(event) {
