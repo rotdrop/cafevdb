@@ -54,6 +54,10 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * Single-file upload data which is stored in the storage of the
  * ambient cloud software.
  *
+ * @method static EnumParticipantFieldDataType CLOUD_FOLDER()
+ * Multi-file upload data which is stored in the storage of the
+ * ambient cloud software under a folder with the configured name.
+ *
  * @method static EnumParticipantFieldDataType DB_FILE()
  * Single-file upload data which is stored as blob in the
  * database. The total encoded size is limited by the used database
@@ -70,5 +74,6 @@ class EnumParticipantFieldDataType extends EnumType
   public const DATETIME = 'datetime';
   public const SERVICE_FEE = 'service-fee';
   public const CLOUD_FILE = 'cloud-file';
+  public const CLOUD_FOLDER = 'cloud-folder';
   public const DB_FILE = 'db-file';
 };
