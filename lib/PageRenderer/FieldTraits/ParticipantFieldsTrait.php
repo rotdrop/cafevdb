@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCP\Files as CloudFiles;
+
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -38,6 +40,9 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 /** Participant-fields. */
 trait ParticipantFieldsTrait
 {
+  /** @var UsreStorage */
+  protected $userStorage = null;
+
   /**
    * For each extra field add one dedicated join table entry
    * which is pinned to the respective field-id.
@@ -323,14 +328,14 @@ trait ParticipantFieldsTrait
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
-              $key = $dataOptions->first()->getKey();
+              $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
               $fileBase = $field['name'];
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-              return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+              return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">'
-              .$this->cloudFileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician).'
+              .$this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician).'
   </table>
 </div>';
             };
@@ -346,6 +351,77 @@ trait ParticipantFieldsTrait
                 } catch (\OCP\Files\NotFoundException $e) {
                   $this->logException($e);
                   return '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
+                }
+              }
+              return null;
+            };
+            break;
+          case FieldType::CLOUD_FOLDER:
+            $this->joinStructure[$tableName]['flags'] |= self::JOIN_SINGLE_VALUED;
+            if (empty($this->userStorage)) {
+              $this->userStorage = $this->di(UserStorage::class);
+            }
+            $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+              $fieldId = $field->getId();
+              $optionKey = $dataOptions->first()->getKey();
+              $policy = $dataOptions->first()->getData()?:'rename';
+              $fileBase = '';
+              $subDir = $field->getName();
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+              $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
+              // read the configured directory in
+
+              /** @var OCP\Files\Folder $folder */
+              $folder = $this->userStorage->getFolder($folderPath);
+              $folderContents = empty($folder) ? [] : $folder->getDirectoryListing();
+
+              $html = '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
+  <table class="file-upload">';
+
+              /** @var CloudFiles\Node $node */
+              foreach ($folderContents as $node) {
+                $fileName = $node->getName() . ($node->getType() == CloudFiles\FileInfo::TYPE_FOLDER ? UserStorage::PATH_SEP : '');
+                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+              }
+
+              $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+
+              $html .= '
+  </table>
+</div>';
+              return $html;
+            };
+            $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              if (!empty($value)) {
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $subDir = $field->getName();
+                $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+                $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
+                $folder = $this->userStorage->getFolder($folderPath);
+                if (!empty($folder)) {
+
+                  $listing = json_decode($value, true);
+                  if (!is_array($listing)) {
+                    $listing = [];
+                  }
+                  $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
+                  $linkText = '&mldr;' . UserStorage::PATH_SEP
+                    . implode(
+                      UserStorage::PATH_SEP,
+                      array_slice(
+                        explode(UserStorage::PATH_SEP, $folderPath),
+                        -3)
+                    );
+                  $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
+                  $filesAppTarget = md5($filesAppLink);
+                  return '<a href="'.$filesAppLink.'"
+                             target="'.$filesAppTarget.'"
+                             title="'.$toolTip.'"
+                             class="open-parent tooltip-auto">
+  ' . $linkText . '
+</a>';
                 }
               }
               return null;
@@ -439,16 +515,16 @@ trait ParticipantFieldsTrait
               /** @var Entities\ProjectParticipantFieldDataOption $option */
               $html = '<div class="file-upload-wrapper" data-option-key="'.$key.'">
   <table class="file-upload">';
-                    foreach ($field->getSelectableOptions() as $option) {
-                      $optionKey = (string)$option->getKey();
-                      $fileBase = $option->getLabel();
-                      $policy = $option->getData()?:'rename';
-                      $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
-                    }
-                    $html .= '
+              foreach ($field->getSelectableOptions() as $option) {
+                $optionKey = (string)$option->getKey();
+                $fileBase = $option->getLabel();
+                $policy = $option->getData()?:'rename';
+                $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
+              }
+              $html .= '
   </table>
 </div>';
-                    return $html;
+              return $html;
             };
             $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               if (!empty($value)) {
@@ -457,7 +533,8 @@ trait ParticipantFieldsTrait
                 $values = array_combine($optionKeys, $optionValues);
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $filePath = $participantFolder.UserStorage::PATH_SEP.array_shift($values);
+                $subDir = $field->getName();
+                $filePath = $participantFolder.UserStorage::PATH_SEP.$subDir.UserStorage::PATH_SEP.array_shift($values);
                 $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
                 $filesAppTarget = md5($filesAppLink);
                 return '<a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="open-parent">'.$value.'</a>';
@@ -1136,21 +1213,21 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_key');
   }
 
-  protected function cloudFileUploadRowHtml($value, $fieldId, $key, $policy, $subDir, $fileBase, $musician)
+  protected function cloudFileUploadRowHtml($value, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     // make sure $subDir exists
     if (!empty($subDir)) {
-      $this->userStorage->ensureFolder($participantFolder.UserStorage::PATH_SEP.$subDir);
+      $subDirPrefix = UserStorage::PATH_SEP . $subDir;
+      $this->userStorage->ensureFolder($participantFolder . $subDirPrefix);
+    } else {
+      $subDirPrefix = '';
     }
     if (!empty($value)) {
-      $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
+      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP.$value;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
         $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
-        if (!empty($subDir)) {
-          $value = str_replace($subDir.UserStorage::PATH_SEP, '', $value);
-        }
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
         $filesAppLink = '#';
@@ -1158,11 +1235,16 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       }
     } else {
       $downloadLink = '';
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder.($subDir ? UserStorage::PATH_SEP.$subDir : ''));
+      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix);
     }
     $filesAppTarget = md5($filesAppLink);
-    $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-    $placeHolder = $this->l->t('Load %s', $fileName);
+    if (!empty($fileBase)) {
+      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+      $placeHolder = $this->l->t('Load %s', $fileName);
+    } else {
+      $fileName = $value;
+      $placeHolder = $this->l->t('Drop files here or click to upload fileds.');
+    }
     $emptyDisabled = empty($value) ? ' disabled' : '';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
@@ -1175,11 +1257,11 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       break;
     }
     $html = '
-  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$key.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-upload-policy="'.$policy.'" data-storage="cloud">
+  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$optionKey.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-file-name="'.$fileName.'" data-upload-policy="'.$policy.'" data-storage="cloud">
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
       <input type="button" title="'.$policyTooltip.'" class="operation upload-replace"/>
-      <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent"></a>
+      <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
     </td>
     <td class="cloud-file">
       <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
@@ -1280,6 +1362,19 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
               $oldKey,
               $newValues[$keyName],
             ]));
+        }
+        switch ($dataType) {
+        case FieldType::CLOUD_FOLDER:
+          // collect the data into a JSON array, input is a comma
+          // separated list of directory entry names
+          $newValues[$valueName] = json_encode(Util::explode(self::VALUES_SEP, $newValues[$valueName]));
+          if ($newValues[$valueName] === $oldValues[$valueName]) {
+            Util::unsetValue($changed, $valueName);
+            continue 3;
+          }
+          break;
+        default:
+          break;
         }
         // tweak the option_key value
         $newValues[$keyName] = $key;

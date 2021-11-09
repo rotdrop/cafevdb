@@ -311,7 +311,7 @@ class ProjectParticipantsController extends Controller {
    *
    * @todo There should be an upload support class handling this stuff
    */
-  public function files($operation, $musicianId, $projectId, $fieldId, $optionKey, $data)
+  public function files($operation, $musicianId, $projectId, $fieldId, $optionKey, $subDir, $fileName, $data)
   {
     $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
@@ -331,17 +331,20 @@ class ProjectParticipantsController extends Controller {
     case 'delete':
       /** @var Entities\ProjectParticipantField $field */
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-      // @todo validate inputs
+
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       $fieldDatum = $participant->getParticipantFieldsDatum($optionKey);
       if (empty($fieldDatum)) {
         return self::grumble($this->l->t('Unable to find data for option key "%s".', $optionKey));
       }
 
+      $subDirPrefix = empty($subDir) ? '' : UserStorage::PATH_SEP . $subDir;
+
       $dataType = $field->getDataType();
       switch ($dataType) {
       case FieldDataType::CLOUD_FILE:
         $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
-        $filePath = $prefixPath . UserStorage::PATH_SEP. $fieldDatum->getOptionValue();
+        $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fieldDatum->getOptionValue();
         break;
 
       case FieldDataType::DB_FILE:
@@ -352,14 +355,33 @@ class ProjectParticipantsController extends Controller {
                                            $fieldDatum->getOptionValue()));
         }
         break;
+
+      case FieldDataType::CLOUD_FOLDER:
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+        $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
+        break;
+
       default:
         return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
       }
 
       $fileRemoved = false;
+      $doDelete = true;
       $this->entityManager->beginTransaction();
       try {
         switch ($dataType) {
+        case FieldDataType::CLOUD_FOLDER:
+          $userStorage->delete($filePath);
+          $optionValue = json_decode($fieldDatum->getOptionValue(), true);
+          if (!is_array($optionValue)) {
+            $optionValue = [];
+          }
+          Util::unsetValue($optionValue, $fileName);
+          if (!empty($optionValue)) {
+            $doDelete = false;
+          }
+          $fieldDatum->setOptionValue(json_encode(array_values($optionValue)));
+          break;
         case FieldDataType::CLOUD_FILE:
           $userStorage->delete($filePath);
           break;
@@ -367,9 +389,11 @@ class ProjectParticipantsController extends Controller {
           $this->remove($dbFile);
           break;
         }
-        $this->remove($fieldDatum);
-        $this->flush();
-        $this->remove($fieldDatum);
+        if ($doDelete) {
+          $this->remove($fieldDatum);
+          $this->flush();
+          $this->remove($fieldDatum);
+        }
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
@@ -384,14 +408,14 @@ class ProjectParticipantsController extends Controller {
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
       $uploadPolicy = $uploadData['uploadPolicy'];
-      $subDir = $uploadData['subDir'];
+      $subDir = $uploadData['subDir']??null;
+      $fileName = $uploadData['fileName']??null;
 
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
       $dataType = $field->getDataType();
 
-      $fileName = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
-
       switch ($dataType) {
+      case FieldDataType::CLOUD_FOLDER:
       case FieldDataType::CLOUD_FILE:
         $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, true), ];
         if ($subDir) {
@@ -399,7 +423,12 @@ class ProjectParticipantsController extends Controller {
           $subDir .= UserStorage::PATH_SEP;
         }
         $userStorage->ensureFolderChain($pathChain);
-        $pathChain[] = $fileName;
+        $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
+        if ($dataType === FieldDataType::CLOUD_FILE) {
+          $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+        } else if (!empty($fileName)) {
+          $pathChain[] = pathinfo($fileName, PATHINFO_FILENAME);
+        }
         $filePath = implode(UserStorage::PATH_SEP, $pathChain);
         break;
       case FieldDataType::DB_FILE:
@@ -410,7 +439,8 @@ class ProjectParticipantsController extends Controller {
           return self::grumble($this->l->t('Upload-policy "%s" requested, but not supported by storage type "%s".',
                                            [ $uploadPolicy, $dataType ]));
         }
-        $filePath = $fileName;
+        $folderPath = '';
+        $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
         break;
       default:
         return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
@@ -449,172 +479,221 @@ class ProjectParticipantsController extends Controller {
       $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
 
       $files = Util::transposeArray($_FILES[$fileKey]);
-
-      if (count($files) !== 1) {
-        return self::grumble($this->l->t('Only single file uploads are supported here, number of submitted uploads is %d.', count($files)));
-      }
-      if (empty($files[$optionKey])) {
-        return self::grumble($this->l->t('Invalid file index, expected the option key "%s", got "%s".', [ $optionKey, array_keys($files)[0] ]));
+      if (is_array($files[$optionKey]['name'])) {
+        $files = Util::transposeArray($files[$optionKey]);
       }
 
-      $file = $files[$optionKey];
-
-      if ($maxUploadFileSize >= 0 and $file['size'] > $maxUploadFileSize) {
-        return self::grumble([
-          'message' => $this->l->t('Not enough storage available'),
-          'upload_max_file_size' => $maxUploadFileSize,
-          'max_human_file_size' => $maxHumanFileSize,
-        ]);
+      if ($dataType != FieldDataType::CLOUD_FOLDER) {
+        if (count($files) !== 1) {
+          return self::grumble($this->l->t('Only single file uploads are supported here, number of submitted uploads is %d.', count($files)));
+        }
+        if (empty($files[$optionKey])) {
+          return self::grumble($this->l->t('Invalid file index, expected the option key "%s", got "%s".', [ $optionKey, array_keys($files)[0] ]));
+        }
       }
 
-      $file['upload_max_file_size'] = $maxUploadFileSize;
-      $file['max_human_file_size']  = $maxHumanFileSize;
-      $file['original_name'] = $file['name']; // clone
+      $totalSize = 0;
+      $uploads = [];
+      foreach ($files as $index => $file) {
 
-      $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
-      if ($file['error'] != UPLOAD_ERR_OK) {
-        return self::grumble($this->l->t('Unable to upload file "%s", error: $s.',
-                                         [ $file['name'], $file['str_error'] ]));
-      }
+        $totalSize += $file['size'];
 
-      /*
-       * upload successful now try to move the file to its proper
-       * location and store it in the data-base.
-       *
-       ************************************************************************
-       *
-       * move the file in place.
-       *
-       */
+        if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+          return self::grumble([
+            'message' => $this->l->t('Not enough storage available'),
+            'upload_max_file_size' => $maxUploadFileSize,
+            'max_human_file_size' => $maxHumanFileSize,
+          ]);
+        }
 
-      $fileCopied = false;
-      $this->entityManager->beginTransaction();
-      try {
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filePath = $filePath . '.' .$extension;
+        $file['upload_max_file_size'] = $maxUploadFileSize;
+        $file['max_human_file_size']  = $maxHumanFileSize;
+        $file['original_name'] = $file['name']; // clone
 
-        $pathInfo = pathinfo($filePath);
+        $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
+        if ($file['error'] != UPLOAD_ERR_OK) {
+          continue;
+        }
 
-        /** @var Entities\ProjectParticipantFieldDatum $fieldData */
-        $fieldData = $participant->getParticipantFieldsDatum($optionKey);
-        if (empty($fieldData)) {
-          $fieldData = (new Entities\ProjectParticipantFieldDatum)
-                     ->setField($field)
-                     ->setProject($project)
-                     ->setMusician($musician)
-                     ->setOptionKey($optionKey);
-        } else {
-          switch ($uploadPolicy) {
-          case 'rename':
-            switch ($dataType) {
-            case FieldDataType::CLOUD_FILE:
-              // Ok, we have to move the old file.
-              $oldName = $fieldData->getOptionValue();
-              $timeStamp = $this->timeStamp();
-              $oldExtension = pathInfo($oldName, PATHINFO_EXTENSION);
-              $backupName = $pathInfo['filename'].'-'.$timeStamp;
-              if (!empty($oldExtension)) {
-                $backupName .= '.'.$oldExtension;
+        if ($dataType == FieldDataType::CLOUD_FOLDER && empty($fileName)) {
+          // use original name as storage name in the cloud
+          $filePath = $folderPath . UserStorage::PATH_SEP . pathinfo($file['name'], PATHINFO_FILENAME);
+        }
+
+        /*
+         * upload successful now try to move the file to its proper
+         * location and store it in the data-base.
+         *
+         ************************************************************************
+         *
+         * move the file in place.
+         *
+         */
+
+        $fileCopied = false;
+
+        $this->entityManager->beginTransaction();
+        try {
+          $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+          $filePath = $filePath . '.' .$extension;
+
+          $pathInfo = pathinfo($filePath);
+
+          $conflict = null;
+
+          /** @var Entities\ProjectParticipantFieldDatum $fieldData */
+          $fieldData = $participant->getParticipantFieldsDatum($optionKey);
+          if (empty($fieldData)) {
+            $fieldData = (new Entities\ProjectParticipantFieldDatum)
+                       ->setField($field)
+                       ->setProject($project)
+                       ->setMusician($musician)
+                       ->setOptionKey($optionKey);
+            $participant->getParticipantFieldsData()->add($fieldData);
+          } else {
+            switch ($uploadPolicy) {
+            case 'rename':
+              switch ($dataType) {
+              case FieldDataType::DB_FILE:
+              case FieldDataType::CLOUD_FOLDER:
+                throw new \InvalidArgumentException($this->l->t('Invalid upload-policy "%s" for data type "%s".', [ $uploadPolicy, $dataType ]));
+                break;
+              case FieldDataType::CLOUD_FILE:
+                // Ok, we have to move the old file.
+                $oldName = $fieldData->getOptionValue();
+                $timeStamp = $this->timeStamp();
+                $oldExtension = pathInfo($oldName, PATHINFO_EXTENSION);
+                $backupName = $pathInfo['filename'].'-'.$timeStamp;
+                if (!empty($oldExtension)) {
+                  $backupName .= '.'.$oldExtension;
+                }
+                $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
+                $oldPath = $pathChain[0].UserStorage::PATH_SEP.$oldName;
+                $userStorage->rename($oldPath, $backupPath);
+                $conflict = 'renamed';
+                break;
               }
-              $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
-              $oldPath = $pathChain[0].UserStorage::PATH_SEP.$oldName;
-              $userStorage->rename($oldPath, $backupPath);
               break;
-            }
-          case 'replace':
-            switch ($dataType) {
-            case FieldDataType::DB_FILE:
-              $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
-                             ->find($fieldData->getOptionValue());
-              if (empty($dbFile)) {
-                return self::grumble($this->l->t('Unable to find associated file with id "%s" in data-base.',
-                                                 $fieldData->getOptionValue()));
+            case 'replace':
+              switch ($dataType) {
+              case FieldDataType::CLOUD_FILE:
+                $conflict = 'replaced';
+                break;
+              case FieldDataType::DB_FILE:
+                $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
+                               ->find($fieldData->getOptionValue());
+                if (empty($dbFile)) {
+                  return self::grumble($this->l->t('Unable to find associated file with id "%s" in data-base.',
+                                                   $fieldData->getOptionValue()));
+                }
+                $conflict = 'replaced';
+                break;
+              case FieldDataType::CLOUD_FOLDER:
+                $optionValue = json_decode($fieldData->getOptionValue(), true);
+                if (!is_array($optionValue)) {
+                  $optionValue = [];
+                }
+                if (array_search($pathInfo['basename'], $optionValue) !== false) {
+                  $conflict = 'replaced';
+                }
+                break;
               }
               break;
             }
           }
-        }
 
-        $fileData = file_get_contents($file['tmp_name']);
-        switch ($dataType) {
-        case FieldDataType::CLOUD_FILE:
-          $fieldData->setOptionValue($subDir.$pathInfo['basename']);
-          $this->persist($fieldData);
-
-          $userStorage->putContent($filePath, $fileData);
-
-          $downloadLink = $userStorage->getDownloadLink($filePath);
-          break;
-        case FieldDataType::DB_FILE:
-          if (empty($dbFile)) {
-            /** @var Entities\EncryptedFile $dbFilew */
-            $dbFile = (new Entities\EncryptedFile)
-                    ->setFileData(new Entities\EncryptedFileData);
-            $dbFile->getFileData()->setFile($dbFile);
-          }
-
-          $dbFile->getFileData()->setData($fileData);
-
-          /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-          $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-
-          $dbFile->setSize(strlen($fileData))
-                 ->setFileName($filePath)
-                 ->setMimeType($mimeTypeDetector->detectString($fileData));
-
-          $this->persist($dbFile);
-          $this->flush();
-          $fieldData->setOptionValue($dbFile->getId());
-          $this->persist($fieldData);
-
-          $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-            'section' => 'database',
-            'object' => $dbFile->getId(),
-          ])
-            . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
-            . '&fileName=' . urlencode($filePath);
-
-          break;
-        }
-
-        $fileCopied = true;
-        unlink($file['tmp_name']);
-
-        unset($file['tmp_name']);
-        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                         [ $file['name'], $filePath ]);
-        $file['name'] = $filePath;
-
-        $file['meta'] = [
-          'musicianId' => $musicianId,
-          'projectId' => $projectId,
-          'pathChain' => $pathChain,
-          'dirName' => $pathInfo['dirname'],
-          'baseName' => $pathInfo['basename'],
-          'extension' =>  $pathInfo['extension']?:'',
-          'fileName' => $pathInfo['filename'],
-          'download' => $downloadLink,
-        ];
-
-        $this->flush();
-        $this->entityManager->commit();
-      } catch (\Throwable $t) {
-        $this->entityManager->rollback();
-        if ($fileCopied) {
+          $fileData = file_get_contents($file['tmp_name']);
           switch ($dataType) {
           case FieldDataType::CLOUD_FILE:
-            // unlink the new file
-            $userStorage->delete($filePath);
+          case FieldDataType::CLOUD_FOLDER:
+            $optionValue = $pathInfo['basename'];
+            if ($dataType == FieldDataType::CLOUD_FOLDER) {
+              $oldValue = json_decode($fieldData->getOptionValue(), true);
+              if (!is_array($oldValue)) {
+                $oldValue = [];
+              }
+              $oldValue[] = $optionValue;
+              $optionValue = array_unique($oldValue);
+              sort($optionValue);
+              $optionValue = json_encode(array_values($optionValue));
+            }
+            $fieldData->setOptionValue($optionValue);
+            $this->persist($fieldData);
+            $userStorage->putContent($filePath, $fileData);
+            $downloadLink = $userStorage->getDownloadLink($filePath);
             break;
           case FieldDataType::DB_FILE:
-            // should be handled by roll-back automatically
+            if (empty($dbFile)) {
+              /** @var Entities\EncryptedFile $dbFilew */
+              $dbFile = (new Entities\EncryptedFile)
+                      ->setFileData(new Entities\EncryptedFileData);
+              $dbFile->getFileData()->setFile($dbFile);
+            }
+
+            $dbFile->getFileData()->setData($fileData);
+
+            /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+            $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+
+            $dbFile->setSize(strlen($fileData))
+                   ->setFileName($filePath)
+                   ->setMimeType($mimeTypeDetector->detectString($fileData));
+
+            $this->persist($dbFile);
+            $this->flush();
+            $fieldData->setOptionValue($dbFile->getId());
+            $this->persist($fieldData);
+
+            $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+              'section' => 'database',
+              'object' => $dbFile->getId(),
+            ])
+              . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+              . '&fileName=' . urlencode($filePath);
+
             break;
           }
-        }
-        throw new \RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
-      }
 
-      return self::dataResponse([ $file ]);
+          $fileCopied = true;
+          unlink($file['tmp_name']);
+
+          unset($file['tmp_name']);
+          $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
+                                         [ $file['name'], $filePath ]);
+          $file['name'] = $filePath;
+
+          $file['meta'] = [
+            'musicianId' => $musicianId,
+            'projectId' => $projectId,
+            'pathChain' => $pathChain,
+            'dirName' => $pathInfo['dirname'],
+            'baseName' => $pathInfo['basename'],
+            'extension' => $pathInfo['extension']?:'',
+            'fileName' => $pathInfo['filename'],
+            'download' => $downloadLink,
+            'conflict' => $conflict,
+          ];
+
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->entityManager->rollback();
+          if ($fileCopied) {
+            switch ($dataType) {
+            case FieldDataType::CLOUD_FILE:
+              // unlink the new file
+              $userStorage->delete($filePath);
+              break;
+            case FieldDataType::DB_FILE:
+              // should be handled by roll-back automatically
+              break;
+            }
+          }
+          throw new \RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
+        }
+        $uploads[] = $file;
+      }
+      return self::dataResponse($uploads);
     default:
       break;
     }

@@ -298,12 +298,16 @@ form.pme-form.project-participant-fields-display {
     }
   }
 
-  td.pme-value.cloud-file table.file-upload {
-    width:100%;
+  td.pme-value {
+    &.cloud-file, &.cloud-folder {
+      table.file-upload {
+        width:100%;
+      }
+    }
   }
 
   tr.file-upload-row {
-    td.cloud-file {
+    td.cloud-file, td.cloud-folder {
       width:100%;
       padding-right:3px;
     }

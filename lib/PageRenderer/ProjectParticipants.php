@@ -201,7 +201,7 @@ class ProjectParticipants extends PMETableViewBase
   private $project;
 
   /** @var UserStorage */
-  private $userStorage;
+  protected $userStorage;
 
   public function __construct(
     ConfigService $configService

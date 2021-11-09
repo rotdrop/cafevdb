@@ -66,7 +66,6 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
           oldProgressWrapper.replaceWith(progressWrapper);
         }
         progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
-        let ajaxRequest = null;
         let progressOpen = false;
         progressWrapper.cafevDialog({
           title: t(appName, 'Updating recurring receivables'),
@@ -130,7 +129,7 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
             progressWrapper.hide();
           },
         });
-        ajaxRequest = requestHandler(progressToken, function() {
+        requestHandler(progressToken, function() {
           if (progressOpen) {
             try {
               progressWrapper.dialog('close');

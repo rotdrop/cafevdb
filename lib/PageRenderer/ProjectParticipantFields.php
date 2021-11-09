@@ -569,6 +569,7 @@ __EOT__;
           switch ($dataType) {
           case DataType::CLOUD_FILE:
           case DataType::DB_FILE:
+          case DataType::CLOUD_FOLDER:
             $value = $this->l->t('n/a');
             break;
           case DataType::BOOLEAN:
@@ -958,7 +959,8 @@ __EOT__;
 
     $tag = 'default_file_upload_policy';
     if ($newvals['data_type'] == DataType::CLOUD_FILE
-        || $newvals['data_type'] == DataType::DB_FILE) {
+        || $newvals['data_type'] == DataType::DB_FILE
+        || $newvals['data_type'] == DataType::CLOUD_FOLDER) {
       if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
         $newvals['tab'] = $this->l->t('file-attachments');
         $changed[] = 'tab';
@@ -968,6 +970,9 @@ __EOT__;
         if (empty($oldvals['encrypted'])) {
           $changed[] = 'encrypted';
         }
+        $value = 'replace';
+      } else if ($newvals['data_type'] === DataType::CLOUD_FOLDER) {
+        // cloud FS has its own versioning system
         $value = 'replace';
       } else {
         $value = $newvals[$tag];

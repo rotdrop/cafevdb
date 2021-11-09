@@ -42,6 +42,7 @@ table.pme-main tr.multiplicity {
     &.default-value,
     &.default-single-value,
     &.default-cloud-file-value,
+    &.default-cloud-folder-value,
     &.default-multi-value {
       display:none;
     }
@@ -57,7 +58,7 @@ table.pme-main tr.multiplicity {
   &.multiplicity-single ~ tr.pme-row.default-single-value,
   &.multiplicity-single ~ tr.pme-row.data-options-single,
   &.multiplicity-simple ~ tr.pme-row.default-simple-value,
-  &.multiplicity-simple:not(.data-type-cloud-file, .data-type-db-file) ~ tr.pme-row.data-options-simple,
+  &.multiplicity-simple:not(.data-type-cloud-file, .data-type-db-file, .data-type-cloud-folder) ~ tr.pme-row.data-options-simple,
   &.multiplicity-groupsofpeople ~ tr.pme-row.data-options,
   &.multiplicity-multiple ~ tr.pme-row.data-options,
   &.multiplicity-multiple ~ tr.pme-row.default-multi-value,
@@ -67,6 +68,7 @@ table.pme-main tr.multiplicity {
     display:table-row;
   }
   &.data-type-db-file,
+  &.data-type-cloud-folder,
   &.data-type-cloud-file {
     ~ tr.pme-row.default-value,
     ~ tr.pme-row.default-multi-value,
@@ -74,8 +76,10 @@ table.pme-main tr.multiplicity {
       display:none!important;
     }
   }
-  &.data-type-cloud-file ~ tr.pme-row.default-cloud-file-value {
-    display:table-row;
+  &.data-type-cloud-file /* , &.data-type-cloud-folder */ {
+    ~ tr.pme-row.default-cloud-file-value {
+      display:table-row;
+    }
   }
   &.data-type-html ~ tr .data-type-html-hidden {
     display:none;

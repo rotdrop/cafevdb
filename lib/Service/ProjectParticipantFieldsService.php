@@ -57,14 +57,17 @@ class ProjectParticipantFieldsService
     Multiplicity::SINGLE => [
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
+      DataType::CLOUD_FOLDER,
     ],
     Multiplicity::MULTIPLE => [
       DataType::BOOLEAN,
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
+      DataType::CLOUD_FOLDER,
     ],
     Multiplicity::PARALLEL => [
       DataType::BOOLEAN,
+      DataType::CLOUD_FOLDER,
     ],
     Multiplicity::RECURRING => [
       DataType::BOOLEAN,
@@ -76,16 +79,19 @@ class ProjectParticipantFieldsService
       DataType::DATETIME,
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
+      DataType::CLOUD_FOLDER,
     ],
     Multiplicity::GROUPOFPEOPLE => [
       DataType::BOOLEAN,
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
+      DataType::CLOUD_FOLDER,
     ],
     Multiplicity::GROUPSOFPEOPLE => [
       DataType::BOOLEAN,
       DataType::CLOUD_FILE,
       DataType::DB_FILE,
+      DataType::CLOUD_FOLDER,
     ],
   ];
 

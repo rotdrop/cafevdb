@@ -41,6 +41,7 @@ import modalizer from './modalizer.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
+require('blueimp-md5');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -762,106 +763,142 @@ const myReady = function(selector, resizeCB) {
 
   participantFieldsHandlers(container, musicianId);
 
-  const fileUploadTemplate = $('#fileUploadTemplate');
-  container
-    .find('form.pme-form')
-    .find('tr.participant-field.cloud-file, tr.participant-field.db-file')
-    .find('td.pme-value .file-upload-row')
-    .each(function(index) {
-      const $this = $(this);
-      const fieldId = $this.data('fieldId');
-      const optionKey = $this.data('optionKey');
-      const uploadPolicy = $this.data('uploadPolicy');
-      const fileBase = $this.data('fileBase');
-      const subDir = $this.data('subDir');
-      const storage = $this.data('storage');
-      const widgetId = 'file-upload-' + optionKey;
-      const uploadUi = fileUploadTemplate.octemplate({
-        wrapperId: widgetId,
-        formClass: 'file-upload-form',
-        accept: '*',
-        uploadName: 'files[' + optionKey + ']',
-        projectId,
-        musicianId,
-        uploadData: JSON.stringify({
-          fieldId,
-          optionKey,
-          uploadPolicy,
-          subDir,
-          fileBase,
-          storage,
-        }),
-      });
-      const $oldUploadForm = $('#' + widgetId);
-      if ($oldUploadForm.length === 0) {
-        $('body').append(uploadUi);
-      } else {
-        $oldUploadForm.replaceWith(uploadUi);
-        // uploadUi.replaceAll($oldUploadForm);
-      }
+  const initFileUploadRow = function() {
+    const $thisRow = $(this);
+    const fieldId = $thisRow.data('fieldId');
+    const optionKey = $thisRow.data('optionKey');
+    const subDir = $thisRow.data('subDir');
+    const fileName = $thisRow.data('fileName');
+    const fileBase = $thisRow.data('fileBase');
+    const widgetId = 'file-upload-' + optionKey + (fileBase || !fileName ? '' : '-md5-' + md5(fileName));
+    const isCloudFolder = $thisRow.closest('td.participant-field').hasClass('cloud-folder');
+    const uploadMultiple = isCloudFolder && !fileName;
+    const uploadUi = fileUploadTemplate.octemplate({
+      wrapperId: widgetId,
+      formClass: 'file-upload-form',
+      accept: '*',
+      uploadName: 'files[' + optionKey + ']' + (uploadMultiple ? '[]' : ''),
+      projectId,
+      musicianId,
+      uploadData: JSON.stringify($thisRow.data()),
+    });
+    const $oldUploadForm = $('#' + widgetId);
+    if ($oldUploadForm.length === 0) {
+      $('body').append(uploadUi);
+    } else {
+      $oldUploadForm.replaceWith(uploadUi);
+      // uploadUi.replaceAll($oldUploadForm);
+    }
+    $thisRow.data('uploadFormId', widgetId);
 
-      const $parentFolder = $this.find('.operation.open-parent');
-      const $deleteUndelete = $this.find('.operation.delete-undelete');
-      const $downloadLink = $this.find('a.download-link');
-      const $placeholder = $this.find('input.upload-placeholder');
+    const $parentFolder = $thisRow.find('.operation.open-parent');
+    const $deleteUndelete = $thisRow.find('.operation.delete-undelete');
+    const $downloadLink = $thisRow.find('a.download-link');
+    const $placeholder = $thisRow.find('input.upload-placeholder');
 
-      FileUpload.init({
-        url: generateUrl('projects/participants/files/upload'),
-        doneCallback(file, index, container) {
+    const noFile = $downloadLink.attr('href') === '';
+
+    $deleteUndelete.prop('disabled', noFile);
+
+    FileUpload.init({
+      url: generateUrl('projects/participants/files/upload'),
+      doneCallback(file, index, container) {
+
+        if (isCloudFolder) {
+          if (!file.meta.conflict) {
+            // clone current row and replace all appropriate values.
+            const $newRow = $thisRow.clone();
+            $newRow.find('a.download-link')
+              .attr('href', file.meta.download)
+              .html(file.meta.baseName);
+            $newRow.find('input.upload-placeholder')
+              .val(file.meta.baseName);
+            $newRow.attr('data-file-name', file.meta.baseName);
+            $newRow.data('fileName', file.meta.baseName);
+            $newRow.insertBefore($thisRow);
+            initFileUploadRow.apply($newRow);
+            resizeCB();
+          }
+        } else {
           $downloadLink.attr('href', file.meta.download);
           $downloadLink.html(file.meta.baseName);
           $placeholder.val(file.meta.baseName);
-          $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-          $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
-        },
-        stopCallback: null,
-        dropZone: $this,
-        containerSelector: '#' + widgetId,
-        inputSelector: 'input[type="file"]',
-        multiple: false,
+
+          const noFile = $downloadLink.attr('href') === '';
+
+          $deleteUndelete.prop('disabled', noFile);
+        }
+      },
+      stopCallback: null,
+      dropZone: $thisRow,
+      containerSelector: '#' + widgetId,
+      inputSelector: 'input[type="file"]',
+      multiple: uploadMultiple,
+    });
+
+    $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+    $thisRow.find('input.upload-placeholder, input.upload-replace')
+      .off('click')
+      .on('click', function(event) {
+        const $fileUpload = $('#' + widgetId + ' input[type="file"]');
+        $fileUpload.trigger('click');
+        return false;
       });
 
-      $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-      $parentFolder.prop('disabled', $downloadLink.attr('href') === '');
-      $this.find('input.upload-placeholder, input.upload-replace')
-        .on('click', function(event) {
-          const $fileUpload = $('#' + widgetId + ' input[type="file"]');
-          $fileUpload.trigger('click');
-          return false;
-        });
+    $deleteUndelete.off('click').on('click', function(event) {
+      const $thisInput = $(this);
+      const cleanup = function(thisRemoved) {
+        Page.busyIcon(false);
+        modalizer(false);
+        $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+        $thisInput.removeClass('busy');
+      };
 
-      $deleteUndelete.on('click', function(event) {
-        const cleanup = function() {
-          Page.busyIcon(false);
-          modalizer(false);
-        };
+      modalizer(true);
+      Page.busyIcon(true);
+      $thisInput.addClass('busy');
+      $deleteUndelete.prop('disabled', true);
 
-        modalizer(true);
-        Page.busyIcon(true);
-
-        $.post(
-          generateUrl('projects/participants/files/delete'), {
-            musicianId,
-            projectId,
-            fieldId,
-            optionKey,
-          })
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          })
-          .done(function(data) {
-            if (!Ajax.validateResponse(data, ['message'], cleanup)) {
-              return;
-            }
+      $.post(
+        generateUrl('projects/participants/files/delete'), {
+          musicianId,
+          projectId,
+          fieldId,
+          optionKey,
+          subDir,
+          fileName,
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+            return;
+          }
+          if (isCloudFolder) {
+            const widgetId = $thisRow.data('uploadFormId');
+            $('#' + widgetId).remove();
+            $.fn.cafevTooltip.remove();
+            $thisRow.remove();
+            resizeCB();
+          } else {
             $downloadLink.attr('href', '');
             $downloadLink.html('');
             $placeholder.val('');
             $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-            Notification.messages(data.message);
-            cleanup();
-          });
-      });
+          }
+          Notification.messages(data.message);
+          cleanup();
+        });
     });
+  };
+
+  const fileUploadTemplate = $('#fileUploadTemplate');
+  container
+    .find('form.pme-form')
+    .find('tr.participant-field.cloud-file, tr.participant-field.db-file, tr.participant-field.cloud-folder')
+    .find('td.pme-value .file-upload-row')
+    .each(initFileUploadRow);
 
 };
 
