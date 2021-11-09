@@ -320,8 +320,6 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 
       'event-attachments-select' => $this->l->t('Select-box with all project-events. You can select events as attachments to your email.'),
 
-      'events-attachment' => $this->l->t('Select calendar attachments from the associated project events.'),
-
       'executive-board-project' => $this->l->t('Name of the pseudo-project listing the members of the executive board.'),
 
       'expert-mode' => $this->l->t('Display additional ``expert\'\' settings. Despite the name you are
@@ -534,7 +532,15 @@ the event.'),
 
       'nothing' => $this->l->t('nothing'),
 
-      'cloud-attachment' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
+      'attachments' => [
+        'cloud' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
+
+        'events' => $this->l->t('Select calendar attachments from the associated project events.'),
+
+        'personal' => $this->l->t('Choose a file to attach from the project\'s per-musician file-attachments.'),
+
+        'upload' => $this->l->t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
+      ],
 
       'clouddev-link' => $this->l->t('Web-link to the current Cloud developer documentation.'),
 
@@ -1045,10 +1051,7 @@ configuration storage if the test can be performed successfully.'),
 
       'transfer-registered-instruments' => $this->l->t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
 
-      'upload-attachment' => $this->l->t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
-
       'wysiwyg-edtior' => $this->l->t('Change to another WYSIWYG editor.'),
-
 
     ];
 

@@ -182,7 +182,7 @@ $containerClass = $appName.'-'.'container';
       <td class="attachments" colspan="2">
         <button type="button"
                 class="attachment upload"
-                title="<?php echo $toolTips['upload-attachment']; ?>"
+                title="<?php echo $toolTips['attachments:upload']; ?>"
                 value="<?php echo $l->t('Upload new File'); ?>">
           <img class="svg"
                src="<?php echo $urlGenerator->imagePath('core', 'actions/upload.svg'); ?>"
@@ -190,16 +190,24 @@ $containerClass = $appName.'-'.'container';
         </button>
         <button type="button"
                 class="attachment cloud"
-                title="<?php echo $toolTips['cloud-attachment']; ?>"
+                title="<?php echo $toolTips['attachments:cloud']; ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
                src="<?php echo $urlGenerator->imagePath('cafevdb', 'cloud.svg'); ?>"
                alt="<?php echo $l->t('Select from Owncloud'); ?>"/>
         </button>
         <button type="button"
+                class="attachment personal"
+                title="<?php echo $toolTips['attachments:personal']; ?>"
+                value="<?php echo $l->t('Select from participant file attachments'); ?>">
+          <img class="svg small"
+               src="<?php echo $urlGenerator->imagePath('core', 'actions/projects.svg'); ?>"
+               alt="<?php echo $l->t('Select from participant file attachments'); ?>"/>
+        </button>
+        <button type="button"
                 <?php echo ($projectId <= 0 ? 'style="display:none;"' : ''); ?>
                 class="attachment events"
-                title="<?php echo $toolTips['events-attachment']; ?>"
+                title="<?php echo $toolTips['attachments:events']; ?>"
                 value="<?php echo $l->t('Project Events'); ?>">
           <img class="svg events"
                src="<?php echo $urlGenerator->imagePath('cafevdb', 'calendar-dark.svg'); ?>"
