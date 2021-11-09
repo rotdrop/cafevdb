@@ -2827,7 +2827,7 @@ Störung.';
     try {
       $tmpFiles = $this
         ->getDatabaseRepository(Entities\EmailAttachment::class)
-        ->findBy([ 'user' => $this->userId(), 'draft' => null ]);
+        ->findBy([ 'draft' => null ]);
     } catch (\Throwable $t) {
       $this->diagnostics['caption'] = $this->l->t(
         'Cleaning temporary files failed: %s', $t->getMessage());
@@ -2869,9 +2869,7 @@ Störung.';
       $this->queryBuilder()
            ->update(Entities\EmailAttachment::class, 'ea')
            ->set('ea.draft', 'null')
-           ->set('ea.user', ':user')
            ->where($this->expr()->eq('ea.draft', ':id'))
-           ->setParameter('user', $this->userId())
            ->setParameter('id', $this->draftId)
            ->getQuery()
            ->execute();
@@ -2901,7 +2899,6 @@ Störung.';
         ->getDatabaseRepository(Entities\EmailAttachment::class)
         ->findOneBy([
           'fileName' => $tmpFile,
-          'user' => $this->userId(),
         ]);
       if (empty($attachment)) {
         $attachment = (new Entities\EmailAttachment())
