@@ -1,0 +1,4 @@
+#: lib/PageRenderer/PMETableViewBase.php:342
+#, php-format
+msgid "extra field type cloud-folder"
+msgstr ""

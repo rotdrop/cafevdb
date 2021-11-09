@@ -124,7 +124,7 @@ function init(options) {
       return false;
     },
     send(event, data) {
-      console.info('SEND DATA', Object.assign({}, data));
+      console.debug('SEND DATA', Object.assign({}, data));
     },
     /**
      * called after the first add, does NOT have the data param
