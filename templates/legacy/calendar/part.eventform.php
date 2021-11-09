@@ -33,7 +33,7 @@
 	<input style="display:none;" type="hidden" name="calendar" value="<?php p($_['calendar_options'][0]['id']); ?>">
 	<?php } ?>
 
-	<div id="event-time">
+	<div id="event-time" data-duration="<?php p($_['duration']); ?>">
 		<div id="event-time-from">
 			<?php p($l->t('from'));?>
 			<input type="text" value="<?php p($_['startdate']);?>" name="from" id="from">

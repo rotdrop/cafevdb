@@ -355,6 +355,10 @@
 	height: 45px;
 }
 
+#submitNewEvent {
+    background-color: var(--color-primary-element);
+}
+
 /* make popups scrollable in smaller viewports */
 .ui-dialog.cafevdb-project-events {
 	max-height: 75% !important;

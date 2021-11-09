@@ -170,13 +170,17 @@ class LegacyEventsController extends Controller {
 
     if (!$start) {
       $start = new \DateTime('now');
+      $start->setTime($start->format('H'), ceil($start->format('i') / 15) * 15);
       $start = $start->getTimeStamp();
     }
 
+    $defaultEventDuration = $this->getConfigValue('eventduration', 180);
+
     if (!$end) {
-      $duration = $this->getConfigValue('eventduration', 180);
-      $end = $start + ($duration * 60);
+      $end = $start + ($defaultEventDuration * 60);
     }
+
+    $duration = $end - $start;
 
     $start = new \DateTime('@'.$start);
     $end = new \DateTime('@'.$end);
@@ -266,6 +270,9 @@ class LegacyEventsController extends Controller {
         'protectCategories' => $protectCategories,
         // 'summary' => $summary,
         'title' => $summary,
+
+        'duration' => $duration,
+        'default_duration' => $defaultEventDuration,
       ],
       'blank');
   }
@@ -343,6 +350,8 @@ class LegacyEventsController extends Controller {
       $endtime = '';
       $allday = true;
     }
+
+    $duration = $dtend->getDateTime()->getTimestamp() - $dtstart->getDateTime()->getTimestamp();
 
     $protectCategories = $this->parameterService['protectCategories'];
     $categories = $vEvent->CATEGORIES;
@@ -567,7 +576,10 @@ class LegacyEventsController extends Controller {
       'endtime' => $endtime,
       'description' => $description,
 
-      'repeat' => $repeat['repeat']
+      'repeat' => $repeat['repeat'],
+
+      'duration' => $duration,
+      'default_duration' => $this->getConfigValue('eventduration', 180),
     ];
     if ($repeat['repeat'] != 'doesnotrepeat') {
       if (array_key_exists('weekofmonth', $repeat) === false) {

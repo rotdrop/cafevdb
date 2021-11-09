@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-09 11:38+0100\n"
-"PO-Revision-Date: 2021-11-09 11:52+0100\n"
+"POT-Creation-Date: 2021-11-09 14:21+0100\n"
+"PO-Revision-Date: 2021-11-09 14:21+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2522,7 +2522,7 @@ msgstr "Der Entwurf %s konnte nicht geladen werden."
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:2833 lib/EmailForm/Composer.php:2935
+#: lib/EmailForm/Composer.php:2833 lib/EmailForm/Composer.php:2932
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
@@ -2531,16 +2531,16 @@ msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:2882
+#: lib/EmailForm/Composer.php:2880
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3142
+#: lib/EmailForm/Composer.php:3139
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:3142
+#: lib/EmailForm/Composer.php:3139
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -3589,7 +3589,10 @@ msgstr ""
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
 "than one key: \"%s\" / \"%s\"."
-msgstr "Schlüssel-Spalte \"%s\" für univariate Verknüpfungs-Tabelle \"%s\" enthält mehr als einen Schlüssel: \"%s\" / \"%s\".\n\n"
+msgstr ""
+"Schlüssel-Spalte \"%s\" für univariate Verknüpfungs-Tabelle \"%s\" enthält "
+"mehr als einen Schlüssel: \"%s\" / \"%s\".\n"
+"\n"
 
 #: lib/PageRenderer/PMETableViewBase.php:975
 #: lib/PageRenderer/PMETableViewBase.php:1498
@@ -8431,7 +8434,7 @@ msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück.
 
 #: src/app/chosen-popup.js:43 src/app/inlineimage.js:245
 #: templates/blog/blogedit.php:40
-#: templates/emailform/part.emailform.composer.php:276
+#: templates/emailform/part.emailform.composer.php:273
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -8536,7 +8539,7 @@ msgstr "Suchergebnis"
 
 #: src/app/email.js:163 templates/legacy/calendar/part.eventform.php:38
 msgid "from"
-msgstr "aus"
+msgstr "von"
 
 #: src/app/email.js:165
 msgid "Empty list"
@@ -8560,11 +8563,11 @@ msgstr ""
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: src/app/email.js:603 src/app/email.js:1554
+#: src/app/email.js:603 src/app/email.js:1561
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:605 src/app/email.js:1556
+#: src/app/email.js:605 src/app/email.js:1563
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
@@ -8670,7 +8673,7 @@ msgstr "Kein Entwürfe vorhanden"
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1246 src/app/email.js:1347
+#: src/app/email.js:1246 src/app/email.js:1354
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
@@ -8678,35 +8681,35 @@ msgstr "Anhänge wirklich löschen?"
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1346
+#: src/app/email.js:1353
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1397 templates/emailform/part.emailform.composer.php:126
+#: src/app/email.js:1404 templates/emailform/part.emailform.composer.php:126
 #: templates/emailform/part.emailform.composer.php:144
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1398
+#: src/app/email.js:1405
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: src/app/email.js:1401
+#: src/app/email.js:1408
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1404
+#: src/app/email.js:1411
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/email.js:1565
+#: src/app/email.js:1572
 msgid "Email will be sent with an open recipients list!"
 msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 
-#: src/app/email.js:1567
+#: src/app/email.js:1574
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
@@ -9472,35 +9475,35 @@ msgstr "Datei aus der Cloud"
 msgid "Select from participant file attachments"
 msgstr "Datei aus den Projekt-Personen-Daten"
 
-#: templates/emailform/part.emailform.composer.php:211
+#: templates/emailform/part.emailform.composer.php:210
 msgid "Project Events"
 msgstr "Projekt-Termine"
 
-#: templates/emailform/part.emailform.composer.php:214
+#: templates/emailform/part.emailform.composer.php:213
 msgid "Select Events"
 msgstr "Termine auswählen"
 
-#: templates/emailform/part.emailform.composer.php:221
+#: templates/emailform/part.emailform.composer.php:219
 msgid "Attached Events"
 msgstr "Angehängte Termine"
 
-#: templates/emailform/part.emailform.composer.php:235
+#: templates/emailform/part.emailform.composer.php:233
 msgid "Delete Event Attachments"
 msgstr "Termin Anhänge auswählen"
 
-#: templates/emailform/part.emailform.composer.php:241
+#: templates/emailform/part.emailform.composer.php:238
 msgid "Attached Files"
 msgstr "Angehängte Dateien"
 
-#: templates/emailform/part.emailform.composer.php:255
+#: templates/emailform/part.emailform.composer.php:252
 msgid "Delete All Attachments"
 msgstr "Alle Anhänge löschen"
 
-#: templates/emailform/part.emailform.composer.php:264
+#: templates/emailform/part.emailform.composer.php:261
 msgid "Send Em@il"
 msgstr "Em@il verschicken"
 
-#: templates/emailform/part.emailform.composer.php:270
+#: templates/emailform/part.emailform.composer.php:267
 msgid "Message Preview"
 msgstr "Email-Vorschau"
 
@@ -10114,7 +10117,7 @@ msgstr "Überschrift des Termins"
 
 #: templates/legacy/calendar/part.eventform.php:43
 msgid "to"
-msgstr "an"
+msgstr "bis"
 
 #: templates/legacy/calendar/part.eventform.php:50
 #: templates/legacy/calendar/part.showevent.php:61
@@ -12124,7 +12127,6 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
-#, php-format
 #~ msgid "Unable to upload file \"%s\", error: $s."
 #~ msgstr "Kann die Datei \"%s\" nicht hochladen."
 

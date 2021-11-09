@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-09 11:53+0100\n"
+"POT-Creation-Date: 2021-11-09 14:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2364,7 +2364,7 @@ msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:2833
-#: lib/EmailForm/Composer.php:2935
+#: lib/EmailForm/Composer.php:2932
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
@@ -2373,16 +2373,16 @@ msgstr ""
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2882
+#: lib/EmailForm/Composer.php:2880
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3142
+#: lib/EmailForm/Composer.php:3139
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3142
+#: lib/EmailForm/Composer.php:3139
 msgid "Local Filesystem"
 msgstr ""
 
@@ -7488,7 +7488,7 @@ msgstr ""
 #: src/app/chosen-popup.js:43
 #: src/app/inlineimage.js:245
 #: templates/blog/blogedit.php:40
-#: templates/emailform/part.emailform.composer.php:276
+#: templates/emailform/part.emailform.composer.php:273
 msgid "Cancel"
 msgstr ""
 
@@ -7604,12 +7604,12 @@ msgid "Unknown form element: {FormElement}"
 msgstr ""
 
 #: src/app/email.js:603
-#: src/app/email.js:1554
+#: src/app/email.js:1561
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
 #: src/app/email.js:605
-#: src/app/email.js:1556
+#: src/app/email.js:1563
 msgid "Em@il Form"
 msgstr ""
 
@@ -7704,7 +7704,7 @@ msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
 #: src/app/email.js:1246
-#: src/app/email.js:1347
+#: src/app/email.js:1354
 msgid "Really Delete Attachments?"
 msgstr ""
 
@@ -7712,34 +7712,34 @@ msgstr ""
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1346
+#: src/app/email.js:1353
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1397
+#: src/app/email.js:1404
 #: templates/emailform/part.emailform.composer.php:126
 #: templates/emailform/part.emailform.composer.php:144
 msgid "Address Book"
 msgstr ""
 
-#: src/app/email.js:1398
+#: src/app/email.js:1405
 msgid "Accept"
 msgstr ""
 
-#: src/app/email.js:1401
+#: src/app/email.js:1408
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1404
+#: src/app/email.js:1411
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: src/app/email.js:1565
+#: src/app/email.js:1572
 msgid "Email will be sent with an open recipients list!"
 msgstr ""
 
-#: src/app/email.js:1567
+#: src/app/email.js:1574
 msgid "Email will be sent with a hidden recipients list!"
 msgstr ""
 
@@ -8462,35 +8462,35 @@ msgstr ""
 msgid "Select from participant file attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:211
+#: templates/emailform/part.emailform.composer.php:210
 msgid "Project Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:214
+#: templates/emailform/part.emailform.composer.php:213
 msgid "Select Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:221
+#: templates/emailform/part.emailform.composer.php:219
 msgid "Attached Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:235
+#: templates/emailform/part.emailform.composer.php:233
 msgid "Delete Event Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:241
+#: templates/emailform/part.emailform.composer.php:238
 msgid "Attached Files"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:255
+#: templates/emailform/part.emailform.composer.php:252
 msgid "Delete All Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:264
+#: templates/emailform/part.emailform.composer.php:261
 msgid "Send Em@il"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:270
+#: templates/emailform/part.emailform.composer.php:267
 msgid "Message Preview"
 msgstr ""
 

@@ -1,3 +1,4 @@
+import { $ } from '../../app/globals.js';
 import Calendar from './calendar.js';
 
 // $(document).on('click', '#newCalendar', function () {
@@ -81,12 +82,13 @@ $(document).on('click', '#editEvent-export', function() {
 // $(document).on('click', '.choosecalendar-rowfield-active', function() {
 //      Calendar.UI.Share.activation($(this), $(this).data('id'));
 // });
-$(document).on('focus', '#event-location:not(.ui-autocomplete-input)', function(event) {
-  $(this).autocomplete({
-    source: OC.linkTo('calendar', 'ajax/search-location.php'),
-    minLength: 2,
-  });
-});
+// @TODO this was autocomplete from addressbook
+// $(document).on('focus', '#event-location:not(.ui-autocomplete-input)', function(event) {
+//   $(this).autocomplete({
+//     source: OC.linkTo('calendar', 'ajax/search-location.php'),
+//     minLength: 2,
+//   });
+// });
 // $(document).on('keydown', '#newcalendar_dialog #displayname_new', function(event){
 //      if (event.which == 13){
 //              $('#newcalendar_dialog #editCalendar-submit').click();

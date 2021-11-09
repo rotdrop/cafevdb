@@ -1,5 +1,5 @@
 <div id="event" title="<?php p($l->t("Edit event"));?>">
-	<form id="event_form">
+	<form id="event_form" data-default-duration="<?php p($_['default_duration']) ?>">
 		<input type="hidden" name="uri" value="<?php p($_['eventuri']) ?>">
 		<input type="hidden" name="calendarid" value="<?php p($_['calendarid']) ?>">
 		<input type="hidden" name="lastmodified" value="<?php p($_['lastmodified']) ?>">
