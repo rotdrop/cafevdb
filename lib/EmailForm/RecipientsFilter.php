@@ -461,8 +461,7 @@ class RecipientsFilter
   }
 
   /**
-   * @param $projectId Either a valid project-id, or -1 if not in
-   *                "project-mode".
+   * @param array $criteria Filter criteria for the list of recipients.
    *
    * @return Associative array with the keys
    * - name (full name)
@@ -514,7 +513,7 @@ class RecipientsFilter
               'email'   => $emailVal,
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
-              'project' => $projectId??-1,
+              'project' => $this->projectId??-1,
               'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
