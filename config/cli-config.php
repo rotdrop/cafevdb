@@ -210,8 +210,6 @@ if (empty($cafevDbPassword)) {
 
 $encryptionService = \OC::$server->query(EncryptionService::class);
 $encryptionService->bind($cafevDbUser, $cafevDbPassword);
-$encryptionService->initUserKeyPair();
-$encryptionService->initAppEncryptionKey();
 
 /*
  *
