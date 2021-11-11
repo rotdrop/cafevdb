@@ -20,6 +20,7 @@
     "globalcitizen/php-iban": "^4.0",
     "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
+    "maennchen/zipstream-php": "*",
     "mikehaertl/php-pdftk": "^0.10.0",
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^4",

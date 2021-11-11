@@ -23,6 +23,9 @@
 
 namespace OCA\CAFEVDB\Storage;
 
+use ZipStream\ZipStream;
+use ZipStream\Option\Archive as ArchiveOptions;
+
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\IL10N;
@@ -133,6 +136,51 @@ class UserStorage
   public function getFolder(string $path):?Folder
   {
     return $this->get($path, FileInfo::TYPE_FOLDER);
+  }
+
+  private function archiveFolderRecursively(Folder $folder, ZipStream $zipStream)
+  {
+    $folderContents = $folder->getDirectoryListing();
+    /** @var Node $node */
+    foreach ($folderContents as $node) {
+      if ($node->getType() == FileInfo::TYPE_FILE) {
+        /** @var File $file */
+        $file = $node;
+        $zipStream->addFile($file->getPath(), $file->getContent());
+      } else {
+        $this->archiveFolderRecursively($node, $zipStream);
+      }
+    }
+  }
+
+  /**
+   * Return the given $pathOrFolder as a zip archive as binary string.
+   */
+  public function getFolderArchive($pathOrFolder, string $format = 'zip'):?string
+  {
+    /** @var \OCP\Files\File $node */
+    if (!$pathOrFolder instanceof \OCP\Files\Folder) {
+      $folder = $this->get($pathOrFolder, FileInfo::TYPE_FOLDER);
+    }
+
+    if (empty($folder)) {
+      return null;
+    }
+
+    $dataStream = fopen("php://memory", 'w');
+    $zipStreamOptions = new ArchiveOptions;
+    $zipStreamOptions->setOutputStream($dataStream);
+
+    $zipStream = new ZipStream($archiveName, $zipStreamOptions);
+
+    $this->addFolderRecursively($folder, $zipStream);
+
+    $zipStream->finish();
+    rewind($dataStream);
+    $data = stream_get_contents($dataStream);
+    fclose($dataStream);
+
+    return $data;
   }
 
   static public function pathCat($first, $second = null):string
