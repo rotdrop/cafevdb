@@ -265,7 +265,7 @@ class EventsService
     $event['calendarid'] = $projectEvent->getCalendarId();
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logInfo('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
+      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
       if (false) {
         // clean up orphaned events
         try {
