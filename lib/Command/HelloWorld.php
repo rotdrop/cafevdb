@@ -102,7 +102,6 @@ class HelloWorld extends Command
     /** @var EncryptionService $encryptionService */
     $encryptionService = \OC::$server->query(EncryptionService::class);
     $encryptionService->bind($userId, $password);
-    $encryptionService->initAppEncryptionKey();
 
     $output->writeln('DB SERVER: ' . $encryptionService->getConfigValue('dbserver'));
 
