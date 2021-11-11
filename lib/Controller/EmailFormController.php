@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\EmailForm\Composer;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -818,8 +819,6 @@ class EmailFormController extends Controller {
   /**
    * @NoAdminRequired
    * @UseSession
-   *
-   * @todo Use IAppData for storage.
    */
   public function attachment($source)
   {
@@ -832,7 +831,7 @@ class EmailFormController extends Controller {
     $this->session->close();
 
     switch ($source) {
-    case Composer::ATTACHMENT_ORIGIN_CLOUD:
+    case AttachmentOrigin::CLOUD:
       $paths = $this->parameterService['paths'];
       if (empty($paths)) {
         return self::grumble($this->l->t('Attachment file-names were not submitted'));
@@ -870,7 +869,7 @@ class EmailFormController extends Controller {
         $files[] = $fileRecord;
       }
       return self::dataResponse($files);
-    case Composer::ATTACHMENT_ORIGIN_UPLOAD:
+    case AttachmentOrigin::UPLOAD:
       $files = $this->request->files[self::UPLOAD_KEY];
       if (empty($files)) {
         // may be caused by PHP restrictions which are not caught by
