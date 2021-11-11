@@ -424,7 +424,37 @@ class ProjectParticipantFieldsService
     case DataType::CLOUD_FILE:
       /** @var UserStorage $userStorage */
       $userStorage = $this->di(UserStorage::class);
-      return $userStorage->getFile($value);
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+
+      $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
+                    ? ''
+                    : UserStorage::PATH_SEP . $field->getName();
+
+      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $value;
+
+      return $userStorage->getFile($filePath);
+
+    case DataType::CLOUD_FOLDER:
+      // The actual option value is ignored in this case
+
+      /** @var UserStorage $userStorage */
+      $userStorage = $this->di(UserStorage::class);
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+
+      $subDirPrefix = UserStorage::PATH_SEP . $field->getName();
+
+      $folderPath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP;
+
+      return $userStorage->getFolder($folderPath);
+
     case DataType::DB_FILE:
       return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
     case DataType::TEXT:
