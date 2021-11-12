@@ -37,6 +37,9 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+
 /** Participant-fields. */
 trait ParticipantFieldsTrait
 {
@@ -312,14 +315,14 @@ trait ParticipantFieldsTrait
               if (!empty($value)) {
                 $downloadLink = $this->urlGenerator()
                                      ->linkToRoute($this->appName().'.downloads.get', [
-                                       'section' => 'database',
+                                       'section' => DownloadsController::SECTION_DATABASE,
                                        'object' => $value,
                                      ])
                               . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $fileBase = $field->getName();
                 $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-                return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
+                return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
               }
               return null;
             };
@@ -347,7 +350,7 @@ trait ParticipantFieldsTrait
                 $fileBase = $field['name'];
                 try {
                   $downloadLink = $this->userStorage->getDownloadLink($filePath);
-                  return '<a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
+                  return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
                 } catch (\OCP\Files\NotFoundException $e) {
                   $this->logException($e);
                   return '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
@@ -534,10 +537,58 @@ trait ParticipantFieldsTrait
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
                 $subDir = $field->getName();
-                $filePath = $participantFolder.UserStorage::PATH_SEP.$subDir.UserStorage::PATH_SEP.array_shift($values);
-                $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
+                $folderPath = $participantFolder.UserStorage::PATH_SEP.$subDir;
+                $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
                 $filesAppTarget = md5($filesAppLink);
-                return '<a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="open-parent">'.$value.'</a>';
+                return '<a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="open-parent tooltip-auto">'.$value.'</a>';
+              }
+              return null;
+            };
+            $keyFdd['values2'] = $values2;
+            $keyFdd['valueTitles'] = $valueTitles;
+            $keyFdd['valueData'] = $valueData;
+            $keyFdd['select'] = 'M';
+            $keyFdd['css']['postfix'][] = $dataType;
+            break;
+          case FieldType::DB_FILE:
+            $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
+            $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
+              $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+              $values = array_combine($optionKeys, $optionValues);
+              $fieldId = $field->getId();
+              $subDir = $field->getName();
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              /** @var Entities\ProjectParticipantFieldDataOption $option */
+              $html = '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+  <table class="file-upload">';
+              foreach ($field->getSelectableOptions() as $option) {
+                $optionKey = (string)$option->getKey();
+                $fileBase = $option->getLabel();
+
+                $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $fileBase, $musician);
+              }
+              $html .= '
+  </table>
+</div>';
+              return $html;
+            };
+            $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              if (!empty($value)) {
+                $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
+                $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                $values = array_combine($optionKeys, $optionValues);
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                if (!empty($values)) {
+                  list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                  $fileBase = $field->getName();
+                  $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.zip';
+
+                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
+                    array_values($values), $fileName);
+
+                  return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
+                }
               }
               return null;
             };
@@ -754,7 +805,7 @@ trait ParticipantFieldsTrait
     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
   <td>
-     <a class="download-link'.(empty($downloadLink) ? ' hidden' : '').'"
+     <a class="download-link tooltip-auto'.(empty($downloadLink) ? ' hidden' : '').'"
         href="'.($downloadLink??'').'">
        '.$this->l->t('download').'
      </a>
@@ -1264,7 +1315,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
     </td>
     <td class="cloud-file">
-      <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
+      <a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
       <input class="upload-placeholder"
              title="'.$this->toolTipsService['participant-attachment-upload'].'"
              placeholder="'.$placeHolder.'"
@@ -1304,7 +1355,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
     </td>
     <td class="db-file">
-      <a class="download-link" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
+      <a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
       <input class="upload-placeholder"
              title="'.$this->toolTipsService['participant-attachment-upload'].'"
              placeholder="'.$placeHolder.'"
