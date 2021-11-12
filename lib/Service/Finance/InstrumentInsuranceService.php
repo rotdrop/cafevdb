@@ -461,14 +461,17 @@ class InstrumentInsuranceService
     $billToParty = $overview['billToParty'];
 
     // $nameBase = $billToParty->getPublicName(true);
-    $userName = $billToParty->getUserIdSlug();
-    $userName = str_replace('.', '-', $userName);
+    $userIdSlug = $billToParty->getUserIdSlug();
+    $camelCaseSlug = Util::dashesToCamelCase($userIdSlug, true, '_-.');
+
+    $year = $overview['date']->format('Y');
 
     $components = [
       $this->timeStamp(),
       $billToParty->getId(),
-      $userName,
+      $camelCaseSlug,
       strtolower($this->l->t('insurance')),
+      $year, $year + 1,
     ];
 
     return implode('-', $components) . '.pdf';
