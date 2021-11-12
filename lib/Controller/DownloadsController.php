@@ -30,16 +30,25 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Util;
 
-class DownloadsController extends Controller {
+class DownloadsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const SECTION_TEST = 'test';
+  public const SECTION_PDFLETTER = 'pdfletter';
+  public const SECTION_DATABASE = 'database';
+
+  public const OBJECT_COLLECTION = 'collection';
+  public const COLLECTION_ITEMS = 'items';
 
   public function __construct(
     $appName
@@ -60,42 +69,63 @@ class DownloadsController extends Controller {
    *
    * @param string $section Cosmetics, for grouping purposes
    *
-   * @param sting $object Something identifying the object in the
-   * context of $section.
+   * @param string $object Something identifying the object in the
+   * context of $section. If $object == self::OBJECT_COLLECTION the
+   * actual items of the collection are expected as query parameters
+   * and a zip-archive of those items will be presented as download,
+   * optionally wrapped into the sub-directory name given by
+   * $collectionName.
+   *
+   * @param array $items Collection items if $object equals
+   * self::OBJECT_COLLECTION
+   *
+   * @param null|string $fileName Optional filename for the download
    *
    * @return mixed \OCP\Response Something derived from \OCP\Response
    *
    * @NoAdminRequired
    */
-  public function fetch($section, $object)
+  public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     switch ($section) {
-    case 'test':
+    case self::SECTION_TEST:
       switch ($object) {
-      case 'pdfletter':
+      case self::SECTION_PDFLETTER:
         /** @var \OCA\CAFEVDB\Documents\PDFLetter $letterGenerator */
         $letterGenerator = $this->di(\OCA\CAFEVDB\Documents\PDFLetter::class);
-        $fileName = 'cafevdb-test-letter.pdf';
+        $fileName = $this->appName() . '-test-letter.pdf';
         $letter = $letterGenerator->testLetter($fileName, 'S');
         return $this->dataDownloadResponse($letter, $fileName, 'application/pdf');
       }
       break;
-    case 'database':
-      $fileId = $object;
-      /** @var Entities\File $file */
-      $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
-      if (empty($file)) {
-        return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
-      }
-      $mimeType = $file->getMimeType();
-      $fileName = $this->request->getParam('fileName');
-      if (empty($fileName)) {
-        $fileName = $file->getFileName();
+    case self::SECTION_DATABASE:
+      if ($object == self::OBJECT_COLLECTION) {
+        $this->logInfo('ITEMS ' . print_r($items, true));
+
         if (empty($fileName)) {
-          $fileName = $this->appName() . '-' . 'download' . $fileId;
+          $fileName = $this->timeStamp() . '-' . $this->appName() . '-' . 'download' . '.zip';
         }
+        $fileName = basename($fileName, '.zip');
+
+        $fileData = $this->di(DatabaseStorageUtil::class)->getCollectionArchive($items, $fileName);
+
+        return $this->dataDownloadResponse($fileData, $fileName . '.zip', 'application/zip');
+      } else {
+        $fileId = $object;
+        /** @var Entities\File $file */
+        $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
+        if (empty($file)) {
+          return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
+        }
+        $mimeType = $file->getMimeType();
+        if (empty($fileName)) {
+          $fileName = $file->getFileName();
+          if (empty($fileName)) {
+            $fileName = $this->appName() . '-' . 'download' . $fileId;
+          }
+        }
+        return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
       }
-      return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
@@ -105,16 +135,21 @@ class DownloadsController extends Controller {
    *
    * @param string $section Cosmetics, for grouping purposes
    *
-   * @param sting $object Something identifying the object in the
+   * @param string $object Something identifying the object in the
    * context of $section.
+   *
+   * @param array $items Collection items if $section equals
+   * self::OBJECT_COLLECTION
+   *
+   * @param null|string $fileName Optional filename for the download
    *
    * @return mixed \OCP\Response Something derived from \OCP\Response
    *
    * @NoAdminRequired
    */
-  public function get($section, $object)
+  public function get(string $section, string $object, array $items = [], ?string $fileName = null)
   {
-    return $this->fetch($section, $object);
+    return $this->fetch($section, $object, $items, $fileName);
   }
 
 }
