@@ -39,6 +39,8 @@ use OCP\Files\FileInfo;
 use OCA\Files_Trashbin\Trash\ITrashManager;
 use OCA\Files_Trashbin\Trash\ITrashItem;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**
  * Some tweaks to for the user-folder stuff.
  */
@@ -138,7 +140,10 @@ class UserStorage
     return $this->get($path, FileInfo::TYPE_FOLDER);
   }
 
-  private function archiveFolderRecursively(Folder $folder, ZipStream $zipStream)
+  /**
+   * Recursively add all files in all sub-directories to the zip archive.
+   */
+  private function archiveFolderRecursively(Folder $folder, int $parentsToStrip, ZipStream $zipStream)
   {
     $folderContents = $folder->getDirectoryListing();
     /** @var Node $node */
@@ -146,26 +151,40 @@ class UserStorage
       if ($node->getType() == FileInfo::TYPE_FILE) {
         /** @var File $file */
         $file = $node;
-        $zipStream->addFile($file->getPath(), $file->getContent());
+
+        $filePath = self::stripParents($file->getPath(), $parentsToStrip);
+
+        $zipStream->addFile($filePath, $file->getContent());
       } else {
-        $this->archiveFolderRecursively($node, $zipStream);
+        $this->archiveFolderRecursively($node, $parentsToStrip, $zipStream);
       }
     }
   }
 
   /**
-   * Return the given $pathOrFolder as a zip archive as binary string.
+   * Return the given $pathOrFolder as a zip archive as binary
+   * string. Empty directories will be omitted.
+   *
+   * @param string|Folder $pathOrFolder Folder-path or \OCP\Files\Folder instance.
+   *
+   * @param int $parentsToStrip The number of parent folders to strip
+   * inside the archive. The default is to strip nothing.
    */
-  public function getFolderArchive($pathOrFolder, string $format = 'zip'):?string
+  public function getFolderArchive($pathOrFolder, $parentsToStrip = 0, string $format = 'zip'):?string
   {
     /** @var \OCP\Files\File $node */
-    if (!$pathOrFolder instanceof \OCP\Files\Folder) {
-      $folder = $this->get($pathOrFolder, FileInfo::TYPE_FOLDER);
+    if (!($pathOrFolder instanceof Folder)) {
+      $folder = $this->getFolder($pathOrFolder);
+    } else {
+      $folder = $pathOrFolder;
     }
 
     if (empty($folder)) {
       return null;
     }
+
+    // don't try to strip more components than the initial path-depth
+    $parentsToStrip = min($parentsToStrip, count(Util::explode(self::PATH_SEP, $folder->getPath())));
 
     $dataStream = fopen("php://memory", 'w');
     $zipStreamOptions = new ArchiveOptions;
@@ -173,7 +192,7 @@ class UserStorage
 
     $zipStream = new ZipStream($archiveName, $zipStreamOptions);
 
-    $this->addFolderRecursively($folder, $zipStream);
+    $this->archiveFolderRecursively($folder, $parentsToStrip, $zipStream);
 
     $zipStream->finish();
     rewind($dataStream);
@@ -196,6 +215,16 @@ class UserStorage
     } else {
       return self::PATH_SEP . (string)$first . self::PATH_SEP . $second;
     }
+  }
+
+  /**
+   * Strip the given number of directories from $path. Return the
+   * root-path self::PATH_SEP if $depth exceeds the number of
+   * path-components present.
+   */
+  static public function stripParents(string $path, int $depth):string
+  {
+    return self::PATH_SEP . implode(self::PATH_SEP, array_slice(Util::explode(self::PATH_SEP, $path), $depth));
   }
 
   /**
