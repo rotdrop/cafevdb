@@ -128,7 +128,12 @@ class Navigation
         }
         foreach ($optionData as $key => $dataValue) {
           $data .= ' data-'.Util::htmlEscape($key)."='";
-          $data .= json_encode($dataValue, JSON_FORCE_OBJECT);
+          if (is_array($dataValue) || ($dataValue instanceof \JsonSerializable)) {
+            $data .= json_encode($dataValue, JSON_FORCE_OBJECT);
+          } else {
+            // convert to string
+            $data .= Util::htmlEscape((string)$dataValue);
+          }
           $data .= "'";
         }
       }
