@@ -22,6 +22,7 @@
 
 import { globalState, $ } from './globals.js';
 import * as Email from './email.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 import { token as pmeToken, sys as PMEsys } from './pme-selectors.js';
 
 // const qs = require('qs');
@@ -55,8 +56,8 @@ const pmeTweaks = function(container) {
   $(globalState.PHPMyEdit.defaultSelector + ' input.email.' + pmeToken('misc') + '.' + pmeToken('commit'))
     .off('click')
     .on('click', function(event) {
-      event.stopImmediatePropagation();
-      Email.emailFormPopup($(this.form).serialize());
+      pageBusyIcon(true);
+      Email.emailFormPopup($(this.form).serialize(), true, false, () => pageBusyIcon(false));
       return false;
     });
 
@@ -82,7 +83,10 @@ const pmeTweaks = function(container) {
     post += '&emailRecipients[MemberStatusFilter][1]=passive';
     post += '&emailRecipients[MemberStatusFilter][2]=soloist';
     post += '&emailRecipients[MemberStatusFilter][3]=conductor';
-    Email.emailFormPopup(post, true, true);
+
+    pageBusyIcon(true);
+    Email.emailFormPopup(post, true, true, () => pageBusyIcon(false));
+
     return false;
   });
 
