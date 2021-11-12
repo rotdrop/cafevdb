@@ -490,7 +490,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       return $this->dataOption->getData();
       break;
     case Multiplicity::PARALLEL():
-      if ($this->field->getDataType() == DataType::CLOUD_FILE) {
+      if ($this->field->getDataType() == DataType::CLOUD_FILE
+          || $this->field->getDataType() == DataType::DB_FILE) {
         return $this->optionValue;
       } else {
         return $this->dataOption->getData();
