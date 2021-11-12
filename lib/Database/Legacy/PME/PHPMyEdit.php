@@ -89,7 +89,8 @@ class PHPMyEdit extends \phpMyEdit
     $this->entityManager = $entityManager;
     $this->connection = $this->entityManager->getConnection();
     if (empty($this->connection)) {
-      throw new \Exception("empty");
+      $loggedIn = \OC::$server->query(\OCP\IUserSession::class)->isLoggedIn();
+      throw new \RuntimeException('Database connection is empty , user logged in: ' . (int)$loggedIn);
     }
     $this->dbh = $this->connection;
     $this->request = $request;
