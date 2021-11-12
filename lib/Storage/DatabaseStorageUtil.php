@@ -23,11 +23,16 @@
 
 namespace OCA\CAFEVDB\Storage;
 
+use ZipStream\ZipStream;
+use ZipStream\Option\Archive as ArchiveOptions;
+
 use OCP\IL10N;
 use OCP\ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCA\CAFEVDB\Controller\DownloadsController;
 
 class DatabaseStorageUtil
 {
@@ -69,20 +74,82 @@ class DatabaseStorageUtil
     return null;
   }
 
-  public function getDownloadLink($fileIdentifier)
+  public function getDownloadLink($fileIdentifier, $fileName = null)
   {
-    $file = $this->get($fileIdentifier);
-    $id = $file->getId();
-
     $urlGenerator = \OC::$server->getURLGenerator();
-    $filesUrl = $urlGenerator->linkToRoute(
-      $this->appName.'.downloads.get', [
-        'section' => 'database',
-        'object' => $id,
-      ])
-              . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
+    $queryParameters = [
+      'requesttoken' => \OCP\Util::callRegister(),
+      'fileName' => $fileName,
+    ];
+
+    if (is_array($fileIdentifier)) {
+      $items = [];
+      foreach ($fileIdentifier as $identifier) {
+        $items[] = $this->get($identifier)->getId();
+      }
+
+      $filesUrl = $urlGenerator->linkToRoute(
+        $this->appName.'.downloads.get', [
+          'section' => DownloadsController::SECTION_DATABASE,
+          'object' => DownloadsController::OBJECT_COLLECTION,
+        ]);
+      $queryParameters['items'] = $items;
+    } else {
+      $file = $this->get($fileIdentifier);
+      $id = $file->getId();
+
+      $filesUrl = $urlGenerator->linkToRoute(
+        $this->appName.'.downloads.get', [
+          'section' => 'database',
+          'object' => $id,
+        ]);
+    }
+
+    $filesUrl .= '?' . http_build_query($queryParameters);
+
     return $filesUrl;
   }
+
+  /**
+   * Pack the collection of Entities\File into a zip-archive.
+   *
+   * @param array $items Something which can be converted by
+   * self::get() into Entities\File. null entries are gracefully
+   * filtered away.
+   *
+   * @param null|string $folderName If not null the zip archive will
+   * contain all data in the given $folderName.
+   *
+   * @return string Binary zip-archive data.
+   *
+   * @todo Support streaming, maybe.
+   */
+  public function getCollectionArchive(array $items, ?string $folderName = null)
+  {
+    $folderName = empty($folderName) ? '' : $folderName . self::PATH_SEP;
+
+    $dataStream = fopen("php://memory", 'w');
+    $zipStreamOptions = new ArchiveOptions;
+    $zipStreamOptions->setOutputStream($dataStream);
+
+    $zipStream = new ZipStream($archiveName, $zipStreamOptions);
+
+    foreach ($items as $item) {
+      if (empty($item)) {
+        continue;
+      }
+      $file = $this->get($item);
+      $zipStream->addFile($folderName . $file->getFileName(), $file->getFileData()->getData());
+    }
+
+    $zipStream->finish();
+    rewind($dataStream);
+    $data = stream_get_contents($dataStream);
+    fclose($dataStream);
+
+    return $data;
+  }
+
 }
 
 // Local Variables: ***
