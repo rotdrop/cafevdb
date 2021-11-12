@@ -25,6 +25,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/**
+ * @todo The sole purpose of this repository is to map tag ->
+ * name. Otherwise we just could use the stock "findAll()".
+ */
 class EmailTemplatesRepository extends EntityRepository
 {
   public function list()
