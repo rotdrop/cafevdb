@@ -396,6 +396,45 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Return the cloud-folder name for the given $field which must be of
+   * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   */
+  public function getFieldFolderPath(Entities\ProjectParticipantFieldDatum $datum):?string
+  {
+    $field = $datum->getField();
+
+    switch ($field->getDataType()) {
+    case DataType::CLOUD_FOLDER: {
+      /** @var UserStorage $userStorage */
+      $userStorage = $this->di(UserStorage::class);
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+
+      return $participantFolder . UserStorage::PATH_SEP . $field->getName();
+    }
+    case DataType::CLOUD_FILE: {
+     /** @var UserStorage $userStorage */
+      $userStorage = $this->di(UserStorage::class);
+
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+
+      $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
+                    ? ''
+                    : UserStorage::PATH_SEP . $field->getName();
+
+      return $participantFolder . $subDirPrefix;
+    }
+    }
+    return null;
+  }
+
+  /**
    * Return the effective value of the given datum. In particular
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
@@ -422,39 +461,12 @@ class ProjectParticipantFieldsService
     case DataType::INTEGER:
       return intval($value);
     case DataType::CLOUD_FILE:
-      /** @var UserStorage $userStorage */
-      $userStorage = $this->di(UserStorage::class);
-
-      /** @var ProjectService $projectService */
-      $projectService = $this->di(ProjectService::class);
-
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
-
-      $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
-                    ? ''
-                    : UserStorage::PATH_SEP . $field->getName();
-
-      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $value;
-
-      return $userStorage->getFile($filePath);
-
+      $folderPath = $this->getFieldFolderPath($datum);
+      $filePath = $folderPath . UserStorage::PATH_SEP . $value;
+      return $userStorage = $this->di(UserStorage::class)->getFile($filePath);
     case DataType::CLOUD_FOLDER:
-      // The actual option value is ignored in this case
-
-      /** @var UserStorage $userStorage */
-      $userStorage = $this->di(UserStorage::class);
-
-      /** @var ProjectService $projectService */
-      $projectService = $this->di(ProjectService::class);
-
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
-
-      $subDirPrefix = UserStorage::PATH_SEP . $field->getName();
-
-      $folderPath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP;
-
-      return $userStorage->getFolder($folderPath);
-
+      $folderPath = $this->getFieldFolderPath($datum);
+      return $this->di(UserStorage::class)->getFolder($folderPath);
     case DataType::DB_FILE:
       return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
     case DataType::TEXT:
