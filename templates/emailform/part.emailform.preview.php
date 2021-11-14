@@ -42,7 +42,15 @@ use OCA\CAFEVDB\Controller\DownloadsController;
         <?php foreach ($message['attachments'] as $attachment) { ?>
           <li>
             <span class="attachment-item">
-              <span class="filename"><a href="<?php echo $urlGenerator->linkToRoute($appName . '.downloads.get', [ 'section' => DownloadsController::SECTION_FILECACHE, 'object' => $attachment['data'], ])  . '?' . 'requesttoken' . '=' . urlencode($requesttoken); ?>"><?php p($attachment['name']); ?></a></span>
+              <span class="filename">
+                <a href="<?php echo $urlGenerator->linkToRoute($appName . '.downloads.get', [ 'section' => DownloadsController::SECTION_FILECACHE, 'object' => $attachment['data'], ])  . '?' . 'requesttoken' . '=' . urlencode($requesttoken); ?>"
+                   class="download-link ajax-download"
+                   data-section="<?php p(DownloadsController::SECTION_FILECACHE); ?>"
+                   data-object="<?php p($attachment['data']); ?>"
+                >
+                  <?php p($attachment['name']); ?>
+                </a>
+              </span>
               <span class="separator">|</span>
               <span class="size"><?php p(\OC_Helper::humanFileSize($attachment['size'])); ?></span>
               <span class="separator">|</span>

@@ -27,6 +27,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import generateUrl from './generate-url.js';
+import fileDownload from './file-download.js';
 
 const participantOptionHandlers = function(container, musicianId) {
 
@@ -35,6 +36,16 @@ const participantOptionHandlers = function(container, musicianId) {
   }
 
   container = $(container);
+
+  // AJAX download support
+  container
+    .find('a.download-link.ajax-download')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      fileDownload($this.attr('href'), $this.data());
+      return false;
+    });
 
   // Handle buttons to revert to default value. Field id must be given
   // as data-value.

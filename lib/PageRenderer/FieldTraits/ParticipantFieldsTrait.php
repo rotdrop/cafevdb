@@ -322,7 +322,7 @@ trait ParticipantFieldsTrait
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $fileBase = $field->getName();
                 $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-                return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
+                return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
               }
               return null;
             };
@@ -350,7 +350,7 @@ trait ParticipantFieldsTrait
                 $fileBase = $field['name'];
                 try {
                   $downloadLink = $this->userStorage->getDownloadLink($filePath);
-                  return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
+                  return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
                 } catch (\OCP\Files\NotFoundException $e) {
                   $this->logException($e);
                   return '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
@@ -587,7 +587,7 @@ trait ParticipantFieldsTrait
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                     array_values($values), $fileName);
 
-                  return '<a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
+                  return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
                 }
               }
               return null;
@@ -805,7 +805,7 @@ trait ParticipantFieldsTrait
     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
   <td>
-     <a class="download-link tooltip-auto'.(empty($downloadLink) ? ' hidden' : '').'"
+     <a class="download-link ajax-download tooltip-auto'.(empty($downloadLink) ? ' hidden' : '').'"
         href="'.($downloadLink??'').'">
        '.$this->l->t('download').'
      </a>
@@ -1315,7 +1315,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
     </td>
     <td class="cloud-file">
-      <a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
+      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
       <input class="upload-placeholder"
              title="'.$this->toolTipsService['participant-attachment-upload'].'"
              placeholder="'.$placeHolder.'"
@@ -1355,7 +1355,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
     </td>
     <td class="db-file">
-      <a class="download-link tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
+      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
       <input class="upload-placeholder"
              title="'.$this->toolTipsService['participant-attachment-upload'].'"
              placeholder="'.$placeHolder.'"

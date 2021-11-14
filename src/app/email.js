@@ -42,6 +42,7 @@ import chosenPopup from './chosen-popup.js';
 import queryData from './query-data.js';
 import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import fileDownload from './file-download.js';
 
 require('bootstrap4-duallistbox');
 require('emailform.scss');
@@ -1848,6 +1849,13 @@ function emailFormPopup(post, modal, single, afterInit) {
             emailForm,
             dialogHolder,
             composerPanel);
+
+          // download support
+          dialogHolder.on('click', 'a.download-link.ajax-download', function(event) {
+            const $this = $(this);
+            fileDownload($this.attr('href'), $this.data());
+            return false;
+          });
 
           // we have to recompute the tab size for the recipients controls
           emailTabResize(dialogWidget, recipientsPanel);

@@ -19,19 +19,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @file
- *
- * File download support via iframe using jquery-file-download.
- */
 
-import { appName, webRoot, $ } from './globals.js';
+import { appName, $ } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
+import * as ncRouter from '@nextcloud/router';
 import { parse as parseContentDisposition } from 'content-disposition';
-
-require('jquery-file-download');
 
 /**
  * Place a download request by posting to the given Ajax URL.
@@ -80,7 +74,8 @@ const download = function(url, post, options) {
     post = newPost;
   }
 
-  const downloadUrl = generateUrl(url);
+  const baseUrl = ncRouter.generateUrl('');
+  const downloadUrl = url.startsWith(baseUrl) ? url : generateUrl(url);
   $.ajax({
     url: downloadUrl,
     method: 'POST',
@@ -117,7 +112,7 @@ const download = function(url, post, options) {
       if (contentType) {
         contentType = contentType.split(';')[0];
       } else {
-        contentType ='application/octetstream';
+        contentType = 'application/octetstream';
       }
 
       // Convert the Byte Data to BLOB object.
