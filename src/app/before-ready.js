@@ -38,7 +38,6 @@ import stopEnterSubmit from './stop-enter-submit.js';
 
 const documentReady = function() {
 
-  // @@TODO perhaps collects these things in before-ready.js
   document.onkeypress = stopEnterSubmit;
 
   $('body').on('dblclick', '.oc-dialog', function() {
@@ -91,7 +90,7 @@ const documentReady = function() {
    * insert another div-container inside #app-content.
    *
    */
-  const content = $('#content');
+  const content = $('#content.app-cafevdb');
   // const appInnerContent = $('#app-inner-content');
 
   // Display the overview-page for the given project.
