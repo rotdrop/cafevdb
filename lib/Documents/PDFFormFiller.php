@@ -33,11 +33,10 @@ class PDFFormFiller
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var PdfTk */
-  private $pdfTk;
+  private $pdfTk = null;
 
   public function __construct(ILogger $logger)
   {
-    $this->pdfTk = new PdfTk('-');
     $this->logger = $logger;
   }
 
@@ -52,6 +51,7 @@ class PDFFormFiller
    */
   public function fill($data, array $fields):PDFFormFiller
   {
+    $this->pdfTk = new PdfTk('-');
     $command = $this->pdfTk->getCommand();
 
     if ($data instanceof File) {
@@ -80,7 +80,9 @@ class PDFFormFiller
 
   public function getContent()
   {
-    // $this->pdfTk->execute();
+    if (empty($this->pdfTk)) {
+      return null;
+    }
     return file_get_contents((string)$this->pdfTk->getTmpFile());
   }
 }
