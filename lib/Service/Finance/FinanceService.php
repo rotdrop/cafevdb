@@ -164,22 +164,27 @@ class FinanceService
    */
   public function preFilledDebitMandateForm($accountSequenceOrAccount, $projectOrId, $musicianOrId = null)
   {
-    /** @var Entities\Musician $musician */
-    if (!($accountSequenceOrAccount instanceof Entities\SepaBankAccount)) {
-      $musician = $this->ensureMusician($musicianOrId);
-      /** @var Entities\SepaBankAccount $bankAccount */
-      $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)
-                          ->find([ 'musician' => $musician, 'sequence' => $accountSequenceOrAccount ]);
-    } else {
+    if ($accountSequenceOrAccount instanceof Entities\SepaBankAccount) {
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $accountSequenceOrAccount;
 
+      /** @var Entities\Musician $musician */
       $musician = $bankAccount->getMusician();
       if (!empty($musicianOrId)
           && $musician->getId() != $this->ensureMusician($musicianOrId)->getId()) {
         throw new \InvalidArgumentException(
           $this->l->t('Bankaccount belongs to musician "%s", but specified musician is "%s".',
                       [ $musician->getPublicName(), $this->ensureMusician($musicianOrId)->getPublicName() ]));
+      }
+    } else {
+      /** @var Entities\Musician $musician */
+      $musician = $this->ensureMusician($musicianOrId);
+      if (!empty($accountSequenceOrAccount)) {
+        /** @var Entities\SepaBankAccount $bankAccount */
+        $bankAccount = $this->getDatabaseRepository(Entities\SepaBankAccount::class)
+                            ->find([ 'musician' => $musician, 'sequence' => $accountSequenceOrAccount ]);
+      } else {
+        $bankAccount = null;
       }
     }
 
