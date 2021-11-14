@@ -789,6 +789,8 @@ div#cafevdb-email-preview {
       }
       li .attachment-item {
         /* display:inline-block; */
+        display:inline-flex;
+        align-items:baseline;
         span {
           /* margin-right: 0.5em; */
           display:inline-block;
@@ -800,6 +802,10 @@ div#cafevdb-email-preview {
             font-style:italic;
           }
           &.size {
+          }
+          &.separator {
+            margin-left:0.5em;
+            margin-right:0.5em;
           }
         }
       }
