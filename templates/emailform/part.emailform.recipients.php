@@ -74,7 +74,7 @@ $containerClass = $appName.'-'.'container';
         <span id="basic-recipient-set-wrapper" class="basic-recipients-set <?php p($containerClass); ?> outer left">
           <span class="label vmiddle">
             <label class="basic-recipients-set"
-                   title="<?php echo $toolTips['email-recipients-basic-set']; ?>">
+                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set']; ?>">
               <?php echo $l->t('Basic Recipients Set'); ?>
             </label>
           </span>
@@ -82,7 +82,7 @@ $containerClass = $appName.'-'.'container';
             <input type="checkbox"
                    id="basic-recipients-set-from-project"
                    class="basic-recipients-set from-project tip"
-                   title="<?php echo $toolTips['email-recipients-from-project']; ?>"
+                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>"
                    name="emailRecipients[basicRecipientsSet][fromProject]"
                    value="1"
             <?php echo $basicRecipientsSet['fromProject'] ? 'checked="checked"' : ''; ?>
@@ -90,7 +90,7 @@ $containerClass = $appName.'-'.'container';
             <span class="label right">
               <label for="basic-recipients-set-from-project"
                      class="tip"
-                     title="<?php echo $toolTips['email-recipients-from-project']; ?>">
+                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>">
                 <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
               </label>
             </span>
@@ -99,7 +99,7 @@ $containerClass = $appName.'-'.'container';
             <input type="checkbox"
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
-                   title="<?php echo $toolTips['email-recipients-except-project']; ?>"
+                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>"
                    name="emailRecipients[basicRecipientsSet][exceptProject]"
                    value="1"
             <?php echo $basicRecipientsSet['exceptProject'] ? 'checked="checked"' : ''; ?>
@@ -107,7 +107,7 @@ $containerClass = $appName.'-'.'container';
             <span class="label right">
               <label for="basic-recipients-set-except-project"
                      class="tip"
-                     title="<?php echo $toolTips['email-recipients-except-project']; ?>">
+                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
                 <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
               </label>
             </span>
@@ -121,7 +121,7 @@ $containerClass = $appName.'-'.'container';
     <span class="member-status-filter <?php p($containerClass); ?> left vmiddle">
       <span class="label left">
         <label for="member-status-filter"
-               title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
+               title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
                >
           <?php echo $l->t('Member-Status'); ?>
         </label>
@@ -130,7 +130,7 @@ $containerClass = $appName.'-'.'container';
               multiple="multiple"
               size="<?php echo count($memberStatusFilter); ?>"
               class="member-status-filter"
-              title="<?php echo $toolTips['email-recipients-member-status-filter']; ?>"
+              title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[memberStatusFilter][]">
         <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
@@ -148,17 +148,17 @@ $containerClass = $appName.'-'.'container';
       <select id="recipients-select"
               multiple="multiple"
               size="18"
-              title="<?php echo $toolTips['email-recipients-choices']; ?>"
+              title="<?php echo $toolTips['emailform:recipients:choices']; ?>"
               name="emailRecipients[selectedRecipients][]">
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
     <span class="instruments-filter <?php p($containerClass); ?> right tooltip-top"
-          title="<?php echo $toolTips['email-recipients-instruments-filter-container']; ?>">
+          title="<?php echo $toolTips['emailform:recipients:filter:instruments:container']; ?>">
       <span class="label top">
         <label for="instruments-filter"
                class="tooltip-off"
-               title="<?php echo $toolTips['email-recipients-instruments-filter-label']; ?>">
+               title="<?php echo $toolTips['emailform:recipients:filter:instruments:label']; ?>">
           <?php echo $l->t('Instruments Filter'); ?>
         </label>
       </span>
@@ -167,7 +167,7 @@ $containerClass = $appName.'-'.'container';
                 multiple="multiple"
                 size="18"
                 class="instruments-filter"
-                title="<?php echo $toolTips['email-recipients-instruments-filter']; ?>"
+                title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[instrumentsFilter][]">
           <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
@@ -180,7 +180,7 @@ $containerClass = $appName.'-'.'container';
   </div>
   <div class="<?php p($rowClass); ?>">
     <span class="<?php p($containerClass); ?> left missing-email-addresses tooltip-top"
-          title="<?php echo $toolTips['email-recipients-broken-emails']; ?>">
+          title="<?php echo $toolTips['emailform:recipients:broken-emails']; ?>">
       <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
         <?php echo $missingText; ?>
       </span>
@@ -203,27 +203,27 @@ $containerClass = $appName.'-'.'container';
              id="instruments-filter-apply"
              value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
-             title="<?php echo $toolTips['email-recipients-filter-apply']; ?>"
+             title="<?php echo $toolTips['emailform:recipients:filter:apply']; ?>"
              name="emailRecipients[applyInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-undo"
              value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
-             title="<?php echo $toolTips['email-recipients-filter-undo']; ?>"
+             title="<?php echo $toolTips['emailform:recipients:filter:undo']; ?>"
              disabled
              name="emailRecipients[undoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
-             title="<?php echo $toolTips['email-recipients-filter-redo']; ?>"
+             title="<?php echo $toolTips['emailform:recipients:filter:redo']; ?>"
              disabled
              name="emailRecipients[redoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"
              value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
-             title="<?php echo $toolTips['email-recipients-filter-reset']; ?>"
+             title="<?php echo $toolTips['emailform:recipients:filter:reset']; ?>"
              name="emailRecipients[resetInstrumentsFilter]" />
     </span>
   </div>

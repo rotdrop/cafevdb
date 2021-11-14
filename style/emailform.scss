@@ -33,12 +33,6 @@
   }
 }
 
-/*****************************************************************************
- *
- * General stuff, background etc.
- *
- */
-
 .ui-dialog.emailform {
   overflow:hidden;
   max-height: 90%; /* !important;*/
@@ -52,487 +46,482 @@
     border-bottom-left-radius:0;
     border-bottom:0;
   }
-}
 
-#emailformdialog {
-  div#emailformwrapper {
+  #emailformdialog {
+
     padding:0;
-    background-color:#F2F8FF;
+    border-top-right-radius:0;
+    border-top-left-radius:0;
 
-    .ui-tabs-nav {
-      margin-bottom: 0;
-    }
+    div#emailformwrapper {
 
-    > div {
-      height:auto !important;
-      overflow-y:auto;
-      overflow-x:hidden;
-    }
+      /************************************************************************
+       *
+       * General stuff, background etc.
+       *
+       */
 
-    ul#emailformtabs {
-      padding-top:0;
-      border-top-right-radius:0;
-      border-top-left-radius:0;
-      border-top:0;
+      padding:0;
+      background-color:#F2F8FF;
 
-      li.dropdown-container {
-        &:hover {
+      .ui-tabs-nav {
+        margin-bottom: 0;
+      }
+
+      > div {
+        height:auto !important;
+        overflow-y:auto;
+        overflow-x:hidden;
+      }
+
+      ul#emailformtabs {
+        padding-top:0;
+        border-top-right-radius:0;
+        border-top-left-radius:0;
+        border-top:0;
+
+        li.dropdown-container {
+          &:hover {
+            font-weight:bold;
+            background-color: var(--color-background-hover);
+          }
+
+          &:active {
+            background-color: var(--color-primary-light);
+          }
+
+          nav {
+            top:30px;
+          }
+        }
+      } /* ul#emailformtabs */
+
+      form#cafevdb-email-form {
+
+        fieldset.page {
+          max-width:65em;
+          /* padding-right:1.2em; */
+        }
+
+        /****************************************************************************
+         *
+         * recipients filters
+         *
+         */
+
+        #emailformrecipients {
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-bottom: 0px !important;
+        }
+
+        /****************************************************************************
+         *
+         * status messages
+         *
+         */
+
+        #emailformdebug {
+          height:auto;
+          width:65em;
+          max-width:65em;
+          overflow:auto;
+        }
+
+        /****************************************************************************
+         *
+         * email composition
+         *
+         */
+
+        #emailformcomposer  {
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-bottom: 0px !important;
+
+          fieldset.email-composition.page {
+            margin-bottom:1em;
+          }
+        }
+
+        /****************************************************************************/
+
+        td.caption {
           font-weight:bold;
-          background-color: var(--color-background-hover);
+          vertical-align:top;
+          padding-right:0.5em;
+          min-width:10em;
         }
 
-        &:active {
-          background-color: var(--color-primary-light);
+        tr.all-attachments {
+          .flex-container {
+            margin-bottom:3px;
+          }
+          button {
+            background-color:#C6DEFF;
+            vertical-align:middle;
+            height:28px;
+            width:34px;
+            padding:5px;
+            border-style:outset;
+            margin-right: 0.5em;
+            &.upload {
+              img {
+                width:24px;
+              }
+            }
+            &.cloud {
+              padding:5px 0;
+              img {
+                width:26px;
+              }
+            }
+            &.events {
+              padding:0px;
+              img {
+                vertical-align:top;
+                height:24px;
+              }
+            }
+            &.personal {
+              img {
+                width:24px;
+              }
+            }
+            &.visibility-toggle {
+              padding: 5px 0;
+              img {
+                width:24px;
+              }
+            }
+          }
+          .separator {
+            display: inline-block;
+            margin: 8px 1em 8px 0.5em;
+            border-left: 1px solid black;
+          }
         }
 
-        nav {
-          top:30px;
+        /* attachments selectors and controls */
+        tr.attachments {
+          &.no-attachments {
+            display:none;
+          }
+          &.empty-selection {
+            display:none;
+            &.show-selectable {
+              display:table-row;
+            }
+          }
+          td.content {
+            .chosen-container {
+              min-width:85%;
+              max-width:85%;
+              float:left;
+              /* max-height:40px; */
+
+              /* &.chosen-with-drop .chosen-drop {
+                position:relative;
+                top:100%;
+                margin-bottom:1em;
+              } */
+
+              .chosen-drop {
+                position:absolute;
+                top:-99999px;
+              }
+            }
+            .attachment-controls {
+              float:right;
+              display:inline-block;
+              input[type=submit], input[type=button] {
+                float:left;
+                background-repeat:no-repeat;
+                background-size: 24px 24px;
+                background-position: center;
+                width:27px;
+                height:27px;
+                font-size:0pt;
+                vertical-align:middle;
+                &.visibility-toggle {
+                  background-image:url('../../../core/img/actions/toggle.svg');
+                }
+                &.delete-all-attachments {
+                  background-image:url('../img/cafevdb-delete.svg');
+                }
+              }
+            }
+          }
         }
-      }
-    }
+
+        /**************************/
+
+        tr.submit {
+          td {
+            padding-top:0.5em;
+            margin:0;
+
+            .container {
+              display:inline-block;
+              &.send, .preview {
+                float:left;
+              }
+              &.cancel {
+                float:right;
+              }
+            }
+          }
+        }
+
+        tr, tr:hover, tr:active {
+          background-color:inherit;
+        }
+
+        td.body, td.caption {
+          vertical-align:top;
+        }
+
+        tr.stored-messages td {
+          border-bottom:1px solid #808080;
+          padding-bottom:0.5em;
+        }
+
+        td.email-address.input input.address-book-emails,
+        td.stored-messages-storage input.submit {
+          background-repeat:no-repeat;
+          background-size: 24px 24px;
+          background-position: center;
+          width:27px;
+          height:27px;
+          font-size:0pt;
+          vertical-align:middle;
+        }
+
+        td.stored-messages-storage {
+          text-align:right;
+
+          input {
+            padding-top:5px;
+          }
+
+          span.checkbox-button.#{$cssPrefix}container {
+            position:relative;
+            vertical-align:middle;
+
+            span.button.save-as-template {
+              background-image: url('../img/template.svg');
+            }
+
+            span.button.draft-auto-save {
+              background-image: url('../img/autosave.svg');
+            }
+
+            span.button {
+              background-repeat:no-repeat;
+              background-position:center;
+              background-size:22px 22px;
+              display:inline-block;
+              width:27px;
+            }
+
+            input[type=checkbox]:checked + label span.button {
+              background-color:red !important;
+              box-shadow:2px 2px 2px #080808 inset;
+            }
+
+            input[type="checkbox"] {
+              position: absolute;
+              left:-10000px;
+              top: auto;
+              width: 1px;
+              height: 1px;
+              overflow: hidden;
+            }
+          }
+
+          input.save-message {
+            background-image:url('../img/save.svg');
+          }
+
+          input.delete-message {
+            background-image:url('../img/cafevdb-delete.svg');
+          }
+        } /* td.stored-messages-storage */
+
+        td.email-address.input input.address-book-emails {
+          background-image:url('../img/contacts-dark.svg');
+          /*  background-color:#000;*/
+          float:right;
+          &.loading {
+            background-image:url('../../../core/img/loading.gif');
+          }
+        }
+
+        .stored-messages-choose .chosen-container {
+          width:20em !important;
+        }
+
+        .chosen-container .chosen-default {
+          color:#000;
+          font-weight:bold;
+        }
+
+        #emailCurrentTemplate {
+          width:16em;
+          margin-left:1em;
+          vertical-align:middle;
+        }
+
+        #emailCurrentTemplate:disabled {
+          opacity:1;
+        }
+
+        td.email-recipients {
+          padding-top:1em;
+        }
+
+        td.email-address.input {
+          width:100%;
+          /*padding: 0 1em 0 0;*/
+        }
+        td.email-address.input input {
+          width:90%;
+          float:left;
+        }
+
+        td.email-address.display {
+          width:100%;
+          overflow:hidden;
+        }
+
+        td.email-address.display span {
+          display:inline-block;
+          max-width:45em;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        td.subject.input span.subject.tag {
+          font-family:monospace;
+          font-size:100%;
+          width:auto;
+          max-width:30%;
+          text-align:right;
+          font-weight:bold;
+          display:inline-block;
+          float:left;
+          line-height:2.5em;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        td.subject.input span.subject.input {
+          width:67%;
+          /* padding: 0 1em 0 0; */
+          display:inline-block;
+          line-height:2.5em;
+          float:right;
+        }
+
+        td.subject.input input {
+          width:100%;
+        }
+
+        td.messagetext {
+          padding: 0.5em 0;
+        }
+
+        td input.sender-name {
+          width:100%;
+        }
+
+        /*****************************************************************************
+         *
+         * email recipients selection
+         *
+         */
+        div.#{$cssPrefix}row {
+          width:100%;
+        }
+
+        div.#{$cssPrefix}row:after {
+          content:" ";
+          display:block;
+          height:0;
+          clear: both;
+        }
+
+        span.#{$cssPrefix}container {
+          display:inline-block;
+        }
+
+        .#{$cssPrefix}container.left {
+          float:left;
+        }
+
+        .#{$cssPrefix}container.right {
+          float:right;
+          text-align:right;
+        }
+
+        .label {
+          font-weight:bold;
+        }
+
+        .label.top {
+          display:block;
+        }
+
+        .label.left {
+          display:inline-block;
+          float:left;
+          padding-right:0.5em;
+        }
+
+        .label.right {
+          display:inline-block;
+          float:right;
+          padding-left:0.5em;
+        }
+
+        .spacer {
+          width:100%;
+          height:3px;
+          margin: 0.5em 0 1em 0;
+          text-align:center;
+          line-height:3px;
+
+          &.below {
+            td {
+              height:0px;
+              padding-bottom:1em;
+            }
+            &.rule td {
+              height:1px;
+              border-bottom:1px solid #808080;
+              &:nth-of-type(2) {
+                min-width:10em;
+              }
+            }
+          }
+        } /* .spacer */
+
+        .vmiddle {
+          vertical-align:middle;
+        }
+
+        .vmiddle * {
+          vertical-align:middle;
+        }
+
+      } /* form#cafevdb-email-form */
+
+    } /* div#emailformwrapper */
+
   }
-
-  padding:0;
-  border-top-right-radius:0;
-  border-top-left-radius:0;
-
-  fieldset.page {
-    min-width:65em;
-  }
-
-  tr.spacer.below td {
-    height:0px;
-    padding-bottom:1em;
-  }
-
-  tr.spacer.below.rule td {
-    height:1px;
-    border-bottom:1px solid #808080;
-  }
-
-  /****************************************************************************
-   *
-   * recipients filters
-   *
-   */
-
-  #emailformrecipients {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: 0px !important;
-  }
-
-  /****************************************************************************
-   *
-   * status messages
-   *
-   */
-
-  #emailformdebug {
-    height:auto;
-    width:65em;
-    max-width:65em;
-    overflow:auto;
-  }
-
-  /****************************************************************************
-   *
-   * email composition
-   *
-   */
-
-  #emailformcomposer  {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: 0px !important;
-  }
-
 }
 
-fieldset.email-composition.page {
-  margin-bottom:1em;
-}
-
-form#cafevdb-email-form {
-
-  td.caption {
-    font-weight:bold;
-    vertical-align:top;
-  }
-
-  fieldset.page {
-    max-width:65em;
-    padding-right:1.2em;
-  }
-  tr.attachments td {
-    vertical-align:middle;
-  }
-  tr.attachments button {
-    background-color:#C6DEFF;
-    vertical-align:middle;
-    height:28px;
-    width:34px;
-    padding:5px;
-    border-style:outset;
-  }
-  tr.attachments button.cloud {
-    padding:5px 0px 5px 0px;
-  }
-  tr.attachments button.cloud img {
-    width:26px;
-  }
-  tr.attachments button.events {
-    padding:0px;
-  }
-  tr.attachments button.events img  {
-    vertical-align:top;
-    height:26px;
-  }
-  tr.eventattachments img {
-    height:10px;
-    vertical-align:top;
-  }
-  tr.eventattachments button {
-    background-color:#C6DEFF;
-    vertical-align:middle;
-    height:20px;
-    padding:5px;
-    border-style:outset;
-    vertical-align:middle;
-  }
-
-  /* File attachments selector and friends */
-
-  td.file-attachments {
-    .chosen-container {
-      min-width:90%;
-      max-width:90%;
-      float:left;
-    }
-
-    .chosen-container.chosen-with-drop .chosen-drop {
-      position:relative;
-      top:100%;
-      margin-bottom:1em;
-    }
-
-    .chosen-container .chosen-drop {
-      position:absolute;
-      top:-99999px;
-    }
-
-    input.delete-all-file-attachments {
-      background-image:url('../img/cafevdb-delete.svg');
-      float:right;
-      background-repeat:no-repeat;
-      background-size: 24px 24px;
-      background-position: center;
-      width:27px;
-      height:27px;
-      font-size:0pt;
-      vertical-align:middle;
-    }
-  } /* td.file-attachment */
-
-  /* Event attachments selector and friends */
-
-  td.event-attachments {
-    .chosen-container {
-      min-width:90%;
-      max-width:90%;
-      float:left;
-    }
-
-    .chosen-container.chosen-with-drop .chosen-drop {
-      position:relative;
-      top:100%;
-      margin-bottom:1em;
-    }
-
-    .chosen-container .chosen-drop {
-      position:absolute;
-      top:-99999px;
-    }
-
-    input.delete-all-event-attachments {
-      background-image:url('../img/cafevdb-delete.svg');
-      float:right;
-      background-repeat:no-repeat;
-      background-size: 24px 24px;
-      background-position: center;
-      width:27px;
-      height:27px;
-      font-size:0pt;
-      vertical-align:middle;
-    }
-  } /* td.event-attachments */
-
-  /**************************/
-
-  tr.submit td {
-    padding-top:0.5em;
-    margin:0;
-  }
-  tr.submit td.send {
-    width:auto;
-    text-align:full;
-  }
-  tr.submit td.cancel {
-    width:auto;
-    text-align:right;
-  }
-  td.cancel input {
-    margin-right:0;
-  }
-
-  tr, tr:hover, tr:active {
-    background-color:inherit;
-  }
-
-  td.body, td.caption {
-    vertical-align:top;
-  }
-  tr.submit td.addresses input {
-    width:auto;
-  }
-  tr.submit td.addresses {
-    width:auto;
-    text-align:full;
-    padding:0;
-    margin:0;
-  }
-
-  tr.stored-messages td {
-    border-bottom:1px solid #808080;
-    padding-bottom:0.5em;
-  }
-
-  td.email-address.input input.address-book-emails,
-  td.stored-messages-storage input.submit {
-    background-repeat:no-repeat;
-    background-size: 24px 24px;
-    background-position: center;
-    width:27px;
-    height:27px;
-    font-size:0pt;
-    vertical-align:middle;
-  }
-
-  td.stored-messages-storage {
-    text-align:right;
-
-    input {
-      padding-top:5px;
-    }
-
-    span.checkbox-button.#{$cssPrefix}container {
-      position:relative;
-      vertical-align:middle;
-
-      span.button.save-as-template {
-        background-image: url('../img/template.svg');
-      }
-
-      span.button.draft-auto-save {
-        background-image: url('../img/autosave.svg');
-      }
-
-      span.button {
-        background-repeat:no-repeat;
-        background-position:center;
-        background-size:22px 22px;
-        display:inline-block;
-        width:27px;
-      }
-
-      input[type=checkbox]:checked + label span.button {
-        background-color:red !important;
-        box-shadow:2px 2px 2px #080808 inset;
-      }
-
-      input[type="checkbox"] {
-        position: absolute;
-        left:-10000px;
-        top: auto;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-    }
-
-    input.save-message {
-      background-image:url('../img/save.svg');
-    }
-
-    input.delete-message {
-      background-image:url('../img/cafevdb-delete.svg');
-    }
-  } /* td.stored-messages-storage */
-
-  td.email-address.input input.address-book-emails {
-    background-image:url('../img/contacts-dark.svg');
-    /*  background-color:#000;*/
-    float:right;
-    &.loading {
-      background-image:url('../../../core/img/loading.gif');
-    }
-  }
-
-  .stored-messages-choose .chosen-container {
-    width:20em !important;
-  }
-
-  .chosen-container .chosen-default {
-    color:#000;
-    font-weight:bold;
-  }
-
-  #emailCurrentTemplate {
-    width:16em;
-    margin-left:1em;
-    vertical-align:middle;
-  }
-
-  #emailCurrentTemplate:disabled {
-    opacity:1;
-  }
-
-  td.email-recipients {
-    padding-top:1em;
-  }
-
-  td.email-address.input {
-    width:100%;
-    /*padding: 0 1em 0 0;*/
-  }
-  td.email-address.input input {
-    width:90%;
-    float:left;
-  }
-
-  td.email-address.display {
-    width:100%;
-    overflow:hidden;
-}
-
-  td.email-address.display span {
-    display:inline-block;
-    max-width:45em;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  td.subject.input span.subject.tag {
-    font-family:monospace;
-    font-size:100%;
-    width:auto;
-    max-width:30%;
-    text-align:right;
-    font-weight:bold;
-    display:inline-block;
-    float:left;
-    line-height:2.5em;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  td.subject.input span.subject.input {
-    width:67%;
-    /* padding: 0 1em 0 0; */
-    display:inline-block;
-    line-height:2.5em;
-    float:right;
-  }
-
-  td.subject.input input {
-    width:100%;
-  }
-
-  td.messagetext {
-    padding: 0.5em 0;
-  }
-
-  td input.sender-name {
-    width:100%;
-  }
-
-  /*****************************************************************************
-   *
-   * email recipients selection
-   *
-   */
-  div.#{$cssPrefix}row {
-    width:100%;
-  }
-
-  div.#{$cssPrefix}row:after {
-    content:" ";
-    display:block;
-    height:0;
-    clear: both;
-  }
-
-  span.#{$cssPrefix}container {
-    display:inline-block;
-  }
-
-  .#{$cssPrefix}container.left {
-    float:left;
-  }
-
-  .#{$cssPrefix}container.right {
-    float:right;
-    text-align:right;
-  }
-
-  .label {
-    font-weight:bold;
-  }
-
-  .label.top {
-    display:block;
-  }
-
-  .label.left {
-    display:inline-block;
-    float:left;
-    padding-right:0.5em;
-  }
-
-  .label.right {
-    display:inline-block;
-    float:right;
-    padding-left:0.5em;
-  }
-
-  .spacer {
-    width:100%;
-    height:3px;
-    margin: 0.5em 0 1em 0;
-    text-align:center;
-    line-height:3px;
-  }
-
-  .spacer .ruler {
-    display:inline-block;
-    width:100%;
-    background-color:#000;
-    height:1px;
-    vertical-align:middle;
-    padding:0;
-  }
-
-  .vmiddle {
-    vertical-align:middle;
-  }
-
-  .vmiddle * {
-    vertical-align:middle;
-  }
-
-} /* form#cafevdb-email-form */
-
-  /* special elements */
+/* special elements */
 
 div#sendingprogresswrapper {
   display:none;
@@ -758,7 +747,7 @@ div#cafevdb-email-preview {
     margin-top:0.5em;
   }
 
-  .email-body {
+  .reset-css {
 
     * {
       all:revert;
@@ -768,6 +757,57 @@ div#cafevdb-email-preview {
     @import '@csstools/normalize.css/normalize';
     /*@import 'normalize.css/normalize';*/
 
+    .flex-container {
+      display:flex;
+    }
+
+    .email-body {
+    }
+
+    &.email-attachments {
+      &.empty {
+        display:none;
+      }
+      h4.centered-in-rule {
+        font-weight:normal;
+        display: flex;
+        flex-direction: row;
+        &:before, &:after{
+          content: "";
+          flex: 1 1;
+          border-bottom: 1px solid;
+          margin: auto;
+        }
+        &:before {
+          margin-right: 1em;
+          margin-left:0.5em;
+        }
+        &:after {
+          margin-left: 1em;
+          margin-right:0.5em;
+        }
+      }
+      li .attachment-item {
+        /* display:inline-block; */
+        span {
+          /* margin-right: 0.5em; */
+          display:inline-block;
+
+          &.filename {
+            font-family:monospace;
+          }
+          &.mime-type {
+            font-style:italic;
+          }
+          &.size {
+          }
+        }
+      }
+    }
+  }
+
+  hr.email-preview-separator  {
+    border:1px solid black;
   }
 }
 

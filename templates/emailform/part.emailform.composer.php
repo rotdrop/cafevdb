@@ -28,6 +28,15 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 $containerClass = $appName.'-'.'container';
 
+$selectedFileAttachments = 0;
+foreach ($fileAttachmentOptions as $option) {
+  $selectedFileAttachments += (int)($option['flags'] &  PageNavigation::SELECTED);
+}
+$selectedEventAttachments = 0;
+foreach ($eventAttachmentOptions as $option) {
+  $selectedEventAttachments += (int)($option['flags'] &  PageNavigation::SELECTED);
+}
+
 ?>
 
 <fieldset id="cafevdb-email-composition-fieldset" class="email-composition page">
@@ -37,12 +46,12 @@ $containerClass = $appName.'-'.'container';
     <tr class="stored-messages">
      <!-- <td class="caption stored-messages"><?php echo $l->t("Drafts"); ?>, <?php echo $l->t('Templates')?></td> -->
       <td colspan="2" class="stored-messages-choose stored-messages">
-        <label notitle="<?php echo $toolTips['select-stored-messages']; ?>">
+        <label notitle="<?php echo $toolTips['emailform:storage:messages:select']; ?>">
           <select size="<?php echo
                               count($storedEmails['drafts']) +
                               count($storedEmails['templates']); ?>"
                   class="stored-messages-selector"
-                  title="<?php echo $toolTips['select-stored-messages']; ?>"
+                  title="<?php echo $toolTips['emailform:storage:messages:select']; ?>"
                   data-placeholder="<?php echo $l->t("Select draft or template"); ?>"
                   name="emailComposer[storedMessagesSelector]"
                   id="cafevdb-stored-messages-selector">
@@ -54,7 +63,7 @@ $containerClass = $appName.'-'.'container';
         <input size="20"
                placeholder="<?php echo $l->t('New Template Name'); ?>"
                value="<?php p($emailTemplateName); ?>"
-               title="<?php echo $toolTips['new-email-template']; ?>"
+               title="<?php echo $toolTips['emailform:storage:messages:new-template']; ?>"
                name="emailComposer[emailTemplateName]"
                type="text"
                class="tooltip-bottom"
@@ -67,11 +76,11 @@ $containerClass = $appName.'-'.'container';
                  name="emailComposer[saveAsTemplate]"/>
           <label for="check-save-as-template"
                  class="tip save-as-template"
-                 title="<?php echo $toolTips['save-as-template']; ?>">
+                 title="<?php echo $toolTips['emailform:storage:messages:save-as-template']; ?>">
             <span class="save-as-template button"></span>
           </label>
         </span>
-        <input title="<?php echo $toolTips['save-email-message']; ?>"
+        <input title="<?php echo $toolTips['emailform:storage:messages:save-message']; ?>"
                type="submit"
                class="submit save-message tooltip-wide tooltip-bottom"
                name="emailComposer[saveMessage]"
@@ -84,12 +93,12 @@ $containerClass = $appName.'-'.'container';
                  <?php !empty($emailDraftAutoSave) && p('checked'); ?>
                  name="emailComposer[draftAutoSave]"/>
           <label for="check-draft-auto-save"
-                 class="draft-auto-save"
-                 title="<?php p($toolTips['draft-auto-save']); ?>">
+                 class="draft-auto-save tooltip-auto"
+                 title="<?php p($toolTips['emailform:storage:messages:draft-auto-save']); ?>">
             <span class="draft-auto-save button"></span>
           </label>
         </span>
-        <input title="<?php echo $toolTips['delete-saved-message']; ?>"
+        <input title="<?php echo $toolTips['emailform:storage:messages:delete-saved-message']; ?>"
                type="submit"
                class="submit delete-message tooltip-bottom"
                name="emailComposer[deleteMessage]"
@@ -100,9 +109,9 @@ $containerClass = $appName.'-'.'container';
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo $l->t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
-        <span title="<?php echo $toolTips['email-recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
+        <span title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
               data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
-              data-title-intro="<?php echo $toolTips['email-recipients-listing']; ?>"
+              data-title-intro="<?php echo $toolTips['emailform:composer:recipients:listing']; ?>"
               class="email-recipients tooltip-bottom tooltip-mostwide">
           <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
         </span>
@@ -112,13 +121,13 @@ $containerClass = $appName.'-'.'container';
       <td class="email-address caption"><?php echo $l->t('Carbon Copy'); ?></td>
       <td class="email-address input" colspan="2">
         <input size="40"
-               title="<?php echo $toolTips['email-recipients-freeform-CC']; ?>"
+               title="<?php echo $toolTips['emailform:composer:recipients:freeform-CC']; ?>"
                class="tooltip-top"
                value="<?php echo htmlspecialchars($_['CC']); ?>"
                name="emailComposer[CC]"
                type="text"
                id="carbon-copy" />
-        <input title="<?php echo $toolTips['address-book-emails']; ?>"
+        <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
                type="submit"
                class="submit address-book-emails CC tooltip-bottom"
                data-for="#carbon-copy"
@@ -130,13 +139,13 @@ $containerClass = $appName.'-'.'container';
       <td class="email-address caption"><?php echo $l->t('Blind CC'); ?></td>
       <td colspan="2" class="email-address input">
         <input size="40"
-               title="<?php echo $toolTips['email-recipients-freeform-BCC']; ?>"
+               title="<?php echo $toolTips['emailform:composer:recipients:freeform-BCC']; ?>"
                class="tooltip-top"
                value="<?php echo htmlspecialchars($_['BCC']); ?>"
                name="emailComposer[BCC]"
                type="text"
                id="blind-carbon-copy"/>
-        <input title="<?php echo $toolTips['address-book-emails']; ?>"
+        <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
                type="submit"
                class="submit address-book-emails BCC tooltip-bottom"
                data-for="#blind-carbon-copy"
@@ -177,12 +186,13 @@ $containerClass = $appName.'-'.'container';
       <td class="caption"><?php echo $l->t('Sender-Email'); ?></td>
       <td colspan="2"><?php echo $l->t('Tied to "%s"', $catchAllEmail); ?></td>
     </tr>
-    <tr class="attachments">
+    <tr class="all-attachments">
       <td class="attachments caption"><?php echo $l->t('Add Attachment'); ?></td>
       <td class="attachments" colspan="2">
+        <div class="flex-container">
         <button type="button"
                 class="attachment upload"
-                title="<?php echo $toolTips['attachments:upload']; ?>"
+                title="<?php echo $toolTips['emailform:composer:attachments:upload']; ?>"
                 value="<?php echo $l->t('Upload new File'); ?>">
           <img class="svg"
                src="<?php echo $urlGenerator->imagePath('core', 'actions/upload.svg'); ?>"
@@ -190,7 +200,7 @@ $containerClass = $appName.'-'.'container';
         </button>
         <button type="button"
                 class="attachment cloud"
-                title="<?php echo $toolTips['attachments:cloud']; ?>"
+                title="<?php echo $toolTips['emailform:composer:attachments:cloud']; ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
                src="<?php echo $urlGenerator->imagePath('cafevdb', 'cloud.svg'); ?>"
@@ -198,82 +208,103 @@ $containerClass = $appName.'-'.'container';
         </button>
         <button type="button"
                 class="attachment personal"
-                title="<?php echo $toolTips['attachments:personal']; ?>"
+                title="<?php echo $toolTips['emailform:composer:attachments:personal']; ?>"
                 value="<?php echo $l->t('Select from participant file attachments'); ?>">
           <img class="svg small"
                src="<?php echo $urlGenerator->imagePath('core', 'actions/projects.svg'); ?>"
                alt="<?php echo $l->t('Select from participant file attachments'); ?>"/>
         </button>
         <button type="button"
-                <?php echo ($projectId <= 0 ? 'style="display:none;"' : ''); ?>
-                class="attachment events"
-                title="<?php echo $toolTips['attachments:events']; ?>"
+                class="attachment events<?php ($projectId <= 0) && p(' hidden'); ?>"
+                title="<?php echo $toolTips['emailform:composer:attachments:events']; ?>"
                 value="<?php echo $l->t('Project Events'); ?>">
           <img class="svg events"
                src="<?php echo $urlGenerator->imagePath('cafevdb', 'calendar-dark.svg'); ?>"
-               alt="<?php echo $l->t('Select Events'); ?>"
+               alt="<?php echo $l->t('Select Events'); ?>"/>
         </button>
+        <div class="separator"></div>
+        <button type="button"
+                class="attachment visibility-toggle tooltip-auto"
+                title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility']); ?>"
+                value="<?php echo $l->t('Toggle Visibily'); ?>">
+          <img class="svg visibility"
+               src="<?php echo $urlGenerator->imagePath('core', 'actions/toggle.svg'); ?>"
+               alt="<?php echo $l->t('toggle'); ?>"/>
+        </button>
+        </div>
       </td>
     </tr>
-    <tr class="event-attachments"
-      <?php echo empty($eventAttachmentOptions) ? 'style="display:none;"' : ''; ?>>
+    <tr class="attachments event-attachments<?php empty($eventAttachmentOptions) && p(' no-attachments'); ?><?php $selectedEventAttachments == 0 && p(' empty-selection'); ?>">
       <td class="event-attachments caption">
         <?php echo $l->t('Attached Events'); ?>
       </td>
-      <td class="event-attachments events" colspan="2">
+      <td class="event-attachments events content chosen-dropup" colspan="2">
         <select multiple="multiple"
-                title="<?php echo $toolTips['event-attachments-select']; ?>"
+                title="<?php echo $toolTips['emailform:composer:attachments:event-select']; ?>"
                 name="emailComposer[attachedEvents][]"
                 class="event-attachments select"
                 id="event-attachments-selector">
           <?php echo PageNavigation::selectOptions($eventAttachmentOptions); ?>
         </select>
-        <input title="<?php echo $toolTips['delete-all-event-attachments']; ?>"
-               type="submit"
-               class="submit delete-all-event-attachments tooltip-top"
-               name="emailComposer[deleteAllAttachments]"
-               value="<?php echo $l->t('Delete Event Attachments'); ?>"/>
+        <div class="attachment-controls">
+          <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:event']); ?>"
+                 type="button"
+                 class="visibility-toggle tooltip-auto"
+                 name="emailComposer[attachmentVisibilityToggle]"
+                 value="<?php p($l->t('Toggle Visibility')); ?>"/>
+          <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-events']; ?>"
+                 type="submit"
+                 class="submit delete-all-attachments delete-all-event-attachments tooltip-top"
+                 name="emailComposer[deleteAllAttachments]"
+                 value="<?php echo $l->t('Delete Event Attachments'); ?>"/>
+        </div>
       </td>
     </tr>
-    <tr class="file-attachments"
-      <?php echo count($fileAttachmentOptions) == 0 ? 'style="display:none;"' : ''; ?>>
+    <tr class="attachments file-attachments<?php (count($fileAttachmentOptions) == 0) && p(' no-attachments'); ?><?php $selectedFileAttachments == 0 && p(' empty-selection'); ?>">
       <td class="file-attachments caption">
         <?php echo $l->t('Attached Files'); ?>
       </td>
-      <td class="file-attachments" colspan="2">
+      <td class="file-attachments files content chosen-dropup" colspan="2">
         <select multiple="multiple"
-                title="<?php echo $toolTips['file-attachments-select']; ?>"
+                title="<?php echo $toolTips['emailform:composer::attachments:file-select']; ?>"
                 name="emailComposer[attachedFiles][]"
-                class="file-attachments select"
+                class="file-attachments select "
                 id="file-attachments-selector">
           <?php echo PageNavigation::selectOptions($fileAttachmentOptions); ?>
         </select>
-        <input title="<?php echo $toolTips['delete-all-file-attachments']; ?>"
-               type="submit"
-               class="submit delete-all-file-attachments tooltip-top"
-               name="emailComposer[deleteAllAttachments]"
-               value="<?php echo $l->t('Delete All Attachments'); ?>"/>
+        <div class="attachment-controls">
+          <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:file']); ?>"
+                 type="button"
+                 class="visibility-toggle tooltip-auto"
+                 name="emailComposer[attachmentVisibilityToggle]"
+                 value="<?php p($l->t('Toggle Visibility')); ?>"/>
+          <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-files']; ?>"
+                 type="submit"
+                 class="submit delete-all-attachments delete-all-file-attachments tooltip-top"
+                 name="emailComposer[deleteAllAttachments]"
+                 value="<?php echo $l->t('Delete All Attachments'); ?>"/>
+        </div>
       </td>
     </tr>
-    <tr class="spacer rule below"><td colspan="3"></td></tr>
+    <tr class="spacer rule below"><td class="caption"></td><td></td><td></td></tr>
     <tr class="submit">
-      <td class="send">
-        <input title="<?php echo $toolTips['send-mass-email']; ?>"
-               class="email-composer submit send"
-               type="submit" name="emailComposer[send]"
-               value="<?php echo $l->t('Send Em@il'); ?>"/>
-      </td>
-      <td>
-        <input title="<?php echo $toolTips['email-message-export']; ?>"
-               class="email-composer submit message-export"
-               type="submit" name="emailComposer[messageExport]"
-               value="<?php echo $l->t('Message Preview'); ?>"/>
-      </td>
-      <td class="cancel">
-        <input title="<?php echo $toolTips['cancel-email-composition']; ?>"
-               class="email-composer submit cancel tooltip-top"
-               type="submit" name="emailComposer[cancel]"
-               value="<?php echo $l->t('Cancel'); ?>" />
+      <td class="send cancel preview" colspan="3">
+        <div class="container send preview">
+          <input title="<?php echo $toolTips['emailform:composer:send']; ?>"
+                 class="email-composer submit send"
+                 type="submit" name="emailComposer[send]"
+                 value="<?php echo $l->t('Send Em@il'); ?>"/>
+          <input title="<?php echo $toolTips['emailform:composer:export']; ?>"
+                 class="email-composer submit message-export"
+                 type="submit" name="emailComposer[messageExport]"
+                 value="<?php echo $l->t('Message Preview'); ?>"/>
+        </div>
+        <div class="container cancel">
+          <input title="<?php echo $toolTips['emailform:composer:cancel']; ?>"
+                 class="email-composer submit cancel tooltip-top"
+                 type="submit" name="emailComposer[cancel]"
+                 value="<?php echo $l->t('Cancel'); ?>" />
+        </div>
       </td>
     </tr>
   </table>

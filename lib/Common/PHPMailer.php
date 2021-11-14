@@ -32,6 +32,27 @@ use \PHPMailer\PHPMailer\PHPMailer as PHPMailerUpstream;
  */
 class PHPMailer extends PHPMailerUpstream
 {
+  /**
+   * @var int Index of data-field into the items returned by
+   * self::getAttachments().
+   */
+  public const ATTACHMENT_INDEX_DATA = 0;
+  /**
+   * @var int Index of name field into the items returned by
+   * self::getAttachments().
+   */
+  public const ATTACHMENT_INDEX_NAME = 2;
+  /**
+   * @var int Index of encoding field into the items returned by
+   * self::getAttachments().
+   */
+  public const ATTACHMENT_INDEX_ENCODING = 3;
+  /**
+   * @var int Index of mime-type field into the items returned by
+   * self::getAttachments().
+   */
+  public const ATTACHMENT_INDEX_MIME_TYPE = 4;
+
   protected const DEBUG_PREFIX = 'CLIENT -> SERVER: ';
   protected const DEBUG_DATA = 'DATA';
   protected const DEBUG_QUIT = 'QUIT';

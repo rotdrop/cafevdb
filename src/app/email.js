@@ -115,11 +115,11 @@ function emailTabResize(dialogWidget, panelHolder) {
   if (panelHeight > dialogHeight - titleOffset) {
     panelHolder.css('max-height', (dialogHeight - titleOffset - panelOffset) + 'px');
   }
-  if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {
-    panelHolder.css('padding-right', '2.4em');
-  } else {
-    panelHolder.css('padding-right', '');
-  }
+  // if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {
+  //   panelHolder.css('padding-right', '2.4em');
+  // } else {
+  //   panelHolder.css('padding-right', '');
+  // }
 }
 
 /**
@@ -134,40 +134,36 @@ function emailTabResize(dialogWidget, panelHolder) {
  */
 const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
 
-  if (dialogHolder.tabs('option', 'active') !== 0
-      || fieldset.find('#member_status_filter_chosen').length > 0) {
-    // alert('active: ' + dialogHolder.tabs('option', 'active') +
-    //       ' done: ' + fieldset.find('#member_status_filter_chosen').length);
+  if (dialogHolder.tabs('option', 'active') !== 0 // visible?
+      || fieldset.find('#member_status_filter_chosen').length > 0 // already initialized
+  ) {
     return;
   }
 
   fieldset.find('#member-status-filter').chosen();
-  fieldset.find('#member-status-filter').chosen();
   fieldset.find('#instruments-filter option[value="*"]').remove();
   fieldset.find('#instruments-filter option[value=""]').remove();
   fieldset.find('#instruments-filter').chosen();
-  fieldset.find('#recipients-select').bootstrapDualListbox(
-    {
-      // moveOnSelect: false,
-      // preserveSelectionOnMove : 'all',
-      moveAllLabel: t(appName, 'Move all'),
-      moveSelectedLabel: t(appName, 'Move selected'),
-      removeSelectedLabel: t(appName, 'Remove selected'),
-      removeAllLabel: t(appName, 'Remove all'),
-      nonSelectedListLabel: t(appName, 'Remaining Recipients'),
-      selectedListLabel: t(appName, 'Selected Recipients'),
-      infoText: '&nbsp;', // t(appName, 'Showing all {0}'),
-      infoTextFiltered: '<span class="badge badge-warning">'
-        + t(appName, 'Filtered')
-        + '</span> {0} '
-        + t(appName, 'from')
-        + ' {1}',
-      infoTextEmpty: t(appName, 'Empty list'),
-      filterPlaceHolder: t(appName, 'Filter'),
-      filterTextClear: t(appName, 'show all'),
-      selectorMinimalHeight: 200,
-    }
-  );
+  fieldset.find('#recipients-select').bootstrapDualListbox({
+    // moveOnSelect: false,
+    // preserveSelectionOnMove : 'all',
+    moveAllLabel: t(appName, 'Move all'),
+    moveSelectedLabel: t(appName, 'Move selected'),
+    removeSelectedLabel: t(appName, 'Remove selected'),
+    removeAllLabel: t(appName, 'Remove all'),
+    nonSelectedListLabel: t(appName, 'Remaining Recipients'),
+    selectedListLabel: t(appName, 'Selected Recipients'),
+    infoText: '&nbsp;', // t(appName, 'Showing all {0}'),
+    infoTextFiltered: '<span class="badge badge-warning">'
+      + t(appName, 'Filtered')
+      + '</span> {0} '
+      + t(appName, 'from')
+      + ' {1}',
+    infoTextEmpty: t(appName, 'Empty list'),
+    filterPlaceHolder: t(appName, 'Filter'),
+    filterTextClear: t(appName, 'show all'),
+    selectorMinimalHeight: 200,
+  });
   const dualSelect = fieldset.find('div.bootstrap-duallistbox-container select');
   dualSelect.attr(
     'title',
@@ -370,7 +366,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
  * Add handlers to the control elements, and call the AJAX sciplets
  * for validation to update the message composition tab accordingly.
  *
- * @param {jQuery} fieldset The field-set enclosing the recipients selection part
+ * @param {jQuery} fieldset The field-set enclosing the composition window part.
  *
  * @param {jQuery} form TBD.
  *
@@ -382,6 +378,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
 
   {
+    // @todo why is this so separated from rest???
     WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
 
     $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
@@ -407,14 +404,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformcomposer'));
   }
 
+  const formData = form.find('fieldset.form-data');
+  const projectId = formData.find('input[name="projectId"]').val();
+  const projectName = formData.find('input[name="projectName"]').val();
+
   const debugOutput = form.find('#emailformdebug');
   const storedEmailsSelector = fieldset.find('select.stored-messages-selector');
   const currentTemplate = fieldset.find('#emailCurrentTemplate');
   const saveAsTemplate = fieldset.find('#check-save-as-template');
   const draftAutoSave = fieldset.find('#check-draft-auto-save');
   const messageText = fieldset.find('textarea');
-  const eventAttachmentsSelector = fieldset.find('select.event-attachments');
-  const fileAttachmentsSelector = fieldset.find('select.file-attachments');
+  const eventAttachmentsRow = fieldset.find('tr.event-attachments');
+  const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
+  const fileAttachmentsRow = fieldset.find('tr.file-attachments');
+  const fileAttachmentsSelector = fileAttachmentsRow.find('select.file-attachments');
   const sendButton = fieldset.find('input.submit.send');
   const dialogWidget = dialogHolder.dialog('widget');
 
@@ -430,11 +433,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     }
 
     const validateLock = function() {
+      Page.busyIcon(true);
       validateLockCB(true);
     };
 
     const validateUnlock = function() {
       validateLockCB(false);
+      Page.busyIcon(false);
     };
 
     // until end of validation
@@ -533,25 +538,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               const fileAttachments = requestData.elementData.attachments;
               fieldset.find('input.file-attachments').val(JSON.stringify(fileAttachments));
               fileAttachmentsSelector.html(options);
-              if (options.length > 0) {
-                fieldset.find('tr.file-attachments').show();
-              } else {
-                fieldset.find('tr.file-attachments').hide();
-              }
+              fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
+              fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
               fileAttachmentsSelector.trigger('chosen:updated');
-              panelHolder.trigger('resize');
+              panelHolder.trigger('resize', { position: 'bottom' });
               break;
             }
             case 'eventAttachments': {
               const options = requestData.elementData.options;
               // const eventAttachments = requestData.elementData.attachments;
               eventAttachmentsSelector.html(options);
-
-              if (options.length > 0) {
-                fieldset.find('tr.event-attachments').show();
-              } else {
-                fieldset.find('tr.event-attachments').hide();
-              }
+              eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+              eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
               eventAttachmentsSelector.trigger('chosen:updated');
               panelHolder.trigger('resize');
 
@@ -775,6 +773,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               progressToken,
               send: 'ThePointOfNoReturn',
               submitAll: true,
+              projectId,
+              projectName,
             },
             function(lock) {
               if (lock) {
@@ -891,6 +891,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         operation: 'cancel',
         formStatus: 'submitted',
         singleItem: true,
+        projectId,
+        projectName,
       });
       // Close the dialog in any case.
       dialogHolder.dialog('close');
@@ -920,6 +922,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         topic: 'draft',
         submitAll: true,
         noDebug: true,
+        projectId,
+        projectName,
+        autoSave: true,
       },
       function(lock) {
         if (!lock) {
@@ -933,13 +938,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   };
 
   const confirmAutoSaveDelete = function(doDelete) {
-    const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
-    console.debug('DRAFT ID', draftId, draftAutoSave.prop('checked'));
-    doDelete = doDelete || draftAutoSave.prop('checked');
-    if (doDelete && parseInt(draftId) > 0) {
+    const draftId = parseInt(fieldset.find('input[name="emailComposer[messageDraftId]"]').val());
+    if (draftId <= 0) {
+      return;
+    }
+    const autoGenerated = storedEmailsSelector.find('option[value="__draft-' + draftId  + '"]').data('autoGenerated') || false;
+    if (autoGenerated && (doDelete || draftAutoSave.prop('checked'))) {
       Dialogs.confirm(
         t(appName,
-          'Do you want to delete the auto-save backup copy of the current message (id = {id})?',
+          'Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?'
+          + '<br/>'
+          + 'If you answer "no" then the current message will be saved again and marked as manually saved. '
+          + 'It will then linger on until you or someone else deletes it manually.',
           { id: draftId }),
         t(appName, 'Delete Auto-Save Draft?'),
         function(confirmed) {
@@ -950,10 +960,25 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 topic: 'draft',
                 messageDraftId: draftId,
                 noDebug: true,
+                projectId,
+                projectName,
               }
             );
+          } else {
+            // perform a manual save to clear the "autoGenerated" flag
+            applyComposerControls(
+              null, {
+                operation: 'save',
+                topic: 'draft',
+                submitAll: true,
+                noDebug: true,
+                projectId,
+                projectName,
+                autoSave: false,
+              });
           }
         },
+        true,
         true
       );
     }
@@ -1061,6 +1086,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 applyComposerControls.call(self, event, {
                   operation: 'delete',
                   topic: 'template',
+                  projectId,
+                  projectName,
                 });
               }
             },
@@ -1086,6 +1113,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                   operation: 'delete',
                   topic: 'draft',
                   messageDraftId: draftId,
+                  projectId,
+                  projectName,
                 });
               }
             },
@@ -1105,6 +1134,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           this, event, {
             operation: 'load',
             topic: 'draft',
+            projectId,
+            projectName,
           },
           function(lock) {
             if (lock) {
@@ -1122,7 +1153,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             selectDeselectAll(storedEmailsSelector);
           });
       } else {
-        applyComposerControls.call(this, event, { operation: 'load', topic: 'template' });
+        applyComposerControls.call(this, event, {
+          operation: 'load',
+          topic: 'template',
+          projectId,
+          projectName,
+        });
       }
       return false;
     });
@@ -1157,6 +1193,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       recipients: $self.val(),
       header,
       singleItem: true,
+      projectId,
+      projectName,
     };
     request[header] = request.Recipients; // remove duplicate later
     applyComposerControls.call(
@@ -1197,19 +1235,23 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .find('button.attachment.events')
     .off('click')
     .on('click', function(event) {
-      const formData = form.find('fieldset.form-data');
-      const projectId = formData.find('input[name="projectId"]').val();
-      const projectName = formData.find('input[name="projectName"]').val();
+      const wasVisible = eventAttachmentsRow.is(':visible');
       let events = eventAttachmentsSelector.val();
       if (!events) {
         events = [];
       }
+      eventAttachmentsRow.addClass('show-selectable');
       Projects.eventsPopup({
         projectId,
         projectName,
         eventSelect: events,
       },
       false /* only move to top if already open */);
+
+      if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+        panelHolder.trigger('resize', { position: 'bottom' });
+      }
+
       return false;
     });
 
@@ -1217,7 +1259,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   dialogHolder
     .off('cafevdb:events_changed')
     .on('cafevdb:events_changed', function(event, events) {
-      console.info('EVENTS', events);
       const formData = form.find('fieldset.form-data');
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
@@ -1235,30 +1276,70 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     });
 
   fieldset
+    .find('tr.attachments input.visibility-toggle')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const $row = $this.closest('tr');
+      $row.removeClass('show-selectable').addClass('hidden');
+      panelHolder.trigger('resize', { position: 'bottom' });
+    });
+
+  fieldset
+    .find('tr.all-attachments button.visibility-toggle')
+    .off('click')
+    .on('click', function(event) {
+      const $attachmentRows = $('tr.attachments');
+      if ($attachmentRows.find(':visible').length === 2) {
+        $attachmentRows.removeClass('show-selectable').addClass('hidden');
+      } else {
+        $attachmentRows.addClass('show-selectable').removeClass('hidden');
+      }
+      panelHolder.trigger('resize', { position: 'bottom' });
+    });
+
+  fieldset
     .find('input.delete-all-event-attachments')
     .off('click')
     .on('click', function(event) {
+      const wasVisible = eventAttachmentsRow.is(':visible');
 
-      // Ask for confirmation
-      Dialogs.confirm(
-        t(appName,
-          'Do you really want to delete all event attachments?'),
-        t(appName, 'Really Delete Attachments?'),
-        function(confirmed) {
-          if (!confirmed) {
+      const numSelected = eventAttachmentsSelector.val().length;
+      const numOptions = eventAttachmentsSelector.find('option').length;
+
+      // must this be here?
+      eventAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+
+      if (numSelected === 0) {
+        eventAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
+      } else {
+        // Ask for confirmation
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to delete all event attachments?'),
+          t(appName, 'Really Delete Attachments?'),
+          function(confirmed) {
+            if (!confirmed) {
+              return false;
+            }
+            // simply void the selection
+            eventAttachmentsSelector.val('');
+            eventAttachmentsSelector.trigger('change');
+            eventAttachmentsSelector.trigger('chosen:updated');
+            eventAttachmentsRow.removeClass('show-selectable');
+            eventAttachmentsRow.addClass('empty-selection');
+
+            if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+              panelHolder.trigger('resize', { position: 'bottom' });
+            }
+
             return false;
-          }
-          // simply void the attachment list
-          eventAttachmentsSelector.val('');
-          eventAttachmentsSelector.trigger('change');
-          eventAttachmentsSelector.trigger('chosen:updated');
-          if (eventAttachmentsSelector.find('option').length === 0) {
-            console.info('HIDE EVENT ATTACHMENT SELECTOR');
-            fieldset.find('tr.event-attachments').hide();
-          }
-          return false;
-        },
-        true);
+          },
+          true);
+      }
 
       return false;
     });
@@ -1266,12 +1347,16 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   eventAttachmentsSelector
     .off('change')
     .on('change', function(event) {
+      const $this = $(this);
       const eventDialog = $('.cafevdb-project-events #events');
-      let events = $(this).val();
+      let events = $this.val();
       if (events.length === 0) {
         events = [];
         // fieldset.find('tr.event-attachments').hide();
       }
+      $this.closest('tr')
+        .toggleClass('empty-selection', events.length === 0)
+        .toggleClass('no-attachments', $this.find('option').length === 0);
       events = events.map(item => JSON.parse(item).uri);
       eventDialog.trigger('cafevdb:events_changed', [events]);
       return false;
@@ -1281,6 +1366,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    * File upload.
    */
+
+  fileAttachmentsSelector.on('change', function(event) {
+    const $this = $(this);
+    $this.closest('tr')
+      .toggleClass('empty-selection', $this.val().length === 0)
+      .toggleClass('no-attachments', $this.find('option').length === 0);
+  });
 
   const updateFileAttachments = function() {
     const fileAttachments = fieldset.find('input.file-attachments').val();
@@ -1293,6 +1385,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       formElement: 'fileAttachments',
       fileAttachments, // JSON data of all files
       formStatus: 'submitted',
+      projectId,
+      projectName,
     };
     if (selectedAttachments) {
       requestData.attachedFiles = selectedAttachments;
@@ -1339,29 +1433,54 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .find('.attachment.personal')
     .off('click')
     .on('click', function() {
-      alert('NOT IMPLEMENTED YET');
+      const wasVisible = fileAttachmentsRow.is(':visible');
+      fileAttachmentsRow.addClass('show-selectable');
+      if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+        panelHolder.trigger('resize', { position: 'bottom' });
+      }
+      return false;
     });
 
   fieldset
     .find('input.delete-all-file-attachments')
     .off('click')
     .on('click', function(event) {
+      const wasVisible = fileAttachmentsRow.is(':visible');
 
-      // Ask for confirmation
-      Dialogs.confirm(
-        t(appName,
-          'Do you really want to delete all file attachments?'),
-        t(appName, 'Really Delete Attachments?'),
-        function(confirmed) {
-          if (!confirmed) {
+      const numSelected = fileAttachmentsSelector.val().length;
+      const numOptions = fileAttachmentsSelector.find('option').length;
+
+      fileAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+
+      if (numSelected === 0) {
+        fileAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
+      } else {
+        // Ask for confirmation
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to delete all file attachments?'),
+          t(appName, 'Really Delete Attachments?'),
+          function(confirmed) {
+            if (!confirmed) {
+              return false;
+            }
+            // simply void the selection
+            fileAttachmentsSelector.val('');
+            fileAttachmentsSelector.trigger('change');
+            fileAttachmentsSelector.trigger('chosen:updated');
+            fileAttachmentsRow.removeClass('show-selectable');
+            fileAttachmentsRow.addClass('empty-selection');
+
+            if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+              panelHolder.trigger('resize', { position: 'bottom' });
+            }
             return false;
-          }
-          // simply void the attachment list and issue an update.
-          fieldset.find('input.file-attachments').val('{}');
-          updateFileAttachments();
-          return false;
-        },
-        true);
+          },
+          true);
+      }
 
       return false;
     });
@@ -1484,8 +1603,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    */
 
   panelHolder.off('resize');
-  panelHolder.on('resize', function() {
+  panelHolder.on('resize', function(event, eventData) {
+    //    const eventData = event.data;
     emailTabResize(dialogWidget, panelHolder);
+    if (eventData && eventData.position === 'bottom') {
+      panelHolder.scrollTop(panelHolder.prop('scrollHeight'));
+    }
   });
 };
 
@@ -1505,15 +1628,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  *
  * - eventSelect: array of ids of events to attach.
  *
- * @param {bool} modal TBD.
+ * @param {bool} modal TBD, default true.
  *
- * @param {bool} single TBD.
+ * @param {bool} single TBD, default false.
  *
  * @param {Function} afterInit TBD.
  */
 function emailFormPopup(post, modal, single, afterInit) {
 
+  if (typeof afterInit !== 'function') {
+    afterInit = function() {};
+  }
+
   if (Email.active === true) {
+    afterInit();
     return;
   }
 
@@ -1594,7 +1722,6 @@ function emailFormPopup(post, modal, single, afterInit) {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton(dialogHolder);
           DialogUtils.fullScreenButton(dialogHolder, function(mode, when) {
-            console.info('FS MODE', mode);
             if (when === 'before') {
               WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
@@ -1614,6 +1741,7 @@ function emailFormPopup(post, modal, single, afterInit) {
           //   dialogHolder.find('li#emailformrecipients-tab a').prop('disabled', true);
           // }
 
+          // this must come before calling emailFormRecipientsHandlers
           dialogHolder.tabs({
             active: single ? 1 : 0,
             disabled: single ? [0] : [],
@@ -1720,13 +1848,14 @@ function emailFormPopup(post, modal, single, afterInit) {
             emailForm,
             dialogHolder,
             composerPanel);
+
+          // we have to recompute the tab size for the recipients controls
+          emailTabResize(dialogWidget, recipientsPanel);
         },
         close() {
-          console.info('CLOSE CALLBACK');
           if (Email.autoSaveTimer) {
             clearTimeout(Email.autoSaveTimer);
             Email.autoSaveTimer = null;
-            console.info('CLEARED AUTOSAVE TIMER');
           }
           Email.autoSaveDelete();
 

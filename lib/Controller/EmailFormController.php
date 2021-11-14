@@ -129,7 +129,6 @@ class EmailFormController extends Controller {
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
-      'csrfToken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
       'wikinamespace' => $this->getAppValue('wikinamespace'),
@@ -144,8 +143,7 @@ class EmailFormController extends Controller {
         'template' => $this->parameterService['template'],
         // 'renderer' => ???? @todo check
         'bulkTransactionId' => $bulkTransactionId,
-        'requesttoken' => \OCP\Util::callRegister(), // @todo: check
-        'csrfToken' => \OCP\Util::callRegister(), // @todo: check
+        'requesttoken' => \OCP\Util::callRegister(),
         'emailKey' => $this->pme->cgiSysName('mrecs'),
       ],
       'emailDraftAutoSave' => $emailDraftAutoSave,
@@ -290,27 +288,38 @@ class EmailFormController extends Controller {
       }
       break;
     case 'preview':
-      $previewMessages = $composer->previewMessages();
-      if ($composer->errorStatus()) {
-        $requestData['errorStatus'] = $composer->errorStatus();
-        $requestData['diagnostics'] = $composer->statusDiagnostics();
-        break;
+      switch ($topic) {
+        case self::TOPIC_UNSPECIFIC:
+          $previewMessages = $composer->previewMessages();
+          if ($composer->errorStatus()) {
+            $requestData['errorStatus'] = $composer->errorStatus();
+            $requestData['diagnostics'] = $composer->statusDiagnostics();
+            break;
+          }
+          $templateParameters = [
+            'appName' => $this->appName,
+            'projectName' => $projectName,
+            'projectId' => $projectId,
+            'messages' => $previewMessages,
+            'urlGenerator' => $this->urlGenerator,
+            'requesttoken' => \OCP\Util::callRegister(),
+          ];
+          $html = (new TemplateResponse(
+            $this->appName,
+            'emailform/part.emailform.preview',
+            $templateParameters,
+            'blank'))->render();
+          return self::dataResponse([
+            'message' => $this->l->t('Preview generation successful.'),
+            'contents' => $html,
+          ]);
+        case 'attachment':
+          // @todo
+          //
+          // * identify attachment by file-name and musician, probably
+          break;
       }
-      $templateParameters = [
-        'appName' => $this->appName,
-        'projectName' => $projectName,
-        'projectId' => $projectId,
-        'messages' => $previewMessages,
-      ];
-      $html = (new TemplateResponse(
-        $this->appName,
-        'emailform/part.emailform.preview',
-        $templateParameters,
-        'blank'))->render();
-      return self::dataResponse([
-        'message' => $this->l->t('Preview generation successful.'),
-        'contents' => $html,
-      ]);
+      break;
     case 'cancel':
       $composer->cleanTemporaries();
       break;
@@ -526,7 +535,7 @@ class EmailFormController extends Controller {
       }
       if ($composer->errorStatus()) {
         $reqquestData['diagnostics']['caption'] =
-                                                $this->l->t('%s could not be saved', ucfirst($topic));
+          $this->l->t('%s could not be saved', ucfirst($topic));
       } else {
         $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
       }

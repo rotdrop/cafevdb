@@ -195,8 +195,6 @@ class ToolTipsService implements \ArrayAccess, \Countable
       return;
     }
     $this->toolTipsData = [
-      'address-book-emails' => $this->l->t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
-
       'blog-acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
 
       'blog-cancelentry' => $this->l->t('Discard the changes for this blog-entry.'),
@@ -221,9 +219,6 @@ displayed closer to the top of the page.'),
       'blogentry-raise' => $this->l->t('Increase the display priority; move the note closer to the top of the page.'),
 
       'blogentry-reply' => $this->l->t('Write a follow-up to the bulletin entry.'),
-
-      'cancel-email-composition' => $this->l->t('Cancel the email composition and close the input form. This has the
-same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
 
       'club-member-project' => $this->l->t('Name of the pseudo-project listing the permanent members of the orchestra.'),
 
@@ -260,65 +255,103 @@ institute.'),
 
       'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use. Debug output can be found in the log-file.'),
 
-      'delete-all-event-attachments' => $this->l->t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
-
-      'delete-all-file-attachments' => $this->l->t('Delete all uploaded file-attachments from the server. This is also done automatically when closing the email-form. This will also empty the select box.'),
-
-      'delete-saved-message' => $this->l->t('Delete the selected email-template or draft. You will be asked for confirmation before it is actually deleted.'),
-
       'direct-change' => $this->l->t('If enabled, clicking on a data-row in a table view opens the "change
 dialog" for the respective record. If disabled, clicking on a data-row will open the "view dialog".'),
 
       'email-account-distribute' => $this->l->t('Distribute the email account credentials to all members of the orchestra group. The credentials will be encrypted using an OpenSSL public key owned by the respective user and stored in the pre-user preferences table.'),
 
-      'email-message-export' => $this->l->t('Export the email text as HTML. In the case of per-member variable
-substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
 
-      'email-recipients-basic-set' => $this->l->t('Choose either among all musicians currently registered for the project
+      'emailtest' => $this->l->t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+
+      'emailform' => [
+        'storage' => [
+          'messages' => [
+            'select' => $this->l->t('Select either a message draft or template as base for the current message.'),
+            'new-template' => $this->l->t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
+            'save-as-template' => $this->l->t('Activate this checkbox in order to save the current email message as
+message template. If you leave this check-box unchecked, then messages
+will be saved as draft. The difference between a draft and a template
+is the following: draft messages will be deleted when the message is
+actually sent out (and potentially "inactive" drafts will be purged
+from the data-base after some time). Templates will never be
+purged. Also, draft messages will be saved with all attachment and --
+most important -- inlcuding the set of the currently selected
+recipients. Message templates, in contrast, are saved with an empty recipient list, as should be.'),
+            'save-message' => $this->l->t('Save the currently active email message either as draft
+(i.e. including recipients and attachments) or as message template
+(without recipients and attachments). Message drafts will be deleted
+after actually sending the message, and after some time of inactivity
+(say a month or so), message templates are remembered
+permanently. Please check the check-box to the left of this button in
+order to store the message as template. Either templates or drafts can
+also be "actively" deleted but clicking the delete button to the right
+of this button.'),
+            'draft-auto-save' => $this->l->t('Automatically save the currently worked-on message as email-draft every 5 minutes.'),
+            'delete-saved-message' => $this->l->t('Delete the selected email-template or draft. You will be asked for confirmation before it is actually deleted.'),
+          ],
+        ],
+        'composer' => [
+          'recipients' => [
+            'listing' => $this->l->t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
+            'freeform-BCC' => $this->l->t('Add arbitrary further hidden recipients.'),
+            'freeform-CC' => $this->l->t('Add arbitrary further recipients.'),
+            'address-book' => $this->l->t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
+          ],
+          'attachments' => [
+            'cloud' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
+            'events' => $this->l->t('Select calendar attachments from the associated project events.'),
+            'personal' => $this->l->t('Choose a file to attach from the project\'s per-musician file-attachments.'),
+            'upload' => $this->l->t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
+            'toggle-visibility' => [
+              'default' => $this->l->t('Hide or show the select boxes in order to select appropriate attachments.'),
+            ],
+            'event-select' => $this->l->t('Select-box with all project-events. You can select events as attachments to your email.'),
+            'delete-all-events' => $this->l->t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
+            'delete-all-files' => $this->l->t('Deselects all file-attachments. The uploaded attachments are kept on the server until the email-form dialog is closed and can be reselected without uploading them again.'),
+          ],
+          'send' => $this->l->t('Attempt to send the stuff you have composed out to your selection of
+recipients. Please think thrice about it. In case of an error
+additional diagnostic messages may (or may not ...) be available in
+the `Debug\' tab'),
+          'export' => $this->l->t('Export the email text as HTML. In the case of per-member variable
+substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
+          'cancel' => $this->l->t('Cancel the email composition and close the input form. This has the
+same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
+        ],
+        'recipients' => [
+          'choices' => $this->l->t('Select the recipients for your email!'),
+          'filter' => [
+            'basic-set' => [
+              'default' => $this->l->t('Choose either among all musicians currently registered for the project
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
-
-      'email-recipients-broken-emails' => $this->l->t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
-
-      'email-recipients-choices' => $this->l->t('Select the recipients for your email!'),
-
-      'email-recipients-except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
-
-      'email-recipients-filter-apply' => $this->l->t('Apply the currently selected instruments as filter. At your option,
-you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
-
-      'email-recipients-filter-redo' => $this->l->t('Redo the last operation undone by the undo button.'),
-
-      'email-recipients-filter-reset' => $this->l->t('Reset to the initial pre-selection which was activ when entering this
+              'from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
+              'except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+            ],
+            'member-status' => $this->l->t('Select recipients by member status. Normally, conductors and soloists
+are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
+            'apply' => $this->l->t('Apply the currently selected instruments as filter. At your option,
+-you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
+            'undo' => $this->l->t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
+            'redo' => $this->l->t('Redo the last operation undone by the undo button.'),
+            'reset' => $this->l->t('Reset to the initial pre-selection which was activ when entering this
 form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
 list.'),
-
-      'email-recipients-filter-undo' => $this->l->t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
-
-      'email-recipients-freeform-BCC' => $this->l->t('Add arbitrary further hidden recipients.'),
-
-      'email-recipients-freeform-CC' => $this->l->t('Add arbitrary further recipients.'),
-
-      'email-recipients-from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
-
-      'email-recipients-instruments-filter' => $this->l->t('Restrict the basic set of musicians to the instruments selected
+            'instruments' => [
+              'filter' => $this->l->t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
 include the musicians playing either of them.'),
-
-      'email-recipients-instruments-filter-container' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
-
-      'email-recipients-instruments-filter-label' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
-
-      'email-recipients-listing' => $this->l->t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
-
-      'email-recipients-member-status-filter' => $this->l->t('Select recipients by member status. Normally, conductors and soloists
-are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
-
-      'emailtest' => $this->l->t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
-
-      'event-attachments-select' => $this->l->t('Select-box with all project-events. You can select events as attachments to your email.'),
+              'container' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
+              'label' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
+              'apply' => $this->l->t('Apply the currently selected instruments as filter. At your option,
+you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
+            ],
+          ],
+          'broken-emails' => $this->l->t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
+        ],
+      ],
 
       'executive-board-project' => $this->l->t('Name of the pseudo-project listing the members of the executive board.'),
 
@@ -520,8 +553,6 @@ simply marked as "disabled" and normally are hidden from sight.'),
 
       'musician-orchestra-tab' => $this->l->t('Display name, pre-name, instruments, status, general remarks.'),
 
-      'new-email-template' => $this->l->t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
-
       'new-project-event' => $this->l->t('Add a new event for the project. The event is added to the respective
 calendar and will also be visible and editable through the calendar
 app. It is also possible to subscribe to the calendars using a
@@ -531,16 +562,6 @@ a project is maintained by attching the project name as "category" to
 the event.'),
 
       'nothing' => $this->l->t('nothing'),
-
-      'attachments' => [
-        'cloud' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
-
-        'events' => $this->l->t('Select calendar attachments from the associated project events.'),
-
-        'personal' => $this->l->t('Choose a file to attach from the project\'s per-musician file-attachments.'),
-
-        'upload' => $this->l->t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
-      ],
 
       'clouddev-link' => $this->l->t('Web-link to the current Cloud developer documentation.'),
 
@@ -881,11 +902,9 @@ events associated to the project.
 Events can be added and modified
 as needed.'),
 
-      'projectevents-delete' => $this->l->t('Delete the event from the system
-(no undo possible).'),
+      'projectevents-delete' => $this->l->t('Delete the event from the system (no undo possible).'),
 
-      'projectevents-deselect' => $this->l->t('Exclude all events from
-email-submission'),
+      'projectevents-deselect' => $this->l->t('Exclude all events from email-submission'),
 
       'projectevents-detach' => $this->l->t('Detach the respective event
 from the project, but do not
@@ -908,8 +927,7 @@ tablet or desktop computer.'),
 
       'projectevents-newrehearsal' => $this->l->t('Add a new rehearsal-event to the project.'),
 
-      'projectevents-select' => $this->l->t('Select all events for
-email-submission'),
+      'projectevents-select' => $this->l->t('Select all events for email-submission'),
 
       'projectevents-selectevent' => $this->l->t('Mark the respective event for being
 sent by email as ICS-attachment per email.
@@ -943,42 +961,7 @@ project-views are moved here.'),
       'registration-mark' => $this->l->t('This is checked for officially registered musicians, those, who have
 sent us a signed registration form. It is left blannk otherwise.'),
 
-      'save-as-template' => $this->l->t('Activate this checkbox in order to save the current email message as
-message template. If you leave this check-box unchecked, then messages
-will be saved as draft. The difference between a draft and a template
-is the following: draft messages will be deleted when the message is
-actually sent out (and potentially "inactive" drafts will be purged
-from the data-base after some time). Templates will never be
-purged. Also, draft messages will be saved with all attachment and --
-most important -- inlcuding the set of the currently selected
-recipients. Message templates, in contrast, are saved with an empty recipient list, as should be.'),
-
-      'save-email-message' => $this->l->t('Save the currently active email message either as draft
-(i.e. including recipients and attachments) or as message template
-(without recipients and attachments). Message drafts will be deleted
-after actually sending the message, and after some time of inactivity
-(say a month or so), message templates are remembered
-permanently. Please check the check-box to the left of this button in
-order to store the message as template. Either templates or drafts can
-also be "actively" deleted but clicking the delete button to the right
-of this button.'),
-
-      'save-email-template' => $this->l->t('Save the current email for later re-usal in the data-base.
-An email template can contain per-member substitutions with the syntax ${MEMBER::VARIABLE},
-where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT and LAND.
-There is also one global (i.e. not per-member) substitution ${GLOAB$this->l->ORGANIZER} which is substituted
-by the pre-names of the organizing committe in order to compose  greetings.'),
-
       'section-leader-mark' => $this->l->t('This is checked for section-leaders and left blank otherwise.'),
-
-      'select-email-template' => $this->l->t('Select one of the email templates previously stored in the data-base.'),
-
-      'select-stored-messages' => $this->l->t('Select either a message draft or template as base for the current message.'),
-
-      'send-mass-email' => $this->l->t('Attempt to send the stuff you have composed out to your selection of
-recipients. Please think thrice about it. In case of an error
-additional diagnostic messages may (or may not ...) be available in
-the `Debug\' tab'),
 
       'sepa-bank-account' => [
         'delete-undelete' => $this->l->t('Delete the given account. If the account has been used for payments then the bank-account will just be marked disabled, but not removed from the data-base.'),

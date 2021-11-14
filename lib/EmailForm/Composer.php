@@ -23,8 +23,23 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use ZipStream\ZipStream;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+
 use OCP\IDateTimeFormatter;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -33,15 +48,11 @@ use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -62,8 +73,8 @@ class Composer
 
   const POST_TAG = 'emailComposer';
 
-  const ATTACHMENT_ORIGIN_CLOUD = 'cloud';
-  const ATTACHMENT_ORIGIN_UPLOAD = 'upload';
+  private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
+  private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
@@ -357,11 +368,29 @@ Störung.';
   /** @var AppStorage */
   private $appStorage;
 
+  /** @var UserStorage */
+  private $userStorage;
+
   /** @var int */
   private $progressToken;
 
   /** @var array */
   private $substitutions;
+
+  /***
+   * @var array
+   *
+   * Personal file-attachments stemming form ProjectParticipantField
+   * entities.
+   */
+  private $personalFileAttachments = null;
+
+  /***
+   * @var array
+   *
+   * "Global" file attachments from upload or the cloud file-system.
+   */
+  private $globalFileAttachments = null;
 
   /*
    * constructor
@@ -375,11 +404,13 @@ Störung.';
     , ProjectParticipantFieldsService $participantFieldsService
     , ProgressStatusService $progressStatusService
     , AppStorage $appStorage
+    , UserStorage $userStorage
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
     $this->appStorage = $appStorage;
+    $this->userStorage = $userStorage;
     $this->entityManager = $entityManager;
     $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
@@ -1342,47 +1373,35 @@ Störung.';
    */
   private function doSendMessages()
   {
-    // The following cannot fail, in principle. $message is then
-    // the current template without any left-over globals.
-
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
+    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)
+        || count($this->personalAttachments()) > 0) {
 
       $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
       foreach ($this->recipients as $recipient) {
-        /** @var Entities\Musician */
+        ++$this->diagnostics['TotalCount'];
+
+        /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
-        $databaseAttachments = [];
-        if (!empty($this->bulkTransaction)) {
-          // find payments and potential attachments
+        $personalAttachments = $this->composePersonalAttachments($musician);
 
-          /** @var Entities\CompositePayment $compositePayment */
-          $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
-          if (!empty($compositePayment)) {
-            /** @var Entities\ProjectPayment $projectPayment */
-            foreach ($compositePayment->getProjectPayments() as $projectPayment) {
-              $supportingDocument = $projectPayment->getSupportingDocument();
-              if (!empty($supportingDocument)) {
-                $databaseAttachments[] = $supportingDocument;
-              } else {
-                $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
-                if (!empty($supportingDocument)) {
-                  $databaseAttachments[] = $supportingDocument;
-                }
-              }
-            }
-          }
+        // we should not send the message out if the generation of the
+        // personal attachment has failed.
+        if (!empty($this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()])) {
+          ++$this->diagnostics['FailedCount'];
+          continue;
         }
-        $msg = $this->composeAndSend($strMessage, [ $recipient ], $databaseAttachments, false);
-        ++$this->diagnostics['TotalCount'];
+
+        $msg = $this->composeAndSend($strMessage, [ $recipient ], $personalAttachments, false);
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
+
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
 
@@ -1392,6 +1411,7 @@ Störung.';
           //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
           //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
           // }
+
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -1444,6 +1464,357 @@ Störung.';
   }
 
   /**
+   * Compose all personal attachments for the given musician.
+   */
+  private function composePersonalAttachments(Entities\Musician $musician):array
+  {
+    // in order to form file-names withtout dots
+    $userIdSlug = $musician->getUserIdSlug();
+    $camelCaseSlug = Util::dashesToCamelCase($userIdSlug, true, '_-.');
+
+    $personalAttachments = [];
+
+    $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()] = [];
+
+    // Find payments and potential attachments.
+    if (!empty($this->bulkTransaction)) {
+      /** @var Entities\CompositePayment $compositePayment */
+      $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+      if (!empty($compositePayment)) {
+        /** @var Entities\ProjectPayment $projectPayment */
+        foreach ($compositePayment->getProjectPayments() as $projectPayment) {
+          $supportingDocument = $projectPayment->getSupportingDocument();
+          if (empty($supportingDocument)) {
+            $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
+          }
+          if (!empty($supportingDocument)) {
+            $personalAttachments[] = function() use ($supportingDocument) {
+              return [
+                'data' => $supportingDocument->getFileData()->getData(),
+                'fileName' => $supportingDocument->getFileName(),
+                'encoding' => 'base64',
+                'mimeType' => $supportingDocument->getMimeType(),
+              ];
+            };
+          }
+        }
+      }
+    }
+
+    // walk through the list of configured attachments and attach all requested.
+    foreach ($this->personalAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected' && !$attachment['sub_selection']) {
+        continue;
+      }
+
+      if (isset($attachment['template_id'])) {
+        $templateId = $attachment['template_id'];
+        if (!empty($this->project)
+            && $this->project->getId() == $this->getClubMembersProjectId()
+            && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
+          $templateId = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+        }
+
+        /** @var FinanceService $financeService */
+        $financeService = $this->di(FinanceService::class);
+        switch ($templateId) {
+          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+            $membersProject = $this->entityManager->find(
+              Entities\Project::class,
+              $this->getClubMembersProjectId()
+            );
+            if (empty($membersProject)) {
+              continue 2;
+            }
+            /**@var Entities\ProjectParticipant $participant */
+            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
+              'musician' => $musician,
+              'project' => $membersProject,
+            ]);
+            if (!empty($participant)) {
+              $bankAccount = $participant->getSepaBankAccount();
+            }
+            if (empty($bankAccount)) {
+              $bankAccount = $musician->getSepaBankAccounts()->first();
+            }
+
+            $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician) {
+              list($fileData, $mimeType, $fileName) =
+                $financeService->preFilledDebitMandateForm($bankAccount, $membersProject, $musician);
+              return [
+                'data' => $fileData,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => $mimeType,
+              ];
+            };
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+            if (empty($this->project)) {
+              continue 2;
+            }
+            /**@var Entities\ProjectParticipant $participant */
+            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
+              'musician' => $musician,
+              'project' => $this->project,
+            ]);
+            if (!empty($participant)) {
+              $bankAccount = $participant->getSepaBankAccount();
+            }
+            if (empty($bankAccount)) {
+              $bankAccount = $musician->getSepaBankAccounts()->first();
+            }
+
+            $personalAttachments[] = function() use ($financeService, $bankAccount, $musician) {
+              list($fileData, $mimeType, $fileName) =
+                $financeService->preFilledDebitMandateForm($bankAccount, $this->project, $musician);
+              return [
+                'data' => $fileData,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => $mimeType,
+              ];
+            };
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
+            /** @var InstrumentInsuranceService $insuranceService */
+            $insuranceService = $this->di(InstrumentInsuranceService::class);
+            $insuranceOverview = $insuranceService->musicianOverview($musician);
+
+            if (empty($insuranceOverview['musicians'])) {
+              // just skip
+              continue 2;
+            }
+
+            $personalAttachments[] = function() use ($insuranceService, $insuranceOverview) {
+              try {
+                $fileData = $insuranceService->musicianOverviewLetter($insuranceOverview);
+                $mimeType = 'application/pdf';
+              } catch (\Throwable $t) {
+                $this->logException($t);
+                $fileData = $t->getMessage() . ' / ' . $t->getTraceAsString();
+                $mimeType = 'text/plain';
+              }
+              $fileName = $insuranceService->musicianOverviewFileName($insuranceOverview);
+              return [
+                'data' => $fileData,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => $mimeType,
+              ];
+            };
+            break;
+        }
+        continue;
+      }
+
+      /** @var Entities\ProjectParticipantField $field */
+      $field = $this->entityManager->find(Entities\ProjectParticipantField::class, $attachment['field_id']);
+      if (empty($field)) {
+        $this->logError('Unable to find attachment field "%s".', $fieldId);
+        $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+        $attachmentFailure = true;
+        continue;
+      }
+
+      $fieldName = $field->getName();
+      $fieldType = $field->getDataType();
+      $fieldMultiplicity = $field->getMultiplicity();
+
+      switch ($fieldType) {
+        case FieldType::CLOUD_FILE:
+        case FieldType::CLOUD_FOLDER:
+        case FieldType::DB_FILE:
+        case FieldType::SERVICE_FEE:
+          break;
+        default:
+          $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
+          $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+          $attachmentFailure = true;
+          continue 2;
+      }
+
+      /** @var Collection $fieldData */
+      $fieldData = $musician->getProjectParticipantFieldsData()
+        ->matching(DBUtil::criteriaWhere([ 'field' => $field, 'deleted' => null ]));
+
+      if ($fieldData->count() == 0) {
+        // Fields are optional, perhaps one could add a "required" field qualifier ...
+        continue;
+      }
+
+      if ($fieldData->count() > 1 && $fieldMultiplicity == FieldMultiplicity::SIMPLE) {
+        $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldType, $fieldMultiplicity));
+        $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+        $attachmentFailure = true;
+        continue;
+      }
+
+      switch ($fieldType) {
+        case FieldType::SERVICE_FEE:
+          // ATM we support sub-selection item only for FieldMultiplicity::RECURRING
+          if ($attachment['status'] != 'selected') {
+            $selectedKeys = [];
+            foreach ($attachment['suboptions'] as $subOption) {
+              if ($subOption['status'] == 'selected') {
+                $selectedKeys[] = $subOption['option_key'];
+              }
+            }
+            $fieldData = $fieldData->filter(function(Entities\ProjectParticipantFieldDatum $fieldDatum) use ($selectedKeys) {
+              return in_array((string)$fieldDatum->getOptionKey(), $selectedKeys);
+            });
+          }
+          if ($fieldData->count() == 0) {
+            // ok, field-data is optional
+            continue 2;
+          }
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          if ($fieldData->count() == 1) {
+            // attach file
+            $fieldDatum = $fieldData->first();
+            $supportingDocument = $fieldDatum->getSupportingDocument();
+            if (!empty($supportingDocument)) {
+              $personalAttachments[] = function() use ($supportingDocument) {
+                return [
+                  'data' => $supportingDocument->getFileData()->getData(),
+                  'fileName' => $supportingDocument->getFileName(),
+                  'encoding' => 'base64',
+                  'mimeType' => $supportingDocument->getMimeType(),
+                ];
+              };
+            }
+          } else {
+            // attach zip-archive
+            $items = [];
+            foreach ($fieldData as $fieldDatum) {
+              /** @var Entities\File $file */
+              $items[] = $fieldDatum->getSupportingDocument();
+            }
+            $folderName = $fieldName . '-' . $camelCaseSlug;
+
+            $personalAttachments[] = function() use ($folderName, $items) {
+              return [
+                'data' => $this->di(DatabaseStorageUtil::class)->getCollectionArchive($items, $folderName),
+                'fileName' => $folderName . '.zip',
+                'encoding' => 'base64',
+                'mimeType' => 'application/zip',
+              ];
+            };
+          }
+          break;
+        case FieldType::CLOUD_FILE:
+          // can be a single file or multiple files with FieldMultiplicity::PARALLEL
+          if ($fieldData->count() == 1) {
+            $fieldDatum = $fieldData->first();
+            /** @var \OCP\Files\File $file */
+            $file = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+
+            $fileName = str_replace(
+              $userIdSlug, $camelCaseSlug,
+              str_replace(
+                UserStorage::PATH_SEP, '_',
+                  substr(UserStorage::stripParents($file->getPath(), self::PERSONAL_ATTACHMENT_PARENTS_STRIP), 1)
+              )
+            );
+
+            $personalAttachments[] = function() use ($file, $fileName) {
+              return [
+                'data' => $file->getContent(),
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => $file->getMimeType(),
+              ];
+            };
+          } else {
+            $folderPath = $this->participantFieldsService->getFieldFolderPath($fieldData->first());
+            $folder = $this->userStorage->getFolder($folderPath);
+
+            // _claus_files_camerata_projects_1997_Vereinsmitglieder_participants_claus-justus.heine_MultiCloudFile.zip
+            $fileName = str_replace(
+              $userIdSlug, $camelCaseSlug,
+              str_replace(
+                UserStorage::PATH_SEP, '_',
+                substr(UserStorage::stripParents($folder->getPath(), self::PERSONAL_ATTACHMENT_PARENTS_STRIP), 1)
+              )
+            );
+            $fileName .= '.zip';
+
+            $personalAttachments[] = function() use ($folder, $fileName) {
+              $data = $this->userStorage->getFolderArchive($folder, self::PERSONAL_ATTACHMENT_PARENTS_STRIP);
+              return [
+                'data' => $data,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => 'application/zip',
+              ];
+            };
+          }
+          break;
+        case FieldType::CLOUD_FOLDER:
+          // simply add the folder as a zip-archive
+          $fieldDatum = $fieldData->first();
+          /** @var OCP\Files\Folder $folder */
+          $folder = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+          if (!empty($folder)) {
+            // _claus_files_camerata_projects_1997_Vereinsmitglieder_participants_claus-justus.heine_Anlagen Versicherung.zip
+            $fileName = str_replace(
+              $userIdSlug, $camelCaseSlug,
+              str_replace(
+                UserStorage::PATH_SEP, '_',
+                substr(UserStorage::stripParents($folder->getPath(), self::PERSONAL_ATTACHMENT_PARENTS_STRIP), 1)
+              )
+            );
+            $fileName .= '.zip';
+            $personalAttachments[] = function() use ($folder, $fileName) {
+              $data = $this->userStorage->getFolderArchive($folder, self::PERSONAL_ATTACHMENT_PARENTS_STRIP);
+              return [
+                'data' => $data,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => 'application/zip',
+              ];
+            };
+          }
+          break;
+        case FieldType::DB_FILE:
+          // can be a single file or multiple files with FieldMultiplicity::PARALLEL
+          if ($fieldData->count() == 1) {
+            $fieldDatum = $fieldData->first();
+            /** @var Entities\File $file */
+            $file = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+            $personalAttachments[] = function() use($file) {
+              return [
+                'data' => $file->getFileData()->getData(),
+                'fileName' => $file->getFileName(),
+                'encoding' => 'base64',
+                'mimeType' => $file->getMimeType(),
+              ];
+            };
+          } else {
+            $items = [];
+            foreach ($fieldData as $fieldDatum) {
+              /** @var Entities\File $file */
+              $items[] = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+            }
+            $folderName = $fieldName . '-' . $camelCaseSlug;
+            $personalAttachments[] = function() use ($folderName, $items) {
+
+              return [
+                'data' => $this->di(DatabaseStorageUtil::class)->getCollectionArchive($items, $folderName),
+                'fileName' => $folderName . '.zip',
+                'encoding' => 'base64',
+                'mimeType' => 'application/zip',
+              ];
+            };
+          }
+          break;
+      }
+    }
+
+    return $personalAttachments;
+  }
+
+  /**
    * Compose and send one message. If $EMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
    * otherwise Bcc: is used, unless sending to the recipients of a
@@ -1456,7 +1827,10 @@ Störung.';
    *
    * @param array $EMails The recipient list
    *
-   * @param array $databaseAttachements
+   * @param array $extraAttachements Array of callables return a flat array
+   * ```
+   * [ 'data' => DATA, 'fileName' => NAME, 'encoding' => ENCODING, 'mimeType' => TYPE ]
+   * ```
    *
    * @param bool $addCC If @c false, then additional CC and BCC recipients will
    *                   not be added.
@@ -1464,7 +1838,7 @@ Störung.';
    * @return string The sent Mime-message which then may be stored in the
    * Sent-Folder on the imap server (for example).
    */
-  private function composeAndSend($strMessage, $EMails, $databaseAttachments = [], $addCC = true)
+  private function composeAndSend($strMessage, $EMails, $extraAttachments = [], $addCC = true)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -1552,7 +1926,6 @@ Störung.';
           }
         }
       } else {
-        $this->logInfo('CONSTRUCTION MODE');
         // Construction mode: per force only send to the developer
         $phpMailer->AddAddress($this->catchAllEmail, $this->catchAllName);
       }
@@ -1597,7 +1970,7 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
-      // Add all registered attachments.
+      // Add all registered global attachments.
       $attachments = $this->fileAttachments();
       foreach ($attachments as $attachment) {
         if ($attachment['status'] != 'selected') {
@@ -1616,9 +1989,7 @@ Störung.';
           $attachment['type']);
       }
 
-      // Finally possibly to-be-attached events. This cannot throw,
-      // but it does not hurt to keep it here. This way we are just
-      // ready with adding data to the message inside the try-block.
+      // Add to-be-attached events.
       $events = $this->eventAttachments();
       if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
@@ -1632,25 +2003,23 @@ Störung.';
                                            'text/calendar');
       }
 
-      // add database-attachment
-      /** @var Entities\EncryptedFile $encryptedFile */
-      foreach ($databaseAttachments as $encryptedFile) {
+      // All extra (in particular: personal) attachments.
+      foreach ($extraAttachments as $generator) {
+        $attachment = call_user_func($generator);
         $phpMailer->addStringAttachment(
-          $encryptedFile->getFileData()->getData(),
-          $encryptedFile->getFileName(),
-          'base64',
-          $encryptedFile->getMimeType());
+          $attachment['data'],
+          $attachment['fileName'],
+          $attachment['encoding'],
+          $attachment['mimeType']
+        );
       }
 
-    } catch (\Exception $exception) {
+    } catch (\Throwable $t) {
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
       $this->diagnostics['MailerExceptions'][] =
-                                               $exception->getFile().
-                                               '('.$exception->getLine().
-                                               '): '.
-                                               $exception->getMessage();
+        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
 
       return false;
     }
@@ -1700,14 +2069,20 @@ Störung.';
     $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
 
     $this->diagnostics['Message']['Files'] = [];
-    $attachments = $this->fileAttachments();
-    foreach ($attachments as $attachment) {
+    foreach ($this->fileAttachments() as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue;
       }
       $size     = \OCP\Util::humanFileSize($attachment['size']);
       $name     = basename($attachment['name']).' ('.$size.')';
       $this->diagnostics['Message']['Files'][] = $name;
+    }
+
+    foreach ($this->personalAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
+      }
+      $this->diagnostics['Message']['Files'][] = $attachment['name'];
     }
 
     $this->diagnostics['Message']['Events'] = [];
@@ -1852,14 +2227,21 @@ Störung.';
    *
    * @param $strMessage The message to send.
    *
-   * @param $EMails The recipient list
+   * @param $eMails The recipient list
+   *
+   * @param array $extraAttachements Array of callables return a flat array
+   * ```
+   * [ 'data' => DATA, 'fileName' => NAME, 'encoding' => ENCODING, 'mimeType' => TYPE ]
+   * ```
    *
    * @param $addCC If @c false, then additional CC and BCC recipients will
    *               not be added.
    *
    * @return bool true or false.
+   *
+   * @todo Fold into composeAndSend
    */
-  private function composeAndExport($strMessage, $eMails, $addCC = true)
+  private function composeAndExport($strMessage, $eMails, $extraAttachments = [], $addCC = true)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -1988,16 +2370,24 @@ Störung.';
                                            'text/calendar');
       }
 
-    } catch (\Exception $exception) {
-      $this->logException($exception);
+      // All extra (in particular: personal) attachments.
+      foreach ($extraAttachments as $generator) {
+        $attachment = call_user_func($generator);
+        $phpMailer->addStringAttachment(
+          $attachment['data'],
+          $attachment['fileName'],
+          $attachment['encoding'],
+          $attachment['mimeType']
+        );
+      }
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
       $this->diagnostics['MailerExceptions'][] =
-        $exception->getFile().
-        '('.$exception->getLine().
-        '): '.
-        $exception->getMessage();
+        $t->getFile() . '(' .$t->getLine() . '): ' . $t->getMessage();
 
       return null;
     }
@@ -2008,27 +2398,48 @@ Störung.';
         // in principle this cannot happen as the mailer DOES use
         // exceptions ...
         $this->executionStatus = false;
-        $this->diagnostics['mailerErrors'][] = $phpMailer->ErrorInfo;
+        $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
         return null;
       } else {
         // success, would log success if we really were sending
       }
-    } catch (\Exception $exception) {
-      $this->logException($exception);
+    } catch (\Throwable $t) {
+      $this->logException($t);
       $this->executionStatus = false;
-      $this->diagnostics['mailerExceptions'][] =
-        $exception->getFile()
-       .'('.$exception->getLine()
-       .'): '.
-        $exception->getMessage();
+      $this->diagnostics['MailerExceptions'][] =
+        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
 
       return null;
+    }
+
+    // decode the somewhat cryptic fields to a more readable variant and
+    // generate a temporary cache file in order to be able to review the
+    // generated attachments.
+    $attachments = [];
+    foreach ($phpMailer->getAttachments() as $mailerAttachment) {
+      $attachment = [
+        'data' => null,
+        'name' => $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_NAME],
+        'size' => strlen($mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA]),
+        'encoding' => $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_ENCODING],
+        'mimeType' => $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_MIME_TYPE],
+      ];
+      // generate a cache file for the preview page
+      /** @var \OCP\ICache $cloudCache */
+      $cloudCache = $this->di(\OCP\ICache::class);
+      $cacheKey = (string)Uuid::create();
+      $attachment['data'] =
+        $cloudCache->set($cacheKey, $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA], self::ATTACHMENT_PREVIEW_CACHE_TTL)
+        ? $cacheKey
+        : null;
+      $cloudCache->set($cacheKey . '-meta', json_encode($attachment));
+      $attachments[] = $attachment;
     }
 
     return [
       'headers' => $phpMailer->getMailHeaders(),
       'body' => $strMessage,
-      // @todo perhaps also supply attachments as download links for easy checking.
+      'attachments' => $attachments,
     ];
   }
 
@@ -2083,14 +2494,16 @@ Störung.';
    * primarily meant in order to debug actual variable substitutions,
    * or to have hardcopies from debit note notifications and other
    * important emails.
+   *
+   * @todo This really should be folded in to sendMessages()
    */
   private function exportMessages(?array $recipients = null)
   {
     // @todo yield needs more care concerning error management
     $messages = [];
 
-    $this->diagnostics['totalCount'] =
-      $this->diagnostics['failedCount'] = 0;
+    $this->diagnostics['TotalCount'] =
+      $this->diagnostics['FailedCount'] = 0;
 
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
@@ -2100,24 +2513,29 @@ Störung.';
     }, self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)) {
+    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)
+        || count($this->personalAttachments()) > 0) {
 
-      $this->diagnostics['totalPayload'] = count($recipients)+1;
-
+      $this->diagnostics['TotalPayload'] = count($recipients)+1;
 
       foreach ($recipients as $recipient) {
-        /** @var Entities\Musician */
+        /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
+
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
-        ++$this->diagnostics['totalCount'];
-        $message = $this->composeAndExport($strMessage, [ $recipient ], false);
-        if (empty($message)) {
-          ++$this->diagnostics['failedCount'];
-          return;
+
+        $personalAttachments = $this->composePersonalAttachments($musician);
+
+        ++$this->diagnostics['TotalCount'];
+        $message = $this->composeAndExport($strMessage, [ $recipient ], $personalAttachments, false);
+        if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
+          ++$this->diagnostics['FailedCount'];
         }
-        $messages[] = $message;
-        //yield $message;
+
+        if (!empty($message)) {
+          $messages[] = $message;
+        }
       }
 
       // Finally send one message without template substitution (as
@@ -2125,25 +2543,27 @@ Störung.';
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
-      ++$this->diagnostics['totalCount'];
+      ++$this->diagnostics['TotalCount'];
       $message = $this->composeAndExport($messageTemplate, [], true);
-      if (empty($message)) {
-        ++$this->diagnostics['failedCount'];
-        return;
+      if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
+        ++$this->diagnostics['FailedCount'];
       }
-      $messages[] = $message;
-      // yield $message;
+
+      if (!empty($message)) {
+        $messages[] = $message;
+      }
+
     } else {
-      $this->diagnostics['totalPayload'] = 1;
-      ++$this->diagnostics['totalCount']; // this is ONE then ...
+      $this->diagnostics['TotalPayload'] = 1;
+      ++$this->diagnostics['TotalCount']; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       $message = $this->composeAndExport($messageTemplate, $recipients);
-      if (empty($message)) {
-        ++$this->diagnostics['failedCount'];
-        return;
+      if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
+        ++$this->diagnostics['FailedCount'];
       }
-      $messages[] = $message;
-      // yield $message;
+      if (!empty($message)) {
+        $messages[] = $message;
+      }
     }
     return $messages;
   }
@@ -2704,6 +3124,8 @@ Störung.';
       $this->diagnostics['SubjectValidation'] = true;
     }
 
+    $autoSave = filter_var($this->parameterService[self::POST_TAG]['autoSave'],  FILTER_VALIDATE_BOOLEAN);
+
     $draftData = [
       'projectId' => $this->parameterService['projectId'],
       'projectName' => $this->parameterService['projectName'],
@@ -2715,24 +3137,29 @@ Störung.';
     unset($draftData[self::POST_TAG]['request']);
     unset($draftData[self::POST_TAG]['submitAll']);
     unset($draftData[self::POST_TAG]['saveMessage']);
+    unset($draftData[self::POST_TAG]['autoSave']);
 
     // $dataJSON = json_encode($draftData);
     $subject = $this->subjectTag() . ' ' . $this->subject();
+
+    /** @var Entities\EmailDraft $draft */
 
     if ($this->draftId > 0) {
       $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
                     ->find($this->draftId);
       if (!empty($draft)) {
         $draft->setSubject($subject)
-              ->setData($draftData);
+          ->setData($draftData)
+          ->setAutoGenerated($draft->getAutoGenerated() && $autoSave);
       } else {
         $this->draftId = 0;
       }
     }
     if (empty($draft)) {
       $draft = Entities\EmailDraft::create()
-             ->setSubject($subject)
-             ->setData($draftData);
+        ->setSubject($subject)
+        ->setData($draftData)
+        ->setAutoGenerated($autoSave);
       $this->persist($draft);
     }
     $this->flush();
@@ -2740,7 +3167,7 @@ Störung.';
 
     // Update the list of attachments, if any
     foreach ($this->fileAttachments() as $attachment) {
-      self::rememberTemporaryFile($attachment['tmp_name']);
+      $this->rememberTemporaryFile($attachment['tmp_name'], $attachment['origin']);
     }
 
     return $this->executionStatus;
@@ -2757,6 +3184,7 @@ Störung.';
       return $this->executionStatus = false;
     }
 
+    /** @var Entities\EmailDraft $draft */
     $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
       ->find($draftId);
     if (empty($draft)) {
@@ -2778,6 +3206,16 @@ Störung.';
     $this->draftId = $draftId;
 
     $this->executionStatus = true;
+
+    // Clear auto-flag once the draft was actively reviewed
+    $draft->setAutoGenerated(false);
+    try {
+      $this->flush();
+    } catch (\Throwable $t) {
+      $this->diagnostics['caption'] = $this->l->t('Could not clear auto-generated flag of draft %s, "%s".', [
+        $draftId, $draft->getSubject(), ]);
+      $this->executionStatus = false;
+    }
 
     return $draftData;
   }
@@ -2890,9 +3328,15 @@ Störung.';
    * drafts are cleaned at logout and when closing the email form.
    *
    * @param string $tmpFile
+   *
+   * @param string|AttachmentOrigin $origin
    */
-  private function rememberTemporaryFile(string $tmpFile)
+  private function rememberTemporaryFile(string $tmpFile, $origin)
   {
+    if ($origin == AttachmentOrigin::PARTICIPANT_FIELD) {
+      // no need to save, we just need the field-id which is stored anyway
+      return true;
+    }
     $tmpFile = basename($tmpFile);
     try {
       $attachment = $this
@@ -2955,10 +3399,12 @@ Störung.';
 
       $tmpFile = $this->appStorage->newTemporaryFile(AppStorage::DRAFTS_FOLDER);
 
-      $tmpFilePath = AppStorage::PATH_SEP.AppStorage::DRAFTS_FOLDER.AppStorage::PATH_SEP.$tmpFile->getName();
+      $tmpFilePath = AppStorage::PATH_SEP .AppStorage::DRAFTS_FOLDER .AppStorage::PATH_SEP . $tmpFile->getName();
+
+      $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD() : AttachmentOrigin::CLOUD();
 
       // Remember the file in the data-base for cleaning up later
-      $this->rememberTemporaryFile($tmpFilePath);
+      $this->rememberTemporaryFile($tmpFilePath, $origin);
 
       try {
         if (!empty($fileRecord['node'])) {
@@ -2970,6 +3416,7 @@ Störung.';
         }
 
         $fileRecord['tmp_name'] = $tmpFilePath;
+        $fileRecord['origin'] = $origin;
 
       } catch (\Throwable $t) {
         $this->logException($t);
@@ -3089,61 +3536,243 @@ Störung.';
     return $this->cgiValue('subject', '');
   }
 
-  /** Return the file attachment data. */
-  public function fileAttachments()
+  /**
+   * Return the file attachment data.
+   *
+   * @return array
+   * ```
+   * [
+   *   [
+   *     'value' => 'field_id',
+   *     'status' => STATUS,
+   *     'field_id' => NAME_AS_STORED_ON_THE_SERVER,
+   *     'name' => NAME,
+   *     ...
+   *   ],
+   *     ...
+   * ]
+   * ```
+   */
+  public function personalAttachments()
   {
-    // JSON encoded array
-    $fileAttachJSON = $this->cgiValue('fileAttachments', '{}');
-    $fileAttach = json_decode($fileAttachJSON, true);
-    $selectedAttachments = $this->cgiValue('attachedFiles', []);
-    $selectedAttachments = array_flip($selectedAttachments);
-    $localFileAttach = [];
-    $cloudFileAttach = [];
-    foreach($fileAttach as $attachment) {
-      if ($attachment['status'] == 'new') {
-        $attachment['status'] = 'selected';
-      } else if (isset($selectedAttachments[$attachment['tmp_name']])) {
+    if ($this->personalFileAttachments !== null) {
+      return $this->personalFileAttachments;
+    }
+
+    if (empty($this->project)) {
+      $this->personalFileAttachments = [];
+      return $this->personalFileAttachments;
+    }
+    $selectedAttachments = array_flip($this->cgiValue('attachedFiles', []));
+
+    // add participant fields data if present
+    $this->personalFileAttachments = [];
+
+    $origin = AttachmentOrigin::PARTICIPANT_FIELD;
+
+    $generalAttachments = [];
+    $serviceFeeAttachments = [];
+    $templateAttachments = [];
+
+    /** @var Entities\ProjectParticipantField $participantField */
+    foreach ($this->project->getParticipantFields() as $participantField) {
+      $fieldType = $participantField->getDataType();
+      if ($fieldType != FieldType::CLOUD_FILE
+          && $fieldType != FieldType::CLOUD_FOLDER
+          && $fieldType != FieldType::DB_FILE
+          && $fieldType != FieldType::SERVICE_FEE) {
+        continue;
+      }
+      $fieldId = $participantField->getId();
+      $fieldName = $participantField->getName();
+      $attachment = [
+        'value' => 'field_id',
+        'field_id' => $fieldId,
+        'name' => $fieldName,
+        'origin' => $origin,
+        'sub_selection' => false,
+        'sub_options' => [],
+      ];
+      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
         $attachment['status'] = 'selected';
       } else {
         $attachment['status'] = 'inactive';
       }
+      if ($fieldType == FieldType::SERVICE_FEE) {
+        $attachment['sub_topic'] = 'bills and receipts';
+        // split only the recurring receivables as there may be so many of them ...
+        if ($participantField->getMultiplicity() == FieldMultiplicity::RECURRING) {
+          // add sub-options in the same manner
+          /** @var Entities\ProjectParticipantFieldDataOption $option */
+          foreach ($participantField->getSelectableOptions() as $option) {
+            $label = $option->getLabel();
+            if (strpos($label, $fieldName) !== 0) {
+              $label = $fieldName . ' - ' . $label;
+            }
+            $subOption = [
+              'value' => 'option_key',
+              'option_key' => (string)$option->getKey(),
+              'name' => $label,
+              'origin' => $origin . '-option',
+            ];
+            if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']] . ':' . $subOption[$subOption['value']]])) {
+              $subOption['status'] = 'selected';
+              $attachment['sub_selection'] = true;
+            } else {
+              $subOption['status'] = 'inactive';
+            }
+            $attachment['suboptions'][] = $subOption;
+          }
+          usort($attachment['suboptions'], function($a, $b) { return strcmp($a['name'], $b['name']); });
+        }
+        $serviceFeeAttachments[] = $attachment;
+      } else {
+        $attachment['sub_topic'] = 'general';
+        $generalAttachments[] = $attachment;
+      }
+    }
+
+    // add also the global document templates
+    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+        continue;
+      }
+      $attachment = [
+        'value' => 'template_id',
+        'template_id' => $templateId,
+        'name' => $this->l->t($documentTemplate['name']),
+        'origin' => $origin,
+        'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
+      ];
+      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+        $attachment['status'] = 'selected';
+      } else {
+        $attachment['status'] = 'inactive';
+      }
+      $templateAttachments[] = $attachment;
+    }
+
+    $comparator = function($a, $b) {
+      return strcmp(
+        $a['origin'].$a['sub_topic'].$a['name'],
+        $b['origin'].$b['sub_topic'].$b['name']
+      );
+    };
+    usort($generalAttachments, $comparator);
+    usort($serviceFeeAttachments, $comparator);
+    usort($templateAttachments, $comparator);
+
+    $this->personalFileAttachments = array_merge($templateAttachments, $generalAttachments, $serviceFeeAttachments);
+
+    return $this->personalFileAttachments;
+  }
+
+  /**
+   * Return the file attachment data.
+   *
+   * @return array
+   * ```
+   * [
+   *   [
+   *     'value' => 'tmp_name',
+   *     'status' => STATUS,
+   *     'tmp_name' => NAME_AS_STORED_ON_THE_SERVER,
+   *     'name' => NAME,
+   *     ...
+   *   ],
+   *     ...
+   * ]
+   * ```
+   */
+  public function fileAttachments()
+  {
+    if ($this->globalFileAttachments !== null) {
+      return $this->globalFileAttachments;
+    }
+
+    // JSON encoded array
+    $fileAttachJSON = $this->cgiValue('fileAttachments', '{}');
+    $fileAttach = json_decode($fileAttachJSON, true);
+    $selectedAttachments = array_flip($this->cgiValue('attachedFiles', []));
+
+    $localFileAttach = [];
+    $cloudFileAttach = [];
+    foreach($fileAttach as $origin => $attachment) {
+      $attachment['value'] = 'tmp_name';
+      $origin = $attachment['origin'];
+      if ($attachment['status'] == 'new') {
+        $attachment['status'] = 'selected';
+      } else if (isset($selectedAttachments[$origin . ':' . $attachment['tmp_name']])) {
+        $attachment['status'] = 'selected';
+      } else {
+        $attachment['status'] = 'inactive';
+      }
+      // Keep only the basename part as the folder is programmatically fixed.
       $attachment['name'] = basename($attachment['name']);
-      if ($attachment['origin'] == self::ATTACHMENT_ORIGIN_CLOUD) {
+      if ($attachment['origin'] == AttachmentOrigin::CLOUD) {
         $cloudFileAttach[] = $attachment;
       } else {
         $localFileAttach[] = $attachment;
       }
     }
 
-    usort($cloudFileAttach, function($a, $b) {
-      return strcmp($a['name'], $b['name']);
-    });
-    usort($localFileAttach, function($a, $b) {
-      return strcmp($a['name'], $b['name']);
-    });
+    $comparator = function($a, $b) { return strcmp($a['name'], $b['name']); };
+    usort($cloudFileAttach, $comparator);
+    usort($localFileAttach, $comparator);
 
-    return array_merge($localFileAttach, $cloudFileAttach);
+    $this->globalFileAttachments = array_merge($localFileAttach, $cloudFileAttach);
+
+    return $this->globalFileAttachments;
   }
 
   /**
    * A helper function to generate suitable select options for
    * PageNavigation::selectOptions()
    */
-  public function fileAttachmentOptions($fileAttach)
+  public function fileAttachmentOptions()
   {
+    $fileAttachments = array_merge($this->fileAttachments(), $this->personalAttachments());
+
     $selectOptions = [];
-    foreach($fileAttach as $attachment) {
-      $value    = $attachment['tmp_name'];
-      $size     = \OC_Helper::humanFileSize($attachment['size']);
-      $name     = $attachment['name'].' ('.$size.')';
-      $group    = $attachment['origin'] == self::ATTACHMENT_ORIGIN_CLOUD ? $this->l->t('Cloud') : $this->l->t('Local Filesystem');
+    foreach($fileAttachments as $attachment) {
+      $value = $attachment[$attachment['value']];
+      $name = $attachment['name'];
+      if (isset($attachment['size'])) {
+        $size = \OC_Helper::humanFileSize($attachment['size']);
+        $name .= ' (' . $size . ')';
+      }
+      $origin = $attachment['origin'];
+      switch ($origin) {
+        case AttachmentOrigin::PARTICIPANT_FIELD: $group = $this->l->t('Personalized'); break;
+        case AttachmentOrigin::CLOUD: $group = $this->l->t('Cloud'); break;
+        case AttachmentOrigin::UPLOAD: $group = $this->l->t('Local Filesystem'); break;
+      }
+      $groupData = [ 'origin' => $origin, ];
+      if (isset($attachment['sub_topic'])) {
+        $group .= ' - ' . $this->l->t($attachment['sub_topic']);
+        $groupData['sub_topic'] = $attachment['sub_topic'];
+      }
       $selected = $attachment['status'] == 'selected';
-      $selectOptions[] = [
-        'value' => $value,
+      $selectOption = [
+        'value' => $origin . ':' . $value,
         'name' => $name,
         'group' => $group,
+        'groupData' => $groupData,
         'flags' => $selected ? PageNavigation::SELECTED : 0,
       ];
+      $selectOptions[] = $selectOption;
+      foreach ($attachment['suboptions']??[] as $subOption) {
+        $selected = $attachment['status'] == 'selected'
+          || $subOption['status'] == 'selected';
+        $selectOptions[] = [
+          'value' => $selectOption['value'] . ':' . $subOption[$subOption['value']],
+          'name' => $subOption['name'],
+          'group' => $selectOption['group'],
+          'groupData' => $groupData,
+          'flags' => $selected ? PageNavigation::SELECTED : 0,
+          'data' => [ 'parent' => $selectOption['value'] ],
+        ];
+      }
     }
     return $selectOptions;
   }
@@ -3196,7 +3825,7 @@ Störung.';
     // build the select option control array
     $selectOptions = [];
     foreach ($eventMatrix as $eventGroup) {
-      $group = $eventGroup['name'];
+      $group = $this->l->t($eventGroup['name']);
       foreach ($eventGroup['events'] as $event) {
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;

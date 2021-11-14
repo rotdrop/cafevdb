@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\DownloadsController;
+
 ?>
 
 <div id="<?php p($appName.'-'.'email-preview'); ?>" class="email-preview">
@@ -31,8 +33,24 @@ namespace OCA\CAFEVDB;
   </div>
   <?php foreach ($messages as $message) { ?>
     <div class="email-header"><pre><?php p($message['headers']); ?></pre></div>
-    <div class="email-body">
+    <div class="email-body reset-css">
       <?php echo $message['body']; ?>
+    </div>
+    <div class="email-attachments reset-css <?php empty($message['attachments']) && p('empty'); ?>">
+      <h4 class="centered-in-rule"><?php p('Attachments'); ?></h4>
+      <ul>
+        <?php foreach ($message['attachments'] as $attachment) { ?>
+          <li>
+            <span class="attachment-item">
+              <span class="filename"><a href="<?php echo $urlGenerator->linkToRoute($appName . '.downloads.get', [ 'section' => DownloadsController::SECTION_FILECACHE, 'object' => $attachment['data'], ])  . '?' . 'requesttoken' . '=' . urlencode($requesttoken); ?>"><?php p($attachment['name']); ?></a></span>
+              <span class="separator">|</span>
+              <span class="size"><?php p(\OC_Helper::humanFileSize($attachment['size'])); ?></span>
+              <span class="separator">|</span>
+              <span class="mime-type"><?php p($attachment['mimeType']); ?></span>
+            </span>
+          </li>
+        <?php } ?>
+      </ul>
     </div>
     <hr class="email-preview-separator"/>
   <?php } ?>
