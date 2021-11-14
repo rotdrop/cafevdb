@@ -43,9 +43,8 @@ class DownloadsController extends Controller
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  public const SECTION_TEST = 'test';
-  public const SECTION_PDFLETTER = 'pdfletter';
   public const SECTION_DATABASE = 'database';
+  public const SECTION_FILECACHE = 'filecache';
 
   public const OBJECT_COLLECTION = 'collection';
   public const COLLECTION_ITEMS = 'items';
@@ -67,7 +66,9 @@ class DownloadsController extends Controller
   /**
    * Fetch something and return it as download.
    *
-   * @param string $section Cosmetics, for grouping purposes
+   * @param string $section Origin of the download. Currently only
+   * self::SECTION_DATABASE and self::SECTION_FILECACHE for data-base
+   * Entities\File objects and cache-objects of the per-user file-cache
    *
    * @param string $object Something identifying the object in the
    * context of $section. If $object == self::OBJECT_COLLECTION the
@@ -88,44 +89,34 @@ class DownloadsController extends Controller
   public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     switch ($section) {
-    case self::SECTION_TEST:
-      switch ($object) {
-      case self::SECTION_PDFLETTER:
-        /** @var \OCA\CAFEVDB\Documents\PDFLetter $letterGenerator */
-        $letterGenerator = $this->di(\OCA\CAFEVDB\Documents\PDFLetter::class);
-        $fileName = $this->appName() . '-test-letter.pdf';
-        $letter = $letterGenerator->testLetter($fileName, 'S');
-        return $this->dataDownloadResponse($letter, $fileName, 'application/pdf');
-      }
-      break;
-    case self::SECTION_DATABASE:
-      if ($object == self::OBJECT_COLLECTION) {
-        $this->logInfo('ITEMS ' . print_r($items, true));
+      case self::SECTION_DATABASE:
+        if ($object == self::OBJECT_COLLECTION) {
+          $this->logInfo('ITEMS ' . print_r($items, true));
 
-        if (empty($fileName)) {
-          $fileName = $this->timeStamp() . '-' . $this->appName() . '-' . 'download' . '.zip';
-        }
-        $fileName = basename($fileName, '.zip');
-
-        $fileData = $this->di(DatabaseStorageUtil::class)->getCollectionArchive($items, $fileName);
-
-        return $this->dataDownloadResponse($fileData, $fileName . '.zip', 'application/zip');
-      } else {
-        $fileId = $object;
-        /** @var Entities\File $file */
-        $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
-        if (empty($file)) {
-          return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
-        }
-        $mimeType = $file->getMimeType();
-        if (empty($fileName)) {
-          $fileName = $file->getFileName();
           if (empty($fileName)) {
-            $fileName = $this->appName() . '-' . 'download' . $fileId;
+            $fileName = $this->timeStamp() . '-' . $this->appName() . '-' . 'download' . '.zip';
           }
+          $fileName = basename($fileName, '.zip');
+
+          $fileData = $this->di(DatabaseStorageUtil::class)->getCollectionArchive($items, $fileName);
+
+          return $this->dataDownloadResponse($fileData, $fileName . '.zip', 'application/zip');
+        } else {
+          $fileId = $object;
+          /** @var Entities\File $file */
+          $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
+          if (empty($file)) {
+            return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
+          }
+          $mimeType = $file->getMimeType();
+          if (empty($fileName)) {
+            $fileName = $file->getFileName();
+            if (empty($fileName)) {
+              $fileName = $this->appName() . '-' . 'download' . $fileId;
+            }
+          }
+          return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
         }
-        return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
-      }
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
