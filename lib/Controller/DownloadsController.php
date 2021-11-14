@@ -89,7 +89,7 @@ class DownloadsController extends Controller
   public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     switch ($section) {
-      case self::SECTION_DATABASE:
+      case self::SECTION_DATABASE: {
         if ($object == self::OBJECT_COLLECTION) {
           $this->logInfo('ITEMS ' . print_r($items, true));
 
@@ -117,6 +117,34 @@ class DownloadsController extends Controller
           }
           return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
         }
+      }
+      case self::SECTION_FILECACHE: {
+        $cacheKey = $object;
+        /** @var OCP\ICache $fileCache */
+        $fileCache = $this->di(\OCP\ICache::class);
+        $fileData = $fileCache->get($cacheKey);
+        if (empty($fileData)) {
+          return self::grumble($this->l->t('File with cache-key "%s" not found in user\'s file-cache.', $cacheKey));
+        }
+        $meta = $fileCache->get($cacheKey . '-meta');
+        if (!empty($meta)) {
+          $fileName = $meta['name']??null;
+          $mimeType = $meta['mimeType']??null;
+        }
+        if (empty($mimeType)) {
+          /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+          $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+          $mimeType = $mimeTypeDetector->detectString($fileData);
+        }
+        if (empty($fileName)) {
+          $fileName = implode('-', [
+            $this->appName(),
+            $this->userId(),
+            $cacheKey,
+          ]) . '.' . Util::fileExtensionFromMimeType($mimeType);
+        }
+        return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+      }
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
