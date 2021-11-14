@@ -310,8 +310,7 @@ class PageController extends Controller {
       'timezone' => $this->getTimezone(),
       'historySize' => $historySize,
       'historyPosition' => $historyPosition,
-      'requesttoken' => \OCP\Util::callRegister(), // @todo: check
-      'csrfToken' => \OCP\Util::callRegister(), // @todo: check
+      'requesttoken' => \OCP\Util::callRegister(),
       'restorehistory' => $restoreHist,
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,

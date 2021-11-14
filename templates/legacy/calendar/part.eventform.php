@@ -80,7 +80,7 @@
 		<textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 
 		<?php if($_['eventuri'] != 'new'){ ?>
-		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($csrfToken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>">
+		<input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>">
 		<?php }?>
 	</div>
 </div>

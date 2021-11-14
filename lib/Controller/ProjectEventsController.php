@@ -159,7 +159,7 @@ class ProjectEventsController extends Controller {
         'selected' => $selected,
         'eventsService' => $this->eventsService,
         'toolTips' => $this->di(ToolTipsService::class),
-        'requestToken' => \OCP\Util::callRegister(),
+        'requesttoken' => \OCP\Util::callRegister(),
       ];
       $response = new TemplateResponse(
         $this->appName(),

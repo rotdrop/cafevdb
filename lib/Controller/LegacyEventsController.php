@@ -227,7 +227,7 @@ class LegacyEventsController extends Controller {
       $this->appName(),
       'legacy/calendar/part.newevent',
       [
-        'csrfToken' => \OCP\Util::callRegister(),
+        'requesttoken' => \OCP\Util::callRegister(),
         'urlGenerator' => $this->urlGenerator(),
 
         'calendarid' => $calendarId,
@@ -541,7 +541,7 @@ class LegacyEventsController extends Controller {
     }
 
     $templateParameters = [
-      'csrfToken' => \OCP\Util::callRegister(),
+      'requestoken' => \OCP\Util::callRegister(),
       'urlGenerator' => $this->urlGenerator(),
       'categories' => $categories,
       'protectCategories' => $protectCategories,

@@ -61,7 +61,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
     <input type="hidden" name="ownerId" value="{ownerId}"/>
     <input type="hidden" name="imageId" value="{imageId}"/>
     <input type="hidden" name="joinTable" value="{joinTable}"/>
-    <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
+    <input type="hidden" name="requesttoken" value="<?php echo $requesttoken; ?>"/>
     <input type="hidden" name="imageSize" value="{imageSize}"/>
     <input type="hidden"  class="max_upload" name="MAX_FILE_SIZE" value="<?php echo $uploadMaxFilesize; ?>"/>
     <input type="hidden" class="max_human_file_size max_upload_human" value="<?php echo $uploadMaxHumanFilesize; ?>""/>
@@ -100,7 +100,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
       <input class="file-upload-start" type="file" accept="{accept}" name="{uploadName}"/>
       <input type="hidden" name="uploadName" value="{uploadName}"/>
       <input type="hidden" name="data" value='{uploadData}' />
-      <input type="hidden" name="requesttoken" value="<?php echo $csrfToken; ?>"/>
+      <input type="hidden" name="requesttoken" value="<?php echo $requesttoken; ?>"/>
       <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>"/>
       <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>"/>
       <input type="hidden" name="projectId" value="{projectId}" />
