@@ -78,12 +78,13 @@ const accordionList = function(selector, $dialogHolder) {
   return true;
 };
 
-const init = function(htmlContent, textStatus, request) {
+const init = function(htmlContent, textStatus, request, afterInit) {
+
+  afterInit = afterInit || function() {};
 
   globalState.Events.projectId = parseInt(request.getResponseHeader('X-' + appName + '-project-id'));
   globalState.Events.projectName = request.getResponseHeader('X-' + appName + '-project-name');
 
-  // var popup = $('#events').cafevDialog({
   const dialogContent = $(htmlContent);
   dialogContent.cafevDialog({
     dialogClass: 'cafevdb-project-events no-scroll',
@@ -195,6 +196,7 @@ const init = function(htmlContent, textStatus, request) {
           return false;
         });
       $dialogHolder.dialog('moveToTop');
+      afterInit();
     },
     close(event, ui) {
       $.fn.cafevTooltip.remove();

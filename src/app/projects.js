@@ -51,6 +51,8 @@ require('projects.scss');
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
+  Page.busyIcon(true);
+  const afterInit = () => Page.busyIcon(false);
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -68,9 +70,11 @@ const eventsPopup = function(post, reopen) {
   $.post(
     generateUrl('projects/events/dialog'), post)
     .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown);
+      Ajax.handleError(xhr, status, errorThrown, afterInit);
     })
-    .done(Events.init);
+    .done(function(data, textStatus, request) {
+      Events.init(data, textStatus, request, afterInit);
+    });
 };
 
 /**
