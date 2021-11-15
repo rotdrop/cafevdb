@@ -897,48 +897,52 @@ of the project name before the year is added.'),
 
       'project-web-article-unlinkpage' => $this->l->t('Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles.'),
 
-      'projectevents-button' => $this->l->t('Open a dialog with all known
+      'projectevents' => [
+        'button' => $this->l->t('Open a dialog with all known
 events associated to the project.
 Events can be added and modified
 as needed.'),
 
-      'projectevents-delete' => $this->l->t('Delete the event from the system (no undo possible).'),
+        'delete' => $this->l->t('Delete the event from the system (no undo possible).'),
 
-      'projectevents-deselect' => $this->l->t('Exclude all events from email-submission'),
+        'deselect' => $this->l->t('Exclude all events from email-submission'),
 
-      'projectevents-detach' => $this->l->t('Detach the respective event
+        'detach' => $this->l->t('Detach the respective event
 from the project, but do not
 delete it from the calender.
 The event can be reattached by
 adding the project-name to its
 categories.'),
 
-      'projectevents-download' => $this->l->t('Download the events as ICS file. In principle it is possible to import
+        'download' => $this->l->t('Download the events as ICS file. In principle it is possible to import
 the ICS file into the respective calendar apps of your smartphone,
 tablet or desktop computer.'),
 
-      'projectevents-edit' => $this->l->t('Modify the event.'),
+        'edit' => $this->l->t('Modify the event.'),
 
-      'projectevents-newconcert' => $this->l->t('Add a new concert-event to the project.'),
+        'clone' => $this->l->t('Clone (duplicate) the event. A new event-form will popup with just the data from this event.'),
 
-      'projectevents-newmanagement' => $this->l->t('Add a private management event which is not exposed to the rest of the world.'),
+        'newconcert' => $this->l->t('Add a new concert-event to the project.'),
 
-      'projectevents-newother' => $this->l->t('Add some other event to the project.'),
+        'newmanagement' => $this->l->t('Add a private management event which is not exposed to the rest of the world.'),
 
-      'projectevents-newrehearsal' => $this->l->t('Add a new rehearsal-event to the project.'),
+        'newother' => $this->l->t('Add some other event to the project.'),
 
-      'projectevents-select' => $this->l->t('Select all events for email-submission'),
+        'newrehearsal' => $this->l->t('Add a new rehearsal-event to the project.'),
 
-      'projectevents-selectevent' => $this->l->t('Mark the respective event for being
+        'select' => $this->l->t('Select all events for email-submission'),
+
+        'selectevent' => $this->l->t('Mark the respective event for being
 sent by email as ICS-attachment per email.
 Hitting the email button above the form
 will open an Email form suitable for
 sending the marked events to selected
 recipients.'),
 
-      'projectevents-sendmail' => $this->l->t('Click to open an email-form
+        'sendmail' => $this->l->t('Click to open an email-form
 and send the selected events to
 selected recipients.'),
+      ],
 
       'projectsbalancefolder-force' => $this->l->t('Force the re-creation of the folder where project balanaces are
 stored.'),

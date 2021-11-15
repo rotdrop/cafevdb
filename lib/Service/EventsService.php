@@ -395,7 +395,7 @@ class EventsService
     /* Event end is inclusive the last second of "end" to generate
      * non-confusing dates and times for whole-day events.
      */
-    $endStamp = $end->getTimestamp() - 1;
+    $endStamp = $end->getTimestamp() + ($allDay ? -1 : 0);
 
     $startdate = Util::strftime("%x", $startStamp, $timezone, $locale);
     $starttime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);

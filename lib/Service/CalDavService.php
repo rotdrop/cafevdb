@@ -189,7 +189,8 @@ class CalDavService
     return $this->calendarManager->search($pattern, $searchProperties, $options, $limit, $offset);
   }
 
-  /** Get a calendar with the given display name.
+  /**
+   * Get a calendar with the given display name.
    *
    * @return ICalendar[]
    */
@@ -206,7 +207,8 @@ class CalDavService
     return null;
   }
 
-  /** Get a calendar with the given its id.
+  /**
+   * Get a calendar with the given id.
    *
    * @return ICalendar[]
    */
@@ -229,6 +231,42 @@ class CalDavService
     $calendarInfo = $this->calDavBackend->getCalendarById($id);
     if (!empty($calendarInfo)) {
       return $calendarInfo['principaluri'];
+    }
+    return null;
+  }
+
+  /**
+   * Get principal, shared and original uri from the calendar id, as well as
+   * the owner-user-id.
+   *
+   * @return array
+   * ```
+   * [
+   *   'principaluri' => principals/users/OWNER_ID,
+   *   'owneruri' => URI_AS_SEEN_BY_OWNER,
+   *   'shareuri' => URI_AS_SEEN_BY_CURRENT_USER,
+   *   'ownerid' => OWNER_USER_ID,
+   *   'userid' => CURRENT_USER_ID,
+   * ]
+   * ```
+   *
+   * @bug Users inernal APIs. The NC PHP API is just too incomplete.
+   */
+  public function calendarUris($id)
+  {
+    $calendarInfo = $this->calDavBackend->getCalendarById($id);
+    if (!empty($calendarInfo)) {
+      [,,$ownerId] = explode('/',  $calendarInfo['principaluri']);
+      $userUri = ($ownerId != $this->calendarUserId)
+        ? $calendarInfo['uri'] . '_shared_by_' . $ownerId
+        : $calendarInfo['uri'];
+      return [
+        'principaluri' => $calendarInfo['principaluri'],
+        'owernuri' => $calendarInfo['uri'],
+        'shareuri' => $userUri,
+        'ownerid' => $ownerId,
+        'userid' => $this->calendarUserId,
+      ];
     }
     return null;
   }

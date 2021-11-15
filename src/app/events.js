@@ -31,6 +31,7 @@ import * as DialogUtils from './dialog-utils.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 import modalizer from './modalizer.js';
 
 require('jquery-ui/ui/widgets/accordion');
@@ -76,6 +77,10 @@ const accordionList = function(selector, $dialogHolder) {
     },
   });
   return true;
+};
+
+const handleError = function(xhr, textStatus, errorThrown) {
+  Ajax.handleError(xhr, textStatus, errorThrown, () => pageBusyIcon(false));
 };
 
 const init = function(htmlContent, textStatus, request, afterInit) {
@@ -150,10 +155,10 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           post,
           function(response, textStatus, xhr) {
             if (textStatus === 'success') {
-              Legacy.Calendar.UI.startEventDialog();
+              Legacy.Calendar.UI.startEventDialog(() => pageBusyIcon(false));
               return;
             }
-            Ajax.handleError(xhr, textStatus, xhr.status);
+            handleError(xhr, textStatus, xhr.status);
           });
 
         eventMenu.find('option').prop('selected', false);
@@ -185,7 +190,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
               projectName: Events.projectName,
               eventSelect: events,
             })
-            .fail(Ajax.handleError)
+            .fail(handleError)
             .done(relist);
           return false;
         });
@@ -271,10 +276,12 @@ const adjustSize = function($dialogHolder) {
 
 };
 
-const relist = function(htmlContent, textStatus, xhr) {
+const relist = function(htmlContent, textStatus, xhr, afterInit) {
 
   // globalState.Events.projectId = parseInt(xhr.getResponseHeader('X-' + appName + '-project-id'));
   // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
+
+  afterInit = afterInit || (() => pageBusyIcon(false));
 
   const $dialogHolder = $('#events');
   const listing = $dialogHolder.find('#eventlistholder');
@@ -297,13 +304,15 @@ const relist = function(htmlContent, textStatus, xhr) {
   CAFEVDB.toolTipsInit(listing);
 
   updateEmailForm();
+
+  afterInit();
 };
 
 const redisplay = function() {
   const post = $('#eventlistform').serializeArray();
 
   $.post(generateUrl('projects/events/redisplay'), post)
-    .fail(Ajax.handleError)
+    .fail(handleError)
     .done(relist);
 };
 
@@ -320,6 +329,9 @@ const buttonClick = function(event) {
     return false;
   }
 
+  pageBusyIcon(true);
+  const afterInit = () => pageBusyIcon(false);
+
   $('#events #debug').hide();
   $('#events #debug').empty();
 
@@ -335,10 +347,26 @@ const buttonClick = function(event) {
       post,
       function(response, textStatus, xhr) {
         if (textStatus === 'success') {
-          Legacy.Calendar.UI.startEventDialog();
+          Legacy.Calendar.UI.startEventDialog(afterInit);
           return;
         }
-        Ajax.handleError(xhr, textStatus, xhr.status);
+        handleError(xhr, textStatus, xhr.status);
+      });
+    break;
+  }
+  case 'clone': {
+    // Clone existing event
+    post.push({ name: 'uri', value: $(this).val() });
+    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
+    $('#dialog_holder').load(
+      generateUrl('legacy/events/forms/clone'),
+      post,
+      function(response, textStatus, xhr) {
+        if (textStatus === 'success') {
+          Legacy.Calendar.UI.startEventDialog(afterInit);
+          return;
+        }
+        handleError(xhr, textStatus, xhr.status);
       });
     break;
   }
@@ -360,14 +388,16 @@ const buttonClick = function(event) {
         function(decision) {
           if (decision) {
             $.post(generateUrl('projects/events/' + name), post)
-              .fail(Ajax.handleError)
+              .fail(handleError)
               .done(relist);
+          } else {
+            afterInit();
           }
         },
         true);
     } else {
       $.post(generateUrl('projects/events/' + name), post)
-        .fail(Ajax.handleError)
+        .fail(handleError)
         .done(relist);
     }
     break;
@@ -376,7 +406,7 @@ const buttonClick = function(event) {
     const emailFormDialog = $('div#emailformdialog');
     if (emailFormDialog.length === 0) {
       // If the email-form is not open, then open it :)
-      Email.emailFormPopup(post);
+      Email.emailFormPopup(post, undefined, undefined, afterInit);
     } else {
       // Email dialog already open. We trigger a custom event to
       // propagte the data. We only submit the event ids.
@@ -384,19 +414,26 @@ const buttonClick = function(event) {
 
       // and we move the email-dialog to front
       emailFormDialog.dialog('moveToTop');
+      afterInit();
     }
     break;
   }
   case 'download': {
     fileDownload(
       'projects/events/download',
-      post,
-      t(appName, 'Unable to download calendar events.')
+      post, {
+        always() {
+          afterInit();
+        },
+        errorMessage(url, data) {
+          t(appName, 'Unable to download calendar events.');
+        },
+      }
     );
     break;
   }
   case 'reload': {
-    redisplay();
+    redisplay(afterInit);
     break;
   }
   }

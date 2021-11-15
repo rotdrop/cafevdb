@@ -1,3 +1,8 @@
+<?php
+
+use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
+
+?>
 <ul>
   <li><a href="#tabs-1"><?php p($l->t('Eventinfo')); ?></a></li>
   <li><a href="#tabs-2"><?php p($l->t('Repeating')); ?></a></li>
@@ -52,33 +57,73 @@
   <input id="advanced_options_button" type="button" class="submit options-hidden" value="<?php p($l->t('Advanced options')); ?>">
 
   <div id="advanced_options" class="hidden">
-    <input id="event-location" type="text" size="100"
-	       placeholder="<?php p($l->t('Location'));?>"
-	       value="<?php p(isset($_['location']) ? $_['location'] : '') ?>"
-	       maxlength="100"  name="location" />
-    <a class="action google" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>"><img alt="<?php echo $l->t("Location@Google"); ?>" src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>" class="png action permanent" style="width:2em;height:2em;padding:0em 0.3em 0.3em 0em;vertical-align:middle;"/></a>
-    <a class="action" id="viewOnMap" title="<?php p($l->t('View on map')); ?>">
-      <img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>" class="svg action" style="width: 16px; height: 16px;"></a>
-
+    <div class="event-location flex-container flex-center">
+      <input id="event-location" type="text" size="100"
+	     placeholder="<?php p($l->t('Location'));?>"
+	     value="<?php p(isset($_['location']) ? $_['location'] : '') ?>"
+	     maxlength="100"  name="location" />
+      <a class="action google tooltip-auto" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>">
+        <img alt="<?php echo $l->t("Location@Google"); ?>"
+             src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>"
+             class="png action permanent"/>
+      </a>
+      <a class="action tooltip-auto"
+         id="viewOnMap"
+         title="<?php p($l->t('View on map')); ?>"
+      >
+        <img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>"
+             class="svg action permanent"/>
+      </a>
+    </div>
+    <div class="category flex-container flex-center">
       <input id="category"
-             <?php if ($protectCategories & 2) { p('class="reallyhidden"'); } ?>
+             <?php if ($protectCategories & EventsController::HIDDEN_CATEGORIES) { p('class="reallyhidden"'); } ?>
              name="categories"
              type="text"
-             <?php if ($protectCategories & 1) { p('disabled'); } ?>
+             <?php if ($protectCategories & EventsController::READONLY_CATEGORIES) { p('readonly'); } ?>
 	     placeholder="<?php p($l->t('Categories (separate by comma)')); ?>"
 	     value="<?php p(isset($_['categories']) ? $_['categories'] : '') ?>"
       >
-      <a class="action edit <?php if ($protectCategories) { p('reallyhidden'); } ?>"
+      <a class="action edit tooltip-auto<?php if ($protectCategories) { p(' reallyhidden'); } ?>"
          id="editCategories"
          title="<?php p($l->t('Edit categories')); ?>"
       >
-	<img alt="<?php p($l->t('Edit categories')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/rename.svg'))?>" class="svg action" style="width: 16px; height: 16px;"></a>
+	<img alt="<?php p($l->t('Edit categories')); ?>"
+             src="<?php print_unescaped($urlGenerator->imagePath('core','actions/rename.svg'))?>"
+             class="svg action"/>
+      </a>
+    </div>
+    <textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 
-	<textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
-
-	<?php if($_['eventuri'] != 'new'){ ?>
-	  <input type="button" class="submit" id="editEvent-export"  name="export" value="<?php p($l->t('Export event'));?>" data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>">
-	<?php }?>
+    <?php if($_['eventuri'] != 'new'){ ?>
+      <div class="flex-container flex-center flex-justify-full">
+        <input type="button"
+               class="submit no-flex"
+               id="editEvent-export"
+               name="export"
+               value="<?php p($l->t('Export event'));?>"
+               data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
+        >
+        <span class="button no-flex calendar-app">
+          <a class="calendar-app"
+             target="<?php p(md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]))); ?>"
+             href="<?php
+                   print_unescaped(
+                     $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
+                       'view' => 'timeGridWeek',
+                       'timeRange' => (new \DateTime($_['startdate']))->format('Y-m-d'),
+                       'mode' => 'sidebar',
+                       'objectId' =>  base64_encode($_['remoteEventUrl']),
+                       'recurrenceId' => $_['starttimestamp'],
+                     ])
+                   );
+                   ?>"
+          >
+            <?php p($l->t('Calendar App')); ?>
+          </a>
+        </span>
+      </div>
+    <?php }?>
   </div>
 </div>
 
@@ -136,7 +181,12 @@
       <tr id="advanced_weekday" style="display:none;">
 	<th width="75px"></th>
 	<td id="weeklycheckbox">
-	  <select id="weeklyoptions" name="weeklyoptions[]" multiple="multiple" style="width: 150px;" title="<?php p($l->t("Select weekdays")) ?>">
+	  <select id="weeklyoptions" name="weeklyoptions[]"
+                  multiple="multiple"
+                  style="width: 150px;"
+                  title="<?php p($l->t("Select weekdays")) ?>"
+                  class="tooltip-auto"
+          >
 	    <?php
 	    if (!isset($_['weekdays'])) {$_['weekdays'] = array();}
 	    print_unescaped(OCP\Template::html_select_options($_['repeat_weekly_options'], $_['repeat_weekdays'], array('combine'=>true)));
@@ -149,7 +199,12 @@
       <tr id="advanced_byyearday" style="display:none;">
 	<th width="75px"></th>
 	<td id="byyeardaycheckbox">
-	  <select id="byyearday" name="byyearday[]" multiple="multiple" title="<?php p($l->t("Select days")) ?>">
+	  <select id="byyearday"
+                  name="byyearday[]"
+                  multiple="multiple"
+                  title="<?php p($l->t("Select days")) ?>"
+                  class="tooltip-auto"
+          >
 	    <?php
 	    if (!isset($_['repeat_byyearday'])) {$_['repeat_byyearday'] = array();}
 	    print_unescaped(OCP\Template::html_select_options($_['repeat_byyearday_options'], $_['repeat_byyearday'], array('combine'=>true)));
@@ -162,7 +217,12 @@
       <tr id="advanced_bymonthday" style="display:none;">
 	<th width="75px"></th>
 	<td id="bymonthdaycheckbox">
-	  <select id="bymonthday" name="bymonthday[]" multiple="multiple" title="<?php p($l->t("Select days")) ?>">
+	  <select id="bymonthday"
+                  name="bymonthday[]"
+                  multiple="multiple"
+                  title="<?php p($l->t("Select days")) ?>"
+                  class="tooltip-auto"
+          >
 	    <?php
 	    if (!isset($_['repeat_bymonthday'])) {$_['repeat_bymonthday'] = array();}
 	    print_unescaped(OCP\Template::html_select_options($_['repeat_bymonthday_options'], $_['repeat_bymonthday'], array('combine'=>true)));
@@ -175,7 +235,12 @@
       <tr id="advanced_bymonth" style="display:none;">
 	<th width="75px"></th>
 	<td id="bymonthcheckbox">
-	  <select id="bymonth" name="bymonth[]" multiple="multiple" title="<?php p($l->t("Select months")) ?>">
+	  <select id="bymonth"
+                  name="bymonth[]"
+                  multiple="multiple"
+                  title="<?php p($l->t("Select months")) ?>"
+                  class="tooltip-auto"
+          >
 	    <?php
 	    if (!isset($_['repeat_bymonth'])) {$_['repeat_bymonth'] = array();}
 	    print_unescaped(OCP\Template::html_select_options($_['repeat_bymonth_options'], $_['repeat_bymonth'], array('combine'=>true)));
@@ -188,7 +253,12 @@
       <tr id="advanced_byweekno" style="display:none;">
 	<th width="75px"></th>
 	<td id="bymonthcheckbox">
-	  <select id="byweekno" name="byweekno[]" multiple="multiple" title="<?php p($l->t("Select weeks")) ?>">
+	  <select id="byweekno"
+                  name="byweekno[]"
+                  multiple="multiple"
+                  title="<?php p($l->t("Select weeks")) ?>"
+                  class="tooltip-auto"
+          >
 	    <?php
 	    if (!isset($_['repeat_byweekno'])) {$_['repeat_byweekno'] = array();}
 	    print_unescaped(OCP\Template::html_select_options($_['repeat_byweekno_options'], $_['repeat_byweekno'], array('combine'=>true)));

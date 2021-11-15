@@ -29,19 +29,19 @@ use OCA\CAFEVDB\Common\Util;
 $evtButtons = [
   'Edit' => [
     'tag' => 'edit',
-    'title' => $toolTips['projectevents-edit'],
+    'title' => $toolTips['projectevents:edit'],
   ],
   'Copy' => [
-    'tag' => 'copy',
-    'title' => $toolTips['projectevents-copy'],
+    'tag' => 'clone',
+    'title' => $toolTips['projectevents:clone'],
   ],
   'Delete' => [
     'tag' => 'delete',
-    'title' => $toolTips['projectevents-delete'],
+    'title' => $toolTips['projectevents:delete'],
   ],
   'Detach' => [
     'tag' => 'detach',
-    'title' => $toolTips['projectevents-detach'],
+    'title' => $toolTips['projectevents:detach'],
   ],
 ];
 
@@ -94,7 +94,7 @@ __EOT__;
           />
 __EOT__;
     }
-    $title = $toolTips['projectevents-selectevent'];
+    $title = $toolTips['projectevents:selectevent'];
     $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
     $emailValue = Util::htmlEscape(json_encode([ 'uri' => $evtUri, 'calendarId' => $calId ]));
     echo <<<__EOT__

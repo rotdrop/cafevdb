@@ -13,6 +13,7 @@ import { appName, $ } from '../../app/globals.js';
 import * as Ajax from '../../app/ajax.js';
 import * as Dialogs from '../../app/dialogs.js';
 import * as Events from '../../app/events.js';
+import { busyIcon as pageBusyIcon } from '../../app/page.js';
 import { toBackButton as dialogToBackButton } from '../../app/dialog-utils.js';
 
 const google = {};
@@ -94,10 +95,10 @@ const Calendar = {
 
       if (fromTimestamp >= toTimestamp) {
         const defaultDuration = $('#event_form').data('defaultDuration');
-        const duration = $('#fromtime').data('duration') || defaultDuration;
-        toTimestamp = fromTimestamp + duration * 60 * 1000;
+        const duration = $('#event-time').data('duration') || defaultDuration;
+        toTimestamp = fromTimestamp + duration * 1000;
 
-        const date = new Date(fromTimestamp);
+        const date = new Date(toTimestamp);
         const movedTime = Calendar.Util.formatTime(date.getHours(), date.getMinutes());
         const movedDate = Calendar.Util.formatDate(
           date.getFullYear(),
@@ -106,9 +107,7 @@ const Calendar = {
         $('#to').val(movedDate);
         $('#totime').val(movedTime);
       }
-      console.info('OLD DURATION', $('#fromtime').data('duration'));
-      $('#fromtime').data('duration', (toTimestamp - fromTimestamp) / 60 / 1000);
-      console.info('NEW DURATION', $('#fromtime').data('duration'));
+      $('#event-time').data('duration', (toTimestamp - fromTimestamp) / 1000);
     },
     getDayOfWeek(iDay) {
       const weekArray = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -167,7 +166,8 @@ const Calendar = {
         $('#loading').hide();
       }
     },
-    startEventDialog() {
+    startEventDialog(afterInit) {
+      afterInit = afterInit || function() {};
       Calendar.UI.loading(false);
       $.fn.cafevTooltip.remove();
       //                      $('#fullcalendar').fullCalendar('unselect');
@@ -231,6 +231,7 @@ const Calendar = {
         // draggable: false,
         open() {
           dialogToBackButton($(this));
+          afterInit();
         },
         close(event, ui) {
           $(this).dialog('destroy').remove();
@@ -293,6 +294,27 @@ const Calendar = {
           // const msg = Ajax.failMessage(xhr, status, errorThrown);
           $('#errorbox').html(t('calendar', 'Deletion failed'));
         }, 'json');
+    },
+    submitCloneEventForm(url) {
+      pageBusyIcon(true);
+      const afterInit = () => pageBusyIcon(false);
+      const post = {
+        calendarid: $('input[name="calendarid"]').val(),
+        uri: $('input[name="uri"]').val(),
+      };
+      $('#errorbox').empty();
+      Calendar.UI.loading(true);
+      $('#event').dialog('destroy').remove();
+      $('#dialog_holder').load(
+        url,
+        post,
+        function(response, textStatus, xhr) {
+          if (textStatus === 'success') {
+            Calendar.UI.startEventDialog(afterInit);
+            return;
+          }
+          Ajax.handleError(xhr, textStatus, xhr.status, afterInit);
+        });
     },
     validateEventForm(url) {
       const post = $('#event_form').serialize();

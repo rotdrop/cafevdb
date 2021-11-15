@@ -44,6 +44,15 @@ class LegacyEventsController extends Controller {
 
   const ERROR_TEMPLATE = "errorpage";
 
+  const READONLY_CATEGORIES = 1;
+  const HIDDEN_CATEGORIES = 2;
+
+  const SUBTOPIC_CLONE = 'clone';
+  const SUBTOPIC_NEW = 'new';
+  const SUBTOPIC_EDIT = 'edit';
+  const SUBTOPIC_DELETE = 'delete';
+  const SUBTOPIC_EXPORT = 'export';
+
   /** @var ISession */
   private $session;
 
@@ -99,11 +108,13 @@ class LegacyEventsController extends Controller {
     switch ($topic) {
     case 'forms':
       switch ($subTopic) {
-      case 'new':
+      case self::SUBTOPIC_NEW:
         return $this->newEventForm();
-      case 'edit':
+      case self::SUBTOPIC_EDIT:
         $this->session->close();
-        return $this->editEventForm();
+        return $this->editEventForm($subTopic);
+      case self::SUBTOPIC_CLONE:
+        return $this->editEventForm($subTopic);
       default:
         break;
       }
@@ -111,13 +122,13 @@ class LegacyEventsController extends Controller {
     case 'actions':
       $this->session->close();
       switch ($subTopic) {
-      case 'new':
+      case self::SUBTOPIC_NEW:
         return $this->newEvent();
-      case 'edit':
+      case self::SUBTOPIC_EDIT:
         return $this->editEvent();
-      case 'delete':
+      case self::SUBTOPIC_DELETE:
         return $this->deleteEvent();
-      case 'export':
+      case self::SUBTOPIC_EXPORT:
         return $this->exportEvent();
       default:
         break;
@@ -148,7 +159,7 @@ class LegacyEventsController extends Controller {
     $allday = $this->parameterService['allday'];
 
     $categories   = $projectName.','.$this->l->t($eventKind);
-    $protectCategories = $this->parameterService['protectCategories'];
+    $protectCategories = $this->parameterService->getParam('protectCategories', self::READONLY_CATEGORIES);
     $calendarUri  = $eventKind.'calendar';
     $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));
     $calendarId   = $this->getConfigValue($calendarUri.'id', null);
@@ -174,10 +185,10 @@ class LegacyEventsController extends Controller {
       $start = $start->getTimeStamp();
     }
 
-    $defaultEventDuration = $this->getConfigValue('eventduration', 180);
+    $defaultEventDuration = $this->getConfigValue('eventduration', 180) * 60;
 
     if (!$end) {
-      $end = $start + ($defaultEventDuration * 60);
+      $end = $start + $defaultEventDuration;
     }
 
     $duration = $end - $start;
@@ -192,12 +203,13 @@ class LegacyEventsController extends Controller {
     $calendars = $this->calDavService->getCalendars(true);
     $calendarOptions = [];
     foreach ($calendars as $calendar) {
-      [,,$userId] = explode('/', $this->calDavService->calendarPrincipalUri($calendar->getKey()));
+      $calendarUris = $this->calDavService->calendarUris($calendar->getKey());
       $calendarOptions[] = [
         'active' => 1,
         'id' => $calendar->getKey(),
         'displayname' => $calendar->getDisplayName(),
-        'userid' => $userId,
+        'userid' => $calendarUris['ownerid'],
+        'uri' => $calendarUris['shareuri'],
       ];
     }
     usort($calendarOptions, function($a, $b) use ($calendarId) {
@@ -227,6 +239,8 @@ class LegacyEventsController extends Controller {
       $this->appName(),
       'legacy/calendar/part.newevent',
       [
+        'appName' => $this->appName(),
+
         'requesttoken' => \OCP\Util::callRegister(),
         'urlGenerator' => $this->urlGenerator(),
 
@@ -249,7 +263,7 @@ class LegacyEventsController extends Controller {
         'repeat_bymonthday_options' => $repeat_bymonthday_options,
         'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
 
-        'eventuri' => 'new',
+        'eventuri' => self::SUBTOPIC_NEW,
         'startdate' => $start->format('d-m-Y'),
         'starttime' => $start->format('H:i'),
         'enddate' => $end->format('d-m-Y'),
@@ -277,7 +291,11 @@ class LegacyEventsController extends Controller {
       'blank');
   }
 
-  private function editEventForm()
+  /**
+   * Edit an existing event. If $subTopic equals self::SUBTOPIC_CLONE then a
+   * new event will be generated on save.
+   */
+  private function editEventForm(string $subTopic)
   {
     // all this mess ...
     $uri = $this->parameterService['uri'];
@@ -286,18 +304,18 @@ class LegacyEventsController extends Controller {
     if (empty($data)) {
       return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
     }
-    //$this->logError(print_r($data, true));
+
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $eventId = $data['id'];
     $object = \Sabre\VObject\Reader::read($data['calendardata']);
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
     }
-    [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
-    $this->logError("ownerId: " . $ownerId);
+    $calendarUris = $this->calDavService->calendarUris($calendarId);
+    $ownerId = $calendarUris['ownerid'];
+    $calendarUri = $calendarUris['shareuri'];
     $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
     $accessClass = $this->accessClass($object);
     // $permissions = OC_Calendar_App::getPermissions($id, OC_Calendar_App::EVENT, $accessClass);
@@ -353,7 +371,7 @@ class LegacyEventsController extends Controller {
 
     $duration = $dtend->getDateTime()->getTimestamp() - $dtstart->getDateTime()->getTimestamp();
 
-    $protectCategories = $this->parameterService['protectCategories'];
+    $protectCategories = $this->parameterService->getParam('protectCategories', 1);
     $categories = $vEvent->CATEGORIES;
     //$this->logError(print_r($categories, true));
     $last_modified = $vEvent->__get('LAST-MODIFIED');
@@ -507,12 +525,12 @@ class LegacyEventsController extends Controller {
     $calendars = $this->calDavService->getCalendars(true);
     $calendarOptions = [];
     foreach ($calendars as $calendar) {
-      [,,$userId] = explode('/', $this->calDavService->calendarPrincipalUri($calendar->getKey()));
       $calendarOptions[] = [
         'active' => 1,
         'id' => $calendar->getKey(),
         'displayname' => $calendar->getDisplayName(),
-        'userid' => $userId,
+        'userid' => $calendarUris['ownerid'],
+        'uri' => $calendarUris['shareuri'],
       ];
     }
     usort($calendarOptions, function($a, $b) use ($calendarId) {
@@ -532,7 +550,11 @@ class LegacyEventsController extends Controller {
     $repeat_bymonthday_options = $this->ocCalendarObject->getByMonthDayOptions();
 
     $template = '';
-    if ($permissions & Constants::PERMISSION_UPDATE) {
+    if ($subTopic == self::SUBTOPIC_CLONE
+        && $permissions & Constants::PERMISSION_READ) {
+      $template = 'legacy/calendar/part.newevent';
+      $uri = self::SUBTOPIC_NEW;
+    } else if ($permissions & Constants::PERMISSION_UPDATE) {
       $template = 'legacy/calendar/part.editevent';
     } elseif ($permissions & Constants::PERMISSION_READ) {
       $template = 'legacy/calendar/part.showevent';
@@ -540,14 +562,19 @@ class LegacyEventsController extends Controller {
       return self::grumble($this->l->t("Don't know how to react to permissions `%s'", [$permissions]));
     }
 
+    $remoteUrl = $this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s/%s', $this->userId(), $calendarUri, $uri));
+
     $templateParameters = [
+      'appName' => $this->appName(),
+
       'requestoken' => \OCP\Util::callRegister(),
       'urlGenerator' => $this->urlGenerator(),
       'categories' => $categories,
       'protectCategories' => $protectCategories,
-
       'eventuri' => $uri,
       'calendarid' => $calendarId,
+      'calendarUri' => $calendarUri,
+      'remoteEventUrl' => $remoteUrl,
       'calendarOwnerId' => $ownerId,
       'calendarDisplayName' => $calendar->getDisplayName(),
       'calendar_options' => $calendarOptions,
@@ -574,12 +601,15 @@ class LegacyEventsController extends Controller {
       'starttime' => $starttime,
       'enddate' => $enddate,
       'endtime' => $endtime,
+      'starttimestamp' => $dtstart->getDateTime()->getTimestamp(),
+      'endtimestamp' => $dtend->getDateTime()->getTimestamp(),
+
       'description' => $description,
 
       'repeat' => $repeat['repeat'],
 
       'duration' => $duration,
-      'default_duration' => $this->getConfigValue('eventduration', 180),
+      'default_duration' => $this->getConfigValue('eventduration', 180) * 60,
     ];
     if ($repeat['repeat'] != 'doesnotrepeat') {
       if (array_key_exists('weekofmonth', $repeat) === false) {
@@ -716,7 +746,6 @@ class LegacyEventsController extends Controller {
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $eventId = $data['id'];
     $object = \Sabre\VObject\Reader::read($data['calendardata']);
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
@@ -724,8 +753,8 @@ class LegacyEventsController extends Controller {
         $this->l->t("Unable to access calendar with id `%s'.", [$calendarId]),
         null, Http::STATUS_FORBIDDEN);
     }
-    [,,$ownerId] = explode('/', $this->calDavService->calendarPrincipalUri($calendarId));
-    $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
+    $calendarUris = $this->calDavService->calendarUris($calendarId);
+    $object = $this->ocCalendarObject->cleanByAccessClass($calendarUris['ownerid'], $object);
     $accessClass = $this->accessClass($object);
     $permissions = $calendar->getPermissions();
     switch ($accessClass) {

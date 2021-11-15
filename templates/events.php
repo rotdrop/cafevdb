@@ -43,19 +43,19 @@
                class="<?php p($cssClass); ?>-sendmail tooltip-bottom"
                name="sendmail"
                value="Em@il"
-               title="<?php echo $toolTips['projectevents-sendmail']; ?>"
+               title="<?php echo $toolTips['projectevents:sendmail']; ?>"
         />
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail-select image-button tooltip-bottom"
                name="select"
                value="+"
-               title="<?php echo $toolTips['projectevents-select']; ?>"
+               title="<?php echo $toolTips['projectevents:select']; ?>"
         />
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail-deselect image-button tooltip-bottom"
                name="deselect"
                value="-"
-               title="<?php echo $toolTips['projectevents-deselect']; ?>"
+               title="<?php echo $toolTips['projectevents:deselect']; ?>"
         />
       </span>
       <span class="<?php p($cssClass); ?>-download">
@@ -64,7 +64,7 @@
                type="button"
                name="download"
                value="<?php p($l->t('Download')); ?>"
-               title="<?php echo $toolTips['projectevents-download']; ?>"/>
+               title="<?php echo $toolTips['projectevents:download']; ?>"/>
       </span>
       <span class="<?php p($cssClass); ?>-reload">
         <input id="<?php p($cssClass); ?>-reload"
@@ -72,7 +72,7 @@
                type="button"
                name="reload"
                value="<?php p($l->t('Reload')); ?>"
-               title="<?php echo $toolTips['projectevents-reload']; ?>"/>
+               title="<?php echo $toolTips['projectevents:reload']; ?>"/>
       </span>
     </div>
     <div id="eventlistholder" class="container scroller eventlist">

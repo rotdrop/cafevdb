@@ -1,5 +1,6 @@
 import { $ } from '../../app/globals.js';
 import Calendar from './calendar.js';
+import fileDownload from '../../app/file-download.js';
 
 // $(document).on('click', '#newCalendar', function () {
 //      Calendar.UI.Calendar.newCalendar(this);
@@ -39,6 +40,10 @@ $(document).on('click', '#advanced_options_button', function() {
   }
 });
 $(document).on('click', '#advanced_options_button_repeat', function() {
+  const isVisible = $('#advanced_options_repeating').is(':visible');
+  $(this)
+    .toggleClass('options-visible', !isVisible)
+    .toggleClass('options-hidden', isVisible);
   Calendar.UI.showadvancedoptionsforrepeating();
 });
 $(document).on('click', '#google-location', function() {
@@ -63,11 +68,14 @@ $(document).on('click', '#editEvent-submit', function() {
   console.log('submit-event');
   Calendar.UI.validateEventForm($(this).data('link'));
 });
+$(document).on('click', '#editEvent-clone', function() {
+  Calendar.UI.submitCloneEventForm($(this).data('link'));
+});
 $(document).on('click', '#editEvent-delete', function() {
   Calendar.UI.submitDeleteEventForm($(this).data('link'));
 });
 $(document).on('click', '#editEvent-export', function() {
-  window.location = $(this).data('link');
+  fileDownload($(this).data('link'));
 });
 // $(document).on('click', '#chooseCalendar-showCalDAVURL', function() {
 //      Calendar.UI.showCalDAVUrl($(this).data('user'), $(this).data('caldav'));

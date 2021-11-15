@@ -211,7 +211,7 @@
       background-image: url(../img/pme-delete.png);
     }
 
-    input.copy {
+    input.clone {
       background-image: url(../img/pme-copy.png);
     }
 
@@ -329,27 +329,6 @@
 	display: inline-block;
 	margin: 7px 0;
 }
-/* location input field leaves room for google button */
-#event-location {
-	width: 85%;
-}
-#google-location {
-	display: inline-block;
-	padding: 0.25em 0.5em;
-}
-#google-location img {
-	width:2em;
-	height:2em;
-	vertical-align:middle;
-}
-/* category input field leaves room for edit button */
-#category {
-	width: 90%;
-}
-#editCategories {
-	display: inline-block;
-	padding: 6px 12px;
-}
 /* whole line for buttons of 'Advanced' and 'Export' */
 #advanced_options_button,
 #editEvent-export {
@@ -366,11 +345,11 @@
 #advanced_options {
   display:none;
 }
-#advanced_options_button {
-  background-position: left center;
+#advanced_options_button, #advanced_options_button_repeat {
+  background-position: 4px center;
   background-repeat: no-repeat;
-  background-size: 16px;
-  padding-left:24px;
+  background-size: 24px;
+  padding-left:32px;
   &.options-visible {
     background-image:url('../../../core/img/actions/triangle-n.svg');
   }
@@ -415,7 +394,6 @@ div.google-popup {
   input#category, a#editCategories {
     /*  display:none;*/
   }
-
   #event-allday {
     display: inline-block;
     margin: 7px 0;
@@ -425,18 +403,47 @@ div.google-popup {
     height: 33px;
     min-width: 800px;
   }
-  .actionsfloatleft {
-    float:left;
-    margin-left: 1.4em !important;
-  }
-  .actionsfloatright {
-    float:right;
-    margin-right: 1.4em !important;
-  }
   #editEvent-submit {
     background-color:var(--color-primary-element);
     border-color:var(--color-primary-element);
     color:var(--color-primary-text);
+  }
+  div.flex-container {
+    display:flex;
+    flex-flow: row nowrap;
+  }
+  span.flex-container {
+    display:inline-flex;
+  }
+  .flex-container {
+    &.flex-center {
+      align-items:center;
+    }
+    &.flex-baseline {
+      align-items:baseline;
+    }
+    &.flex-justify-full {
+      justify-content:space-between;
+    }
+    input, .button {
+      flex: 4 1 90%;
+      &.no-flex {
+        flex:0 0 auto;
+      }
+    }
+    a.action {
+      margin-left: 0.5em;
+      flex: 0 1;
+      height:32px;
+      padding-top:4px;
+      padding-bottom:4px;
+      img {
+        height:24px;
+      }
+    }
+    .button.calendar-app {
+      margin:3px 0;
+    }
   }
 }
 
