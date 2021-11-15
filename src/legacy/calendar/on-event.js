@@ -17,24 +17,29 @@ import Calendar from './calendar.js';
 //      $('#ioscaldav').select();
 // });
 $(document).on('click', '#viewOnMap', function() {
-  $(this).tipsy('hide');
+  $.fn.cafevTooltip('hide');
   Calendar.Util.openLocationMap();
 });
 $(document).on('click', '#editCategories', function() {
-  $(this).tipsy('hide');
+  $.fn.cafevTooltip('hide');
   OC.Tags.edit('event');
 });
 $(document).on('click', '#allday_checkbox', function() {
   Calendar.UI.lockTime();
 });
 $(document).on('click', '#advanced_options_button', function() {
-  Calendar.UI.showadvancedoptions();
+  const isVisible = $('#advanced_options').is(':visible');
+  $(this)
+    .toggleClass('options-visible', !isVisible)
+    .toggleClass('options-hidden', isVisible);
+  if (isVisible) {
+    Calendar.UI.hideadvancedoptions();
+  } else {
+    Calendar.UI.showadvancedoptions();
+  }
 });
 $(document).on('click', '#advanced_options_button_repeat', function() {
   Calendar.UI.showadvancedoptionsforrepeating();
-});
-$(document).on('click', '#advanced_options_bar', function() {
-  Calendar.UI.hideadvancedoptions();
 });
 $(document).on('click', '#google-location', function() {
   Calendar.UI.googlelocation();

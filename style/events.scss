@@ -160,12 +160,20 @@
     input.projectevents-sendmail-deselect[type=button] {
       background-image:url('../img/e_mail_X.png');
     }
+
     input.projectevents-sendmail-select[type=button] {
       background-image:url('../img/e_mail_checked.png');
     }
 
     input.projectevents-download {
       background-image:url('../../../core/img/actions/download.svg');
+    }
+
+    span.projectevents-reload {
+      float:right;
+      input.projectevents-reload {
+        background-image: url(../img/reload-solid.svg);
+      }
     }
 
     /* Larger button */
@@ -201,6 +209,10 @@
 
     input.delete {
       background-image: url(../img/pme-delete.png);
+    }
+
+    input.copy {
+      background-image: url(../img/pme-copy.png);
     }
 
     input.email-check[type=checkbox] {
@@ -342,7 +354,7 @@
 #advanced_options_button,
 #editEvent-export {
 	display: block;
-	margin: 0;
+	margin: 3px 0;
 }
 /* normal font weight for secondary buttons for less obtrusiveness */
 #advanced_options_button,
@@ -350,6 +362,23 @@
 #editEvent-delete {
 	font-weight: normal;
 }
+
+#advanced_options {
+  display:none;
+}
+#advanced_options_button {
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-left:24px;
+  &.options-visible {
+    background-image:url('../../../core/img/actions/triangle-n.svg');
+  }
+  &:not(.options-visible) {
+    background-image:url('../../../core/img/actions/triangle-s.svg');
+  }
+}
+
 /* more space for action buttons below */
 #actions {
 	height: 45px;
@@ -378,37 +407,38 @@ div.google-popup {
   max-height:none !important;
 }
 
-/* Hide the advanced options in the event form */
-#advanced_options_bar {
-  cursor:pointer;
-  background-color:#BBB;
-  margin-top:0.5ex;
-  margin-bottom:0.5ex;
-  height:1ex;
-  vertical-align:middle;
-  border-top:2px solid #000;
-  moz-box-shadow:-3px 0 7px #777;
-  webkit-box-shadow:-3px 0 7px #777;
-  box-shadow: 0 0.4ex 0.8ex #777;
-}
-
 /* Hide the category selector. We use the categories to link events to
  * projects, or at least to restore event-project connection. Better not
  * let the user fiddle with that.
  */
-.cafevdb.eventdlg input#category,
-.cafevdb.eventdlg a#editCategories {
-/*  display:none;*/
-}
+.cafevdb.eventdlg {
+  input#category, a#editCategories {
+    /*  display:none;*/
+  }
 
-.cafevdb.eventdlg #event-allday {
-	display: inline-block;
-	margin: 7px 0;
-	width: 100%;
+  #event-allday {
+    display: inline-block;
+    margin: 7px 0;
+    width: 100%;
+  }
+  .actions {
+    height: 33px;
+    min-width: 800px;
+  }
+  .actionsfloatleft {
+    float:left;
+    margin-left: 1.4em !important;
+  }
+  .actionsfloatright {
+    float:right;
+    margin-right: 1.4em !important;
+  }
+  #editEvent-submit {
+    background-color:var(--color-primary-element);
+    border-color:var(--color-primary-element);
+    color:var(--color-primary-text);
+  }
 }
-.cafevdb.eventdlg .actions {height: 33px;	min-width: 800px;}
-.cafevdb.eventdlg .actionsfloatleft {float:left;margin-left: 1.4em !important;}
-.cafevdb.eventdlg .actionsfloatright {float:right;margin-right: 1.4em !important;}
 
 /*
  * LocalVariables: ***

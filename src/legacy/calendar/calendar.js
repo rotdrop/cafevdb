@@ -225,7 +225,7 @@ const Calendar = {
         //   of: 'div[aria-describedby="events"]'
         // },
         width: 520,
-        height: 600,
+        height: 'auto',
         resizable: false,
         dialogClass: 'cafevdb eventdlg',
         // draggable: false,
@@ -474,11 +474,11 @@ const Calendar = {
     },
     hideadvancedoptions() {
       $('#advanced_options').slideUp('slow');
-      $('#advanced_options_button').css('display', 'inline-block');
+      // $('#advanced_options_button').css('display', 'inline-block');
     },
     showadvancedoptions() {
       $('#advanced_options').slideDown('slow');
-      $('#advanced_options_button').css('display', 'none');
+      // $('#advanced_options_button').css('display', 'none');
     },
     showadvancedoptionsforrepeating() {
       if ($('#advanced_options_repeating').is(':hidden')) {

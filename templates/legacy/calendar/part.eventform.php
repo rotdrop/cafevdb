@@ -49,12 +49,9 @@
 	<input id="allday_checkbox" class="checkbox" type="checkbox"<?php if($_['allday']) {print_unescaped('checked="checked"');} ?> name="allday">
 	<label id="event-allday" for="allday_checkbox"><?php p($l->t("All Day Event"));?></label>
 
-	<input id="advanced_options_button" style="display:none;" type="button" class="submit" value="<?php p($l->t('Advanced options')); ?>">
+	<input id="advanced_options_button" type="button" class="submit options-hidden" value="<?php p($l->t('Advanced options')); ?>">
 
-	<div id="advanced_options">
-                <a class="action" title="<?php echo $l->t('Click to hide location and description fields.'); ?>">
-                   <div id="advanced_options_bar"></div>
-                </a>
+	<div id="advanced_options" class="hidden">
 		<input id="event-location" type="text" size="100"
 			placeholder="<?php p($l->t('Location'));?>"
 			value="<?php p(isset($_['location']) ? $_['location'] : '') ?>"
