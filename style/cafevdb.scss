@@ -498,7 +498,7 @@ li.cafevdb-page-config-check {
   select:active:not(:disabled),
   option:active:not(:disabled),
   button:active:not(:disabled) {
-    border-radius:.5em;
+    /*border-radius:.5em;*/
     /*border-radius:4px;*/
     background-color:SteelBlue;
   }
