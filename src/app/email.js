@@ -1859,6 +1859,8 @@ function emailFormPopup(post, modal, single, afterInit) {
 
           // we have to recompute the tab size for the recipients controls
           emailTabResize(dialogWidget, recipientsPanel);
+
+          dialogHolder.dialog('moveToTop');
         },
         close() {
           if (Email.autoSaveTimer) {

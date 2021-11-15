@@ -194,6 +194,7 @@ const init = function(htmlContent, textStatus, request) {
           updateEmailForm();
           return false;
         });
+      $dialogHolder.dialog('moveToTop');
     },
     close(event, ui) {
       $.fn.cafevTooltip.remove();

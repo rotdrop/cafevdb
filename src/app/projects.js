@@ -54,6 +54,9 @@ const eventsPopup = function(post, reopen) {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
+  if (globalState.Events.projectId !== post.projectId) {
+    reopen = true;
+  }
   const eventsDlg = $('#events');
   if (eventsDlg.dialog('isOpen') === true) {
     if (reopen === false) {
@@ -91,7 +94,8 @@ const emailPopup = function(post, reopen) {
     }
     emailDlg.dialog('close').remove();
   }
-  Email.emailFormPopup(post, false);
+  Page.busyIcon(true);
+  Email.emailFormPopup(post, false, undefined, () => Page.busyIcon(false));
 };
 
 /**
@@ -105,7 +109,7 @@ const emailPopup = function(post, reopen) {
  * { projectName: 'NAME', projectId: XX }
  */
 const instrumentationNumbersPopup = function(containerSel, post) {
-  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
+  // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
@@ -260,7 +264,7 @@ const actions = function(select, containerSel) {
     eventsPopup(post);
     break;
   case 'project-email':
-    emailPopup(post);
+    emailPopup(post, true);
     break;
   case 'project-instrumentation-numbers':
     instrumentationNumbersPopup(containerSel, post);
@@ -1065,7 +1069,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     toolbox.on(
       'click', 'button.project-email',
       function(event) {
-        emailPopup(post);
+        emailPopup(post, true);
         return false;
       });
     toolbox.on(
