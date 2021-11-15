@@ -325,8 +325,8 @@ const buttonClick = function(event) {
 
   const name = $(this).attr('name');
 
-  if (name === 'edit') {
-
+  switch (name) {
+  case 'edit': {
     // Edit existing event
     post.push({ name: 'uri', value: $(this).val() });
     post.push({ name: 'calendarid', value: $(this).data('calendarId') });
@@ -340,11 +340,12 @@ const buttonClick = function(event) {
         }
         Ajax.handleError(xhr, textStatus, xhr.status);
       });
-    return false;
-  } else if (name === 'delete'
-             || name === 'detach'
-             || name === 'select'
-             || name === 'deselect') {
+    break;
+  }
+  case 'delete':
+  case 'detach':
+  case 'select':
+  case 'deselect': {
     // Execute the task and redisplay the event list.
 
     post.push({ name: 'EventURI', value: $(this).val() });
@@ -369,9 +370,9 @@ const buttonClick = function(event) {
         .fail(Ajax.handleError)
         .done(relist);
     }
-    return false;
-  } else if (name === 'sendmail') {
-
+    break;
+  }
+  case 'sendmail': {
     const emailFormDialog = $('div#emailformdialog');
     if (emailFormDialog.length === 0) {
       // If the email-form is not open, then open it :)
@@ -384,16 +385,20 @@ const buttonClick = function(event) {
       // and we move the email-dialog to front
       emailFormDialog.dialog('moveToTop');
     }
-
-  } else if (name === 'download') {
-
+    break;
+  }
+  case 'download': {
     fileDownload(
       'projects/events/download',
       post,
       t(appName, 'Unable to download calendar events.')
     );
-
-    return false;
+    break;
+  }
+  case 'reload': {
+    redisplay();
+    break;
+  }
   }
 
   return false;

@@ -22,49 +22,57 @@
  */
 ?>
 <div id="events" class="cafev not-fixed-container"
-     title="<?php echo $l->t('Events for').' '.$projectName;?>">
-  <form id="eventlistform" class="<?php echo $cssClass; ?> not-fixed-container" >
-    <input type="hidden" name="projectId"   value="<?php echo $projectId; ?>" />
-    <input type="hidden" name="projectName" value="<?php echo $projectName; ?>" />
-    <input type="hidden" name="requesttoken" value="<?php echo $requesttoken; ?>"/>
+     title="<?php p($l->t('Events for').' '.$projectName); ?>">
+  <form id="eventlistform" class="<?php p($cssClass); ?> not-fixed-container" >
+    <input type="hidden" name="projectId"   value="<?php p($projectId); ?>" />
+    <input type="hidden" name="projectName" value="<?php p($projectName); ?>" />
+    <input type="hidden" name="requesttoken" value="<?php p($requesttoken); ?>"/>
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
-              data-placeholder="<?php echo $l->t('New Event'); ?>"
+              data-placeholder="<?php p($l->t('New Event')); ?>"
               title="<?php echo $toolTips['new-project-event']; ?>">
         <option value=""></option>
-        <option value="concerts"><?php echo $l->t('Concert'); ?></option>
-        <option value="rehearsals"><?php echo $l->t('Rehearsal'); ?></option>
-        <option value="other"><?php echo $l->t('Miscellaneous'); ?></option>
-        <option value="management"><?php echo $l->t('Management'); ?></option>
-        <option value="finance"><?php echo $l->t('Finance'); ?></option>
+        <option value="concerts"><?php p($l->t('Concert')); ?></option>
+        <option value="rehearsals"><?php p($l->t('Rehearsal')); ?></option>
+        <option value="other"><?php p($l->t('Miscellaneous')); ?></option>
+        <option value="management"><?php p($l->t('Management')); ?></option>
+        <option value="finance"><?php p($l->t('Finance')); ?></option>
       </select>
-      <span class="<?php echo $cssClass; ?>-email">
+      <span class="<?php p($cssClass); ?>-email">
         <input type="button"
-               class="<?php echo $cssClass; ?>-sendmail tooltip-bottom"
+               class="<?php p($cssClass); ?>-sendmail tooltip-bottom"
                name="sendmail"
                value="Em@il"
                title="<?php echo $toolTips['projectevents-sendmail']; ?>"
         />
         <input type="button"
-               class="<?php echo $cssClass; ?>-sendmail-select image-button tooltip-bottom"
+               class="<?php p($cssClass); ?>-sendmail-select image-button tooltip-bottom"
                name="select"
                value="+"
                title="<?php echo $toolTips['projectevents-select']; ?>"
         />
         <input type="button"
-               class="<?php echo $cssClass; ?>-sendmail-deselect image-button tooltip-bottom"
+               class="<?php p($cssClass); ?>-sendmail-deselect image-button tooltip-bottom"
                name="deselect"
                value="-"
                title="<?php echo $toolTips['projectevents-deselect']; ?>"
         />
       </span>
-      <span class="<?php echo $cssClass; ?>-download">
-        <input id="<?php echo $cssClass; ?>-download"
-               class="<?php echo $cssClass; ?>-download image-button tooltip-bottom"
+      <span class="<?php p($cssClass); ?>-download">
+        <input id="<?php p($cssClass); ?>-download"
+               class="<?php p($cssClass); ?>-download image-button tooltip-bottom"
                type="button"
                name="download"
-               value="<?php echo $l->t('Download'); ?>"
+               value="<?php p($l->t('Download')); ?>"
                title="<?php echo $toolTips['projectevents-download']; ?>"/>
+      </span>
+      <span class="<?php p($cssClass); ?>-reload">
+        <input id="<?php p($cssClass); ?>-reload"
+               class="<?php p($cssClass); ?>-reload image-button tooltip-bottom"
+               type="button"
+               name="reload"
+               value="<?php p($l->t('Reload')); ?>"
+               title="<?php echo $toolTips['projectevents-reload']; ?>"/>
       </span>
     </div>
     <div id="eventlistholder" class="container scroller eventlist">

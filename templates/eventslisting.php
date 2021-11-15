@@ -29,15 +29,19 @@ use OCA\CAFEVDB\Common\Util;
 $evtButtons = [
   'Edit' => [
     'tag' => 'edit',
-    'title' => $toolTips['projectevents-edit']
+    'title' => $toolTips['projectevents-edit'],
+  ],
+  'Copy' => [
+    'tag' => 'copy',
+    'title' => $toolTips['projectevents-copy'],
   ],
   'Delete' => [
     'tag' => 'delete',
-    'title' =>$toolTips['projectevents-delete']
+    'title' => $toolTips['projectevents-delete'],
   ],
   'Detach' => [
     'tag' => 'detach',
-    'title' =>$toolTips['projectevents-detach']
+    'title' => $toolTips['projectevents-detach'],
   ],
 ];
 
