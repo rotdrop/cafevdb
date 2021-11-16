@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-15 10:16+0100\n"
-"PO-Revision-Date: 2021-11-15 10:28+0100\n"
+"POT-Creation-Date: 2021-11-16 02:11+0100\n"
+"PO-Revision-Date: 2021-11-15 23:12+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -189,7 +189,9 @@ msgstr "Datei \"%s\" konnte nicht im Datenbank-Speicher gefunden werden."
 #: lib/Controller/DownloadsController.php:127
 #, php-format
 msgid "File with cache-key \"%s\" not found in user's file-cache."
-msgstr "Datei mit Cache-Schlüssel \"%s\" konnte im User-Datei-Cache nicht gefunden werden."
+msgstr ""
+"Datei mit Cache-Schlüssel \"%s\" konnte im User-Datei-Cache nicht gefunden "
+"werden."
 
 #: lib/Controller/EmailFormController.php:313
 msgid "Preview generation successful."
@@ -487,29 +489,29 @@ msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 msgid "Unknown Request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\"."
 
-#: lib/Controller/LegacyEventsController.php:130
+#: lib/Controller/LegacyEventsController.php:141
 #, php-format
 msgid "unknown service requested: `%s/%s'."
 msgstr "Unbekannter Dienst angefragt: `%s/%s'."
 
-#: lib/Controller/LegacyEventsController.php:142
+#: lib/Controller/LegacyEventsController.php:153
 msgid "Project-id and/or name not set"
 msgstr "Projekt-Name und/oder Id nicht übermittelt."
 
-#: lib/Controller/LegacyEventsController.php:165
+#: lib/Controller/LegacyEventsController.php:176
 #, php-format
 msgid "Cannot access calendar: `%s'"
 msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 
-#: lib/Controller/LegacyEventsController.php:287
-#: lib/Controller/LegacyEventsController.php:674
-#: lib/Controller/LegacyEventsController.php:713
+#: lib/Controller/LegacyEventsController.php:305
+#: lib/Controller/LegacyEventsController.php:704
+#: lib/Controller/LegacyEventsController.php:743
 #, php-format
 msgid "Could not fetch object `%s' from calendar `%s'."
 msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 
-#: lib/Controller/LegacyEventsController.php:291
-#: lib/Controller/LegacyEventsController.php:717
+#: lib/Controller/LegacyEventsController.php:309
+#: lib/Controller/LegacyEventsController.php:747
 #, php-format
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
@@ -517,44 +519,44 @@ msgstr ""
 "Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
 "%s' stimmen nicht überein."
 
-#: lib/Controller/LegacyEventsController.php:297
-#: lib/Controller/LegacyEventsController.php:724
+#: lib/Controller/LegacyEventsController.php:314
+#: lib/Controller/LegacyEventsController.php:753
 #, php-format
 msgid "Unable to access calendar with id `%s'."
 msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 
-#: lib/Controller/LegacyEventsController.php:540
+#: lib/Controller/LegacyEventsController.php:562
 #, php-format
 msgid "Don't know how to react to permissions `%s'"
 msgstr "Weiß nicht, wie ich auf die Zugriffsrechte `%s' reagieren soll"
 
-#: lib/Controller/LegacyEventsController.php:648
+#: lib/Controller/LegacyEventsController.php:678
 msgid "Failed to validate event creating request."
 msgstr "Fehler bei der Validierung der Termindaten."
 
-#: lib/Controller/LegacyEventsController.php:660
+#: lib/Controller/LegacyEventsController.php:690
 msgid "Calendar object successfully created."
 msgstr "Kalender Objekt wurde erfolgreich erzeugt."
 
-#: lib/Controller/LegacyEventsController.php:668
+#: lib/Controller/LegacyEventsController.php:698
 msgid "Failed to validate event updating request."
 msgstr "Validierung der Terminänderung fehlgeschlagen."
 
-#: lib/Controller/LegacyEventsController.php:681
+#: lib/Controller/LegacyEventsController.php:711
 msgid "Race-condition, event was modified in between."
 msgstr "Bearbeitungs-Kollision, Termin würde zwischenzeitlich verändert."
 
-#: lib/Controller/LegacyEventsController.php:692
+#: lib/Controller/LegacyEventsController.php:722
 #, php-format
 msgid "Successfully updated `%s'."
 msgstr "`%s' erfolgreich modifiziert."
 
-#: lib/Controller/LegacyEventsController.php:700
+#: lib/Controller/LegacyEventsController.php:730
 #, php-format
 msgid "Successfully deleted `%s'."
 msgstr "`%s' erfolgreich gelöscht."
 
-#: lib/Controller/LegacyEventsController.php:752
+#: lib/Controller/LegacyEventsController.php:781
 #, php-format
 msgid "Method %s is not yet implemented."
 msgstr "Methode %s is noch nicht implementiert."
@@ -2525,7 +2527,9 @@ msgstr "Der Entwurf %s konnte nicht geladen werden."
 #: lib/EmailForm/Composer.php:3215
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
-msgstr "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" löschen."
+msgstr ""
+"Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
+"löschen."
 
 #: lib/EmailForm/Composer.php:3246
 #, php-format
@@ -3818,7 +3822,7 @@ msgstr ""
 "Einträge."
 
 #: lib/PageRenderer/ProjectParticipantFields.php:215
-#: templates/legacy/calendar/part.eventform.php:98
+#: templates/legacy/calendar/part.eventform.php:140
 #: templates/legacy/calendar/part.showevent.php:123
 msgid "Advanced"
 msgstr "Erweitert"
@@ -7261,7 +7265,7 @@ msgstr ""
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr "Öffnet das Em@il-Formular für das Projekt in einem Dialog-Fenster."
 
-#: lib/Service/ToolTipsService.php:835 lib/Service/ToolTipsService.php:900
+#: lib/Service/ToolTipsService.php:835 lib/Service/ToolTipsService.php:901
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -7460,15 +7464,17 @@ msgstr ""
 "Veranstaltungsankündigung und diesem Projekt. Primär als\n"
 "\"Undo\"-Funktion nach versehentlichem Verknüpfen gemeint."
 
-#: lib/Service/ToolTipsService.php:905
+#: lib/Service/ToolTipsService.php:906
 msgid "Delete the event from the system (no undo possible)."
-msgstr "Termin komplett aus dem Kalender löschen (kann nicht rückgängig gemacht werden)."
+msgstr ""
+"Termin komplett aus dem Kalender löschen (kann nicht rückgängig gemacht "
+"werden)."
 
-#: lib/Service/ToolTipsService.php:907
+#: lib/Service/ToolTipsService.php:908
 msgid "Exclude all events from email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/Service/ToolTipsService.php:909
+#: lib/Service/ToolTipsService.php:910
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -7481,7 +7487,7 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/Service/ToolTipsService.php:916
+#: lib/Service/ToolTipsService.php:917
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
@@ -7491,35 +7497,43 @@ msgstr ""
 "Prinzip in eine geeignete Kalender App Deines SmartPhones, Tables oder\n"
 "Desktop-PCs importiert werden."
 
-#: lib/Service/ToolTipsService.php:920
+#: lib/Service/ToolTipsService.php:921
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/Service/ToolTipsService.php:922
+#: lib/Service/ToolTipsService.php:923
+msgid ""
+"Clone (duplicate) the event. A new event-form will popup with just the data "
+"from this event."
+msgstr ""
+"Den Termin duplizieren. A neues Termin-Formular wird geöffnet, das gerade "
+"die Daten dieses Termins enthält."
+
+#: lib/Service/ToolTipsService.php:925
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/Service/ToolTipsService.php:924
+#: lib/Service/ToolTipsService.php:927
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/Service/ToolTipsService.php:926
+#: lib/Service/ToolTipsService.php:929
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/Service/ToolTipsService.php:928
+#: lib/Service/ToolTipsService.php:931
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/Service/ToolTipsService.php:930
+#: lib/Service/ToolTipsService.php:933
 msgid "Select all events for email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/Service/ToolTipsService.php:932
+#: lib/Service/ToolTipsService.php:935
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -7533,7 +7547,7 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/Service/ToolTipsService.php:939
+#: lib/Service/ToolTipsService.php:942
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -7542,33 +7556,33 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/Service/ToolTipsService.php:943
+#: lib/Service/ToolTipsService.php:947
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr "Erzwinge die Neu-Erstellung des Abrechnungs-Datei-Ordners."
 
-#: lib/Service/ToolTipsService.php:946
+#: lib/Service/ToolTipsService.php:950
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr "Erstellen des gemeinsamen Ordners erzwingen."
 
-#: lib/Service/ToolTipsService.php:948
+#: lib/Service/ToolTipsService.php:952
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr "Redaxo Artikel Kategorie für archivierte Konzerte."
 
-#: lib/Service/ToolTipsService.php:950
+#: lib/Service/ToolTipsService.php:954
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Konzertankündigungen."
 
-#: lib/Service/ToolTipsService.php:952
+#: lib/Service/ToolTipsService.php:956
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr "Artikel-Kategorier für Probenpläne."
 
-#: lib/Service/ToolTipsService.php:954
+#: lib/Service/ToolTipsService.php:958
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Templates."
 
-#: lib/Service/ToolTipsService.php:956
+#: lib/Service/ToolTipsService.php:960
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
@@ -7576,7 +7590,7 @@ msgstr ""
 "Papierkorb Pseudo-Kategorie. Wird ein Artikel über das DB-Interface\n"
 "gelöscht, landet der in diesem Unterordner."
 
-#: lib/Service/ToolTipsService.php:959
+#: lib/Service/ToolTipsService.php:963
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -7584,7 +7598,7 @@ msgstr ""
 "Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/Service/ToolTipsService.php:961
+#: lib/Service/ToolTipsService.php:965
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
@@ -7593,12 +7607,12 @@ msgstr ""
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
-#: lib/Service/ToolTipsService.php:964
+#: lib/Service/ToolTipsService.php:968
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 "Die Markierung ist bei Stimmführern gesetzt, ansonsten bleibt das Feld leer."
 
-#: lib/Service/ToolTipsService.php:967
+#: lib/Service/ToolTipsService.php:971
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
@@ -7608,21 +7622,21 @@ msgstr ""
 "Zahlungen verwendet wurde, wird der Account lediglich als inaktiv\n"
 "markiert, aber nicht in der Datenbank gelöscht."
 
-#: lib/Service/ToolTipsService.php:968
+#: lib/Service/ToolTipsService.php:972
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 "Öffnet einen neuen Eingabe-Dialog mit Detailinformationen zu dieser "
 "Bankverbindung."
 
-#: lib/Service/ToolTipsService.php:969
+#: lib/Service/ToolTipsService.php:973
 msgid "Add a new dialog for defining a new bank-account."
 msgstr "Öffnet einen Eingabedialog, um eine neue Bankverbindung zu definieren."
 
-#: lib/Service/ToolTipsService.php:970
+#: lib/Service/ToolTipsService.php:974
 msgid "Show also the disabled bank accounts, if any."
 msgstr "Auch deaktiviert Bankverbindungen anzeigen, falls vorhanden."
 
-#: lib/Service/ToolTipsService.php:973
+#: lib/Service/ToolTipsService.php:977
 msgid ""
 "Used SEPA mandates are not deleted from the DB, but just flagged as\n"
 "\"inactive\" if they expire or are manually pseudo-deleted."
@@ -7631,7 +7645,7 @@ msgstr ""
 "werden. Stattdessen werden sie als \"inaktiv\" markiert, wenn sie\n"
 "auslaufen oder aber explizit quasi-gelöscht werden."
 
-#: lib/Service/ToolTipsService.php:976
+#: lib/Service/ToolTipsService.php:980
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -7648,7 +7662,7 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/Service/ToolTipsService.php:978
+#: lib/Service/ToolTipsService.php:982
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -7659,11 +7673,11 @@ msgstr ""
 "verwendet und ist deshalb abgelaufen und kann nicht weiter verwendet\n"
 "werden. Bitte löschen und den Schatzmeister informieren, vielen Dank!"
 
-#: lib/Service/ToolTipsService.php:984
+#: lib/Service/ToolTipsService.php:988
 msgid "Folder shared by the orchestra group."
 msgstr "Gemeinsamer Ordner der Orchestergruppe."
 
-#: lib/Service/ToolTipsService.php:985
+#: lib/Service/ToolTipsService.php:989
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
@@ -7671,19 +7685,19 @@ msgstr ""
 "Öffentlicher \"Briefkasten\"-Ordner. Für anonymes Hochladen von größeren "
 "Dateien."
 
-#: lib/Service/ToolTipsService.php:986
+#: lib/Service/ToolTipsService.php:990
 msgid "Shared folder for document templates."
 msgstr "Gemeinsamer Ordner für Dokumentenvorlagen."
 
-#: lib/Service/ToolTipsService.php:987
+#: lib/Service/ToolTipsService.php:991
 msgid "Shared folder for per-project data."
 msgstr "Gemeinsamer Ordner für Projektdaten."
 
-#: lib/Service/ToolTipsService.php:988
+#: lib/Service/ToolTipsService.php:992
 msgid "Shared folder for per-project per-participant data"
 msgstr "Gemeinsamer Ordner für personalisierte Projekt-Mitglieder-Daten."
 
-#: lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:993
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
@@ -7691,19 +7705,19 @@ msgstr ""
 "Gemeinsamer Ordner mit der Gewinn- und Verlustrechnung; vermutlich erst nach "
 "Abschluß des Projekts von Bedeutung."
 
-#: lib/Service/ToolTipsService.php:991
+#: lib/Service/ToolTipsService.php:995
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musizierendne-DB Anwendung."
 
-#: lib/Service/ToolTipsService.php:993
+#: lib/Service/ToolTipsService.php:997
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/Service/ToolTipsService.php:995
+#: lib/Service/ToolTipsService.php:999
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/Service/ToolTipsService.php:997
+#: lib/Service/ToolTipsService.php:1001
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -7718,20 +7732,20 @@ msgstr ""
 "unsichtbar ist. Aktivieren dieser Option macht auch solche Datensätze\n"
 "sichtbar."
 
-#: lib/Service/ToolTipsService.php:1003 templates/part.common.header.php:103
+#: lib/Service/ToolTipsService.php:1007 templates/part.common.header.php:103
 #: templates/part.common.header.php:109
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/Service/ToolTipsService.php:1005
+#: lib/Service/ToolTipsService.php:1009
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1007
+#: lib/Service/ToolTipsService.php:1011
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1009
+#: lib/Service/ToolTipsService.php:1013
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -7739,7 +7753,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/Service/ToolTipsService.php:1011
+#: lib/Service/ToolTipsService.php:1015
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -7748,7 +7762,7 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/Service/ToolTipsService.php:1016 lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:1020 lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
 "An image file with the orchestra logo -- preferably in SVG format. The logo "
@@ -7758,7 +7772,7 @@ msgstr ""
 "Logo kann in Dokumentenvorlagen eingesetzt werden, indem man den\n"
 "\"[LOGO]\"-Platzhalter verwendet."
 
-#: lib/Service/ToolTipsService.php:1017
+#: lib/Service/ToolTipsService.php:1021
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -7775,7 +7789,7 @@ msgstr ""
 "entsprechend erzeugt werden. Vorausgefüllte Mandate können aus der\n"
 "Teilnehmenden- und Musizierenden-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1019
+#: lib/Service/ToolTipsService.php:1023
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -7793,7 +7807,7 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1021
+#: lib/Service/ToolTipsService.php:1025
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
@@ -7803,11 +7817,11 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsService.php:1025
+#: lib/Service/ToolTipsService.php:1029
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsService.php:1027
+#: lib/Service/ToolTipsService.php:1031
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -7817,7 +7831,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsService.php:1031
+#: lib/Service/ToolTipsService.php:1035
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -7825,7 +7839,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsService.php:1033
+#: lib/Service/ToolTipsService.php:1037
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -7834,7 +7848,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsService.php:1035
+#: lib/Service/ToolTipsService.php:1039
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -7843,7 +7857,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsService.php:1037
+#: lib/Service/ToolTipsService.php:1041
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -8264,7 +8278,7 @@ msgstr "Abgebrochen"
 #: src/app/email.js:657 src/app/inlineimage.js:54 src/app/inlineimage.js:61
 #: src/app/inlineimage.js:156 src/app/inlineimage.js:427
 #: src/app/settings.js:1063 src/app/settings.js:1076
-#: src/legacy/calendar/calendar.js:312
+#: src/legacy/calendar/calendar.js:334
 msgid "Error"
 msgstr "Fehler"
 
@@ -8543,7 +8557,7 @@ msgstr "Ausgewählte Empfänger"
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:161 templates/legacy/calendar/part.eventform.php:38
+#: src/app/email.js:161 templates/legacy/calendar/part.eventform.php:43
 msgid "from"
 msgstr "von"
 
@@ -8612,8 +8626,11 @@ msgid ""
 "again and marked as manually saved. It will then linger on until you or "
 "someone else deletes it manually."
 msgstr ""
-"Möchten Sie die automatisch erzeugte Sicherungs-Kopie der aktuellen Nachricht (id= {id}) löschen?<br/>\n"
-"Falls Sie mit \"nein\" antworten, wird die aktuelle Sicherungskopie erneut gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
+"Möchten Sie die automatisch erzeugte Sicherungs-Kopie der aktuellen "
+"Nachricht (id= {id}) löschen?<br/>\n"
+"Falls Sie mit \"nein\" antworten, wird die aktuelle Sicherungskopie erneut "
+"gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
+"auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
 #: src/app/email.js:955
 msgid "Delete Auto-Save Draft?"
@@ -8721,19 +8738,19 @@ msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
 msgid "Email will be sent with a hidden recipients list!"
 msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
-#: src/app/events.js:45
+#: src/app/events.js:46
 msgid "Do you really want to delete this event?"
 msgstr "Möchten Sie den Termin wirklich löschen?"
 
-#: src/app/events.js:46
+#: src/app/events.js:47
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: src/app/events.js:359
+#: src/app/events.js:387
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
-#: src/app/events.js:394
+#: src/app/events.js:429
 msgid "Unable to download calendar events."
 msgstr "Kann die Kalender-Einträge nicht laden."
 
@@ -8850,23 +8867,23 @@ msgstr "Großes Foto"
 msgid "Unable to export insurance overview."
 msgstr "Kann die Versicherungs-Übersicht nicht exportieren."
 
-#: src/app/location.js:68 src/legacy/calendar/calendar.js:418
+#: src/app/location.js:68 src/legacy/calendar/calendar.js:440
 msgid "Browser determined position"
 msgstr "Vom Web-Browser übermittelte Position."
 
-#: src/app/location.js:81 src/legacy/calendar/calendar.js:431
+#: src/app/location.js:81 src/legacy/calendar/calendar.js:453
 msgid "Detailed search at Google-Maps"
 msgstr "Detaillierte Suchfunktion bei Google-Maps"
 
-#: src/app/location.js:116 src/legacy/calendar/calendar.js:459
+#: src/app/location.js:116 src/legacy/calendar/calendar.js:481
 msgid "Location not found:"
 msgstr "Ort nicht gefunden:"
 
-#: src/app/location.js:118 src/legacy/calendar/calendar.js:461
+#: src/app/location.js:118 src/legacy/calendar/calendar.js:483
 msgid "No location specified."
 msgstr "Kein Ort angegeben."
 
-#: src/app/location.js:120 src/legacy/calendar/calendar.js:463
+#: src/app/location.js:120 src/legacy/calendar/calendar.js:485
 msgid "Unknown location"
 msgstr "Unbekannter Ort."
 
@@ -9206,54 +9223,54 @@ msgstr "Kann die Übersetzungen nicht laden."
 msgid "User Manual: {section}"
 msgstr "Benutzerhandbuch: {section}"
 
-#: src/legacy/calendar/calendar.js:22
+#: src/legacy/calendar/calendar.js:23
 msgid "Missing or invalid fields"
 msgstr "Fehlende oder ungültige Felder"
 
-#: src/legacy/calendar/calendar.js:23
+#: src/legacy/calendar/calendar.js:24
 #: templates/legacy/calendar/part.showevent.php:11
 msgid "Title"
 msgstr "Überschrift"
 
-#: src/legacy/calendar/calendar.js:24
-#: templates/legacy/calendar/part.eventform.php:17
+#: src/legacy/calendar/calendar.js:25
+#: templates/legacy/calendar/part.eventform.php:22
 #: templates/legacy/calendar/part.showevent.php:37
 msgid "Calendar"
 msgstr "Kalender"
 
-#: src/legacy/calendar/calendar.js:25
+#: src/legacy/calendar/calendar.js:26
 msgid "From Date"
 msgstr "Anfangsdatum"
 
-#: src/legacy/calendar/calendar.js:26
+#: src/legacy/calendar/calendar.js:27
 msgid "From Time"
 msgstr "Anfangszeit"
 
-#: src/legacy/calendar/calendar.js:27
+#: src/legacy/calendar/calendar.js:28
 msgid "To Date"
 msgstr "Enddatum"
 
-#: src/legacy/calendar/calendar.js:28
+#: src/legacy/calendar/calendar.js:29
 msgid "To Time"
 msgstr "Endzeit"
 
-#: src/legacy/calendar/calendar.js:29
+#: src/legacy/calendar/calendar.js:30
 msgid "The event ends before it starts"
 msgstr "Das Ereignis endet bevor es beginnt"
 
-#: src/legacy/calendar/calendar.js:30
+#: src/legacy/calendar/calendar.js:31
 msgid "There was a database fail"
 msgstr "Datenbankfehler"
 
-#: src/legacy/calendar/calendar.js:31
+#: src/legacy/calendar/calendar.js:32
 msgid "Interval is not valid. It must be a positive integer!"
 msgstr "Der Zeitraum ist ungültig, muss eine positive Ganzzahl sein."
 
-#: src/legacy/calendar/calendar.js:294
+#: src/legacy/calendar/calendar.js:295
 msgid "Deletion failed"
 msgstr "Löschen ist fehlgeschlagen"
 
-#: src/legacy/calendar/calendar.js:344
+#: src/legacy/calendar/calendar.js:366
 msgid "Calendar event validation caught an error."
 msgstr "Termin-Validierung fehlgeschlagen"
 
@@ -10101,158 +10118,162 @@ msgstr "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung."
 msgid "Edit event"
 msgstr "Ein Ereignis bearbeiten"
 
-#: templates/legacy/calendar/part.editevent.php:9
-msgid "Save event"
-msgstr "Termin speichern"
-
-#: templates/legacy/calendar/part.editevent.php:10
+#: templates/legacy/calendar/part.editevent.php:13
 msgid "Delete event"
 msgstr "Termin löschen"
 
-#: templates/legacy/calendar/part.eventform.php:2
+#: templates/legacy/calendar/part.editevent.php:19
+msgid "Clone event"
+msgstr "Termin duplizieren"
+
+#: templates/legacy/calendar/part.editevent.php:25
+msgid "Save event"
+msgstr "Termin speichern"
+
+#: templates/legacy/calendar/part.eventform.php:7
 #: templates/legacy/calendar/part.showevent.php:3
 msgid "Eventinfo"
 msgstr "Termin-Information"
 
-#: templates/legacy/calendar/part.eventform.php:3
+#: templates/legacy/calendar/part.eventform.php:8
 #: templates/legacy/calendar/part.showevent.php:4
 msgid "Repeating"
 msgstr "Wiederholend"
 
-#: templates/legacy/calendar/part.eventform.php:4
+#: templates/legacy/calendar/part.eventform.php:9
 #: templates/legacy/calendar/part.showevent.php:5
 msgid "Alarm"
 msgstr "Erinnerung"
 
-#: templates/legacy/calendar/part.eventform.php:5
+#: templates/legacy/calendar/part.eventform.php:10
 #: templates/legacy/calendar/part.showevent.php:6
 msgid "Attendees"
 msgstr "Teilnehmende"
 
-#: templates/legacy/calendar/part.eventform.php:7
+#: templates/legacy/calendar/part.eventform.php:12
 msgid "Share"
 msgstr "Teilen"
 
-#: templates/legacy/calendar/part.eventform.php:12
+#: templates/legacy/calendar/part.eventform.php:17
 msgid "Title of the Event"
 msgstr "Überschrift des Termins"
 
-#: templates/legacy/calendar/part.eventform.php:43
+#: templates/legacy/calendar/part.eventform.php:48
 msgid "to"
 msgstr "bis"
 
-#: templates/legacy/calendar/part.eventform.php:50
+#: templates/legacy/calendar/part.eventform.php:55
 #: templates/legacy/calendar/part.showevent.php:61
 msgid "All Day Event"
 msgstr "Ganztägiger Termin"
 
-#: templates/legacy/calendar/part.eventform.php:52
+#: templates/legacy/calendar/part.eventform.php:57
 #: templates/legacy/calendar/part.showevent.php:81
 msgid "Advanced options"
 msgstr "Erweiterte Einstellungen"
 
-#: templates/legacy/calendar/part.eventform.php:55
-msgid "Click to hide location and description fields."
-msgstr "Ort und Beschreibung verstecken"
-
-#: templates/legacy/calendar/part.eventform.php:59
+#: templates/legacy/calendar/part.eventform.php:62
 #: templates/legacy/calendar/part.showevent.php:86
 msgid "Location"
 msgstr "Ort"
 
-#: templates/legacy/calendar/part.eventform.php:62
+#: templates/legacy/calendar/part.eventform.php:65
 #: templates/legacy/calendar/part.showevent.php:92
 msgid "View the current location with Google-Maps"
 msgstr "Ort mit Google-Maps anzeigen"
 
-#: templates/legacy/calendar/part.eventform.php:62
+#: templates/legacy/calendar/part.eventform.php:66
 #: templates/legacy/calendar/part.showevent.php:93
 msgid "Location@Google"
 msgstr "Org@Google"
 
-#: templates/legacy/calendar/part.eventform.php:63
-#: templates/legacy/calendar/part.eventform.php:64
+#: templates/legacy/calendar/part.eventform.php:72
+#: templates/legacy/calendar/part.eventform.php:74
 #: templates/legacy/calendar/part.showevent.php:97
 #: templates/legacy/calendar/part.showevent.php:98
 msgid "View on map"
 msgstr "Auf Karte anzeigen"
 
-#: templates/legacy/calendar/part.eventform.php:71
+#: templates/legacy/calendar/part.eventform.php:84
 msgid "Categories (separate by comma)"
 msgstr "Kategorien (bitte mit Komma trennen)"
 
-#: templates/legacy/calendar/part.eventform.php:76
-#: templates/legacy/calendar/part.eventform.php:78
+#: templates/legacy/calendar/part.eventform.php:89
+#: templates/legacy/calendar/part.eventform.php:91
 msgid "Edit categories"
 msgstr "Kategorien bearbeiten"
 
-#: templates/legacy/calendar/part.eventform.php:80
+#: templates/legacy/calendar/part.eventform.php:96
 #: templates/legacy/calendar/part.showevent.php:106
 msgid "Description"
 msgstr "Beschreibung"
 
-#: templates/legacy/calendar/part.eventform.php:83
+#: templates/legacy/calendar/part.eventform.php:104
 msgid "Export event"
 msgstr "Termin exportieren"
 
-#: templates/legacy/calendar/part.eventform.php:91
+#: templates/legacy/calendar/part.eventform.php:122
+msgid "Calendar App"
+msgstr "Kalender-App"
+
+#: templates/legacy/calendar/part.eventform.php:133
 #: templates/legacy/calendar/part.showevent.php:116
 msgid "Repeat"
 msgstr "Wiederholen"
 
-#: templates/legacy/calendar/part.eventform.php:142
+#: templates/legacy/calendar/part.eventform.php:187
 #: templates/legacy/calendar/part.showevent.php:167
 msgid "Select weekdays"
 msgstr "Wochentage auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:155
-#: templates/legacy/calendar/part.eventform.php:168
+#: templates/legacy/calendar/part.eventform.php:205
+#: templates/legacy/calendar/part.eventform.php:223
 #: templates/legacy/calendar/part.showevent.php:180
 #: templates/legacy/calendar/part.showevent.php:193
 msgid "Select days"
 msgstr "Tage auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:160
+#: templates/legacy/calendar/part.eventform.php:212
 #: templates/legacy/calendar/part.showevent.php:185
 msgid "and the events day of year."
 msgstr "und der Kalendertag des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:173
+#: templates/legacy/calendar/part.eventform.php:230
 #: templates/legacy/calendar/part.showevent.php:198
 msgid "and the events day of month."
 msgstr "und der Monatstag des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:181
+#: templates/legacy/calendar/part.eventform.php:241
 #: templates/legacy/calendar/part.showevent.php:206
 msgid "Select months"
 msgstr "Monate auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:194
+#: templates/legacy/calendar/part.eventform.php:259
 #: templates/legacy/calendar/part.showevent.php:219
 msgid "Select weeks"
 msgstr "Wochen auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:199
+#: templates/legacy/calendar/part.eventform.php:266
 #: templates/legacy/calendar/part.showevent.php:224
 msgid "and the events week of year."
 msgstr "und die Wochennummer des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:205
+#: templates/legacy/calendar/part.eventform.php:272
 #: templates/legacy/calendar/part.showevent.php:230
 msgid "Interval"
 msgstr "Zeitraum"
 
-#: templates/legacy/calendar/part.eventform.php:211
+#: templates/legacy/calendar/part.eventform.php:278
 #: templates/legacy/calendar/part.showevent.php:236
 msgid "End"
 msgstr "Ende"
 
-#: templates/legacy/calendar/part.eventform.php:224
+#: templates/legacy/calendar/part.eventform.php:291
 #: templates/legacy/calendar/part.showevent.php:249
 msgid "occurrences"
 msgstr "Einzeltermine"
 
-#: templates/legacy/calendar/part.eventform.php:243
+#: templates/legacy/calendar/part.eventform.php:310
 msgid "Visibility to people shared with"
 msgstr "Sichtbarkeit für geteilt-mit-denen"
 
@@ -12148,6 +12169,9 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#~ msgid "Click to hide location and description fields."
+#~ msgstr "Ort und Beschreibung verstecken"
 
 #~ msgid ""
 #~ "Delete all uploaded file-attachments from the server. This is also done "
