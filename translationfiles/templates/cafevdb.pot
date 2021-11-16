@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-11-16 02:11+0100\n"
+"POT-Creation-Date: 2021-11-16 10:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -478,72 +478,72 @@ msgstr ""
 msgid "Unknown Request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:141
+#: lib/Controller/LegacyEventsController.php:147
 #, php-format
 msgid "unknown service requested: `%s/%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:153
+#: lib/Controller/LegacyEventsController.php:159
 msgid "Project-id and/or name not set"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:176
+#: lib/Controller/LegacyEventsController.php:182
 #, php-format
 msgid "Cannot access calendar: `%s'"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:305
-#: lib/Controller/LegacyEventsController.php:704
-#: lib/Controller/LegacyEventsController.php:743
+#: lib/Controller/LegacyEventsController.php:312
+#: lib/Controller/LegacyEventsController.php:712
+#: lib/Controller/LegacyEventsController.php:751
 #, php-format
 msgid "Could not fetch object `%s' from calendar `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:309
-#: lib/Controller/LegacyEventsController.php:747
+#: lib/Controller/LegacyEventsController.php:316
+#: lib/Controller/LegacyEventsController.php:755
 #, php-format
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:314
-#: lib/Controller/LegacyEventsController.php:753
+#: lib/Controller/LegacyEventsController.php:321
+#: lib/Controller/LegacyEventsController.php:761
 #, php-format
 msgid "Unable to access calendar with id `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:562
+#: lib/Controller/LegacyEventsController.php:569
 #, php-format
 msgid "Don't know how to react to permissions `%s'"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:678
+#: lib/Controller/LegacyEventsController.php:686
 msgid "Failed to validate event creating request."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:690
+#: lib/Controller/LegacyEventsController.php:698
 msgid "Calendar object successfully created."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:698
+#: lib/Controller/LegacyEventsController.php:706
 msgid "Failed to validate event updating request."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:711
+#: lib/Controller/LegacyEventsController.php:719
 msgid "Race-condition, event was modified in between."
-msgstr ""
-
-#: lib/Controller/LegacyEventsController.php:722
-#, php-format
-msgid "Successfully updated `%s'."
 msgstr ""
 
 #: lib/Controller/LegacyEventsController.php:730
 #, php-format
+msgid "Successfully updated `%s'."
+msgstr ""
+
+#: lib/Controller/LegacyEventsController.php:738
+#, php-format
 msgid "Successfully deleted `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:781
+#: lib/Controller/LegacyEventsController.php:789
 #, php-format
 msgid "Method %s is not yet implemented."
 msgstr ""
@@ -3616,7 +3616,7 @@ msgid ""
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:215
-#: templates/legacy/calendar/part.eventform.php:140
+#: templates/legacy/calendar/part.eventform.php:150
 #: templates/legacy/calendar/part.showevent.php:123
 msgid "Advanced"
 msgstr ""
@@ -4388,8 +4388,8 @@ msgid "Run brief sanity checks on the configuration options."
 msgstr ""
 
 #: lib/PageRenderer/Util/Navigation.php:644
-#: lib/Service/ToolTipsService.php:813
-#: lib/Service/ToolTipsService.php:849
+#: lib/Service/ToolTipsService.php:805
+#: lib/Service/ToolTipsService.php:841
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -6024,26 +6024,15 @@ msgid "Display name, pre-name, instruments, status, general remarks."
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:556
-msgid ""
-"Add a new event for the project. The event is added to the respective\n"
-"calendar and will also be visible and editable through the calendar\n"
-"app. It is also possible to subscribe to the calendars using a\n"
-"suitable CalDAV client from your smartphone, tablet or desktop\n"
-"computer. The link between an \"ordinary\" event in the web-calendar and\n"
-"a project is maintained by attching the project name as \"category\" to\n"
-"the event."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:564
 #: templates/project-web-articles.php:71
 msgid "nothing"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:566
+#: lib/Service/ToolTipsService.php:558
 msgid "Web-link to the current Cloud developer documentation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:568
+#: lib/Service/ToolTipsService.php:560
 #, php-format
 msgid ""
 "Status of outstanding project fees:\n"
@@ -6061,35 +6050,35 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:584
+#: lib/Service/ToolTipsService.php:576
 msgid ""
 "Link to the data-base administration tool for the underlying data-base. "
 "Swiss-army-knife-like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:586
+#: lib/Service/ToolTipsService.php:578
 msgid "Link to the documentation for the database-management tool."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:589
+#: lib/Service/ToolTipsService.php:581
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:592
-#: lib/Service/ToolTipsService.php:764
+#: lib/Service/ToolTipsService.php:584
+#: lib/Service/ToolTipsService.php:756
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:594
+#: lib/Service/ToolTipsService.php:586
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:598
+#: lib/Service/ToolTipsService.php:590
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -6098,7 +6087,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:604
+#: lib/Service/ToolTipsService.php:596
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -6106,7 +6095,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:609
+#: lib/Service/ToolTipsService.php:601
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -6116,24 +6105,24 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:617
+#: lib/Service/ToolTipsService.php:609
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:620
+#: lib/Service/ToolTipsService.php:612
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:623
+#: lib/Service/ToolTipsService.php:615
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:627
+#: lib/Service/ToolTipsService.php:619
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -6141,20 +6130,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:634
+#: lib/Service/ToolTipsService.php:626
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:637
+#: lib/Service/ToolTipsService.php:629
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:642
+#: lib/Service/ToolTipsService.php:634
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -6162,7 +6151,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:648
+#: lib/Service/ToolTipsService.php:640
 msgid ""
 "Click me to export a CSV-table with the selected debit notes suitable for "
 "use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
@@ -6171,21 +6160,21 @@ msgid ""
 "debiting their bank account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:650
+#: lib/Service/ToolTipsService.php:642
 msgid "Select all displayed debit-notes for export."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:652
+#: lib/Service/ToolTipsService.php:644
 msgid "Deselect all displayed debit-notes from export selection."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:654
+#: lib/Service/ToolTipsService.php:646
 msgid ""
 "Select this debit note for debiting the project fees. In order to actually "
 "export the debit-note you have to hit the `Debit' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:657
+#: lib/Service/ToolTipsService.php:649
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -6194,7 +6183,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:664
+#: lib/Service/ToolTipsService.php:656
 msgid ""
 "Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -6206,7 +6195,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:673
+#: lib/Service/ToolTipsService.php:665
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -6218,14 +6207,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:682
+#: lib/Service/ToolTipsService.php:674
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:686
+#: lib/Service/ToolTipsService.php:678
 msgid ""
 "Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -6234,30 +6223,30 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:692
+#: lib/Service/ToolTipsService.php:684
 msgid ""
 "Click to generate bulk-transactions for the selected musicians and "
 "receivables."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:694
+#: lib/Service/ToolTipsService.php:686
 msgid ""
 "Click to select all displayed participants for bulk-transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:696
+#: lib/Service/ToolTipsService.php:688
 msgid ""
 "Click to deselect all displayed participants from the bulk-transaction "
 "generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:698
+#: lib/Service/ToolTipsService.php:690
 msgid ""
 "Select and deselect this participant and bank-acccount to and from bulk-"
 "transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:700
+#: lib/Service/ToolTipsService.php:692
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -6265,29 +6254,29 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:702
+#: lib/Service/ToolTipsService.php:694
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:704
+#: lib/Service/ToolTipsService.php:696
 msgid "Export in OpenDocument-format (LibreOffice/OpenOffice)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:706
+#: lib/Service/ToolTipsService.php:698
 msgid "Export as PDF in A3/Landscape, scaled to fit the page size"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:708
+#: lib/Service/ToolTipsService.php:700
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:710
+#: lib/Service/ToolTipsService.php:702
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:712
+#: lib/Service/ToolTipsService.php:704
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -6323,53 +6312,53 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:744
+#: lib/Service/ToolTipsService.php:736
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:746
+#: lib/Service/ToolTipsService.php:738
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:749
+#: lib/Service/ToolTipsService.php:741
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:754
+#: lib/Service/ToolTipsService.php:746
 msgid ""
 "Click to unlock if the field is empty, click again to clear the field if the "
 "field contains data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:756
+#: lib/Service/ToolTipsService.php:748
 msgid "Click to lock and unlock this input field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:759
+#: lib/Service/ToolTipsService.php:751
 msgid "Some usefull convenience actions (click me for details!)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:762
+#: lib/Service/ToolTipsService.php:754
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:763
+#: lib/Service/ToolTipsService.php:755
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:767
+#: lib/Service/ToolTipsService.php:759
 msgid ""
 "Limits the number of rows per page to the given value. A \"∞\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:770
+#: lib/Service/ToolTipsService.php:762
 #, php-format
 msgid ""
 "Klick mich, um die\n"
@@ -6378,76 +6367,76 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:777
+#: lib/Service/ToolTipsService.php:769
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:778
+#: lib/Service/ToolTipsService.php:770
 msgid ""
 "Discards all unsaved data and reloads all fields form the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:780
+#: lib/Service/ToolTipsService.php:772
 msgid ""
 "Discards all unsaved data and reloads all fields from the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:785
+#: lib/Service/ToolTipsService.php:777
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:786
+#: lib/Service/ToolTipsService.php:778
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:790
+#: lib/Service/ToolTipsService.php:782
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:794
+#: lib/Service/ToolTipsService.php:786
 msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:796
+#: lib/Service/ToolTipsService.php:788
 msgid ""
 "Click me to sort by this field! Click again to reverse the search direction. "
 "Click another time to disable sorting by this field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:798
+#: lib/Service/ToolTipsService.php:790
 msgid "Click me to reverse the sort order by this field!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:800
+#: lib/Service/ToolTipsService.php:792
 msgid "Click me to remove this field from the sorting criteria!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:802
+#: lib/Service/ToolTipsService.php:794
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:805
+#: lib/Service/ToolTipsService.php:797
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:810
-#: lib/Service/ToolTipsService.php:840
+#: lib/Service/ToolTipsService.php:802
+#: lib/Service/ToolTipsService.php:832
 msgid ""
 "Define participant-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:815
+#: lib/Service/ToolTipsService.php:807
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
 "exceptional case for \"virtual pseudo projects\". The latter in\n"
@@ -6457,29 +6446,29 @@ msgid ""
 "permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:823
+#: lib/Service/ToolTipsService.php:815
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:827
+#: lib/Service/ToolTipsService.php:819
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:829
+#: lib/Service/ToolTipsService.php:821
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:833
+#: lib/Service/ToolTipsService.php:825
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:835
-#: lib/Service/ToolTipsService.php:901
+#: lib/Service/ToolTipsService.php:827
+#: lib/Service/ToolTipsService.php:893
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -6487,55 +6476,55 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:843
+#: lib/Service/ToolTipsService.php:835
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:845
+#: lib/Service/ToolTipsService.php:837
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:851
+#: lib/Service/ToolTipsService.php:843
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:854
+#: lib/Service/ToolTipsService.php:846
 msgid ""
 "Some people gave us debit mandates but still want to pay by bank-transfer. "
 "Uncheck in order to exclude the person from direct debits transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:856
+#: lib/Service/ToolTipsService.php:848
 msgid "Sum of the fees for all booked etra items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:858
+#: lib/Service/ToolTipsService.php:850
 msgid ""
 "Everything related to project fees, surcharges, bank transfers, debit\n"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:861
+#: lib/Service/ToolTipsService.php:853
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:863
+#: lib/Service/ToolTipsService.php:855
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:865
+#: lib/Service/ToolTipsService.php:857
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:867
+#: lib/Service/ToolTipsService.php:859
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -6550,7 +6539,7 @@ msgid ""
 "Thanks."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:876
+#: lib/Service/ToolTipsService.php:868
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -6558,19 +6547,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:880
+#: lib/Service/ToolTipsService.php:872
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:882
+#: lib/Service/ToolTipsService.php:874
 #: lib/Service/ToolTipsService.php:775
 #, php-format
 msgid "Further \"not so important\" data of the participant."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:884
+#: lib/Service/ToolTipsService.php:876
 #: lib/Service/ToolTipsService.php:777
 #, php-format
 msgid ""
@@ -6578,26 +6567,26 @@ msgid ""
 "special field for the things you want to note"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:887
+#: lib/Service/ToolTipsService.php:879
 msgid ""
 "The accumulated total of all service fees, reimbursements and salaries the "
 "participant has to pay or to receive (TOTALS/PAID/REMAINING)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:889
+#: lib/Service/ToolTipsService.php:881
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:891
+#: lib/Service/ToolTipsService.php:883
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:894
+#: lib/Service/ToolTipsService.php:886
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -6607,28 +6596,34 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:896
+#: lib/Service/ToolTipsService.php:888
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:898
+#: lib/Service/ToolTipsService.php:890
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:906
+#: lib/Service/ToolTipsService.php:899
+msgid "Modify the event."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:901
+msgid ""
+"Clone (duplicate) the event. A new event-form will popup with just the data "
+"from this event."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:903
 msgid "Delete the event from the system (no undo possible)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:908
-msgid "Exclude all events from email-submission"
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:910
+#: lib/Service/ToolTipsService.php:905
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -6638,45 +6633,7 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:917
-msgid ""
-"Download the events as ICS file. In principle it is possible to import\n"
-"the ICS file into the respective calendar apps of your smartphone,\n"
-"tablet or desktop computer."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:921
-msgid "Modify the event."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:923
-msgid ""
-"Clone (duplicate) the event. A new event-form will popup with just the data "
-"from this event."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:925
-msgid "Add a new concert-event to the project."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:927
-msgid ""
-"Add a private management event which is not exposed to the rest of the world."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:929
-msgid "Add some other event to the project."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:931
-msgid "Add a new rehearsal-event to the project."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:933
-msgid "Select all events for email-submission"
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:935
+#: lib/Service/ToolTipsService.php:912
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -6686,6 +6643,40 @@ msgid ""
 "recipients."
 msgstr ""
 
+#: lib/Service/ToolTipsService.php:923
+msgid ""
+"Add a new event for the project. The event is added to the respective\n"
+"calendar and will also be visible and editable through the calendar\n"
+"app. It is also possible to subscribe to the calendars using a\n"
+"suitable CalDAV client from your smartphone, tablet or desktop\n"
+"computer. The link between an \"ordinary\" event in the web-calendar and\n"
+"a project is maintained by attching the project name as \"category\" to\n"
+"the event."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:931
+msgid "Add a new concert-event to the project."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:933
+msgid "Add a new rehearsal-event to the project."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:935
+msgid "Add a non-categorized event to the project."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:937
+msgid ""
+"Add a private management event which is not exposed to the rest of the world."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:939
+msgid ""
+"Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
+"transfers."
+msgstr ""
+
 #: lib/Service/ToolTipsService.php:942
 msgid ""
 "Click to open an email-form\n"
@@ -6693,80 +6684,99 @@ msgid ""
 "selected recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:947
+#: lib/Service/ToolTipsService.php:946
+msgid "Select all events for email-submission"
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:948
+msgid "Exclude all events from email-submission"
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:950
+msgid ""
+"Download the events as ICS file. In principle it is possible to import\n"
+"the ICS file into the respective calendar apps of your smartphone,\n"
+"tablet or desktop computer."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:954
+msgid "Reload all events from the cloud-calendars."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:959
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:950
+#: lib/Service/ToolTipsService.php:962
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:952
+#: lib/Service/ToolTipsService.php:964
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:954
+#: lib/Service/ToolTipsService.php:966
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:956
+#: lib/Service/ToolTipsService.php:968
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:958
+#: lib/Service/ToolTipsService.php:970
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:960
+#: lib/Service/ToolTipsService.php:972
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:963
+#: lib/Service/ToolTipsService.php:975
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:965
+#: lib/Service/ToolTipsService.php:977
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:968
+#: lib/Service/ToolTipsService.php:980
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:971
+#: lib/Service/ToolTipsService.php:983
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
 "base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:972
+#: lib/Service/ToolTipsService.php:984
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:973
+#: lib/Service/ToolTipsService.php:985
 msgid "Add a new dialog for defining a new bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:974
+#: lib/Service/ToolTipsService.php:986
 msgid "Show also the disabled bank accounts, if any."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:977
+#: lib/Service/ToolTipsService.php:989
 msgid ""
 "Used SEPA mandates are not deleted from the DB, but just flagged as\n"
 "\"inactive\" if they expire or are manually pseudo-deleted."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:980
+#: lib/Service/ToolTipsService.php:992
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -6775,7 +6785,7 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:982
+#: lib/Service/ToolTipsService.php:994
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -6783,47 +6793,47 @@ msgid ""
 "and contact the treasurer for further instructions."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:988
+#: lib/Service/ToolTipsService.php:1000
 msgid "Folder shared by the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:1001
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:990
+#: lib/Service/ToolTipsService.php:1002
 msgid "Shared folder for document templates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:991
+#: lib/Service/ToolTipsService.php:1003
 msgid "Shared folder for per-project data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:992
+#: lib/Service/ToolTipsService.php:1004
 msgid "Shared folder for per-project per-participant data"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:993
+#: lib/Service/ToolTipsService.php:1005
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:995
+#: lib/Service/ToolTipsService.php:1007
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:997
+#: lib/Service/ToolTipsService.php:1009
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:999
+#: lib/Service/ToolTipsService.php:1011
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1001
+#: lib/Service/ToolTipsService.php:1013
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -6832,34 +6842,34 @@ msgid ""
 "these data-items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1007
+#: lib/Service/ToolTipsService.php:1019
 #: templates/part.common.header.php:103
 #: templates/part.common.header.php:109
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1009
+#: lib/Service/ToolTipsService.php:1021
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1011
+#: lib/Service/ToolTipsService.php:1023
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1013
+#: lib/Service/ToolTipsService.php:1025
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1015
+#: lib/Service/ToolTipsService.php:1027
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1020
+#: lib/Service/ToolTipsService.php:1032
 #: lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
@@ -6867,7 +6877,7 @@ msgid ""
 "is substituted into document templates using the \"[LOGO]\" placeholder."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1021
+#: lib/Service/ToolTipsService.php:1033
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -6877,7 +6887,7 @@ msgid ""
 "project-participant views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1023
+#: lib/Service/ToolTipsService.php:1035
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -6886,43 +6896,43 @@ msgid ""
 "mandates can be downloaed from the musician and member's project view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1025
+#: lib/Service/ToolTipsService.php:1037
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1029
+#: lib/Service/ToolTipsService.php:1041
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1031
+#: lib/Service/ToolTipsService.php:1043
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1035
+#: lib/Service/ToolTipsService.php:1047
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1037
+#: lib/Service/ToolTipsService.php:1049
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1039
+#: lib/Service/ToolTipsService.php:1051
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1041
+#: lib/Service/ToolTipsService.php:1053
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -6947,17 +6957,14 @@ msgid "Other"
 msgstr ""
 
 #: lib/Settings/PersonalForm.php:281
-#: templates/events.php:38
 msgid "Management"
 msgstr ""
 
 #: lib/Settings/PersonalForm.php:282
-#: templates/events.php:39
 msgid "Finance"
 msgstr ""
 
 #: lib/Settings/PersonalForm.php:285
-#: templates/events.php:37
 msgid "Miscellaneous"
 msgstr ""
 
@@ -7350,7 +7357,7 @@ msgstr ""
 #: src/app/inlineimage.js:427
 #: src/app/settings.js:1063
 #: src/app/settings.js:1076
-#: src/legacy/calendar/calendar.js:334
+#: src/legacy/calendar/calendar.js:337
 msgid "Error"
 msgstr ""
 
@@ -7886,27 +7893,22 @@ msgid "Unable to export insurance overview."
 msgstr ""
 
 #: src/app/location.js:68
-#: src/legacy/calendar/calendar.js:440
 msgid "Browser determined position"
 msgstr ""
 
 #: src/app/location.js:81
-#: src/legacy/calendar/calendar.js:453
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
 #: src/app/location.js:116
-#: src/legacy/calendar/calendar.js:481
 msgid "Location not found:"
 msgstr ""
 
 #: src/app/location.js:118
-#: src/legacy/calendar/calendar.js:483
 msgid "No location specified."
 msgstr ""
 
 #: src/app/location.js:120
-#: src/legacy/calendar/calendar.js:485
 msgid "Unknown location"
 msgstr ""
 
@@ -8150,7 +8152,7 @@ msgid ""
 msgstr ""
 
 #: src/app/sepa-debit-mandate.js:622
-#: templates/events.php:74
+#: templates/events.php:81
 #: templates/part.common.header.php:63
 msgid "Reload"
 msgstr ""
@@ -8217,54 +8219,54 @@ msgstr ""
 msgid "User Manual: {section}"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:23
+#: src/legacy/calendar/calendar.js:24
 msgid "Missing or invalid fields"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:24
+#: src/legacy/calendar/calendar.js:25
 #: templates/legacy/calendar/part.showevent.php:11
 msgid "Title"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:25
+#: src/legacy/calendar/calendar.js:26
 #: templates/legacy/calendar/part.eventform.php:22
 #: templates/legacy/calendar/part.showevent.php:37
 msgid "Calendar"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:26
+#: src/legacy/calendar/calendar.js:27
 msgid "From Date"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:27
+#: src/legacy/calendar/calendar.js:28
 msgid "From Time"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:28
+#: src/legacy/calendar/calendar.js:29
 msgid "To Date"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:29
+#: src/legacy/calendar/calendar.js:30
 msgid "To Time"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:30
+#: src/legacy/calendar/calendar.js:31
 msgid "The event ends before it starts"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:31
+#: src/legacy/calendar/calendar.js:32
 msgid "There was a database fail"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:32
+#: src/legacy/calendar/calendar.js:33
 msgid "Interval is not valid. It must be a positive integer!"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:295
+#: src/legacy/calendar/calendar.js:298
 msgid "Deletion failed"
 msgstr ""
 
-#: src/legacy/calendar/calendar.js:366
+#: src/legacy/calendar/calendar.js:369
 msgid "Calendar event validation caught an error."
 msgstr ""
 
@@ -8885,27 +8887,19 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr ""
 
-#: templates/events.php:25
+#: templates/events.php:30
 msgid "Events for"
 msgstr ""
 
-#: templates/events.php:32
+#: templates/events.php:37
 msgid "New Event"
 msgstr ""
 
-#: templates/events.php:35
-msgid "Concert"
-msgstr ""
-
-#: templates/events.php:36
-msgid "Rehearsal"
-msgstr ""
-
-#: templates/events.php:66
+#: templates/events.php:73
 msgid "Download"
 msgstr ""
 
-#: templates/eventslisting.php:56
+#: templates/eventslisting.php:57
 msgid "no events"
 msgstr ""
 
@@ -9005,15 +8999,15 @@ msgstr ""
 msgid "Edit event"
 msgstr ""
 
-#: templates/legacy/calendar/part.editevent.php:13
+#: templates/legacy/calendar/part.editevent.php:14
 msgid "Delete event"
 msgstr ""
 
-#: templates/legacy/calendar/part.editevent.php:19
+#: templates/legacy/calendar/part.editevent.php:21
 msgid "Clone event"
 msgstr ""
 
-#: templates/legacy/calendar/part.editevent.php:25
+#: templates/legacy/calendar/part.editevent.php:27
 msgid "Save event"
 msgstr ""
 
@@ -9074,93 +9068,111 @@ msgstr ""
 msgid "Location@Google"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:72
-#: templates/legacy/calendar/part.eventform.php:74
+#: templates/legacy/calendar/part.eventform.php:71
+msgid "Open the cloud's map and location app in another tab or window."
+msgstr ""
+
+#: templates/legacy/calendar/part.eventform.php:80
 #: templates/legacy/calendar/part.showevent.php:97
 #: templates/legacy/calendar/part.showevent.php:98
 msgid "View on map"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:84
+#: templates/legacy/calendar/part.eventform.php:90
 msgid "Categories (separate by comma)"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:89
-#: templates/legacy/calendar/part.eventform.php:91
-msgid "Edit categories"
+#: templates/legacy/calendar/part.eventform.php:92
+msgid ""
+"Event categories. The dedicated per-project events are linked to their "
+"respective project by automatically adding the project name as category. "
+"Another automatically added category is the short name of the calendar."
 msgstr ""
 
 #: templates/legacy/calendar/part.eventform.php:96
+#: templates/legacy/calendar/part.eventform.php:98
+msgid "Edit categories"
+msgstr ""
+
+#: templates/legacy/calendar/part.eventform.php:103
 #: templates/legacy/calendar/part.showevent.php:106
 msgid "Description"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:104
+#: templates/legacy/calendar/part.eventform.php:111
 msgid "Export event"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:122
+#: templates/legacy/calendar/part.eventform.php:112
+msgid "Export this event as ICS file."
+msgstr ""
+
+#: templates/legacy/calendar/part.eventform.php:116
+msgid "Open the cloud's calendar app in another tab or window."
+msgstr ""
+
+#: templates/legacy/calendar/part.eventform.php:132
 msgid "Calendar App"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:133
+#: templates/legacy/calendar/part.eventform.php:143
 #: templates/legacy/calendar/part.showevent.php:116
 msgid "Repeat"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:187
+#: templates/legacy/calendar/part.eventform.php:197
 #: templates/legacy/calendar/part.showevent.php:167
 msgid "Select weekdays"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:205
-#: templates/legacy/calendar/part.eventform.php:223
+#: templates/legacy/calendar/part.eventform.php:215
+#: templates/legacy/calendar/part.eventform.php:233
 #: templates/legacy/calendar/part.showevent.php:180
 #: templates/legacy/calendar/part.showevent.php:193
 msgid "Select days"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:212
+#: templates/legacy/calendar/part.eventform.php:222
 #: templates/legacy/calendar/part.showevent.php:185
 msgid "and the events day of year."
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:230
+#: templates/legacy/calendar/part.eventform.php:240
 #: templates/legacy/calendar/part.showevent.php:198
 msgid "and the events day of month."
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:241
+#: templates/legacy/calendar/part.eventform.php:251
 #: templates/legacy/calendar/part.showevent.php:206
 msgid "Select months"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:259
+#: templates/legacy/calendar/part.eventform.php:269
 #: templates/legacy/calendar/part.showevent.php:219
 msgid "Select weeks"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:266
+#: templates/legacy/calendar/part.eventform.php:276
 #: templates/legacy/calendar/part.showevent.php:224
 msgid "and the events week of year."
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:272
+#: templates/legacy/calendar/part.eventform.php:282
 #: templates/legacy/calendar/part.showevent.php:230
 msgid "Interval"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:278
+#: templates/legacy/calendar/part.eventform.php:288
 #: templates/legacy/calendar/part.showevent.php:236
 msgid "End"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:291
+#: templates/legacy/calendar/part.eventform.php:301
 #: templates/legacy/calendar/part.showevent.php:249
 msgid "occurrences"
 msgstr ""
 
-#: templates/legacy/calendar/part.eventform.php:310
+#: templates/legacy/calendar/part.eventform.php:320
 msgid "Visibility to people shared with"
 msgstr ""
 
