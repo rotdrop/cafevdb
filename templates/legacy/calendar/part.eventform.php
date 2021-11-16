@@ -62,14 +62,20 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
 	     placeholder="<?php p($l->t('Location'));?>"
 	     value="<?php p(isset($_['location']) ? $_['location'] : '') ?>"
 	     maxlength="100"  name="location" />
-      <a class="action google tooltip-auto" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>">
+      <!-- <a class="action google tooltip-auto" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>">
         <img alt="<?php echo $l->t("Location@Google"); ?>"
              src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>"
              class="png action permanent"/>
-      </a>
+      </a> -->
       <a class="action tooltip-auto"
-         id="viewOnMap"
          title="<?php p($l->t('View on map')); ?>"
+         target="<?php p(md5($urlGenerator->linkToRoute('maps.page.index'))); ?>"
+         href="<?php
+               print_unescaped(
+                 $urlGenerator->linkToRoute('maps.page.index')
+                 . '?search=' . urlencode($_['location'])
+               );
+               ?>"
       >
         <img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>"
              class="svg action permanent"/>
