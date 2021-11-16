@@ -46,9 +46,9 @@ $(document).on('click', '#advanced_options_button_repeat', function() {
     .toggleClass('options-hidden', isVisible);
   Calendar.UI.showadvancedoptionsforrepeating();
 });
-$(document).on('click', '#google-location', function() {
-  Calendar.UI.googlelocation();
-});
+// $(document).on('click', '#google-location', function() {
+//   Calendar.UI.googlelocation();
+// });
 $(document).on('click', '#submitNewEvent', function() {
   Calendar.UI.validateEventForm($(this).data('link'));
 });

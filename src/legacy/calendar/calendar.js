@@ -15,8 +15,9 @@ import * as Dialogs from '../../app/dialogs.js';
 import * as Events from '../../app/events.js';
 import { busyIcon as pageBusyIcon } from '../../app/page.js';
 import { toBackButton as dialogToBackButton } from '../../app/dialog-utils.js';
+import { toolTipsInit } from '../../app/cafevdb.js';
 
-const google = {};
+// const google = {};
 
 const Calendar = {
   missing: {
@@ -230,7 +231,9 @@ const Calendar = {
         dialogClass: 'cafevdb eventdlg',
         // draggable: false,
         open() {
-          dialogToBackButton($(this));
+          const $dialogHolder = $(this);
+          dialogToBackButton($dialogHolder);
+          toolTipsInit($dialogHolder);
           afterInit();
         },
         close(event, ui) {
@@ -405,95 +408,95 @@ const Calendar = {
     //            }
     //          });
     // },
-    googlepopup(latlng, location) {
-      if ($('#event_googlemap').dialog('isOpen') === true) {
-        $('#event_googlemap').dialog('close').remove();
-      }
-      $('#event_map').html('<div id="event_googlemap"></div>');
-      const mapOptions = {
-        zoom: 15,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-      };
-      const map = new google.maps.Map(document.getElementById('event_googlemap'), mapOptions);
-      $('#event_googlemap').cafevDialog({
-        title: 'Google Maps',
-        dialogClass: 'google-popup',
-        position: {
-          my: 'left top',
-          at: 'center center',
-          of: '#event',
-          offset: '0 0',
-        },
-        resizable: true,
-        resize: 'auto',
-        width: 500,
-        height: 600,
-        close(event, ui) {
-          $(this).dialog('destroy').remove();
-        },
-        open() {
-          $(this).css('overflow', 'hidden');
-          let googlesearch = '';
-          if (location === '') {
-            googlesearch = latlng.lat() + ',' + latlng.lng();
-            location = t('calendar', 'Browser determined position') + '<br/>' + googlesearch;
-          } else {
-            googlesearch = location;
-          }
-          const infowindow = new google.maps.InfoWindow();
-          const marker = new google.maps.Marker({
-            map,
-            position: latlng,
-          });
-          google.maps.event.addListener(
-            marker, 'click', function() {
-              infowindow.setContent(
-                location + '</br>'
-                  + '<a href="https://maps.google.com/maps?q=' + googlesearch + '" style="color:#00f;text-decoration:underline;" target="_blank">' + t('calendar', 'Detailed search at Google-Maps') + '</a>');
-              infowindow.open(map, marker);
-            });
-          google.maps.event.trigger(map, 'resize');
-          map.setCenter(latlng);
-        },
-        resizeStop(event, ui) {
-          const center = map.getCenter();
-          google.maps.event.trigger(map, 'resize');
-          map.setCenter(center);
-        },
-      });
+    // googlepopup(latlng, location) {
+    //   if ($('#event_googlemap').dialog('isOpen') === true) {
+    //     $('#event_googlemap').dialog('close').remove();
+    //   }
+    //   $('#event_map').html('<div id="event_googlemap"></div>');
+    //   const mapOptions = {
+    //     zoom: 15,
+    //     center: latlng,
+    //     mapTypeId: google.maps.MapTypeId.ROADMAP,
+    //   };
+    //   const map = new google.maps.Map(document.getElementById('event_googlemap'), mapOptions);
+    //   $('#event_googlemap').cafevDialog({
+    //     title: 'Google Maps',
+    //     dialogClass: 'google-popup',
+    //     position: {
+    //       my: 'left top',
+    //       at: 'center center',
+    //       of: '#event',
+    //       offset: '0 0',
+    //     },
+    //     resizable: true,
+    //     resize: 'auto',
+    //     width: 500,
+    //     height: 600,
+    //     close(event, ui) {
+    //       $(this).dialog('destroy').remove();
+    //     },
+    //     open() {
+    //       $(this).css('overflow', 'hidden');
+    //       let googlesearch = '';
+    //       if (location === '') {
+    //         googlesearch = latlng.lat() + ',' + latlng.lng();
+    //         location = t('calendar', 'Browser determined position') + '<br/>' + googlesearch;
+    //       } else {
+    //         googlesearch = location;
+    //       }
+    //       const infowindow = new google.maps.InfoWindow();
+    //       const marker = new google.maps.Marker({
+    //         map,
+    //         position: latlng,
+    //       });
+    //       google.maps.event.addListener(
+    //         marker, 'click', function() {
+    //           infowindow.setContent(
+    //             location + '</br>'
+    //               + '<a href="https://maps.google.com/maps?q=' + googlesearch + '" style="color:#00f;text-decoration:underline;" target="_blank">' + t('calendar', 'Detailed search at Google-Maps') + '</a>');
+    //           infowindow.open(map, marker);
+    //         });
+    //       google.maps.event.trigger(map, 'resize');
+    //       map.setCenter(latlng);
+    //     },
+    //     resizeStop(event, ui) {
+    //       const center = map.getCenter();
+    //       google.maps.event.trigger(map, 'resize');
+    //       map.setCenter(center);
+    //     },
+    //   });
 
-    },
-    googlelocation() {
-      if ($('#event_googlemap').dialog('isOpen') === true) {
-        $('#event_googlemap').dialog('close').remove();
-      }
+    // },
+    // googlelocation() {
+    //   if ($('#event_googlemap').dialog('isOpen') === true) {
+    //     $('#event_googlemap').dialog('close').remove();
+    //   }
 
-      const location = $('input[name=location]').val();
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ address: location }, function(results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-          const latlng = results[0].geometry.location;
-          Calendar.UI.googlepopup(latlng, location);
-        } else {
-          let alerttext;
-          if (location) {
-            alerttext = t('calendar', 'Location not found:') + ' ' + location;
-          } else {
-            alerttext = t('calendar', 'No location specified.');
-          }
-          Dialogs.alert(alerttext, t('calendar', 'Unknown location'), null, false, true);
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-              const latlng = new google.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude);
-              Calendar.UI.googlepopup(latlng, '');
-            });
-          }
-        }
-      });
-    },
+    //   const location = $('input[name=location]').val();
+    //   const geocoder = new google.maps.Geocoder();
+    //   geocoder.geocode({ address: location }, function(results, status) {
+    //     if (status === google.maps.GeocoderStatus.OK) {
+    //       const latlng = results[0].geometry.location;
+    //       Calendar.UI.googlepopup(latlng, location);
+    //     } else {
+    //       let alerttext;
+    //       if (location) {
+    //         alerttext = t('calendar', 'Location not found:') + ' ' + location;
+    //       } else {
+    //         alerttext = t('calendar', 'No location specified.');
+    //       }
+    //       Dialogs.alert(alerttext, t('calendar', 'Unknown location'), null, false, true);
+    //       if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(function(position) {
+    //           const latlng = new google.maps.LatLng(
+    //             position.coords.latitude,
+    //             position.coords.longitude);
+    //           Calendar.UI.googlepopup(latlng, '');
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     hideadvancedoptions() {
       $('#advanced_options').slideUp('slow');
       // $('#advanced_options_button').css('display', 'inline-block');

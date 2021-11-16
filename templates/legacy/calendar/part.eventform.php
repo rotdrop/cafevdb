@@ -68,7 +68,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
              class="png action permanent"/>
       </a> -->
       <a class="action tooltip-auto"
-         title="<?php p($l->t('View on map')); ?>"
+         title="<?php p($l->t('Open the cloud\'s map and location app in another tab or window.')); ?>"
          target="<?php p(md5($urlGenerator->linkToRoute('maps.page.index'))); ?>"
          href="<?php
                print_unescaped(
@@ -77,18 +77,19 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
                );
                ?>"
       >
-        <img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core','actions/public.svg'))?>"
+        <img alt="<?php p($l->t('View on map')); ?>" src="<?php print_unescaped($urlGenerator->imagePath('core', 'filetypes/location.svg'))?>"
              class="svg action permanent"/>
       </a>
     </div>
     <div class="category flex-container flex-center">
       <input id="category"
-             <?php if ($protectCategories & EventsController::HIDDEN_CATEGORIES) { p('class="reallyhidden"'); } ?>
+             class="tooltip-auto<?php ($protectCategories & EventsController::HIDDEN_CATEGORIES) && p(' reallyhidden'); ?>"
              name="categories"
              type="text"
-             <?php if ($protectCategories & EventsController::READONLY_CATEGORIES) { p('readonly'); } ?>
+             <?php ($protectCategories & EventsController::READONLY_CATEGORIES) && p('readonly'); ?>
 	     placeholder="<?php p($l->t('Categories (separate by comma)')); ?>"
 	     value="<?php p(isset($_['categories']) ? $_['categories'] : '') ?>"
+             title="<?php echo $l->t('Event categories. The dedicated per-project events are linked to their respective project by automatically adding the project name as category. Another automatically added category is the short name of the calendar.'); ?>"
       >
       <a class="action edit tooltip-auto<?php if ($protectCategories) { p(' reallyhidden'); } ?>"
          id="editCategories"
@@ -108,10 +109,13 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
                id="editEvent-export"
                name="export"
                value="<?php p($l->t('Export event'));?>"
+               title="<?php p($l->t('Export this event as ICS file.')); ?>"
                data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
         >
-        <span class="button no-flex calendar-app">
-          <a class="calendar-app"
+        <span class="button no-flex calendar-app tooltip-auto"
+              title="<?php p($l->t('Open the cloud\'s calendar app in another tab or window.')); ?>"
+        >
+          <a class="calendar-app tooltip-auto"
              target="<?php p(md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]))); ?>"
              href="<?php
                    print_unescaped(

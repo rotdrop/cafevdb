@@ -10,12 +10,14 @@
              class="submit no-flex"
              id="editEvent-delete"
              name="delete"
+             title="<?php echo $toolTips['projectevents:event:delete']; ?>"
              value="<?php p($l->t('Delete event'));?>"
              data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'delete'])); ?>">
       <input type="button"
              class="submit no-flex"
              id="editEvent-clone"
              name="clone"
+             title="<?php echo $toolTips['projectevents:event:clone']; ?>"
              value="<?php p($l->t('Clone event'));?>"
              data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'forms', 'subTopic' => 'clone'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
       >

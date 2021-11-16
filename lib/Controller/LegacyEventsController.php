@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\VCalendarService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Serves the requests issued by the old OC v8 event popups.*/
 class LegacyEventsController extends Controller {
@@ -74,6 +75,9 @@ class LegacyEventsController extends Controller {
   /** @var OC_Calendar_Object */
   private $ocCalendarObject;
 
+  /** @var ToolTipsService */
+  private $tolTipsService;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -83,6 +87,7 @@ class LegacyEventsController extends Controller {
     , ProjectService $projectService
     , CalDavService $calDavService
     , VCalendarService $vCalendarService
+    , ToolTipsService $toolTipsService
     , ISession $session
   ) {
     parent::__construct($appName, $request);
@@ -94,6 +99,7 @@ class LegacyEventsController extends Controller {
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
     $this->ocCalendarObject = $vCalendarService->legacyEventObject();
+    $this->toolTipsService = $toolTipsService;
     $this->session = $session;
 
     $this->l = $this->l10N();
@@ -240,6 +246,7 @@ class LegacyEventsController extends Controller {
       'legacy/calendar/part.newevent',
       [
         'appName' => $this->appName(),
+        'toolTips' => $this->toolTipsService,
 
         'requesttoken' => \OCP\Util::callRegister(),
         'urlGenerator' => $this->urlGenerator(),
@@ -566,6 +573,7 @@ class LegacyEventsController extends Controller {
 
     $templateParameters = [
       'appName' => $this->appName(),
+      'toolTips' => $this->toolTipsService,
 
       'requestoken' => \OCP\Util::callRegister(),
       'urlGenerator' => $this->urlGenerator(),

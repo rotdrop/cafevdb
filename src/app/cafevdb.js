@@ -296,6 +296,8 @@ const snapperClose = function() {
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
  *
  * @param {String|jQuery} containerSel TBD.
+ *
+ * @todo This function performs too much work and is too unstructured.
  */
 const toolTipsInit = function(containerSel) {
   if (typeof containerSel === 'undefined') {
