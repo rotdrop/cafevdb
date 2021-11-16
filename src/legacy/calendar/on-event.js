@@ -102,6 +102,12 @@ $(document).on('click', '#editEvent-export', function() {
 //     minLength: 2,
 //   });
 // });
+$(document).on('blur', '#event-location', function(event) {
+  const $this = $(this);
+  const $mapLink = $this.next();
+  const mapUrl = $mapLink.attr('href');
+  $mapLink.attr('href', mapUrl.replace(/search=.*$/gi, 'search=' + encodeURIComponent($this.val())));
+});
 // $(document).on('keydown', '#newcalendar_dialog #displayname_new', function(event){
 //      if (event.which == 13){
 //              $('#newcalendar_dialog #editCalendar-submit').click();
