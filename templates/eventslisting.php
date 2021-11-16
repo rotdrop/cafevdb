@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -29,19 +30,19 @@ use OCA\CAFEVDB\Common\Util;
 $evtButtons = [
   'Edit' => [
     'tag' => 'edit',
-    'title' => $toolTips['projectevents:edit'],
+    'title' => $toolTips['projectevents:event:edit'],
   ],
   'Copy' => [
     'tag' => 'clone',
-    'title' => $toolTips['projectevents:clone'],
+    'title' => $toolTips['projectevents:event:clone'],
   ],
   'Delete' => [
     'tag' => 'delete',
-    'title' => $toolTips['projectevents:delete'],
+    'title' => $toolTips['projectevents:event:delete'],
   ],
   'Detach' => [
     'tag' => 'detach',
-    'title' => $toolTips['projectevents:detach'],
+    'title' => $toolTips['projectevents:event:detach'],
   ],
 ];
 
@@ -67,12 +68,16 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $evtUri  = $event['uri'];
     $calId  = $event['calendarid'];
     $brief  = htmlspecialchars(stripslashes($event['summary']));
-    $description = htmlspecialchars(nl2br("\n".stripslashes($event['description'])));
+    $location = htmlspecialchars(stripslashes($event['location']));
+    $description = htmlspecialchars(nl2br(stripslashes($event['description'])));
 
     $datestring = $eventsService->briefEventDate($event, $timezone, $locale);
     $longDate = $eventsService->longEventDate($event, $timezone, $locale);
 
-    $description = $longDate.'<br/>'.$brief.$description;
+    $description = $longDate
+      . (!empty($brief) ? '<br/>' . $brief  : '')
+      . (!empty($location) ? '<br/>' . $location  : '')
+      . (!empty($description) ? '<br/>' . $description : '');
 
     echo <<<__EOT__
       <tr class="$cssClass step-$n">
@@ -94,7 +99,7 @@ __EOT__;
           />
 __EOT__;
     }
-    $title = $toolTips['projectevents:selectevent'];
+    $title = $toolTips['projectevents:event:select'];
     $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
     $emailValue = Util::htmlEscape(json_encode([ 'uri' => $evtUri, 'calendarId' => $calId ]));
     echo <<<__EOT__

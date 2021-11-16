@@ -20,6 +20,11 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+use OCA\CAFEVDB\Service\ConfigService;
+
+$calendarUris = array_column(ConfigService::CALENDARS, 'uri');
+
 ?>
 <div id="events" class="cafev not-fixed-container"
      title="<?php p($l->t('Events for').' '.$projectName); ?>">
@@ -30,32 +35,34 @@
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
               data-placeholder="<?php p($l->t('New Event')); ?>"
-              title="<?php echo $toolTips['new-project-event']; ?>">
+              title="<?php echo $toolTips['projectevents:all:new']; ?>">
         <option value=""></option>
-        <option value="concerts"><?php p($l->t('Concert')); ?></option>
-        <option value="rehearsals"><?php p($l->t('Rehearsal')); ?></option>
-        <option value="other"><?php p($l->t('Miscellaneous')); ?></option>
-        <option value="management"><?php p($l->t('Management')); ?></option>
-        <option value="finance"><?php p($l->t('Finance')); ?></option>
+        <?php foreach ($calendarUris as $uri) { ?>
+          <option value="<?php p($uri); ?>"
+                  title="<?php echo $toolTips['projectevents:all:new:' . $uri]; ?>"
+          >
+            <?php p($l->t(ucfirst($uri))); ?>
+          </option>
+        <?php } ?>
       </select>
       <span class="<?php p($cssClass); ?>-email">
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail tooltip-bottom"
                name="sendmail"
                value="Em@il"
-               title="<?php echo $toolTips['projectevents:sendmail']; ?>"
+               title="<?php echo $toolTips['projectevents:all:sendmail']; ?>"
         />
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail-select image-button tooltip-bottom"
                name="select"
                value="+"
-               title="<?php echo $toolTips['projectevents:select']; ?>"
+               title="<?php echo $toolTips['projectevents:all:select']; ?>"
         />
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail-deselect image-button tooltip-bottom"
                name="deselect"
                value="-"
-               title="<?php echo $toolTips['projectevents:deselect']; ?>"
+               title="<?php echo $toolTips['projectevents:all:deselect']; ?>"
         />
       </span>
       <span class="<?php p($cssClass); ?>-download">
@@ -64,7 +71,7 @@
                type="button"
                name="download"
                value="<?php p($l->t('Download')); ?>"
-               title="<?php echo $toolTips['projectevents:download']; ?>"/>
+               title="<?php echo $toolTips['projectevents:all:download']; ?>"/>
       </span>
       <span class="<?php p($cssClass); ?>-reload">
         <input id="<?php p($cssClass); ?>-reload"
@@ -72,7 +79,7 @@
                type="button"
                name="reload"
                value="<?php p($l->t('Reload')); ?>"
-               title="<?php echo $toolTips['projectevents:reload']; ?>"/>
+               title="<?php echo $toolTips['projectevents:all:reload']; ?>"/>
       </span>
     </div>
     <div id="eventlistholder" class="container scroller eventlist">

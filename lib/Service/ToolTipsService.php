@@ -553,14 +553,6 @@ simply marked as "disabled" and normally are hidden from sight.'),
 
       'musician-orchestra-tab' => $this->l->t('Display name, pre-name, instruments, status, general remarks.'),
 
-      'new-project-event' => $this->l->t('Add a new event for the project. The event is added to the respective
-calendar and will also be visible and editable through the calendar
-app. It is also possible to subscribe to the calendars using a
-suitable CalDAV client from your smartphone, tablet or desktop
-computer. The link between an "ordinary" event in the web-calendar and
-a project is maintained by attching the project name as "category" to
-the event.'),
-
       'nothing' => $this->l->t('nothing'),
 
       'clouddev-link' => $this->l->t('Web-link to the current Cloud developer documentation.'),
@@ -903,45 +895,65 @@ events associated to the project.
 Events can be added and modified
 as needed.'),
 
-        'delete' => $this->l->t('Delete the event from the system (no undo possible).'),
+        'event' => [
+          'edit' => $this->l->t('Modify the event.'),
 
-        'deselect' => $this->l->t('Exclude all events from email-submission'),
+          'clone' => $this->l->t('Clone (duplicate) the event. A new event-form will popup with just the data from this event.'),
 
-        'detach' => $this->l->t('Detach the respective event
+          'delete' => $this->l->t('Delete the event from the system (no undo possible).'),
+
+          'detach' => $this->l->t('Detach the respective event
 from the project, but do not
 delete it from the calender.
 The event can be reattached by
 adding the project-name to its
 categories.'),
 
-        'download' => $this->l->t('Download the events as ICS file. In principle it is possible to import
-the ICS file into the respective calendar apps of your smartphone,
-tablet or desktop computer.'),
-
-        'edit' => $this->l->t('Modify the event.'),
-
-        'clone' => $this->l->t('Clone (duplicate) the event. A new event-form will popup with just the data from this event.'),
-
-        'newconcert' => $this->l->t('Add a new concert-event to the project.'),
-
-        'newmanagement' => $this->l->t('Add a private management event which is not exposed to the rest of the world.'),
-
-        'newother' => $this->l->t('Add some other event to the project.'),
-
-        'newrehearsal' => $this->l->t('Add a new rehearsal-event to the project.'),
-
-        'select' => $this->l->t('Select all events for email-submission'),
-
-        'selectevent' => $this->l->t('Mark the respective event for being
+          'select' => $this->l->t('Mark the respective event for being
 sent by email as ICS-attachment per email.
 Hitting the email button above the form
 will open an Email form suitable for
 sending the marked events to selected
 recipients.'),
 
-        'sendmail' => $this->l->t('Click to open an email-form
+        ],
+
+        'all' => [
+          'new' => [
+            'default' => $this->l->t('Add a new event for the project. The event is added to the respective
+calendar and will also be visible and editable through the calendar
+app. It is also possible to subscribe to the calendars using a
+suitable CalDAV client from your smartphone, tablet or desktop
+computer. The link between an "ordinary" event in the web-calendar and
+a project is maintained by attching the project name as "category" to
+the event.'),
+
+            'concerts' => $this->l->t('Add a new concert-event to the project.'),
+
+            'rehearsals' => $this->l->t('Add a new rehearsal-event to the project.'),
+
+            'other' => $this->l->t('Add a non-categorized event to the project.'),
+
+            'management' => $this->l->t('Add a private management event which is not exposed to the rest of the world.'),
+
+            'finance' => $this->l->t('Add a finance event to the project, e.g. a dead-line for debit-notes or bank transfers.'),
+          ],
+
+          'sendmail' => $this->l->t('Click to open an email-form
 and send the selected events to
 selected recipients.'),
+
+          'select' => $this->l->t('Select all events for email-submission'),
+
+          'deselect' => $this->l->t('Exclude all events from email-submission'),
+
+          'download' => $this->l->t('Download the events as ICS file. In principle it is possible to import
+the ICS file into the respective calendar apps of your smartphone,
+tablet or desktop computer.'),
+
+          'reload' => $this->l->t('Reload all events from the cloud-calendars.'),
+        ],
+
       ],
 
       'projectsbalancefolder-force' => $this->l->t('Force the re-creation of the folder where project balanaces are
