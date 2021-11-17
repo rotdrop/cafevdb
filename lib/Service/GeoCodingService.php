@@ -48,9 +48,7 @@ class GeoCodingService
   const POSTALCODESSEARCH_TAG = "postalCodes";
   const PROVIDER_URL = 'http://api.geonames.org';
   const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
-  const NOMINATIM_KEYS = [
-    'city', 'country', 'street', 'postalcode',
-  ];
+  const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
   const CONTINENT_TARGET = '->';
   private $userName = null;
   private $countryNames = [];
@@ -112,53 +110,91 @@ class GeoCodingService
     return null;
   }
 
-  public function autoCompleteStreet($partialStreet, $country, $city = null, $postalCode = null)
+  /**
+   * Given contry, city, postalcode try to as OSM about all matching
+   * streets. Note that not all countries have postal-code areas
+   * defined, so this may only work well in certain regions of western
+   * Europe. If a query does not return any results and we have a city
+   * name, then ATM we simply repeat the query with the given city.
+   *
+   * Example overpass API data:
+   * ```
+   * [out:csv("name";false)];
+   * area["ISO3166-1"="DE"]->.country;
+   * area[postal_code="47800"]->.postal_code;
+   * way(area.country)(area.postal_code)[highway][name~="^Blah"];
+   * // sort and remove duplicates
+   * for (t["name"])
+   * (
+   *   make x name=_.val;
+   *   out;
+   * );
+   * ```
+   *
+   *
+   */
+  public function autoCompleteStreet($country = null, $city = null, $postalCode = null)
   {
-    // ignore complete street address with number
-    if (preg_match('/\s+[0-9]+[a-z]?$/i', $partialStreet)) {
-      $this->logDebug('Ignoring complete address');
-      return [ $partialStreet ];
+    if (empty($country) && empty($city) && empty($postalCode)) {
+      return [];
     }
 
-    $queryUrl = self::NOMINATIM_URL.'?street='.urlencode($partialStreet).'&country='.urlencode($country);
-    if (!empty($city)) {
-      $queryUrl .= '&city='.urlencode($city);
+    $countryArea =
+      $postalCodeArea =
+      $cityArea = '';
+
+    $oql = '[out:csv("name";false)];
+';
+    if (!empty($country)) {
+      $oql .= sprintf('area["ISO3166-1"="%s"]->.country;
+', $country);
+      $countryArea = '(area.country)';
     }
     if (!empty($postalCode)) {
-      $queryUrl .= '&postalcode='.urlencode($postalCode);
+      $oql .= sprintf('area[postal_code="%s"]->.postalCode;
+', $postalCode);
+      $postalCodeArea = '(area.postalCode)';
+    } else if (!empty($city)) {
+      // querying for the city as well does not seem to speed up things.
+      $oql .= sprintf('area[name~"%s"]->.city;
+', $city);
+      $cityArea = '(area.city)';
     }
-    $queryUrl .= '&format=jsonv2';
-    $this->logDebug($queryUrl);
+    $oql .= sprintf('way%1$s%2$s%3$s[highway][name%4$s];
+', $countryArea, $postalCodeArea, $cityArea, empty($partialStreet) ? '' : "~\"$partialStreet\"");
+    $oql .= 'for (t["name"])
+(
+  make x name=_.val;
+  out;
+);
+';
+
+    $queryUrl = self::OVERPASS_URL . '?' . \http_build_query([ 'data' => $oql ]);
+    $this->logDebug('OQL ' . print_r(preg_split('/\r\n|\r|\n/', $oql), true));
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $queryUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
     $response = curl_exec($ch);
     curl_close($ch);
 
     if (empty($response)) {
+      if (!empty($postalCode) && !empty($city)) {
+        return $this->autoCompleteStreet($country, $city);
+      }
       return [];
+    } else {
+      // overpass may return an HTML page with errors
+      /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+      $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+      $mimeType = $mimeTypeDetector->detectString($response);
+      if ($mimeType != 'text/plain') {
+        // assume it is an error
+        $this->logInfo('OVERPASS' . $mimeType);
+        return [];
+      }
     }
-    $results = [];
-    $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
-    foreach ($json as $hit) {
-      if ($hit['category'] != 'highway') {
-        continue;
-      }
-      if ($hit['type'] != 'residential') {
-        continue;
-      }
-      if ($hit['osm_type'] != 'way') {
-        continue;
-      }
-      $info = explode(',', $hit['display_name']);
-      if (empty($info)) {
-        continue;
-      }
-      $this->logDebug(print_r($info, true));
-      $results[] = $info[0];
-    }
+    $results = array_filter(preg_split('/\r\n|\r|\n/', $response));
     $this->logDebug(print_r($results, true));
     return $results;
   }
@@ -349,6 +385,7 @@ class GeoCodingService
 
       $hasChanged = false;
       $this->setDatabaseRepository(GeoPostalCode::class);
+      /** @var GeoPostalCode $geoPostalCode */
       $geoPostalCode = $this->findOneBy([
         'country' => $placeCountry,
         'postalCode' => $postalCode,
@@ -369,12 +406,13 @@ class GeoCodingService
         $geoPostalCode->setLongitude($lng);
         $geoPostalCode->setLatitude($lat);
         $this->persist($geoPostalCode);
+        $this->flush(); // needed for update the translations below
       }
 
       foreach ($translations as $language => $translation) {
         $hasChanged = false;
         $this->setDatabaseRepository(GeoPostalCodeTranslation::class);
-        $entity = $this->findOneBy([
+        $entity = $this->find([
           'geoPostalCode' => $geoPostalCode,
           'target' => $lang,
         ]);

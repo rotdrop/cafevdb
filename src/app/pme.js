@@ -180,24 +180,28 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
   }
 };
 
+const deferKey = pmePrefix + '-submitdefer';
+
 const cancelDeferredReload = function(container) {
-  const deferKey = pmePrefix + '-submitdefer';
-  container.removeData(deferKey);
+  container.data(deferKey, []);
 };
 
+/**
+ * Create a jQuery Deferred object in order post-one form submission
+ * until after validation of data, for example.
+ *
+ * @returnes{Deferred}
+ */
 const pmeDeferReload = function(container) {
-  const deferKey = pmePrefix + '-submitdefer';
   const defer = $.Deferred();
-
-  container.data(deferKey, defer.promise());
-
+  const promises = container.data(deferKey) || [];
+  promises.push(defer.promise());
+  container.data(deferKey, promises);
   return defer;
 };
 
 const reloadDeferred = function(container) {
-  const deferKey = pmePrefix + '-submitdefer';
-
-  return $.when(container.data(deferKey));
+  return $.when.apply($, container.data(deferKey));
 };
 
 /**

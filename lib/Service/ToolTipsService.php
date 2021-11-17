@@ -195,6 +195,11 @@ class ToolTipsService implements \ArrayAccess, \Countable
       return;
     }
     $this->toolTipsData = [
+      'autocomplete' => [
+        'default' => $this->l->t('Type some text to get autocomplete suggestions.'),
+
+        'require-three' => $this->l->t('Type at least three characters to get autocomplete suggestions.'),
+      ],
       'blog-acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
 
       'blog-cancelentry' => $this->l->t('Discard the changes for this blog-entry.'),

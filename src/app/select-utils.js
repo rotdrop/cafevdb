@@ -87,14 +87,45 @@ const deselectAll = function($select) {
   }
 };
 
-const selectedValues = function($select, values) {
+/**
+ * Set or return the selected values and update the potentially
+ * underlying "selectize" or "chosen" widget. Works for "multiple" as
+ * well as single selects.
+ *
+ * @param{jQuery} $select collection with a single select.
+ *
+ * @param{(string|string[])} [values] If given then set the given
+ * values into the select. If the select is not multiple and value is
+ * an array then use values[0] as selected value.
+ *
+ * @param{bool} [trigger=false] If trigger === true then trigger a
+ * change-event on the select after installing the new values.
+ *
+ * @returns{(Array|string|null)} Always return an array for multiple
+ * selects and a string or null for single selects. When setting new
+ * values return the previously set values.
+ */
+const selectedValues = function($select, values, trigger) {
   if (values === undefined) {
+    let result;
     if (selectizeActive($select)) {
-      return $select[0].selectize.items;
+      result = $select[0].selectize.items;
     } else {
-      return $select.val() || [];
+      result = $select.val() || [];
+      if (!Array.isArray(result)) {
+        result = [result];
+      }
+    }
+    if ($select.prop('multiple')) {
+      return result;
+    } else {
+      return result.length > 0 ? result[0] : null;
     }
   } else {
+    const oldValues = selectedValues($select);
+    if (!Array.isArray(values)) {
+      values = [values];
+    }
     if (selectizeActive($select)) {
       const selectize = $select[0].selectize;
       selectize.clear(true);
@@ -102,14 +133,15 @@ const selectedValues = function($select, values) {
       selectize.deselectAll();
       selectize.refreshItems(true);
     } else {
-      $select.find('option').each(function(idx) {
-        const $option = $(this);
-        $option.prop('selected', values.includes($option.val()));
-      });
+      $select.val(values);
       if (chosenActive($select)) {
         $select.trigger('chosen:updated');
       }
     }
+    if (trigger === true) {
+      $select.trigger('change');
+    }
+    return oldValues;
   }
 };
 

@@ -105,7 +105,7 @@ class MusiciansController extends Controller {
    * - address
    * - duplicates
    */
-  public function validate($topic)
+  public function validate($topic, $subTopic = null)
   {
     $message = [];
     switch ($topic) {
@@ -221,64 +221,70 @@ class MusiciansController extends Controller {
         'email' => $email,
       ]);
 
-    case 'address':
+    case 'autocomplete':
       $country = $this->requestParameter('country');
       $city = $this->requestParameter('city');
       $street = $this->requestParameter('street');
-      $zip = $this->requestParameter('postal_code');
-      $active = $this->parameterService['activeElement'];
+      $postalCode = $this->requestParameter('postal_code');
+      switch ($subTopic) {
+        case 'street':
+          // separate street data into its own request as the OverPass API is slow.
+          $streets = $this->geoCodingService->autoCompleteStreet($country, $city, $postalCode);
 
-      $locations = $this->geoCodingService->cachedLocations($zip, $city, $country);
-      $streets = $this->geoCodingService->autoCompleteStreet($street, $country, $city, $zip);
+          sort($streets, SORT_LOCALE_STRING);
+          $streets = empty($city) && empty($postalCode)
+            ? []
+            : array_values(array_unique($streets));
 
-      if (count($locations) == 0 && ($city || $zip)) {
-        // retry remotely with given country
-        $locations = $this->geoCodingService->remoteLocations($zip, $city, $country);
-        if (count($locations) == 0) {
-          // retry without country, i.e. on same continent
-          $locations = $this->geoCodingService->cachedLocations($zip, $city, null);
-          if (count($locations) == 0) {
-            // still no luck: try a world search
-            $locations = $this->geoCodingService->cachedLocations($zip, $city, '%');
+          return self::dataResponse([
+            'streets' => $streets,
+          ]);
+          break;
+        case 'place':
+          // compute auto-comlete for country, city, postal-code in one run
+          $locations = $this->geoCodingService->cachedLocations($postalCode, $city, $country);
+          if (count($locations) == 0 && ($city || $postalCode)) {
+            // retry remotely with given country
+            $locations = $this->geoCodingService->remoteLocations($postalCode, $city, $country);
             if (count($locations) == 0) {
-              // retry with remote service, on this continent ...
-              $locations = $this->geoCodingService->remoteLocations($zip, $city, null);
+              // retry without country, i.e. on same continent
+              $locations = $this->geoCodingService->cachedLocations($postalCode, $city, null);
+              if (count($locations) == 0) {
+                // still no luck: try a world search
+                $locations = $this->geoCodingService->cachedLocations($postalCode, $city, '%');
+                if (count($locations) == 0) {
+                  // retry with remote service, on this continent ...
+                  $locations = $this->geoCodingService->remoteLocations($postalCode, $city, null);
+                }
+              }
             }
           }
-        }
+
+          $cities = [];
+          $postalCodes = [];
+          $countries = [];
+          foreach($locations as $location) {
+            $cities[] = $location['Name'];
+            $postalCodes[] = $location['PostalCode'];
+            $countries[] = $location['Country'];
+          };
+          sort($cities, SORT_LOCALE_STRING);
+          sort($postalCodes, SORT_LOCALE_STRING);
+          sort($countries);
+
+          $cities = array_values(array_unique($cities, SORT_LOCALE_STRING));
+          $postalCodes = array_values(array_unique($postalCodes, SORT_LOCALE_STRING));
+          $countries = array_values(array_unique($countries));
+
+          return self::dataResponse([
+            'cities' => $cities,
+            'postalCodes' => $postalCodes,
+            'countries' => $countries,
+          ]);
+          break;
+        default:
+          return self::grumble($this->l->t('Unsupported auto-complete request for "%s".', $subTopic));
       }
-
-      $cities = [];
-      $postalCodes = [];
-      $countries = [];
-      foreach($locations as $location) {
-        $cities[] = $location['Name'];
-        $postalCodes[] = $location['PostalCode'];
-        $countries[] = $location['Country'];
-      };
-      sort($cities, SORT_LOCALE_STRING);
-      sort($postalCodes, SORT_LOCALE_STRING);
-      sort($countries);
-      sort($streets, SORT_LOCALE_STRING);
-
-      $cities = array_values(array_unique($cities, SORT_LOCALE_STRING));
-      $postalCodes = array_values(array_unique($postalCodes, SORT_LOCALE_STRING));
-      $countries = array_values(array_unique($countries));
-      $streets = array_values(array_unique($streets));
-
-      return self::dataResponse([
-        'message' => '',
-        'city' => $city,
-        'zip' => $zip,
-        'street' => $street,
-        'suggestions' => [
-          'cities' => $cities,
-          'postalCodes' => $postalCodes,
-          'countries' => $countries,
-          'streets' => $streets,
-        ],
-      ]);
-
       break;
     case 'duplicates':
       $surName = $this->requestParameter('sur_name');

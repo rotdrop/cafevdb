@@ -28,7 +28,9 @@ import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
+import { selected as selectedValues } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -216,7 +218,26 @@ const contactValidation = function(container) {
   const address = container.find('form.pme-form input.musician-address').not('.pme-filter');
   const city = address.filter('.city');
   const street = address.filter('.street');
-  const zip = address.filter('.postal-code');
+  const postalCode = address.filter('.postal-code');
+
+  const countrySelect = container.find('select.musician-address.country');
+  const $allAddressFields = $(address).add(countrySelect);
+
+  $allAddressFields.each(function() {
+    const $this = $(this);
+    $this.data('oldValue', $this.val());
+  });
+
+  const updateAutocompleteData = function() {
+    postalCode.data('oldValue', null);
+    postalCode.trigger('blur');
+  };
+
+  const needAutocompleteUpdate = function() {
+    return (countrySelect.data('oldValue') !== countrySelect.val()
+            || city.data('oldValue') !== city.val()
+            || postalCode.data('oldValue') !== postalCode.val());
+  };
 
   address
     .autocomplete({
@@ -232,6 +253,11 @@ const contactValidation = function(container) {
 
         $results.css('top', newTop + 'px');
       },
+      select(event, ui) {
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.blur();
+      },
     })
     .on('focus, click', function() {
       if (!$(this).autocomplete('widget').is(':visible')) {
@@ -240,7 +266,6 @@ const contactValidation = function(container) {
     });
 
   // Inject a text input element for possible suggestions for the country setting.
-  const countrySelect = container.find('select.musician-address.country');
   const countryInput = $('<input type="text"'
                          + ' class="musician-address country"'
                          + ' id="country-autocomplete"'
@@ -279,27 +304,167 @@ const contactValidation = function(container) {
 
       event.stopImmediatePropagation();
 
-      const country = self.val();
-      countrySelect.find('option[value=' + country + ']').prop('selected', true);
-      countrySelect.trigger('chosen:updated');
-      countrySelect.trigger('change');
+      countrySelect.data('oldValue', selectedValues(countrySelect, self.val(), true));
 
       return false;
     });
 
   let lockCountry = false;
   countrySelect.on('change', function(event) {
-    address.filter('.city').trigger('blur');
-    lockCountry = true;
+    if (needAutocompleteUpdate()) {
+      updateAutocompleteData();
+    }
+    lockCountry = !!selectedValues(countrySelect);
     return false;
   });
+
+  let autocompletePlaceRequest = null;
+  let autocompleteStreetRequest = null;
+
+  const fetchPlaceAutocompletion = function() {
+
+    const submitDefer = PHPMyEdit.deferReload(container);
+
+    const form = container.find('form.pme-form');
+    const post = form.serialize();
+
+    if (autocompletePlaceRequest) {
+      autocompletePlaceRequest.abort('cancelled');
+    }
+
+    pageBusyIcon(true);
+
+    const cleanup = function() {
+      submitDefer.resolve();
+      autocompletePlaceRequest = null;
+      if (!autocompleteStreetRequest) {
+        pageBusyIcon(false);
+      } else {
+        $.when(autocompleteStreetRequest).then(() => pageBusyIcon(false));
+      }
+    };
+
+    autocompletePlaceRequest = $.post(
+      generateUrl('validate/musicians/autocomplete/place'),
+      post)
+      .fail(function(xhr, status, errorThrown) {
+        if (status !== 'cancelled') {
+          console.error('Auto-complete update failed', xhr, status, errorThrown);
+          cleanup();
+        } else {
+          console.error('Auto-complete update cancelled');
+        }
+      })
+      .done(function(data) {
+        if (!data || !data.cities || !data.countries || !data.postalCodes) {
+          console.error('Auto-complete request does not contain the requested data.', data);
+          cleanup();
+          return;
+        }
+
+        city.autocomplete('option', 'source', data.cities);
+        postalCode.autocomplete('option', 'source', data.postalCodes);
+
+        address.each(function() {
+          const $this = $(this);
+          const sourceSize = $this.autocomplete('option', 'source').length;
+          $this.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+        });
+
+        const selectedCountry = selectedValues(countrySelect);
+        const countries = data.countries;
+        countryInput.hide();
+        countryInput.autocomplete('option', 'source', []);
+        if (countries.length === 1 && countries[0] !== selectedCountry && !lockCountry) {
+
+          // if we have just one matching country, we force the
+          // country-select to hold this value.
+          countrySelect.data('oldValue', selectedValues(countrySelect, countries));
+
+        } else if (countries.length > 1) {
+          // provide the user with some more choices.
+          countryInput.autocomplete('option', 'source', countries);
+          countryInput.show();
+        }
+        lockCountry = false;
+
+        Notification.messages(data.message);
+
+        cleanup();
+
+      });
+
+    return autocompletePlaceRequest;
+  };
+
+  const fetchStreetAutocompletion = function() {
+
+    const submitDefer = PHPMyEdit.deferReload(container);
+
+    const form = container.find('form.pme-form');
+    let post = form.serialize();
+
+    if (autocompleteStreetRequest) {
+      autocompleteStreetRequest.abort('cancelled');
+    }
+
+    pageBusyIcon(true);
+
+    const cleanup = function() {
+      submitDefer.resolve();
+      autocompleteStreetRequest = null;
+      if (!autocompletePlaceRequest) {
+        pageBusyIcon(false);
+      } else {
+        $.when(autocompletePlaceRequest).then(() => pageBusyIcon(false));
+      }
+    };
+
+    autocompleteStreetRequest = $.post(
+      generateUrl('validate/musicians/autocomplete/street'),
+      post)
+      .fail(function(xhr, status, errorThrown) {
+        if (status !== 'cancelled') {
+          console.error('Auto-complete update failed', xhr, status, errorThrown);
+          cleanup();
+        } else {
+          console.error('Auto-complete update cancelled');
+        }
+      })
+      .done(function(data) {
+        if (!data || !data.streets) {
+          console.error('Auto-complete request does not contain the requested data.', data);
+          cleanup();
+          return;
+        }
+
+        street.autocomplete('option', 'source', data.streets);
+        const sourceSize = street.autocomplete('option', 'source').length;
+        street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+
+        Notification.messages(data.message);
+
+        cleanup();
+
+      });
+
+    return autocompleteStreetRequest;
+  };
 
   address.on('blur', function(event) {
     const self = $(this);
 
     if (self.hasClass('street')) {
+      // too costly
       return true;
     }
+
+    if (self.data('oldValue') === self.val()) {
+      // avoid refresh when the value has not changed
+      return true;
+    }
+
+    self.data('oldValue', self.val());
 
     // this is somehow needed here ...
     event.stopImmediatePropagation();
@@ -309,76 +474,14 @@ const contactValidation = function(container) {
       return false;
     }
 
-    const submitDefer = PHPMyEdit.deferReload(container);
+    fetchPlaceAutocompletion();
+    fetchStreetAutocompletion();
 
-    const form = container.find('form.pme-form');
-    let post = form.serialize();
-    post += '&' + $.param({ activeElement: self.attr('name') });
-
-    const reload = container.find('.pme-navigation input.pme-reload');
-
-    address.prop('disabled', true);
-    reload.addClass('loading');
-
-    const cleanup = function() {
-      reload.removeClass('loading');
-      address.prop('disabled', false);
-      submitDefer.resolve();
-    };
-
-    $.post(
-      generateUrl('validate/musicians/address'),
-      post)
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(
-          data, ['message', 'city', 'zip', 'street', 'suggestions'], cleanup)) {
-          return false;
-        }
-
-        city.val(data.city);
-        street.val(data.street);
-        zip.val(data.zip);
-
-        const suggestions = data.suggestions;
-
-        city.autocomplete('option', 'source', suggestions.cities);
-        zip.autocomplete('option', 'source', suggestions.postalCodes);
-        street.autocomplete('option', 'source', suggestions.streets);
-        const selectedCountry = countrySelect.find('option:selected').val();
-        const countries = suggestions.countries;
-        countryInput.hide();
-        countryInput.autocomplete('option', 'source', []);
-        if (countries.length === 1 && countries[0] !== selectedCountry && !lockCountry) {
-          // if we have just one matching country, we force the
-          // country-select to hold this value.
-          countrySelect.find('option[value=' + countries[0] + ']').prop('selected', true);
-          countrySelect.trigger('chosen:updated');
-          // alert('selected: '+selectedCountry+' matching: '+countries[0]);
-        } else if (countries.length > 1) {
-          // provide the user with some more choices.
-          // alert('blah');
-          countryInput.autocomplete('option', 'source', countries);
-          countryInput.show();
-        }
-        lockCountry = false;
-
-        // data.message += CAFEVDB.print_r(citySuggestions, true);
-        const message = Array.isArray(data.message)
-          ? data.message.join('<br>')
-          : data.message;
-        if (message !== '') {
-          Dialogs.alert(
-            message, t(appName, 'Address Validation'), cleanup, true, true);
-          Dialogs.debugPopup(data);
-        } else {
-          cleanup();
-        }
-      });
     return false;
   });
+
+  // force an update of the autocomplete data
+  updateAutocompleteData();
 };
 
 const ready = function(container) {
