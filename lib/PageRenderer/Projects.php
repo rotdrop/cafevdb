@@ -124,6 +124,12 @@ class Projects extends PMETableViewBase
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Project'));
     }
+
+    if (empty($this->requestParameters['template'])) {
+      // "booted" as default Page
+      $this->requestParameters[$this->pme->cgiSysName('qfyear_comp')] = '>=';
+      $this->requestParameters[$this->pme->cgiSysName('qfyear')] = date('Y') - 1;
+    }
   }
 
   public function needPhpSession():bool
