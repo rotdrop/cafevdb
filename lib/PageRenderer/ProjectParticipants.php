@@ -517,7 +517,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
         'tab'      => [ 'id' => 'musician' ],
         'name'     => $this->l->t('User Id'),
-        'css'      => [ 'postfix' => ' musician-name' ],
+        'css'      => [ 'postfix' => [ 'musician-name', ], ],
         'input|LF' => 'H',
         // 'options'  => 'AVCPD',
         'select'   => 'T',
@@ -807,7 +807,7 @@ class ProjectParticipants extends PMETableViewBase
           return $this->toolTipsService['registration-mark'];
         },
       ],
-      'css'      => [ 'postfix' => ' registration tooltip-top align-center' ],
+      'css'      => [ 'postfix' => [ 'registration', 'tooltip-top', 'align-center', ], ],
     ];
 
     $fdd = [
@@ -876,7 +876,7 @@ class ProjectParticipants extends PMETableViewBase
         'name'    => $this->l->t('Member Status'),
         'select'  => 'D',
         'maxlen'  => 128,
-        'css'     => ['postfix' => ' memberstatus tooltip-wide'],
+        'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
         'values2' => $this->memberStatusNames,
         'tooltip' => $this->toolTipsService['member-status'],
       ]);
@@ -945,7 +945,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Mobile Phone'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => [ 'postfix' => ' phone-number' ],
+        'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
             return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -960,7 +960,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Fixed Line Phone'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => [ 'postfix' => ' phone-number' ],
+        'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
             return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -975,7 +975,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Street'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address street'],
+        'css'      => [ 'postfix' => [ 'musician-address', 'street', ], ],
         'maxlen'   => 128,
       ]);
 
@@ -984,7 +984,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Postal Code'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address postal-code'],
+        'css'      => [ 'postfix' => [ 'musician-address', 'postal-code', ], ],
         'maxlen'   => 11,
       ]);
 
@@ -993,7 +993,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('City'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => ['postfix' => ' musician-address city'],
+        'css'      => [ 'postfix' => [ 'musician-address', 'city', ], ],
         'maxlen'   => 128,
       ]);
 
@@ -1008,7 +1008,7 @@ class ProjectParticipants extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => $this->getConfigValue('streetAddressCountry'),
-        'css'      => ['postfix' => ' musician-address country chosen-dropup'],
+        'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
         'values2'     => $countries,
         'valueGroups' => $countryGroups,
       ]);
@@ -1097,7 +1097,7 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => [ 'id' => 'miscinfo' ],
         'name'     => 'UUID',
         'options'  => 'LAVCPDR',
-        'css'      => ['postfix' => ' musician-uuid clip-long-text tiny-width'],
+        'css'      => [ 'postfix' => [ 'musician-uuid', 'clip-long-text', 'tiny-width', ], ],
         'sql'      => 'BIN2UUID($join_col_fqn)',
         'display|LVF' => ['popup' => 'data'],
         'sqlw'     => 'UUID2BIN($val_qas)',

@@ -349,7 +349,7 @@ make sure that the musicians are also automatically added to the
       $opts['fdd']['add_musicians'] = [
         'tab' => [ 'id' => 'tab-all' ],
         'name' => $this->l->t('Add Musicians'),
-        'css' => [ 'postfix' => ' register-musician' ],
+        'css' => [ 'postfix' => [ 'register-musician', ], ],
         'select' => 'T',
         'options' => 'VCLR',
         'input' => 'V',
@@ -380,7 +380,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Surname'),
-      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
       // 'options'  => 'AVCPD',
       'select'   => 'T',
@@ -391,7 +391,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['first_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Forename'),
-      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
       'select'   => 'T',
       'maxlen'   => 128,
@@ -401,7 +401,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['nick_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Nickname'),
-      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
       'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
       'select'   => 'T',
@@ -443,7 +443,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['display_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
-      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'sql|LFVD' => parent::musicianPublicNameSql(),
       'maxlen'   => 384,
       'sort'     => true,
@@ -487,7 +487,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['user_id_slug'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('User Id'),
-      'css'      => [ 'postfix' => ' musician-name'.' '.$addCSS ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
       // 'options'  => 'AVCPD',
       'select'   => 'T',
@@ -531,7 +531,7 @@ make sure that the musicians are also automatically added to the
     $fdd = [
       'name'        => $this->l->t('Instruments'),
       'tab'         => ['id' => 'orchestra'],
-      'css'         => ['postfix' => ' musician-instruments tooltip-top no-chosen selectize drag-drop'],
+      'css'         => ['postfix' => [ 'musician-instruments', 'tooltip-top', 'no-chosen', 'selectize', 'drag-drop', ], ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => ($expertMode
                         ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
@@ -597,7 +597,7 @@ make sure that the musicians are also automatically added to the
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => ['postfix' => ' memberstatus tooltip-wide'],
+      'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
       'values2' => $this->memberStatusNames,
       'tooltip' => $this->toolTipsService['member-status'],
     ];
@@ -629,7 +629,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['mobile_phone'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Mobile Phone'),
-      'css'      => ['postfix' => ' phone-number'],
+      'css'      => ['postfix' => [ 'phone-number', ], ],
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -643,7 +643,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['fixed_line_phone'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Fixed Line Phone'),
-      'css'      => ['postfix' => ' phone-number'],
+      'css'      => ['postfix' => [ 'phone-number', ], ],
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -661,16 +661,17 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street'),
-      'css'      => ['postfix' => ' musician-address street'],
+      'css'      => ['postfix' => [ 'musician-address', 'street', ], ],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
+      'tooltip' => $this->toolTipsService['autocomplete:require-three'],
     ];
 
     $opts['fdd']['postal_code'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Postal Code'),
-      'css'      => ['postfix' => ' musician-address postal-code'],
+      'css'      => ['postfix' => [ 'musician-address', 'postal-code', ], ],
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true,
@@ -679,7 +680,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['city'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('City'),
-      'css'      => ['postfix' => ' musician-address city'],
+      'css'      => ['postfix' => [ 'musician-address', 'city', ], ],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
@@ -694,9 +695,9 @@ make sure that the musicians are also automatically added to the
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => $this->getConfigValue('streetAddressCountry'),
+      'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
-      'css'      => ['postfix' => ' musician-address country chosen-dropup'],
       'sort'     => true,
     ];
 
@@ -760,7 +761,7 @@ make sure that the musicians are also automatically added to the
        'escape' => false,
        'nowrap' => true,
        'sort' =>false,
-       'css' => [ 'postfix' => ' restrict-height', ],
+       'css' => [ 'postfix' => [ 'restrict-height', ], ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
          $musicianId = $recordId['id'];
          $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
@@ -791,7 +792,7 @@ make sure that the musicians are also automatically added to the
         $musicianId = $recordId['id'] ?? 0;
         return $this->photoImageLink($musicianId, $action, $imageId);
       },
-      'css' => ['postfix' => ['photo'], ],
+      'css' => ['postfix' => [ 'photo', ], ],
       'default' => '',
       'sort' => false
     ]);
@@ -833,7 +834,7 @@ make sure that the musicians are also automatically added to the
       'name'     => 'UUID',
       //'options'  => 'AVCPDR',
       'input'    => 'R',
-      'css'      => ['postfix' => ' musician-uuid'.' '.$addCSS],
+      'css'      => ['postfix' => [ 'musician-uuid', $addCSS, ], ],
       'sql'      => 'BIN2UUID($main_table.uuid)',
       'sqlw'     => 'UUID2BIN($val_qas)',
       'select'   => 'T',
