@@ -190,7 +190,6 @@ class GeoCodingService
       $mimeType = $mimeTypeDetector->detectString($response);
       if ($mimeType != 'text/plain') {
         // assume it is an error
-        $this->logInfo('OVERPASS' . $mimeType);
         return [];
       }
     }
