@@ -337,7 +337,6 @@ class PageController extends Controller {
     // ok no exception, so flush the history to the session, when we
     // got so far.
     try {
-      $this->logInfo('Closing session');
       $this->historyService->store();
       if (!$renderer->needPhpSession() || $renderAs !== 'user') {
         $this->session->close();
@@ -361,7 +360,7 @@ class PageController extends Controller {
     if ($renderAs === 'user') {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
-        return 'blog/blog';
+        $template = 'blog/blog';
       }
     }
     return $template;
