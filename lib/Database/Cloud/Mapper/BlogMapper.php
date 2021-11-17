@@ -62,7 +62,8 @@ class BlogMapper extends Mapper
     return $this->insert($note);
   }
 
-  /**Modify a note.
+  /**
+   * Modify a note.
    *
    * @param $author The author of this mess.
    *
@@ -185,7 +186,8 @@ class BlogMapper extends Mapper
     return $this->findEntities($qb);
   }
 
- /**Generate a complex tree structure reflecting the message
+  /**
+   * Generate a complex tree structure reflecting the message
    * threads. This function calls itself recursively until all
    * sub-threads have been fetched.
    */
@@ -200,7 +202,8 @@ class BlogMapper extends Mapper
     return $parent;
   }
 
-  /**Generate a complex tree structure reflecting the message threads.
+  /**
+   * Generate a complex tree structure reflecting the message threads.
    * This is the entry point for the template: fetch all notes in
    * turn. If the function succeeds the return value has the following
    * layout:
@@ -240,8 +243,7 @@ class BlogMapper extends Mapper
     return $data;
   }
 
-  /**Get the time stamp of the most recent post.
-   */
+  /**Get the time stamp of the most recent post. */
   public function lastModifiedTimestamp()
   {
     $qb = $this->db->getQueryBuilder();
