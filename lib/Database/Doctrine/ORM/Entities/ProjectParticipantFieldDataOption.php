@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
+use OCA\CAFEVDB\Exceptions;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Uuid;
@@ -234,6 +236,29 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getLabel():?string
   {
     return $this->label;
+  }
+
+  /**
+   * Set untranslatedLabel.
+   *
+   * @param null|string $untranslatedLabel
+   *
+   * @return ProjectParticipantFieldDataOption
+   */
+  public function setUntranslatedLabel(?string $untranslatedLabel):ProjectParticipantFieldDataOption
+  {
+    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedLabel" cannot be set, it is read-only.');
+    return $this;
+  }
+
+  /**
+   * Get untranslatedLabel.
+   *
+   * @return string|null
+   */
+  public function getUntranslatedLabel():?string
+  {
+    return $this->untranslatedLabel;
   }
 
   /**
