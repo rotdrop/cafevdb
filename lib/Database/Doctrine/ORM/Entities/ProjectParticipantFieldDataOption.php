@@ -78,10 +78,18 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedLabel")
    * @ORM\Column(type="string", length=128, nullable=true)
    */
   private $label;
+
+  /**
+   * @var string
+   *
+   * Untranslated variant of self:$label, filled automatically by
+   * Gedmo\Translatable
+   */
+  private $untranslatedLabel;
 
   /**
    * Multi-purpose field. For Multiplicity::RECURRING the PHP class

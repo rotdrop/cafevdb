@@ -76,10 +76,18 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedName")
    * @ORM\Column(type="string", length=128, nullable=false)
    */
   private $name;
+
+  /**
+   * @var string
+   *
+   * Untranslated variant of self:$name, filled automatically by
+   * Gedmo\Translatable
+   */
+  private $untranslatedName;
 
   /**
    * @var Types\EnumParticipantFieldMultiplicity
