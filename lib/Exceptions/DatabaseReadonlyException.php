@@ -23,6 +23,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-class DatabaseMigrationException extends DatabaseException
+class DatabaseReadonlyException extends DatabaseException
 {
 }
