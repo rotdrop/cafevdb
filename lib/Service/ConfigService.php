@@ -810,8 +810,8 @@ class ConfigService {
 
   /**
    * Format the given date according to $format and $timeZone to a
-   * human readable time-stampe, providing defaults for $format and
-   * using the default time-zone of none is specified.
+   * human readable time-stamp, providing defaults for $format and
+   * using the default time-zone if none is specified.
    *
    * @param int|\DateTimeInterface $date
    *
