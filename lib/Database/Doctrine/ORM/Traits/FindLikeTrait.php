@@ -82,6 +82,21 @@ trait FindLikeTrait
   }
 
   /**
+   * Find one or no entity by given wild-card criteria. This is like findOne()
+   * but the criterias may contain '%' or '*', in which case a LIKE
+   * comparison is used.
+   *
+   * @param array $criteria Search criteria
+   *
+   * @return null|Object
+   *
+   */
+  public function findOneLike($criteria)
+  {
+    return $this->findLike($criteria, null, 1, null);
+  }
+
+  /**
    * Adds an order-by phrase and limits to the given query-builder.
    *
    * @parm ORM\QueryBuilder $qb
