@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
@@ -65,6 +66,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Events;
 
 /**
@@ -144,6 +148,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var Transformable\Transformer\TransformerPool */
   private $transformerPool;
 
+  /** @var UndoableRunQueue */
+  protected $preCommitActions;
+
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
@@ -159,6 +166,8 @@ class EntityManager extends EntityManagerDecorator
     $this->request = $request;
     $this->logger = $logger;
     $this->l = $l10n;
+
+    $this->preCommitActions = new UndoableRunQueue($this->logger, $this->l);
 
     $this->bind();
     if (!$this->bound()) {
@@ -240,6 +249,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function reopen()
   {
+    $this->preCommitActions->clearActionQueue();
     $this->bind();
   }
 
@@ -664,6 +674,48 @@ class EntityManager extends EntityManagerDecorator
 
     }
     return parent::persist($entity);
+  }
+
+  /**
+   * Register a pre-commit action and optionally an associated
+   * undo-action. The actions are run after all data-base operation
+   * have completed just before the final commit step. If the action
+   * succeeds, then its $undoAction will be registered for the case
+   * that the final commit throws an exception. In this case all
+   * undo-actions will be executed in reverse order.
+   *
+   * In case of an error $action must throw an \Exception, its return
+   * value is ignored.
+   *
+   * The callables need to run "stand-alone" without parameters.
+   *
+   * @param mixed $action
+   *
+   * @param Callable $undo The associated undo-action.
+   */
+  public function registerPreCommitAction($action, ?Callable $undo = null)
+  {
+    if (is_callable($action)) {
+      $this->preCommitActions->register(new GenericUndoable($action, $undo));
+    } else if ($action instanceof IUndoable) {
+      $this->preCommitActions->register($action);
+    } else  {
+      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
+  }
+
+  public function commit()
+  {
+    $this->preCommitActions->executeActions();
+    parent::commit();
+  }
+
+  public function rollback()
+  {
+    // undo does not throw, it just logs exceptions
+    $this->preCommitActions->executeUndo();
+    // @todo we probably have to check if there is something to roll-back.
+    parent::rollback();
   }
 
   /**

@@ -246,7 +246,7 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function beginTransaction()
   {
-    $this->connection->beginTransaction();
+    $this->entityManager->beginTransaction();
   }
 
   /**
@@ -255,7 +255,7 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function commit()
   {
-    $this->connection->commit();
+    $this->entityManager->commit();
   }
 
   /**
@@ -264,7 +264,7 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function rollBack()
   {
-    $this->connection->rollBack();
+    $this->entityManager->rollback();
   }
 
   /**
