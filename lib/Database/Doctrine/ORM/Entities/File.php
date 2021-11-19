@@ -49,6 +49,8 @@ class File implements \ArrayAccess
   use CAFEVDB\Traits\UpdatedAt;
   use CAFEVDB\Traits\CreatedAtEntity;
 
+  const PATH_SEPARATOR = '/';
+
   /**
    * @var int
    *
@@ -169,6 +171,40 @@ class File implements \ArrayAccess
   public function getFileName()
   {
     return $this->fileName;
+  }
+
+  /**
+   * Set only the dir-name
+   */
+  public function setDirName(string $dirName):File
+  {
+    $this->fileName = trim($dirName, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . ($this->getBaseName()??'');
+    return $this;
+  }
+
+  /**
+   * Get the dir-part of the file-name
+   */
+  public function getDirName():?string
+  {
+    return is_string($this->fileName) ? dirname($this->fileName) : null;
+  }
+
+  /**
+   * Set only the base-name
+   */
+  public function setBaseName(string $baseName):File
+  {
+    $this->fileName = ($this->getDirName()??'') . self::PATH_SEPARATOR . trim($baseName, self::PATH_SEPARATOR);
+    return $this;
+  }
+
+  /**
+   * Get the dir-part of the file-name
+   */
+  public function getBaseName(?string $extension = null):?string
+  {
+    return is_string($this->fileName) ? basename($this->fileName, $extension) : null;
   }
 
   /**
