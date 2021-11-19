@@ -45,7 +45,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
@@ -458,8 +457,6 @@ class SepaBulkTransactionsController extends Controller {
     // Up to here everything was just in memory. The actual data-base
     // stuff should possibly be moved into the FinanceService.
 
-    $preCommitActions = new UndoableRunQueue($this->logger(), $this->l10n());
-
     $bulkSubmissionNames = [
       'debitNotes' => [
         'submission' => $this->l->t('Debit notes submission deadline for %s', $project->getName()),
@@ -475,61 +472,63 @@ class SepaBulkTransactionsController extends Controller {
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
     foreach ([ 'debitNotes' => $debitNote, 'bankTransfers' => $bankTransfer] as $bulkTag => $bulkTransaction) {
       if (!empty($bulkTransaction)) {
-        $preCommitActions->register(new GenericUndoable(
-          function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-            list($eventUri, $eventUid) = $this->financeService->financeEvent(
-              $bulkSubmissionNames[$bulkTag]['submission'],
-              $this->l->t('Due date: %s',
-                          $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
-              $project,
-              $bulkTransaction->getSubmissionDeadline(),
-              SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
-            $bulkTransaction->setSubmissionEventUri($eventUri);
-            $bulkTransaction->setSubmissionEventUid($eventUid);
-            return $eventUri;
-          },
-          function($done) {
-            $this->financeService->deleteFinanceCalendarEntry($done);
-          }
-        ));
-        $preCommitActions->register(new GenericUndoable(
-          function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-            list($taskUri, $taskUid) = $this->financeService->financeTask(
-              $bulkSubmissionNames[$bulkTag]['submission'],
-              $this->l->t('Due date: %s',
-                          $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
-              $project,
-              $bulkTransaction->getSubmissionDeadline(),
-              SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
-            $bulkTransaction->setSubmissionTaskUri($taskUri);
-            $bulkTransaction->setSubmissionTaskUid($taskUid);
-            return $taskUri;
-          },
-          function($done) {
-            $this->financeService->deleteFinanceCalendarEntry($done);
-          }
-        ));
-        $preCommitActions->register(new GenericUndoable(
-          function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-            list($eventUri, $eventUid) = $this->financeService->financeEvent(
-              $bulkSubmissionNames[$bulkTag]['due'],
-              $this->l->t('TODO: add more information like the list of export-files, totals etc.'),
-              $project,
-              $bulkTransaction->getDueDate());
-            $bulkTransaction->setDueEventUri($eventUri);
-            $bulkTransaction->setDueEventUid($eventUid);
-            return $eventUri;
-          },
-          function($done) {
-            $this->financeService->deleteFinanceCalendarEntry($done);
-          }
-        ));
+        $this->entityManager
+          ->registerPreCommitAction(new GenericUndoable(
+            function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
+              list($eventUri, $eventUid) = $this->financeService->financeEvent(
+                $bulkSubmissionNames[$bulkTag]['submission'],
+                $this->l->t('Due date: %s',
+                            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
+                $project,
+                $bulkTransaction->getSubmissionDeadline(),
+                SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
+              $bulkTransaction->setSubmissionEventUri($eventUri);
+              $bulkTransaction->setSubmissionEventUid($eventUid);
+              return $eventUri;
+            },
+            function($done) {
+              $this->financeService->deleteFinanceCalendarEntry($done);
+            }
+          ))
+          ->register(new GenericUndoable(
+            function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
+              list($taskUri, $taskUid) = $this->financeService->financeTask(
+                $bulkSubmissionNames[$bulkTag]['submission'],
+                $this->l->t('Due date: %s',
+                            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
+                $project,
+                $bulkTransaction->getSubmissionDeadline(),
+                SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
+              $bulkTransaction->setSubmissionTaskUri($taskUri);
+              $bulkTransaction->setSubmissionTaskUid($taskUid);
+              return $taskUri;
+            },
+            function($done) {
+              $this->financeService->deleteFinanceCalendarEntry($done);
+            }
+          ))
+          ->register(new GenericUndoable(
+            function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
+              list($eventUri, $eventUid) = $this->financeService->financeEvent(
+                $bulkSubmissionNames[$bulkTag]['due'],
+                $this->l->t('TODO: add more information like the list of export-files, totals etc.'),
+                $project,
+                $bulkTransaction->getDueDate());
+              $bulkTransaction->setDueEventUri($eventUri);
+              $bulkTransaction->setDueEventUid($eventUid);
+              return $eventUri;
+            },
+            function($done) {
+              $this->financeService->deleteFinanceCalendarEntry($done);
+            }
+          ));
       }
     }
 
     // add also the notification deadline
     if (!empty($debitNote)) {
-        $preCommitActions->register(new GenericUndoable(
+      $this->entityManager
+        ->registerPreCommitAction(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
             $calendarUri = $this->financeService->financeEvent(
               $bulkSubmissionNames['debitNotes']['notification'],
@@ -546,8 +545,8 @@ class SepaBulkTransactionsController extends Controller {
           function($done) {
             $this->financeService->deleteFinanceCalendarEntry($done);
           }
-        ));
-        $preCommitActions->register(new GenericUndoable(
+        ))
+        ->register(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
             $calendarUri = $this->financeService->financeTask(
               $bulkSubmissionNames['debitNotes']['notification'],
@@ -571,7 +570,7 @@ class SepaBulkTransactionsController extends Controller {
     try {
 
       // action must come before persist
-      $preCommitActions->executeActions();
+      $this->entityManager->executePreCommitActions();
 
       if (!empty($debitMandate)) {
         $this->persist($debitNote);
@@ -584,7 +583,6 @@ class SepaBulkTransactionsController extends Controller {
 
       $this->entityManager->commit();
     } catch (\Throwable $t) {
-      $preCommitActions->executeUndo();
       $this->entityManager->rollback();
       $this->entityManager->reopen();
       $this->logException($t);

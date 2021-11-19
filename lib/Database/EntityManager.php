@@ -689,11 +689,17 @@ class EntityManager extends EntityManagerDecorator
    *
    * The callables need to run "stand-alone" without parameters.
    *
-   * @param mixed $action
+   * @param Callable|IUndoable $action Action to register.
    *
-   * @param Callable $undo The associated undo-action.
+   * @param null|Callable $undo The associated undo-action. If
+   * $actionm instanceof IUndoable then the $undo action is
+   * ignored. It should rather be specified while constructing the
+   * IUndoable instance.
+   *
+   * @return UndoableRunQueue  Return the run-queue for  easy chaining
+   * via UndoableRunQueue::register().
    */
-  public function registerPreCommitAction($action, ?Callable $undo = null)
+  public function registerPreCommitAction($action, ?Callable $undo = null):UndoableRunQueue
   {
     if (is_callable($action)) {
       $this->preCommitActions->register(new GenericUndoable($action, $undo));
@@ -702,11 +708,21 @@ class EntityManager extends EntityManagerDecorator
     } else  {
       throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
+    return $this->preCommitActions;
+  }
+
+  /**
+   * Explicitly execute the registered actions in case that the order
+   * of execution matters.
+   */
+  public function executePreCommitActions()
+  {
+    $this->preCommitActions->executeActions();
   }
 
   public function commit()
   {
-    $this->preCommitActions->executeActions();
+    $this->executePreCommitActions();
     parent::commit();
   }
 

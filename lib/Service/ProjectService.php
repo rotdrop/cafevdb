@@ -40,7 +40,6 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Events;
 
@@ -1548,51 +1547,51 @@ Whatever.',
 
     $softDelete  = count($project['payments']??[]) > 0;
 
-    $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
-       ->register(new GenericUndoable(
-         function() use ($project) {
-           $startTime = $this->getTimeStamp();
-           $this->removeProjectFolders($project);
-           $endTime = $this->getTimeStamp();
-           return [ $startTime, $endTime ];
-         },
-         function($timeInterval) use ($project) {
-           $this->restoreProjectFolders($project, $timeInterval);
-         }))
-       ->register(new GenericUndoable(
-         function() use ($project) {
-           try {
-             $pageVersion = $this->deleteProjectWikiPage($project);
-           } catch (\Throwable $t) {
-             $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
-             $pageVersion = null;
-           }
-           $this->generateWikiOverview([ $projectId ]);
-           return $pageVersion;
-         },
-         function($pageVersion) use ($project) {
-           $this->restoreProjectWikiPage($project, $pageVersion);
-           $this->generateWikiOverview();
-         }))
-       ->register(new GenericUndoable(
-         function() use ($project) {
-           $projectId = $project->getId();
-           $webPages = $project->getWebPages();
-           foreach ($webPages as $page) {
-             // ignore errors
-             $this->deleteProjectWebPage($projectId, $page);
-           }
-           return $webPages;
-         },
-         function($webPages) use ($project) {
-           foreach ($webPages as $webPage) {
-             try {
-               $this->restoreProjectWebPage($project->getId(), $webPage);
-             } catch (\Throwable $t) {
-               $this->logException($t, 'Unable to restore web-article with id ' . $webPage['articleId']);
-             }
-           }
-         }));
+    $this->entityManager
+      ->registerPreCommitAction(new GenericUndoable(
+        function() use ($project) {
+          $startTime = $this->getTimeStamp();
+          $this->removeProjectFolders($project);
+          $endTime = $this->getTimeStamp();
+          return [ $startTime, $endTime ];
+        },
+        function($timeInterval) use ($project) {
+          $this->restoreProjectFolders($project, $timeInterval);
+        }))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+        try {
+          $pageVersion = $this->deleteProjectWikiPage($project);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
+          $pageVersion = null;
+        }
+        $this->generateWikiOverview([ $projectId ]);
+        return $pageVersion;
+        },
+        function($pageVersion) use ($project) {
+          $this->restoreProjectWikiPage($project, $pageVersion);
+          $this->generateWikiOverview();
+        }))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          $projectId = $project->getId();
+          $webPages = $project->getWebPages();
+          foreach ($webPages as $page) {
+            // ignore errors
+            $this->deleteProjectWebPage($projectId, $page);
+          }
+          return $webPages;
+        },
+        function($webPages) use ($project) {
+          foreach ($webPages as $webPage) {
+            try {
+              $this->restoreProjectWebPage($project->getId(), $webPage);
+            } catch (\Throwable $t) {
+              $this->logException($t, 'Unable to restore web-article with id ' . $webPage['articleId']);
+            }
+          }
+        }));
 
     $this->entityManager->beginTransaction();
     try {
@@ -1600,7 +1599,7 @@ Whatever.',
       $this->eventDispatcher->dispatchTyped(
         new Events\BeforeProjectDeletedEvent($project->getId(), $softDelete));
 
-      $preCommitActions->executeActions();
+      $this->entityManager->executePreCommitActions();
 
       if ($softDelete) {
         if (!$project->isDeleted()) {
@@ -1648,7 +1647,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      $preCommitActions->executeUndo();
       if (!$this->entityManager->isTransactionActive()) {
         $this->entityManager->close();
         $this->entityManager->reopen();
@@ -1777,49 +1775,49 @@ Whatever.',
     $oldProject = [ 'id' => $projectId, 'name' => $oldName, 'year' => $oldYear ];
     $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
-    $preCommitActions = (new UndoableRunQueue($this->logger(), $this->l10n()))
-       ->register(new GenericUndoable(
-         function() use ($oldProject, $newProject) {
-           $this->logInfo('OLD ' . print_r($oldProject, true) . ' NEW ' . print_r($newProject, true));
-           $this->renameProjectFolder($newProject, $oldProject);
-         },
-         function() use ($oldProject, $newProject) {
-           $this->renameProjectFolder($oldProject, $newProject);
-         }
-       ))
-       ->register(new GenericUndoable(
-         function() use ($oldProject, $newProject) {
-           $this->renameProjectWikiPage($newProject, $oldProject);
-         },
-         function() use ($oldProject, $newProject) {
-           $this->renameProjectWikiPage($oldProject, $newProject);
-         }
-       ))
-       ->register(new GenericUndoable(
-         function() use ($oldProject, $newProject) {
-           $this->nameProjectWebPages($newProject['id'], $newProject['name']);
-         },
-         function() use ($oldProject, $newProject) {
-           $this->nameProjectWebPages($oldProject['id'], $oldProject['name']);
-         }
-       ))
-       ->register(new GenericUndoable(
-         function() use ($oldProject, $newProject) {
-           $this->eventDispatcher->dispatchTyped(
-             new Events\ProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
-           );
-         },
-         function() use ($oldProject, $newProject) {
-           $this->eventDispatcher->dispatchTyped(
-             new Events\ProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
-           );
-         }
-       ));
+    $this->entityManager
+      ->registerPreCommitAction(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $this->logInfo('OLD ' . print_r($oldProject, true) . ' NEW ' . print_r($newProject, true));
+          $this->renameProjectFolder($newProject, $oldProject);
+        },
+        function() use ($oldProject, $newProject) {
+          $this->renameProjectFolder($oldProject, $newProject);
+        }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $this->renameProjectWikiPage($newProject, $oldProject);
+        },
+        function() use ($oldProject, $newProject) {
+          $this->renameProjectWikiPage($oldProject, $newProject);
+        }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $this->nameProjectWebPages($newProject['id'], $newProject['name']);
+        },
+        function() use ($oldProject, $newProject) {
+          $this->nameProjectWebPages($oldProject['id'], $oldProject['name']);
+        }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $this->eventDispatcher->dispatchTyped(
+            new Events\ProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
+          );
+        },
+        function() use ($oldProject, $newProject) {
+          $this->eventDispatcher->dispatchTyped(
+            new Events\ProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
+          );
+        }
+      ));
 
     $this->entityManager->beginTransaction();
     try {
 
-      $preCommitActions->executeActions();
+      $this->entityManager->executePreCommitActions();
 
       $project->setName($newName);
       $project->setYear($newYear);
@@ -1829,10 +1827,9 @@ Whatever.',
       $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->logException($t);
-      $this->entityManager->rollback();
       $project->setName($oldName); // needed ?
       $project->setYear($oldYear); // needed ?
-      $preCommitActions->executeUndo();
+      $this->entityManager->rollback();
       if (!$this->entityManager->isTransactionActive()) {
         $this->entityManager->close();
         $this->entityManager->reopen();

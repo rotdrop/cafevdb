@@ -35,7 +35,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
@@ -201,9 +200,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var bool Debug web requests */
   protected $debugRequests = false;
 
-  /** @var UndoableRunQueue */
-  protected $preCommitActions;
-
   /**
    * @var array
    * ```
@@ -253,8 +249,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
-
-    $this->preCommitActions = new UndoableRunQueue($this->logger(), $this->l10n());
 
     $this->membersProjectId = $this->getClubMembersProjectId();
 
@@ -435,13 +429,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function registerPreCommitAction($action, ?Callable $undo = null)
   {
-    if (is_callable($action)) {
-      $this->preCommitActions->register(new GenericUndoable($action, $undo));
-    } else if ($action instanceof IUndoable) {
-      $this->preCommitActions->register($action);
-    } else  {
-      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
-    }
+    return $this->entityManager->registerPreCommitAction($action, $undo);
   }
 
   /**
@@ -461,11 +449,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pme->beginTransaction();
     try {
       $this->pme->execute($opts);
-      $this->preCommitActions->executeActions();
       $this->pme->commit();
     } catch (\Throwable $t) {
       $this->logError('Rolling back SQL transaction ...');
-      $this->preCommitActions->executeUndo();
       $this->pme->rollBack();
       throw new \Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), $t->getCode(), $t);
     }
