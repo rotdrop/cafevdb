@@ -302,7 +302,7 @@ trait ParticipantFieldsTrait
               $fieldId = $field->getId();
               $policy = $field->getDefaultValue()?:'rename';
               $key = $dataOptions->first()->getKey();
-              $fileBase = $field->getUntranslatedName();
+              $fileBase = $field->getName();
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$key.'">
@@ -320,7 +320,7 @@ trait ParticipantFieldsTrait
                                      ])
                               . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $fileBase = $field->getUntranslatedName();
+                $fileBase = $field->getName();
                 $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
                 return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>';
               }
@@ -564,7 +564,7 @@ trait ParticipantFieldsTrait
               /** @var Entities\ProjectParticipantFieldDataOption $option */
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
-                $fileBase = $option->getUntranslatedLabel();
+                $fileBase = $option->getLabel();
                 $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $fileBase, $musician);
               }
               $html .= '
@@ -580,7 +580,7 @@ trait ParticipantFieldsTrait
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 if (!empty($values)) {
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                  $fileBase = $field->getUntranslatedName();
+                  $fileBase = $field->getName();
                   $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.zip';
 
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
