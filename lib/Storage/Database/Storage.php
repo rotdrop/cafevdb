@@ -46,11 +46,13 @@ class Storage extends AbstractStorage
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const PATH_SEPARATOR = '/';
+
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository */
   protected $filesRepository;
 
-  /** @var string */
-  protected $root;
+  /** @var array */
+  private $files = [];
 
   public function __construct($params)
   {
@@ -63,16 +65,46 @@ class Storage extends AbstractStorage
     }
 
     $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
-
-    $this->root = isset($params['root']) ? '/' . ltrim($params['root'], '/') : '/';
   }
 
-  protected function findFiles()
+  protected function findFiles(string $dirName)
   {
-    return $this->filesRepository->findAll();
+    $dirName = self::normalizeDirectoryName($dirName);
+    $files = empty($directory)
+      ? $this->filesRepository->findAll()
+      : $this->filesRepository->findLike([ 'fileName' => $dirName . self::PATH_SEPARATOR . '%' ]);
+    /** @var Entities\File $file */
+    foreach ($files as $file) {
+      $fileName = $this->buildPath($file->getFileName());
+      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathinfo($name);
+      if ($fileDirName == $dirName) {
+        $this->files[$dirName][$baseName] = $file;
+      } else if (strpos($fileDirName, $dirName) === 0) {
+        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+        $this->files[$dirName][$baseName] = $baseName;
+      }
+    }
+    return $this->files[$dirName];
   }
 
-  protected function getStorageModificationTime()
+  protected function getDirectoryModificationTime(string $dirName):\DateTimeInterface
+  {
+    $date = (new \DateTimeImmutable)->setTimestamp(0);
+    /** @var Entities\File $node */
+    foreach ($this->findFiles($dirName) as $node) {
+      if ($node instanceof Entities\File) {
+        $updated = $node->getUpdated();
+      } else {
+        $updated = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node);
+      }
+      if ($updated > $date) {
+        $date = $updated;
+      }
+    }
+    return $date;
+  }
+
+  protected function getStorageModificationTime():int
   {
     return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
   }
@@ -80,11 +112,29 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName() . '::' . 'database-storage' . $this->root;
+    return $this->appName() . '::' . 'database-storage'. self::PATH_SEPARATOR;
   }
 
   protected function buildPath($path) {
-    return rtrim($this->root . '/' . $path, '/');
+    return \OC\Files\Filesystem::normalizePath($path);
+  }
+
+  /** Attach self::PATH_SEPARATOR to the dirname if it is not the root directory. */
+  protected static function normalizeDirectoryName(string $dirName)
+  {
+    if ($dirName == '.') {
+      $dirName = '';
+    }
+    $dirName = trim($dirName, self::PATH_SEPARATOR);
+    return empty($dirName) ? $dirName : $dirName . self::PATH_SEPARATOR;
+  }
+
+  /** Attach self::PATH_SEPARATOR to the dirname if it is not the root directory. */
+  protected static function pathInfo(string $path)
+  {
+    $pathInfo = pathinfo($path);
+    $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname']);
+    return $pathInfo;
   }
 
   /** {@inheritdoc} */
@@ -92,47 +142,26 @@ class Storage extends AbstractStorage
     return true;
   }
 
-  /**
-   * Generate the file name from the entity. The default is to prepend
-   * the database id. Derived classes may want to override this.
-   *
-   * @param Entities\File $file
-   *
-   * @return string
-   */
-  protected function fileNameFromEntity(Entities\File $file):string
-  {
-    $nameParts = [ 'db', $file->getId() ];
-    if (!empty($file->getFileName())) {
-      $nameParts[] = $file->getFileName();
-    }
-    $name = implode('-', $nameParts);
-    $ext = pathinfo($name, PATHINFO_EXTENSION);
-    if (empty($ext)) {
-      $ext = Util::fileExtensionFromMimeType($file->getMimeType());
-      if (!empty($ext)) {
-        $name .= '.' . $ext;
-      }
-    }
-    return $name;
-  }
-
   private function fileIdFromFileName($name)
   {
     $name = $this->buildPath($name);
     $name = pathinfo($name, PATHINFO_BASENAME);
-    list(,$id) = explode('-', $name);
-    return (int)$id;
+    $parts = explode('-', $name);
+    if (count($parts) >= 2 && filter_var($parts[1], FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ], ]) !== false) {
+      return $parts[1];
+    }
+    return 0;
   }
 
   /**
-   * Fetch the file entity corresponding to file-name.
+   * Fetch the file entity corresponding to file-name. If the entry is a
+   * directory, return the directory name.
    *
    * @param string $name
    *
-   * @return null|Enties\File
+   * @return null|string|Enties\File
    */
-  protected function fileFromFileName(string $name):?Entities\File
+  protected function fileFromFileName(string $name)
   {
     $id = $this->fileIdFromFileName($name);
     if ($id > 0) {
@@ -155,7 +184,7 @@ class Storage extends AbstractStorage
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
-      return $this->getStorageModificationTime();
+      return $this->getDirectoryModificationTime($path)->getTimestamp();
     }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
@@ -195,12 +224,6 @@ class Storage extends AbstractStorage
 
   public function stat($path)
   {
-    if (!$this->is_dir($path)) {
-      return [
-        'mtime' => $this->filemtime($path),
-        'size' => $this->filesize($path),
-      ];
-    }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;
@@ -213,10 +236,9 @@ class Storage extends AbstractStorage
 
   public function file_exists($path)
   {
-    if ($path === '' || $path === '.' || $path === '/') {
+    if ($this->is_dir($path)) {
       return true;
     }
-
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;
@@ -241,10 +263,7 @@ class Storage extends AbstractStorage
     if (!$this->is_dir($path)) {
       return false;
     }
-    $fileNames = [];
-    foreach ($this->findFiles() as $file) {
-      $fileNames[] = $this->fileNameFromEntity($file);
-    }
+    $fileNames = array_keys($this->findFiles($path));
     return IteratorDirectory::wrap($fileNames);
   }
 
@@ -255,7 +274,13 @@ class Storage extends AbstractStorage
 
   public function is_dir($path)
   {
-    if ($path === '' || $path == '/') {
+    if ($path === '' || $path == self::PATH_SEPARATOR) {
+      return true;
+    }
+    if (is_string($this->fileFromFileName($path))) {
+      return true;
+    }
+    if (!empty($this->filesRepository->findOneLike([ 'fileName' => trim($path, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . '%' ]))) {
       return true;
     }
     return false;

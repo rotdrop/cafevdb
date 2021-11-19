@@ -57,57 +57,55 @@ class BankTransactionsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function fileNameFromEntity(Entities\File $file):string
-  {
-    $fileName = $file->getFileName();
-    if (empty($fileName)) {
-      return parent::fileNameFromEntity($file);
-    }
-    return $fileName;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function fileFromFileName(string $name):?Entities\File
+  protected function fileFromFileName(string $name)
   {
     $name = $this->buildPath($name);
-    $name = pathinfo($name, PATHINFO_BASENAME);
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
 
-    if (empty($this->files)) {
-      $this->findFiles();
+    if (empty($this->files[$dirName])) {
+      $this->findFiles($dirName);
     }
 
-    return $this->files[$name] ?? null;
+    return ($this->files[$dirName][$baseName]
+            ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
+                ?? null));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function findFiles()
+  protected function findFiles(string $dirName)
   {
-    $this->files = [];
+    $dirName = self::normalizeDirectoryName($dirName);
+    $this->files[$dirName] = [];
     $transactions = $this->transactionsRepository->findAll();
     /** @var Entities\SepaBulkTransaction $transaction */
     foreach ($transactions as $transaction) {
-      foreach ($transaction->getSepaTransactionData() as $transactionDatum) {
-        $this->files[$transactionDatum->getFileName()] = $transactionDatum;
+      /** @var Entities\File $file */
+      foreach ($transaction->getSepaTransactionData() as $file) {
+        // @todo For now generate sub-directories for every year. This should
+        // perhaps be changed ...
+        $fileName = $file->getFileName();
+        if (preg_match('/^([0-9]{4})[0-9]{4}-[0-9]{6}/', $fileName, $matches)) {
+          $year = $matches[1];
+          $fileName = $year . self::PATH_SEPARATOR . $fileName;
+        }
+        $fileName = $this->buildPath($fileName);
+        list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+        if ($fileDirName == $dirName) {
+          $this->files[$dirName][$baseName] = $file;
+        } else if (strpos($fileDirName, $dirName) === 0) {
+          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+          $this->files[$dirName][$baseName] = $baseName;
+        }
       }
     }
-    return array_values($this->files);
+    return $this->files[$dirName];
   }
 
-  protected function getStorageModificationTime()
+  protected function getStorageModificationTime():int
   {
-    $date = (new \DateTimeImmutable)->setTimestamp(0);
-    /** @var Entities\File $file */
-    foreach ($this->findFiles() as $file) {
-      $updated = $file->getUpdated();
-      if ($updated > $date) {
-        $date = $updated;
-      }
-    }
-    return $date->getTimestamp();
+    return $this->getDirectoryModificationTime('')->getTimestamp();
   }
 
   /** {@inheritdoc} */
@@ -116,7 +114,7 @@ class BankTransactionsStorage extends Storage
     return $this->appName()
       . '::'
       . 'database-storage/finance/transactions'
-      . $this->root;
+      . self::PATH_SEPARATOR;
   }
 }
 

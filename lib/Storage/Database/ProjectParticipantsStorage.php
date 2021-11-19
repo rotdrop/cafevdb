@@ -32,6 +32,7 @@ use Icewind\Streams\CountWrapper;
 use Icewind\Streams\IteratorDirectory;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
@@ -50,6 +51,9 @@ class ProjectParticipantsStorage extends Storage
   /** @var Entities\ProjectParticipant */
   private $participant;
 
+  /** @var ProjectService */
+  private $projectService;
+
   /** @var array */
   private $files = [];
 
@@ -58,79 +62,83 @@ class ProjectParticipantsStorage extends Storage
     parent::__construct($params);
     $this->participant = $params['participant'];
     $this->project = $this->participant->getProject();
+    $this->projectService = $this->di(ProjectService::class);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function fileNameFromEntity(Entities\File $file):string
-  {
-    $fileName = $file->getFileName();
-    if (empty($fileName)) {
-      $fileName = parent::fileNameFromEntity($file);
-    }
-    return $fileName;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function fileFromFileName(string $name):?Entities\File
+  protected function fileFromFileName(?string $name)
   {
     $name = $this->buildPath($name);
-    $name = pathinfo($name, PATHINFO_BASENAME);
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
 
-    if (empty($this->files)) {
-      $this->findFiles();
+    if (empty($this->files[$dirName])) {
+      $this->findFiles($dirName);
     }
 
-    return $this->files[$name] ?? null;
+    return ($this->files[$dirName][$baseName]
+            ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
+                ?? null));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function findFiles()
+  protected function findFiles(string $dirName)
   {
-    $this->files = [];
+    $dirName = self::normalizeDirectoryName($dirName);
+    $this->files[$dirName] = [];
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
-      $dataType = $fieldDatum->getField()->getDataType();
+      /** @var Entities\ProjectParticipantField $field */
+      $field = $fieldDatum->getField();
+      $dataType = $field->getDataType();
       switch ($dataType) {
       case FieldType::DB_FILE:
         $fileId = (int)$fieldDatum->getOptionValue();
         $file = $this->filesRepository->find($fileId);
-        if (!empty($file)) {
-          $this->files[$file->getFileName()] = $file;
-        }
         break;
       case FieldType::SERVICE_FEE:
         $file = $fieldDatum->getSupportingDocument();
-        if (!empty($file)) {
-          $this->files[$file->getFileName()] = $file;
-        }
         break;
       default:
-        continue 2;
+        $file = null;
+      }
+      /** @var Entities\File $file */
+      if (!empty($file)) {
+        // construct a consistent file-name from the field-info
+        if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
+          // construct the file-name from the field-name
+          $fileName = $this->projectService->participantFilename($field->getName(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+        } else {
+          // construct the file-name from the option label
+          /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+          $fieldOption = $fieldDatum->getDataOption();
+          $fileName =
+            $field->getName()
+            . self::PATH_SEPARATOR
+            . $this->projectService->participantFilename($fieldOption->getLabel(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+        }
+        $fileName = $this->buildPath($fileName);
+        list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+        if ($fileDirName == $dirName) {
+          $this->files[$dirName][$baseName] = $file;
+        } else if (strpos($fileDirName, $dirName) === 0) {
+          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+          $this->files[$dirName][$baseName] = $baseName;
+        }
       }
     }
-    return array_values($this->files);
+    return $this->files[$dirName];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getStorageModificationTime()
+  protected function getStorageModificationTime():int
   {
-    $date = (new \DateTimeImmutable)->setTimestamp(0);
-    /** @var Entities\File $file */
-    foreach ($this->findFiles() as $file) {
-      $updated = $file->getUpdated();
-      if ($updated > $date) {
-        $date = $updated;
-      }
-    }
-    return $date->getTimestamp();
+    return $this->getDirectoryModificationTime('')->getTimestamp();
   }
 
   /** {@inheritdoc} */
@@ -142,7 +150,7 @@ class ProjectParticipantsStorage extends Storage
       . $this->project->getName()
       . 'participants/'
       . $this->participant->getMusician()->getUserIdSlug()
-      . $this->root;
+      . self::PATH_SEPARATOR;
   }
 }
 
