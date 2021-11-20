@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Migration;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use OCP\IDBConnection;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 
-class Version060000Date20201022230000 extends SimpleMigrationStep
+/**
+ * Auto-generated migration step: Please modify to your needs!
+ */
+class Version070000Date20211120104235 extends SimpleMigrationStep
 {
   /** @var IDBConnection */
   private $connection;
 
   /**
-   * Version1008Date20181105104826 constructor.
+   * Constructor.
    *
    * @param IDBConnection $connection
    */
@@ -30,19 +36,8 @@ class Version060000Date20201022230000 extends SimpleMigrationStep
    * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
    * @param array $options
    */
-  public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
-
-    // $schema = $schemaClosure();
-    // $table = $schema->getTable('cafevdb_blog');
-    // $table->addColumn('inreplyto_tmp', 'integer', [
-    //   'notnull' => true,
-    //   'length' => 4,
-    //   'default' => -1,
-    // ]);
-    // $query = $this->connection->getQueryBuilder();
-    // $query->update('cafevdb_blog')
-    //       ->set('inreplyto_tmp', 'inreplyto');
-  }
+  public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void
+  {}
 
   /**
    * @param IOutput $output
@@ -50,18 +45,18 @@ class Version060000Date20201022230000 extends SimpleMigrationStep
    * @param array $options
    * @return null|ISchemaWrapper
    */
-  public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
-
+  public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper
+  {
     /** @var ISchemaWrapper $schema */
     $schema = $schemaClosure();
-
     $table = $schema->getTable('cafevdb_blog');
-    $table->addColumn('in_reply_to', 'integer', [
-      'notnull' => true,
-      'length' => 4,
-      'default' => -1,
+    $column = $table->getColumn('in_reply_to');
+    $column->setType(Type::getType(Types::BIGINT));
+    $column->setOptions([
+      'notnull' => false,
+      'length' => 20,
+      'default' => null,
     ]);
-
     return $schema;
   }
 
@@ -70,13 +65,16 @@ class Version060000Date20201022230000 extends SimpleMigrationStep
    * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
    * @param array $options
    */
-  public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+  public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void
+  {
+    /** @var ISchemaWrapper $schema */
     $schema = $schemaClosure();
     $table = $schema->getTable('cafevdb_blog');
+    /** @var IQueryBuilder $qb */
     $qb = $this->connection->getQueryBuilder();
     $qb->update('cafevdb_blog')
-      ->set('in_reply_to', 'inreplyto')
+      ->set('in_reply_to', $qb->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+      ->where($qb->expr()->eq('in_reply_to', $qb->createNamedParameter(-1, IQueryBuilder::PARAM_INT)))
       ->execute();
-    $table->dropColumn('inreplyto');
   }
 }

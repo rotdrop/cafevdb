@@ -166,7 +166,8 @@ const submit = function(event) {
     clearReaderValue = 0;
   }
 
-  const action = globalState.Blog.blogId >= 0 ? 'modify' : 'create';
+  console.info('GLOBAL', globalState.Blog);
+  const action = globalState.Blog.blogId > 0 ? 'modify' : 'create';
   $.post(generateUrl('blog/action/' + action), {
     blogId: globalState.Blog.blogId,
     inReplyTo: globalState.Blog.inReplyTo,

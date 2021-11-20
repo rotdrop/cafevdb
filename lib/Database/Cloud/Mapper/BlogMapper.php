@@ -176,12 +176,13 @@ class BlogMapper extends Mapper
    */
   private function findThreadHeads()
   {
+    /** @var IQueryBuilder $qb */
     $qb = $this->db->getQueryBuilder();
     $qb->select('*')
-       ->from($this->tableName)
-       ->where($qb->expr()->eq('in_reply_to', $qb->createNamedParameter(null, IQueryBuilder::PARAM_INT)))
-       ->orderBy('priority', 'DESC')
-       ->orderBy('created', 'DESC');
+      ->from($this->tableName)
+      ->where($qb->expr()->isNull('in_reply_to'))
+      ->orderBy('priority', 'DESC')
+      ->orderBy('created', 'DESC');
 
     return $this->findEntities($qb);
   }
