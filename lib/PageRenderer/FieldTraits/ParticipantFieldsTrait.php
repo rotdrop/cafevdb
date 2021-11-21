@@ -1274,7 +1274,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $subDirPrefix = '';
     }
     if (!empty($value)) {
-      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP.$value;
+      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $value;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
         $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
