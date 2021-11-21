@@ -41,6 +41,8 @@ use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\UndoableFolderRename;
+use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Events;
 
 /**
@@ -87,11 +89,15 @@ class ProjectService
   /** @var IEventDispatcher */
   private $eventDispatcher;
 
+  /** @var MusicianService */
+  private $musicianService;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
     , UserStorage $userStorage
     , ProjectParticipantFieldsService $participantFieldsService
+    , MusicianService $musicianService
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
     , IEventDispatcher $eventDispatcher
@@ -100,6 +106,7 @@ class ProjectService
     $this->entityManager = $entityManager;
     $this->userStorage = $userStorage;
     $this->participantFieldsService = $participantFieldsService;
+    $this->musicianService = $musicianService;
     $this->eventDispatcher = $eventDispatcher;
 
     $this->wikiRPC = $wikiRPC;
@@ -611,7 +618,7 @@ class ProjectService
   public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
   {
     list(self::FOLDER_TYPE_PARTICIPANTS => $parentPath,) = $this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry);
-    $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
+    $userIdSlug = $this->musicianService->ensureUserIdSlug($musician);
     $participantFolder = $parentPath.UserStorage::PATH_SEP.$userIdSlug;
     if (!$dry) {
       $this->userStorage->ensureFolder($participantFolder);
@@ -625,25 +632,37 @@ class ProjectService
    */
   public function participantFilename(string $base, $project, $musician)
   {
-    $userIdSlug = $this->ensureMusicianUserIdSlug($musician);
+    $userIdSlug = $this->musicianService->ensureUserIdSlug($musician);
     return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
   }
 
   /**
-   * Ensure that the musicain indeed has a user-id-slug. In principle
-   * this should never happen when the app runs in production mode ...
+   * Rename all project-participants folders in order to reflect changes in
+   * the user-id-slug (== user-name). This functions registers suitable
+   * IUndoable actions with the EntityManager which are executed pre-commit.
    *
-   * @return string The user-id slug.
+   * @param Entities\Musician $musician
+   *
+   * @param string $oldUserIdSlug
+   *
+   * @param string $newUserIdSlug
+   *
    */
-  public function ensureMusicianUserIdSlug(Entities\Musician $musician)
+  public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug)
   {
-    if (empty($musician->getUserIdSlug())) {
-      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musician['id']);
-      $musician->setUserIdSlug(\Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG);
-      $this->persist($musician);
-      $this->flush();
+    /** @var Entities\ProjectParticipant $projectParticipant */
+    foreach ($musician->getProjectParticipation() as $projectParticipant) {
+      $project = $projectParticipant->getProject();
+
+      $participantsFolder = $this>getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+
+      $oldName = $oldUserIdSlug ? $participantsFolder . UserStorage::PATH_SEP . $oldUserIdSlug : null;
+      $newName = $participantsFolder . UserStorage::PATH_SEP . $newUserIdSlug;
+
+      $this->entityManager->registerPreCommitAction(
+        new UndoableFolderRename($oldName, $newName, true)
+      );
     }
-    return $musician->getUserIdSlug();
   }
 
   public function projectWikiLink($pageName)
