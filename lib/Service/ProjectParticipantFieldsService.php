@@ -413,7 +413,7 @@ class ProjectParticipantFieldsService
 
       $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
 
-      return $participantFolder . UserStorage::PATH_SEP . $field->getName();
+      return $participantFolder . UserStorage::PATH_SEP . $field->getUntranslatedName();
     }
     case DataType::CLOUD_FILE: {
      /** @var UserStorage $userStorage */
@@ -426,7 +426,7 @@ class ProjectParticipantFieldsService
 
       $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
                     ? ''
-                    : UserStorage::PATH_SEP . $field->getName();
+                    : UserStorage::PATH_SEP . $field->getUntranslatedName();
 
       return $participantFolder . $subDirPrefix;
     }
@@ -789,7 +789,14 @@ class ProjectParticipantFieldsService
 
   public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName)
   {
-
+    switch ($field->getDataType()) {
+      case DataType::CLOUD_FOLDER:
+        break;
+      case DataType::CLOUD_FILE:
+        break;
+      default:
+        break;
+    }
   }
 
   public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldName, string $newName)
