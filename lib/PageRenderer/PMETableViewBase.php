@@ -2318,6 +2318,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   public function renameProjectParticipantFolders($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
+    return true; // leave to the ORM-only event life-cycle events
+
     if ($op != 'update') {
       return true; // safeguard
     }
