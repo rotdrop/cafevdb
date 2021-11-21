@@ -568,7 +568,11 @@ class ProjectParticipantsController extends Controller {
                   $backupName .= '.'.$oldExtension;
                 }
                 $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
-                $oldPath = $pathChain[0].UserStorage::PATH_SEP.$oldName;
+                $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
+                if (!empty($subDir)) {
+                  $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
+                }
+                $oldPath .= $oldName;
                 $userStorage->rename($oldPath, $backupPath);
                 $conflict = 'renamed';
                 break;
