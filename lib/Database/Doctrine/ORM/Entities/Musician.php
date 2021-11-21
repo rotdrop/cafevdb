@@ -22,12 +22,15 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Events;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -1056,4 +1059,39 @@ class Musician implements \ArrayAccess, \JsonSerializable
     ]);
   }
 
+  /** @var bool */
+  private $preUpdatePosted = false;
+
+  /**
+   * @ORM\PreUpdate
+   *
+   * @param Event\PreUpdateEventArgs $event
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'userIdSlug';
+    if (!$event->hasChangedField($field)) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $event->getOldValue($field), $event->getNewValue($field)));
+    $this->preUpdatePosted = true;
+  }
+
+  /**
+   * @ORM\PostUpdate
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    if (!$this->preUpdatePosted) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this));
+    $this->preUpdatePosted = false;
+  }
 }

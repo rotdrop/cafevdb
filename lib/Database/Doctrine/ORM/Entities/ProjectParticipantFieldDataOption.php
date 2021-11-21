@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Events;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -37,6 +38,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * ProjectParticipantFieldsDataOptions
@@ -48,9 +50,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- *
- * Soft deletion is necessary in case the ProjectPayments table
- * already contains entries.
+ * @ORM\HasLifecycleCallbacks
  */
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
@@ -425,5 +425,41 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   {
     return $this->fieldData->count()
       + $this->payments->count();
+  }
+
+  /** @var bool */
+  private $preUpdatePosted = false;
+
+  /**
+   * @ORM\PreUpdate
+   *
+   * @param Event\PreUpdateEventArgs $event
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'label';
+    if (!$event->hasChangedField($field)) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantFieldOption($this, $event->getOldValue($field), $event->getNewValue($field)));
+    $this->preUpdatePosted = true;
+  }
+
+  /**
+   * @ORM\PostUpdate
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    if (!$this->preUpdatePosted) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
+    $this->preUpdatePosted = false;
   }
 }

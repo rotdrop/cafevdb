@@ -28,6 +28,7 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\EventDispatcher\Event;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -151,6 +152,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var UndoableRunQueue */
   protected $preCommitActions;
 
+  /** @var IEventDispatcher */
+  protected $eventDispatcher;
+
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
@@ -171,12 +175,25 @@ class EntityManager extends EntityManagerDecorator
 
     $this->bind();
     if (!$this->bound()) {
-      $eventDispatcher = $this->appContainer->get(IEventDispatcher::class);
-      $eventDispatcher->addListener(Events\EncryptionServiceBound::class, function(Events\EncryptionServiceBound $event) {
+      $this->eventDispatcher = $this->appContainer->get(IEventDispatcher::class);
+      $this->eventDispatcher->addListener(Events\EncryptionServiceBound::class, function(Events\EncryptionServiceBound $event) {
         $this->logDebug('LAZY BINDING ENTITY MANAGER');
         $this->bind();
       });
     }
+  }
+
+  /**
+   * Dispatch the given event to the cloud's event dispatcher.
+   *
+   * @param Event $event.
+   */
+  public function dispatchEvent(Event $event)
+  {
+    if (empty($this->eventDispatcher)) {
+      $this->eventDispatcher = $this->appContainer->get(IEventDispatcher::class);
+    }
+    return $this->eventDispatcher->dispatchTyped($event);
   }
 
   public function bound():bool

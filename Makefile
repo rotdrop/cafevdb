@@ -115,7 +115,7 @@ composer.lock: composer.json composer.json.in
 }
 
 pre-build:
-	git submodule update --init
+#	git submodule update --init
 .PHONY: pre-build
 
 #@@ Fetches the PHP and JS dependencies and compiles the JS.

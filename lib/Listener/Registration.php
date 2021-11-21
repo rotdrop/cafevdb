@@ -41,6 +41,9 @@ class Registration
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);
     self::registerListener($context, FileNodeListener::class);
+    self::registerListener($context, PreChangeUserIdSlugListener::class);
+    self::registerListener($context, PreRenameProjectParticipantFieldListener::class);
+    self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {
