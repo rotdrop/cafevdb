@@ -23,11 +23,14 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCA\CAFEVDB\Events\PreRenameProjectParticipantFieldOption as HandledEvent;
 use OCP\ILogger;
 use OCP\IL10N;
+
+use OCA\CAFEVDB\Events\PreRenameProjectParticipantFieldOption as HandledEvent;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 class PreRenameProjectParticipantFieldOptionListener implements IEventListener
 {
@@ -35,10 +38,15 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
 
   const EVENT = HandledEvent::class;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   public function __construct(
-    ILogger $logger
+    IAppContainer $appContainer
+    , ILogger $logger
     , IL10N $l10n
   ) {
+    $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
   }
@@ -50,6 +58,11 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
     }
 
     $this->logInfo('OLD / NEW: ' . $event->getOldLabel() . ' / ' . $event->getNewLabel());
+
+    /** @var ProjectParticipantFieldsService $participantFieldsService */
+    $participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
+
+    $participantFieldsService->handleRenameOption($event->getOption(), $event->getOldLabel(), $event->getNewLabel());
   }
 }
 

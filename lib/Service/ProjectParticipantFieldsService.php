@@ -787,6 +787,16 @@ class ProjectParticipantFieldsService
     return !$used;
   }
 
+  public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName)
+  {
+
+  }
+
+  public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldName, string $newName)
+  {
+
+  }
+
 }
 
 // Local Variables: ***
