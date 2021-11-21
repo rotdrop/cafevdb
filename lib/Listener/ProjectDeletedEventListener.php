@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCA\CAFEVDB\Events\BeforePojectDeletedEvent as HandledEvent;
+use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
