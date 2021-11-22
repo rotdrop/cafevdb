@@ -325,6 +325,20 @@ class UserStorage
   }
 
   /**
+   * Rename $oldPath to $newPath which are interpreted as paths
+   * relative to the user's folder.
+   */
+  public function copy(string $oldPath, string $newPath)
+  {
+    try {
+      $newPath = $this->userFolder->getFullPath($newPath);
+      $this->userFolder->get($oldPath)->copy($newPath);
+    } catch (\Throwable $t) {
+      throw new \Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
+    }
+  }
+
+  /**
    * Make sure the given directory exists. If the given path existis
    * and is not a directory, it will be moved out of the way or
    * deleted.

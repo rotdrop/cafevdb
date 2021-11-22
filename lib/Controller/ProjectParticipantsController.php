@@ -531,6 +531,7 @@ class ProjectParticipantsController extends Controller {
          */
 
         $fileCopied = false;
+        $oldPath = null;
 
         $this->entityManager->beginTransaction();
         try {
@@ -573,7 +574,7 @@ class ProjectParticipantsController extends Controller {
                   $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
                 }
                 $oldPath .= $oldName;
-                $userStorage->rename($oldPath, $backupPath);
+                $userStorage->copy($oldPath, $backupPath);
                 $conflict = 'renamed';
                 break;
               }
@@ -581,6 +582,13 @@ class ProjectParticipantsController extends Controller {
             case 'replace':
               switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
+                // we still need to populate $oldPath in order to trigger the
+                // restore functionality of the cloud.
+                $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
+                if (!empty($subDir)) {
+                  $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
+                }
+                $oldPath .= $fieldData->getOptionValue();
                 $conflict = 'replaced';
                 break;
               case FieldDataType::DB_FILE:
@@ -623,6 +631,11 @@ class ProjectParticipantsController extends Controller {
             }
             $fieldData->setOptionValue($optionValue);
             $this->persist($fieldData);
+            if ($oldPath && $oldPath != $filePath) {
+              // try to rename first (extension can be different) in order to
+              // have a file history inside the cloud.
+              $userStorage->rename($oldPath, $filePath);
+            }
             $userStorage->putContent($filePath, $fileData);
             $downloadLink = $userStorage->getDownloadLink($filePath);
             break;
@@ -685,6 +698,7 @@ class ProjectParticipantsController extends Controller {
           if ($fileCopied) {
             switch ($dataType) {
             case FieldDataType::CLOUD_FILE:
+              // @todo HERE WE SHOULD RESTORE THE OLD FILE IF ANY
               // unlink the new file
               $userStorage->delete($filePath);
               break;
