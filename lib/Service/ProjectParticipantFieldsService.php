@@ -40,6 +40,11 @@ use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\UndoableFolderRename;
+use OCA\CAFEVDB\Common\UndoableFileRename;
+use OCA\CAFEVDB\Common\IUndoable;
+
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
@@ -742,6 +747,8 @@ class ProjectParticipantFieldsService
    *
    * @return bool true if the field was really deleted, false if it
    * was kept.
+   *
+   * @todo We might want to remove "side-effects", i.e. data-base files and cloud files.
    */
   public function deleteField($fieldOrId)
   {
@@ -787,21 +794,111 @@ class ProjectParticipantFieldsService
     return !$used;
   }
 
+  /**
+   * Rename all linked cloud-folders as necessary. This is done by registering
+   * suitable IUndoable instances for the entity-manager's pre-commit
+   * run-queue. In case of an error the change is undone, i.e. the files are
+   * renamed back.
+   *
+   * @todo
+   * - perhaps we should do a read-dir instead or additionally
+   * - handle "soft-deleted" entities
+   */
   public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName)
   {
     switch ($field->getDataType()) {
       case DataType::CLOUD_FOLDER:
+        // We have to rename the folder which is just named after the
+        // field-name.
+        $type = 'folder';
         break;
       case DataType::CLOUD_FILE:
+        switch ($field->getMultiplicity()) {
+          case Multiplicity::SIMPLE:
+            // The file is name after the field, so we have to rename the file.
+            $type = 'file';
+            break;
+          default:
+            // should be Multiplicity::PARALLEL ...  the individual files are
+            // named after the option and stored in a sub-folder which is just
+            // the field-name, so we have to rename to folder
+            $type = 'folder';
+            break;
+        }
         break;
       default:
-        break;
+        return;
     }
+
+    $softDeleteableState = $this->disableFilter('soft-deleteable');
+
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $field->getProject();
+
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($field->getProject()->getParticipants() as $participant) {
+      $musician = $participant->getMusician();
+      $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
+      if ($type == 'folder') {
+        $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
+        $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
+        $this->entityManager->registerPreCommitAction(
+          new UndoableFolderRename($oldPath, $newPath, true /* gracefully */)
+        );
+      } else { // 'file'
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        foreach ($field->getSelectableOptions(true) as $option) {
+          /** @var Entities\ProjectParticipantFieldDatum $datum */
+          $datum = $participant->getParticipantFieldsDatum($option->getKey());
+          if (!empty($datum)) {
+            $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
+            $oldBaseName = $projectService->participantFilename($oldName, $project, $musician) . '.' . $extension;
+            $newBaseName = $projectService->participantFilename($newName, $project, $musician) . '.' . $extension;
+            $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
+            $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
+            $this->entityManager->registerPreCommitAction(
+              new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
+            );
+          }
+        }
+      }
+    }
+
+    $softDeleteableState && $this->enableFilter('soft-deleteable');
   }
 
-  public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldName, string $newName)
+  public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel)
   {
+    $field = $option->getField();
+    if ($field->getDataType() != DataType::CLOUD_FILE) {
+      return;
+    }
+    if ($field->getMultiplicity() == Multiplicity::SIMPLE) {
+      // name based on field name
+      return;
+    }
 
+    $softDeleteableState = $this->disableFilter('soft-deleteable');
+
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $field->getProject();
+
+    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+    foreach ($option->getFieldData() as $fieldDatum) {
+      $musician = $fieldDatum->getMusician();
+      $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
+      $oldBaseName = $projectService->participantFilename($oldLabel, $project, $musician) . '.' . $extension;
+      $newBaseName = $projectService->participantFilename($newLabel, $project, $musician) . '.' . $extension;
+      $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
+      $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
+      $this->entityManager->registerPreCommitAction(
+        new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
+      );
+    }
+
+    $softDeleteableState && $this->enableFilter('soft-deleteable');
   }
 
 }
