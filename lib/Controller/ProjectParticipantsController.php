@@ -618,6 +618,8 @@ class ProjectParticipantsController extends Controller {
           switch ($dataType) {
           case FieldDataType::CLOUD_FILE:
           case FieldDataType::CLOUD_FOLDER:
+            // @todo perhaps just store the extension as the rest is derived
+            // from the field-name and user-id-slug
             $optionValue = $pathInfo['basename'];
             if ($dataType == FieldDataType::CLOUD_FOLDER) {
               $oldValue = json_decode($fieldData->getOptionValue(), true);
