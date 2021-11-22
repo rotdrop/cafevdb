@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -193,7 +194,7 @@ class ProjectParticipantField implements \ArrayAccess
 
   public function __construct()
   {
-    $this->arrayCTOR();
+    $this->__wakeup();
     $this->id = null;
     $this->project = null;
     $this->defaultValue = null;
@@ -215,6 +216,24 @@ class ProjectParticipantField implements \ArrayAccess
       $this->dataOptions->add($dataOption);
       if ($oldDataOption == $oldDefaultValue) {
         $this->defaultValue = $dataOption;
+      }
+    }
+  }
+
+  public function __wakeup()
+  {
+    $this->arrayCTOR();
+    $this->forceTranslationLocale();
+  }
+
+  protected function forceTranslationLocale()
+  {
+    if ($this->dataType == Types\EnumParticipantFieldDataType::CLOUD_FILE
+        || $this->dataType == Types\EnumParticipantFieldDataType::CLOUD_FOLDER) {
+      $this->setLocale(ConfigService::DEFAULT_LOCALE);
+      /** @var ProjectParticipantFieldDataOption $option */
+      foreach ($this->getDataOptions() as $option) {
+        $option->setLocale(ConfigService::DEFAULT_LOCALE);
       }
     }
   }
@@ -472,6 +491,8 @@ class ProjectParticipantField implements \ArrayAccess
   {
     $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
 
+    $this->forceTranslationLocale();
+
     return $this;
   }
 
@@ -710,4 +731,13 @@ class ProjectParticipantField implements \ArrayAccess
     $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
     $this->preUpdatePosted = false;
   }
+
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad(Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->forceTranslationLocale();
+  }
+
 }

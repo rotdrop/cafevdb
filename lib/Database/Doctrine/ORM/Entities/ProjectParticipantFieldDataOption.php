@@ -27,8 +27,10 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
@@ -62,6 +64,8 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
 
   /**
+   * @var ProjectParticipantField
+   *
    * Link back to ProjectParticipantField
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions")
@@ -144,7 +148,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
 
   public function __construct()
   {
-    $this->arrayCTOR();
+    $this->__wakeup();
     $this->fieldData = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->key = null;
@@ -161,6 +165,23 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $this->key = $oldKey == Uuid::nil()
                ? $oldKey
                : Uuid::create();
+  }
+
+  public function __wakeup()
+  {
+    $this->arrayCTOR();
+    $this->forceTranslationLocale();
+  }
+
+  protected function forceTranslationLocale()
+  {
+    $field = $this->field;
+    if ($field instanceof ProjectParticipantField) {
+      if ($field->getDataType() == Types\EnumParticipantFieldDataType::CLOUD_FILE
+          || $field->getDataType() == Types\EnumParticipantFieldDataType::CLOUD_FOLDER) {
+        $this->setLocale(ConfigService::DEFAULT_LOCALE);
+      }
+    }
   }
 
   /**
@@ -459,7 +480,16 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
+    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantFieldOption($this));
     $this->preUpdatePosted = false;
+  }
+
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad(Event\LifecycleEventArgs $eventArgs)
+  {
+    \OCP\Util::writeLog('cafevdb', __METHOD__, \OCP\Util::INFO);
+    $this->forceTranslationLocale();
   }
 }
