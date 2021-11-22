@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 /** Participant-fields. */
 trait ParticipantFieldsTrait
 {
-  /** @var UsreStorage */
+  /** @var UserStorage */
   protected $userStorage = null;
 
   /**
@@ -346,7 +346,7 @@ trait ParticipantFieldsTrait
               if (!empty($value)) {
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $filePath = $participantFolder.UserStorage::PATH_SEP.$value;
+                $filePath = $participantFolder . UserStorage::PATH_SEP . $value;
                 $fileBase = $field->getUntranslatedName();
                 try {
                   $downloadLink = $this->userStorage->getDownloadLink($filePath);
@@ -520,7 +520,7 @@ trait ParticipantFieldsTrait
   <table class="file-upload">';
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
-                $fileBase = $option->getLabel();
+                $fileBase = $option->getUntranslatedLabel();
                 $policy = $option->getData()?:'rename';
                 $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
               }
@@ -577,7 +577,6 @@ trait ParticipantFieldsTrait
                 $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
                 $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
                 $values = array_combine($optionKeys, $optionValues);
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 if (!empty($values)) {
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                   $fileBase = $field->getName();
@@ -1273,28 +1272,31 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     } else {
       $subDirPrefix = '';
     }
+    if (!empty($fileBase)) {
+      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+      if (!empty($value)) {
+        $fileName .= '.' . pathinfo($value, PATHINFO_EXTENSION);
+      }
+      $placeHolder = $this->l->t('Load %s', $fileName);
+    } else {
+      $fileName = $value;
+      $placeHolder = $this->l->t('Drop files here or click to upload fileds.');
+    }
     if (!empty($value)) {
-      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $value;
+      $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
         $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
         $filesAppLink = '#';
-        $value = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $value) . '</span>';
+        $value = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
     } else {
       $downloadLink = '';
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix);
+      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
     }
     $filesAppTarget = md5($filesAppLink);
-    if (!empty($fileBase)) {
-      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-      $placeHolder = $this->l->t('Load %s', $fileName);
-    } else {
-      $fileName = $value;
-      $placeHolder = $this->l->t('Drop files here or click to upload fileds.');
-    }
     $emptyDisabled = empty($value) ? ' disabled' : '';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
@@ -1311,16 +1313,16 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
       <input type="button" title="'.$policyTooltip.'" class="operation upload-replace"/>
-      <a href="'.$filesAppLink.'" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
+      <a href="' . $filesAppLink . '" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
     </td>
     <td class="cloud-file">
-      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$value.'</a>
+      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileName . '</a>
       <input class="upload-placeholder"
              title="'.$this->toolTipsService['participant-attachment-upload'].'"
              placeholder="'.$placeHolder.'"
              type="text"
              name="'.$optionValueName.'"
-             value="'.htmlspecialchars($value).'"
+             value="'.htmlspecialchars(empty($value) ? '' : $fileName).'"
       />
     </td>
   </tr>';
