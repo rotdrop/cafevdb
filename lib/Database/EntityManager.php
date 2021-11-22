@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
@@ -150,10 +151,16 @@ class EntityManager extends EntityManagerDecorator
   private $transformerPool;
 
   /** @var UndoableRunQueue */
+  protected $preFlushActions;
+
+  /** @var UndoableRunQueue */
   protected $preCommitActions;
 
   /** @var IEventDispatcher */
   protected $eventDispatcher;
+
+  /** @var array */
+  protected $lifeCycleEvents;
 
   // initial setup.
   public function __construct(
@@ -171,6 +178,7 @@ class EntityManager extends EntityManagerDecorator
     $this->logger = $logger;
     $this->l = $l10n;
 
+    $this->preFlushActions = new UndoableRunQueue($this->logger, $this->l);
     $this->preCommitActions = new UndoableRunQueue($this->logger, $this->l);
 
     $this->bind();
@@ -266,6 +274,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function reopen()
   {
+    $this->preFlushActions->clearActionQueue();
     $this->preCommitActions->clearActionQueue();
     $this->bind();
   }
@@ -392,7 +401,13 @@ class EntityManager extends EntityManagerDecorator
     // mysql set names UTF-8 if required
     $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
-    $eventManager->addEventListener([ \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema ], $this);
+    $eventManager->addEventListener([
+      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
+      ORM\Events::loadClassMetadata,
+      ORM\Events::preUpdate,
+      ORM\Events::postUpdate,
+    ], $this);
+
 
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
@@ -437,6 +452,25 @@ class EntityManager extends EntityManagerDecorator
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
+    $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
+
+      private $appContainer;
+
+      public function __construct(IAppContainer $appContainer)
+      {
+        $this->appContainer = $appContainer;
+      }
+
+      public function resolve($className)
+      {
+        try {
+          return parent::resolve($className);
+        } catch (\Throwable $t) {
+          $this->register($object = $this->appContainer->get($className));
+          return $object;
+        }
+      }
+    });
     return [ $config, new \OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager(), ];
   }
 
@@ -563,6 +597,61 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($foreignKeyListener);
 
     return [ $config, $evm, $annotationReader ];
+  }
+
+  /**
+   * Manipulate class-metadata
+   */
+  public function loadClassMetadata(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
+  {
+    $metaData = $args->getClassMetadata();
+    $className = $metaData->getName();
+    $callbacks = [];
+    foreach ($metaData->lifecycleCallbacks as $event => $eventHandlers) {
+      switch ($event) {
+      case ORM\Events::preUpdate:
+      case ORM\Events::postUpdate:
+        $this->lifeCycleEvents[$event][$className] = $eventHandlers;
+        break;
+      default:
+        $callbacks[$event] = $eventHandlers;
+      }
+    }
+    $metaData->setLifecycleCallbacks($callbacks);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function preUpdate(ORM\Event\PreUpdateEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getEntity();
+    $eventArgs = new ORM\Event\PreUpdateEventArgs($entity, $this, $eventArgs->getEntityChangeSet());
+    foreach ($this->lifeCycleEvents[ORM\Events::preUpdate] as $className => $eventHandlers) {
+      if ($entity instanceof $className) {
+        foreach ($eventHandlers as $handler) {
+          call_user_func([ $entity, $handler ], $eventArgs);
+        }
+      }
+    }
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getEntity();
+    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
+    foreach ($this->lifeCycleEvents[ORM\Events::postUpdate] as $className => $eventHandlers) {
+      if ($entity instanceof $className) {
+        foreach ($eventHandlers as $handler) {
+          call_user_func([ $entity, $handler ], $eventArgs);
+        }
+      }
+    }
   }
 
   /**
@@ -749,6 +838,44 @@ class EntityManager extends EntityManagerDecorator
     $this->preCommitActions->executeUndo();
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+    // undo does not throw, it just logs exceptions
+    $this->preFlushActions->executeUndo();
+  }
+
+  /**
+   * @see registerPreCommitAction
+   *
+   * The difference is that these function are executed when flush()
+   * is called. The undo-queue is executed after the data-base rollback in case of an error.
+   */
+  public function registerPreFlushAction($action, ?Callable $undo = null):UndoableRunQueue
+  {
+    if (is_callable($action)) {
+      $this->preFlushActions->register(new GenericUndoable($action, $undo));
+    } else if ($action instanceof IUndoable) {
+      $this->preFlushActions->register($action);
+    } else  {
+      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
+    return $this->preFlushActions;
+  }
+
+  /**
+   * Explicitly execute the registered actions in case that the order
+   * of execution matters.
+   */
+  public function executePreFlushActions()
+  {
+    $this->preFlushActions->executeActions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function flush($entity = null)
+  {
+    $this->executePreFlushActions();
+    parent::flush($entity);
   }
 
   /**
