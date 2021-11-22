@@ -42,6 +42,7 @@ use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
+use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Events;
 
@@ -630,9 +631,13 @@ class ProjectService
    * e.g. passport-clausjustusheine.pdf
    * e.g. passport-claus-justus-heine.pdf
    */
-  public function participantFilename(string $base, $project, $musician)
+  public function participantFilename(string $base, $project, $musicianOrSlug)
   {
-    $userIdSlug = $this->musicianService->ensureUserIdSlug($musician);
+    if ($musicianOrSlug instanceof Entities\Musician) {
+      $userIdSlug = $this->musicianService->ensureUserIdSlug($musicianOrSlug);
+    } else {
+      $userIdSlug = $musicianOrSlug;
+    }
     return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
   }
 
@@ -647,22 +652,82 @@ class ProjectService
    *
    * @param string $newUserIdSlug
    *
+   * @todo This alone does not suffice. Wie also have to rename a bunch of
+   * per-project files.
+   *
    */
   public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug)
   {
+    $softDeleteableState = $this->disableFilter('soft-deleteable');
+
     /** @var Entities\ProjectParticipant $projectParticipant */
     foreach ($musician->getProjectParticipation() as $projectParticipant) {
       $project = $projectParticipant->getProject();
 
-      $participantsFolder = $this>getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+      $participantsFolder = $this->getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
 
-      $oldName = $oldUserIdSlug ? $participantsFolder . UserStorage::PATH_SEP . $oldUserIdSlug : null;
-      $newName = $participantsFolder . UserStorage::PATH_SEP . $newUserIdSlug;
+      $newFolderPath = $participantsFolder . UserStorage::PATH_SEP . $newUserIdSlug;
 
-      $this->entityManager->registerPreCommitAction(
-        new UndoableFolderRename($oldName, $newName, true)
+      if (!empty($oldUserIdSlug)) {
+
+        $oldFolderPath = $participantsFolder . UserStorage::PATH_SEP . $oldUserIdSlug;
+
+        // apart from the project folder the user-id-slug is also potentially
+        // part of the file-name of several files.
+
+        /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+        foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
+          /** @var Entities\ProjectParticipantField $field */
+          $field = $fieldDatum->getField();
+          if ($field->getDataType() != FieldDataType::CLOUD_FILE) {
+            continue;
+          }
+
+          $project = $field->getProject();
+          $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
+
+          // @todo: this should be moved to the ProjectParticipantFieldsService
+          if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
+            // name based on field name
+            $nameBase = $field->getUntranslatedName();
+            $subDir = '';
+          } else {
+            // name based on option label
+            $nameBase = $fieldDatum->getDataOption()->getUntranslatedLabel();
+            $subDir = $field->getUntranslatedName() . UserStorage::PATH_SEP;
+          }
+          $oldFilePath =
+            $oldFolderPath . UserStorage::PATH_SEP
+            . $subDir
+            . $this->participantFilename($nameBase, $project, $oldUserIdSlug)
+            . '.' . $extension;
+
+          $newFilePath =
+            $oldFolderPath . UserStorage::PATH_SEP
+            . $subDir
+            . $this->participantFilename($nameBase, $project, $newUserIdSlug)
+            . '.' . $extension;
+
+          $this->logInfo('Try rename files ' . $oldFilePath . ' -> ' . $newFilePath);
+
+          $this->entityManager->registerPreFlushAction(
+            new UndoableFileRename($oldFilePath, $newFilePath, true /* gracefully */)
+          );
+        }
+
+      } else {
+        $oldFolderPath = null;
+      }
+
+      $this->logInfo('Try rename folders ' . $oldFolderPath . ' -> ' . $newFolderPath);
+
+      // rename the project folder, this is the "easy" part
+      $this->entityManager->registerPreFlushAction(
+        new UndoableFolderRename($oldFolderPath, $newFolderPath, true /* gracefully */)
       );
     }
+
+    $softDeleteableState && $this->enableFilter('soft-deleteable');
   }
 
   public function projectWikiLink($pageName)
