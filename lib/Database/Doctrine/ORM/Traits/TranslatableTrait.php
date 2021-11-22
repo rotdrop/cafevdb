@@ -33,4 +33,21 @@ trait TranslatableTrait
    * this is not a mapped field of entity metadata, just a simple property
    */
   private $locale;
+
+  /**
+   * Set the "local" per-entity override locale for table field translations.
+   */
+  public function setLocale(?string $locale):self
+  {
+    $this->locale = $locale;
+    return $this;
+  }
+
+  /**
+   * Get the "locate" per-entity override locate for table field translations.
+   */
+  public function getLocale():?string
+  {
+    return $this->locate;
+  }
 }
