@@ -245,7 +245,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function setLabel(?string $label):ProjectParticipantFieldDataOption
   {
     $this->label = $label;
-
+    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
+      $this->untranslatedLabel = $this->label;
+    }
     return $this;
   }
 

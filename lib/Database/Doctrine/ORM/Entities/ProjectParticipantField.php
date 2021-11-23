@@ -419,7 +419,9 @@ class ProjectParticipantField implements \ArrayAccess
   public function setName($name):ProjectParticipantField
   {
     $this->name = $name;
-
+    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
+      $this->untranslatedName = $this->name;
+    }
     return $this;
   }
 
