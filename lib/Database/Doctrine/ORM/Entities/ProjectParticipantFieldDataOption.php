@@ -489,7 +489,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   public function postLoad(Event\LifecycleEventArgs $eventArgs)
   {
-    \OCP\Util::writeLog('cafevdb', __METHOD__, \OCP\Util::INFO);
     $this->forceTranslationLocale();
   }
 }
