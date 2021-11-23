@@ -305,6 +305,8 @@ class ProjectParticipantFields extends PMETableViewBase
       $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
     );
 
+    $opts['fdd']['name']['sql'] = self::ifDefaultLocale('$main_table.$field_name', $opts['fdd']['name']['sql']);
+
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => [ 'advanced' ] ],
       'name' => $this->l->t('#Usage'),
@@ -415,13 +417,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
   JSON_OBJECT(
     "key", BIN2UUID($join_table.key)
-    , "label", $join_table.l10n_label
+    , "label", ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . '
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
-) ORDER BY $join_table.l10n_label ASC, $join_table.data ASC),"]")',
+) ORDER BY ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
       'values' => [
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
@@ -1798,4 +1800,10 @@ __EOT__;
       .'</span>';
   }
 
+  static private function ifDefaultLocale($ifTrue, $ifFalse)
+  {
+    return 'IF($main_table.data_type IN ("'
+      . DataType::CLOUD_FILE . '", "'
+      . DataType::CLOUD_FOLDER . '"), ' . $ifTrue . ', ' . $ifFalse . ')';
+  }
 }
