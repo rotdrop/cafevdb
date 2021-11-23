@@ -43,7 +43,7 @@ const participantOptionHandlers = function(container, musicianId) {
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      fileDownload($this.attr('href'), $this.data());
+      fileDownload($this.attr('href'));
       return false;
     });
 
