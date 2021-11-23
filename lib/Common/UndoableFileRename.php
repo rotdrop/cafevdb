@@ -39,10 +39,13 @@ class UndoableFileRename implements IUndoable
   protected $userStorage;
 
   /** @var string */
-  protected $oldName;
+  protected $oldName = null;
 
   /** @var string */
-  protected $newName;
+  protected $newName = null;
+
+  /** @var Callable */
+  protected $generator;
 
   protected const GRACELESS = 0;
   protected const GRACEFULLY_REQUESTED = 1;
@@ -55,17 +58,29 @@ class UndoableFileRename implements IUndoable
    * Undoable file rename, optionally ignoring non-existing source file. The
    * rename will greedily generate any missing destination directories.
    *
-   * @param string $oldName Full path of the old file.
+   * @param null|string $oldName Full path of the old file.
    *
-   * @param string $newName Full path to the new location.
+   * @param null|string $newName Full path to the new location.
    *
    * @param bool $gracefully Do not throw if the source-file given as $oldName
    * does not exist.
+   *
+   * @param null|Callable $generator A callable returning an array
+   * [NEW,OLD]. The generator will be called by the invocation of the
+   * do() function.
    */
-  public function __construct(string $oldName, string $newName, bool $gracefully = false)
+  public function __construct(?string $oldName = null, ?string $newName = null, bool $gracefully = false, ?Callable $generator = null)
   {
-    $this->oldName = self::normalizePath($oldName);
-    $this->newName = self::normalizePath($newName);
+    if ((empty($oldName) || empty($newName)) && empty($generator)) {
+      throw new \InvalidArgumentException('Paramteter $oldName and $newName must be non-null when the file-name generator is null.');
+    }
+    if (empty($generator)) {
+      $this->generator = function() use ($oldName, $newName) {
+        return [ $oldName, $newName ];
+      };
+    } else {
+      $this->generator = $generator;
+    }
     $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
     $this->userStorage = \OC::$server->get(UserStorage::class);
   }
@@ -117,6 +132,11 @@ class UndoableFileRename implements IUndoable
 
   /** {@inheritdoc} */
   public function do() {
+    list($this->oldName, $this->newName) = call_user_func($this->generator);
+
+    $this->oldName = self::normalizePath($this->oldName);
+    $this->newName = self::normalizePath($this->newName);
+
     try {
       $this->rename($this->oldName, $this->newName);
     } catch (\OCP\Files\NotFoundException $e) {
@@ -130,6 +150,7 @@ class UndoableFileRename implements IUndoable
 
   /** {@inheritdoc} */
   public function undo() {
+    // use the path-names previously generated in self::do()
     if ($this->gracefully !== self::GRACEFULLY_PERFORMED) {
       $this->rename($this->newName, $this->oldName);
     }
@@ -138,6 +159,8 @@ class UndoableFileRename implements IUndoable
   /** {@inheritdoc} */
   public function reset() {
     $this->gracefully = $this->gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
+    $this->oldName = null;
+    $this->newName = null;
   }
 
 }
