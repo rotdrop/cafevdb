@@ -836,10 +836,10 @@ class EntityManager extends EntityManagerDecorator
 
   public function rollback()
   {
-    // undo does not throw, it just logs exceptions
-    $this->preCommitActions->executeUndo();
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+    // undo does not throw, it just logs exceptions
+    $this->preCommitActions->executeUndo();
     // undo does not throw, it just logs exceptions
     $this->preFlushActions->executeUndo();
   }
