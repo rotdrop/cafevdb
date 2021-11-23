@@ -828,6 +828,8 @@ class EntityManager extends EntityManagerDecorator
 
   public function commit()
   {
+    // execute all remaining pre-flush action
+    $this->executePreFlushActions();
     $this->executePreCommitActions();
     parent::commit();
   }

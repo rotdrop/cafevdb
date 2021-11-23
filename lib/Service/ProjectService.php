@@ -1632,7 +1632,7 @@ Whatever.',
     $softDelete  = count($project['payments']??[]) > 0;
 
     $this->entityManager
-      ->registerPreCommitAction(new GenericUndoable(
+      ->registerPreFlushAction(new GenericUndoable(
         function() use ($project) {
           $startTime = $this->getTimeStamp();
           $this->removeProjectFolders($project);
@@ -1683,7 +1683,7 @@ Whatever.',
       $this->eventDispatcher->dispatchTyped(
         new Events\BeforeProjectDeletedEvent($project->getId(), $softDelete));
 
-      $this->entityManager->executePreCommitActions();
+      $this->entityManager->executePreFlushActions();
 
       if ($softDelete) {
         if (!$project->isDeleted()) {
@@ -1860,7 +1860,7 @@ Whatever.',
     $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
     $this->entityManager
-      ->registerPreCommitAction(new GenericUndoable(
+      ->registerPreFlushAction(new GenericUndoable(
         function() use ($oldProject, $newProject) {
           $this->logInfo('OLD ' . print_r($oldProject, true) . ' NEW ' . print_r($newProject, true));
           $this->renameProjectFolder($newProject, $oldProject);
@@ -1901,7 +1901,7 @@ Whatever.',
     $this->entityManager->beginTransaction();
     try {
 
-      $this->entityManager->executePreCommitActions();
+      $this->entityManager->executePreFlushActions();
 
       $project->setName($newName);
       $project->setYear($newYear);

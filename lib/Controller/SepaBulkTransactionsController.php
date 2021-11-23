@@ -473,7 +473,7 @@ class SepaBulkTransactionsController extends Controller {
     foreach ([ 'debitNotes' => $debitNote, 'bankTransfers' => $bankTransfer] as $bulkTag => $bulkTransaction) {
       if (!empty($bulkTransaction)) {
         $this->entityManager
-          ->registerPreCommitAction(new GenericUndoable(
+          ->registerPreFlushAction(new GenericUndoable(
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
               list($eventUri, $eventUid) = $this->financeService->financeEvent(
                 $bulkSubmissionNames[$bulkTag]['submission'],
@@ -528,7 +528,7 @@ class SepaBulkTransactionsController extends Controller {
     // add also the notification deadline
     if (!empty($debitNote)) {
       $this->entityManager
-        ->registerPreCommitAction(new GenericUndoable(
+        ->registerPreFlushAction(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
             $calendarUri = $this->financeService->financeEvent(
               $bulkSubmissionNames['debitNotes']['notification'],
@@ -570,7 +570,7 @@ class SepaBulkTransactionsController extends Controller {
     try {
 
       // action must come before persist
-      $this->entityManager->executePreCommitActions();
+      $this->entityManager->executePreFlushActions();
 
       if (!empty($debitMandate)) {
         $this->persist($debitNote);

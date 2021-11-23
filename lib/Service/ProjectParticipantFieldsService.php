@@ -843,7 +843,7 @@ class ProjectParticipantFieldsService
       if ($type == 'folder') {
         $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
         $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
-        $this->entityManager->registerPreCommitAction(
+        $this->entityManager->registerPreFlushAction(
           new UndoableFolderRename($oldPath, $newPath, true /* gracefully */)
         );
       } else { // 'file'
@@ -857,7 +857,7 @@ class ProjectParticipantFieldsService
             $newBaseName = $projectService->participantFilename($newName, $project, $musician) . '.' . $extension;
             $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
             $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-            $this->entityManager->registerPreCommitAction(
+            $this->entityManager->registerPreFlushAction(
               new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
             );
           }
@@ -888,12 +888,12 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($option->getFieldData() as $fieldDatum) {
       $musician = $fieldDatum->getMusician();
-      $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
+      $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
       $oldBaseName = $projectService->participantFilename($oldLabel, $project, $musician) . '.' . $extension;
       $newBaseName = $projectService->participantFilename($newLabel, $project, $musician) . '.' . $extension;
       $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
       $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-      $this->entityManager->registerPreCommitAction(
+      $this->entityManager->registerPreFlushAction(
         new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
       );
     }
