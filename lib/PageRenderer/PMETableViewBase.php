@@ -410,39 +410,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeBare = !$enable;
   }
 
-  /**
-   * Register a pre-commit action and optionally an associated
-   * undo-action. The actions are run after all data-base operation
-   * have completed just before the final commit step. If the action
-   * succeeds, then its $undoAction will be registered for the case
-   * that the final commit throws an exception. In this case all
-   * undo-actions will be executed in reverse order.
-   *
-   * In case of an error $action must throw an \Exception, its return
-   * value is ignored.
-   *
-   * The callables need to run "stand-alone" without parameters.
-   *
-   * @param mixed $action
-   *
-   * @param Callable $undo The associated undo-action.
-   */
-  public function registerPreCommitAction($action, ?Callable $undo = null)
-  {
-    return $this->entityManager->registerPreCommitAction($action, $undo);
-  }
-
-  /**
-   * Common case of pre-commit action: rename a folder or file to
-   * reflect changes in the data-base.
-   *
-   * @see UndoableFolderRename
-   */
-  public function registerPreCommitRename(string $oldNode, string $newNode, bool $gracefully = false)
-  {
-    $this->registerPreCommitAction(new UndoableFolderRename($oldNode, $newNode, $gracefully));
-  }
-
   /** Run underlying table-manager (phpMyEdit for now). */
   public function execute($opts = [])
   {
