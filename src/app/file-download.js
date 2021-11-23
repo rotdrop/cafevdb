@@ -64,9 +64,9 @@ const download = function(url, post, options) {
     fail(data);
   };
 
-  if (post === undefined) {
-    post = [];
-  } else if (!Array.isArray(post) && typeof post === 'object') {
+  const method = post ? 'POST' : 'GET';
+  post = post || [];
+  if (!Array.isArray(post) && typeof post === 'object') {
     const newPost = [];
     for (const [name, value] of Object.entries(post)) {
       newPost.push({ name, value });
@@ -74,11 +74,13 @@ const download = function(url, post, options) {
     post = newPost;
   }
 
-  const baseUrl = ncRouter.generateUrl('');
-  const downloadUrl = url.startsWith(baseUrl) ? url : generateUrl(url);
+  const downloadUrl = (url.startsWith(ncRouter.generateUrl(''))
+                       || url.startsWith(ncRouter.generateRemoteUrl('')))
+    ? url
+    : generateUrl(url);
   $.ajax({
     url: downloadUrl,
-    method: 'POST',
+    method,
     cache: false,
     data: post,
     dataType: 'binary', // vital, otherwise jQuery annoyingly tries to parse the response
