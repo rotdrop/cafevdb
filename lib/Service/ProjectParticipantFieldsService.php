@@ -843,7 +843,7 @@ class ProjectParticipantFieldsService
       if ($type == 'folder') {
         $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
         $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
-        $this->entityManager->registerPreFlushAction(
+        $this->entityManager->registerPreCommitAction(
           new UndoableFolderRename($oldPath, $newPath, true /* gracefully */)
         );
       } else { // 'file'
@@ -857,8 +857,8 @@ class ProjectParticipantFieldsService
             $newBaseName = $projectService->participantFilename($newName, $project, $musician) . '.' . $extension;
             $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
             $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-            $this->entityManager->registerPreFlushAction(
-              new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
+            $this->entityManager->registerPreCommitAction(
+              new UndoableFileRename($oldPath, $newPath, gracefully: true)
             );
           }
         }
@@ -888,14 +888,28 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($option->getFieldData() as $fieldDatum) {
       $musician = $fieldDatum->getMusician();
+      $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
       $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
       $oldBaseName = $projectService->participantFilename($oldLabel, $project, $musician) . '.' . $extension;
       $newBaseName = $projectService->participantFilename($newLabel, $project, $musician) . '.' . $extension;
-      $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
-      $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-      $this->entityManager->registerPreFlushAction(
-        new UndoableFileRename($oldPath, $newPath, true /* gracefully */)
+      $oldPath = $participantsFolder . UserStorage::PATH_SEP
+        . '%s' . UserStorage::PATH_SEP
+        . $oldBaseName;
+      $newPath = $participantsFolder . UserStorage::PATH_SEP
+        . '%s' . UserStorage::PATH_SEP
+        . $newBaseName;
+
+      $this->entityManager->registerPreCommitAction(
+        new UndoableFileRename(
+          generator: function() use ($oldPath, $newPath, $field) {
+            return [
+              sprintf($oldPath, $field->getUntranslatedName()),
+              sprintf($newPath, $field->getUntranslatedName()),
+            ];
+          },
+          gracefully: true)
       );
+
     }
 
     $softDeleteableState && $this->enableFilter('soft-deleteable');
