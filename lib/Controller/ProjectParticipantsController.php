@@ -514,6 +514,7 @@ class ProjectParticipantsController extends Controller {
 
         $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
         if ($file['error'] != UPLOAD_ERR_OK) {
+          $this->logInfo('Upload error ' . print_r($file, true));
           continue;
         }
 
