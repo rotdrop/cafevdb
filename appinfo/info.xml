@@ -6,7 +6,7 @@
   <name>CAFeV DB</name>
   <description>Orchestra Management Application.</description>
   <codename>Excessive Endurance</codename>
-  <version>7.0.0 RC4</version>
+  <version>7.0.0 RC5</version>
   <licence>AGPL</licence>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
@@ -44,13 +44,14 @@
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
   </commands>
-  <!--
-      This cannot work as some stuff needs authenticated users.
-      <background-jobs>
-      <job>OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding</job>
-      <job>OCA\CAFEVDB\BackgroundJob\BulkUpdateGeoCoding</job>
-      </background-jobs>
-  -->
+  <background-jobs>
+    <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
+    <!--
+        This cannot work as some stuff needs authenticated users.
+        <job>OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding</job>
+        <job>OCA\CAFEVDB\BackgroundJob\BulkUpdateGeoCoding</job>
+    -->
+  </background-jobs>
   <credits>
     <item>
       <title>The PHP Project</title>
