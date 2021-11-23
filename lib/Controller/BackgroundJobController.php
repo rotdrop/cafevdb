@@ -63,9 +63,15 @@ class BackgroundJobController extends Controller
   {
     try {
       $now = time();
-      $lastRun = $this->getConfigValue(self::BACKGROUND_JOB_LAST_RUN, 0);
+      $lastRun = (int)$this->getConfigValue(self::BACKGROUND_JOB_LAST_RUN, 0);
       if ($now - $lastRun < self::INTERVAL_SECONDS) {
-        return;
+        return self::dataResponse([
+          'message' => 'Too early (' . ($now - $lastRun) . ' seconds)',
+          'now' => $now,
+          'lastRun' => $lastRun,
+          'delta' => $now - $lastRun,
+          'interval' => self::INTERVAL_SECONDS,
+        ], Http::STATUS_TOO_MANY_REQUESTS);
       }
       if (!$this->inGroup()) {
         return self::grumble(
