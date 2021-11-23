@@ -48,6 +48,6 @@ trait TranslatableTrait
    */
   public function getLocale():?string
   {
-    return $this->locate;
+    return $this->locale;
   }
 }
