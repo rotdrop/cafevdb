@@ -171,12 +171,12 @@ function init(options) {
         percentage: ((data.loaded / data.total) * 100).toFixed(1),
         loaded: data.loaded,
         total: data.total,
-        rate: data.bitrate,
+        rate: data.bitrate.toFixed(4),
       });
       uploadProgressWrapper.cafevDialog('option', 'title', title);
     },
     progressall(e, data) {
-      const progress = (data.loaded / data.total) * 100;
+      const progress = ((data.loaded / data.total) * 100).toFixed(1);
       progressBar.progressbar('value', progress);
     },
     /**
