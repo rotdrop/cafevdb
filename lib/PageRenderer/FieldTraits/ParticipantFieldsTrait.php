@@ -346,8 +346,10 @@ trait ParticipantFieldsTrait
               if (!empty($value)) {
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $filePath = $participantFolder . UserStorage::PATH_SEP . $value;
                 $fileBase = $field->getUntranslatedName();
+                $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+                $fileName .= '.' . pathinfo($value, PATHINFO_EXTENSION);
+                $filePath = $participantFolder . UserStorage::PATH_SEP . $fileName;
                 try {
                   $downloadLink = $this->userStorage->getDownloadLink($filePath);
                   return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileBase.'</a>';
