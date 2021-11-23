@@ -496,6 +496,8 @@ class ProjectParticipantsController extends Controller {
       $uploads = [];
       foreach ($files as $index => $file) {
 
+        $messages = []; // messages for non-fatal errors
+
         $totalSize += $file['size'];
 
         if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
@@ -574,7 +576,12 @@ class ProjectParticipantsController extends Controller {
                   $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
                 }
                 $oldPath .= $oldName;
-                $userStorage->copy($oldPath, $backupPath);
+                try {
+                  $userStorage->copy($oldPath, $backupPath);
+                } catch (\Throwable $t) {
+                  $messages[] = $this->l->t('Unable to create a backup-copy of "%1$s" to "%2$s: %3$s".', [ $oldPath, $backupPath, $t->getMessage() ]);
+                  $this->logException($t);
+                }
                 $conflict = 'renamed';
                 break;
               }
@@ -636,7 +643,12 @@ class ProjectParticipantsController extends Controller {
             if ($oldPath && $oldPath != $filePath) {
               // try to rename first (extension can be different) in order to
               // have a file history inside the cloud.
-              $userStorage->rename($oldPath, $filePath);
+              try {
+                $userStorage->rename($oldPath, $filePath);
+              } catch (\Throwable $t) {
+                $messages[] = $this->l->t('Unable to rename the old file "%1$s" to the new name "%2$s".
+ There will be no undo-history in the cloud file-space for this file.', [ $oldPath, $filePath ]);
+              }
             }
             $userStorage->putContent($filePath, $fileData);
             $downloadLink = $userStorage->getDownloadLink($filePath);
@@ -691,6 +703,7 @@ class ProjectParticipantsController extends Controller {
             'fileName' => $pathInfo['filename'],
             'download' => $downloadLink,
             'conflict' => $conflict,
+            'messages' => $messages,
           ];
 
           $this->flush();

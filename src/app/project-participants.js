@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $ } from './globals.js';
+import { $, appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
@@ -803,6 +803,13 @@ const myReady = function(selector, resizeCB) {
     FileUpload.init({
       url: generateUrl('projects/participants/files/upload'),
       doneCallback(file, index, container) {
+
+        if (!file.meta) {
+          Notification.show(t(appName, 'File-upload feedback does not contain the required meta-information, the upload has probably failed.'));
+          return;
+        }
+
+        Notification.messages(file.meta.messages);
 
         if (isCloudFolder) {
           if (!file.meta.conflict) {
