@@ -1376,8 +1376,16 @@ Störung.';
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)
-        || count($this->personalAttachments()) > 0) {
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalAttachments = count($this->personalAttachments()) > 0;
+
+    if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
+
+      $this->logInfo(
+        'Sending separately because of personal substitutions / attachments '
+        . (int)$hasPersonalSubstitutions
+        . ' / '
+        . (int)$hasPersonalAttachments);
 
       $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
@@ -2513,8 +2521,16 @@ Störung.';
     }, self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate)
-        || count($this->personalAttachments()) > 0) {
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalAttachments = count($this->personalAttachments()) > 0;
+
+    if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
+
+      $this->logInfo(
+        'Composing separately because of personal substitutions / attachments '
+        . (int)$hasPersonalSubstitutions
+        . ' / '
+        . (int)$hasPersonalAttachments);
 
       $this->diagnostics['TotalPayload'] = count($recipients)+1;
 
