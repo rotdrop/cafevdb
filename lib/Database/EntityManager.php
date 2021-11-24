@@ -627,12 +627,21 @@ class EntityManager extends EntityManagerDecorator
   public function preUpdate(ORM\Event\PreUpdateEventArgs $eventArgs)
   {
     $entity = $eventArgs->getEntity();
-    $eventArgs = new ORM\Event\PreUpdateEventArgs($entity, $this, $eventArgs->getEntityChangeSet());
+    $changeSet = $eventArgs->getEntityChangeSet();
+    $tmpEventArgs = new ORM\Event\PreUpdateEventArgs($entity, $this, $changeSet);
+    $handled = 0;
     foreach ($this->lifeCycleEvents[ORM\Events::preUpdate] as $className => $eventHandlers) {
       if ($entity instanceof $className) {
         foreach ($eventHandlers as $handler) {
-          call_user_func([ $entity, $handler ], $eventArgs);
+          call_user_func([ $entity, $handler ], $tmpEventArgs);
+          ++$handled;
         }
+      }
+    }
+    if ($handled > 0) {
+      $newChangeSet = array_merge($eventArgs->getEntityChangeSet(), $tmpEventArgs->getEntityChangeSet());
+      foreach ($newChangeSet as $field => $value) {
+        $eventArgs->setNewValue($field, $value[1]);
       }
     }
   }
