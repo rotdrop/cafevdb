@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { onRequestTokenUpdate } from '@nextcloud/auth';
 import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix } from './config.js';
 
 function importAll(r) {
@@ -74,7 +75,13 @@ if (window.CAFEFDB === undefined) {
   window.CAFEVDB.nonce = btoa(OC.requestToken);
 }
 const globalState = window.CAFEVDB;
-const nonce = globalState.nonce;
+let nonce = globalState.nonce;
+
+onRequestTokenUpdate(function(token) {
+  globalState.nonce = btoa(token);
+  nonce = globalState.nonce;
+  console.info('NEW REQUEST TOKEN', token);
+});
 
 console.info('INITIAL GLOBAL STATE', globalState, initialState);
 

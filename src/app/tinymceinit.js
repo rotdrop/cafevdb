@@ -170,7 +170,7 @@ const myGetConfig = function(plusConfig) {
     plusConfig = {};
   }
   const nonceConfig = {
-    nonce,
+    nonce: () => globalState.nonce,
   };
   // const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   // if (width <= 768) { // perhaps mobile
@@ -185,7 +185,7 @@ const myInit = function(lang) {
   myConfig.language = lang;
   const allconfig = myGetConfig({
     selector: 'textarea.wysiwyg-editor',
-    nonce,
+    nonce: () => globalState.nonce,
   });
   // console.info('Try init tinymce');
   // console.info('tinymce: ', window.tinymce);
