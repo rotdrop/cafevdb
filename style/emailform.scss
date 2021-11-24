@@ -213,6 +213,10 @@
               display:table-row;
             }
           }
+	  /* give show-selectable priority */
+	  &.hidden.show-selectable {
+            display:table-row;
+          }
           td.content {
             .chosen-container {
               min-width:85%;
