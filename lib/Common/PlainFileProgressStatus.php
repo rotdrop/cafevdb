@@ -135,7 +135,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
         throw (new Exceptions\ProgressStatusNotFoundException(
           $this->l->t('Unable to find progress status for job id "%s"', $id),
           $t->getCode(),
-          $t))->setId($id);
+          $t));
       }
     } else {
       $this->file = $this->storage->newTemporaryFile(self::DATA_DIR);
