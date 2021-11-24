@@ -35,39 +35,35 @@ import { globalState } from './cafevdb.js';
  */
 const addEditor = function(selector, initCallback, initialHeight) {
   console.debug('WysiwygEditor.addEditor');
-  const editorElement = $(selector);
-  if (!editorElement.length) {
-    if (typeof initCallback === 'function') {
-      initCallback();
-    }
+  const $editorElements = $(selector);
+  initCallback = (typeof initCallback === 'function') ? initCallback : () => {};
+  if (!$editorElements.length) {
+    initCallback();
     return;
   }
   switch (globalState.wysiwygEditor) {
   default:
   case 'ckeditor':
-    if (typeof initCallback !== 'function') {
-      initCallback = function() {};
-    }
     console.debug('attach ckeditor');
     import('@ckeditor/ckeditor5-build-classic')
       .then(({ default: ClassicEditor }) => {
-        editorElement.each(function(index) {
-          ClassicEditor
-            .create(this)
-            .then(editor => {
-              console.debug('ckeditor promise');
-              editorElement.data('ckeditor', editor);
-              initCallback();
-            })
-            .catch(error => {
-              console.debug('There was a problem initializing the editor.', error);
-              initCallback();
-            });
-        });
-      })
-      .catch(error => {
-        console.error('There was a problem initializing the editor.', error);
-        initCallback();
+        // this is a Gurkerei becauser jQuery is missing allSettled
+        $.when
+          .apply(
+            $,
+            $editorElements.map(function(index, editorElement) {
+              return ClassicEditor
+                .create(editorElement)
+                .catch(error => {
+                  console.error('There was a problem initializing the editor.', error);
+                  return $.Deferred().resolveWith(this, arguments);
+                });
+            }).get()
+          )
+          .then(() => {
+            console.debug('ckeditor promise(s) settled.');
+            initCallback();
+          });
       });
     break;
   case 'tinymce': {
@@ -80,45 +76,37 @@ const addEditor = function(selector, initCallback, initialHeight) {
       }
     });
     const plusConfig = {};
-    if (!editorElement.is('textarea')) {
+    if (!$editorElements.is('textarea')) {
       plusConfig.inline = true;
     }
     if (typeof initialHeight !== 'undefined') {
       plusConfig.height = initialHeight;
     }
-    const mceDeferred = $.Deferred();
-    mceDeferred.then(
-      function() {
-        console.info('MCE promise succeeded');
-        if (typeof initCallback === 'function') {
-          initCallback();
-        }
-      },
-      function() {
-        console.error('MCE promise failed');
-        if (typeof initCallback === 'function') {
-          initCallback();
-        }
-        editorElement.css('visibility', '');
-      }
-    );
+    // wait for at most 10 seconds, then cancel
+    const mceDeferredTimeout = 10 * 1000;
     import('./tinymceinit')
       .then((myTinyMCE) => {
         const mceConfig = myTinyMCE.getConfig(plusConfig);
-        editorElement
-          .off('cafevdb:tinymce-done')
-          .on('cafevdb:tinymce-done', function(event) {
-            console.info('tinyMCE init done callback');
-            mceDeferred.resolve();
+        $.when
+          .apply(
+            $,
+            $editorElements.map(function(index, editorElement) {
+              const $editorElement = $(editorElement);
+              const mceDeferred = $.Deferred();
+              $editorElement.data('mceDeferred', mceDeferred);
+              $editorElement.tinymce(mceConfig);
+              setTimeout(function() { mceDeferred.reject(); }, mceDeferredTimeout);
+              return mceDeferred.catch(error => {
+                console.error('There was a problem initializing the editor.', error);
+                return $.Deferred().resolveWith(this, arguments);
+              });
+            }).get()
+          )
+          .then(() => {
+            console.debug('tinyMCE promise(s) settled.');
+            initCallback();
           });
-        console.debug('attach tinymce');
-        editorElement.tinymce(mceConfig);
       });
-    // wait for at most 5 seconds, then cancel
-    const timeout = 10;
-    setTimeout(function() {
-      mceDeferred.reject();
-    }, timeout * 1000);
     break;
   }
   }
@@ -130,17 +118,17 @@ const addEditor = function(selector, initCallback, initialHeight) {
  * @param {String} selector TBD.
  */
 const removeEditor = function(selector) {
-  const editorElement = $(selector);
-  if (!editorElement.length) {
+  const $editorElements = $(selector);
+  if (!$editorElements.length) {
     return;
   }
   try {
-    editorElement.ckeditor().remove();
+    $editorElements.ckeditor().remove();
   } catch (e) {
     // console.info('EXCEPTION', e);
   }
   try {
-    editorElement.tinymce().remove();
+    $editorElements.tinymce().remove();
   } catch (e) {
     // console.info('EXCEPTION', e);
   }
@@ -154,27 +142,27 @@ const removeEditor = function(selector) {
  * @param {String} contents TBD.
  */
 const updateEditor = function(selector, contents) {
-  const editorElement = $(selector);
+  const $editorElements = $(selector);
   let editor;
-  if (!editorElement.length) {
+  if (!$editorElements.length) {
     return;
   }
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
+    if ($editorElements.ckeditor) {
+      editor = $editorElements.ckeditor().ckeditorGet();
       editor.setData(contents);
       // ckeditor snapshots itself on update.
       // editor.undoManager.save(true);
     }
     break;
   case 'tinymce':
-    editorElement.tinymce().setContent(contents);
-    editorElement.tinymce().undoManager.add();
+    $editorElements.tinymce().setContent(contents);
+    $editorElements.tinymce().undoManager.add();
     break;
   default:
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
+    if ($editorElements.ckeditor) {
+      editor = $editorElements.ckeditor().ckeditorGet();
       editor.setData(contents);
       // ckeditor snapshots itself on update.
       // editor.undoManager.save(true);
@@ -190,24 +178,24 @@ const updateEditor = function(selector, contents) {
  * @param {String} selector TBD.
  */
 const snapshotEditor = function(selector) {
-  const editorElement = $(selector);
+  const $editorElements = $(selector);
   let editor;
-  if (!editorElement.length) {
+  if (!$editorElements.length) {
     return;
   }
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
+    if ($editorElements.ckeditor) {
+      editor = $editorElements.ckeditor().ckeditorGet();
       editor.undoManager.save(true);
     }
     break;
   case 'tinymce':
-    editorElement.tinymce().undoManager.add();
+    $editorElements.tinymce().undoManager.add();
     break;
   default:
-    if (editorElement.ckeditor) {
-      editor = editorElement.ckeditor().ckeditorGet();
+    if ($editorElements.ckeditor) {
+      editor = $editorElements.ckeditor().ckeditorGet();
       editor.undoManager.save(true);
     }
     break;

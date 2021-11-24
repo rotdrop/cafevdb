@@ -104,8 +104,8 @@ const myConfig = {
         }
       }
     };
-    console.debug('trigger tinymce-done');
-    $('#' + inst.id).trigger('cafevdb:tinymce-done');
+    console.debug('Resolve mcdDeffered');
+    $('#' + inst.id).data('mceDeferred').resolve();
   },
 
   // spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
