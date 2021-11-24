@@ -210,14 +210,15 @@ trait FindLikeTrait
     $modifiers = [];
     $comparators = [];
     foreach ($criteria as $key => $value) {
-      $modifiers[$key] = [];
       if (!preg_match('/^[!=<>]+/', $key, $matches)) {
+        $modifiers[$key] = [];
         continue;
       }
       $operators = $matches[0];
       unset($criteria[$key]);
       $key = substr($key, strlen($operators));
       $criteria[$key] = $value;
+      $modifiers[$key] = [];
       while (!empty($operators)) {
         foreach (self::$modifiers as $abbr => $modifier) {
           $pos = strpos($operators, $abbr);
