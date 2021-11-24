@@ -1993,7 +1993,7 @@ Störung.';
       $events = $this->eventAttachments();
       if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
-        $calendar = $this->eventsService->exportEvents($events, $this->projectName, 'hideParticipants': true);
+        $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
         $phpMailer->AddStringEmbeddedImage($calendar,
