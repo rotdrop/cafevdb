@@ -350,10 +350,10 @@ const contactValidation = function(container) {
       .fail(function(xhr, status, errorThrown) {
         if (status !== 'cancelled') {
           console.error('Auto-complete update failed', xhr, status, errorThrown);
-          cleanup();
         } else {
           console.error('Auto-complete update cancelled');
         }
+        cleanup();
       })
       .done(function(data) {
         if (!data || !data.cities || !data.countries || !data.postalCodes) {
