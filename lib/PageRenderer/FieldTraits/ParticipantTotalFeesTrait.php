@@ -73,6 +73,7 @@ trait ParticipantTotalFeesTrait
                 $fieldValue = $row[$qf];
               }
             }
+            $fieldValue = null; // break reference to previous field
 
             if (empty($fieldValues['key']) && empty($fieldValues['value'])) {
               continue;
