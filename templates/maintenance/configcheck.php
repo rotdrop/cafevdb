@@ -30,6 +30,12 @@ $css_class = 'config-check';
 //script($appName, 'events-test');
 
 $nav = '';
+$nav .= $pageNavigation->pageControlElement('all');
+$nav .= $pageNavigation->pageControlElement('projects');
+$nav .= $pageNavigation->pageControlElement('instruments');
+$nav .= $pageNavigation->pageControlElement('project-participant-fields');
+$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
+$nav .= $pageNavigation->pageControlElement('blog');
 
 $header = ''
   .'<div class="'.$css_pfx.'-config-check" id="'.$css_pfx.'-config-check-header">
