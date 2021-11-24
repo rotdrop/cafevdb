@@ -601,16 +601,20 @@ class EventsService
    * Export the given events in ICAL format. The events need not
    * belong to the same calendar.
    *
-   * @param $events An array with EVENT_URI => CALENDAR_ID.
+   * @param array $events An array with EVENT_URI => CALENDAR_ID.
    *
-   * @param $projectName Short project tag, will form part of the
+   * @param string $projectName Short project tag, will form part of the
    * name of the calendar.
+   *
+   * @param bool $hideParticipants Switch in order to hide participants. For
+   * example email attachment sendc @all most likely should not contain the
+   * list of attendees.
    *
    * @return A string with the ICAL data.
    *
    * @todo Include local timezone.
    */
-  public function exportEvents($events, $projectName)
+  public function exportEvents(array $events, string $projectName, bool $hideParticipants = false)
   {
     $result = '';
 
@@ -628,6 +632,10 @@ class EventsService
       $vObject = VCalendarService::getVObject($vCalendar);
       if (empty($vObject)) {
         continue;
+      }
+      if ($hideParticipants) {
+        $vObject->remove('ATTENDEE');
+        $vObject->remove('ORGANIZER');
       }
       $result .= $vObject->serialize();
     }
