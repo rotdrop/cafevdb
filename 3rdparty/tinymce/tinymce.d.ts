@@ -1310,7 +1310,7 @@ interface StyleSheetLoaderSettings {
     maxLoadTime?: number;
     contentCssCors?: boolean;
     referrerPolicy?: ReferrerPolicy;
-    nonce?: string;
+    nonce?: () => string;
 }
 interface StyleSheetLoader {
     load: (url: string, success: () => void, failure?: () => void) => void;
@@ -1318,7 +1318,7 @@ interface StyleSheetLoader {
     unload: (url: string) => void;
     unloadAll: (urls: string[]) => void;
     _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
-    _setNonce: (nonce: string) => void;
+    _setNonce: (nonce: () => string) => void;
 }
 declare type Registry = Registry$1;
 interface EditorUiApi {
@@ -1397,6 +1397,7 @@ interface BaseEditorSettings {
     content_css_cors?: boolean;
     content_security_policy?: string;
     content_style?: string;
+    deprecation_warnings?: boolean;
     font_css?: string | string[];
     content_langs?: ContentLanguage[];
     contextmenu?: string | false;
@@ -1475,7 +1476,7 @@ interface BaseEditorSettings {
     min_height?: number;
     min_width?: number;
     no_newline_selector?: string;
-    nonce?: string;
+    nonce?: () => string;
     nowrap?: boolean;
     object_resizing?: boolean | string;
     padd_empty_with_br?: boolean;
@@ -1959,7 +1960,7 @@ interface EditorSelection {
         unbind: () => void;
     };
     getScrollContainer: () => HTMLElement;
-    scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
+    scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
     placeCaretAt: (clientX: number, clientY: number) => void;
     getBoundingClientRect: () => ClientRect | DOMRect;
     destroy: () => void;
@@ -2253,11 +2254,17 @@ interface URIConstructor {
         data: string;
     };
 }
+interface SafeUriOptions {
+    readonly allow_html_data_urls?: boolean;
+    readonly allow_script_urls?: boolean;
+    readonly allow_svg_data_urls?: boolean;
+}
 declare class URI {
     static parseDataUri(uri: string): {
         type: string;
         data: string;
     };
+    static isDomSafe(uri: string, context?: string, options?: SafeUriOptions): boolean;
     static getDocumentBaseUrl(loc: {
         protocol: string;
         host?: string;
@@ -2598,7 +2605,7 @@ interface RangeUtils {
 }
 interface ScriptLoaderSettings {
     referrerPolicy?: ReferrerPolicy;
-    nonce?: string;
+    nonce?: () => string;
 }
 interface ScriptLoaderConstructor {
     readonly prototype: ScriptLoader;
@@ -2615,7 +2622,7 @@ declare class ScriptLoader {
     private loading;
     constructor(settings?: ScriptLoaderSettings);
     _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void;
-    _setNonce(nonce: string): void;
+    _setNonce(nonce?: () => string): void;
     loadScript(url: string, success?: () => void, failure?: () => void): void;
     isDone(url: string): boolean;
     markDone(url: string): void;
@@ -2870,6 +2877,7 @@ interface VK {
     DELETE: number;
     DOWN: number;
     ENTER: number;
+    ESC: number;
     LEFT: number;
     RIGHT: number;
     SPACEBAR: number;
