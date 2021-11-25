@@ -95,11 +95,13 @@ const addEditor = function(selector, initCallback, initialHeight) {
               const mceDeferred = $.Deferred();
               $editorElement.data('mceDeferred', mceDeferred);
               $editorElement.tinymce(mceConfig);
-              setTimeout(function() { mceDeferred.reject(); }, mceDeferredTimeout);
-              return mceDeferred.catch(error => {
-                console.error('There was a problem initializing the editor.', error);
-                return $.Deferred().resolveWith(this, arguments);
-              });
+              setTimeout(function() { console.info('MCE Deferred Timeout'); mceDeferred.reject(); }, mceDeferredTimeout);
+              return mceDeferred.then(
+                id => { console.debug('MCE deferred resolved for id ' + id); },
+                error => {
+                  console.error('There was a problem initializing the editor.', error);
+                  return $.Deferred().resolveWith(this, arguments);
+                });
             }).get()
           )
           .then(() => {
