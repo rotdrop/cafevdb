@@ -20,6 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'pme-table-tabs.scss';
+
 html:not(.ie8) input[type="checkbox"].pme-input + span.pme-label::before {
 	content: "";
 	display: inline-block;
@@ -174,63 +176,8 @@ form.pme-form {
       }
     }
 
-    &.tab-0 {
-      th.tab-0, td.tab-0 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-1 {
-      th.tab-1, td.tab-1 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-2 {
-      th.tab-2, td.tab-2 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-3 {
-      th.tab-3, td.tab-3 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-4 {
-      th.tab-4, td.tab-4 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-5 th.tab-5,
-    &.tab-5 td.tab-5 {
-      display:table-cell;
-    }
-
-    &.tab-6 {
-      th.tab-6, td.tab-6 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-7 {
-      th.tab-7, td.tab-7 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-8 {
-      th.tab-8, td.tab-8 {
-	display:table-cell;
-      }
-    }
-
-    &.tab-9 {
-      th.tab-9, td.tab-9 {
-	display:table-cell;
-      }
+    @for $id from 0 through 15 {
+      @include showTableTab($id);
     }
 
   } /* table.pme-main */
@@ -248,15 +195,19 @@ form.pme-form {
   max-width: 90%; /* !important; */
   overflow: hidden;
   padding: 0;
-}
 
-.ui-dialog.pme-table-dialog .ui-dialog-content {
-  /* height has to be computed in order to attach the vertical
-   * scrollbar to the inner div.
-   */
-  overflow-y: auto;
-  overflow-x: hidden;
-  /*overflow: auto;*/
+  .ui-dialog-content {
+    /* height has to be computed in order to attach the vertical
+     * scrollbar to the inner div.
+     */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /*overflow: auto;*/
+
+    .pme-table-dialog {
+      height:unset;
+    }
+  }
 }
 
 /* Hide the dialog behind the modal layer during loading of slow
@@ -1309,6 +1260,9 @@ form.pme-form {
       &.lock-unlock {
         background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
       }
+    }
+    &:disabled + label.pme-input-lock {
+      display:none;
     }
   }
 

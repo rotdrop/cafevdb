@@ -654,7 +654,7 @@ const tableDialog = function(form, element, containerSel) {
   let dialogCSSId = PHPMyEdit.dialogCSSId;
   containerSel = pmeSelector(containerSel);
   if (containerSel !== pmeDefaultSelector) {
-    if (containerSel.charAt(0) == '#') {
+    if (containerSel.charAt(0) === '#') {
       dialogCSSId = containerSel.substring(1) + '-' + dialogCSSId;
     } else {
       dialogCSSId = containerSel + '.' + dialogCSSId;
@@ -741,7 +741,6 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       if (tableOptions.modalDialog) {
         modalizer(true);
       }
-
       dialogHolder.cafevDialog({
         title: dialogHolder.find(pmeClassSelector('span', 'short-title')).html(),
         position: popupPosition,
@@ -1330,39 +1329,62 @@ const installTabHandler = function(containerSel, changeCallback) {
   }
 
   const tabsSelector = pmeClassSelector('li', 'navigation') + '.table-tabs';
+  const form = container.find(pmeFormSelector());
+  const table = form.find(pmeTableSelector());
+
+  const $tabAnchor = form.find('li.table-tabs.selected a');
+  const tabClasses = ['tab-' + $tabAnchor.data('tabIndex'), 'tab-' + $tabAnchor.data('tabId')];
+
+  const updateTabReadOnlyFields = function(tabClasses) {
+    const readWriteClasses = tabClasses.map(tabClass => tabClass + '-readwrite');
+    console.info('READ WRITE CLASSES', readWriteClasses);
+    form
+      .find('td.' + pmeToken('value') + '.default-readonly').each(function() {
+        const $td = $(this);
+        const readWrite = readWriteClasses.some((cssClass) => $td.hasClass(cssClass));
+        console.info('RW', $td, readWrite);
+        $td.find('label, input').prop('readonly', !readWrite);
+        $td.find('input[type="checkbox"]').prop('disabled', !readWrite);
+      });
+  };
+
+  updateTabReadOnlyFields(tabClasses);
 
   container
     .off('click', tabsSelector)
     .on('click', tabsSelector, function(event) {
-
-      const form = container.find(pmeFormSelector());
-      const table = form.find(pmeTableSelector());
+      const $this = $(this);
 
       // console.info('FORM', form.scrollLeft());
       form.scrollLeft(0);
 
-      const oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
-      const tabClass = $(this).find('a').attr('href').substring(1);
+      const $oldTabAnchor = form.find('li.table-tabs.selected a');
+      const oldTabClasses = ['tab-' + $oldTabAnchor.data('tabIndex'), 'tab-' + $oldTabAnchor.data('tabId')];
+      const $tabAnchor = $this.find('a');
+      const tabClasses = ['tab-' + $tabAnchor.data('tabIndex'), 'tab-' + $tabAnchor.data('tabId')];
 
       // Inject the display triggers ...
-      table.removeClass(oldTabClass).addClass(tabClass);
+      table.removeClass(oldTabClasses).addClass(tabClasses);
 
       // Record the tab in the form data
-      form.find('input[name="' + pmeSys('cur_tab') + '"]').val(tabClass.substring(4));
+      form.find('input[name="' + pmeSys('cur_tab') + '"]').val($tabAnchor.data('tabIndex'));
 
       // for styling and logic ...
       form.find(tabsSelector).removeClass('selected');
-      $(this).addClass('selected');
+      $this.addClass('selected');
+
+      updateTabReadOnlyFields(tabClasses);
 
       // account for unstyled chosen selected
       let reattachChosen = false;
-      const pfx = (tabClass === 'tab-all') ? '' : 'td.' + tabClass;
+      const pfx = (tabClasses.includes('tab-all')) ? '' : 'td.' + tabClasses.join('.');
       const selector = pmeClassSelectors(
         pfx + ' ' + 'div.chosen-container',
         ['input', 'filter', 'comp-filter']);
       form.find(selector).each(function(idx) {
-        if ($(this).width() <= PHPMyEdit.singleDeselectOffset) {
-          $(this).prev().chosen('destroy');
+        const $this = $(this);
+        if ($this.width() <= PHPMyEdit.singleDeselectOffset) {
+          $this.prev().chosen('destroy');
           reattachChosen = true;
         }
       });

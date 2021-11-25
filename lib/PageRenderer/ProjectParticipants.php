@@ -419,7 +419,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
       [
         'name'     => $this->l->t('Name'),
-        'tab'      => [ 'id' => 'tab-all' ],
+        'tab'      => [ 'id' => 'musician' ],
         'input|LF' => 'H',
         'maxlen'   => 384,
       ]);
@@ -428,7 +428,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
       [
         'name'     => $this->l->t('First Name'),
-        'tab'      => [ 'id' => 'tab-all' ],
+        'tab'      => [ 'id' => 'musician' ],
         'input|LF' => 'H',
         'maxlen'   => 384,
       ]);
@@ -437,7 +437,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'nick_name',
       [
         'name'     => $this->l->t('Nickname'),
-        'tab'      => [ 'id' => 'tab-all' ],
+        'tab'      => [ 'id' => 'musician' ],
         'input|LF' => 'H',
         'sql|LFVD' => 'IF($join_col_fqn IS NULL OR $join_col_fqn = \'\', $table.first_name, $join_col_fqn)',
         'maxlen'   => 384,
@@ -477,6 +477,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name', [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
+        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
         'sql|LFVD' => parent::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
@@ -558,7 +559,7 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     $fdd = [
-      'tab'         => [ 'id' => [ 'instrumentation', 'project' ] ],
+      'tab'         => [ 'id' => [ 'instrumentation' ] ],
       'name'        => $this->l->t('Project Instrument'),
       'css'         => [
         'postfix' => [
@@ -1042,6 +1043,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('Language'),
+        'css'      => [ 'postfix' => [ 'musician-language', 'chosen-dropup', 'allow-empty', ], ],
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => 'Deutschland',

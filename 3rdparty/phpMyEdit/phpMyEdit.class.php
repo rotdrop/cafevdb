@@ -198,7 +198,8 @@ class phpMyEdit
 	var $misccss2;      // minor css class name for misc buttons
 	var $navigation;	// navigation style
 	var $buttons;
-	var $tabs;			// TAB names
+	var $tab_names;   	// TAB names by index
+	var $tab_ids;       // TAB ids by index
 	var $tabs_help;     // Tooltips, if any
 	var $tabs_by_id;    // TAB indices by Id
 	var $tabs_by_name;  // TAB indices by Id
@@ -468,7 +469,7 @@ class phpMyEdit
 	function filter_enabled() { return stristr($this->options, 'F') && $this->list_operation(); }
 	function view_enabled()	  { return stristr($this->options, 'V'); }
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
-	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
+	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tab_names) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
 	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
@@ -1977,7 +1978,8 @@ class phpMyEdit
 		if ($this->display['tabs']) {
 			if (is_array($this->display['tabs'])) {
 				// tab-names explicitly given.
-				$this->tabs = array();
+				$this->tab_names = array();
+				$this->tab_ids = array();
 				$this->tabs_help    = array();
 				$this->tabs_by_id   = array('tab-all' => 'all');
 				$this->tabs_by_name = array('tab-all' => 'all');
@@ -1986,7 +1988,8 @@ class phpMyEdit
 					if ($tabdef['id'] == 'tab-all') {
 						$idx = 'all';
 					}
-					$this->tabs[$idx] = $tabdef['name'];
+					$this->tab_ids[$idx] = $tabdef['id'];
+					$this->tab_names[$idx] = $tabdef['name'];
 					$this->tabs_by_id[$tabdef['id']]= $idx;
 					$this->tabs_by_name[$tabdef['name']] = $idx;
 					if (isset($tabdef['default']) && $tabdef['default']) {
@@ -2001,32 +2004,36 @@ class phpMyEdit
 				for ($tab = $k = $this->cur_tab = 0; $k < $this->num_fds; $k++) {
 					if (isset($this->fdd[$k]['tab'])) {
 						if ($tab == 0 && $k > 0) {
-							$this->tabs[0] = 'PMEtab0';
+							$this->tab_ids[0] = 'PMEtab0';
+							$this->tab_names[0] = 'PMEtab0';
 							$this->cur_tab = 1;
 							$tab++;
 						}
 						if (is_array($this->fdd[$k]['tab'])) {
-							$this->tabs[$tab] = @$this->fdd[$k]['tab']['name'];
+							$this->tab_names[$tab] = @$this->fdd[$k]['tab']['name'];
+							$this->tab_ids[$tab] = $this->fdd[$k]['tab']['id']??$tab;
 							$this->fdd[$k]['tab']['default'] && $this->cur_tab = $tab;
 						} else {
-							$this->tabs[$tab] = @$this->fdd[$k]['tab'];
+							$this->tab_ids[$tab] = $tab;
+							$this->tab_names[$tab] = @$this->fdd[$k]['tab'];
 						}
-						$this->tabs_by_id[$this->tabs[$tab]] = $tab;
-						$this->tabs_by_name[$this->tabs[$tab]] = $tab;
+						$this->tabs_by_id[$this->tab_ids[$tab]] = $tab;
+						$this->tabs_by_name[$this->tab_names[$tab]] = $tab;
 						$tab++;
 					}
 				}
 			}
 			$this->cur_tab = $this->get_sys_cgi_var('cur_tab', $this->cur_tab);
 
-			//error_log(print_r($this->tabs, true));
+			//error_log(print_r($this->tab_names, true));
 
 			// Transfer tab definitions to the CSS which will be
 			// emitted automatically. Columns without tab definitions
 			// will get the last mentioned tab. The first columns
 			// without tab definitions will go to the default tab.
-			$tab_idx = $this->tabs_by_name[$this->tabs[$this->cur_tab]];
-			$tab_postfix = ' tab-'.$tab_idx;
+			$tab_id = $this->tab_ids[$this->cur_tab];
+			$tab_idx = $this->tabs_by_id[$tab_id]; // why not simply cur_tab?
+			$tab_postfix = [ 'tab-'.$tab_idx, 'tab-'.$tab_id ];
 			for ($k = 0; $k < $this->num_fds; $k++) {
 				if (isset($this->fdd[$k]['tab'])) {
 					$tab_def = $this->fdd[$k]['tab'];
@@ -2036,21 +2043,24 @@ class phpMyEdit
 						} else if (isset($this->tabs_by_name[$tab_def])) {
 							$tab_idx = $this->tabs_by_name[$tab_def];
 						} // else give a damn
-						$tab_postfix = ' tab-'.$tab_idx;
+						$tab_id = $this->tab_ids[$tab_idx];
+						$tab_postfix = [ 'tab-'.$tab_idx, 'tab-'.$tab_id ];
 					} else {
 						if (isset($tab_def['id'])) {
 							$idList = $tab_def['id'];
 							if (!is_array($idList)) {
 								$idList = array($idList);
 							}
-							$tab_postfix = '';
+							$tab_postfix = [];
 							foreach($idList as $id) {
 								$tab_idx = $this->tabs_by_id[$id];
-								$tab_postfix .= ' tab-'.$tab_idx;
+								$tab_postfix[] = 'tab-'.$tab_idx;
+								$tab_postfix[] = 'tab-'.$id;
 							}
 						} else if (isset($tab_def['name'])) {
 							$tab_idx = $this->tabs_by_name[$tab_def];
-							$tab_postfix = ' tab-'.$idx;
+							$tab_id = $this->tab_ids[$tab_idx];
+							$tab_postfix = [ 'tab-'.$idx, 'tab-'.$tab_id ];
 						}
 					}
 				} // else just use the most recent tab-postfix
@@ -2061,7 +2071,7 @@ class phpMyEdit
 				if (!is_array($this->fdd[$k]['css']['postfix'])) {
 					$this->fdd[$k]['css']['postfix'] = [ $this->fdd[$k]['css']['postfix'], ];
 				}
-				$this->fdd[$k]['css']['postfix'][] = $tab_postfix; // append it
+				$this->fdd[$k]['css']['postfix'] = array_merge($this->fdd[$k]['css']['postfix'], $tab_postfix );
 			}
 		}
 
@@ -2090,7 +2100,8 @@ class phpMyEdit
 		echo '<td colspan="2" class="table-tabs">'."\n";
 		echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs pme-container">'."\n";
 		echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
-		foreach($this->tabs as $idx => $name) {
+		foreach($this->tab_names as $idx => $name) {
+			$id = $this->tab_ids[$idx];
 			$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
 			if (isset($this->tabs_help[$idx])) {
 				$title = ' title="'.$this->tabs_help[$idx].'"';
@@ -2099,7 +2110,7 @@ class phpMyEdit
 			}
 			$class = $this->getCSSclass('navigation', $position).' table-tabs tab-menu'.$selected;
 			echo '<li class="'.$class.'"'.$title.'>'."\n";
-			echo '<a href="#tab-'.$idx.'">'.$name.'</a>'."\n";
+			echo '<a href="#tab-'.$idx.'" data-tab-id="'.$id.'" data-tab-index="'.$idx.'">'.$name.'</a>'."\n";
 			echo '</li>'."\n";
 		}
 		echo '</ul>'."\n";
@@ -6394,7 +6405,7 @@ class phpMyEdit
 			//$this->label_cmp($this->sw, 'Clear')	&& $this->fl = 0;
 		}
 		// TAB names
-		$this->tabs = array();
+		$this->tab_names = array();
 		// Setting key_delim according to key_type
 		foreach ($this->key as $key => $key_type) {
 			if ($key_type == 'real') {
