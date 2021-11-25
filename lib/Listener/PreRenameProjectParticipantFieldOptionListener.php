@@ -57,12 +57,20 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
       return;
     }
 
-    $this->logInfo('OLD / NEW: ' . $event->getOldLabel() . ' / ' . $event->getNewLabel());
+    $oldLabel = $event->getOldLabel();
+    $newLabel = $event->getNewLabel();
+
+    $this->logInfo('OLD / NEW: ' . $oldLabel . ' / ' . $newLabel);
+
+    if ($oldLabel == $newLabel) {
+      $this->logInfo('Cowardly refusing to handle rename to same label: ' . $oldlabel);
+      return;
+    }
 
     /** @var ProjectParticipantFieldsService $participantFieldsService */
     $participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
 
-    $participantFieldsService->handleRenameOption($event->getOption(), $event->getOldLabel(), $event->getNewLabel());
+    $participantFieldsService->handleRenameOption($event->getOption(), $oldLabel, $newLabel);
   }
 }
 

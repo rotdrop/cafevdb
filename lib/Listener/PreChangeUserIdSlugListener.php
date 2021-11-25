@@ -57,12 +57,20 @@ class PreChangeUserIdSlugListener implements IEventListener
       return;
     }
 
-    $this->logInfo('OLD / NEW: ' . $event->getOldSlug() . ' / ' . $event->getNewSlug());
+    $oldSlug = $event->getOldSlug();
+    $newSlug = $event->getNewSlug();
+
+    $this->logInfo('OLD / NEW: ' . $oldSlug . ' / ' . $newSlug);
+
+    if ($oldSlug === $newSlug) {
+      $this->logWarn('Cowardly refusing to handle rename to same slug: ' . $oldSlug);
+      return;
+    }
 
     /** @var ProjectService $projectService */
     $projectService = $this->appContainer->get(ProjectService::class);
 
-    $projectService->renameParticipantFolders($event->getMusician(), $event->getOldSlug(), $event->getNewSlug());
+    $projectService->renameParticipantFolders($event->getMusician(), $oldSlug, $newSlug);
   }
 }
 
