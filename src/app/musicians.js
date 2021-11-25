@@ -402,7 +402,7 @@ const contactValidation = function(container) {
     const submitDefer = PHPMyEdit.deferReload(container);
 
     const form = container.find('form.pme-form');
-    let post = form.serialize();
+    const post = form.serialize();
 
     if (autocompleteStreetRequest) {
       autocompleteStreetRequest.abort('cancelled');
