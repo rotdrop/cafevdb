@@ -317,3 +317,4 @@ foreach ($eventAttachmentOptions as $option) {
            class="file-attachments">
   </fieldset>
 </fieldset>
+<div class="scrollbar-compensator"></div>

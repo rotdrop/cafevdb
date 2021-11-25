@@ -138,9 +138,21 @@
           overflow-y: auto;
           overflow-x: hidden;
           padding-bottom: 0px !important;
+          display:flex;
+          flex-wrap:nowrap;
+          flex-direction:row;
+          justify-content:space-between;
+          align-items:baseline;
 
           fieldset.email-composition.page {
             margin-bottom:1em;
+            flex: 1 0 auto;
+          }
+          padding-right: calc(1.4em - 20px);
+          div.scrollbar-compensator {
+            min-width:0;
+            width:20px;
+            flex: 0 1 auto;
           }
         }
 
