@@ -2560,7 +2560,7 @@ Störung.';
       // on the imap server.
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics['TotalCount'];
-      $message = $this->composeAndExport($messageTemplate, [], true);
+      $message = $this->composeAndExport($messageTemplate, [], [], true);
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
       }
