@@ -31,3 +31,4 @@ stats.json
 dev-scripts/composer.phar
 secrets.csv
 wrapper-build-hash
+build-flavour

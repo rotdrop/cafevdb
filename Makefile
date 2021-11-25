@@ -142,14 +142,18 @@ composer-download:
 composer: stamp.composer-core-versions
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
-WRAPPER_PREV_BUILD_HASH = $(shell cat wrapper-build-hash 2> /dev/null || echo)
-WRAPPER_GIT_BUILD_HASH = $(shell git rev-parse $(subst %,HEAD:,$(WRAPPER_GIT_DEPENDENCIES))\
+WRAPPER_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/wrapper-build-hash 2> /dev/null || echo)
+WRAPPER_GIT_BUILD_HASH = $(shell git rev-parse $(WRAPPER_GIT_DEPENDENCIES:%=HEAD:%)\
  | git hash-object --stdin)
 
-wrapper-build-hash:
 ifneq ($(WRAPPER_PREV_BUILD_HASH), $(WRAPPER_GIT_BUILD_HASH))
-	echo $(WRAPPER_GIT_BUILD_HASH) > $@
+.PHONY: wrapper-build-hash
 endif
+wrapper-build-hash:
+	@echo "GIT dependencies of PHP-Scoper have changed, need to rebuild the wrapper"
+	@echo "OLD HASH $(WRAPPER_PREV_BUILD_HASH)"
+	@echo "NEW HASH $(WRAPPER_GIT_BUILD_HASH)"
+	echo $(WRAPPER_GIT_BUILD_HASH) > wrapper-build-hash
 
 composer-wrapped.lock: composer-wrapped.json
 	rm -f composer-wrapped.lock
@@ -210,28 +214,62 @@ $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js: $(shell find $(ABSSRCDIR)/
 $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCDIR)/3rdparty/selectize/src/scss/*.scss)
 	make -C $(ABSSRCDIR)/3rdparty/selectize
 
-.PHONY: node-hacks
-node-hacks: # selectize
+CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
+JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js")
 
-.PHONY: npm-update
-npm-update: node-hacks
+SELECTIZE_DIST =\
+ $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js\
+ $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
+
+CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
+
+TINYMCE_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/tinymce/*)
+
+NPM_INIT_DEPS =\
+ Makefile package-lock.json package.json webpack.config.js
+
+THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST)
+
+WEBPACK_DEPS =\
+ $(NPM_INIT_DEPS)\
+ $(TINYMCE_DIST)\
+ $(CHOSEN_DIST)\
+ $(CSS_FILES) $(JS_FILES)
+
+CSS_TARGETS = app.css settings.css admin-settings.css
+JS_TARGETS = app.js settings.js admin-settings.js
+WEBPACK_TARGETS =\
+ $(patsubst %,$(ABSSRCDIR)/css/%,$(CSS_TARGETS))\
+ $(patsubst %,$(ABSSRCDIR)/js/%,$(JS_TARGETS))
+
+package-lock.json: package.json webpack.config.js Makefile $(THIRD_PARTY_NPM_DEPS)
+	{ [ -d package-lock.json ] && [ test -d node_modules ]; } || npm install
 	npm update
+	touch package-lock.json
 
-.PHONY: npm-init
-npm-init: node-hacks
-	npm install
+BUILD_FLAVOUR_FILE = $(ABSSRCDIR)/build-flavour
+PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
 
-# Installs npm dependencies
-.PHONY: npm
-npm: npm-dev
+$(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
+	npm run $(shell cat $(BUILD_FLAVOUR_FILE))
+
+.PHONY: build-flavour-dev
+build-flavour-dev:
+ifneq ($(PREV_BUILD_FLAVOUR), dev)
+	echo dev > $(BUILD_FLAVOUR_FILE)
+endif
+
+.PHONY: build-flavour-build
+build-flavour-build:
+ifneq ($(PREV_BUILD_FLAVOUR), build)
+	echo build > $(BUILD_FLAVOUR_FILE)
+endif
 
 .PHONY: npm-dev
-npm-dev: npm-init
-	npm run dev
+npm-dev: build-flavour-dev $(WEBPACK_TARGETS)
 
 .PHONY: npm-build
-npm-build: npm-init
-	npm run build
+npm-build: build-flavour-build $(WEBPACK_TARGETS)
 
 # Removes the appstore build
 .PHONY: clean
