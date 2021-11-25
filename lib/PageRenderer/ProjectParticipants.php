@@ -1246,11 +1246,13 @@ class ProjectParticipants extends PMETableViewBase
       $instrumentVoices[$instrument] = [ 0 ];
     }
     $voiceValues = Util::explodeIndexedMulti($newValues[$voiceField]);
-    foreach ($voiceValues as $instrument => $newVoices) {
-      $instrumentVoices[$instrument] = array_merge($instrumentVoices[$instrument], $newVoices);
-    }
 
     $this->debug('VOICE VALUES '.print_r($voiceValues, true));
+
+    foreach ($instrumentVoices as $instrument => &$voices) {
+      $voices = array_merge($voices, $voiceValues[$instrument]??[]);
+    }
+
     $this->debug('VOICES '.print_r($instrumentVoices, true));
 
     $instrumentationNumbers = $this->project->getInstrumentationNumbers();
