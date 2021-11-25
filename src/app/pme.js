@@ -725,7 +725,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
     },
     done(htmlContent, historySize, historyPosition) {
       const containerSel = '#' + containerCSSId;
-      const dialogHolder = $('<div id="' + containerCSSId + '" class="resize-target"></div>');
+      const dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
       dialogHolder.html(htmlContent);
       dialogHolder.find('iframe').on('load', function(event) {
         const $this = $(this);
@@ -1345,6 +1345,10 @@ const installTabHandler = function(containerSel, changeCallback) {
         console.info('RW', $td, readWrite);
         $td.find('label, input').prop('readonly', !readWrite);
         $td.find('input[type="checkbox"]').prop('disabled', !readWrite);
+        if (readWrite) {
+          // let the handler to its logic
+          $td.find('input.' + pmeToken('input-lock')).trigger('change');
+        }
       });
   };
 
@@ -1718,15 +1722,15 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-empty',
     function(event) {
       const $this = $(this);
-      const checked = $this.prop('checked');
+      const locked = !$this.prop('checked');
       const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
-      $input.prop('readonly', !checked);
-      if (!checked) {
+      $input.prop('readonly', locked);
+      if (locked) {
         $input.val('');
+        $input.attr('placeholder', $input.data('lockedPlaceholder'));
+      } else {
+        $input.attr('placeholder', $input.data('unlockedPlaceholder'));
       }
-      const dataPlaceholder = $input.data('placeholder');
-      $input.data('placeholder', $input.attr('placeholder'));
-      $input.attr('placeholder', dataPlaceholder);
       return false;
     });
 

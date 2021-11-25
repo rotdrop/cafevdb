@@ -378,7 +378,7 @@ make sure that the musicians are also automatically added to the
     }
 
     $opts['fdd']['sur_name'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
+      'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Surname'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
@@ -389,7 +389,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $opts['fdd']['first_name'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
+      'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Forename'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
@@ -399,7 +399,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $opts['fdd']['nick_name'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
+      'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Nickname'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',
@@ -443,7 +443,15 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['display_name'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Display-Name'),
-      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
+      'css'      => [
+        'postfix' => [
+          'musician-name',
+          'default-readonly',
+          'tab-contact-readwrite',
+          'tab-all-readwrite',
+          $addCSS,
+        ],
+      ],
       'sql|LFVD' => parent::musicianPublicNameSql(),
       'maxlen'   => 384,
       'sort'     => true,
@@ -460,13 +468,15 @@ make sure that the musicians are also automatically added to the
             return [
               'placeholder' => $lockedPlaceholder,
               'readonly' => true,
-              'data-placeholder' => $unlockedPlaceholder,
+              'data-unlocked-placeholder' => $unlockedPlaceholder,
+              'data-locked-placeholder' => $lockedPlaceholder,
             ];
           } else {
             return [
               'placeholder' => $unlockedPlaceholder,
               'readonly' => false,
-              'data-placeholder' => $lockedPlaceholder,
+              'data-unlocked-placeholder' => $unlockedPlaceholder,
+              'data-locked-placeholder' => $lockedPlaceholder,
             ];
           }
         },
@@ -485,7 +495,7 @@ make sure that the musicians are also automatically added to the
     ];
 
     $opts['fdd']['user_id_slug'] = [
-      'tab'      => [ 'id' => 'tab-all' ],
+      'tab'      => [ 'id' => [ 'orchestra', 'contact', ], ],
       'name'     => $this->l->t('User Id'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
       'input|LF' => 'H',

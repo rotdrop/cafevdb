@@ -491,13 +491,15 @@ class ProjectParticipants extends PMETableViewBase
               return [
                 'placeholder' => $lockedPlaceholder,
                 'readonly' => true,
-                'data-placeholder' => $unlockedPlaceholder,
+                'data-locked-placeholder' => $lockedPlaceholder,
+                'data-unlocked-placeholder' => $unlockedPlaceholder,
               ];
             } else {
               return [
                 'placeholder' => $unlockedPlaceholder,
                 'readonly' => false,
-                'data-placeholder' => $lockedPlaceholder,
+                'data-locked-placeholder' => $lockedPlaceholder,
+                'data-unlocked-placeholder' => $unlockedPlaceholder,
               ];
             }
           },
