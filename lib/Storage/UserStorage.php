@@ -317,8 +317,8 @@ class UserStorage
   public function rename(string $oldPath, string $newPath)
   {
     try {
-      $newPath = $this->userFolder->getFullPath($newPath);
-      $this->userFolder->get($oldPath)->move($newPath);
+      $newFullPath = $this->userFolder->getFullPath($newPath);
+      $this->userFolder->get($oldPath)->move($newFullPath);
     } catch (\Throwable $t) {
       throw new \Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
