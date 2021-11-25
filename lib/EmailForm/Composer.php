@@ -1377,7 +1377,7 @@ Störung.';
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
-    $hasPersonalAttachments = count($this->personalAttachments()) > 0;
+    $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
@@ -2522,7 +2522,7 @@ Störung.';
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
-    $hasPersonalAttachments = count($this->personalAttachments()) > 0;
+    $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
@@ -3723,6 +3723,19 @@ Störung.';
     $this->personalFileAttachments = array_merge($templateAttachments, $generalAttachments, $serviceFeeAttachments);
 
     return $this->personalFileAttachments;
+  }
+
+  public function activePersonalAttachments()
+  {
+    $numAttachments = 0;
+    // walk through the list of configured attachments and attach all requested.
+    foreach ($this->personalAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected' && !$attachment['sub_selection']) {
+        continue;
+      }
+      ++$numAttachments;
+    }
+     return $numAttachments;
   }
 
   /**
