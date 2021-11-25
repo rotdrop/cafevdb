@@ -1663,7 +1663,7 @@ Störung.';
           // ATM we support sub-selection item only for FieldMultiplicity::RECURRING
           if ($attachment['status'] != 'selected') {
             $selectedKeys = [];
-            foreach ($attachment['suboptions'] as $subOption) {
+            foreach ($attachment['sub_options'] as $subOption) {
               if ($subOption['status'] == 'selected') {
                 $selectedKeys[] = $subOption['option_key'];
               }
@@ -3678,9 +3678,9 @@ Störung.';
             } else {
               $subOption['status'] = 'inactive';
             }
-            $attachment['suboptions'][] = $subOption;
+            $attachment['sub_options'][] = $subOption;
           }
-          usort($attachment['suboptions'], function($a, $b) { return strcmp($a['name'], $b['name']); });
+          usort($attachment['sub_options'], function($a, $b) { return strcmp($a['name'], $b['name']); });
         }
         $serviceFeeAttachments[] = $attachment;
       } else {
@@ -3700,6 +3700,7 @@ Störung.';
         'name' => $this->l->t($documentTemplate['name']),
         'origin' => $origin,
         'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
+        'sub_selection' => false,
       ];
       if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
         $attachment['status'] = 'selected';
@@ -3818,7 +3819,7 @@ Störung.';
         'flags' => $selected ? PageNavigation::SELECTED : 0,
       ];
       $selectOptions[] = $selectOption;
-      foreach ($attachment['suboptions']??[] as $subOption) {
+      foreach ($attachment['sub_options']??[] as $subOption) {
         $selected = $attachment['status'] == 'selected'
           || $subOption['status'] == 'selected';
         $selectOptions[] = [
