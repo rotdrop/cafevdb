@@ -40,12 +40,11 @@ const pmeTweaks = function(container) {
   }
 
   container.find('input.date').datepicker({
-    dateFormat: 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1940',
+    minDate: '01.01.1940', // birthday limit
   });
 
-  container.find('input.datetime').datepicker({
-    dateFormat: 'dd.mm.yy', // this is 4-digit year
+  // @todo this should be some sort of date-time picker
+  container.find('input.datetime').datetimepicker({
     minDate: '01.01.1990',
   });
 

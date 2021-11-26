@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Legacy\PME;
 use \OCP\IRequest;
 use \OCP\ILogger;
 use \OCP\IL10N;
+use \OCP\IDateTimeZone;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver\ResultStatement;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
@@ -49,6 +50,9 @@ class PHPMyEdit extends \phpMyEdit
 
   /** @var RequestParameterService */
   private $request;
+
+  /** @var IDateTimeZone */
+  private $dateTimeZone;
 
   private $defaultOptions;
 
@@ -84,6 +88,7 @@ class PHPMyEdit extends \phpMyEdit
     , RequestParameterService $request
     , ILogger $logger
     , IL10N $l10n
+    , IDateTimeZone $dateTimeZone
   )
   {
     $this->entityManager = $entityManager;
@@ -96,6 +101,7 @@ class PHPMyEdit extends \phpMyEdit
     $this->request = $request;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->dateTimeZone = $dateTimeZone;
     $this->debug = false;
 
     $this->overrideOptions = [
@@ -504,6 +510,68 @@ class PHPMyEdit extends \phpMyEdit
   public function cgiDataName($suffix = '')
   {
     return $this->cgi['prefix']['data'].$suffix;
+  }
+
+  /**
+   * Create a Unix time-stamp from user-input
+   *
+   * Strategy: if the user input does not contain a date, then we do not
+   * perform a timezone correction but just convert to a time stamp to the
+   * date at 00:00:00 UTC.
+   */
+  protected function makeTimeStampFromUser($userInput)
+  {
+    // Ok, the easiest way is probably to simply add the offset in seconds.
+    $timeStamp = parent::makeTimeStampFromUser($userInput);
+
+    if ($timeStamp % (24 * 60 * 60) == 0 && !preg_match("/\d{1,2}\:\d{1,2}/", $userInput)) {
+      // assume date-only
+      return $timeStamp;
+    }
+
+    // The following is wrong, as the user-input was treated as coming from UTC
+    $timeZone = $this->dateTimeZone->getTimeZone();
+    $dateTime = (new \DateTime)->setTimezone($timeZone)->setTimestamp($timeStamp);
+
+    $modTimeStamp = $timeStamp - $timeZone->getOffset($dateTime);
+    $modDateTime = (new \DateTime)->setTimezone($timeZone)->setTimestamp($modTimeStamp);
+
+    $this->logDebug('ORIG / MOD ' . print_r($dateTime, true) . ' / ' . print_r($modDateTime, true));
+    $this->logDebug('ORIG / MOD ' . $timeStamp . ' / ' . $modTimeStamp);
+
+    if ($timeZone->getOffset($dateTime) != $timeZone->getOffset($modDateTime)) {
+      $this->logError('Timezone adjustment for failed for user-input ' . $userInput);
+    }
+
+    return $modTimeStamp;
+  }
+
+  /**
+   * Create a Unix time-stamp from user-input
+   */
+  protected function makeTimeStampFromDatabase($databaseValue)
+  {
+    $timeStamp = parent::makeTimeStampFromDatabase($databaseValue);
+
+    if ($timeStamp % (24 * 60 * 60) == 0 && !preg_match("/\d{1,2}\:\d{1,2}/", $databaseValue)) {
+      // assume date-only
+      return $timeStamp;
+    }
+
+    $timeZone = $this->dateTimeZone->getTimeZone();
+    $dateTime = (new \DateTime)->setTimezone($timeZone)->setTimestamp($timeStamp);
+
+    $modTimeStamp = $timeStamp + $timeZone->getOffset($dateTime);
+    $modDateTime = (new \DateTime)->setTimezone($timeZone)->setTimestamp($modTimeStamp);
+
+    $this->logDebug('ORIG / MOD ' . print_r($dateTime, true) . ' / ' . print_r($modDateTime, true));
+    $this->logDebug('ORIG / MOD ' . $timeStamp . ' / ' . $modTimeStamp);
+
+    if ($timeZone->getOffset($dateTime) != $timeZone->getOffset($modDateTime)) {
+      $this->logError('Timezone adjustment for failed for user-input ' . $userInput);
+    }
+
+    return $modTimeStamp;
   }
 
   /*

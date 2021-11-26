@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/*
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,7 +52,6 @@ trait InitialStateTrait {
 
     $tooltips   = $this->getUserValue('tooltips', '');
     $directChg  = $this->getUserValue('directchange', '');
-    $language   = $this->getUserValue('lang', 'en');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
     $expertMode = $this->getUserValue('expertmode');
 
@@ -63,6 +63,10 @@ trait InitialStateTrait {
     }
     $adminContact = implode(',', $adminEmail);
 
+    $languageComplete = $l->getLanguageCode();
+    list($languageShort,) = explode('_', $languageComplete);
+    $locale = $l->getLocaleCode();
+
     $this->initialStateService->provideInitialState(
       $this->appName,
       'CAFEVDB',
@@ -70,7 +74,9 @@ trait InitialStateTrait {
         'appName' => $this->appName,
         'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
         'wysiwygEditor' => $editor,
-        'language' => $language,
+        'language' => $languageShort,
+        'cloudLanguage' => $languageComplete,
+        'locale' => $locale,
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,

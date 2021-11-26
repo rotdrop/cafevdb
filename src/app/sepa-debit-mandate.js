@@ -422,7 +422,6 @@ const mandatesInit = function(data, onChangeCallback) {
     // }
 
     mandateForm.find('input[class$="Date"]').datepicker({
-      dateFormat: 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1990',
       beforeShow(input) {
         const $input = $(input);
@@ -1452,7 +1451,6 @@ const mandateReady = function(selector) {
     });
 
   table.find('input.sepadate').datepicker({
-    dateFormat: 'dd.mm.yy', // this is 4-digit year
     minDate: '01.01.1990',
     beforeShow(input) {
       $(input).unbind('blur');

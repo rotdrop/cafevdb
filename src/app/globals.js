@@ -40,17 +40,11 @@ require('jquery-ui/ui/effect');
 require('jquery-ui/ui/widgets/dialog');
 require('jquery-ui/ui/widgets/datepicker');
 require('jquery-ui/ui/widgets/tabs');
-importAll(require.context('jquery-ui/ui/i18n/', true, /^datepicker-.*\.js$/));
+importAll(require.context('jquery-ui/ui/i18n/', true, /datepicker-.*\.js$/));
+require('jquery-datetimepicker/build/jquery.datetimepicker.full.js');
+require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
 require('chosen/public/chosen.jquery.js');
 require('chosen/public/chosen.css');
-
-$.datepicker.setDefaults({
-  beforeShow(i) {
-    if ($(i).prop('readonly')) {
-      return false;
-    }
-  },
-});
 
 const ImagesLoaded = require('imagesloaded');
 ImagesLoaded.makeJQueryPlugin(jQuery);
@@ -83,7 +77,39 @@ onRequestTokenUpdate(function(token) {
   console.info('NEW REQUEST TOKEN', token);
 });
 
-console.info('INITIAL GLOBAL STATE', globalState, initialState);
+const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
+$.extend(datePickerDefaults, {
+  beforeShow(i) {
+    if ($(i).prop('readonly')) {
+      return false;
+    }
+  },
+});
+
+$.datepicker.setDefaults(datePickerDefaults);
+$.datetimepicker.setLocale(globalState.language);
+
+const jQueryDateTimePicker = $.fn.datetimepicker;
+// convert to php format, incomplete
+const dateFormat = $.datepicker.regional[globalState.language].dateFormat
+  .replace(/yy/g, 'Y')
+  .replace(/MM/g, 'F')
+//  .replace(/M/g, 'M')
+  .replace(/mm/g, 'MM')
+  .replace(/m/g, 'n')
+  .replace(/MM/g, 'm')
+  .replace(/DD/g, 'l')
+//  .replace(/D/g, 'D')
+  .replace(/dd/g, 'DD')
+  .replace(/d/g, 'j')
+  .replace(/DD/g, 'd')
+;
+const timeFormat = 'H:i';
+const dateTimeFormat = [dateFormat, timeFormat].join(' ');
+$.fn.datetimepicker = function(opt, opt2) {
+  $.extend(opt, { format: dateTimeFormat, formatTime: timeFormat, formatDate: dateFormat }, opt);
+  return jQueryDateTimePicker.apply(this, arguments);
+};
 
 export {
   globalState,

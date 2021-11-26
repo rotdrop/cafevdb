@@ -2548,7 +2548,7 @@ class phpMyEdit
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 			if ($this->col_has_datemask($k)) {
-				echo $this->makeTimeString($k, $row);
+				echo $this->makeUserTimeString($k, $row);
 			} else if ($escape) {
 				echo htmlspecialchars($value);
 			} else {
@@ -2817,22 +2817,40 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
-	function makeTimeString($k, $row)
+	/**
+	 * Create a Unix time-stamp from user-input
+	 */
+	protected function makeTimeStampFromUser($userInput)
+	{
+		return strtotime($userInput);
+	}
+
+	/**
+	 * Create a Unix time-stamp from user-input
+	 */
+	protected function makeTimeStampFromDatabase($databaseValue)
+	{
+		return strtotime($databaseValue);
+	}
+
+	/**
+	 * Create a time-string for user display from a data-base value
+	 */
+	function makeUserTimeString($k, $row)
 	{
 		$value = '';
-		$stamp = $row["qf$k"."_timestamp"];
-		switch ($stamp) {
+		$data = $row["qf$k"."_timestamp"];
+		switch ($data) {
 		case '':
 		case 0:
 		case '0000-00-00':
 			// Invalid date and time
 			break;
 		default:
-			$olddata = $data = $row["qf$k".'_timestamp'];
 			if (!is_numeric($data)) {
 				// Convert whatever is contained in the timestamp field to
 				// seconds since the epoch.
-				$data = strtotime($data);
+				$data = $this->makeTimeStampFromDatabase($data);
 			}
 			if (@$this->fdd[$k]['datemask']) {
 				$value = intval($data);
@@ -2899,7 +2917,7 @@ class phpMyEdit
 		$this->col_has_values($k) && $this->set_values($k);
 
 		if ($this->col_has_datemask($k)) {
-			$value = $this->makeTimeString($k, $row);
+			$value = $this->makeUserTimeString($k, $row);
 		} else if (isset($this->fdd[$k][self::FDD_VALUES2])) {
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
@@ -4950,7 +4968,7 @@ class phpMyEdit
 					$fn = trim($fn);
 					if ($fn != '') {
 						// Convert back to a date/time object understood by mySQL
-						$stamps = strtotime($fn);
+						$stamps = $this->makeTimeStampFromUser($fn);
 						$fn = date('Y-m-d H:i:s', $stamps);
 						// echo "<!-- ".$fn." -->\n";
 					}
@@ -5095,7 +5113,7 @@ class phpMyEdit
 						$stamps[$fd] = false;
 					} else {
 						// Convert back to a date/time object understood by mySQL
-						$stamps[$fd] = strtotime($fn);
+						$stamps[$fd] = $this->makeTimeStampFromUser($fn);
 						$fn = date('Y-m-d H:i:s', $stamps[$fd]);
 						// echo "<!-- ".$fn." -->\n";
 					}
@@ -5147,7 +5165,7 @@ class phpMyEdit
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
 			if (isset($stamps[$fd])) {
-				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
+				$oldstamp = $oldvals[$fd] != "" ? $this->makeTimeStampFromDatabase($oldvals[$fd]) : false;
 				if ($oldstamp != $stamps[$fd]) {
 					$changed[] = $fd;
 				} else {
@@ -5187,7 +5205,7 @@ class phpMyEdit
 			return false;
 		}
 
-		// Creatinng WHERE part for query groups, after the trigger as
+		// Creating WHERE part for query groups, after the trigger as
 		// it may even have added things.
 		foreach($oldvals as $fd => $value) {
 			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
@@ -5313,7 +5331,7 @@ class phpMyEdit
 		foreach ($newvals as $fd => $value) {
 			$k = $this->fdn[$fd];
 			if ($this->col_has_datemask($k)) {
-				if (strtotime($value) != strtotime($oldvals[$fd])) {
+				if ($this->makeTimeStampFromDatabase($value) != $this->makeTimeStampFromDatabase($oldvals[$fd])) {
 					$changed[] = $fd;
 				}
 			} else if ($value != $oldvals[$fd]) {
