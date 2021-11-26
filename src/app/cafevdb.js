@@ -23,7 +23,6 @@
 import { globalState, appName, $, jQuery } from './globals.js';
 import generateUrl from './generate-url.js';
 import { urlDecode } from './url-decode.js';
-import { chosenActive } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 
 require('cafevdb.scss');
