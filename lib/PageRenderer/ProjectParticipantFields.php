@@ -580,6 +580,8 @@ __EOT__;
           case DataType::SERVICE_FEE:
             $value = $this->moneyValue($value);
             break;
+          case DataType::DATE:
+          case DataType::DATETIME:
           default:
             break;
           }
@@ -1715,8 +1717,9 @@ __EOT__;
     } else {
       $htmlDisabled = [ 'textarea' => 'disabled', 'input' => '' ];
     }
+    $cssBase = 'pme-input data-options-'.$variant;
     $html  .=<<<__EOT__
-<input class="pme-input data-options-{$variant} data-type-html-hidden data-type-html-disabled"
+<input class="{$cssBase} field-{$field} data-type-html-hidden data-type-html-disabled"
        {$htmlDisabled['input']}
        type="text"
        maxlength="29"
@@ -1727,7 +1730,7 @@ __EOT__;
 />
 __EOT__;
     $html  .=<<<__EOT__
-<span class="pme-input data-options-{$variant} not-data-type-html-hidden not-data-type-html-disabled">
+<span class="{$cssBase} field-{$field} not-data-type-html-hidden not-data-type-html-disabled">
   <textarea class="pme-input data-options-{$variant} wysiwyg-editor"
             name="{$name}[{$key}][{$field}]"
             {$htmlDisabled['textarea']}
@@ -1740,7 +1743,7 @@ __EOT__;
     foreach (['key', 'label',/* 'deposit',*/ 'limit', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $html .=<<<__EOT__
-<input class="pme-input data-options-{$variant}"
+<input class="{$cssBase} field-{$field}"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"

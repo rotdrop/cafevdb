@@ -33,7 +33,6 @@ import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
-
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -171,6 +170,7 @@ const ready = function(selector, resizeCB) {
     const multiplicityClass = 'multiplicity-' + data.multiplicity;
     const dataTypeClass = 'data-type-' + data.dataType;
     const depositDueDateClass = 'deposit-due-date-' + data.depositDueDate;
+    const dataOptionsClass = 'data-options-' + data.multiplicity;
     container.find('tr.multiplicity')
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
@@ -192,6 +192,45 @@ const ready = function(selector, resizeCB) {
     });
     container.find('.data-type-html-disabled').prop('disabled', data.dataType === 'html');
     container.find('.not-data-type-html-disabled').prop('disabled', data.dataType !== 'html');
+
+    const $dataInputs = container.find('tr.pme-row.' + dataOptionsClass + ' td.pme-value input.field-data');
+    console.info('DATA INPUTS', $dataInputs);
+    $dataInputs.each(function() {
+      const $this = $(this);
+      $this.off('change');
+      if ($this.hasClass('hasDatepicker')) {
+        $this.datepicker('destroy');
+      }
+      $this.datetimepicker('destroy');
+    });
+    switch (data.dataType) {
+    case 'service-fee':
+      $dataInputs.attr('type', 'number');
+      break;
+    case 'date':
+      $dataInputs
+        .attr('type', 'text')
+        .datepicker({
+          minDate: '01.01.1940', // birthday
+        });
+      $dataInputs
+        .off('change')
+        .on('change', function(event) {
+          const $this = $(this);
+          console.info('DATE', $this.datepicker('getDate'));
+        });
+      break;
+    case 'datetime':
+      $dataInputs
+        .attr('type', 'text')
+        .datetimepicker({
+          step: 5,
+        });
+      break;
+    default:
+      $dataInputs.attr('type', 'text');
+      break;
+    }
   };
 
   const fieldTypeData = function() {
@@ -266,11 +305,6 @@ const ready = function(selector, resizeCB) {
     console.debug('RESIZECB');
     resizeCB();
 
-    if (dataType === 'service-fee') {
-      container.find('td.pme-value.default-value input').attr('type', 'number');
-    } else {
-      container.find('td.pme-value.default-value input').attr('type', 'text');
-    }
     return false;
   });
   container.find('select.multiplicity:not(.pme-filter)').trigger('change');
@@ -549,8 +583,7 @@ const ready = function(selector, resizeCB) {
     });
     if ($this.is('.field-limit')) {
       $this.datepicker({
-        dateFormat: 'dd.mm.yy', // this is 4-digit year
-        minDate: '01.01.2000',
+        minDate: '01.01.2000', // no receivables before this time
       });
     }
   });
