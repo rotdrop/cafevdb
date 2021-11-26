@@ -479,6 +479,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           }
 
           options.modified = true;
+        } else if ($submitButton.hasClass(pmeToken('reload'))) {
+          // this is essentially a cancel, so remove 'modified'
+          options.modified = false;
         }
         tableDialogReload(options, changeCallback, triggerData);
 
@@ -1337,12 +1340,10 @@ const installTabHandler = function(containerSel, changeCallback) {
 
   const updateTabReadOnlyFields = function(tabClasses) {
     const readWriteClasses = tabClasses.map(tabClass => tabClass + '-readwrite');
-    console.info('READ WRITE CLASSES', readWriteClasses);
     form
       .find('td.' + pmeToken('value') + '.default-readonly').each(function() {
         const $td = $(this);
         const readWrite = readWriteClasses.some((cssClass) => $td.hasClass(cssClass));
-        console.info('RW', $td, readWrite);
         $td.find('label, input').prop('readonly', !readWrite);
         $td.find('input[type="checkbox"]').prop('disabled', !readWrite);
         if (readWrite) {
