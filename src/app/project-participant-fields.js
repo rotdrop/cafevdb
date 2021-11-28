@@ -167,10 +167,11 @@ const ready = function(selector, resizeCB) {
     if (!data) {
       return;
     }
-    const multiplicityClass = 'multiplicity-' + data.multiplicity;
-    const dataTypeClass = 'data-type-' + data.dataType;
+    const dataType = data.dataType;
+    const multiplicity = data.multiplicity;
+    const multiplicityClass = 'multiplicity-' + multiplicity;
+    const dataTypeClass = 'data-type-' + dataType;
     const depositDueDateClass = 'deposit-due-date-' + data.depositDueDate;
-    const dataOptionsClass = 'data-options-' + data.multiplicity;
     container.find('tr.multiplicity')
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
@@ -180,30 +181,42 @@ const ready = function(selector, resizeCB) {
       const $this = $(this);
       $this.prop(
         'required',
-        ($this.hasClass(data.multiplicity + '-multiplicity-required')
-         || $this.hasClass(data.dataType + '-data-type-required')
+        ($this.hasClass(multiplicity + '-multiplicity-required')
+         || $this.hasClass(dataType + '-data-type-required')
          || $this.hasClass(data.depositDueDate + '-deposit-due-date-required')
-         || $this.hasClass('multiplicity-' + data.multiplicity + '-'
+         || $this.hasClass('multiplicity-' + multiplicity + '-'
                            + data.depositDueDate + '-deposit-due-date-required')
         )
-          && !$this.hasClass('not-multiplicity-' + data.multiplicity + '-'
+          && !$this.hasClass('not-multiplicity-' + multiplicity + '-'
                              + data.depositDueDate + '-deposit-due-date-required')
       );
     });
-    container.find('.data-type-html-disabled').prop('disabled', data.dataType === 'html');
-    container.find('.not-data-type-html-disabled').prop('disabled', data.dataType !== 'html');
+    container.find('.data-type-html-disabled').prop('disabled', dataType === 'html');
+    container.find('.not-data-type-html-disabled').prop('disabled', dataType !== 'html');
 
-    const $dataInputs = container.find('tr.pme-row.' + dataOptionsClass + ' td.pme-value input.field-data');
-    console.info('DATA INPUTS', $dataInputs);
+    const inputData = container.find('table.data-options').data('size');
+    const $dataInputs = container.find(
+      'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value input.field-data[type=text]'
+        + ', '
+        + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' input.field-data[type=text]');
+    const dateTimePickerSelector = 'body > .xdsoft_datetimepicker';
     $dataInputs.each(function() {
       const $this = $(this);
-      $this.off('change');
       if ($this.hasClass('hasDatepicker')) {
         $this.datepicker('destroy');
       }
       $this.datetimepicker('destroy');
+      if (inputData) {
+        const inputSize = inputData[dataType] || inputData.default;
+        if (inputSize) {
+          $this.attr('size', inputSize);
+        } else {
+          console.warn('No input size defined, even not the default', $this, inputData, dataType);
+        }
+      }
     });
-    switch (data.dataType) {
+    $(dateTimePickerSelector).remove();
+    switch (dataType) {
     case 'service-fee':
       $dataInputs.attr('type', 'number');
       break;
@@ -213,12 +226,12 @@ const ready = function(selector, resizeCB) {
         .datepicker({
           minDate: '01.01.1940', // birthday
         });
-      $dataInputs
-        .off('change')
-        .on('change', function(event) {
-          const $this = $(this);
-          console.info('DATE', $this.datepicker('getDate'));
-        });
+      // $dataInputs
+      //   .off('change')
+      //   .on('change', function(event) {
+      //     const $this = $(this);
+      //     console.info('DATE', $this.datepicker('getDate'));
+      //   });
       break;
     case 'datetime':
       $dataInputs
@@ -304,6 +317,8 @@ const ready = function(selector, resizeCB) {
     allowedHeaderVisibility();
     console.debug('RESIZECB');
     resizeCB();
+
+    $.fn.cafevTooltip.remove(); // remove left-overs
 
     return false;
   });
