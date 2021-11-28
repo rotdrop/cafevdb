@@ -19,11 +19,38 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /******************************************************************************
  *
  * participant-field stuff
  *
  */
+
+@mixin columnHiddenIf($propertyValue, $property: "data-type", $relation: "~", $prefix: "&") {
+  #{$prefix}.#{$property}-#{$propertyValue} #{$relation} tr {
+    td, th {
+      &.#{$property}-#{$propertyValue}-hidden {
+        display:none!important;
+      }
+    }
+  }
+  #{$prefix}:not(.#{$property}-#{$propertyValue}) #{$relation} tr {
+    td, th {
+      &.not-#{$property}-#{$propertyValue}-hidden {
+        display:none!important;
+      }
+    }
+  }
+}
+
+@mixin columnHiddenIfDataType($dataType, $relation: "~", $prefix: "&") {
+  @include columnHiddenIf($dataType, data-type, $relation, $prefix);
+}
+
+@mixin columnHiddenIfMultiplicity($multiplicity, $relation: "~", $prefix: "&") {
+  @include columnHiddenIf($multiplicity, multiplicity, $relation, $prefix);
+}
+
 table.pme-main tr.multiplicity {
   &.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single {
     display:none;
@@ -81,11 +108,11 @@ table.pme-main tr.multiplicity {
       display:table-row;
     }
   }
-  &.data-type-html ~ tr .data-type-html-hidden {
-    display:none;
+  @each $dataType in html, service-fee {
+    @include columnHiddenIfDataType($dataType);
   }
-  &:not(.data-type-html) ~ tr .not-data-type-html-hidden {
-    display:none;
+  @each $multiplicity in groupofpeople, groupsofpeople, recurring {
+    @include columnHiddenIfMultiplicity($multiplicity);
   }
 }
 
@@ -154,24 +181,41 @@ td.field-limit,
 th.field-limit {
     display:none!important;
 }
-table.data-options.operation-display, table.data-options.show-data {
-  td.field-data, th.field-data,
-  td.field-deposit, th.field-deposit,
-  td.field-limit, th.field-limit {
-    display:table-cell!important;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  &.multiplicity-recurring {
-    td.field-data {
-      text-align:right;
+table.data-options {
+  &.operation-display, &.show-data {
+    @each $dataType in html, service-fee {
+      @include columnHiddenIfDataType($dataType, "");
+    }
+    @each $multiplicity in groupofpeople, groupsofpeople, recurring {
+      @include columnHiddenIfMultiplicity($multiplicity, "");
+    }
+    td, th {
+      &.field-data, &.field-deposit, &.field-limit {
+        display:table-cell!important;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+    }
+    &.multiplicity-recurring {
+      td.field-data {
+        text-align:right;
+      }
     }
   }
 }
 form.pme-form.pme-list {
   table.data-options.operation-display {
-    td.field-data, th.field-data {
-      max-width:8em;
+    td, th {
+      &.field-data {
+        max-width:8em;
+      }
+    }
+    &.data-type-datetime {
+      td, th {
+        &.field-data {
+          max-width:10em;
+        }
+      }
     }
   }
 }
@@ -179,7 +223,7 @@ form.pme-form.pme-list {
 table.pme-main {
   /* Show field-data for service-fee fields, because it holds the amount to pay. */
   tr.multiplicity {
-    &.data-type-service-fee {
+    &.data-type-service-fee, &.data-type-date, &.data-type-datetime {
       ~ tr.pme-row td.pme-value {
         td.field-data, th.field-data {
           display:table-cell!important;
@@ -317,7 +361,6 @@ table.data-options {
       display:inline-block;
       width:100%;
     }
-
     th.operations,
     th.field-key,
     td.operations,
