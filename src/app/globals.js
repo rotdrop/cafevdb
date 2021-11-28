@@ -77,19 +77,49 @@ onRequestTokenUpdate(function(token) {
   console.info('NEW REQUEST TOKEN', token);
 });
 
+// Override jquery-ui datepicker a little bit. Note that the
+// datepicker widget does not seem to follow the ui-widget framework
+// in its definition, so do it the hard way.
+const jQueryUiDatePicker = $.fn.datepicker;
+const onselectDatePickerReason = 'cafevdb datepicker onselect';
+$.fn.datepicker = function(options) {
+  const $this = $(this);
+
+  if (options === 'destroy') {
+    $this.off('focusout.cafevdb blur.cafevdb');
+  } else if ((typeof options === 'object' && options !== null) || options === undefined) {
+    $this
+      .off('focusout.cafevdb blur.cafevdb')
+      .on('focusout.cafevdb blur.cafevdb', function(event, reason) {
+        if (reason !== onselectDatePickerReason) {
+          // wait until the date-picker has done its work
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          $.fn.cafevTooltip.remove(); // remove left-overs after cancelling focus-out
+          console.debug('Catched datepicker blur/focusout event', event, [...arguments]);
+          return false;
+        }
+      });
+    console.debug('Attached jQuery-UI datepicker short-coming blur event.');
+  }
+  return jQueryUiDatePicker.apply($this, arguments);
+};
+
 const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
 $.extend(datePickerDefaults, {
-  beforeShow(i) {
-    if ($(i).prop('readonly')) {
-      return false;
-    }
+  beforeShow(inputElement) {
+    return !$(inputElement).prop('readonly');
+  },
+  onSelect(dateText, datePickerInstance) {
+    const $inputElement = $(this);
+    console.debug('Re-trigger jQuery-UI datepicker blur event AFTER set-date');
+    $inputElement.trigger('blur', onselectDatePickerReason);
   },
 });
 
 $.datepicker.setDefaults(datePickerDefaults);
 $.datetimepicker.setLocale(globalState.language);
 
-const jQueryDateTimePicker = $.fn.datetimepicker;
 // convert to php format, incomplete
 const dateFormat = $.datepicker.regional[globalState.language].dateFormat
   .replace(/yy/g, 'Y')
@@ -105,9 +135,28 @@ const dateFormat = $.datepicker.regional[globalState.language].dateFormat
   .replace(/DD/g, 'd')
 ;
 const timeFormat = 'H:i';
-const dateTimeFormat = [dateFormat, timeFormat].join(' ');
+const dateTimeFormat = [dateFormat, timeFormat].join(', ');
+
+// override datetimepicker a little bit
+const jQueryDateTimePicker = $.fn.datetimepicker;
 $.fn.datetimepicker = function(opt, opt2) {
-  $.extend(opt, { format: dateTimeFormat, formatTime: timeFormat, formatDate: dateFormat }, opt);
+  $.extend(opt, {
+    format: dateTimeFormat,
+    formatTime: timeFormat,
+    formatDate: dateFormat,
+    onShow(currentTime, $inputElement, event) {
+      return !$inputElement.prop('readonly');
+    },
+    // onChangeDateTime(currentTime, $inputElement, event) {
+    //   // const dateTimePicker = this;
+    //   // $inputElement.blur();
+    //   console.info('DATETIMEPICKER CURRENT TIME', currentTime);
+    // },
+    onClose(currentTime, $inputElement, event) {
+      // $inputElement.trigger('blur');
+      $inputElement.trigger('focusout');
+    },
+  }, opt);
   return jQueryDateTimePicker.apply(this, arguments);
 };
 
