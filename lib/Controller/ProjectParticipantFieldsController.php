@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -267,7 +268,7 @@ class ProjectParticipantFieldsController extends Controller {
         $inputRows = [];
         foreach ($receivables as $receivable) {
           $inputRows[] = $this->renderer->dataOptionInputRowHtml(
-            $receivable, $index++, $receivable->usage() > 0
+            $receivable, $index++, $receivable->usage() > 0, FieldDataType::SERVICE_FEE
           );
         }
 
@@ -471,26 +472,25 @@ class ProjectParticipantFieldsController extends Controller {
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
         switch ($data['data-type']??null) {
-        case 'service-fee':
-        case 'money':
-          // see that it is a valid decimal number ...
-          if (!empty($item['data'])) {
-            $parsed = $this->fuzzyInput->currencyValue($item['data']);
-            if ($parsed === false) {
-              return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['data'] ]));
+          case FieldDataType::SERVICE_FEE:
+            // see that it is a valid decimal number ...
+            if (!empty($item['data'])) {
+              $parsed = $this->fuzzyInput->currencyValue($item['data']);
+              if ($parsed === false) {
+                return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['data'] ]));
+              }
+              $item['data'] = $parsed;
             }
-            $item['data'] = $parsed;
-          }
-          if (!empty($item['deposit'])) {
-            $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
-            if ($parsed === false) {
-              return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+            if (!empty($item['deposit'])) {
+              $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
+              if ($parsed === false) {
+                return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+              }
+              $item['deposit'] = $parsed;
             }
-            $item['deposit'] = $parsed;
-          }
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
         }
 
         $input = '';
@@ -500,7 +500,7 @@ class ProjectParticipantFieldsController extends Controller {
           $options[] = [ 'name' => $item['label'],
                          'value' => $key,
                          'flags' => ($default === $key ? PageNavigation::SELECTED : 0) ];
-          $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used);
+          $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used, $data['data-type']);
         }
         $options = PageNavigation::selectOptions($options);
 

@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -219,8 +221,8 @@ trait ParticipantFieldsTrait
             $fdd['mask'] = '%g';
             $fdd['align'] = 'right';
             break;
-          case FieldType::DATE:
-          case FieldType::DATETIME:
+          // case FieldType::DATE:
+          // case FieldType::DATETIME:
           case FieldType::SERVICE_FEE:
             $style = $this->defaultFDD[$dataType];
             if (empty($style)) {
@@ -229,6 +231,12 @@ trait ParticipantFieldsTrait
             unset($style['name']);
             $fdd = array_merge($fdd, $style);
             $fdd['css']['postfix'] = array_merge($fdd['css']['postfix'], $css);
+            break;
+          case FieldType::DATE:
+          case FieldType::DATETIME:
+          case FieldType::CLOUD_FILE:
+          case FieldType::CLOUD_FOLDER:
+          case FieldType::DB_FILE:
             break;
           }
         }
@@ -432,6 +440,16 @@ trait ParticipantFieldsTrait
               return null;
             };
             break;
+          case FieldType::DATE:
+          case FieldType::DATETIME:
+            $style = $this->defaultFDD[$dataType];
+            if (empty($style)) {
+              throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
+            }
+            unset($style['name']);
+            $fdd = array_merge($fdd, $style);
+            $fdd['css']['postfix'] = array_merge($fdd['css']['postfix'], $css);
+            // fall through
           default:
             if (!empty($defaultValue)) {
               $valueFdd['display|CAP'] = $valueFdd['display|CAP'] ?? [];
@@ -469,34 +487,47 @@ trait ParticipantFieldsTrait
             ]);
           $dataValue = reset($valueData);
           switch ($dataType) {
-          case FieldType::BOOLEAN:
-            break;
-          case 'money':
-          case FieldType::SERVICE_FEE:
-            $money = $this->moneyValue($dataValue);
-            $noMoney = $this->moneyValue(0);
-            // just use the amount to pay as label
-            $keyFdd['values2|LVDF'] = [
-              '' => '-,--',
-              0 => $noMoney, //'-,--',
-              $key => $money,
-            ];
-            $keyFdd['values2|CAP'] = [ $key => $money, ];
-            unset($keyFdd['mask']);
-            $keyFdd['php|VDLF'] = function($value) {
-              return $this->moneyValue($value);
-            };
-            break;
-          default:
-            if (!empty($dataValue)) {
+            case FieldType::BOOLEAN:
+              break;
+            case FieldType::SERVICE_FEE:
+              $money = $this->moneyValue($dataValue);
+              $noMoney = $this->moneyValue(0);
+              // just use the amount to pay as label
               $keyFdd['values2|LVDF'] = [
-                '' => '',
-                0 => '',
-                $key => $dataValue,
+                '' => '-,--',
+                0 => $noMoney, //'-,--',
+                $key => $money,
               ];
-            }
-            $keyFdd['values2|CAP'] = [ $key => $dataValue ];
-            break;
+              $keyFdd['values2|CAP'] = [ $key => $money, ];
+              unset($keyFdd['mask']);
+              $keyFdd['php|VDLF'] = function($value) {
+                return $this->moneyValue($value);
+              };
+              break;
+            case FieldType::DATE:
+            case FieldType::DATETIME:
+              if (!empty($dataValue)) {
+                try {
+                  $date = DateTime::parse($dataValue, $this->getDateTimeZone());
+                  $dataValue = ($dataType == FieldType::DATE)
+                    ? $this->dateTimeFormatter()->formatDate($date, 'medium')
+                    : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                } catch (\Throwable $t) {
+                  $this->logException($t);
+                  // don't care
+                }
+              }
+              // fall through
+            default:
+              if (!empty($dataValue)) {
+                $keyFdd['values2|LVDF'] = [
+                  '' => '',
+                  0 => '',
+                  $key => $dataValue,
+                ];
+              }
+              $keyFdd['values2|CAP'] = [ $key => $dataValue ];
+              break;
           } // data-type switch
           break;
         case FieldMultiplicity::PARALLEL:
@@ -598,12 +629,14 @@ trait ParticipantFieldsTrait
             $keyFdd['select'] = 'M';
             $keyFdd['css']['postfix'][] = $dataType;
             break;
+          case FieldType::DATE:
+          case FieldType::DATETIME:
           case FieldType::SERVICE_FEE:
             foreach ($dataOptions as $dataOption) {
               $key = (string)$dataOption['key'];
               $label = $dataOption['label'];
               $data  = $dataOption['data'];
-              $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType, 'money');
+              $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType);
             }
             unset($keyFdd['mask']);
             $keyFdd['values2glue'] = '<br/>';
@@ -992,7 +1025,7 @@ WHERE pp.project_id = $this->projectId",
               $groupMemberFdd['display'],
               [
                 'prefix' => '<label class="'.implode(' ', $css).'">',
-                'postfix' => ($this->allowedOptionLabel('', $fieldData, $dataType, 'money selected')
+                'postfix' => ($this->allowedOptionLabel('', $fieldData, $dataType, 'selected')
                               .'</label>'),
               ]);
           }
@@ -1051,7 +1084,7 @@ WHERE pp.project_id = $this->projectId",
             $css[] = ' money '.$dataType;
             foreach ($groupValues2 as $key => $value) {
               $groupValues2[$key] = $this->allowedOptionLabel(
-                $value, $groupValueData[$key], $dataType, 'money group');
+                $value, $groupValueData[$key], $dataType, 'group');
             }
           }
 
@@ -1218,10 +1251,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     return [ $joinStructure, $generator ];
   }
 
+  /**
+   * Create a label for a multi-value option (multiple, parallel, recurring).
+   */
   protected function allowedOptionLabel($label, $value, $dataType, $css = null, $data = null)
   {
     $label = Util::htmlEscape($label);
-    $css = empty($css) ? $dataType : $css.' '.$dataType;
+    $css = $dataType . (empty($css) ? '' : ' ' . $css);
     $innerCss = $dataType;
     $htmlData = [];
     if (is_array($data)) {
@@ -1234,14 +1270,26 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $htmlData = ' '.$htmlData;
     }
     switch ($dataType) {
-    case 'money':
-    case FieldType::SERVICE_FEE:
-      $value = $this->moneyValue($value);
-      $innerCss .= ' money';
-      break;
-    default:
-      $value = Util::htmlEscape($value);
-      break;
+      case FieldType::SERVICE_FEE:
+        $value = $this->moneyValue($value);
+        $innerCss .= ' money';
+        $css .= ' money';
+        break;
+      case FieldType::DATE:
+      case FieldType::DATETIME:
+        if (!empty($value)) {
+          try {
+            $date = DateTime::parse($value, $this->getDateTimeZone());
+            $value = ($dataType == FieldType::DATE)
+              ? $this->dateTimeFormatter()->formatDate($date, 'medium')
+              : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+          } catch (\Throwable $t) {
+            // don't care
+          }
+        }
+      default:
+        $value = Util::htmlEscape($value);
+        break;
     }
     $label = '<span class="allowed-option-name '.$innerCss.'">'.$label.'</span>';
     $sep   = '<span class="allowed-option-separator '.$innerCss.'">&nbsp;</span>';

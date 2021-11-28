@@ -58,6 +58,13 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
 
+  const OPTION_DATA_INPUT_SIZE = [
+    'default' => 9,
+    DataType::SERVICE_FEE => 9,
+    DataType::DATE => 7,
+    DataType::DATETIME => 12,
+  ];
+
   /**
    * @var string
    * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
@@ -555,36 +562,54 @@ __EOT__;
           $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
-          } else if (!empty($defaultRow['label'])) {
+          } else if ($multiplicity != Multiplicity::SIMPLE && !empty($defaultRow['label'])) {
             $value = $defaultRow['label'];
           } else {
             $value = null;
           }
         }
         switch ($multiplicity) {
-        case Multiplicity::GROUPOFPEOPLE:
-        case Multiplicity::GROUPSOFPEOPLE:
-        case Multiplicity::RECURRING:
-          $value = $this->l->t('n/a');
-          break;
-        default:
-          switch ($dataType) {
-          case DataType::CLOUD_FILE:
-          case DataType::DB_FILE:
-          case DataType::CLOUD_FOLDER:
+          case Multiplicity::GROUPOFPEOPLE:
+          case Multiplicity::GROUPSOFPEOPLE:
+          case Multiplicity::RECURRING:
             $value = $this->l->t('n/a');
             break;
-          case DataType::BOOLEAN:
-            $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
-            break;
-          case DataType::SERVICE_FEE:
-            $value = $this->moneyValue($value);
-            break;
-          case DataType::DATE:
-          case DataType::DATETIME:
           default:
-            break;
-          }
+            switch ($dataType) {
+              case DataType::CLOUD_FILE:
+              case DataType::DB_FILE:
+              case DataType::CLOUD_FOLDER:
+                $value = $this->l->t('n/a');
+                break;
+              case DataType::BOOLEAN:
+                $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
+                break;
+              case DataType::SERVICE_FEE:
+                $value = $this->moneyValue($value);
+                break;
+              case DataType::DATE:
+                if (!empty($value)) {
+                  try {
+                    $date = DateTime::parse($value, $this->getDateTimeZone());
+                    $value = $this->dateTimeFormatter()->formatDate($date, 'medium');
+                  } catch (\Throwable $t) {
+                    // ignore
+                  }
+                }
+                break;
+              case DataType::DATETIME:
+                if (!empty($value)) {
+                  try {
+                    $date = DateTime::parse($value, $this->getDateTimeZone());
+                    $value = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                  } catch (\Throwable $t) {
+                    // ignore
+                  }
+                }
+                break;
+              default:
+                break;
+            }
         }
         $html = '<span class="';
         if ($dataType != 'text' && $dataType != 'html') {
@@ -1139,11 +1164,22 @@ __EOT__;
           continue;
         }
         if (empty($value)) {
-          // empty values are set to null
-          continue;
+          $value = null;
+        } else if ($key != Uuid::NIL && $field == 'data') {
+          switch ($newvals['data_type']) {
+            case DataType::DATE:
+              $date = DateTime::parseFromLocale($value, $this->getLocale(), 'UTC');
+              $value = $date->format('Y-m-d');
+              break;
+            case DataType::DATETIME:
+              $date = DateTime::parseFromLocale($value, $this->getLocale(), $this->getDateTimeZone());
+              $value = $date->setTimezone('UTC')->toIso8601String();
+              break;
+          }
+          $this->logInfo('PARSED DATE IS ' . $value . ' ' . print_r($date, true));
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-        $optionValues[$field][] = $key.self::JOIN_KEY_SEP.$value;
+        $optionValues[$field][] = empty($value) ? null : $key.self::JOIN_KEY_SEP.$value;
       }
       if (($newvals['multiplicity'] == Multiplicity::SIMPLE
            || $newvals['multiplicity'] == Multiplicity::SINGLE)
@@ -1152,7 +1188,11 @@ __EOT__;
         break;
       }
     }
+
+    $this->debug('OPTION VALUES AFTER RESHAPE '.print_r($optionValues, true));
+
     foreach ($optionValues as $field => $fieldData) {
+      //  TODO: eliminate empty field-data
       $newvals[$field] = implode(',', $fieldData);
       if ($newvals[$field] != ($oldvals[$field]??null)) {
         $changed[] = $field;
@@ -1216,9 +1256,12 @@ __EOT__;
    * @param boolean $used Whether the DB already contains data
    * records referring to this item.
    *
+   * @param string $dataType Curent data-type in order to establish some
+   * default values.
+   *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml($value, $index, $used)
+  public function dataOptionInputRowHtml($value, $index, $used, $dataType = null)
   {
     $pfx = $this->pme->cgiDataName('data_options');
     $key = $value['key'];
@@ -1255,9 +1298,9 @@ __EOT__;
           .' class="field-key expert-mode-only"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
-          .' size="9"'
-          .' maxlength="8"'
+          .' title="'.$value[$prop].'"'
+          .' size="5"'
+          .' maxlength="'.strlen($value[$prop]).'"'
           .'/>'
           .'<input'
           .' type="hidden"'
@@ -1277,22 +1320,35 @@ __EOT__;
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
           .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
-          .' size="33"'
+          .' size="16"'
           .' maxlength="32"'
           .'/>'
           .'</td>';
     // data
     $prop = 'data';
+    $size = self::OPTION_DATA_INPUT_SIZE[$dataType]??self::OPTION_DATA_INPUT_SIZE['default'];
+    $fieldValue = $value[$prop];
+    if (!empty($fieldValue)) {
+      switch ($dataType) {
+        case DataType::DATE:
+          $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+          $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+          break;
+        case DataType::DATETIME:
+          $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+          $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+          break;
+      }
+    }
     $html .= '<td class="field-'.$prop.'"><input'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="field-'.$prop.'"'
-          .' type="text"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
-          .' maxlength="8"'
-          .' size="9"'
-          .'/></td>';
+      .($deleted ? ' readonly="readonly"' : '')
+      .' class="field-'.$prop.'"'
+      .' type="text"'
+      .' name="'.$pfx.'['.$index.']['.$prop.']"'
+      .' value="'.$fieldValue.'"'
+      .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+      .' size="'.$size.'"'
+      .'/></td>';
     // deposit
     $prop = 'deposit';
     $cssClass = implode(' ', [
@@ -1505,13 +1561,28 @@ __EOT__;
         case Multiplicity::SIMPLE:
           return '';
         case Multiplicity::SINGLE:
+          $singleOption = reset($allowed);
           switch ($dataType) {
-          case DataType::BOOLEAN:
-            return $this->l->t('true').' / '.$this->l->t('false');
-          case DataType::SERVICE_FEE:
-            return $this->moneyValue(0).' / '.$this->moneyValue(reset($allowed)['data']);
+            case DataType::BOOLEAN:
+              return $this->l->t('true').' / '.$this->l->t('false');
+            case DataType::SERVICE_FEE:
+              return $this->moneyValue(0).' / '.$this->moneyValue($singleOption['data']);
+            case DataType::DATE:
+              $fieldValue = $singleOption['data'];
+              if (!empty($fieldValue)) {
+                $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+              }
+              return $fieldValue;
+            case DataType::DATETIME:
+              $fieldValue = $singleOption['data'];
+              if (!empty($fieldValue)) {
+                $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+              }
+              return $fieldValue;
           default:
-            return '['.$this->l->t('empty').']'.' / '.reset($allowed)['data'];
+            return '['.$this->l->t('empty').']'.' / '.$singleOption['data'];
           }
       }
     }
@@ -1564,7 +1635,9 @@ __EOT__;
     if (!empty($dataType)) {
       $cssClass .= ' data-type-'.$dataType;
     }
-    $html .= '<table class="'.$cssClass.'">
+    $html .= '<table
+  class="'.$cssClass.'"
+  data-size=\'' . json_encode(self::OPTION_DATA_INPUT_SIZE) . '\'>
   <thead>
      <tr>';
     $html .= '<th class="operations"></th>';
@@ -1591,6 +1664,10 @@ __EOT__;
       $css = 'field-'.$key;
       if ($key == 'key') {
         $css .= ' expert-mode-only';
+      } else if ($key == 'deposit') {
+        $css .= ' not-data-type-service-fee-hidden';
+      } else if ($key == 'limit') {
+        $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
       }
       $html .=
             '<th'
@@ -1629,8 +1706,38 @@ __EOT__;
                   'medium');
               }
             } else {
-              if ($field == 'data' || $field == 'deposit') {
+              switch ($dataType) {
+                case DataType::SERVICE_FEE:
+                  $fieldValue = $this->currencyValue($fieldValue);
+                  break;
+                case DataType::DATE:
+                  if (!empty($fieldValue)) {
+                    try {
+                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                      $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+                      } catch (\Throwable $t) {
+                      // ignore
+                    }
+                    }
+                  break;
+                case DataType::DATETIME:
+                  if (!empty($fieldValue)) {
+                    try {
+                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                      $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                    } catch (\Throwable $t) {
+                      // ignore
+                    }
+                  }
+                  break;
+                default:
+                  break;
+              }
+              if ($field == 'deposit') {
                 $fieldValue = $this->currencyValue($fieldValue);
+                $css .= ' not-data-type-service-fee-hidden';
+              } else if ($field == 'limit') {
+                $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
               }
             }
             $html .= '<td class="'.$css.'">'.$fieldValue.'</td>';
@@ -1654,7 +1761,7 @@ __EOT__;
             continue;
           }
           $used = array_search(Uuid::uuidBytes($key), $usedKeys) !== false;
-          $html .= $this->dataOptionInputRowHtml($value, $idx, $used);
+          $html .= $this->dataOptionInputRowHtml($value, $idx, $used, $dataType);
           $idx++;
         }
         $html .= $this->dataOptionGeneratorHtml($fieldId, $generatorItem);
@@ -1709,7 +1816,19 @@ __EOT__;
     $key = $entry['key'];
     $name  = $this->pme->cgiDataName('data_options_' . $variant);
     $field = 'data';
-    $value = htmlspecialchars($entry[$field]);
+    if (!empty($value)) {
+      switch ($dataType) {
+        case DataType::DATE:
+          $date = DateTime::parse($value, $this->getDateTimeZone());
+          $value = $this->dateTimeFormatter()->formatDate($date, 'medium');
+          break;
+        case DataType::DATETIME:
+          $date = DateTime::parse($value, $this->getDateTimeZone());
+          $value = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+          break;
+      }
+    }
+    $value = htmlspecialchars($value);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
     if ($dataType == DataType::HTML) {
