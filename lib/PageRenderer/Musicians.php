@@ -533,7 +533,6 @@ make sure that the musicians are also automatically added to the
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
-          //'datemask' => 'd.m.Y H:i:s',
         ]
       );
     }
@@ -858,9 +857,9 @@ make sure that the musicians are also automatically added to the
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Last Updated"),
-          //"default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
-          "options" => 'LFAVCPDR' // Set by update trigger.
+          "options" => 'LFAVCPDR', // Set by update trigger.
+          'timeformat' => 'medium',
         ]
       );
 
@@ -870,9 +869,9 @@ make sure that the musicians are also automatically added to the
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Created"),
-          //"default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
-          "options" => 'LFAVCPDR' // Set by update trigger
+          "options" => 'LFAVCPDR', // Set by update trigger
+          'timeformat' => 'medium',
         ]
       );
 

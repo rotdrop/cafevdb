@@ -555,7 +555,6 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
-          //'datemask' => 'd.m.Y H:i:s',
         ]
       );
     }
@@ -1116,9 +1115,9 @@ class ProjectParticipants extends PMETableViewBase
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Last Updated"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR',
+          'timeformat' => 'medium',
         ]));
 
     $this->makeJoinTableField(
@@ -1128,9 +1127,9 @@ class ProjectParticipants extends PMETableViewBase
         [
           'tab' => ['id' => 'miscinfo'],
           "name" => $this->l->t("Created"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
           "nowrap" => true,
           "options" => 'LFAVCPDR',
+          'timeformat' => 'medium',
         ]));
 
     /*

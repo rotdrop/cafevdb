@@ -698,7 +698,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => [ 'postfix' => ' sepadate' ],
-        'datemask' => 'd.m.Y',
+        'dateformat' => 'medium',
       ]);
 
     $this->makeJoinTableField(
@@ -719,7 +719,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => [ 'postfix' => ' last-used-date' ],
-        'datemask' => 'd.m.Y'
+        'dateformat' => 'medium',
       ]);
 
     ///////////////

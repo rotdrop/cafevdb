@@ -276,7 +276,6 @@ class Projects extends PMETableViewBase
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
-          //'datemask' => 'd.m.Y H:i:s',
         ]
       );
     }
@@ -778,10 +777,9 @@ __EOT__;
         $this->defaultFDD['datetime'],
         [
           'tab' => ['id' => 'miscinfo'],
-          "name" => $this->l->t("Last Updated"),
-          "default" => date($this->defaultFDD['datetime']['datemask']),
-          "nowrap" => true,
-          "options" => 'LFAVCPDR' // Set by update trigger.
+          'name' => $this->l->t('Last Updated'),
+          'nowrap' => true,
+          'options' => 'LFAVCPDR' // Set by update trigger.
         ]
       );
 

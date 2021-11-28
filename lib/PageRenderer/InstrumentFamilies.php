@@ -246,7 +246,6 @@ class InstrumentFamilies extends PMETableViewBase
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
-          //'datemask' => 'd.m.Y H:i:s',
         ]
       );
     }

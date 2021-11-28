@@ -601,7 +601,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'select'   => 'T',
         'maxlen'   => 19,
         'sort'     => true,
-        'datemask' => 'd.m.Y H:i:s',
+        'dateformat' => 'medium',
+        'timeformat' => 'short',
         'css'      => [ 'postfix' => [ 'datetime', ], ],
       ],
       'date' => [
@@ -609,7 +610,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => [ 'postfix' => [ 'date', ], ],
-        'datemask' => 'd.m.Y',
+        'dateformat' => 'medium',
+        'timeformat' => false, // or leave out
       ],
       'due_date' => [
         'select'   => 'T',
@@ -617,7 +619,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => [ 'postfix' => [ 'date', 'due-date', ], ],
-        'datemask' => 'd.m.Y',
+        'dateformat' => 'medium',
       ],
       // Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity
       'deleted' => [
@@ -626,7 +628,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'maxlen' => 10,
         'sort' => true,
         'css' => [ 'postfix' => [ 'revocation-date', 'date',  'show-disabled-shown', 'hide-disabled-hidden', ], ],
-        'datemask' => 'd.m.Y',
+        'dateformat' => 'medium',
         'default' => null,
       ],
     ];
