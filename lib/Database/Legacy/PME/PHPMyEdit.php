@@ -27,6 +27,7 @@ use \OCP\IRequest;
 use \OCP\ILogger;
 use \OCP\IL10N;
 use \OCP\IDateTimeZone;
+use \OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver\ResultStatement;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
@@ -53,6 +54,9 @@ class PHPMyEdit extends \phpMyEdit
 
   /** @var IDateTimeZone */
   private $dateTimeZone;
+
+  /** @var IDateTimeFormatter */
+  private $dateTimeFormatter;
 
   private $defaultOptions;
 
@@ -89,6 +93,7 @@ class PHPMyEdit extends \phpMyEdit
     , ILogger $logger
     , IL10N $l10n
     , IDateTimeZone $dateTimeZone
+    , IDateTimeFormatter $dateTimeFormatter
   )
   {
     $this->entityManager = $entityManager;
@@ -102,6 +107,7 @@ class PHPMyEdit extends \phpMyEdit
     $this->logger = $logger;
     $this->l = $l10n;
     $this->dateTimeZone = $dateTimeZone;
+    $this->dateTimeFormatter = $dateTimeFormatter;
     $this->debug = false;
 
     $this->overrideOptions = [
@@ -572,6 +578,65 @@ class PHPMyEdit extends \phpMyEdit
     }
 
     return $modTimeStamp;
+  }
+
+  /**
+   * Create a time-string for user display from a data-base value
+   */
+  function makeUserTimeString($k, $row)
+  {
+    $value = '';
+    $data = $row["qf$k"."_timestamp"];
+    switch ($data) {
+      case '':
+      case 0:
+      case '0000-00-00':
+        // Invalid date and time
+        break;
+      default:
+        if (!is_numeric($data)) {
+          // Convert whatever is contained in the timestamp field to
+          // seconds since the epoch.
+          $data = $this->makeTimeStampFromDatabase($data);
+        }
+        $timeStamp = intval($data);
+        $dateFormat = $timeFormat = $this->fdd[$k]['datetimeformat'] ?? false;
+        $dateFormat = $this->fdd[$k]['dateformat'] ?? false;
+        $timeFormat = $this->fdd[$k]['timeformat'] ?? false;
+
+        if (!empty($dateFormat) && !empty($timeFormat)) {
+          if ($dateFormat === true && $timeFormat === true) {
+            return $this->dateTimeFormatter->formatDateTime($timestamp);
+          } else if ($timeFormat === true) {
+            return $this->dateTimeFormatter->formatDateTime($timestamp, $dateFormat);
+          } else {
+            return $this->dateTimeFormatter->formatDateTime($timestamp, $dateFormat, $timeFormat);
+          }
+        } else if (!empty($dateFormat)) {
+          return $dateFormat === true
+            ? $this->dateTimeFormatter->formatDate($timeStamp)
+            : $this->dateTimeFormatter->formatDate($timeStamp, $dateFormat);
+        } else if (!empty($timeFormat)) {
+          return $timeFormat === true
+            ? $this->timeTimeFormatter->formatTime($timeStamp)
+            : $this->timeTimeFormatter->formatTime($timeStamp, $timeFormat);
+        } else if (!empty($this->fdd[$k]['datemask'])) {
+          return @date($this->fdd[$k]['datemask'], $timeStamp);
+        } else if (!empty($this->fdd[$k]['strftimemask'])) {
+          return @strftime($this->fdd[$k]['strftimemask'], $timeStamp);
+        }
+    }
+    return $value;
+  }
+
+  /** "register" the date-time-format extension */
+  function col_has_datemask($k)
+  {
+    return parent::col_has_datemask($k)
+      || ($this->fdd[$k]['datetimeformat']
+          ?? $this->fdd[$k]['dateformat']
+          ?? $this->fdd[$k]['timeformat']
+          ?? false);
   }
 
   /*
