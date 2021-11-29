@@ -29,6 +29,7 @@ class Util
 
   public const OMIT_EMPTY_FIELDS = 1;
   public const TRIM = 2;
+  public const ESCAPED = 4;
 
   public const FILE_EXTENSIONS_BY_MIME_TYPE = [
     'image/png' => 'png',
@@ -146,18 +147,53 @@ class Util
   }
 
   /**
-   * Explode, but omit empty array members, i.e. return empty array
-   * for empty string.
+   * A preg_explode() wrapper with some extra features.
+   *
+   * @param string $delim The delimiter string.
+   *
+   * @param string $string The string to split.
+   *
+   * @param int $flags Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED
+   * - self::OMIT_EMPTY_FIELDS Omit empty fields from the output array
+   * - self::TRIM Trim white-space around the delimiter
+   * - self::ESCAPED Ignore escaped delimiters and replace escaped delimiters
+   *   in the output array.. See paramterer $escape.
+   *
+   * @param string $escape The escape character when self::ESCAPED is set.
+   *
+   * @return array
    */
-  static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
+  static public function explode(string $delim, string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
   {
-    if (!empty($flags)) {
-      $pregFlags = ($flags & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
-      $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
-      return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
-    } else {
+    if (empty($flags)) {
       return explode($delim, $string);
     }
+    $pregFlags = ($flags & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
+    $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
+    if ($flags & self::ESCAPED) {
+      return
+        str_replace(
+          [ $escape.$escape, $escape.$delim ],
+          [ $escape, $delim ],
+          preg_split('/'.$trimExpr.preg_quote($escape, '/').'.'.'(*SKIP)(*FAIL)|'.preg_quote($delim, '/').$trimExpr.'/s', $string, -1, $pregFlags)
+        );
+    } else {
+      return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
+    }
+  }
+
+  /**
+   * Counter-part to self::explode()
+   */
+  static public function implode(string $delim, string $string, int $flags = self::ESCAPED, string $escape = '\\'):string
+  {
+    if ($flags & self::ESCAPED) {
+      $string = str_replace(
+        [ $escape, $delim ],
+        [ $escape.$escape, $escape.$delim ],
+        $string);
+    }
+    return implode($delim, $string);
   }
 
   /**
