@@ -272,8 +272,8 @@ trait SepaAccountsTrait
             $mandateDeleted = Util::explodeIndexed($row['qf'.($k-3)]);
             $references = Util::explodeIndexed($row['qf'.($k-4)]);
 
-            $this->logInfo('M DELETED '.print_r($mandateDeleted, true));
-            $this->logInfo('A DELETED '.print_r($accountDeleted, true));
+            $this->logDebug('M DELETED '.print_r($mandateDeleted, true));
+            $this->logDebug('A DELETED '.print_r($accountDeleted, true));
 
             $html = '<table class="'.($this->showDisabled ? 'show-deleted' : 'hide-deleted').' row-count-'.count($ibans).'">
   <tbody>';
