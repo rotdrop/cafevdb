@@ -176,7 +176,13 @@ const ready = function(selector, resizeCB) {
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
       })
-      .addClass(multiplicityClass + ' ' + dataTypeClass + ' ' + depositDueDateClass);
+      .addClass([multiplicityClass, dataTypeClass, depositDueDateClass]);
+    container.find('tr.data-options table.data-options')
+      .removeClass(function(index, className) {
+        return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
+      })
+      .addClass([multiplicityClass, dataTypeClass]);
+
     container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function(index) {
       const $this = $(this);
       $this.prop(
@@ -516,8 +522,6 @@ const ready = function(selector, resizeCB) {
         // just remove the row
         $row.remove();
         $.fn.cafevTooltip.remove();
-        allowedHeaderVisibility();
-        resizeCB();
       } else {
         // must not delete, mark as inactive
         $row.data('deleted', Date.now() / 1000.0);
@@ -529,6 +533,8 @@ const ready = function(selector, resizeCB) {
       const dfltSelect = container.find('select.default-multi-value');
       dfltSelect.find('option[value="' + key + '"]').remove();
       dfltSelect.trigger('chosen:updated');
+      allowedHeaderVisibility();
+      resizeCB();
     }
     return false;
   });
