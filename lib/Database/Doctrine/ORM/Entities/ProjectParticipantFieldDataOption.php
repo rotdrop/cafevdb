@@ -429,7 +429,10 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Filter field-data by musician
+   * Filter field-data by musician.
+   *
+   * @todo Why does this return a collection? There should be zero or one data
+   * item.
    *
    * @param Musician $musician
    */
