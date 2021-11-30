@@ -662,11 +662,25 @@ body.cafevdb-modalizer {
 .dropdown-container {
   position: relative;
 
+  $dropDownButtonWidth: 44px;
+  $dropDownButtonHeight: 44px;
+
+  .dropdown-button {
+    width:$dropDownButtonWidth;
+    height:$dropDownButtonHeight;
+    display:inline-block;
+    background-color: rgba(255, 255, 255, 0.6);
+    &:hover {
+      color:white;
+      opacity:1;
+    }
+  }
+
   &.tooltips-disabled .dropdown-content li a img.tooltips-checkmark {
     opacity:0.3;
   }
 
-  &.tooltips-enabled .dropdown-content li a img.tooltips-checkmark {
+  &.tooltips-enabled .dropdown-content li a img.tooltips-acheckmark {
     opacity:1;
   }
 
@@ -679,7 +693,11 @@ body.cafevdb-modalizer {
     filter: drop-shadow(0 1px 5px var(--color-box-shadow));
     /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-    z-index: 1;
+    z-index: 10;
+
+    &.dropdown-dropup {
+      bottom:$dropDownButtonHeight;
+    }
 
     &.dropdown-align-right {
       right:0; /* 5px; */
@@ -689,36 +707,56 @@ body.cafevdb-modalizer {
     }
 
     /* Links inside the dropdown */
-    li {
-      margin:0!important;
-      padding:0!important;
-      float:none!important;
-      a {
-        color: var(--color-main-text);
-        padding: 10px 12px;
-        text-decoration: none;
-        display: block;
+    ul, ul.menu-list {
+      li, li.menu-item {
+        margin:0!important;
+        padding:0!important;
+        float:none!important;
+        label, label.menu-item,
+        a, a.menu-item,
+        a:visited, a.menu-item:visited {
+          color: var(--color-main-text);
+          padding: 10px 12px;
+          font-weight: bold;
+          font-style:normal;
+          text-decoration: none;
+          display: block;
 
-        img {
-          opacity:0.7;
-          margin-right:10px;
-          height:16px;
-          width:16px;
-          vertical-align:baseline;
-          border:0;
+          img {
+            opacity:0.7;
+            margin-right:10px;
+            height:16px;
+            width:16px;
+            vertical-align:baseline;
+            border:0;
+          }
+
+          img[src=""] {
+            display: none;
+          }
+
+          /* Change color of dropdown links on hover */
+          &:hover {
+            background-color: var(--color-background-hover);
+          }
+
+          &:active {
+            background-color: var(--color-primary-light);
+          }
         }
-
-        img[src=""] {
-          display: none;
+        input.checkbox + {
+          a, & {
+            img.checkmark {
+              opacity:0.3;
+            }
+          }
         }
-
-        /* Change color of dropdown links on hover */
-        &:hover {
-          background-color: var(--color-background-hover);
-        }
-
-        &:active {
-          background-color: var(--color-primary-light);
+        input.checkbox:checked + {
+          a, & {
+            img.checkmark {
+              opacity:1;
+            }
+          }
         }
       }
     }
