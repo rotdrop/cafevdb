@@ -500,6 +500,8 @@ class ProjectParticipantFields extends PMETableViewBase
     , "limit", $join_table.`limit`
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
+    , "untranslated_label", $join_table.label
+    , "untranslated_tooltip", $join_table.tooltip
 ) ORDER BY ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
       'values' => [
         'column' => 'key',
@@ -1420,7 +1422,7 @@ __EOT__;
    * Generate a row given values and index for the "change" view
    * corresponding to the multi-choice fields.
    *
-   * @param array $value One row of the form as returned form
+   * @param array $dataOption One row of the form as returned form
    * self::explodeDataOptions()
    *
    * @param integer $index A unique row number.
@@ -1433,15 +1435,15 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml($value, $index, $used, $dataType = null)
+  public function dataOptionInputRowHtml($dataOption, $index, $used, $dataType = null)
   {
     $pfx = $this->pme->cgiDataName('data_options');
-    $key = $value['key'];
-    $deleted = !empty($value['deleted']);
+    $key = $dataOption['key'];
+    $deleted = !empty($dataOption['deleted']);
     $data = ''
           .' data-index="'.$index.'"' // real index
           .' data-used="'.($used ? 'used' : 'unused').'"'
-          .' data-deleted="'.$value['deleted'].'"';
+          .' data-deleted="'.$dataOption['deleted'].'"';
     $html = '';
     $html .= '
     <tr'
@@ -1472,41 +1474,42 @@ __EOT__;
           .' type="text"'
           .' class="'.$cssClass.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.$value[$prop].'"'
+          .' value="'.$dataOption[$prop].'"'
+          .' title="'.$dataOption[$prop].'"'
           .' size="5"'
-          .' maxlength="'.strlen($value[$prop]).'"'
+          .' maxlength="'.strlen($dataOption[$prop]).'"'
           .'/>'
           .'<input'
           .' type="hidden"'
           .' class="field-deleted"'
           .' name="'.$pfx.'['.$index.'][deleted]"'
-          .' value="'.$value['deleted'].'"'
+          .' value="'.$dataOption['deleted'].'"'
           .'/>'
           .'</td>';
     // label
     $prop = 'label';
     $cssClass = 'field-' . $prop;
     $html .= '<td class="'.$cssClass.'">'
-          .'<input'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' spellcheck="true"'
-          .' type="text"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
-          .' size="16"'
-          .' maxlength="32"'
-          .'/>'
-          .'</td>';
+      .'<input'
+      .($deleted ? ' readonly="readonly"' : '')
+      .' class="'.$cssClass.'"'
+      .' spellcheck="true"'
+      .' type="text"'
+      .' name="'.$pfx.'['.$index.']['.$prop.']"'
+      .' value="'.Util::htmlEscape($dataOption[$prop]).'"'
+      .' data-untranslated="'.Util::htmlEscape($dataOption['untranslated_'.$prop]??'').'"'
+      .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+      .' size="16"'
+      .' maxlength="32"'
+      .'/>'
+      .'</td>';
     // data
     $prop = 'data';
     $cssClass = self::OPTION_DATA_SHOW_MASK[$prop]??[];
     $cssClass[] = 'field-' . $prop;
     $cssClass = implode(' ', $cssClass);
     $size = self::OPTION_DATA_INPUT_SIZE[$dataType]??self::OPTION_DATA_INPUT_SIZE['default'];
-    $fieldValue = $value[$prop];
+    $fieldValue = $dataOption[$prop];
     if (!empty($fieldValue)) {
       switch ($dataType) {
         case DataType::DATE:
@@ -1549,7 +1552,7 @@ __EOT__;
           .' step="0.01"'
           .' required'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
+          .' value="'.$dataOption[$prop].'"'
           .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' maxlength="8"'
           .' size="9"'
@@ -1562,7 +1565,7 @@ __EOT__;
           .' class="'.$cssClass.'"'
           .' type="number"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
+          .' value="'.$dataOption[$prop].'"'
           .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' maxlength="8"'
           .' size="9"'
@@ -1571,17 +1574,18 @@ __EOT__;
     $prop = 'tooltip';
     $cssClass = 'field-'.$prop;
     $html .= '<td class="'.$cssClass.'">'
-          .'<textarea'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
-          .' cols="32"'
-          .' rows="1"'
-          .'>'
-          .$value[$prop]
-          .'</textarea>'
-          .'</td>';
+      .'<textarea'
+      .($deleted ? ' readonly="readonly"' : '')
+      .' class="'.$cssClass.'"'
+      .' name="'.$pfx.'['.$index.']['.$prop.']"'
+      .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+      .' cols="32"'
+      .' rows="1"'
+      .' data-untranslated="'.Util::htmlEscape($dataOption['untranslated_'.$prop]).'"'
+      .'>'
+      .Util::htmlEscape($dataOption[$prop])
+      .'</textarea>'
+      .'</td>';
     // finis
     $html .= '
     </tr>';

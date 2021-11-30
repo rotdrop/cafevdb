@@ -563,10 +563,11 @@ class ProjectParticipantFieldsService
     $result = [];
     foreach ($options as $option) {
       $keys = array_keys($option);
-      if ($keys !== $protoKeys) {
+      $missingKeys = array_diff($protoKeys, $keys);
+      if (!empty($missingKeys)) {
         throw new \InvalidArgumentException(
-          $this->l->t('Prototype keys "%s" and options keys "%s" differ',
-                      [ implode(',', $protoKeys), implode(',', $keys) ])
+          $this->l->t('Prototype keys "%s" and options keys "%s" differ, missing "%s"',
+                      [ implode(',', $protoKeys), implode(',', $keys), implode(',', $missingKeys) ])
         );
       }
       if ($trimInactive && !empty($option['deleted'])) {
