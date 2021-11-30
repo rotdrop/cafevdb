@@ -1671,8 +1671,8 @@ __EOT__;
         'key' => $this->l->t('Key'),
         'label' => $this->l->t('Label'),
         'data' => $this->l->t('Data'),
-        'deposit' => $this->l->t('Deposit'),
-        'limit' => $this->l->t('Start Date'),
+        'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
+        'limit' => $this->l->t('Limit'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     } else {
