@@ -97,7 +97,7 @@ class InstrumentationService
     if ($persist) {
       $this->persist($dummy);
     }
-    if ($dummy->getSepaBankAccounts()->count() == 0) {
+    if ($dummy->getSepaBankAccounts()->isEmpty()) {
       // also generate a dummy bank account
       $bankAccount = (new Entities\SepaBankAccount)
                    ->setMusician($dummy)

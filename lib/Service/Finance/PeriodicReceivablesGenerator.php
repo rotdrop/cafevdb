@@ -127,7 +127,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
       $tooltipText = $this->l->t($tooltipTemplate);
 
       $existingReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$seconds]));
-      if ($existingReceivables->count() == 0) {
+      if ($existingReceivables->isEmpty()) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
@@ -159,7 +159,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
     $added = $removed = $changed = $skipped = false;
     $notices = [];
-    if ($existingReceivableData->count() == 0) {
+    if ($existingReceivableData->isEmpty()) {
       $datum = (new Entities\ProjectParticipantFieldDatum)
              ->setField($receivable->getField())
              ->setMusician($participant->getMusician())
@@ -172,9 +172,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
       $participant->getProject()->getParticipantFieldsData()->add($datum);
       $added = true;
     } else {
-      // there is at most one ...
       /** @var Entities\ProjectParticipantFieldDatum $datum */
-      $datum = $existingReceivableData->first();
+      $datum = $existingReceivableData->first(); // there is at most one ...
       $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
       $changed = true;
     }

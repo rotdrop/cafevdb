@@ -176,8 +176,10 @@ class ProjectParticipantFieldsService
    * Fetch all generator fields for the given project.
    *
    * @param $project
+   *
+   * @return Collections\Collection
    */
-  public function generatedFields(Entities\Project $project)
+  public function generatedFields(Entities\Project $project):Collections\Collection
   {
     // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
     //   'multiplicity' => Multiplicity::RECURRING
@@ -660,10 +662,11 @@ class ProjectParticipantFieldsService
    */
   public function filterByFieldName(Collections\Collection $things, string $fieldName, $singleResult = true)
   {
-    if ($things->count() == 0) {
+    if ($things->isEmpty()) {
       return $singleResult ? null :  new Collections\ArrayCollection;
     }
     $fieldNames = $this->translationVariants($fieldName);
+    /** @var Collections\ArrayCollection $remaining */
     $remaining = new Collections\ArrayCollection;
     if ($things->first() instanceof Entities\ProjectParticipantField) {
       /** @var Entities\ProjectParticipantField $field */
@@ -707,7 +710,7 @@ class ProjectParticipantFieldsService
     if ($singleResult) {
       if ($remaining->count() == 1) {
         return $remaining->first();
-      } else if ($remaining->count() == 0) {
+      } else if ($remaining->isEmpty()) {
         return null;
       }
     }

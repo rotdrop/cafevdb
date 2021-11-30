@@ -1646,7 +1646,7 @@ Störung.';
       $fieldData = $musician->getProjectParticipantFieldsData()
         ->matching(DBUtil::criteriaWhere([ 'field' => $field, 'deleted' => null ]));
 
-      if ($fieldData->count() == 0) {
+      if ($fieldData->isEmpty()) {
         // Fields are optional, perhaps one could add a "required" field qualifier ...
         continue;
       }
@@ -1672,7 +1672,7 @@ Störung.';
               return in_array((string)$fieldDatum->getOptionKey(), $selectedKeys);
             });
           }
-          if ($fieldData->count() == 0) {
+          if ($fieldData->isEmpty()) {
             // ok, field-data is optional
             continue 2;
           }

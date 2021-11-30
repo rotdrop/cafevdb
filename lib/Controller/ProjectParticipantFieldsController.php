@@ -381,7 +381,7 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->l->t('Unable to find a project with id %d.', $projectId));
         }
         $generatedFields = $this->participantFieldsService->generatedFields($project);
-        if ($generatedFields->count() == 0) {
+        if ($generatedFields->isEmpty()) {
           return self::response(
             $this->l->t('Project "%s" has no generated fields.', $project->getName()));
         }

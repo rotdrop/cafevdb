@@ -145,6 +145,10 @@ class SepaBulkTransactionService
    * will be capped according to their receivable-due-date and deposit-due-date.
    *
    * @return Entities\CompositePayment
+   *
+   * @todo Check
+   * Entities\ProjectParticipantFieldDataOption::getMusicianFieldData(), it
+   * should only return more than one item if there are also deleted items.
    */
   public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueDate = null):Entities\CompositePayment
   {

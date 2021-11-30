@@ -138,7 +138,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         $tooltipText = $this->l->t($tooltipTemplate);
       }
       $yearReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]));
-      if ($yearReceivables->count() == 0) {
+      if ($yearReceivables->isEmpty()) {
         // add a new option
         $receivable = (new Entities\ProjectParticipantFieldDataOption)
                     ->setField($this->serviceFeeField)
