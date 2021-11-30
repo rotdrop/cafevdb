@@ -27,6 +27,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use OCP\ILogger;
 
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
@@ -37,10 +38,17 @@ class ReceivablesGeneratorFactory
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const GENERATORS_FOLDER = __DIR__ . '/../../';
   const GENERATOR_LABEL = IRecurringReceivablesGenerator::GENERATOR_LABEL;
 
   /** @var IAppContainer */
   private $appContainer;
+
+  /**
+   * @var array
+   * List of known generators.
+   */
+  private $generators;
 
   public function __construct(
     IAppContainer $appContainer
@@ -70,15 +78,13 @@ class ReceivablesGeneratorFactory
     , $progressToken = null
   ):IRecurringReceivablesGenerator
   {
-    if ($serviceFeeField->getMultiplicity() != Multiplicity::RECURRING()
-        || $serviceFeeField->getDataType() != FieldDataType::SERVICE_FEE()) {
+    $multiplicity = $serviceFeeField->getMultiplicity();
+    $dataType = $serviceFeeField->getDataType();
+    if (!ProjectParticipantFieldsService::isSupportedType($multiplicity, $dataType)) {
       throw new \RuntimeException(
         $this->l->t(
-          'Can only auto-generate receivables for recurring service-fee entities, multiplicity/data-type = %s/%s',
-          [
-            (string)$serviceFeeField->getMultiplicity(),
-            (string)$serviceFeeField->getDataType(),
-          ]));
+          'Auto-generating receivables or options for the combination of multiplicity/data-type = %s/%s is unsupported', [ $multiplicity, $dataType, ])
+      );
     }
 
     // the generator is coded in the data-option with nil-uuid
@@ -105,5 +111,50 @@ class ReceivablesGeneratorFactory
     $generatorInstance->bind($serviceFeeField, $progressToken);
 
     return $generatorInstance;
+  }
+
+
+  public function findGenerators(string $directory = self::GENERATORS_FOLDER):array
+  {
+    $directory = realpath($directory);
+    if ($directory === false || !file_exists($directory) || !is_dir($directory)) {
+      return [];
+    }
+    if (!empty($this->generators[$directory])) {
+      return $this->generators[$directory];
+    }
+
+    $iterator = new \RegexIterator(
+      new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
+        \RecursiveIteratorIterator::LEAVES_ONLY
+      ),
+      '#^.+\\/[^/]+ReceivablesGenerator\\.php$#i',
+      \RegexIterator::GET_MATCH);
+
+    $files = array_keys(iterator_to_array($iterator));
+
+    $generators = [];
+    foreach ($files as $file) {
+      try {
+        @include_once $file;
+      } catch (\Throwable $t) {
+        // ignore
+      }
+    }
+    foreach (get_declared_classes() as $className) {
+      if (is_subclass_of($className, IRecurringReceivablesGenerator::class)) {
+        try {
+          $generators[$className::slug()] = $className;
+        } catch (\Throwable $t) {
+          // ignore
+        }
+      }
+    }
+    asort($generators);
+
+    $this->generators[$directory] = $generators;
+
+    return $this->generators[$directory];
   }
 }

@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Functions;
 
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
@@ -119,19 +120,15 @@ class ProjectParticipantFieldsService
    *
    * @return array
    */
-  static public function recurringReceivablesGenerators()
+  public function recurringReceivablesGenerators()
   {
-    return [
-      'nothing' => DoNothingReceivablesGenerator::class,
-      'daily' => PeriodicReceivablesGenerator::class,
-      'insurance' => InstrumentInsuranceReceivablesGenerator::class,
-      // 'membership' => MembershipFeesReceivablesGenerator::class, not yet
-    ];
+    $generatorsFactory = $this->di(ReceivablesGeneratorFactory::class);
+    return $generatorsFactory->findGenerators();
   }
 
   public function resolveReceivableGenerator($value)
   {
-    $generators = self::recurringReceivablesGenerators();
+    $generators = $this->recurringReceivablesGenerators();
     if (!empty($generators[$value])) {
       $value = $generators[$value];
     } else {
