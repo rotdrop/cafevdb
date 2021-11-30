@@ -1609,38 +1609,48 @@ __EOT__;
       $showDeletedTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-deleted']);
       $showDataLabel = $this->l->t("Show data-fields.");
       $showDataTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-data']);
-      $html .=<<<__EOT__
-<div class="field-display-options notnot-multiplicity-recurring">
-  <div class="show-deleted">
-    <input type="checkbox"
-           name="show-deleted"
-           class="show-deleted checkbox"
-           value="show"
-           id="data-options-show-deleted"
-           />
-    <label class="show-deleted"
-           for="data-options-show-deleted"
-           title="$showDeletedTip"
-           >
-      $showDeletedLabel
-    </label>
+      $displayOptions = '
+<div class="field-display-options dropdown-container">
+  <div class="field-display-options dropdown-button icon-menu"
+       title="'.Util::htmlEscape($this->toolTipsService['participant-fields:show-display-options']).'">
   </div>
-  <div class="show-data">
-    <input type="checkbox"
-           name="show-data"
-           class="show-data checkbox"
-           value="show"
-           id="data-options-show-data"
-           />
-    <label class="show-data"
-           for="data-options-show-data"
-           title="$showDataTip"
-           >
-      $showDataLabel
-    </label>
-  </div>
+  <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
+    <ul class="menu-list">
+      <li class="menu-item show-deleted tooltip-left" title="'.$showDeletedTip.'">
+        <label class="show-deleted menu-item" for="data-options-show-deleted">
+          <input type="checkbox"
+                 name="show-deleted"
+                 class="show-deleted checkbox"
+                 value="show"
+                 id="data-options-show-deleted"
+          />
+          <img class="show-deleted checkmark"
+               alt=""
+               src="'.$this->urlGenerator()->imagePath('core', 'actions/checkmark.svg').'"
+          >
+          '.$showDeletedLabel.'
+        </label>
+      </li>
+      <li class="menu-item show-data tooltip-left" title="'.$showDataTip.'">
+        <label class="show-data menu-item" for="data-options-show-data">
+          <input type="checkbox"
+                 name="show-data"
+                 class="show-data checkbox"
+                 value="show"
+                 id="data-options-show-data"
+          />
+          <img class="show-data checkmark"
+               alt=""
+               src="'.$this->urlGenerator()->imagePath('core', 'actions/checkmark.svg').'"
+          >
+          '.$showDataLabel.'
+        </label>
+      </li>
+    </ul>
+  </nav>
 </div>
-__EOT__;
+';
+      $html .= $displayOptions;
     }
 
     $cssClass = 'operation-'.$op.' data-options';
