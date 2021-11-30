@@ -151,7 +151,7 @@ class Util
    *
    * @param string $delim The delimiter string.
    *
-   * @param string $string The string to split.
+   * @param null|string $string The string to split.
    *
    * @param int $flags Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED
    * - self::OMIT_EMPTY_FIELDS Omit empty fields from the output array
@@ -163,7 +163,7 @@ class Util
    *
    * @return array
    */
-  static public function explode(string $delim, string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
+  static public function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
   {
     if (empty($flags)) {
       return explode($delim, $string);
