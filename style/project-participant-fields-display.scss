@@ -44,7 +44,7 @@ form.pme-form.project-participant-fields-display {
 
   &:not(.pme-change) {
     span.allowed-option-name:empty,
-    span.allowed-option-name:empty ~ span {
+    span.allowed-option-name:empty ~ span.allowed-option-separator {
       display:none;
     }
 
@@ -298,9 +298,28 @@ form.pme-form.project-participant-fields-display {
         &.row-count-0 thead  {
           display:none;
         }
+        tr.field-datum td.input {
+          position:relative;
+          width:100%;
+          label.lock-unlock.left-of-input.position-right {
+            right:0;
+            margin-right:4px;
+          }
+          input:not([type=checkbox]) {
+            width:100%;
+          }
+        }
         tr.generator {
           border-top: 1px solid black;
         }
+         th, td {
+           &.document-count-0 {
+             display:none;
+           }
+           &.label.unlabelled {
+             display:none;
+           }
+         }
       }
     }
   }

@@ -1291,11 +1291,15 @@ __EOT__;
     </td>';
     // key
     $prop = 'key';
-    $html .= '<td class="field-'.$prop.' expert-mode-only">'
+    $cssClass = implode(' ', [
+      'field-' . $prop,
+      'expert-mode-only',
+    ]);
+    $html .= '<td class="'.$cssClass.'">'
           .'<input'
           .($used || $deleted || true ? ' readonly="readonly"' : '')
           .' type="text"'
-          .' class="field-key expert-mode-only"'
+          .' class="'.$cssClass.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
           .' title="'.$value[$prop].'"'
@@ -1311,10 +1315,11 @@ __EOT__;
           .'</td>';
     // label
     $prop = 'label';
-    $html .= '<td class="field-'.$prop.'">'
+    $cssClass = 'field-' . $prop;
+    $html .= '<td class="'.$cssClass.'">'
           .'<input'
           .($deleted ? ' readonly="readonly"' : '')
-          .' class="field-'.$prop.'"'
+          .' class="'.$cssClass.'"'
           .' spellcheck="true"'
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
@@ -1326,6 +1331,7 @@ __EOT__;
           .'</td>';
     // data
     $prop = 'data';
+    $cssClass = 'field-' . $prop;
     $size = self::OPTION_DATA_INPUT_SIZE[$dataType]??self::OPTION_DATA_INPUT_SIZE['default'];
     $fieldValue = $value[$prop];
     if (!empty($fieldValue)) {
@@ -1340,9 +1346,9 @@ __EOT__;
           break;
       }
     }
-    $html .= '<td class="field-'.$prop.'"><input'
+    $html .= '<td class="'.$cssClass.'"><input'
       .($deleted ? ' readonly="readonly"' : '')
-      .' class="field-'.$prop.'"'
+      .' class="'.$cssClass.'"'
       .' type="text"'
       .' name="'.$pfx.'['.$index.']['.$prop.']"'
       .' value="'.$fieldValue.'"'
@@ -1357,8 +1363,9 @@ __EOT__;
       'not-multiplicity-single-set-deposit-due-date-required',
       'not-multiplicity-groupofpeople-set-deposit-due-date-required',
       'set-deposit-due-date-required',
+      'not-data-type-service-fee-hidden',
     ]);
-    $html .= '<td class="field-'.$prop.'"><input'
+    $html .= '<td class="'.$cssClass.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
           .' class="'.$cssClass.'"'
           .' type="number"'
@@ -1372,9 +1379,15 @@ __EOT__;
           .'/></td>';
     // limit
     $prop = 'limit';
-    $html .= '<td class="field-'.$prop.'"><input'
+    $cssClass = implode(' ', [
+      'field-' . $prop,
+      'not-multiplicity-recurring-hidden',
+      'not-multiplicity-groupofpeople-hidden',
+      'not-multiplicity-groupsofpeople-hidden',
+    ]);
+    $html .= '<td class="'.$cssClass.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
-          .' class="field-'.$prop.'"'
+          .' class="'.$cssClass.'"'
           .' type="number"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
@@ -1384,10 +1397,11 @@ __EOT__;
           .'/></td>';
     // tooltip
     $prop = 'tooltip';
-    $html .= '<td class="field-'.$prop.'">'
+    $cssClass = 'field-'.$prop;
+    $html .= '<td class="'.$cssClass.'">'
           .'<textarea'
           .($deleted ? ' readonly="readonly"' : '')
-          .' class="field-'.$prop.'"'
+          .' class="'.$cssClass.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
           .' cols="32"'
@@ -1456,13 +1470,14 @@ __EOT__;
       $updateStrategies[] = $option;
     }
     $updateStrategies = PageNavigation::selectOptions($updateStrategies);
+    $generators = $this->participantFieldsService->recurringReceivablesGenerators();
     $html .= '
 <tr
   class="data-line data-options generator active only-multiplicity-recurring"
   data-generators=\''.json_encode(
     array_merge(
-      array_map([ $this->l, 't' ], array_keys(ProjectParticipantFieldsService::recurringReceivablesGenerators())),
-      array_values(ProjectParticipantFieldsService::recurringReceivablesGenerators())
+      array_map([ $this->l, 't' ], array_keys($generators)),
+      array_values($generators)
     )
   ).'\'
   data-field-id="'.$fieldId.'">
@@ -1733,12 +1748,12 @@ __EOT__;
                 default:
                   break;
               }
-              if ($field == 'deposit') {
-                $fieldValue = $this->currencyValue($fieldValue);
-                $css .= ' not-data-type-service-fee-hidden';
-              } else if ($field == 'limit') {
-                $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
-              }
+            }
+            if ($field == 'deposit') {
+              $fieldValue = $this->currencyValue($fieldValue);
+              $css .= ' not-data-type-service-fee-hidden';
+            } else if ($field == 'limit') {
+              $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
             }
             $html .= '<td class="'.$css.'">'.$fieldValue.'</td>';
           }
@@ -1817,15 +1832,19 @@ __EOT__;
     $name  = $this->pme->cgiDataName('data_options_' . $variant);
     $field = 'data';
     if (!empty($value)) {
-      switch ($dataType) {
-        case DataType::DATE:
-          $date = DateTime::parse($value, $this->getDateTimeZone());
-          $value = $this->dateTimeFormatter()->formatDate($date, 'medium');
-          break;
-        case DataType::DATETIME:
-          $date = DateTime::parse($value, $this->getDateTimeZone());
-          $value = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          break;
+      try {
+        switch ($dataType) {
+          case DataType::DATE:
+            $date = DateTime::parse($value, $this->getDateTimeZone());
+            $value = $this->dateTimeFormatter()->formatDate($date, 'medium');
+            break;
+          case DataType::DATETIME:
+            $date = DateTime::parse($value, $this->getDateTimeZone());
+            $value = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+            break;
+        }
+      } catch (\Throwable $t) {
+        // ignore, may be no valid data when data-type changes.
       }
     }
     $value = htmlspecialchars($value);

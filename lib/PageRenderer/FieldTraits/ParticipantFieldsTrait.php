@@ -774,22 +774,14 @@ trait ParticipantFieldsTrait
 
             $value = $row['qf'.$k];
             $values = Util::explodeIndexed($value);
-            $valueName = $this->pme->cgiDataName($valueFddName);
-            $keyName = $this->pme->cgiDataName($keyFddName);
-            $invoices = Util::explodeIndexed($row['qf'.($k+1)]);
-            $html = '<table class="row-count-'.count($values).'">
-  <thead>
-    <tr>
-      <th>'.$this->l->t('Actions').'</th>
-      <th>'.$this->l->t('Subject').'</th>
-      <th>'.$this->l->t('Value [%s]', $this->currencySymbol()).'</th>
-      <th>'.$this->l->t('Invoice').'</th>
-    </tr>
-  </thead>
-  <tbody>';
+
             $options = [];
+            $labelled = false;
             foreach (array_keys($values) as $key) {
               $options[$key] = $field->getDataOption($key);
+              if (!empty($options[$key]->getLabel())) {
+                $labelled = true;
+              }
             }
             // sort by label and data ascending order like in ProjectParticipantFields
             uasort($options, function($a, $b) {
@@ -804,10 +796,72 @@ trait ParticipantFieldsTrait
               return $cmp;
             });
 
+            $valueName = $this->pme->cgiDataName($valueFddName);
+            $keyName = $this->pme->cgiDataName($keyFddName);
+            $invoices = Util::explodeIndexed($row['qf'.($k+1)]);
+            $valueLabel = $this->l->t('Value');
+            $invoiceLabel = $this->l->t('Documents');
+            $valueInputType = 'text';
+            switch ($dataType) {
+              case FieldType::SERVICE_FEE:
+                $valueLabel = $this->l->t('Value [%s]', $this->currencySymbol());
+                $invoiceLabel = $this->l->t('Invoice');
+                $valueInputType = 'number';
+                break;
+              case FieldType::DATE:
+                $valueLabel = $this->l->t('Date');
+                break;
+              case FieldType::DATETIME:
+                $valueLabel = $this->l->t('Date/Time');
+                break;
+            }
+
+            $cssClass = [
+              'row-count-' .count($values),
+              'multiplicity-' . $multiplicity,
+              'data-type-' . $dataType,
+            ];
+            $html = '<table class="'.implode(' ', $cssClass).'">
+  <thead>
+    <tr>
+      <th class="operations">'.$this->l->t('Actions').'</th>
+      <th class="label'.($labelled ? '' : ' unlabelled').'">'.$this->l->t('Subject').'</th>
+      <th class="input">'.$valueLabel.'</th>
+      <th class="documents document-count-'.count($invoices).'">'.$invoiceLabel.'</th>
+    </tr>
+  </thead>
+  <tbody>';
+
+            $lockCssClass = [
+              'pme-input',
+              'pme-input-lock',
+              'lock-unlock',
+              'left-of-input',
+            ];
+            if ($dataType != FieldType::SERVICE_FEE) {
+              $lockCssClass[] = 'position-right';
+            }
+            $lockCssClass = implode(' ', $lockCssClass);
             $idx = 0;
             foreach ($options as $key => $option) {
               $value = $values[$key];
+              if (!empty($value)) {
+                switch ($dataType) {
+                  case FieldType::DATE:
+                  case FieldType::DATETIME:
+                    try {
+                      $date = DateTime::parse($value, $this->getDateTimeZone());
+                      $value = ($dataType == FieldType::DATE)
+                        ? $this->dateTimeFormatter()->formatDate($date, 'medium')
+                        : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                    } catch (\Throwable $t) {
+                      // ignore for now
+                    }
+                    break;
+                }
+              }
               $label = $option ? $option->getLabel() : '';
+              $locked = !empty($value) || $dataType == FieldType::SERVICE_FEE;
               if (!empty($invoices[$key])) {
                 $downloadLink = $this->urlGenerator()
                                      ->linkToRoute($this->appName().'.downloads.get', [
@@ -828,16 +882,16 @@ trait ParticipantFieldsTrait
       title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
       type="button"/>
   </td>
-  <td class="label">
+  <td class="label'.($labelled ? '' : ' unlabelled').'">
     '.$label.'
   </td>
   <td class="input">
-    <input id="receivable-input-'.$key.'" type=checkbox checked="checked" class="pme-input pme-input-lock lock-unlock left-of-input"/>
-    <label class="pme-input pme-input-lock lock-unlock left-of-input" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$key.'"></label>
-    <input class="pme-input '.$dataType.'" type="number" readonly="readonly" name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
+    <input id="receivable-input-'.$key.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
+    <label class="'.$lockCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$key.'"></label>
+    <input class="pme-input '.$dataType.'" type="'.$valueInputType.'"'.($locked ? ' readonly' : '').' name="'.$valueName.'['.$idx.']" value="'.$value.'"/>
     <input class="pme-input '.$dataType.'" type="hidden" name="'.$keyName.'['.$idx.']" value="'.$key.'"/>
   </td>
-  <td>
+  <td class="documents document-count-'.count($invoices).'">
      <a class="download-link ajax-download tooltip-auto'.(empty($downloadLink) ? ' hidden' : '').'"
         href="'.($downloadLink??'').'">
        '.$this->l->t('download').'
@@ -856,6 +910,9 @@ trait ParticipantFieldsTrait
               $updateStrategies[] = $option;
             }
             $updateStrategies = PageNavigation::selectOptions($updateStrategies);
+            $recomputeLabel = $dataType == FieldType::SERVICE_FEE
+              ? $this->l->t('Recompute all Receivables')
+              : $this->l->t('Update all Input-Options');
             $html .= '
     <tr class="generator" data-field-id="'.$field['id'].'">
       <td class="operations" colspan="4">
@@ -863,7 +920,7 @@ trait ParticipantFieldsTrait
           class="operation regenerate-all"
           title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
           type="button"
-          value="'.$this->l->t('Recompute all Receivables').'"
+          value="'.$recomputeLabel.'"
           title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all'].'"
         />
         <label for="recurring-receivables-update-strategy" class="recurring-receivables-update-strategy">
@@ -1466,17 +1523,29 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             ]));
         }
         switch ($dataType) {
-        case FieldType::CLOUD_FOLDER:
-          // collect the data into a JSON array, input is a comma
-          // separated list of directory entry names
-          $newValues[$valueName] = json_encode(Util::explode(self::VALUES_SEP, $newValues[$valueName]));
-          if ($newValues[$valueName] === $oldValues[$valueName]) {
-            Util::unsetValue($changed, $valueName);
-            continue 3;
-          }
-          break;
-        default:
-          break;
+          case FieldType::CLOUD_FOLDER:
+            // collect the data into a JSON array, input is a comma
+            // separated list of directory entry names
+            $newValues[$valueName] = json_encode(Util::explode(self::VALUES_SEP, $newValues[$valueName]));
+            if ($newValues[$valueName] === $oldValues[$valueName]) {
+              Util::unsetValue($changed, $valueName);
+              continue 3;
+            }
+            break;
+          case FieldType::DATE:
+            if (!empty($newValues[$valueName])) {
+              $date = DateTime::parseFromLocale($newValues[$valueName], $this->getLocale(), 'UTC');
+              $newValues[$valueName] = $date->format('Y-m-d');
+            }
+            break;
+          case FieldType::DATETIME:
+            if (!empty($newValues[$valueName])) {
+              $date = DateTime::parseFromLocale($newValues[$valueName], $this->getLocale(), $this->getDateTimeZone());
+              $newValues[$valueName] = $date->setTimezone('UTC')->toIso8601String();
+            }
+            break;
+          default:
+            break;
         }
         // tweak the option_key value
         $newValues[$keyName] = $key;
@@ -1498,6 +1567,16 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           $amounts = Util::explode(',', $dataSet[$valueName]);
           $values = [];
           foreach (array_combine($keys, $amounts) as $key => $amount) {
+            switch ($dataType) {
+              case FieldType::DATE:
+                $date = DateTime::parseFromLocale($amount, $this->getLocale(), 'UTC');
+                $amount = $date->format('Y-m-d');
+                break;
+              case FieldType::DATETIME:
+                $date = DateTime::parseFromLocale($amount, $this->getLocale(), $this->getDateTimeZone());
+                $amount = $date->setTimezone('UTC')->toIso8601String();
+                break;
+            }
             $values[] = $key.self::JOIN_KEY_SEP.$amount;
           }
           $dataSet[$valueName] = implode(',', $values);

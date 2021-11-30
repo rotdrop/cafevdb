@@ -29,14 +29,14 @@
 @mixin columnHiddenIf($propertyValue, $property: "data-type", $relation: "~", $prefix: "&") {
   #{$prefix}.#{$property}-#{$propertyValue} #{$relation} tr {
     td, th {
-      &.#{$property}-#{$propertyValue}-hidden {
+      &.#{$property}-#{$propertyValue}-hidden, .#{$property}-#{$propertyValue}-hidden {
         display:none!important;
       }
     }
   }
   #{$prefix}:not(.#{$property}-#{$propertyValue}) #{$relation} tr {
     td, th {
-      &.not-#{$property}-#{$propertyValue}-hidden {
+      &.not-#{$property}-#{$propertyValue}-hidden, .not-#{$property}-#{$propertyValue}-hidden {
         display:none!important;
       }
     }
@@ -229,6 +229,8 @@ table.pme-main {
           display:table-cell!important;
         }
       }
+    }
+    &.data-type-service-fee {
       &.deposit-due-date-set {
         ~ tr.pme-row td.pme-value {
           td.field-deposit, th.field-deposit {

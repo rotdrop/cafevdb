@@ -195,10 +195,12 @@ const ready = function(selector, resizeCB) {
     container.find('.not-data-type-html-disabled').prop('disabled', dataType !== 'html');
 
     const inputData = container.find('table.data-options').data('size');
-    const $dataInputs = container.find(
-      'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value input.field-data[type=text]'
-        + ', '
-        + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' input.field-data[type=text]');
+    const $dataInputs = container
+      .find(
+        'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
+          + ', '
+          + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator)')
+      .find('input.field-data[type=text], input.field-data[type=number]');
     const dateTimePickerSelector = 'body > .xdsoft_datetimepicker';
     $dataInputs.each(function() {
       const $this = $(this);
@@ -254,7 +256,7 @@ const ready = function(selector, resizeCB) {
       return {
         multiplicity: multiplicity.val(),
         dataType: dataType.val(),
-        depositDueDate: depositDueDate.val() === '' ? 'unset' : 'set',
+        depositDueDate: (dataType === 'service-fee' && depositDueDate.val() !== '') ? 'set' : 'unset',
       };
     }
     const elem = container.find('td.pme-value.field-type .data');
@@ -286,7 +288,6 @@ const ready = function(selector, resizeCB) {
     const depositDueDateInput = container.find('input.deposit-due-date');
     const multiplicitySelect = container.find('select.multiplicity');
     const dataTypeSelect = container.find('select.data-type');
-    const depositDueDate = depositDueDateInput.val() === '' ? 'unset' : 'set';
     const multiplicity = multiplicitySelect.val();
     const dataTypeMask = SelectUtils.optionByValue(multiplicitySelect, multiplicity).data('data');
     let dataType = dataTypeSelect.val();
@@ -313,6 +314,7 @@ const ready = function(selector, resizeCB) {
       }
     }
     dataTypeSelect.trigger('chosen:updated');
+    const depositDueDate = (dataType === 'service-fee' && depositDueDateInput.val() !== '') ? 'set' : 'unset';
     setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
     allowedHeaderVisibility();
     console.debug('RESIZECB');
@@ -572,10 +574,8 @@ const ready = function(selector, resizeCB) {
       return false;
     });
 
-  const lockGeneratedValues = function(container) {
-    // generated options
-    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
-    const generated = container.find(generatedSelector).find('input[type="text"], textarea');
+  const lockGeneratedValuesRow = function($row) {
+    const generated = $row.find('input[type="text"], textarea');
     generated.each(function(index) {
       const $this = $(this);
       if (!$this.hasClass('expert-mode-only')) {
@@ -584,6 +584,12 @@ const ready = function(selector, resizeCB) {
         });
       }
     });
+  };
+
+  const lockGeneratedValues = function(container) {
+    // generated options
+    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
+    lockGeneratedValuesRow(container.find(generatedSelector));
   };
 
   lockGeneratedValues(container);
@@ -684,8 +690,9 @@ const ready = function(selector, resizeCB) {
       if (self.prop('readonly')) {
         return false;
       }
-      const row = self.closest('tr.data-options');
-      const placeHolder = row.hasClass('placeholder');
+      const $row = self.closest('tr.data-options');
+      const $table = $row.closest('table.data-options');
+      const placeHolder = $row.hasClass('placeholder');
       if (placeHolder && self.val().trim() === '') {
         // don't add empty fields (but of course allow to remove field data)
         self.val('');
@@ -696,8 +703,8 @@ const ready = function(selector, resizeCB) {
       const dflt = container.find('select.default-multi-value');
 
       const request = 'option/define';
-      const data = $.extend({ default: dflt.val() }, fieldTypeData(), row.data());
-      const allowed = row.find('input[type="text"], input[type="hidden"], textarea');
+      const data = $.extend({ default: dflt.val() }, fieldTypeData(), $row.data());
+      const allowed = $row.find('input[type="text"], input[type="hidden"], textarea');
       const postData = $.param({ request, data })
             + '&' + allowed.serialize();
 
@@ -729,15 +736,19 @@ const ready = function(selector, resizeCB) {
           const input = data.dataOptionFormInputs;
           $.fn.cafevTooltip.remove();
           if (placeHolder) {
-            row.parents('table').find('thead').show();
-            row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            $row.parents('table').find('thead').show();
+            $row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
             self.val('');
-            row.data('index', +row.data('index') + 1); // next index
+            $row.data('index', +$row.data('index') + 1); // next index
             resizeCB();
           } else {
-            const next = row.next();
-            row.replaceWith(input);
-            next.prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            const $nextRow = $row.next();
+            $row.replaceWith(input);
+            const $newRow = $nextRow.prev();
+            $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            if ($table.hasClass('multiplicity-recurring')) {
+              lockGeneratedValuesRow($newRow);
+            }
           }
           // get the key <-> value connection right for the default selector
           const newValue = $(option).val();
@@ -839,11 +850,15 @@ const ready = function(selector, resizeCB) {
   // set autocomplete for generator selection
   const generatorRow = container.find('tr.data-options.generator');
   const generators = generatorRow.data('generators');
-  generatorRow.find('input.field-data').autocomplete({
-    source: generators,
-    position: { my: 'left top', at: 'left bottom' },
-    minLength: 0,
-  });
+  generatorRow.find('input.field-data')
+    .autocomplete({
+      source: generators,
+      position: { my: 'left bottom', at: 'left top', collision: 'none' },
+      minLength: 0,
+    })
+    .on('focus', function() {
+      $(this).autocomplete('search', '');
+    });
 
   // synthesize resize events for textareas.
   textareaResize(container, 'textarea.field-tooltip, textarea.participant-field-tooltip');
