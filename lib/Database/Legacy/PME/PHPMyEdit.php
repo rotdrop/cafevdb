@@ -521,9 +521,8 @@ class PHPMyEdit extends \phpMyEdit
   /**
    * Create a Unix time-stamp from user-input
    *
-   * Strategy: if the user input does not contain a date, then we do not
-   * perform a timezone correction but just convert to a time stamp to the
-   * date at 00:00:00 UTC.
+   * Strategy: if the user-input does not contain a time, then convert to UTC
+   * time at midnight. Otherwise adjust by the time-zone offset of the user.
    */
   protected function makeTimeStampFromUser($userInput)
   {
@@ -553,14 +552,20 @@ class PHPMyEdit extends \phpMyEdit
   }
 
   /**
-   * Create a Unix time-stamp from user-input
+   * Create a Unix time-stamp from the data-base.
+   *
+   * Strategy: if the date/time value in the data base does contain a time,
+   * then assume UTC and just convert to a time-stamp.
+   *
+   * If the value in the data-base does not contain as time then adjust to
+   * 00:00 local-time by shifting with the time-zone offset of the local user.
    */
   protected function makeTimeStampFromDatabase($databaseValue)
   {
     $timeStamp = parent::makeTimeStampFromDatabase($databaseValue);
 
-    if ($timeStamp % (24 * 60 * 60) == 0 && !preg_match("/\d{1,2}\:\d{1,2}/", $databaseValue)) {
-      // assume date-only
+    if ($timeStamp % (24 * 60 * 60) != 0 || preg_match("/\d{1,2}\:\d{1,2}/", $databaseValue)) {
+      // assume UTC with time-stamp
       return $timeStamp;
     }
 
@@ -574,7 +579,7 @@ class PHPMyEdit extends \phpMyEdit
     $this->logDebug('ORIG / MOD ' . $timeStamp . ' / ' . $modTimeStamp);
 
     if ($timeZone->getOffset($dateTime) != $timeZone->getOffset($modDateTime)) {
-      $this->logError('Timezone adjustment for failed for user-input ' . $userInput);
+      $this->logError('Timezone adjustment failed for data-base input ' . $databaseValue);
     }
 
     return $modTimeStamp;
@@ -606,11 +611,11 @@ class PHPMyEdit extends \phpMyEdit
 
         if (!empty($dateFormat) && !empty($timeFormat)) {
           if ($dateFormat === true && $timeFormat === true) {
-            return $this->dateTimeFormatter->formatDateTime($timestamp);
+            return $this->dateTimeFormatter->formatDateTime($timeStamp);
           } else if ($timeFormat === true) {
-            return $this->dateTimeFormatter->formatDateTime($timestamp, $dateFormat);
+            return $this->dateTimeFormatter->formatDateTime($timeStamp, $dateFormat);
           } else {
-            return $this->dateTimeFormatter->formatDateTime($timestamp, $dateFormat, $timeFormat);
+            return $this->dateTimeFormatter->formatDateTime($timeStamp, $dateFormat, $timeFormat);
           }
         } else if (!empty($dateFormat)) {
           return $dateFormat === true
