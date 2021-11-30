@@ -30,6 +30,29 @@ import { token as pmeToken, sys as PMEsys } from './pme-selectors.js';
 import * as qs from 'qs';
 
 /**
+ * Cleanup-function to call before replacing HTML content
+ *
+ * @param {jQuery} container TBD.
+ */
+const pmeUnTweak = function(container) {
+  if (typeof container === 'undefined') {
+    container = $('body');
+  }
+
+  container.find('input.date').each(function() {
+    const $this = $(this);
+    if ($this.hasClass('hasDatepicker')) {
+      $this.datepicker('destroy');
+    }
+  });
+
+  container.find('input.datetime').each(function() {
+    const $this = $(this);
+    $this.datetimepicker('destroy');
+  });
+};
+
+/**
  * Some general PME tweaks.
  *
  * @param {jQuery} container TBD.
@@ -39,13 +62,22 @@ const pmeTweaks = function(container) {
     container = $('body');
   }
 
-  container.find('input.date').datepicker({
+  const $dateInputs = container.find('input.date');
+  $dateInputs.each(function() {
+    const $this = $(this);
+    if ($this.hasClass('hasDatepicker')) {
+      $this.datepicker('destroy');
+    }
+  });
+  $dateInputs.datepicker({
     minDate: '01.01.1940', // birthday limit
   });
 
-  // @todo this should be some sort of date-time picker
-  container.find('input.datetime').datetimepicker({
+  const $dateTimeInputs = container.find('input.datetime');
+  $dateTimeInputs.datetimepicker('destroy');
+  $dateTimeInputs.datetimepicker({
     minDate: '01.01.1990',
+    step: 5,
   });
 
   container.find('td.money, td.signed-number').filter(function() {
@@ -72,7 +104,6 @@ const pmeTweaks = function(container) {
     }
     const recordKey = PMEsys('rec');
     const params = qs.parse(href[1]);
-    console.info('QUERY DATA', params);
     if (params[recordKey] === undefined) {
       return false;
     }
@@ -94,7 +125,10 @@ const pmeTweaks = function(container) {
   // $(PHPMyEdit.defaultSelector + ' input.' + pmeToken('bulkcommit')).addClass('formsubmit');
 };
 
-export default pmeTweaks;
+export {
+  pmeTweaks as tweaks,
+  pmeUnTweak as unTweak,
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

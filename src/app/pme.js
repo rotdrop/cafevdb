@@ -35,7 +35,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
 import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
-import pmeTweaks from './pme-tweaks.js';
+import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
 import { deselectAll as selectDeselectAll } from './select-utils.js';
@@ -223,6 +223,8 @@ const tableDialogReplace = function(container, content, options, callback, trigg
 
   const containerSel = '#' + options.dialogHolderCSSId;
 
+  // remote data/time widgets and other stuff
+  pmeUnTweak(container);
   // remove the WYSIWYG editor, if any is attached
   WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
 
@@ -863,6 +865,11 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           $.fn.cafevTooltip.remove();
           const dialogHolder = $(this);
 
+          // remote data/time widgets and other stuff
+          pmeUnTweak(dialogHolder);
+          // remove the WYSIWYG editor, if any is attached
+          WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+
           dialogHolder.find('iframe').removeAttr('src');
 
           if (tableOptions.modified === true) {
@@ -974,6 +981,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       }
       $.fn.cafevTooltip.remove();
 
+      pmeUnTweak(container);
       WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
       pmeInner(container).html(htmlContent);
 

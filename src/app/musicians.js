@@ -36,11 +36,18 @@ require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 require('sepa-bank-accounts.scss');
 
-const addMusicians = function(form, post) {
-  const projectId = form.find('input[name="projectId"]').val();
-  const projectName = form.find('input[name="projectName"]').val();
+/**
+ * Add several musicians.
+ *
+ * @param{jQuery} $form TBD.
+ *
+ * @param{Object} post TBD.
+ */
+const addMusicians = function($form, post) {
+  const projectId = $form.find('input[name="projectId"]').val();
+  const projectName = $form.find('input[name="projectName"]').val();
   if (typeof post === 'undefined') {
-    post = form.serialize();
+    post = $form.serialize();
   }
 
   // Open the change-musician dialog with the newly
@@ -55,7 +62,7 @@ const addMusicians = function(form, post) {
     .done(function(data) {
       if (!Ajax.validateResponse(data, ['musicians'])) {
         // Load the underlying base-view in any case in order to go "back" ...
-        ProjectParticipants.loadProjectParticipants(form);
+        ProjectParticipants.loadProjectParticipants($form);
         return;
       }
       console.log(data);
@@ -65,7 +72,7 @@ const addMusicians = function(form, post) {
         const musicianId = data.musicians[0];
         // alert('data: '+CAFEVDB.print_r(musician, true));
         ProjectParticipants.loadProjectParticipants(
-          form,
+          $form,
           undefined,
           function() {
             Notification.messages(data.message);
@@ -83,20 +90,35 @@ const addMusicians = function(form, post) {
           });
       } else {
         // load the instrumentation table, initially restricted to the new musicians
-        ProjectParticipants.loadProjectParticipants(form, data.musicians, function() {
+        ProjectParticipants.loadProjectParticipants($form, data.musicians, function() {
           Notification.messages(data.message);
         });
       }
     });
 };
 
+/**
+ * Add auto-complete and validation handlers to musician input-data,
+ * in particular personal data. In principle this is only relevant in
+ * change and add mode.
+ *
+ * @param{jQuery|string} container TBD.
+ */
 const contactValidation = function(container) {
 
-  if (typeof container === 'undefined') {
-    container = $('body');
+  const $container = container || $('body');
+
+  const $form = $container.find('form.' + pmeToken('form'));
+
+  // "read-only" forms do not need contact validation handlers
+  if ($form.hasClass(pmeToken('list'))
+      || $form.hasClass(pmeToken('view'))
+      || $form.hasClass(pmeToken('delete'))
+  ) {
+    return;
   }
 
-  container.find('input.phone-number')
+  $form.find('input.phone-number')
     .not('.pme-filter')
     .off('blur')
     .on('blur', function(event) {
@@ -105,9 +127,8 @@ const contactValidation = function(container) {
 
       const submitDefer = PHPMyEdit.deferReload(container);
 
-      const form = container.find('form.pme-form');
-      const phones = form.find('input.phone-number');
-      const post = form.serialize();
+      const phones = $form.find('input.phone-number');
+      const post = $form.serialize();
       const mobile = phones.filter('input[name$="mobile_phone"]');
       const fixedLine = phones.filter('input[name$="fixed_line_phone"]');
 
@@ -169,7 +190,7 @@ const contactValidation = function(container) {
         });
     });
 
-  container.find('input.email')
+  $form.find('input.email')
     .not('.pme-filter')
     .off('blur')
     .on('blur', function(event) {
@@ -178,9 +199,8 @@ const contactValidation = function(container) {
 
       const submitDefer = PHPMyEdit.deferReload(container);
 
-      const form = container.find('form.pme-form');
-      const email = form.find('input.email');
-      const post = form.serialize();
+      const email = $form.find('input.email');
+      const post = $form.serialize();
       email.prop('disabled', true);
 
       const cleanup = function() {
@@ -199,7 +219,7 @@ const contactValidation = function(container) {
             return;
           }
           // inject the sanitized value into their proper input fields
-          form.find('input[name$="email"]').val(data.email);
+          $form.find('input[name$="email"]').val(data.email);
           const message = Array.isArray(data.message)
             ? data.message.join('<br>')
             : data.message;
@@ -215,13 +235,13 @@ const contactValidation = function(container) {
         });
     });
 
-  const address = container.find('form.pme-form input.musician-address').not('.pme-filter');
+  const address = $form.find('input.musician-address');
   const city = address.filter('.city');
   const street = address.filter('.street');
   const postalCode = address.filter('.postal-code');
 
-  const countrySelect = container.find('select.musician-address.country');
-  const $allAddressFields = $(address).add(countrySelect);
+  const $countrySelect = $form.find('select.musician-address.country');
+  const $allAddressFields = $(address).add($countrySelect);
 
   $allAddressFields.each(function() {
     const $this = $(this);
@@ -234,7 +254,7 @@ const contactValidation = function(container) {
   };
 
   const needAutocompleteUpdate = function() {
-    return (countrySelect.data('oldValue') !== countrySelect.val()
+    return ($countrySelect.data('oldValue') !== $countrySelect.val()
             || city.data('oldValue') !== city.val()
             || postalCode.data('oldValue') !== postalCode.val());
   };
@@ -266,14 +286,14 @@ const contactValidation = function(container) {
     });
 
   // Inject a text input element for possible suggestions for the country setting.
-  const countryInput = $('<input type="text"'
+  const $countryInput = $('<input type="text"'
                          + ' class="musician-address country"'
                          + ' id="country-autocomplete"'
                          + ' placeholder="' + t(appName, 'Suggestions') + '" />');
-  countryInput.hide();
-  $('tr.musician-address.country td[class|="pme-value"] select').before(countryInput);
-  //    countryInput = $('#country-autocomplete');
-  countryInput
+  $countryInput.hide();
+  $countrySelect.before($countryInput);
+
+  $countryInput
     .autocomplete({
       source: [],
       minLength: 0,
@@ -289,8 +309,8 @@ const contactValidation = function(container) {
       },
       select(event, ui) {
         const country = ui.item.value;
-        countryInput.val(country);
-        countryInput.trigger('blur');
+        $countryInput.val(country);
+        $countryInput.trigger('blur');
         return true;
       },
     })
@@ -304,17 +324,17 @@ const contactValidation = function(container) {
 
       event.stopImmediatePropagation();
 
-      countrySelect.data('oldValue', selectedValues(countrySelect, self.val(), true));
+      $countrySelect.data('oldValue', selectedValues($countrySelect, self.val(), true));
 
       return false;
     });
 
   let lockCountry = false;
-  countrySelect.on('change', function(event) {
+  $countrySelect.on('change', function(event) {
     if (needAutocompleteUpdate()) {
       updateAutocompleteData();
     }
-    lockCountry = !!selectedValues(countrySelect);
+    lockCountry = !!selectedValues($countrySelect);
     return false;
   });
 
@@ -325,8 +345,7 @@ const contactValidation = function(container) {
 
     const submitDefer = PHPMyEdit.deferReload(container);
 
-    const form = container.find('form.pme-form');
-    const post = form.serialize();
+    const post = $form.serialize();
 
     if (autocompletePlaceRequest) {
       autocompletePlaceRequest.abort('cancelled');
@@ -371,20 +390,20 @@ const contactValidation = function(container) {
           $this.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
         });
 
-        const selectedCountry = selectedValues(countrySelect);
+        const selectedCountry = selectedValues($countrySelect);
         const countries = data.countries;
-        countryInput.hide();
-        countryInput.autocomplete('option', 'source', []);
+        $countryInput.hide();
+        $countryInput.autocomplete('option', 'source', []);
         if (countries.length === 1 && countries[0] !== selectedCountry && !lockCountry) {
 
           // if we have just one matching country, we force the
           // country-select to hold this value.
-          countrySelect.data('oldValue', selectedValues(countrySelect, countries));
+          $countrySelect.data('oldValue', selectedValues($countrySelect, countries));
 
         } else if (countries.length > 1) {
           // provide the user with some more choices.
-          countryInput.autocomplete('option', 'source', countries);
-          countryInput.show();
+          $countryInput.autocomplete('option', 'source', countries);
+          $countryInput.show();
         }
         lockCountry = false;
 
@@ -401,8 +420,7 @@ const contactValidation = function(container) {
 
     const submitDefer = PHPMyEdit.deferReload(container);
 
-    const form = container.find('form.pme-form');
-    const post = form.serialize();
+    const post = $form.serialize();
 
     if (autocompleteStreetRequest) {
       autocompleteStreetRequest.abort('cancelled');
@@ -487,19 +505,19 @@ const contactValidation = function(container) {
 const ready = function(container) {
 
   // sanitize
-  container = PHPMyEdit.container(container);
+  const $container = PHPMyEdit.container(container);
 
-  contactValidation(container);
+  contactValidation($container);
 
-  const form = container.find('form.pme-form');
+  const $form = $container.find('form.pme-form');
   // const nameInputs = form.find('input.musician-name');
 
   let nameValidationActive = false;
 
   // avoid duplicate entries in the DB, but only when adding new
   // musicians.
-  container
-    .find('form.pme-form input.musician-name.add-musician')
+  $form
+    .find('input.musician-name.add-musician')
     .off('blur')
     .on('blur', function(event) {
 
@@ -510,7 +528,7 @@ const ready = function(container) {
 
       nameValidationActive = true;
 
-      const post = form.serialize();
+      const post = $form.serialize();
 
       const cleanup = function() {
         nameValidationActive = false;
@@ -553,12 +571,12 @@ const ready = function(container) {
                   if (!answer) {
                     return;
                   }
-                  const mainContainer = $(container.data('ambientContainer'));
-                  const form = mainContainer.find(PHPMyEdit.formSelector());
-                  container.dialog('close');
+                  const $mainContainer = $($container.data('ambientContainer'));
+                  const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
+                  $container.dialog('close');
                   if (numDuplicates === 1) {
-                    const projectId = form.find('input[name="ProjectId"]').val();
-                    const projectName = form.find('input[name="ProjectName"]').val();
+                    const projectId = $mainForm.find('input[name="ProjectId"]').val();
+                    const projectName = $mainForm.find('input[name="ProjectName"]').val();
                     ProjectParticipants.personalRecordDialog(
                       ids[0],
                       {
@@ -569,7 +587,7 @@ const ready = function(container) {
                       }
                     );
                   } else {
-                    ProjectParticipants.loadMusicians(form, ids, null);
+                    ProjectParticipants.loadMusicians($mainForm, ids, null);
                   }
                 }, true, true);
             }
@@ -588,16 +606,15 @@ const ready = function(container) {
       return false;
     });
 
-  container
+  $form
     .find('input.register-musician')
     .off('click')
     .on('click', function(event) {
-      const form = container.find('form.pme-form');
-      const projectId = form.find('input[name="projectId"]').val();
-      const projectName = form.find('input[name="projectName"]').val();
+      const projectId = $form.find('input[name="projectId"]').val();
+      const projectName = $form.find('input[name="projectName"]').val();
       const musicianId = $(this).data('musician-id');
 
-      addMusicians(form, {
+      addMusicians($form, {
         projectId,
         projectName,
         musicianId,
@@ -605,16 +622,13 @@ const ready = function(container) {
       return false;
     });
 
-  // container.find('input.bulkcommit.' + pmeToken('misc')).addClass('formsubmit');
-  container
+  $form
     .find(['input', 'bulkcommit', pmeToken('misc'), pmeToken('commit')].join('.'))
     .addClass('pme-custom')
     .prop('disabled', false)
     .off('click')
     .on('click', function(event) {
-
-      const form = container.find('form.pme-form');
-      addMusicians(form);
+      addMusicians($form);
       return false;
     });
 

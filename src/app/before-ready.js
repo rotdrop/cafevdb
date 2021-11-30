@@ -32,7 +32,7 @@ import * as Projects from './projects.js';
 import * as ProjectPayments from './project-payments.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
-import pmeTweaks from './pme-tweaks.js';
+import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.js';
 import pmeExportMenu from './pme-export.js';
 import stopEnterSubmit from './stop-enter-submit.js';
 
