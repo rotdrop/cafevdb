@@ -596,7 +596,7 @@ class ProjectParticipantFieldsController extends Controller {
               'changed' => $changed,
               'skipped' => $skipped,
               'notices' => $notices,
-            ) = $generator->updateParticipant($participant, $receivable, $updateStrategy);
+            ) = $generator->updateParticipant($participant, null /* $receivable */, $updateStrategy);
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($participant->getParticipantFieldsData() as $datum) {
               if ($datum->getField()->getId() == $fieldId) {
