@@ -38,7 +38,10 @@ trait DateTimeTrait
     if ($dateTime === null || $dateTime === '') {
       return null;
     } else if (!($dateTime instanceof \DateTimeInterface)) {
-      $timeStamp = filter_var($dateTime, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
+      $timeStamp = filter_var($dateTime, FILTER_VALIDATE_INT, [ 'min_range' => 0 ]);
+      if ($timeStamp === false) {
+        $timeStamp = filter_var($dateTime, FILTER_VALIDATE_FLOAT, [ 'min_range' => 0 ]);
+      }
       if ($timeStamp !== false) {
         return (new \DateTimeImmutable())->setTimestamp($timeStamp);
       } else if (is_string($dateTime)) {
