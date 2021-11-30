@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 
 /**
  * Do nothing implementation to have something implementing
@@ -34,8 +34,11 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  public function __construct(EntityManager $entityManager) {
-    parent::__construct($entityManager);
+  public function __construct(
+    EntityManager $entityManager
+    , ProgressStatusService $progressStatusService
+  ) {
+    parent::__construct($entityManager, $progressStatusService);
   }
 
   /**
