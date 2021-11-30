@@ -1291,7 +1291,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('click')
     .on('click', function(event) {
       const $attachmentRows = $('tr.attachments');
-      console.info('VISIBLE', $attachmentRows.filter(':visible'));
       if ($attachmentRows.filter(':visible').length === 2) {
         $attachmentRows.removeClass('show-selectable').addClass('hidden');
       } else {

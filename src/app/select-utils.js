@@ -151,8 +151,6 @@ const selectedValues = function($select, values, trigger) {
  * selectize.
  */
 const refreshSelectWidget = function($select) {
-  console.info('ORIG SELECTED', $select.val());
-  console.info('SELECTED', selectedValues($select));
   if (chosenActive($select)) {
     $select.trigger('chosen:updated');
   } else if (selectizeActive($select)) {
