@@ -185,15 +185,15 @@ class Util
   /**
    * Counter-part to self::explode()
    */
-  static public function implode(string $delim, string $string, int $flags = self::ESCAPED, string $escape = '\\'):string
+  static public function implode(string $delim, array $array, int $flags = self::ESCAPED, string $escape = '\\'):string
   {
     if ($flags & self::ESCAPED) {
       $string = str_replace(
         [ $escape, $delim ],
         [ $escape.$escape, $escape.$delim ],
-        $string);
+        $array);
     }
-    return implode($delim, $string);
+    return implode($delim, $array);
   }
 
   /**
@@ -214,6 +214,9 @@ class Util
    */
   static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
   {
+    if (empty($data)) {
+      return [];
+    }
     $matrix = array_map(
       function($row) use ($keyDelimiter, $default) {
         $row = explode($keyDelimiter, $row, 2);

@@ -121,6 +121,9 @@ class phpMyEdit
 	const TRIVIAL_ENCODE = '%s';
 	const TRIVIAL_DESCRIPION = '$table.$column';
 
+	const VAL_DELIM = ',';
+	const ESC_CHAR = '\\';
+
 	// Class variables {{{
 
 	// Database handling
@@ -436,6 +439,39 @@ class phpMyEdit
 			}
 		}
 		return true;
+	}
+
+	static function implodeValueArray($array, bool $onlyFlat)
+	{
+		if (empty($array)) {
+			return '';
+		}
+		if (self::is_flat($array)) {
+			return implode(
+				self::VAL_DELIM,
+				str_replace(
+					[ self::ESC_CHAR, self::VAL_DELIM ],
+					[ self::ESC_CHAR.self::ESC_CHAR, self::ESC_CHAR.self::VAL_DELIM ],
+					$array
+				)
+			);
+		} else if ($onlyFlat) {
+			return $array;
+		}
+		return json_encode($array);
+	}
+
+	static function explodeValueArray($string)
+	{
+		if (empty($string)) {
+			return [];
+		}
+		return
+			str_replace(
+					[ self::ESC_CHAR.self::ESC_CHAR, self::ESC_CHAR.self::VAL_DELIM ],
+					[ self::ESC_CHAR, self::VAL_DELIM ],
+					preg_split('/'.preg_quote(self::ESC_CHAR, '/').'.'.'(*SKIP)(*FAIL)|'.preg_quote(self::VAL_DELIM, '/').'/s', $string, -1, PREG_SPLIT_NO_EMPTY)
+        );
 	}
 
 	function dbhValid()
@@ -1403,7 +1439,7 @@ class phpMyEdit
 				$sort_fields_w[] = $sort_field_w;
 			}
 			if (count($sort_fields) > 0) {
-				$qparts[self::QPARTS_ORDERBY] = join(',', $sort_fields);
+				$qparts[self::QPARTS_ORDERBY] = implode(',', $sort_fields);
 			}
 		}
 		$qparts[self::QPARTS_LIMIT] = $this->listall() ? '' : $this->sql_limit($this->fm,$this->inc);
@@ -1489,7 +1525,7 @@ class phpMyEdit
 				$fields[] = ($this->fqn($k, $flags)." AS ".$this->sd."qf".$k."_timestamp".$this->ed);
 			}
 		}
-		return join(',', $fields);
+		return implode(',', $fields);
 	} /* }}} */
 
 	function get_SQL_join_clause() /* {{{ */
@@ -1567,7 +1603,7 @@ class phpMyEdit
 				foreach ($ov as $field2 => $ov2) {
 					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
 				}
-				$where[] = '('.join(' OR ', $tmp_where).')';
+				$where[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
@@ -1622,7 +1658,7 @@ class phpMyEdit
 		}
 
 		/* Join WHERE parts by AND */
-		$where = join(' AND ', $where);
+		$where = implode(' AND ', $where);
 
 		if ($text) {
 			return str_replace('%', '*', $where);
@@ -1651,7 +1687,7 @@ class phpMyEdit
 				foreach ($ov as $field2 => $ov2) {
 					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
 				}
-				$having[] = '('.join(' OR ', $tmp_where).')';
+				$having[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
@@ -1681,7 +1717,7 @@ class phpMyEdit
 			$having[] = $filter;
 		}
 
-		$having = join(' AND ', $having);
+		$having = implode(' AND ', $having);
 
 		if ($text) {
 			return str_replace('%', '*', $having);
@@ -1917,7 +1953,7 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
 								}
 							}
 							break;
@@ -1938,7 +1974,7 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
 								}
 							}
 							break;
@@ -1952,7 +1988,7 @@ class phpMyEdit
 								}
 							}
 							if (count($ids) > 0) {
-								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
+								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
 							}
 							break;
 						}
@@ -2319,7 +2355,7 @@ class phpMyEdit
 						$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
 						if ($this->col_has_multiple($k)) {
-							$hiddenValues = empty($row["qf$k"]) ? [] : explode(',', $row["qf$k"]);
+							$hiddenValues = self::explodeValueArray($row["qf$k"]);
 							$idx = 0;
 							foreach ($hiddenValues as $value) {
 								echo $this->htmlHiddenData($this->fds[$k].'['.($idx++).']', $value, $css_class_name);
@@ -2428,10 +2464,10 @@ class phpMyEdit
 			if (!empty($vals)) {
 				if ($this->col_has_multiple($k)) {
 					$value = array();
-					foreach(array_filter(explode(',', $row["qf$k"])) as $key) {
+					foreach(self::explodeValueArray($row["qf$k"]) as $key) {
 						$value[] = $vals[$key];
 					}
-					$value = implode(',', $value);
+					$value = self::implodeValueArray($value, onlyFlat: false);
 				} else {
 					$value = $vals[$row["qf$k"]]??null;
 				}
@@ -2463,7 +2499,7 @@ class phpMyEdit
 			if ($this->readonly($k)) {
 				$hiddenValues = trim($selected);
 				if (!is_array($hiddenValues)) {
-					$hiddenValues = empty($hiddenValues) ? [] : explode(',', $hiddenValues);
+					$hiddenValues = self::explodeValueArray($hiddenValues);
 				}
 				$array = $multiple ? '[]' : '';
 				if (empty($hiddenValues)) {
@@ -2671,7 +2707,7 @@ class phpMyEdit
 			$elements[] = $postfix;
 			$postfix = null;
 		}
-		$css = $pfx.join($this->css['separator'].$pfx, $elements);
+		$css = $pfx.implode($this->css['separator'].$pfx, $elements);
 
 		if (is_callable($postfix)) {
 			$postfix = call_user_func($postfix, $name, $position, $divider, $postfix_data, $this);
@@ -2745,7 +2781,7 @@ class phpMyEdit
 				$array[$i] = $this->substituteVars($subst_ar[$key], $subst_ar, $max_depth - 1);
 			}
 		}
-		return $str = join('', $array);
+		return $str = implode('', $array);
 	} /* }}} */
 
 	/**
@@ -2927,7 +2963,7 @@ class phpMyEdit
 				$value = $row["qf$k"];
 			}
 			if ($this->col_has_multiple($k)) {
-				$value_ar  = explode(',', $value);
+				$value_ar  = self::explodeValueArray($value);
 				$value_ar2 = array();
 				foreach ($value_ar as $value_key) {
 					if (isset($this->fdd[$k][self::FDD_VALUES2][$value_key])) {
@@ -2940,7 +2976,7 @@ class phpMyEdit
 				} else {
 					$glue = ', ';
 				}
-				$value = join($glue, $value_ar2);
+				$value = implode($glue, $value_ar2); // display, so no escape of delimiter
 			} else {
 				if (isset($this->fdd[$k][self::FDD_VALUES2][$value])) {
 					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value], $k, $css, $key_rec);
@@ -3181,7 +3217,7 @@ class phpMyEdit
 		if ($multiple) {
 			$ret  .= '[]" multiple size="'.$this->multiple.'"';
 			if (!is_array($selected)) {
-				$selected = empty($selected) ? [] : explode(',', $selected);
+				$selected = self::explodeValueArray($selected);
 			}
 			$ret .= " data-initial-values='".json_encode($selected, JSON_NUMERIC_CHECK)."'";
 		} else {
@@ -3307,7 +3343,7 @@ class phpMyEdit
 		$ret = '';
 		if ($multiple) {
 			if (! is_array($selected) && $selected !== null) {
-				$selected = explode(',', $selected);
+				$selected = self::explodeValueArray($selected);
 			}
 		}
 		if (! is_array($selected)) {
@@ -4143,7 +4179,7 @@ class phpMyEdit
 		$css_sys = $this->getCSSclass('sys');
 		$css_data = $this->getCSSclass('data');
 		$css_clear = $this->getCSSclass('clear');
-		$htmlSorting = join(', ', $this->sort_fields_w);
+		$htmlSorting = implode(', ', $this->sort_fields_w);
 		echo '<tr class="' . $css_class_name . '">' . "\n";
 		echo '<td class="' . $css_class_name . ' ' . $css_sys . '" colspan="' . $this->sys_cols . '">';
 		echo '<span class="' . $css_class_name . ' label">' . $this->labels['Sorting'] . ':' . '</span>';
@@ -4538,10 +4574,10 @@ class phpMyEdit
 			$qpcopy[]	 = $qp_prefix.'Copy';
 			$qpchange[]	 = $qp_prefix.'Change';
 			$qpdelete[]	 = $qp_prefix.'Delete';
-			$qpviewStr	 = htmlspecialchars($this->page_name.'?'.join('&',$qpview).$this->qfn);
-			$qpcopyStr	 = htmlspecialchars($this->page_name.'?'.join('&',$qpcopy).$this->qfn);
-			$qpchangeStr = htmlspecialchars($this->page_name.'?'.join('&',$qpchange).$this->qfn);
-			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.join('&',$qpdelete).$this->qfn);
+			$qpviewStr	 = htmlspecialchars($this->page_name.'?'.implode('&',$qpview).$this->qfn);
+			$qpcopyStr	 = htmlspecialchars($this->page_name.'?'.implode('&',$qpcopy).$this->qfn);
+			$qpchangeStr = htmlspecialchars($this->page_name.'?'.implode('&',$qpchange).$this->qfn);
+			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.implode('&',$qpdelete).$this->qfn);
 		}
 
 		/* Execute query constructed above */
@@ -4984,8 +5020,8 @@ class phpMyEdit
 						$key_col_val[$key] = $fn;
 					}
 				}
-				if (is_array($fn) && self::is_flat($fn)) {
-					$newvals[$fd] = join(',',$fn);
+				if (is_array($fn)) {
+					$newvals[$fd] = self::implodeValueArray($fn, onlyFlat: true);
 				} else {
 					$newvals[$fd] = $fn;
 				}
@@ -5017,7 +5053,7 @@ class phpMyEdit
 			}
 			if (is_array($val)) {
 				// if the triggers still left the stuff as array, try to do something useful.
-				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
+				$val = self::implodeValueArray($val, onlyFlat: false);
 			}
 			if (false) {
 				// query_groups not supported, would be difficult
@@ -5128,8 +5164,8 @@ class phpMyEdit
 				// keep for reference in oldvals. Keep readonly-fields in newvals
 				if (!$this->disabled($k) || $this->readonly($k)) {
 					// leave complictated arrays to the trigger hooks.
-					if (is_array($fn) && self::is_flat($fn)) {
-						$newvals[$fd] = join(',', $fn);
+					if (is_array($fn)) {
+						$newvals[$fd] = self::implodeValueArray($fn, onlyFlat: true);
 					} else {
 						$newvals[$fd] = $fn;
 					}
@@ -5181,9 +5217,9 @@ class phpMyEdit
 			} else if ($value != $oldvals[$fd]) {
 				$fdn = $this->fdn[$fd]; // $fdn == field number
 				if ($this->col_has_multiple($fdn) && !$this->skipped($fdn)) {
-					$tmpval1 = explode(',',$value);
+					$tmpval1 = self::explodeValueArray($value);
 					sort($tmpval1);
-					$tmpval2 = explode(',',$oldvals[$fd]);
+					$tmpval2 = self::explodeValueArray($oldvals[$fd]);
 					sort($tmpval2);
 					if ($tmpval1 != $tmpval2) {
 						$changed[] = $fd;
@@ -5244,7 +5280,7 @@ class phpMyEdit
 			$val = $newvals[$fd];
 			if (is_array($val)) {
 				// if the triggers still left the stuff as array, try to do something useful.
-				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
+				$val = self::implodeValueArray($val, onlyFlat: false);
 			}
 			if (isset($fdd['querygroup'])) {
 				// Split update query if requested by calling app
@@ -6078,7 +6114,7 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->filters[$junctor] = join(' '.$junctor.' ', $filter);
+					$this->filters[$junctor] = implode(' '.$junctor.' ', $filter);
 				} else {
 					$this->filters[$junctor] = $filter;
 				}
@@ -6107,7 +6143,7 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->having[$junctor] = join(' '.$junctor.' ', $filter);
+					$this->having[$junctor] = implode(' '.$junctor.' ', $filter);
 				} else {
 					$this->having[$junctor] = $filter;
 				}
