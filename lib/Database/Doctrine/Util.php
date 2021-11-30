@@ -54,10 +54,24 @@ class Util
    *
    * @todo This could be made more elaborate like
    * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().
+   * @todo Teach
+   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
+   * to use grouping with parens.
    *
-   * @param array $arrayCriteria Array of FIELD => VALUE pairs. FIELD
-   * support a negation operation '!'. If VALUE is an array it is
-   * interpreted as a list of acceptable values. Otherwise equality is tested.
+   * @param array $arrayCriteria Array of FIELD => VALUE pairs. FIELD support
+   * a negation operation '!'. If VALUE is an array it is interpreted as a
+   * list of acceptable values. Otherwise equality is tested. Criteria can be
+   * prefixed by '|' and '&' to indicate the boolean junctor with the other
+   * criteria. Grouping is possible by using '(' and ')'. The final closing
+   * paren may be omitted. Example:
+   * ```
+   * [
+   *   '!fieldId' => 13,       // search for field_id != 13
+   *   '&(|optionValue' => ''  // with option_value the empty string ... or
+   *   'optionValue' => null   // option_value is NULL
+   *   ')' => IGNORED_VALUE    // close the OR-group
+   * ],
+   * ```
    *
    * @return Collections\Criteria
    */
@@ -65,7 +79,9 @@ class Util
   {
     $criteria = self::criteria();
     $expr = self::criteriaExpr();
-    // unfortunately, andWhere() does not work if there is no condition already.
+    $groupLevel = -1;
+    $groupExpression = [];
+    $expression = null;
     foreach ($arrayCriteria as $key => $value) {
       $junctor = 'andWhere';
       if ($key[0] == '|') {
@@ -74,13 +90,55 @@ class Util
       } elseif ($key[0] == '&') {
         $key = substr($key, 1);
       }
+      if ($key[0] == '(') {
+        $key = substr($key, 1);
+        $expression = [ 'junctor' => $junctor ];
+        $expression['composite'] = 'andX';
+        if ($key[0] == '|') {
+          $expression['composite'] = 'orX';
+          $key = substr($key, 1);
+        } else if ($key[0] == '&') {
+          $key = substr($key, 1);
+        }
+        $expression['components'] = [];
+        $groupExpression[++$groupLevel] = $expression;
+      } else if ($key[0] == ')') {
+        $key = substr($key, 1);
+        $expression = array_pop($groupExpression); $groupLevel--;
+        $junctor = $expression['junctor'];
+        $composite = $expression['composite'];
+        $components = $expression['components'];
+        $compositeExpr = call_user_func_array([ $expr, $composite ], $components);
+        if ($groupLevel >= 0) {
+          $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+        } else {
+          $criteria->$junctor($compositeExpr);
+        }
+      }
+      if (strlen($key) == 0) {
+        // control item, e.g. parens
+        continue;
+      }
       if ($key[0] == '!') {
         $key = substr($key, 1);
-        $comp = is_array($value) ? $expr->notIn($key, $value) : $expr->neq($key, $value);
+        $compExpr = is_array($value) ? $expr->notIn($key, $value) : $expr->neq($key, $value);
       } else {
-        $comp = is_array($value) ? $expr->in($key, $value) : $expr->eq($key, $value);
+        $compExpr = is_array($value) ? $expr->in($key, $value) : $expr->eq($key, $value);
       }
-      $criteria->$junctor($comp);
+      if ($groupLevel >= 0) {
+        $groupExpression[$groupLevel]['components'][] = $compExpr;
+      } else {
+        $criteria->$junctor($compExpr);
+      }
+    }
+    if ($groupLevel == 0) {
+      // omitted closing parenthesis at end
+      $expression = $groupExpression[0];
+      $junctor = $expression['junctor'];
+      $composite = $expression['composite'];
+      $components = $expression['components'];
+      $compositeExpr = call_user_func_array([ $expr, $composite ], $components);
+      $criteria->$junctor($compositeExpr);
     }
     return $criteria;
   }
