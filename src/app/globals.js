@@ -74,7 +74,7 @@ let nonce = globalState.nonce;
 onRequestTokenUpdate(function(token) {
   globalState.nonce = btoa(token);
   nonce = globalState.nonce;
-  console.info('NEW REQUEST TOKEN', token);
+  console.debug('NEW REQUEST TOKEN', token);
 });
 
 // Override jquery-ui datepicker a little bit. Note that the
@@ -144,6 +144,7 @@ $.fn.datetimepicker = function(opt, opt2) {
     format: dateTimeFormat,
     formatTime: timeFormat,
     formatDate: dateFormat,
+    step: 5,
     onShow(currentTime, $inputElement, event) {
       return !$inputElement.prop('readonly');
     },
