@@ -347,11 +347,12 @@ const ready = function(selector, resizeCB) {
     return true; // other key pressed
   });
 
+  const $dataOptionsTable = container.find('table.data-options');
   container.on('change', '#data-options-show-deleted', function(event) {
     if ($(this).prop('checked')) {
-      container.find('table.data-options').addClass('show-deleted');
+      $dataOptionsTable.addClass('show-deleted');
     } else {
-      container.find('table.data-options').removeClass('show-deleted');
+      $dataOptionsTable.removeClass('show-deleted');
     }
     $.fn.cafevTooltip.remove();
     allowedHeaderVisibility();
@@ -360,9 +361,9 @@ const ready = function(selector, resizeCB) {
 
   container.on('change', '#data-options-show-data', function(event) {
     if ($(this).prop('checked')) {
-      container.find('table.data-options').addClass('show-data');
+      $dataOptionsTable.addClass('show-data');
     } else {
-      container.find('table.data-options').removeClass('show-data');
+      $dataOptionsTable.removeClass('show-data');
     }
     $.fn.cafevTooltip.remove();
     resizeCB();
