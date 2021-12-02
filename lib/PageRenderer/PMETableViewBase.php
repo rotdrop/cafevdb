@@ -1276,12 +1276,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $entityId = $meta->extractKeyValues($identifier);
         $entity = $this->find($entityId);
         if (empty($entity)) {
+          $this->debug('Entity not found, creating');
           $entity = $entityClass::create();
           foreach ($entityId as $key => $value) {
             $entity[$key] = $value;
           }
         }
         foreach ($changeSet as $column => $field) {
+          $this->debug('Set ' . $column . ' / ' . $field . ' to ' . $newvals[$field] . ' old ' . $entity[$field]);
           $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
@@ -2158,14 +2160,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $this->queryIndexField($this->joinTableFieldName($tableInfo, $column), $fdd);
   }
 
-  protected function makeFieldTranslationsJoin(array $joinInfo, $fields)
+  protected function makeFieldTranslationsJoin(array $joinInfo, $fields, bool $untranslatedFallback = true, bool $onlyTranslated = false)
   {
     if (!is_array($fields)) {
       $fields = [ $fields ];
     }
     $l10nFields = [];
-    foreach ($fields as $field) {
-      $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
+    if ($untranslatedFallback) {
+      foreach ($fields as $field) {
+        $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
+      }
+    } else {
+      foreach ($fields as $field) {
+        $l10nFields[] = 'jt_'.$field.'.content AS l10n_'.$field;
+      }
     }
     $entity = addslashes($joinInfo['entity']);
     // if (count($joinInfo['identifier']) > 1) {
@@ -2180,7 +2188,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   ON $jt.locale = '$lang'
     AND $jt.object_class = '$entity'
     AND $jt.field = '$field'
-    AND $jt.foreign_key =";
+    AND $jt.foreign_key = ";
       if (count($joinInfo['identifier']) > 1) {
         $l10nJoin .= " CONCAT_WS(' ', ";
       }
@@ -2200,6 +2208,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $query = 'SELECT t.*, '.implode(', ', $l10nFields).'
   FROM '.$table.' t
 '.implode('', $l10nJoins);
+    if ($onlyTranslated) {
+      array_map(function($field) { return 'l10n_'.$field.' IS NOT NULL'; }, $fields);
+      $query .= ' WHERE '
+        .implode(
+          ' AND ',
+          array_map(function($field) { return 'jt_'.$field.'.content IS NOT NULL'; }, $fields));
+    }
     return $query;
   }
 
