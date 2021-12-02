@@ -1010,6 +1010,7 @@ class phpMyEdit
 		}
 
 		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
+		$qparts[self::QPARTS_GROUPBY] = $queryField;
 		if (!empty($encode)) {
 			$queryField = sprintf($encode, $queryField);
 		}
@@ -1069,6 +1070,9 @@ class phpMyEdit
 			$decode = function($value) { return $value; };
 		}
 		while ($row = $this->sql_fetch($res, 'n')) {
+			if (empty($row[0])) {
+				continue;
+			}
 			$colIdx = $idx;
 			$values[$row[0]] = $decode($row[$colIdx++]);
 			if (!empty($groups)) {
