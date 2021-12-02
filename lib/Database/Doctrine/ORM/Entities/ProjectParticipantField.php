@@ -154,10 +154,18 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedTab")
    * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the project tab is used."})
    */
   private $tab = null;
+
+  /**
+   * @var string
+   *
+   * Untranslated variant of self:$tab, filled automatically by
+   * Gedmo\Translatable
+   */
+  private $untranslatedTab;
 
   /**
    * @var int|null
@@ -223,19 +231,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function __wakeup()
   {
     $this->arrayCTOR();
-    $this->forceTranslationLocale();
-  }
-
-  protected function forceTranslationLocale()
-  {
-    if ($this->dataType == Types\EnumParticipantFieldDataType::CLOUD_FILE
-        || $this->dataType == Types\EnumParticipantFieldDataType::CLOUD_FOLDER) {
-      $this->setLocale(ConfigService::DEFAULT_LOCALE);
-      /** @var ProjectParticipantFieldDataOption $option */
-      foreach ($this->getDataOptions() as $option) {
-        $option->setLocale(ConfigService::DEFAULT_LOCALE);
-      }
-    }
   }
 
   /**
@@ -492,9 +487,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function setDataType($dataType):ProjectParticipantField
   {
     $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
-
-    $this->forceTranslationLocale();
-
     return $this;
   }
 
@@ -627,6 +619,29 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
+   * Set untranslatedTab.
+   *
+   * @param string $untranslatedTab
+   *
+   * @return ProjectParticipantField
+   */
+  public function setUntranslatedTab($untranslatedTab):ProjectParticipantField
+  {
+    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedTab" cannot be set, it is read-only.');
+    return $this;
+  }
+
+  /**
+   * Get untranslatedTab.
+   *
+   * @return string
+   */
+  public function getUntranslatedTab()
+  {
+    return $this->untranslatedTab;
+  }
+
+  /**
    * Set encrypted.
    *
    * @param bool|null $encrypted
@@ -730,16 +745,8 @@ class ProjectParticipantField implements \ArrayAccess
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
+    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this)); //
     $this->preUpdatePosted = false;
-  }
-
-  /**
-   * @ORM\PostLoad
-   */
-  public function postLoad(Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->forceTranslationLocale();
   }
 
 }

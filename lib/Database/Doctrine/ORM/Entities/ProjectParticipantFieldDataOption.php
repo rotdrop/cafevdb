@@ -170,18 +170,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function __wakeup()
   {
     $this->arrayCTOR();
-    $this->forceTranslationLocale();
-  }
-
-  protected function forceTranslationLocale()
-  {
-    $field = $this->field;
-    if ($field instanceof ProjectParticipantField) {
-      if ($field->getDataType() == Types\EnumParticipantFieldDataType::CLOUD_FILE
-          || $field->getDataType() == Types\EnumParticipantFieldDataType::CLOUD_FOLDER) {
-        $this->setLocale(ConfigService::DEFAULT_LOCALE);
-      }
-    }
   }
 
   /**
@@ -487,13 +475,5 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $entityManager = $event->getEntityManager();
     $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantFieldOption($this));
     $this->preUpdatePosted = false;
-  }
-
-  /**
-   * @ORM\PostLoad
-   */
-  public function postLoad(Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->forceTranslationLocale();
   }
 }
