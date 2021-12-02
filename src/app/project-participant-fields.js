@@ -171,7 +171,6 @@ const ready = function(selector, resizeCB) {
     if (!data) {
       return;
     }
-    console.info('FIELD TYPE CSS CLASS', data);
     const dataType = data.dataType;
     const multiplicity = data.multiplicity;
     const dueDate = data.depositDueDate;
@@ -313,9 +312,6 @@ const ready = function(selector, resizeCB) {
       'select.data-type',
       'input.deposit-due-date',
     ].join(), function(event) {
-
-      console.info('FIELD TYPE CHANGE');
-
       const depositDueDateInput = container.find('input.deposit-due-date');
       const multiplicitySelect = container.find('select.multiplicity');
       const dataTypeSelect = container.find('select.data-type');
@@ -346,7 +342,6 @@ const ready = function(selector, resizeCB) {
       }
       dataTypeSelect.trigger('chosen:updated');
       const depositDueDate = (dataType === 'service-fee' && depositDueDateInput.val() !== '') ? 'set' : 'unset';
-      console.info('DEPOSIT DUE DATE INPUT', depositDueDateInput, depositDueDateInput.val());
       setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
       allowedHeaderVisibility();
       console.debug('RESIZECB');
