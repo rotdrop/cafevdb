@@ -59,7 +59,7 @@ import 'jquery-ui/ui/widgets/sortable';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 // import 'selectize/dist/css/selectize.css';
-require('cafevdb-selectize.css');
+require('cafevdb-selectize.scss');
 
 require('pme-table.scss');
 

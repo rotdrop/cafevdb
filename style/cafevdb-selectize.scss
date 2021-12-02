@@ -1,0 +1,93 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*****************************************************************************
+ *
+ * Undo some Nextcloud specific problems
+ *
+ */
+
+/* Undo search-box height */
+.app-cafevdb .selectize-control {
+
+  white-space:normal;
+  display:inline-block;
+
+  /* needs to be adjusted if cloud app changes style */
+  .selectize-input {
+    input[type="select-multiple"] {
+      height:unset!important;
+    }
+
+    input[type="select-one"] {
+      height:unset!important;
+    }
+
+    border-radius:var(--borde-radius);
+
+    /* needs to be adjusted if cloud app changes style */
+    &.focus {
+      border-color: var(--color-primary-element);
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.single {
+    vertical-align:middle;
+
+    .selectize-input {
+
+      white-space:nowrap;
+      overflow:hidden;
+
+      > span {
+        width:100%;
+      }
+
+      /**
+       * Restyle s.t. in a narrow environment the arrow drop-down control
+       * is visible.
+       */
+      input[type="select-one"] {
+        width:100%;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        vertical-align:middle;
+      }
+
+      /**
+       * Restyle s.t. in a narrow environment the remove and arrow controls
+       * are visible.
+       */
+      .item {
+        width:100%;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        vertical-align:middle;
+        display:inline-block;
+        padding-right:10px!important;
+      }
+    }
+  }
+}

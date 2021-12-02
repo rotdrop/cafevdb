@@ -50,7 +50,7 @@ import {
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 // import 'selectize/dist/css/selectize.css';
-require('cafevdb-selectize.css');
+require('cafevdb-selectize.scss');
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -58,6 +58,8 @@ require('jquery-ui/themes/base/autocomplete.css');
 require('sepa-debit-mandate.scss');
 require('project-participant-fields-display.scss');
 require('lock-input.scss');
+
+require('./jquery-datetimepicker.js');
 
 /**
  * Initialize the mess with contents. The "mess" is a dialog window

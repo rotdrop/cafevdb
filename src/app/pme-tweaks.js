@@ -29,6 +29,8 @@ import { token as pmeToken, sys as PMEsys } from './pme-selectors.js';
 // require('qs/lib/index.js');
 import * as qs from 'qs';
 
+require('./jquery-datetimepicker.js');
+
 /**
  * Cleanup-function to call before replacing HTML content
  *
