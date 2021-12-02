@@ -24,400 +24,437 @@
  *
  * participant-field stuff
  *
+ * Rather complicated, css classes:
+ *
+ * not-STUFF-hidden qualifies for bening shown
+ * STUFF-hiffen has precedence and tries to hide.
+ *
+ * STUFF is a css-class attached to some parent element.
+ *
  */
 
-@mixin columnHiddenIf($propertyValue, $property: "data-type", $relation: "~", $prefix: "&") {
-  #{$prefix}.#{$property}-#{$propertyValue} #{$relation} tr {
-    td, th {
-      &.#{$property}-#{$propertyValue}-hidden, .#{$property}-#{$propertyValue}-hidden {
-        display:none!important;
-      }
-    }
-  }
-  #{$prefix}:not(.#{$property}-#{$propertyValue}) #{$relation} tr {
-    td, th {
-      &.not-#{$property}-#{$propertyValue}-hidden, .not-#{$property}-#{$propertyValue}-hidden {
-        display:none!important;
+@use "sass:list";
+@use "local";
+
+// Hide selected elements by default, elementShownIf() will then override the visibility again
+@mixin defaultHiddenElement($element, $prefix: "&", $relation: "~") {
+  #{$prefix} {
+    & #{$relation} {
+      #{$element} {
+        &.default-hidden {
+          display:none;
+        }
       }
     }
   }
 }
 
-@mixin columnHiddenIfDataType($dataType, $relation: "~", $prefix: "&") {
-  @include columnHiddenIf($dataType, data-type, $relation, $prefix);
-}
+/// Hide an element by default and show it only if the $prefix has the
+/// given property set. Elements are shown if the have a not-#{$property}-hidden attribute.
+///
+/// @param{list} $property A CSS class or list of CSS classes
+///
+@mixin elementShownIf($property, $element, $prefix: "&", $relation: "~", $display: unset, $important: false) {
+  $important: if($important, "!important", "");
+  $prefixProperty: local.listToString($property, ".");
+  $elementProperty: local.listToString($property, "-");
 
-@mixin columnHiddenIfMultiplicity($multiplicity, $relation: "~", $prefix: "&") {
-  @include columnHiddenIf($multiplicity, multiplicity, $relation, $prefix);
-}
-
-table.pme-main tr.multiplicity {
-  &.multiplicity-single.data-type-boolean ~ tr.pme-row.data-options-single {
-    display:none;
-  }
-  ~ tr.pme-row {
-    &.due-date,
-    &.deposit-due-date,
-    &.maximum-group-size,
-    &.data-options,
-    &.data-options-single,
-    &.data-options-simple,
-    &.data-options-groupofpeople,
-    &.deposit-single,
-    &.deposit-simple,
-    &.deposit-groupofpeople,
-    &.default-value,
-    &.default-single-value,
-    &.default-cloud-file-value,
-    &.default-cloud-folder-value,
-    &.default-multi-value {
-      display:none;
+  // @include defaultHiddenElement($element, $prefix, $relation);
+  #{$prefix} {
+    &.#{$prefixProperty} {
+      & #{$relation} {
+        #{$element} {
+          &.default-hidden.not-#{$elementProperty}-hidden {
+            display:#{$display}#{$important};
+          }
+        }
+      }
     }
-  }
-  &.multiplicity-recurring ~ tr.pme-row .not-multiplicity-recurring,
-  &:not(.multiplicity-recurring) ~ tr.pme-row .only-multiplicity-recurring {
-    display:none!important;
-  }
-  &.data-type-service-fee ~ tr.pme-row.due-date,
-  &.data-type-service-fee ~ tr.pme-row.deposit-due-date,
-  &.multiplicity-groupofpeople ~ tr.pme-row.maximum-group-size,
-  &.multiplicity-groupofpeople.data-type-service-fee ~ tr.pme-row.data-options-groupofpeople,
-  &.multiplicity-single ~ tr.pme-row.default-single-value,
-  &.multiplicity-single ~ tr.pme-row.data-options-single,
-  &.multiplicity-simple ~ tr.pme-row.default-simple-value,
-  &.multiplicity-simple:not(.data-type-cloud-file, .data-type-db-file, .data-type-cloud-folder) ~ tr.pme-row.data-options-simple,
-  &.multiplicity-groupsofpeople ~ tr.pme-row.data-options,
-  &.multiplicity-multiple ~ tr.pme-row.data-options,
-  &.multiplicity-multiple ~ tr.pme-row.default-multi-value,
-  &.multiplicity-parallel ~ tr.pme-row.data-options,
-  &.multiplicity-parallel ~ tr.pme-row.default-multi-value,
-  &.multiplicity-recurring ~ tr.pme-row.data-options {
-    display:table-row;
-  }
-  &.data-type-db-file,
-  &.data-type-cloud-folder,
-  &.data-type-cloud-file {
-    ~ tr.pme-row.default-value,
-    ~ tr.pme-row.default-multi-value,
-    ~ tr.pme-row.default-single-value {
-      display:none!important;
-    }
-  }
-  &.data-type-cloud-file /* , &.data-type-cloud-folder */ {
-    ~ tr.pme-row.default-cloud-file-value {
-      display:table-row;
-    }
-  }
-  @each $dataType in html, service-fee {
-    @include columnHiddenIfDataType($dataType);
-  }
-  @each $multiplicity in groupofpeople, groupsofpeople, recurring {
-    @include columnHiddenIfMultiplicity($multiplicity);
   }
 }
 
-.project-participant-fields table.pme-main {
-  tr:not(.pme-filter) .chosen-container {
-    box-sizing:border-box;
-    min-width:50%;
-  }
-  tr.data-options {
-    &.generator {
-      border-top: 1px solid black;
-    }
-    td {
-      input, textarea {
-        vertical-align:middle;
+// Hide an element if $prefix.$property is set and the element(s) have the class
+// $property-hidden
+@mixin elementHiddenIf($property, $element, $prefix: "&", $relation: "~") {
+  #{$prefix} {
+    &.#{$property} {
+      & #{$relation} {
+        #{$element} {
+          &, &[class*="hidden"] {
+            &.#{$property}-hidden {
+              display:none;
+            }
+          }
+        }
       }
-    }
-    td.operations input.operation {
-      background-repeat:no-repeat;
-      background-size: 24px 24px;
-      background-position: center;
-      width:28px;
-      height:28px;
-      vertical-align:middle;
-      margin-right:1em;
-      &.regenerate {
-        /* background-image:url('../img/reload-solid.svg'); */
-        background-image:url('../img/actions/compute-red.svg');
-      }
-      &.regenerate-all {
-        /* background-image:url('../img/reload-solid.svg'); */
-        background-image:url('../img/actions/compute-red.svg');
-      }
-      &.generator-run {
-        background-image:url('../../../core/img/actions/play.svg');
-      }
-      &.delete-undelete {
-        background-image:url('../img/cafevdb-delete.svg');
-      }
-      &.busy {
-        background-image:url('../../../core/img/loading.gif') !important;
-      }
-    }
-    &.deleted td.operations input.delete-undelete {
-      background-image:url('../img/history.svg');
     }
   }
 }
-form.pme-form.pme-copyadd .show-deleted {
-    display:none;
+
+/***************************************************/
+
+@mixin defaultHiddenColumn($prefix: "&", $relation: "") {
+  @include defaultHiddenElement("th, td", $prefix, $relation);
 }
-tr.data-options.deleted {
-    display:none;
+@mixin columnShownIf($property, $prefix: "&", $important: false) {
+  @include elementShownIf($property, "th, td", $prefix, $relation: "", $display: table-cell, $important: $important);
 }
-table.data-options.show-deleted tr.data-options.deleted {
-    display:table-row;
+@mixin columnShownIfMultiplicity($multiplicity, $prefix: "&", $important: false) {
+  @include columnShownIf(multiplicity-#{$multiplicity}, $prefix, $important);
 }
-/* Data currently only useful for service-fee-fields, limit only for
- * group definitions.
- */
-td.field-data,
-th.field-data,
-td.field-deposit,
-th.field-deposit,
-td.field-limit,
-th.field-limit {
-    display:none!important;
+@mixin columnShownIfDataType($dataType, $prefix: "&", $important: false) {
+  @include columnShownIf(data-type-#{$dataType}, $prefix, $important);
 }
-table.data-options {
-  &.operation-display, &.show-data {
-    @each $dataType in html, service-fee {
-      @include columnHiddenIfDataType($dataType, "");
+
+@mixin columnHiddenIf($property, $prefix: "&", $relation: "") {
+  @include elementHiddenIf($property, "th, td", $prefix, $relation);
+}
+@mixin columnHiddenIfMultiplicity($multiplicity, $prefix: "&", $relation: "") {
+  @include columnHiddenIf(multiplicity-#{$multiplicity}, $prefix, $relation);
+}
+@mixin columnHiddenIfDataType($dataType, $prefix: "&", $relation: "") {
+  @include columnHiddenIf(data-type-#{$dataType}, $prefix, $relation);
+}
+
+@mixin defaultHiddenRow($prefix: "&", $relation: "~") {
+  @include defaultHiddenElement("tr", $prefix, $relation);
+}
+@mixin rowShownIf($property, $prefix: "&", $relation: "~", $important: false) {
+  @include elementShownIf($property, "tr", $prefix, $relation, table-row, $important)
+}
+@mixin rowShownIfMultiplicity($multiplicity, $prefix: "&", $relation: "~") {
+  @include rowShownIf(multiplicity-#{$multiplicity}, $prefix, $relation);
+}
+@mixin rowShownIfDataType($dataType, $prefix: "&", $relation: "~") {
+  @include rowShownIf(data-type-#{$dataType}, $prefix, $relation);
+}
+
+@mixin rowHiddenIf($property, $prefix: "&", $relation: "~") {
+  @include elementHiddenIf($property, "tr", $prefix, $relation);
+}
+@mixin rowHiddenIfMultiplicity($multiplicity, $prefix: "&", $relation: "~") {
+  @include rowHiddenIf(multiplicity-#{$multiplicity}, $prefix, $relation);
+}
+@mixin rowHiddenIfDataType($dataType, $prefix: "&", $relation: "~") {
+  @include rowHiddenIf(data-type-#{$dataType}, $prefix, $relation);
+}
+
+@mixin showAlternate($prefixSelector, $selector, $prefix: "&", $middle: "&", $postfix: "", $display: unset) {
+  #{$prefix} {
+    &:not(#{$prefixSelector}) {
+      #{$middle} {
+        #{$postfix}:not(#{$selector}) {
+          display:#{$display};
+        }
+        #{$postfix}#{$selector} {
+          display: none;
+        }
+      }
     }
-    @each $multiplicity in groupofpeople, groupsofpeople, recurring {
-      @include columnHiddenIfMultiplicity($multiplicity, "");
+    &#{$prefixSelector} {
+      #{$middle} {
+        #{$postfix}:not(#{$selector}) {
+          display: none;
+        }
+        #{$postfix}#{$selector} {
+          display:#{$display};
+        }
+      }
     }
-    td, th {
-      &.field-data, &.field-deposit, &.field-limit {
-        display:table-cell!important;
+  }
+}
+
+@mixin showAlternateDataType($dataType, $prefix: "&", $middle: "&", $postfix: "", $display: unset) {
+  @include showAlternate(".data-type-#{$dataType}", ".#{$dataType}", $prefix, $middle, $postfix, $display);
+}
+
+@mixin dataOptionsTable($prefix: "", $operation: "display") {
+  $optionsTable: "table.data-options";
+
+  @if $operation == "display" {
+    td.pme-value #{$optionsTable}.operation-#{$operation} {
+      th, td {
+        padding:3px;
+      }
+    }
+    td.pme-cell #{$optionsTable}.operation-#{$operation} {
+      th, td {
+        padding:1px;
+      }
+    }
+  }
+  #{$optionsTable} {
+
+    border-collapse:collapse;
+    border-spacing:1px;
+
+    th {
+      font-style:italic;
+      font-weight:bold;
+      text-align:center;
+    }
+
+    @include defaultHiddenColumn();
+    @each $dataType in service-fee, date-time, date {
+      @include columnShownIfDataType($dataType);
+    }
+    @each $multiplicity in groupofpeople, groupsofpeople {
+      @include columnShownIfMultiplicity($multiplicity);
+    }
+    @each $property in expert-mode, show-data {
+      @include columnShownIf($property, $important: true);
+    }
+    @each $multiplicity in recurring {
+      @include columnHiddenIfMultiplicity($multiplicity);
+      @include rowHiddenIfMultiplicity($multiplicity, $relation: "");
+      @include rowShownIfMultiplicity($multiplicity, $relation: "");
+    }
+    @each $cell in th, td {
+      @include showAlternateDataType("service-fee", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
+    }
+    &.operation-#{$operation} {
+      @if $operation == "change" {
+        td, th {
+          input[type="number"] {
+            text-align:right;
+          }
+        }
+        td[class*="field"] {
+          input:not([type=checkbox]), textarea {
+            width:100%;
+          }
+        }
+        @each $dataType in cloud-file, cloud-folder, db-file {
+          @include columnHiddenIfDataType($dataType);
+        }
+      }
+      @if $operation == "display" {
+        td, th {
+          &.operations {
+            display:none;
+          }
+        }
+        span.service-fee.currency-amount {
+          text-align:right;
+          display:inline-block;
+          width:100%;
+        }
+        th, td {
+          border:1px solid #004D9C;
+          &.field-data, &.field-deposit, &.field-limit, &.field-tooltip {
+            overflow:hidden;
+            text-overflow:ellipsis;
+          }
+          &.field-data {
+            max-width:8em;
+          }
+          &.field-tooltip {
+            max-width:16em;
+          }
+        }
+        td {
+          text-align:left;
+          &.field-limit {
+            text-align:center;
+          }
+        }
+        &.data-type-service-fee td.field-data {
+          text-align:right;
+        }
+        &.data-type-datetime {
+          td, th {
+            &.field-data {
+              max-width:10em;
+            }
+          }
+        }
+        &.multiplicity-recurring {
+          td, th {
+            &.field-data {
+              text-align:right;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* principal separator */
+#pme-table-container.project-participant-fields {
+
+  /* list-only rules */
+  form.pme-form.pme-list {
+    table.pme-main {
+      td.pme-cell {
+        &.data-options {
+          @include dataOptionsTable;
+        }
+        &.participant-field-tooltip, &.default-single-value {
+          ul, ol {
+            list-style-position:inside!important;
+            list-style-type:unset;
+          }
+          dd {
+            display: block;
+            margin-left:1em;
+          }
+          h1, h2, h3, h4, h5 {
+            font-weight:bold;
+          }
+          em {
+            font-style:italic;
+          }
+          b {
+            font-style:bold;
+          }
+        }
+      }
+    }
+  }
+
+  /* dialog-only rules */
+  form.pme-form:not(.pme-list) {
+    table.pme-main {
+      /* tr.multiplicity contains the data-type and multiplicity tags */
+      tr.multiplicity {
+        @include  defaultHiddenRow();
+        @each $dataType in service-fee, cloud-file, db-file {
+          @include rowShownIfDataType($dataType);
+        }
+        @each $multiplicity in groupofpeople, single, simple, multiple, parallel, recurring {
+          @include rowShownIfMultiplicity($multiplicity);
+        }
+        @each $multiplicity in recurring {
+          @include rowHiddenIfMultiplicity($multiplicity);
+        }
+        @each $dataType in cloud-file, cloud-folder, db-file {
+          @include rowHiddenIfDataType($dataType);
+        }
+        /* Some compound combinations */
+        @each $dataType in service-fee {
+          @each $multiplicity in groupofpeople, single, simple {
+            @include rowShownIf(("multiplicity-#{$multiplicity}" "data-type-#{$dataType}"));
+          }
+        }
+      }
+    }
+    &.pme-view, &.pme-delete {
+      table.pme-main {
+        td.pme-value {
+          &.data-options {
+            @include dataOptionsTable;
+          }
+        }
+      }
+    }
+    &:not(.pme-view, .pme-delete) {
+      table.pme-main {
+        textarea.field-tooltip,
+        textarea.participant-field-tooltip {
+          overflow-x:hidden; /* fix FF extra-line bug */
+        }
+        tr.multiplicity {
+          @each $multiplicity in groupofpeople, single, simple {
+            @include defaultHiddenElement(
+              "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
+            );
+            @each $dataType in html {
+              @include elementShownIf(
+                "data-type-#{$dataType}",
+                "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
+              );
+              @include elementHiddenIf(
+                "data-type-#{$dataType}",
+                "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
+              );
+            }
+          }
+          @include showAlternateDataType("service-fee", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+        }
+        td.pme-value {
+          .chosen-container {
+            box-sizing:border-box;
+            min-width:50%;
+          }
+          &.data-options {
+            /* pull-up menu for option control */
+            position:relative;
+            background-clip:padding-box;
+            div.field-display-options {
+              position:absolute;
+              bottom:0px;
+              right:0px;
+            }
+            td.placeholder {
+              min-width:35em;
+            }
+            /* general option table styling */
+            @include dataOptionsTable($operation: "change");
+            table.data-options {
+              /* could move it to the mixin, but it is OTOH only required once */
+              tr {
+                td {
+                  input, textarea {
+                    vertical-align:middle;
+                  }
+                  &.operations {
+                    input.operation {
+                      background-repeat:no-repeat;
+                      background-size: 24px 24px;
+                      background-position: center;
+                      width:28px;
+                      height:28px;
+                      vertical-align:middle;
+                      margin-right:1em;
+                      &.regenerate {
+                        /* background-image:url('../img/reload-solid.svg'); */
+                        background-image:url('../img/actions/compute-red.svg');
+                      }
+                      &.regenerate-all {
+                        /* background-image:url('../img/reload-solid.svg'); */
+                        background-image:url('../img/actions/compute-red.svg');
+                      }
+                      &.generator-run {
+                        background-image:url('../../../core/img/actions/play.svg');
+                      }
+                      &.delete-undelete {
+                        background-image:url('../img/cafevdb-delete.svg');
+                      }
+                      &.busy {
+                        background-image:url('../../../core/img/loading.gif') !important;
+                      }
+                    }
+                  }
+                }
+                &.deleted td.operations input.delete-undelete {
+                  background-image:url('../img/history.svg');
+                }
+                &.generator {
+                  border-top: 1px solid black;
+                  td.generator {
+                    padding-right:44px;
+                  }
+                }
+              }
+            } /* data-options table */
+          }
+        }
+      }
+    }
+  }
+}
+
+/* tooltip styling for popup=data */
+.tooltip.cafevdb .pme-cell-wrapper {
+  @include dataOptionsTable;
+  table.data-options {
+    th, td {
+      &.field-data, &.field-tooltip {
+        max-width:8em;
         overflow:hidden;
         text-overflow:ellipsis;
       }
     }
-    &.multiplicity-recurring {
-      td.field-data {
-        text-align:right;
-      }
-    }
-  }
-}
-form.pme-form.pme-list {
-  table.data-options.operation-display {
-    td, th {
-      &.field-data {
-        max-width:8em;
-      }
-    }
-    &.data-type-datetime {
-      td, th {
-        &.field-data {
-          max-width:10em;
-        }
-      }
-    }
-  }
-}
-
-table.pme-main {
-  /* Show field-data for service-fee fields, because it holds the amount to pay. */
-  tr.multiplicity {
-    &.data-type-service-fee, &.data-type-date, &.data-type-datetime {
-      ~ tr.pme-row td.pme-value {
-        td.field-data, th.field-data {
-          display:table-cell!important;
-        }
-      }
-    }
-    &.data-type-service-fee {
-      &.deposit-due-date-set {
-        ~ tr.pme-row td.pme-value {
-          td.field-deposit, th.field-deposit {
-            display:table-cell!important;
-          }
-        }
-        &.multiplicity-simple ~ tr.pme-row.deposit-simple,
-        &.multiplicity-single ~ tr.pme-row.deposit-single,
-        &.multiplicity-groupofpeople ~ tr.pme-row.deposit-groupofpeople {
-          display:table-row;
-        }
-      }
-    }
-
-    /* Hide field-data for autogenerated service-fee fields. */
-    &.multiplicity-recurring.data-type-service-fee {
-      ~ tr.pme-row td.pme-value {
-        td.field-limit, th.field-limit {
-          display:none!important;
-        }
-        td.field-data, th.field-data {
-          display:table-cell!important;
-          span.service-fee {
-            display:none;
-          }
-          span.general {
-            display:inline-block;
-          }
-        }
-      }
-    }
-
-    /* Show field-limit for group-fields */
-    &.multiplicity-groupsofpeople ~ tr.pme-row td.pme-value {
-      td.field-limit, th.field-limit {
-        display:table-cell!important;
-      }
-    }
-
-    ~ tr.pme-row {
-      span.service-fee {
-        display:none;
-      }
-      span.general {
-        display:inline-block;
-      }
-    }
-    &.data-type-service-fee {
-      ~ tr.pme-row {
-        span.service-fee {
-          display:inline-block;
-        }
-        span.general {
-          display:none;
-        }
-      }
-      ~ tr.pme-row.data-options td.pme-value div.show-data {
-        display:none;
-      }
-      ~ tr.pme-row input.field-data,
-      ~ tr.pme-row input.field-deposit,
-      ~ tr.pme-row input.data-options-single,
-      ~ tr.pme-row input.data-options-simple,
-      ~ tr.pme-row input.data-options-groupofpeople {
-        text-align:right;
-        width:130px;
-      }
-      ~ tr.pme-row tr.generator input.field-data {
-        text-align:inherit;
-      }
-    }
-  }
-}
-
-/* list view */
-.pme-cell-wrapper table.operation-display.data-options {
-  th.field-data span.general,
-  th.field-deposit span.general,
-  &.data-type-service-fee .field-data span.service-fee,
-  &.data-type-service-fee .field-deposit span.service-fee {
-    display:inline-block;
-  }
-  &.data-type-service-fee .field-data span.general,
-  &.data-type-service-fee .field-deposit span.general,
-  .field-data span.service-fee {
-    display:none;
-  }
-}
-
-table.pme-main {
-  /* @todo this does not seem to belong here */
-  td.pme-cell span.align-right,
-  td.pme-value span.align-right {
-    float:right;
-  }
-  span.service-fee.currency-amount {
-    text-align:right;
-    display:inline-block;
-    width:100%;
-  }
-}
-
-/******************/
-
-.project-participant-fields {
-  table.pme-main {
-    textarea.field-tooltip,
-    textarea.participant-field-tooltip {
-      overflow-x:hidden; /* fix FF extra-line bug */
-    }
-    td.data-options {
-      position:relative;
-      background-clip:padding-box;
-      div.field-display-options {
-        position:absolute;
-        bottom:0px;
-        right:0px;
-      }
-      td.placeholder {
-        min-width:35em;
-      }
-    }
-  }
-}
-
-table.data-options {
-  &.operation-display {
-    span.service-fee.currency-amount {
-      text-align:right;
-      display:inline-block;
-      width:100%;
-    }
-    th.operations,
-    th.field-key,
-    td.operations,
-    td.field-key {
-      display:none!important;
-    }
-    th, td {
-      text-align:left;
-      border:1px solid #004D9C;
-    }
-    td.field-limit {
-      text-align:center;
-    }
-  }
-
-  border-collapse:collapse;
-  border-spacing:1px;
-
-  th {
-    font-style:italic;
-  }
-}
-td.pme-value table.data-options.operation-display {
-  th, td {
-    padding:3px;
-  }
-}
-td.pme-cell table.data-options.operation-display {
-  th, td {
-    padding:1px;
-  }
-}
-td.pme-cell.participant-field-tooltip {
-  ul, ol {
-    list-style-position:inside!important;
-    list-style-type:unset;
-  }
-  dd {
-    display: block;
-    margin-left:1em;
-  }
-  h1, h2, h3, h4, h5 {
-    font-weight:bold;
-  }
-  em {
-    font-style:italic;
-  }
-  b {
-    font-style:bold;
-  }
-}
-.tooltip-inner .pme-cell-wrapper table.data-options {
-  th.field-data, td.field-data, th.field-tooltip, td.field-tooltip {
-    max-width:8em;
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 }

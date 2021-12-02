@@ -58,6 +58,32 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
 
+  const OPTION_DATA_SHOW_MASK = [
+    'key' => [
+      'default-hidden',
+      'not-expert-mode-hidden',
+    ],
+    'data' => [
+      'data-type-cloud-file-hidden',
+      'data-type-db-file-hidden',
+      'data-type-cloud-folder-hidden',
+    ],
+    'deposit' => [
+      'default-hidden',
+      'not-data-type-service-fee-hidden',
+      'multiplicity-recurring-hidden',
+      'not-show-data-hidden',
+    ],
+    'limit' => [
+      'default-hidden',
+      'not-multiplicity-groupofpeople-hidden',
+      'not-multiplicity-groupsofpeople-hidden',
+      'not-data-type-date-hidden',
+      'not-data-type-date-time-hidden',
+      'not-show-data-hidden',
+    ],
+  ];
+
   const OPTION_DATA_INPUT_SIZE = [
     'default' => 9,
     DataType::SERVICE_FEE => 9,
@@ -370,14 +396,28 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
       $this->defaultFDD['due_date'], [
         'tab' => [ 'id' => 'definition' ],
-        'css' => [ 'postfix' => [ 'service-fee-data-type-required', ], ],
+        'css' => [
+          'postfix' => [
+            'due-date',
+            'default-hidden',
+            'not-data-type-service-fee-hidden',
+            'service-fee-data-type-required',
+          ],
+        ],
       ]);
 
     $opts['fdd']['deposit_due_date'] = Util::arrayMergeRecursive(
       $this->defaultFDD['due_date'], [
         'tab' => [ 'id' => 'definition' ],
         'name' =>  $this->l->t('Deposit Due Date'),
-        'css' => [ 'postfix' => [ 'deposit-due-date' ], ],
+        'css' => [
+          'postfix' => [
+            'deposit-due-date',
+            'default-hidden',
+            'not-data-type-service-fee-hidden',
+            'multiplicity-recurring-hidden',
+          ],
+        ],
       ]);
 
     /**************************************************************************
@@ -405,9 +445,39 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['data_options'] = [
       'name' => $this->l->t('Data Options'),
       'input' => 'SR',
-      'css|LF' => [ 'postfix' => [ 'data-options hide-subsequent-lines', ], ],
-      'css' => ['postfix' => ' data-options' ],
-      'css|VD' => [ 'postfix' => [ 'data-options data-options-single', ], ],
+      'css|LF' => [
+        'postfix' => [
+          'data-options',
+          'default-hidden',
+          'not-multiplicty-groupsofpeople-hidden',
+          'not-multiplicty-parallel-hidden',
+          'not-multiplicty-multiple-hidden',
+          'not-multiplicty-recurring-hidden',
+          'hide-subsequent-lines',
+        ],
+      ],
+      'css' => [
+        'postfix' => [
+          'data-options',
+          'default-hidden',
+          'not-multiplicity-groupsofpeople-hidden',
+          'not-multiplicity-parallel-hidden',
+          'not-multiplicity-multiple-hidden',
+          'not-multiplicity-recurring-hidden',
+        ],
+      ],
+      'css|VD' => [
+        'postfix' => [
+          'data-options',
+          'data-options-single',
+          'default-hidden',
+          'not-multiplicity-groupsofpeople-hidden',
+          'not-multiplicity-parallel-hidden',
+          'not-multiplicity-multiple-hidden',
+          'not-multiplicity-recurring-hidden',
+          'not-multiplicity-single-hidden',
+        ],
+      ],
       'select' => 'T',
       'sort' => true,
       'display|LF' => [ 'popup' => 'data', ],
@@ -445,7 +515,16 @@ class ProjectParticipantFields extends PMETableViewBase
     foreach (['groupofpeople' => '', 'single' => '', 'simple' => $this->l->t('Default') . ' '] as $variant => $prefix) {
       $opts['fdd']['data_options_' . $variant] = [
         'name' => $this->currencyLabel($this->l->t('Data'), $prefix),
-        'css' => [ 'postfix' => [ 'data-options-' . $variant ] ],
+        'css' => [
+          'postfix' => [
+            'data-options-' . $variant,
+            'default-hidden',
+            'not-multiplicity-' . $variant . '-hidden',
+            'data-type-cloud-folder-hidden',
+            'data-type-cloud-file-hidden',
+            'data-type-db-file-hidden',
+          ],
+        ],
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant) {
           // allowed values from virtual JSON aggregator field
@@ -468,6 +547,8 @@ class ProjectParticipantFields extends PMETableViewBase
         'css' => [
           'postfix' => [
             'deposit-' . $variant,
+            'default-hidden',
+            'not-multiplicity-' . $variant . '-data-type-service-fee-hidden',
             'multiplicity-' . $variant . '-set-deposit-due-date-required',
           ],
         ],
@@ -522,7 +603,14 @@ __EOT__;
     }
     $opts['fdd']['maximum_group_size'] = [
       'name' => $this->l->t('Maximum Size'),
-      'css' => [ 'postfix' => ' no-search maximum-group-size' ],
+      'css' => [
+        'postfix' => [
+          'maximum-group-size',
+          'default-hidden',
+          'not-multiplicity-groupofpeople-hidden',
+          'no-search',
+        ],
+      ],
       'sql' => 'MAX(IF($join_table.deleted IS NULL, $join_table.limit, 0))',
       'input' => 'S',
       'input|DV' => 'V',
@@ -542,8 +630,18 @@ __EOT__;
 
     $opts['fdd']['default_value'] = [
       'name' => $this->l->t('Default Value'),
-      'css' => [ 'postfix' => ' default-value' ],
-      'css|VD' =>  [ 'postfix' => ' default-value default-single-value' ],
+      'css' => [
+        'postfix' => [
+          'default-single-value',
+          'squeeze-subsequent-lines', // for html
+          'default-hidden',
+          'not-multiplicity-simple-hidden',
+          'not-multiplicity-single-hidden',
+          'data-type-db-file-hidden',
+          'data-type-cloud-folder-hidden',
+          'data-type-cloud-file-hidden',
+        ],
+      ],
       'input|ACP' => 'RH',
       'select' => 'T',
       'maxlen' => 29,
@@ -577,6 +675,8 @@ __EOT__;
           default:
             switch ($dataType) {
               case DataType::CLOUD_FILE:
+                $value = $this->l->t($value);
+                break;
               case DataType::DB_FILE:
               case DataType::CLOUD_FOLDER:
                 $value = $this->l->t('n/a');
@@ -611,12 +711,11 @@ __EOT__;
                 break;
             }
         }
-        $html = '<span class="';
-        if ($dataType != 'text' && $dataType != 'html') {
-          $html .= 'align-right';
-        }
-        $html .= '">';
-        $html .= $value;
+        $cssClass = ($dataType != DataType::HTML && $dataType != DataType::TEXT) ? ' align-right' : '';
+        $html = '<span class="pme-cell-wrapper'.$cssClass.'">';
+        $html .= ($dataType == DataType::HTML)
+          ? '<span class="pme-cell-squeezer">'.$value.'</span>'
+          : $value;
         $html .= '</span>';
         return $html;
       },
@@ -628,7 +727,18 @@ __EOT__;
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACP',
       'sql' => 'BIN2UUID($main_table.default_value)',
-      'css' => [ 'postfix' => ' default-multi-value allow-empty' ],
+      'css' => [
+        'postfix' => [
+          'default-multi-value',
+          'default-hidden',
+          'data-type-db-file-hidden',
+          'data-type-cloud-folder-hidden',
+          'data-type-cloud-file-hidden',
+          'not-multiplicity-multiple-hidden',
+          'not-multiplicity-parallel-hidden',
+          'allow-empty',
+        ],
+      ],
       'select' => 'D', // @todo should be multi for "parallel".
       'values' => [
         'table' => $this->optionsTable,
@@ -652,7 +762,16 @@ __EOT__;
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACP',
       'sql' => 'BIN2UUID($main_table.default_value)',
-      'css' => [ 'postfix' => [ 'default-single-value' ], ],
+      'css' => [
+        'postfix' => [
+          'default-single-value',
+          'default-hidden',
+          'data-type-db-file-hidden',
+          'data-type-cloud-folder-hidden',
+          'data-type-cloud-file-hidden',
+          'not-multiplicity-single-hidden',
+        ],
+      ],
       'select' => 'O',
       'values2|A' => [ 0 => $this->l->t('no'), 1 => $this->l->t('yes') ],
       'default' => false,
@@ -674,9 +793,16 @@ __EOT__;
       'name' => $this->l->t('Upload Policy'),
       // 'input' => 'V', // not virtual, update handled by trigger
       'options' => 'ACPVD',
-      'css' => [ 'postfix' => [ 'default-cloud-file-value' ] ],
+      'css' => [
+        'postfix' => [
+          'default-cloud-file-value',
+          'default-hidden',
+          'not-data-type-cloud-file-hidden',
+        ],
+      ],
       'select' => 'D',
-      'values2|ACP' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
+      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
+      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
       'values' => [
         'table' => $this->optionsTable,
         'column' => 'data',
@@ -695,7 +821,7 @@ __EOT__;
       [
         'tab'      => [ 'id' => 'display' ],
         'name' => $this->l->t('Tooltip'),
-        'css' => [ 'postfix' => ' participant-field-tooltip hide-subsequent-lines' ],
+        'css' => [ 'postfix' => [ 'participant-field-tooltip', 'squeeze-subsequent-lines', 'hide-subsequent-lines', 'wysiwyg-editor', ], ],
         'select' => 'T',
         'textarea' => [ 'rows' => 5,
                         'cols' => 28 ],
@@ -703,7 +829,11 @@ __EOT__;
         'size' => 30,
         'sort' => true,
         'escape' => false,
-        'display|LF' => [ 'popup' => 'data' ],
+        'display|LF' => [
+          'popup' => 'data',
+          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
         'tooltip' => $this->toolTipsService['participant-fields-tooltip'],
       ],
       $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'tooltip')
@@ -711,7 +841,7 @@ __EOT__;
 
     $opts['fdd']['display_order'] = [
       'name' => $this->l->t('Display-Order'),
-      'css' => [ 'postfix' => ' display-order' ],
+      'css' => [ 'postfix' => [ 'display-order', ], ],
       'select' => 'N',
       'maxlen' => 5,
       'sort' => true,
@@ -726,8 +856,13 @@ __EOT__;
       'css' => [ 'postfix' => [ 'tab', 'allow-empty', ], ],
       'select' => 'D',
       'values' => [
-        'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ]),
-        'column' => 'l10n_tab',
+        'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ], false),
+        'column' => 'tab',
+        'description' => [
+          'columns' => [ 'GROUP_CONCAT(DISTINCT $table.l10n_tab)' ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
         'join' => '$join_table.id = $main_table.id',
       ],
       'values2' => $tableTabValues2,
@@ -764,7 +899,7 @@ __EOT__;
       $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
         'tab' => [ 'id' => 'advanced' ],
-        'css' => [ 'postfix' => ' encrypted' ],
+        'css' => [ 'postfix' => [ 'encrypted', ], ],
         'sqlw' => 'IF($val_qas = "", 0, 1)',
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVFD' => [ 1 => $this->l->t('true'),
@@ -786,7 +921,7 @@ __EOT__;
       $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
         'tab' => [ 'id' => 'advanced' ],
-        'css' => [ 'postfix' => ' readers user-groups' ],
+        'css' => [ 'postfix' => [ 'readers', 'user-groups', ], ],
         'select' => 'M',
         'values' => $cloudGroups,
         'maxlen' => 10,
@@ -798,7 +933,7 @@ __EOT__;
       $opts['fdd']['writers'] = [
         'name' => $this->l->t('Writers'),
         'tab' => [ 'id' => 'advanced' ],
-        'css' => [ 'postfix' => ' writers chosen-dropup user-groups' ],
+        'css' => [ 'postfix' => [ 'writers', 'chosen-dropup', 'user-groups', ], ],
         'select' => 'M',
         'values' => $cloudGroups,
         'maxlen' => 10,
@@ -1280,7 +1415,7 @@ __EOT__;
     .' '.$data.'>';
     $html .= '<td class="operations">
   <input
-    class="operation delete-undelete notnot-multiplicity-recurring"
+    class="operation delete-undelete"
     title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:delete-undelete']).'"
     type="button"/>
   <input
@@ -1291,10 +1426,9 @@ __EOT__;
     </td>';
     // key
     $prop = 'key';
-    $cssClass = implode(' ', [
-      'field-' . $prop,
-      'expert-mode-only',
-    ]);
+    $cssClass = self::OPTION_DATA_SHOW_MASK[$prop]??[];
+    $cssClass[] = 'field-' . $prop;
+    $cssClass = implode(' ', $cssClass);
     $html .= '<td class="'.$cssClass.'">'
           .'<input'
           .($used || $deleted || true ? ' readonly="readonly"' : '')
@@ -1331,7 +1465,9 @@ __EOT__;
           .'</td>';
     // data
     $prop = 'data';
-    $cssClass = 'field-' . $prop;
+    $cssClass = self::OPTION_DATA_SHOW_MASK[$prop]??[];
+    $cssClass[] = 'field-' . $prop;
+    $cssClass = implode(' ', $cssClass);
     $size = self::OPTION_DATA_INPUT_SIZE[$dataType]??self::OPTION_DATA_INPUT_SIZE['default'];
     $fieldValue = $value[$prop];
     if (!empty($fieldValue)) {
@@ -1357,14 +1493,18 @@ __EOT__;
       .'/></td>';
     // deposit
     $prop = 'deposit';
-    $cssClass = implode(' ', [
-      'field-'.$prop,
-      'not-multiplicity-simple-set-deposit-due-date-required',
-      'not-multiplicity-single-set-deposit-due-date-required',
-      'not-multiplicity-groupofpeople-set-deposit-due-date-required',
-      'set-deposit-due-date-required',
-      'not-data-type-service-fee-hidden',
-    ]);
+    $cssClass = implode(
+      ' ',
+      array_merge(
+        self::OPTION_DATA_SHOW_MASK[$prop]??[], [
+          'field-'.$prop,
+          'not-multiplicity-simple-set-deposit-due-date-required',
+          'not-multiplicity-single-set-deposit-due-date-required',
+          'not-multiplicity-groupofpeople-set-deposit-due-date-required',
+          'set-deposit-due-date-required',
+          'not-data-type-service-fee-hidden',
+      ])
+    );
     $html .= '<td class="'.$cssClass.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
           .' class="'.$cssClass.'"'
@@ -1379,12 +1519,7 @@ __EOT__;
           .'/></td>';
     // limit
     $prop = 'limit';
-    $cssClass = implode(' ', [
-      'field-' . $prop,
-      'not-multiplicity-recurring-hidden',
-      'not-multiplicity-groupofpeople-hidden',
-      'not-multiplicity-groupsofpeople-hidden',
-    ]);
+    $cssClass = implode(' ', array_merge(['field-' . $prop], self::OPTION_DATA_SHOW_MASK[$prop]));
     $html .= '<td class="'.$cssClass.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
           .' class="'.$cssClass.'"'
@@ -1433,7 +1568,7 @@ __EOT__;
   {
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
-<tr class="data-line data-options placeholder active not-multiplicity-recurring"
+<tr class="data-line data-options placeholder active multiplicity-recurring-hidden"
   data-field-id="'.$fieldId.'" data-index="0">
   <td class="placeholder" colspan="6">
     <input
@@ -1471,9 +1606,17 @@ __EOT__;
     }
     $updateStrategies = PageNavigation::selectOptions($updateStrategies);
     $generators = $this->participantFieldsService->recurringReceivablesGenerators();
+    $cssClass = implode(' ', [
+      'data-line',
+      'data-options',
+      'generator',
+      'active',
+      'default-hidden',
+      'not-multiplicity-recurring-hidden',
+    ]);
     $html .= '
 <tr
-  class="data-line data-options generator active only-multiplicity-recurring"
+  class="'.$cssClass.'"
   data-generators=\''.json_encode(
     array_merge(
       array_map([ $this->l, 't' ], array_keys($generators)),
@@ -1562,6 +1705,12 @@ __EOT__;
   /**
    * Generate a table in order to define field-valus for
    * multi-select stuff.
+   *
+   *      |  key        | label | data | limit          | deposit     |  tooltip
+   * ==================================================================================
+   * show | expert-mode |       |      | groupofpeople  | service-fee |
+   *      |             |       |      | groupsofpeople |             |
+   *      |             |       |      | date/time (?)  |             |
    */
   private function showDataOptions($value, $op, $fieldId, $multiplicity = null, $dataType = null)
   {
@@ -1686,17 +1835,12 @@ __EOT__;
       ];
     }
     foreach ($headers as $key => $value) {
-      $css = 'field-'.$key;
-      if ($key == 'key') {
-        $css .= ' expert-mode-only';
-      } else if ($key == 'deposit') {
-        $css .= ' not-data-type-service-fee-hidden';
-      } else if ($key == 'limit') {
-        $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
-      }
+      $cssClass = self::OPTION_DATA_SHOW_MASK[$key]??[];
+      $cssClass[] = 'field-'.$key;
+      $cssClass = implode(' ', $cssClass);
       $html .=
             '<th'
-            .' class="'.$css.'"'
+            .' class="'.$cssClass.'"'
             .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$key]).'"'
             .'>'
             .$value
@@ -1719,10 +1863,6 @@ __EOT__;
     <tr>
       <td class="operations"></td>';
           foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip'] as $field) {
-            $css = 'field-'.$field;
-            if ($field == 'key') {
-              $css .= ' expert-mode-only';
-            }
             $fieldValue = $value[$field];
             if ($multiplicity == Multiplicity::RECURRING) {
               if ($field == 'limit' && !empty($fieldValue)) {
@@ -1761,10 +1901,10 @@ __EOT__;
             }
             if ($field == 'deposit') {
               $fieldValue = $this->currencyValue($fieldValue);
-              $css .= ' not-data-type-service-fee-hidden';
-            } else if ($field == 'limit') {
-              $css .= ' not-multiplicity-recurring-hidden not-multiplicity-groupofpeople-hidden not-multiplicity-groupsofpeople-hidden';
             }
+            $css = self::OPTION_DATA_SHOW_MASK[$field]??[];
+            $css[] = 'field-'.$field;
+            $css = implode(' ', $css);
             $html .= '<td class="'.$css.'">'.$fieldValue.'</td>';
           }
           $html .= '
@@ -1865,9 +2005,19 @@ __EOT__;
     } else {
       $htmlDisabled = [ 'textarea' => 'disabled', 'input' => '' ];
     }
-    $cssBase = 'pme-input data-options-'.$variant;
+    $cssBase = [
+      'pme-input',
+      'data-options-'.$variant,
+    ];
+    $cssClass = implode(' ', array_merge(
+      $cssBase, [
+        'field-'.$field,
+        'data-type-html-hidden',
+        'data-type-html-disabled',
+        'service-fee-data-type-required',
+      ]));
     $html  .=<<<__EOT__
-<input class="{$cssBase} field-{$field} data-type-html-hidden data-type-html-disabled"
+<input class="{$cssClass}"
        {$htmlDisabled['input']}
        type="text"
        maxlength="29"
@@ -1877,9 +2027,16 @@ __EOT__;
        title="{$tip}"
 />
 __EOT__;
+    $cssClass = implode(' ', array_merge(
+      $cssBase, [
+        'field-'.$field,
+        'default-hidden',
+        'not-data-type-html-hidden',
+        'not-data-type-html-disabled',
+      ]));
     $html  .=<<<__EOT__
-<span class="{$cssBase} field-{$field} not-data-type-html-hidden not-data-type-html-disabled">
-  <textarea class="pme-input data-options-{$variant} wysiwyg-editor"
+<span class="{$cssClass} pme-cell-wrapper">
+  <textarea class="pme-input data-options-{$variant} data-type-html-wysiwyg-editor"
             name="{$name}[{$key}][{$field}]"
             {$htmlDisabled['textarea']}
             title="{$tip}"
@@ -1931,11 +2088,10 @@ __EOT__;
   private function currencyValue($value)
   {
     return
-      '<span class="general">'.$value.'</span>'
-      .'<span class="service-fee currency-amount">'
-      .$this->moneyValue($value)
-      .'</span>';
-
+      '<span class="service-fee-alternatives">
+  <span class="general">'.$value.'</span>
+  <span class="service-fee currency-amount">'.$this->moneyValue($value).'</span>
+</span>';
   }
 
   /**
@@ -1945,10 +2101,10 @@ __EOT__;
   private function currencyLabel($label, $prefix = '')
   {
     return
-      '<span class="general">'.$prefix.$label.'</span>'
-      .'<span class="service-fee currency-label">'
-      .$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'
-      .'</span>';
+      '<span class="service-fee-alternatives">
+  <span class="general">'.$prefix.$label.'</span>
+  <span class="service-fee currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
+</span>';
   }
 
   static private function ifDefaultLocale($ifTrue, $ifFalse)
