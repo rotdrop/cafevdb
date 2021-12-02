@@ -1283,7 +1283,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
         foreach ($changeSet as $column => $field) {
-          $this->debug('Set ' . $column . ' / ' . $field . ' to ' . $newvals[$field] . ' old ' . $entity[$field]);
+          $this->debug('Set ' . $column . ' / ' . $field . ' to ' . $newvals[$field]);
           $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
