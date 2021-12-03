@@ -20,11 +20,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { webRoot, appName, $ } from './globals.js';
+import { appName, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Email from './email.js';
-import * as Dialogs from './dialogs.js';
 import * as PHPMyEdit from './pme.js';
 import fileDownload from './file-download.js';
 import modalizer from './modalizer.js';
@@ -101,7 +100,7 @@ const documentReady = function() {
 
 export {
   documentReady,
-  ready
+  ready,
 };
 
 // Local Variables: ***

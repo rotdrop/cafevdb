@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { $ } from './globals.js';
 require('select-utils.scss');
 
 // find an option by its value
@@ -30,7 +31,9 @@ const findOptionByValue = function($select, value) {
 /**
  * Determine if the given element is managed by jQuery chosen.
  *
- * @returns bool
+ * @param{jQuery} $select TBD.
+ *
+ * @returns{bool}
  */
 const chosenActive = function($select) {
   return $select.data('chosen') !== undefined;
@@ -58,7 +61,7 @@ const makePlaceholder = function($select) {
         .attr('value', '')
         .prop('hidden', true)
         .prop('disabled', true)
-//        .prop('selected', true)
+      // .prop('selected', true)
         .html(placeHolder);
     });
   }
@@ -67,7 +70,9 @@ const makePlaceholder = function($select) {
 /**
  * Determine if the given element is managed by selectize.
  *
- * @returns bool
+ * @param{jQuery} $select TBD.
+ *
+ * @returns{bool}
  */
 const selectizeActive = function($select) {
   return !!($select.length > 0 && ($select[0].selectize !== undefined));
@@ -149,6 +154,8 @@ const selectedValues = function($select, values, trigger) {
  * Update the underlying select widget to reflect changes in the
  * original select element. This currently support jQuery chosen and
  * selectize.
+ *
+ * @param{jQuery} $select TBD.
  */
 const refreshSelectWidget = function($select) {
   if (chosenActive($select)) {

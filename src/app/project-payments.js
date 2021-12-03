@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 

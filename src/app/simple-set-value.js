@@ -112,6 +112,8 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
  * @param {String} eventType Something like 'blue', 'change' etc.
  *
  * @param {jQuery} msgElement TBD.
+ *
+ * @param {Object} userCallbacks TBD.
  */
 const simpleSetHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {

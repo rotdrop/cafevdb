@@ -3,10 +3,11 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const Visualizer = require('webpack-visualizer-plugin2');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs');
 const xml2js = require('xml2js');
@@ -20,6 +21,7 @@ xml2js.parseString(fs.readFileSync(infoFile), function(err, result) {
   appInfo = result;
 });
 const appName = appInfo.info.id[0];
+const productionMode = process.env.NODE_ENV === 'production';
 
 module.exports = {
   entry: {
@@ -39,7 +41,7 @@ module.exports = {
   },
   devtool: 'source-map',
   optimization: {
-    minimize: (process.env.NODE_ENV === 'production'),
+    minimize: productionMode,
     minimizer: [
       new TerserPlugin({
         parallel: true,
@@ -89,7 +91,12 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
     }),
-    // new CssoWebpackPlugin({ pluginOutputPostfix: 'min' }),
+    new CssoWebpackPlugin(
+      {
+        pluginOutputPostfix: productionMode ? null : 'min',
+      },
+      productionMode ? /\.css$/ : /^$/
+    ),
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
     }),
@@ -100,18 +107,13 @@ module.exports = {
       templateContent(arg) {
         return JSON.stringify(arg.htmlWebpackPlugin.files, null, 2);
       },
-//       templateContent: ({htmlWebpackPlugin}) => `
-// HEAD TAGS
-// ${htmlWebpackPlugin.tags.headTags}
-// BODY TAGS
-// ${htmlWebpackPlugin.tags.bodyTags}
-// FILES
-// ${htmlWebpackPlugin.files.publicPath}
-// ${htmlWebpackPlugin.files.js}
-// ${htmlWebpackPlugin.files.css}
-// ${htmlWebpackPlugin.files.manifest}
-// ${htmlWebpackPlugin.files.favicon}
-//   `
+    }),
+    new ESLintPlugin({
+      exclude: [
+        'node_modules',
+        '3rdparty',
+        'src/legacy',
+      ],
     }),
   ],
   module: {

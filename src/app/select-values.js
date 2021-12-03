@@ -50,7 +50,7 @@ const selectValues = function(select, optionValues) {
     optionValues = [optionValues];
   }
   if (!multiple) {
-    optionValues = [ optionValues[0] ];
+    optionValues = [optionValues[0]];
   }
   // setter has to use foreach
   $select.each(function(idx) {

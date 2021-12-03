@@ -101,7 +101,7 @@ const pmeTweaks = function(container) {
   form.find('a.email').off('click').on('click', function(event) {
     event.preventDefault();
     const href = $(this).attr('href').split('?');
-    if (href.length != 2) {
+    if (href.length !== 2) {
       return false;
     }
     const recordKey = PMEsys('rec');

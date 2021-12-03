@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, webRoot, $ } from './globals.js';
+import { globalState, appName, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -95,7 +95,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.mandateProjectId';
-  const projectIdSelector = '.mandateProjectId';
+  // const projectIdSelector = '.mandateProjectId';
   const projectIdOnlySelector = '.mandateProjectId.only-for-project';
   const projectIdAllSelector = '.mandateProjectId.for-all-receivables';
   const allReceivablesSelector = 'input.for-all-receivables';

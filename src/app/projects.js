@@ -624,8 +624,7 @@ const articleSelectOnChange = function(event, container) {
   return false;
 };
 
-const attachArticleSelectHandlers = function(containerContext)
-{
+const attachArticleSelectHandlers = function(containerContext) {
   const container = containerContext.container;
   const articleBox = containerContext.articleBox;
   const articleSelect = container.find('#cmsarticleselect');

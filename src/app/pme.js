@@ -190,7 +190,9 @@ const cancelDeferredReload = function(container) {
  * Create a jQuery Deferred object in order post-one form submission
  * until after validation of data, for example.
  *
- * @returnes{Deferred}
+ * @param{jQuery} container TBD.
+ *
+ * @returns{Deferred}
  */
 const pmeDeferReload = function(container) {
   const defer = $.Deferred();
@@ -1258,7 +1260,7 @@ function installInputSelectize(containerSel, onlyClass) {
       openOnFocus: false,
       items: $self.data('initialValues'),
       // closeAfterSelect: true,
-      create: function(input) {
+      create(input) {
         return {
           value: input,
           text: input,

@@ -170,7 +170,7 @@ const pmeFormInit = function(containerSel) {
     brokerSelect.on('change', function(event) {
       const $this = $(this);
       const $broker = $this.find('option:selected');
-      if ($broker.length == 0) {
+      if ($broker.length === 0) {
         return;
       }
       const rates = $broker.data('data').split(',');

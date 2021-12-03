@@ -20,6 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { $ } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';

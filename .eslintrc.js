@@ -11,6 +11,7 @@ module.exports = {
     dayNames: true,
     firstDay: true,
     APP_NAME: true,
+    XULDocument: true,
   },
   rules: {
     camelcase: [

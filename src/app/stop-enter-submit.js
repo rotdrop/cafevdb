@@ -42,7 +42,9 @@ const textLikeInputTypes = [
  * Stop enter-keypress from submitting the form if the active element
  * was a text-like input.
  *
- * @param {object} evt jQuery event.
+ * @param {Object} evt jQuery event.
+ *
+ * @returns{bool} true.
  */
 const stopEnterSubmit = function(evt) {
   evt = evt || event;

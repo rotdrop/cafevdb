@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $, appName, webRoot } from './globals.js';
+import { $, appName } from './globals.js';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Ajax from './ajax.js';

@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nonce, webRoot } from './app/globals.js';
+import { nonce, webRoot, $ } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
@@ -44,7 +44,6 @@ import { documentReady as projectPaymentsReady } from './app/project-payments.js
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
-jQuery = require('jquery');
 require('jquery-ui');
 
 require('navsnapper.css');

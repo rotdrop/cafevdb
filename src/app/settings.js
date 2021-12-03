@@ -323,7 +323,7 @@ const afterLoad = function(container) {
     const financeFolder = $('input#financefolder').val() !== '';
     $('#sharedfolder-form').find('fieldset').each(function(i, element) {
       const $element = $(element);
-      let disabled = (!shareOwnerSet
+      const disabled = (!shareOwnerSet
                       || ($element.hasClass('needs-sharedfolder') && !sharedFolder)
                       || ($element.hasClass('needs-projectsfolder') && !projectsFolder)
                       || ($element.hasClass('needs-financefolder') && !financeFolder));
@@ -519,12 +519,12 @@ const afterLoad = function(container) {
       enableFieldSets();
     });
     sharedFolder('financefolder', function(element, css, data, value, msg) {
-      const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
+      // const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
       $('div#sharing-settings span.financefolder').html(value[css]); // update
       enableFieldSets();
     });
     sharedFolder('projectsfolder', function(element, css, data, value, msg) {
-      const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
+      // const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
       $('div#sharing-settings span.projectsfolder').html(value[css]); // update
       enableFieldSets();
     });
@@ -663,7 +663,7 @@ const afterLoad = function(container) {
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown))
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
             Notification.messages(data.message);
@@ -1072,7 +1072,7 @@ const afterLoad = function(container) {
             .done(function(files) {
               if (!Array.isArray(files) || files.length !== 1) {
                 Dialogs.alert(
-                  t(appName, 'Unable to copy selected file {file}.', { file: paths[0] }),
+                  t(appName, 'Unable to copy selected file {file}.', { file: files }),
                   t(appName, 'Error'));
               }
               moveIntoPlace(files[0], $container, $this);

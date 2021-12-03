@@ -84,7 +84,7 @@ const download = function(url, post, options) {
     cache: false,
     data: post,
     dataType: 'binary', // vital, otherwise jQuery annoyingly tries to parse the response
-    xhr: function() {
+    xhr() {
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 2) {

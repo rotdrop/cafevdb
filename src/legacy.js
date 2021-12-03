@@ -20,18 +20,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { jQuery } from './app/globals.js';
 import Calendar from './legacy/calendar/calendar.js';
 import './legacy/calendar/on-event.js';
 import './legacy/calendar/jquery.multi-autocomplete.js';
 import 'legacy/calendar/jquery.ui.timepicker.js';
 
-jQuery = require('jquery');
+// jQuery = require('jquery');
 require('jquery-ui');
 
-//window.$ = jQuery;
-//window.jQuery = jQuery;
+// window.$ = jQuery;
+// window.jQuery = jQuery;
 
-console.info('JQUERY', window.jQuery.widget);
+console.info('JQUERY', jQuery.widget, window.jQuery.widget);
 
 require('legacy/calendar/jquery.ui.timepicker.css');
 

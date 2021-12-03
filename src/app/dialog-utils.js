@@ -78,7 +78,9 @@ function dialogToBackButton(dialogHolder) {
 /**
  * Add a full-screen-button to the titlebar of a jQuery-UI dialog.
  *
- * @Param {jQuery} dialogHolder TBD.
+ * @param {jQuery} dialogHolder TBD.
+ *
+ * @param {Function} onChangeCallback TBD.
  */
 function dialogFullScreenButton(dialogHolder, onChangeCallback) {
   const dialogWidget = dialogHolder.dialog('widget');

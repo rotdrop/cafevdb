@@ -38,10 +38,11 @@ import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import modalizer from './modalizer.js';
+import { md5 } from 'blueimp-md5';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
-require('blueimp-md5');
+// require('blueimp-md5');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -791,7 +792,7 @@ const myReady = function(selector, resizeCB) {
     }
     $thisRow.data('uploadFormId', widgetId);
 
-    const $parentFolder = $thisRow.find('.operation.open-parent');
+    // const $parentFolder = $thisRow.find('.operation.open-parent');
     const $deleteUndelete = $thisRow.find('.operation.delete-undelete');
     const $downloadLink = $thisRow.find('a.download-link');
     const $placeholder = $thisRow.find('input.upload-placeholder');

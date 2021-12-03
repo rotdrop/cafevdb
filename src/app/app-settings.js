@@ -23,7 +23,7 @@
 // @@TODO these are rather personal settings
 
 import { $ } from './globals.js';
-import { appSettings, toolTipsInit, unfocus } from './cafevdb.js';
+import { appSettings, unfocus } from './cafevdb.js';
 
 const documentReady = function() {
 
@@ -49,16 +49,6 @@ const documentReady = function() {
 
     return false;
   });
-
-  // appNav.on('click', '#app-settings-expert-operations', function(event) {
-  //   appSettings(
-  //     'expertmode/form',
-  //     function(container) {
-  //       $.fn.cafevTooltip.remove(); // remove any left-over items
-  //       toolTipsInit(container);
-  //     });
-  //   return false;
-  // });
 
 };
 

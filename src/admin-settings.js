@@ -4,7 +4,8 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,11 +21,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState } from './app/config.js';
+import { $, appName } from './app/globals.js';
 import * as Ajax from './app/ajax.js';
 import generateUrl from './app/generate-url.js';
-
-const appName = initialState.appName;
 
 $(function() {
 

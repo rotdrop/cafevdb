@@ -25,7 +25,7 @@
  */
 
 // Compatibility
-import { appName } from './globals.js';
+import { appName, $ } from './globals.js';
 
 require('dialogs.scss');
 
