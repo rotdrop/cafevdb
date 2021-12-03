@@ -1921,6 +1921,10 @@ Störung.';
             // blind copy, don't expose the victim to the others.
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);
           } else {
+
+            // @todo Bcc should be the universal default unless explicitly
+            // configured otherwise by the user.
+
             // Well, people subscribing to one of our projects
             // simply must not complain, except soloist or
             // conductors which normally are not bothered with

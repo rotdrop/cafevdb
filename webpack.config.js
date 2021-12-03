@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const Visualizer = require('webpack-visualizer-plugin2');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -81,6 +82,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
+      chunkFilename: "[id].css",
     }),
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
