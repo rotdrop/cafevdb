@@ -675,7 +675,7 @@ __EOT__;
           default:
             switch ($dataType) {
               case DataType::CLOUD_FILE:
-                $value = $this->l->t($value??'');
+                $value = !empty($value) ? $this->l->t($value) : '';
                 break;
               case DataType::DB_FILE:
               case DataType::CLOUD_FOLDER:
