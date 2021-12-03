@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,19 +25,29 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
-use OCA\CAFEVDB\Service\ConfigService;
-
 class ErrorService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 
-  public function __construct(ConfigService $configService) {
+  /** @var OrganizationalRolesService */
+  private $rolesService;
+
+  public function __construct(
+    ConfigService $configService
+    , OrganizationalRolesService $rolesService) {
     $this->configService = $configService;
+    $this->rolesService = $rolesService;
   }
 
-  public function exceptionTemplate(\Exception $e, $renderAs = 'blank') {
+  public function exceptionTemplate(\Exception $e, $renderAs = 'blank')
+  {
+    $admin = implode(',', array_map(
+      function($contact) { return $contact['name'] . ' <' . $contact['email'] . '>'; },
+      $this->rolesService->cloudAdminContact()
+    ));
+
     return new TemplateResponse(
       $this->appName(),
       self::ERROR_TEMPLATE,
@@ -46,7 +57,7 @@ class ErrorService
         'exception' => $e->getMessage(),
         'trace' => $e->getTraceAsString(),
         'debug' => true,
-        'admin' => 'unknown',
+        'admin' => $admin,
       ],
       $renderAs
     );

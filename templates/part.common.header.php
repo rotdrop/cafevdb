@@ -31,8 +31,8 @@ use OCA\CAFEVDB\Service\ConfigService;
  *
  */
 
-script($appName, 'app');
-style($appName, 'app');
+script($appName, $assets['js']['asset']);
+style($appName, $assets['css']['asset']);
 
 /*
  *

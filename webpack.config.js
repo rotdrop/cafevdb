@@ -3,9 +3,10 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+// const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const Visualizer = require('webpack-visualizer-plugin2');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs');
 const xml2js = require('xml2js');
@@ -29,8 +30,12 @@ module.exports = {
   output: {
     // path: path.resolve(__dirname, 'js'),
     path: path.resolve(__dirname, '.'),
-    filename: 'js/[name].js',
-    assetModuleFilename: 'assets/[name]-[hash].[ext]',
+    publicPath: '',
+    filename: 'js/[name]-[contenthash].js',
+    assetModuleFilename: 'js/assets/[name]-[hash][ext][query]',
+    chunkFilename: 'js/chunks/[name]-[contenthash].js',
+    clean: false,
+    compareBeforeEmit: true, // true would break the Makefile
   },
   devtool: 'source-map',
   optimization: {
@@ -69,9 +74,10 @@ module.exports = {
       analyzerPort: 11111,
       analyzerMode: 'static',
       openAnalyzer: false,
+      reportFilename: './statistics/bundle-analyzer.html',
     }),
     new Visualizer({
-      filename: './visualizer-stats.html',
+      filename: './statistics/visualizer-stats.html',
     }),
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -81,11 +87,31 @@ module.exports = {
       'window.jQuery': 'jquery',
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: "[id].css",
+      filename: 'css/[name]-[contenthash].css',
     }),
+    // new CssoWebpackPlugin({ pluginOutputPostfix: 'min' }),
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
+    }),
+    new HtmlWebpackPlugin({
+      inject: false,
+      filename: 'js/asset-meta.json',
+      minify: false,
+      templateContent(arg) {
+        return JSON.stringify(arg.htmlWebpackPlugin.files, null, 2);
+      },
+//       templateContent: ({htmlWebpackPlugin}) => `
+// HEAD TAGS
+// ${htmlWebpackPlugin.tags.headTags}
+// BODY TAGS
+// ${htmlWebpackPlugin.tags.bodyTags}
+// FILES
+// ${htmlWebpackPlugin.files.publicPath}
+// ${htmlWebpackPlugin.files.js}
+// ${htmlWebpackPlugin.files.css}
+// ${htmlWebpackPlugin.files.manifest}
+// ${htmlWebpackPlugin.files.favicon}
+//   `
     }),
   ],
   module: {

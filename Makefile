@@ -236,11 +236,13 @@ WEBPACK_DEPS =\
  $(CHOSEN_DIST)\
  $(CSS_FILES) $(JS_FILES)
 
-CSS_TARGETS = app.css settings.css admin-settings.css
-JS_TARGETS = app.js settings.js admin-settings.js
-WEBPACK_TARGETS =\
- $(patsubst %,$(ABSSRCDIR)/css/%,$(CSS_TARGETS))\
- $(patsubst %,$(ABSSRCDIR)/js/%,$(JS_TARGETS))
+# CSS_TARGETS = app.css settings.css admin-settings.css
+# JS_TARGETS = app.js settings.js admin-settings.js
+# WEBPACK_TARGETS =\
+#  $(patsubst %,$(ABSSRCDIR)/css/%,$(CSS_TARGETS))\
+#  $(patsubst %,$(ABSSRCDIR)/js/%,$(JS_TARGETS))
+
+WEBPACK_TARGETS = $(ABSSRCDIR)/js/asset-meta.json
 
 package-lock.json: package.json webpack.config.js Makefile $(THIRD_PARTY_NPM_DEPS)
 	{ [ -d package-lock.json ] && [ test -d node_modules ]; } || npm install
@@ -251,9 +253,8 @@ BUILD_FLAVOUR_FILE = $(ABSSRCDIR)/build-flavour
 PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
 
 $(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
+	make webpack-clean
 	npm run $(shell cat $(BUILD_FLAVOUR_FILE))
-# npm does not update the time-stamps if nothing changes, so ...
-	touch $(WEBPACK_TARGETS)
 
 .PHONY: build-flavour-dev
 build-flavour-dev:
@@ -274,28 +275,32 @@ npm-dev: build-flavour-dev $(WEBPACK_TARGETS)
 .PHONY: npm-build
 npm-build: build-flavour-build $(WEBPACK_TARGETS)
 
-# Removes the appstore build
-.PHONY: clean
-clean: ## Tidy up local environment
-	rm -rf $(BUILDDIR)
+#@@ Removes WebPack builds
+webpack-clean:
 	rm -rf ./js/*
 	rm -rf ./css/*
+.PHONY: webpack-clean
 
-# Same as clean but also removes dependencies installed by composer, bower and
-# npm
-.PHONY: distclean
+#@@ Removes build files
+clean: ## Tidy up local environment
+	rm -rf $(BUILDDIR)
+.PHONY: clean
+
+#@@ Same as clean but also removes dependencies installed by composer, bower and npm
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor*
 	rm -rf node_modules
+.PHONY: distclean
 
-.PHONY: realclean
-realclean: distclean ## Really delete everything but the bare source files
+#@@ Really delete everything but the bare source files
+realclean: distclean
 	rm -f composer*.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
 	rm -f *.html
 	rm -f stats.json
+.PHONY: realclean
 
 # Builds the source and appstore package
 .PHONY: dist

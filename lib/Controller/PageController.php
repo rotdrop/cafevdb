@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\MigrationsService;
+use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
@@ -74,6 +75,9 @@ class PageController extends Controller {
   /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
   private $pageNavigation;
 
+  /** @var AssetService */
+  private $assetService;
+
   /** @var array
    *
    * Result of ConfigCheckService.
@@ -85,6 +89,7 @@ class PageController extends Controller {
     , IRequest $request
     , ISession $session
     , IAppContainer $appContainer
+    , AssetService $assetService
     , ConfigService $configService
     , HistoryService $historyService
     , OrganizationalRolesService $organizationalRolesService
@@ -100,6 +105,7 @@ class PageController extends Controller {
 
     $this->session = $session;
     $this->appContainer = $appContainer;
+    $this->assetService = $assetService;
     $this->configService = $configService;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
@@ -278,6 +284,10 @@ class PageController extends Controller {
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
+      'assets' => [
+        AssetService::JS => $this->assetService->getJSAsset('app'),
+        AssetService::CSS => $this->assetService->getCSSAsset('app'),
+      ],
       'appConfig' => $this->configService,
       'pageNavigation' => $this->pageNavigation,
       'roles' => $this->organizationalRolesService,

@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,6 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Common\Util;
 
 echo '<div class="cafevdb cfgerror error toastify">';
 switch ($error) {
@@ -39,11 +44,11 @@ case 'exception':
   $message = $exception;
   $trace   = is_array($trace) ? print_r($trace, true) : $trace;
   $debug   = $debug;
-  echo $l->t("CamerataDB Error: got the error message `%s'!", [$message]);
+  echo $l->t('CamerataDB Error: got the error message "%s"!', [$message]);
   echo '<br/>';
-  $admin = '<a href="mailto:'.$admin.'?subject=cafevdb%20exception&body='.$message.' '.$trace.'">'.$admin.'</a>';
-  echo $l->t("Please save the output and send it to the system administrator: `%s'. Many thanks for that!",
-            [$admin]);
+  $adminMailto = '<a href="mailto:'.rawurlencode($admin).'?subject=cafevdb%20exception&body='.rawurlencode($message).'%20'.urlencode($trace).'">'.Util::htmlEscape($admin).'</a>';
+  echo $l->t('Please save the output and send it to the system administrator: "%s". Many thanks for that!',
+            [$adminMailto]);
   echo '<br/>';
   echo '<br/>';
   if ($debug) {

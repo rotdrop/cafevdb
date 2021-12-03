@@ -27,6 +27,7 @@ use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -52,6 +53,9 @@ class PersonalForm {
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
 
+  /** @var AssetService */
+  private $assetService;
+
   /** @var ProjectService */
   private $projectService;
 
@@ -75,6 +79,7 @@ class PersonalForm {
 
   public function __construct(
     ConfigService $configService
+    , AssetService $assetService
     , ProjectService $projectService
     , ErrorService $errorService
     , TranslationService $translationService
@@ -85,6 +90,7 @@ class PersonalForm {
     , UserStorage $userStorage
   ) {
     $this->configService = $configService;
+    $this->assetService = $assetService;
     $this->projectService = $projectService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
@@ -102,6 +108,10 @@ class PersonalForm {
         $this->appName(),
         self::ERROR_TEMPLATE,
         [
+          'assets' => [
+            AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+            AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+          ],
           'error' => 'notamember',
           'userId' => $this->userId(),
         ], 'blank');
@@ -146,6 +156,10 @@ class PersonalForm {
       }
 
       $templateParameters = [
+        'assets' => [
+          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+        ],
         'appName' => $this->appName(),
         'userId' => $this->userId(),
         'locale' => $this->getLocale(),

@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,20 +28,26 @@ use OCP\Settings\ISettings;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\AssetService;
 
 class Admin implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
 
+  /** @var AssetService */
+  private $assetService;
+
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
   public function __construct(
     ConfigService $configService
+    , AssetService $assetService
     , WikiRPC $wikiRPC
   ) {
     $this->configService = $configService;
+    $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
   }
 
@@ -49,6 +56,10 @@ class Admin implements ISettings {
       $this->appName(),
       self::TEMPLATE,
       [
+        'assets' => [
+          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+        ],
         'appName' => $this->appName(),
         'userGroup' => $this->getAppValue('usergroup'),
         'wikiNameSpace' => $this->getAppValue('wikinamespace'),

@@ -23,8 +23,8 @@
 
 namespace OCA\CAFEVDB;
 
-script($appName, 'settings');
-style($appName, 'settings');
+script($appName, $assets['js']['asset']);
+style($appName, $assets['css']['asset']);
 
 $tooltipstitle  = $toolTips['show-tool-tips'];
 $restorehistorytitle = $toolTips['restore-history'];

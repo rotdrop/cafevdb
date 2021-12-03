@@ -20,8 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-script($appName, 'admin-settings');
-style($appName, 'admin-settings');
+script($appName, $assets['js']['asset']);
+style($appName, $assets['css']['asset']);
 
 if (empty($wikiVersion)) {
   $wikiHide = '';
