@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
+const Visualizer = require('webpack-visualizer-plugin2');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs');
@@ -29,15 +29,33 @@ module.exports = {
     // path: path.resolve(__dirname, 'js'),
     path: path.resolve(__dirname, '.'),
     filename: 'js/[name].js',
+    assetModuleFilename: 'assets/[name]-[hash].[ext]',
   },
   devtool: 'source-map',
   optimization: {
     minimize: (process.env.NODE_ENV === 'production'),
     minimizer: [
       new TerserPlugin({
-        cache: true,
         parallel: true,
-        sourceMap: true, // Must be set to true if using source-maps in production
+        //
+        // minify: TerserPlugin.uglifyJsMinify,
+        // `terserOptions` options will be passed to `uglify-js`
+        // Link to options - https://github.com/mishoo/UglifyJS#minify-options,
+        //
+        // minify: TerserPlugin.swcMinify,
+        // `terserOptions` options will be passed to `swc` (`@swc/core`)
+        // Link to options - https://swc.rs/docs/config-js-minify
+        //
+        // minify: TerserPlugin.esbuildMinify,
+        // `terserOptions` options will be passed to `esbuild`
+        // Link to options - https://esbuild.github.io/api/#minify
+        // Note: the `minify` options is true by default (and override other `minify*` options), so if you want to disable the `minifyIdentifiers` option (or other `minify*` options) please use:
+        // terserOptions: {
+        //   minify: false,
+        //   minifyWhitespace: true,
+        //   minifyIdentifiers: false,
+        //   minifySyntax: true,
+        // },
         terserOptions: {
           // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
         },
@@ -107,19 +125,37 @@ module.exports = {
         ],
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: 'css/img/',
-          publicPath: 'img',
-          useRelativePaths: true,
+        test: /\.(jpe?g|png|gif)$/i,
+        type: 'asset', // 'asset/resource',
+        generator: {
+          filename: 'css/img/[name]-[hash][ext]',
         },
       },
       {
+        test: /\.svg$/i,
+        use: 'svgo-loader',
+        type: 'asset', // 'asset/resource',
+        generator: {
+          filename: 'css/img/[name]-[hash][ext]',
+        },
+      },
+      // {
+      //   test: /\.false(jpe?g|png|gif|svg)$/i,
+      //   loader: 'file-loader',
+      //   options: {
+      //     digestType: 'base74',
+      //     hashType: 'sha512',
+      //     lenght: 16,
+      //     name: '[name]-[hash].[ext]',
+      //     outputPath: 'css/img/',
+      //     publicPath: 'img',
+      //     useRelativePaths: true,
+      //   },
+      // },
+      {
         test: /\.handlebars/,
         loader: 'handlebars-loader',
-        query: {
+        options: {
           extensions: '.handlebars',
         },
       },
@@ -140,6 +176,9 @@ module.exports = {
       'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/JqueryIntegration.js'),
       // 'canvas-to-blob': 'blueimp-canvas-to-blob',
       // 'load-image': 'blueimp-load-image',
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
     },
   },
   // externals: {

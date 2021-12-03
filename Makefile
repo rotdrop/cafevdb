@@ -252,10 +252,13 @@ PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
 
 $(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
 	npm run $(shell cat $(BUILD_FLAVOUR_FILE))
+# npm does not update the time-stamps if nothing changes, so ...
+	touch $(WEBPACK_TARGETS)
 
 .PHONY: build-flavour-dev
 build-flavour-dev:
 ifneq ($(PREV_BUILD_FLAVOUR), dev)
+	make clean
 	echo dev > $(BUILD_FLAVOUR_FILE)
 endif
 
