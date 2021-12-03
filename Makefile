@@ -254,7 +254,7 @@ PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
 
 $(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
 	make webpack-clean
-	npm run $(shell cat $(BUILD_FLAVOUR_FILE))
+	npm run $(shell cat $(BUILD_FLAVOUR_FILE)) || rm -f $(WEBPACK_TARGETS)
 
 .PHONY: build-flavour-dev
 build-flavour-dev:
@@ -266,6 +266,7 @@ endif
 .PHONY: build-flavour-build
 build-flavour-build:
 ifneq ($(PREV_BUILD_FLAVOUR), build)
+	make clean
 	echo build > $(BUILD_FLAVOUR_FILE)
 endif
 
