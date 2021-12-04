@@ -1,20 +1,21 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
-# Branch feature/crypto-seal #
+# Branch feature/mailing-lists #
 
 ## Purpose ##
 
-Provide a multi-user encryption for certain database-entries. Idea
-would be to make personal data available for club-members for review
-or even editing.
+Provide global and per-project mailing lists for the communication to
+the registrered musians and between the registered musicians.
 
 ## Comments ##
 
-This could work like the openssl_seal() function. As usual there are
-questions how to organize re-encryption on password change and the like.
+- data-security issues?
+
+- moving all the data-base addresses to the tentative "global" mailing-list is also problematic concering the consent of the participants. Still better than posting again @all
 
 # General README #
+
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
