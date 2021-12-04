@@ -114,8 +114,7 @@ class AssociationSlugHandler implements SlugHandlerInterface
       $targetMeta->getReflectionProperty($associationSlugField)->setValue($targetObject, $slug);
       $targetState = $uow->getEntityState($targetObject);
       if ($targetState == UnitOfWork::STATE_MANAGED || $targetState == UnitOfWork::STATE_NEW) {
-        $oid = spl_object_hash($targetObject);
-        $ea->setOriginalObjectProperty($uow, $oid, $associationSlugField, $oldTargetSlug);
+        $ea->setOriginalObjectProperty($uow, $targetObject, $associationSlugField, $oldTargetSlug);
         $ea->recomputeSingleObjectChangeSet($uow, $targetMeta, $targetObject);
       }
     }
