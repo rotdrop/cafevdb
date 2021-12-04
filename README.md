@@ -1,3 +1,38 @@
+CAFEVDB -- Orchestra Management App
+===================================
+
+# Branch feature/project-registration-form #
+
+## Purpose ##
+
+Provide a per-project registration form with the following features:
+
+- tentative registration to a project by email-address or name, with auto-fill for known persons
+  - security? At least a captcha is necessary, or an email registration round-trip
+- check-marks for
+  - acceptance of required contact/personal data storage
+    - email/phone/address contact for project
+    - per-project mailing list subscription for project
+  - optional contact "features"
+    - global news-letter registration
+
+On form submit:
+- the registration should then be filled into the respective project table
+  - this is not an auto-registration, the person applies for acceptance
+  - of course with a "confirmation required" note
+- the person should get email-feedback
+- the orga-team should be triggered by email and/or push-message
+
+After acceptance by the orga-team:
+- automatic adding to the per-project communication channels
+  - mailing list?
+  - chat channel?
+  - SMS notifications?
+
+## Comments ##
+
+# General README #
+
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
