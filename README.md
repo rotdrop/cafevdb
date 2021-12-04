@@ -1,5 +1,5 @@
-CAFEVDB
-=======
+CAFEVDB -- Orchestra Management App
+===================================
 
 # Branch feature/bulk-email-bcc #
 
