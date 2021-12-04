@@ -1,6 +1,15 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
+# Branch feature/project-registration-form #
+
+## Purpose ##
+
+Pull-down menus composed of ul/li and a are easier to style and open
+the possibility to open the target in another tab or window.
+
+## Comments ##
+
 # General README #
 
 The goal of the project is a group-ware application which aids
