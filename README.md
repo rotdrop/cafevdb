@@ -5,7 +5,7 @@ CAFEVDB -- Orchestra Management App
 
 ## Purpose ##
 
-Optionally let the default translations in en_US (see https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/translatable.md[Gedmo\Translatable](https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/translatable.md)) configurable through the UI.
+Optionally let the default translations in en_US (see [Gedmo\Translatable](https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/translatable.md)) configurable through the UI.
 
 ## Comments ##
 
