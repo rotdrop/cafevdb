@@ -836,6 +836,7 @@ const myReady = function(selector, resizeCB) {
 
           $deleteUndelete.prop('disabled', noFile);
         }
+        $.fn.cafevTooltip.remove();
       },
       stopCallback: null,
       dropZone: $thisRow,
@@ -850,6 +851,7 @@ const myReady = function(selector, resizeCB) {
       .on('click', function(event) {
         const $fileUpload = $('#' + widgetId + ' input[type="file"]');
         $fileUpload.trigger('click');
+        $.fn.cafevTooltip.remove();
         return false;
       });
 
