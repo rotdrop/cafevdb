@@ -1,3 +1,6 @@
+CAFEVDB -- Orchestra Management App
+===================================
+
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
