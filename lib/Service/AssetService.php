@@ -59,7 +59,6 @@ class AssetService
       foreach ($assetMeta[$type] as $assetFileName) {
         $assetFileName = basename($assetFileName, '.' . $type);
         if (preg_match('/^(.*)-([a-f0-9]+)$/', $assetFileName, $matches)) {
-          $this->logInfo('ASSET MATCHES ' . print_r($matches, true));
           ${self::ASSET} = $matches[0];
           $base = $matches[1];
           ${self::HASH} = $matches[2];
