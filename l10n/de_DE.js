@@ -1093,6 +1093,7 @@ OC.L10N.register(
     "Add arbitrary further hidden recipients." : "Beliebige weitere versteckte Empfänger hinzufügen.",
     "Add arbitrary further recipients." : "Beliebige weitere Empfänger hinzufügen.",
     "Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts'-App." : "Link zum Cloud-Adressbuch. Öffnet eine Auswahlbox mit den dort\nabgelegten Em@il-Adressen. Optional können auch die Cc:- oder\nBcc:-Adressen zum Owncoud-Adressbuch hinzugefügt werden.",
+    "Undisclose the bulk-recipients of this message. This can only be activated in \"project-mode\". Normally this should be left disabled in which case the email is sent with a hidden recipients list." : "Falls aktiviert, wird die Massen-Email mit einer offenen Empfängerliste gesendet. Das sollte tunlichts vermieden werden. Die Einstellung kann nur aktiviert werden, falls es sich um Projekt-bezogene Email handelt.",
     "Choose a file to attach from the files stored remotely on in the Cloud storage area." : "Ein Attachment aus dem Cloud-Datei-System auswählen.",
     "Select calendar attachments from the associated project events." : "Öffnet ein Fenster mit allen Projekt-Terminen. Termine können dort als\nAnhang zur Em@il ausgewählt werden.",
     "Choose a file to attach from the project's per-musician file-attachments." : "Einen Datei-Anhang aus den Projekt-per-Person-Anhängen auswählen.",
