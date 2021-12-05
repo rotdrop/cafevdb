@@ -124,11 +124,13 @@ foreach ($eventAttachmentOptions as $option) {
             <input type="checkbox"
                    <?php !empty($discloseRecipients) && p('checked'); ?>
                    id="check-disclose-recipients"
+                   <?php ($projectId <= 0) && p('disabled'); ?>
                    class="disclose-recipients tooltip-top"
                    name="emailComposer[discloseRecipients]"
                    type="disclose-recipients"
             />
             <label for="check-disclose-recipients"
+                   <?php ($projectId <= 0) && p('disabled'); ?>
                    class="disclose-recipients">
               <span class="disclose-recipients button">
                 <span class="undisclosed">CC</span>
