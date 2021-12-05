@@ -118,14 +118,14 @@ foreach ($eventAttachmentOptions as $option) {
           >
             <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
           </span>
-          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button disclose-recipients">
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button disclose-recipients tooltip-auto"
+                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclose-recipients']); ?>"
+          >
             <input type="checkbox"
                    <?php !empty($discloseRecipients) && p('checked'); ?>
                    id="check-disclose-recipients"
                    class="disclose-recipients tooltip-top"
                    name="emailComposer[discloseRecipients]"
-
-                   title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclose-recipients']); ?>"
                    type="disclose-recipients"
             />
             <label for="check-disclose-recipients"
