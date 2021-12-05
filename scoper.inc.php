@@ -106,5 +106,13 @@ return [
 
       return preg_replace('/namespace .+;/', '', $contents);
     },
+    // work around broken Scoper
+    function (string $filePath, string $prefix, string $contents): string {
+      return preg_replace(
+        '%[?]\S+\\\\self%',
+        '?self',
+        $contents
+      );
+    },
   ],
 ];
