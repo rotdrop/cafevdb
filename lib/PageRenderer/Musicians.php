@@ -539,6 +539,8 @@ make sure that the musicians are also automatically added to the
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
+          'dateformat' => 'medium',
+          'timeformat' => 'short',
         ]
       );
     }
