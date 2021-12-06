@@ -164,7 +164,9 @@ class MusicianService
   public function deleteMusician(Entities\Musician $musician)
   {
     if (empty($musician->getDeleted())) {
-      $this->remove($musician, true); // this should be soft-delete
+      // $this->remove($musician, true); // this should be soft-delete
+      // for now skip the soft-deleteable cascade and just set the deleted-data manually
+      $musician->setDeleted('now');
     }
     if ($musician->getPayments()->count() == 0) {
       if ($musician->getProjectParticipation()->isEmpty()) {
