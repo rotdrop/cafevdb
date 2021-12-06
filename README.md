@@ -1,23 +1,6 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
-# Branch feature/bulk-email-bcc #
-
-## Branch Purpose ##
-
-By default all email through the email form should be Bcc
-with only hidden bulk-recipients. Up to now per-project email is still
-send with an open recipient list.
-
-This branch changes this behaviour to Bcc per-default, adding a
-checkbox and a warning to the UI to override Bcc: to To: for
-project-participant-only email.
-
-## Comments ##
-
-- In the long run @all email should be moved to mailing-list traffic.
-
-# General README #
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
