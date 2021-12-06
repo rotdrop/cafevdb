@@ -158,7 +158,8 @@ module.exports = {
         test: /\.(jpe?g|png|gif)$/i,
         type: 'asset', // 'asset/resource',
         generator: {
-          filename: 'css/img/[name]-[hash][ext]',
+          filename: './css/img/[name]-[hash][ext]',
+          publicPath: '../',
         },
       },
       {
@@ -166,7 +167,8 @@ module.exports = {
         use: 'svgo-loader',
         type: 'asset', // 'asset/resource',
         generator: {
-          filename: 'css/img/[name]-[hash][ext]',
+          filename: './css/img/[name]-[hash][ext]',
+          publicPath: '../',
         },
       },
       // {

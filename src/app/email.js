@@ -414,6 +414,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const currentTemplate = fieldset.find('#emailCurrentTemplate');
   const saveAsTemplate = fieldset.find('#check-save-as-template');
   const draftAutoSave = fieldset.find('#check-draft-auto-save');
+  const discloseRecipients = fieldset.find('#check-disclosed-recipients');
   const messageText = fieldset.find('textarea');
   const eventAttachmentsRow = fieldset.find('tr.event-attachments');
   const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
@@ -1177,6 +1178,31 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         $self.val($self.val().trim());
         return false;
       });
+
+  /**************************************************************************
+   *
+   */
+  discloseRecipients
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+
+      if ($this.prop('checked')) {
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to disclose the bulk-message recipients?'
+            + ' This may violate privacy regulations.'),
+          t(appName, 'Really disclose the recipients?'),
+          function(confirmed) {
+            $this.prop('checked', confirmed);
+          },
+          true,
+          true
+        );
+        return false;
+      }
+      return true;
+    });
 
   /**
    * Validate Cc: and Bcc: entries.

@@ -111,6 +111,7 @@ class EmailFormController extends Controller {
    */
   public function webForm($projectId = null, $projectName = '', $bulkTransactionId = null, $emailTemplate = null)
   {
+    /** @var Composer $composer */
     $composer = $this->appContainer->query(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
 
@@ -150,6 +151,7 @@ class EmailFormController extends Controller {
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
       'storedEmails' => $composer->storedEmails(),
+      'disclosedRecipients' => $composer->discloseRecipients(),
       'TO' => $composer->toString(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
@@ -337,6 +339,7 @@ class EmailFormController extends Controller {
           'projectId' => $projectId,
           'emailTemplateName' => $composer->currentEmailTemplate(),
           'storedEmails' => $composer->storedEmails(),
+          'disclosedRecipients' => $composer->discloseRecipients(),
           'TO' => $composer->toString(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
@@ -450,6 +453,7 @@ class EmailFormController extends Controller {
 
           'emailTemplateName' => $composer->currentEmailTemplate(),
           'storedEmails' => $composer->storedEmails(),
+          'disclosedRecipients' => $composer->discloseRecipients(),
           'TO' => $composer->toString(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),

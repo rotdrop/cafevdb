@@ -6,6 +6,7 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,6 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
+use OCA\CAFEVDB\Common\Util;
 
 $containerClass = $appName.'-'.'container';
 
@@ -105,15 +107,36 @@ foreach ($eventAttachmentOptions as $option) {
                value="<?php echo $l->t('Delete Message'); ?>"/>
       </td>
     </tr>
-
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo $l->t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
-        <span title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
-              data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
-              data-title-intro="<?php echo $toolTips['emailform:composer:recipients:listing']; ?>"
-              class="email-recipients tooltip-bottom tooltip-mostwide">
-          <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
+        <span class="flex-container">
+          <span class="email-address-holder email-recipients inner vmiddle tooltip-bottom tooltip-mostwide"
+                title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
+                data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
+                data-title-intro="<?php echo $toolTips['emailform:composer:recipients:listing']; ?>"
+          >
+            <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
+          </span>
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto"
+                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"
+          >
+            <input type="checkbox"
+                   <?php ($disclosedRecipients??false) && p('checked'); ?>
+                   id="check-disclosed-recipients"
+                   <?php ($projectId <= 0) && p('disabled'); ?>
+                   class="disclosed-recipients tooltip-top"
+                   name="emailComposer[disclosedRecipients]"
+            />
+            <label for="check-disclosed-recipients"
+                   <?php ($projectId <= 0) && p('disabled'); ?>
+                   class="disclosed-recipients">
+              <span class="disclosed-recipients button">
+                <span clas="label">BCC</span>
+              </span>
+            </label>
+            <span class="checkbox-alert alert-checked"></span>
+          </span>
         </span>
       </td>
     </tr>
@@ -121,18 +144,19 @@ foreach ($eventAttachmentOptions as $option) {
       <td class="email-address caption"><?php echo $l->t('Carbon Copy'); ?></td>
       <td class="email-address input" colspan="2">
         <input size="40"
-               title="<?php echo $toolTips['emailform:composer:recipients:freeform-CC']; ?>"
-               class="tooltip-top"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:freeform-CC']); ?>"
+               class="email-address-holder tooltip-top"
                value="<?php echo htmlspecialchars($_['CC']); ?>"
                name="emailComposer[CC]"
                type="text"
                id="carbon-copy" />
-        <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
+        <input title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:address-book']); ?>"
                type="submit"
                class="submit address-book-emails CC tooltip-bottom"
                data-for="#carbon-copy"
                name="emailComposer[addressBookCC]"
-               value="<?php echo $l->t('Address Book'); ?>"/>
+               value="<?php echo $l->t('Address Book'); ?>"
+        />
       </td>
     </tr>
     <tr class="email-address">
@@ -140,7 +164,7 @@ foreach ($eventAttachmentOptions as $option) {
       <td colspan="2" class="email-address input">
         <input size="40"
                title="<?php echo $toolTips['emailform:composer:recipients:freeform-BCC']; ?>"
-               class="tooltip-top"
+               class="email-address-holder tooltip-top"
                value="<?php echo htmlspecialchars($_['BCC']); ?>"
                name="emailComposer[BCC]"
                type="text"
@@ -150,7 +174,8 @@ foreach ($eventAttachmentOptions as $option) {
                class="submit address-book-emails BCC tooltip-bottom"
                data-for="#blind-carbon-copy"
                name="emailComposer[addressBookBCC]"
-               value="<?php echo $l->t('Address Book'); ?>"/>
+               value="<?php echo $l->t('Address Book'); ?>"
+        />
       </td>
     </tr>
     <tr>

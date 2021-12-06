@@ -53,6 +53,14 @@
     border-top-right-radius:0;
     border-top-left-radius:0;
 
+    .flex-container {
+      display:flex;
+
+      > * {
+        float:none!important;
+      }
+    }
+
     div#emailformwrapper {
 
       /************************************************************************
@@ -103,6 +111,80 @@
           /* padding-right:1.2em; */
         }
 
+        // two-state checkbox with button-like display
+        span.checkbox-button.#{$cssPrefix}container {
+          position:relative;
+          vertical-align:middle;
+
+          span.button {
+            background-repeat:no-repeat;
+            background-position:center;
+            background-size:22px 22px;
+            display:inline-block;
+            width:27px;
+          }
+
+          &:not(.inverted) input[type=checkbox]:checked,
+          &.inverted input[type=checkbox] {
+            & + label span.button {
+              background-color:red;
+              box-shadow:2px 2px 2px #080808 inset;
+            }
+          }
+
+          &:not(.inverted) input[type=checkbox],
+          &.inverted input[type=checkbox]:checked {
+            & + label span.button {
+              background-color: var(--color-background-dark);
+              box-shadow:unset;
+            }
+          }
+
+          input[type=checkbox] {
+            &:disabled ~ * {
+              opacity:20%;
+            }
+
+            & ~ .checkbox-alert {
+              background-image:url('../../../core/img/actions/alert-outline.svg');
+              background-color:red;
+              background-repeat:no-repeat;
+              background-position:center;
+              display:block;
+              position:absolute;
+              left:-4px;
+              top:-4px;
+              width:20px;
+              height:20px;
+              z-index:1;
+              border-radius:var(--border-radius-pill);
+              border:1px solid black;
+              &.alert-checked {
+                display:none;
+              }
+              &.alert-unchecked {
+                display:block;
+              }
+            }
+
+            &:checked {
+              & ~ .checkbox-alert.alert-checked {
+                display:block;
+              }
+              & ~ .checkbox-alert.alert-unchecked {
+                display:none;
+              }
+            }
+
+            position: absolute;
+            left:-10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+          }
+        }
+
         /****************************************************************************
          *
          * recipients filters
@@ -113,6 +195,18 @@
           overflow-y: auto;
           overflow-x: hidden;
           padding-bottom: 0px !important;
+
+          div.#{$cssPrefix}row {
+            width:100%;
+          }
+
+          div.#{$cssPrefix}row:after {
+            content:" ";
+            display:block;
+            height:0;
+            clear: both;
+          }
+
         }
 
         /****************************************************************************
@@ -154,318 +248,331 @@
             width:20px;
             flex: 0 1 auto;
           }
-        }
 
-        /****************************************************************************/
+          tr {
 
-        td.caption {
-          font-weight:bold;
-          vertical-align:top;
-          padding-right:0.5em;
-          min-width:10em;
-        }
+            td.caption {
+              font-weight:bold;
+              vertical-align:top;
+              padding-right:0.5em;
+              min-width:10em;
+            }
 
-        tr.all-attachments {
-          .flex-container {
-            margin-bottom:3px;
-          }
-          button {
-            background-color:#C6DEFF;
-            vertical-align:middle;
-            height:28px;
-            width:34px;
-            padding:5px;
-            border-style:outset;
-            margin-right: 0.5em;
-            &.upload {
-              img {
-                width:24px;
+            &.all-attachments {
+              .flex-container {
+                margin-bottom:3px;
               }
-            }
-            &.cloud {
-              padding:5px 0;
-              img {
-                width:26px;
-              }
-            }
-            &.events {
-              padding:0px;
-              img {
-                vertical-align:top;
-                height:24px;
-              }
-            }
-            &.personal {
-              img {
-                width:24px;
-              }
-            }
-            &.visibility-toggle {
-              padding: 5px 0;
-              img {
-                width:24px;
-              }
-            }
-          }
-          .separator {
-            display: inline-block;
-            margin: 8px 1em 8px 0.5em;
-            border-left: 1px solid black;
-          }
-        }
-
-        /* attachments selectors and controls */
-        tr.attachments {
-          &.no-attachments {
-            display:none;
-          }
-          &.empty-selection {
-            display:none;
-            &.show-selectable {
-              display:table-row;
-            }
-          }
-	  /* give show-selectable priority */
-	  &.hidden.show-selectable {
-            display:table-row;
-          }
-          td.content {
-            .chosen-container {
-              min-width:85%;
-              max-width:85%;
-              float:left;
-              /* max-height:40px; */
-
-              /* &.chosen-with-drop .chosen-drop {
-                position:relative;
-                top:100%;
-                margin-bottom:1em;
-              } */
-
-              .chosen-drop {
-                position:absolute;
-                top:-99999px;
-              }
-            }
-            .attachment-controls {
-              float:right;
-              display:inline-block;
-              input[type=submit], input[type=button] {
-                float:left;
-                background-repeat:no-repeat;
-                background-size: 24px 24px;
-                background-position: center;
-                width:27px;
-                height:27px;
-                font-size:0pt;
+              button {
+                background-color:#C6DEFF;
                 vertical-align:middle;
+                height:28px;
+                width:34px;
+                padding:5px;
+                border-style:outset;
+                margin-right: 0.5em;
+                &.upload {
+                  img {
+                    width:24px;
+                  }
+                }
+                &.cloud {
+                  padding:5px 0;
+                  img {
+                    width:26px;
+                  }
+                }
+                &.events {
+                  padding:0px;
+                  img {
+                    vertical-align:top;
+                    height:24px;
+                  }
+                }
+                &.personal {
+                  img {
+                    width:24px;
+                  }
+                }
                 &.visibility-toggle {
-                  background-image:url('../../../core/img/actions/toggle.svg');
+                  padding: 5px 0;
+                  img {
+                    width:24px;
+                  }
                 }
-                &.delete-all-attachments {
-                  background-image:url('../img/cafevdb-delete.svg');
+              }
+              .separator {
+                display: inline-block;
+                margin: 8px 1em 8px 0.5em;
+                border-left: 1px solid black;
+              }
+            } // tr.all-attachments
+
+            /* attachments selectors and controls */
+            &.attachments {
+              &.no-attachments {
+                display:none;
+              }
+              &.empty-selection {
+                display:none;
+                &.show-selectable {
+                  display:table-row;
                 }
               }
-            }
-          }
-        }
-
-        /**************************/
-
-        tr.submit {
-          td {
-            padding-top:0.5em;
-            margin:0;
-
-            .container {
-              display:inline-block;
-              &.send, .preview {
-                float:left;
+	      /* give show-selectable priority */
+	      &.hidden.show-selectable {
+                display:table-row;
               }
-              &.cancel {
-                float:right;
+              td.content {
+                .chosen-container {
+                  min-width:85%;
+                  max-width:85%;
+                  float:left;
+                  /* max-height:40px; */
+
+                  /* &.chosen-with-drop .chosen-drop {
+                     position:relative;
+                     top:100%;
+                     margin-bottom:1em;
+                     } */
+
+                  .chosen-drop {
+                    position:absolute;
+                    top:-99999px;
+                  }
+                }
+                .attachment-controls {
+                  float:right;
+                  display:inline-block;
+                  input[type=submit], input[type=button] {
+                    float:left;
+                    background-repeat:no-repeat;
+                    background-size: 24px 24px;
+                    background-position: center;
+                    width:27px;
+                    height:27px;
+                    font-size:0pt;
+                    vertical-align:middle;
+                    &.visibility-toggle {
+                      background-image:url('../../../core/img/actions/toggle.svg');
+                    }
+                    &.delete-all-attachments {
+                      background-image:url('../img/cafevdb-delete.svg');
+                    }
+                  }
+                }
               }
-            }
-          }
-        }
+            } // tr.attachments
 
-        tr, tr:hover, tr:active {
-          background-color:inherit;
-        }
+            &.submit {
+              td {
+                padding-top:0.5em;
+                margin:0;
 
-        td.body, td.caption {
-          vertical-align:top;
-        }
+                .container {
+                  display:inline-block;
+                  &.send, .preview {
+                    float:left;
+                  }
+                  &.cancel {
+                    float:right;
+                  }
+                }
+              }
+            } // tr.submit
 
-        tr.stored-messages td {
-          border-bottom:1px solid #808080;
-          padding-bottom:0.5em;
-        }
+          } // tr
 
-        td.email-address.input input.address-book-emails,
-        td.stored-messages-storage input.submit {
-          background-repeat:no-repeat;
-          background-size: 24px 24px;
-          background-position: center;
-          width:27px;
-          height:27px;
-          font-size:0pt;
-          vertical-align:middle;
-        }
+          /**************************/
 
-        td.stored-messages-storage {
-          text-align:right;
-
-          input {
-            padding-top:5px;
+          tr, tr:hover, tr:active {
+            background-color:inherit;
           }
 
-          span.checkbox-button.#{$cssPrefix}container {
-            position:relative;
+          td.body, td.caption {
+            vertical-align:top;
+          }
+
+          tr.stored-messages td {
+            border-bottom:1px solid #808080;
+            padding-bottom:0.5em;
+          }
+
+          td.email-address.input input.address-book-emails,
+          td.stored-messages-storage input.submit {
+            background-repeat:no-repeat;
+            background-size: 24px 24px;
+            background-position: center;
+            width:27px;
+            height:27px;
+            font-size:0pt;
             vertical-align:middle;
+          }
 
-            span.button.save-as-template {
-              background-image: url('../img/template.svg');
+          td.stored-messages-storage {
+            text-align:right;
+
+            input.save-message {
+              background-image:url('../img/save.svg');
             }
 
-            span.button.draft-auto-save {
-              background-image: url('../img/autosave.svg');
+            input.delete-message {
+              background-image:url('../img/cafevdb-delete.svg');
             }
 
-            span.button {
-              background-repeat:no-repeat;
-              background-position:center;
-              background-size:22px 22px;
-              display:inline-block;
-              width:27px;
+            input {
+              padding-top:5px;
             }
 
-            input[type=checkbox]:checked + label span.button {
-              background-color:red !important;
-              box-shadow:2px 2px 2px #080808 inset;
+            span.checkbox-button.#{$cssPrefix}container {
+
+              span.button.save-as-template {
+                background-image: url('../img/template.svg');
+              }
+
+              span.button.draft-auto-save {
+                background-image: url('../img/autosave.svg');
+              }
             }
 
-            input[type="checkbox"] {
-              position: absolute;
-              left:-10000px;
-              top: auto;
-              width: 1px;
-              height: 1px;
-              overflow: hidden;
+            input[type=checkbox]:checked + label span.button.draft-auto-save {
+              background-color:lightgreen;
+            }
+          } /* td.stored-messages-storage */
+
+          .stored-messages-choose .chosen-container {
+            width:20em !important;
+          }
+
+          .chosen-container .chosen-default {
+            color:#000;
+            font-weight:bold;
+          }
+
+          #emailCurrentTemplate {
+            width:16em;
+            margin-left:1em;
+            vertical-align:middle;
+          }
+
+          #emailCurrentTemplate:disabled {
+            opacity:1;
+          }
+
+          td.email-address {
+
+            &.input input.address-book-emails {
+              background-image:url('../img/contacts-dark.svg');
+              /*  background-color:#000;*/
+              float:right;
+              &.loading {
+                background-image:url('../../../core/img/loading.gif');
+              }
+            }
+
+            &.email-recipients {
+              padding-top:1em;
+            }
+
+            width:100%;
+            /*padding: 0 1em 0 0;*/
+            .email-address-holder {
+              width:90%;
+              float:left;
+            }
+
+            .flex-container {
+              flex-wrap: nowrap;
+              justify-content:space-between;
+              flex-direction:row;
+              align-items:center;
+              > * {
+                /* display:inline-flex; */
+              }
+              .email-address-holder {
+                flex: 1 0 auto;
+              }
+              .checkbox-button {
+                flex: 0 1 auto;
+              }
+            }
+
+            &.display {
+              overflow:hidden;
+
+              span.email-address-holder {
+                max-width:45em;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              }
+
+              .checkbox-button.disclosed-recipients {
+                input[type=checkbox] {
+                  & + label span.button {
+                    padding-left:0;
+                    padding-right:0;
+                    text-align:center;
+                    width:34px;
+                    height:34px;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    span.label {
+                      display:inline-flex;
+                      font-weight:bold;
+                    }
+                  }
+                }
+                &:not(.inverted) input[type=checkbox]:checked,
+                &.inverted input[type=checkbox] {
+                  & + label span.button {
+                    background-color:lightgreen;
+                  }
+                }
+                &:not(.inverted) input[type=checkbox],
+                &.inverted input[type=checkbox]:checked {
+                  & + label span.button {
+                    background-color: var(--color-background-dark);
+                  }
+                }
+              }
             }
           }
 
-          input.save-message {
-            background-image:url('../img/save.svg');
+          td.subject.input span.subject.tag {
+            font-family:monospace;
+            font-size:100%;
+            width:auto;
+            max-width:30%;
+            text-align:right;
+            font-weight:bold;
+            display:inline-block;
+            float:left;
+            line-height:2.5em;
+            overflow:hidden;
+            text-overflow:ellipsis;
           }
 
-          input.delete-message {
-            background-image:url('../img/cafevdb-delete.svg');
+          td.subject.input span.subject.input {
+            width:67%;
+            /* padding: 0 1em 0 0; */
+            display:inline-block;
+            line-height:2.5em;
+            float:right;
           }
-        } /* td.stored-messages-storage */
 
-        td.email-address.input input.address-book-emails {
-          background-image:url('../img/contacts-dark.svg');
-          /*  background-color:#000;*/
-          float:right;
-          &.loading {
-            background-image:url('../../../core/img/loading.gif');
+          td.subject.input input {
+            width:100%;
           }
-        }
 
-        .stored-messages-choose .chosen-container {
-          width:20em !important;
-        }
+          td.messagetext {
+            padding: 0.5em 0;
+          }
 
-        .chosen-container .chosen-default {
-          color:#000;
-          font-weight:bold;
-        }
+          td input.sender-name {
+            width:100%;
+          }
 
-        #emailCurrentTemplate {
-          width:16em;
-          margin-left:1em;
-          vertical-align:middle;
-        }
-
-        #emailCurrentTemplate:disabled {
-          opacity:1;
-        }
-
-        td.email-recipients {
-          padding-top:1em;
-        }
-
-        td.email-address.input {
-          width:100%;
-          /*padding: 0 1em 0 0;*/
-        }
-        td.email-address.input input {
-          width:90%;
-          float:left;
-        }
-
-        td.email-address.display {
-          width:100%;
-          overflow:hidden;
-        }
-
-        td.email-address.display span {
-          display:inline-block;
-          max-width:45em;
-          overflow:hidden;
-          text-overflow:ellipsis;
-        }
-
-        td.subject.input span.subject.tag {
-          font-family:monospace;
-          font-size:100%;
-          width:auto;
-          max-width:30%;
-          text-align:right;
-          font-weight:bold;
-          display:inline-block;
-          float:left;
-          line-height:2.5em;
-          overflow:hidden;
-          text-overflow:ellipsis;
-        }
-
-        td.subject.input span.subject.input {
-          width:67%;
-          /* padding: 0 1em 0 0; */
-          display:inline-block;
-          line-height:2.5em;
-          float:right;
-        }
-
-        td.subject.input input {
-          width:100%;
-        }
-
-        td.messagetext {
-          padding: 0.5em 0;
-        }
-
-        td input.sender-name {
-          width:100%;
-        }
-
-        /*****************************************************************************
-         *
-         * email recipients selection
-         *
-         */
-        div.#{$cssPrefix}row {
-          width:100%;
-        }
-
-        div.#{$cssPrefix}row:after {
-          content:" ";
-          display:block;
-          height:0;
-          clear: both;
-        }
+        } // #emailformcomposer
 
         span.#{$cssPrefix}container {
           display:inline-block;
@@ -673,6 +780,12 @@ form#cafevdb-email-form {
 
   .recipients-select.#{$cssPrefix}container {
     width:80%;
+
+    .btn, .btn-outline-secondary {
+      &:focus {
+        box-shadow:0 0;
+      }
+    }
   }
 
   .instruments-filter.#{$cssPrefix}container {
