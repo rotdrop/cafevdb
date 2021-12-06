@@ -1318,6 +1318,17 @@ Störung.';
     return str_replace('$$', '$', $message);
   }
 
+  public function discloseRecipients()
+  {
+    return $this->projectId >= 0
+      && (
+        filter_var(
+          $this->cgiValue('disclosedRecipients', 'off'),
+          FILTER_VALIDATE_BOOLEAN,
+          FILTER_NULL_ON_FAILURE)
+        ??false);
+  }
+
   /**
    * Send out the messages with self::doSendMessages(), after checking
    * them with self::preComposeValidation(). If successful a possibly
@@ -1917,18 +1928,11 @@ Störung.';
         foreach ($EMails as $recipient) {
           if ($singleAddress) {
             $phpMailer->AddAddress($recipient['email'], $recipient['name']);
-          } else if ($recipient['project'] < 0) {
+          } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
             // blind copy, don't expose the victim to the others.
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);
           } else {
-
-            // @todo Bcc should be the universal default unless explicitly
-            // configured otherwise by the user.
-
-            // Well, people subscribing to one of our projects
-            // simply must not complain, except soloist or
-            // conductors which normally are not bothered with
-            // mass-email at all, but if so, then they are added as Bcc
+            // open recipients list is requested, still some recipients are hidden.
             if ($recipient['status'] == 'conductor' ||
                 $recipient['status'] == 'soloist') {
               $phpMailer->AddBCC($recipient['email'], $recipient['name']);
@@ -2288,14 +2292,11 @@ Störung.';
       foreach ($eMails as $recipient) {
         if ($singleAddress) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
-        } else if ($recipient['project'] < 0) {
+        } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
           // blind copy, don't expose the victim to the others.
           $phpMailer->AddBCC($recipient['email'], $recipient['name']);
         } else {
-          // Well, people subscribing to one of our projects
-          // simply must not complain, except soloist or
-          // conductors which normally are not bothered with
-          // mass-email at all, but if so, then they are added as Bcc
+          // open recipients list is requested, still some recipients are hidden.
           if ($recipient['status'] == 'conductor' ||
               $recipient['status'] == 'soloist') {
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);

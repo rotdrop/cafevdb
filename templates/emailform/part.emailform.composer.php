@@ -118,25 +118,24 @@ foreach ($eventAttachmentOptions as $option) {
           >
             <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
           </span>
-          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button disclose-recipients tooltip-auto"
-                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclose-recipients']); ?>"
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto"
+                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"
           >
             <input type="checkbox"
-                   <?php !empty($discloseRecipients) && p('checked'); ?>
-                   id="check-disclose-recipients"
+                   <?php ($disclosedRecipients??false) && p('checked'); ?>
+                   id="check-disclosed-recipients"
                    <?php ($projectId <= 0) && p('disabled'); ?>
-                   class="disclose-recipients tooltip-top"
-                   name="emailComposer[discloseRecipients]"
-                   type="disclose-recipients"
+                   class="disclosed-recipients tooltip-top"
+                   name="emailComposer[disclosedRecipients]"
             />
-            <label for="check-disclose-recipients"
+            <label for="check-disclosed-recipients"
                    <?php ($projectId <= 0) && p('disabled'); ?>
-                   class="disclose-recipients">
-              <span class="disclose-recipients button">
-                <span class="undisclosed">CC</span>
-                <span class="disclosed">CC</span>
+                   class="disclosed-recipients">
+              <span class="disclosed-recipients button">
+                <span clas="label">BCC</span>
               </span>
             </label>
+            <span class="checkbox-alert alert-checked"></span>
           </span>
         </span>
       </td>

@@ -301,7 +301,7 @@ of this button.'),
             'freeform-BCC' => $this->l->t('Add arbitrary further hidden recipients.'),
             'freeform-CC' => $this->l->t('Add arbitrary further recipients.'),
             'address-book' => $this->l->t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
-            'disclose-recipients' => $this->l->t('Undisclose the bulk-recipients of this message. This can only be activated in "project-mode". Normally this should be left disabled in which case the email is sent with a hidden recipients list.'),
+            'disclosed-recipients' => $this->l->t('Unchecking this option discloses the bulk-recipients of this message. Only recipients of project-related emails can be disclosed. Normally this should be left checked, in which case the email is sent with a hidden recipients list.'),
           ],
           'attachments' => [
             'cloud' => $this->l->t('Choose a file to attach from the files stored remotely on in the Cloud storage area.'),
