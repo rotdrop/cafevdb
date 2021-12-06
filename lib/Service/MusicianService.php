@@ -74,13 +74,32 @@ class MusicianService
    * project-structures intact but still honour privacy regulations.
    * This function then would have to cleanup data-base storage and
    * cloud-storage as well.
+   *
+   * Musicians with remaining open obligations are not impersonated.
+   *
+   * @param Entities\Musician $musician
+   *
+   * @todo Musicians without OPEN payments can safely be remove, worst case
+   * after a couple of years. ATM we just block.
    */
   protected function impersonateMusician(Entities\Musician $musician)
   {
+    $financialArtifacts = ProjectParticipantFieldsService::participantMonetaryObligations($musician);
+    if ($financialArtifacts['sum'] !== $financialArtifacts['received']) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Musician "%1$s" cannot be removed because there are unbalanced financial obligations totals/payed/remaining = %$2d/%3d/%3d. A negative remaining amount means the musician still needs to be refund by the orchestra.', [
+            $musician->getPublicName(),
+            $financialArtifacts['sum'],
+            $financialArtifacts['received'],
+            $financialArtifacts['sum'] - $financialArtifacts['received'],
+          ]
+        )
+      );
+    }
     if ($musician->getPayments()->count() > 0) {
       throw new Exceptions\EndUserNotificationException(
-        $this->l->t('Musician "%s" cannot be removed because there are financial records which depend on this musician.', $musician->getPublicName())
-      );
+        $this->l->t('Musician "%s" cannot be removed because there are financial records which depend on this musician.', $musician->getPublicName()));
     }
 
     /** @var ProjectParticipantFieldsService $participantFieldsService */
@@ -90,7 +109,9 @@ class MusicianService
     foreach ($musician->getProjectParticipantFieldsData() as $participantDatum) {
       // cleanup as required, in particular the file-system
       $removeEntity = false;
-      switch ($participantDatum->getField()->getDataType()) {
+      /** @var Entities\ProjectParticipantField $participantField */
+      $participantField = $participantDatum->getField();
+      switch ($participantField->getDataType()) {
         case FieldDataType::CLOUD_FILE:
           /** @var OCP\Files\File $cloudFile */
           $cloudFile = $participantFieldsService->getEffectiveFieldDatum($participantDatum);
@@ -107,6 +128,22 @@ class MusicianService
           /** @var Entities\File $dbFile */
           $dbFile = $participantFieldsService->getEffectiveFieldDatum($participantDatum);
           $this->remove($dbFile, true);
+          $removeEntity = true;
+          break;
+        case FieldDataType::SERVICE_FEE:
+          $dbFile = $participantDatum->getSupportingDocument();
+          $this->remove($dbFile, true);
+          $participantDatum->setSupportingDocument(null);
+          $this->persist($participantDatum); // ??? needed ???
+          break;
+        default:
+          break;
+      }
+      switch ($participantField->getMultiplicity()) {
+        case FieldMultiplicity::SIMPLE:
+          $removeEntity = true;
+          break;
+        case FieldMultiplicity::RECURRING:
           $removeEntity = true;
           break;
         default:
