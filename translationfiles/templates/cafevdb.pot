@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-12-05 16:35+0100\n"
+"POT-Creation-Date: 2021-12-06 09:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -185,129 +185,129 @@ msgstr ""
 msgid "File with cache-key \"%s\" not found in user's file-cache."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:313
+#: lib/Controller/EmailFormController.php:315
 msgid "Preview generation successful."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:384
+#: lib/Controller/EmailFormController.php:387
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:388
-#: lib/Controller/EmailFormController.php:509
-#: lib/Controller/EmailFormController.php:535
-#: lib/Controller/EmailFormController.php:563
+#: lib/Controller/EmailFormController.php:391
+#: lib/Controller/EmailFormController.php:513
+#: lib/Controller/EmailFormController.php:539
+#: lib/Controller/EmailFormController.php:567
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:398
+#: lib/Controller/EmailFormController.php:401
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:406
+#: lib/Controller/EmailFormController.php:409
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:505
+#: lib/Controller/EmailFormController.php:509
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:517
+#: lib/Controller/EmailFormController.php:521
 msgid "Email template name must not be empty"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:539
+#: lib/Controller/EmailFormController.php:543
 #, php-format
 msgid "%s could not be saved"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:555
+#: lib/Controller/EmailFormController.php:559
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:574
+#: lib/Controller/EmailFormController.php:578
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:578
+#: lib/Controller/EmailFormController.php:582
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:715
+#: lib/Controller/EmailFormController.php:719
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:745
+#: lib/Controller/EmailFormController.php:749
 msgid "Form Input"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:820
+#: lib/Controller/EmailFormController.php:824
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:826
+#: lib/Controller/EmailFormController.php:830
 msgid "UNIMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:847
+#: lib/Controller/EmailFormController.php:851
 msgid "Attachment file-names were not submitted"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:856
+#: lib/Controller/EmailFormController.php:860
 #: lib/Controller/UploadsController.php:106
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:859
+#: lib/Controller/EmailFormController.php:863
 #: lib/Controller/UploadsController.php:109
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:873
-#: lib/Controller/EmailFormController.php:931
+#: lib/Controller/EmailFormController.php:877
+#: lib/Controller/EmailFormController.php:935
 #: lib/Controller/UploadsController.php:185
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:891
+#: lib/Controller/EmailFormController.php:895
 #: lib/Controller/ProjectParticipantsController.php:466
 #: lib/Controller/UploadsController.php:141
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:899
+#: lib/Controller/EmailFormController.php:903
 #: lib/Controller/ProjectParticipantsController.php:474
 #: lib/Controller/UploadsController.php:149
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:901
+#: lib/Controller/EmailFormController.php:905
 #: lib/Controller/ProjectParticipantsController.php:476
 #: lib/Controller/UploadsController.php:151
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:913
+#: lib/Controller/EmailFormController.php:917
 #: lib/Controller/ProjectParticipantsController.php:505
 #: lib/Controller/UploadsController.php:163
 msgid "Not enough storage available"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:937
+#: lib/Controller/EmailFormController.php:941
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
@@ -2289,7 +2289,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:536
-#: src/app/email.js:1100
+#: src/app/email.js:1101
 msgid "Unknown Template"
 msgstr ""
 
@@ -2344,82 +2344,82 @@ msgstr ""
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1339
+#: lib/EmailForm/Composer.php:1350
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2498
+#: lib/EmailForm/Composer.php:2499
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2655
+#: lib/EmailForm/Composer.php:2656
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2668
+#: lib/EmailForm/Composer.php:2669
 msgid "musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2760
-#: lib/EmailForm/Composer.php:2775
+#: lib/EmailForm/Composer.php:2761
+#: lib/EmailForm/Composer.php:2776
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2859
-#: lib/EmailForm/Composer.php:2912
-#: lib/EmailForm/Composer.php:2922
+#: lib/EmailForm/Composer.php:2860
+#: lib/EmailForm/Composer.php:2913
+#: lib/EmailForm/Composer.php:2923
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2887
+#: lib/EmailForm/Composer.php:2888
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3203
+#: lib/EmailForm/Composer.php:3204
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3211
+#: lib/EmailForm/Composer.php:3212
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3235
+#: lib/EmailForm/Composer.php:3236
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3266
+#: lib/EmailForm/Composer.php:3267
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3324
-#: lib/EmailForm/Composer.php:3435
+#: lib/EmailForm/Composer.php:3325
+#: lib/EmailForm/Composer.php:3436
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3352
+#: lib/EmailForm/Composer.php:3353
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3377
+#: lib/EmailForm/Composer.php:3378
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3821
+#: lib/EmailForm/Composer.php:3822
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3822
+#: lib/EmailForm/Composer.php:3823
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3823
+#: lib/EmailForm/Composer.php:3824
 msgid "Local Filesystem"
 msgstr ""
 
@@ -2942,7 +2942,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:399
 #: lib/PageRenderer/ProjectPayments.php:412
 #: lib/PageRenderer/SepaBulkTransactions.php:442
-#: templates/emailform/part.emailform.composer.php:181
+#: templates/emailform/part.emailform.composer.php:182
 msgid "Subject"
 msgstr ""
 
@@ -5494,9 +5494,10 @@ msgstr ""
 
 #: lib/Service/ToolTipsService.php:304
 msgid ""
-"Undisclose the bulk-recipients of this message. This can only be activated "
-"in \"project-mode\". Normally this should be left disabled in which case the "
-"email is sent with a hidden recipients list."
+"Unchecking this option discloses the bulk-recipients of this message. Only "
+"recipients of project-related emails can be disclosed. Normally this should "
+"be left checked, in which case the email is sent with a hidden recipients "
+"list."
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:307
@@ -7397,8 +7398,8 @@ msgstr ""
 #: src/app/blog.js:363
 #: src/app/blog.js:386
 #: src/app/email.js:73
-#: src/app/email.js:563
-#: src/app/email.js:657
+#: src/app/email.js:564
+#: src/app/email.js:658
 #: src/app/inlineimage.js:54
 #: src/app/inlineimage.js:61
 #: src/app/inlineimage.js:156
@@ -7564,7 +7565,7 @@ msgstr ""
 #: src/app/chosen-popup.js:43
 #: src/app/inlineimage.js:245
 #: templates/blog/blogedit.php:40
-#: templates/emailform/part.emailform.composer.php:330
+#: templates/emailform/part.emailform.composer.php:331
 msgid "Cancel"
 msgstr ""
 
@@ -7675,47 +7676,47 @@ msgstr ""
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.js:562
+#: src/app/email.js:563
 msgid "Unknown form element: {FormElement}"
 msgstr ""
 
-#: src/app/email.js:602
-#: src/app/email.js:1690
+#: src/app/email.js:603
+#: src/app/email.js:1716
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.js:604
-#: src/app/email.js:1692
+#: src/app/email.js:605
+#: src/app/email.js:1718
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.js:656
+#: src/app/email.js:657
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.js:716
+#: src/app/email.js:717
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.js:718
+#: src/app/email.js:719
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.js:747
+#: src/app/email.js:748
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.js:783
+#: src/app/email.js:784
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.js:918
+#: src/app/email.js:919
 msgid "Dummy Autosave Subject"
 msgstr ""
 
-#: src/app/email.js:950
+#: src/app/email.js:951
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -7723,101 +7724,111 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.js:955
+#: src/app/email.js:956
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.js:1016
+#: src/app/email.js:1017
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.js:1017
+#: src/app/email.js:1018
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.js:1049
+#: src/app/email.js:1050
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.js:1051
+#: src/app/email.js:1052
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.js:1082
+#: src/app/email.js:1083
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
 msgstr ""
 
-#: src/app/email.js:1084
+#: src/app/email.js:1085
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.js:1098
+#: src/app/email.js:1099
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.js:1108
+#: src/app/email.js:1109
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.js:1110
+#: src/app/email.js:1111
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.js:1151
+#: src/app/email.js:1152
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.js:1152
+#: src/app/email.js:1153
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.js:1323
+#: src/app/email.js:1193
+msgid ""
+"Do you really want to disclose the bulk-message recipients? This may violate "
+"privacy regulations."
+msgstr ""
+
+#: src/app/email.js:1195
+msgid "Really disclose the recipients?"
+msgstr ""
+
+#: src/app/email.js:1349
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.js:1324
-#: src/app/email.js:1466
+#: src/app/email.js:1350
+#: src/app/email.js:1492
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.js:1425
+#: src/app/email.js:1451
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1465
+#: src/app/email.js:1491
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1524
-#: templates/emailform/part.emailform.composer.php:157
-#: templates/emailform/part.emailform.composer.php:176
+#: src/app/email.js:1550
+#: templates/emailform/part.emailform.composer.php:158
+#: templates/emailform/part.emailform.composer.php:177
 msgid "Address Book"
 msgstr ""
 
-#: src/app/email.js:1525
+#: src/app/email.js:1551
 msgid "Accept"
 msgstr ""
 
-#: src/app/email.js:1528
+#: src/app/email.js:1554
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1531
+#: src/app/email.js:1557
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: src/app/email.js:1701
+#: src/app/email.js:1727
 msgid "Email will be sent with an open recipients list!"
 msgstr ""
 
-#: src/app/email.js:1703
+#: src/app/email.js:1729
 msgid "Email will be sent with a hidden recipients list!"
 msgstr ""
 
@@ -8494,92 +8505,92 @@ msgstr ""
 msgid "No recipients selected."
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:143
+#: templates/emailform/part.emailform.composer.php:144
 msgid "Carbon Copy"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:162
+#: templates/emailform/part.emailform.composer.php:163
 msgid "Blind CC"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:197
+#: templates/emailform/part.emailform.composer.php:198
 msgid "Message-Body"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:201
+#: templates/emailform/part.emailform.composer.php:202
 msgid "Sender-Name"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:210
+#: templates/emailform/part.emailform.composer.php:211
 msgid "Sender-Email"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:211
+#: templates/emailform/part.emailform.composer.php:212
 #, php-format
 msgid "Tied to \"%s\""
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:214
+#: templates/emailform/part.emailform.composer.php:215
 msgid "Add Attachment"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:220
-#: templates/emailform/part.emailform.composer.php:223
+#: templates/emailform/part.emailform.composer.php:221
+#: templates/emailform/part.emailform.composer.php:224
 msgid "Upload new File"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:228
-#: templates/emailform/part.emailform.composer.php:231
+#: templates/emailform/part.emailform.composer.php:229
+#: templates/emailform/part.emailform.composer.php:232
 msgid "Select from Owncloud"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:236
-#: templates/emailform/part.emailform.composer.php:239
+#: templates/emailform/part.emailform.composer.php:237
+#: templates/emailform/part.emailform.composer.php:240
 msgid "Select from participant file attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:244
+#: templates/emailform/part.emailform.composer.php:245
 msgid "Project Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:247
+#: templates/emailform/part.emailform.composer.php:248
 msgid "Select Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:253
+#: templates/emailform/part.emailform.composer.php:254
 msgid "Toggle Visibily"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:256
+#: templates/emailform/part.emailform.composer.php:257
 msgid "toggle"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:263
+#: templates/emailform/part.emailform.composer.php:264
 msgid "Attached Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:278
-#: templates/emailform/part.emailform.composer.php:304
+#: templates/emailform/part.emailform.composer.php:279
+#: templates/emailform/part.emailform.composer.php:305
 msgid "Toggle Visibility"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:283
+#: templates/emailform/part.emailform.composer.php:284
 msgid "Delete Event Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:289
+#: templates/emailform/part.emailform.composer.php:290
 msgid "Attached Files"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:309
+#: templates/emailform/part.emailform.composer.php:310
 msgid "Delete All Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:320
+#: templates/emailform/part.emailform.composer.php:321
 msgid "Send Em@il"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:324
+#: templates/emailform/part.emailform.composer.php:325
 msgid "Message Preview"
 msgstr ""
 
