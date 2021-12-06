@@ -900,7 +900,8 @@ class GeoCodingService
     return $continents;
   }
 
-  /**Export the table of countries as key => name array w.r.t. the
+  /**
+   * Export the table of countries as key => name array w.r.t. the
    * current locale or the requested language.
    */
   public function countryNames($language = null)
@@ -926,22 +927,39 @@ class GeoCodingService
     $criteria = self::criteriaWhere(['target' => [self::CONTINENT_TARGET, 'en', $language] ])
               ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
 
+    $countryData = [];
     foreach ($this->matching($criteria, GeoCountry::class) as $country) {
       $iso = $country->getIso();
       $target = $country->getTarget();
       $data = $country->getData();
       switch ($target) {
-      case self::CONTINENT_TARGET:
-        $continents[$iso] = $data;
-        break;
-      case 'en':
-      case $language:
-        $countries[$iso] = $data;
-        break;
-      default:
-        $this->error('Unexpected translation target ' . $target);
-        break;
+        case self::CONTINENT_TARGET:
+          $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
+          $countryData[$iso]['continent'] = $data;
+          $continents[$iso] = $data;
+          break;
+        case 'en':
+        case $language:
+          $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
+          $countryData[$iso][$language] = $data;
+          break;
+        default:
+          $this->error('Unexpected translation target ' . $target);
+          break;
       }
+    }
+
+    uasort($countryData, function($a, $b) {
+      $result = strcmp($a['continent'], $b['continent']);
+      if ($result === 0) {
+        $result = strcmp($a[$language], $b[$language]);
+      }
+      return $result;
+    });
+
+    $countries = [];
+    foreach ($countryData as $iso => $data) {
+      $countries[$iso] = $data[$language];
     }
 
     $this->countryContinents = $continents;
