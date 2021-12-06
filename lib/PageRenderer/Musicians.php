@@ -541,8 +541,11 @@ make sure that the musicians are also automatically added to the
           'name' => $this->l->t('Deleted'),
           'dateformat' => 'medium',
           'timeformat' => 'short',
+          'maxlen' => 19,
         ]
       );
+      Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+      $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
     }
 
     $fdd = [
@@ -550,9 +553,7 @@ make sure that the musicians are also automatically added to the
       'tab'         => ['id' => 'orchestra'],
       'css'         => ['postfix' => [ 'musician-instruments', 'tooltip-top', 'no-chosen', 'selectize', 'drag-drop', ], ],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => ($expertMode
-                        ? 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'
-                        : 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)'),
+      'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -592,10 +593,11 @@ make sure that the musicians are also automatically added to the
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'orchestra' ] ],
-        'sql'     => "GROUP_CONCAT(DISTINCT IF(\$join_col_fqn IS NULL, NULL, \$join_table.instrument_id))",
-        'default' => false,
-        'select'  => 'T',
-        'input'   => ($expertMode ? 'S' : 'SH'),
+        'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
+        'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
+        'default' => null,
+        'select'  => 'M',
+        'input'   => 'SR',
         'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
         'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
