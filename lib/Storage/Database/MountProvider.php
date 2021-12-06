@@ -174,6 +174,10 @@ class MountProvider implements IMountProvider
       '|multiplicity' => FieldMultiplicity::RECURRING,
     ]);
 
+    // disable soft-deleteable here in order to cope with the case that the
+    // musician underlying the project-participation is alreay soft-deleted.
+    $filterState = $this->disableFilter('soft-deleteable');
+
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $fileFields = $project->getParticipantFields()->matching($fileCriteria);
@@ -207,6 +211,8 @@ class MountProvider implements IMountProvider
 
       }
     }
+
+    $filterState && $this->enableFilter('soft-deleteable');
 
     --self::$recursionLevel;
     return $mounts;

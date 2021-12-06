@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
 
@@ -64,6 +65,9 @@ class Musicians extends PMETableViewBase
 
   /** @var OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService */
   private $insuranceService;
+
+  /** @var MusicianService */
+  private $musicianService;
 
   /**
    * @var bool Called with project-id in order to add musicians to an
@@ -139,12 +143,14 @@ class Musicians extends PMETableViewBase
     , ContactsService $contactsService
     , PhoneNumberService $phoneNumberService
     , InstrumentInsuranceService $insuranceService
+    , MusicianService $musicianService
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
     $this->insuranceService = $insuranceService;
+    $this->musicianService = $musicianService;
     $this->projectMode = false;
 
     if (empty($this->musicianId)) {
@@ -533,6 +539,8 @@ make sure that the musicians are also automatically added to the
       $opts['fdd']['deleted'] = array_merge(
         $this->defaultFDD['deleted'], [
           'name' => $this->l->t('Deleted'),
+          'dateformat' => 'medium',
+          'timeformat' => 'short',
         ]
       );
     }
@@ -934,12 +942,8 @@ make sure that the musicians are also automatically added to the
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
-    /** @var Entities\Musician $entity */
-    $this->remove($entity, true); // this should be soft-delete
-    if ($entity->unused()) {
-      $this->logInfo($entity->getPublicName() . ' is unused, issuing hard-delete');
-      $this->remove($entity, true); // this should be hard-delete
-    }
+    $this->musicianService->deleteMusician($entity);
+
     $changed = []; // disable PME delete query
 
     return true; // but run further triggers if appropriate

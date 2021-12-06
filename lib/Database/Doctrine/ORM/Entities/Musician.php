@@ -1049,7 +1049,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function usage():int
   {
-    return $this->payments->count();
+    return $this->payments->count() + $this->projectParticipation->count();
   }
 
   public function jsonSerialize():array
