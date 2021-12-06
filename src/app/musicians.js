@@ -418,7 +418,7 @@ const contactValidation = function(container) {
 
   const fetchStreetAutocompletion = function() {
 
-    const submitDefer = PHPMyEdit.deferReload(container);
+    // const submitDefer = PHPMyEdit.deferReload(container);
 
     const post = $form.serialize();
 
@@ -429,7 +429,7 @@ const contactValidation = function(container) {
     pageBusyIcon(true);
 
     const cleanup = function() {
-      submitDefer.resolve();
+      // submitDefer.resolve();
       autocompleteStreetRequest = null;
       if (!autocompletePlaceRequest) {
         pageBusyIcon(false);
@@ -456,15 +456,21 @@ const contactValidation = function(container) {
           return;
         }
 
-        street.autocomplete('option', 'source', data.streets);
-        const sourceSize = street.autocomplete('option', 'source').length;
-        street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+        if (street.autocomplete('instance') === undefined) {
+          console.error('STREET INPUT ELEMENT LACKS AUTOCOMPLETE WIDGET', street);
+        } else {
+          street.autocomplete('option', 'source', data.streets);
+          const sourceSize = street.autocomplete('option', 'source').length;
+          street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
 
-        Notification.messages(data.message);
+          Notification.messages(data.message);
+        }
 
         cleanup();
 
       });
+
+    PHPMyEdit.pushCancellable(container, autocompleteStreetRequest);
 
     return autocompleteStreetRequest;
   };

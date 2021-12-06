@@ -181,6 +181,7 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
 };
 
 const deferKey = pmePrefix + '-submitdefer';
+const cancellableKey = pmePrefix + '-cancellable';
 
 const cancelDeferredReload = function(container) {
   container.data(deferKey, []);
@@ -204,6 +205,21 @@ const pmeDeferReload = function(container) {
 
 const reloadDeferred = function(container) {
   return $.when.apply($, container.data(deferKey));
+};
+
+const pmeCancelBeforeSubmit = function(container) {
+  const cancellable = container.data(cancellableKey) || [];
+  for (const job of cancellable) {
+    console.info('TRYE ABORT JOB', job);
+    job.abort('cancelled');
+  }
+  container.data(cancellableKey, []);
+};
+
+const pmePushCancellable = function(container, promise) {
+  const cancellable = container.data(cancellableKey) || [];
+  cancellable.push(promise);
+  container.data(cancellableKey, cancellable);
 };
 
 /**
@@ -341,6 +357,9 @@ const tableDialogReload = function(options, callback, triggerData) {
   // Possibly delay reload until validation handlers have done their
   // work.
   reloadDeferred(container).then(function() {
+
+    pmeCancelBeforeSubmit(container);
+
     let post = container.find(pmeFormSelector()).serialize();
 
     // add the option values
@@ -540,6 +559,8 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       const deleteSelector = pmeSysNameSelector('input', 'savedelete');
 
       reloadDeferred(container).then(function() {
+
+        pmeCancelBeforeSubmit(container);
 
         let post = container.find(pmeFormSelector()).serialize();
         post += '&' + $.param(options);
@@ -1804,6 +1825,7 @@ export {
   pmeSubmitOuterForm as submitOuterForm,
   pmeClassSelectors as classSelectors,
   pmeOpenRowDialog as openRowDialog,
+  pmePushCancellable as pushCancellable,
 };
 
 // Local Variables: ***
