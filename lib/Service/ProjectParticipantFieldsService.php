@@ -270,7 +270,19 @@ class ProjectParticipantFieldsService
    * such that a positive sign means that the orchestra earns money, a
    * negative sign means that the participant earns money.
    *
-   * If not project is given compute the totals for all projects.
+   * If no project is given compute the totals for all projects.
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project
+   *
+   * @return array
+   * ```
+   * [
+   *   'sum' => TOTAL_SUM_OF_OBLIGATIONS,
+   *   'received' => TOTAL_AMOUNT_RECEIVED,
+   * ]
+   * ```
    */
   static public function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null)
   {
