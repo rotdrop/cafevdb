@@ -34,15 +34,17 @@
 
   /* needs to be adjusted if cloud app changes style */
   .selectize-input {
-    input[type="select-multiple"] {
+    input[type="select-multiple"], input[type="select-one"] {
+      /* This rule compensates a bug which updates the type of the
+       * autocomplete input by the type of a non-input element
+       */
+      height:unset!important;
+    }
+    input:last-child {
       height:unset!important;
     }
 
-    input[type="select-one"] {
-      height:unset!important;
-    }
-
-    border-radius:var(--borde-radius);
+    border-radius:var(--border-radius);
 
     /* needs to be adjusted if cloud app changes style */
     &.focus {
