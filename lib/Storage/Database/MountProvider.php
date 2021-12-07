@@ -114,11 +114,12 @@ class MountProvider implements IMountProvider
     $this->logDebug($user->getUID() . ' ' . $sharedFolder);
 
     $mounts = [];
+    $bulkLoadStorageIds = [];
 
     if ($user->getUID() === $this->shareOwnerId()) {
 
       $storage = new Storage([]);
-      \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
+      $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
         $storage,
@@ -139,7 +140,7 @@ class MountProvider implements IMountProvider
     }
 
     $storage = new BankTransactionsStorage([]);
-    \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
+    $bulkLoadStorageIds[] = $storage->getId();
 
     $mounts[] = new class(
       $storage,
@@ -178,6 +179,11 @@ class MountProvider implements IMountProvider
     // musician underlying the project-participation is alreay soft-deleted.
     $filterState = $this->disableFilter('soft-deleteable');
 
+    // this is going to execute too many queries, try to fetch at least the
+    // storages in one run.
+
+    $participantStorages = [];
+
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $fileFields = $project->getParticipantFields()->matching($fileCriteria);
@@ -187,30 +193,35 @@ class MountProvider implements IMountProvider
 
       /** @var Entities\ProjectParticipant $participant */
       foreach ($project->getParticipants() as $participant) {
-        $folder = $projectService->ensureParticipantFolder($project, $participant->getMusician(), false);
+        $folder = $projectService->ensureParticipantFolder($project, $participant->getMusician(), dry: true);
         $storage = new ProjectParticipantsStorage([
           'participant' => $participant,
         ]);
-        \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds([ $storage->getId(), ]);
-
-        $mounts[] = new class(
-          $storage,
-          '/' . $user->getUID()
-          . '/files'
-          . $folder
-          . '/'. $this->l->t('documents'),
-          null,
-          $loader,
-          [
-            'filesystem_check_changes' => 1,
-            'readonly' => true,
-            'previews' => true,
-            'enable_sharing' => true,
-          ]
-        ) extends MountPoint { public function getMountType() { return 'database'; } };
-
+        $bulkLoadStorageIds[] = $storage->getId();
+        $participantStorages[$folder] = $storage;
       }
     }
+
+    foreach ($participantStorages as $folder => $storage) {
+
+      $mounts[] = new class(
+        $storage,
+        '/' . $user->getUID()
+        . '/files'
+        . $folder
+        . '/'. $this->l->t('documents'),
+        null,
+        $loader,
+        [
+          'filesystem_check_changes' => 1,
+          'readonly' => true,
+          'previews' => true,
+          'enable_sharing' => true,
+        ]
+        ) extends MountPoint { public function getMountType() { return 'database'; } };
+    }
+
+    \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds($bulkLoadStorageIds);
 
     $filterState && $this->enableFilter('soft-deleteable');
 

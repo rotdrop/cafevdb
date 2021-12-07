@@ -66,7 +66,8 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
  *
  */
 
-use OCA\CAFEVDB\Hooks\MountProviderHook;
+use OCP\Files\Config\IMountProviderCollection;
+use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
 class Application extends App implements IBootstrap
 {
@@ -94,9 +95,9 @@ class Application extends App implements IBootstrap
       });
     });
 
-    $context->injectFn(function(MountProviderHook $mountProviderHook) {
-      // $mountProviderHook->handler([]);
-    });
+    $context->injectFn(function(IMountProviderCollection $mountProviderCollection, DatabaseMountProvider $mountProvider) {
+      $mountProviderCollection->registerProvider($mountProvider, PHP_INT_MAX);
+     });
   }
 
   // Called earlier than boot, so anything initialized in the
