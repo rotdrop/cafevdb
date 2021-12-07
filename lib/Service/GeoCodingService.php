@@ -949,7 +949,7 @@ class GeoCodingService
       }
     }
 
-    uasort($countryData, function($a, $b) {
+    uasort($countryData, function($a, $b) use ($language) {
       $result = strcmp($a['continent'], $b['continent']);
       if ($result === 0) {
         $result = strcmp($a[$language], $b[$language]);
