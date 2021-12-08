@@ -86,7 +86,7 @@ class OpenSSLAsymCryptor implements IKeyCryptor
 
   public function setPrivateKey($privKey, $password = null)
   {
-    $this->privKey =openssl_pkey_get_private($privKey, $password);
+    $this->privKey = openssl_pkey_get_private($privKey, $password);
     $details = openssl_pkey_get_details($this->privKey);
     $this->setPublicKey($details['key']);
   }
@@ -116,9 +116,7 @@ function sealData(string $data, array $keyEncryption):?string
 
   /** @var IKeyCryptor $sealCryptor */
   foreach ($keyEncryption as $userId => $sealCryptor) {
-    if (is_callable($sealCryptor)) {
-      $sealData[] = $userId . ':' . base64_encode($sealCryptor->encrypt($sealKey));
-    }
+    $sealData[] = $userId . ':' . base64_encode($sealCryptor->encrypt($sealKey));
   }
   $sealedData = sprintf('%08d', strlen($encryptedData));
   $sealedData .= $encryptedData . ';';
