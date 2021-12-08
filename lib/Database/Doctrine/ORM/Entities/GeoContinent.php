@@ -43,7 +43,7 @@ class GeoContinent implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
   private $code;
@@ -51,7 +51,7 @@ class GeoContinent implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
   private $target;
