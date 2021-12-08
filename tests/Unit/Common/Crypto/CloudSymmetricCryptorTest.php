@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Common\Crypto;
 
-use OCP\AppFramework\App;
+// use OCP\AppFramework\App;
 use PHPUnit\Framework\TestCase;
 
 use OCP\Security\ICrypto;
@@ -41,10 +41,13 @@ class CloudSymmetricCryptorTest extends TestCase
   /** @var string */
   private const DATA_BYTES = 'This is a unicode ääöüß string';
 
+  /** @var string */
+  private const ENCRYPTED_BYTES = 'abcd';
+
   /** @var CloudSymmetricCryptor */
   private $cryptor;
 
-  /** @var ICrypto */
+  /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
   private $cloudCryptor;
 
   public function setup():void
@@ -67,5 +70,29 @@ class CloudSymmetricCryptorTest extends TestCase
     $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
 
     $this->assertInstanceOf(CloudSymmetricCryptor::class, $cryptor);
+  }
+
+  public function testEncryptWrapping()
+  {
+    $this->cloudCryptor
+      ->expects($this->once())
+      ->method('encrypt')
+      ->with(self::DATA_BYTES, self::ENCRYPTION_KEY)
+      ->willReturn(self::ENCRYPTED_BYTES);
+
+    $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
+    $this->assertEquals(self::ENCRYPTED_BYTES, $cryptor->encrypt(self::DATA_BYTES));
+  }
+
+  public function testDecryptWrapping()
+  {
+    $this->cloudCryptor
+      ->expects($this->once())
+      ->method('decrypt')
+      ->with(self::ENCRYPTED_BYTES, self::ENCRYPTION_KEY)
+      ->willReturn(self::DATA_BYTES);
+
+    $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
+    $this->assertEquals(self::DATA_BYTES, $cryptor->decrypt(self::ENCRYPTED_BYTES));
   }
 }

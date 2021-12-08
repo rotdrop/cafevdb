@@ -37,7 +37,8 @@
     "tinybutstrong/opentbs": "dev-production/cafevdb"
   },
   "require-dev": {
-    "humbug/php-scoper": "^0.15.0"
+    "humbug/php-scoper": "^0.15.0",
+    "phpunit/phpunit": "*"
   },
   "autoload": {
     "classmap": ["3rdparty/phpMyEdit/."]
