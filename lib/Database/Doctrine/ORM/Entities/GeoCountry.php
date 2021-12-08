@@ -36,104 +36,104 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 class GeoCountry implements \ArrayAccess
 {
-    use CAFEVDB\Traits\ArrayTrait;
-    use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-     * @ORM\Id
-     */
-    private $iso;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private $iso;
 
-    /**
-     * @var string
-     * @ORM\Id
-     *
-     * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-     */
-    private $target;
+  /**
+   * @var string
+   * @ORM\Id
+   *
+   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
+   */
+  private $target;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=1024, nullable=false)
-     */
-    private $data;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=1024, nullable=false)
+   */
+  private $data;
 
-    public function __construct() {
-        $this->arrayCTOR();
-    }
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
-    /**
-     * Set iso.
-     *
-     * @param string $iso
-     *
-     * @return GeoCountries
-     */
-    public function setIso($iso)
-    {
-        $this->iso = $iso;
+  /**
+   * Set iso.
+   *
+   * @param string $iso
+   *
+   * @return GeoCountries
+   */
+  public function setIso($iso)
+  {
+    $this->iso = $iso;
 
-        return $this;
-    }
-    /**
-     * Get iso.
-     *
-     * @return string
-     */
-    public function getIso()
-    {
-        return $this->iso;
-    }
+    return $this;
+  }
+  /**
+   * Get iso.
+   *
+   * @return string
+   */
+  public function getIso()
+  {
+    return $this->iso;
+  }
 
-    /**
-     * Set continent.
-     *
-     * @param string $target
-     *
-     * @return GeoCountries
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
+  /**
+   * Set continent.
+   *
+   * @param string $target
+   *
+   * @return GeoCountries
+   */
+  public function setTarget($target)
+  {
+    $this->target = $target;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * Get target.
-     *
-     * @return string
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
+  /**
+   * Get target.
+   *
+   * @return string
+   */
+  public function getTarget()
+  {
+    return $this->target;
+  }
 
-    /**
-     * Set data.
-     *
-     * @param string $data
-     *
-     * @return GeoCountries
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
+  /**
+   * Set data.
+   *
+   * @param string $data
+   *
+   * @return GeoCountries
+   */
+  public function setData($data)
+  {
+    $this->data = $data;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * Get data.
-     *
-     * @return string
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
+  /**
+   * Get data.
+   *
+   * @return string
+   */
+  public function getData()
+  {
+    return $this->data;
+  }
 }

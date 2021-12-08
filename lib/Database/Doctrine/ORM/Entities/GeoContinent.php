@@ -37,103 +37,106 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 class GeoContinent implements \ArrayAccess
 {
-    use CAFEVDB\Traits\ArrayTrait;
-    use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
-     * @ORM\Id
-     */
-    private $code;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private $code;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
-     * @ORM\Id
-     */
-    private $target;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2, nullable=false, options={"collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private $target;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=1024, nullable=false)
-     */
-    private $translation;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=1024, nullable=false)
+   */
+  private $translation;
 
-    public function __construct() {
-        $this->arrayCTOR();
-    }
 
-    /**
-     * Get code.
-     *
-     * @return string
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
 
-        return $this;
-    }
 
-    /**
-     * Get code.
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
+  public function __construct() {
+    $this->arrayCTOR();
+  }
 
-    /**
-     * Set target.
-     *
-     * @param string $target
-     *
-     * @return GeoContinents
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
+  /**
+   * Get code.
+   *
+   * @return string
+   */
+  public function setCode($code)
+  {
+    $this->code = $code;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * Get target.
-     *
-     * @return string
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
+  /**
+   * Get code.
+   *
+   * @return string
+   */
+  public function getCode()
+  {
+    return $this->code;
+  }
 
-    /**
-     * Set translation.
-     *
-     * @param string $translatoin
-     *
-     * @return GeoContinents
-     */
-    public function setTranslation($translation)
-    {
-        $this->translation = $translation;
+  /**
+   * Set target.
+   *
+   * @param string $target
+   *
+   * @return GeoContinents
+   */
+  public function setTarget($target)
+  {
+    $this->target = $target;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * Get translation.
-     *
-     * @return string
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
+  /**
+   * Get target.
+   *
+   * @return string
+   */
+  public function getTarget()
+  {
+    return $this->target;
+  }
+
+  /**
+   * Set translation.
+   *
+   * @param string $translatoin
+   *
+   * @return GeoContinents
+   */
+  public function setTranslation($translation)
+  {
+    $this->translation = $translation;
+
+    return $this;
+  }
+
+  /**
+   * Get translation.
+   *
+   * @return string
+   */
+  public function getTranslation()
+  {
+    return $this->translation;
+  }
 }
