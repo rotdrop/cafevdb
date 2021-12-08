@@ -42,7 +42,6 @@ const addEditor = function(selector, initCallback, initialHeight) {
     return;
   }
   switch (globalState.wysiwygEditor) {
-  default:
   case 'ckeditor':
     console.debug('attach ckeditor');
     import('@ckeditor/ckeditor5-build-classic')
@@ -114,6 +113,9 @@ const addEditor = function(selector, initCallback, initialHeight) {
       });
     break;
   }
+  default:
+    console.error('UNSUPPORTED WYSIWYG EDITOR', globalState);
+    break;
   }
 };
 
