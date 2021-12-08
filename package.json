@@ -72,7 +72,7 @@
     "selectize": "file:3rdparty/selectize",
     "style-loader": "^2.0.0",
     "svgo-loader": "^3.0.0",
-    "terser-webpack-plugin": "*",
+    "terser-webpack-plugin": "^5.2.5",
     "uuid": "^3.4.0",
     "webpack": "^5.64.4",
     "webpack-bundle-analyzer": "^4.4.0",
