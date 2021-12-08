@@ -1,0 +1,68 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Common\Crypto;
+
+/** Asymmetric encryption using the OpenSSL extension of PHP */
+class OpenSSLAsymmetricCryptor implements ICryptor
+{
+  private $userId;
+
+  private $privKey = null;
+
+  private $pubKey = null;
+
+  public function __construct(string $userId, $privKey = null, string $password = null)
+  {
+    $this->userId = $userId;
+    if (!empty($privKey)) {
+      $this->setPrivateKey($privKey, $password);
+    }
+  }
+
+  public function setPrivateKey($privKey, $password = null)
+  {
+    $this->privKey = openssl_pkey_get_private($privKey, $password);
+    $details = openssl_pkey_get_details($this->privKey);
+    $this->setPublicKey($details['key']);
+  }
+
+  public function setPublicKey($pubKey)
+  {
+    $this->pubKey = $pubKey;
+  }
+
+  /** {@inheritdoc} */
+  public function encrypt(string $data):string
+  {
+    openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
+    return $encryptedData;
+  }
+
+  /** {@inheritdoc} */
+  public function decrypt(string $data):string
+  {
+    openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
+    return $decryptedData;
+  }
+};

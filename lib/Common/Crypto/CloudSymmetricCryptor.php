@@ -23,44 +23,37 @@
 
 namespace OCA\CAFEVDB\Common\Crypto;
 
-/** Asymmetric encryption using the OpenSSL extension of PHP */
-class OpenSSLAsymCryptor implements ICryptor
+use OCP\Security\ICrypto;
+
+/** Use the encryption service provided by the ambient cloud software. */
+class CloudSymmetricCryptor implements ICryptor
 {
-  private $userId;
+  /** @var ICrypto */
+  private $crypto;
 
-  private $privKey = null;
+  /** @var null|string */
+  private $encryptionKey;
 
-  private $pubKey = null;
-
-  public function __construct(string $userId, $privKey = null, string $password = null)
+  public function __construct(ICrypto $crypto, ?string $encryptionKey = null)
   {
-    $this->userId = $userId;
-    if (!empty($privKey)) {
-      $this->setPrivateKey($privKey, $password);
-    }
+    $this->crypto = $crypto;
+    $this->encryptionKey = $encryptionKey;
   }
 
-  public function setPrivateKey($privKey, $password = null)
+  public function setEncryptionKey($encryptionKey)
   {
-    $this->privKey = openssl_pkey_get_private($privKey, $password);
-    $details = openssl_pkey_get_details($this->privKey);
-    $this->setPublicKey($details['key']);
+    $this->encryptionKey = $encryptionKey;
   }
 
-  public function setPublicKey($pubKey)
-  {
-    $this->pubKey = $pubKey;
-  }
-
+  /** {@inheritdoc} */
   public function encrypt(string $data):string
   {
-    openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
-    return $encryptedData;
+    return $this->crypto->encrypt($data, $this->encryptionKey);
   }
 
+  /** {@inheritdoc} */
   public function decrypt(string $data):string
   {
-    openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
-    return $decryptedData;
+    return $this->crypto->decrypt($data, $this->encryptionKey);
   }
 };
