@@ -733,8 +733,8 @@ class ConfigService {
     if (method_exists($this->l10NFactory, 'getLanguages')) {
       $cloudLanguages = $this->l10NFactory->getLanguages();
 
-      $otherLanguages = array_column($cloudLanguages['languages'], 'name', 'code');
-      $commonLanguages = array_column($cloudLanguages['commonlanguages'], 'name', 'code');
+      $otherLanguages = array_column($cloudLanguages['otherLanguages'], 'name', 'code');
+      $commonLanguages = array_column($cloudLanguages['commonLanguages'], 'name', 'code');
       $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
       ksort($cloudLanguages);
     }
