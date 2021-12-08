@@ -88,7 +88,7 @@ class SealService
     $keyData = explode(';', substr($data, 10 + $length));
     foreach ($keyData as $seal) {
       list($keyUser, $sealedKey) = explode(':', $seal);
-      if ($user == $keyUser)  {
+      if ($userId == $keyUser)  {
         $key = $keyCryptor->decrypt($sealedKey);
         return $this->crypto->decrypt($encryptedData, $key);
       }

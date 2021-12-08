@@ -27,9 +27,10 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\Security\ICrypto;
 
-use OCA\CAFEVDB\Common\Crypto\CloudSymmetricCryptor;
+use OCA\CAFEVDB\Common\Crypto\ICryptor;
+use OCA\CAFEVDB\Common\Crypto\SealService;
 
-class CloudSymmetricCryptorTest extends TestCase
+class SealServiceTest extends TestCase
 {
   /** @var string */
   private const ENCRYPTION_KEY = '12345678';
@@ -40,8 +41,9 @@ class CloudSymmetricCryptorTest extends TestCase
   /** @var string */
   private const ENCRYPTED_BYTES = 'abcd';
 
-  /** @var CloudSymmetricCryptor */
-  private $cryptor;
+  private const USER_A = 'user.a';
+
+  private const USER_B = 'user.b';
 
   /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
   private $cloudCryptor;
@@ -49,7 +51,6 @@ class CloudSymmetricCryptorTest extends TestCase
   public function setup():void
   {
     parent::setup();
-
     $this->cloudCryptor = $this->getMockBuilder(ICrypto::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -57,32 +58,40 @@ class CloudSymmetricCryptorTest extends TestCase
 
   public function testConstruction()
   {
-    $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
-
-    $this->assertInstanceOf(CloudSymmetricCryptor::class, $cryptor);
+    $sealService = new SealService($this->cloudCryptor);
+    $this->assertInstanceOf(SealService::class, $sealService);
   }
 
-  public function testEncryptWrapping()
+  public function testSealing()
   {
     $this->cloudCryptor
-      ->expects($this->once())
+      ->expects($this->any())
       ->method('encrypt')
-      ->with(self::DATA_BYTES, self::ENCRYPTION_KEY)
       ->willReturn(self::ENCRYPTED_BYTES);
-
-    $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
-    $this->assertEquals(self::ENCRYPTED_BYTES, $cryptor->encrypt(self::DATA_BYTES));
-  }
-
-  public function testDecryptWrapping()
-  {
     $this->cloudCryptor
-      ->expects($this->once())
+      ->expects($this->any())
       ->method('decrypt')
-      ->with(self::ENCRYPTED_BYTES, self::ENCRYPTION_KEY)
       ->willReturn(self::DATA_BYTES);
 
-    $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
-    $this->assertEquals(self::DATA_BYTES, $cryptor->decrypt(self::ENCRYPTED_BYTES));
+    $keyCryptor = $this->getMockBuilder(ICryptor::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $keyCryptor
+      ->expects($this->any())
+      ->method('encrypt')
+      ->willReturn(self::ENCRYPTED_BYTES);
+    $keyCryptor
+      ->expects($this->any())
+      ->method('decrypt')
+      ->willReturn(self::DATA_BYTES);
+
+    $sealService = new SealService($this->cloudCryptor);
+    $sealedData = $sealService->seal(self::DATA_BYTES, [ self::USER_A => $keyCryptor, self::USER_B => $keyCryptor ]);
+
+    $unsealed = $sealService->unseal($sealedData, self::USER_A, $keyCryptor);
+    $this->assertEquals($unsealed, self::DATA_BYTES);
+
+    $unsealed = $sealService->unseal($sealedData, self::USER_B, $keyCryptor);
+    $this->assertEquals($unsealed, self::DATA_BYTES);
   }
 }
