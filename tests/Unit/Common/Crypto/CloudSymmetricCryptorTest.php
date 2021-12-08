@@ -55,11 +55,7 @@ class CloudSymmetricCryptorTest extends TestCase
     parent::setup();
     $infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../../../../appinfo/info.xml'));
     $this->appName = (string)$infoXml->id;
-    // $app = new App($this->appName);
-    // $container = $app->getContainer();
 
-    // $this->cloudCryptor = $container->get(ICrypto::class);
-    // $this->cryptor = $container->get(CloudSymmetricCryptor::class);
     $this->cloudCryptor = $this->getMockBuilder(ICrypto::class)
       ->disableOriginalConstructor()
       ->getMock();

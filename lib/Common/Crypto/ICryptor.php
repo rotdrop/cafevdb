@@ -26,6 +26,6 @@ namespace OCA\CAFEVDB\Common\Crypto;
 /** Simple wrapper interface. */
 interface ICryptor
 {
-  public function encrypt(string $data):string;
-  public function decrypt(string $data):string;
+  public function encrypt(string $data):?string;
+  public function decrypt(string $data):?string;
 };

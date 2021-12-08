@@ -46,13 +46,13 @@ class CloudSymmetricCryptor implements ICryptor
   }
 
   /** {@inheritdoc} */
-  public function encrypt(string $data):string
+  public function encrypt(string $data):?string
   {
     return $this->crypto->encrypt($data, $this->encryptionKey);
   }
 
   /** {@inheritdoc} */
-  public function decrypt(string $data):string
+  public function decrypt(string $data):?string
   {
     return $this->crypto->decrypt($data, $this->encryptionKey);
   }

@@ -26,42 +26,43 @@ namespace OCA\CAFEVDB\Common\Crypto;
 /** Asymmetric encryption using the OpenSSL extension of PHP */
 class OpenSSLAsymmetricCryptor implements ICryptor
 {
-  private $userId;
-
   private $privKey = null;
 
   private $pubKey = null;
 
-  public function __construct(string $userId, $privKey = null, string $password = null)
+  public function __construct($privKey = null, string $password = null)
   {
-    $this->userId = $userId;
     if (!empty($privKey)) {
       $this->setPrivateKey($privKey, $password);
     }
   }
 
-  public function setPrivateKey($privKey, $password = null)
+  public function setPrivateKey($privKey, $password = null):OpenSSLAsymmetricCryptor
   {
     $this->privKey = openssl_pkey_get_private($privKey, $password);
     $details = openssl_pkey_get_details($this->privKey);
     $this->setPublicKey($details['key']);
+    return $this;
   }
 
-  public function setPublicKey($pubKey)
+  public function setPublicKey($pubKey):OpenSSLAsymmetricCryptor
   {
     $this->pubKey = $pubKey;
+    return $this;
   }
 
   /** {@inheritdoc} */
-  public function encrypt(string $data):string
+  public function encrypt(string $decryptedData):?string
   {
+    $encryptedData = null;
     openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
     return $encryptedData;
   }
 
   /** {@inheritdoc} */
-  public function decrypt(string $data):string
+  public function decrypt(string $encryptedData):?string
   {
+    $decryptedData = null;
     openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
     return $decryptedData;
   }
