@@ -65,7 +65,7 @@ class GeoCountry implements \ArrayAccess
   /**
    * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="continentCode", referencedColumnName="code"),
+   *   @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
    *   @ORM\JoinColumn(name="target", referencedColumnName="target")
    * )
    */

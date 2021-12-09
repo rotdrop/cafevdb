@@ -44,7 +44,26 @@ class GeoCountryContinents implements IMigration
     return $this->l->t('Replace the legacy country-continent solution by a simple join-table.');
   }
 
+  private const STRUCTURAL = 'structural';
+  private const TRANSACTIONAL = 'transactional';
+
   private const SQL = [
+    self::STRUCTURAL => [
+      'ALTER TABLE GeoContinents CHANGE translation l10n_name VARCHAR(1024) NOT NULL',
+      'ALTER TABLE GeoCountries ADD continent_code CHAR(2) DEFAULT NULL COLLATE `ascii_general_ci`, CHANGE data l10n_name VARCHAR(1024) NOT NULL',
+      'ALTER TABLE GeoCountries ADD CONSTRAINT FK_7DF803716C569B466F2FFC FOREIGN KEY (continent_code, target) REFERENCES GeoContinents (code, target)',
+      'CREATE INDEX IDX_7DF803716C569B466F2FFC ON GeoCountries (continent_code, target)',
+    ],
+    self::TRANSACTIONAL => [
+      // Alter all columns
+      'SET FOREIGN_KEY_CHECKS = 0',
+      "UPDATE GeoCountries gc
+LEFT JOIN GeoCountries gc2
+ON gc.iso = gc2.iso AND gc2.target = '->'
+SET gc.continent_code = gc2.l10n_name
+WHERE NOT gc.target = '->'",
+      "DELETE FROM GeoCountries WHERE target = '->'",
+    ],
   ];
 
   public function __construct(
@@ -61,24 +80,33 @@ class GeoCountryContinents implements IMigration
   {
     $connection = $this->entityManager->getConnection();
 
-    // $connection->beginTransaction();
     try {
-      foreach (self::SQL as $sql) {
+      foreach (self::SQL[self::STRUCTURAL] as $sql) {
         $statement = $connection->prepare($sql);
         $statement->execute();
       }
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   $connection->commit();
-      // }
     } catch (\Throwable $t) {
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   try {
-      //     $connection->rollBack();
-      //   } catch (\Throwable $t2) {
-      //     $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-      //   }
-      // }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Migration "%s" failed.', $this->description()), $t->getCode(), $t);
+      throw new Exceptions\DatabaseMigrationException($this->l->t('Structural part of migration "%s" failed.', $this->description()), $t->getCode(), $t);
+    }
+
+    $connection->beginTransaction();
+    try {
+      foreach (self::SQL[self::TRANSACTIONAL] as $sql) {
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+      }
+      if ($connection->getTransactionNestingLevel() > 0) {
+        $connection->commit();
+      }
+    } catch (\Throwable $t) {
+      if ($connection->getTransactionNestingLevel() > 0) {
+        try {
+          $connection->rollBack();
+        } catch (\Throwable $t2) {
+          $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
+        }
+      }
+      throw new Exceptions\DatabaseMigrationException($this->l->t('Transactional part of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
     }
     return true;
   }
