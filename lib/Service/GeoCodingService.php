@@ -56,6 +56,9 @@ class GeoCodingService
   private $countryContinents = [];
   private $languages = [];
 
+  /** @var bool */
+  private $debug = false;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -63,6 +66,15 @@ class GeoCodingService
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->userName = $this->getConfigValue('orchestra').'_'.$this->appName();
+    $this->debug = $this->shouldDebug(ConfigService::DEBUG_GEOCODING);
+  }
+
+  protected function debug(string $message, array $context = [], $shift = 2) {
+    if ($this->debug) {
+      $this->logInfo($message, $context, $shift + 1);
+    } else {
+      $this->logDebug($message, $context, $shift + 1);
+    }
   }
 
   /**
@@ -98,12 +110,12 @@ class GeoCodingService
       if ($type === self::DRY) {
         return $url;
       } else {
-        $this->logDebug($url);
+        $this->debug($url);
       }
       $response = file_get_contents($url);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
-        $this->logDebug(print_r($json, true));
+        $this->debug(print_r($json, true));
         return $json;
       }
     }
@@ -170,7 +182,7 @@ class GeoCodingService
 ';
 
     $queryUrl = self::OVERPASS_URL . '?' . \http_build_query([ 'data' => $oql ]);
-    $this->logDebug('OQL ' . print_r(preg_split('/\r\n|\r|\n/', $oql), true));
+    $this->debug('OQL ' . print_r(preg_split('/\r\n|\r|\n/', $oql), true));
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $queryUrl);
@@ -194,7 +206,7 @@ class GeoCodingService
       }
     }
     $results = array_filter(preg_split('/\r\n|\r|\n/', $response));
-    $this->logDebug(print_r($results, true));
+    $this->debug(print_r($results, true));
     return $results;
   }
 
@@ -263,7 +275,7 @@ class GeoCodingService
       }
     }
 
-    $this->logDebug($qb->getDql());
+    $this->debug($qb->getDql());
     $locations = [];
     foreach ($qb->getQuery()->execute() as $location) {
       $oneLocation = [
@@ -495,7 +507,7 @@ class GeoCodingService
                  ))
                ->setParameter('country', $country)
                ->setParameter('postalCode', $postalCode);
-    $this->logDebug($qb->getDql());
+    $this->debug($qb->getDql());
     $qb->getQuery()
        ->execute();
     $this->flush();
@@ -530,7 +542,7 @@ class GeoCodingService
       $language = locale_get_primary_language($locale);
     }
 
-    $this->logDebug("Updating postal codes for language " . $language);
+    $this->debug("Updating postal codes for language " . $language);
 
     // only fetch "old" postal codes for registered musicians.
     $qb = $this->queryBuilder()
@@ -545,7 +557,7 @@ class GeoCodingService
                ->orWhere('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
                ->orderBy('gpc.updated', 'ASC')
                ->setMaxResults($limit);
-    $this->logDebug($qb->getDql());
+    $this->debug($qb->getDql());
 
     $zipCodes = [];
     foreach ($qb->getQuery()->getResult() as $postalCode) {
@@ -556,12 +568,12 @@ class GeoCodingService
     }
     $zipCodes = array_merge($zipCodes, $forcedZipCodes);
 
-    $this->logDebug('ZIP CODES '.print_r($zipCodes, true));
+    $this->debug('ZIP CODES '.print_r($zipCodes, true));
 
     $numChanged = 0;
     $numTotal = 0;
     foreach ($zipCodes as $zipCode) {
-      $this->logDebug(print_r($zipCode, true));
+      $this->debug(print_r($zipCode, true));
       $zipCodeInfo = $this->request('postalCodeLookup', $zipCode);
       $postalCode = $zipCode['postalCode'];
       $country = $zipCode['country'];
@@ -585,9 +597,9 @@ class GeoCodingService
         foreach ($this->languages($language) as $lang) {
           $translation = $this->translatePlaceName($name, $country, $lang);
           $translation = Util::normalizeSpaces($translation);
-          $this->logDebug(print_r($translations, true));
-          $this->logDebug(print_r($lang, true));
-          $this->logDebug(print_r($translation, true));
+          $this->debug(print_r($translations, true));
+          $this->debug(print_r($lang, true));
+          $this->debug(print_r($translation, true));
           if (empty($translation)) {
             continue;
           }
@@ -653,7 +665,7 @@ class GeoCodingService
         }
 
         if ($limit == 1) {
-          $this->logDebug($postalCode.'@'.$country.': '.$name);
+          $this->debug($postalCode.'@'.$country.': '.$name);
         }
       }
 
@@ -663,7 +675,7 @@ class GeoCodingService
     }
     $this->flush();
 
-    $this->logDebug('Affected Postal Code records: '.$numChanged.' of '.$numTotal);
+    $this->debug('Affected Postal Code records: '.$numChanged.' of '.$numTotal);
 
     return true;
   }
@@ -739,7 +751,7 @@ class GeoCodingService
 
     foreach ($languages as $lang) {
       $numRows = $this->updateCountriesForLanguage($lang, $force);
-      $this->logDebug('Affected rows for language '.$lang.': '.print_r($numRows, true));
+      $this->debug('Affected rows for language '.$lang.': '.print_r($numRows, true));
     }
 
     return true;
@@ -749,7 +761,7 @@ class GeoCodingService
   public function updateCountriesForLanguage($lang, $force = false)
   {
     if (!$force && $this->count(['target' => $lang], GeoCountry::class) > 0) {
-      $this->logDebug('language '.$lang.' already retrieved and update not forced, skipping update.');
+      $this->debug('language '.$lang.' already retrieved and update not forced, skipping update.');
       return 0;
     }
 
@@ -773,7 +785,7 @@ class GeoCodingService
 
       $localeName = $localeCountryNames[$code];
       if ($localeName != $name) {
-        $this->logDebug($lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
+        $this->debug($lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
       }
 
       $this->setDatabaseRepository(GeoCountry::class);
@@ -824,7 +836,7 @@ class GeoCodingService
                         ->distinct(true)
                         ->getQuery()
                         ->execute();
-      $this->logDebug('LANGUAGES '.print_r($languages, true));
+      $this->debug('LANGUAGES '.print_r($languages, true));
       $languages = array_map(function($value) { return $value['target'];}, $languages);
       $languages = array_filter($languages, function($value) { return $value !== '=>'; });
     }
@@ -835,7 +847,7 @@ class GeoCodingService
     $languages = array_unique(array_merge([self::DEFAULT_LANGUAGE, $currentLang], $languages));
     $this->languages = array_filter(array_unique(array_merge([self::DEFAULT_LANGUAGE, $currentLang, $extraLang], $languages)));
 
-    $this->logDebug(print_r($this->languages, true));
+    $this->debug(print_r($this->languages, true));
 
     return $this->languages;
   }

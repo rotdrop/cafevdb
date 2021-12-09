@@ -40,6 +40,7 @@ $debugModes = [
   ConfigService::DEBUG_REQUEST => $l->t('HTTP Requests'),
   ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
   ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'),
+  ConfigService::DEBUG_GEOCODING => $l->t('GeoCoding'),
 ];
 
 ?>

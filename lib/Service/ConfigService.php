@@ -63,7 +63,8 @@ class ConfigService {
   const DEBUG_REQUEST   = (1 << 4);
   const DEBUG_TOOLTIPS  = (1 << 5);
   const DEBUG_EMAILFORM = (1 << 6);
-  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
+  const DEBUG_GEOCODING = (1 << 7);
+  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM|self::DEBUG_GEOCODING;
   const DEBUG_NONE      = 0;
 
   const DEFAULT_LOCALE = 'en_US';

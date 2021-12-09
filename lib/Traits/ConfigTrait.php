@@ -618,7 +618,7 @@ trait ConfigTrait {
       $this->toolTipsService = $this->di(ToolTipsService::class);
       if (!empty($this->toolTipsService)) {
         $debugMode = $this->getConfigValue('debugmode', 0);
-        $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
+        $this->toolTipsService->debug($this->shouldDebug(ConfigService::DEBUG_TOOLTIPS));
       }
     }
     return $this->toolTipsService;
