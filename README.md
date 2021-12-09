@@ -12,8 +12,12 @@ somewhere on the cloud:
 - sub-directory of projects-folder for project emails
 - perhaps sub-directory of management-board project for general emails.
 - using the message-id as tag or sub-folder
+- could use postbox/incoming/ for uploads, postbox/outgoing/ for downloads.
 
 ## Comments ##
+
+- ConfigCheckService::linkShareObject() already let's us share write-only with a link.
+- or use the cloud's OCS API?
 
 # General README #
 
