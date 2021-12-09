@@ -500,7 +500,7 @@ class GeoCodingService
     $expr = $this->expr();
     $qb = $this->queryBuilder()
                ->update(GeoPostalCode::class, 'gpc')
-               ->set('gpc.updated', "'".(new \DateTime)->format('Y-m-d H:i:s')."'")
+               ->set('gpc.updated', "'".(new \DateTime)->format('Y-m-d H:i:s.u')."'")
                ->where(
                  $expr->andX(
                    $expr->eq('gpc.country', ':country'),
