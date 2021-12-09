@@ -115,7 +115,7 @@ trait FindLikeTrait
    */
   protected static function addOrderBy(ORM\QueryBuilder $qb, ?array $orderBy = null, ?int $limit = null, ?int $offset = null, ?string $alias = null): ORM\QueryBuilder
   {
-    foreach ($orderBy as $key => $dir) {
+    foreach ($orderBy??[] as $key => $dir) {
       if (strpos($key, '.') === false && !empty($alias)) {
         $key = $alias . '.' . $key;
       }
