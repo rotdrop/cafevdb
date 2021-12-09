@@ -922,56 +922,23 @@ class GeoCodingService
     $countries = [];
     $continents = [];
 
-    $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language] ])
-              ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+    $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
+      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
 
     $countryData = [];
-    /** @var GeoCountry $country */
-    foreach ($this->matching($criteria, GeoCountry::class) as $country) {
-      $iso = $country->getIso();
-      $l10nName = $country->getL10nName();
-      $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
-      $countryData[$iso][$language] = $l10nName;
-      $countryData[$iso]['continent'] =
-        $continents[$iso] = $country->getContinent()->getCode();
-    }
-
-    uasort($countryData, function($a, $b) use ($language) {
-      $result = strcmp($a['continent'], $b['continent']);
-      if ($result === 0) {
-        $result = strcmp($a[$language], $b[$language]);
+    /** @var GeoContinent $continent */
+    foreach ($this->matching($criteria, GeoContinent::class) as $continent) {
+      /** @var GeoCountry $country */
+      foreach ($continent->getCountries() as $country) {
+        $iso = $country->getIso();
+        $l10nName = $country->getL10nName();
+        $countries[$iso] = $l10nName;
+        $continents[$iso] = $continent->getCode();
       }
-      return $result;
-    });
-
-    $countries = [];
-    foreach ($countryData as $iso => $data) {
-      $countries[$iso] = $data[$language];
     }
 
     $this->countryContinents = $continents;
     $this->countryNames[$language] = $countries;
-
-    if (false) {
-
-      $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
-        ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
-
-      $countryData = [];
-      /** @var GeoContinent $continent */
-      foreach ($this->matching($criteria, GeoCountry::class) as $continent) {
-        /** @var GeoCountry $country */
-        foreach ($continent->getCountries() as $country) {
-          $iso = $country->getIso();
-          $l10nName = $country->getL10nName();
-          $countries[$iso] = $l10nName;
-          $continents[$iso] = $continent->getCode();
-        }
-      }
-
-      $this->countryContinents = $continents;
-      $this->countryNames[$language] = $countries;
-    }
 
     return $countries;
   }
