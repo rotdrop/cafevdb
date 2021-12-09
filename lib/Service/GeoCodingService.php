@@ -496,6 +496,7 @@ class GeoCodingService
     // to update some of those beasts. We simply pretend to
     // update all, e.g. for the timestamp we give a damn on
     // the name.
+
     $expr = $this->expr();
     $qb = $this->queryBuilder()
                ->update(GeoPostalCode::class, 'gpc')
@@ -511,21 +512,7 @@ class GeoCodingService
     $qb->getQuery()
        ->execute();
     $this->flush();
-  }
-
-  private function debug($string, $context = [])
-  {
-    $this->log(\OCP\ILogger::DEBUG, $string, $context);
-  }
-
-  private function error($string, $context = [])
-  {
-    $this->log(\OCP\ILogger::ERROR, $string, $context);
-  }
-
-  private function info($string, $context = [])
-  {
-    $this->log(\OCP\ILogger::INFO, $string, $context);
+    $this->debug('Stamped postal code ' . $postalCode . '@' . $country);
   }
 
   /**Update the list of known zip-code - location relations, but
@@ -554,7 +541,7 @@ class GeoCodingService
                  'gpc.country = m.country AND gpc.postalCode = m.postalCode'
                )
                ->where('gpc.updated IS NULL')
-               ->orWhere('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) > 1')
+               ->orWhere('TIMESTAMPDIFF(MONTH, gpc.updated, CURRENT_TIMESTAMP()) >= 1')
                ->orderBy('gpc.updated', 'ASC')
                ->setMaxResults($limit);
     $this->debug($qb->getDql());
@@ -582,7 +569,7 @@ class GeoCodingService
           !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
           count($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) == 0) {
         $this->stampPostalCode($postalCode, $country);
-        $this->error("No remote information for ".$postalCode.'@'.$country. ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY));
+        $this->logError("No remote information for ".$postalCode.'@'.$country. ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY));
         continue;
       }
 
