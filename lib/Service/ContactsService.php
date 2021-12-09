@@ -252,7 +252,7 @@ class ContactsService
           if ($skip) {
             continue; // FAX etc.
           }
-          $key = $cell ? 'MobilePhone' : 'FixedLinePhone';
+          $key = $cell ? 'mobilePhone' : 'fixedLinePhone';
           if ($work == $preferWork || !isset($entity[$key])) {
             $entity[$key] = (string)$tel;
           }
@@ -276,7 +276,7 @@ class ContactsService
           if ($skip) {
             continue; // unknown
           }
-          $key = 'Email';
+          $key = 'email';
           if ($work == $preferWork || !isset($entity[$key])) {
             $entity[$key] = (string)$email;
           }
@@ -288,25 +288,25 @@ class ContactsService
       }
 
       if (isset($obj->LANG)) {
-        $entity['Sprachpräferenz'] = (string)$obj->LANG;
+        $entity['language'] = (string)$obj->LANG;
       }
 
       if (isset($obj->BDAY)) {
-        $entity['Geburtstag'] = date('Y-m-d H:i:s', strtotime((string)$obj->BDAY));
+        $entity['birthday'] = $obj->BDAY->getDateTime();
       }
 
       if (isset($obj->REV)) {
-        $entity['Aktualisiert'] = date('Y-m-d H:i:s', strtotime((string)$obj->REV));
+        $entity['updated'] = $obj->REV->getDateTime;
       }
 
       if (isset($obj->ADR)) {
         $fields = array(false, // 'pobox', // unsupported
                         false, // 'ext', // well ...
-                        'Strasse',
-                        'Stadt',
+                        'street',
+                        'city',
                         false, // 'region', // unsupported
-                        'Postleitzahle',
-                        'Land');
+                        'postalCode',
+                        'country');
 
         foreach ($obj->ADR as $addr) {
           $work = false;
@@ -324,10 +324,10 @@ class ContactsService
           if ($skip) {
             continue; // unknown
           }
-          if ($work != $preferWork && (isset($entity['Land']) ||
-                                       isset($entity['Strasse']) ||
-                                       isset($entity['Stadt']) ||
-                                       isset($entity['Postleitzahl']))) {
+          if ($work != $preferWork && (isset($entity['country']) ||
+                                       isset($entity['street']) ||
+                                       isset($entity['city']) ||
+                                       isset($entity['postalCode']))) {
             continue;
           }
           // we only support regular addresses, if address
@@ -363,7 +363,7 @@ class ContactsService
           $languages = $geoCodingService->languages(true);
           foreach($languages as $language) {
             $countries = $geoCodingService->countryNames($language);
-            $iso = array_search($entity['countries'], $countries);
+            $iso = array_search($entity['country'], $countries);
             if ($iso !== false) {
               $entity['Land'] = $iso;
             }
@@ -381,7 +381,7 @@ class ContactsService
             $musicianInstruments[] = $instrument;
           }
         }
-        $entity['Instruments'] = implode(',', $musicianInstruments);
+        $entity['instruments'] = implode(',', $musicianInstruments);
       }
 
       if (isset($obj->PHOTO)) {
@@ -391,7 +391,7 @@ class ContactsService
           $rawData = $photo->getRawMimeDirValue();
           if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $rawData, $matches)) {
             $mimeType = $matches[1];
-            $imageData = substr($entity['Portrait'], strlen($matches[0]));
+            $imageData = substr($entity['photo'], strlen($matches[0]));
             $haveData = true;
           }
         } else {
