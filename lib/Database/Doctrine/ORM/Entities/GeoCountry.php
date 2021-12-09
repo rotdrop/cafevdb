@@ -62,8 +62,14 @@ class GeoCountry implements \ArrayAccess
    */
   private $data;
 
+  /**
+   * @ORM\ManyToMany(targetEntity="GeoContinent", mappedBy="countries")
+   */
+  private $continents;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->continents = new ArrayCollection;
   }
 
   /**

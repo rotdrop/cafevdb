@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -63,11 +65,24 @@ class GeoContinent implements \ArrayAccess
    */
   private $translation;
 
-
-
+  /**
+   * @ORM\ManyToMany(targetEntity="GeoCountry", inversedBy="continents")
+   * @ORM\JoinTable(name="geo_country_continents",
+   *   joinColumns={
+   *     @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
+   *     @ORM\JoinColumn(name="target", referencedColumnName="target")
+   *   },
+   *   inverseJoinColumns={
+   *     @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
+   *     @ORM\JoinColumn(name="target", referencedColumnName="target")
+   *   }
+   * )
+   */
+  private $countries;
 
   public function __construct() {
     $this->arrayCTOR();
+    $this->countries = new ArrayCollection;
   }
 
   /**
