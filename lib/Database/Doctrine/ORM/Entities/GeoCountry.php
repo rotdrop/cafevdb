@@ -60,12 +60,16 @@ class GeoCountry implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=1024, nullable=false)
    */
-  private $data;
+  private $l10nName;
 
   /**
-   * @ORM\ManyToMany(targetEntity="GeoContinent", mappedBy="countries")
+   * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="continentCode", referencedColumnName="code"),
+   *   @ORM\JoinColumn(name="target", referencedColumnName="target")
+   * )
    */
-  private $continents;
+  private $continent;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -120,26 +124,26 @@ class GeoCountry implements \ArrayAccess
   }
 
   /**
-   * Set data.
+   * Set l10nName.
    *
-   * @param string $data
+   * @param string $l10nName
    *
    * @return GeoCountries
    */
-  public function setData($data)
+  public function setL10nName($l10nName)
   {
-    $this->data = $data;
+    $this->l10nName = $l10nName;
 
     return $this;
   }
 
   /**
-   * Get data.
+   * Get l10nName.
    *
    * @return string
    */
-  public function getData()
+  public function getL10nName()
   {
-    return $this->data;
+    return $this->l10nName;
   }
 }

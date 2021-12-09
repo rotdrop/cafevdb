@@ -45,9 +45,6 @@ class GeoCountryContinents implements IMigration
   }
 
   private const SQL = [
-    'CREATE TABLE geo_country_continents (continent_code CHAR(2) NOT NULL COLLATE `ascii_general_ci`, target CHAR(2) NOT NULL COLLATE `ascii_general_ci`, country_iso CHAR(2) NOT NULL COLLATE `ascii_general_ci`, INDEX IDX_47A8687816C569B466F2FFC (continent_code, target), INDEX IDX_47A868785A7049D0466F2FFC (country_iso, target), PRIMARY KEY(continent_code, target, country_iso)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;',
-    'ALTER TABLE geo_country_continents ADD CONSTRAINT FK_47A8687816C569B466F2FFC FOREIGN KEY (continent_code, target) REFERENCES GeoContinents (code, target);',
-    'ALTER TABLE geo_country_continents ADD CONSTRAINT FK_47A868785A7049D0466F2FFC FOREIGN KEY (country_iso, target) REFERENCES GeoCountries (iso, target);',
   ];
 
   public function __construct(

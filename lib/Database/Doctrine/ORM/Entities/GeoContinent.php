@@ -63,20 +63,10 @@ class GeoContinent implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=1024, nullable=false)
    */
-  private $translation;
+  private $l10nName;
 
   /**
-   * @ORM\ManyToMany(targetEntity="GeoCountry", inversedBy="continents")
-   * @ORM\JoinTable(name="geo_country_continents",
-   *   joinColumns={
-   *     @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
-   *     @ORM\JoinColumn(name="target", referencedColumnName="target")
-   *   },
-   *   inverseJoinColumns={
-   *     @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
-   *     @ORM\JoinColumn(name="target", referencedColumnName="target")
-   *   }
-   * )
+   * @ORM\OneToMany(targetEntity="GeoCountry", mappedBy="continent")
    */
   private $countries;
 
@@ -132,26 +122,26 @@ class GeoContinent implements \ArrayAccess
   }
 
   /**
-   * Set translation.
+   * Set l10nName.
    *
    * @param string $translatoin
    *
    * @return GeoContinents
    */
-  public function setTranslation($translation)
+  public function setL10nName($l10nName)
   {
-    $this->translation = $translation;
+    $this->l10nName = $l10nName;
 
     return $this;
   }
 
   /**
-   * Get translation.
+   * Get l10nName.
    *
    * @return string
    */
-  public function getTranslation()
+  public function getL10nName()
   {
-    return $this->translation;
+    return $this->l10nName;
   }
 }

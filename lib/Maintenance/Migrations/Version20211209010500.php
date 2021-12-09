@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20211209010000 extends GeoCountryContinents {};
+class Version20211209010500 extends GeoCountryContinents {};
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
