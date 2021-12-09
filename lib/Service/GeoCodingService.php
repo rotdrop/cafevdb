@@ -277,9 +277,8 @@ class GeoCodingService
       // and now it comes: if I understand this correctly the
       // associations of ORM will seemlessly provide the array of all
       // translations.
+      /** @var GeoPostalCodeTranslation $translation */
       foreach ($location->getTranslations() as $translation) {
-        // so $translation is now an instance of
-        // GeoPostalCodeTranslation ?
         $oneLocation[$translation->getTarget()] = $translation->getTranslation();
       }
       $locations[] = $oneLocation;
@@ -795,6 +794,7 @@ class GeoCodingService
 
       if (!empty($continentName)) {
         // Update continent table
+        /** @var GeoContinent $entity */
         $this->setDatabaseRepository(GeoContinent::class);
         $entity = $this->find(['code' => $continent, 'target' => $lang]);
         if (empty($entity)) {
@@ -802,9 +802,9 @@ class GeoCodingService
                   ->setCode($continent)
                   ->setTarget($lang);
         } else {
-          $numRows += (int)($entity->getTranslation() != $continentName);
+          $numRows += (int)($entity->getL10nName() != $continentName);
         }
-        $entity->setTranslation($continentName);
+        $entity->setL10nName($continentName);
         $this->persist($entity);
       }
     }
@@ -886,8 +886,9 @@ class GeoCodingService
     $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
               ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
 
-    foreach ($this->matching($criteria, GeoContinent::class) as $translation) {
-      $continents[$translation->getCode()] = $translation->getTranslation();
+    /** @var GeoContinent $continent */
+    foreach ($this->matching($criteria, GeoContinent::class) as $continent) {
+      $continents[$continent->getCode()] = $continent->getL10nName();
     }
 
     $this->continentNames[$language] = $continents;
