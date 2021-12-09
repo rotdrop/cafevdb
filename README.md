@@ -1,6 +1,22 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
+# Branch feature/email-form-large-attachments-as-file-link #
+
+## Purpose ##
+
+In the builtin-email form send large attachments as cloud-file-links
+instead of copying the data. The attachment-storage should be located
+somewhere on the cloud:
+
+- sub-directory of projects-folder for project emails
+- perhaps sub-directory of management-board project for general emails.
+- using the message-id as tag or sub-folder
+
+## Comments ##
+
+# General README #
+
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
