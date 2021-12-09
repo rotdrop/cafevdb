@@ -81,9 +81,9 @@ class GeoCountry implements \ArrayAccess
    *
    * @param string $iso
    *
-   * @return GeoCountries
+   * @return GeoCountry
    */
-  public function setIso($iso)
+  public function setIso(string $iso):GeoCountry
   {
     $this->iso = $iso;
 
@@ -94,7 +94,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return string
    */
-  public function getIso()
+  public function getIso():string
   {
     return $this->iso;
   }
@@ -106,7 +106,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return GeoCountries
    */
-  public function setTarget($target)
+  public function setTarget(string $target):GeoCountry
   {
     $this->target = $target;
 
@@ -118,7 +118,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return string
    */
-  public function getTarget()
+  public function getTarget():string
   {
     return $this->target;
   }
@@ -130,7 +130,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return GeoCountries
    */
-  public function setL10nName($l10nName)
+  public function setL10nName(string $l10nName):GeoCountry
   {
     $this->l10nName = $l10nName;
 
@@ -142,8 +142,32 @@ class GeoCountry implements \ArrayAccess
    *
    * @return string
    */
-  public function getL10nName()
+  public function getL10nName():string
   {
     return $this->l10nName;
+  }
+
+  /**
+   * Set continent.
+   *
+   * @param GeoContinent $continent
+   *
+   * @return GeoCountries
+   */
+  public function setContinent(GeoContinent $continent):GeoCountry
+  {
+    $this->continent = $continent;
+
+    return $this;
+  }
+
+  /**
+   * Get continent.
+   *
+   * @return GeoContinent
+   */
+  public function getContinent():GeoContinent
+  {
+    return $this->continent;
   }
 }

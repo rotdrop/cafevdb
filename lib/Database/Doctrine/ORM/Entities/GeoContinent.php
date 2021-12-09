@@ -66,7 +66,8 @@ class GeoContinent implements \ArrayAccess
   private $l10nName;
 
   /**
-   * @ORM\OneToMany(targetEntity="GeoCountry", mappedBy="continent")
+   * @ORM\OneToMany(targetEntity="GeoCountry", mappedBy="continent", indexBy="iso", fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"l10nName" = "ASC"})
    */
   private $countries;
 
@@ -76,11 +77,13 @@ class GeoContinent implements \ArrayAccess
   }
 
   /**
-   * Get code.
+   * Set code.
    *
-   * @return string
+   * @param string $code
+   *
+   * @return GeoContinent
    */
-  public function setCode($code)
+  public function setCode(string $code):GeoContinent
   {
     $this->code = $code;
 
@@ -92,7 +95,7 @@ class GeoContinent implements \ArrayAccess
    *
    * @return string
    */
-  public function getCode()
+  public function getCode():string
   {
     return $this->code;
   }
@@ -102,9 +105,9 @@ class GeoContinent implements \ArrayAccess
    *
    * @param string $target
    *
-   * @return GeoContinents
+   * @return GeoContinent
    */
-  public function setTarget($target)
+  public function setTarget($target):GeoContinent
   {
     $this->target = $target;
 
@@ -116,7 +119,7 @@ class GeoContinent implements \ArrayAccess
    *
    * @return string
    */
-  public function getTarget()
+  public function getTarget():string
   {
     return $this->target;
   }
@@ -128,7 +131,7 @@ class GeoContinent implements \ArrayAccess
    *
    * @return GeoContinents
    */
-  public function setL10nName($l10nName)
+  public function setL10nName($l10nName):GeoContinent
   {
     $this->l10nName = $l10nName;
 
@@ -140,8 +143,32 @@ class GeoContinent implements \ArrayAccess
    *
    * @return string
    */
-  public function getL10nName()
+  public function getL10nName():string
   {
     return $this->l10nName;
+  }
+
+  /**
+   * Set countries.
+   *
+   * @param string $translatoin
+   *
+   * @return GeoContinents
+   */
+  public function setCountries(Collection $countries):GeoContinent
+  {
+    $this->countries = $countries;
+
+    return $this;
+  }
+
+  /**
+   * Get countries.
+   *
+   * @return Collection
+   */
+  public function getCountries():Collection
+  {
+    return $this->countries;
   }
 }

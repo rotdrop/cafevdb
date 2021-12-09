@@ -39,6 +39,7 @@ class GeoCodingService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const DEFAULT_LANGUAGE = 'en';
   const JSON = 1;
   const XML = 2;
   const RDF = 3;
@@ -49,7 +50,6 @@ class GeoCodingService
   const PROVIDER_URL = 'http://api.geonames.org';
   const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
   const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
-  const CONTINENT_TARGET = '->';
   private $userName = null;
   private $countryNames = [];
   private $continentNames = [];
@@ -777,25 +777,20 @@ class GeoCodingService
         $this->logDebug($lang.'_'.$code.': '.$localeName.' / '.$name.' (php/remote)');
       }
 
-      $targets = [
-        $lang => $name,
-        self::CONTINENT_TARGET => $continent,
-      ];
-
       $this->setDatabaseRepository(GeoCountry::class);
-      foreach ($targets as $target => $data) {
-        if (!empty($data)) {
-          $entity = $this->find(['iso' => $code, 'target' => $target]);
-          if (empty($entity)) {
-            $entity = GeoCountry::create()
-                    ->setIso($code)
-                    ->setTarget($target);
-          } else {
-            $numRows += (int)($entity->getData() != $data);
-          }
-          $entity->setData($data);
-          $this->persist($entity);
+      if (!empty($name)) {
+        $entity = $this->find(['iso' => $code, 'target' => $target]);
+        if (empty($entity)) {
+          $entity = GeoCountry::create()
+            ->setIso($code)
+            ->setTarget($target);
+        } else {
+          $numRows += (int)($entity->getL10nName() != $name);
         }
+        $entity
+          ->setL10nName($name)
+          ->setContinentCode($continent);
+        $this->persist($entity);
       }
 
       if (!empty($continentName)) {
@@ -837,8 +832,8 @@ class GeoCodingService
     $locale = $this->getLocale();
     $currentLang = locale_get_primary_language($locale);
 
-    $languages = array_unique(array_merge(['en', $currentLang], $languages));
-    $this->languages = array_filter(array_unique(array_merge(['en', $currentLang, $extraLang], $languages)));
+    $languages = array_unique(array_merge([self::DEFAULT_LANGUAGE, $currentLang], $languages));
+    $this->languages = array_filter(array_unique(array_merge([self::DEFAULT_LANGUAGE, $currentLang, $extraLang], $languages)));
 
     $this->logDebug(print_r($this->languages, true));
 
@@ -888,8 +883,8 @@ class GeoCodingService
 
     // sort s.t. the fallback-language comes first and is overwritten
     // later by the correct translation.
-    $criteria = self::criteriaWhere(['target' => ['en', $language]])
-              ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
+    $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
+              ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
 
     foreach ($this->matching($criteria, GeoContinent::class) as $translation) {
       $continents[$translation->getCode()] = $translation->getTranslation();
@@ -903,6 +898,8 @@ class GeoCodingService
   /**
    * Export the table of countries as key => name array w.r.t. the
    * current locale or the requested language.
+   *
+   * @todo Grouping by continents could now be done at the data-base level.
    */
   public function countryNames($language = null)
   {
@@ -924,29 +921,18 @@ class GeoCodingService
     $countries = [];
     $continents = [];
 
-    $criteria = self::criteriaWhere(['target' => [self::CONTINENT_TARGET, 'en', $language] ])
-              ->orderBy(['target' => ('en' < $language ? 'ASC' : 'DESC')]);
+    $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language] ])
+              ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
 
     $countryData = [];
+    /** @var GeoCountry $country */
     foreach ($this->matching($criteria, GeoCountry::class) as $country) {
       $iso = $country->getIso();
-      $target = $country->getTarget();
-      $data = $country->getData();
-      switch ($target) {
-        case self::CONTINENT_TARGET:
-          $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
-          $countryData[$iso]['continent'] = $data;
-          $continents[$iso] = $data;
-          break;
-        case 'en':
-        case $language:
-          $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
-          $countryData[$iso][$language] = $data;
-          break;
-        default:
-          $this->error('Unexpected translation target ' . $target);
-          break;
-      }
+      $l10nName = $country->getL10nName();
+      $countryData[$iso] = $countryData[$iso]??[ 'iso' => $iso ];
+      $countryData[$iso][$language] = $l10nName;
+      $countryData[$iso]['continent'] =
+        $continents[$iso] = $country->getContinent()->getCode();
     }
 
     uasort($countryData, function($a, $b) use ($language) {
@@ -964,6 +950,27 @@ class GeoCodingService
 
     $this->countryContinents = $continents;
     $this->countryNames[$language] = $countries;
+
+    if (false) {
+
+      $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
+        ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+
+      $countryData = [];
+      /** @var GeoContinent $continent */
+      foreach ($this->matching($criteria, GeoCountry::class) as $continent) {
+        /** @var GeoCountry $country */
+        foreach ($continent->getCountries() as $country) {
+          $iso = $country->getIso();
+          $l10nName = $country->getL10nName();
+          $countries[$iso] = $l10nName;
+          $continents[$iso] = $continent->getCode();
+        }
+      }
+
+      $this->countryContinents = $continents;
+      $this->countryNames[$language] = $countries;
+    }
 
     return $countries;
   }
