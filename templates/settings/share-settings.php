@@ -130,6 +130,25 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         <input name="postboxfolder-check" id="postboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
         <div class="postboxfolder-sharelink<?php empty($postboxFolderShareLink) && p('hidden'); ?>"><?php p($postboxFolderShareLink); ?></div>
       </fieldset>
+      <fieldset id="outboxfolder-fieldset"
+		class="needs-sharedfolder"
+		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
+        <input type="hidden" id="outboxfolder-saved" name="outboxfolder-saved" value="<?php echo $_['outboxfolder']; ?>" />
+        <input <?php echo $_['outboxfolder'] != '' ? 'disabled' : ''; ?>
+          type="text"
+          id="outboxfolder"
+          name="outboxfolder"
+          placeholder="<?php echo $l->t('Outbox-Folder'); ?>"
+          value="<?php echo $_['outboxfolder']; ?>"
+          title="<?php echo $toolTips['outboxfolder']; ?>"
+        />
+        <input type="checkbox" id="outboxfolder-force" name="outboxfolder-force" class="checkbox"/>
+        <label for="outboxfolder-force" title="<?php echo $toolTips['outboxfolder-force']; ?>" >
+          <?php echo $l->t('force');?>
+        </label>
+        <input name="outboxfolder-check" id="outboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
       <fieldset id="documenttemplatesfolder-fieldset"
 		class="needs-sharedfolder"
 		<?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >

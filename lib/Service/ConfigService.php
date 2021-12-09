@@ -84,6 +84,7 @@ class ConfigService {
   const TRANSACTIONS_FOLDER = 'transactionsfolder';
   const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
   const POSTBOX_FOLDER = 'postboxfolder';
+  const OUTBOX_FOLDER = 'outboxfolder';
 
   const CMS_CATEGORIES = [
     'preview',

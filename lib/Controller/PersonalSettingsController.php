@@ -1100,6 +1100,7 @@ class PersonalSettingsController extends Controller {
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
     case ConfigService::POSTBOX_FOLDER:
+    case ConfigService::OUTBOX_FOLDER:
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
     case ConfigService::PROJECT_POSTERS_FOLDER:

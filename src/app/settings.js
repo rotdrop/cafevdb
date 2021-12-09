@@ -540,7 +540,7 @@ const afterLoad = function(container) {
         $('div.postboxfolder-sharelink').html(data.url);
       }
     });
-
+    sharedFolder('outboxfolder');
   } // shared objects
 
   /****************************************************************************

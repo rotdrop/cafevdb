@@ -234,7 +234,7 @@ class PersonalForm {
         $sharedFolder = $this->getConfigValue(ConfigService::SHARED_FOLDER);
         try {
           if (!empty($sharedFolder)) {
-            $sharedFolderLink = $this->userStorage->getFilesAppLink($sharedFolder);
+            $sharedFolderLink = $this->userStorage->getFilesAppLink($sharedFolder, true);
           }
         } catch (\Throwable $t) {
           // don't care
@@ -242,6 +242,7 @@ class PersonalForm {
         $documentTemplatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
         $postboxFolder = $this->getConfigValue(ConfigService::POSTBOX_FOLDER);
         $postboxFolderShareLink = $this->getConfigValue(ConfigService::POSTBOX_FOLDER . 'ShareLink');
+        $outboxFolder = $this->getConfigValue(ConfigService::OUTBOX_FOLDER);
 
         $translations = null;
         try {
@@ -303,6 +304,7 @@ class PersonalForm {
             'sharedFolderLink' => $sharedFolderLink,
             ConfigService::POSTBOX_FOLDER => $postboxFolder,
             'postboxFolderShareLink' => $postboxFolderShareLink,
+            ConfigService::OUTBOX_FOLDER => $outboxFolder,
             ConfigService::DOCUMENT_TEMPLATES_FOLDER => $documentTemplatesFolder,
             ConfigService::PROJECTS_FOLDER => $this->getConfigValue(ConfigService::PROJECTS_FOLDER, ''),
             ConfigService::PROJECT_PARTICIPANTS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER, ''),
