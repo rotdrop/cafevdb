@@ -20,9 +20,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.cafevdb-lock-unlock-victim.hidden + input[type="checkbox"].cafevdb-lock-input-widget + label.cafevdb-lock-input-widget,
-input[type="checkbox"].cafevdb-lock-input-widget.disabled + label.cafevdb-lock-input-widget {
-  display:none!important;
+.cafevdb-lock-unlock-victim.hidden,
+input.cafevdb-lock-unlock-victim[type="hidden"] {
+  &+ input[type="checkbox"].cafevdb-lock-input-widget {
+    & + label.cafevdb-lock-input-widget {
+      display:none!important;
+    }
+  }
+}
+
+input[type="checkbox"].cafevdb-lock-input-widget.disabled {
+  & + label.cafevdb-lock-input-widget {
+    display:none!important;
+  }
 }
 
 input[type="checkbox"].cafevdb-lock-input-widget {
