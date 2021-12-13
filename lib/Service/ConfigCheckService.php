@@ -80,6 +80,9 @@ class ConfigCheckService
   /** @var MigrationsService */
   private $migrationsService;
 
+  /** @var SimpleSharingService */
+  private $sharingService;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
@@ -92,6 +95,7 @@ class ConfigCheckService
     , EventsService $eventsService
     , AddressBookProvider $addressBookProvider
     , MigrationsService $migrationsService
+    , SimpleSharingService $sharingService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -103,6 +107,7 @@ class ConfigCheckService
     $this->cardDavService = $cardDavService;
     $this->addressBookProvider = $addressBookProvider;
     $this->migrationsService = $migrationsService;
+    $this->sharingService = $sharingService;
     $this->l = $this->l10n();
     // {
       // $mm3 = new MailingListsService($this->configService);
@@ -296,47 +301,6 @@ class ConfigCheckService
       }
     }
     return false;
-  }
-
-
-  public function linkShareObject($id, $shareOwner = null)
-  {
-    $shareType = IShare::TYPE_LINK;
-    $sharePerms = \OCP\Constants::PERMISSION_CREATE;
-
-    if (empty($shareOwner)) {
-      $shareOwner = $this->userId();
-    }
-
-    // retrieve all shared items for $shareOwner
-    foreach($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
-      if ($share->getNodeId() === $id) {
-        // check permissions
-        if ($share->getPermissions() !== $sharePerms) {
-          $share->setPermissions($sharePerms);
-          $this->shareManager->updateShare($share);
-        }
-        if ($share->getPermissions() === $sharePerms) {
-          $url = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
-          return $url;
-        }
-        return null;
-      }
-    }
-
-    // Otherwise it should be legal to attempt a new share ...
-    $share = $this->shareManager->newShare();
-    $share->setNodeId($id);
-    $share->setPermissions($sharePerms);
-    $share->setShareType($shareType);
-    $share->setShareOwner($shareOwner);
-    $share->setSharedBy($shareOwner);
-
-    if ($this->shareManager->createShare($share)) {
-      $url = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
-    }
-
-    return null;
   }
 
   /**
@@ -697,9 +661,7 @@ class ConfigCheckService
       // Now it should exist as directory and $node should contain its file-info
 
       if ($node) {
-        $id = $node->getId();
-        $this->logDebug('shared folder id ' . $id);
-        $url = $this->linkShareObject($id, $userId);
+        $url = $this->sharingService->linkShareObject($node, $userId);
         if (empty($url)) {
           return null;
         }
