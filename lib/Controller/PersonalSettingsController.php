@@ -1120,6 +1120,7 @@ class PersonalSettingsController extends Controller {
       if (empty($sharedFolder)) {
         return self::grumble($this->l->t('Shared folder is not set.'));
       }
+      $sharedFolder .= UserStorage::PATH_SEP;
       if (!isset($value[$parameter])
           || !isset($value[$parameter.'-saved'])
           || !isset($value[$parameter.'-force'])) {
@@ -1164,7 +1165,7 @@ class PersonalSettingsController extends Controller {
           if ($this->configCheckService->checkProjectFolder($prefixFolder . $real)) {
             $this->setConfigValue($parameter, $real);
             try {
-              $folderLink = $this->userStorage->getFilesAppLink($prefixFolder. $real);
+              $folderLink = $this->userStorage->getFilesAppLink($sharedFolder . $prefixFolder . $real);
             } catch (\Throwable $t) {
               // don't care
               $this->logException($t);
@@ -1172,7 +1173,7 @@ class PersonalSettingsController extends Controller {
             if ($parameter == ConfigService::POSTBOX_FOLDER) {
               try {
                 $url = $this->configCheckService->checkLinkSharedFolder(
-                  $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
+                  $sharedFolder . $prefixFolder . $real
                 );
                 $this->setConfigValue($parameter . 'ShareLink', $url);
               } catch (\Throwable $t) {
@@ -1192,7 +1193,7 @@ class PersonalSettingsController extends Controller {
           return self::grumble($saved . ' != ' . $real);
         } else if ($this->configCheckService->checkProjectFolder($prefixFolder . $actual)) {
           try {
-            $folderLink = $this->userStorage->getFilesAppLink($prefixFolder . $actual);
+            $folderLink = $this->userStorage->getFilesAppLink($sharedFolder . $prefixFolder . $actual);
           } catch (\Throwable $t) {
             // don't care
           }
