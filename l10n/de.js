@@ -2077,6 +2077,7 @@ OC.L10N.register(
     "Shared folder" : "Gemeinsamer Ordner",
     "shared folder" : "Gemeinsamer Ordner",
     "Postbox-Folder" : "Briefkasten-Ordner",
+    "Outbox-Folder" : "Briefkasten-Ordner",
     "Document templates folder" : "Dokumentenvorlagen-Ordner",
     "Project folder" : "Projekt-Dateien",
     "YEAR" : "JAHR",
