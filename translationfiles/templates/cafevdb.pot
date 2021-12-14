@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-12-14 17:46+0100\n"
+"POT-Creation-Date: 2021-12-14 18:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -9694,7 +9694,7 @@ msgstr ""
 #: templates/settings/app-settings.php:54
 #: templates/settings/app-settings.php:106
 #: templates/settings/email-settings.php:96
-#: templates/settings/email-settings.php:225
+#: templates/settings/email-settings.php:238
 #: templates/settings/personal-settings.php:150
 #: templates/settings/personal-settings.php:159
 #: templates/settings/share-settings.php:47
@@ -9770,7 +9770,7 @@ msgid "Database Name"
 msgstr ""
 
 #: templates/settings/app-settings.php:97
-#: templates/settings/email-settings.php:204
+#: templates/settings/email-settings.php:217
 msgid "User"
 msgstr ""
 
@@ -9927,47 +9927,55 @@ msgstr ""
 msgid "Attachment Link Size Limit"
 msgstr ""
 
+#: templates/settings/email-settings.php:155
+msgid "e.g. 7 days"
+msgstr ""
+
 #: templates/settings/email-settings.php:160
+msgid "Attachment Link Expiration Limit"
+msgstr ""
+
+#: templates/settings/email-settings.php:173
 msgid "Always Link Cloud Files"
 msgstr ""
 
-#: templates/settings/email-settings.php:164
+#: templates/settings/email-settings.php:177
 msgid "Test Settings"
 msgstr ""
 
-#: templates/settings/email-settings.php:169
+#: templates/settings/email-settings.php:182
 msgid "Test Email Setup"
 msgstr ""
 
-#: templates/settings/email-settings.php:179
+#: templates/settings/email-settings.php:192
 msgid "Email test-mode; send emails only to the email test-address."
 msgstr ""
 
-#: templates/settings/email-settings.php:180
+#: templates/settings/email-settings.php:193
 msgid "Test-Mode"
 msgstr ""
 
-#: templates/settings/email-settings.php:185
+#: templates/settings/email-settings.php:198
 msgid "Test Email Adress"
 msgstr ""
 
-#: templates/settings/email-settings.php:187
+#: templates/settings/email-settings.php:200
 msgid "Test address"
 msgstr ""
 
-#: templates/settings/email-settings.php:198
+#: templates/settings/email-settings.php:211
 msgid "Mailing-List REST URL"
 msgstr ""
 
-#: templates/settings/email-settings.php:207
+#: templates/settings/email-settings.php:220
 msgid "REST User"
 msgstr ""
 
-#: templates/settings/email-settings.php:214
+#: templates/settings/email-settings.php:227
 msgid "Password"
 msgstr ""
 
-#: templates/settings/email-settings.php:227
+#: templates/settings/email-settings.php:240
 msgid "REST Password"
 msgstr ""
 
