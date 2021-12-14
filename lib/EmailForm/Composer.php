@@ -1987,6 +1987,10 @@ Störung.';
       $logMessage->BCC = $stringBCC;
 
       // Add all registered global attachments.
+      //
+      // @todo check the size of the attachments, if to large, copy attachment
+      // to download area.
+      //
       $attachments = $this->fileAttachments();
       foreach ($attachments as $attachment) {
         if ($attachment['status'] != 'selected') {
