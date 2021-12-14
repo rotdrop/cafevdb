@@ -59,8 +59,12 @@ class SimpleSharingService
    * @return null|string The absolute URL for the share or null.
    *
    */
-  public function linkShareObject(FileNode $node, ?string $shareOwner = null, int $sharePerms = \OCP\Constants::PERMISSION_CREATE)
-  {
+  public function linkShareObject(
+    FileNode $node
+    , ?string $shareOwner = null
+    , int $sharePerms = \OCP\Constants::PERMISSION_CREATE
+    , ?\DateTimeInterface $expirationDate = null
+  ) {
     $this->logDebug('shared folder id ' . $node->getId());
 
     $shareType = IShare::TYPE_LINK;
@@ -84,12 +88,17 @@ class SimpleSharingService
     }
 
     // None found, generate a new one
+    /** @var IShare $share */
     $share = $this->shareManager->newShare();
     $share->setNode($node);
     $share->setPermissions($sharePerms);
     $share->setShareType($shareType);
     $share->setShareOwner($shareOwner);
     $share->setSharedBy($shareOwner);
+
+    if (!empty($expirationDate)) {
+      $share->setExpirationDate($expireDate);
+    }
 
     if (!$this->shareManager->createShare($share)) {
       return null;
