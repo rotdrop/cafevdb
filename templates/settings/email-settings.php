@@ -113,7 +113,7 @@ use OCA\CAFEVDB\Common\Util;
       </fieldset>
     </form>
     <h4><?php echo $l->t('Bulk Mail Composition'); ?></h4>
-    <form class="emailidentity">
+    <form class="bulk-email-settings">
       <fieldset class="emailidentity">
         <legend><?php p($l->t('Bulk Mail Identity')); ?></legend>
         <input type="text"
@@ -131,31 +131,44 @@ use OCA\CAFEVDB\Common\Util;
         />
         <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
       </fieldset>
-      <fieldset class="emailattachments">
+      <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>
-        <input type="number"
-               id="attachmentlinksizelimit"
+        <input type="text"
+               id="attachmentLinkSizeLimit"
                name="attachmentLinkSizeLimit"
                class="attachment-link-size-limit"
                value="<?php p($attachmentLinkSizeLimit); ?>"
                placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
-               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:size-limit']); ?>"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:size-limit']); ?>"
         />
-        <label for="attachmentlinksizelimit"
-               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:size-limit']); ?>"
+        <label for="attachmentLinkSizeLimit"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:size-limit']); ?>"
         >
           <?php p($l->t('Attachment Link Size Limit')); ?>
         </label>
-        <br/>
+        <br class="input-field-separater"/>
+        <input type="text"
+               id="attachmentLinkExpirationLimit"
+               class="attachmentLinkExpirationLimit"
+               name="attachmentLinkExpirationLimit"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:expiration-limit']); ?>"
+               placeholder="<?php p($l->t('e.g. 7 days')); ?>"
+        />
+        <label for="attachmentLinkExpirationLimit"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:expiration-limit']); ?>"
+        >
+          <?php p($l->t('Attachment Link Expiration Limit')); ?>
+        </label>
+        <br class="input-field-separater"/>
         <input type="checkbox"
-               id="cloudattachmentalwayslink"
-               class="cloudattachmentalwayslink checkbox"
+               id="cloudAttachmentAlwaysLink"
+               class="cloudAttachmentAlwaysLink checkbox"
                name="cloudAttachmentAlwaysLink"
                type="checkbox"
-               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:always-link-cloud']); ?>"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:cloud-always']); ?>"
         />
-        <label for="cloudattachmentalwayslink"
-               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:always-link-cloud']); ?>"
+        <label for="cloudAttachmentAlwaysLink"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:cloud-always']); ?>"
         >
           <?php p($l->t('Always Link Cloud Files')); ?>
         </label>

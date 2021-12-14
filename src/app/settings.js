@@ -654,14 +654,36 @@ const afterLoad = function(container) {
     }
 
     {
-      const container = emailContainer.find('form.emailidentity');
+      const container = emailContainer.find('form.bulk-email-settings');
       console.log('************', container);
 
-      container.find('#emailfromname,#emailfromaddress').on('blur', function(event) {
-        const name = $(this).attr('name');
-        const value = $(this).val();
+      const blurInputs = container.find([
+        'input#emailfromname',
+        'input#emailfromaddress',
+        'input.attachmentLinkSizeLimit',
+        'input.attachmentLinkExpirationLimit',
+      ].join(','));
+
+      blurInputs.on('blur', function(event) {
+        const $this = $(this);
+        const name = $this.attr('name');
+        const value = $this.val();
         $.post(
           setAppUrl(name), { value })
+          .fail(function(xhr, status, errorThrown) {
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+          })
+          .done(function(data) {
+            Notification.messages(data.message);
+          });
+        return false;
+      });
+
+      container.find('input.cloudAttachmentAlwaysLink').on('change', function(event) {
+        const $this = $(this);
+        const name = $this.attr('name');
+        $.post(
+          setAppUrl(name), { value: $this.prop('checked') })
           .fail(function(xhr, status, errorThrown) {
             Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
