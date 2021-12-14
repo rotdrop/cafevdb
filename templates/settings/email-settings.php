@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
+use OCA\CAFEVDB\Common\Util;
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
@@ -111,22 +112,54 @@ use OCA\CAFEVDB\Controller\PersonalSettingsController;
         <!-- span class="statusmessage" id="email-account-distribute-message"></span -->
       </fieldset>
     </form>
-    <h4><?php echo $l->t('Bulk Sender Identity'); ?></h4>
+    <h4><?php echo $l->t('Bulk Mail Composition'); ?></h4>
     <form class="emailidentity">
-      <input type="text"
-             name="emailfromname"
-             id="emailfromname"
-             value="<?php echo $_['emailfromname']; ?>"
-             placeholder="<?php echo $l->t('Real Sender Name');?>"
-      />
-      <label for="emailfromname"><?php echo $l->t('From: name');?></label>
-      <input type="text"
+      <fieldset class="emailidentity">
+        <legend><?php p($l->t('Bulk Mail Identity')); ?></legend>
+        <input type="text"
+               name="emailfromname"
+               id="emailfromname"
+               value="<?php echo $_['emailfromname']; ?>"
+               placeholder="<?php echo $l->t('Real Sender Name');?>"
+        />
+        <label for="emailfromname"><?php echo $l->t('From: name');?></label>
+        <input type="text"
              name="emailfromaddress"
-             id="emailfromaddress"
-             value="<?php echo $_['emailfromaddress']; ?>"
-             placeholder="<?php echo $l->t('Email From Adress');?>"
-      />
-      <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+               id="emailfromaddress"
+               value="<?php echo $_['emailfromaddress']; ?>"
+               placeholder="<?php echo $l->t('Email From Adress');?>"
+        />
+        <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+      </fieldset>
+      <fieldset class="emailattachments">
+        <legend><?php p($l->t('Attachment Policy')); ?></legend>
+        <input type="number"
+               id="attachmentlinksizelimit"
+               name="attachmentLinkSizeLimit"
+               class="attachment-link-size-limit"
+               value="<?php p($attachmentLinkSizeLimit); ?>"
+               placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:size-limit']); ?>"
+        />
+        <label for="attachmentlinksizelimit"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:size-limit']); ?>"
+        >
+          <?php p($l->t('Attachment Link Size Limit')); ?>
+        </label>
+        <br/>
+        <input type="checkbox"
+               id="cloudattachmentalwayslink"
+               class="cloudattachmentalwayslink checkbox"
+               name="cloudAttachmentAlwaysLink"
+               type="checkbox"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:always-link-cloud']); ?>"
+        />
+        <label for="cloudattachmentalwayslink"
+               title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:always-link-cloud']); ?>"
+        >
+          <?php p($l->t('Always Link Cloud Files')); ?>
+        </label>
+      </fieldset>
     </form>
     <h4><?php echo $l->t('Test Settings'); ?></h4>
     <form class="emailtest">
