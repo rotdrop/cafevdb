@@ -527,6 +527,11 @@ trait ConfigTrait {
     return $this->configService->getLocale($lang);
   }
 
+  protected function getLanguage(?string $locale = null):string
+  {
+    return $this->configService->getLanguage($locale);
+  }
+
   protected function localeCountryNames($locale = null) {
     return $this->configService->localeCountryNames($locale);
   }
@@ -565,6 +570,13 @@ trait ConfigTrait {
   public function floatValue($value, $decimals = 2, $locale = null)
   {
     return $this->configService->floatValue($value, $decimals, $locale);
+  }
+
+  /** Format a bytes value with "readable" postfix */
+  protected function humanFileSize(int $bytes, string $locale = null, bool $binary = true, int $digits = 2)
+  {
+    $locale = $locale ?? $this->getLocale();
+    return Util::humanFileSize($bytes, $locale, $binary, $digits);
   }
 
   /** Return the current time as short time-stamp (textual). */
