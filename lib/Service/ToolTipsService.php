@@ -314,6 +314,11 @@ of this button.'),
             'event-select' => $this->l->t('Select-box with all project-events. You can select events as attachments to your email.'),
             'delete-all-events' => $this->l->t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
             'delete-all-files' => $this->l->t('Deselects all file-attachments. The uploaded attachments are kept on the server until the email-form dialog is closed and can be reselected without uploading them again.'),
+            'link' => [
+              'size-limit' => $this->l->t('Attachments exceeding this size limit will be replaced by download-links. Set to 0 to convert all attachments to download links. Set to a negative value in order to disable this feature. The size can be specified in bytes or any usual storage unit, e.g. "16.5 MiB".'),
+              'expiration-limit' => $this->l->t('Download-links will expire after this time after sending the email. Set to 0 in order to never expire download-links. The time interval may be given in "natural" notation, e.g. "7 days", "1 week". The interval will be rounded to full days.'),
+              'cloud-always' => $this->l->t('If checked attachments originating from the cloud storage will always be replaced by a download-link. If unchecked "cloud-files" are just treated like uploaded attachments.'),
+            ],
           ],
           'send' => $this->l->t('Attempt to send the stuff you have composed out to your selection of
 recipients. Please think thrice about it. In case of an error
