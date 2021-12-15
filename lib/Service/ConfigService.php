@@ -704,6 +704,18 @@ class ConfigService {
     return $locale;
   }
 
+  /**
+   * Return the language part of the current or given locale.
+   */
+  public function getLanguage(?string $locale = null):string
+  {
+    if (empty($locale)) {
+      $locale = $this->getLocale();
+    }
+    $lang = locale_get_primary_language($locale);
+    return $lang;
+  }
+
   /**Return an array of supported country-codes and names*/
   public function localeCountryNames($locale = null)
   {
