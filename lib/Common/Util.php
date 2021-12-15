@@ -290,6 +290,35 @@ class Util
     return $maxUploadFilesize;
   }
 
+  /**
+   * Locale-aware "human readable" file-size.
+   *
+   * @param int $bytes The raw value in bytes.
+   *
+   * @param null|string $locale Defaults to 'en_US_POSIX'
+   *
+   * @param bool $binary Use MiB etc. if true, other decimal system.
+   */
+  public static function humanFileSize(int $bytes, string $locale = null, bool $binary = true, int $digits = 2)
+  {
+    $prefix = [ '', 'K', 'M', 'G', 'T', 'P', 'E', 'Z' ];
+    $locale = $locale ?? 'en_US_POSIX';
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $multiplier = $binary ? 1024.0 : 1000.0;
+    $bytes = (float)$bytes;
+    $exp = 0;
+    while ($exp < count($prefix) && $bytes > $multiplier) {
+      ++$exp;
+      $bytes /= $multiplier;
+    }
+    $postfix = $prefix[$exp];
+    if ($binary && $postfix !== '') {
+      $postfix .= 'i';
+    }
+    $postfix .= 'B';
+    return $fmt->format(round($bytes, $digits)) . ' ' . $postfix;
+  }
+
   /**Format the right way (tm). */
   public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
   {
