@@ -267,7 +267,7 @@ class FuzzyInputService
         [ 'b', 'k', 'ki', 'm', 'mi', 'g', 'gi', 't', 'ti', 'p', 'pi' ],
         $value));
 
-    if (preg_match('/([0-9,.]+)([kmgtp]?i?b?)?$/', $value, $matches)) {
+    if (preg_match('/([-0-9,.]+)([kmgtp]?i?b?)?$/', $value, $matches)) {
       $this->logInfo('MATCHES ' . print_r($matches, true));
       $value = $this->floatValue($matches[1]);
       if (empty($value)) {
@@ -277,8 +277,9 @@ class FuzzyInputService
         if (empty($factor[$matches[2]])) {
           return null;
         }
-        return $value * $factor[$matches[2]];
+        $value *= $factor[$matches[2]];
       }
+      return $value;
     } else {
       return null;
     }
@@ -295,7 +296,18 @@ class FuzzyInputService
    */
   public function dateIntervalValue(string $value, ?string $locale = null):?\DateInterval
   {
+    $locale = $locale ?? $this->getLocale();
     $value = Util::normalizeSpaces($value);
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::SPELLOUT);
+    $value = implode(
+      ' ',
+      array_map(
+        function($value) use ($fmt) {
+          $number = $fmt->parse(strtolower($value));
+          return empty($number) ? $value : $number;
+        },
+        explode(' ', $value)
+      ));
     $language = $this->getLanguage($locale);
     DateInterval::setLocale($language);
     $value = DateInterval::parseFromLocale($value, $language);
