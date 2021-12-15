@@ -136,7 +136,7 @@ use OCA\CAFEVDB\Common\Util;
         <input type="text"
                id="attachmentLinkSizeLimit"
                name="attachmentLinkSizeLimit"
-               class="attachment-link-size-limit"
+               class="attachmentLinkSizeLimit"
                value="<?php p($attachmentLinkSizeLimit); ?>"
                placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
                title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:size-limit']); ?>"
@@ -152,6 +152,7 @@ use OCA\CAFEVDB\Common\Util;
                class="attachmentLinkExpirationLimit"
                name="attachmentLinkExpirationLimit"
                title="<?php Util::htmlEscape($tollTips['emailform:composer:attachments:link:expiration-limit']); ?>"
+               value="<?php p($attachmentLinkExpirationLimit); ?>"
                placeholder="<?php p($l->t('e.g. 7 days')); ?>"
         />
         <label for="attachmentLinkExpirationLimit"

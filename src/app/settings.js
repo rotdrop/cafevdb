@@ -674,6 +674,10 @@ const afterLoad = function(container) {
             Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
           })
           .done(function(data) {
+            console.info('DATA', data);
+            if (data[name] && data[name] !== value) {
+              $this.val(data[name]);
+            }
             Notification.messages(data.message);
           });
         return false;

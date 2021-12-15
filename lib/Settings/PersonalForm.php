@@ -368,6 +368,18 @@ class PersonalForm {
           $templateParameters['email'.$key] = $this->getConfigValue('email'.$key);
         }
 
+        $key = 'attachmentLinkExpirationLimit';
+        $templateParameters[$key] = $this->getConfigValue($key);
+        if (!empty($templateParameters[$key])) {
+          $templateParameters[$key] = $this->l->t('%d days', $templateParameters[$key]);
+        }
+
+        $key = 'attachmentLinkSizeLimit';
+        $templateParameters[$key] = $this->getConfigValue($key);
+        if (!empty($templateParameters[$key])) {
+          $templateParameters[$key] = $this->humanFileSize($templateParameters[$key]);
+        }
+
         foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
           $templateParameters[$listConfig] = $this->getConfigValue($listConfig);
         }
