@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Carbon\Carbon as DateTime;
 use Carbon\CarbonInterval as DateInterval;
 
 use OCP\AppFramework\Controller;
@@ -1446,7 +1447,11 @@ class PersonalSettingsController extends Controller {
     case 'attachmentLinkExpirationLimit':
       $interval = $this->fuzzyInputService->dateIntervalValue($value);
       if (!empty($interval)) {
-        $realValue = $interval->cascade()->total('days');
+        // try to at least have some slightly useful number of days for things
+        // like "one year"
+        $now = new \DateTimeImmutable;
+        $realValue = $now->diff($now->add($interval))->format('%a');
+        // $realValue = $interval->total('days');
         $reportValue = $this->l->t('%d days', $realValue);
       } else {
         $realValue = $reportValue = null;
