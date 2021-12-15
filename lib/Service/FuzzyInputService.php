@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Carbon\CarbonInterval as DateInterval;
+
 use OCA\CAFEVDB\Common\Util;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 
@@ -236,6 +238,69 @@ class FuzzyInputService
       }
     }
     return $parsed !== false ? (float)$parsed : $parsed;
+  }
+
+  /**
+   * Parse a storage user input value and return its value in bytes.
+   *
+   * @param string $value Input value.
+   *
+   * @param null|string $locale Locale or null for the user's default locale.
+   *
+   * @return int
+   *
+   */
+  public function storageValue(string $value, ?string $locale = null)
+  {
+    $factor = [
+      'b' => 1,
+      'kb' => 1000, 'kib' => (1 << 10),
+      'mb' => 1000000, 'mib' => (1 << 20),
+      'gb' => 1000000000, 'gib' => (1 << 30),
+      'tb' => 1000000000000, 'tib' => (1 << 40),
+      'pb' => 1000000000000000, 'pib' => (1 << 50),
+    ];
+    $value = preg_replace('/\s+/u', '', $value);
+    $value = strtolower(
+      str_ireplace(
+        [ 'bytes', 'kilo', 'kibi', 'mega', 'mebi', 'giga', 'gibi', 'tera', 'tibi', 'peta', 'pebi' ],
+        [ 'b', 'k', 'ki', 'm', 'mi', 'g', 'gi', 't', 'ti', 'p', 'pi' ],
+        $value));
+
+    if (preg_match('/([0-9,.]+)([kmgtp]?i?b?)?$/', $value, $matches)) {
+      $this->logInfo('MATCHES ' . print_r($matches, true));
+      $value = $this->floatValue($matches[1]);
+      if (empty($value)) {
+        return null;
+      }
+      if (!empty($matches[2])) {
+        if (empty($factor[$matches[2]])) {
+          return null;
+        }
+        return $value * $factor[$matches[2]];
+      }
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Try to parse a data-time interval given in the user's locale
+   *
+   * @param string $value Input value, probably in user's locale.
+   *
+   * @param null|string $locale Locale or null for the user's default locale.
+   *
+   * @return null|\DateInterval
+   */
+  public function dateIntervalValue(string $value, ?string $locale = null):?\DateInterval
+  {
+    $value = Util::normalizeSpaces($value);
+    $language = $this->getLanguage($locale);
+    DateInterval::setLocale($language);
+    $value = DateInterval::parseFromLocale($value, $language);
+
+    return $value;
   }
 
   /**
