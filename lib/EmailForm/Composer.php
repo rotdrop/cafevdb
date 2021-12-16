@@ -2394,8 +2394,6 @@ Störung.';
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
-      // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../', true);
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2512,16 +2510,29 @@ Störung.';
 <html lang="%1$s">
   <head>
     <title>%2$s</title>
-    <meta http-equiv="refresh" content="0;URL=\'%3$s\'"/>
+    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
   </head>
   <body>
-    <a href="%3$s">%4$s</a>
+    <div class="message">
+      You will be redirected to the download location in %6$d seconds. You may as well
+      click on the download-link below:
+    </div>
+    <blockquote class="link">
+      <a href="%2$s">%2$s</a>
+      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
+    </blockquote>
+    <div class="expiration-notice">
+      Please note that the download link will expire on %7$s.
+    </div>
   </body>
 </html>', [
   $this->getLanguage(),
-  $attachment['name'],
   $shareLink,
-  $shareLink
+  basename($attachment['name']),
+  Util::humanFileSize($downloadFile->getSize()),
+  $attachment['type'],
+  30,
+  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
 ]
             );
             $phpMailer->addStringAttachment(
@@ -2567,6 +2578,10 @@ Störung.';
           $attachment['mimeType']
         );
       }
+
+      // Add the HTML message after possibly adding download-links
+      // pass the correct path in order for automatic image conversion
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
 
     } catch (\Throwable $t) {
       $this->logException($t);
