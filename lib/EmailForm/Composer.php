@@ -1390,6 +1390,9 @@ Störung.';
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
+    $references = [];
+    $templateMessageId = $this->getOutboundService()->generateMessageId();
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       $this->logInfo(
@@ -1417,9 +1420,14 @@ Störung.';
           continue;
         }
 
-        $msg = $this->composeAndSend($strMessage, [ $recipient ], $personalAttachments, false);
+        $msg = $this->composeAndSend(
+          $strMessage, [ $recipient ], $personalAttachments,
+          addCC: false,
+          references: $templateMessageId
+        );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
+          $references[] = $msg['messageId'];
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
@@ -1441,7 +1449,12 @@ Störung.';
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       ++$this->diagnostics['TotalCount'];
-      $mimeMsg = $this->composeAndSend($messageTemplate, [], [], true);
+      $mimeMsg = $this->composeAndSend(
+        $messageTemplate, [],
+        addCC: true,
+        messageId: $templateMessageId,
+        references: $references
+      );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -1834,6 +1847,41 @@ Störung.';
   }
 
   /**
+   * Construct the PHPMailer instance
+   *
+   * @param bool $authenticate If true install the SMTP authentication. If
+   * false the mailer will probably not be able to send messages (safe-guard).
+   *
+   * @return PHPMailer
+   */
+  private function getOutboundService(bool $authenticate = false):PHPMailer
+  {
+    $phpMailer = new PHPMailer(true);
+    $phpMailer->setLanguage($this->getLanguage());
+    $phpMailer->CharSet = 'utf-8';
+    $phpMailer->SingleTo = false;
+
+    $phpMailer->IsSMTP();
+
+    $phpMailer->Host = $this->getConfigValue('smtpserver');
+    $phpMailer->Port = $this->getConfigValue('smtpport');
+
+    if ($authenticate) {
+      switch ($this->getConfigValue('smtpsecure')) {
+        case 'insecure': $phpMailer->SMTPSecure = ''; break;
+        case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
+        case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
+        default:         $phpMailer->SMTPSecure = ''; break;
+      }
+      $phpMailer->SMTPAuth = true;
+      $phpMailer->Username = $this->getConfigValue('emailuser');
+      $phpMailer->Password = $this->getConfigValue('emailpassword');
+    }
+
+    return $phpMailer;
+  }
+
+  /**
    * Compose and send one message. If $EMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
    * otherwise Bcc: is used, unless sending to the recipients of a
@@ -1854,10 +1902,28 @@ Störung.';
    * @param bool $addCC If @c false, then additional CC and BCC recipients will
    *                   not be added.
    *
-   * @return string The sent Mime-message which then may be stored in the
-   * Sent-Folder on the imap server (for example).
+   * @param null|string $messageId A pre-computed message-id.
+   *
+   * @param null|string|array $references Message id(s) for a References:
+   * header. If a string then the single message-id of the master-template. If
+   * an array then these are the message ids of the individual merged messages.
+   *
+   * @return array
+   * ```
+   * [
+   *   'message' => "The sent Mime-message which then may be stored in the
+   * Sent-Folder on the imap server (for example)",
+   *   'messageId' => USED_MESSAGE_ID,
+   * ]
+   * ```
    */
-  private function composeAndSend($strMessage, $EMails, $extraAttachments = [], $addCC = true)
+  private function composeAndSend(
+    $strMessage
+    , $EMails
+    , $extraAttachments = []
+    , $addCC = true
+    , ?string $messageId = null
+    , $references = null)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -1877,11 +1943,7 @@ Störung.';
     // surrounding the actual sending of the message.
     try {
 
-      $phpMailer = new PHPMailer(true);
-      $phpMailer->CharSet = 'utf-8';
-      $phpMailer->SingleTo = false;
-
-      $phpMailer->IsSMTP();
+      $phpMailer = $this->getOutboundService(authenticate: true);
 
       // Provide some progress feed-back to amuse the user
       $progressStatus = $this->progressStatusService->get($this->progressToken);
@@ -1900,18 +1962,6 @@ Störung.';
           $progressStatus->update($current, $total);
         }
       });
-
-      $phpMailer->Host = $this->getConfigValue('smtpserver');
-      $phpMailer->Port = $this->getConfigValue('smtpport');
-      switch ($this->getConfigValue('smtpsecure')) {
-      case 'insecure': $phpMailer->SMTPSecure = ''; break;
-      case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
-      case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
-      default:         $phpMailer->SMTPSecure = ''; break;
-      }
-      $phpMailer->SMTPAuth = true;
-      $phpMailer->Username = $this->getConfigValue('emailuser');
-      $phpMailer->Password = $this->getConfigValue('emailpassword');
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
@@ -2048,6 +2098,23 @@ Störung.';
     $sentEmail = $this->sentEmail($logMessage);
     if (!$sentEmail) {
       return false;
+    }
+
+    // install custom message id if given
+    if (!empty($messageId)) {
+      $phpMailer->MessageID = $messageId;
+    }
+    if (!empty($references)) {
+      if (is_string($references)) {
+        // the id of the master-copy
+        $sentEmail->setReferencing($this->getReference(Entities\SentEmail::class, $references));
+      } else {
+        sort($references);
+        foreach ($references as $reference) {
+          $sentEmail->getReferencedBy()->set($reference, $this->getReference(Entities\SentEmail, $reference));
+        }
+      }
+      $phpMailer->setReferences((array)$references);
     }
 
     // Finally the point of no return. Send it out!!!
@@ -2257,12 +2324,32 @@ Störung.';
    * @param $addCC If @c false, then additional CC and BCC recipients will
    *               not be added.
    *
-   * @return bool true or false.
+   * @param null|string $messageId A pre-computed message-id.
+   *
+   * @param null|string|array $references Message id(s) for a References:
+   * header. If a string then the single message-id of the master-template. If
+   * an array then these are the message ids of the individual merged messages.
+   *
+   * @return array
+   * ```
+   * [
+   *   'headers' => $phpMailer->getMailHeaders(),
+   *   'messageId' => DUMMY_MESSAGE_ID,
+   *   'body' => $strMessage,
+   *   'attachments' => $attachments,
+   * ]
+   * ```
    *
    * @todo Fold into composeAndSend
    */
-  private function composeAndExport($strMessage, $eMails, $extraAttachments = [], $addCC = true)
-  {
+  private function composeAndExport(
+    $strMessage
+    , $eMails
+    , $extraAttachments = []
+    , $addCC = true
+    , ?string $messageId = null
+    , $references = null
+  ) {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2278,9 +2365,7 @@ Störung.';
     // export the message text, with a short header.
     try {
 
-      $phpMailer = new PHPMailer(true);
-      $phpMailer->CharSet = 'utf-8';
-      $phpMailer->SingleTo = false;
+      $phpMailer = $this->getOutboundService();
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
@@ -2409,7 +2494,15 @@ Störung.';
       return null;
     }
 
-    // Finally the point of no return. Send it out!!!
+    // install custom message id if given
+    if (!empty($messageId)) {
+      $phpMailer->MessageID = $messageId;
+    }
+    if (!empty($references)) {
+      $phpMailer->setReferences((array)$references);
+    }
+
+    // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
     try {
       if (!$phpMailer->preSend()) {
         // in principle this cannot happen as the mailer DOES use
@@ -2454,6 +2547,7 @@ Störung.';
     }
 
     return [
+      'messageId' => $phpMailer->getLastMessageID(),
       'headers' => $phpMailer->getMailHeaders(),
       'body' => $strMessage,
       'attachments' => $attachments,
@@ -2533,6 +2627,10 @@ Störung.';
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
+    $references = [];
+    $templateMessageId = $this->getOutboundService()->generateMessageId();
+    $this->logInfo('TEMPLATE MESSAGE ID ' . $templateMessageId);
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       $this->logInfo(
@@ -2553,13 +2651,20 @@ Störung.';
         $personalAttachments = $this->composePersonalAttachments($musician);
 
         ++$this->diagnostics['TotalCount'];
-        $message = $this->composeAndExport($strMessage, [ $recipient ], $personalAttachments, false);
+        $message = $this->composeAndExport(
+          $strMessage,
+          [ $recipient ],
+          $personalAttachments,
+          addCC: false,
+          references: $templateMessageId
+        );
         if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
           ++$this->diagnostics['FailedCount'];
         }
 
         if (!empty($message)) {
           $messages[] = $message;
+          $references[] = $message['messageId'];
         }
       }
 
@@ -2569,7 +2674,12 @@ Störung.';
       // on the imap server.
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics['TotalCount'];
-      $message = $this->composeAndExport($messageTemplate, [], [], true);
+      $message = $this->composeAndExport(
+        $messageTemplate, [], [],
+        addCC: true,
+        messageId: $templateMessageId,
+        references: $references
+      );
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
       }
@@ -3454,8 +3564,6 @@ Störung.';
    *
    * @return array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
-   *
-   * @todo Use IAppData and use temporaries in the cloud storage.
    */
   public function saveAttachment(&$fileRecord)
   {
