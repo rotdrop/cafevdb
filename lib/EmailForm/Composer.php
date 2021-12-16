@@ -55,6 +55,8 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
+use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
+
 /**
  * This is the mass-email composer class. We try to be somewhat
  * careful to have useful error reporting, and avoid sending garbled
@@ -68,6 +70,8 @@ class Composer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+
+  const MSG_ID_AT = '_at_';
 
   const PROGRESS_CHUNK_SIZE = 4096;
   const PROGRESS_THROTTLE_SECONDS = 2;
@@ -1887,6 +1891,111 @@ Störung.';
     return $phpMailer;
   }
 
+  private static function outBoxSubFolderFromMessageId(string $messageId):string
+  {
+    return str_replace([ '@', '.' ], [ self::MSG_ID_AT, '_' ], substr($messageId, 1, -1));
+  }
+
+  private static function messageIdFromOutBoxSubFolder(string $outBoxSubFolderPath):string
+  {
+    return '<' . str_replace([ self::MSG_ID_AT, '_' ], [ '@', '.' ], $outBoxSubFolderPath) . '>';
+  }
+
+  /**
+   * Compose all "global" attachments, possibly replacing large attachments by
+   * download links.
+   *
+   * @param PHPMailer $phpMailer
+   *
+   * @param string $messageId Defines the sub-folder where the attachments are
+   * stored.
+   */
+  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
+  {
+    // also simulate link generation for attachments exceeding a certain size
+    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', (1 << 20)); // k=10, m=20
+    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', 7); // days
+
+    $outBoxSubFolderPath = self::outBoxSubFolderFromMessageId($messageId);
+    $outBoxSubFolderPath = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolderPath);
+
+    $expirationDate = $linkExpirationLimit <= 0
+      ? null
+      : ((new \DateTimeImmutable('UTC midnight'))
+        ->modify('+' . $linkExpirationLimit . ' days'));
+
+    // Add all registered attachments.
+    foreach ($this->fileAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
+      }
+      if ($attachment['type'] == 'message/rfc822') {
+        $encoding = '8bit';
+      } else {
+        $encoding = 'base64';
+      }
+      $file = $this->appStorage->getFile($attachment['tmp_name']);
+      if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
+        $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $attachment['name']);
+        $downloadFile = $this->userStorage->getFile($downloadPath);
+        if (empty($downloadFile)) {
+          $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
+        }
+        if (!empty($downloadFile)) {
+          $shareLink = $this->simpleShareingService->linkShare(
+            $downloadFile,
+            $this->shareOwnerId(),
+            sharePerms: \OCP\Constants::PERMISSION_READ,
+            expirationDate: $expirationDate
+            );
+          $downloadAttachment = $this->l->t(
+            '<!DOCTYPE html>
+<html lang="%1$s">
+  <head>
+    <title>%2$s</title>
+    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
+  </head>
+  <body>
+    <div class="message">
+      You will be redirected to the download location in %6$d seconds. You may as well
+      click on the download-link below:
+    </div>
+    <blockquote class="link">
+      <a href="%2$s">%2$s</a>
+      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
+    </blockquote>
+    <div class="expiration-notice">
+      Please note that the download link will expire on %7$s.
+    </div>
+  </body>
+</html>', [
+  $this->getLanguage(),
+  $shareLink,
+  basename($attachment['name']),
+  Util::humanFileSize($downloadFile->getSize()),
+  $attachment['type'],
+  30,
+  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
+]
+          );
+          $phpMailer->addStringAttachment(
+            $downloadAttachment,
+            basename($attachment['name']) . '.html',
+            '8bit',
+            'text/html'
+          );
+          $this->registerAttachmentDownloadsCleaner();
+          continue;
+        }
+      }
+      $phpMailer->AddStringAttachment(
+        $file->getContent(),
+        basename($attachment['name']),
+        $encoding,
+          $attachment['type']);
+    }
+  }
+
   /**
    * Compose and send one message. If $EMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
@@ -1973,7 +2082,7 @@ Störung.';
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__, true);
+      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../', true);
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2043,45 +2152,8 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
-      // Add all registered global attachments.
-      //
-      // @todo check the size of the attachments:
-      //
-      // - if too large, copy attachment to download area.
-      // - if $references is a string, create a sub-folder in the
-      //   outbox-folder with the unique id.
-      // - Otherwise use the own (pre-generated) message-id.
-      // - Generate a link-share for each large attachment
-      // - Then?
-      //   - generate an HTML attachment with a download link
-      //   - and/or add a download-link to the message text, possibly with a
-      //     configurable or at least localized template text.
-      //
-      $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit');
-      $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit');
-      $outBoxSubFolder = is_string($references) ? $references : $messageId;
-      $outBoxSubFolder = substr($outBoxSubFolder, 1, strpos($outBoxSubFolder, '@', 1) - 1);
-      $outBoxSubFolder = $this->getOutBoxFolderPath() . UserStorage::PATH_SEP . $outBoxSubFolder;
-
-      $attachments = $this->fileAttachments();
-      foreach ($attachments as $attachment) {
-        if ($attachment['status'] != 'selected') {
-          continue;
-        }
-        if ($attachment['type'] == 'message/rfc822') {
-          $encoding = '8bit';
-        } else {
-          $encoding = 'base64';
-        }
-        $file = $this->appStorage->getFile($attachment['tmp_name']);
-        if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
-        }
-        $phpMailer->AddStringAttachment(
-          $file->getContent(),
-          basename($attachment['name']),
-          $encoding,
-          $attachment['type']);
-      }
+      // compose all global attachments. May replace large attachments by download-links.
+      $this->composeGlobalAttachments($phpMailer, is_string($references) ? $references : $messageId);
 
       // Add to-be-attached events.
       $events = $this->eventAttachments();
@@ -2395,6 +2467,9 @@ Störung.';
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
 
+      // pass the correct path in order for automatic image conversion
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
+
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
       $phpMailer->AddReplyTo($senderEmail, $senderName);
@@ -2402,7 +2477,6 @@ Störung.';
 
       // Loop over all data-base records and add each recipient in turn
       foreach ($eMails as $recipient) {
-        $this->logInfo('RECIPIENT ' . $recipient['email']);
         if ($singleAddress) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
         } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
@@ -2459,103 +2533,13 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
-      // also simulate link generation for attachments exceeding a certain size
-      $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit');
-      $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit');
-
-      $outBoxSubFolder = is_string($references) ? $references : $messageId;
-      $outBoxSubFolder = substr($outBoxSubFolder, 1, strpos($outBoxSubFolder, '@', 1) - 1);
-      $outBoxSubFolder = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolder);
-
-      $this->logInfo('OUTBOX DOWNLOAD SUBFOLDER ' . $outBoxSubFolder);
-
-      $expirationDate = $linkExpirationLimit <= 0
-        ? null
-        : ((new \DateTimeImmutable)
-          ->setTimezone($this->getDateTimeZone())
-          ->modify('+' . $linkExpirationLimit . ' days'));
-
-      // Add all registered attachments.
-      $attachments = $this->fileAttachments();
-      $logMessage->fileAttach = $attachments;
-      foreach ($attachments as $attachment) {
-        if ($attachment['status'] != 'selected') {
-          continue;
-        }
-        if ($attachment['type'] == 'message/rfc822') {
-          $encoding = '8bit';
-        } else {
-          $encoding = 'base64';
-        }
-        $file = $this->appStorage->getFile($attachment['tmp_name']);
-        if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
-          $downloadPath = UserStorage::pathCat($outBoxSubFolder, $attachment['name']);
-          $downloadFile = $this->userStorage->getFile($downloadPath);
-          if (!empty($downloadFile)) {
-            $this->logInfo('DOWNLOAD FILE ALREADY EXISTS ' . $downloadPath);
-          } else {
-            $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
-            $this->logInfo('DUMPING ATTACHMENT TO DOWNLOAD AREA ' . $downloadFile->getInternalPath());
-          }
-          if (!empty($downloadFile)) {
-            $shareLink = $this->simpleShareingService->linkShareObject(
-              $downloadFile,
-              $this->shareOwnerId(),
-              sharePerms: \OCP\Constants::PERMISSION_READ,
-              expirationDate: $expirationDate
-            );
-            $this->logInfo('SHARE LINK ' . $shareLink);
-            $downloadAttachment = $this->l->t(
-              '<!DOCTYPE html>
-<html lang="%1$s">
-  <head>
-    <title>%2$s</title>
-    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
-  </head>
-  <body>
-    <div class="message">
-      You will be redirected to the download location in %6$d seconds. You may as well
-      click on the download-link below:
-    </div>
-    <blockquote class="link">
-      <a href="%2$s">%2$s</a>
-      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
-    </blockquote>
-    <div class="expiration-notice">
-      Please note that the download link will expire on %7$s.
-    </div>
-  </body>
-</html>', [
-  $this->getLanguage(),
-  $shareLink,
-  basename($attachment['name']),
-  Util::humanFileSize($downloadFile->getSize()),
-  $attachment['type'],
-  30,
-  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-]
-            );
-            $phpMailer->addStringAttachment(
-              $downloadAttachment,
-              basename($attachment['name']) . '.html',
-              '8bit',
-              'text/html'
-            );
-          }
-          continue;
-        }
-        $phpMailer->AddStringAttachment(
-          $file->getContent(),
-          basename($attachment['name']),
-          $encoding,
-          $attachment['type']);
-      }
+      // compose all global attachments. May replace large attachments by download-links.
+      $this->composeGlobalAttachments($phpMailer, is_string($references) ? $references : $messageId);
 
       // Finally possibly to-be-attached events. This cannot throw,
       // but it does not hurt to keep it here. This way we are just
       // ready with adding data to the message inside the try-block.
       $events = $this->eventAttachments();
-      $logMessage->events = $events;
       if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
@@ -2578,10 +2562,6 @@ Störung.';
           $attachment['mimeType']
         );
       }
-
-      // Add the HTML message after possibly adding download-links
-      // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
 
     } catch (\Throwable $t) {
       $this->logException($t);
@@ -3699,6 +3679,63 @@ Störung.';
       return $fileRecord;
     }
     return false;
+  }
+
+  /**
+   * Clean expired download attachments and left over preview downloads
+   */
+  public function registerAttachmentDownloadsCleaner()
+  {
+    /** @var \OCP\BackgroundJob\IJobList $jobList */
+    $jobList = $this->di(\OCP\BackgroundJob\IJobList::class);
+
+    // the job-list takes care by itself that no duplicates are added
+    $jobList->add(CleanupExpiredDownloads::class, [
+      'paths' => [ $this->getOutBoxFolderPath(), ],
+      'uid' => $this->shareOwnerId(),
+    ]);
+  }
+
+  /**
+   * Expire all orphan download shares, e.g. generated by preview
+   * messages. The idea is to simply expire all orphan shares. The regular
+   * cleanup-job will then delete all shares after a given time (24 hours by
+    * default).
+   */
+  public function cleanAttachmentDownloads()
+  {
+    $outboxFolder = $this->userStorage->getFolder($this->getOutBoxFolderPath());
+    if (empty($outboxFolder)) {
+      $this->logError('Outbox folder "' . $this->getOutBoxFolderPath() . '" could not be found');
+      return;
+    }
+
+    $numChangedShares = 0;
+
+    /** @var \OCP\Files\Folder $node */
+    foreach ($outboxFolder->getDirectoryListing() as $node) {
+      if ($node->getType() != \OCP\Files\Node::TYPE_FOLDER
+          || strpos($node->getName(), self::MSG_ID_AT) === false) {
+        $this->logDebug('The node ' . $node->getName() . ' does not look like originating from a message id, skipping.');
+        continue; // does not appear to be a message id
+      }
+      $messageId = self::messageIdFromOutBoxSubFolder($node->getName());
+      $this->logDebug('LOOK FOR MESSAGE ID ' . $messageId);
+      $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
+      if (empty($sentEmail)) {
+        $this->logDebug('No sent-email with name id "' . $messageId . '" found, could delete.');
+        /** @var \OCP\Files\Node $fileAttachment */
+        foreach ($node->getDirectoryListing() as $fileAttachment) {
+          $this->logDebug('TRY EXPIRE ' . $fileAttachment->getName());
+          $numChangedShares +=
+            $this->simpleShareingService->expire($fileAttachment, $this->shareOwnerId());
+        }
+      }
+    }
+    if ($numChangedShares > 0) {
+      // make sure the clean-up service runs
+      $this->registerAttachmentDownloadsCleaner();
+    }
   }
 
   // public methods exporting data needed by the web-page template

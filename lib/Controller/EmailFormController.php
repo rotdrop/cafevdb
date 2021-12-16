@@ -325,6 +325,7 @@ class EmailFormController extends Controller {
     case 'cancel':
       $composer->cleanDrafts();
       $composer->cleanTemporaries();
+      $composer->cleanAttachmentDownloads();
       break;
     case 'update':
       switch ($topic) {
