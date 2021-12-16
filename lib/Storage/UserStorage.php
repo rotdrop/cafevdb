@@ -70,14 +70,25 @@ class UserStorage
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->user = $userSession->getUser();
     $this->appContainer = $appContainer;
     $this->rootFolder = $rootFolder;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->setUser($userSession->getUser());
+  }
+
+  /**
+   * @return IUser The current user
+   */
+  public function setUser(?IUser $user):UserStorage
+  {
+    $this->user = $user;
     if (!empty($this->user)) {
       $this->userFolder = $this->rootFolder->getUserFolder($this->user->getUID());
+    } else {
+      $this->logInfo('NO USER, NO USER FOLDER');
     }
+    return $this;
   }
 
   /**

@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Exceptions\MissingProjectsFolderException;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Mount parts of the database-storage somewhere.
@@ -85,12 +86,20 @@ class MountProvider implements IMountProvider
       return [];
     }
 
+    if ($user->getUID() == $this->shareOwnerId()) {
+      // do not try to establish virtual mounts for the dummy user
+      return [];
+    }
+
     self::$recursionLevel++;
 
     $sharedFolder = $this->getSharedFolderPath();
 
-    /** @var OCA\CAFEVDB\Storage\UserStorage $userStorage */
-    $userStorage = $this->di(\OCA\CAFEVDB\Storage\UserStorage::class);
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+    if (empty($userStorage->user())) {
+      $userStorage->setUser($user);
+    }
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
       $this->logException(new \Exception('No shared folder for ' . $user->getUID()));
