@@ -34,56 +34,19 @@ use OCA\CAFEVDB\Exceptions;
 /**
  * Generate some needed procedures and functions. MySQL specific.
  */
-class UpdateGeographicalScopes implements IMigration
+class UpdateGeographicalScopes extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  protected static $sql = [
+    self::STRUCTURAL => [
+    "SET FOREIGN_KEY_CHECKS = 0",
+    "ALTER TABLE InsuranceRates CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
+    "ALTER TABLE InstrumentInsurances CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
+    ],
+  ];
 
   public function description():string
   {
     return $this->l->t('Adjust geographical scopes enum.');
-  }
-
-  private const SQL = [
-    "SET FOREIGN_KEY_CHECKS = 0",
-    "ALTER TABLE InsuranceRates CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
-    "ALTER TABLE InstrumentInsurances CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
-  ];
-
-  public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
-  ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->entityManager = $entityManager;
-  }
-
-  public function execute():bool
-  {
-    $connection = $this->entityManager->getConnection();
-
-    // $connection->beginTransaction();
-    try {
-      foreach (self::SQL as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   $connection->commit();
-      // }
-    } catch (\Throwable $t) {
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   try {
-      //     $connection->rollBack();
-      //   } catch (\Throwable $t2) {
-      //     $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-      //   }
-      // }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-    return true;
   }
 };
 

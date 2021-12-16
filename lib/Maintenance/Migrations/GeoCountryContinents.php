@@ -34,20 +34,9 @@ use OCA\CAFEVDB\Exceptions;
 /**
  * Replace a legacy one-table solution by a clean join-table.
  */
-class GeoCountryContinents implements IMigration
+class GeoCountryContinents extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-
-  public function description():string
-  {
-    return $this->l->t('Replace the legacy country-continent solution by a simple join-table.');
-  }
-
-  private const STRUCTURAL = 'structural';
-  private const TRANSACTIONAL = 'transactional';
-
-  private const SQL = [
+  protected static $sql = [
     self::STRUCTURAL => [
       'ALTER TABLE GeoContinents CHANGE translation l10n_name VARCHAR(1024) NOT NULL',
       'ALTER TABLE GeoCountries ADD continent_code CHAR(2) DEFAULT NULL COLLATE `ascii_general_ci`, CHANGE data l10n_name VARCHAR(1024) NOT NULL',
@@ -66,49 +55,9 @@ WHERE NOT gc.target = '->'",
     ],
   ];
 
-  public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
-  ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->entityManager = $entityManager;
-  }
-
-  public function execute():bool
+  public function description():string
   {
-    $connection = $this->entityManager->getConnection();
-
-    try {
-      foreach (self::SQL[self::STRUCTURAL] as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-    } catch (\Throwable $t) {
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Structural part of migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-
-    $connection->beginTransaction();
-    try {
-      foreach (self::SQL[self::TRANSACTIONAL] as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-      if ($connection->getTransactionNestingLevel() > 0) {
-        $connection->commit();
-      }
-    } catch (\Throwable $t) {
-      if ($connection->getTransactionNestingLevel() > 0) {
-        try {
-          $connection->rollBack();
-        } catch (\Throwable $t2) {
-          $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-        }
-      }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Transactional part of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-    return true;
+    return $this->l->t('Replace the legacy country-continent solution by a simple join-table.');
   }
 };
 

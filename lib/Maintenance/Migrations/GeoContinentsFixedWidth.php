@@ -34,54 +34,17 @@ use OCA\CAFEVDB\Exceptions;
 /**
  * Generate some needed procedures and functions. MySQL specific.
  */
-class GeoContinentsFixedWidth implements IMigration
+class GeoContinentsFixedWidth extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  protected static $sql = [
+    self::STRUCTURAL => [
+      'ALTER TABLE GeoContinents CHANGE code code CHAR(2) NOT NULL COLLATE `ascii_general_ci`, CHANGE target target CHAR(2) NOT NULL COLLATE `ascii_general_ci`;',
+    ],
+  ];
 
   public function description():string
   {
     return $this->l->t('Pin the data-type of the GeoContinents table to 2-char-fixed-width.');
-  }
-
-  private const SQL = [
-    'ALTER TABLE GeoContinents CHANGE code code CHAR(2) NOT NULL COLLATE `ascii_general_ci`, CHANGE target target CHAR(2) NOT NULL COLLATE `ascii_general_ci`;',
-  ];
-
-  public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
-  ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->entityManager = $entityManager;
-  }
-
-  public function execute():bool
-  {
-    $connection = $this->entityManager->getConnection();
-
-    // $connection->beginTransaction();
-    try {
-      foreach (self::SQL as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   $connection->commit();
-      // }
-    } catch (\Throwable $t) {
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   try {
-      //     $connection->rollBack();
-      //   } catch (\Throwable $t2) {
-      //     $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-      //   }
-      // }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-    return true;
   }
 };
 

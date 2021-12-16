@@ -35,54 +35,17 @@ use OCA\CAFEVDB\Exceptions;
  * Remove user field from attachments table, use Gedmo "blamable" and
  * "timestampable".
  */
-class ParticipantFieldsTypeCloudFolder implements IMigration
+class ParticipantFieldsTypeCloudFolder extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE ProjectParticipantFields CHANGE data_type data_type enum('text','html','boolean','integer','float','date','datetime','service-fee','cloud-file','cloud-folder','db-file') DEFAULT 'text' NOT NULL COMMENT 'enum(text,html,boolean,integer,float,date,datetime,service-fee,cloud-file,cloud-folder,db-file)(DC2Type:EnumParticipantFieldDataType)'",
+    ],
+  ];
 
   public function description():string
   {
     return $this->l->t('Add cloud-folder type to catalog of participant fields.');
-  }
-
-  private const SQL = [
-    "ALTER TABLE ProjectParticipantFields CHANGE data_type data_type enum('text','html','boolean','integer','float','date','datetime','service-fee','cloud-file','cloud-folder','db-file') DEFAULT 'text' NOT NULL COMMENT 'enum(text,html,boolean,integer,float,date,datetime,service-fee,cloud-file,cloud-folder,db-file)(DC2Type:EnumParticipantFieldDataType)'",
-  ];
-
-  public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
-  ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->entityManager = $entityManager;
-  }
-
-  public function execute():bool
-  {
-    $connection = $this->entityManager->getConnection();
-
-    // $connection->beginTransaction();
-    try {
-      foreach (self::SQL as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   $connection->commit();
-      // }
-    } catch (\Throwable $t) {
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   try {
-      //     $connection->rollBack();
-      //   } catch (\Throwable $t2) {
-      //     $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-      //   }
-      // }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-    return true;
   }
 };
 
