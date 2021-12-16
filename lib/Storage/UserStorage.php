@@ -218,9 +218,11 @@ class UserStorage
     if (is_array($first)) {
       $first = implode(self::PATH_SEP, $first);
     }
+    $first = trim($first, self::PATH_SEP);
     if (is_array($second)) {
       $second = implode(self::PATH_SEP, $second);
     }
+    $second = trim($second, self::PATH_SEP);
     if (empty($second)) {
       return self::PATH_SEP . (string)$first;
     } else {
