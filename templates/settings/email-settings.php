@@ -169,10 +169,12 @@ use OCA\CAFEVDB\Common\Util;
                name="cloudAttachmentAlwaysLink"
                type="checkbox"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
+               disabled
         />
         <label for="cloudAttachmentAlwaysLink"
                class="tooltip-auto"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
+               disabled
         >
           <?php p($l->t('Always Link Cloud Files')); ?>
         </label>
