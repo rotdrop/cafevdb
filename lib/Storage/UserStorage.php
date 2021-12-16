@@ -405,8 +405,10 @@ class UserStorage
   /**
    * Put file content by path. Create $path if it does not exists,
    * otherwise replace its contents by the given data.
+   *
+   * @return File
    */
-  public function putContent($path, $content)
+  public function putContent($path, $content):File
   {
     try {
       try {
@@ -414,11 +416,12 @@ class UserStorage
         $file->putContent($content);
       } catch(\OCP\Files\NotFoundException $e) {
         $this->ensureFolder(dirname($path));
-        $this->userFolder->newFile($path, $content);
+        $file = $this->userFolder->newFile($path, $content);
       }
     } catch (\Throwable $t) {
       throw new \RuntimeException($this->l->t('Unable to set content of file "%s".', $path), $t->getCode(), $t);
     }
+    return $file;
   }
 
   /**
