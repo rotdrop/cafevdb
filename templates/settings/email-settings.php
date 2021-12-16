@@ -165,14 +165,14 @@ use OCA\CAFEVDB\Common\Util;
         <br class="input-field-separater"/>
         <input type="checkbox"
                id="cloudAttachmentAlwaysLink"
-               class="cloudAttachmentAlwaysLink checkbox tooltip-auto"
+               class="cloudAttachmentAlwaysLink checkbox tooltip-auto hidden"
                name="cloudAttachmentAlwaysLink"
                type="checkbox"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
                disabled
         />
         <label for="cloudAttachmentAlwaysLink"
-               class="tooltip-auto"
+               class="tooltip-auto hidden"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
                disabled
         >
