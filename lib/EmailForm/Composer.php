@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -365,6 +366,9 @@ Störung.';
   /** @var ProgressStatusService */
   private $progressStatusService;
 
+  /** @var SimpleSharingService */
+  private $simpleShareingService;
+
   /** @var AppStorage */
   private $appStorage;
 
@@ -403,12 +407,14 @@ Störung.';
     , EntityManager $entityManager
     , ProjectParticipantFieldsService $participantFieldsService
     , ProgressStatusService $progressStatusService
+    , SimpleSharingService $simpleSharingService
     , AppStorage $appStorage
     , UserStorage $userStorage
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
+    $this->simpleShareingService = $simpleSharingService;
     $this->appStorage = $appStorage;
     $this->userStorage = $userStorage;
     $this->entityManager = $entityManager;
@@ -1944,6 +1950,7 @@ Störung.';
     try {
 
       $phpMailer = $this->getOutboundService(authenticate: true);
+      $messageId = $messageId ?? $phpMailer->generateMessageId();
 
       // Provide some progress feed-back to amuse the user
       $progressStatus = $this->progressStatusService->get($this->progressToken);
@@ -2038,9 +2045,24 @@ Störung.';
 
       // Add all registered global attachments.
       //
-      // @todo check the size of the attachments, if to large, copy attachment
-      // to download area.
+      // @todo check the size of the attachments:
       //
+      // - if too large, copy attachment to download area.
+      // - if $references is a string, create a sub-folder in the
+      //   outbox-folder with the unique id.
+      // - Otherwise use the own (pre-generated) message-id.
+      // - Generate a link-share for each large attachment
+      // - Then?
+      //   - generate an HTML attachment with a download link
+      //   - and/or add a download-link to the message text, possibly with a
+      //     configurable or at least localized template text.
+      //
+      $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit');
+      $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit');
+      $outBoxSubFolder = is_string($references) ? $references : $messageId;
+      $outBoxSubFolder = substr($outBoxSubFolder, 1, strpos($outBoxSubFolder, '@', 1) - 1);
+      $outBoxSubFolder = $this->getOutBoxFolderPath() . UserStorage::PATH_SEP . $outBoxSubFolder;
+
       $attachments = $this->fileAttachments();
       foreach ($attachments as $attachment) {
         if ($attachment['status'] != 'selected') {
@@ -2052,6 +2074,8 @@ Störung.';
           $encoding = 'base64';
         }
         $file = $this->appStorage->getFile($attachment['tmp_name']);
+        if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
+        }
         $phpMailer->AddStringAttachment(
           $file->getContent(),
           basename($attachment['name']),
@@ -2366,6 +2390,7 @@ Störung.';
     try {
 
       $phpMailer = $this->getOutboundService();
+      $messageId = $messageId ?? $phpMailer->generateMessageId();
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
@@ -2379,6 +2404,7 @@ Störung.';
 
       // Loop over all data-base records and add each recipient in turn
       foreach ($eMails as $recipient) {
+        $this->logInfo('RECIPIENT ' . $recipient['email']);
         if ($singleAddress) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
         } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
@@ -2435,6 +2461,22 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
+      // also simulate link generation for attachments exceeding a certain size
+      $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit');
+      $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit');
+
+      $outBoxSubFolder = is_string($references) ? $references : $messageId;
+      $outBoxSubFolder = substr($outBoxSubFolder, 1, strpos($outBoxSubFolder, '@', 1) - 1);
+      $outBoxSubFolder = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolder);
+
+      $this->logInfo('OUTBOX DOWNLOAD SUBFOLDER ' . $outBoxSubFolder);
+
+      $expirationDate = $linkExpirationLimit <= 0
+        ? null
+        : ((new \DateTimeImmutable)
+          ->setTimezone($this->getDateTimeZone())
+          ->modify('+' . $linkExpirationLimit . ' days'));
+
       // Add all registered attachments.
       $attachments = $this->fileAttachments();
       $logMessage->fileAttach = $attachments;
@@ -2448,6 +2490,25 @@ Störung.';
           $encoding = 'base64';
         }
         $file = $this->appStorage->getFile($attachment['tmp_name']);
+        if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
+          $downloadPath = UserStorage::pathCat($outBoxSubFolder, $attachment['name']);
+          $downloadFile = $this->userStorage->getFile($downloadPath);
+          if (!empty($downloadFile)) {
+            $this->logInfo('DOWNLOAD FILE ALREADY EXISTS ' . $downloadPath);
+          } else {
+            $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
+            $this->logInfo('DUMPING ATTACHMENT TO DOWNLOAD AREA ' . $downloadFile->getInternalPath());
+          }
+          if (!empty($downloadFile)) {
+            $shareLink = $this->simpleShareingService->linkShareObject(
+              $downloadFile,
+              $this->shareOwnerId(),
+              sharePerms: \OCP\Constants::PERMISSION_READ,
+              expirationDate: $expirationDate
+            );
+            $this->logInfo('SHARE LINK ' . $shareLink);
+          }
+        }
         $phpMailer->AddStringAttachment(
           $file->getContent(),
           basename($attachment['name']),
@@ -2629,7 +2690,6 @@ Störung.';
 
     $references = [];
     $templateMessageId = $this->getOutboundService()->generateMessageId();
-    $this->logInfo('TEMPLATE MESSAGE ID ' . $templateMessageId);
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
