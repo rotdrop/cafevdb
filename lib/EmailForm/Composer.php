@@ -2507,7 +2507,31 @@ Störung.';
               expirationDate: $expirationDate
             );
             $this->logInfo('SHARE LINK ' . $shareLink);
+            $downloadAttachment = $this->l->t(
+              '<!DOCTYPE html>
+<html lang="%1$s">
+  <head>
+    <title>%2$s</title>
+    <meta http-equiv="refresh" content="0;URL=\'%3$s\'"/>
+  </head>
+  <body>
+    <a href="%3$s">%4$s</a>
+  </body>
+</html>', [
+  $this->getLanguage(),
+  $attachment['name'],
+  $shareLink,
+  $shareLink
+]
+            );
+            $phpMailer->addStringAttachment(
+              $downloadAttachment,
+              basename($attachment['name']) . '.html',
+              '8bit',
+              'text/html'
+            );
           }
+          continue;
         }
         $phpMailer->AddStringAttachment(
           $file->getContent(),
