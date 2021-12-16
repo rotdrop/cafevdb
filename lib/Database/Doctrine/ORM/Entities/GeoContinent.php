@@ -71,7 +71,8 @@ class GeoContinent implements \ArrayAccess
    */
   private $countries;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->countries = new ArrayCollection;
   }
