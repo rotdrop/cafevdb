@@ -73,7 +73,7 @@ abstract class AbstractMigration implements IMigration
     $connection = $this->entityManager->getConnection();
 
     try {
-      foreach (self::$sql[self::STRUCTURAL] as $sql) {
+      foreach (static::$sql[self::STRUCTURAL] as $sql) {
         $statement = $connection->prepare($sql);
         $statement->execute();
       }
@@ -81,10 +81,10 @@ abstract class AbstractMigration implements IMigration
       throw new Exceptions\DatabaseMigrationException($this->l->t('Structural part of migration "%s" failed.', $this->description()), $t->getCode(), $t);
     }
 
-    if (!empty(self::$sql[self::TRANSACTIONAL])) {
+    if (!empty(static::$sql[self::TRANSACTIONAL])) {
       $connection->beginTransaction();
       try {
-        foreach (self::$sql[self::TRANSACTIONAL] as $sql) {
+        foreach (static::$sql[self::TRANSACTIONAL] as $sql) {
           $statement = $connection->prepare($sql);
           $statement->execute();
         }
