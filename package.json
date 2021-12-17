@@ -34,7 +34,7 @@
     "blueimp-file-upload": "^10.31.0",
     "blueimp-md5": "^2.18.0",
     "bootstrap": "^4.6.1",
-    "bootstrap4-duallistbox": "^4.0.2",
+    "bootstrap4-duallistbox": "file:3rdparty/bootstrap-duallistbox",
     "camelcase": "^5.2.0",
     "content-disposition": "*",
     "copy-webpack-plugin": "^v6.0.0",
