@@ -1482,6 +1482,13 @@ Störung.';
         ++$this->diagnostics['FailedCount'];
       }
     }
+
+    try {
+      $this->flush();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+
     return $this->executionStatus;
   }
 
@@ -2207,7 +2214,12 @@ Störung.';
       } else {
         sort($references);
         foreach ($references as $reference) {
-          $sentEmail->getReferencedBy()->set($reference, $this->getReference(Entities\SentEmail, $reference));
+          // Adding references unfortunately is not enough, ORM does not match
+          // "un-flushed" newly persisted objects with reference
+          // objects. However, find() does work and obtains the managed object.
+          $referencing = $this->getDatabaseRepository(Entities\SentEmail::class)->find($reference);
+          $sentEmail->getReferencedBy()->set($reference, $referencing);
+          $referencing->setReferencing($sentEmail);
         }
       }
       $phpMailer->setReferences((array)$references);
@@ -2225,7 +2237,7 @@ Störung.';
         // catch errors?
         $sentEmail->setMessageId($phpMailer->getLastMessageID());
         $this->persist($sentEmail);
-        $this->flush();
+        // $this->flush();
       }
     } catch (\Throwable $t) {
       $this->executionStatus = false;
