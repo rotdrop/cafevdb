@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-12-16 11:23+0100\n"
+"POT-Creation-Date: 2021-12-17 01:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -190,125 +190,125 @@ msgstr ""
 msgid "Preview generation successful."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:387
+#: lib/Controller/EmailFormController.php:388
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:391
-#: lib/Controller/EmailFormController.php:513
-#: lib/Controller/EmailFormController.php:539
-#: lib/Controller/EmailFormController.php:567
+#: lib/Controller/EmailFormController.php:392
+#: lib/Controller/EmailFormController.php:514
+#: lib/Controller/EmailFormController.php:540
+#: lib/Controller/EmailFormController.php:568
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:401
+#: lib/Controller/EmailFormController.php:402
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:409
+#: lib/Controller/EmailFormController.php:410
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:509
+#: lib/Controller/EmailFormController.php:510
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:521
+#: lib/Controller/EmailFormController.php:522
 msgid "Email template name must not be empty"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:543
+#: lib/Controller/EmailFormController.php:544
 #, php-format
 msgid "%s could not be saved"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:559
+#: lib/Controller/EmailFormController.php:560
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:578
+#: lib/Controller/EmailFormController.php:579
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:582
+#: lib/Controller/EmailFormController.php:583
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:719
+#: lib/Controller/EmailFormController.php:720
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:749
+#: lib/Controller/EmailFormController.php:750
 msgid "Form Input"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:824
+#: lib/Controller/EmailFormController.php:825
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:830
+#: lib/Controller/EmailFormController.php:831
 msgid "UNIMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:851
+#: lib/Controller/EmailFormController.php:852
 msgid "Attachment file-names were not submitted"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:860
+#: lib/Controller/EmailFormController.php:861
 #: lib/Controller/UploadsController.php:106
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:863
+#: lib/Controller/EmailFormController.php:864
 #: lib/Controller/UploadsController.php:109
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:877
-#: lib/Controller/EmailFormController.php:935
+#: lib/Controller/EmailFormController.php:878
+#: lib/Controller/EmailFormController.php:936
 #: lib/Controller/UploadsController.php:185
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:895
+#: lib/Controller/EmailFormController.php:896
 #: lib/Controller/ProjectParticipantsController.php:466
 #: lib/Controller/UploadsController.php:141
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:903
+#: lib/Controller/EmailFormController.php:904
 #: lib/Controller/ProjectParticipantsController.php:474
 #: lib/Controller/UploadsController.php:149
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:905
+#: lib/Controller/EmailFormController.php:906
 #: lib/Controller/ProjectParticipantsController.php:476
 #: lib/Controller/UploadsController.php:151
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:917
+#: lib/Controller/EmailFormController.php:918
 #: lib/Controller/ProjectParticipantsController.php:505
 #: lib/Controller/UploadsController.php:163
 msgid "Not enough storage available"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:941
+#: lib/Controller/EmailFormController.php:942
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
@@ -2292,27 +2292,27 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:530
+#: lib/EmailForm/Composer.php:540
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:536
+#: lib/EmailForm/Composer.php:546
 #: src/app/email.js:1101
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:811
+#: lib/EmailForm/Composer.php:821
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:812
-#: lib/EmailForm/Composer.php:834
-#: lib/EmailForm/Composer.php:1130
-#: lib/EmailForm/Composer.php:1137
+#: lib/EmailForm/Composer.php:822
+#: lib/EmailForm/Composer.php:844
+#: lib/EmailForm/Composer.php:1140
+#: lib/EmailForm/Composer.php:1147
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:812
+#: lib/EmailForm/Composer.php:822
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:292
 #: lib/PageRenderer/ProjectParticipantFields.php:546
 #: lib/PageRenderer/ProjectParticipantFields.php:1823
@@ -2320,114 +2320,140 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:813
-#: lib/EmailForm/Composer.php:1138
+#: lib/EmailForm/Composer.php:823
+#: lib/EmailForm/Composer.php:1148
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:814
-#: lib/EmailForm/Composer.php:1139
+#: lib/EmailForm/Composer.php:824
+#: lib/EmailForm/Composer.php:1149
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:815
+#: lib/EmailForm/Composer.php:825
 #: lib/PageRenderer/PMETableViewBase.php:618
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:950
+#: lib/EmailForm/Composer.php:960
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1135
+#: lib/EmailForm/Composer.php:1145
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1136
+#: lib/EmailForm/Composer.php:1146
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1277
+#: lib/EmailForm/Composer.php:1287
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1350
+#: lib/EmailForm/Composer.php:1360
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2597
+#: lib/EmailForm/Composer.php:1952
+#, php-format
+msgid ""
+"<!DOCTYPE html>\n"
+"<html lang=\"%1$s\">\n"
+"  <head>\n"
+"    <title>%2$s</title>\n"
+"    <meta http-equiv=\"refresh\" content=\"%6$d;URL='%2$s'\"/>\n"
+"  </head>\n"
+"  <body>\n"
+"    <div class=\"message\">\n"
+"      You will be redirected to the download location in %6$d seconds. You "
+"may as well\n"
+"      click on the download-link below:\n"
+"    </div>\n"
+"    <blockquote class=\"link\">\n"
+"      <a href=\"%2$s\">%2$s</a>\n"
+"      <div class=\"link-info\"><code>%3$s</code> -- %4$s, %5$s</div>\n"
+"    </blockquote>\n"
+"    <div class=\"expiration-notice\">\n"
+"      Please note that the download link will expire on %7$s.\n"
+"    </div>\n"
+"  </body>\n"
+"</html>"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:2677
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2770
+#: lib/EmailForm/Composer.php:2849
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2783
+#: lib/EmailForm/Composer.php:2862
 msgid "musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2875
-#: lib/EmailForm/Composer.php:2890
+#: lib/EmailForm/Composer.php:2954
+#: lib/EmailForm/Composer.php:2969
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2974
-#: lib/EmailForm/Composer.php:3027
-#: lib/EmailForm/Composer.php:3037
+#: lib/EmailForm/Composer.php:3053
+#: lib/EmailForm/Composer.php:3106
+#: lib/EmailForm/Composer.php:3116
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3002
+#: lib/EmailForm/Composer.php:3081
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3318
+#: lib/EmailForm/Composer.php:3397
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3326
+#: lib/EmailForm/Composer.php:3405
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3350
+#: lib/EmailForm/Composer.php:3429
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3381
+#: lib/EmailForm/Composer.php:3460
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3439
-#: lib/EmailForm/Composer.php:3550
+#: lib/EmailForm/Composer.php:3518
+#: lib/EmailForm/Composer.php:3629
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3467
+#: lib/EmailForm/Composer.php:3546
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3492
+#: lib/EmailForm/Composer.php:3571
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3934
+#: lib/EmailForm/Composer.php:4070
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3935
+#: lib/EmailForm/Composer.php:4071
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3936
+#: lib/EmailForm/Composer.php:4072
 msgid "Local Filesystem"
 msgstr ""
 
@@ -4514,75 +4540,75 @@ msgstr ""
 msgid "Unapplied migrations: %s."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:218
+#: lib/Service/EncryptionService.php:221
 msgid "Cannot initialize SSL key-pair without user and password"
 msgstr ""
 
-#: lib/Service/EncryptionService.php:230
+#: lib/Service/EncryptionService.php:233
 #, php-format
 msgid "Unable to generate SSL key pair for user \"%s\"."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:240
+#: lib/Service/EncryptionService.php:243
 #, php-format
 msgid "Unable to unlock private key for user \"%s\""
 msgstr ""
 
-#: lib/Service/EncryptionService.php:369
+#: lib/Service/EncryptionService.php:372
 msgid "Failed to validate user encryption key."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:390
+#: lib/Service/EncryptionService.php:393
 msgid "Cannot decrypt private values without bound user credentials"
 msgstr ""
 
-#: lib/Service/EncryptionService.php:405
+#: lib/Service/EncryptionService.php:408
 #, php-format
 msgid "Decryption of \"%s\" with private key of user \"%s\" failed."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:431
+#: lib/Service/EncryptionService.php:434
 msgid "Cannot encrypt private values without bound user credentials"
 msgstr ""
 
-#: lib/Service/EncryptionService.php:439
+#: lib/Service/EncryptionService.php:442
 #, php-format
 msgid "Cannot encrypt private values for user \"%s\" without public SSL key."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:444
+#: lib/Service/EncryptionService.php:447
 #, php-format
 msgid "Encrypting value for key \"%s\" with public key of user \"%s\" failed."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:467
+#: lib/Service/EncryptionService.php:470
 msgid "Cannot validate app encryption key without bound user credentials"
 msgstr ""
 
-#: lib/Service/EncryptionService.php:527
+#: lib/Service/EncryptionService.php:530
 #, php-format
 msgid ""
 "Decryption requested for user \"%s\", but not configured, empty encryption "
 "key."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:536
+#: lib/Service/EncryptionService.php:539
 #, php-format
 msgid "Unable to decrypt value \"%s\" for \"%s\""
 msgstr ""
 
-#: lib/Service/EncryptionService.php:557
+#: lib/Service/EncryptionService.php:560
 #, php-format
 msgid ""
 "Encryption requested but not configured for user \"%s\", empty encryption "
 "key."
 msgstr ""
 
-#: lib/Service/EncryptionService.php:596
+#: lib/Service/EncryptionService.php:599
 msgid "Encrypt failed"
 msgstr ""
 
-#: lib/Service/EncryptionService.php:628
+#: lib/Service/EncryptionService.php:631
 msgid "Decrypt failed"
 msgstr ""
 
@@ -7093,48 +7119,48 @@ msgid ""
 "component."
 msgstr ""
 
-#: lib/Storage/Database/MountProvider.php:212
+#: lib/Storage/Database/MountProvider.php:221
 msgid "documents"
 msgstr ""
 
-#: lib/Storage/UserStorage.php:274
+#: lib/Storage/UserStorage.php:287
 #, php-format
 msgid "Unable to restore \"%s\": TrashManager cannot be loaded"
 msgstr ""
 
-#: lib/Storage/UserStorage.php:323
-#: lib/Storage/UserStorage.php:337
+#: lib/Storage/UserStorage.php:336
+#: lib/Storage/UserStorage.php:350
 #, php-format
 msgid "Rename of \"%s\" to \"%s\" failed."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:361
+#: lib/Storage/UserStorage.php:374
 #, php-format
 msgid "Deleted non-directory %s"
 msgstr ""
 
-#: lib/Storage/UserStorage.php:420
+#: lib/Storage/UserStorage.php:435
 #, php-format
 msgid "Unable to set content of file \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:435
+#: lib/Storage/UserStorage.php:451
 #, php-format
 msgid "Cannot read from folder \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:438
+#: lib/Storage/UserStorage.php:454
 #, php-format
 msgid "Unable to get content of file \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:464
-#: lib/Storage/UserStorage.php:510
-#: lib/Storage/UserStorage.php:538
+#: lib/Storage/UserStorage.php:480
+#: lib/Storage/UserStorage.php:526
+#: lib/Storage/UserStorage.php:554
 msgid "Argument must be a valid path or already a file-system node."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:485
+#: lib/Storage/UserStorage.php:501
 #, php-format
 msgid "Unknown file type \"%s\" for download file \"%s\"."
 msgstr ""
@@ -9720,7 +9746,7 @@ msgstr ""
 #: templates/settings/app-settings.php:54
 #: templates/settings/app-settings.php:106
 #: templates/settings/email-settings.php:96
-#: templates/settings/email-settings.php:242
+#: templates/settings/email-settings.php:244
 #: templates/settings/personal-settings.php:150
 #: templates/settings/personal-settings.php:159
 #: templates/settings/share-settings.php:47
@@ -9796,7 +9822,7 @@ msgid "Database Name"
 msgstr ""
 
 #: templates/settings/app-settings.php:97
-#: templates/settings/email-settings.php:221
+#: templates/settings/email-settings.php:223
 msgid "User"
 msgstr ""
 
@@ -9961,47 +9987,47 @@ msgstr ""
 msgid "Attachment Link Expiration Limit"
 msgstr ""
 
-#: templates/settings/email-settings.php:177
+#: templates/settings/email-settings.php:179
 msgid "Always Link Cloud Files"
 msgstr ""
 
-#: templates/settings/email-settings.php:181
+#: templates/settings/email-settings.php:183
 msgid "Test Settings"
 msgstr ""
 
-#: templates/settings/email-settings.php:186
+#: templates/settings/email-settings.php:188
 msgid "Test Email Setup"
 msgstr ""
 
-#: templates/settings/email-settings.php:196
+#: templates/settings/email-settings.php:198
 msgid "Email test-mode; send emails only to the email test-address."
 msgstr ""
 
-#: templates/settings/email-settings.php:197
+#: templates/settings/email-settings.php:199
 msgid "Test-Mode"
 msgstr ""
 
-#: templates/settings/email-settings.php:202
+#: templates/settings/email-settings.php:204
 msgid "Test Email Adress"
 msgstr ""
 
-#: templates/settings/email-settings.php:204
+#: templates/settings/email-settings.php:206
 msgid "Test address"
 msgstr ""
 
-#: templates/settings/email-settings.php:215
+#: templates/settings/email-settings.php:217
 msgid "Mailing-List REST URL"
 msgstr ""
 
-#: templates/settings/email-settings.php:224
+#: templates/settings/email-settings.php:226
 msgid "REST User"
 msgstr ""
 
-#: templates/settings/email-settings.php:231
+#: templates/settings/email-settings.php:233
 msgid "Password"
 msgstr ""
 
-#: templates/settings/email-settings.php:244
+#: templates/settings/email-settings.php:246
 msgid "REST Password"
 msgstr ""
 
