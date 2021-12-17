@@ -35,54 +35,17 @@ use OCA\CAFEVDB\Exceptions;
  * Remove user field from attachments table, use Gedmo "blamable" and
  * "timestampable".
  */
-class MultiUserEmailAttachments implements IMigration
+class MultiUserEmailAttachments extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE EmailAttachments ADD created DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', ADD updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', ADD created_by VARCHAR(255) DEFAULT NULL, ADD updated_by VARCHAR(255) DEFAULT NULL, DROP user",
+    ],
+  ];
 
   public function description():string
   {
     return $this->l->t('Add multi-user support for email-attachments.');
-  }
-
-  private const SQL = [
-    "ALTER TABLE EmailAttachments ADD created DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', ADD updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', ADD created_by VARCHAR(255) DEFAULT NULL, ADD updated_by VARCHAR(255) DEFAULT NULL, DROP user",
-  ];
-
-  public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
-  ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->entityManager = $entityManager;
-  }
-
-  public function execute():bool
-  {
-    $connection = $this->entityManager->getConnection();
-
-    // $connection->beginTransaction();
-    try {
-      foreach (self::SQL as $sql) {
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-      }
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   $connection->commit();
-      // }
-    } catch (\Throwable $t) {
-      // if ($connection->getTransactionNestingLevel() > 0) {
-      //   try {
-      //     $connection->rollBack();
-      //   } catch (\Throwable $t2) {
-      //     $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-      //   }
-      // }
-      throw new Exceptions\DatabaseMigrationException($this->l->t('Migration "%s" failed.', $this->description()), $t->getCode(), $t);
-    }
-    return true;
   }
 };
 

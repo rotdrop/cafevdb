@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
                 </a>
               </span>
               <span class="separator">|</span>
-              <span class="size"><?php p(\OC_Helper::humanFileSize($attachment['size'])); ?></span>
+              <span class="size"><?php p(\OCP\Util::humanFileSize($attachment['size'])); ?></span>
               <span class="separator">|</span>
               <span class="mime-type"><?php p($attachment['mimeType']); ?></span>
             </span>

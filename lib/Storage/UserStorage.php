@@ -70,14 +70,25 @@ class UserStorage
     , ILogger $logger
     , IL10N $l10n
   ) {
-    $this->user = $userSession->getUser();
     $this->appContainer = $appContainer;
     $this->rootFolder = $rootFolder;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->setUser($userSession->getUser());
+  }
+
+  /**
+   * @return IUser The current user
+   */
+  public function setUser(?IUser $user):UserStorage
+  {
+    $this->user = $user;
     if (!empty($this->user)) {
       $this->userFolder = $this->rootFolder->getUserFolder($this->user->getUID());
+    } else {
+      $this->logInfo('NO USER, NO USER FOLDER');
     }
+    return $this;
   }
 
   /**
@@ -207,9 +218,11 @@ class UserStorage
     if (is_array($first)) {
       $first = implode(self::PATH_SEP, $first);
     }
+    $first = trim($first, self::PATH_SEP);
     if (is_array($second)) {
       $second = implode(self::PATH_SEP, $second);
     }
+    $second = trim($second, self::PATH_SEP);
     if (empty($second)) {
       return self::PATH_SEP . (string)$first;
     } else {
@@ -405,8 +418,10 @@ class UserStorage
   /**
    * Put file content by path. Create $path if it does not exists,
    * otherwise replace its contents by the given data.
+   *
+   * @return File
    */
-  public function putContent($path, $content)
+  public function putContent($path, $content):File
   {
     try {
       try {
@@ -414,11 +429,12 @@ class UserStorage
         $file->putContent($content);
       } catch(\OCP\Files\NotFoundException $e) {
         $this->ensureFolder(dirname($path));
-        $this->userFolder->newFile($path, $content);
+        $file = $this->userFolder->newFile($path, $content);
       }
     } catch (\Throwable $t) {
       throw new \RuntimeException($this->l->t('Unable to set content of file "%s".', $path), $t->getCode(), $t);
     }
+    return $file;
   }
 
   /**

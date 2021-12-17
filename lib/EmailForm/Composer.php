@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -53,6 +54,8 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+
+use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -67,6 +70,8 @@ class Composer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+
+  const MSG_ID_AT = '_at_';
 
   const PROGRESS_CHUNK_SIZE = 4096;
   const PROGRESS_THROTTLE_SECONDS = 2;
@@ -365,6 +370,9 @@ Störung.';
   /** @var ProgressStatusService */
   private $progressStatusService;
 
+  /** @var SimpleSharingService */
+  private $simpleShareingService;
+
   /** @var AppStorage */
   private $appStorage;
 
@@ -403,12 +411,14 @@ Störung.';
     , EntityManager $entityManager
     , ProjectParticipantFieldsService $participantFieldsService
     , ProgressStatusService $progressStatusService
+    , SimpleSharingService $simpleSharingService
     , AppStorage $appStorage
     , UserStorage $userStorage
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
+    $this->simpleShareingService = $simpleSharingService;
     $this->appStorage = $appStorage;
     $this->userStorage = $userStorage;
     $this->entityManager = $entityManager;
@@ -1390,6 +1400,9 @@ Störung.';
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
+    $references = [];
+    $templateMessageId = $this->getOutboundService()->generateMessageId();
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       $this->logInfo(
@@ -1417,9 +1430,14 @@ Störung.';
           continue;
         }
 
-        $msg = $this->composeAndSend($strMessage, [ $recipient ], $personalAttachments, false);
+        $msg = $this->composeAndSend(
+          $strMessage, [ $recipient ], $personalAttachments,
+          addCC: false,
+          references: $templateMessageId
+        );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
+          $references[] = $msg['messageId'];
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
@@ -1441,7 +1459,12 @@ Störung.';
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       ++$this->diagnostics['TotalCount'];
-      $mimeMsg = $this->composeAndSend($messageTemplate, [], [], true);
+      $mimeMsg = $this->composeAndSend(
+        $messageTemplate, [],
+        addCC: true,
+        messageId: $templateMessageId,
+        references: $references
+      );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -1459,6 +1482,13 @@ Störung.';
         ++$this->diagnostics['FailedCount'];
       }
     }
+
+    try {
+      $this->flush();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+
     return $this->executionStatus;
   }
 
@@ -1834,6 +1864,146 @@ Störung.';
   }
 
   /**
+   * Construct the PHPMailer instance
+   *
+   * @param bool $authenticate If true install the SMTP authentication. If
+   * false the mailer will probably not be able to send messages (safe-guard).
+   *
+   * @return PHPMailer
+   */
+  private function getOutboundService(bool $authenticate = false):PHPMailer
+  {
+    $phpMailer = new PHPMailer(true);
+    $phpMailer->setLanguage($this->getLanguage());
+    $phpMailer->CharSet = 'utf-8';
+    $phpMailer->SingleTo = false;
+
+    $phpMailer->IsSMTP();
+
+    $phpMailer->Host = $this->getConfigValue('smtpserver');
+    $phpMailer->Port = $this->getConfigValue('smtpport');
+
+    if ($authenticate) {
+      switch ($this->getConfigValue('smtpsecure')) {
+        case 'insecure': $phpMailer->SMTPSecure = ''; break;
+        case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
+        case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
+        default:         $phpMailer->SMTPSecure = ''; break;
+      }
+      $phpMailer->SMTPAuth = true;
+      $phpMailer->Username = $this->getConfigValue('emailuser');
+      $phpMailer->Password = $this->getConfigValue('emailpassword');
+    }
+
+    return $phpMailer;
+  }
+
+  private static function outBoxSubFolderFromMessageId(string $messageId):string
+  {
+    return str_replace([ '@', '.' ], [ self::MSG_ID_AT, '_' ], substr($messageId, 1, -1));
+  }
+
+  private static function messageIdFromOutBoxSubFolder(string $outBoxSubFolderPath):string
+  {
+    return '<' . str_replace([ self::MSG_ID_AT, '_' ], [ '@', '.' ], $outBoxSubFolderPath) . '>';
+  }
+
+  /**
+   * Compose all "global" attachments, possibly replacing large attachments by
+   * download links.
+   *
+   * @param PHPMailer $phpMailer
+   *
+   * @param string $messageId Defines the sub-folder where the attachments are
+   * stored.
+   */
+  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
+  {
+    // also simulate link generation for attachments exceeding a certain size
+    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', (1 << 20)); // k=10, m=20
+    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', 7); // days
+
+    $outBoxSubFolderPath = self::outBoxSubFolderFromMessageId($messageId);
+    $outBoxSubFolderPath = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolderPath);
+
+    $expirationDate = $linkExpirationLimit <= 0
+      ? null
+      : ((new \DateTimeImmutable('UTC midnight'))
+        ->modify('+' . $linkExpirationLimit . ' days'));
+
+    // Add all registered attachments.
+    foreach ($this->fileAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
+      }
+      if ($attachment['type'] == 'message/rfc822') {
+        $encoding = '8bit';
+      } else {
+        $encoding = 'base64';
+      }
+      $file = $this->appStorage->getFile($attachment['tmp_name']);
+      if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
+        $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $attachment['name']);
+        $downloadFile = $this->userStorage->getFile($downloadPath);
+        if (empty($downloadFile)) {
+          $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
+        }
+        if (!empty($downloadFile)) {
+          $shareLink = $this->simpleShareingService->linkShare(
+            $downloadFile,
+            $this->shareOwnerId(),
+            sharePerms: \OCP\Constants::PERMISSION_READ,
+            expirationDate: $expirationDate
+            );
+          $downloadAttachment = $this->l->t(
+            '<!DOCTYPE html>
+<html lang="%1$s">
+  <head>
+    <title>%2$s</title>
+    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
+  </head>
+  <body>
+    <div class="message">
+      You will be redirected to the download location in %6$d seconds. You may as well
+      click on the download-link below:
+    </div>
+    <blockquote class="link">
+      <a href="%2$s">%2$s</a>
+      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
+    </blockquote>
+    <div class="expiration-notice">
+      Please note that the download link will expire on %7$s.
+    </div>
+  </body>
+</html>', [
+  $this->getLanguage(),
+  $shareLink,
+  basename($attachment['name']),
+  Util::humanFileSize($downloadFile->getSize()),
+  $attachment['type'],
+  30,
+  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
+]
+          );
+          $phpMailer->addStringAttachment(
+            $downloadAttachment,
+            basename($attachment['name']) . '.html',
+            '8bit',
+            'text/html'
+          );
+          $this->registerAttachmentDownloadsCleaner();
+          continue;
+        }
+      }
+      $phpMailer->AddStringAttachment(
+        $file->getContent(),
+        basename($attachment['name']),
+        $encoding,
+          $attachment['type']);
+    }
+  }
+
+  /**
    * Compose and send one message. If $EMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
    * otherwise Bcc: is used, unless sending to the recipients of a
@@ -1854,10 +2024,28 @@ Störung.';
    * @param bool $addCC If @c false, then additional CC and BCC recipients will
    *                   not be added.
    *
-   * @return string The sent Mime-message which then may be stored in the
-   * Sent-Folder on the imap server (for example).
+   * @param null|string $messageId A pre-computed message-id.
+   *
+   * @param null|string|array $references Message id(s) for a References:
+   * header. If a string then the single message-id of the master-template. If
+   * an array then these are the message ids of the individual merged messages.
+   *
+   * @return array
+   * ```
+   * [
+   *   'message' => "The sent Mime-message which then may be stored in the
+   * Sent-Folder on the imap server (for example)",
+   *   'messageId' => USED_MESSAGE_ID,
+   * ]
+   * ```
    */
-  private function composeAndSend($strMessage, $EMails, $extraAttachments = [], $addCC = true)
+  private function composeAndSend(
+    $strMessage
+    , $EMails
+    , $extraAttachments = []
+    , $addCC = true
+    , ?string $messageId = null
+    , $references = null)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -1877,11 +2065,8 @@ Störung.';
     // surrounding the actual sending of the message.
     try {
 
-      $phpMailer = new PHPMailer(true);
-      $phpMailer->CharSet = 'utf-8';
-      $phpMailer->SingleTo = false;
-
-      $phpMailer->IsSMTP();
+      $phpMailer = $this->getOutboundService(authenticate: true);
+      $messageId = $messageId ?? $phpMailer->generateMessageId();
 
       // Provide some progress feed-back to amuse the user
       $progressStatus = $this->progressStatusService->get($this->progressToken);
@@ -1901,22 +2086,10 @@ Störung.';
         }
       });
 
-      $phpMailer->Host = $this->getConfigValue('smtpserver');
-      $phpMailer->Port = $this->getConfigValue('smtpport');
-      switch ($this->getConfigValue('smtpsecure')) {
-      case 'insecure': $phpMailer->SMTPSecure = ''; break;
-      case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
-      case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
-      default:         $phpMailer->SMTPSecure = ''; break;
-      }
-      $phpMailer->SMTPAuth = true;
-      $phpMailer->Username = $this->getConfigValue('emailuser');
-      $phpMailer->Password = $this->getConfigValue('emailpassword');
-
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__, true);
+      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../', true);
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -1986,24 +2159,8 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
-      // Add all registered global attachments.
-      $attachments = $this->fileAttachments();
-      foreach ($attachments as $attachment) {
-        if ($attachment['status'] != 'selected') {
-          continue;
-        }
-        if ($attachment['type'] == 'message/rfc822') {
-          $encoding = '8bit';
-        } else {
-          $encoding = 'base64';
-        }
-        $file = $this->appStorage->getFile($attachment['tmp_name']);
-        $phpMailer->AddStringAttachment(
-          $file->getContent(),
-          basename($attachment['name']),
-          $encoding,
-          $attachment['type']);
-      }
+      // compose all global attachments. May replace large attachments by download-links.
+      $this->composeGlobalAttachments($phpMailer, is_string($references) ? $references : $messageId);
 
       // Add to-be-attached events.
       $events = $this->eventAttachments();
@@ -2046,6 +2203,28 @@ Störung.';
       return false;
     }
 
+    // install custom message id if given
+    if (!empty($messageId)) {
+      $phpMailer->MessageID = $messageId;
+    }
+    if (!empty($references)) {
+      if (is_string($references)) {
+        // the id of the master-copy
+        $sentEmail->setReferencing($this->getReference(Entities\SentEmail::class, $references));
+      } else {
+        sort($references);
+        foreach ($references as $reference) {
+          // Adding references unfortunately is not enough, ORM does not match
+          // "un-flushed" newly persisted objects with reference
+          // objects. However, find() does work and obtains the managed object.
+          $referencing = $this->getDatabaseRepository(Entities\SentEmail::class)->find($reference);
+          $sentEmail->getReferencedBy()->set($reference, $referencing);
+          $referencing->setReferencing($sentEmail);
+        }
+      }
+      $phpMailer->setReferences((array)$references);
+    }
+
     // Finally the point of no return. Send it out!!!
     try {
       if (!$phpMailer->Send()) {
@@ -2058,7 +2237,7 @@ Störung.';
         // catch errors?
         $sentEmail->setMessageId($phpMailer->getLastMessageID());
         $this->persist($sentEmail);
-        $this->flush();
+        // $this->flush();
       }
     } catch (\Throwable $t) {
       $this->executionStatus = false;
@@ -2253,12 +2432,32 @@ Störung.';
    * @param $addCC If @c false, then additional CC and BCC recipients will
    *               not be added.
    *
-   * @return bool true or false.
+   * @param null|string $messageId A pre-computed message-id.
+   *
+   * @param null|string|array $references Message id(s) for a References:
+   * header. If a string then the single message-id of the master-template. If
+   * an array then these are the message ids of the individual merged messages.
+   *
+   * @return array
+   * ```
+   * [
+   *   'headers' => $phpMailer->getMailHeaders(),
+   *   'messageId' => DUMMY_MESSAGE_ID,
+   *   'body' => $strMessage,
+   *   'attachments' => $attachments,
+   * ]
+   * ```
    *
    * @todo Fold into composeAndSend
    */
-  private function composeAndExport($strMessage, $eMails, $extraAttachments = [], $addCC = true)
-  {
+  private function composeAndExport(
+    $strMessage
+    , $eMails
+    , $extraAttachments = []
+    , $addCC = true
+    , ?string $messageId = null
+    , $references = null
+  ) {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2274,14 +2473,14 @@ Störung.';
     // export the message text, with a short header.
     try {
 
-      $phpMailer = new PHPMailer(true);
-      $phpMailer->CharSet = 'utf-8';
-      $phpMailer->SingleTo = false;
+      $phpMailer = $this->getOutboundService();
+      $messageId = $messageId ?? $phpMailer->generateMessageId();
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
+
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../', true);
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2346,31 +2545,13 @@ Störung.';
       }
       $logMessage->BCC = $stringBCC;
 
-      // Add all registered attachments.
-      $attachments = $this->fileAttachments();
-      $logMessage->fileAttach = $attachments;
-      foreach ($attachments as $attachment) {
-        if ($attachment['status'] != 'selected') {
-          continue;
-        }
-        if ($attachment['type'] == 'message/rfc822') {
-          $encoding = '8bit';
-        } else {
-          $encoding = 'base64';
-        }
-        $file = $this->appStorage->getFile($attachment['tmp_name']);
-        $phpMailer->AddStringAttachment(
-          $file->getContent(),
-          basename($attachment['name']),
-          $encoding,
-          $attachment['type']);
-      }
+      // compose all global attachments. May replace large attachments by download-links.
+      $this->composeGlobalAttachments($phpMailer, is_string($references) ? $references : $messageId);
 
       // Finally possibly to-be-attached events. This cannot throw,
       // but it does not hurt to keep it here. This way we are just
       // ready with adding data to the message inside the try-block.
       $events = $this->eventAttachments();
-      $logMessage->events = $events;
       if ($this->projectId > 0 && !empty($events)) {
         // Construct the calendar
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
@@ -2405,7 +2586,15 @@ Störung.';
       return null;
     }
 
-    // Finally the point of no return. Send it out!!!
+    // install custom message id if given
+    if (!empty($messageId)) {
+      $phpMailer->MessageID = $messageId;
+    }
+    if (!empty($references)) {
+      $phpMailer->setReferences((array)$references);
+    }
+
+    // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
     try {
       if (!$phpMailer->preSend()) {
         // in principle this cannot happen as the mailer DOES use
@@ -2450,6 +2639,7 @@ Störung.';
     }
 
     return [
+      'messageId' => $phpMailer->getLastMessageID(),
       'headers' => $phpMailer->getMailHeaders(),
       'body' => $strMessage,
       'attachments' => $attachments,
@@ -2529,6 +2719,9 @@ Störung.';
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
+    $references = [];
+    $templateMessageId = $this->getOutboundService()->generateMessageId();
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       $this->logInfo(
@@ -2549,13 +2742,20 @@ Störung.';
         $personalAttachments = $this->composePersonalAttachments($musician);
 
         ++$this->diagnostics['TotalCount'];
-        $message = $this->composeAndExport($strMessage, [ $recipient ], $personalAttachments, false);
+        $message = $this->composeAndExport(
+          $strMessage,
+          [ $recipient ],
+          $personalAttachments,
+          addCC: false,
+          references: $templateMessageId
+        );
         if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
           ++$this->diagnostics['FailedCount'];
         }
 
         if (!empty($message)) {
           $messages[] = $message;
+          $references[] = $message['messageId'];
         }
       }
 
@@ -2565,7 +2765,12 @@ Störung.';
       // on the imap server.
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
       ++$this->diagnostics['TotalCount'];
-      $message = $this->composeAndExport($messageTemplate, [], [], true);
+      $message = $this->composeAndExport(
+        $messageTemplate, [], [],
+        addCC: true,
+        messageId: $templateMessageId,
+        references: $references
+      );
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
       }
@@ -3450,8 +3655,6 @@ Störung.';
    *
    * @return array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
-   *
-   * @todo Use IAppData and use temporaries in the cloud storage.
    */
   public function saveAttachment(&$fileRecord)
   {
@@ -3488,6 +3691,63 @@ Störung.';
       return $fileRecord;
     }
     return false;
+  }
+
+  /**
+   * Clean expired download attachments and left over preview downloads
+   */
+  public function registerAttachmentDownloadsCleaner()
+  {
+    /** @var \OCP\BackgroundJob\IJobList $jobList */
+    $jobList = $this->di(\OCP\BackgroundJob\IJobList::class);
+
+    // the job-list takes care by itself that no duplicates are added
+    $jobList->add(CleanupExpiredDownloads::class, [
+      'paths' => [ $this->getOutBoxFolderPath(), ],
+      'uid' => $this->shareOwnerId(),
+    ]);
+  }
+
+  /**
+   * Expire all orphan download shares, e.g. generated by preview
+   * messages. The idea is to simply expire all orphan shares. The regular
+   * cleanup-job will then delete all shares after a given time (24 hours by
+    * default).
+   */
+  public function cleanAttachmentDownloads()
+  {
+    $outboxFolder = $this->userStorage->getFolder($this->getOutBoxFolderPath());
+    if (empty($outboxFolder)) {
+      $this->logError('Outbox folder "' . $this->getOutBoxFolderPath() . '" could not be found');
+      return;
+    }
+
+    $numChangedShares = 0;
+
+    /** @var \OCP\Files\Folder $node */
+    foreach ($outboxFolder->getDirectoryListing() as $node) {
+      if ($node->getType() != \OCP\Files\Node::TYPE_FOLDER
+          || strpos($node->getName(), self::MSG_ID_AT) === false) {
+        $this->logDebug('The node ' . $node->getName() . ' does not look like originating from a message id, skipping.');
+        continue; // does not appear to be a message id
+      }
+      $messageId = self::messageIdFromOutBoxSubFolder($node->getName());
+      $this->logDebug('LOOK FOR MESSAGE ID ' . $messageId);
+      $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
+      if (empty($sentEmail)) {
+        $this->logDebug('No sent-email with name id "' . $messageId . '" found, could delete.');
+        /** @var \OCP\Files\Node $fileAttachment */
+        foreach ($node->getDirectoryListing() as $fileAttachment) {
+          $this->logDebug('TRY EXPIRE ' . $fileAttachment->getName());
+          $numChangedShares +=
+            $this->simpleShareingService->expire($fileAttachment, $this->shareOwnerId());
+        }
+      }
+    }
+    if ($numChangedShares > 0) {
+      // make sure the clean-up service runs
+      $this->registerAttachmentDownloadsCleaner();
+    }
   }
 
   // public methods exporting data needed by the web-page template

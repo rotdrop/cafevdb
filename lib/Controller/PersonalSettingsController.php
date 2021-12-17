@@ -23,6 +23,9 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Carbon\Carbon as DateTime;
+use Carbon\CarbonInterval as DateInterval;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
@@ -45,6 +48,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -113,6 +117,9 @@ class PersonalSettingsController extends Controller {
   /** @var UserStorage */
   private $userStorage;
 
+  /** @var FuzzyInputService */
+  private $fuzzyInputService;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -126,6 +133,7 @@ class PersonalSettingsController extends Controller {
     , ProjectService $projectService
     , CalDavService $calDavService
     , TranslationService $translationService
+    , FuzzyInputService $fuzzyInputService
     , UserStorage $userStorage
     , WikiRPC $wikiRPC
     , WebPagesRPC $webPagesRPC
@@ -142,6 +150,7 @@ class PersonalSettingsController extends Controller {
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->translationService = $translationService;
+    $this->fuzzyInputService = $fuzzyInputService;
     $this->userStorage = $userStorage;
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
@@ -1100,6 +1109,7 @@ class PersonalSettingsController extends Controller {
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
     case ConfigService::POSTBOX_FOLDER:
+    case ConfigService::OUTBOX_FOLDER:
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
     case ConfigService::PROJECT_POSTERS_FOLDER:
@@ -1423,6 +1433,37 @@ class PersonalSettingsController extends Controller {
     case 'emailfromname':
       return $this->setSimpleConfigValue($parameter, $value);
 
+    case 'cloudAttachmentAlwaysLink':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));
+      }
+      $stringValue = $realValue ? 'on' : 'off';
+      $this->setUserValue($parameter, $stringValue);
+      return self::response($this->l->t('Switching %2$s %1$s', [
+        $this->l->t($stringValue),
+        $this->l->t($parameter),
+      ]));
+    case 'attachmentLinkExpirationLimit':
+      $interval = $this->fuzzyInputService->dateIntervalValue($value);
+      if (!empty($interval)) {
+        // try to at least have some slightly useful number of days for things
+        // like "one year"
+        $now = new \DateTimeImmutable;
+        $realValue = $now->diff($now->add($interval))->format('%a');
+        // $realValue = $interval->total('days');
+        $reportValue = $this->l->t('%d days', $realValue);
+      } else {
+        $realValue = $reportValue = null;
+      }
+      return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
+    case 'attachmentLinkSizeLimit':
+      $realValue = $this->fuzzyInputService->storageValue($value);
+      $reportValue = empty($realValue)
+        ? null
+        : $this->humanFileSize($realValue);
+      return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
+      break;
     case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
       foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
         ${$listConfig} = $this->getConfigValue($listConfig);
@@ -1744,9 +1785,12 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
-  private function setSimpleConfigValue($key, $value)
+  private function setSimpleConfigValue($key, $value, $reportValue = null)
   {
     $realValue = Util::normalizeSpaces($value);
+    if (empty($reportValue)) {
+      $reportValue = $realValue;
+    }
 
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
@@ -1761,8 +1805,9 @@ class PersonalSettingsController extends Controller {
         $realValue = '••••••••';
       }
       return self::dataResponse([
-        'message' => $this->l->t('Value for "%s" set to "%s"', [ $key, $realValue ]),
-        $key => $value,
+        'message' => $this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ]),
+        $key => $reportValue,
+        $key.'Raw' => $realValue,
       ]);
     }
   }

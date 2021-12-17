@@ -23,32 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCP\ILogger;
-use OCP\IL10N;
-
-use OCA\CAFEVDB\Maintenance\IMigration;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Exceptions;
-
-/**
- * Generate some needed procedures and functions. MySQL specific.
- */
-class UpdateGeographicalScopes extends AbstractMigration
-{
-  protected static $sql = [
-    self::STRUCTURAL => [
-    "SET FOREIGN_KEY_CHECKS = 0",
-    "ALTER TABLE InsuranceRates CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
-    "ALTER TABLE InstrumentInsurances CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
-    ],
-  ];
-
-  public function description():string
-  {
-    return $this->l->t('Adjust geographical scopes enum.');
-  }
-};
+class Version20211216100000 extends SentEmailReferences {};
 
 // Local Variables: ***
 // c-basic-offset: 2 ***

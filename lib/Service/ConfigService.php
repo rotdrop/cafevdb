@@ -84,6 +84,7 @@ class ConfigService {
   const TRANSACTIONS_FOLDER = 'transactionsfolder';
   const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
   const POSTBOX_FOLDER = 'postboxfolder';
+  const OUTBOX_FOLDER = 'outboxfolder';
 
   const CMS_CATEGORIES = [
     'preview',
@@ -701,6 +702,18 @@ class ConfigService {
     }
     $this->logDebug('Generated locale string: ' . $locale);
     return $locale;
+  }
+
+  /**
+   * Return the language part of the current or given locale.
+   */
+  public function getLanguage(?string $locale = null):string
+  {
+    if (empty($locale)) {
+      $locale = $this->getLocale();
+    }
+    $lang = locale_get_primary_language($locale);
+    return $lang;
   }
 
   /**Return an array of supported country-codes and names*/

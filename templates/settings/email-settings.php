@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
+use OCA\CAFEVDB\Common\Util;
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
@@ -111,22 +112,73 @@ use OCA\CAFEVDB\Controller\PersonalSettingsController;
         <!-- span class="statusmessage" id="email-account-distribute-message"></span -->
       </fieldset>
     </form>
-    <h4><?php echo $l->t('Bulk Sender Identity'); ?></h4>
-    <form class="emailidentity">
-      <input type="text"
-             name="emailfromname"
-             id="emailfromname"
-             value="<?php echo $_['emailfromname']; ?>"
-             placeholder="<?php echo $l->t('Real Sender Name');?>"
-      />
-      <label for="emailfromname"><?php echo $l->t('From: name');?></label>
-      <input type="text"
+    <h4><?php echo $l->t('Bulk Mail Composition'); ?></h4>
+    <form class="bulk-email-settings">
+      <fieldset class="emailidentity">
+        <legend><?php p($l->t('Bulk Mail Identity')); ?></legend>
+        <input type="text"
+               name="emailfromname"
+               id="emailfromname"
+               value="<?php echo $_['emailfromname']; ?>"
+               placeholder="<?php echo $l->t('Real Sender Name');?>"
+        />
+        <label for="emailfromname"><?php echo $l->t('From: name');?></label>
+        <input type="text"
              name="emailfromaddress"
-             id="emailfromaddress"
-             value="<?php echo $_['emailfromaddress']; ?>"
-             placeholder="<?php echo $l->t('Email From Adress');?>"
-      />
-      <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+               id="emailfromaddress"
+               value="<?php echo $_['emailfromaddress']; ?>"
+               placeholder="<?php echo $l->t('Email From Adress');?>"
+        />
+        <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+      </fieldset>
+      <fieldset class="email-attachments">
+        <legend><?php p($l->t('Attachment Policy')); ?></legend>
+        <input type="text"
+               id="attachmentLinkSizeLimit"
+               name="attachmentLinkSizeLimit"
+               class="attachmentLinkSizeLimit tooltip-auto"
+               value="<?php p($attachmentLinkSizeLimit); ?>"
+               placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
+        />
+        <label for="attachmentLinkSizeLimit"
+               class="tooltip-auto"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
+        >
+          <?php p($l->t('Attachment Link Size Limit')); ?>
+        </label>
+        <br class="input-field-separater"/>
+        <input type="text"
+               id="attachmentLinkExpirationLimit"
+               class="attachmentLinkExpirationLimit tooltip-auto"
+               name="attachmentLinkExpirationLimit"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:expiration-limit']); ?>"
+               value="<?php p($attachmentLinkExpirationLimit); ?>"
+               placeholder="<?php p($l->t('e.g. 7 days')); ?>"
+        />
+        <label for="attachmentLinkExpirationLimit"
+               class="tooltip-auto"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:expiration-limit']); ?>"
+        >
+          <?php p($l->t('Attachment Link Expiration Limit')); ?>
+        </label>
+        <br class="input-field-separater"/>
+        <input type="checkbox"
+               id="cloudAttachmentAlwaysLink"
+               class="cloudAttachmentAlwaysLink checkbox tooltip-auto hidden"
+               name="cloudAttachmentAlwaysLink"
+               type="checkbox"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
+               disabled
+        />
+        <label for="cloudAttachmentAlwaysLink"
+               class="tooltip-auto hidden"
+               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
+               disabled
+        >
+          <?php p($l->t('Always Link Cloud Files')); ?>
+        </label>
+      </fieldset>
     </form>
     <h4><?php echo $l->t('Test Settings'); ?></h4>
     <form class="emailtest">

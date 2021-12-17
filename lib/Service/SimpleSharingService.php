@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
-use OCP\Files\Node as FileNode;
+use OCP\Files\Node as FileSystemNode;
 use OCP\ILogger;
 
 class SimpleSharingService
@@ -50,7 +50,7 @@ class SimpleSharingService
    * already shared with the requested permissions then just return the old
    * share.
    *
-   * @param FileNode $node
+   * @param FileSystemNode $node
    *
    * @paran null|string $shareOwner User-id of the owner.
    *
@@ -59,8 +59,12 @@ class SimpleSharingService
    * @return null|string The absolute URL for the share or null.
    *
    */
-  public function linkShareObject(FileNode $node, ?string $shareOwner = null, int $sharePerms = \OCP\Constants::PERMISSION_CREATE)
-  {
+  public function linkShare(
+    FileSystemNode $node
+    , ?string $shareOwner = null
+    , int $sharePerms = \OCP\Constants::PERMISSION_CREATE
+    , ?\DateTimeInterface $expirationDate = null
+  ) {
     $this->logDebug('shared folder id ' . $node->getId());
 
     $shareType = IShare::TYPE_LINK;
@@ -69,13 +73,31 @@ class SimpleSharingService
       $shareOwner = $this->userId();
     }
 
-    // retrieve all shared items for $shareOwner
+    if (!empty($expirationDate)) {
+      // make sure it is UTC midnight
+      $expirationDate = new \DateTimeImmutable($expirationDate->format('Y-m-d'));
+    }
+    $expirationTimeStamp = empty($expirationDate) ? -1 : $expirationDate->getTimestamp();
+
+    /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
       // check permissions
       if ($share->getPermissions() !== $sharePerms) {
-        $share->setPermissions($sharePerms);
-        $this->shareManager->updateShare($share);
+        continue;
       }
+
+      // check expiration time
+      $shareExpirationDate = $share->getExpirationDate();
+
+      $shareExpirationStamp = empty($shareExpirationDate) ? -1 : $shareExpirationDate->getTimestamp();
+
+      $this->logInfo('SHARE EXPIRATION DATE ' . print_r($shareExpirationDate, true) . ' ' . $shareExpirationStamp);
+
+      if ($shareExpirationStamp != $expirationTimeStamp) {
+        continue;
+      }
+
+      // check permissions
       if ($share->getPermissions() === $sharePerms) {
         $url = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
         $this->logInfo('Reuse existing link-share ' . $url);
@@ -84,12 +106,14 @@ class SimpleSharingService
     }
 
     // None found, generate a new one
+    /** @var IShare $share */
     $share = $this->shareManager->newShare();
     $share->setNode($node);
     $share->setPermissions($sharePerms);
     $share->setShareType($shareType);
     $share->setShareOwner($shareOwner);
     $share->setSharedBy($shareOwner);
+    $share->setExpirationDate($expirationDate);
 
     if (!$this->shareManager->createShare($share)) {
       return null;
@@ -100,6 +124,41 @@ class SimpleSharingService
     $this->logInfo('Created new link-share ' . $url);
 
     return $url;
+  }
+
+  /**
+   * Expire all shares of the respective user of the respective type of the given file-system node by
+   * setting their expiration time to the current time.
+   *
+   * @param FileSystemNode $node
+   *
+   * @param null|string $shareOwner
+   *
+   * @param int $shareType Defaults to IShare::TYPE_LINK
+   *
+   * @return int The number of changed shares
+   *
+   */
+  public function expire(FileSystemNode $node, ?string $shareOwner = null, int $shareType = IShare::TYPE_LINK):int
+  {
+    if (empty($shareOwner)) {
+      $shareOwner = $this->userId();
+    }
+
+    $now = new \DateTimeImmutable;
+
+    $numChanged = 0;
+
+    /** @var IShare $share */
+    foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
+      $expirationDate = $share->getExpirationDate() ?? $now;
+      if ($expirationDate > $now) {
+        $share->setExpirationDate($now);
+        $this->shareManager->updateShare($share);
+        ++$numChanged;
+      }
+    }
+    return $numChanged;
   }
 }
 

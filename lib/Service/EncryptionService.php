@@ -61,6 +61,9 @@ class FakeL10N
  *
  * We only support the case where the password is available through
  * the credential store of the emedding cloud instance.
+ *
+ * @todo One could cache the decrypted configuration values given that
+ * encryption may be costly.
  */
 class EncryptionService
 {

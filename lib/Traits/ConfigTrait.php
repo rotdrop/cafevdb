@@ -346,19 +346,20 @@ trait ConfigTrait {
   }
 
   /**
-   * Return the full path to the finance folder.
+   * Create the full-path for the sub-folder corresponding to the given config
+   * key.
    */
-  protected function getProjectsFolderPath()
+  protected function getSharedSubFolderPath(string $configKey)
   {
     $sharedFolder = $this->getSharedFolderPath();
     if (empty($sharedFolder)) {
       return null;
     }
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    if (empty($projectsFolder)) {
+    $subFolder = $this->getConfigValue($configKey);
+    if (empty($subFolder)) {
       return null;
     }
-    return '/' . $sharedFolder . '/' . $projectsFolder;
+    return '/' . $sharedFolder . '/' . $subFolder;
   }
 
   /**
@@ -406,17 +407,17 @@ trait ConfigTrait {
   /**
    * Return the full path to the finance folder.
    */
+  protected function getProjectsFolderPath()
+  {
+    return $this->getSharedSubFolderPath(ConfigService::PROJECTS_FOLDER);
+  }
+
+  /**
+   * Return the full path to the finance folder.
+   */
   protected function getFinanceFolderPath()
   {
-    $sharedFolder = $this->getSharedFolderPath();
-    if (empty($sharedFolder)) {
-      return null;
-    }
-    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
-    if (empty($financeFolder)) {
-      return null;
-    }
-    return '/' . $sharedFolder . '/' . $financeFolder;
+    return $this->getSharedSubFolderPath(ConfigService::FINANCE_FOLDER);
   }
 
   /**
@@ -433,6 +434,22 @@ trait ConfigTrait {
       return null;
     }
     return '/' . $financeFolder . '/' . $transactionsFolder;
+  }
+
+  /**
+   * Return the full path to incoming post-box folder.
+   */
+  protected function getPostBoxFolderPath()
+  {
+    return $this->getSharedSubFolderPath(ConfigService::POSTBOX_FOLDER);
+  }
+
+  /**
+   * Return the full path to the outgoing postbox folder.
+   */
+  protected function getOutBoxFolderPath()
+  {
+    return $this->getSharedSubFolderPath(ConfigService::OUTBOX_FOLDER);
   }
 
   public function getIcon()
@@ -527,6 +544,11 @@ trait ConfigTrait {
     return $this->configService->getLocale($lang);
   }
 
+  protected function getLanguage(?string $locale = null):string
+  {
+    return $this->configService->getLanguage($locale);
+  }
+
   protected function localeCountryNames($locale = null) {
     return $this->configService->localeCountryNames($locale);
   }
@@ -565,6 +587,13 @@ trait ConfigTrait {
   public function floatValue($value, $decimals = 2, $locale = null)
   {
     return $this->configService->floatValue($value, $decimals, $locale);
+  }
+
+  /** Format a bytes value with "readable" postfix */
+  protected function humanFileSize(int $bytes, string $locale = null, bool $binary = true, int $digits = 2)
+  {
+    $locale = $locale ?? $this->getLocale();
+    return Util::humanFileSize($bytes, $locale, $binary, $digits);
   }
 
   /** Return the current time as short time-stamp (textual). */

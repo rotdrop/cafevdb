@@ -26,27 +26,26 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
 use OCP\ILogger;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Exceptions;
 
 /**
- * Generate some needed procedures and functions. MySQL specific.
+ * Remember the reference to the message template for mail-merged messages.
  */
-class UpdateGeographicalScopes extends AbstractMigration
+class SentEmailReferences extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-    "SET FOREIGN_KEY_CHECKS = 0",
-    "ALTER TABLE InsuranceRates CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
-    "ALTER TABLE InstrumentInsurances CHANGE geographical_scope geographical_scope enum('Domestic','Continent','Germany','Europe','World') DEFAULT 'Germany' NOT NULL COMMENT 'enum(Domestic,Continent,Germany,Europe,World)(DC2Type:EnumGeographicalScope)'",
+      'ALTER TABLE SentEmails ADD reference_id VARCHAR(256) DEFAULT NULL COLLATE `ascii_bin`',
+      'ALTER TABLE SentEmails ADD CONSTRAINT FK_80F49BA01645DEA9 FOREIGN KEY (reference_id) REFERENCES SentEmails (message_id)',
+      'CREATE INDEX IDX_80F49BA01645DEA9 ON SentEmails (reference_id)',
+    ],
+    self::TRANSACTIONAL => [
     ],
   ];
 
   public function description():string
   {
-    return $this->l->t('Adjust geographical scopes enum.');
+    return $this->l->t('Remember a reference to the message template for mail-merged emails.');
   }
 };
 

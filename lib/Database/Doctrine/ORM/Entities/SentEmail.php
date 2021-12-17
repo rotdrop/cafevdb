@@ -28,7 +28,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-// @todo: recipients, md5 for quick check, message-id to fetch message from imap storage.
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SentEmail
@@ -43,7 +44,7 @@ class SentEmail
   use CAFEVDB\Traits\CreatedAtEntity;
 
   /**
-   * @var int
+   * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
    * @ORM\Id
@@ -147,13 +148,35 @@ class SentEmail
   private $htmlBodyHash;
 
   /**
+   * @var SentEmail
+   *
+   * @ORM\ManyToOne(targetEntity="SentEmail", inversedBy="referencedBy", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(name="reference_id", referencedColumnName="message_id")
+   */
+  private $referencing;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="referencing", indexBy="messageId", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"bulkRecipients" = "ASC"})
+   */
+  private $referencedBy;
+
+  public function __construct()
+  {
+    $this->arrayCTOR();
+    $this->referencedBy = new ArrayCollection;
+  }
+
+  /**
    * Sets messageId.
    *
    * @param string $messageId
    *
    * @return SentEmail $this
    */
-  public function setMessageId(string $messageId):self
+  public function setMessageId(string $messageId):SentEmail
   {
     $this->messageId = $messageId;
 
@@ -177,7 +200,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setCreatedBy(string $createdBy):self
+  public function setCreatedBy(string $createdBy):SentEmail
   {
     $this->createdBy = $createdBy;
 
@@ -201,7 +224,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBulkRecipients(string $bulkRecipients):self
+  public function setBulkRecipients(string $bulkRecipients):SentEmail
   {
     $this->bulkRecipients = $bulkRecipients;
 
@@ -225,7 +248,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBulkRecipientsHash(string $bulkRecipientsHash):self
+  public function setBulkRecipientsHash(string $bulkRecipientsHash):SentEmail
   {
     $this->bulkRecipientsHash = $bulkRecipientsHash;
 
@@ -249,7 +272,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setHtmlBody(string $htmlBody):self
+  public function setHtmlBody(string $htmlBody):SentEmail
   {
     $this->htmlBody = $htmlBody;
 
@@ -273,7 +296,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setHtmlBodyHash(string $htmlBodyHash):self
+  public function setHtmlBodyHash(string $htmlBodyHash):SentEmail
   {
     $this->htmlBodyHash = $htmlBodyHash;
 
@@ -297,7 +320,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setSubject(string $subject):self
+  public function setSubject(string $subject):SentEmail
   {
     $this->subject = $subject;
 
@@ -321,7 +344,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setSubjectHash(string $subjectHash):self
+  public function setSubjectHash(string $subjectHash):SentEmail
   {
     $this->subjectHash = $subjectHash;
 
@@ -345,7 +368,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setCc(string $cc):self
+  public function setCc(string $cc):SentEmail
   {
     $this->cc = $cc;
 
@@ -369,7 +392,7 @@ class SentEmail
    *
    * @return SentEmail $this
    */
-  public function setBcc(string $bcc):self
+  public function setBcc(string $bcc):SentEmail
   {
     $this->bcc = $bcc;
 
@@ -384,5 +407,53 @@ class SentEmail
   public function getBcc():string
   {
     return $this->bcc;
+  }
+
+  /**
+   * Sets referencing.
+   *
+   * @param null|SentEmail $referencing
+   *
+   * @return SentEmail $this
+   */
+  public function setReferencing(?SentEmail $referencing):SentEmail
+  {
+    $this->referencing = $referencing;
+
+    return $this;
+  }
+
+  /**
+   * Returns referencing.
+   *
+   * @return string|null
+   */
+  public function getReferencing():?SentEmail
+  {
+    return $this->referencing;
+  }
+
+  /**
+   * Sets referencedBy.
+   *
+   * @param Collection $referencedBy
+   *
+   * @return SentEmail $this
+   */
+  public function setReferencedBy(Collection $referencedBy):SentEmail
+  {
+    $this->referencedBy = $referencedBy;
+
+    return $this;
+  }
+
+  /**
+   * Returns referencedBy.
+   *
+   * @return Collection
+   */
+  public function getReferencedBy():Collection
+  {
+    return $this->referencedBy;
   }
 }
