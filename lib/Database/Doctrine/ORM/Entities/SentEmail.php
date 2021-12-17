@@ -150,7 +150,7 @@ class SentEmail
   /**
    * @var SentEmail
    *
-   * @ORM\ManyToOne(targetEntity="SentEmail", inversedBy="referencedBy", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="SentEmail", inversedBy="referencedBy", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(name="reference_id", referencedColumnName="message_id")
    */
   private $referencing;
@@ -158,7 +158,7 @@ class SentEmail
   /**
    * @var Collection
    *
-   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="referencing", indexBy="messageId", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="referencing", indexBy="messageId", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @ORM\OrderBy({"bulkRecipients" = "ASC"})
    */
   private $referencedBy;
