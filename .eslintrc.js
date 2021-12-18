@@ -1,4 +1,8 @@
 module.exports = {
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 2015,
+  },
   globals: {
     __webpack_nonce__: true,
     __webpack_public_path__: true,
