@@ -3716,6 +3716,11 @@ Störung.';
    */
   public function cleanAttachmentDownloads()
   {
+    $outBoxFolderPath = $this->getOutBoxFolderPath();
+    if (empty($outBoxFolderPath)) {
+      $this->logError('Outbox folder path "' . $this->getOutBoxFolderPath() . '" not configured');
+      return;
+    }
     $outboxFolder = $this->userStorage->getFolder($this->getOutBoxFolderPath());
     if (empty($outboxFolder)) {
       $this->logError('Outbox folder "' . $this->getOutBoxFolderPath() . '" could not be found');
