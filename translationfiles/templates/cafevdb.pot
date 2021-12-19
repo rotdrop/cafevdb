@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-12-17 01:05+0100\n"
+"POT-Creation-Date: 2021-12-19 21:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -788,7 +788,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:560
 #: lib/Controller/PersonalSettingsController.php:753
-#: lib/Controller/PersonalSettingsController.php:1798
+#: lib/Controller/PersonalSettingsController.php:1829
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr ""
@@ -1240,61 +1240,62 @@ msgid "Unknown link target %s"
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1630
-#: lib/Controller/PersonalSettingsController.php:1740
+#: lib/Controller/PersonalSettingsController.php:1770
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1650
-#: lib/Controller/PersonalSettingsController.php:1675
-#: lib/Controller/PersonalSettingsController.php:1706
+#: lib/Controller/PersonalSettingsController.php:1652
+#: lib/Controller/PersonalSettingsController.php:1679
+#: lib/Controller/PersonalSettingsController.php:1705
+#: lib/Controller/PersonalSettingsController.php:1736
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1724
+#: lib/Controller/PersonalSettingsController.php:1754
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1768
+#: lib/Controller/PersonalSettingsController.php:1799
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1785
+#: lib/Controller/PersonalSettingsController.php:1816
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/SepaBulkTransactionsController.php:128
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1808
+#: lib/Controller/PersonalSettingsController.php:1839
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1825
+#: lib/Controller/PersonalSettingsController.php:1856
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1846
+#: lib/Controller/PersonalSettingsController.php:1877
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1848
+#: lib/Controller/PersonalSettingsController.php:1879
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1851
+#: lib/Controller/PersonalSettingsController.php:1882
 #, php-format
 msgid "Public SSL key missing for %s, key distribution failed."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1856
+#: lib/Controller/PersonalSettingsController.php:1887
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2356,7 +2357,7 @@ msgstr ""
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1952
+#: lib/EmailForm/Composer.php:2005
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2382,78 +2383,78 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2677
+#: lib/EmailForm/Composer.php:2735
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2849
+#: lib/EmailForm/Composer.php:2907
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2862
+#: lib/EmailForm/Composer.php:2920
 msgid "musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2954
-#: lib/EmailForm/Composer.php:2969
+#: lib/EmailForm/Composer.php:3012
+#: lib/EmailForm/Composer.php:3027
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3053
-#: lib/EmailForm/Composer.php:3106
-#: lib/EmailForm/Composer.php:3116
+#: lib/EmailForm/Composer.php:3111
+#: lib/EmailForm/Composer.php:3164
+#: lib/EmailForm/Composer.php:3174
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3081
+#: lib/EmailForm/Composer.php:3139
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3397
+#: lib/EmailForm/Composer.php:3455
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3405
+#: lib/EmailForm/Composer.php:3463
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3429
+#: lib/EmailForm/Composer.php:3487
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3460
+#: lib/EmailForm/Composer.php:3518
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3518
-#: lib/EmailForm/Composer.php:3629
+#: lib/EmailForm/Composer.php:3576
+#: lib/EmailForm/Composer.php:3687
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3546
+#: lib/EmailForm/Composer.php:3604
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3571
+#: lib/EmailForm/Composer.php:3629
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4070
+#: lib/EmailForm/Composer.php:4133
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4071
+#: lib/EmailForm/Composer.php:4134
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4072
+#: lib/EmailForm/Composer.php:4135
 msgid "Local Filesystem"
 msgstr ""
 
@@ -4640,55 +4641,55 @@ msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:176
+#: lib/Service/Finance/FinanceService.php:184
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:293
-#: lib/Service/Finance/FinanceService.php:334
+#: lib/Service/Finance/FinanceService.php:299
+#: lib/Service/Finance/FinanceService.php:340
 msgid "finance"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:423
+#: lib/Service/Finance/FinanceService.php:429
 msgid "The given mandate does not contain a valid project-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:439
+#: lib/Service/Finance/FinanceService.php:445
 msgid "The given mandate does not contain a valid musician-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:463
+#: lib/Service/Finance/FinanceService.php:469
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:751
+#: lib/Service/Finance/FinanceService.php:757
 msgid "Illegal characters in bank account owner field."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:762
+#: lib/Service/Finance/FinanceService.php:768
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:771
+#: lib/Service/Finance/FinanceService.php:777
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:777
+#: lib/Service/Finance/FinanceService.php:783
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:781
+#: lib/Service/Finance/FinanceService.php:787
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:786
+#: lib/Service/Finance/FinanceService.php:792
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
@@ -11073,6 +11074,32 @@ msgstr ""
 #: lib/PageRenderer/PMETableViewBase.php:342
 #, php-format
 msgid "extra field type cloud-folder"
+msgstr ""
+
+#: templates/settings/orchestra-settings.php:168
+#, php-format
+msgid "Select member data update"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4016
+#: templates/settings/orchestra-settings.php:180
+#, php-format
+msgid "member data update"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4139
+#, php-format
+msgid "general"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4139
+#, php-format
+msgid "bills and receipts"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4215
+#, php-format
+msgid "concerts"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
