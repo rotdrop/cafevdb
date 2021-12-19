@@ -1587,9 +1587,50 @@ Störung.';
               $bankAccount = $musician->getSepaBankAccounts()->first();
             }
 
-            $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician) {
+            $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
-                $financeService->preFilledDebitMandateForm($bankAccount, $membersProject, $musician);
+                $financeService->preFilledDebitMandateForm(
+                  $bankAccount,
+                  $membersProject,
+                  $musician,
+                  formName: $templateId
+                );
+              return [
+                'data' => $fileData,
+                'fileName' => $fileName,
+                'encoding' => 'base64',
+                'mimeType' => $mimeType,
+              ];
+            };
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+            $membersProject = $this->entityManager->find(
+              Entities\Project::class,
+              $this->getClubMembersProjectId()
+            );
+            if (empty($membersProject)) {
+              continue 2;
+            }
+            /**@var Entities\ProjectParticipant $participant */
+            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
+              'musician' => $musician,
+              'project' => $membersProject,
+            ]);
+            if (!empty($participant)) {
+              $bankAccount = $participant->getSepaBankAccount();
+            }
+            if (empty($bankAccount)) {
+              $bankAccount = $musician->getSepaBankAccounts()->first();
+            }
+
+            $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician, $templateId) {
+              list($fileData, $mimeType, $fileName) =
+                $financeService->preFilledDebitMandateForm(
+                  $bankAccount,
+                  $membersProject,
+                  $musician,
+                  formName: $templateId
+                );
               return [
                 'data' => $fileData,
                 'fileName' => $fileName,
@@ -1614,9 +1655,14 @@ Störung.';
               $bankAccount = $musician->getSepaBankAccounts()->first();
             }
 
-            $personalAttachments[] = function() use ($financeService, $bankAccount, $musician) {
+            $personalAttachments[] = function() use ($financeService, $bankAccount, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
-                $financeService->preFilledDebitMandateForm($bankAccount, $this->project, $musician);
+                $financeService->preFilledDebitMandateForm(
+                  $bankAccount,
+                  $this->project,
+                  $musician,
+                  formName: $templateId
+                );
               return [
                 'data' => $fileData,
                 'fileName' => $fileName,

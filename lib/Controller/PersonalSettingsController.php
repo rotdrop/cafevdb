@@ -1640,7 +1640,9 @@ class PersonalSettingsController extends Controller {
         if ($format == 'pdf') {
           list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
             $musician->getSepaBankAccounts()->first(),
-            $this->getExecutiveBoardProjectId());
+            $this->getExecutiveBoardProjectId(),
+            formName: $templateName
+          );
         } else {
           /** @var OpenDocumentFiller $documentFiller */
           $documentFiller = $this->di(OpenDocumentFiller::class);
@@ -1665,7 +1667,35 @@ class PersonalSettingsController extends Controller {
         if ($format == 'pdf') {
           list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
             $musician->getSepaBankAccounts()->first(),
-            $this->getClubMembersProjectId());
+            $this->getClubMembersProjectId(),
+            formName: $templateName
+          );
+        } else {
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $templateFileName = $this->getDocumentTemplatesPath($templateName);
+          if (empty($templateFileName)) {
+            return self::grumble(
+              $this->l->t('There is no template file for template "%s"',
+                          $templateName));
+          }
+          list($fileData, $mimeType, $fileName) = $documentFiller->fill(
+            $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
+          );
+        }
+        break;
+      }
+      case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE: {
+        /** @var InstrumentationService $instrumentationService */
+        $instrumentationService = $this->di(InstrumentationService::class);
+        $musician = $instrumentationService->getDummyMusician();
+
+        if ($format == 'pdf') {
+          list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+            $musician->getSepaBankAccounts()->first(),
+            $this->getClubMembersProjectId(),
+            formName: $templateName
+          );
         } else {
           /** @var OpenDocumentFiller $documentFiller */
           $documentFiller = $this->di(OpenDocumentFiller::class);
@@ -1744,29 +1774,30 @@ class PersonalSettingsController extends Controller {
         // /** @var InstrumentationService $instrumentationService */
         // $instrumentationService = $this->di(InstrumentationService::class);
         // $musician = $instrumentationService->getDummyMusician();
-      case 'projectDebitNoteMandateForm':
-      case 'generalDebitNoteMandateForm':
-        /** @var InstrumentInsuranceService $insuranceService */
-        /** @var OpenDocumentFiller $documentFiller */
-        $documentFiller = $this->di(OpenDocumentFiller::class);
-        $fillData = $documentFiller->fillData([]);
-        break;
-      case 'instrumentInsuranceRecord': {
-        /** @var InstrumentInsuranceService $insuranceService */
-        $insuranceService = $this->di(InstrumentInsuranceService::class);
-        $musician = $insuranceService->getDummyMusician();
-        $insuranceOverview = $insuranceService->musicianOverview($musician);
+        case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+        case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+        case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          /** @var InstrumentInsuranceService $insuranceService */
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $fillData = $documentFiller->fillData([]);
+          break;
+        case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD: {
+          /** @var InstrumentInsuranceService $insuranceService */
+          $insuranceService = $this->di(InstrumentInsuranceService::class);
+          $musician = $insuranceService->getDummyMusician();
+          $insuranceOverview = $insuranceService->musicianOverview($musician);
 
-        /** @var OpenDocumentFiller $documentFiller */
-        $documentFiller = $this->di(OpenDocumentFiller::class);
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
 
-        $fillData = $documentFiller->fillData($insuranceOverview);
-        break;
-      }
-      default:
-        return self::grumble(
-          $this->l->t('Download of auto-fill test-data for template "%s" is not yet implemented, sorry.',
-                      $templateName));
+          $fillData = $documentFiller->fillData($insuranceOverview);
+          break;
+        }
+        default:
+          return self::grumble(
+            $this->l->t('Download of auto-fill test-data for template "%s" is not yet implemented, sorry.',
+                        $templateName));
       }
 
       $fileData = json_encode($fillData);

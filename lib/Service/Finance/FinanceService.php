@@ -160,9 +160,17 @@ class FinanceService
   }
 
   /**
+   * Provide pre-filled debit-mandate and personal data forms.
    *
+   * @param mixed $accountSequenceOrAccount
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param int|Entities\Musician $musicianOrId
+   *
+   * @param null|string $formName
    */
-  public function preFilledDebitMandateForm($accountSequenceOrAccount, $projectOrId, $musicianOrId = null)
+  public function preFilledDebitMandateForm($accountSequenceOrAccount, $projectOrId, $musicianOrId = null, ?string $formName = null)
   {
     if ($accountSequenceOrAccount instanceof Entities\SepaBankAccount) {
       /** @var Entities\SepaBankAccount $bankAccount */
@@ -203,14 +211,12 @@ class FinanceService
       return [];
     }
 
-    if ($this->isClubMembersProject($project)) {
-      $formName = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
-    } else {
-      $formName = ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
-    }
-
     if (empty($formName)) {
-      return [];
+      if ($this->isClubMembersProject($project)) {
+        $formName = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+      } else {
+        $formName = ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
+      }
     }
 
     $formFileName = $this->getDocumentTemplatesPath($formName);
