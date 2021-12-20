@@ -73,18 +73,18 @@ const modalizer = function(open) {
       return true;
     }
     const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
-    console.info('overlay index: ', overlayIndex);
+    console.debug('overlay index: ', overlayIndex);
     let numDialogs = 0;
     $('.ui-dialog.ui-widget').each(function(index) {
       const $this = $(this);
       const thisIndex = $this.data('z-index') || parseInt($this.css('z-index'));
-      console.info('that index: ', thisIndex);
+      console.debug('that index: ', thisIndex);
       if (thisIndex >= overlayIndex) {
         ++numDialogs;
       }
     });
 
-    console.info('num dialogs open: ', numDialogs);
+    console.debug('num dialogs open: ', numDialogs);
     if (numDialogs > 1) {
       // one is the modalizer itself, of course.
       return modalizer;
