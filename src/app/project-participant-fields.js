@@ -190,17 +190,29 @@ const ready = function(selector, resizeCB) {
 
     container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function(index) {
       const $this = $(this);
-      $this.prop(
-        'required',
-        ($this.hasClass(multiplicity + '-multiplicity-required')
-         || $this.hasClass(dataType + '-data-type-required')
-         || $this.hasClass(dueDate + '-deposit-due-date-required')
-         || $this.hasClass('multiplicity-' + multiplicity + '-'
-                           + dueDate + '-deposit-due-date-required')
-        )
-          && !$this.hasClass('not-multiplicity-' + multiplicity + '-'
-                             + dueDate + '-deposit-due-date-required')
-      );
+      let required = false;
+      for (const className of $this.attr('class').split(/\s+/)) {
+        switch (className) {
+        case multiplicity + '-multiplicity-required':
+        case dataType + '-data-type-required':
+        case dueDate + '-deposit-due-date-required':
+        case 'multiplicity-' + multiplicity + '-' + dueDate + '-deposit-due-date-required':
+          required = true;
+          break;
+        default:
+          break;
+        }
+        if (className === 'not-multiplicity-' + multiplicity + '-' + dueDate + '-deposit-due-date-required') {
+          required = false;
+          break; // kill-switch, bail out.
+        }
+        const onlyMultiplicityRequired = className.match(/only-multiplicity-(.*)-multiplicity-required/);
+        if (onlyMultiplicityRequired && onlyMultiplicityRequired[1] !== multiplicity) {
+          required = false;
+          break; // kill-switch, bail out.
+        }
+      }
+      $this.prop('required', required);
     });
     container.find('.data-type-html-disabled, .data-type-html-disabled *').prop('disabled', dataType === 'html');
     container.find('.not-data-type-html-disabled, .not-data-type-html-disabled *').prop('disabled', dataType !== 'html');

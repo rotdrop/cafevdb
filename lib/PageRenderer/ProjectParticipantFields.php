@@ -512,26 +512,26 @@ class ProjectParticipantFields extends PMETableViewBase
       },
     ];
 
-    foreach (['groupofpeople' => '', 'single' => '', 'simple' => $this->l->t('Default') . ' '] as $variant => $prefix) {
-      $opts['fdd']['data_options_' . $variant] = [
+    foreach (['groupofpeople' => '', 'single' => '', 'simple' => $this->l->t('Default') . ' '] as $multiplicityVariant => $prefix) {
+      $opts['fdd']['data_options_' . $multiplicityVariant] = [
         'name' => $this->currencyLabel($this->l->t('Data'), $prefix),
         'css' => [
           'postfix' => [
-            'data-options-' . $variant,
+            'data-options-' . $multiplicityVariant,
             'default-hidden',
-            'not-multiplicity-' . $variant . '-hidden',
+            'not-multiplicity-' . $multiplicityVariant . '-hidden',
             'data-type-cloud-folder-hidden',
             'data-type-cloud-file-hidden',
             'data-type-db-file-hidden',
           ],
         ],
         'sql' => '$main_table.id',
-        'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($variant) {
+        'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
           $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
           $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
           $dataType = $row['qf'.$pme->fdn['data_type']]??null;
-          return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $variant);
+          return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $multiplicityVariant);
         },
         'input' => 'SR',
         'options' => 'ACP', // but not in list/view/delete-view
@@ -539,34 +539,34 @@ class ProjectParticipantFields extends PMETableViewBase
         'maxlen' => 29,
         'size' => 30,
         'sort' => true,
-        'tooltip' => $this->toolTipsService['participant-fields-data-options' . ':' . $variant],
+        'tooltip' => $this->toolTipsService['participant-fields-data-options' . ':' . $multiplicityVariant],
       ];
 
-      $opts['fdd']['deposit_' . $variant] = [
+      $opts['fdd']['deposit_' . $multiplicityVariant] = [
         'name' => $prefix . $this->l->t('Deposit').' ['.$this->currencySymbol().']',
         'css' => [
           'postfix' => [
-            'deposit-' . $variant,
+            'deposit-' . $multiplicityVariant,
             'default-hidden',
-            'not-multiplicity-' . $variant . '-data-type-service-fee-hidden',
-            'multiplicity-' . $variant . '-set-deposit-due-date-required',
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden',
+            'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-required',
           ],
         ],
         'sql' => '$main_table.id',
-        'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($variant) {
+        'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
           $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
           $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
           $dataType = $row['qf'.$pme->fdn['data_type']]??null;
           list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
           $key = $entry['key'];
-          $name  = $this->pme->cgiDataName('data_options_' . $variant);
+          $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
           $field = 'deposit';
           $value = htmlspecialchars($entry[$field]);
           $tip = $pme->fdd[$pmeField]['tooltip'];
           $html =<<<__EOT__
             <div class="active-value">
-            <input class="pme-input data-options-{$variant} multiplicity-{$variant}-set-deposit-due-date-required"
+            <input class="pme-input data-options-{$multiplicityVariant} multiplicity-{$multiplicityVariant}-set-deposit-due-date-required"
             type="number"
             step="0.01"
             maxlength="29"
@@ -586,7 +586,7 @@ __EOT__;
         'maxlen' => 29,
         'size' => 30,
         'sort' => true,
-        'tooltip' => $this->toolTipsService['participant-fields-deposit-' . $variant],
+        'tooltip' => $this->toolTipsService['participant-fields-deposit-' . $multiplicityVariant],
       ];
     }
 
@@ -1970,8 +1970,10 @@ __EOT__;
 
   /**
    * Display the input stuff for a single-value choice and simple input values.
+   *
+   * @param string $multiplicityVariant The multiplicity-variant this is emitted for.
    */
-  private function showAllowedSingleValue($dataOptions, $op, $toolTip, $multiplicity, $dataType, $variant)
+  private function showAllowedSingleValue($dataOptions, $op, $toolTip, $multiplicity, $dataType, $multiplicityVariant)
   {
     list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
     $value = $entry['data'];
@@ -1979,7 +1981,7 @@ __EOT__;
       return $this->currencyValue($value);
     }
     $key = $entry['key'];
-    $name  = $this->pme->cgiDataName('data_options_' . $variant);
+    $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
     $field = 'data';
     if (!empty($value)) {
       try {
@@ -2007,7 +2009,7 @@ __EOT__;
     }
     $cssBase = [
       'pme-input',
-      'data-options-'.$variant,
+      'data-options-'.$multiplicityVariant,
     ];
     $cssClass = implode(' ', array_merge(
       $cssBase, [
@@ -2015,6 +2017,7 @@ __EOT__;
         'data-type-html-hidden',
         'data-type-html-disabled',
         'service-fee-data-type-required',
+        'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
       ]));
     $html  .=<<<__EOT__
 <input class="{$cssClass}"
@@ -2036,7 +2039,7 @@ __EOT__;
       ]));
     $html  .=<<<__EOT__
 <span class="{$cssClass} pme-cell-wrapper">
-  <textarea class="pme-input data-options-{$variant} data-type-html-wysiwyg-editor"
+  <textarea class="pme-input data-options-{$multiplicityVariant} data-type-html-wysiwyg-editor"
             name="{$name}[{$key}][{$field}]"
             {$htmlDisabled['textarea']}
             title="{$tip}"
@@ -2069,7 +2072,7 @@ __EOT__;
       foreach(['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
-<input class="pme-input data-options-{$variant}"
+<input class="pme-input data-options-{$multiplicityVariant}"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"
