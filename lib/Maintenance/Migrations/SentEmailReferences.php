@@ -39,8 +39,6 @@ class SentEmailReferences extends AbstractMigration
       'ALTER TABLE SentEmails ADD CONSTRAINT FK_80F49BA01645DEA9 FOREIGN KEY (reference_id) REFERENCES SentEmails (message_id)',
       'CREATE INDEX IDX_80F49BA01645DEA9 ON SentEmails (reference_id)',
     ],
-    self::TRANSACTIONAL => [
-    ],
   ];
 
   public function description():string
