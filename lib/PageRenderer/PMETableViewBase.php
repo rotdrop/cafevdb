@@ -2160,20 +2160,32 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     return $this->queryIndexField($this->joinTableFieldName($tableInfo, $column), $fdd);
   }
 
-  protected function makeFieldTranslationsJoin(array $joinInfo, $fields, bool $untranslatedFallback = true, bool $onlyTranslated = false)
+  /**
+   * Join with an in-database translation table. The following fields are provided:
+   *
+   * - l10n_FIELD -- translated field will fallback translation to original value
+   * - translated_FIELD -- translated field without fallback to original value
+   * - original_FIELD -- untranslated field with fallback to translated value
+   * - untranslated_FIELD -- untranslated field without fallback to translated value
+   *
+   * @param array $joinInfo Join desciption, see PMETableViewBase::defineJoinStructure().
+   *
+   * @param string|array $fields Single field-name as string or array of field-names.
+   *
+   * @param bool $onlyTranslated Only fetch line with translation values.
+   *
+   */
+  protected function makeFieldTranslationsJoin(array $joinInfo, $fields, $onlyTranslated = false)
   {
     if (!is_array($fields)) {
       $fields = [ $fields ];
     }
     $l10nFields = [];
-    if ($untranslatedFallback) {
-      foreach ($fields as $field) {
-        $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
-      }
-    } else {
-      foreach ($fields as $field) {
-        $l10nFields[] = 'jt_'.$field.'.content AS l10n_'.$field;
-      }
+    foreach ($fields as $field) {
+      $l10nFields[] = 'COALESCE(jt_'.$field.'.content, t.'.$field.') AS l10n_'.$field;
+      $l10nFields[] = 'jt_'.$field.'.content AS translated_'.$field;
+      $l10nFields[] = 'COALESCE(t.'.$field.', jt_'.$field.'.content) AS original_'.$field;
+      $l10nFields[] = 't.'.$field.' AS untranslated_'.$field;
     }
     $entity = addslashes($joinInfo['entity']);
     // if (count($joinInfo['identifier']) > 1) {
@@ -2205,7 +2217,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $l10nJoins[] = $l10nJoin;
     }
     $table = explode(self::VALUES_TABLE_SEP, $joinInfo['table'])[0];
-    $query = 'SELECT t.*, '.implode(', ', $l10nFields).'
+    $query = 'SELECT t.*'
+      . ', '
+      . implode(', ', $l10nFields).'
   FROM '.$table.' t
 '.implode('', $l10nJoins);
     if ($onlyTranslated) {
