@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -104,13 +105,14 @@ trait ParticipantFieldsTrait
         }
 
         // set tab unless overridden by field definition
-        if ($field['data_type'] == FieldType::SERVICE_FEE) {
-          $tab = [ 'id' => $financeTab ];
-        } else {
-          $tab = [ 'id' => 'project' ];
-        }
         if (!empty($field['tab'])) {
           $tabId = $this->tableTabId($field['tab']);
+          $tab = [ 'id' => $tabId ];
+        } else {
+          $tabId = ProjectParticipantFieldsService::defaultTabId($field['multiplicity'], $field['data_type']);
+          if ($tabId == 'finance') {
+            $tabId = $financeTab;
+          }
           $tab = [ 'id' => $tabId ];
         }
 

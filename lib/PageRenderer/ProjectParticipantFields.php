@@ -330,8 +330,8 @@ class ProjectParticipantFields extends PMETableViewBase
         'css' => [ 'postfix' => [ 'field-name', ], ],
         'input' => 'M',
         'select' => 'T',
-        'maxlen' => 29,
-        'size' => 30,
+        'maxlen' => 64,
+        'size' => 40,
         'sort' => true,
         'tooltip' => $this->toolTipsService['participant-fields-field-name'],
       ],
@@ -855,9 +855,10 @@ __EOT__;
       'name' => $this->l->t('Table Tab'),
       'css' => [ 'postfix' => [ 'tab', 'allow-empty', ], ],
       'select' => 'D',
+      'sql' => '$join_col_fqn',
       'values' => [
-        'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ], false),
-        'column' => 'tab',
+        'table' => $this->makeFieldTranslationsJoin($this->joinStructure[self::TABLE], [ 'tab' ]),
+        'column' => 'original_tab',
         'description' => [
           'columns' => [ 'GROUP_CONCAT(DISTINCT $table.l10n_tab)' ],
           'cast' => [ false ],
@@ -985,6 +986,30 @@ __EOT__;
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
 
+    $opts[PHPMyEdit::OPT_TRIGGERS]['*'][PHPMyEdit::TRIGGER_DATA][] =
+      function(&$pme, $op, $step, &$row) {
+        $dataType = $row[$this->queryField('data_type', $pme->fdd)]??null;
+        if (empty($row[$this->queryField('tab', $pme->fdd)])) {
+          $tab = null;
+          switch ($dataType) {
+            case DataType::SERVICE_FEE:
+              $tab = 'finance';
+              break;
+            case DataType::CLOUD_FILE:
+            case DataType::CLOUD_FOLDER:
+            case DataType::DB_FILE:
+              $tab = 'file-attachments';
+              break;
+            default:
+              $tab = 'project';
+              break;
+          }
+          $row[$this->queryField('tab', $pme->fdd)] = $tab;
+          $row[$this->queryIndexField('tab', $pme->fdd)] = $tab;
+        }
+        return true;
+      };
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
@@ -1049,7 +1074,7 @@ __EOT__;
 
     /************************************************************************
      *
-     * Add the data from NewTab to Tab
+     * Move the data from NewTab to Tab
      *
      */
 
@@ -1060,11 +1085,28 @@ __EOT__;
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
-    if (empty($newvals['tab']) && ($newvals['tab']??null) !== null) {
-      $newvals['tab'] = null;
-      if (($oldvals['tab']??null) !== null) {
-        $changed[] = 'tab';
+    /************************************************************************
+     *
+     * Remove tab definitions resulting from data-type specs
+     *
+     */
+
+    $tag = 'tab';
+    foreach (['oldvals', 'newvals'] as $dataSet) {
+      if (!empty(${$dataSet}[$tag])) {
+        $defaultTabId = ProjectParticipantFieldsService::defaultTabId(${$dataSet}['multiplicity'], ${$dataSet}['data_type']);
+        if (${$dataSet}[$tag] == $defaultTabId) {
+          ${$dataSet}[$tag] = null;
+        }
       }
+    }
+
+    if (empty($newvals[$tag]) && ($newvals[$tag]??null) !== null) {
+      $newvals[$tag] = null;
+    }
+
+    if ($oldvals[$tag] !== $newvals[$tag]) {
+      $changed[] = $tag;
     }
 
     /************************************************************************
@@ -1125,10 +1167,6 @@ __EOT__;
     if ($newvals['data_type'] == DataType::CLOUD_FILE
         || $newvals['data_type'] == DataType::DB_FILE
         || $newvals['data_type'] == DataType::CLOUD_FOLDER) {
-      if ($op == PHPMyEdit::SQL_QUERY_INSERT && empty($newvals['tab'])) {
-        $newvals['tab'] = $this->l->t('file-attachments');
-        $changed[] = 'tab';
-      }
       if ($newvals['data_type'] == DataType::DB_FILE) {
         $newvals['encrypted'] = true;
         if (empty($oldvals['encrypted'])) {
@@ -1311,7 +1349,6 @@ __EOT__;
               $value = $date->setTimezone('UTC')->toIso8601String();
               break;
           }
-          $this->logInfo('PARSED DATE IS ' . $value . ' ' . print_r($date, true));
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = empty($value) ? null : $key.self::JOIN_KEY_SEP.$value;

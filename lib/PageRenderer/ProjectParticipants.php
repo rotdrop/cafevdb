@@ -1336,6 +1336,11 @@ class ProjectParticipants extends PMETableViewBase
     ];
     $personal = [
       [
+        'id' => 'file-attachments',
+        'tooltip' => $this->toolTipsService['project-file-attachments-tab'],
+        'name' => $this->l->t('Project file attachments'),
+      ],
+      [
         'id' => 'musician',
         'tooltip' => $this->toolTipsService['project-personaldata-tab'],
         'name' => $this->l->t('Personal data'),

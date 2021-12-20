@@ -84,7 +84,6 @@ class ProjectParticipantFieldsService
       // DataType::DATE,
       // DataType::DATETIME,
       DataType::CLOUD_FILE,
-      DataType::DB_FILE,
       DataType::CLOUD_FOLDER,
     ],
     Multiplicity::GROUPOFPEOPLE => [
@@ -409,6 +408,20 @@ class ProjectParticipantFieldsService
   public static function multiplicityTypeMask()
   {
     return self::UNSUPPORTED;
+  }
+
+  public static function defaultTabId(string $multiplicity, string $dataType):string
+  {
+    switch ($dataType) {
+      case DataType::SERVICE_FEE:
+        return  'finance';
+      case DataType::CLOUD_FILE:
+      case DataType::CLOUD_FOLDER:
+      case DataType::DB_FILE:
+        return 'file-attachments';
+      default:
+        return 'project';
+    }
   }
 
   /**
