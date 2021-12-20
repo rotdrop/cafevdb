@@ -70,10 +70,11 @@ class PHPMyEdit extends \phpMyEdit
 
   private $disabledLogTable;
 
-  /** @var array
-   * Overrides for the translation table.
-   */
+  /** @var array Overrides for the translation table. */
   private $labelOverride;
+
+  /** @var string Hash of most recent query */
+  private $queryHash;
 
   /**
    * Override constructor, delay most of the actual work to the
@@ -360,7 +361,30 @@ class PHPMyEdit extends \phpMyEdit
       return false;
     }
     $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
-    return $stmt->fetch($type);
+    $result = $stmt->fetch($type);
+    // Work around bug https://jira.mariadb.org/browse/MDEV-27323
+    if ($result !== false
+        && $type == FetchMode::ASSOCIATIVE
+        && $this->queryHash == $this->generatedQueryHash
+        && !empty($this->columnAliases)) {
+      $missingColumns = array_diff($this->columnAliases, array_keys($result));
+      if (!empty($missingColumns)) {
+        // We assume that this is caused by an optimization bug and that
+        // either the corresponding qfNN_idx column or the corresponding
+        // non-..._idx column is there and contains the correft data
+        $this->logError('Potential MariaDB missing-columns bug (https://jira.mariadb.org/browse/MDEV-27323): ' . print_r($missingColumns, true));
+        $postfix = '_idx';
+        foreach ($missingColumns as $column) {
+          $dataColumn = strrpos($column, $postfix) === false ? $column . $postfix : substr($column, -strlen($postfix));
+          if (empty($result[$dataColumn])) {
+            $this->logError('MariaDB bug https://jira.mariadb.org/browse/MDEV-27323): unable to reconstruct data for column ' . $column);
+          }
+          $result[$column] = $result[$dataColumn];
+        }
+      }
+    }
+
+    return $result;
   }
 
   function sql_free_result(&$stmt)
@@ -394,10 +418,7 @@ class PHPMyEdit extends \phpMyEdit
 
   function myquery($query, $line = 0, $debug = false)
   {
-    if (false && ($debug || $this->debug)) {
-      $line = intval($line);
-      echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($query),'<hr size="1" />',"\n";
-    }
+    $this->queryHash = md5($query);
     if ($debug || $this->debug) {
       $this->logInfo("DEBUG QUERY: ".$query, [], 2);
     }
