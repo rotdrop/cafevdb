@@ -102,6 +102,11 @@ const addEditor = function(selector, initCallback, initialHeight) {
                 },
                 error => {
                   console.error('There was a problem initializing the editor.', error);
+                  try {
+                    $editorElement.tinymce().remove();
+                  } catch (e) {
+                    console.error('EXCEPTION', e);
+                  }
                   return $.Deferred().resolveWith(this, arguments);
                 });
             }).get()

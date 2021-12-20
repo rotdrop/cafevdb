@@ -170,7 +170,7 @@ const myGetConfig = function(plusConfig) {
     plusConfig = {};
   }
   const nonceConfig = {
-    nonce: () => globalState.nonce,
+    nonce: () => globalState.initialNonce,
   };
   // const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   // if (width <= 768) { // perhaps mobile

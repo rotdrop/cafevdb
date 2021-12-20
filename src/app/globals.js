@@ -59,14 +59,15 @@ if (window.CAFEFDB === undefined) {
   window.CAFEVDB = initialState.CAFEVDB;
   // @TODO the nonce in principle could go to the initial-state
   window.CAFEVDB.nonce = btoa(OC.requestToken);
+  window.CAFEVDB.initialNonce = window.CAFEVDB.nonce;
 }
 const globalState = window.CAFEVDB;
 let nonce = globalState.nonce;
 
 onRequestTokenUpdate(function(token) {
-  globalState.nonce = btoa(token);
+  globalState.nonce = token;
   nonce = globalState.nonce;
-  console.debug('NEW REQUEST TOKEN', token);
+  console.debug('NEW REQUEST TOKEN', token, OC.requestToken);
 });
 
 export {
