@@ -38,11 +38,12 @@ import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
 import modalizer from './modalizer.js';
-import { md5 } from 'blueimp-md5';
+import md5 from 'blueimp-md5';
+// or: const md5 = require('blueimp-md5');
+// but NOT: import { md5 } from 'blueimp-md5';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
-// require('blueimp-md5');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
