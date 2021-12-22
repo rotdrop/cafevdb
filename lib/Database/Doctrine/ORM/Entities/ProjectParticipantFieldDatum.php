@@ -39,7 +39,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectParticipantFieldsData
  *
- * @ORM\Table(name="ProjectParticipantFieldsData")
+ * @ORM\Table(
+ *   name="ProjectParticipantFieldsData",
+ *   indexes={
+ *     @ORM\Index(fields={"field", "project"}),
+ *   }
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",

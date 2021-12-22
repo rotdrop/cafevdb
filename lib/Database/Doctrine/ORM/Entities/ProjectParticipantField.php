@@ -43,7 +43,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 /**
  * ProjectParticipantFields
  *
- * @ORM\Table(name="ProjectParticipantFields")
+ * @ORM\Table(
+ *   name="ProjectParticipantFields",
+ *   indexes={
+ *     @ORM\Index(fields={"id", "project"}),
+ *   }
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
  * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  * @Gedmo\SoftDeleteable(
