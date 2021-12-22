@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use OCP\EventDispatcher\IEventDispatcher;
+
 // FIXME: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
@@ -38,6 +40,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Events;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -63,6 +66,21 @@ class ProjectParticipantsStorage extends Storage
     $this->participant = $params['participant'];
     $this->project = $this->participant->getProject();
     $this->projectService = $this->di(ProjectService::class);
+    /** @var IEventDispatcher $eventDispatcher */
+    $eventDispatcher = $this->di(IEventDispatcher::class);
+    $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
+      $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
+      try {
+        $this->participant = $this->getDatabaseRepository(Entities\ProjectParticipant::Class)
+          ->find([
+            'project' => $this->participant->getProject()->getId(),
+            'musician' => $this->participant->getMusician()->getId(),
+          ]);
+        $this->project = $this->participant->getProject();
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
+    });
   }
 
   /**
@@ -107,18 +125,24 @@ class ProjectParticipantsStorage extends Storage
       }
       /** @var Entities\File $file */
       if (!empty($file)) {
-        // construct a consistent file-name from the field-info
+
+        $dbFileName = $file->getFileName();
+        $fieldName = $field->getName();
+
         if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
           // construct the file-name from the field-name
-          $fileName = $this->projectService->participantFilename($field->getName(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+          $fileName = $this->projectService->participantFilename($fieldName, $this->project, $this->participant->getMusician()) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
         } else {
-          // construct the file-name from the option label
+          // construct the file-name from the option label if non-empty or the file-name of the DB-file
           /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
           $fieldOption = $fieldDatum->getDataOption();
-          $fileName =
-            $field->getName()
-            . self::PATH_SEPARATOR
-            . $this->projectService->participantFilename($fieldOption->getLabel(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+          $optionLabel = $fieldOption->getLabel();
+          if (!empty($optionLabel)) {
+            $baseName = $this->projectService->participantFilename($fieldOption->getLabel(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+          } else {
+            $baseName = basename($dbFileName);
+          }
+          $fileName = $fieldName . self::PATH_SEPARATOR . $baseName;
         }
         $fileName = $this->buildPath($fileName);
         list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
