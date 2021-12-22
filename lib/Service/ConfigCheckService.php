@@ -956,14 +956,13 @@ class ConfigCheckService
    * data-base server and selecting the configured data-base.
    *
    * @return bool @c true on success.
-   *
-   * @todo Initial database structure and migrations
-   */
+   *   */
   public function databaseAccessible()
   {
     $connection = null;
 
-    $this->entityManager->reopen();
+    // Why was this here? It breaks things ...
+    // $this->entityManager->reopen();
 
     $connection = $this->entityManager->getConnection();
 
