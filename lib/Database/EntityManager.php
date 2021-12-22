@@ -233,6 +233,7 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
+    $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
 
   public function getConnection():?DatabaseConnection
@@ -266,6 +267,15 @@ class EntityManager extends EntityManagerDecorator
   public function getUserId():string
   {
     return $this->userId;
+  }
+
+  /*
+   * Close the entity-manager
+   */
+  public function close()
+  {
+    parent::close();
+    $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
   }
 
   /*
