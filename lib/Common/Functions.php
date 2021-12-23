@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Common\Functions;
 
 use OCA\CAFEVDB\Common\VarDumper;
 
+/** Symphony var-dumper which does not suffer from inifinite recursions. */
 function dump($variable, $stream = true)
 {
   static $dumper = null;
@@ -32,6 +33,21 @@ function dump($variable, $stream = true)
     $dumper = new VarDumper;
   }
   return $dumper->dump($variable, $stream);
+}
+
+/** Version of strcmp which sorts empty strings last. */
+function strCmpEmptyLast($a, $b)
+{
+  if ($a == $b) {
+    return 0;
+  }
+  if (empty($a)) {
+    return 1;
+  }
+  if (empty($b)) {
+    return -1;
+  }
+  return strcmp($a, $b);
 }
 
 // Local Variables: ***
