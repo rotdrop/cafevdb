@@ -71,6 +71,7 @@ class Navigation
    * flags => optional or bit-wise or of self::DISABLED, self::SELECTED
    * title => optional title
    * label => optional label
+   * class => optional CSS class
    * group => optional option group
    * groupClass => optional css, only taken into account on group-change
    * groupData => optional data array, only taken into account on group-change
@@ -120,6 +121,7 @@ class Navigation
       $label = isset($option['label']) ? ' label="'.Util::htmlEscape($option['label']).'"' : '';
       $title = isset($option['title']) ? ' title="'.Util::htmlEscape($option['title']).'"' : '';
       $group = isset($option['group']) ? Util::htmlEscape($option['group']) : false;
+      $cssClass = isset($option['class']) ? ' class="'.Util::htmlEscape($option['class']).'"' : '';
       $data = '';
       if (isset($option['data'])) {
         $optionData = $option['data'];
@@ -157,9 +159,9 @@ class Navigation
           $indent = '  ';
         }
       }
-      $result .= $indent.'<option value="'.Util::htmlEscape((string)$value).'"'.
-              $disabled.$selected.$label.$title.(isset($groupId) ? ' data-group-id="'.$groupId.'"' : '').$data.
-              '>'.
+      $result .= $indent.'<option value="'.Util::htmlEscape((string)$value).'"'
+        . $cssClass.$disabled.$selected.$label.$title.(isset($groupId) ? ' data-group-id="'.$groupId.'"' : '').$data
+        . '>'.
               Util::htmlEscape($option['name']).
               '</option>
                  ';
