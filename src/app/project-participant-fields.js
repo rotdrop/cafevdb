@@ -665,15 +665,15 @@ const ready = function(selector, resizeCB) {
     'blur',
     generatorSelector + '.field-data',
     function(event) {
-      const self = $(this);
-      if (self.prop('readonly')) {
+      const $self = $(this);
+      if ($self.prop('readonly')) {
         return false;
       }
-      const row = self.closest('tr.data-options');
+      const $row = $self.closest('tr.data-options');
 
       const request = 'generator/define';
-      const data = $.extend({}, fieldTypeData(), row.data());
-      const allowed = row.find(textElementSelector);
+      const data = $.extend({}, fieldTypeData(), $row.data());
+      const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
             + '&' + allowed.serialize();
 
@@ -702,19 +702,65 @@ const ready = function(selector, resizeCB) {
         .done(function(data) {
           if (!Ajax.validateResponse(
             data,
-            [/* check for required fields */],
+            ['value', 'slug', 'operationLabels', 'availableUpdateStrategies'],
             cleanup)) {
             return;
           }
 
-          const empty = self.val().trim() === '';
-          if (empty) {
-            self.removeClass('readonly');
-          } else {
-            self.addClass('readonly');
+          if (data.value !== $self.val()) {
+            $self.val(data.value);
           }
-          self.lockUnlock('lock', !empty);
-          row.find('.operation.generator-run').prop('disabled', empty);
+
+          const fieldId = parseInt($row.data('fieldId'));
+          const empty = $self.val().trim() === '';
+          if (empty) {
+            $self.removeClass('readonly');
+          } else {
+            $self.addClass('readonly');
+          }
+          $self.lockUnlock('lock', !empty);
+          $row.find('.operation.generator-run').prop('disabled', empty || !(fieldId > 0));
+
+          const $table = $row.closest('table');
+          const oldGeneratorSlug = $row.data('generatorSlug');
+          $table.removeClass('recurring-generator-' + oldGeneratorSlug);
+          $table.addClass('recurring-generator-' + data.slug);
+          $row.data('generatorSlug', data.slug);
+          $row.removeClass('update-strategy-count-' + $row.data('availableUpdateStrategies').length);
+          $row.data('availableUpdateStrategies', data.availableUpdateStrategies);
+          $row.addClass('update-strategy-count-' + $row.data('availableUpdateStrategies').length);
+
+          const operationClass = (operation, value) => [
+            'recurring',
+            operation,
+            (value ? 'enabled' : 'disabled'),
+          ].join('-');
+          for (const [operation, value] of Object.entries(data.operationLabels)) {
+            $table.removeClass([
+              operationClass(operation, true),
+              operationClass(operation, false),
+            ]);
+            $table.addClass(operationClass(operation, value));
+          }
+
+          // adjust update strategy options
+          const $updateStrategies = $row.find('select.recurring-receivables-update-strategy');
+          const defaultStrategy = $updateStrategies.data('defaultValue');
+          $updateStrategies.find('option').each(function() {
+            const $option = $(this);
+            const optionValue = $option.val();
+            if (optionValue !== '') {
+              $option.prop('disabled', data.availableUpdateStrategies.indexOf($option.val()) === -1);
+              if ($option.prop('disabled')) {
+                $option.prop('selected', false);
+              } else if (optionValue === defaultStrategy) {
+                $updateStrategies.val(defaultStrategy);
+              }
+            }
+          });
+          if (data.availableUpdateStrategies.length === 1) {
+            $updateStrategies.val(data.availableUpdateStrategies[0]);
+          }
 
           Notification.messages(data.message);
 
@@ -899,9 +945,19 @@ const ready = function(selector, resizeCB) {
       source: generators,
       position: { my: 'left bottom', at: 'left top', collision: 'none' },
       minLength: 0,
+      select(event, ui) {
+        // trigger blur event for validation
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.blur();
+      },
     })
     .on('focus', function() {
-      $(this).autocomplete('search', '');
+      const $this = $(this);
+      if (!$this.autocomplete('widget').is(':visible')
+          && !$this.prop('disabled') && !$this.prop('readonly')) {
+        $(this).autocomplete('search', '');
+      }
     });
 
   // synthesize resize events for textareas.

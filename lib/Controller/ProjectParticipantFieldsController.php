@@ -201,9 +201,21 @@ class ProjectParticipantFieldsController extends Controller {
           return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
         }
 
+        $operationLabels = $generatorClass::operationLabels();
+        foreach ($operationLabels as $slug => $value) {
+          if (is_callable($value)) {
+            $operationLabels[$slug] = true;
+          }
+        }
+
+        $updateStrategyChoices = $generatorClass::updateStrategyChoices();
+
         return self::dataResponse([
           'message' => $this->l->t('Generator "%s" successfully mapped to PHP-class "%s".', [ $item['data'], $generatorClass, ]),
           'value' => $generatorClass,
+          'slug' => $generatorClass::slug(),
+          'operationLabels' => $operationLabels,
+          'availableUpdateStrategies' => $updateStrategyChoices,
         ]);
       case self::REQUEST_SUB_TOPIC_RUN:
         foreach (['fieldId', 'startDate',] as $parameter) {

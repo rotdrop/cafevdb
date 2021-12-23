@@ -447,6 +447,7 @@ help text in order to inform others what this option is about.'),
         'regenerate-all' => [
           'default' => $this->l->t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
           'everybody' => $this->l->t('Recompute the values of all recurring fields for all participants.'),
+          'manually' => $this->l->t('Make sure that at least one new empty input field is available. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
         ],
         'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
         'generator-startdate' => $this->l->t('Starting date for the receivable generation. Maybe overridden by the concrete generator framework.'),

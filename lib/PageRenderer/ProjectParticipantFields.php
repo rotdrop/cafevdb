@@ -1606,7 +1606,9 @@ __EOT__;
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
 <tr class="data-line data-options placeholder active multiplicity-recurring-hidden"
-  data-field-id="'.$fieldId.'" data-index="0">
+    data-field-id="'.$fieldId.'"
+    data-index="0"
+>
   <td class="placeholder" colspan="6">
     <input
       class="field-label"
@@ -1632,11 +1634,28 @@ __EOT__;
   </td>
 </tr>';
     $generator = $generatorItem['data']??null;
+    $availableUpdateStrategies = IRecurringReceivablesGenerator::UPDATE_STRATEGIES;
+    $generatorSlug = '';
+    if (!empty($generator)) {
+      $availableUpdateStrategies = $generator::updateStrategyChoices();
+      $generatorSlug = $generator::slug();
+    }
+    $updateStrategies = [ [ 'value' => '', 'name' => '', 'class' => 'hidden', ], ];
     foreach (IRecurringReceivablesGenerator::UPDATE_STRATEGIES as $tag) {
+      $flags = 0;
+      if ($tag == IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION) {
+        $flags |= PageNavigation::SELECTED;
+      }
+      if (array_search($tag, $availableUpdateStrategies) === false) {
+        $flags |= PageNavigation::DISABLED;
+        $flags &= ~PageNavigation::SELECTED; // don't select disabled options
+      } else if (count($availableUpdateStrategies) == 1) {
+        $flags |= PageNavigation::SELECTED; // select the only available option.
+      }
       $option = [
         'value' => $tag,
         'name' => $this->l->t($tag),
-        'flags' => ($tag === IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION ? PageNavigation::SELECTED : 0),
+        'flags' => $flags,
         'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
       ];
       $updateStrategies[] = $option;
@@ -1650,29 +1669,33 @@ __EOT__;
       'active',
       'default-hidden',
       'not-multiplicity-recurring-hidden',
+      'update-strategy-count-' . count($availableUpdateStrategies),
     ]);
     $html .= '
 <tr
   class="'.$cssClass.'"
+  data-generator-slug="'.$generatorSlug.'"
   data-generators=\''.json_encode(
     array_merge(
       array_map([ $this->l, 't' ], array_keys($generators)),
       array_values($generators)
     )
   ).'\'
-  data-field-id="'.$fieldId.'">
+  data-field-id="'.$fieldId.'"
+  data-available-update-strategies=\''.json_encode($availableUpdateStrategies).'\'
+>
   <td class="operations">
     <input
       class="operation regenerate-all"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody']).'"
       type="button"
-      '.(empty($generator) ? 'disabled' : '').'
+      '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
     />
     <input
       class="operation generator-run"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator-run']).'"
       type="button"
-      '.(empty($generator) ? 'disabled' : '').'
+      '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
     />
   </td>
   <td class="generator" colspan="5">
@@ -1681,6 +1704,8 @@ __EOT__;
     </label>
     <select
       id="recurring-receivables-update-strategy"
+      required
+      data-default-value="'.IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION.'"
       class="recurring-multiplicity-required recurring-receivables-update-strategy"
       name="recurringReceivablesUpdateStrategy"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
@@ -1839,13 +1864,38 @@ __EOT__;
       $html .= $displayOptions;
     }
 
-    $cssClass = 'operation-'.$op.' data-options';
+    $cssClass = [
+      'operation-'.$op,
+      'data-options',
+    ];
     if (!empty($multiplicity)) {
-      $cssClass .= ' multiplicity-'.$multiplicity;
+      $cssClass[] = 'multiplicity-'.$multiplicity;
     }
     if (!empty($dataType)) {
-      $cssClass .= ' data-type-'.$dataType;
+      $cssClass[] = 'data-type-'.$dataType;
     }
+
+    if ($multiplicity == Multiplicity::RECURRING) {
+      foreach ($allowed as $value) {
+        if ($value['key'] === Uuid::NIL) {
+          $generatorItem = $value;
+          break;
+        }
+      }
+      $generator = $generatorItem['data']??null;
+      if (!empty($generator)) {
+        $cssClass[] = 'recurring-generator-' . $generator::slug();
+      }
+      $operationLabels = $generator::operationLabels();
+      foreach ($operationLabels as $slug => $value) {
+        if (is_callable($value)) {
+          $value = true;
+        }
+        $cssClass[] = 'recurring-' . $slug . '-' . ($value ? 'en' : 'dis') . 'abled';
+      }
+    }
+
+    $cssClass = implode(' ', $cssClass);
     $html .= '<table
   class="'.$cssClass.'"
   data-size=\'' . json_encode(self::OPTION_DATA_INPUT_SIZE) . '\'>
