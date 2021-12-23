@@ -86,7 +86,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
    */
   static public function slug():string
   {
-    return 'periodic';
+    return self::t('periodic');
   }
 
   /**

@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Common\DoNothingProgressStatus;
@@ -33,6 +34,7 @@ use OCA\CAFEVDB\Exceptions;
 abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   /** @var Entities\ProjectParticipantField */
   protected $serviceFeeField;
@@ -58,6 +60,32 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       'musician' => null,
       'receivable' => null,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function updateStrategyChoices():array
+  {
+    return self::UPDATE_STRATEGIES;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function operationLabels(?string $slug = null)
+  {
+    $labels = [
+      self::OPERATION_OPTION_REGENERATE => true,
+      self::OPERATION_OPTION_REGENERATE_ALL => function(string $dataType) {
+        return $dataType == FieldType::SERVICE_FEE
+          ? self::t('Recompute all Receivables')
+          : self::t('Update all Input-Options');
+      },
+      self::OPERATION_GENERATOR_RUN => true,
+      self::OPERATION_GENERATOR_REGENERATE => true,
+    ];
+    return $slug === null ? $labels : $labels[$slug]??null;
   }
 
   /**

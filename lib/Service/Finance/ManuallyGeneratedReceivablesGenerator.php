@@ -62,7 +62,30 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
    */
   static public function slug():string
   {
-    return 'manually';
+    return self::t('manually');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function updateStrategyChoices():array
+  {
+    return [ self::UPDATE_STRATEGY_SKIP ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function operationLabels(?string $slug = null)
+  {
+    // t('blah')
+    $labels = [
+      self::OPERATION_OPTION_REGENERATE => false,
+      self::OPERATION_OPTION_REGENERATE_ALL => self::t('New Input-Option'),
+      self::OPERATION_GENERATOR_RUN => true,
+      self::OPERATION_GENERATOR_REGENERATE => false,
+    ];
+    return $slug === null ? $labels : $labels[$slug]??null;
   }
 
   /**

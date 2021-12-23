@@ -83,7 +83,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
    */
   static public function slug():string
   {
-    return 'insurance';
+    return self::t('insurance');
   }
 
   /**

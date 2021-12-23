@@ -73,10 +73,42 @@ interface IRecurringReceivablesGenerator
     self::UPDATE_STRATEGY_EXCEPTION,
   ];
 
+  const OPERATION_OPTION_REGENERATE = 'option-regenerate';
+  const OPERATION_OPTION_REGENERATE_ALL = 'option-regenerate-all';
+  const OPERATION_GENERATOR_REGENERATE = 'generator-regenerate';
+  const OPERATION_GENERATOR_RUN = 'generator-run';
+
+  const OPERATION_SLUGS = [
+    self::OPERATION_OPTION_REGENERATE,
+    self::OPERATION_OPTION_REGENERATE_ALL,
+    self::OPERATION_GENERATOR_RUN,
+    self::OPERATION_GENERATOR_REGENERATE,
+  ];
+
   /**
    * A unique short slug which can be used to identify the generator.
    */
   static public function slug():string;
+
+  /**
+   * An array of possible conflict resolutions for conflicting data-items.
+   */
+  static public function updateStrategyChoices():array;
+
+  /**
+   * Return an array of or just one description button-labels, indexed by
+   * operation slug. If a label is literal false the corresponding UI element
+   * can be hidden, if true a default element will be used. For
+   * labelled control elements a string can be returned.
+   *
+   * @param null|string $slug Must be either null or one of the elements of
+   * self::SLUGS. If null all labels will be return, otherwise just the
+   * requested one. If $slug is a string but is not contained in
+   * self::OPERATION_SLUGS then null is returned.
+   *
+   * @return null|string|arra
+   */
+  static public function operationLabels(?string $slug = null);
 
   /**
    * Bind this instance to the given entity. The idea is to have a

@@ -46,7 +46,7 @@ class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
    */
   static public function slug():string
   {
-    return 'nothing';
+    return self::t('nothing');
   }
 
   /**
