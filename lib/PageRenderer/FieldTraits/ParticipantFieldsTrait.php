@@ -733,7 +733,7 @@ trait ParticipantFieldsTrait
                 'column' => 'option_key',
                 'description' => [
                   'columns' => [
-                    'IF($table.field_id = '.$fieldId.$deletedSqlFilter.', BIN2UUID($table.option_key), NULL)',
+                    'IF($table.field_id = '.$fieldId.$deletedValueFilter.', BIN2UUID($table.option_key), NULL)',
                     '$table.option_value',
                   ],
                   'divs' => self::JOIN_KEY_SEP,
