@@ -222,6 +222,11 @@ trait EntityManagerTrait {
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
   protected function find($id, $lockMode = null, $lockVersion = null) {
+
+    if ($this->entityClassName == \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class) {
+      \OCP\Util::writeLog('ORM', 'PROJECT ' . print_r($id, true), \OCP\Util::INFO);
+    }
+
     return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
 
