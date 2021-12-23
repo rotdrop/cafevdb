@@ -414,6 +414,8 @@ class ProjectParticipantsController extends Controller {
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
       $dataType = $field->getDataType();
 
+      $folderPath = $filePath = '';
+
       switch ($dataType) {
       case FieldDataType::CLOUD_FOLDER:
       case FieldDataType::CLOUD_FILE:
@@ -439,8 +441,11 @@ class ProjectParticipantsController extends Controller {
           return self::grumble($this->l->t('Upload-policy "%s" requested, but not supported by storage type "%s".',
                                            [ $uploadPolicy, $dataType ]));
         }
-        $folderPath = '';
-        $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+        if (!empty($uploadData['fileBase'])) {
+          $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+        } else if (!empty($fileName)) {
+          $filePath = pathinfo($fileName, PATHINFO_FILENAME);
+        }
         break;
       default:
         return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
@@ -521,6 +526,8 @@ class ProjectParticipantsController extends Controller {
         if ($dataType == FieldDataType::CLOUD_FOLDER && empty($fileName)) {
           // use original name as storage name in the cloud
           $filePath = $folderPath . UserStorage::PATH_SEP . pathinfo($file['name'], PATHINFO_FILENAME);
+        } else if ($dataType == FieldDataType::DB_FILE && empty($filePath)) {
+          $filePath = pathinfo($file['name'], PATHINFO_FILENAME);
         }
 
         /*
@@ -554,7 +561,7 @@ class ProjectParticipantsController extends Controller {
                        ->setMusician($musician)
                        ->setOptionKey($optionKey);
             $participant->getParticipantFieldsData()->add($fieldData);
-          } else {
+          } else if (!empty($fieldData->getOptionValue())) {
             switch ($uploadPolicy) {
             case 'rename':
               switch ($dataType) {

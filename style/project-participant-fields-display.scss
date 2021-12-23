@@ -54,9 +54,43 @@ form.pme-form.project-participant-fields-display {
     td.service-fee.enum:not(.pme-key) {
       min-width:12em;
     }
+
+    td.service-fee.enum {
+      font-family:inherit;
+    }
+
+    span.allowed-option-name {
+      max-width:5em;
+      /*float:left;*/
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      /*position:absolute;*/ /* needs position != static on parent */
+      /*left:0;*/
+    }
+
+    span.allowed-option-value.money {
+      font-family:monospace;
+      float:right;
+      white-space:nowrap;
+      /*position:absolute;*/
+      /*right:0;*/
+    }
+
+    span.allowed-option.group {
+      width:100%;
+    }
+
+    td.money.single-valued,
+    td.money.simple-valued {
+      font-family:monospace;
+    }
+    td.money.single-valued.groupofpeople {
+      font-family:inherit;
+    }
   }
 
-  &:not(.pme-change,.pme-list) {
+  &:not(.pme-change, .pme-list) {
     td.groupofpeople:not(.pme-key),
     td.groupofpeople-id:not(.pme-key),
     td.service-fee.set:not(.pme-key),
@@ -108,91 +142,47 @@ form.pme-form.project-participant-fields-display {
     padding-right:0.5em;
   }
 
-  &:not(.pme-change) {
-    td.service-fee.enum {
-      font-family:inherit;
-    }
-
+  &.pme-view, &.pme-delete {
     span.allowed-option-name {
-      max-width:5em;
-      /*float:left;*/
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      /*position:absolute;*/ /* needs position != static on parent */
-      /*left:0;*/
+      max-width:12em;
+    }
+    span.allowed-option-name, span.allowed-option-value.money {
+      /* float:unset; */
+    }
+    td.service-fee span.allowed-option-name:after {
+      content: ": ";
+    }
+
+    td.service-fee.set span.allowed-option-value.money {
+      font-family:monospace;
+      /* font-size:120%; */
+      /* position:absolute; */
+      /* left:12em; */
+      float:right;
+    }
+
+    td.service-fee.set {
+      position:relative;
     }
   }
 
-  &.pme-view span.allowed-option-name,
-  &.pme-delete span.allowed-option-name {
-    max-width:12em;
-  }
-
-  &:not(.pme-change) span.allowed-option-value.money {
-    font-family:monospace;
-    float:right;
-    white-space:nowrap;
-    /*position:absolute;*/
-    /*right:0;*/
-  }
-
-  &:not(.pme-change) span.allowed-option.group {
-    width:100%;
-  }
-
-  &.pme-view span.allowed-option-name,
-  &.pme-delete span.allowed-option-name,
-  &.pme-view span.allowed-option-value.money,
-  &.pme-delete span.allowed-option-value.money {
-    /* float:unset; */
-  }
-
-  &.pme-view td.service-fee span.allowed-option-name:after,
-  &.pme-delete td.service-fee span.allowed-option-name:after {
-    content: ": ";
-  }
-
-  &.pme-add td.pme-key.service-fee.single-valued,
-  &.pme-change td.pme-key.service-fee.single-valued,
-  &.pme-copy td.pme-key.service-fee.single-valued,
-  &.pme-view td.service-fee.set,
-  &.pme-delete td.service-fee.set {
-    position:relative;
+  &.pme-add, &.pme-change, &.pme-copy {
+    td.pme-key.service-fee.single-valued {
+      position:relative;
+    }
   }
 
   /* The following can be used to style the money labels. */
-  &.pme-change td.pme-key.service-fee.single-valued span.allowed-option-name.money,
-  &.pme-add td.pme-key.service-fee.single-valued span.allowed-option-name.money,
-  &.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-name.money {
-    /* margin-right:6em; */ /* leave room for absolute positioned money value */
-  }
-
-  &.pme-change td.pme-key.service-fee.single-valued span.allowed-option-value.money,
-  &.pme-add td.pme-key.service-fee.single-valued span.allowed-option-value.money,
-  &.pme-delete td.pme-key.service-fee.single-valued span.allowed-option-value.money {
-    font-family:monospace;
-    float:right;
-    /* position:absolute; */
-    /* right:1em; */
-  }
-
-  &.pme-view td.service-fee.set span.allowed-option-value.money,
-  &.pme-delete td.service-fee.set span.allowed-option-value.money {
-    font-family:monospace;
-    /* font-size:120%; */
-    /* position:absolute; */
-    /* left:12em; */
-    float:right;
-  }
-
-  &:not(.pme-change) {
-    td.money.single-valued,
-    td.money.simple-valued {
-      font-family:monospace;
+  &.pme-change, &.pme-add, &.pme-delete {
+    td.pme-key.service-fee.single-valued span.allowed-option-name.money {
+      /* margin-right:6em; */ /* leave room for absolute positioned money value */
     }
-    td.money.single-valued.groupofpeople {
-      font-family:inherit;
+
+    td.pme-key.service-fee.single-valued span.allowed-option-value.money {
+      font-family:monospace;
+      float:right;
+      /* position:absolute; */
+      /* right:1em; */
     }
   }
 
@@ -213,11 +203,12 @@ form.pme-form.project-participant-fields-display {
     }
   }
 
-  td.pme-value input.sepa-debit-mandate,
-  td.pme-cell input.sepa-debit-mandate {
-    min-height:unset;
-    margin:0;
-    padding: 2px 12px 2px 12px;
+  td.pme-value, td.pme-cell {
+    input.sepa-debit-mandate {
+      min-height:unset;
+      margin:0;
+      padding: 2px 12px 2px 12px;
+    }
   }
 
   /**
@@ -247,10 +238,52 @@ form.pme-form.project-participant-fields-display {
     }
   }
 
+  /**
+   * Style files-app links
+   */
+  &.pme-list, &.pme-view, &.pme-delete {
+    td.pme-value, td.pme-cell {
+      &.data-type-db-file, &.data-type-cloud-file, &.data-type-cloud-folder {
+        padding:1px 3px;
+        .operation {
+          display:inline-block;
+          background-repeat:no-repeat;
+          background-size: 20px 20px;
+          background-position: center;
+          width:24px;
+          height:24px;
+          min-height:unset;
+          margin:0;
+          vertical-align:middle;
+          padding:4px;
+          margin-right:0.5em;
+          &.open-parent {
+            background-image:url('../../../core/img/filetypes/folder-external.svg');
+          }
+        }
+      }
+    }
+  }
+
   tr.participant-field.recurring {
     td.pme-value {
       table {
         border-collapse:collapse;
+        &.data-type-db-file thead {
+          display:none;
+        }
+        &.recurring-option-recompute-button-disable {
+          td.operations input.operation.regenerate {
+            display:none;
+          }
+        }
+        &.recurring-generator-manually {
+          td.operations {
+            input.operation.regenerate-all {
+              background-image:url('../../../core/img/actions/add.svg');
+            }
+          }
+        }
         td.operations {
           input.operation.regenerate-all {
             width:auto;
@@ -266,6 +299,9 @@ form.pme-form.project-participant-fields-display {
           }
           label.recurring-receivables-update-strategy {
             margin-left:1em;
+            &.update-strategy-count-0, &.update-strategy-count-1 {
+              display:none;
+            }
           }
           input.operation {
             background-repeat:no-repeat;
@@ -274,7 +310,7 @@ form.pme-form.project-participant-fields-display {
             width:28px;
             height:28px;
             vertical-align:middle;
-            margin-right:1em;
+            margin-right:0.5em;
             &.regenerate {
               /*background-image:url('../img/reload-solid.svg');*/
               background-image:url('../img/actions/compute-red.svg');
@@ -311,15 +347,21 @@ form.pme-form.project-participant-fields-display {
         }
         tr.generator {
           border-top: 1px solid black;
+          .flex-container {
+            flex-flow:row nowrap;
+            display:inline-flex;
+            align-items:center;
+            justify-content:space-between;
+          }
         }
-         th, td {
-           &.document-count-0 {
-             display:none;
-           }
-           &.label.unlabelled {
-             display:none;
-           }
-         }
+        th, td {
+          &.document-count-0 {
+            display:none;
+          }
+          &.label.unlabelled {
+            display:none;
+          }
+        }
       }
     }
   }
