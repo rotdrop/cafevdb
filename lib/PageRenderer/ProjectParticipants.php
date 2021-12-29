@@ -442,7 +442,7 @@ class ProjectParticipants extends PMETableViewBase
         'sql|LFVD' => 'IF($join_col_fqn IS NULL OR $join_col_fqn = \'\', $table.first_name, $join_col_fqn)',
         'maxlen'   => 384,
         'display|ACP' => [
-          'attributes' => function($op, $row, $k, $pme) {
+          'attributes' => function($op, $value, $row, $k, $pme) {
             $firstName = $row['qf'.($k-1)];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
@@ -481,7 +481,7 @@ class ProjectParticipants extends PMETableViewBase
         'sql|LFVD' => parent::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
-          'attributes' => function($op, $row, $k, $pme) {
+          'attributes' => function($op, $value, $row, $k, $pme) {
             $surName = $row['qf'.($k-3)];
             $firstName = $row['qf'.($k-2)];
             $nickName = $row['qf'.($k-1)];
@@ -527,7 +527,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'   => 256,
         'sort'     => true,
         'display|ACP' => [
-          'attributes' => function($op, $row, $k, $pme) {
+          'attributes' => function($op, $value, $row, $k, $pme) {
             $surName = $row['qf'.($k-4)];
             $firstName = $row['qf'.($k-3)];
             $nickName = $row['qf'.($k-2)];

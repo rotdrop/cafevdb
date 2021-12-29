@@ -563,12 +563,17 @@ class phpMyEdit
 		return '';
 	}
 
-	/**Wrapper around core htmlspecialchars; avoid double encoding,
+	/**
+	 * Wrapper around core htmlspecialchars; avoid double encoding,
 	 * standard options.
 	 */
 	public function enc($string, $double_encode = false)
 	{
-		return htmlspecialchars($string, ENT_COMPAT|ENT_HTML401, 'UTF-8', $double_encode);
+		return htmlspecialchars(
+			$string,
+			flags: ENT_COMPAT | ENT_SUBSTITUTE | ENT_HTML401,
+			encoding: 'UTF-8',
+			double_encode: $double_encode);
 	}
 
 	function disabledTag($k)
@@ -663,11 +668,11 @@ class phpMyEdit
 			var_dump($val);
 			$content = ob_get_contents();
 			ob_end_clean();
-			echo htmlspecialchars($content);
+			echo $this->enc($content);
 			echo "</pre>\n";
 		} else {
-			echo 'debug_var()::<i>',htmlspecialchars($name),'</i>';
-			echo '::<b>',htmlspecialchars($val),'</b>::',"<br />\n";
+			echo 'debug_var()::<i>',$this->enc($name),'</i>';
+			echo '::<b>',$this->enc($val),'</b>::',"<br />\n";
 		}
 	} /* }}} */
 
@@ -676,7 +681,7 @@ class phpMyEdit
 	 */
 	function sql_connect() /* {{{ */
 	{
-		//echo htmlspecialchars($this->uh.$this->un.$this->pw);
+		//echo $this->enc($this->uh.$this->un.$this->pw);
 		$persistent = @ini_get('mysqli.allow_persistent') ? 'p:' : '';
 		$this->dbh = new mysqli($persistent.$this->hn, $this->un, $this->pw, $this->db);
 		if ($this->dbh->connect_errno) {
@@ -767,7 +772,7 @@ class phpMyEdit
 		global $debug_query;
 		if ($debug_query || $debug) {
 			$line = intval($line);
-			echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($qry),'<hr size="1" />',"\n";
+			echo '<h4>MySQL query at line ',$line,'</h4>',$this->enc($qry),'<hr size="1" />',"\n";
 		}
 		if (!$this->dbhValid()) {
 			return false;
@@ -780,7 +785,7 @@ class phpMyEdit
 				'query' => $qry
 				);
 			echo '<h4>MySQL error ', $this->dbh->errno,'</h4>';
-			echo htmlspecialchars($this->dbh->error),'<hr size="1" />',"\n";
+			echo $this->enc($this->dbh->error),'<hr size="1" />',"\n";
 			//error_log($qry);
 		}
 		return $ret;
@@ -885,7 +890,7 @@ class phpMyEdit
 		// 	'Search' => 'v',
 		// 	'Hide'	 => '^',
 		// 	'Clear'	 => 'X',
-		// 	'Query'	 => htmlspecialchars('>'));
+		// 	'Query'	 => $this->enc('>'));
 		// if ((!$this->nav_text_links() && !$this->nav_graphic_links())
 		// 	|| !isset($ret['Search']) || !isset($ret['Query'])
 		// 	|| !isset($ret['Hide'])	  || !isset($ret['Clear'])) {
@@ -2025,7 +2030,7 @@ class phpMyEdit
 			return;
 		}
 
-		$page_name = htmlspecialchars($this->page_name);
+		$page_name = $this->enc($this->page_name);
 		if ($this->display['tabs']) {
 			if (is_array($this->display['tabs'])) {
 				// tab-names explicitly given.
@@ -2189,7 +2194,7 @@ class phpMyEdit
 			$defaulted = $value === null;
 			if ($defaulted) {
 				$value  = @$this->fdd[$k]['default'];
-				$escape && $value = htmlspecialchars($value);
+				$escape && $value = $this->enc($value);
 				//error_log('default: '.$this->fdd[$k]['name'].': '.$value);
 			}
 			if ($this->hidden($k)) {
@@ -2276,7 +2281,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['attributes'])) {
 					$attributes = $this->fdd[$k]['display']['attributes'];
 					if (is_callable($attributes)) {
-						$attributes = call_user_func($attributes, 'add', [], $k, $this);
+						$attributes = call_user_func($attributes, 'add', null, [], $k, $this);
 					}
 					if (!is_array($attributes)) {
 						$attributes= [ $attributes ];
@@ -2299,7 +2304,7 @@ class phpMyEdit
 							if (!is_string($attributeValue)) {
 								echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
 							} else {
-								echo ' '.$attributeKey.'="'.$attributeValue.'"';
+								echo ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
 							}
 							break;
 						}
@@ -2547,7 +2552,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['attributes'])) {
 				$attributes = $this->fdd[$k]['display']['attributes'];
 				if (is_callable($attributes)) {
-					$attributes = call_user_func($attributes, $operation, $row, $k, $this);
+					$attributes = call_user_func($attributes, $operation, $value, $row, $k, $this);
 				}
 				if (!is_array($attributes)) {
 					$attributes= [ $attributes ];
@@ -2570,7 +2575,7 @@ class phpMyEdit
 						if (!is_string($attributeValue)) {
 							echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
 						} else {
-							echo ' '.$attributeKey.'="'.$attributeValue.'"';
+							echo ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
 						}
 						break;
 					}
@@ -2582,7 +2587,7 @@ class phpMyEdit
 			if ($this->col_has_datemask($k)) {
 				echo $this->makeUserTimeString($k, $row);
 			} else if ($escape) {
-				echo htmlspecialchars($value);
+				echo $this->enc($value);
 			} else {
 				echo $value;
 			}
@@ -2627,7 +2632,7 @@ class phpMyEdit
 		}
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
-		echo htmlspecialchars($row["qf$k"]),'"',$len_props,' />',"\n";
+		echo $this->enc($row["qf$k"]),'"',$len_props,' />',"\n";
 		if (isset($this->fdd[$k]['display']['postfix'])) {
 			$postfix = $this->fdd[$k]['display']['postfix'];
 			if (is_callable($postfix)) {
@@ -2815,7 +2820,7 @@ class phpMyEdit
 			?  $this->substituteVars($this->fdd[$k]['URLdisp'], $ar)
 			: $disp_val;
 		$target = isset($this->fdd[$k]['URLtarget'])
-			? 'target="'.htmlspecialchars($this->fdd[$k]['URLtarget']).'" '
+			? 'target="'.$this->enc($this->fdd[$k]['URLtarget']).'" '
 			: '';
 		$prefix_found  = false;
 		$postfix_found = false;
@@ -2841,9 +2846,9 @@ class phpMyEdit
 			$ret = $escape ? '&nbsp;' : '';
 		} else {
 			if ($escape) {
-				$urldisp = htmlspecialchars($urldisp);
+				$urldisp = $this->enc($urldisp);
 			}
-			$urllink = htmlspecialchars($urllink);
+			$urllink = $this->enc($urllink);
 			$ret = '<a '.$target.'class="'.$css.'" href="'.$urllink.'">'.$urldisp.'</a>';
 		}
 		return $ret;
@@ -3007,7 +3012,7 @@ class phpMyEdit
 			return $escape ? '&nbsp;' : ''; // ??? why
 		}
 		if ($escape) {
-			$value = htmlspecialchars($value);
+			$value = $this->enc($value);
 		}
 		return $escape ? nl2br($value) : $value;
 	} /* }}} */
@@ -3172,9 +3177,9 @@ class phpMyEdit
 	function htmlHidden($name, $value, $css = null) /* {{{ */
 	{
 		return '<input type="hidden" '
-			.'name="'.htmlspecialchars($name).'" '
-			.(!empty($css) ? 'class="'.htmlspecialchars($css).'" ' : '')
-			.'value="'.htmlspecialchars($value).'" />'."\n";
+			.'name="'.$this->enc($name).'" '
+			.(!empty($css) ? 'class="'.$this->enc($css).'" ' : '')
+			.'value="'.$this->enc($value).'" />'."\n";
 	} /* }}} */
 
 	/**
@@ -3209,7 +3214,7 @@ class phpMyEdit
 						$escape = true,
 						$js = NULL, $help = NULL)
 	{
-		$ret = '<select class="'.htmlspecialchars($css).'" name="'.htmlspecialchars($name);
+		$ret = '<select class="'.$this->enc($css).'" name="'.$this->enc($name);
 		if ($multiple) {
 			$ret  .= '[]" multiple size="'.$this->multiple.'"';
 			if (!is_array($selected)) {
@@ -3242,7 +3247,7 @@ class phpMyEdit
 		is_array($kd_array) || $kd_array = array();
 		$found = false;
 		$dfltGroup = empty($kg_array[-1]) ? null : $kg_array[-1];
-		$dfltData = empty($kd_array[-1]) ? null : htmlspecialchars($kd_array[-1]);
+		$dfltData = empty($kd_array[-1]) ? null : $this->enc($kd_array[-1]);
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
@@ -3263,7 +3268,7 @@ class phpMyEdit
 				$groupData = "data-group-info='".json_encode($groupData)."'";
 				$ret .= '<optgroup '.$groupData.' data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
-			$encodedKey = htmlspecialchars($key);
+			$encodedKey = $this->enc($key);
 			$ret .= '<option value="'.$encodedKey.'"';
 			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)) {
 				//|| (count($selected) == 0 && ! $found && ! $multiple)) {
@@ -3271,11 +3276,11 @@ class phpMyEdit
 				$found = true;
 			}
 			if (!empty($kt_array[$key])) {
-				$title = htmlspecialchars($kt_array[$key]);
+				$title = $this->enc($kt_array[$key]);
 				$ret .= ' title="'.$title.'"';
 			}
 			if (!empty($kd_array[$key])) {
-				$data = htmlspecialchars($kd_array[$key]);
+				$data = $this->enc($kd_array[$key]);
 				$ret .= " data-data='".$data."'";
 			} else if (!empty($dfltData)) {
 				$ret .= " data-data='".$dfltData."'";
@@ -3284,7 +3289,7 @@ class phpMyEdit
 				$ret .= ' data-group-id="'.$groupId.'"';
 			}
 			$strip_tags && $value = strip_tags($value);
-			$escape		&& $value = htmlspecialchars($value);
+			$escape		&& $value = $this->enc($value);
 			$ret .= '>'.$value.'</option>'."\n";
 		}
 		if (isset($lastGroup)) {
@@ -3294,7 +3299,7 @@ class phpMyEdit
 		if ($readonly == 'readonly') {
 			// selects can only be disabled, but not made readonly.
 			foreach ($selected as $value) {
-				$name = htmlspecialchars($name).($multiple ? '[]' : '');
+				$name = $this->enc($name).($multiple ? '[]' : '');
 				$ret .= $this->htmlHidden($name, $value, $css);
 				if (!$multiple) {
 					break;
@@ -3376,13 +3381,13 @@ class phpMyEdit
 			$inputhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
 				: $this->fetchToolTip($css, $name, $css.'radio');
-			$ret .= '<label'.$labelhelp.' class="'.htmlspecialchars($css).'-label">';
+			$ret .= '<label'.$labelhelp.' class="'.$this->enc($css).'-label">';
 			$ret .= '<input type="'.$type.'"'
-				.' name="'.htmlspecialchars($name).'[]"'
-				.' value="'.htmlspecialchars($key).'"'
-				.' class="'.htmlspecialchars($css).'"';
+				.' name="'.$this->enc($name).'[]"'
+				.' value="'.$this->enc($key).'"'
+				.' class="'.$this->enc($css).'"';
 			if (!empty($kd_array[$key])) {
-				$data = htmlspecialchars($kd_array[$key]);
+				$data = $this->enc($kd_array[$key]);
 				$ret .= " data-data='".$data."'";
 			}
 			// $ret .= $inputhelp;
@@ -3398,7 +3403,7 @@ class phpMyEdit
 				$ret .= ' required';
 			}
 			$strip_tags && $value = strip_tags($value);
-			$escape		&& $value = htmlspecialchars($value);
+			$escape		&& $value = $this->enc($value);
 			$ret .= '><span class="pme-label">'.$value.'</span></label>'.$br."\n";
 		}
 		return $ret;
@@ -3439,7 +3444,7 @@ class phpMyEdit
 		}
 		$ret .= '>';
 		if ($escape) {
-			$ret .= htmlspecialchars($value);
+			$ret .= $this->enc($value);
 		} else {
 			$ret .= $value;
 		}
@@ -3508,9 +3513,9 @@ class phpMyEdit
 						continue;
 					}
 					$ret == '' || $ret .= '&amp;';
-					$ret .= htmlspecialchars(rawurlencode($key));
+					$ret .= $this->enc(rawurlencode($key));
 					$ret .= '=';
-					$ret .= htmlspecialchars(rawurlencode($val));
+					$ret .= $this->enc(rawurlencode($val));
 				}
 			}
 			if ($method[strlen($method) - 1] == '+') {
@@ -3707,7 +3712,7 @@ class phpMyEdit
 		echo 'fdd=',$this->fdd,'   ';
 		echo 'fl=',$this->fl,'	 ';
 		echo 'fm=',$this->fm,'	 ';
-		echo 'sfn=',htmlspecialchars($this->get_sfn_cgi_vars()),'	';
+		echo 'sfn=',$this->enc($this->get_sfn_cgi_vars()),'	';
 		echo 'qfn=',$this->qfn,'   ';
 		echo 'sw=',$this->sw,'	 ';
 		echo 'rec=',implode(',', $this->rec),'   ';
@@ -4148,7 +4153,7 @@ class phpMyEdit
 										   $mc);
 				}
 				$name = $this->cgi['prefix']['sys'].$l;
-				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
+				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
 				echo ' />';
@@ -4215,7 +4220,7 @@ class phpMyEdit
 			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],':</span>';
 			echo $this->htmlSubmit('sw', 'Clear', $css_clear, $disabled);
 			echo "</td>\n";
-			$htmlQuery = htmlspecialchars($text_query);
+			$htmlQuery = $this->enc($text_query);
 			$shortHtmlQuery = preg_replace('/`PMEtable([0-9]+)`[.]/', 't$1.', $htmlQuery);
 			$shortHtmlQuery = preg_replace('/`PMEjoin([0-9]+)`[.]/', 'j$1.', $shortHtmlQuery);
 			// title="'.$htmlQuery.'"
@@ -4570,10 +4575,10 @@ class phpMyEdit
 			$qpcopy[]	 = $qp_prefix.'Copy';
 			$qpchange[]	 = $qp_prefix.'Change';
 			$qpdelete[]	 = $qp_prefix.'Delete';
-			$qpviewStr	 = htmlspecialchars($this->page_name.'?'.implode('&',$qpview).$this->qfn);
-			$qpcopyStr	 = htmlspecialchars($this->page_name.'?'.implode('&',$qpcopy).$this->qfn);
-			$qpchangeStr = htmlspecialchars($this->page_name.'?'.implode('&',$qpchange).$this->qfn);
-			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.implode('&',$qpdelete).$this->qfn);
+			$qpviewStr	 = $this->enc($this->page_name.'?'.implode('&',$qpview).$this->qfn);
+			$qpcopyStr	 = $this->enc($this->page_name.'?'.implode('&',$qpcopy).$this->qfn);
+			$qpchangeStr = $this->enc($this->page_name.'?'.implode('&',$qpchange).$this->qfn);
+			$qpdeleteStr = $this->enc($this->page_name.'?'.implode('&',$qpdelete).$this->qfn);
 		}
 
 		/* Execute query constructed above */
@@ -4650,16 +4655,16 @@ class phpMyEdit
 					}
 					if ($this->nav_text_links() || $this->nav_graphic_links()) {
 						$queryAppend = '&' .
-									 htmlspecialchars($recordQueryData) . '&' .
-									 htmlspecialchars($mrecRecordQueryData);
+									 $this->enc($recordQueryData) . '&' .
+									 $this->enc($mrecRecordQueryData);
 						$viewQuery	 = $qpviewStr	. $queryAppend;
 						$copyQuery	 = $qpcopyStr	. $queryAppend;
 						$changeQuery = $qpchangeStr . $queryAppend;
 						$deleteQuery = $qpdeleteStr . $queryAppend;
-						$viewTitle	 = htmlspecialchars($this->labels['View']);
-						$changeTitle = htmlspecialchars($this->labels['Change']);
-						$copyTitle	 = htmlspecialchars($this->labels['Copy']);
-						$deleteTitle = htmlspecialchars($this->labels['Delete']);
+						$viewTitle	 = $this->enc($this->labels['View']);
+						$changeTitle = $this->enc($this->labels['Change']);
+						$copyTitle	 = $this->enc($this->labels['Copy']);
+						$deleteTitle = $this->enc($this->labels['Delete']);
 					}
 					if ($this->nav_graphic_links()) {
 						$imgstyle =
@@ -4738,7 +4743,7 @@ class phpMyEdit
 					if ($this->nav_buttons()) {
 						echo '<td class="',$css_class_name,'"><input class="',$css_class_name;
 						echo '" type="radio" name="'.$this->cgi['prefix']['sys'].'rec';
-						echo '" value="',htmlspecialchars($recordData),'"';
+						echo '" value="',$this->enc($recordData),'"';
 						if ((empty($this->rec) && $first) || ($this->rec == $key_rec)) {
 							echo ' checked';
 							$first = false;
@@ -4754,13 +4759,13 @@ class phpMyEdit
 
 						echo '<td class="'.$css_class_name.' '.$misccss.'">'
 							.'<label class="'.$css
-							.'" for="'.$namebase.'-'.htmlspecialchars($mrecRecordData)
+							.'" for="'.$namebase.'-'.$this->enc($mrecRecordData)
 							.'" '.$ttip.'>'
 							.'<input class="'.$css
 							.'" '.$ttip
-							.'id="'.$namebase.'-'.htmlspecialchars($mrecRecordData)
+							.'id="'.$namebase.'-'.$this->enc($mrecRecordData)
 							.'" type="checkbox" name="'.$namebase.'[]'
-							.'" value="',htmlspecialchars($mrecRecordData),'"';
+							.'" value="',$this->enc($mrecRecordData),'"';
 						// Set all members of $this->mrecs as checked, or add the current file
 						// result
 						$mrecs_key = array_search($mrecRecordData, $this->mrecs);
@@ -5562,8 +5567,13 @@ class phpMyEdit
 											array(&$this,
 												  $op, $step, &$oldvals,
 												  &$changed, &$newvals));
-			} else {
+			} else if (is_string($t)) {
+				if (!file_exists($t)) {
+					throw new \RuntimeException('Trigger file "' . $t . '" does not exist.');
+				}
 				$ret = include($t);
+			} else {
+				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file.');
 			}
 		}
 
@@ -5812,9 +5822,9 @@ class phpMyEdit
 	 */
 	function error($message, $additional_info = '') /* {{{ */
 	{
-		echo '<h1>phpMyEdit error: ',htmlspecialchars($message),'</h1>',"\n";
+		echo '<h1>phpMyEdit error: ',$this->enc($message),'</h1>',"\n";
 		if ($additional_info != '') {
-			echo '<hr size="1" />',htmlspecialchars($additional_info);
+			echo '<hr size="1" />',$this->enc($additional_info);
 		}
 		return false;
 	} /* }}} */

@@ -414,7 +414,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 380,
       'sort'     => true,
       'display|ACP' => [
-        'attributes' => function($op, $row, $k, $pme) {
+        'attributes' => function($op, $value, $row, $k, $pme) {
           $firstName = $row['qf'.($k-1)] ?? '';
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
           $unlockedPlaceholder = $this->l->t('e.g. Cathy');
@@ -463,7 +463,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'select'   => 'T',
       'display|ACP' => [
-        'attributes' => function($op, $row, $k, $pme) {
+        'attributes' => function($op, $value, $row, $k, $pme) {
           // $this->logInfo('OP '.$op);
           $surName = $row['qf'.($k-3)] ?? '';
           $firstName = $row['qf'.($k-2)] ?? '';
@@ -510,7 +510,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 256,
       'sort'     => true,
       'display|ACP' => [
-        'attributes' => function($op, $row, $k, $pme) {
+        'attributes' => function($op, $value, $row, $k, $pme) {
           $surName = $row['qf'.($k-4)] ?? '';
           $firstName = $row['qf'.($k-3)] ?? '';
           $nickName = $row['qf'.($k-2)] ?? '';
