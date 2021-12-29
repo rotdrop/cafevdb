@@ -56,10 +56,13 @@ input[type="radio"].pme-input {
  * outside ... copied from OC, will have to be changed when OC changes.
  *
  */
-.ui-widget form.pme-form.pme-list input {
-  font-family: var(--font-face);
-  font-size: 13px;
-  font-weight: bold;
+.ui-widget form.pme-form {
+  input, .button {
+    font-family: var(--font-face);
+    font-size: 13px;
+    font-weight: bold;
+    line-height: normal;
+  }
 }
 
 /*******************************************************************************
@@ -1167,6 +1170,13 @@ table.pme-main {
     text-overflow: ellipsis;
     color: #000;
     opacity: 0.57;
+  }
+
+  a.button {
+    &, &:hover, &:link, &:visited {
+      text-decoration:none;
+      color:inherit;
+    }
   }
 } /* table.pme-main */
 
