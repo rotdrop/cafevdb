@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -62,19 +63,15 @@ class InsuranceBroker implements \ArrayAccess
   private $address;
 
   /**
-   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker", cascade={"persist", "merge"})
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker", fetch="EXTRA_LAZY")
    */
   private $insuranceRates;
-
-  /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="broker", cascade={"persist", "merge"})
-   */
-  private $instrumentInsurances;
 
   public function __construct() {
     $this->arrayCTOR();
     $this->insuranceRates = new ArrayCollection();
-    $this->instrumentInsurance = new ArrayCollection();
   }
 
   /**
@@ -174,26 +171,17 @@ class InsuranceBroker implements \ArrayAccess
   }
 
   /**
-   * Set instrumentInsurances.
-   *
-   * @param ArrayCollection $instrumentInsurances
-   *
-   * @return InsuranceBroker
-   */
-  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceBroker
-  {
-    $this->instrumentInsurances = $instrumentInsurances;
-
-    return $this;
-  }
-
-  /**
    * Get instrumentInsurances.
    *
    * @return ArrayCollection
    */
   public function getInstrumentInsurances():Collection
   {
-    return $this->instrumentInsurances;
+    $insurances = [];
+    /** @var InsuranceRate $rate */
+    foreach ($this->insuranceRates as $rate) {
+      $insurances = array_merge($insurances, $rate->toArray());
+    }
+    return new ArrayCollection($insurances);
   }
 }

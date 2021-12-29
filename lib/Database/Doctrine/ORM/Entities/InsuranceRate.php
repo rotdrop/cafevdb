@@ -28,6 +28,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * InsuranceRate
@@ -78,8 +80,16 @@ class InsuranceRate implements \ArrayAccess
    */
   private $policyNumber;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="insuranceRate", fetch="EXTRA_LAZY")
+   */
+  private $instrumentInsurances;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->instrumentInsurances = new ArrayCollection();
   }
 
   /**
@@ -199,5 +209,29 @@ class InsuranceRate implements \ArrayAccess
   public function getPolicyNumber():?string
   {
     return $this->policyNumber;
+  }
+
+  /**
+   * Set instrumentInsurances.
+   *
+   * @param ArrayCollection $instrumentInsurances
+   *
+   * @return InsuranceBroker
+   */
+  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceRate
+  {
+    $this->instrumentInsurances = $instrumentInsurances;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentInsurances.
+   *
+   * @return ArrayCollection
+   */
+  public function getInstrumentInsurances():Collection
+  {
+    return $this->instrumentInsurances;
   }
 }

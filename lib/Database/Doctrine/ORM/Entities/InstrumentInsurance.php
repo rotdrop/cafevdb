@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * InstrumentInsurance
@@ -74,23 +75,12 @@ class InstrumentInsurance implements \ArrayAccess
   private $billToParty;
 
   /**
-   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="short_name", nullable=false)
-   */
-  private $broker;
-
-  /**
-   * @var Types\EnumGeoraphicalScope
+   * @var InsuranceRate
    *
-   * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
-   */
-  private $geographicalScope;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="InsuranceRate")
+   * @ORM\ManyToOne(targetEntity="InsuranceRate", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id"),
-   *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope")
+   *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id", nullable=false),
+   *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope", nullable=false)
    * )
    */
   private $insuranceRate;
@@ -190,41 +180,13 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set broker.
-   *
-   * @param string $broker
-   *
-   * @return InstrumentInsurance
-   */
-  public function setBroker($broker):InstrumentInsurance
-  {
-    $this->broker = $broker;
-
-    return $this;
-  }
-
-  /**
    * Get broker.
    *
    * @return InsuranceBroker
    */
   public function getBroker():InsuranceBroker
   {
-    return $this->broker;
-  }
-
-  /**
-   * Set geographicalScope.
-   *
-   * @param string|Types\EnumGeographicalScope $geographicalScope
-   *
-   * @return InstrumentInsurance
-   */
-  public function setGeographicalScope($geographicalScope):InstrumentInsurance
-  {
-    $this->geographicalScope = new Types\EnumGeographicalScope($geographicalScope);
-
-    return $this;
+    return $this->insuranceRate->getBroker();
   }
 
   /**
@@ -234,7 +196,7 @@ class InstrumentInsurance implements \ArrayAccess
    */
   public function getGeographicalScope():Types\EnumGeographicalScope
   {
-    return $this->geographicalScope;
+    return $this->insuranceRate->getGeographicalScope();
   }
 
   /**
@@ -424,13 +386,9 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceRate(?InsuranceRate $insuranceRate):InstrumentInsurance
+  public function setInsuranceRate(InsuranceRate $insuranceRate):InstrumentInsurance
   {
     $this->insuranceRate = $insuranceRate;
-    if (!empty($insuranceRate)) {
-      $this->geographicalScope = $insuranceRate->getGeographicalScope();
-      $this->broker = $insuranceRate->getBroker();
-    }
     return $this;
   }
 
