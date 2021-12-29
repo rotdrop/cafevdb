@@ -1226,7 +1226,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('MULTIPLE KEYS ' . $multipleIndex);
               foreach ($multipleValues as $column => $dataItem) {
                 $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
-                $meta->setSimpleColumnValue($entity, $column, $value);
+                $meta->setColumnValue($entity, $column, $value);
               }
 
               // persist
@@ -1256,7 +1256,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               foreach ($multipleValues as $column => $dataItem) {
                 $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
                 $this->debug('SET MULTIPLE VALUE ' .  $column . ' => ' . $value);
-                $meta->setSimpleColumnValue($entity, $column, $value);
+                $meta->setColumnValue($entity, $column, $value);
               }
 
               // persist
@@ -1284,7 +1284,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
         foreach ($changeSet as $column => $field) {
           $this->debug('Set ' . $column . ' / ' . $field . ' to ' . $newvals[$field]);
-          $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
+          $meta->setColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
         if (($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) && empty($entity[$joinInfo['column']])) {
@@ -1608,7 +1608,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('MULTIPLE KEYS ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
               $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
-              $meta->setSimpleColumnValue($entity, $column, $value);
+              $meta->setColumnValue($entity, $column, $value);
             }
 
             // persist
@@ -1630,7 +1630,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
         foreach ($changeSet as $column => $field) {
           $this->debug('TRY SET ' . $column . ' => ' . $newvals[$field]);
-          $meta->setSimpleColumnValue($entity, $column, $newvals[$field]);
+          $meta->setColumnValue($entity, $column, $newvals[$field]);
           Util::unsetValue($changed, $field);
         }
 

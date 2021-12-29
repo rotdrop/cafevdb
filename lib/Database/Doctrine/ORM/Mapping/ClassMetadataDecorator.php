@@ -37,7 +37,10 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var array */
-  private $simpleColumnMappings_ = null;
+  private $columnAssociations_ = [];
+
+  /** @var array */
+  private $temporaryColumnStorage = [];
 
   /** @var EntityManager */
   private $entityManager;
@@ -333,13 +336,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
             // replace the value by a reference
             $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
           }
-          // try the setter of the entity first
-          $method = 'set'.ucfirst($field);
-          if (is_callable([ $entity, $method ])) {
-            $entity->$method($reference);
-          } else {
-            $this->metaData->setFieldValue($entity, $field, $reference);
-          }
+          self::doSetFieldValue($this->metaData, $entity, $field, $reference);
           // assume this is the column value, not the entity of the foreign key
           $columnValues[$columnName] = $value;
         }
@@ -390,7 +387,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
             continue;
           }
           throw new \Exception(
-            $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
+            $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]) . print_r($columnValues, true) );
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]['type']);
       }
@@ -410,104 +407,23 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
    *
    * @return array A flat mapping column-name => entity-property
    */
-  public function simpleColumnMappings():array
+  private function columnAssociations():array
   {
-    if (empty($this->simpleColumnMappings_)) {
+    if (empty($this->columnAssociations_)) {
       $meta = $this->metaData;
       $fields = [];
-      foreach ($meta->fieldMappings as $field => $info) {
-        $column = $info['columnName'];
-        $fields[$column] = $field;
-      }
       foreach ($meta->associationMappings as $field => $mapping) {
         foreach (($mapping['joinColumns'] ?? []) as $joinColumn) {
-          $column = $joinColumn['name'];
-          if (empty($fields[$column])) {
-            // this should catch the additional join-columns
-            // introduced by associations.
-            $fields[$column] = $field;
-          }
+          $fields[$joinColumn['name']][$joinColumn['referencedColumnName']] = $field;
         }
       }
-      $this->simpleColumnMappings_ = $fields;
+      $this->columnAssociations_ = $fields;
     }
-    return $this->simpleColumnMappings_;
+    return $this->columnAssociations_;
   }
 
-  /**
-   * Convert the given value to a reference if $field is a "simple"
-   * association field and set it in the entity.
-   *
-   * If $field has no association just set $field to $value
-   *
-   * If $value is an instance of the target entity, just set $field to $value
-   *
-   * If there is a single join-column, use $value as its value and
-   * generate a rereference to the target entity.
-   *
-   * If there are multiple join-columns, then exactly one must have no
-   * associated field in the given $entity, all otheres must have a
-   * field in the given $entity. The "hidden column" is set to $value,
-   * all other join-column values are taken from the entity.
-   *
-   * More complicated cases cannot easily be handled, as the function
-   * only accepts a single value to set.
-   */
-  public function setSimpleFieldValue($entity, string $field, $value)
+  static private function doSetFieldValue($meta, $entity, $field, $value)
   {
-    $meta = $this->metaData;
-    if (isset($meta->associationMappings[$field])) {
-      $association = $meta->associationMappings[$field];
-      $targetEntity = $association['targetEntity'];
-
-      if (!($value instanceof $targetEntity) && empty($value)) {
-        // avoid generating references with empty identifiers
-        $value = null;
-      } else if (!($value instanceof $targetEntity)) {
-
-        $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
-
-        $referencedId = [];
-        if (count($association['joinColumns']) == 1) {
-          $joinInfo = $association['joinColumns'][0];
-          $columnName = $joinInfo['name'];
-          $targetColumn = $joinInfo['referencedColumnName'];
-          $targetField = $targetMeta->fieldNames[$targetColumn];
-          $referencedId[$targetField] = $value;
-        } else {
-          // Fuzzy case. We allow one hidden column where the other
-          // values are fed from "simple" columns in the entity.
-          foreach ($association['joinColumns'] as $joinInfo) {
-            $columnName = $joinInfo['name'];
-            $targetColumn = $joinInfo['referencedColumnName'];
-            $targetField = $targetMeta->simpleColumnMappings()[$targetColumn];
-            if (empty($targetField)) {
-              throw new \RuntimeException($this->l->t('Empty target field for column "%s".', $targetColumn));
-            }
-
-            if (isset($meta->fieldNames[$columnName])) {
-              $joinField = $meta->fieldNames[$columnName];
-              $joinValue = $meta->getFieldValue($entity, $joinField);
-              if (empty($joinValue)) {
-                throw new \RuntimeException($this->l->t('Join-column has empty value.'));
-              }
-              $referencedId[$targetField] = $joinValue;
-            } else {
-              if (empty($value)) {
-                throw new \RuntimeException($this->l->t('More than one hidden join-column.'));
-              }
-              $referencedId[$targetField] = $value;
-              $value = null;
-            }
-          }
-          if ($value !== null) {
-            throw new \RuntimeException($this->l->t('No hidden join column.'));
-          }
-        }
-        // replace the value by a reference
-        $value = $this->entityManager->getReference($targetEntity, $referencedId);
-      }
-    }
     // try first the setter/getter of the entity
     $method = 'set'.ucfirst($field);
     if (is_callable([ $entity, $method ])) {
@@ -518,17 +434,100 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
     }
   }
 
-  /**
-   * Convert the given value to a reference if $field is a "simple"
-   * association field and set it in the entity.
-   */
-  public function setSimpleColumnValue($entity, string $column, $value)
+  public function setColumnValue($entity, string $column, $value)
   {
-    $field = $this->simpleColumnMappings()[$column];
-    if (empty($field)) {
-      throw new \RuntimeException('Unable to find field for column "'.$column.'"');
+    $this->logInfo('Set column value for ' . $column . ' ' . $value);
+
+    $meta = $this->metaData;
+    $numSetters = 0;
+    if (isset($meta->fieldNames[$column])) {
+      // simple case, just set the entity property
+      self::doSetFieldValue($meta, $entity, $meta->fieldNames[$column], $value);
+      ++$numSetters;
     }
-    $this->setSimpleFieldValue($entity, $field, $value);
+    $columnAssociations = $this->columnAssociations();
+    foreach (($columnAssociations[$column]??[]) as $field) {
+      // If the column is a join-column then try to create references to the
+      // respective entity. Multi-column associations are supported if the
+      // column is the only one which is not known.
+      if (empty($value)) {
+        // an empty join-column value must void the association as the
+        // join-columns are the identifier of the referenced entity and hence
+        // cannot be null unless the referenced entity is null
+        self::doSetFieldValue($meta, $entity, $field, null);
+        continue;
+      }
+      $associationMapping = $meta->associationMappings[$field];
+      $targetEntity = $associationMapping['targetEntity'];
+      $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
+      $referencedColumnId = [];
+      foreach ($associationMapping['joinColumns'] as $joinInfo) {
+        $joinColumnName = $joinInfo['name'];
+        $targetColumn = $joinInfo['referencedColumnName'];
+        if ($joinColumnName == $column) {
+          $fieldValue = $meta->getFieldValue($entity, $field);
+          if (!empty($fieldValue) &&
+              $value == $targetMeta->getColumnValue($fieldValue, $targetColumn)) {
+            // do not destroy already installed associated entities
+            continue 2;
+          }
+          $targetValue = $value;
+        } else {
+          $targetValue = $this->getColumnValue($entity, $joinColumnName);
+        }
+        if (empty($targetValue)) {
+          continue 2;
+        }
+        $referencedColumnId[$targetColumn] = $targetValue;
+      }
+      $referencedId = $targetMeta->extractKeyValues($referencedColumnId);
+      $fieldValue = $this->entityManager->getReference($targetEntity, $referencedId);
+      self::doSetFieldValue($meta, $entity, $field, $fieldValue);
+      ++$numSetters;
+    }
+    if ($numSetters == 0) {
+      // throw new \RuntimeException($this->l->t('Unable to feed a single field with the value of the column "' . $column . '".'));
+      $this->logInfo('Remember value for column ' . $column . ': ' . $value);
+      $this->temporaryColumnStorage[$column] = $value;
+    } else {
+      unset($this->temporaryColumnStorage[$column]);
+    }
+  }
+
+  /**
+   * Fetch the value of a column, recursing into associations.
+   */
+  public function getColumnValue($entity, string $column)
+  {
+    $meta = $this->metaData;
+    // simple case ...
+    if (isset($meta->fieldNames[$column])) {
+      return $meta->getFieldValue($entity, $meta->fieldNames[$column]);
+    }
+    // look into the association mappings
+    $columnAssociations = $this->columnAssociations();
+    foreach (($columnAssociations[$column]??[]) as $targetColumn => $field) {
+      $fieldValue = $meta->getFieldValue($entity, $field);
+      if (empty($fieldValue)) {
+        continue;
+      }
+      $associationMapping = $meta->associationMappings[$field];
+      $targetEntity = $associationMapping['targetEntity'];
+      if ($fieldValue instanceof $targetEntity) {
+        $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
+        return $targetMeta->getColumnValue($fieldValue, $targetColumn);
+      } else {
+        // assume the field-value is the just the column value of the single join-column
+        if (count($associationMapping['joinColumns']) != 1) {
+          throw new \RuntimeException($this->l->t('Association field must eiter be an entity or the value of the single join column.') . print_r($associationMapping['joinColumns'], true) );
+        }
+        return $fieldValue;
+      }
+    }
+    if (!empty($this->temporaryColumnStorage[$column])) {
+      return $this->temporaryColumnStorage[$column];
+    }
+    return null;
   }
 
   /**
