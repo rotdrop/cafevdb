@@ -57,6 +57,7 @@ const tweakTimeout = function(options) {
 };
 
 const show = function(text, options) {
+  console.info(text);
   tweakTimeout(options);
   const row = OC.Notification.show(text, options);
   rows.push(row);
@@ -64,6 +65,7 @@ const show = function(text, options) {
 };
 
 const showHtml = function(text, options) {
+  console.info(text);
   tweakTimeout(options);
   const row = OC.Notification.showHtml(text, options);
   rows.push(row);
@@ -71,6 +73,7 @@ const showHtml = function(text, options) {
 };
 
 const showTemporary = function(text, options) {
+  console.info(text);
   tweakTimeout(options);
   const row = OC.Notification.showTemporary(text, options);
   rows.push(row);
