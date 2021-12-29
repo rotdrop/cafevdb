@@ -27,12 +27,114 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
+import * as SelectUtils from './select-utils.js';
 // import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
 require('instrument-insurances.scss');
+
+const lang = $('html').attr('lang');
+
+const pmeAutocomplete = function($input) {
+  const autocompleteData = $input.data('autocomplete');
+  if (autocompleteData) {
+    $input
+      .autocomplete({
+        source: autocompleteData.map(x => String(x)),
+        minLength: 0,
+        open(event, ui) {
+          const $input = $(event.target);
+          const $results = $input.autocomplete('widget');
+          // The following would place the list above the input
+          // const top = $results.position().top;
+          // const height = $results.outerHeight();
+          // const inputHeight = $input.outerHeight();
+          // const newTop = top - height - inputHeight;
+
+          // $results.css('top', newTop + 'px');
+          const $parent = $results.parent();
+          $results.data('savedOverflow', $parent.css('overflow'));
+          $parent.css('overflow', 'visible');
+        },
+        close(event, ui) {
+          const $input = $(event.target);
+          const $results = $input.autocomplete('widget');
+          const $parent = $results.parent();
+          $parent.css('overflow', $results.data('savedOverflow'));
+          $results.removeData('savedOverflow');
+        },
+        select(event, ui) {
+          const $input = $(event.target);
+          $input.val(ui.item.value);
+          $input.blur();
+        },
+      })
+      .on('focus, click', function() {
+        const $this = $(this);
+        if (!$this.autocomplete('widget').is(':visible')) {
+          $this.autocomplete('search', $this.val());
+        }
+      });
+  }
+};
+
+const updateInsuranceFee = function(elements) {
+
+  const $scopeSelect = elements.$scopeSelect;
+  const $brokerSelect = elements.$brokerSelect;
+  const $insuranceAmount = elements.$insuranceAmount;
+  const $insuranceRate = elements.$insuranceRate;
+  const $insuranceFee = elements.$insuranceFee;
+
+  const $scope = $scopeSelect.find('option:selected');
+  if ($scope.length === 0) {
+    return false;
+  }
+  const $broker = $brokerSelect.find('option:selected');
+  if ($broker.length === 0) {
+    return false;
+  }
+  const rates = $broker.data('data');
+  const rateMeta = rates.find(rate => rate.geographicalScope === $scope.val());
+  if (!rateMeta) {
+    return false;
+  }
+  const rate = rateMeta.rate;
+
+  $insuranceRate.find('.pme-input').val(rate);
+  const $rateDisplay = $insuranceRate.find('.insurance-rate-display');
+  $rateDisplay.data('value', rate);
+  $rateDisplay.html((rate * 100.0).toLocaleString(lang) + ' %');
+
+  $insuranceFee.html(
+    new Intl.NumberFormat(
+      lang, {
+        style: 'currency',
+        currency: $insuranceFee.data('currencyCode'),
+      })
+      .format(
+        $insuranceAmount.val() * rate * (1.0 + $insuranceFee.data('taxRate'))
+      )
+  );
+};
+
+const enableScopeOptions = function($scopeSelect, $broker) {
+  if ($broker.length === 0) {
+    return;
+  }
+  const rates = $broker.data('data');
+  $scopeSelect.find('option').each(function(idx) {
+    const $option = $(this);
+    $option.prop('disabled', rates.find(rate => rate.geographicalScope === $option.val()) === undefined);
+  });
+  $scopeSelect.trigger('change'); // update insurance fees
+  SelectUtils.refreshWidget($scopeSelect);
+};
 
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
@@ -74,13 +176,6 @@ const pmeFormInit = function(containerSel) {
     for (key in textInputs) {
       oldValues[key] = textInputs[key].val();
     }
-
-    const blurLock = function(lock) {
-      for (const key in textInputs) {
-        textInputs[key].prop('disabled', lock);
-      }
-      submits.prop('disabled', lock);
-    };
 
     const validate = function(control, button, lockCallback) {
 
@@ -146,41 +241,76 @@ const pmeFormInit = function(containerSel) {
             validateUnlock();
           });
       });
-    };
+    }; // validate end
 
     // Validate text inputs. We assume that select boxes work
     // out just fine.
+    //
+    // Mis-feature. Do client-side validation when modifying
+    // individual inputs and a single server-side validation when
+    // submitting the form
 
-    for (key in textInputs) {
-      textInputs[key]
-        .off('blur')
-        .on('blur', { control: key }, function(event) {
+    // const blurLock = function(lock) {
+    //   for (const key in textInputs) {
+    //     textInputs[key].prop('disabled', lock);
+    //   }
+    //   submits.prop('disabled', lock);
+    // };
 
-          event.preventDefault();
+    // for (key in textInputs) {
+    //   textInputs[key]
+    //     .off('blur')
+    //     .on('blur', { control: key }, function(event) {
 
-          validate(event.data.control, undefined, blurLock);
+    //       event.preventDefault();
 
-          return false;
+    //       validate(event.data.control, undefined, blurLock);
+
+    //       return false;
+    //     });
+    // }
+
+    // autocomplete some input things with precomputed values
+    pmeAutocomplete(form.find('input.insured-item'));
+    pmeAutocomplete(form.find('input.construction-year'));
+
+    // restrict rate-selections based on what is supported by the
+    // broker and update insurance-fee info fields on change.
+
+    const $scopeSelect = form.find('select.scope-select');
+    const $brokerSelect = form.find('select.broker-select');
+    const $insuranceRate = form.find('td.pme-value.insurance-rate');
+    const $insuranceFee = form.find('td.pme-value.insurance-fee .insurance-fee-display');
+    const $insuranceAmount = form.find('td.pme-value.insurance-amount input');
+
+    form.find('input.insurance-amount')
+      .on('change', function(event) {
+        updateInsuranceFee({
+          $scopeSelect,
+          $brokerSelect,
+          $insuranceAmount,
+          $insuranceRate,
+          $insuranceFee,
         });
-    }
-
-    // restrict rate-selections based on what is supported by the broker
-    const scopeSelect = form.find('select.scope-select');
-    const brokerSelect = form.find('select.broker-select');
-    brokerSelect.on('change', function(event) {
-      const $this = $(this);
-      const $broker = $this.find('option:selected');
-      if ($broker.length === 0) {
-        return;
-      }
-      const rates = $broker.data('data').split(',');
-      console.info('RATES', rates);
-      scopeSelect.find('option').each(function(idx) {
-        const $option = $(this);
-        $option.prop('disabled', rates.find(rate => rate === $option.val()) === undefined);
-        console.info('OPTION', rates.find(rate => rate === $option.val()), $option.val());
+        return false;
       });
-      scopeSelect.trigger('chosen:updated');
+
+    enableScopeOptions($scopeSelect, $brokerSelect.find('option:selected'));
+
+    $brokerSelect.on('change', function(event) {
+      enableScopeOptions($scopeSelect, $(this).find('option:selected'));
+      return false;
+    });
+
+    $scopeSelect.on('change', function(event) {
+      updateInsuranceFee({
+        $scopeSelect,
+        $brokerSelect,
+        $insuranceAmount,
+        $insuranceRate,
+        $insuranceFee,
+      });
+      return false;
     });
 
     // intercept form-submit until validated

@@ -294,27 +294,33 @@ class InstrumentInsuranceService
    *
    * where "RATE" is the actual fraction, not the percentage.
    */
-  public function getRates($translate = false)
+  public function getRates($translate = false, $nested = false)
   {
     $rates = [];
+    $nestedRates = [];
     $entities = $this->getDatabaseRepository(Entities\InsuranceRate::class)->findAll();
-    foreach ($entities as $rate) {
-      $scope = (string)$entity['geographicalScope'];
+    /** @var Entities\InsuranceRate $entity */
+    foreach ($entities as $entity) {
+      $scope = (string)$entity->getGeographicalScope();
       if ($translate) {
         $scope = $this->l->t($scope);
       }
-      $rateKey = $entity['broker'].$scope;
-      $dueDate = $entity['dueDate'];
+      $shortBroker = $entity->getBroker()->getShortName();
+      $rateKey = $shortBroker.$scope;
+      $dueDate = $entity->getDueDate();
       if (!empty($dueDate)) {
         $dueDate = $this->dueDate($dueDate);
       }
       $rates[$rateKey] = [
-        'rate' => $entity['rate'],
+        'rate' => $entity->getRate(),
         'due' => $dueDate,
-        'policy' => $entity['policyNumber'],
+        'policy' => $entity->getPolicyNumber(),
       ];
+      if ($nested) {
+        $nestedRates[$shortBroker][$scope] = $rates[$rateKey];
+      }
     }
-    return $rates;
+    return $nested ? $nestedRates : $rates;
   }
 
   /**
@@ -325,12 +331,13 @@ class InstrumentInsuranceService
   {
     $brokers = [];
     $entities = $this->getDatabaseRepository(Entities\InsuranceBroker::class)->findAll();
+    /** @var Entities\InsuranceBroker $entity */
     foreach ($entities as $entity) {
-      $key = $entity['shortName'];
+      $key = $entity->getShortName();
       $brokers[$key] = [
-        'shortName' => $entity['shortName'],
-        'name' => $entity['longName'],
-        'address' => $entity['address'],
+        'shortName' => $entity->getShortName(),
+        'name' => $entity->getLongName(),
+        'address' => $entity->getAddress(),
       ];
     }
 

@@ -373,6 +373,9 @@ invited to have a look, but please do not change anything unless you know what y
 
       'instrument-insurance' => [
         'not-a-club-member' => $this->l->t('The bill-to-party of an instrument-insurance must be a club-member. This seems not to be the case.'),
+        'bill' => $this->l->t('Generate a PDF with detailed records of the insured items and the resulting insurance fee.'),
+        'manufacturer' => $this->l->t('Manufacturer and (brief) place of manufacture if know.'),
+        'year-of-construction' => $this->l->t('Year of manufacture, if known. "Fuzzy" expression like "unknown", "end of 19th century", "around 1900" etc. are allowed.'),
       ],
 
       'participant-fields' => [
@@ -528,9 +531,6 @@ each individual table view.'),
 
         'balance' => $this->l->t('The differences between the number of required musicians and the registered / confirmed musicians.'),
       ],
-
-      'instrument-insurance-bill' => $this->l->t('Generate a PDF with detailed records of the insured items and the
-resulting insurance fee.'),
 
       'instruments-disabled' => $this->l->t('Instruments which are already used by musicians or
 projects cannot be deleted; instead "deleting" them flags them as "Disabled".'),

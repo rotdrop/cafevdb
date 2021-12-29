@@ -52,24 +52,6 @@ class InstrumentInsurances extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\InstrumentInsurance::class,
     ],
-    // [
-    //   'table' => self::MUSICIANS_TABLE,
-    //   'entity' => Entities\Musician::class,
-    //   'identifier' => [ 'id' => 'musician_id' ],
-    //   'column' => 'id',
-    // ],
-    // [
-    //   'table' => self::MUSICIANS_TABLE.parent::VALUE_TABLE_SEP.'BillToParty',
-    //   'entity' => Entities\Musician::class,
-    //   'identifier' => [ 'id' => 'bill_to_party_id' ],
-    //   'column' => 'id',
-    // ],
-    // [
-    //   'table' => self::BROKERS_TABLE,
-    //   'entity' => Entities\InsuranceBroker::class,
-    //   'identifier' => [ 'short_name' => 'broker_id' ],
-    //   'column' => 'short_name',
-    // ],
     self::RATES_TABLE => [
       'entity' => Entities\InsuranceRate::class,
       'flags' => self::JOIN_READONLY,
@@ -213,7 +195,7 @@ class InstrumentInsurances extends PMETableViewBase
         ],
         [
           'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['insurences-miscinfo-tab'],
+          'tooltip' => $this->toolTipsService['instrument-insurence:miscinfo-tab'],
           'name' => $this->l->t('Miscellaneous Data'),
         ],
         [
@@ -225,7 +207,7 @@ class InstrumentInsurances extends PMETableViewBase
     ];
 
     if ($this->musicianId > 0) {
-      $opts['filters'] = "$table.musician_id = " . $this->musicianId;
+      $opts['filters'] = '$table.instrument_holder_id = ' . $this->musicianId;
     }
 
     $opts['groupby_fields'] = [ 'id' ];
@@ -254,7 +236,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['fdd']['instrument_holder_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Musician'),
-      'css'      => [ 'postfix' => [ 'musician-id', 'instrument-holder', ] ],
+      'css'      => [ 'postfix' => [ 'musician-id', 'instrument-holder', ], ],
       'select'   => 'D',
       'maxlen'   => 11,
       'sort'     => true,
@@ -337,7 +319,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['fdd']['broker_id'] = [
       'tab'      => [ 'id' => 'overview'],
       'name'     => $this->l->t('Insurance Broker'),
-      'css'      => [ 'postfix' => ' broker-select' ],
+      'css'      => [ 'postfix' => [ 'broker-select', ], ],
       'select'   => 'D',
       'maxlen'   => 384,
       'sort'     => true,
@@ -345,7 +327,14 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => 'SELECT
   b.*,
-  GROUP_CONCAT(DISTINCT r.geographical_scope ORDER BY r.geographical_scope ASC) AS geographical_scopes
+  GROUP_CONCAT(DISTINCT r.geographical_scope ORDER BY r.geographical_scope ASC) AS geographical_scopes,
+  CONCAT("[", GROUP_CONCAT(DISTINCT
+    JSON_OBJECT(
+      "geographicalScope", r.geographical_scope
+      , "rate", r.rate
+      , "dueDate", r.due_date
+      , "policyNumber", r.policy_number
+) ORDER BY r.geographical_scope ASC),"]") AS insurance_rates
 FROM '.self::BROKER_TABLE.' b
 LEFT JOIN '.self::RATES_TABLE.' r
   ON r.broker_id = b.short_name
@@ -357,14 +346,15 @@ GROUP BY b.short_name',
           'cast' => [ false, false ],
         ],
         'join' => '$join_col_fqn = $main_table.broker_id',
-        'data' => '$table.geographical_scopes',
+        // 'data' => '$table.geographical_scopes',
+        'data' => '$table.insurance_rates',
       ],
     ];
 
     $opts['fdd']['geographical_scope'] = [
       'tab'      => [ 'id' => 'overview' ],
       'name'     => $this->l->t('Geographical Scope'),
-      'css'      => [ 'postfix' => ' scope-select' ],
+      'css'      => [ 'postfix' => [ 'scope-select', ], ],
       'select'   => 'D',
       'maxlen'   => 384,
       'sort'     => true,
@@ -372,13 +362,24 @@ GROUP BY b.short_name',
       'values2'  => $this->scopeNames,
     ];
 
+    $instrumentValues = array_values($this->instruments);
     $opts['fdd']['object'] = [
       'tab'      => [ 'id' => [ 'item', 'overview' ]],
       'name'     => $this->l->t('Insured Object'),
-      'css'      => [ 'postfix' => ' insured-item' ],
+      'css'      => [ 'postfix' => [ 'insured-item', ], ],
+      'input'    => 'M', // required
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
+      'display' => [
+        'attributes' => [
+          'data-autocomplete' => array_merge(
+            $instrumentValues,
+            // array_map(fn($x) => $x . '-' . $this->l->t('bow'), $instrumentValues),
+            // array_map(fn($x) => $x . '-' . $this->l->t('case'), $instrumentValues),
+          ),
+        ],
+      ],
     ];
 
     $opts['fdd']['accessory'] = [
@@ -401,17 +402,42 @@ GROUP BY b.short_name',
     $opts['fdd']['manufacturer'] = [
       'tab'      => [ 'id' => 'item' ],
       'name'     => $this->l->t('Manufacturer'),
-      'css'      => [ 'postfix' => ' manufacturer' ],
+      'tooltip'  => $this->toolTipsService['instrument-insurance:manufacturer'],
+      'css'      => [ 'postfix' => [ 'manufacturer', ], ],
+      'display' => [
+        'attributes' => [
+          'placeholder' => $this->l->t('e.g. Bilbo Beutlin, Hobbiton, The Shire'),
+        ],
+      ],
+      'input'    => 'M', // required
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true,
     ];
 
+    $yearAutocomplete = range(1900, (new \DateTime)->format('Y')+1, 10);
+    $yearAutocomplete = array_merge(
+      array_map(fn($year) => $this->l->t('around %1$04d', $year), $yearAutocomplete),
+      range(2001, (new \DateTime)->format('Y')+1)
+    );
+    for ($century = 15; $century <= (new \DateTime)->format('Y') / 100; ++$century) {
+      $yearAutocomplete[] = $this->l->t('end of %1$02dth century', $century);
+    }
+    sort($yearAutocomplete);
+    $yearAutocomplete = array_values(array_unique($yearAutocomplete));
+
     $opts['fdd']['year_of_construction'] = [
       'tab'      => [ 'id' => 'item' ],
       'name'     => $this->l->t('Year of Construction'),
-      'css'      => [ 'postfix' => ' construction-year' ],
-      'select'   => 'T',
+      'css'      => [ 'postfix' => [ 'construction-year', ], ],
+      'input'    => 'M', // required
+      'tooltip'  => $this->toolTipsService['instrument-insurance:year-of-construction'],
+      'display' => [
+        'attributes' => [
+          'placeholder' => $this->l->t('e.g. "1921" or "around 1900"'),
+          'data-autocomplete' => $yearAutocomplete,
+        ],
+      ],
       'maxlen'   => 20,
       'sort'     => true,
     ];
@@ -421,7 +447,14 @@ GROUP BY b.short_name',
       [
         'tab'  => [ 'id' => 'finance' ],
         'name' => $this->l->t('Insurance Amount'),
-        'css'  => [ 'postfix' => ' amount align-right' ],
+        'css'  => [ 'postfix' => [ 'insurance-amount', 'amount', 'align-right', ], ],
+        'input' => 'M', // required
+        'display' => [
+          'attributes' => [
+            'min' => 100,
+            'step' => 1,
+          ],
+        ],
         'php|LFPDV' => function($value) { return $this->moneyValue($value); },
       ]);
 
@@ -429,25 +462,38 @@ GROUP BY b.short_name',
       $opts['fdd'], self::RATES_TABLE, 'rate',
       [
         'tab'  => [ 'id' => 'finance' ],
-        'css' => [ 'postfix' => ' align-right' ],
+        'css' => [ 'postfix' => [ 'insurance-rate', 'align-right', ], ],
         'name' => $this->l->t('Insurance Rate'),
         'options' => 'LFACPDV',
-        'sql' => '$join_table.rate',
-        'php' => function($rate) {
-          return $this->floatValue((float)$rate*100.0).' %';
-        }
+        'sql' => '$join_col_fqn',
+        'php' => function($rate, $op, $k, $row, $rec, $pme) {
+          $css_postfix	= $pme->fdd[$k]['css']['postfix']??[];
+          $css_class_name = $pme->getCSSclass('input', null, false, $css_postfix);
+          return
+            $pme->htmlHiddenData('insurance_rate', $rate, $css_class_name)
+            . '<span class="insurance-rate-display" data-value="'.$rate.'">'
+            . $this->floatValue((float)$rate*100.0).' %'
+            . '</span';
+        },
       ]);
 
     $opts['fdd']['insurance_fee'] = [
       'tab'  => [ 'id' => 'finance' ],
       'input' => 'V',
-      'css' => [ 'postfix' => ' align-right' ],
+      'css' => [ 'postfix' => [ 'insurance-fee', 'align-right', ], ],
       'name' => $this->l->t('Insurance Fee').'<br/>'.$this->l->t('including taxes'),
       'options' => 'LFACPDV',
       'sql' => 'ROUND($table.insurance_amount
  * '.$joinTables[self::RATES_TABLE].'.rate
  * (1+'.floatval(InstrumentInsuranceService::TAXES).'), 2)',
-      'php' => function($value) { return $this->moneyValue($value); },
+      'php' => function($value) {
+        return '<span class="insurance-fee-display"
+  data-currency-code="'.$this->currencyCode().'"
+  data-tax-rate="'.InstrumentInsuranceService::TAXES.'"
+>'
+          . $this->moneyValue($value)
+          . '</span>';
+      },
     ];
 
     $allItemsTable = self::TABLE . self::VALUES_TABLE_SEP . 'allItems';
@@ -473,8 +519,8 @@ GROUP BY b.short_name',
                 ."value=\"$bval\" "
                 ."title=\"$tip\" "
                 ."name=\""
-                ."Template=instrument-insurance&amp;"
-                ."MusicianId=".$musicianId."\" "
+                ."template=instrument-insurance&amp;"
+                ."musicianId=".$musicianId."\" "
                 ."class=\"musician-instrument-insurance\" />"
                 ."</div>";
         return $button;
@@ -486,6 +532,7 @@ GROUP BY b.short_name',
       [
         'tab'  => [ 'id' => 'overview' ],
         'name' => $this->l->t('Start of Insurance'),
+        'input' => 'M', // required
       ]);
 
     $opts['fdd']['bill'] = [
@@ -505,22 +552,22 @@ GROUP BY b.short_name',
           'bill' => [
             'label' => $this->l->t('bill'),
             'post'  => json_encode($post),
-            'title' => $this->toolTipsService['instrument-insurance-bill'],
+            'title' => $this->toolTipsService['instrument-insurance:bill'],
           ],
         ];
         $html = '';
         foreach ($actions as $key => $action) {
           $action['properties'] = $action['properties'] ?? null;
           $html .=<<<__EOT__
-<li class="nav tooltip-left inline-block ">
-  <a class="nav {$key} tooltip-auto"
+<div class="nav tooltip-left inline-block ">
+  <a class="button {$key} tooltip-auto inline-block"
      href="#"
      data-post='{$action['post']}'
      {$action['properties']}
      title="{$action['title']}">
 {$action['label']}
   </a>
-</li>
+</div>
 __EOT__;
         }
           return $html;
@@ -530,6 +577,8 @@ __EOT__;
     //
     //
     ///////////////////////////////////////////////////////////////////////////
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateOrInsertTrigger' ];
 
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
@@ -545,4 +594,44 @@ __EOT__;
       $this->pme->setOptions($opts);
     }
   }
+
+  /**
+   * Cleanup "trigger" which relocates several virtual inputs to their
+   * proper destination columns.
+   *
+   * phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param $pme The phpMyEdit instance
+   *
+   * @param $op The operation, 'insert', 'update' etc.
+   *
+   * @param $step 'before' or 'after'
+   *
+   * @param $oldvals Self-explanatory.
+   *
+   * @param &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param &$newvals Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
+   */
+  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    if ($op === PHPMyEdit::SQL_QUERY_INSERT) {
+      // populate the empty $oldValues array with null in order to have
+      // less undefined array key accesses.
+      $oldValues = array_fill_keys(array_keys($newValues), null);
+    }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    $changed = array_values(array_unique($changed));
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
+
+    $this->changeSetSize = count($changed);
+
+    return true;
+  }
+
 }

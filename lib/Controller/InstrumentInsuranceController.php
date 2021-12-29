@@ -184,6 +184,7 @@ class InstrumentInsuranceController extends Controller {
         'manufacturer' => 'manufacturer',
         'constructionYear' => 'year_of_construction',
         'amount' => 'insurance_amount',
+        'rate' => 'insurance_rate',
       ];
       $values = [];
       foreach($cgiKeys as $key => $cgiKey) {
@@ -216,6 +217,7 @@ class InstrumentInsuranceController extends Controller {
         if ($control != 'submit') {
           break;
         }
+      case 'brokerSelect':
       case 'broker-select':
         $value = $values['brokerSelect'];
         if (empty($value)) {
@@ -225,6 +227,7 @@ class InstrumentInsuranceController extends Controller {
         if ($control != 'submit') {
           break;
         }
+      case 'scopeSelect':
       case 'scope-select':
         $value = $values['scopeSelect'];
         if (empty($value)) {
@@ -276,19 +279,24 @@ class InstrumentInsuranceController extends Controller {
           break;
         }
       case 'amount':
+        if (empty($values['amount'])) {
+          $errorMessage[] = $this->l->t('The insurance amount is missing.');
+          break;
+        }
         $value = $this->fuzzyInputService->currencyValue($values['amount']);
         if (empty($value)) {
-          $errorMessage[] = $this->l->t('The insurance amount is missing.');
-        } else {
-          $LocaleInfo = localeconv();
-          $value = str_replace($LocaleInfo["mon_thousands_sep"] , "", $value);
-          $value = str_replace($LocaleInfo["mon_decimal_point"] , ".", $value);
-          if (!is_numeric($value)) {
-            $errorMessage[] = $this->l->t('Insurance amount should be a mere number.');
-          }
-          if ((string)floatval($value) != (string)intval($value)) {
-            $errorMessage[] = $this->l->t('Insurance amount should be an integral number.');
-          }
+          $errorMessages[] = $this->l->t('Unable to parse currency value "%s".', $values['amount']);
+          break;
+        }
+        if ((string)floatval($value) != (string)intval($value)) {
+          $errorMessage[] = $this->l->t('Insurance amount should be an integral number.');
+          break;
+        }
+
+        if ($control != 'submit') {
+          $values['amount'] = intval($value);
+          $values['fee'] = (float)$values['amount'] * (float)$values['rate'];
+          break;
         }
         break; // break at last item
       default:
