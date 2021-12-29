@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2021-12-23 02:19+0100\n"
-"PO-Revision-Date: 2021-12-23 02:20+0100\n"
+"POT-Creation-Date: 2021-12-29 01:52+0100\n"
+"PO-Revision-Date: 2021-12-29 01:53+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -428,31 +428,31 @@ msgstr ""
 msgid "Rate has been simplified from \"%s\" to \"%s\"."
 msgstr "Die Rate wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: lib/Controller/InstrumentInsuranceController.php:202
+#: lib/Controller/InstrumentInsuranceController.php:203
 msgid "Insured musician is missing"
 msgstr "Die versicherte Person fehlt."
 
-#: lib/Controller/InstrumentInsuranceController.php:223
+#: lib/Controller/InstrumentInsuranceController.php:225
 msgid "Insurance broker is missing."
 msgstr "Angabe Versicherungsmakler fehlt."
 
-#: lib/Controller/InstrumentInsuranceController.php:232
+#: lib/Controller/InstrumentInsuranceController.php:235
 msgid "Geographical scope for the insurance is missing."
 msgstr "Der Geltungsbereich für die Versicherung fehlt."
 
-#: lib/Controller/InstrumentInsuranceController.php:241
+#: lib/Controller/InstrumentInsuranceController.php:244
 msgid "Insured object has not been specified."
 msgstr "Der zu versichernde Gegenstand wurde nicht angegeben."
 
-#: lib/Controller/InstrumentInsuranceController.php:250
+#: lib/Controller/InstrumentInsuranceController.php:253
 msgid "Object classification (instrument, accessory) is missing."
 msgstr "Zubehör-/Instrument-Klassifizierung fehlt."
 
-#: lib/Controller/InstrumentInsuranceController.php:258
+#: lib/Controller/InstrumentInsuranceController.php:261
 msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
-#: lib/Controller/InstrumentInsuranceController.php:268
+#: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Database/EntityManager.php:224 lib/Documents/OpenDocumentFiller.php:271
 #: lib/Documents/OpenDocumentFiller.php:288
 #: lib/Documents/OpenDocumentFiller.php:299
@@ -461,31 +461,32 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:309
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1788
 #: lib/PageRenderer/Instruments.php:376
-#: lib/Service/Finance/InstrumentInsuranceService.php:882
-#: lib/Service/Finance/InstrumentInsuranceService.php:886
+#: lib/Service/Finance/InstrumentInsuranceService.php:889
+#: lib/Service/Finance/InstrumentInsuranceService.php:893
 #: lib/Service/PhoneNumberService.php:88 lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:42 src/app/cafevdb.js:43
 msgid "unknown"
 msgstr "unbekannt"
 
-#: lib/Controller/InstrumentInsuranceController.php:269
+#: lib/Controller/InstrumentInsuranceController.php:272
 msgid "Construction year is unknown."
 msgstr "Das Herstellungsjahr wurde nicht angegeben."
 
-#: lib/Controller/InstrumentInsuranceController.php:281
+#: lib/Controller/InstrumentInsuranceController.php:283
 msgid "The insurance amount is missing."
 msgstr "Die Versicherungssumme fehlt."
 
-#: lib/Controller/InstrumentInsuranceController.php:287
-msgid "Insurance amount should be a mere number."
-msgstr "Die Versicherungssumme sollte einfach eine Zahl sein."
+#: lib/Controller/InstrumentInsuranceController.php:288
+#, php-format
+msgid "Unable to parse currency value \"%s\"."
+msgstr "Kann den Geldbetrag \"%s\" nicht entziffern."
 
-#: lib/Controller/InstrumentInsuranceController.php:290
+#: lib/Controller/InstrumentInsuranceController.php:292
 msgid "Insurance amount should be an integral number."
 msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 
-#: lib/Controller/InstrumentInsuranceController.php:295
-#: lib/Controller/InstrumentInsuranceController.php:306
+#: lib/Controller/InstrumentInsuranceController.php:303
+#: lib/Controller/InstrumentInsuranceController.php:314
 #, php-format
 msgid "Unknown Request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\"."
@@ -2363,33 +2364,24 @@ msgstr "\"%s\" nach \"%s\" verschoben."
 msgid "Could not copy cloud file to upload storage."
 msgstr "Konnte die Cloud-Datei nicht in den Upload-Datenspeicher kopieren."
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:319
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:382
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:554
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:322
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:379
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:553
 msgid "Foreign keys as principle keys cannot be composite"
 msgstr "Fremde Schlüssel as Primärschlüssel können nicht zusammengesetzt sein"
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:393
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:390
 #, php-format
 msgid "Missing value and no generator for identifier field: %s::%s"
 msgstr "Fehlender Wert oder Wert-Generator für Id-Feld: %s::%s"
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:485
-#, php-format
-msgid "Empty target field for column \"%s\"."
-msgstr "Leeres Zielfeld für die Spalte \"%s\"."
-
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:492
-msgid "Join-column has empty value."
-msgstr "Der Inhalt der Verknüpfungspalte ist leer."
-
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:497
-msgid "More than one hidden join-column."
-msgstr "Mehr als eine versteckte Verknüpfungs-Spalte."
-
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:504
-msgid "No hidden join column."
-msgstr "Keine versteckte Verknüpfungsspalte."
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:522
+msgid ""
+"Association field must eiter be an entity or the value of the single join "
+"column."
+msgstr ""
+"Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
+"der einzigen Verknüpfungs-Spalte."
 
 #: lib/Database/EntityManager.php:834 lib/Database/EntityManager.php:879
 #, php-format
@@ -2883,6 +2875,10 @@ msgstr ""
 "Entferne einige unnötige Daten-Reiter Definitionen aus den Personen-Daten-"
 "Feldern."
 
+#: lib/Maintenance/Migrations/CleanupInstrumentInsurances.php:50
+msgid "Cleanup association structure of instrument insurances."
+msgstr "Querverbindungen für Versicherungstabellen aufräumen."
+
 #: lib/Maintenance/Migrations/GeoContinentsFixedWidth.php:47
 msgid "Pin the data-type of the GeoContinents table to 2-char-fixed-width."
 msgstr "Setze Datentyp für Länder-Kürzel auf feste Länge 2 Buchstaben."
@@ -2984,7 +2980,7 @@ msgid "Instrument Insurances"
 msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:149
-#: lib/PageRenderer/InstrumentInsurances.php:256
+#: lib/PageRenderer/InstrumentInsurances.php:238
 #: lib/PageRenderer/ProjectPayments.php:361
 #: lib/PageRenderer/SepaBankAccounts.php:532
 #: lib/PageRenderer/SepaBulkTransactions.php:356
@@ -2992,30 +2988,30 @@ msgid "Musician"
 msgstr "Person"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
-#: lib/PageRenderer/InstrumentInsurances.php:207
-#: lib/PageRenderer/InstrumentInsurances.php:377
+#: lib/PageRenderer/InstrumentInsurances.php:189
+#: lib/PageRenderer/InstrumentInsurances.php:368
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
-#: lib/PageRenderer/InstrumentInsurances.php:386
+#: lib/PageRenderer/InstrumentInsurances.php:387
 msgid "Accessory"
 msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
-#: lib/PageRenderer/InstrumentInsurances.php:403
-#: lib/Service/Finance/InstrumentInsuranceService.php:738
+#: lib/PageRenderer/InstrumentInsurances.php:404
+#: lib/Service/Finance/InstrumentInsuranceService.php:745
 msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:153
-#: lib/PageRenderer/InstrumentInsurances.php:412
+#: lib/PageRenderer/InstrumentInsurances.php:431
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:154
-#: lib/PageRenderer/InstrumentInsurances.php:212
-#: lib/PageRenderer/InstrumentInsurances.php:423
+#: lib/PageRenderer/InstrumentInsurances.php:194
+#: lib/PageRenderer/InstrumentInsurances.php:449
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
@@ -3031,7 +3027,7 @@ msgstr "Versicherungsnummer"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:205
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:235
-#: lib/PageRenderer/InstrumentInsurances.php:366
+#: lib/PageRenderer/InstrumentInsurances.php:356
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
@@ -3361,32 +3357,32 @@ msgstr "Familie"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/PageRenderer/InstrumentInsurances.php:141
+#: lib/PageRenderer/InstrumentInsurances.php:123
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:201
+#: lib/PageRenderer/InstrumentInsurances.php:183
 msgid "Insurance brief, item, musician, broker"
 msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
-#: lib/PageRenderer/InstrumentInsurances.php:202
+#: lib/PageRenderer/InstrumentInsurances.php:184
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/PageRenderer/InstrumentInsurances.php:206
+#: lib/PageRenderer/InstrumentInsurances.php:188
 msgid "Details about the insured item"
 msgstr "Details über die versicherten Gegenstände"
 
-#: lib/PageRenderer/InstrumentInsurances.php:211
+#: lib/PageRenderer/InstrumentInsurances.php:193
 msgid "Insurance rate and total sum of insurance police"
 msgstr "Versicherungsraten und Gesamtbeitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:217
+#: lib/PageRenderer/InstrumentInsurances.php:199
 #: lib/PageRenderer/Musicians.php:306
 msgid "Miscellaneous Data"
 msgstr "Veschiedenes"
 
-#: lib/PageRenderer/InstrumentInsurances.php:222
+#: lib/PageRenderer/InstrumentInsurances.php:204
 #: lib/PageRenderer/Musicians.php:309
 #: lib/PageRenderer/ProjectParticipantFields.php:253
 #: lib/PageRenderer/ProjectParticipants.php:1358
@@ -3397,53 +3393,71 @@ msgstr "Veschiedenes"
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:240
+#: lib/PageRenderer/InstrumentInsurances.php:222
 msgid "Insurance Id"
 msgstr "Versicherungs-Id"
 
-#: lib/PageRenderer/InstrumentInsurances.php:286
+#: lib/PageRenderer/InstrumentInsurances.php:268
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/PageRenderer/InstrumentInsurances.php:319
+#: lib/PageRenderer/InstrumentInsurances.php:301
 msgid "Club Member"
 msgstr "Vereinsmitglied"
 
-#: lib/PageRenderer/InstrumentInsurances.php:339
+#: lib/PageRenderer/InstrumentInsurances.php:321
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/PageRenderer/InstrumentInsurances.php:433
+#: lib/PageRenderer/InstrumentInsurances.php:409
+msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
+msgstr "z.B. Bilbo Beutlin, Hobbingen, Auenland"
+
+#: lib/PageRenderer/InstrumentInsurances.php:420
+#, php-format
+msgid "around %1$04d"
+msgstr "um %1$04d"
+
+#: lib/PageRenderer/InstrumentInsurances.php:424
+#, php-format
+msgid "end of %1$02dth century"
+msgstr "Ende des %1$02en Jahrhunderts"
+
+#: lib/PageRenderer/InstrumentInsurances.php:437
+msgid "e.g. \"1921\" or \"around 1900\""
+msgstr "z.B. \"1921\" oder \"um 1900\""
+
+#: lib/PageRenderer/InstrumentInsurances.php:466
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/InstrumentInsurances.php:445
+#: lib/PageRenderer/InstrumentInsurances.php:484
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:445
+#: lib/PageRenderer/InstrumentInsurances.php:484
 msgid "including taxes"
 msgstr "inklusive Steuern"
 
-#: lib/PageRenderer/InstrumentInsurances.php:458
+#: lib/PageRenderer/InstrumentInsurances.php:504
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/PageRenderer/InstrumentInsurances.php:469
+#: lib/PageRenderer/InstrumentInsurances.php:515
 #: lib/PageRenderer/Musicians.php:788
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/PageRenderer/InstrumentInsurances.php:488
+#: lib/PageRenderer/InstrumentInsurances.php:534
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/PageRenderer/InstrumentInsurances.php:493
+#: lib/PageRenderer/InstrumentInsurances.php:540
 msgid "Bill"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/InstrumentInsurances.php:506
+#: lib/PageRenderer/InstrumentInsurances.php:553
 msgid "bill"
 msgstr "Rechnung"
 
@@ -3510,12 +3524,12 @@ msgid "Broker"
 msgstr "Anbieter"
 
 #: lib/PageRenderer/InsuranceRates.php:158
-#: lib/Service/Finance/InstrumentInsuranceService.php:736
+#: lib/Service/Finance/InstrumentInsuranceService.php:743
 msgid "Scope"
 msgstr "Bereich"
 
 #: lib/PageRenderer/InsuranceRates.php:167
-#: lib/Service/Finance/InstrumentInsuranceService.php:740
+#: lib/Service/Finance/InstrumentInsuranceService.php:747
 msgid "Rate"
 msgstr "Rate"
 
@@ -3694,7 +3708,7 @@ msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #: lib/PageRenderer/Musicians.php:881
-#: lib/PageRenderer/ProjectParticipants.php:1137 src/app/ajax.js:29
+#: lib/PageRenderer/ProjectParticipants.php:1137 src/app/ajax.js:30
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -4093,7 +4107,7 @@ msgstr "Obergrenze"
 #: lib/PageRenderer/ProjectPayments.php:389
 #: lib/PageRenderer/SepaBankAccounts.php:784
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: lib/Service/Finance/InstrumentInsuranceService.php:739
+#: lib/Service/Finance/InstrumentInsuranceService.php:746
 msgid "Amount"
 msgstr "Betrag"
 
@@ -5031,7 +5045,7 @@ msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:86
-#: lib/Service/Finance/InstrumentInsuranceService.php:473 :-1
+#: lib/Service/Finance/InstrumentInsuranceService.php:480 :-1
 #, php-format
 msgid "insurance"
 msgstr "Versicherung"
@@ -5067,7 +5081,7 @@ msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:502
+#: lib/Service/Finance/InstrumentInsuranceService.php:509
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
@@ -5077,32 +5091,32 @@ msgstr ""
 "Versicherungsübersicht. Bitte ein passendes Dokument bei den\n"
 "App-Einstellungen (Orchester->Dokumentenvorlagen) einstellen."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:617
+#: lib/Service/Finance/InstrumentInsuranceService.php:624
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:621
+#: lib/Service/Finance/InstrumentInsuranceService.php:628
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:636
+#: lib/Service/Finance/InstrumentInsuranceService.php:643
 #: templates/instrument-insurance.php:55 templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:658
+#: lib/Service/Finance/InstrumentInsuranceService.php:665
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:659
+#: lib/Service/Finance/InstrumentInsuranceService.php:666
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:664
+#: lib/Service/Finance/InstrumentInsuranceService.php:671
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -5121,33 +5135,33 @@ msgstr ""
 "dann, wenn sich an der Versicherung etwas ändern\n"
 "sollte."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:672
+#: lib/Service/Finance/InstrumentInsuranceService.php:679
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr "Gesamtversicherungsbeitrag %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:685
+#: lib/Service/Finance/InstrumentInsuranceService.php:692
 msgid "Annual amount excluding taxes"
 msgstr "Jahresbeitrag ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:689
-#: lib/Service/Finance/InstrumentInsuranceService.php:829
+#: lib/Service/Finance/InstrumentInsuranceService.php:696
+#: lib/Service/Finance/InstrumentInsuranceService.php:836
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr "%s %% Versicherungssteuer"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:693
+#: lib/Service/Finance/InstrumentInsuranceService.php:700
 msgid "Total amount to pay"
 msgstr "Rechnungsbetrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:703
+#: lib/Service/Finance/InstrumentInsuranceService.php:710
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 "Der Versicherungsbeitrag wird immer im voraus für das nächste "
 "Versicherungsjahr gezahlt."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:704
+#: lib/Service/Finance/InstrumentInsuranceService.php:711
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
@@ -5157,11 +5171,11 @@ msgstr ""
 "reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
 "Versicherungsjahre auf Monatsbasis berechnet wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:706
+#: lib/Service/Finance/InstrumentInsuranceService.php:713
 msgid "This is detailed in the table on the following page."
 msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:714
+#: lib/Service/Finance/InstrumentInsuranceService.php:721
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
@@ -5169,7 +5183,7 @@ msgstr ""
 "Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
 "nicht gekündigt wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:720
+#: lib/Service/Finance/InstrumentInsuranceService.php:727
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -5181,57 +5195,57 @@ msgstr ""
 "rechtzeitig im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:727
+#: lib/Service/Finance/InstrumentInsuranceService.php:734
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:728
+#: lib/Service/Finance/InstrumentInsuranceService.php:735
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:735
+#: lib/Service/Finance/InstrumentInsuranceService.php:742
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:737
+#: lib/Service/Finance/InstrumentInsuranceService.php:744
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:741
+#: lib/Service/Finance/InstrumentInsuranceService.php:748
 msgid "Start"
 msgstr "Beginn"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:742
+#: lib/Service/Finance/InstrumentInsuranceService.php:749
 msgid "Valid until"
 msgstr "Laufzeit bis"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:743
+#: lib/Service/Finance/InstrumentInsuranceService.php:750
 msgid "Months"
 msgstr "Monate"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:744
+#: lib/Service/Finance/InstrumentInsuranceService.php:751
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:780
+#: lib/Service/Finance/InstrumentInsuranceService.php:787
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:813
+#: lib/Service/Finance/InstrumentInsuranceService.php:820
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:823
+#: lib/Service/Finance/InstrumentInsuranceService.php:830
 msgid "Totals excluding taxes"
 msgstr "Gesamtsumme ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:836
+#: lib/Service/Finance/InstrumentInsuranceService.php:843
 msgid "Totals including taxes"
 msgstr "Gesamtsumme mit Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:877
+#: lib/Service/Finance/InstrumentInsuranceService.php:884
 msgid "Jane"
 msgstr "Susanne"
 
@@ -6337,7 +6351,28 @@ msgstr ""
 "Der Rechnungsempfänger der Instrumenten-Versicherung muss ein\n"
 "Vereinsmitglied sein. Dies scheint aber nicht der Fall zu sein."
 
-#: lib/Service/ToolTipsService.php:381
+#: lib/Service/ToolTipsService.php:376
+msgid ""
+"Generate a PDF with detailed records of the insured items and the resulting "
+"insurance fee."
+msgstr ""
+"Erzeugt ein PDF mit detaillierten Informationen zu den Versicherungen\n"
+"der einzelnen Objekte, insbesondere auch mit den resultierenden "
+"Versicherungsbeiträgen."
+
+#: lib/Service/ToolTipsService.php:377
+msgid "Manufacturer and (brief) place of manufacture if know."
+msgstr "Hersteller und (kurz!) Herstellungsort, falls bekannt."
+
+#: lib/Service/ToolTipsService.php:378
+msgid ""
+"Year of manufacture, if known. \"Fuzzy\" expression like \"unknown\", \"end "
+"of 19th century\", \"around 1900\" etc. are allowed."
+msgstr ""
+"Herstellungsjahr, falls bekannt. Erlaubt sind auch \"schlampige\" Angaben "
+"wie \"unbekannt\", \"Ende des 19ten Jahrhunderts\", \"um 1900\" usw."
+
+#: lib/Service/ToolTipsService.php:384
 msgid ""
 "Delete this file attachment. Undelete may be possible using the file-app of "
 "the cloud-software."
@@ -6345,7 +6380,7 @@ msgstr ""
 "Diesen Datei-Anhang löschen. Ggf. kann man das Löschen in der\n"
 "Datei-App der Cloud-Software rückgängig machen."
 
-#: lib/Service/ToolTipsService.php:383
+#: lib/Service/ToolTipsService.php:386
 msgid ""
 "Upload a new attachment. The old file will be overwritten but possibly may "
 "be restored using hte file-app of the cloud-software."
@@ -6354,7 +6389,7 @@ msgstr ""
 "können aber ggf. über die Datei-App der Cloud-Software wieder hergestellt "
 "werden."
 
-#: lib/Service/ToolTipsService.php:385
+#: lib/Service/ToolTipsService.php:388
 msgid ""
 "Upload a new attachment. The old file will be renamed by attaching the "
 "current time to its name."
@@ -6362,7 +6397,7 @@ msgstr ""
 "Einen neuen Datei-Anhang hochladen. Alte Anhänge werden umbenannt, indem ein "
 "Datum an den Namen gehängt wird."
 
-#: lib/Service/ToolTipsService.php:387
+#: lib/Service/ToolTipsService.php:390
 msgid ""
 "Click to upload the relevant file or use drag and drop anywhere in this data-"
 "row."
@@ -6370,27 +6405,27 @@ msgstr ""
 "Anklicken, um die jeweilige Datei hoch zu laden, oder ziehe eine neue Datei "
 "vom Desktop-Dateimanager auf diese Zeile."
 
-#: lib/Service/ToolTipsService.php:389
+#: lib/Service/ToolTipsService.php:392
 msgid "Click to download this file."
 msgstr "Anklicken um die Datei zu laden."
 
-#: lib/Service/ToolTipsService.php:391
+#: lib/Service/ToolTipsService.php:394
 msgid "Open the containing folder using the file-app of the cloud."
 msgstr ""
 "Den Datei-Ordner mit dieser Datei in der Datei-App der Cloud-Software öffnen."
 
-#: lib/Service/ToolTipsService.php:394
+#: lib/Service/ToolTipsService.php:397
 msgid ""
 "Multiplicity of the field, e.g. free-text, single choice, multiple choice "
 "etc."
 msgstr ""
 "Vielfachheit des Feldes, z.B. einfacher Wert, ja/nein, mehrfach Ausweil etc."
 
-#: lib/Service/ToolTipsService.php:396
+#: lib/Service/ToolTipsService.php:399
 msgid "Group of people, e.g. to define room-mates."
 msgstr "Personengruppe, z.B. um Zimmerbelegungen zu definieren."
 
-#: lib/Service/ToolTipsService.php:398
+#: lib/Service/ToolTipsService.php:401
 msgid ""
 "Group of people with predefined group-names and a potentially\n"
 "different maximal number of people fitting in the group. For example to "
@@ -6400,29 +6435,29 @@ msgstr ""
 "maximaler Personenzahl pro Gruppe. Zum Beispiel zur Festlegung von\n"
 "Zimmerbelegungen."
 
-#: lib/Service/ToolTipsService.php:401
+#: lib/Service/ToolTipsService.php:404
 msgid "Multiple choices, excluding each other."
 msgstr "Mehrere einander ausschließende Optionen."
 
-#: lib/Service/ToolTipsService.php:403
+#: lib/Service/ToolTipsService.php:406
 msgid "Multiple choices where, more than one option can be selected."
 msgstr ""
 "Mehrfachauswahl, bei der mehrere Optionen gleichzeitig ausgwählt werden "
 "können."
 
-#: lib/Service/ToolTipsService.php:405
+#: lib/Service/ToolTipsService.php:408
 msgid "Simple yes-no choice."
 msgstr "Einfache ja-nein Auswahl."
 
-#: lib/Service/ToolTipsService.php:407
+#: lib/Service/ToolTipsService.php:410
 msgid "General date field with the respective meaning."
 msgstr "Einfache Datenfeld mit der offensichtlichen Bedeutung."
 
-#: lib/Service/ToolTipsService.php:411
+#: lib/Service/ToolTipsService.php:414
 msgid "Data type of the field, e.g service-fee, text, HTML-text etc."
 msgstr "Datentyp des Felds, z.B. Unkostenbeitrag, Text, HTML-Text etc."
 
-#: lib/Service/ToolTipsService.php:415
+#: lib/Service/ToolTipsService.php:418
 msgid ""
 "Hit this button to delete or undelete each item. Note that items that\n"
 "already have been associated with musicians in the data-base can no\n"
@@ -6440,11 +6475,11 @@ msgstr ""
 "inaktiv markierte Option kann durch erneutes Anklicken dieses Buttons\n"
 "wieder hergestellt werden."
 
-#: lib/Service/ToolTipsService.php:424
+#: lib/Service/ToolTipsService.php:427
 msgid "Table with all admissible values for this multiple choice option."
 msgstr "Tabelle mit allen zulässigen Werten für diese multiple-Choice Option."
 
-#: lib/Service/ToolTipsService.php:425
+#: lib/Service/ToolTipsService.php:428
 msgid ""
 "In order to add a new option just enter its name here and hit enter or\n"
 "just click somewhere else. Further attributes can be changed later (data-"
@@ -6454,7 +6489,7 @@ msgstr ""
 "(oder irgendwo anders hinklicken). Weitere Daten können danach\n"
 "hinzugefügt werden."
 
-#: lib/Service/ToolTipsService.php:427
+#: lib/Service/ToolTipsService.php:430
 msgid ""
 "Please enter here a unique short non-nonsense key. You will no longer\n"
 "be able to change this db-key once this option has be attached to a\n"
@@ -6466,7 +6501,7 @@ msgstr ""
 "diese Option in die DB eingetragen wurde. Den Anzeige-Namen (einfach\n"
 "das Feld rechts) kann man aber jederzeit ändern."
 
-#: lib/Service/ToolTipsService.php:430
+#: lib/Service/ToolTipsService.php:433
 msgid ""
 "Just the display-label shown in the select-boxes in the instrumentation "
 "table."
@@ -6474,7 +6509,7 @@ msgstr ""
 "Einfach der Name, der für diese Option in den Auswahlboxen der\n"
 "Besetzungstabelle angezeigt wird."
 
-#: lib/Service/ToolTipsService.php:431
+#: lib/Service/ToolTipsService.php:434
 msgid ""
 "For surcharge-items this is just the surcharge-amount associated with\n"
 "the option. For other multi-choice items this is just one arbitrary\n"
@@ -6484,7 +6519,7 @@ msgstr ""
 "Zusatzbetrags eingetragen. Anhand dieser Beträge wird aus den Tabellen\n"
 "automatisch der Gesamtbetrag berechnet, den die Person zahlen muss."
 
-#: lib/Service/ToolTipsService.php:434
+#: lib/Service/ToolTipsService.php:437
 msgid ""
 "An extra-tooltip which can be associated to this specific option. A\n"
 "help text in order to inform others what this option is about."
@@ -6492,11 +6527,11 @@ msgstr ""
 "Ein Hilfetext, der mit diesem Eintrag assoziiert werden kann. Der Text\n"
 "erscheint als Kontext-Hilfe."
 
-#: lib/Service/ToolTipsService.php:436
+#: lib/Service/ToolTipsService.php:439
 msgid "The maximum allowed number of people in a \"group of people\" field"
 msgstr "Die maximale Anzahl von Personen, die in die Gruppe hineinpassen."
 
-#: lib/Service/ToolTipsService.php:438 lib/Service/ToolTipsService.php:439
+#: lib/Service/ToolTipsService.php:441 lib/Service/ToolTipsService.php:442
 msgid ""
 "For a yes/no option please enter here the single item to select, e.g. the "
 "surcharge amount for a service-fee field."
@@ -6504,13 +6539,13 @@ msgstr ""
 "Für eine Ja/Nein-Option hier bitte die Auswahloption eintragen, also je nach "
 "Feld-Typ z.B. den Geldbetrag oder den Text."
 
-#: lib/Service/ToolTipsService.php:440
+#: lib/Service/ToolTipsService.php:443
 msgid "Please enter the default value for this free-text option."
 msgstr ""
 "Bitte hier optional den Voreinstellungswert für diese Freitext-Option "
 "eintragen."
 
-#: lib/Service/ToolTipsService.php:445
+#: lib/Service/ToolTipsService.php:448
 msgid ""
 "Delete or undelete the receivable for this musician. The data will only be "
 "deleted when hitting the \"save\"-button of the form. Undelete is only "
@@ -6521,7 +6556,7 @@ msgstr ""
 "Wiederherstellen der Daten ist nur solange möglich, bis der\n"
 "\"Speichern\"-Knopf betätigt wurde."
 
-#: lib/Service/ToolTipsService.php:446
+#: lib/Service/ToolTipsService.php:449
 msgid ""
 "Recompute the values of this particular recurring field. The action will be "
 "performed immediately."
@@ -6529,7 +6564,7 @@ msgstr ""
 "Die Werte für dieses Feld neu berechnen. Die Neu-Berechnung erfolgt "
 "instantan."
 
-#: lib/Service/ToolTipsService.php:448
+#: lib/Service/ToolTipsService.php:451
 msgid ""
 "Recompute all receivables for the musician. Note that this will reload the "
 "input-form discarding all changes which have not been saved yet."
@@ -6538,11 +6573,11 @@ msgstr ""
 "Berechnung wird das Formular neu geladen, alle noch nicht\n"
 "gespeicherten Änderungen gehen verloren."
 
-#: lib/Service/ToolTipsService.php:449
+#: lib/Service/ToolTipsService.php:452
 msgid "Recompute the values of all recurring fields for all participants."
 msgstr "Die Werte für alle Felder aller Personen neu berechnen."
 
-#: lib/Service/ToolTipsService.php:450
+#: lib/Service/ToolTipsService.php:453
 msgid ""
 "Make sure that at least one new empty input field is available. Note that "
 "this will reload the input-form discarding all changes which have not been "
@@ -6553,7 +6588,7 @@ msgstr ""
 "Formular neu geladen, alle noch nicht gespeicherten Änderungen gehen\n"
 "verloren."
 
-#: lib/Service/ToolTipsService.php:452
+#: lib/Service/ToolTipsService.php:455
 msgid ""
 "Name of a the generator for this field. Can be be a fully-qualified PHP "
 "class-name or one of the known short-cuts."
@@ -6561,7 +6596,7 @@ msgstr ""
 "Name der Erzeuger-Maschinerie für dieses Feld. Kann ein vollständiger\n"
 "PHP Klassenname sein order auch eine der vorgeschlagenen Abkürzungen."
 
-#: lib/Service/ToolTipsService.php:453
+#: lib/Service/ToolTipsService.php:456
 msgid ""
 "Starting date for the receivable generation. Maybe overridden by the "
 "concrete generator framework."
@@ -6569,7 +6604,7 @@ msgstr ""
 "Anfangsdatum für die Berechnung der Forderungen. Wird ggf. vom\n"
 "Generator-Mechanismus überschrieben. Im Zweifel einfach leer lassen."
 
-#: lib/Service/ToolTipsService.php:454
+#: lib/Service/ToolTipsService.php:457
 msgid ""
 "Run the value generator. Depending on the generator this might result in new "
 "fields or just does nothing if all relevant fields are already there."
@@ -6578,13 +6613,13 @@ msgstr ""
 "könnnen daraus neue Datenfelder resultieren oder eben auch nicht,\n"
 "falls alle relevanten Datenfelder bereits existieren."
 
-#: lib/Service/ToolTipsService.php:457 lib/Service/ToolTipsService.php:459
-#: lib/Service/ToolTipsService.php:463
+#: lib/Service/ToolTipsService.php:460 lib/Service/ToolTipsService.php:462
+#: lib/Service/ToolTipsService.php:466
 msgid ""
 "Specify a default value for the custom field here. Leave blank if unsure."
 msgstr "Eine Voreinstellung für dieses Feld eintragen. Im Zweifel leer lassen."
 
-#: lib/Service/ToolTipsService.php:461
+#: lib/Service/ToolTipsService.php:464
 msgid ""
 "Default policy when replacing files with new uploads. Default is to rename "
 "the old file by attaching a time-stamp. \"replace\" will just overwrite the "
@@ -6597,7 +6632,7 @@ msgstr ""
 "einfach überschrieben, können abe ggf. in der Datei-App der\n"
 "Cloud-Software trotzdem wieder hergestellt werden."
 
-#: lib/Service/ToolTipsService.php:465
+#: lib/Service/ToolTipsService.php:468
 msgid ""
 "Disable this extra field. This will not erase any data in the\n"
 "data-base, but simply mark the field as unused and hide it from sight."
@@ -6605,7 +6640,7 @@ msgstr ""
 "Dieses Extra-Feld als inaktiv markieren. Die damit verknüpften Daten\n"
 "werden nicht gelöscht, das Feld wird lediglich ausgeblendet."
 
-#: lib/Service/ToolTipsService.php:468
+#: lib/Service/ToolTipsService.php:471
 msgid ""
 "Define the display priority. Larger values will move the item more to\n"
 "the left or the top inside its table-tab."
@@ -6613,7 +6648,7 @@ msgstr ""
 "Darstellungsreihenfolge. Felder mit größerem Wert werden weiter vorne\n"
 "dargestellt bzw. weiter oben."
 
-#: lib/Service/ToolTipsService.php:471
+#: lib/Service/ToolTipsService.php:474
 msgid ""
 "Expert use: store encrypted values in the data-base. If unsure: <em>DON'T</"
 "em>"
@@ -6621,14 +6656,14 @@ msgstr ""
 "Für Fortgeschrittene: Werte verschlüsselt speichern. Besser die Finger\n"
 "davon lassen, ist sowieso noch nicht fertig implementiert."
 
-#: lib/Service/ToolTipsService.php:473
+#: lib/Service/ToolTipsService.php:476
 msgid ""
 "Extra-tab to group project-specific data which just didn't fit\n"
 "somewhere else."
 msgstr ""
 "Extra-Datenreiter um Felder zu gruppieren, die sonst nirgendwo hin passten."
 
-#: lib/Service/ToolTipsService.php:476
+#: lib/Service/ToolTipsService.php:479
 msgid ""
 "Just the name for this option. Please keep the name as <em>short</em> as\n"
 "possible, but try to be descriptive. If further explanations are\n"
@@ -6641,11 +6676,11 @@ msgstr ""
 "<strong>Kontexthilfe</strong>-Feld im\n"
 "<strong>Darstellungs</strong>-Reiter eingetragen werden."
 
-#: lib/Service/ToolTipsService.php:481
+#: lib/Service/ToolTipsService.php:484
 msgid "The maximum number of peopel allowed in the group."
 msgstr "Die maximale Anzahl von Personen, die in die Gruppe hineinpassen."
 
-#: lib/Service/ToolTipsService.php:483
+#: lib/Service/ToolTipsService.php:486
 msgid ""
 "Define a new table-tab. In order to do so, first deselect any\n"
 "predefined tab in the select box above, then enter the new name. The\n"
@@ -6657,7 +6692,7 @@ msgstr ""
 "neuen Namen eingeben. Der Datenreiter steht dann auch als Option für\n"
 "andere Felder zur Verfügung."
 
-#: lib/Service/ToolTipsService.php:487
+#: lib/Service/ToolTipsService.php:490
 msgid ""
 "Members of these Cloud user-groups are allowed to view the\n"
 "field. If left blank, every logged in user is allowed to view the\n"
@@ -6667,7 +6702,7 @@ msgstr ""
 "Feld. Falls keine Gruppe ausgewählt ist, kann das Feld von jedem\n"
 "betrachtet werden."
 
-#: lib/Service/ToolTipsService.php:491
+#: lib/Service/ToolTipsService.php:494
 msgid ""
 "Each option has an optional data-entry attached to it. Normally, this\n"
 "is only useful for surcharge options, where the \"data-entry\" just is\n"
@@ -6678,7 +6713,7 @@ msgstr ""
 "Jeder Option ist noch ein Datenfeld zugeordnet. Insbesondere für\n"
 "kostenpflichtige Zusatzoptionen wird hier der Betrag eingetragen."
 
-#: lib/Service/ToolTipsService.php:497
+#: lib/Service/ToolTipsService.php:500
 msgid ""
 "Options already attached to musicians can no longer be deleted in\n"
 "order to prevent data-loss in the underlying data-base. It is even\n"
@@ -6693,7 +6728,7 @@ msgstr ""
 "deaktivierten Optionen wieder eingeblendet und können reaktiviert\n"
 "werden (siehe Knopf zur Linken der jeweiligen Zeile)."
 
-#: lib/Service/ToolTipsService.php:502
+#: lib/Service/ToolTipsService.php:505
 msgid ""
 "Define the table-tab this entry should be grouped with. It is also\n"
 "possible to define new table-tabs. In order to do so, first deselect\n"
@@ -6705,7 +6740,7 @@ msgstr ""
 "Datenreiter ausgewählt wird, landen normale Felder im \"Projekt\"-Reiter\n"
 "und Finanz-bezogene Felder im \"Finanzielles\"-Reiter."
 
-#: lib/Service/ToolTipsService.php:507
+#: lib/Service/ToolTipsService.php:510
 msgid ""
 "Optionally define a tool-tip (context-help) for the field. The tooltip\n"
 "may contain HTML formatting."
@@ -6713,7 +6748,7 @@ msgstr ""
 "Optional noch eine Kontexthilfe für das Feld definieren. Der \"Tooltip\"\n"
 "darf nicht zu kompliziertes HTML enthalten."
 
-#: lib/Service/ToolTipsService.php:510
+#: lib/Service/ToolTipsService.php:513
 msgid ""
 "Members of these Cloud user-groups are allowed to change the\n"
 "field. If left blank, every logged in user is allowed to change this field."
@@ -6721,7 +6756,7 @@ msgstr ""
 "Mitglieder dieser Cloud-Gruppen dürfen diese Feld verändern. Falls\n"
 "hier nichts enigetragen wird, darf jeder das Feld ändern."
 
-#: lib/Service/ToolTipsService.php:513
+#: lib/Service/ToolTipsService.php:516
 msgid ""
 "Select-box with all currently uploaded attachments. Note that a file will "
 "only be attached to a message if it is also checked in this select box."
@@ -6730,7 +6765,7 @@ msgstr ""
 "mit gesendet, wenn die hier auch ausgewählt sind. Nach dem Hoch-Laden\n"
 "sollten die neuen Dateien automatisch ausgewählt sein."
 
-#: lib/Service/ToolTipsService.php:515
+#: lib/Service/ToolTipsService.php:518
 msgid ""
 "Try to restore the last visited table view whenreloading the entire page "
 "with the web-browser. If unchecked either the musician's view or the blog-"
@@ -6741,7 +6776,7 @@ msgstr ""
 "nicht aktiviert ist, wird entweder die Gesamtansichte der registrierten "
 "Musizierenden oder eine Blog-Seite gezeigt."
 
-#: lib/Service/ToolTipsService.php:517
+#: lib/Service/ToolTipsService.php:520
 msgid ""
 "Toggle the initial display of the search-filters for data-base tables\n"
 "in order to make the table view a little less crowded. Search-filters\n"
@@ -6753,13 +6788,13 @@ msgstr ""
 "den individuellen Tabellenansichten wieder mittels des \"Suche\"-Buttons\n"
 "eingeschaltet werden."
 
-#: lib/Service/ToolTipsService.php:522
+#: lib/Service/ToolTipsService.php:525
 msgid "Further personal settings, normally not needed use with care."
 msgstr ""
 "Weitere individuelle Einstellungen. Normalerweise braucht man das nicht, "
 "bitte mit Vorsicht verwenden."
 
-#: lib/Service/ToolTipsService.php:525 lib/Service/ToolTipsService.php:430
+#: lib/Service/ToolTipsService.php:528 lib/Service/ToolTipsService.php:430
 #, php-format
 msgid ""
 "The number of the required musicians per instrument per voice (if the "
@@ -6769,7 +6804,7 @@ msgstr ""
 "dass die Stimmgruppe in Stimmen wir \"Violine 1\", \"Violline 2\" aufgeteilt "
 "ist)"
 
-#: lib/Service/ToolTipsService.php:527 lib/Service/ToolTipsService.php:432
+#: lib/Service/ToolTipsService.php:530 lib/Service/ToolTipsService.php:432
 #, php-format
 msgid ""
 "The voice for the respective instrument. Leave at the default to signal that "
@@ -6781,7 +6816,7 @@ msgstr ""
 "aufgeteilt werden muss. In der Regel wird man z.B. zwischen \"Violine\n"
 "1\" und \"Violine 2\" unterscheiden wollen ..."
 
-#: lib/Service/ToolTipsService.php:529 lib/Service/ToolTipsService.php:434
+#: lib/Service/ToolTipsService.php:532 lib/Service/ToolTipsService.php:434
 #, php-format
 msgid ""
 "The differences between the number of required musicians and the "
@@ -6789,15 +6824,6 @@ msgid ""
 msgstr ""
 "Die Differenz zwischen der Anzahl der benötigten Spielenden und der\n"
 "registrierten bzw. bestätigten Spielenden."
-
-#: lib/Service/ToolTipsService.php:532
-msgid ""
-"Generate a PDF with detailed records of the insured items and the\n"
-"resulting insurance fee."
-msgstr ""
-"Erzeugt ein PDF mit detaillierten Informationen zu den Versicherungen\n"
-"der einzelnen Objekte, insbesondere auch mit den resultierenden "
-"Versicherungsbeiträgen."
 
 #: lib/Service/ToolTipsService.php:535
 msgid ""
@@ -8212,15 +8238,15 @@ msgstr ""
 msgid "Unknown file type \"%s\" for download file \"%s\"."
 msgstr "Unbekannter Datei-Typ \"%s\" für Download-Datei \"%s\"."
 
-#: lib/Traits/InitialStateTrait.php:95
+#: lib/Traits/InitialStateTrait.php:97
 msgid "Select a filter option."
 msgstr "Wähle einen Filter."
 
-#: lib/Traits/InitialStateTrait.php:96 lib/Traits/InitialStateTrait.php:102
+#: lib/Traits/InitialStateTrait.php:98 lib/Traits/InitialStateTrait.php:104
 msgid "No values match."
 msgstr "Kein Wert passt."
 
-#: lib/Traits/InitialStateTrait.php:97
+#: lib/Traits/InitialStateTrait.php:99
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
@@ -8229,11 +8255,11 @@ msgstr ""
 "Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin außerhalb des "
 "Menüs klickt."
 
-#: lib/Traits/InitialStateTrait.php:101
+#: lib/Traits/InitialStateTrait.php:103
 msgid "Select an option."
 msgstr "Wähle eine Option."
 
-#: lib/Traits/InitialStateTrait.php:103
+#: lib/Traits/InitialStateTrait.php:105
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -8265,275 +8291,275 @@ msgstr "CafevDB"
 msgid "Orchestra Management Application."
 msgstr "Orchester-Verwaltungs-Anwendung"
 
-#: src/app/ajax.js:28
+#: src/app/ajax.js:29
 msgid "OK"
 msgstr "Fein"
 
-#: src/app/ajax.js:30
+#: src/app/ajax.js:31
 msgid "Accepted"
 msgstr "Akzeptiert"
 
-#: src/app/ajax.js:31
+#: src/app/ajax.js:32
 msgid "Non-Authoritative Information"
 msgstr "Unverbindliche Information"
 
-#: src/app/ajax.js:32
+#: src/app/ajax.js:33
 msgid "No Content"
 msgstr "Antwort enthält keine Daten"
 
-#: src/app/ajax.js:33
+#: src/app/ajax.js:34
 msgid "Reset Content"
 msgstr "Inhalt zurückgesetzt"
 
-#: src/app/ajax.js:34
+#: src/app/ajax.js:35
 msgid "Partial Content"
 msgstr "Unvollständige Antwort"
 
-#: src/app/ajax.js:35
+#: src/app/ajax.js:36
 msgid "Multi-Status (WebDAV)"
 msgstr "Multi-Status (WebDAV)"
 
-#: src/app/ajax.js:36
+#: src/app/ajax.js:37
 msgid "Already Reported (WebDAV)"
 msgstr "Bereits berichtet (WebDAV)"
 
-#: src/app/ajax.js:37
+#: src/app/ajax.js:38
 msgid "IM Used"
 msgstr "IM verwendet"
 
-#: src/app/ajax.js:38
+#: src/app/ajax.js:39
 msgid "Multiple Choices"
 msgstr "Mehrere Wahlmöglichkeiten"
 
-#: src/app/ajax.js:39
+#: src/app/ajax.js:40
 msgid "Moved Permanently"
 msgstr "Permanent verschoben"
 
-#: src/app/ajax.js:40
+#: src/app/ajax.js:41
 msgid "Found"
 msgstr "Gefunden"
 
-#: src/app/ajax.js:41
+#: src/app/ajax.js:42
 msgid "See Other"
 msgstr "Siehe andere Web-Adresse"
 
-#: src/app/ajax.js:42
+#: src/app/ajax.js:43
 msgid "Not Modified"
 msgstr "Unverändert"
 
-#: src/app/ajax.js:43
+#: src/app/ajax.js:44
 msgid "Use Proxy"
 msgstr "Benutze einen Proxy"
 
-#: src/app/ajax.js:44
+#: src/app/ajax.js:45
 msgid "(Unused)"
 msgstr "(Unbenutzt)"
 
-#: src/app/ajax.js:45
+#: src/app/ajax.js:46
 msgid "Temporary Redirect"
 msgstr "Zeitweilige Umleitung"
 
-#: src/app/ajax.js:46
+#: src/app/ajax.js:47
 msgid "Permanent Redirect (experimental)"
 msgstr "Permanente Umleitung"
 
-#: src/app/ajax.js:47
+#: src/app/ajax.js:48
 msgid "Bad Request"
 msgstr "Ungültige Anfrage"
 
-#: src/app/ajax.js:48
+#: src/app/ajax.js:49
 msgid "Unauthorized"
 msgstr "Nicht autorisiert"
 
-#: src/app/ajax.js:49
+#: src/app/ajax.js:50
 msgid "Payment Required"
 msgstr "Bezahlung erforderlich"
 
-#: src/app/ajax.js:50
+#: src/app/ajax.js:51
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: src/app/ajax.js:51
+#: src/app/ajax.js:52
 msgid "Not Found"
 msgstr "Unauffindbar"
 
-#: src/app/ajax.js:52
+#: src/app/ajax.js:53
 msgid "Method Not Allowed"
 msgstr "Anfragemethode nicht zulässig"
 
-#: src/app/ajax.js:53
+#: src/app/ajax.js:54
 msgid "Not Acceptable"
 msgstr "Nicht akzeptabel"
 
-#: src/app/ajax.js:54
+#: src/app/ajax.js:55
 msgid "Proxy Authentication Required"
 msgstr "Proxy-Authentifizierung erforderlich"
 
-#: src/app/ajax.js:55
+#: src/app/ajax.js:56
 msgid "Request Timeout"
 msgstr "Anfrage-Zeitüberschreitung"
 
-#: src/app/ajax.js:56
+#: src/app/ajax.js:57
 msgid "Conflict"
 msgstr "Konflikt"
 
-#: src/app/ajax.js:57
+#: src/app/ajax.js:58
 msgid "Gone"
 msgstr "Weg"
 
-#: src/app/ajax.js:58
+#: src/app/ajax.js:59
 msgid "Length Required"
 msgstr "Länge benötigt"
 
-#: src/app/ajax.js:59
+#: src/app/ajax.js:60
 msgid "Precondition Failed"
 msgstr "Vorbedingung nicht erfüllt"
 
-#: src/app/ajax.js:60
+#: src/app/ajax.js:61
 msgid "Request Entity Too Large"
 msgstr "Anfrage-Daten zu groß"
 
-#: src/app/ajax.js:61
+#: src/app/ajax.js:62
 msgid "Request-URI Too Long"
 msgstr "Anfrage-URI zu lang"
 
-#: src/app/ajax.js:62
+#: src/app/ajax.js:63
 msgid "Unsupported Media Type"
 msgstr "Nicht unterstützter Medien-Typ"
 
-#: src/app/ajax.js:63
+#: src/app/ajax.js:64
 msgid "Requested Range Not Satisfiable"
 msgstr "Angeforderter Bereich nicht möglich"
 
-#: src/app/ajax.js:64
+#: src/app/ajax.js:65
 msgid "Expectation Failed"
 msgstr "Erwartete Operation Fehlgeschlagen"
 
-#: src/app/ajax.js:65
+#: src/app/ajax.js:66
 msgid "I'm a teapot (RFC 2324)"
 msgstr "Ich bin eine Teekanne (RFC 2324)"
 
-#: src/app/ajax.js:66
+#: src/app/ajax.js:67
 msgid "Enhance Your Calm (Twitter)"
 msgstr "Verstärke Deine Ruhe (Twitter)"
 
-#: src/app/ajax.js:67
+#: src/app/ajax.js:68
 msgid "Unprocessable Entity (WebDAV)"
 msgstr "Nicht-verarbeitbarer Entrag (WebDAV)"
 
-#: src/app/ajax.js:68
+#: src/app/ajax.js:69
 msgid "Locked (WebDAV)"
 msgstr "Gesperrt (WebDAV)"
 
-#: src/app/ajax.js:69
+#: src/app/ajax.js:70
 msgid "Failed Dependency (WebDAV)"
 msgstr "Abhängigkeit fehlgeschlagen (WebDAV)"
 
-#: src/app/ajax.js:70
+#: src/app/ajax.js:71
 msgid "Reserved for WebDAV"
 msgstr "Reserviert für WebDAV"
 
-#: src/app/ajax.js:71
+#: src/app/ajax.js:72
 msgid "Upgrade Required"
 msgstr "Aufwertung benötigt"
 
-#: src/app/ajax.js:72
+#: src/app/ajax.js:73
 msgid "Precondition Required"
 msgstr "Vorbedingung erforderlich"
 
-#: src/app/ajax.js:73
+#: src/app/ajax.js:74
 msgid "Too Many Requests"
 msgstr "Zu viele Anfragen."
 
-#: src/app/ajax.js:74
+#: src/app/ajax.js:75
 msgid "Request Header Fields Too Large"
 msgstr "Anfrage-Kopfzeilen zu lang"
 
-#: src/app/ajax.js:75
+#: src/app/ajax.js:76
 msgid "No Response (Nginx)"
 msgstr "Keine Antwort (Nginx)"
 
-#: src/app/ajax.js:76
+#: src/app/ajax.js:77
 msgid "Retry With (Microsoft)"
 msgstr "Wiederholen mit (Microsoft)"
 
-#: src/app/ajax.js:77
+#: src/app/ajax.js:78
 msgid "Blocked by Windows Parental Controls (Microsoft)"
 msgstr "Blockiert von Windows-Kindersicherung (Microsoft)"
 
-#: src/app/ajax.js:78
+#: src/app/ajax.js:79
 msgid "Unavailable For Legal Reasons"
 msgstr "Nicht verfügbar aus rechtlichen Gründen"
 
-#: src/app/ajax.js:79
+#: src/app/ajax.js:80
 msgid "Client Closed Request (Nginx)"
 msgstr "Anwender-Programm hat die Anfrage beendet (Nginx)"
 
-#: src/app/ajax.js:80
+#: src/app/ajax.js:81
 msgid "Internal Server Error"
 msgstr "Interner Server-Fehler"
 
-#: src/app/ajax.js:81
+#: src/app/ajax.js:82
 msgid "Not Implemented"
 msgstr "Nicht implementiert"
 
-#: src/app/ajax.js:82
+#: src/app/ajax.js:83
 msgid "Bad Gateway"
 msgstr "Schlechte Netzübergangseinheit"
 
-#: src/app/ajax.js:83
+#: src/app/ajax.js:84
 msgid "Service Unavailable"
 msgstr "Dienst nicht verfügbar"
 
-#: src/app/ajax.js:84
+#: src/app/ajax.js:85
 msgid "Gateway Timeout"
 msgstr "Zeitüberschreitung bei der Netzübergangseinheit"
 
-#: src/app/ajax.js:85
+#: src/app/ajax.js:86
 msgid "HTTP Version Not Supported"
 msgstr "HTTP-Version nicht unterstützt"
 
-#: src/app/ajax.js:86
+#: src/app/ajax.js:87
 msgid "Variant Also Negotiates (Experimental)"
 msgstr "Variante handelt außerdem aus (Experimenmtell)"
 
-#: src/app/ajax.js:87
+#: src/app/ajax.js:88
 msgid "Insufficient Storage (WebDAV)"
 msgstr "Zu wenig Speicherplatz (WebDAV)"
 
-#: src/app/ajax.js:88
+#: src/app/ajax.js:89
 msgid "Loop Detected (WebDAV)"
 msgstr "Zirkel entdeckt (WebDAV)"
 
-#: src/app/ajax.js:89
+#: src/app/ajax.js:90
 msgid "Bandwidth Limit Exceeded (Apache)"
 msgstr "Bandbreiten-Beschränkung überschritten (Apache)"
 
-#: src/app/ajax.js:90
+#: src/app/ajax.js:91
 msgid "Not Extended"
 msgstr "Nicht erweitert"
 
-#: src/app/ajax.js:91
+#: src/app/ajax.js:92
 msgid "Network Authentication Required"
 msgstr "Netzwerk-Authentifizierung erforderlich"
 
-#: src/app/ajax.js:92
+#: src/app/ajax.js:93
 msgid "Network read timeout error"
 msgstr "Netzwerk Lese-Zeitüberschreitung"
 
-#: src/app/ajax.js:93
+#: src/app/ajax.js:94
 msgid "Network connect timeout error"
 msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 
-#: src/app/ajax.js:149
+#: src/app/ajax.js:150
 msgid "Operation cancelled by user."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/ajax.js:152
+#: src/app/ajax.js:153
 msgid "Aborted"
 msgstr "Abgebrochen"
 
-#: src/app/ajax.js:165 src/app/ajax.js:350 src/app/blog.js:181
+#: src/app/ajax.js:166 src/app/ajax.js:351 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
 #: src/app/blog.js:386 src/app/email.js:73 src/app/email.js:564
@@ -8544,19 +8570,19 @@ msgstr "Abgebrochen"
 msgid "Error"
 msgstr "Fehler"
 
-#: src/app/ajax.js:190
+#: src/app/ajax.js:191
 msgid "System Administrator"
 msgstr "System-Administrator"
 
-#: src/app/ajax.js:215
+#: src/app/ajax.js:216
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
 
-#: src/app/ajax.js:243
+#: src/app/ajax.js:244
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: src/app/ajax.js:245
+#: src/app/ajax.js:246
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -8565,7 +8591,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: src/app/ajax.js:250
+#: src/app/ajax.js:251
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -8574,7 +8600,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: src/app/ajax.js:298
+#: src/app/ajax.js:299
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -8582,19 +8608,19 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: src/app/ajax.js:300
+#: src/app/ajax.js:301
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: src/app/ajax.js:307
+#: src/app/ajax.js:308
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: src/app/ajax.js:316
+#: src/app/ajax.js:317
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: src/app/ajax.js:328
+#: src/app/ajax.js:329
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
@@ -8604,11 +8630,11 @@ msgstr ""
 "Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
 "Verfügung stellt."
 
-#: src/app/ajax.js:331
+#: src/app/ajax.js:332
 msgid "Error: plain string received"
 msgstr "Fehler: einfache Zeichenkette empfangen"
 
-#: src/app/ajax.js:336
+#: src/app/ajax.js:337
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
@@ -8616,15 +8642,15 @@ msgstr ""
 "Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
 "die oben aufgeführten benötigten Eigentschaften."
 
-#: src/app/ajax.js:339
+#: src/app/ajax.js:340
 msgid "Error: not a plain object"
 msgstr "Fehler: kein einfaches Objekt"
 
-#: src/app/ajax.js:378
+#: src/app/ajax.js:379
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
-#: src/app/ajax.js:385
+#: src/app/ajax.js:386
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
@@ -9137,7 +9163,7 @@ msgstr ""
 msgid "Photo Zoom"
 msgstr "Großes Foto"
 
-#: src/app/insurance.js:220
+#: src/app/insurance.js:350
 msgid "Unable to export insurance overview."
 msgstr "Kann die Versicherungs-Übersicht nicht exportieren."
 
@@ -9253,7 +9279,7 @@ msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
 msgstr ""
-"Ein Fehlt ist aufgetreten. Die Daten wurden nicht gespeichtert. Lieder gibt "
+"Ein Fehler ist aufgetreten. Die Daten wurden nicht gespeichtert. Leider gibt "
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
@@ -12521,6 +12547,22 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#~ msgid "Insurance amount should be a mere number."
+#~ msgstr "Die Versicherungssumme sollte einfach eine Zahl sein."
+
+#, php-format
+#~ msgid "Empty target field for column \"%s\"."
+#~ msgstr "Leeres Zielfeld für die Spalte \"%s\"."
+
+#~ msgid "Join-column has empty value."
+#~ msgstr "Der Inhalt der Verknüpfungspalte ist leer."
+
+#~ msgid "More than one hidden join-column."
+#~ msgstr "Mehr als eine versteckte Verknüpfungs-Spalte."
+
+#~ msgid "No hidden join column."
+#~ msgstr "Keine versteckte Verknüpfungsspalte."
 
 #, php-format
 #~ msgid "Migration \"%s\" failed."
