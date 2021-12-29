@@ -571,6 +571,16 @@ trait ConfigTrait {
     return $this->configService->transliterate($string, $locale);
   }
 
+  /** Return the currency code for the locale. */
+  public function currencyCode($locale = null)
+  {
+    if (empty($locale)) {
+      $locale = $this->getLocale();
+    }
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+  }
+
   /** Return the currency symbol for the locale. */
   public function currencySymbol($locale = null)
   {

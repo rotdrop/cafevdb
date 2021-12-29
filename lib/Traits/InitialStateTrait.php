@@ -77,6 +77,8 @@ trait InitialStateTrait {
         'language' => $languageShort,
         'cloudLanguage' => $languageComplete,
         'locale' => $locale,
+        'currencySymbol' => $this->currencySymbol(),
+        'currencyCode' => $this->currencyCode(),
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,
