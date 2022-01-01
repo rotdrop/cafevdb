@@ -187,14 +187,24 @@ class OpenDocumentFiller
       if (empty($unoconv)) {
         throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "unoconv" program on the server.'));
       }
-      $pdfConvert = new Process([
-        $unoconv,
-        '-f', 'pdf',
-        '--stdin', '--stdout',
-        '-e', 'ExportNotes=False'
-      ]);
-      $pdfConvert->setInput($fileData);
-      $pdfConvert->run();
+      $retry = false;
+      do {
+        $pdfConvert = new Process([
+          $unoconv,
+          '-f', 'pdf',
+          '--stdin', '--stdout',
+          '-e', 'ExportNotes=False'
+        ]);
+        $pdfConvert->setInput($fileData);
+        try  {
+          $pdfConvert->run();
+          $retry = false;
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->logError('RETRY ' . print_r($this->backend->VarRef, true));
+          $retry = true;
+        }
+      } while ($retry);
       $fileData = $pdfConvert->getOutput();
       $mimeType = 'application/pdf';
       $pathInfo = pathinfo($fileName);
