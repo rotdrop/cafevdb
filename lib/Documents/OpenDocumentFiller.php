@@ -201,7 +201,7 @@ class OpenDocumentFiller
           $retry = false;
         } catch (\Throwable $t) {
           $this->logException($t);
-          $this->logError('RETRY ' . print_r($this->backend->VarRef, true));
+          $this->logError('RETRY');
           $retry = true;
         }
       } while ($retry);
