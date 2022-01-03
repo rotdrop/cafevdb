@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,6 +35,8 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
+
+use OCA\CAFEVDB\Common\Crypto;
 
 /**
  * This kludge is here as long as our slightly over-engineered
@@ -102,6 +104,12 @@ class EncryptionService
   /** @var IEventDispatcher */
   private $eventDispatcher;
 
+  /** @var Crypto\SealService */
+  private $sealService;
+
+  /** @var Crypto\CloudSymmetricCryptor */
+  private $appCryptor;
+
   /** @var string */
   private $userId = null;
 
@@ -122,6 +130,7 @@ class EncryptionService
     , AuthorizationService $authorization
     , IConfig $containerConfig
     , IUserSession $userSession
+    , Crypto\SealService $sealService
     , ICrypto $crypto
     , IHasher $hasher
     , ICredentialsStore $credentialsStore
@@ -131,6 +140,7 @@ class EncryptionService
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
+    $this->sealService = $sealService;
     $this->crypto = $crypto;
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
@@ -172,6 +182,7 @@ class EncryptionService
     $this->userPassword = $password;
     $this->initUserKeyPair();
     $this->initAppEncryptionKey();
+    $this->appCryptor = new Crypto\CloudSymmetricCryptor($this->crypto, $this->appEncryptionKey);
     $this->eventDispatcher->dispatchTyped(new EncryptionServiceBoundEvent($userId));
   }
 
