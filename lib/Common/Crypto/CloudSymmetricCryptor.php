@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -40,9 +40,24 @@ class CloudSymmetricCryptor implements ICryptor
     $this->encryptionKey = $encryptionKey;
   }
 
-  public function setEncryptionKey($encryptionKey)
+  /**
+   * Set the encryption-key to use.
+   *
+   * @param null|string $encryptionKey
+   */
+  public function setEncryptionKey(?string $encryptionKey)
   {
     $this->encryptionKey = $encryptionKey;
+  }
+
+  /**
+   * Fetch the installed encryption key, if any.
+   *
+   * @return null|string
+   */
+  public function getEncryptionKey():?string
+  {
+    return $this->encryptionKey;
   }
 
   /** {@inheritdoc} */
