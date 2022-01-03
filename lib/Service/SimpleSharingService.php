@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
 use OCP\Files\Node as FileSystemNode;
+use OCP\IURLGenerator;
 use OCP\ILogger;
 
 class SimpleSharingService
@@ -36,8 +37,9 @@ class SimpleSharingService
   private $shareManager;
 
   public function __construct(
-    ConfigService $configService,
-    IShareManager $shareManager
+    ConfigService $configService
+    , IShareManager $shareManager
+    , IURLGenerator $urlGenerator
   )  {
     $this->configService = $configService;
     $this->shareManager = $shareManager;
