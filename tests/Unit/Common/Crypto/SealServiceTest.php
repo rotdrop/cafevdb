@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -93,5 +93,30 @@ class SealServiceTest extends TestCase
 
     $unsealed = $sealService->unseal($sealedData, self::USER_B, $keyCryptor);
     $this->assertEquals($unsealed, self::DATA_BYTES);
+  }
+
+  public function testSealValidation()
+  {
+    $this->cloudCryptor
+      ->expects($this->any())
+      ->method('encrypt')
+      ->willReturn(self::ENCRYPTED_BYTES);
+
+    $keyCryptor = $this->getMockBuilder(ICryptor::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $keyCryptor
+      ->expects($this->any())
+      ->method('encrypt')
+      ->willReturn(self::ENCRYPTED_BYTES);
+    $keyCryptor
+      ->expects($this->any())
+      ->method('decrypt')
+      ->willReturn(self::DATA_BYTES);
+
+    $sealService = new SealService($this->cloudCryptor);
+    $sealedData = $sealService->seal(self::DATA_BYTES, [ self::USER_A => $keyCryptor, self::USER_B => $keyCryptor ]);
+
+    $this->assertEquals(true, $sealService->isSealedData($sealedData));
   }
 }
