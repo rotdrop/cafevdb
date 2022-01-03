@@ -1,24 +1,6 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
-# Branch feature/email-form-large-attachments-as-file-link #
-
-## Purpose ##
-
-In the builtin-email form send large attachments as cloud-file-links
-instead of copying the data. The attachment-storage should be located
-somewhere on the cloud:
-
-- sub-directory of projects-folder for project emails
-- perhaps sub-directory of management-board project for general emails.
-- using the message-id as tag or sub-folder
-- could use postbox/incoming/ for uploads, postbox/outgoing/ for downloads.
-
-## Comments ##
-
-- ConfigCheckService::linkShareObject() already let's us share write-only with a link.
-- or use the cloud's OCS API?
-
 # General README #
 
 The goal of the project is a group-ware application which aids
