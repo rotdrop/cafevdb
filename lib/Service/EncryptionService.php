@@ -108,7 +108,7 @@ class EncryptionService
   private $sealService;
 
   /** @var Crypto\CloudSymmetricCryptor */
-  private $appCryptor;
+  private $appCryptor = null;
 
   /** @var string */
   private $userId = null;
@@ -121,9 +121,6 @@ class EncryptionService
 
   /** @var string */
   private $userPublicKey = null;
-
-  /** @var string */
-  private $appEncryptionKey = null;
 
   public function __construct(
     $appName
@@ -141,6 +138,7 @@ class EncryptionService
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->sealService = $sealService;
+    $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
     $this->crypto = $crypto;
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
@@ -182,7 +180,6 @@ class EncryptionService
     $this->userPassword = $password;
     $this->initUserKeyPair();
     $this->initAppEncryptionKey();
-    $this->appCryptor = new Crypto\CloudSymmetricCryptor($this->crypto, $this->appEncryptionKey);
     $this->eventDispatcher->dispatchTyped(new EncryptionServiceBoundEvent($userId));
   }
 
@@ -207,13 +204,13 @@ class EncryptionService
 
   public function getAppEncryptionKey()
   {
-    return $this->appEncryptionKey;
+    return $this->appCryptor->getEncryptionKey();
   }
 
   public function setAppEncryptionKey($key)
   {
     //$this->logInfo('Installing encryption key '.$key);
-    $this->appEncryptionKey = $key;
+    $this->appCryptor->setEncryptionKey($key);
   }
 
   /**
@@ -370,16 +367,16 @@ class EncryptionService
     if (empty($usrdbkey)) {
       // No key -> unencrypted
       $this->logDebug("No Encryption Key, setting to empty string in order to disable encryption.");
-      $this->appEncryptionKey = ''; // not null, just empty
+      $this->appCryptor->setEncryptionKey(''); // not null, just empty
     } else {
-      $this->appEncryptionKey = $usrdbkey;
+      $this->appCryptor->setEncryptionKey($usrdbkey);
     }
 
     // compare the user-key with the stored encryption key hash
     $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($usrdbkey, $sysdbkeyhash)) {
       // Failed
-      $this->appEncryptionKey = null;
+      $this->appCryptor->setEncryptionKey(null);
       throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key.'));
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
@@ -482,7 +479,7 @@ class EncryptionService
     }
 
     if (empty($encryptionKey)) {
-      $encryptionKey = $this->appEncryptionKey;
+      $encryptionKey = $this->appCryptor->getEncryptionKey();
     }
     if (empty($encryptionKey)) {
       $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
@@ -536,7 +533,7 @@ class EncryptionService
 
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
       // null is error or uninitialized, string '' means no encryption
-      if ($this->appEncryptionKey === null) {
+      if ($this->appCryptor->getEncryptionKey() === null) {
         if (!empty($this->userId)) {
           $message = $this->l->t('Decryption requested for user "%s", but not configured, empty encryption key.', $this->userId);
           throw new Exceptions\EncryptionKeyException($message);
@@ -545,7 +542,7 @@ class EncryptionService
         return false;
       }
       try {
-        $value  = $this->decrypt($value, $this->appEncryptionKey);
+        $value  = $this->appCryptor->decrypt($value);
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
@@ -564,8 +561,9 @@ class EncryptionService
    */
   public function setConfigValue($key, $value)
   {
-    if (!empty($this->appEncryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
-      if ($this->appEncryptionKey === null) {
+    $encryptionKey = $this->appCryptor->getEncryptionKey();
+    if (!empty($encryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
+      if ($encryptionKey === null) {
         // null is error or uninitialized, string '' means no encryption
         if (!empty($this->userId)) {
           $message = $this->l->t('Encryption requested but not configured for user "%s", empty encryption key.', $this->userId);
@@ -575,7 +573,7 @@ class EncryptionService
         return false;
       }
       //$this->logInfo('Encrypting value for key '.$key);
-      $value = $this->encrypt($value, $this->appEncryptionKey);
+      $value = $this->encrypt($value, $encryptionKey);
     }
     $this->setAppValue($key, $value);
     return true;
