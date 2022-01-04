@@ -28,4 +28,6 @@ interface ICryptor
 {
   public function encrypt(?string $data):?string;
   public function decrypt(?string $data):?string;
+  public function canEncrypt():bool;
+  public function canDecrypt():bool;
 };

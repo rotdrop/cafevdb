@@ -90,4 +90,16 @@ class CloudSymmetricCryptor implements ICryptor
     }
     return $data;
   }
+
+  /** {@inheritdoc} */
+  public function canEncrypt():bool
+  {
+    return $this->encryptionKey !== null;
+  }
+
+  /** {@inheritdoc} */
+  public function canDecrypt():bool
+  {
+    return $this->encryptionKey !== null;
+  }
 };

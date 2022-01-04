@@ -66,4 +66,16 @@ class OpenSSLAsymmetricCryptor implements ICryptor
     openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
     return $decryptedData;
   }
+
+  /** {@inheritdoc} */
+  public function canEncrypt():bool
+  {
+    return $this->pubKey !== null;
+  }
+
+  /** {@inheritdoc} */
+  public function canDecrypt():bool
+  {
+    return $this->privKey !== null;
+  }
 };
