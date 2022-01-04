@@ -387,8 +387,12 @@ class PersonalSettingsController extends Controller {
 
       try {
 
-        // re-crypt the config-space
         $encryptionService->setAppEncryptionKey($systemKey);
+
+        // re-generate the private/public key pair
+        $this->encryptionService()->initAppKeyPair(forceNewKeyPair: true);
+
+        // re-crypt the config-space
         $this->configService->encryptConfigValues([
           EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
         ]);

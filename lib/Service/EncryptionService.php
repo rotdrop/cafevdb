@@ -110,6 +110,9 @@ class EncryptionService
   /** @var Crypto\CloudSymmetricCryptor */
   private $appCryptor;
 
+  /** @var Crypto\OpenSSLAsymmetricCryptor */
+  private $appAsymmetricCryptor;
+
   /** @var string */
   private $userId = null;
 
@@ -139,6 +142,7 @@ class EncryptionService
     $this->containerConfig = $containerConfig;
     $this->sealService = $sealService;
     $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
+    $this->appAsymmetricCryptor = new Crypto\OpenSSLAsymmetricCryptor;
     $this->crypto = $crypto;
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
@@ -180,6 +184,7 @@ class EncryptionService
     $this->userPassword = $password;
     $this->initUserKeyPair();
     $this->initAppEncryptionKey();
+    $this->initAppKeyPair();
     $this->eventDispatcher->dispatchTyped(new EncryptionServiceBoundEvent($userId));
   }
 
@@ -261,6 +266,44 @@ class EncryptionService
 
     $this->userPrivateKey = $privKey;
     $this->userPublicKey = $pubKey;
+  }
+
+  public function initAppKeyPair($forceNewKeyPair = false)
+  {
+    $group = $this->getAppValue('usergroup');
+    $encryptionKey = $this->getAppEncryptionKey();
+    if (empty($group) || empty($encryptionKey)) {
+      $this->logError('Cannot initialize SSL key-pair without user-group and encryption key');
+      return;
+    }
+
+    $group = '@' . $group;
+
+    if (!$forceNewKeyPair) {
+      $privKey = $this->getUserValue($group, 'privateSSLKey', null);
+      $pubKey = $this->getUserValue($group, 'publicSSLKey', null);
+    }
+    if (empty($privKey) || empty($pubKey)) {
+      // Ok, generate one.
+      $keys = $this->generateUserKeyPair($group, $encryptionKey);
+      if ($keys === false) {
+        $this->logError(sprintf('Unable to generate SSL key pair for user-group "%s".', $group));
+        return;
+      }
+      list($privKey, $pubKey) = $keys;
+    }
+
+    $privKey = openssl_pkey_get_private($privKey, $encryptionKey);
+
+    if ($privKey === false) {
+      $this->appAsymmetricCryptor->setPrivateKey(null);
+      $this->appAsymmetricCryptor->setPublicKey(null);
+      $this->logError(sprintf('Unable to unlock private key for user-group "%s"', $group));
+      return;
+    }
+
+    $this->appAsymmetricCryptor->setPrivateKey($privKey);
+    $this->appAsymmetricCryptor->setPublicKey($pubKey);
   }
 
   // To distribute the encryption key for the data base and
