@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -52,7 +52,7 @@ class OpenSSLAsymmetricCryptor implements ICryptor
   }
 
   /** {@inheritdoc} */
-  public function encrypt(string $decryptedData):?string
+  public function encrypt(?string $decryptedData):?string
   {
     $encryptedData = null;
     openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
@@ -60,7 +60,7 @@ class OpenSSLAsymmetricCryptor implements ICryptor
   }
 
   /** {@inheritdoc} */
-  public function decrypt(string $encryptedData):?string
+  public function decrypt(?string $encryptedData):?string
   {
     $decryptedData = null;
     openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);

@@ -108,7 +108,7 @@ class EncryptionService
   private $sealService;
 
   /** @var Crypto\CloudSymmetricCryptor */
-  private $appCryptor = null;
+  private $appCryptor;
 
   /** @var string */
   private $userId = null;
@@ -211,6 +211,14 @@ class EncryptionService
   {
     //$this->logInfo('Installing encryption key '.$key);
     $this->appCryptor->setEncryptionKey($key);
+  }
+
+  /**
+   * @return Crypto\ICryptor
+   */
+  public function getAppCryptor():Crypto\ICryptor
+  {
+    return $this->appCryptor;
   }
 
   /**
@@ -573,74 +581,10 @@ class EncryptionService
         return false;
       }
       //$this->logInfo('Encrypting value for key '.$key);
-      $value = $this->encrypt($value, $encryptionKey);
+      $value = $this->appCryptor->encrypt($value);
     }
     $this->setAppValue($key, $value);
     return true;
-  }
-
-  /**
-   * Encrypt the given value with the given encryption
-   * key. Internally, the first 4 bytes contain the length of $value
-   * as string in hexadecimal notation, the following 32 bytes contain
-   * the MD5 checksum of $value, starting at byte 36 follows the
-   * data. Everyting is encrypted, and a BASE64 encoded representation
-   * of the encoded data is stored int the data-base.
-   *
-   * @param $value The data to encrypt
-   *
-   * @param $enckey The encrypt key.
-   *
-   * @return The encrypted and encoded data.
-   *
-   * @throws Exceptions\EncryptionFailedException
-   */
-  public function encrypt($value, $enckey)
-  {
-    // Store the size in the first 4 bytes in order not to have to
-    // rely on padding. We store the value in hexadecimal notation
-    // in order to keep text-fields as text fields.
-    $value = strval($value);
-    if (!empty($enckey)) {
-      try {
-        $value = $this->crypto->encrypt($value, $enckey);
-      } catch (\Throwable $t) {
-         throw new Exceptions\EncryptionFailedException($this->l->t('Encrypt failed'), $t->getCode(), $t);
-      }
-    }
-    return $value;
-  }
-
-  /**
-   * Decrypt $value using the specified encryption key $enckey. If
-   * $enckey is empty or unset, no decryption is attempted. This
-   * function also checks against the internally stored MD5 sum.
-   *
-   * @param $value The encrypted and BASE64 encoded data.
-   *
-   * @param $enckey The encryption key or an empty string or
-   * nothing.
-   *
-   * @return The decrypted data in case of success, or false
-   * otherwise. If either @c $value or @c enckey is empty the return
-   * value is just passed argument @c value.
-   *
-   * @throws Exceptions\DecryptionFailedException
-   */
-  public function decrypt($value, $enckey)
-  {
-    if (!empty($enckey) && !empty($value)) {
-      // not encrypted hack
-      if (substr($value, -2, 2) !== '|3') {
-        return $value;
-      }
-      try {
-         $value = $this->crypto->decrypt($value, $enckey);
-      } catch (\Throwable $t) {
-        throw new Exceptions\DecryptionFailedException($this->l->t('Decrypt failed'), $t->getCode(), $t);
-      }
-    }
-    return $value;
   }
 
   public function verifyHash($value, $hash)

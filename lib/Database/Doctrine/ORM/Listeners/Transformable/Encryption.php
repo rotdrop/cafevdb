@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,34 +25,39 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
-use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Common\Crypto\ICryptor;
 
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
   /** @var string */
   private $encryptionKey;
 
-  /** @var EncryptionService */
-  private $encryptionService;
+  /** @var ICryptor */
+  private $cryptor;
 
   /** @var bool */
   private $cachable;
 
-  public function __construct(EncryptionService $encryptionService)
+  public function __construct(ICryptor $cryptor)
   {
-    $this->encryptionService = $encryptionService;
-    $this->encryptionKey = $this->encryptionService->getAppEncryptionKey();
+    $this->cryptor = $cryptor;
     $this->cachable = true;
   }
 
   /**
-   * @param string encryptionKey The new encryption-key
+   * @param ICryptor $cryptor
    */
-  public function setEncryptionKey(string $encryptionKey)
+  public function setCryptor(ICryptor $cryptor)
   {
-    $oldKey = $this->encryptionKey;
-    $this->encryptionKey = $encryptionKey;
-    return $oldKey;
+    $this->cryptor = $cryptor;
+  }
+
+  /**
+   * @return ICryptor
+   */
+  public function getCryptor():ICryptor
+  {
+    return $this->cryptor;
   }
 
   /**
@@ -70,7 +75,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function transform($value)
   {
-    return $this->encryptionService->encrypt($value, $this->encryptionKey);
+    return $this->cryptor->encrypt($value);
   }
 
   /**
@@ -80,7 +85,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform($value)
   {
-     return $this->encryptionService->decrypt($value, $this->encryptionKey);
+    return $this->cryptor->decrypt($value);
   }
 
   /**

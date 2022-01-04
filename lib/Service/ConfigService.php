@@ -503,16 +503,14 @@ class ConfigService {
     return $this->encryptionService->getAppEncryptionKey();
   }
 
-  public function encrypt($value, $key = null)
+  public function encrypt($value)
   {
-    $key = $key?: $this->getAppEncryptionKey();
-    return $this->encryptionService->encrypt($value, $key);
+    return $this->encryptionService->getAppCryptor()->encrypt($value);
   }
 
-  public function decrypt($value, $key = null)
+  public function decrypt($value)
   {
-    $key = $key?: $this->getAppEncryptionKey();
-    return $this->encryptionService->decrypt($value, $key);
+    return $this->encryptionService->getAppCryptor()->decrypt($value);
   }
 
   public function verifyHash($value, $hash)

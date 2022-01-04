@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,7 +38,7 @@ class CloudSymmetricCryptorTest extends TestCase
   private const DATA_BYTES = 'This is a unicode ääöüß string';
 
   /** @var string */
-  private const ENCRYPTED_BYTES = 'abcd';
+  private const ENCRYPTED_BYTES = 'abcd|3';
 
   /** @var CloudSymmetricCryptor */
   private $cryptor;

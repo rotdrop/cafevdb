@@ -192,14 +192,14 @@ trait ConfigTrait {
     return $this->configService->encryptionKeyValid($encryptionKey);
   }
 
-  protected function encrypt($value, $key = null)
+  protected function encrypt($value)
   {
-    return $this->configService->encrypt($value, $key);
+    return $this->configService->encrypt($value);
   }
 
-  protected function decrypt($value, $key = null)
+  protected function decrypt($value)
   {
-    return $this->configService->decrypt($value, $key);
+    return $this->configService->decrypt($value);
   }
 
   protected function verifyHash($value, $hash)

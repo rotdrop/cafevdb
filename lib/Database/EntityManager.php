@@ -53,6 +53,7 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 
+use OCA\CAFEVDB\Common\Crypto;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;
@@ -574,7 +575,9 @@ class EntityManager extends EntityManagerDecorator
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
-    $transformerPool['encrypt'] = new Listeners\Transformable\Encryption($this->encryptionService);
+    $transformerPool['encrypt'] = new Listeners\Transformable\Encryption(
+      $this->encryptionService->getAppCryptor()
+    );
     $transformerPool['hash'] = new Transformable\Transformer\PhpHashTransformer([
       'algorithm' => 'sha256',
       'binary' => false,
@@ -1019,12 +1022,15 @@ class EntityManager extends EntityManagerDecorator
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool['encrypt'];
 
+    /** @var Crypto\CloudSymmetricCryptor $cryptor */
+    $cryptor = $transformer->getCryptor();
+
     $encryptedEntities = [];
     $this->beginTransaction();
     try {
       // make sure decryption is still with the old key if it is given
       if (!empty($oldEncryptionKey)) {
-        $transformer->setEncryptionKey($oldEncryptionKey);
+        $cryptor->setEncryptionKey($oldEncryptionKey);
       }
 
       $transformer->setCachable(false);
@@ -1050,10 +1056,9 @@ class EntityManager extends EntityManagerDecorator
 
       // Set new encryption key
       if (empty($oldEncryptionKey)) {
-        $oldEncryptionKey = $transformer->setEncryptionKey($newEncryptionKey);
-      } else {
-        $transformer->setEncryptionKey($newEncryptionKey);
+        $oldEncryptionKey = $cryptor->getEncryptionKey();
       }
+      $cryptor->setEncryptionKey($encryptionKey);
 
       // Flush to disk with new encryption key
       $this->flush();
@@ -1073,7 +1078,7 @@ class EntityManager extends EntityManagerDecorator
     } catch (\Throwable $t) {
       // $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
-      $transformer->setEncryptionKey($oldEncryptionKey);
+      $cryptor->setEncryptionKey($oldEncryptionKey);
       $this->reopen();
       throw new \RuntimeException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),

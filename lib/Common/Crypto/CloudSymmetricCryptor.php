@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Common\Crypto;
 
 use OCP\Security\ICrypto;
+use OCA\CAFEVDB\Exceptions;
 
 /** Use the encryption service provided by the ambient cloud software. */
 class CloudSymmetricCryptor implements ICryptor
@@ -41,7 +42,7 @@ class CloudSymmetricCryptor implements ICryptor
   }
 
   /**
-   * Set the encryption-key to use.
+   * Set the encryption-key to use. If left empty then the data will be left unencrypted and decrypted.
    *
    * @param null|string $encryptionKey
    */
@@ -61,14 +62,32 @@ class CloudSymmetricCryptor implements ICryptor
   }
 
   /** {@inheritdoc} */
-  public function encrypt(string $data):?string
+  public function encrypt(?string $data):?string
   {
-    return $this->crypto->encrypt($data, $this->encryptionKey);
+    if (!empty($this->encryptionKey)) {
+      try {
+        $data = $this->crypto->encrypt($data, $this->encryptionKey);
+      } catch (\Throwable $t) {
+        throw new Exceptions\EncryptionFailedException('Encrypt failed', $t->getCode(), $t);
+      }
+    }
+    return $data;
   }
 
   /** {@inheritdoc} */
-  public function decrypt(string $data):?string
+  public function decrypt(?string $data):?string
   {
-    return $this->crypto->decrypt($data, $this->encryptionKey);
+    if (!empty($this->encryptionKey) && !empty($data)) {
+      // not encrypted hack
+      if (substr($data, -2, 2) !== '|3') {
+        return $data;
+      }
+      try {
+        $data = $this->crypto->decrypt($data, $this->encryptionKey);
+      } catch (\Throwable $t) {
+        throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
+      }
+    }
+    return $data;
   }
 };
