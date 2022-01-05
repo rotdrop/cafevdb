@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -285,6 +285,7 @@ form.pme-form.project-participant-fields-display {
           }
         }
         td.operations {
+          padding-right:0.5em;
           input.operation.regenerate-all {
             width:auto;
             height:unset;
@@ -310,7 +311,7 @@ form.pme-form.project-participant-fields-display {
             width:28px;
             height:28px;
             vertical-align:middle;
-            margin-right:0.5em;
+            /* margin-right:0.5em; */
             &.regenerate {
               /*background-image:url('../img/reload-solid.svg');*/
               background-image:url('../img/actions/compute-red.svg');
@@ -380,23 +381,29 @@ form.pme-form.project-participant-fields-display {
       padding-right:3px;
     }
 
-    td.operations .operation {
-      display:inline-block;
-      background-repeat:no-repeat;
-      background-size: 24px 24px;
-      background-position: center;
-      width:28px;
-      height:28px;
-      vertical-align:middle;
-      margin-right:0.5em;
-      &.delete-undelete {
-        background-image:url('../img/cafevdb-delete.svg');
-      }
-      &.upload-replace {
-        background-image:url('../../../core/img/actions/upload.svg');
-      }
-      &.open-parent {
-        background-image:url('../../../core/img/filetypes/folder-external.svg');
+    td.operations {
+      padding-right:0.5em;
+      .operation {
+        display:inline-block;
+        background-repeat:no-repeat;
+        background-size: 24px 24px;
+        background-position: center;
+        width:28px;
+        height:28px;
+        vertical-align:middle;
+        /* margin-right:0.5em; */
+        &.delete-undelete {
+          background-image:url('../img/cafevdb-delete.svg');
+        }
+        &.upload-replace {
+          background-image:url('../../../core/img/actions/upload.svg');
+        }
+        &.upload-from-cloud {
+          background-image:url('../img/cloud-icon.svg');
+        }
+        &.open-parent {
+          background-image:url('../../../core/img/filetypes/folder-external.svg');
+        }
       }
     }
 

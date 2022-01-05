@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,6 +26,7 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
+import * as Dialogs from './dialogs.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import * as FileUpload from './file-upload.js';
@@ -775,7 +776,7 @@ const myReady = function(selector, resizeCB) {
     const widgetId = 'file-upload-' + optionKey + (fileBase || !fileName ? '' : '-md5-' + md5(fileName));
     const isCloudFolder = $thisRow.closest('td.participant-field').hasClass('cloud-folder');
     const uploadMultiple = isCloudFolder && !fileName;
-    const uploadUi = fileUploadTemplate.octemplate({
+    const $uploadUi = fileUploadTemplate.octemplate({
       wrapperId: widgetId,
       formClass: 'file-upload-form',
       accept: '*',
@@ -786,10 +787,9 @@ const myReady = function(selector, resizeCB) {
     });
     const $oldUploadForm = $('#' + widgetId);
     if ($oldUploadForm.length === 0) {
-      $('body').append(uploadUi);
+      $('body').append($uploadUi);
     } else {
-      $oldUploadForm.replaceWith(uploadUi);
-      // uploadUi.replaceAll($oldUploadForm);
+      $oldUploadForm.replaceWith($uploadUi);
     }
     $thisRow.data('uploadFormId', widgetId);
 
@@ -802,43 +802,44 @@ const myReady = function(selector, resizeCB) {
 
     $deleteUndelete.prop('disabled', noFile);
 
+    const doneCallback = function(file, index, container) {
+      if (!file.meta) {
+        Notification.show(t(appName, 'File-upload feedback does not contain the required meta-information, the upload has probably failed.'));
+        return;
+      }
+
+      Notification.messages(file.meta.messages);
+
+      if (isCloudFolder) {
+        if (!file.meta.conflict) {
+          // clone current row and replace all appropriate values.
+          const $newRow = $thisRow.clone();
+          $newRow.find('a.download-link')
+            .attr('href', file.meta.download)
+            .html(file.meta.baseName);
+          $newRow.find('input.upload-placeholder')
+            .val(file.meta.baseName);
+          $newRow.attr('data-file-name', file.meta.baseName);
+          $newRow.data('fileName', file.meta.baseName);
+          $newRow.insertBefore($thisRow);
+          initFileUploadRow.apply($newRow);
+          resizeCB();
+        }
+      } else {
+        $downloadLink.attr('href', file.meta.download);
+        $downloadLink.html(file.meta.baseName);
+        $placeholder.val(file.meta.baseName);
+
+        const noFile = $downloadLink.attr('href') === '';
+
+        $deleteUndelete.prop('disabled', noFile);
+      }
+      $.fn.cafevTooltip.remove();
+    };
+
     FileUpload.init({
       url: generateUrl('projects/participants/files/upload'),
-      doneCallback(file, index, container) {
-
-        if (!file.meta) {
-          Notification.show(t(appName, 'File-upload feedback does not contain the required meta-information, the upload has probably failed.'));
-          return;
-        }
-
-        Notification.messages(file.meta.messages);
-
-        if (isCloudFolder) {
-          if (!file.meta.conflict) {
-            // clone current row and replace all appropriate values.
-            const $newRow = $thisRow.clone();
-            $newRow.find('a.download-link')
-              .attr('href', file.meta.download)
-              .html(file.meta.baseName);
-            $newRow.find('input.upload-placeholder')
-              .val(file.meta.baseName);
-            $newRow.attr('data-file-name', file.meta.baseName);
-            $newRow.data('fileName', file.meta.baseName);
-            $newRow.insertBefore($thisRow);
-            initFileUploadRow.apply($newRow);
-            resizeCB();
-          }
-        } else {
-          $downloadLink.attr('href', file.meta.download);
-          $downloadLink.html(file.meta.baseName);
-          $placeholder.val(file.meta.baseName);
-
-          const noFile = $downloadLink.attr('href') === '';
-
-          $deleteUndelete.prop('disabled', noFile);
-        }
-        $.fn.cafevTooltip.remove();
-      },
+      doneCallback,
       stopCallback: null,
       dropZone: $thisRow,
       containerSelector: '#' + widgetId,
@@ -852,6 +853,62 @@ const myReady = function(selector, resizeCB) {
       .on('click', function(event) {
         const $fileUpload = $('#' + widgetId + ' input[type="file"]');
         $fileUpload.trigger('click');
+        $.fn.cafevTooltip.remove();
+        return false;
+      });
+
+    $thisRow.find('input.upload-from-cloud')
+      .off('click')
+      .on('click', function(event) {
+        const $this = $(this);
+        console.info('upload from cloud');
+        Dialogs.filePicker(
+          'BLAH',
+          function(paths) {
+            console.info('GOT PATH', paths);
+            $this.addClass('busy');
+            if (!paths) {
+              Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+              $this.removeClass('busy');
+              return;
+            }
+            if (!Array.isArray(paths)) {
+              paths = [paths];
+            }
+            $.post(generateUrl('upload/stash'), { cloudPaths: paths })
+              .fail(function(xhr, status, errorThrown) {
+                Ajax.handleError(xhr, status, errorThrown);
+                $this.removeClass('busy');
+              })
+              .done(function(files) {
+                if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
+                  Dialogs.alert(
+                    t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
+                    t(appName, 'Error'),
+                    function() {
+                      $this.removeClass('busy');
+                    });
+                  return;
+                }
+                const formData = $uploadUi.find('form').serializeArray();
+                formData.push({ name: 'files', value: JSON.stringify(files) });
+                console.info('FORMDATA', formData);
+                $.post(generateUrl('projects/participants/files/upload'), formData)
+                  .fail(function(xhr, status, errorThrown) {
+                    Ajax.handleError(xhr, status, errorThrown);
+                    $this.removeClass('busy');
+                  })
+                  .done(function(data) {
+                    console.info('DONE DATA', data);
+                    $.each(data, function(index, file) {
+                      doneCallback(file, index, $uploadUi);
+                    });
+                    $this.removeClass('busy');
+                  });
+              });
+          },
+          uploadMultiple
+        );
         $.fn.cafevTooltip.remove();
         return false;
       });

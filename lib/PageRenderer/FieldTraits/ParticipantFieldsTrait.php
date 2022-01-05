@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1547,6 +1547,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
       <input type="button" title="'.$policyTooltip.'" class="operation upload-replace"/>
+      <input type="button" title="' . $this->toolTipService['participant-fields:attachment:from-cloud'] . '" class="operation upload-from-cloud"/>
       <a href="' . $filesAppLink . '" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
     </td>
     <td class="cloud-file">
@@ -1626,6 +1627,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     <td class="operations">
       <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
       <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
+      <input type="button" title="' . $this->toolTipService['participant-fields:attachment:from-cloud'] . '" class="operation upload-from-cloud"/>
       <a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
          title="'.$this->toolTipsService['participant-attachment-open-parent'].'"
          class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"

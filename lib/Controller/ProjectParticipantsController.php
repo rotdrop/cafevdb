@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
@@ -311,7 +312,7 @@ class ProjectParticipantsController extends Controller {
    *
    * @todo There should be an upload support class handling this stuff
    */
-  public function files($operation, $musicianId, $projectId, $fieldId, $optionKey, $subDir, $fileName, $data)
+  public function files($operation, $musicianId, $projectId, $fieldId, $optionKey, $subDir, $fileName, $data, $files = null)
   {
     $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
@@ -461,31 +462,43 @@ class ProjectParticipantsController extends Controller {
        */
 
       $fileKey = 'files';
-      if (empty($_FILES[$fileKey])) {
-        // may be caused by PHP restrictions which are not caught by
-        // error handlers.
-        $contentLength = $this->request->server['CONTENT_LENGTH'];
-        $limit = \OCP\Util::uploadLimit();
-        if ($contentLength > $limit) {
-          return self::grumble(
-            $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
-              \OCP\Util::humanFileSize($contentLength),
-              \OCP\Util::humanFileSize($limit),
-            ]));
-        }
-        $error = error_get_last();
-        if (!empty($error)) {
-          return self::grumble(
-            $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
-        }
-        return self::grumble($this->l->t('No file was uploaded. Unknown error'));
-      }
 
-      $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
+      if (!empty($files)) {
 
-      $files = Util::transposeArray($_FILES[$fileKey]);
-      if (is_array($files[$optionKey]['name'])) {
-        $files = Util::transposeArray($files[$optionKey]);
+        // files come from upload/stash
+        $files = json_decode($files, true);
+        if ($dataType !== FieldDataType::CLOUD_FOLDER && count($files) == 1) {
+          $files[$optionKey] = array_shift($files);
+        }
+
+      } else {
+
+        if (empty($_FILES[$fileKey])) {
+          // may be caused by PHP restrictions which are not caught by
+          // error handlers.
+          $contentLength = $this->request->server['CONTENT_LENGTH'];
+          $limit = \OCP\Util::uploadLimit();
+          if ($contentLength > $limit) {
+            return self::grumble(
+              $this->l->t('Upload size %s exceeds limit %s, contact your server administrator.', [
+                \OCP\Util::humanFileSize($contentLength),
+                \OCP\Util::humanFileSize($limit),
+              ]));
+          }
+          $error = error_get_last();
+          if (!empty($error)) {
+            return self::grumble(
+              $this->l->t('No file was uploaded, error message was "%s".', $error['message']));
+          }
+          return self::grumble($this->l->t('No file was uploaded. Unknown error'));
+        }
+
+        $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
+
+        $files = Util::transposeArray($_FILES[$fileKey]);
+        if (is_array($files[$optionKey]['name'])) {
+          $files = Util::transposeArray($files[$optionKey]);
+        }
       }
 
       if ($dataType != FieldDataType::CLOUD_FOLDER) {
@@ -515,7 +528,11 @@ class ProjectParticipantsController extends Controller {
 
         $file['upload_max_file_size'] = $maxUploadFileSize;
         $file['max_human_file_size']  = $maxHumanFileSize;
-        $file['original_name'] = $file['name']; // clone
+        if (!empty($file['original_name'])) {
+          $file['name'] = $file['original_name'];
+        } else {
+          $file['original_name'] = $file['name']; // clone
+        }
 
         $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
         if ($file['error'] != UPLOAD_ERR_OK) {
@@ -629,7 +646,14 @@ class ProjectParticipantsController extends Controller {
             }
           }
 
-          $fileData = file_get_contents($file['tmp_name']);
+          if (!file_exists($file['tmp_name'])) {
+            /** @var UserStorage $appStorage */
+            $appStorage = $this->di(AppStorage::class);
+            $appFile = $appStorage->getFile(AppStorage::UPLOAD_FOLDER, $file['tmp_name']);
+            $fileData = $appFile->getContent();
+          } else {
+            $fileData = file_get_contents($file['tmp_name']);
+          }
           switch ($dataType) {
           case FieldDataType::CLOUD_FILE:
           case FieldDataType::CLOUD_FOLDER:

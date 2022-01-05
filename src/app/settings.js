@@ -1100,7 +1100,11 @@ const afterLoad = function(container) {
               if (!Array.isArray(files) || files.length !== 1) {
                 Dialogs.alert(
                   t(appName, 'Unable to copy selected file {file}.', { file: files }),
-                  t(appName, 'Error'));
+                  t(appName, 'Error'),
+                  function() {
+                    $this.removeClass('busy');
+                  });
+                return;
               }
               moveIntoPlace(files[0], $container, $this);
             });
