@@ -2,7 +2,7 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020,2021
+# @copyright Claus-Justus Heine 2020,2021,2022
 #
 app_name=$(notdir $(CURDIR))
 SRCDIR=.
@@ -39,7 +39,8 @@ WRAPPER_NAMESPACE = OCA\\CAFEVDB\\Wrapped
 WRAPPER_GIT_DEPENDENCIES =\
  3rdparty/doctrine-orm\
  3rdparty/gedmo-doctrine-extensions\
- 3rdparty/mediamonks-doctrine-extensions
+ 3rdparty/mediamonks-doctrine-extensions\
+ 3rdparty/doctrine-on-update-extension
 
 NAMESPACE_WRAPPER_DIRS =\
  lib/Database/Doctrine\
