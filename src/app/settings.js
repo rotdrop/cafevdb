@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1080,11 +1080,12 @@ const afterLoad = function(container) {
       const $this = $(this);
       const $container = $this.closest('.template-upload');
 
-      $this.addClass('busy');
-
       Dialogs.filePicker(
         $this.data('placeholder'),
         function(path) {
+
+          $this.addClass('busy');
+
           if (!path) {
             Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
             $this.removeClass('busy');
