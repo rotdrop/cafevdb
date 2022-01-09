@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -357,6 +357,9 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
    * the database column names (read: not the entity-class-names, but
    * the raw column names in the database).
    *
+   * @param bool $ignoreMissing Ignore missing key values, just continue and
+   * return an incomplete set of keys.
+   *
    * @return array
    * ```
    * [
@@ -365,11 +368,11 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
    * ]
    * ```
    * @todo $columnValues sometimes contains raw data-base values as it
-   * is passed down here from code using the legacyx phpMyEdit
+   * is passed down here from code using the legacy phpMyEdit
    * stuff. ATM we hack around by converting string values to their
    * proper PHP values, but this is an ugly hack.
    */
-  public function extractKeyValues(array $columnValues):array
+  public function extractKeyValues(array $columnValues, bool $ignoreMissing = false):array
   {
     $entityId = [];
     foreach ($this->metaData->identifier as $field) {
@@ -383,11 +386,11 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
         $columnName = $this->metaData->fieldMappings[$field]['columnName'];
         if (!isset($columnValues[$columnName])) {
           // possibly an attempt to extract from non-existing field.
-          if ($this->metaData->usesIdGenerator()) {
+          if ($ignoreMissing || $this->metaData->usesIdGenerator()) {
             continue;
           }
           throw new \Exception(
-            $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]) . print_r($columnValues, true) );
+            $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]['type']);
       }
