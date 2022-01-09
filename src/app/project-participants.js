@@ -862,8 +862,12 @@ const myReady = function(selector, resizeCB) {
       .on('click', function(event) {
         const $this = $(this);
         console.info('upload from cloud');
+        const filePickerObject = $thisRow.data('fileBase') || $thisRow.data('subDir');
+        const filePickerCaption = filePickerObject
+          ? t(appName, 'Select cloud-files for {object}', { object: filePickerObject })
+          : t(appName, 'Select a file from the cloud');
         Dialogs.filePicker(
-          'BLAH',
+          filePickerCaption,
           function(paths) {
             console.info('GOT PATH', paths);
             $this.addClass('busy');
@@ -907,7 +911,11 @@ const myReady = function(selector, resizeCB) {
                   });
               });
           },
-          uploadMultiple
+          uploadMultiple,
+          undefined, // mimetypeFilter
+          undefined, // modal
+          undefined, // type
+          $thisRow.data('participantFolder'),
         );
         $.fn.cafevTooltip.remove();
         return false;
