@@ -124,6 +124,8 @@ class phpMyEdit
 	const VAL_DELIM = ',';
 	const ESC_CHAR = '\\';
 
+	const MAX_INPUT_LEN = 60;
+
 	// Class variables {{{
 
 	// Database handling
@@ -1067,7 +1069,7 @@ class phpMyEdit
 		$grps   = array();
 		$dt     = array();
 		$ttls   = array();
-		$idx    = !empty($desc) ? 1 : 0;
+		$idx    = empty($desc) ? 0 : 1;
 		if ($idx == 0 && is_callable($fdd['encryption']['decrypt']??null)) {
 			$decrypt = $fdd['encryption']['decrypt'];
 			$decode = function($value) use ($decrypt) {
@@ -2215,6 +2217,33 @@ class phpMyEdit
 					echo $this->fdd[$k]['display']['prefix'];
 				}
 			}
+
+			/* If $vals only contains one "multiple" value, then the
+			 * multi-select stuff is at least confusing. Also, if there is
+			 * only one possible value, then this value must not be changed.
+			 */
+			$select = $this->fdd[$k][self::FDD_SELECT]?:null;
+			$multiValues = false;
+			$vals = false;
+			$valgrp = false;
+			if ($this->col_has_values($k)) {
+				$valgrp = $this->set_values($k);
+			}
+			if (empty($select) || stristr("MCOD", $select) !== false) {
+				$vals        = false;
+				$groups      = false;
+				$data        = false;
+				$titles      = false;
+				if ($this->col_has_values($k)) {
+					$valgrp = $this->set_values($k);
+					$vals   = $valgrp['values'];
+					$groups = $valgrp['groups'];
+					$titles = $valgrp['titles'];
+					$data   = $valgrp['data'];
+					$multiValues = count($vals) > 1;
+				}
+			}
+
 			if ($this->col_has_php($k)) {
 				$php = $this->fdd[$k]['php'];
 				if (is_callable($php)) {
@@ -2225,16 +2254,13 @@ class phpMyEdit
 				} else if (file_exists($php)) {
 					echo include($php);
 				}
-			} elseif ($this->col_has_values($k)) {
-				$valgrp     = $this->set_values($k);
-				$vals		= $valgrp['values'];
-				$groups     = $valgrp['groups'];
-				$data       = $valgrp['data'];
-				$titles     = $valgrp['titles'];
-				$selected	= $value;
+			} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
 				$mandatory  = $this->mandatory($k);
+
+				$selected	= $value;
+
 				$strip_tags = true;
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
@@ -2249,16 +2275,21 @@ class phpMyEdit
 										   $selected, $multiple, $readonly, $mandatory,
 										   $strip_tags, $escape, NULL, $helptip);
 				}
-			} elseif (isset ($this->fdd[$k]['textarea'])) {
+			} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
 										 $k, $value, $escape, $helptip);
 			} else {
 				// Simple edit box required
+				$readonly = $this->disabledTag($k);
+				if ($readonly === false && $vals) {
+					// force read-only if single value.
+					$readonly = $this->display['readonly'];
+				}
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']??0);
-				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 40);
-
+				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, self::MAX_INPUT_LEN);
+				$type = $select == 'N' ? 'number' : 'text';
 				if ($size > 0) {
 					$len_props .= ' size="'.$size.'"';
 				}
@@ -2267,15 +2298,11 @@ class phpMyEdit
 				}
 				echo '<input class="',$css_class_name,'" ';
 				echo $this->printTooltip($helptip);
-
-				$type = $this->fdd[$k][self::FDD_SELECT] == 'N' ? 'number' : 'text';
 				echo ($this->password($k) ? 'type="password"' : 'type="'.$type.'"');
 				echo ($this->mandatory($k) ? ' required' : '');
 
-				$readonly = $this->disabledTag($k);
-				if ($readonly === false && $this->col_has_values($k)) {
-					// force read-only if single value.
-					$readonly = $this->display['readonly'];
+				if (!empty($valgrp)) {
+					echo " data-pme-values='".json_encode($valgrp)."'";
 				}
 
 				if (isset($this->fdd[$k]['display']['attributes'])) {
@@ -2439,14 +2466,16 @@ class phpMyEdit
 		$select = $this->fdd[$k][self::FDD_SELECT]?:null;
 		$multiValues = false;
 		$vals = false;
+		$valgrp = false;
+		if ($this->col_has_values($k)) {
+			$valgrp = $this->set_values($k);
+		}
 		if (empty($select) || stristr("MCOD", $select) !== false) {
 			$vals        = false;
 			$groups      = false;
 			$data        = false;
 			$titles      = false;
-			$valgrp      = false;
 			if ($this->col_has_values($k)) {
-				$valgrp = $this->set_values($k);
 				$vals   = $valgrp['values'];
 				$groups = $valgrp['groups'];
 				$titles = $valgrp['titles'];
@@ -2535,7 +2564,7 @@ class phpMyEdit
 			}
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen'] ?? 0);
-			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
+			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, self::MAX_INPUT_LEN);
 			$type = $select == 'N' ? 'number' : 'text';
 			if ($size > 0) {
 				$len_props .= ' size="'.$size.'"';
@@ -2544,10 +2573,12 @@ class phpMyEdit
 				$len_props .= ' maxlength="'.$maxlen.'"';
 			}
 			echo '<input class="',$css_class_name,'" type="',$type,'"';
-			if ($help) {
-				echo ' title="'.$this->enc($help).'" ';
-			}
+			echo $this->printTooltip($help);
 			echo ($this->mandatory($k) ? ' required' : '');
+
+			if (!empty($valgrp)) {
+				echo " data-pme-values='".json_encode($valgrp)."'";
+			}
 
 			if (isset($this->fdd[$k]['display']['attributes'])) {
 				$attributes = $this->fdd[$k]['display']['attributes'];
