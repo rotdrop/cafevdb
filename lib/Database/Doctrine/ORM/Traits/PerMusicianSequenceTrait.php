@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -58,18 +59,21 @@ trait PerMusicianSequenceTrait
   {
     $entityManager = $this->getEntityManager();
 
+    if ($entity->getSequence() !== null) {
+      $entityManager->persist($entity);
+      return $entity;
+    }
+
     // in order not to have "other" exceptions in our try block
     $entityManager->flush();
 
-    if ($entity->getSequence() === null) {
-      $musician = $entity->getMusician();
-      if (!($musician instanceof Entities\Musician)) {
-        $musician = $entityManager->getReference(Entities\Musician::class, [ 'id' => $musician ]);
-        $entity->setMusician($musician);
-      }
-      $nextSequence = 1 + $this->sequenceMax($musician);
-      $entity->setSequence($nextSequence);
+    $musician = $entity->getMusician();
+    if (!($musician instanceof Entities\Musician)) {
+      $musician = $entityManager->getReference(Entities\Musician::class, [ 'id' => $musician ]);
+      $entity->setMusician($musician);
     }
+    $nextSequence = 1 + $this->sequenceMax($musician);
+    $entity->setSequence($nextSequence);
     $entityManager->persist($entity);
     $entityManager->flush();
     return $entity;
