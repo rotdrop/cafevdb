@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,11 +23,12 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
 
 $title = $l->t("SEPA Bank Information for %s", $musicianName);
 
-$mandateExpiredTip = $toolTips['sepa-mandate-expired'];
+$mandateExpiredTip = Util::htmlEscape($toolTips['sepa-mandate-expired']);
 
 $mandateSequenceType = $mandateNonRecurring ? 'once' : 'permanent';
 
@@ -84,7 +86,11 @@ $formCss = implode(' ', array_filter([
 ]));
 
 ?>
-<div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
+<div id="sepa-debit-mandate-dialog"
+     title="<?php echo $title;?>"
+     data-participant-folder="<?php p($participantFolder); ?>"
+     data-musician-name="<?php p($musicianName); ?>"
+>
   <div style="display:none;"
        id="mandate-expired-notice"
        class="<?php echo ($mandateExpired ? 'active' : ''); ?> mandate-expired-notice tooltip-bottom"
@@ -145,7 +151,7 @@ $formCss = implode(' ', array_filter([
       </div>
       <label class="sepa-validation-toggle"
              for="sepa-validation-toggle"
-             title="<?php echo $toolTips['sepa-instant-validation']; ?>">
+             title="<?php echo Util::htmlEscape($toolTips['sepa-instant-validation']); ?>">
         <?php echo $l->t('Instant IBAN Validation:'); ?>
         <input type="checkbox"
                checked="checked"
@@ -193,7 +199,7 @@ $formCss = implode(' ', array_filter([
                      <?php echo $mandateBinding == 'only-for-project' ? 'checked' : ''; ?>
               />
             <label for="sepa-debit-mandate-only-for-project"
-                   title="<?php echo  $toolTips['sepa-debit-mandate-only-for-project']; ?>"
+                   title="<?php echo Util::htmlEscape($toolTips['sepa-debit-mandate-only-for-project']); ?>"
                    class="tooltip-right">
               <?php p($bindingText['only-for-project'][0]); ?>
             </label>
@@ -233,16 +239,17 @@ $formCss = implode(' ', array_filter([
                    type="radio"
                    name="mandateBinding"
                    value="for-all-receivables"
+                   <?php empty($isClubMember) && p('data-no-club-member="blah"'); ?>
                    <?php empty($isClubMember) && p('disabled'); ?>
                    <?php ($mandateBinding == 'for-all-receivables') && p('checked'); ?>
             />
             <label for="sepa-debit-mandate-for-all-receivables"
-                   title="<?php echo  $toolTips['sepa-debit-mandate-for-all-receivables']; ?>"
+                   title="<?php echo Util::htmlEscape($toolTips['sepa-debit-mandate-for-all-receivables']); ?>"
                    class="tooltip-right">
               <?php p($bindingText['for-all-receivables'][0]); ?>
             </label>
           </span>
-          <span class="debit-mandate-binding hidden-no-data  hidden-if-unlocked">
+          <span class="debit-mandate-binding hidden-no-data hidden-if-unlocked">
             <span class="debit-mandate-binding label">
               <?php p($l->t('Project-binding:')); ?>
             </span>
@@ -280,13 +287,20 @@ $formCss = implode(' ', array_filter([
           </label>
           <div class="written-mandate-upload block">
             <div class="operations inline-block">
-              <input type="button" title="<?php echo $toolTips['sepa-bank-data-form:download-mandate-form']; ?>" class="operation download-mandate-form"/>
-              <input type="button" title="<?php echo $toolTips['sepa-bank-data-form:upload-replace-written-mandate']; ?>" class="operation upload-replace"/>
+              <input type="button" title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:download-mandate-form']); ?>" class="operation download-mandate-form"/>
+              <input type="button"
+                     title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:upload-replace-written-mandate:from-client']); ?>"
+                     class="operation upload-button upload-from-client"
+              />
+              <input type="button"
+                     title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:upload-replace-written-mandate:from-cloud']); ?>"
+                     class="operation upload-button upload-from-cloud"
+              />
             </div>
             <div class="file-data inline-block">
-              <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTips['sepa-bank-data-form:download-written-mandate']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
+              <a class="download-link hidden-no-written-mandate" title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:download-written-mandate']); ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
               <input class="upload-placeholder no-validation hidden-have-written-mandate"
-                     title="<?php echo $toolTips['sepa-bank-data-form:upload-written-mandate']; ?>"
+                     title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:upload-written-mandate']); ?>"
                      placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>"
                      type="text"
                      name="uploadPlaceholder"
@@ -302,7 +316,7 @@ $formCss = implode(' ', array_filter([
                    value="mandateUploadLater"
             />
             <label for="upload-written-mandate-later"
-                   title="<?php echo $toolTips['sepa-bank-data-form:upload-written-mandate-later']; ?>"
+                   title="<?php echo Util::htmlEscape($toolTips['sepa-bank-data-form:upload-written-mandate-later']); ?>"
                    class="tooltip-right inline-block hidden-have-written-mandate">
               <?php echo $l->t('upload later'); ?>
             </label>

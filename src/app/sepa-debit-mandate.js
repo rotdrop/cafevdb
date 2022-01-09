@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,7 +35,7 @@ import generateUrl from './generate-url.js';
 import * as FileUpload from './file-upload.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
-import selectValues from './select-values.js';
+import * as SelectUtils from './select-utils.js';
 import modalizer from './modalizer.js';
 import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
@@ -60,6 +60,8 @@ require('project-participant-fields-display.scss');
 require('lock-input.scss');
 
 require('./jquery-datetimepicker.js');
+
+require('./jquery-readonly.js');
 
 /**
  * Initialize the mess with contents. The "mess" is a dialog window
@@ -237,26 +239,80 @@ const mandatesInit = function(data, onChangeCallback) {
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   const uploadWrapperId = appName + 'written-mandate-upload-wrapper';
-  const uploadUi = fileUploadTemplate.octemplate({
+  const $uploadUi = fileUploadTemplate.octemplate({
     wrapperId: uploadWrapperId,
     formClass: 'file-upload-form',
     accept: '*',
     uploadName: 'files',
   });
   if ($('#' + uploadWrapperId).length === 0) {
-    $('body').append(uploadUi);
+    $('body').append($uploadUi);
   } else {
-    $('+' + uploadWrapperId).replaceWith(uploadUi);
+    $('+' + uploadWrapperId).replaceWith($uploadUi);
   }
 
   popup.on(
     'click',
     mandateFormSelector + ' ' + uploadPlaceholderSelector
       + ', '
-      + mandateFormSelector + ' ' + 'input.upload-replace',
+      + mandateFormSelector + ' ' + 'input.upload-from-client',
     function(event) {
       $('#' + uploadWrapperId + ' input[type="file"]').trigger('click');
       return false;
+    });
+
+  const writtenMandateUploadDone = function(file, index, container) {
+    const mandateFieldset = popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
+    mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
+    mandateFieldset.find('input.upload-placeholder')
+      .val(file.original_name)
+      .lockUnlock('lock', true);
+    // we now should pretend that we have no written mandate in order to get the styling right
+    mandateFieldset.removeClass('have-written-mandate').addClass('no-written-mandate');
+  };
+
+  popup.on(
+    'click',
+    mandateFormSelector + ' ' + 'input.upload-from-cloud',
+    function(event) {
+      const $this = $(this);
+      Dialogs.filePicker(
+        t(appName, 'Select debit mandate for {musicianName}', popup.data()),
+        function(paths) {
+          $this.addClass('busy');
+          if (!paths) {
+            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+            $this.removeClass('busy');
+            return;
+          }
+          if (!Array.isArray(paths)) {
+            paths = [paths];
+          }
+          $.post(generateUrl('upload/stash'), { cloudPaths: paths })
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+              $this.removeClass('busy');
+            })
+            .done(function(files) {
+              if (!Array.isArray(files) || files.length !== 1) {
+                Dialogs.alert(
+                  t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
+                  t(appName, 'Error'),
+                  function() {
+                    $this.removeClass('busy');
+                  });
+                return;
+              }
+              writtenMandateUploadDone(files[0], 0, $uploadUi);
+              $this.removeClass('busy');
+            });
+        },
+        false, // multiple
+        undefined, // mimetypeFilter
+        undefined, // modal
+        undefined, // type
+        popup.data('participantFolder'),
+      );
     });
 
   popup.on(
@@ -287,9 +343,12 @@ const mandatesInit = function(data, onChangeCallback) {
       if (!$self.hasClass('unused')) {
         $self.find('select').each(function(index) {
           const $select = $(this);
-          $select.prop('disabled', $select.val() !== '');
+          $select.readonly($select.val() !== '');
         });
-        $self.find('input[type="radio"], input[type="button"]:not(.download-mandate-form), select').prop('disabled', true);
+        $self.find('input[type="button"]:not(.download-mandate-form)').prop('disabled', true);
+        $self.find('input[type="radio"], select').readonly(true);
+        $self.find('input[type="button"].download-mandate-form').prop('disabled', $self.hasClass('no-written-mandate'));
+        $self.find('input[type="button"].upload-button').prop('disabled', !$self.hasClass('no-written-mandate'));
       }
     });
   };
@@ -303,8 +362,8 @@ const mandatesInit = function(data, onChangeCallback) {
 
     const mandateForm = $dlg.find(mandateFormSelector);
     const fieldsets = mandateForm.find('fieldset');
-    const accountFieldset = mandateForm.find('fieldset.bank-account');
-    const mandateFieldset = mandateForm.find('fieldset.debit-mandate');
+    const accountFieldset = fieldsets.filter('.bank-account');
+    const mandateFieldset = fieldsets.filter('.debit-mandate');
 
     data.fieldsets = fieldsets;
 
@@ -349,6 +408,11 @@ const mandatesInit = function(data, onChangeCallback) {
       position: { my: 'left bottom', at: 'left top' },
       minLength: 0,
       autoFocus: true,
+      select(event, ui) {
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.blur();
+      },
     });
     accountOwnerInput.on('focus', function(event) {
       const $self = $(this);
@@ -456,14 +520,7 @@ const mandatesInit = function(data, onChangeCallback) {
 
     FileUpload.init({
       url: generateUrl('upload/stash'),
-      doneCallback(file, index, container) {
-        mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
-        mandateFieldset.find('input.upload-placeholder')
-          .val(file.original_name)
-          .lockUnlock('lock', true);
-        // we now should pretend that we have no written mandate in order to get the styling right
-        mandateFieldset.removeClass('have-written-mandate').addClass('no-written-mandate');
-      },
+      doneCallback: writtenMandateUploadDone,
       stopCallback: null,
       dropZone: mandateFieldset.find('.written-mandate-upload'),
       containerSelector: '#' + uploadWrapperId,
@@ -953,6 +1010,10 @@ const mandateValidatePME = function(event, validateLockCB) {
 
   const $element = $(this);
 
+  const $form = $element.closest('form.' + pmeToken('form'));
+
+  console.info('FORM/ELEMENT', $element, $form);
+
   if ($element.prop('readonly')) {
     return false;
   }
@@ -996,50 +1057,33 @@ const mandateValidatePME = function(event, validateLockCB) {
   // mandateDate
   // lastUsedDate
   const inputMapping = {
-    [pmeData('SepaDebitMandates:last_used_date')]: 'mandateLastUsedDate',
-    [pmeData('SepaDebitMandates:mandate_date')]: 'mandateDate',
+    [pmeData('Projects:id')]: 'projectId',
+    [pmeData('musician_id')]: 'musicianId',
     [pmeData('SepaDebitMandates:mandate_reference')]: 'mandateReference',
+    [pmeData('SepaDebitMandates:mandate_date')]: 'mandateDate',
     [pmeData('SepaDebitMandates:sequence')]: 'mandateSequence',
+    [pmeData('SepaDebitMandates:last_used_date')]: 'mandateLastUsedDate',
     [pmeData('SepaDebitMandates:non_recurring[]')]: 'mandateNonRecurring',
+    [pmeData('sequence')]: 'bankAccountSequence',
     [pmeData('bank_account_owner')]: 'bankAccountOwner',
     [pmeData('iban')]: 'bankAccountIBAN',
     [pmeData('bic')]: 'bankAccountBIC',
     [pmeData('blz')]: 'bankAccountBLZ',
-    [pmeData('Projects:id')]: 'projectId',
-    [pmeData('musician_id')]: 'musicianId',
-    [pmeData('sequence')]: 'bankAccountSequence',
   };
   let changed = $element.attr('name');
   changed = inputMapping[changed];
 
-  const projectElem = $('[name="' + pmeData('Projects:id') + '"]');
-  // if (!projectElem.is('input')) {
-  //   projectElem = projectElem.find('option[selected="selected"]');
-  // }
-  const projectId = projectElem.val();
-
-  const musicianElem = $('[name="' + pmeData('musician_id') + '"]');
-  // if (!musicianElem.is('input')) {
-  //   musicianElem = musicianElem.find('option[selected="selected"]');
-  // }
-  const musicianId = musicianElem.val();
-
   const mandateData = {
-    musicianId,
-    projectId,
-    mandateReference: $('input[name="' + pmeData('SepaDebitMandates:mandate_reference') + '"]').val(),
-    mandateDate: $('input[name="' + pmeData('SepaDebitMandates:mandate_date') + '"]').val(),
-    mandateSequence: $('input[name="' + pmeData('SepaDebitMandates:sequence') + '"]').val(),
-    mandateLastUsedDate: $('input[name="' + pmeData('SepaDebitMandates:last_used_date') + '"]').val(),
-    mandateProjectId: projectId,
-    mandateNonRecurring: $('input[name="' + pmeData('SepaDebitMandates:non_recurring[]') + '"]').prop('checked'),
-    bankAccountSequence: $('input[name="' + pmeData('sequence') + '"]').val(),
-    bankAccountOwner: $('input[name="' + pmeData('bank_account_owner') + '"]').val(),
-    bankAccountIBAN: $('input[name="' + pmeData('iban') + '"]').val(),
-    bankAccountBIC: $('input[name="' + pmeData('bic') + '"]').val(),
-    bankAccountBLZ: $('input[name="' + pmeData('blz') + '"]').val(),
     changed,
   };
+  const mandateInputs = {};
+  for (const [name, key] of Object.entries(inputMapping)) {
+    const $input = mandateInputs[key] = $form.find('[name="' + name + '"]');
+    mandateData[key] = $input.is(':checkbox') ? $input.prop('checked') : $input.val();
+  }
+  mandateData.mandateProjectId = mandateData.projectId;
+
+  console.info('INPUTS/VAL', mandateInputs.bankAccountOwner, mandateData.bankAccountOwner);
 
   // until end of validation
   validateLock();
@@ -1082,26 +1126,28 @@ const mandateValidatePME = function(event, validateLockCB) {
         data.message.push(hints);
       }
 
-      // if (data.value) {
-      //   $element.val(data.value);
-      // }
       if (data.iban !== undefined) {
-        $('input[name="' + pmeData('iban') + '"]').val(data.iban);
+        mandateInputs.bankAccountIBAN.val(data.iban);
       }
       if (data.bic !== undefined) {
-        $('input[name="' + pmeData('bic') + '"]').val(data.bic);
+        mandateInputs.bankAccountBIC.val(data.bic);
       }
       if (data.blz !== undefined) {
-        $('input[name="' + pmeData('blz') + '"]').val(data.blz);
+        mandateInputs.bankAccountBLZ.val(data.blz);
       }
       if (data.owner !== undefined) {
-        $('input[name="' + pmeData('bank_account_owner') + '"]').val(data.owner);
+        mandateInputs.bankAccountOwner.val(data.owner);
       }
       if (data.reference !== undefined) {
-        $('input[name="' + pmeData('mandate_reference') + '"]').val(data.reference);
+        const hasReference = data.reference !== '';
+        mandateInputs.mandateDate.prop('required', hasReference);
+        mandateInputs.mandateDate.readonly(!hasReference);
+        mandateInputs.mandateReference.val(data.reference);
       }
-      if (data.nonRecurring !== undefined) {
-        $('input[name="' + pmeData('non_recurring[]') + '"]').prop('checked', data.nonRecurring === 'true');
+      if (data.mandateNonRecurring !== undefined) {
+        const hasReference = data.reference !== '';
+        mandateInputs.mandateNonRecurring.readonly(!hasReference);
+        mandateInputs.mandateNonRecurring.prop('checked', data.mandateNonRecurring === true);
       }
 
       Notification.hide();
@@ -1280,8 +1326,7 @@ const mandateReady = function(selector) {
       const $self = $(this);
       const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
       const $other = bulkTransactionChooser.filter(otherClass);
-      selectValues($other, selectValues($self));
-      $other.trigger('chosen:updated');
+      SelectUtils.selected($other, SelectUtils.selected($self));
       $.fn.cafevTooltip.remove();
       return false;
     });
@@ -1392,22 +1437,109 @@ const mandateReady = function(selector) {
   const table = form.find('table[summary="SepaBankAccounts"]');
 
   const validateInput = function(event) {
-    const input = $(this);
+    const $input = $(this);
+    console.info('VALIDATE THIS', this);
     mandateValidatePME.call(this, event, function(lock) {
-      input.prop('readonly', lock);
+      $input.readonly(lock);
     });
   };
 
-  table.find('input[type="text"]').not('.revocation-date, tr.' + pmeToken('filter') + ' input')
-    .off('blur')
+  table.find('input[type="text"].pme-input').off('blur');
+  table.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
+
+  const $musicianIdInput = table.find('input.pme-input.musician-id');
+  const $projectParticipantSelect = table.find('select.pme-input.project-participant');
+  const $bankAccountOwnerInput = table.find('input.pme-input.bank-account-owner');
+  const $bankAccountIbanInput = table.find('input.pme-input.bank-account-iban');
+
+  // construct IBAN auto-completion from data-pme-values
+  const ibanValues = $bankAccountIbanInput.data('pmeValues');
+  console.info(ibanValues);
+  const ibanAutoComplete = {};
+  for (const [ibanKey, iban] of Object.entries(ibanValues.values)) {
+    const ibanOwnerIds = ibanValues.data[ibanKey].split(',');
+    for (const ibanOwnerId of ibanOwnerIds) {
+      if (!ibanAutoComplete[ibanOwnerId]) {
+        ibanAutoComplete[ibanOwnerId] = [iban];
+      } else {
+        ibanAutoComplete[ibanOwnerId].push(iban);
+      }
+    }
+  }
+
+  $bankAccountIbanInput.autocomplete({
+    source: ibanAutoComplete[$musicianIdInput.val()],
+    position: { my: 'left bottom', at: 'left top' },
+    minLength: 0,
+    autoFocus: true,
+    select(event, ui) {
+      const $input = $(event.target);
+      $input.val(ui.item.value);
+      $input.blur();
+    },
+  });
+  $bankAccountIbanInput.on('focus', function(event) {
+    const $self = $(this);
+    if ($self.val() === '') {
+      $self.autocomplete('search', '');
+    }
+  });
+
+  $projectParticipantSelect.on('change', function(event) {
+    const $this = $(this);
+    const $that = $bankAccountOwnerInput;
+    $musicianIdInput.val($this.val());
+    $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[$musicianIdInput.val()]);
+    if ($that.val() === '') {
+      $that.val($this.find('option:selected').html());
+      $that.blur();
+    }
+  });
+
+  $bankAccountOwnerInput.on('blur', function(event) {
+    const $this = $(this);
+    const $that = $projectParticipantSelect;
+    const value = $this.val();
+    if (value !== '' && $that.val() === '') {
+      $that.find('option').each(function() {
+        const $option = $(this);
+        if ($option.html() === value) {
+          SelectUtils.selected($that, $option.val(), true);
+        }
+      });
+    }
+  });
+
+  $bankAccountOwnerInput.data('autocomplete', []);
+  $projectParticipantSelect.find('option').each(function() {
+    $bankAccountOwnerInput.data('autocomplete').push($(this).html());
+  });
+
+  $bankAccountOwnerInput.autocomplete({
+    source: $bankAccountOwnerInput.data('autocomplete'),
+    position: { my: 'left bottom', at: 'left top' },
+    minLength: 0,
+    autoFocus: true,
+    select(event, ui) {
+      const $input = $(event.target);
+      $input.val(ui.item.value);
+      $input.blur();
+    },
+  });
+  $bankAccountOwnerInput.on('focus', function(event) {
+    const $self = $(this);
+    if ($self.val() === '') {
+      $self.autocomplete('search', '');
+    }
+  });
+
+  table.find('input[type="text"].pme-input').not('.revocation-date')
     .on('blur', validateInput);
 
-  table.find('select').not('tr.' + pmeToken('filter') + ' select')
-    .off('change')
+  table.find('select.pme-input').not('.project-participant')
     .on('change', validateInput);
 
-  table.find('input[type="checkbox"]').not('tr.' + pmeToken('filter') + ' input')
-    .off('change')
+  table.find('input[type="checkbox"].pme-input')
     .on('change', validateInput);
 
   const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
@@ -1420,6 +1552,8 @@ const mandateReady = function(selector) {
         button.blur();
         return false;
       }
+
+      console.info('VALIDATE ON SUBMIT');
 
       // allow delete button, validation makes no sense here
       if (button.attr('name') === PHPMyEdit.sys('savedelete')) {

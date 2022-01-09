@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -127,8 +127,6 @@ class SepaDebitMandatesController extends Controller {
     $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
 
     $memberProjectId = $this->getConfigValue('memberProjectId', null);
-    $mandateSequenceType = 'permanent';
-
 
     $IBAN = $this->parameterService['bankAccountIBAN'];
     $BLZ  = $this->parameterService['bankAccountBLZ'];
@@ -179,8 +177,14 @@ class SepaDebitMandatesController extends Controller {
           $BIC = $mandate['BIC'];
           $message[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
         } else if (!empty($newProject) && !empty($musicianId)) {
-          $reference = $this->financeService->generateSepaMandateReference($newProject, $musicianId);
+          $mandate = (new Entities\SepaDebitMandate)
+            ->setProject($newProject)
+            ->setMusician($musicianId);
+          $reference = $this->financeService->generateSepaMandateReference($mandate);
           $message[] = $this->l->t('Generated new reference "%s"', $reference);
+        } else if (empty($newProject)) {
+          $reference = '';
+          $message[] = $this->l->t('No project, delete mandate-reference.');
         }
         $mandateProjectId = $newProject;
         $newValidations[] = [
@@ -642,6 +646,8 @@ class SepaDebitMandatesController extends Controller {
 
       'projectOptions' => $projectOptions,
 
+      'participantFolder' => empty($project) ? '' : $this->projectService->ensureParticipantFolder($project, $musician, dry: true),
+
       'cssClass' => 'sepadebitmandate',
 
       'mandateSequence' => $mandate->getSequence(),
@@ -894,11 +900,21 @@ class SepaDebitMandatesController extends Controller {
         $fileData = $writtenMandate->getFileData();
       }
 
+
       $fileContents = $uploadFile->getContent();
       $mimeType = $mimeTypeDetector->detectString($fileContents);
       $fileData->setData($fileContents);
-      $writtenMandate->setMimeType($mimeType)
-                     ->setSize($uploadFile->getSize());
+
+      $writtenMandateFileName = $mandateReference;
+      $extension = Util::fileExtensionFromMimeType($mimeType);
+      if (!empty($extension)) {
+        $writtenMandateFileName .= '.' . $extension;
+      }
+
+      $writtenMandate
+        ->setMimeType($mimeType)
+        ->setSize($uploadFile->getSize())
+        ->setFileName($writtenMandateFileName);
       $uploadFile->delete();
     }
 

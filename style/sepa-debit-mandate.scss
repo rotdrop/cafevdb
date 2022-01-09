@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -182,44 +182,61 @@
     display:none!important;
   }
 
-  /* lock/unlock the project binding if we have a mandate */
-  input.debit-mandate-binding-lock {
-    ~ label.debit-mandate-binding-lock {
-      height: 16px;
-      width: 16px;
-      position: relative;
-      vertical-align: top;
-      top: 0;
-      background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0.2;
-      text-indent: -10000em;
-      z-index:1;
+  fieldset.debit-mandate {
+    /* lock/unlock the project binding if we have a mandate */
+    input.debit-mandate-binding-lock {
+      ~ label.debit-mandate-binding-lock {
+        height: 16px;
+        width: 16px;
+        position: relative;
+        vertical-align: top;
+        top: 0;
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.2;
+        text-indent: -10000em;
+        z-index:1;
+      }
+
+      &:checked ~ label.debit-mandate-binding-lock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+        opacity: 0.2;
+      }
+
+      &:not(:checked) ~ .debit-mandate-binding {
+        &.hidden-if-unlocked {
+          display:none!important;
+        }
+        &.hidden-if-locked {
+          display:inline-block!important;
+        }
+      }
+
+      &:checked ~ .debit-mandate-binding {
+        &.hidden-if-locked {
+          display:none!important;
+        }
+        &.hidden-if-unlocked {
+          display:inline-block!important;
+        }
+      }
     }
-
-    &:checked ~ label.debit-mandate-binding-lock {
-      background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
-      opacity: 0.2;
-    }
-  }
-
-  fieldset.used input.debit-mandate-binding-lock ~ label.debit-mandate-binding-lock {
-    background-image: url('../img/dontred.svg');
-    background-size: 16px 16px;
-  }
-
-  input.debit-mandate-binding-lock {
-    &:not(:checked) ~ .debit-mandate-binding.hidden-if-unlocked,
-    fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-locked,
-    input.debit-mandate-binding-lock:checked ~ .debit-mandate-binding.hidden-if-locked {
-      display:none!important;
-    }
-
-    &:checked ~ .debit-mandate-binding.hidden-if-unlocked,
-    fieldset.used input.debit-mandate-binding-lock ~ .debit-mandate-binding.hidden-if-unlocked,
-    input.debit-mandate-binding-lock:not(:checked) ~ .debit-mandate-binding.hidden-if-locked {
-      display:inline-block!important;
+    &.used {
+      input.debit-mandate-binding-lock ~ {
+        label.debit-mandate-binding-lock {
+          background-image: url('../img/dontred.svg');
+          background-size: 16px 16px;
+        }
+        .debit-mandate-binding {
+          &.hidden-if-locked {
+            display:none!important;
+          }
+          &.hidden-if-unlocked {
+            display:inline-block!important;
+          }
+        }
+      }
     }
   }
 
@@ -344,25 +361,31 @@
       width:20em;
     }
 
-    .operations .operation {
-      background-repeat:no-repeat;
-      background-size: 24px 24px;
-      background-position: center;
-      width:28px;
-      height:28px;
-      vertical-align:middle;
-      margin-right:1em;
+    .operations {
+      padding-right:0.5em;
+      .operation {
+        background-repeat:no-repeat;
+        background-size: 24px 24px;
+        background-position: center;
+        width:28px;
+        height:28px;
+        vertical-align:middle;
+        /* margin-right:0.5em; */
 
-      &.delete-undelete {
-        background-image:url('../img/cafevdb-delete.svg');
-      }
+        &.delete-undelete {
+          background-image:url('../img/cafevdb-delete.svg');
+        }
 
-      &.upload-replace {
-        background-image:url('../../../core/img/actions/upload.svg');
-      }
+        &.upload-from-client {
+          background-image:url('../../../core/img/actions/upload.svg');
+        }
+        &.upload-from-cloud {
+          background-image:url('../img/cloud-icon.svg');
+        }
 
-      &.download-mandate-form {
-        background-image:url('../../../core/img/actions/download.svg');
+        &.download-mandate-form {
+          background-image:url('../../../core/img/actions/download.svg');
+        }
       }
     }
   }
