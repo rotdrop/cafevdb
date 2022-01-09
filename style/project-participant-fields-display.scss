@@ -127,6 +127,8 @@ form.pme-form.project-participant-fields-display {
       background-position:center;
       width:28px;
       height:28px;
+      min-width:28px;
+      min-height:28px;
       text-indent:-10000em;
       vertical-align:middle;
       padding:0;
@@ -169,6 +171,10 @@ form.pme-form.project-participant-fields-display {
   &.pme-add, &.pme-change, &.pme-copy {
     td.pme-key.service-fee.single-valued {
       position:relative;
+    }
+    width:100%;
+    .file-upload-wrapper td.input {
+      width:100%;
     }
   }
 
