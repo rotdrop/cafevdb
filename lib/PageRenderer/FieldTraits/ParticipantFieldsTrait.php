@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCP\Files as CloudFiles;
+use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -311,7 +312,6 @@ trait ParticipantFieldsTrait
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
-              $policy = $field->getDefaultValue()?:'rename';
               $key = $dataOptions->first()->getKey();
               $fileBase = $field->getName();
               $subDir = null;
@@ -323,29 +323,30 @@ trait ParticipantFieldsTrait
 </div>';
             };
             $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              if (!empty($value)) {
-                /** @var Entities\File $file */
-                $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
-                $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $fileBase = $field->getName();
-                $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-                $fileName .= '.' . $extension;
-                $downloadLink = $this->urlGenerator()
-                                     ->linkToRoute($this->appName().'.downloads.get', [
+              if (empty($value)) {
+                return '';
+              }
+
+              /** @var Entities\File $file */
+              $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
+              $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $fileBase = $field->getName();
+              $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+              $fileName .= '.' . $extension;
+              $downloadLink = $this->urlGenerator()
+                ->linkToRoute($this->appName().'.downloads.get', [
                                        'section' => DownloadsController::SECTION_DATABASE,
                                        'object' => $value,
-                                     ])
-                  . '?'
-                  . http_build_query([
-                    'requesttoken'  => \OCP\Util::callRegister(),
+                ])
+                . '?'
+                . http_build_query([
+                  'requesttoken'  => \OCP\Util::callRegister(),
                     'fileName' => $fileName,
-                  ]);
-                $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
+                ]);
+              $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
-                return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
-              }
-              return null;
+              return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
             };
             break;
           case FieldType::CLOUD_FILE:
@@ -1530,65 +1531,69 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $downloadLink = '';
       $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
     }
-    $filesAppTarget = md5($filesAppLink);
-    $emptyDisabled = empty($value) ? ' disabled' : '';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
-    switch ($policy) {
-    case 'rename':
-      $policyTooltip = $this->toolTipsService['participant-attachment-upload-rename'];
-      break;
-    case 'replace':
-      $policyTooltip = $this->toolTipsService['participant-attachment-upload-replace'];
-      break;
-    }
-    $html = '
-  <tr class="file-upload-row" data-field-id="'.$fieldId.'" data-option-key="'.$optionKey.'" data-sub-dir="'.$subDir.'" data-file-base="'.$fileBase.'" data-file-name="'.$fileName.'" data-upload-policy="'.$policy.'" data-storage="cloud">
-    <td class="operations">
-      <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
-      <input type="button" title="'.$policyTooltip.'" class="operation upload-replace"/>
-      <input type="button" title="' . $this->toolTipService['participant-fields:attachment:from-cloud'] . '" class="operation upload-from-cloud"/>
-      <a href="' . $filesAppLink . '" target="'.$filesAppTarget.'" title="'.$this->toolTipsService['participant-attachment-open-parent'].'" class="button operation open-parent tooltip-auto"></a>
-    </td>
-    <td class="cloud-file">
-      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileName . '</a>
-      <input class="upload-placeholder"
-             title="'.$this->toolTipsService['participant-attachment-upload'].'"
-             placeholder="'.$placeHolder.'"
-             type="text"
-             name="'.$optionValueName.'"
-             value="'.htmlspecialchars(empty($value) ? '' : $fileName).'"
-      />
-    </td>
-  </tr>';
-    return $html;
+
+    return (new TemplateResponse(
+      $this->appName(),
+      'fragments/participant-fields/cloud-file-upload-row', [
+        'fieldId' => $fieldId,
+        'optionKey' => $optionKey,
+        'optionValue' => $optionValue,
+        'subDir' => $subDir,
+        'fileBase' => $fileBase,
+        'fileName' => $fileName,
+        'uploadPolicy' => $policy,
+        'participantFolder' => $participantFolder,
+        'filesAppLink' => $filesAppLink,
+        'downloadLink' => $downloadLink,
+        'optionValueName' => $optionValueName,
+        'uploadPlaceHolder' => $placeHolder,
+        'toolTips' => $this->toolTipsService,
+        'toolTipsPrefix' => 'participant-fields',
+      ],
+      'blank'
+    ))->render();
   }
 
-  protected function dbFileUploadRowHtml($value, int $fieldId, string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician)
+  protected function dbFileUploadRowHtml($optionValue, int $fieldId, string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician, ?Entities\Project $project = null, bool $overrideFileName = false)
   {
-    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+    $project = $project??$this->project;
+    $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
     $subDirPrefix = UserStorage::PATH_SEP . $this->l->t('documents');
     if (!empty($subDir)) {
       $subDirPrefix .= UserStorage::PATH_SEP . $subDir;
     }
-    if (!empty($value)) {
+    if (!empty($optionValue)) {
       /** @var Entities\File $file */
-      $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
-      $dbPathInfo = pathinfo($file->getFileName());
-      $dbFileName = $dbPathInfo['basename'];
-      $dbExtension = $dbPathInfo['extension'];
+      $file = $this->getDatabaseRepository(Entities\File::class)->find($optionValue);
+      $dbPathName = $file->getFileName();
+      if (!empty($dbPathName)) {
+        $dbPathInfo = pathinfo($dbPathName);
+        $dbFileName = $dbPathInfo['basename'];
+        $dbExtension = $dbPathInfo['extension'];
+      } else {
+        $dbExtension = Util::fileExtensionFromMimeType($file->getMimeType());
+        $dbFileName = $fileBase . '.' . $dbExtension;
+      }
     }
-    if (!empty($fileBase)) {
-      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+    if ($overrideFileName) {
+      $fileName = $fileBase;
+      $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+      if (empty($extension) && !empty($dbExtension)) {
+        $fileName .= '.' . $dbExtension;
+      }
+    } else if (!empty($fileBase)) {
+      $fileName = $this->projectService->participantFilename($fileBase, $project, $musician);
       if (!empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
       }
-    } else if (!empty($value)) {
+    } else if (!empty($optionValue)) {
       $fileName = $dbFileName;
     } else {
       $fileName = null;
     }
-    if (!empty($value)) {
+    if (!empty($optionValue)) {
       $requestData = [
         'requesttoken' => \OCP\Util::callRegister(),
       ];
@@ -1597,7 +1602,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       }
       $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
           'section' => 'database',
-          'object' => $value,
+          'object' => $optionValue,
       ])
         . '?' . http_build_query($requestData);
     } else {
@@ -1609,42 +1614,29 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
       $filesAppLink = '';
     }
-    $filesAppTarget = md5($filesAppLink);
     $placeHolder = empty($fileName)
       ? $this->l->t('Drop files here or click to upload fileds.')
       : $this->l->t('Load %s', $fileName);
-    $emptyDisabled = empty($value) ? ' disabled' : '';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
-    $html = '
-  <tr class="file-upload-row field-datum"
-      data-field-id="'.$fieldId.'"x
-      data-option-key="'.$optionKey.'"
-      data-file-base="'.$fileBase.'"
-      data-upload-policy="replace"
-      data-storage="db"
-      data-sub-dir=""
-    >
-    <td class="operations">
-      <input type="button"'.$emptyDisabled.' title="'.$this->toolTipsService['participant-attachment-delete'].'" class="operation delete-undelete"/>
-      <input type="button" title="'.$this->toolTipsService['participant-attachment-upload-replace'].'" class="operation upload-replace"/>
-      <input type="button" title="' . $this->toolTipService['participant-fields:attachment:from-cloud'] . '" class="operation upload-from-cloud"/>
-      <a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-         title="'.$this->toolTipsService['participant-attachment-open-parent'].'"
-         class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
-      ></a>
-    </td>
-    <td class="db-file input">
-      <a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">'.$fileName.'</a>
-      <input class="upload-placeholder"
-             title="'.$this->toolTipsService['participant-attachment-upload'].'"
-             placeholder="'.$placeHolder.'"
-             type="text"
-             name="'.$optionValueName.'"
-             value="'.htmlspecialchars($value).'"
-      />
-    </td>
-  </tr>';
-    return $html;
+
+    return (new TemplateResponse(
+      $this->appName(),
+      'fragments/participant-fields/db-file-upload-row', [
+        'fieldId' => $fieldId,
+        'optionKey' => $optionKey,
+        'optionValue' => $optionValue,
+        'fileBase' => $fileBase,
+        'fileName' => $fileName,
+        'participantFolder' => $participantFolder,
+        'filesAppLink' => $filesAppLink,
+        'downloadLink' => $downloadLink,
+        'optionValueName' => $optionValueName,
+        'uploadPlaceHolder' => $placeHolder,
+        'toolTips' => $this->toolTipsService,
+        'toolTipsPrefix' => 'participant-fields',
+      ],
+      'blank'
+    ))->render();
   }
 
   /**
