@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -92,9 +92,12 @@ class ProjectParticipant implements \ArrayAccess
   private $projectInstruments;
 
   /**
+   * @var SepaBankAccount
+   *
    * Optional link to a bank account for this project. The account can
    * but need not belong to a debit-mandate. This is the account used
    * for this project.
+   * @todo Either remove or use this information.
    *
    * @ORM\ManyToOne(targetEntity="SepaBankAccount")
    * @ORM\JoinColumns(
@@ -105,7 +108,10 @@ class ProjectParticipant implements \ArrayAccess
   private $sepaBankAccount = null;
 
   /**
+   * @var SepaDebitMandate
+   *
    * Optional link to a SEPA debit-mandate used for this project.
+   * @todo Remove, this is a relict from pre-ORM times.
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
    * @ORM\JoinColumns(

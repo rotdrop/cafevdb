@@ -83,6 +83,8 @@ class CompositePayment implements \ArrayAccess
   private $sepaBankAccount;
 
   /**
+   * @var SepaDebitMandate
+   *
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
    *                inversedBy="payments",
    *                fetch="EXTRA_LAZY")
