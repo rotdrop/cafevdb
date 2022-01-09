@@ -553,9 +553,19 @@ class SepaBankAccounts extends PMETableViewBase
         'table' => self::TABLE,
         'column' => 'bank_account_owner',
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
+      ],
+      'values|ACP' => [
+        'table' => self::TABLE,
+        'column' => 'bank_account_owner',
+        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
+        // in order to support auto-completion and/or filling in particular
+        // while adding new mandates we provide the bank account identifier
+        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'filters' => '$table.deleted IS NULL',
       ],
     ];
 
@@ -586,13 +596,15 @@ class SepaBankAccounts extends PMETableViewBase
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
-        'data' => 'GROUP_CONCAT(DISTINCT $table.musician_id)',
+        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
       ],
       'values|ACP' => [ // use full table contents for auto-completion
         'table' => self::TABLE,
         'column' => 'iban',
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-        'data' => 'GROUP_CONCAT(DISTINCT $table.musician_id)',
+        // in order to support auto-completion and/or filling in particular
+        // while adding new mandates we provide the bank account identifier
+        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
         'filters' => '$table.deleted IS NULL',
       ],
       'display' => [
@@ -942,9 +954,20 @@ received so far'),
     return $tabs;
   }
 
+  /**
+   * Before insert handler.
+   * - check whether it is is a new IBAN for the musician, otherwise redirect to the change dialog
+   * - prepare data to be usable by beforeUpdateDoUpdateAll() and beforeInsertDoInsertAll()
+   *
+   */
   public function beforeInsertGenerateKeys(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
     $musician = $this->getReference(Entities\Musician::class, $newvals['musician_id']);
+
+    // if we have a sequence, fetch the bank account
+    if (!empty($newvals['sequence'])) {
+
+    }
 
     $maxSequence = $this->getDatabaseRepository(Entities\SepaBankAccount::class)->sequenceMax($musician);
     $newvals['sequence'] = $maxSequence + 1;

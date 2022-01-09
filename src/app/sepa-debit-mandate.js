@@ -811,8 +811,6 @@ const mandateDelete = function(sepaId, callbackOk, action) {
   // "submit" the entire form
   // const post = $('#sepa-debit-mandate-form').serialize();
 
-  console.info('DELETE', sepaId, action);
-
   let endPoint = 'debit-mandates';
   switch (action) {
   case 'disable':
@@ -1005,21 +1003,19 @@ const mandateValidate = function(event, validateLockCB) {
  *
  * @returns {bool}
  */
-const mandateValidatePME = function(event, validateLockCB) {
-  event.preventDefault();
+const mandateValidatePMEWorker = function(event, validateLockCB) {
 
   const $element = $(this);
 
   const $form = $element.closest('form.' + pmeToken('form'));
 
-  console.info('FORM/ELEMENT', $element, $form);
-
-  if ($element.prop('readonly')) {
-    return false;
-  }
-
   if (typeof validateLockCB === 'undefined') {
     validateLockCB = function(lock, validateOk) {};
+  }
+
+  if ($element.prop('readonly')) {
+    validateLockCB(false, null);
+    return false;
   }
 
   const validateLock = function() {
@@ -1082,8 +1078,6 @@ const mandateValidatePME = function(event, validateLockCB) {
     mandateData[key] = $input.is(':checkbox') ? $input.prop('checked') : $input.val();
   }
   mandateData.mandateProjectId = mandateData.projectId;
-
-  console.info('INPUTS/VAL', mandateInputs.bankAccountOwner, mandateData.bankAccountOwner);
 
   // until end of validation
   validateLock();
@@ -1160,6 +1154,37 @@ const mandateValidatePME = function(event, validateLockCB) {
   return false;
 };
 
+let mandateValidatePMEPromise = {};
+
+/**
+ * Serialize input validation calls. The point is that even successful
+ * validation may lead to a modification of input elements, which in
+ * turn have to serve as input to the next validation call.
+ *
+ * @param{Object} event TBD.
+ *
+ * @param{function} validateLockCB TBD.
+ *
+ * @returns{boolean} false
+ */
+const mandateValidatePME = function(event, validateLockCB) {
+  const self = this;
+  if (typeof validateLockCB === 'undefined') {
+    validateLockCB = function(lock, validateOk) {};
+  }
+  mandateValidatePMEPromise = $.when(mandateValidatePMEPromise).then(function() {
+    const defer = $.Deferred();
+    mandateValidatePMEWorker.call(self, event, function(lock, validateOk) {
+      validateLockCB(lock, validateOk);
+      if (!lock) {
+        defer.resolve();
+      }
+    });
+    return defer.promise();
+  });
+  return false;
+};
+
 const mandatePopupInit = function(selector) {
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
@@ -1177,10 +1202,8 @@ const mandatePopupInit = function(selector) {
           sepaId: values,
           done(data) {
             mandatesInit(data, function() {
-              console.info('RELOAD FUNCTION');
               const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
               if (pmeReload.length > 0) {
-                console.info('DO RELOAD');
                 pmeReload.trigger('click', {
                   postOpen(pmeDialog) {
                     // override the default in order to avoid moving the underlying dialog to top.
@@ -1438,7 +1461,6 @@ const mandateReady = function(selector) {
 
   const validateInput = function(event) {
     const $input = $(this);
-    console.info('VALIDATE THIS', this);
     mandateValidatePME.call(this, event, function(lock) {
       $input.readonly(lock);
     });
@@ -1451,19 +1473,41 @@ const mandateReady = function(selector) {
   const $projectParticipantSelect = table.find('select.pme-input.project-participant');
   const $bankAccountOwnerInput = table.find('input.pme-input.bank-account-owner');
   const $bankAccountIbanInput = table.find('input.pme-input.bank-account-iban');
+  const $bankAccountSequenceInput = table.find('input.pme-input.bank-account-sequence');
 
   // construct IBAN auto-completion from data-pme-values
   const ibanValues = $bankAccountIbanInput.data('pmeValues');
-  console.info(ibanValues);
   const ibanAutoComplete = {};
+  const sequenceData = {}; // by musician id and iban
+  const ibanIdentifiers = {}; // identifier by IBAN
   for (const [ibanKey, iban] of Object.entries(ibanValues.values)) {
-    const ibanOwnerIds = ibanValues.data[ibanKey].split(',');
-    for (const ibanOwnerId of ibanOwnerIds) {
-      if (!ibanAutoComplete[ibanOwnerId]) {
-        ibanAutoComplete[ibanOwnerId] = [iban];
-      } else {
-        ibanAutoComplete[ibanOwnerId].push(iban);
-      }
+    const ibanIds = ibanValues.data[ibanKey].split(',');
+    for (const ibanId of ibanIds) {
+      const identifierArray = ibanId.split('-');
+      const musicianId = identifierArray[0];
+      const sequence = identifierArray[1];
+      ibanAutoComplete[musicianId] = ibanAutoComplete[musicianId] || [];
+      ibanAutoComplete[musicianId].push(iban);
+      sequenceData[musicianId] = sequenceData[musicianId] || {};
+      sequenceData[musicianId][iban] = sequenceData[musicianId][iban] || [];
+      sequenceData[musicianId][iban].push(sequence); // ?? only one ??
+      ibanIdentifiers[iban] = ibanIdentifiers[iban] || [];
+      ibanIdentifiers[iban].push(identifierArray);
+    }
+  }
+
+  const ownerValues = $bankAccountOwnerInput.data('pmeValues');
+  const ownerAutoComplete = [];
+  const ownerData = {}; // by musician id and sequence
+  for (const [ownerKey, owner] of Object.entries(ownerValues.values)) {
+    const ownerIdentifiers = ownerValues.data[ownerKey].split(',');
+    for (const ownerIdentifier of ownerIdentifiers) {
+      const identifierArray = ownerIdentifier.split('-');
+      const musicianId = identifierArray[0];
+      const sequence = identifierArray[1];
+      ownerData[musicianId] = ownerData[musicianId] || {};
+      ownerData[musicianId][sequence] = owner;
+      ownerAutoComplete.push(owner);
     }
   }
 
@@ -1484,39 +1528,108 @@ const mandateReady = function(selector) {
       $self.autocomplete('search', '');
     }
   });
+  $bankAccountIbanInput.on('blur', function(event) {
+    // const $this = $(this);
+
+  });
+
+  // auto-fill empty or only-autofilled inputs.
+  const maybeAutoFillInput = function($input, value, blur, confirm) {
+    if ($input.val() !== value) {
+      const autoFillInput = function() {
+        $input.data('autoFill', value);
+        $input.val(value);
+        if (blur === true) {
+          $input.blur();
+        }
+      };
+      if ($input.val() === '' || $input.val() === $input.data('autoFill')) {
+        autoFillInput();
+      } else if (typeof confirm === 'function') {
+        confirm(autoFillInput, $input, value, blur);
+      }
+    }
+  };
 
   $projectParticipantSelect.on('change', function(event) {
     const $this = $(this);
-    const $that = $bankAccountOwnerInput;
-    $musicianIdInput.val($this.val());
-    $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[$musicianIdInput.val()]);
-    if ($that.val() === '') {
-      $that.val($this.find('option:selected').html());
-      $that.blur();
+    const $owner = $bankAccountOwnerInput;
+    const musicianId = $this.val();
+    $musicianIdInput.val(musicianId);
+    ibanAutoComplete[musicianId] = [...new Set(ibanAutoComplete[musicianId])];
+    $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[musicianId]);
+    let autoOwner = $this.find('option:selected').html();
+    let clearAutofill = true;
+    if (ibanAutoComplete[musicianId].length === 1) {
+      const iban = ibanAutoComplete[musicianId][0];
+      if (sequenceData[musicianId][iban].length === 1) {
+        const sequence = sequenceData[musicianId][iban][0];
+        const owner = ownerData[musicianId][sequence];
+        autoOwner = owner;
+        maybeAutoFillInput($bankAccountSequenceInput, sequence);
+        maybeAutoFillInput($bankAccountIbanInput, iban, true);
+        clearAutofill = false;
+      }
     }
+    if (clearAutofill) {
+      maybeAutoFillInput($bankAccountSequenceInput, '');
+      maybeAutoFillInput($bankAccountIbanInput, '', true);
+    }
+    maybeAutoFillInput($owner, autoOwner, true, function(autoFillAction) {
+      Dialogs.confirm(
+        t(appName,
+          'The bank-account-owner is already set but differs from the project-participant.'
+          + ' Shall we replace the current bank-account-owner by the project-participant?'),
+        t(appName, 'Set Bank-Account-Owner to Project-Participant?'),
+        confirm => confirm && autoFillAction(),
+        true, // modal
+        false, // allowHtml
+      );
+    });
   });
 
   $bankAccountOwnerInput.on('blur', function(event) {
     const $this = $(this);
-    const $that = $projectParticipantSelect;
+    const $participant = $projectParticipantSelect;
     const value = $this.val();
-    if (value !== '' && $that.val() === '') {
-      $that.find('option').each(function() {
+    if (value !== '') {
+      let ownerMusicianId = -1;
+      $participant.find('option').each(function() {
         const $option = $(this);
-        if ($option.html() === value) {
-          SelectUtils.selected($that, $option.val(), true);
+        if ($option.html() === value && $option.val() !== $participant.val()) {
+          ownerMusicianId = $option.val();
         }
       });
+      const autoFillParticipant = function() {
+        SelectUtils.selected($participant, ownerMusicianId, true);
+        $participant.data('autoFill', ownerMusicianId);
+      };
+      if (ownerMusicianId !== -1 && ownerMusicianId !== $participant.val()) {
+        if ($participant.val() === '' || $participant.val() === $participant.data('autoFill')) {
+          // just overwrite any previous autofill
+          autoFillParticipant();
+        } else {
+          // ask the user if the participant should be replaced
+          Dialogs.confirm(
+            t(appName,
+              'Project-participant is already set but differs from the bank-account-owner.'
+              + ' Shall we set the project-participant to the bank-account-owner?'),
+            t(appName, 'Set Project-Participant to Bank-Account-Owner?'),
+            confirm => confirm && autoFillParticipant(),
+            true, // modal
+            false, // allowHtml
+          );
+        }
+      }
     }
   });
 
-  $bankAccountOwnerInput.data('autocomplete', []);
   $projectParticipantSelect.find('option').each(function() {
-    $bankAccountOwnerInput.data('autocomplete').push($(this).html());
+    ownerAutoComplete.push($(this).html());
   });
 
   $bankAccountOwnerInput.autocomplete({
-    source: $bankAccountOwnerInput.data('autocomplete'),
+    source: ownerAutoComplete,
     position: { my: 'left bottom', at: 'left top' },
     minLength: 0,
     autoFocus: true,
@@ -1552,8 +1665,6 @@ const mandateReady = function(selector) {
         button.blur();
         return false;
       }
-
-      console.info('VALIDATE ON SUBMIT');
 
       // allow delete button, validation makes no sense here
       if (button.attr('name') === PHPMyEdit.sys('savedelete')) {

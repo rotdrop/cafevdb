@@ -142,6 +142,14 @@ class SepaDebitMandatesController extends Controller {
       'initiator' => null,
     ];
 
+    if ($changed != 'bankAccountIBAN' && (!empty($IBAN) && (empty($BLZ)) || empty($BIC))) {
+      // re-run the IBAN validation
+      $validations[] = [
+        'changed' => 'bankAccountIBAN',
+        'value' => $IBAN,
+      ];
+    }
+
     $feedback = [];
     $message = [];
     $result = [];
@@ -260,6 +268,10 @@ class SepaDebitMandatesController extends Controller {
       case 'bankAccountIBAN':
         if (empty($value)) {
           $IBAN = '';
+          $BLZ = '';
+          $BIC = '';
+          $result['bankAccountBLZ'] = $BLZ;
+          $result['bankAccountBIC'] = $BIC;
           break;
         }
         $value = Util::removeSpaces($value);
@@ -391,6 +403,8 @@ class SepaDebitMandatesController extends Controller {
           $BLZ = $blz;
           $BIC = $bav->getMainAgency($blz)->getBIC();
         }
+        $result['bankAccountBLZ'] = $BLZ;
+        $result['bankAccountBIC'] = $BIC;
         break;
       case 'bankAccountBLZ':
         if ($value == '') {
