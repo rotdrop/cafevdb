@@ -24,7 +24,11 @@ import { $ } from './globals.js';
 import { refreshWidget as refreshSelectWidget } from './select-utils.js';
 
 $.fn.readonly = function(state) {
-  state = status || false;
+  if (state === undefined) {
+    state = true;
+  } else {
+    state = !!state;
+  }
   this.each(function() {
     const $this = $(this);
     $this.prop('readonly', state);
