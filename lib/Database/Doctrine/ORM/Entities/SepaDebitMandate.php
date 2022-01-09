@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\HasLifecycleCallbacks
  */
 class SepaDebitMandate implements \ArrayAccess
 {
@@ -74,6 +75,8 @@ class SepaDebitMandate implements \ArrayAccess
    * @ORM\Column(type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="NONE")
+   * @ ORM\GeneratedValue(strategy="CUSTOM")
+   * @ ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
   private $sequence;
 
@@ -192,13 +195,7 @@ class SepaDebitMandate implements \ArrayAccess
   public function setSequence(?int $sequence):SepaDebitMandate
   {
     $this->sequence = $sequence;
-
-    if ($sequence !== null && $this->mandateReference !== null) {
-      $this->mandateReference = preg_replace(
-        '/[+][0-9]{2}$/',
-        sprintf('+%02d', $sequence),
-        $this->mandateReference);
-    }
+    $this->adjustMandateReference();
 
     return $this;
   }
@@ -214,9 +211,9 @@ class SepaDebitMandate implements \ArrayAccess
   }
 
   /**
-   * Set musician.
+   * Set musician or musician-id
    *
-   * @param Musician $musician
+   * @param int|Musician $musician
    *
    * @return SepaDebitMandate
    */
@@ -230,7 +227,7 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician
+   * @return int|Musician
    */
   public function getMusician()
   {
@@ -244,7 +241,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setSepaBankAccount($sepaBankAccount):SepaDebitMandate
+  public function setSepaBankAccount(SepaBankAccount $sepaBankAccount):SepaDebitMandate
   {
     $this->sepaBankAccount = $sepaBankAccount;
 
@@ -256,7 +253,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function getSepaBankAccount():?SepaBankAccount
+  public function getSepaBankAccount():SepaBankAccount
   {
     return $this->sepaBankAccount;
   }
@@ -268,7 +265,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setMandateReference($mandateReference)
+  public function setMandateReference(string $mandateReference)
   {
     $this->mandateReference = $mandateReference;
 
@@ -280,19 +277,19 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return string
    */
-  public function getMandateReference()
+  public function getMandateReference():string
   {
     return $this->mandateReference;
   }
 
   /**
-   * Set project.
+   * Set project or project-id
    *
-   * @param Project|null $project
+   * @param int|Project $project
    *
    * @return SepaDebitMandate
    */
-  public function setProject($project = null):SepaDebitMandate
+  public function setProject($project):SepaDebitMandate
   {
     $this->project = $project;
 
@@ -302,7 +299,7 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return Project|null
+   * @return Project|int
    */
   public function getProject()
   {
@@ -327,7 +324,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return \DateTimeInterface
    */
-  public function getMandateDate()
+  public function getMandateDate():\DateTimeInterface
   {
     return $this->mandateDate;
   }
@@ -395,9 +392,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get lastUsedDate.
    *
-   * @return \DateTime
+   * @return \DateTimeInterface
    */
-  public function getLastUsedDate()
+  public function getLastUsedDate():\DateTimeInterface
   {
     return $this->lastUsedDate;
   }
@@ -409,7 +406,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setNonRecurring($nonRecurring):SepaDebitMandate
+  public function setNonRecurring(bool $nonRecurring):SepaDebitMandate
   {
     $this->nonRecurring = $nonRecurring;
 
@@ -421,7 +418,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return bool
    */
-  public function getNonRecurring()
+  public function getNonRecurring():bool
   {
     return $this->nonRecurring;
   }
@@ -458,5 +455,25 @@ class SepaDebitMandate implements \ArrayAccess
   public function usage():int
   {
     return $this->payments->count();
+  }
+
+  /**
+   * See that the mandate-sequence is reflected by the mandate reference.
+   *
+   * @todo The DB structure probably should be cleaned up s.t. this is not
+   * necessary.
+   *
+   * @ORM\PrePersist
+   * @ORM\PreUpdate
+   * @ORM\PreFlush
+   */
+  public function adjustMandateReference()
+  {
+    if ($this->sequence !== null && $this->mandateReference !== null) {
+      $this->mandateReference = preg_replace(
+        '/[+][0-9]{2}$/',
+        sprintf('+%02d', $this->sequence),
+        $this->mandateReference);
+    }
   }
 }
