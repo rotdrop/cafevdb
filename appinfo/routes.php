@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -389,6 +389,11 @@ $routes = [
     [
       'name' => 'sepa_debit_mandates#mandate_reactivate',
       'url' => '/finance/sepa/debit-mandates/reactivate',
+      'verb' => 'POST',
+    ],
+    [ // upload hard copy
+      'name' => 'sepa_debit_mandates#mandate_hardcopy',
+      'url' => '/finance/sepa/debit-mandates/hardcopy/{operation}',
       'verb' => 'POST',
     ],
     [

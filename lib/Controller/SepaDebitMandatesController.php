@@ -51,6 +51,10 @@ class SepaDebitMandatesController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+
+  public const HARDCOPY_ACTION_UPLOAD = 'upload';
+  public const HARDCOPY_ACTION_DELETE = 'delete';
 
   /** @var ReqeuestParameterService */
   private $parameterService;
@@ -894,6 +898,7 @@ class SepaDebitMandatesController extends Controller {
       $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
     }
 
+    $uploadFile = null;
     $writtenMandate = $debitMandate->getWrittenMandate();
     if (!empty($writtenMandateFileUpload)) {
       /** @var AppStorage $appStorage */
@@ -929,7 +934,6 @@ class SepaDebitMandatesController extends Controller {
         ->setMimeType($mimeType)
         ->setSize($uploadFile->getSize())
         ->setFileName($writtenMandateFileName);
-      $uploadFile->delete();
     }
 
     // set the new values
@@ -953,6 +957,10 @@ class SepaDebitMandatesController extends Controller {
         $debitMandate->setSequence(null);
       }
     } while ($debitMandate->getSequence() === null);
+
+    if (!empty($uploadFile)) {
+      $uploadFile->delete();
+    }
 
     $responseData = [
       'message' => [
@@ -1031,12 +1039,161 @@ class SepaDebitMandatesController extends Controller {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
   }
 
-  private function handleMandateRevocation($musicianId, $mandateSequence, $action)
+  /**
+   * @NoAdminRequired
+   */
+  public function mandateHardcopy($operation, $musicianId, $mandateSequence)
+  {
+    $this->logInfo('ACTION ' . $operation);
+    switch ($operation) {
+      case self::HARDCOPY_ACTION_UPLOAD:
+        // we mis-use the participant-data upload form, so the actual identifiers
+        // are in the "data" parameter and have to be remapped.
+        $data = $this->parameterService['data'];
+        $uploadData = json_decode($data, true);
+        $musicianId = $uploadData['fieldId'];
+        $mandateSequence = $uploadData['optionKey'];
+        $files = $this->parameterService['files'];
+        break;
+      case self::HARDCOPY_ACTION_DELETE:
+        $mandateSequence = $this->parameterService['optionKey'];
+        break;
+    }
+
+    $requiredKeys = [ 'musicianId', 'mandateSequence' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        return self::grumble($this->l->t('Required information "%s" not provided.', $required));
+      }
+    }
+
+    /** @var Entities\SepaDebitMandate $mandate */
+    $debitMandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
+
+    if (empty($debitMandate)) {
+      return self::grumble($this->l->t('Unable to find mandate for musician id "%1$d" with sequence "%2$d".', [ $musicianId, $mandateSequence ]));
+    }
+    $mandateReference = $debitMandate->getMandateReference();
+
+    switch ($operation) {
+      case self::HARDCOPY_ACTION_UPLOAD:
+        // the following should be made a service routine or Trait
+
+        $files = $this->prepareUploadInfo($files, $mandateSequence, multiple: false);
+        if ($files instanceof Http\Response) {
+          // error generated
+          return $files;
+        }
+
+        $file = array_shift($files); // only one
+        $this->logInfo('FILE ' . print_r($file, true));
+        if ($file['error'] != UPLOAD_ERR_OK) {
+          return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
+        }
+
+        // Ok, got it, set or replace the hard-copy file
+        $fileContent = $this->getUploadContent($file);
+
+        /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+        $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+
+        $conflict = null;
+        $writtenMandate = $debitMandate->getWrittenMandate();
+        if (empty($writtenMandate)) {
+          $writtenMandate = new Entities\EncryptedFile;
+          $fileData = new Entities\EncryptedFileData;
+          $fileData->setFile($writtenMandate);
+          $writtenMandate->setFileData($fileData);
+        } else {
+          $conflict = 'replaced';
+          $fileData = $writtenMandate->getFileData();
+        }
+
+        $mimeType = $mimeTypeDetector->detectString($fileContent);
+        $fileData->setData($fileContent);
+
+        $writtenMandateFileName = $mandateReference;
+        $extension = Util::fileExtensionFromMimeType($mimeType);
+        if (!empty($extension)) {
+          $writtenMandateFileName .= '.' . $extension;
+        }
+
+        $writtenMandate
+          ->setMimeType($mimeType)
+          ->setSize(strlen($fileContent))
+          ->setFileName($writtenMandateFileName);
+
+        $this->entityManager->beginTransaction();
+        try {
+          $this->persist($writtenMandate);
+          $debitMandate->setWrittenMandate($writtenMandate);
+          $this->flush();
+
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          $exceptionChain = $this->exceptionChainData($t);
+          $exceptionChain['message'] =
+            $this->l->t('Error, caught an exception. No changes were performed.');
+          return self::grumble($exceptionChain);
+        }
+
+        $this->removeStashedFile($file);
+
+        $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+          'section' => 'database',
+          'object' => $writtenMandate->getId(),
+        ])
+          . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+          . '&fileName=' . urlencode($writtenMandateFileName);
+
+        unset($file['tmp_name']);
+        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
+                                       [ $file['name'], $filePath ]);
+        $file['name'] = $writtenMandateFileName;
+
+        $pathInfo = pathinfo($writtenMandateFileName);
+
+        $file['meta'] = [
+          'musicianId' => $musicianId,
+          'projectId' => $projectId,
+          'pathChain' => $pathChain,
+          'dirName' => $pathInfo['dirname'],
+          'baseName' => $pathInfo['basename'],
+          'extension' => $pathInfo['extension']?:'',
+          'fileName' => $pathInfo['filename'],
+          'download' => $downloadLink,
+          'conflict' => $conflict,
+          'messages' => $file['message'],
+        ];
+
+        return self::dataResponse([ $file ]);
+      case self::HARDCOPY_ACTION_DELETE:
+        $writtenMandate = $debitMandate->getWrittenMandate();
+        if (empty($writtenMandate)) {
+          // ok, it is not there ...
+          return self::response($this->l->t('We have no hard-copy of the written-mandate for "%1$s", so we cannot delete it.', $mandateReference));
+        }
+        if (!$debitMandate->unused()) {
+          return self::grumble($this->l->t('The debit mandate "%1$s" is already in use, the hard-copy of the written-mandate may only be replaced, but not deleted.', $mandateReference));
+        }
+
+        // ok, delete it
+        $debitMandate->setWrittenMandate(null);
+        $this->remove($writtenMandate, flush: true);
+
+        return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
+    }
+    return self::grumble($this->l->t('UNIMPLEMENTED'));
+  }
+
+  private function handleMandateRevocation($musicianId, $mandateSequence, $operation)
   {
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+        return self::grumble($this->l->t('Required information "%s" not provided.', $required));
       }
     }
 
@@ -1045,7 +1202,7 @@ class SepaDebitMandatesController extends Controller {
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
     $reference = $mandate->getMandateReference();
 
-    switch ($action) {
+    switch ($operation) {
     case 'delete':
       $this->remove($mandate, true);
       break;
@@ -1064,7 +1221,7 @@ class SepaDebitMandatesController extends Controller {
       $this->flush();
       break;
     default:
-      return self::grumble($this->l->t('Unknown revocation action: "%s".', $action));
+      return self::grumble($this->l->t('Unknown revocation action: "%s".', $operation));
     }
 
     if ($this->entityManager->contains($mandate)) {

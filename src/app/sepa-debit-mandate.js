@@ -39,6 +39,7 @@ import * as SelectUtils from './select-utils.js';
 import modalizer from './modalizer.js';
 import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
+import initFileUploadRow from './pme-file-upload-row.js';
 import './lock-input.js';
 import {
   data as pmeData,
@@ -1153,6 +1154,11 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
   return false;
 };
 
+/**
+ * Serialize input validation calls. The point is that even successful
+ * validation may lead to a modification of input elements, which in
+ * turn have to serve as input to the next validation call.
+ */
 let mandateValidatePMEPromise = {};
 
 /**
@@ -1322,7 +1328,8 @@ const mandateInsuranceReady = function(selector) {
     .on('click', mandateExportHandler);
 };
 
-const mandateReady = function(selector) {
+// PME handlers, not for the popup dialog
+const mandateReady = function(selector, resizeCB) {
 
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
@@ -1330,8 +1337,8 @@ const mandateReady = function(selector) {
 
   // bail out if not for us.
   const form = container.find(pmeFormSelector());
-  let dbTable = form.find('input[value="InstrumentInsurance"]');
-  if (dbTable.length > 0) {
+  let $pmeTable = form.find('table[summary="InstrumentInsurance"]');
+  if ($pmeTable.length > 0) {
     mandateInsuranceReady(selector);
     return;
   }
@@ -1442,9 +1449,10 @@ const mandateReady = function(selector) {
 
   pmeExportMenu(containerSel);
 
-  dbTable = form.find('input[value="SepaBankAccounts"]');
-  if (dbTable.length === 0) {
-    // console.info('EXIT EARLY');
+  // from here
+  $pmeTable = form.find('table[summary="SepaBankAccounts"]');
+
+  if ($pmeTable.length === 0) {
     return;
   }
 
@@ -1456,8 +1464,6 @@ const mandateReady = function(selector) {
     return;
   }
 
-  const table = form.find('table[summary="SepaBankAccounts"]');
-
   const validateInput = function(event) {
     const $input = $(this);
     mandateValidatePME.call(this, event, function(lock) {
@@ -1465,15 +1471,15 @@ const mandateReady = function(selector) {
     });
   };
 
-  table.find('input[type="text"].pme-input').off('blur');
-  table.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
+  $pmeTable.find('input[type="text"].pme-input').off('blur');
+  $pmeTable.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
 
-  const $musicianIdInput = table.find('input.pme-input.musician-id');
-  const $projectParticipantSelect = table.find('select.pme-input.project-participant');
-  const $bankAccountOwnerInput = table.find('input.pme-input.bank-account-owner');
-  const $bankAccountIbanInput = table.find('input.pme-input.bank-account-iban');
-  const $bankAccountSequenceInput = table.find('input.pme-input.bank-account-sequence');
-  const $mandateProjectSelect = table.find('select.mandate-project');
+  const $musicianIdInput = $pmeTable.find('input.pme-input.musician-id');
+  const $projectParticipantSelect = $pmeTable.find('select.pme-input.project-participant');
+  const $bankAccountOwnerInput = $pmeTable.find('input.pme-input.bank-account-owner');
+  const $bankAccountIbanInput = $pmeTable.find('input.pme-input.bank-account-iban');
+  const $bankAccountSequenceInput = $pmeTable.find('input.pme-input.bank-account-sequence');
+  const $mandateProjectSelect = $pmeTable.find('select.mandate-project');
 
   $mandateProjectSelect
     .closest('tr.pme-row')
@@ -1658,13 +1664,13 @@ const mandateReady = function(selector) {
     }
   });
 
-  table.find('input[type="text"].pme-input').not('.revocation-date')
+  $pmeTable.find('input[type="text"].pme-input').not('.revocation-date')
     .on('blur', validateInput);
 
-  table.find('select.pme-input').not('.project-participant')
+  $pmeTable.find('select.pme-input').not('.project-participant')
     .on('change', validateInput);
 
-  table.find('input[type="checkbox"].pme-input')
+  $pmeTable.find('input[type="checkbox"].pme-input')
     .on('change', validateInput);
 
   const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
@@ -1685,7 +1691,7 @@ const mandateReady = function(selector) {
 
       submitActive = true;
 
-      const inputs = table.find('input[type="text"]');
+      const inputs = $pmeTable.find('input[type="text"]');
 
       $.fn.cafevTooltip.hide();
       inputs.prop('readonly', true);
@@ -1709,7 +1715,7 @@ const mandateReady = function(selector) {
       return false;
     });
 
-  table.find('input.sepadate').datepicker({
+  $pmeTable.find('input.sepadate').datepicker({
     minDate: '01.01.1990',
     beforeShow(input) {
       $(input).unbind('blur');
@@ -1721,6 +1727,30 @@ const mandateReady = function(selector) {
     },
   });
 
+  const musicianId = $musicianIdInput.val();
+  const projectId = $mandateProjectSelect.val();
+  console.info(
+    'MUS PROJ',
+    musicianId,
+    projectId,
+    $pmeTable.find('tr.written-mandate td.pme-value .file-upload-row'),
+  );
+  if (+musicianId > 0 && +projectId > 0) {
+    // upload handlers
+    $pmeTable
+      .find('tr.written-mandate td.pme-value .file-upload-row')
+      .each(function() {
+        // don't use arrow notation as it does not have the this binding
+        initFileUploadRow.call(
+          this,
+          projectId,
+          musicianId,
+          resizeCB, {
+            upload: 'finance/sepa/debit-mandates/hardcopy/upload',
+            delete: 'finance/sepa/debit-mandates/hardcopy/delete',
+          });
+      });
+  }
 };
 
 const mandatesDocumentReady = function() {
@@ -1729,7 +1759,7 @@ const mandatesDocumentReady = function() {
     'sepa-bank-accounts',
     {
       callback(selector, parameters, resizeCB) {
-        mandateReady(selector);
+        mandateReady(selector, resizeCB);
         resizeCB();
       },
       context: globalState.SepaDebitMandate,
