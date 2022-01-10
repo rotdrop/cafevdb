@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,6 +34,8 @@ use OCP\Files\FileInfo;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -43,8 +45,11 @@ use OCA\CAFEVDB\Common\Util;
 class UploadsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const UPLOAD_KEY = 'files';
+  public const MOVE_DEST_CLOUD = 'cloud';
+  public const MOVE_DEST_DB = 'db';
 
   /** @var AppStorage */
   private $appStorage;
@@ -60,27 +65,78 @@ class UploadsController extends Controller {
 
     $this->configService = $configService;
     $this->appStorage = $appStorage;
+    $this->entityManager = null;
     $this->l = $this->l10N();
   }
 
   /**
    * @NoAdminRequired
+   *
+   * @param string $stahedFile
+   * @param string $destinationPath
+   * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
+   * @param bool $encrypted Whether to store the data encrypted (DB only).
+   * @param string $appDirectory
    */
-  public function move($stashedFile, $destinationPath, $appDirectory = AppStorage::UPLOAD_FOLDER)
+  public function move(string $stashedFile, string $destinationPath, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, string $appDirectory = AppStorage::UPLOAD_FOLDER)
   {
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->di(UserStorage::class);
     $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
+    switch ($storage) {
+      case self::MOVE_DEST_CLOUD:
+        /** @var UserStorage $userStorage */
+        $userStorage = $this->di(UserStorage::class);
 
-    $userStorage->putContent($destinationPath, $appFile->getContent());
-    $downloadLink = $userStorage->getDownloadLink($destinationPath);
-    $appFile->delete();
+        $userStorage->putContent($destinationPath, $appFile->getContent());
+        $downloadLink = $userStorage->getDownloadLink($destinationPath);
+        $appFile->delete();
 
-    return self::dataResponse([
-      'message' => $this->l->t('Moved "%s" to "%s".', [ $stashedFile, $destinationPath ]),
-      'fileName' => basename($destinationPath),
-      'downloadLink' => $downloadLink,
-    ]);
+        return self::dataResponse([
+          'message' => $this->l->t('Moved "%s" to "%s".', [ $stashedFile, $destinationPath ]),
+          'fileName' => basename($destinationPath),
+          'downloadLink' => $downloadLink,
+        ]);
+      case self::MOVE_DEST_DB:
+        // here $destinationPath is the file-name in the data-base
+        if (empty($this->entityManager)) {
+          $this->entityManager = $this->di(EntityManager::class);
+        }
+        $dbFile = $encrypted ? new Entities\EncryptedFile : new Entities\File;
+
+        $dbFile->getFileData()->setData($appFile->getContent());
+        $dbFile->setMimeType($appFile->getMimeType())
+          ->setSize($appFile->getSize())
+          ->setFileName($destinationPath);
+
+        $this->entityManager->beginTransaction();
+        try {
+          $this->persist($dbFile);
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          return self::grumble($this->exceptionChainData($t));
+        }
+
+        // ok, all fine
+        $appFile->delete();
+
+        $downloadLink = $this->urlGenerator()->linkToRoute(
+          $this->appName().'.downloads.get', [
+            'section' => 'database',
+            'object' => $writtenMandate->getId(),
+          ])
+          . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+          . '&fileName=' . urlencode(basename($destinationPath));
+
+        return self::dataResponse([
+          'message' => $this->l->t('Moved "%1$s" to db-storage with name "%2$s", id %d.', [ $stashedFile, $destinationPath, $dbFile->getId() ]),
+          'fileName' => basename($destinationPath),
+          'fileId' => $dbFile->getId(),
+          'downloadLink' => $downloadLink,
+        ]);
+    }
+    return self::grumble($this->l->t('Unknown request'));
   }
 
   /**

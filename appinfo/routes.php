@@ -232,8 +232,9 @@ $routes = [
     ],
     [
       'name' => 'uploads#move',
-      'url' => '/upload/move',
+      'url' => '/upload/move/{storage}',
       'verb' => 'POST',
+      'defaults' => [ 'storage' => 'cloud' ],
     ],
     // various download stuff
     [
