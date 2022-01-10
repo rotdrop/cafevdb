@@ -1086,7 +1086,6 @@ class SepaDebitMandatesController extends Controller {
         }
 
         $file = array_shift($files); // only one
-        $this->logInfo('FILE ' . print_r($file, true));
         if ($file['error'] != UPLOAD_ERR_OK) {
           return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
         }
