@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -154,6 +154,38 @@ class ProjectParticipantsStorage extends Storage
         }
       }
     }
+
+    // also link in the debit-mandate hard-copies in their own sub-folder
+    // subDir: $this->l->t('DebitMandates'),
+    // Link in all project-related and the general debit-mandates
+
+    $debitMandatesDirectory = $this->l->t('DebitMandates');
+    $membersProjectId = $this->getClubMembersProjectId();
+    $projectId = $this->participant->getProject()->getId();
+
+    /** @var Entities\SepaDebitMandate $debitMandate */
+    foreach ($this->participant->getMusician()->getSepaDebitMandates() as $debitMandate) {
+      $mandateProjectId = $debitMandate->getProject()->getId();
+      if ($mandateProjectId !== $membersProjectId && $mandateProjectId !== $projectId) {
+        continue;
+      }
+      $file = $debitMandate->getWrittenMandate();
+      if (empty($file)) {
+        continue;
+      }
+      // enforce the "correct" file-name
+      $dbFileName = $file->getFileName();
+      $baseName = $debitMandate->getMandateReference() . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+      $fileName = $this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . $baseName);
+      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+      if ($fileDirName == $dirName) {
+        $this->files[$dirName][$baseName] = $file;
+      } else if (strpos($fileDirName, $dirName) === 0) {
+        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+        $this->files[$dirName][$baseName] = $baseName;
+      }
+    }
+
     return $this->files[$dirName];
   }
 
