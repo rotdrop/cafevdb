@@ -43,6 +43,7 @@
     <command>OCA\CAFEVDB\Command\TooltipsList</command>
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
+    <command>OCA\CAFEVDB\Command\ParticipantFolders</command>
   </commands>
   <background-jobs>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
