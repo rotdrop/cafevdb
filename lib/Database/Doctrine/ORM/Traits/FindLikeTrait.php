@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,6 +37,13 @@ trait FindLikeTrait
     '=' => 'eq',
     '<' => 'lt',
     '>' => 'gt',
+  ];
+  private static $junctors = [
+    '(|' => [ 'orX' ],
+    '(&' => [ 'andX' ],
+    '!(|' => [ 'not', 'orX', ],
+    '!(&' => [ 'not', 'andX', ],
+    ')' => [ ')' ],
   ];
 
   /**
@@ -147,6 +154,25 @@ trait FindLikeTrait
    *   expression ```!(FIELD > SOMETHING)```
    * - in particulular ```'!FIELD' => SOMETHING``` will just negate
    *   the criterion
+   * - logical junctors & and | and parenthesis are also supported: criteria can be
+   *   prefixed by '(|' and '(&' to indicate the boolean junctor with the other
+   *   criteria. Grouping is required by using '(' and ')'. The final closing
+   *   paren may be omitted.
+   *   Example:
+   *   ```
+   *   [
+   *     ... STUFF
+   *     '!fieldId' => 13,       // search for field_id != 13
+   *     '(|optionValue' => ''   // and (option_value the empty string ...
+   *       'optionValue' => null //      or option_value is NULL ...
+   *       '(&blah' => 2',       //      or (blah is 2 ...
+   *        'blub' => 3,         //          and blub is 3 ...
+   *       ')(&foo' => 5         //         ) or (foo is 5 ...
+   *          'bar' => 6         //               and bar is 6
+   *        ')' => ANYTHING      //              ) close the AND-group
+   *                             // implicitly close the first or group
+   *   ],
+   *   ```
    * - supports Collections\Criteria, these are applied at the end.
    *
    * In order to filter by empty collections a left-join with the
@@ -206,12 +232,16 @@ trait FindLikeTrait
         unset($criteria[$key]);
       }
     }
-    // find modifiers, !=<>
-    $modifiers = [];
+    $modifiers = []; // negation
     $comparators = [];
+    $junctors = [];
+    $parens = [];
     foreach ($criteria as $key => $value) {
-      if (!preg_match('/^[!=<>]+/', $key, $matches)) {
+      if (!preg_match('/^[!=<>&|()]+/', $key, $matches)) {
         $modifiers[$key] = [];
+        $comparators[$key] = null;
+        $junctors[$key] = null;
+        $parens[$key] = null;
         continue;
       }
       $operators = $matches[0];
@@ -219,7 +249,25 @@ trait FindLikeTrait
       $key = substr($key, strlen($operators));
       $criteria[$key] = $value;
       $modifiers[$key] = [];
+      $junctors[$key] = [];
+      $parens[$key] = [];
       while (!empty($operators)) {
+        // reduce multiple ! signs
+        while (strpos($operators, '!!') !== false) {
+          $operators = str_replace('!!', '', $operators);
+        }
+        // (&, (|, !(|, !(&
+        foreach (self::$junctors as $abbr => $junctor) {
+          $pos = $strpos($operators, $abbr);
+          if ($pos === 0) {
+            $operators = substr($operators, strlen($abbr));
+            $junctors[$key] = array_merge($junctors[$key], $junctor);
+          }
+          if (empty($operators)) {
+            break 2;
+          }
+        }
+        // this is only !
         foreach (self::$modifiers as $abbr => $modifier) {
           $pos = strpos($operators, $abbr);
           if ($pos === 0) {
@@ -285,6 +333,7 @@ trait FindLikeTrait
       'indexBy' => $indexBy,
       'modifiers' => $modifiers,
       'comparators' => $comparators,
+      'junctors' => $junctors,
       'collectionCriteria' => $collectionCriteria,
     ];
 
@@ -335,8 +384,29 @@ trait FindLikeTrait
     }
 
     if (!empty($criteria)) {
-      $andX = $qb->expr()->andX();
+      $groupExpression[0] = [
+        'junctor' => 'andX',
+        'components' => [],
+      ];
+      $groupLevel = 0;
+
       foreach ($criteria as $key => &$value) {
+
+        foreach ($junctors[$key] as $junctor) {
+          if ($junctor !== ')') {
+            $expression = [
+              'junctor' => $junctor,
+              'components' => [],
+            ];
+            $groupExpression[++$groupLevel] = $expression;
+          } else {
+            $expression = array_pop($groupExpression); $groupLevel--;
+            $junctor = $expression['junctor'];
+            $components = $expression['components'];
+            $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
+            $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+          }
+        }
         $literal[$key] = false;
         $dotPos = strpos($key, '.');
         if ($dotPos !== false) {
@@ -376,9 +446,21 @@ trait FindLikeTrait
         foreach ($modifiers[$key] as $modifier) {
           $expr = $qb->expr()->$modifier($expr);
         }
-        $andX->add($expr);
+        $groupExpression[$groupLevel]['components'][] = $expr;
       }
-      $qb->where($andX);
+
+      // closing parenthesis maybe omitted at end, can be arbitrary many
+      while ($groupLevel >= 0) {
+        $expression = array_pop($groupExpression); $groupLevel--;
+        $junctor = $expression['junctor'];
+        $components = $expression['components'];
+        $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
+        if ($groupLevel > 0) {
+          $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+        } else {
+          $qb->where($compositeExpr);
+        }
+      }
       unset($value); // break reference
     }
 
