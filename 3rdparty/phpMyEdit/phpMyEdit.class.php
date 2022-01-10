@@ -6,7 +6,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -2178,6 +2178,47 @@ class phpMyEdit
 		echo '</table>',"\n";
 	} /* }}} */
 
+	/**
+	 * Generate HTML  attributes from the fdd values. For technical reasons readonly is handled in a special way.
+	 */
+	protected function htmlAttributes($k, &$readonly = null)
+	{
+		$htmlFragment = '';
+		if (isset($this->fdd[$k]['display']['attributes'])) {
+			$attributes = $this->fdd[$k]['display']['attributes'];
+			if (is_callable($attributes)) {
+				$attributes = call_user_func($attributes, 'add', null, [], $k, $this);
+			}
+			if (!is_array($attributes)) {
+				$attributes= [ $attributes ];
+			}
+			foreach ($attributes as $attributeKey => $attributeValue) {
+				switch ($attributeKey) {
+					case 'readonly':
+						if ($attributeValue === true) {
+							$readonly = $this->display['readonly'];
+						} else if ($attributeValue == false) {
+							$readonly = false;
+						}
+						break;
+					case 'disabled':
+						if ($attributeValue === true) {
+							$htmlFragment .= ' '.$this->display['disabled'];
+						}
+						break;
+					default:
+						if (!is_string($attributeValue)) {
+							$htmlFragment .= ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
+						} else {
+							$htmlFragment .= ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
+						}
+						break;
+				}
+			}
+		}
+		return $htmlFragment;
+	}
+
 	/*
 	 * Display functions
 	 */
@@ -2262,23 +2303,26 @@ class phpMyEdit
 				$selected	= $value;
 
 				$strip_tags = true;
+
+				$attributes = $this->htmlAttributes($k);
+
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 											   $css_class_name, $vals, $groups, $titles, $data,
 											   $selected,
 											   $multiple, $readonly, $mandatory,
-											   $strip_tags, $escape, NULL, $helptip);
+											   $strip_tags, $escape, $helptip, $attributes);
 				} else {
 					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $groups, $titles, $data,
-										   $selected, $multiple, $readonly, $mandatory,
-										   $strip_tags, $escape, NULL, $helptip);
+										   $css_class_name, $vals, $groups, $titles, $data, $selected,
+										   $multiple, $readonly, $mandatory, $strip_tags, $escape,
+										   $helptip, $attributes);
 				}
 			} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
-										 $k, $value, $escape, $helptip);
+										 $k, $value, $escape, $helptip, $attributes);
 			} else {
 				// Simple edit box required
 				$readonly = $this->disabledTag($k);
@@ -2305,38 +2349,7 @@ class phpMyEdit
 					echo " data-pme-values='".json_encode($valgrp)."'";
 				}
 
-				if (isset($this->fdd[$k]['display']['attributes'])) {
-					$attributes = $this->fdd[$k]['display']['attributes'];
-					if (is_callable($attributes)) {
-						$attributes = call_user_func($attributes, 'add', null, [], $k, $this);
-					}
-					if (!is_array($attributes)) {
-						$attributes= [ $attributes ];
-					}
-					foreach ($attributes as $attributeKey => $attributeValue) {
-						switch ($attributeKey) {
-						case 'readonly':
-							if ($attributeValue === true) {
-								$readonly = $this->display['readonly'];
-							} else if ($attributeValue == false) {
-								$readonly = false;
-							}
-							break;
-						case 'disabled':
-							if ($attributeValue === true) {
-								echo ' '.$this->display['disabled'];
-							}
-							break;
-						default:
-							if (!is_string($attributeValue)) {
-								echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
-							} else {
-								echo ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
-							}
-							break;
-						}
-					}
-				}
+				echo $this->htmlAttributes($k, $readonly);
 
 				echo ($readonly !== false ? ' '.$readonly : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
@@ -2522,6 +2535,9 @@ class phpMyEdit
 				$selected = @$this->fdd[$k]['default'];
 			}
 			$strip_tags = true;
+
+			$attributes = $this->htmlAttributes($k);
+
 			// "readonly" is not possible for selects, radio stuff and
 			// check-boxes. Display is "disbled", if read-only is
 			// requested we emit a hidden input (or hidden inputs, if
@@ -2544,17 +2560,17 @@ class phpMyEdit
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data,
 										   $selected, $multiple, $readonly, $mandatory,
-										   $strip_tags, $escape, NULL, $help);
+										   $strip_tags, $escape, $help, $attributes);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-									   $css_class_name, $vals, $groups, $titles, $data,
-									   $selected, $multiple, $readonly, $mandatory,
-									   $strip_tags, $escape, NULL, $help);
+									   $css_class_name, $vals, $groups, $titles, $data, $selected,
+									   $multiple, $readonly, $mandatory, $strip_tags, $escape,
+									   $help, $attributes);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 									 $css_class_name,
-									 $k, $row["qf$k"], $escape, $help);
+									 $k, $row["qf$k"], $escape, $help, $attributes);
 		} else {
 			$value    = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$readonly = $this->disabledTag($k);
@@ -2580,38 +2596,7 @@ class phpMyEdit
 				echo " data-pme-values='".json_encode($valgrp)."'";
 			}
 
-			if (isset($this->fdd[$k]['display']['attributes'])) {
-				$attributes = $this->fdd[$k]['display']['attributes'];
-				if (is_callable($attributes)) {
-					$attributes = call_user_func($attributes, $operation, $value, $row, $k, $this);
-				}
-				if (!is_array($attributes)) {
-					$attributes= [ $attributes ];
-				}
-				foreach ($attributes as $attributeKey => $attributeValue) {
-					switch ($attributeKey) {
-					case 'readonly':
-						if ($attributeValue === true) {
-							$readonly = $this->display['readonly'];
-						} else if ($attributeValue == false) {
-							$readonly = false;
-						}
-						break;
-					case 'disabled':
-						if ($attributeValue === true) {
-							echo ' '.$this->display['disabled'];
-						}
-						break;
-					default:
-						if (!is_string($attributeValue)) {
-							echo ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
-						} else {
-							echo ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
-						}
-						break;
-					}
-				}
-			}
+			echo $this->htmlAttributes($k, $readonly);
 
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
@@ -3243,7 +3228,8 @@ class phpMyEdit
 						$required = false,
 						$strip_tags = false,
 						$escape = true,
-						$js = NULL, $help = NULL)
+						$help = NULL,
+						$attributes = NULL)
 	{
 		$ret = '<select class="'.$this->enc($css).'" name="'.$this->enc($name);
 		if ($multiple) {
@@ -3267,7 +3253,7 @@ class phpMyEdit
 			$ret .= ' required';
 		}
 
-		$ret .= ' '.$js.">\n";
+		$ret .= ' '.$attributes.">\n";
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array((string)$selected);
 		} else {
@@ -3356,7 +3342,7 @@ class phpMyEdit
 	 * @param	required	bool for required attribute
 	 * @param	strip_tags	bool for stripping tags from values
 	 * @param	escape		bool for HTML escaping values
-	 * @param	js		string to be in the <select >, ususally onchange='..';
+	 * @param	attributes	string to be in the <select >
 	 */
 	function htmlRadioCheck($name, $css,
 							$kv_array,
@@ -3370,7 +3356,8 @@ class phpMyEdit
 							$required = false,
 							$strip_tags = false,
 							$escape = true,
-							$js = NULL, $help = NULL)
+							$help = NULL,
+							$attributes = NULL)
 	{
 		$ret = '';
 		if ($multiple) {
@@ -3433,6 +3420,9 @@ class phpMyEdit
 			if (!empty($required)) {
 				$ret .= ' required';
 			}
+			if (!empty($attributes)) {
+				$ret .= ' '.$attributes;
+			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = $this->enc($value);
 			$ret .= '><span class="pme-label">'.$value.'</span></label>'.$br."\n";
@@ -3440,7 +3430,7 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
-	function htmlTextarea($name, $css, $k, $value = null, $escape = true, $help = NULL) /* {{{ */
+	function htmlTextarea($name, $css, $k, $value = null, $escape = true, $help = NULL, $attributes = NULL) /* {{{ */
 	{
 		// mce mod start
 		if (isset($this->fdd[$k]['textarea']['css'])) {
@@ -3472,6 +3462,9 @@ class phpMyEdit
 		}
 		if ($help) {
 			$ret .= ' title="'.$this->enc($help).'"';
+		}
+		if (!empty($attributes)) {
+			$ret .= ' '.$attributes;
 		}
 		$ret .= '>';
 		if ($escape) {
@@ -3967,9 +3960,9 @@ class phpMyEdit
 			}
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
 									 $this->getCSSclass('goto', $position).$listAllClass,
-									 $kv_array, null, null, null,
-									 (string)$this->fm, false, $disabledgoto, false,
-									 false, true);
+									 $kv_array, null, null, null, (string)$this->fm,
+									 false, $disabledgoto, false, false, true,
+									 null /* help */, null /* attributes */);
 		}
 		if ($name == 'goto') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).$listAllClass.'">';
@@ -4007,9 +4000,9 @@ class phpMyEdit
 			$disabled = $this->total_recs <= 1;
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 									 $this->getCSSclass('pagerows', $position),
-									 $kv_array, null, null, null,
-									 $selected, false, $disabled, false,
-									 false, false);
+									 $kv_array, null, null, null, $selected,
+									 false, $disabled, false, false, false,
+									 null /* help */, null /* attributes */);
 		}
 		if ($name == 'rows_per_page') {
 			$disabled = $this->total_recs <= 1;
@@ -4161,8 +4154,9 @@ class phpMyEdit
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
-									   $vals, $groups, $titles, $data,
-									   $selected, $multiple || true, $readonly, false, $strip_tags, $escape);
+									   $vals, $groups, $titles, $data, $selected,
+									   $multiple || true, $readonly, false, $strip_tags, $escape,
+									   null /* help */, null /* attributes */);
 				echo '</div>';
 			} elseif (($this->fdd[$fd][self::FDD_SELECT] == 'N' ||
 					   $this->fdd[$fd][self::FDD_SELECT] == 'T')) {
@@ -4180,8 +4174,7 @@ class phpMyEdit
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
-										   $this->comp_ops, null, null, null,
-										   $mc);
+										   $this->comp_ops, null, null, null, $mc);
 				}
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
