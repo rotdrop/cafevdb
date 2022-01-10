@@ -173,15 +173,13 @@ class MountProvider implements IMountProvider
     $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
     $projects = $projectsRepo->findBy([
       'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
-      'participantFields.multiplicity' => [ FieldMultiplicity::SIMPLE, FieldMultiplicity::RECURRING ],
     ]);
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
 
     $fileCriteria = DBUtil::criteriaWhere([
-      'dataType' => FieldType::DB_FILE,
-      '|multiplicity' => FieldMultiplicity::RECURRING,
+      'dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE, ],
     ]);
 
     // disable soft-deleteable here in order to cope with the case that the
