@@ -259,10 +259,12 @@ class SepaBankAccounts extends PMETableViewBase
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
       $this->joinTableFieldName(self::PROJECTS_TABLE, 'id'),
       'sequence',
+      $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
     ];
 
     // Group by for to-many joins
     $opts['groupby_fields'] = $opts['sort_field'];
+    $opts['groupby_where'] = true;
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
