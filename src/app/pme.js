@@ -438,6 +438,10 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     return;
   }
 
+  container.on('pmetable:layoutchange', function(event) {
+    changeCallback({ reason: 'layoutChange' });
+  });
+
   installTabHandler(container, function() {
     changeCallback({ reason: 'tabChange' });
   });
@@ -1306,7 +1310,13 @@ const installInputChosen = function(containerSel, onlyClass) {
 
   // Provide a data-placeholder and also remove the match-all
   // filter, which is not needed when using chosen.
-  container.find('select.' + pmeInput).attr('data-placeholder', PHPMyEdit.inputSelectPlaceholder);
+  container.find('select.' + pmeInput).each(function() {
+    const $select = $(this);
+    if (!$select.attr('data-placeholder')) {
+      $select.attr('data-placeholder', PHPMyEdit.inputSelectPlaceholder);
+    }
+  });
+
   container.off('change', 'select.' + pmeInput);
   //    container.find('select.' + pmeInput + ' option[value="*"]').remove();
 
