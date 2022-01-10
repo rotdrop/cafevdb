@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Exceptions;
 
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
@@ -655,11 +656,16 @@ class SepaBankAccounts extends PMETableViewBase
         'select'   => 'D',
         'maxlen'   => 11,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'mandate-project', 'allow-empty', ], ],
+        'css'      => [ 'postfix' => [ 'mandate-project', 'allow-empty', 'chosen-width-auto', ], ],
         'values' => [
           'description' => [
             'columns' => [ 'year' => "CONCAT(\$table.year, IF(\$table.year IS NULL, '', ': '))", 'name' => 'name' ],
             //'divs' => [ 'year' => ': ' ]
+          ],
+        ],
+        'display' => [
+          'attributes' => [
+            'data-placeholder' => $this->l->t('Choose a Project to define a Mandate'),
           ],
         ],
       ]
@@ -691,6 +697,7 @@ class SepaBankAccounts extends PMETableViewBase
       [
         'tab'    => [ 'id' => 'mandate' ],
         'name'   => $this->l->t('Mandate Sequence'),
+        'css'      => [ 'postfix' => [ 'mandate-sequence', 'empty-mandate-project-hidden', ], ],
         'input'  => 'R',
         'select' => 'N',
         'maxlen' => 3,
@@ -709,6 +716,7 @@ class SepaBankAccounts extends PMETableViewBase
       [
         'tab'    => [ 'id' => 'mandate' ],
         'name'   => $this->l->t('Mandate Reference'),
+        'css'    => [ 'postfix' => [ 'mandate-reference', 'empty-mandate-project-hidden', ], ],
         'input'  => 'R',
         'select' => 'T',
         'maxlen' => 35,
@@ -748,6 +756,7 @@ class SepaBankAccounts extends PMETableViewBase
       [
         'tab' => [ 'id' => 'mandate' ],
         'name' => $this->l->t('Non-Recurring'),
+        'css'    => [ 'postfix' => [ 'mandate-non-recurring', 'empty-mandate-project-hidden', ], ],
         'input|A' => 'R',
         'select' => 'O',
         'maxlen' => '1',
@@ -764,12 +773,12 @@ class SepaBankAccounts extends PMETableViewBase
       [
         'tab' => [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Date Issued'),
+        'css'      => [ 'postfix' => [ 'mandate-date', 'sepadate', 'empty-mandate-project-hidden', ], ],
         'input' => 'M',
         'input|A' => 'RM',
         'select'   => 'T',
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'sepadate', ], ],
         'dateformat' => 'medium',
       ]);
 
@@ -782,11 +791,11 @@ class SepaBankAccounts extends PMETableViewBase
         'input|LFDV' => 'H',
         'maxlen'   => 10,
         'sort'     => true,
-        'css'      => [ 'postfix' => [ 'written-mandate', ], ],
+        'css'      => [ 'postfix' => [ 'written-mandate', 'empty-mandate-project-hidden', ], ],
         'php|ACP' => function($writtenMandateId, $op, $k, $row, $recordId, $pme) {
           $mandateReference = $row['qf'.($k - 3)];
           if (empty($mandateReference)) {
-            return $this->l->t('written mandate upload after saving');
+            return $this->l->t('please upload written mandate after saving');
           }
           $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($recordId['musician_id']);
           $projectId = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id', $pme->fdd)];
@@ -962,15 +971,60 @@ received so far'),
    */
   public function beforeInsertGenerateKeys(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
+    /** @var Entities\Musician $musician */
     $musician = $this->getReference(Entities\Musician::class, $newvals['musician_id']);
+    $sequence = $newvals['sequence']??null;
 
-    // if we have a sequence, fetch the bank account
+    $bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+
     if (!empty($newvals['sequence'])) {
-
+      // if we have a sequence, fetch the bank account
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $bankAccountsRepository->find([
+        'musician' => $musician,
+        'sequence' => $sequence,
+      ]);
+      if (empty($bankAccount)) {
+        throw new Exceptions\DatabaseEntityNotFoundException(
+          $this->l->t(
+            'Unable to find the bank-account with sequence "%1$s" for the musician "%2$s".',
+            [ $sequence, $musician->getPublicName(true) ]
+          )
+        );
+      }
+      $this->logInfo('FOUND EXISTING WITH IBAN ' . $bankAccount->getIban());
+    } else {
+      // Still make sure that an existing bank-account with the same IBAN is
+      // re-used. Unfortunately findBy() does not work with encrypted fields,
+      // so fetch all and filter in PHP.
+      $iban = $newvals['iban'];
+      $bankAccountCandidates = $bankAccountsRepository->findBy([
+        'musician' => $musician,
+        //'iban' => $iban,
+        'deleted' => null,
+      ]);
+      $bankAccountCandidates = array_values(array_filter(
+        $bankAccountCandidates,
+        function($account) use  ($iban) {
+          /** @var Entities\SepaBankAccount $account */
+          return $account->getIban() == $iban;
+        }
+      ));
+      /** @var Entities\SepaBankAccount $account */
+      foreach ($bankAccountCandidates as $account) {
+        $this->logInfo('IBAN ' . $account->getIban());
+      }
+      $this->logInfo('NUMBER OF EXISTING ' . count($bankAccountCandidates));
+      if (count($bankAccountCandidates) > 1) {
+        throw new Exceptions\DatabaseEntityNotUniqueException(
+          $this->l->t(
+            'More than one (%1$d) active bank account found for musician "%2$s" and IBAN "%3$s".',
+            [ count($bankAccountCandidates), $musician->getPublicName(true), $newvals['iban'] ]
+          )
+        );
+      }
+      $bankAccount = $bankAccountCandidates[0];
     }
-
-    $maxSequence = $this->getDatabaseRepository(Entities\SepaBankAccount::class)->sequenceMax($musician);
-    $newvals['sequence'] = $maxSequence + 1;
 
     $maxSequence = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->sequenceMax($musician);
     $debitMandateSequence = $maxSequence + 1;
@@ -994,6 +1048,34 @@ received so far'),
     }
 
     $changed = array_keys($newvals);
+
+    if (empty($bankAccount)) {
+      $maxSequence = $bankAccountsRepository->sequenceMax($musician);
+      $newvals['sequence'] = $maxSequence + 1;
+    } else {
+      // redirect to the updater
+
+      if (!$bankAccount->unused()) {
+        $newvals['bank_account_owner'] = $bankAccount->getBankAccountOwner();
+      }
+
+      $oldvals['musician_id'] = $newvals['musician_id'];
+      $oldvals['sequence'] = $newvals['sequence'];
+      $oldvals['deleted'] = $newvals['deleted'];
+      $oldvals['iban'] = $newvals['iban'];
+      $oldvals['iban'] = $newvals['iban'];
+      $oldvals['blz'] = $newvals['blz'];
+      $oldvals['bic'] = $newvals['bic'];
+
+      $changed = [];
+      foreach (array_merge(array_keys($oldvals), array_keys($newvals)) as $key) {
+        if ($newvals[$key] !== $oldvals[$key]) {
+          $changed[] = $key;
+        }
+      }
+
+      return $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldvals, $changed, $newvals);
+    }
 
     return true;
   }
