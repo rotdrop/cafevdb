@@ -962,6 +962,11 @@ class SepaDebitMandatesController extends Controller {
       $uploadFile->delete();
     }
 
+    if (!empty($writtenMandateFileUpload)) {
+      // make sure the user-folder exists
+      $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $debitMandate->getMusician(), dry: false);
+    }
+
     $responseData = [
       'message' => [
         $this->l->t('Successfully stored the bank-account with IBAN "%s" and owner "%s"',
@@ -1153,6 +1158,8 @@ class SepaDebitMandatesController extends Controller {
         $file['name'] = $writtenMandateFileName;
 
         $pathInfo = pathinfo($writtenMandateFileName);
+
+        $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $debitMandate->getMusician(), dry: false);
 
         $file['meta'] = [
           'musicianId' => $musicianId,

@@ -658,6 +658,10 @@ class ProjectParticipantsController extends Controller {
                                          [ $file['name'], $filePath ]);
           $file['name'] = $filePath;
 
+          // ensure the per-participant folder exists, even for data-base
+          // uploads as it contains a mount-point in this case.
+          $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
+
           $file['meta'] = [
             'musicianId' => $musicianId,
             'projectId' => $projectId,

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
@@ -570,6 +571,7 @@ class ProjectParticipantFieldsController extends Controller {
         // id for progress-bar
         $progressToken = $data['progressToken'];
 
+        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
         $receivable = null;
         if (!empty($data['key'])) {
           $receivable = $field->getDataOption($data['key']);
@@ -630,14 +632,23 @@ class ProjectParticipantFieldsController extends Controller {
         }
 
         $receivableAmounts = [];
-        if (!empty($participant) && !empty($receivable)) {
-          $participantFieldsData = $participant->getParticipantFieldsData();
-          $receivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
-          $receivableAmounts[$participant->getMusician()->getId()] = $receivableData->first()->getOptionValue();
-        } else if (!empty($receivable)) {
-          /** @var Entities\ProjectParticipantFieldDatum $datum */
-          foreach ($receivable->getFieldData() as $datum) {
-            $receivableAmounts[$datum->getMusician()->getId()] = $datum->getOptionValue();
+        if (!empty($receivable)) {
+          if (!empty($participant)) {
+            /** @var Entities\ProjectParticipantFieldDatum $receivableDatum */
+            $receivableDatum = $participant
+              ->getParticipantFieldsData()
+              ->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))
+              ->first();
+            $receivableAmounts[$participant->getMusician()->getId()] = $receivableDatum->getOptionValue();
+            if (!empty($receivableDatum->getSupportingDocument())) {
+              $projectService = $this->di(ProjectService::class);
+              $projectService->ensureParticipantFolder($participant->getProject(), $participant->getMusician());
+            }
+          } else {
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            foreach ($receivable->getFieldData() as $datum) {
+              $receivableAmounts[$datum->getMusician()->getId()] = $datum->getOptionValue();
+            }
           }
         }
 
