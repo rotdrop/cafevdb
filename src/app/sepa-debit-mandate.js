@@ -1132,14 +1132,13 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
       if (data.owner !== undefined) {
         mandateInputs.bankAccountOwner.val(data.owner);
       }
+      const hasReference = !!data.reference;
       if (data.reference !== undefined) {
-        const hasReference = data.reference !== '';
         mandateInputs.mandateDate.prop('required', hasReference);
         mandateInputs.mandateDate.readonly(!hasReference);
         mandateInputs.mandateReference.val(data.reference);
       }
       if (data.mandateNonRecurring !== undefined) {
-        const hasReference = data.reference !== '';
         mandateInputs.mandateNonRecurring.readonly(!hasReference);
         mandateInputs.mandateNonRecurring.prop('checked', data.mandateNonRecurring === true);
       }
@@ -1474,6 +1473,19 @@ const mandateReady = function(selector) {
   const $bankAccountOwnerInput = table.find('input.pme-input.bank-account-owner');
   const $bankAccountIbanInput = table.find('input.pme-input.bank-account-iban');
   const $bankAccountSequenceInput = table.find('input.pme-input.bank-account-sequence');
+  const $mandateProjectSelect = table.find('select.mandate-project');
+
+  $mandateProjectSelect
+    .closest('tr.pme-row')
+    .toggleClass('empty-mandate-project', $mandateProjectSelect.val() === '');
+  $mandateProjectSelect.on('change', function(event) {
+    const $this = $(this);
+    $this
+      .closest('tr.pme-row')
+      .toggleClass('empty-mandate-project', $this.val() === '');
+    // $this.closest('.ui-dialog').trigger('resize');
+    container.trigger('pmetable:layoutchange');
+  });
 
   // construct IBAN auto-completion from data-pme-values
   const ibanValues = $bankAccountIbanInput.data('pmeValues');
