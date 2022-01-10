@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -200,7 +200,7 @@ class MountProvider implements IMountProvider
 
       /** @var Entities\ProjectParticipant $participant */
       foreach ($project->getParticipants() as $participant) {
-        $folder = $projectService->ensureParticipantFolder($project, $participant->getMusician(), dry: true);
+        $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
         $storage = new ProjectParticipantsStorage([
           'participant' => $participant,
         ]);

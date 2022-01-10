@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -625,6 +625,31 @@ class ProjectService
       $this->userStorage->ensureFolder($participantFolder);
     }
     return $participantFolder;
+  }
+
+  /**
+   * More leight-weight construction of the participant folder, assuming
+   * everything else is just is ok.
+   */
+  public function getParticipantFolder(Entities\Project $project, Entities\Musician $musician)
+  {
+    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    $userIdSlug = $musician->getUserIdSlug();
+    if (empty($userIdSlug)) {
+      return null;
+    }
+
+    return UserStorage::PATH_SEP . implode(
+      UserStorage::PATH_SEP, [
+        $sharedFolder,
+        $projectsFolder,
+        $project['year'],
+        $project['name'],
+        $participantsFolder,
+        $userIdSlug,
+      ]);
   }
 
   /**
@@ -1495,6 +1520,9 @@ Whatever.',
       ];
       return false;
     }
+
+    // make sure the participant sub-folder exists also
+    $this->ensureParticipantFolder($project, $musician);
 
     $status[] = [
       'id' => $id,
