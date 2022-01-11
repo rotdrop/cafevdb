@@ -94,6 +94,11 @@ class MountProvider implements IMountProvider
 
     self::$recursionLevel++;
 
+    // disable soft-deleteable here in order to cope with the case that the
+    // musician underlying the project-participation is alreay soft-deleted.
+    // Do this early as proxies seemingly (correctly) remember the filter state.
+    $filterState = $this->disableFilter('soft-deleteable');
+
     $sharedFolder = $this->getSharedFolderPath();
 
     /** @var UserStorage $userStorage */
@@ -168,12 +173,13 @@ class MountProvider implements IMountProvider
     ) extends MountPoint { public function getMountType() { return 'database'; } };
 
     $fieldsRepo = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
-    $fields = $fieldsRepo->findBy([ 'dataType' => FieldType::DB_FILE ]);
+    $fields = $fieldsRepo->findBy([ 'dataType' => FieldType::DB_FILE, 'deleted' => null ]);
     // $this->logInfo(count($fields));
 
     $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
     $projects = $projectsRepo->findBy([
       'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+      'deleted' => null,
     ]);
 
     /** @var ProjectService $projectService */
@@ -181,11 +187,8 @@ class MountProvider implements IMountProvider
 
     $fileCriteria = DBUtil::criteriaWhere([
       'dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE, ],
+      'deleted' => null,
     ]);
-
-    // disable soft-deleteable here in order to cope with the case that the
-    // musician underlying the project-participation is alreay soft-deleted.
-    $filterState = $this->disableFilter('soft-deleteable');
 
     // this is going to execute too many queries, try to fetch at least the
     // storages in one run.

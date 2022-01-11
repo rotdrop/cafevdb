@@ -70,16 +70,22 @@ class ProjectParticipantsStorage extends Storage
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
+      // the mount provider currently disables soft-deleteable filter ...
+      $filterState = $this->disableFilter('soft-deleteable');
       try {
-        $this->participant = $this->getDatabaseRepository(Entities\ProjectParticipant::Class)
+        $projectId = $this->participant->getProject()->getId();
+        $musicianId = $this->participant->getMusician()->getId();
+        $this->clearDatabaseRepository();
+        $this->participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)
           ->find([
-            'project' => $this->participant->getProject()->getId(),
-            'musician' => $this->participant->getMusician()->getId(),
+            'project' => $projectId,
+            'musician' => $musicianId,
           ]);
         $this->project = $this->participant->getProject();
       } catch (\Throwable $t) {
         $this->logException($t);
       }
+      $filterState && $this->enableFilter('soft-deleteable');
     });
   }
 
@@ -105,12 +111,21 @@ class ProjectParticipantsStorage extends Storage
    */
   protected function findFiles(string $dirName)
   {
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter('soft-deleteable');
+
     $dirName = self::normalizeDirectoryName($dirName);
     $this->files[$dirName] = [];
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
+      if ($fieldDatum->isDeleted()) {
+        continue;
+      }
       /** @var Entities\ProjectParticipantField $field */
       $field = $fieldDatum->getField();
+      if ($field->isDeleted()) {
+        continue;
+      }
       $dataType = $field->getDataType();
       switch ($dataType) {
       case FieldType::DB_FILE:
@@ -186,6 +201,8 @@ class ProjectParticipantsStorage extends Storage
       }
     }
 
+    $filterState && $this->enableFilter('soft-deleteable');
+
     return $this->files[$dirName];
   }
 
@@ -200,13 +217,17 @@ class ProjectParticipantsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName()
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter('soft-deleteable');
+    $result = $this->appName()
       . '::'
       . 'database-storage/'
       . $this->project->getName()
       . 'participants/'
       . $this->participant->getMusician()->getUserIdSlug()
       . self::PATH_SEPARATOR;
+    $filterState && $this->enableFilter('soft-deleteable');
+    return $result;
   }
 }
 
