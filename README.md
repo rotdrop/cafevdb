@@ -1,7 +1,19 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
-# Branch feature/crypto-seal #
+# Branch feature/member-access #
+
+## Purpose ##
+
+Give orchestra-members access to selected parts of the data-base,
+i.e. let them view their own (and only their own) data. Ideally
+
+- enable update of personal address data
+- download access to bills, insurance records etc.
+
+## Comments ##
+
+# General README #
 
 ## Purpose ##
 
