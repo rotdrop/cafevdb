@@ -82,6 +82,7 @@ class MountProvider implements IMountProvider
     }
 
     if (!$this->entityManager->connected()) {
+      // probably no credentials ...
       $this->logDebug('EntityManager is not connected for user ' . $user->getUID());
       return [];
     }
