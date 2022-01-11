@@ -44,6 +44,13 @@ trait EntityManagerTrait {
   /** @var EntityRepository */
   protected $databaseRepository;
 
+  /** Clear the cache */
+  protected function clearDatabaseRepository()
+  {
+    $this->entityClassName = null;
+    $this->databaseRepository = null;
+  }
+
   /**
    * Set the given name as the current database target entity.
    *
@@ -68,7 +75,8 @@ trait EntityManagerTrait {
     if (!empty($entityClassName) && $entityClassName !== $this->entityClassName) {
       $this->setDatabaseRepository($entityClassName);
     }
-    if (empty($this->databaseRepository)) {
+    if (empty($this->databaseRepository)
+        || $this->databaseRepository->getEntityManager() != $this->entityManager->getWrappedObject()) {
       $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
     }
     return $this->databaseRepository;

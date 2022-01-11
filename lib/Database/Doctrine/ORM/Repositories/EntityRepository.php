@@ -23,9 +23,16 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+
 class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+
+  public function getEntityManager():EntityManagerInterface
+  {
+    return parent::getEntityManager();
+  }
 }
 
 // Local Variables: ***

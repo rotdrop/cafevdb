@@ -135,6 +135,15 @@ class ProjectService
       $this->logException($t);
     }
     $this->l = $this->l10n();
+
+    // refresh repository in case entity-manager is reopened
+    $this->eventDispatcher->addListener(
+      Events\EntityManagerBoundEvent::class,
+      function(Events\EntityManagerBoundEvent $event) {
+        $this->clearDatabaseRepository();
+        $this->repository = $this->getDatabaseRepository(Entities\Project::class);
+      }
+    );
   }
 
   /**

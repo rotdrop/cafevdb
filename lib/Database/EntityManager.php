@@ -31,6 +31,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\Event;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
@@ -222,7 +223,7 @@ class EntityManager extends EntityManagerDecorator
       $this->close();
     }
     $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
-    if (empty($wrapped) || $userId != $this->userId) {
+    if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
       $this->debug = 0 != ($this->encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
       $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
@@ -276,6 +277,11 @@ class EntityManager extends EntityManagerDecorator
   {
     parent::close();
     $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
+  }
+
+  public function getWrappedObject():EntityManagerInterface
+  {
+    return $this->entityManager;
   }
 
   /*
