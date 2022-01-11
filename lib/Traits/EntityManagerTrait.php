@@ -24,10 +24,11 @@
 namespace OCA\CAFEVDB\Traits;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 /**
@@ -41,7 +42,7 @@ trait EntityManagerTrait {
   /** @var string */
   protected $entityClassName;
 
-  /** @var EntityRepository */
+  /** @var BaseEntityRepository */
   protected $databaseRepository;
 
   /** Clear the cache */
@@ -67,16 +68,17 @@ trait EntityManagerTrait {
    *
    * @param string|null $entityClassName
    *
-   * @return EntityRepository The repository for the current target
+   * @return BaseEntityRepository The repository for the current target
    * database entity.
    */
-  protected function getDatabaseRepository($entityClassName = null):EntityRepository
+  protected function getDatabaseRepository($entityClassName = null):BaseEntityRepository
   {
     if (!empty($entityClassName) && $entityClassName !== $this->entityClassName) {
       $this->setDatabaseRepository($entityClassName);
     }
     if (empty($this->databaseRepository)
-        || $this->databaseRepository->getEntityManager() != $this->entityManager->getWrappedObject()) {
+        || ($this->databaseRepository instanceof EntityRepository
+            && $this->databaseRepository->getEntityManager() != $this->entityManager->getWrappedObject())) {
       $this->databaseRepository = $this->entityManager->getRepository($this->entityClassName);
     }
     return $this->databaseRepository;
