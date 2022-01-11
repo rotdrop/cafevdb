@@ -240,7 +240,7 @@ trait FindLikeTrait
       if (!preg_match('/^[!=<>&|()]+/', $key, $matches)) {
         $modifiers[$key] = [];
         $comparators[$key] = null;
-        $junctors[$key] = null;
+        $junctors[$key] = [];
         $parens[$key] = null;
         continue;
       }
@@ -392,7 +392,7 @@ trait FindLikeTrait
 
       foreach ($criteria as $key => &$value) {
 
-        foreach ($junctors[$key] as $junctor) {
+        foreach ($junctors[$key]??[] as $junctor) {
           if ($junctor !== ')') {
             $expression = [
               'junctor' => $junctor,
