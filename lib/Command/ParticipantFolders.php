@@ -36,11 +36,14 @@ use Symfony\Component\Console\Helper\ProgressBar;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 class ParticipantFolders extends Command
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
   /** @var IL10N */
   private $l;
 
@@ -86,16 +89,16 @@ class ParticipantFolders extends Command
     $user = $this->userManager->get($userId);
     $this->userSession->setUser($user);
 
+    // Login event-handler binds encryption-service and entity-manager
     if ($this->userSession->login($userId, $password)) {
       $output->writeln($this->l->t('Login succeeded.'));
     } else {
       $output->writeln($this->l->t('Login failed.'));
+      return 1;
     }
 
-    /** @var EncryptionService $encryptionService */
-    $encryptionService = \OC::$server->query(EncryptionService::class);
-    $encryptionService->bind($userId, $password);
-    $encryptionService->initAppEncryptionKey();
+    $this->entityManager = \OC::$server->query(EntityManager::class);
+    $this->disableFilter('soft-deleteable');
 
     /** @var ProjectService $projectService */
     $projectService = \OC::$server->query(ProjectService::class);
@@ -124,6 +127,9 @@ class ParticipantFolders extends Command
       $participants = $project->getParticipants();
       $progress1->start($participants->count());
       foreach ($participants as $participant) {
+        if ($participant->isDeleted() || $participant->getMusician()->isDeleted()) {
+          continue;
+        }
         $projectService->ensureParticipantFolder($project, $participant->getMusician(), dry: false);
         $progress1->advance();
         $progress2->advance();
