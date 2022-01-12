@@ -765,8 +765,9 @@ const myReady = function(selector, resizeCB) {
     .find('form.pme-form')
     .find('tr.participant-field.cloud-file, tr.participant-field.db-file, tr.participant-field.cloud-folder')
     .find('td.pme-value .file-upload-row')
-    .each(() => initFileUploadRow.call(this, projectId, musicianId, resizeCB));
-
+    .each(function() { // don't () => ..., no this binding!!!
+      initFileUploadRow.call(this, projectId, musicianId, resizeCB);
+    });
 };
 
 const myDocumentReady = function() {
