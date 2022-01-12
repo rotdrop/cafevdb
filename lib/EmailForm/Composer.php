@@ -1221,6 +1221,7 @@ Störung.';
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
+	$this->logInfo('Try replace ' . $nameSpace . '::' . $key);
         $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler) { return $handler($keyArg, $musician); };
       }
     }
@@ -1872,11 +1873,16 @@ Störung.';
           }
           break;
         case FieldType::DB_FILE:
-          // can be a single file or multiple files with FieldMultiplicity::PARALLEL
-          if ($fieldData->count() == 1) {
-            $fieldDatum = $fieldData->first();
+          // can be a single file or multiple files with FieldMultiplicity::PARALLEL or FieldMultiplicity::RECURRING
+          $items = [];
+          foreach ($fieldData as $fieldDatum) {
             /** @var Entities\File $file */
-            $file = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+            $items[] = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+          }
+ 	  $items = array_values(array_filter($items)); // fields maybe empty ...
+          if (count($items) == 1) {
+            /** @var Entities\File $file */
+            $file = array_shift($items);
             $personalAttachments[] = function() use($file) {
               return [
                 'data' => $file->getFileData()->getData(),
@@ -1886,11 +1892,6 @@ Störung.';
               ];
             };
           } else {
-            $items = [];
-            foreach ($fieldData as $fieldDatum) {
-              /** @var Entities\File $file */
-              $items[] = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
-            }
             $folderName = $fieldName . '-' . $camelCaseSlug;
             $personalAttachments[] = function() use ($folderName, $items) {
 
