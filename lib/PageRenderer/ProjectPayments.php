@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -454,7 +454,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ppf.data_type AS data_type,
   ppf.multiplicity AS multiplicity
   FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
+  LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+      AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
+      AND ppfotr.field = "label"
+      AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+  LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+      AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
+      AND ppftr.field = "name"
+      AND ppftr.foreign_key = ppf.id
   ON ppfo.field_id = ppf.id',
           'encode' => 'BIN2UUID(%s)',
           'description' => '$table.display_label',
