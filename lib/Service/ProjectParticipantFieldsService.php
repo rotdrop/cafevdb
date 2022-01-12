@@ -497,6 +497,9 @@ class ProjectParticipantFieldsService
       $folderPath = $this->getFieldFolderPath($datum);
       return $this->di(UserStorage::class)->getFolder($folderPath);
     case DataType::DB_FILE:
+      if (empty($value)) {
+        return null;
+      }
       return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
     case DataType::TEXT:
     case DataType::HTML:
