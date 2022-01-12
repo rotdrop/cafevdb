@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -400,6 +400,14 @@ Störung.';
    */
   private $globalFileAttachments = null;
 
+  /***
+   * @var array
+   *
+   * Potential personal file-attachments deduced from parsing the personal
+   * substitutions.
+   */
+  private $implicitFileAttachments = null;
+
   /*
    * constructor
    */
@@ -688,6 +696,7 @@ Störung.';
 
       // per-participant project-data
       $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
+
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -708,13 +717,15 @@ Störung.';
           'files' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
             return ($field->getDataType() == FieldType::CLOUD_FILE
-                    || $field->getDataType() == FieldType::DB_FILE);
+                    || $field->getDataType() == FieldType::DB_FILE
+                    || $field->getDataType() == FieldType::CLOUD_FOLDER);
           }),
           'other' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
             return ($field->getDataType() != FieldType::SERVICE_FEE
                     && $field->getDataType() != FieldType::CLOUD_FILE
-                    && $field->getDataType() != FieldType::DB_FILE);
+                    && $field->getDataType() != FieldType::DB_FILE
+                    && $field->getDataType() != FieldType::CLOUD_FOLDER);
           }),
         ];
 
@@ -758,12 +769,24 @@ Störung.';
             }
           }
           if (!$found) {
-            return $keyArg[0];
+            return $keyArg[0] . ':' . $keyArg[1];
           }
         }
 
         $html = '';
         foreach ($fieldsByType as $type => $fields) {
+
+          // add implicit file attachments
+          foreach ($fields as $field) {
+            switch ($field->getDataType()) {
+              case FieldType::SERVICE_FEE:
+              case FieldType::CLOUD_FILE:
+              case FieldType::DB_FILE:
+              case FieldType::CLOUD_FOLDER:
+                $this->implicitFileAttachments[] = 'participant-field' . ':' . $field->getId();
+                break;
+            }
+          }
 
           $numberOfFields = $fields->count();
 
@@ -811,7 +834,37 @@ Störung.';
             /** @var Entities\ProjectParticipantField $field */
             foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
               foreach ($fields as $field) {
-                $html .= '<li>'.$field->getName().'</li>';
+                /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+                $fieldOptions = $field->getSelectableOptions();
+                if ($multiplicity == 'single') {
+                  $fieldOption = $fieldOptions->first();
+                  $fieldValue = '';
+                  if (!empty($fieldOption)) {
+                    $fieldDatum = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
+                    $fieldValue = $this->participantFieldsService->printEffectiveFieldDatum($fieldDatum);
+                  }
+                  $html .= '<li>'
+                    . $field->getName()
+                    . ': '
+                    . $fieldValue
+                    . '</li>';
+                } else {
+                  $html .= '<li>' . $field->getName() . '<ul>';
+                  foreach ($fieldOptions as $fieldOption) {
+                    $fieldValue = '';
+                    if (!empty($fieldOption)) {
+                      $fieldDatum = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
+                      $fieldValue = $this->participantFieldsService->printEffectiveFieldDatum($fieldDatum);
+                    }
+                    if (empty($fieldValue)) {
+                      continue;
+                    }
+                    $html .= '<li>'
+                      . $fieldValue
+                      . '</li>';
+                  }
+                  $html .= '</ul></li>';
+                }
               }
             }
             $html .= '</ul>';
@@ -1221,7 +1274,6 @@ Störung.';
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
-	$this->logInfo('Try replace ' . $nameSpace . '::' . $key);
         $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler) { return $handler($keyArg, $musician); };
       }
     }
@@ -1419,9 +1471,21 @@ Störung.';
 
         /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
+
+        $this->implicitFileAttachments = [];
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
+        $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
+        if (!empty($this->implicitFileAttachments)) {
+          $this->personalFileAttachments = null; // have to void it ...
+          $this->cgiData['attachedFiles'] = array_values(
+            array_unique(
+              array_merge(
+                $this->cgiData['attachedFiles']??[],
+                $this->implicitFileAttachments??[]
+              )));
+        }
         $personalAttachments = $this->composePersonalAttachments($musician);
 
         // we should not send the message out if the generation of the
@@ -1551,7 +1615,6 @@ Störung.';
       }
     }
 
-    // walk through the list of configured attachments and attach all requested.
     foreach ($this->personalAttachments() as $attachment) {
       if ($attachment['status'] != 'selected' && !$attachment['sub_selection']) {
         continue;
@@ -2783,8 +2846,20 @@ Störung.';
         /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
 
+        $this->implicitFileAttachments = [];
         $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
+
+        $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
+        if (!empty($this->implicitFileAttachments)) {
+          $this->personalFileAttachments = null; // have to void it ...
+          $this->cgiData['attachedFiles'] = array_values(
+            array_unique(
+              array_merge(
+                $this->cgiData['attachedFiles']??[],
+                $this->implicitFileAttachments??[]
+              )));
+        }
 
         $personalAttachments = $this->composePersonalAttachments($musician);
 

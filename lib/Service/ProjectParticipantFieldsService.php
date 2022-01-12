@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -492,7 +492,8 @@ class ProjectParticipantFieldsService
     case DataType::CLOUD_FILE:
       $folderPath = $this->getFieldFolderPath($datum);
       $filePath = $folderPath . UserStorage::PATH_SEP . $value;
-      return $userStorage = $this->di(UserStorage::class)->getFile($filePath);
+      $file = $this->di(UserStorage::class)->getFile($filePath);
+      return $file;
     case DataType::CLOUD_FOLDER:
       $folderPath = $this->getFieldFolderPath($datum);
       return $this->di(UserStorage::class)->getFolder($folderPath);
@@ -505,6 +506,49 @@ class ProjectParticipantFieldsService
     case DataType::HTML:
     default:
       return $value;
+    }
+  }
+
+  public function printEffectiveFieldDatum(
+    ?Entities\ProjectParticipantFieldDatum $datum
+    , string $dateFormat = 'long'
+    , int $floatPrecision = 2
+  ) {
+    if (empty($datum)) {
+      return '';
+    }
+
+    $fieldValue = $this->getEffectiveFieldDatum($datum);
+    if (empty($fieldValue)) {
+      return '';
+    }
+
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $datum->getField();
+
+    switch ($field->getDataType()) {
+      case DataType::BOOLEAN:
+        return $fieldValue ? $this->l->t('true') : $this->l->t('false');
+      case DataType::DATE:
+        return $this->formatDate($fieldValue, $dateFormat);
+      case DataType::DATETIME:
+        return $this->formatDateTime($fieldValue, $dateFormat);
+      case DataType::FLOAT:
+        return $this->floatValue($fieldValue, $floatPrecision);
+      case DataType::SERVICE_FEE:
+        return $this->moneyValue($fieldValue);
+      case DataType::INTEGER:
+        return (string)(int)$fieldValue;
+      case DataType::CLOUD_FILE:
+        return $fieldValue->getName();
+      case DataType::CLOUD_FOLDER:
+        return $fieldValue->getName() . UserStorage::PATH_SEP;
+      case DataType::DB_FILE:
+        return $fieldValue->getFileName();
+      case DataType::TEXT:
+      case DataType::HTML: // should use tidy
+      default:
+        return $fieldValue;
     }
   }
 
