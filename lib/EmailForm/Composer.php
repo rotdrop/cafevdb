@@ -648,7 +648,7 @@ Störung.';
       if (empty($date)) {
         return '';
       }
-      $result = $this->formatDate($date, $keyArg[1]?:'full');
+      $result = $this->formatDate($date, $keyArg[1]??'full');
 
       return $result;
     };
