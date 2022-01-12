@@ -5597,7 +5597,14 @@ class phpMyEdit
 				}
 				$ret = include($t);
 			} else {
-				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file.');
+				$class = is_object($t[0]??null) ? get_class($t[0]) : null;
+				$method = is_string($t[1]??null) ? $t[1] : null;
+				if (!empty($class) && !empty($method)) {
+					$callable = $class . '::' . $method . '()';
+				} else {
+					$callable = 'unknown';
+				}
+				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
 			}
 		}
 
