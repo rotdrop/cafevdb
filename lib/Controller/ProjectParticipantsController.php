@@ -350,6 +350,7 @@ class ProjectParticipantsController extends Controller {
         break;
 
       case FieldDataType::DB_FILE:
+        /** @var Entities\EncryptedFile $dbFile */
         $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
                        ->find($fieldDatum->getOptionValue());
         if (empty($dbFile)) {
@@ -388,6 +389,7 @@ class ProjectParticipantsController extends Controller {
           $userStorage->delete($filePath);
           break;
         case FieldDataType::DB_FILE:
+          $filePath = $dbFile->getFileName();
           $this->remove($dbFile);
           break;
         }
