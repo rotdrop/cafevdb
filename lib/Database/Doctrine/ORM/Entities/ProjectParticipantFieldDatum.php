@@ -382,9 +382,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       return $value;
     case Multiplicity::SIMPLE():
     case Multiplicity::RECURRING():
+      if (empty($this->optionValue)) {
+        return 0.0;
+      }
       $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
       if ($value === false) {
-        throw new \RuntimeException('Stored value cannot be converted to float.');
+        throw new \RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
       }
       return $value;
     default:
