@@ -132,7 +132,7 @@ class DatabaseStorageUtil
     $zipStreamOptions = new ArchiveOptions;
     $zipStreamOptions->setOutputStream($dataStream);
 
-    $zipStream = new ZipStream($archiveName, $zipStreamOptions);
+    $zipStream = new ZipStream($folderName, $zipStreamOptions);
 
     foreach ($items as $item) {
       if (empty($item)) {
