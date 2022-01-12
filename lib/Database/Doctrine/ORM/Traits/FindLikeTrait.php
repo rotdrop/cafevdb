@@ -258,7 +258,7 @@ trait FindLikeTrait
         }
         // (&, (|, !(|, !(&
         foreach (self::$junctors as $abbr => $junctor) {
-          $pos = $strpos($operators, $abbr);
+          $pos = strpos($operators, $abbr);
           if ($pos === 0) {
             $operators = substr($operators, strlen($abbr));
             $junctors[$key] = array_merge($junctors[$key], $junctor);
