@@ -535,7 +535,7 @@ class SepaDebitMandatesController extends Controller {
       $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     }
 
-    $this->logInfo('CALLED WITH '.print_r([$projectId, $musicianId, $bankAccountSequence, $mandateSequence], true));
+    $this->logDebug('CALLED WITH '.print_r([$projectId, $musicianId, $bankAccountSequence, $mandateSequence], true));
 
     $mandateProjectId = null;
     if (!empty($mandateSequence)) {
@@ -934,6 +934,8 @@ class SepaDebitMandatesController extends Controller {
         ->setMimeType($mimeType)
         ->setSize($uploadFile->getSize())
         ->setFileName($writtenMandateFileName);
+
+      $this->persist($writtenMandate);
     }
 
     // set the new values
@@ -948,6 +950,7 @@ class SepaDebitMandatesController extends Controller {
       try {
         // try persist with increasing sequence until we succeed
         $this->debitMandatesRepository->persist($debitMandate);
+        $this->flush();
       } catch (UniqueConstraintViolationException $e) {
         if ($debitMandate->inUse()) {
           $this->logException($e);
@@ -1049,7 +1052,6 @@ class SepaDebitMandatesController extends Controller {
    */
   public function mandateHardcopy($operation, $musicianId, $mandateSequence)
   {
-    $this->logInfo('ACTION ' . $operation);
     switch ($operation) {
       case self::HARDCOPY_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
