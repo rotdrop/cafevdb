@@ -5556,8 +5556,21 @@ class phpMyEdit
 		for ($ret = true, $t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
 			if (is_callable($t)) {
 				$ret = call_user_func_array($t, array(&$this, $op, $step, &$row));
-			} else {
+			} else if (is_string($t)) {
+				if (!file_exists($t)) {
+					throw new \RuntimeException('Trigger file "' . $t . '" does not exist.');
+				}
 				$ret = include($t);
+			} else {
+				$class = is_object($t[0]??null) ? get_class($t[0]) : null;
+				$method = is_string($t[1]??null) ? $t[1] : null;
+				if (!empty($class) && !empty($method)) {
+					$callable = $class . '::' . $method . '()';
+				} else {
+					$callable = 'unknown';
+				}
+				$this->logError('TRIGGER ' . \OCA\CAFEVDB\Common\Functions\dump($t));
+				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
 			}
 		}
 
