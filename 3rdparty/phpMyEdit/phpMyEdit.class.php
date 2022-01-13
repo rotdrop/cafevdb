@@ -1017,6 +1017,11 @@ class phpMyEdit
 				$subs['record_id['.$recKey.']'] = $value;
 			}
 		}
+		if (!empty($this->groupby_rec)) {
+			foreach ($this->groupby_rec as $recKey => $recValue) {
+				$subs['groupby_id['.$recKey.']'] = $recValue;
+			}
+		}
 
 		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
 		$qparts[self::QPARTS_GROUPBY] = $queryField;
@@ -1671,6 +1676,11 @@ class phpMyEdit
 		if (!empty($this->rec)) {
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
+			}
+		}
+		if (!empty($this->groupby_rec)) {
+			foreach ($this->groupby_rec as $recKey => $recValue) {
+				$subs['groupby_id['.$recKey.']'] = $recValue;
 			}
 		}
 
