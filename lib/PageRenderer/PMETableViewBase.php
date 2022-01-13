@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -593,6 +593,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'css'   => ['postfix' => [ 'money', ], ],
         //'align' => 'right',
         'select' => 'N',
+        'display|ACP' => [
+          'attributes' => [
+            'step' => '0.01',
+          ],
+          'postfix' => '&nbsp;' . $this->currencySymbol(),
+        ],
         'maxlen' => '8', // NB: +NNNN.NN = 8
         'escape' => false,
         'sort' => true,
@@ -1355,6 +1361,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->debug('MISSING '.print_r($missingKeys, true));
+
+    // try to fill missing keys of the master table by set keys of join columns
     foreach ($this->joinStructure as $joinInfo) {
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         continue;
@@ -1381,7 +1389,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
-    $this->debug('CHANGESETS: '.print_r($changeSets, true));
+    $this->debug('CHANGESETS: ' . print_r($changeSets, true));
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
@@ -1402,7 +1410,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $joinInfo['identifier'][$key] = $key;
         }
       }
-      $this->debug('CHANGESET '.$table.' '.print_r($changeSet, true));
+      $this->debug('CHANGESET ' . $table . ' ' . print_r($changeSet, true));
       $entityClass = $joinInfo['entity'];
       $repository = $this->getDatabaseRepository($entityClass);
       $meta = $this->classMetadata($entityClass);
@@ -1529,7 +1537,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
           }
 
-          // remove the her handled key-column from the changeset
+          // remove the here handled key-column from the changeset
           unset($changeSet[$selfKey]);
           Util::unsetValue($changed, $selfField);
         }
@@ -1592,7 +1600,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
-          $this->debug('TRY MOD ' . $new . ' ' . print_r($addIdentifier[$new], true));
+          $this->debug('TRY ADD ' . $new . ' ' . print_r($addIdentifier[$new], true));
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
@@ -1648,6 +1656,26 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach (array_keys($this->pme->key) as $key) {
             $newvals[$key] = $identifier[$key];
           }
+
+          // fill in missing join keys if required
+          foreach ($changeSets as $table => &$childChangeSet) {
+            $childJoinInfo = $this->joinStructure[$table];
+            if ($childJoinInfo['flags'] & self::JOIN_MASTER) {
+              continue;
+            }
+            $this->logInfo('MANIP CHANGESET ' . $table . ' ' . print_r($childChangeSet, true));
+            foreach (array_keys($this->pme->key) as $key) {
+              foreach (['identifier', 'filter'] as $columnRestriction) {
+                foreach ($childJoinInfo[$columnRestriction] as $column => $target) {
+                  if ($target === $key) {
+                    // $newvals[$this->joinTableFieldName($table, $column)] = $newvals[$key];
+                    $childChangeSet[$column] = $key;
+                  }
+                }
+              }
+            }
+          }
+          unset($childChangeSet); // beak reference
         }
       }
     }
