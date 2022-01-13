@@ -39,6 +39,9 @@ class CompositePayment implements \ArrayAccess
    * The total amount for the bank transaction. This must equal the
    * sum of the self:$projectPayments collection.
    *
+   * @todo If this is always the sum and thus can be computed, why then this
+   * field?
+   *
    * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
   private $amount = '0.00';
