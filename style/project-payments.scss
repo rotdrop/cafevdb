@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,34 +22,41 @@
 
 .pme-form.pme-list.project-payments {
 
-  tr.pme-row.composite-payment:not(.following-hidden,.project-payment) td {
-    font-weight:bold;
-  }
+  tr.pme-row {
 
-  tr.pme-row.composite-payment.odd.following-hidden:not(:hover) td {
-    background:#B7CEEC;
-  }
+    &.composite-payment:not(.following-hidden,.project-payment) td {
+      font-weight:bold;
+    }
 
-  tr.pme-row.composite-payment.even.following-hidden:not(:hover) td {
-    background:#C6DEFF;
-  }
+    &.composite-payment {
+      &.following-hidden {
+        &.odd:not(:hover) td {
+          background:#B7CEEC;
+        }
+        &.even:not(:hover) td {
+          background:#C6DEFF;
+        }
+        &.first ~ tr.pme-row.composite-payment.following {
+          display:none;
+        }
+      }
+    }
 
-  tr.pme-row.composite-payment.first.following-hidden ~ tr.pme-row.composite-payment.following {
-    display:none;
+    &.project-payment {
+      &.odd:not(:hover) td {
+        background:#bfdeb9;
+      }
+      &.even:not(:hover) td {
+        background:#f6ffda;
+      }
+      &:hover td {
+        background:#96b183;
+      }
+      td.instrumentation-id {
+        padding-left:1em;
+      }
+    }
   }
-
-  tr.pme-row.project-payment.odd:not(:hover) td {
-    background:#bfdeb9;
-  }
-
-  tr.pme-row.project-payment.even:not(:hover) td {
-    background:#f6ffda;
-  }
-
-  tr.pme-row.project-payment:hover td {
-    background:#96b183;
-  }
-
 }
 
 /* GnuCash dark green #bfdeb9 */
