@@ -277,23 +277,17 @@ const tableDialogReplace = function(container, content, options, callback, trigg
 };
 
 const pmePost = function(post, callbacks) {
-  const dfltCallbacks = {
-    fail(xhr, status, errorThrown) {},
-    done(htmlContent, historySize, historyPosition) {},
-  };
-  callbacks = $.extend(dfltCallbacks, callbacks);
-
-  $.post(CAFEVDB.generateUrl('page/pme/load'), post)
-    .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown);
-      callbacks.fail(xhr, status, errorThrown);
-    })
-  // HTTP response
-    .done(function(htmlContent, textStatus, request) {
-      const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
-      const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
-      callbacks.done(htmlContent, historySize, historyPosition);
-    });
+  return $.post(CAFEVDB.generateUrl('page/pme/load'), post)
+    .then(
+      function(htmlContent, textStatus, request) {
+        const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
+        const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
+        return $.Deferred().resolve(htmlContent, historySize, historyPosition).promise();
+      },
+      function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown);
+        return $.Deferred().reject(xhr, status, errorThrown).promise();
+      });
 };
 
 const blockTableDialog = function(dialogHolder) {
@@ -368,18 +362,17 @@ const tableDialogReload = function(options, callback, triggerData) {
     // add name and value of the "submit" button.
     post += '&' + $.param({ [reloadName]: reloadValue });
 
-    pmePost(post, {
-      fail(xhr, status, errorThrown) {
+    pmePost(post)
+      .fail(function(xhr, status, errorThrown) {
         Page.busyIcon(false);
         unblockTableDialog(container);
         tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
-      },
-      done(htmlContent, historySize, historyPosition) {
+      })
+      .done(function(htmlContent, historySize, historyPosition) {
         tableDialogReplace(container, htmlContent, options, callback, triggerData);
         container.data(pmeToken('reloading'), false);
-      },
-    });
+      });
   });
 };
 
@@ -583,14 +576,14 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         blockTableDialog(container);
 
         // @todo Error handling is flaky
-        pmePost(post, {
-          fail(xhr, status, errorThrown) {
+        pmePost(post)
+          .fail(function(xhr, status, errorThrown) {
             unblockTableDialog(container);
             tableDialogLoadIndicator(container, false);
             Page.busyIcon(false);
             container.data(pmeToken('saving'), false);
-          },
-          done(htmlContent, historySize, historyPosition) {
+          })
+          .done(function(htmlContent, historySize, historyPosition) {
             const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
             if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
               // Some error occured. Stay in the given mode.
@@ -624,8 +617,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
               }
             }
             container.data(pmeToken('saving'), false);
-          },
-        });
+          });
       });
       return false;
     });
@@ -750,12 +742,12 @@ const pmeTableDialogOpen = function(tableOptions, post) {
     post += '&' + $.param({ [tableOptions.initialName]: tableOptions.initialValue });
   }
 
-  pmePost(post, {
-    fail(xhr, status, errorThrown) {
+  pmePost(post)
+    .fail(function(xhr, status, errorThrown) {
       Page.busyIcon(false);
       pmeOpenDialogs[containerCSSId] = false;
-    },
-    done(htmlContent, historySize, historyPosition) {
+    })
+    .done(function(htmlContent, historySize, historyPosition) {
       const containerSel = '#' + containerCSSId;
       const dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
       dialogHolder.html(htmlContent);
@@ -926,8 +918,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           return false;
         },
       });
-    },
-  });
+    });
   return true;
 };
 
@@ -996,12 +987,12 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
     post += '&' + $.param(element);
   }
 
-  pmePost(post, {
-    fail(xhr, status, errorThrown) {
+  pmePost(post)
+    .fail(function(xhr, status, errorThrown) {
       Page.busyIcon(false);
       modalizer(false);
-    },
-    done(htmlContent, historySize, historyPosition) {
+    })
+    .done(function(htmlContent, historySize, historyPosition) {
 
       if (historySize > 0) {
         Page.updateHistoryControls(historyPosition, historySize);
@@ -1038,8 +1029,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
         container.trigger('pmetable:layoutchange');
       });
-    },
-  });
+    });
   return false;
 };
 
