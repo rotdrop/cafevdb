@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1647,7 +1647,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
       });
 
     // Trigger view or change "operation" when clicking on a data-row.
-    const rowSelector = formSel + ' td.' + pmeToken('cell') + ':not(.control)';
+    const rowSelector = formSel + ' tr:not(.disable-row-click)' + ' td.' + pmeToken('cell') + ':not(.control)';
     container
       .off('click', rowSelector)
       .on('click', rowSelector, function(event) {
