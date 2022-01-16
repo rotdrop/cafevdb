@@ -5395,12 +5395,23 @@ class phpMyEdit
 		// Another additional query (must go after real query). This
 		// also really determines the changed records, in case only
 		// some of the query-groups have failed.
+
+		// Update changed keys. How could this happen?
 		foreach (array_keys($this->key) as $key) {
 			if (in_array($key, $changed)) {
 				$this->rec[$key] = $newvals[$key]; // key has changed
 				//error_log('changed '.print_r($changed, true));
 			}
 		}
+
+		// Update group-by fields. This can happen
+		foreach ($this->groupby_rec as $key => &$groupByValue) {
+			if (!empty($newvals[$key])) {
+				$groupByValue = $newvals[$key];
+			}
+		}
+		unset($groupByValue);
+
 		$query_newrec .= ' WHERE '.$this->key_record_where();
 		$res	 = $this->myquery($query_newrec, __LINE__);
 		if ($res === false) {

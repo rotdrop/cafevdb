@@ -34,6 +34,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 
+use OCA\CAFEVDB\Exceptions;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
@@ -1095,7 +1097,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
           }
 
-          // remove the her handled key-column from the changeset
+          // remove the here handled key-column from the changeset
           unset($changeSet[$selfKey]);
           Util::unsetValue($changed, $selfField);
         }
@@ -1224,6 +1226,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ENTITIY ID '.print_r($entityId, true));
               $entity = $entityClass::create();
               foreach ($entityId as $key => $value) {
+                if ($value <= 0) {
+                  // treat this as autoincrement or otherwise auto-generated ids
+                  continue;
+                }
                 $entity[$key] = $value;
               }
 
@@ -1237,6 +1243,41 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
               // persist
               $this->persist($entity);
+
+              // flush in order to trigger auto-increment
+              $this->flush();
+
+              // distribute potential new key-values to the $newvals array
+
+              $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
+              foreach ($identifierColumns as $key) {
+                // Always set the field with explicitly matching name
+                $selfField = $this->joinTableFieldName($joinInfo, $key);
+                if (isset($newvals[$selfField])) {
+                  $newvals[$selfField] = $identifierColumnValues[$key];
+                }
+                // set further values for more complicated joins
+                $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
+                if ($pivotColumn === false) {
+                  // assume that the 'column' component contains the keys.
+                  $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                  $masterField = $this->joinTableMasterFieldName($joinInfo);
+                  $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
+                } else if (!is_array($pivotColumn)) {
+                  $newvals[$pivotColumn] = $identifierColumnValues[$key];
+                } else if (isset($pivotColumn['value'])){
+                  if ($pivotColumn['value'] != $identifierColumnValues[$key]) {
+                    throw new Exceptions\DatabaseInconsistentValueException($this->l->t(
+                      'Adding a new entity "%1$s" resulted in an inconsistent value for the column "%2$s", prescribed value was "%3$s", generated value is "%4$s".',
+                      [ $entityClass, $key, $pivotColumn['value'], $identifierColumnValues[$key] ]
+                    ));
+                  }
+                } else if (isset($pivotColumn['self'])) {
+                  // always set
+                } else {
+                  throw new \RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
+                }
+              }
             }
           }
           if (isset($remIdentifier[$new]) && !empty($changeSet)) {
@@ -1273,7 +1314,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         foreach ($changeSet as $column => $field) {
           Util::unsetValue($changed, $field);
         }
-      } else { // !multiple, simply update
+      } else {
+        // !$multiple, simply update. The "master-"table can only
+        // "land" here
+
         // Note: this implies an additional fetch from the database,
         // however, in the long run the goal would be to switch to
         // Doctrine/ORM for everything. So we live with it for the
@@ -1621,6 +1665,40 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
             // persist
             $this->persist($entity);
+
+            // flush in order to trigger auto-increment
+            $this->flush();
+
+            // distribute potential new key-values to the $newvals array
+            $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
+            foreach ($identifierColumns as $key) {
+              // Always set the field with explicitly matching name
+              $selfField = $this->joinTableFieldName($joinInfo, $key);
+              if (isset($newvals[$selfField])) {
+                $newvals[$selfField] = $identifierColumnValues[$key];
+              }
+              // set further values for more complicated joins
+              $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
+              if ($pivotColumn === false) {
+                // assume that the 'column' component contains the keys.
+                $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                $masterField = $this->joinTableMasterFieldName($joinInfo);
+                $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
+              } else if (!is_array($pivotColumn)) {
+                $newvals[$pivotColumn] = $identifierColumnValues[$key];
+              } else if (isset($pivotColumn['value'])){
+                if ($pivotColumn['value'] != $identifierColumnValues[$key]) {
+                  throw new Exceptions\DatabaseInconsistentValueException($this->l->t(
+                    'Adding a new entity "%1$s" resulted in an inconsistent value for the column "%2$s", prescribed value was "%3$s", generated value is "%4$s".',
+                    [ $entityClass, $key, $pivotColumn['value'], $identifierColumnValues[$key] ]
+                  ));
+                }
+              } else if (isset($pivotColumn['self'])) {
+                // always set
+              } else {
+                throw new \RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
+              }
+            }
           }
         }
         foreach ($changeSet as $column => $field) {
