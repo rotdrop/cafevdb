@@ -112,6 +112,15 @@ class CompositePayment implements \ArrayAccess
    */
   private $musician;
 
+  /**
+   * @var EncryptedFile
+   *
+   * Optional. ATM only used for particular auto-generated monetary fields.
+   *
+   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
+   */
+  private $supportingDocument;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
@@ -379,5 +388,35 @@ class CompositePayment implements \ArrayAccess
   public function getNotificationMessageId()
   {
     return $this->notificationMessageId;
+  }
+
+  /**
+   * Set supportingDocument.
+   *
+   * @param null|EncryptedFile $supportingDocument
+   *
+   * @return CompositePayment
+   */
+  public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
+  {
+    $this->supportingDocument = $supportingDocument;
+
+    return $this;
+  }
+
+  /**
+   * Get supportingDocument.
+   *
+   * @return null|EncryptedFile
+   */
+  public function getSupportingDocument():?EncryptedFile
+  {
+    return $this->supportingDocument;
+  }
+
+  /** \JsonSerializable interface */
+  public function jsonSerialize():array
+  {
+    return $this->toArray();
   }
 }
