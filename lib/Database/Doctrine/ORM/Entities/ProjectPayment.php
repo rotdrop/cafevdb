@@ -12,7 +12,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ProjectPayments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
  */
-class ProjectPayment implements \ArrayAccess
+class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -62,6 +62,9 @@ class ProjectPayment implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(nullable=false)
+   * )
    */
   private $compositePayment;
 
@@ -98,11 +101,26 @@ class ProjectPayment implements \ArrayAccess
   }
 
   /**
+   * Set id.
+   *
+   * @param null|int $id
+   *
+   * @return ProjectPayment
+   */
+  public function setId(?int $id):ProjectPayment
+  {
+    if (empty($id)) {
+      $this->id = null; // flag auto-increment on insert
+    }
+    return $this;
+  }
+
+  /**
    * Get id.
    *
    * @return int
    */
-  public function getId()
+  public function getId():?int
   {
     return $this->id;
   }
@@ -321,5 +339,11 @@ class ProjectPayment implements \ArrayAccess
   public function getSupportingDocument():?EncryptedFile
   {
     return $this->supportingDocument;
+  }
+
+  /** \JsonSerializable interface */
+  public function jsonSerialize():array
+  {
+    return $this->toArray();
   }
 }
