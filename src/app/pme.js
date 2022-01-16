@@ -153,7 +153,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  */
 const pmeSubmitOuterForm = function(outerSelector, options) {
   outerSelector = pmeSelector(outerSelector);
-  options = $.extend({}, { keepLocked: false, keepBusy: false }, options);
+  options = $.extend({}, { keepLocked: false, keepBusy: false, discard: false }, options);
 
   // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
@@ -161,14 +161,19 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
   const $outerForm = $(outerSelector + ' ' + pmeFormSelector());
   $outerForm.data('submitOptions', options);
 
-  const submitNames = [
+  const submitNamesApply = [
     'morechange',
     'applyadd',
     'applycopy',
+  ];
+  const submitNamesReload = [
     'reloadchange',
     'reloadview',
     'reloadlist',
   ];
+  const submitNames = options.discard
+    ? submitNamesReload
+    : submitNamesApply.concat(submitNamesReload);
 
   const button = $outerForm.find(pmeSysNameSelectors('input', submitNames)).first();
   if (button.length > 0) {
@@ -210,7 +215,7 @@ const reloadDeferred = function(container) {
 const pmeCancelBeforeSubmit = function(container) {
   const cancellable = container.data(cancellableKey) || [];
   for (const job of cancellable) {
-    console.info('TRYE ABORT JOB', job);
+    console.info('TRY ABORT JOB', job);
     job.abort('cancelled');
   }
   container.data(cancellableKey, []);
@@ -630,7 +635,10 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
   if (options.modified && options.ambientContainerSelector) {
     // might be costly?
-    pmeSubmitOuterForm(options.ambientContainerSelector, { keepLocked: true });
+    pmeSubmitOuterForm(options.ambientContainerSelector, {
+      keepLocked: true,
+      discard: options.reloadMode === 'discard',
+    });
   }
 };
 
@@ -833,6 +841,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
                   dialogDiv.dialog('moveToTop');
                 },
               },
+              tableOptions,
             };
             parameters = $.extend({}, defaultParameters, parameters);
             if (parameters.reason === 'unknown') {
