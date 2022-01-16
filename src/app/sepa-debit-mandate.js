@@ -1759,7 +1759,9 @@ const mandatesDocumentReady = function() {
     'sepa-bank-accounts',
     {
       callback(selector, parameters, resizeCB) {
-        mandateReady(selector, resizeCB);
+        if (parameters.reason !== 'dialogClose') {
+          mandateReady(selector, resizeCB);
+        }
         resizeCB();
       },
       context: globalState.SepaDebitMandate,

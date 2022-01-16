@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -240,6 +240,11 @@ const documentReady = function() {
         return;
       }
 
+      if (parameters.reason === 'dialogClose') {
+        resizeCB();
+        return;
+      }
+
       const container = $(selector);
       pmeExportMenu(selector);
       SepaDebitMandate.popupInit(selector);
@@ -319,11 +324,15 @@ const documentReady = function() {
   PHPMyEdit.addTableLoadCallback('project-payments', {
     callback(selector, parameters, resizeCB) {
 
-      if (parameters.reason !== 'dialogOpen') {
+      switch (parameters.reason) {
+      case 'dialogOpen':
+      case 'dialogClose':
+        ProjectPayments.ready(selector, parameters, resizeCB);
+        break;
+      default:
         resizeCB();
+        break;
       }
-
-      ProjectPayments.ready(selector, resizeCB);
     },
     context: CAFEVDB,
     parameters: [],

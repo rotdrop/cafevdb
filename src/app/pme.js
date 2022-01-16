@@ -602,6 +602,14 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
               return;
             }
 
+            // Final invocation of callback in order to give it a
+            // chance to parse the HTML response if necessary.
+            changeCallback({
+              reason: 'dialogClose',
+              htmlResponse: htmlContent,
+              triggerData,
+            });
+
             if (options.initialViewOperation && deleteButton.length <= 0) {
               // return to initial view, but not after deletion
               unblockTableDialog(container);
@@ -849,6 +857,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
             }
             dialogHolder.css('height', 'auto');
             switch (parameters.reason) {
+            case 'dialogClose':
+              tableLoadCallback(template, containerSel, parameters, function(arg) {});
+              break;
             case 'dialogOpen':
               WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
                 transposeReady(containerSel);

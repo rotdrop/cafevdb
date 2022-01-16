@@ -780,6 +780,11 @@ const myDocumentReady = function() {
         return;
       }
 
+      if (parameters.reason === 'dialogClose') {
+        resizeCB();
+        return;
+      }
+
       const container = $(selector);
       pmeExportMenu(selector);
       SepaDebitMandate.popupInit(selector);

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -361,7 +361,9 @@ const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('insurance-rates', {
     callback(selector, parameters, resizeCB) {
-      pmeFormInit(selector);
+      if (parameters.reason !== 'dialogClose') {
+        pmeFormInit(selector);
+      }
       resizeCB();
     },
     context: globalState,
@@ -370,7 +372,9 @@ const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('insurance-brokers', {
     callback(selector, parameters, resizeCB) {
-      pmeFormInit(selector);
+      if (parameters.reason !== 'dialogClose') {
+        pmeFormInit(selector);
+      }
       resizeCB();
     },
     context: globalState,
@@ -379,17 +383,18 @@ const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback('instrument-insurance', {
     callback(selector, parameters, resizeCB) {
-      pmeExportMenu(selector);
+      if (parameters.reason !== 'dialogClose') {
+        pmeExportMenu(selector);
 
-      SepaDebitMandate.insuranceReady(selector);
+        SepaDebitMandate.insuranceReady(selector);
 
-      pmeFormInit(selector);
+        pmeFormInit(selector);
 
-      $(':button.musician-instrument-insurance').click(function(event) {
-        Page.loadPage($(this).attr('name'));
-        return false;
-      });
-
+        $(':button.musician-instrument-insurance').click(function(event) {
+          Page.loadPage($(this).attr('name'));
+          return false;
+        });
+      }
       resizeCB();
 
     },
