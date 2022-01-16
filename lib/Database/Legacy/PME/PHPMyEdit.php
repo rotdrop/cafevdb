@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -578,7 +578,7 @@ class PHPMyEdit extends \phpMyEdit
    * Strategy: if the date/time value in the data base does contain a time,
    * then assume UTC and just convert to a time-stamp.
    *
-   * If the value in the data-base does not contain as time then adjust to
+   * If the value in the data-base does not contain a time then adjust to
    * 00:00 local-time by shifting with the time-zone offset of the local user.
    */
   protected function makeTimeStampFromDatabase($databaseValue)
@@ -653,6 +653,22 @@ class PHPMyEdit extends \phpMyEdit
         }
     }
     return $value;
+  }
+
+  /**
+   * Generate a data-base value from a timestamp.
+   */
+  protected function timestampToDatabase($timeStamp, $k)
+  {
+    $dateFormat = $timeFormat = $this->fdd[$k]['datetimeformat'] ?? false;
+    $dateFormat = $this->fdd[$k]['dateformat'] ?? false;
+    $timeFormat = $this->fdd[$k]['timeformat'] ?? false;
+    if ($dateFormat !== false && $timeFormat === false) {
+      $format = 'Y-m-d';
+    } else {
+      $format = 'Y-m-d H:i:s';
+    }
+    return date($format, $timeStamp);
   }
 
   /** "register" the date-time-format extension */

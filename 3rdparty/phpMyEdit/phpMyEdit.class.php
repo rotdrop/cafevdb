@@ -2897,6 +2897,14 @@ class phpMyEdit
 	}
 
 	/**
+	 * Generate a data-base value from a timestamp.
+	 */
+	protected function timestampToDatabase($timeStamp, $k)
+	{
+		return date('Y-m-d H:i:s', $stamps);
+	}
+
+	/**
 	 * Create a time-string for user display from a data-base value
 	 */
 	function makeUserTimeString($k, $row)
@@ -5039,8 +5047,9 @@ class phpMyEdit
 					$fn = trim($fn);
 					if ($fn != '') {
 						// Convert back to a date/time object understood by mySQL
-						$stamps = $this->makeTimeStampFromUser($fn);
-						$fn = date('Y-m-d H:i:s', $stamps);
+						$timeStamp = $this->makeTimeStampFromUser($fn);
+						$fn = $this->timestampToDatabase($timeStamp, $k);
+						// $fn = date('Y-m-d H:i:s', $stamps);
 						// echo "<!-- ".$fn." -->\n";
 					}
 				}
@@ -5185,7 +5194,8 @@ class phpMyEdit
 					} else {
 						// Convert back to a date/time object understood by mySQL
 						$stamps[$fd] = $this->makeTimeStampFromUser($fn);
-						$fn = date('Y-m-d H:i:s', $stamps[$fd]);
+						$fn = $this->timestampToDatabase($stamps[$fd], $k);
+						// $fn = date('Y-m-d H:i:s', $stamps[$fd]);
 						// echo "<!-- ".$fn." -->\n";
 					}
 				}
@@ -5236,11 +5246,15 @@ class phpMyEdit
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
 			if (isset($stamps[$fd])) {
-				$oldstamp = $oldvals[$fd] != "" ? $this->makeTimeStampFromDatabase($oldvals[$fd]) : false;
-				if ($oldstamp != $stamps[$fd]) {
-					$changed[] = $fd;
-				} else {
-					$oldvals[$fd] = $value; // force equal, no reason to change.
+				// $value already contains the data-base formatted value, so
+				// assume no change if both formatted values coincide.
+				if ($value !== $oldvals[$fd]) {
+					$oldstamp = $oldvals[$fd] != "" ? $this->makeTimeStampFromDatabase($oldvals[$fd]) : false;
+					if ($oldstamp != $stamps[$fd]) {
+						$changed[] = $fd;
+					} else {
+						$oldvals[$fd] = $value; // force equal, no reason to change.
+					}
 				}
 			} else if (!empty($checks[$fd]) && empty($value)) {
 				if (intval($value) !== intval($oldvals[$fd])) {
