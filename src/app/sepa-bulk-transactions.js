@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,8 +37,10 @@ const ready = function(container, resizeCB) {
 
   container
     .on('click', 'table.pme-main tr.bulk-transaction.first td', function(event) {
+      const $row = $(this).closest('tr.bulk-transaction.first');
       event.stopImmediatePropagation();
-      $(this).closest('tr.bulk-transaction.first').toggleClass('following-hidden');
+      $row.toggleClass('following-hidden');
+      $row.find('input.expanded-marker').val($row.hasClass('following-hidden') ? 0 : 1);
       return false;
     });
 

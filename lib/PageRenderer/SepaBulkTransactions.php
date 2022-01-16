@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -44,10 +44,15 @@ class SepaBulkTransactions extends PMETableViewBase
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
   const DATA_TABLE = self::SEPA_BULK_TRANSACTION_DATA_TABLE;
 
+  const ROW_TAG_PREFIX = '0;';
+
   protected $cssClass = self::TEMPLATE;
 
   /** @var FinanceService */
   private $financeService;
+
+  /** @var array */
+  private $bulkTransactionExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -75,8 +80,7 @@ class SepaBulkTransactions extends PMETableViewBase
     ],
     self::COMPOSITE_PAYMENTS_TABLE => [
       'sql' => "SELECT
-  CONCAT_WS(';', __t1.sepa_transaction_id, GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id)) AS row_tag,
-  0 AS sort_key,
+  CONCAT('".self::ROW_TAG_PREFIX."', __t1.sepa_transaction_id) AS row_tag,
   __t1.sepa_transaction_id AS sepa_transaction_id,
   GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
   GROUP_CONCAT(DISTINCT __t1.musician_id ORDER BY __t1.id) AS musician_id,
@@ -89,7 +93,6 @@ GROUP BY __t1.sepa_transaction_id
 UNION
 SELECT
   __t2.id AS row_tag,
-  __t2.id AS sort_key,
   __t2.sepa_transaction_id AS sepa_transaction_id,
   __t2.id AS id,
   __t2.musician_id AS musician_id,
@@ -149,6 +152,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->financeService = $financeService;
+    $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
   }
 
   public function shortTitle()
@@ -192,6 +196,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      'bulkTransactionExpanded' => $this->bulkTransactionExpanded,
     ];
 
     // Name of field which is the unique key
@@ -202,7 +207,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       '-submission_dead_line',
       '-created',
       'id',
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'sort_key'),
+      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
     ];
     $opts['groupby_fields'] = [ 'id' ];
     $opts['groupby_where'] = true;
@@ -263,7 +268,9 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $lastBulkTransactionId = $bulkTransactionId;
         $oddCompositePayment = true;
         $cssClasses[] = 'first';
-        $cssClasses[] = 'following-hidden';
+        if (!$this->bulkTransactionExpanded[$bulkTransactionId]) {
+          $cssClasses[] = 'following-hidden';
+        }
         $cssClasses[] = $evenOdd[(int)$oddBulkTransaction];
         $oddBulkTransaction = !$oddBulkTransaction;
       } else {
@@ -309,16 +316,23 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'options'  => 'LFAVCPD',
       'maxlen'   => 11,
       'default'  => '0', // auto increment
-      'sort'     => true
+      'sort'     => true,
+      'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
+        $html = '';
+        if ($this->isBulkTransactionRow($k, $row, $pme)) {
+          $html = '<input type="hidden" class="expanded-marker" name="bulkTransactionExpanded['.$recordId['id'].']" value="'.(int)($this->bulkTransactionExpanded[$recordId['id']]??0).'"/>';
+          if ($this->expertMode) {
+            $html .= '<span class="cell-wrapper">' . $value . '</span>';
+          }
+        }
+        return $html;
+      },
     ];
 
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH' ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'sort_key', [ 'input' => 'SRH' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
@@ -505,31 +519,30 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'sql' => '$main_table.id',
       'sort'  => false,
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-          $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
-          if (strstr($rowTag, ';') === false) {
-            return '';
-          }
-          $post = json_encode([
-            'bulkTransactionId' => $recordId['id'],
-            'requesttoken' => \OCP\Util::callRegister(),
-            'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-            'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
-          ]);
-          $actions = [
-            'download' => [
-              'label' =>  $this->l->t('download'),
-              'post' => $post,
-              'title' => $this->toolTipsService['bulk-transaction-download'],
-            ],
-            'announce' => [
-              'label' => $this->l->t('announce'),
-              'post'  => $post,
-              'title' => $this->toolTipsService['bulk-transaction-announce'],
-            ],
-          ];
-          $html = '';
-          foreach($actions as $key => $action) {
-            $html .=<<<__EOT__
+        if (!$this->isBulkTransactionRow($k, $row, $pme)) {
+          return '';
+        }
+        $post = json_encode([
+          'bulkTransactionId' => $recordId['id'],
+          'requesttoken' => \OCP\Util::callRegister(),
+          'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+          'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+        ]);
+        $actions = [
+          'download' => [
+            'label' =>  $this->l->t('download'),
+            'post' => $post,
+            'title' => $this->toolTipsService['bulk-transaction-download'],
+          ],
+          'announce' => [
+            'label' => $this->l->t('announce'),
+            'post'  => $post,
+            'title' => $this->toolTipsService['bulk-transaction-announce'],
+          ],
+        ];
+        $html = '';
+        foreach($actions as $key => $action) {
+          $html .=<<<__EOT__
 <li class="nav tooltip-left inline-block tooltip-auto">
   <a class="nav {$key} tooltip-auto"
      href="#"
@@ -539,9 +552,9 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   </a>
 </li>
 __EOT__;
-          }
-          return $html;
-        },
+        }
+        return $html;
+      },
     ];
 
     //
@@ -573,6 +586,12 @@ __EOT__;
     }
   }
 
+  private function isBulkTransactionRow($k , $row, $pme)
+  {
+    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+    return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
+  }
+
   /**
    * Print only the values for the bulk-transaction row
    *
@@ -580,8 +599,7 @@ __EOT__;
    * the composite row, then the missing data should also be printed.
    */
   public function bulkTransactionRowOnly($value, $action, $k, $row, $recordId, $pme) {
-    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
-    if (strstr($rowTag, ';') !== false) {
+    if ($this->isBulkTransactionRow($k, $row, $pme)) {
       return $value;
     } else {
       return '';
