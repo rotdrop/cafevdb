@@ -336,7 +336,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
             // replace the value by a reference
             $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
           }
-          self::doSetFieldValue($this->metaData, $entity, $field, $reference);
+          $this->doSetFieldValue($this->metaData, $entity, $field, $reference);
           // assume this is the column value, not the entity of the foreign key
           $columnValues[$columnName] = $value;
         }
@@ -425,7 +425,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
     return $this->columnAssociations_;
   }
 
-  static private function doSetFieldValue($meta, $entity, $field, $value)
+  private function doSetFieldValue($meta, $entity, $field, $value)
   {
     // try first the setter/getter of the entity
     $method = 'set'.ucfirst($field);
@@ -439,13 +439,13 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
 
   public function setColumnValue($entity, string $column, $value)
   {
-    $this->logInfo('Set column value for ' . $column . ' ' . $value);
+    $this->logInfo('Set column value for ' . $column . ' to ' . $value);
 
     $meta = $this->metaData;
     $numSetters = 0;
     if (isset($meta->fieldNames[$column])) {
       // simple case, just set the entity property
-      self::doSetFieldValue($meta, $entity, $meta->fieldNames[$column], $value);
+      $this->doSetFieldValue($meta, $entity, $meta->fieldNames[$column], $value);
       ++$numSetters;
     }
     $columnAssociations = $this->columnAssociations();
@@ -457,7 +457,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
         // an empty join-column value must void the association as the
         // join-columns are the identifier of the referenced entity and hence
         // cannot be null unless the referenced entity is null
-        self::doSetFieldValue($meta, $entity, $field, null);
+        $this->doSetFieldValue($meta, $entity, $field, null);
         continue;
       }
       $associationMapping = $meta->associationMappings[$field];
@@ -485,7 +485,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
       }
       $referencedId = $targetMeta->extractKeyValues($referencedColumnId);
       $fieldValue = $this->entityManager->getReference($targetEntity, $referencedId);
-      self::doSetFieldValue($meta, $entity, $field, $fieldValue);
+      $this->doSetFieldValue($meta, $entity, $field, $fieldValue);
       ++$numSetters;
     }
     if ($numSetters == 0) {
