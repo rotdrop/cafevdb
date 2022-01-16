@@ -24,6 +24,7 @@ module.exports = {
           '^__webpack_[_a-z]+__$',
           '^oc_',
           '^print_r$',
+          '_key$',
           'disable_search',
           'inherit_select_classes',
           'allow_single_deselect',
