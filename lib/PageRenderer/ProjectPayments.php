@@ -47,8 +47,13 @@ class ProjectPayments extends PMETableViewBase
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
+  const ROW_TAG_PREFIX = '0;';
+
   /** @var FinanceService */
   private $financeService;
+
+  /** @var array */
+  private $compositePaymentExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -92,23 +97,44 @@ class ProjectPayments extends PMETableViewBase
     self::PROJECT_PAYMENTS_TABLE => [
       // not elegant, but should add an additional row in front of the
       // collection of project-payments.
+      //
+      // Note that the fancy "composite_key" have to be kept in sync with the
+      // composite_key fdd below
       'sql' => "SELECT
-  CONCAT_WS(';', __t1.composite_payment_id, GROUP_CONCAT(__t1.id ORDER BY __t1.id)) AS row_tag,
-  0 AS sort_key,
-  GROUP_CONCAT(CONCAT_WS('".self::COMP_KEY_SEP."', __t1.project_id, __t1.field_id, BIN2UUID(__t1.receivable_key)) ORDER BY __t1.id) AS receivable_key_string,
-  __t1.*
+  CONCAT('".self::ROW_TAG_PREFIX."', __t1.composite_payment_id) AS row_tag,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::COMP_KEY_SEP."', __t1.project_id, __t1.field_id, BIN2UUID(__t1.receivable_key)) ORDER BY __t1.id) AS receivable_composite_key,
+  GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.amount) ORDER BY __t1.id) AS amount,
+  SUM(__t1.amount) AS total_amount,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.subject) ORDER BY __t1.id) AS subject,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.receivable_key) ORDER BY __t1.id) AS receivable_key,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.supporting_document_id) ORDER BY __t1.id) AS supporting_document_id,
+  GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
+  __t1.musician_id,
+  __t1.composite_payment_id
 FROM ".self::PROJECT_PAYMENTS_TABLE." __t1
 GROUP BY __t1.composite_payment_id
 UNION
 SELECT
   __t2.id AS row_tag,
-  __t2.id AS sort_key,
-  CONCAT_WS('".self::COMP_KEY_SEP."', __t2.project_id, __t2.field_id, BIN2UUID(__t2.receivable_key)) AS receivable_key_string,
-  __t2.*
+  CONCAT_WS('".self::COMP_KEY_SEP."', __t2.project_id, __t2.field_id, BIN2UUID(__t2.receivable_key)) AS receivable_composite_key,
+  __t2.id,
+  __t2.amount,
+  __t2.amount AS total_amount,
+  __t2.subject,
+  __t2.project_id,
+  __t2.field_id,
+  __t2.receivable_key,
+  __t2.supporting_document_id,
+  __t2.project_id AS project_ids,
+  __t2.musician_id,
+  __t2.composite_payment_id
 FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
-        'id' => null, // [ 'self' => true ],
+        'id' => false,
       ],
       'filter' => [
         'composite_payment_id' => 'id',
@@ -171,6 +197,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->financeService = $financeService;
+    $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
   }
 
   public function shortTitle()
@@ -209,6 +236,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      'compositePaymentExpanded' => $this->compositePaymentExpanded,
     ];
 
     // Name of field which is the unique key
@@ -225,7 +253,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
       'musician_id',
       'id',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'sort_key'),
+      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
     ];
 
     $opts['groupby_fields'] = [ 'id' ];
@@ -252,7 +280,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $lastCompositeId = $compositePaymentId;
         $oddProjectPayment = true;
         $cssClasses[] = 'first';
-        $cssClasses[] = 'following-hidden';
+        if (!$this->compositePaymentExpanded[$compositePaymentId]) {
+          $cssClasses[] = 'following-hidden';
+        }
+        $cssClasses[] = 'disable-row-click';
         $cssClasses[] = $evenOdd[(int)$oddCompositePayment];
         $oddCompositePayment = !$oddCompositePayment;
       } else {
@@ -272,7 +303,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       static $lastCompositeId = -1;
 
       $compositePaymentId = $row['qf'.$pme->fdn['id']];
-      $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
 
       if ($lastCompositeId != $compositePaymentId) {
         if ($lastCompositeId > 0) {
@@ -328,6 +358,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'maxlen'   => 11,
       'default'  => null,
       'sort'     => true,
+      'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
+        $html = '';
+        if ($this->isCompositeRow($k, $row, $pme)) {
+          $html = '<input type="hidden" class="expanded-marker" name="compositePaymentExpanded['.$recordId['id'].']" value="'.(int)($this->compositePaymentExpanded[$recordId['id']]??0).'"/>';
+          if ($this->expertMode) {
+            $html .= '<span class="cell-wrapper">' . $value . '</span>';
+          }
+        }
+        return $html;
+      },
     ];
 
     $opts['fdd']['musician_id'] = [
@@ -350,46 +390,83 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'name' => 'row_tag', 'input' => 'SRH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'name' => 'row_tag', 'input' => 'RH' ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'sort_key', [ 'name' => 'input', 'input' => 'SRH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id', [ 'name' => 'composite_payment_id', 'input' => 'RH' ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
       [
-        'name'     => $this->l->t('Musician'),
-        'css'      => [ 'postfix' => [ 'instrumentation-id', ], ],
+        'name' => $this->l->t('Musician'),
+        'css' => [ 'postfix' => [ 'instrumentation-id', ], ],
         'select' => 'D',
         'input' => 'M',
+        'input|C' => 'R',
         'values' => [
 	  'description' => [
-	    'columns' => [ '$table.id', self::musicianPublicNameSql() ],
-	    'divs' => [ ': ' ],
+	    'columns' => [ self::musicianPublicNameSql() ],
+	    'divs' => [],
 	    'ifnull' => [ false, false ],
-	    'cast' => [ 'CHAR', false ],
+	    'cast' => [ false ],
 	  ],
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),
         ],
-        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $opts['fdd']['amount'] = array_merge(
       $this->defaultFDD['money'], [
-        'name' => $this->l->t('Amount'),
-        'input' => 'H',
+        'name' => $this->l->t('Total Amount'),
+        'input|LFAP' => 'H',
+        'input|CDV' => 'M',
+        'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+          return $this->moneyValue($value);
+        },
       ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
       array_merge(
         $this->defaultFDD['money'], [
-          'sql' => 'IF($join_table.sort_key = 0, $main_table.amount, $join_col_fqn)',
+          'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", $main_table.amount, $join_col_fqn)',
+          'sql' => '$join_col_fqn',
           'name' => $this->l->t('Amount'),
           'input' => 'M',
+          'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+            return $this->moneyValue($value);
+          },
         ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'imbalance',
+      Util::arrayMergeRecursive(
+        $this->defaultFDD['money'], [
+          'sql' => '$main_table.amount - $join_table.total_amount',
+          'css' => [ 'postfix' => [ 'tooltip-auto', ] ],
+          'name' => $this->l->t('Imbalance'),
+          'input' => 'R',
+          'options' => 'LFCDV',
+          'php|CDV' => function($value, $action, $k, $row, $recordId, $pme) {
+            $name = $pme->fds[$k];
+            $html = $pme->htmlHiddenData($name, $value);
+            $html .= '<span class="cell-wrapper">' . $this->moneyValue($value) . '</span>';
+            return $html;
+          },
+          'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+            if ($this->isCompositeRow($k, $row, $pme)) {
+              return $this->moneyValue($value);
+            }
+            return '';
+          },
+          'display|ACP' => [
+            'postfix' => null,
+            'popup' => 'tooltip',
+          ],
+          'tooltip' => $this->toolTipsService['project-payments:imbalance'],
+        ]
+    ));
 
     $opts['fdd']['date_of_receipt'] = array_merge(
       $this->defaultFDD['date'], [
@@ -398,26 +475,34 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'input' => 'M',
       ]);
 
-    $opts['fdd']['subject'] = array(
+    $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
       'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
-      'input' => 'H',
+      'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
+      'input|LFVD' => 'HRM',
       'select' => 'T',
       'display|LF' => [ 'popup' => 'data' ],
+
       'escape' => true,
-      'sort' => true
-    );
+      'sort' => true,
+      'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
+      'textarea|ACP' => [
+        'css' => 'constrained',
+        'rows' => 4,
+        'cols' => 35,
+      ],
+    ];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'subject',
       [
         'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Subject'),
-        'input'  => 'MR',
+        'input'  => 'M',
         'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
-        'sql|LFVD' => 'IF($join_table.sort_key = 0, REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
-        'sql|ACP' => 'IF($join_table.sort_key = 0, $main_table.subject, $join_col_fqn)',
-        'display' => [
+        'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
+        'sql' => '$join_col_fqn',
+        'display|LF' => [
           'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
           'popup' => 'data',
@@ -430,7 +515,93 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
       ]);
 
+    /**
+     * The following is there in order to remove split-transaction. There will
+     * also be a dedicated "add a new split".
+     */
     $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'id', [
+        'tab' => [ 'id' => [ 'booking', 'transaction' ] ],
+        'css' => [ 'postfix' => [ 'payment-id', 'chosen-dropup', ], ],
+        'name' => $this->l->t('Receivables'),
+        'select' => 'M',
+        'input|LF' => 'H',
+        'options' => 'CDV',
+        'sql' => 'GROUP_CONCAT($join_col_fqn)',
+        'values' => [
+          'table' => 'SELECT
+  pp.id,
+  pp.composite_payment_id,
+  pp.musician_id,
+  pp.amount,
+  m.first_name,
+  m.sur_name,
+  m.nick_name,
+  m.display_name,
+  ppf.project_id,
+  ppf.id AS field_id,
+  ppfo.key AS receivable_key,
+  IF(ppf.multiplicity IN ("'.
+          FieldMultiplicity::SIMPLE.'","'.
+          FieldMultiplicity::SINGLE.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE.'"),
+     COALESCE(ppftr.content, ppf.name),
+     CONCAT_WS(" - ", COALESCE(ppftr.content, ppf.name), COALESCE(ppfotr.content, ppfo.label))
+  ) AS receivable_display_label,
+  ppf.multiplicity,
+  COALESCE(ppftr.content, ppf.name) AS field_name
+  FROM ' . self::PROJECT_PAYMENTS_TABLE . ' pp
+  LEFT JOIN ' . self::MUSICIANS_TABLE . ' m
+    ON pp.musician_id = m.id
+  LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . ' ppfo
+    ON ppfo.field_id = pp.field_id
+      AND ppfo.key = pp.receivable_key
+  LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+      AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
+      AND ppfotr.field = "label"
+      AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
+  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+    ON ppf.id = pp.field_id
+  LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+      AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
+      AND ppftr.field = "name"
+      AND ppftr.foreign_key = ppf.id',
+          'column' => 'id',
+          'description' => [
+	    'columns' => [
+              'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->l10n()->getLanguageCode()) . '"))',
+              '$table.receivable_display_label',
+            ],
+	    'divs' => [ ' - ' ],
+	    'ifnull' => [ false, false ],
+	    'cast' => [ false, false ],
+          ],
+          'join' => '$main_table.id = $join_table.composite_payment_id',
+          'filters' => '$table.composite_payment_id = $record_id[id]',
+          'data' => 'JSON_OBJECT(
+  "musicianId", $table.musician_id
+  , "projectId", $table.project_id
+  , "projectPaymentId", $table.id
+  , "compositePaymentId", $table.composite_payment_id
+  , "fieldId", $table.field_id
+  , "receivableKey", BIN2UUID($table.receivable_key)
+  , "amount", $table.amount
+)',
+          'groups' => 'IF($table.multiplicity IN ("'.
+          FieldMultiplicity::SIMPLE.'","'.
+          FieldMultiplicity::SINGLE.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE.'"),
+  "'.$this->l->t('Single Options').'",
+  $table.field_name)',
+        ],
+        'valueGroups|CP' => [ -1 => $this->l->t('Operations'), ],
+        'values2|CP' => [ -1 => $this->l->t('Add a new Receivable'), ],
+        'values2glue' => '<br/>',
+      ]);
+
+    list(, $compositeKeyKey) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key',
       [
         'tab' => [ 'id' => [ 'booking', 'transaction' ] ],
@@ -440,7 +611,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'input' => 'M',
         'css'  => [ 'postfix' => [ 'receivable', 'squeeze-subsequent-lines', 'chosen-dropup', ], ],
         // Pre-computed key for composite-payment row
-        'sql' => $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.receivable_key_string',
+        'sql' => $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.receivable_composite_key',
         'values' => [
           'table' => 'SELECT
   IF(ppfo.label IS NOT NULL, ppfo.field_id, -1) AS sort_field,
@@ -464,12 +635,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+    ON ppfo.field_id = ppf.id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
     ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
-      AND ppftr.foreign_key = ppf.id
-  ON ppfo.field_id = ppf.id',
+      AND ppftr.foreign_key = ppf.id',
           // 'encode' => 'BIN2UUID(%s)',
           'description' => '$table.display_label',
           'join' => ('$join_table.field_id = '
@@ -497,6 +668,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'popup' => 'data',
         ],
       ]);
+
+    $opts['fdd'][$compositeKeyKey]['values|C'] = $opts['fdd'][$compositeKeyKey]['values'];
+    $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
+      ' AND $table.composite_key
+         IN (SELECT DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", ppfd.project_id, ppfd.field_id, BIN2UUID(ppfd.option_key))
+  FROM ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' ppfd
+  WHERE ppfd.musician_id = (SELECT cp.musician_id FROM ' . self::COMPOSITE_PAYMENTS_TABLE . ' cp WHERE cp.id = $record_id[id])'
+      . ($projectMode ? ' AND ppfd.project_id = '.$projectId : '')
+      . ')';
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
@@ -610,32 +790,52 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           return true;
         }
 
-        $this->logInfo('OP ' . $op);
+        $receivableKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')];
+        $amountIndex = $pme->fdn['amount'];
 
-        $sortKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'sort_key')];
-        $receivableKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'key')];
-        $amountIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount')];
+        $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
+        $paymentsAmountIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount')];
         $subjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
+        $musicianIdIndex = $pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+        $paymentsIdIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id')];
+        $subjectIndex = $pme->fdn['subject'];
+        $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
+        $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
 
-        if ($row['qf'.$sortKeyIndex] == 0) {
-          $this->logInfo('COMPOSITE ROW');
-          $pme->fdd[$receivableKeyIndex]['select'] = 'M';
-          $pme->fdd[$receivableKeyIndex]['name'] = $this->l->t('Receivables');
-          $pme->fdd[$amountIndex]['input'] = 'R';
-          $pme->fdd[$amountIndex]['name'] = $this->l->t('Total Amount');
-          $pme->fdd[$subjectIndex]['name'] = $this->l->t('Summary');
+        if (str_starts_with($row['qf'.$rowTagIndex], self::ROW_TAG_PREFIX)) {
+          $this->logDebug('COMPOSITE ROW');
+          $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
+          $pme->fdd[$amountIndex]['input'] = 'M';
+          $pme->fdd[$paymentsAmountIndex]['input'] = 'HR';
+          $pme->fdd[$paymentsIdIndex]['input'] = 'M';
+          $pme->fdd[$paymentsIdIndex]['select'] = 'M';
+          $pme->fdd[$paymentsIdIndex]['valueData'] = [
+            -1 => json_encode([
+              'recordId' => $pme->rec,
+              'groupbyRec' => $pme->groupby_rec,
+            ], true),
+          ];
+          $pme->fdd[$subjectIndex]['input'] = 'M';
+          $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
         } else {
-          $this->logInfo('COMPONENT ROW');
+          $this->logDebug('COMPONENT ROW');
           $pme->fdd[$receivableKeyIndex]['select'] = 'D';
+          $pme->fdd[$paymentsIdIndex]['input'] = 'RH';
+          $pme->fdd[$subjectIndex]['input'] = 'HR';
+          $pme->fdd[$paymentsSubjectIndex]['input'] = 'M';
+          $pme->fdd[$amountIndex]['input'] = 'HR';
+          $pme->fdd[$paymentsAmountIndex]['input'] = 'M';
+          $pme->fdd[$imbalanceIndex]['input'] = 'HR';
         }
         return true;
       };
 
     if ($projectMode) {
-      $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
+      $opts['filters'] = 'FIND_IN_SET('.$projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
     }
 
     // redirect all updates through Doctrine\ORM.
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
@@ -664,6 +864,124 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * @todo The UI should rather expose multiple edit lines and provide a
    * "feeling" like e.g. in GnuCash for split-bookings.
+
+   // update for composite
+
+     BEFORE OLDVALS Array (
+     [id] => 514
+     [musician_id] => 407
+     [sepa_transaction_id] =>
+     [ProjectPayments:row_tag] => 0;514
+     [Musicians:id] => 407
+     [amount] => 15.00
+     [ProjectPayments:amount] => 55.17,45.00
+     [date_of_receipt] => 2022-01-13
+     [subject] => asfasfasfa
+     [ProjectPayments:subject] => sadfgdsafasd,sdafdasfas
+     [ProjectPayments:id] => 976,978
+     [ProjectParticipantFieldsDataOptions:composite_key] => 18-224-82fad011-04a6-11ec-9e3f-04e261401ed5,18-224-82fb239c-04a6-11ec-9e3f-04e261401ed5 )
+
+     BEFORE NEWVALS Array (
+     [id] => 514
+     [musician_id] => 407
+     [sepa_transaction_id] =>
+     [ProjectPayments:row_tag] => 0;514
+     [Musicians:id] => 407
+     [amount] => 15.00
+     [ProjectPayments:amount] => 55.17,45.00
+     [date_of_receipt] => 2022-01-13 00:00:00
+     [subject] => asfasfasfa
+     [ProjectPayments:subject] => sadfgdsafasd,sdafdasfas
+     [ProjectPayments:id] => 976,978
+     [ProjectParticipantFieldsDataOptions:composite_key] => 18-224-82fad011-04a6-11ec-9e3f-04e261401ed5,18-224-82fb239c-04a6-11ec-9e3f-04e261401ed5 )
+   */
+  public function beforeUpdateSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    if (empty($changed)) {
+      // don't start manipulations if nothing has changed.
+      return true;
+    }
+
+    $compositeKey = $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
+    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+
+    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+    $newValues['musician_id'] = $musicianId;
+
+    if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+
+      $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['flags'] |= self::JOIN_SINGLE_VALUED;
+
+      // determine our payments id
+      $paymentId = $newValues[$rowTagKey] ?? $newValues[$paymentIdKey];
+      if (empty($paymentId)) {
+        $paymentId = 0; // flag key generation
+      }
+      $newValues[$paymentIdKey] = $newValues[$rowTagKey] = $paymentId;
+
+      // extract project-id, field-id, receivable_key from the composite-option-key select
+      list($projectId, $fieldId, $receivableKey) = explode(
+        self::COMP_KEY_SEP,
+        $compositeKey,
+        3
+      );
+
+      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
+      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
+      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
+      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
+      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')] = $pme->rec['id'];
+
+      // index all values by the key in order to please the
+      // PMETableViewBase::beforeUpdateDoUpdateAll() machine
+      foreach ($newValues as $key => &$value) {
+        if ($key == $paymentIdKey || $key == $rowTagKey) {
+          continue;
+        }
+        if (empty($value)) {
+          continue;
+        }
+        if (strpos($key, self::PROJECT_PAYMENTS_TABLE . self::JOIN_KEY_SEP) === 0) {
+          $value = $paymentId . self::JOIN_KEY_SEP . $value;
+        }
+      }
+      unset($value); // break reference
+    } else {
+      // "row_tag" is used as "column" in $this->joinStructure, so transfer
+      // the ProjectPayments ids to that field.
+      foreach (['newValues', 'oldValues'] as $dataSet) {
+        ${$dataSet}[$rowTagKey] = ${$dataSet}[$paymentIdKey];
+      }
+    }
+
+    $changed = [];
+    foreach (array_unique(array_merge(array_keys($oldValues), array_keys($newValues))) as $key) {
+      if (isset($oldValues[$key]) !== isset($newValues[$key])
+          || ($oldValues[$key]??null) !== ($newValues[$key]??null)) {
+        $changed[] = $key;
+      }
+    }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
+
+    return true;
+  }
+
+  /**
+   * Remap the input values in order to satisfy the data-model:
+   *
+   * - one receivable per ProjectPayment
+   * - CompositePaymnt amount must be sum of all partial payments
+   * - CompositePayment subject is constructed from individual payments
+   *
+   * However, on insert we only add a single "split" transaction. Further
+   * parts have to be added afterwards.
+   *
+   * @todo The UI should rather expose multiple edit lines and provide a
+   * "feeling" like e.g. in GnuCash for split-bookings.
    */
   public function beforeInsertSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
@@ -674,7 +992,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     // ProjectPayments:amount -> amount
     // Musicians:id -> musician_id
     // ProjectParticipantFieldsDataOptions:key -> ProjectPayments:receivable_key
-
 
     // extract project-id, field-id, receivable_key from the composite-option-key select
     list($projectId, $fieldId, $receivableKey) = explode(
@@ -705,12 +1022,37 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    * @todo: if the search results (e.g. for the amount) do not contain
    * the composite row, then the missing data should also be printed.
    */
-  public function compositeRowOnly($value, $action, $k, $row, $recordId, $pme) {
+  public function compositeRowOnly($value, $action, $k, $row, $recordId, $pme)
+  {
+    return $this->selectiveRowDisplay('composite', $value, $action, $k, $row, $recordId, $pme);
+  }
+
+  /**
+   * Print only the values for the component row.
+   *
+   * @todo: if the search results (e.g. for the amount) do not contain
+   * the composite row, then the missing data should also be printed.
+   */
+  public function componentRowOnly($value, $action, $k, $row, $recordId, $pme)
+  {
+    return $this->selectiveRowDisplay('component', $value, $action, $k, $row, $recordId, $pme);
+  }
+
+  /** Decide whether the current row refers to the composite payment or to a "split" project-payment */
+  private function isCompositeRow($k, $row, $pme)
+  {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
-    if (strstr($rowTag, ';') !== false) {
+    return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
+  }
+
+  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme) {
+    $compositeRow = $this->isCompositeRow($k, $row, $pme);
+    $composite = $where === 'composite';
+    $component = $where === 'component';
+    if (($compositeRow && $composite) || (!$compositeRow && $component)) {
       return $value;
     } else {
-      return '';
     }
+    return '';
   }
 }
