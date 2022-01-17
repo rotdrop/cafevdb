@@ -26,6 +26,8 @@
  * @param int $fieldId
  * @param string $optionKey
  * @param string $optionValue
+ * @param int $musicianId
+ * @param int $projectId
  * @param string $subDir
  * @param string $fileBase
  * @param string $fileName

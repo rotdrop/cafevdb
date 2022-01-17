@@ -126,7 +126,6 @@ class ProjectPayments extends PMETableViewBase
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.receivable_key) ORDER BY __t1.id) AS receivable_key,
-  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.supporting_document_id) ORDER BY __t1.id) AS supporting_document_id,
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.musician_id,
   __t1.composite_payment_id
@@ -143,7 +142,6 @@ SELECT
   __t2.project_id,
   __t2.field_id,
   __t2.receivable_key,
-  __t2.supporting_document_id,
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
@@ -439,6 +437,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
       ]);
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [ 'input' => 'RH' ]);
+
     $opts['fdd']['amount'] = array_merge(
       $this->defaultFDD['money'], [
         'name' => $this->l->t('Total Amount'),
@@ -622,7 +623,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'valueGroups|CP' => [ -1 => $this->l->t('Operations'), ],
         'values2|CP' => [ -1 => $this->l->t('Add a new Receivable'), ],
         'values2glue' => '<br/>',
-        'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+        'php|VD' => function($value, $action, $k, $row, $recordId, $pme) {
           $compositeKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')];
           return $this->createSupportingDocumentsDownload($value, $action, $compositeKeyIndex, $row, $recordId, $pme);
         },
@@ -690,18 +691,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
         'values2glue' => '<br/>',
         'display' => [
-          'prefix' => function($op, $where, $k, $row, $pme) {
+          'prefixBlah' => function($op, $where, $k, $row, $pme) {
             if ($this->isCompositeRow($k, $row, $pme)) {
               return '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
             }
           },
-          'postfix' => function($op, $where, $k, $row, $pme) {
+          'postfixBlah' => function($op, $where, $k, $row, $pme) {
             if ($this->isCompositeRow($k, $row, $pme)) {
               return '</div></div>';
             }
           },
           'popup' => function($cellData, $k, $row, $pme) {
-            return $this->isCompositeRow($k, $row, $pme) ? $cellData : '';
+            return $this->isCompositeRow($k, $row, $pme) ? strip_tags($cellData, '<br>') : '';
           },
         ],
         'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
@@ -723,12 +724,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'tab' => [ 'id' => [ 'booking', ] ],
       'css' => [ 'postfix' => [ 'supporting-document', ], ],
       'name' => $this->l->t('Supporting Document'),
-      'options' => 'ACDPV',
+      'input|LF' => 'HR',
+      'options' => 'LFACDPV',
       'php|ACP' => function($value, $action, $k, $row, $recordId, $pme) {
 
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
-        $fileName = implode('-', [$this->l->t('project-payment-record'), $recordId['id']]);
+        $fileName = implode('-', [$this->l->t('payment-record'), $recordId['id']]);
 
         $fileName = $this->getPaymentRecordsFolderName() . UserStorage::PATH_SEP . $fileName;
 
@@ -1136,14 +1138,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $musicianId = $row['qf'.$pme->fdn['musician_id']];
     if ($this->isCompositeRow($k, $row, $pme)) {
       $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
+      // $receivables must contain at least one element.
       $supportingDocument = $row['qf'.$pme->fdn['supporting_document_id']];
       if (!empty($supportingDocument) || count($receivables) > 1) {
-        if (empty($receivables)) {
-          // single supporting document for composite payment (bill ...)
-          // @todo
-          return $value;
+        $userIdSlug = $row['qf'.$pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'user_id_slug')]];
+        if (!empty($supportingDocument)) {
+          $supportingDocuments = [ $supportingDocument ];
         }
-        $supportingDocuments = [];
         foreach ($receivables as $receivable) {
           list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
@@ -1158,23 +1159,25 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             continue;
           }
           $supportingDocuments[] = $fieldDatum->getSupportingDocument();
+          $project = $project??$fieldDatum->getProject();
         }
         $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
         $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
-        $fileName = implode('-', [$dateOfReceipt, $this->l->t('project-payment'), $recordId['id'], $subject]);
+
+        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
+
+        // there should be at least one project ...
+        $subFolder = empty($supportingDocument) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+        $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
-        return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
+        return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
         return $value;
       }
-      $filesAppButton = false;
-    } else {
-      $filesAppButton = true;
     }
 
     // fall-through, single or no supporting document
     $receivable = $row['qf'.$k.'_idx'];
     list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
-    $this->logInfo('FDN MUSICIAN ' . $pme->fdn['musician_id'] . ' ' . $musicianId);
 
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     $fieldDatum = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->find([
@@ -1189,7 +1192,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     }
     $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
 
-    $filesAppAnchor = !$filesAppButton ? '' : $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
+    $filesAppAnchor = $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
     $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
 
     return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';

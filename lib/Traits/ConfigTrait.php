@@ -452,26 +452,6 @@ trait ConfigTrait {
     return $this->getSharedSubFolderPath(ConfigService::OUTBOX_FOLDER);
   }
 
-  /**
-   * Get the name of the per-participant document folder
-   *
-   * @return string Translated name of the documents sub-folder.
-   */
-  protected function getDocumentsFolderName()
-  {
-    return $this->l->t('documents');
-  }
-
-  /**
-   * Get the name of the sub-folder holding payment records.
-   *
-   * @return string Translated name of the payment-records sub-folder.
-   */
-  protected function getPaymentRecordsFolderName()
-  {
-    return $this->l->t('payment-records');
-  }
-
   public function getIcon()
   {
     return $this->configService->getIcon();

@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
+  use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
 
@@ -808,8 +809,8 @@ class SepaBankAccounts extends PMETableViewBase
             . $this->dbFileUploadRowHtml($writtenMandateId,
                                          fieldId: $recordId['musician_id'],
                                          optionKey: $row['qf'.($k-4)],
-                                         subDir: $this->l->t('DebitMandates'),
-                                         fileBase: $mandateReference,
+                                         subDir: $this->getDebitMandatesFolderName(),
+                                         fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
                                          overrideFileName: true,
                                          musician: $musician,
                                          project: $project)

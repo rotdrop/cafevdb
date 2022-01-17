@@ -50,6 +50,7 @@ class MountProvider implements IMountProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use ProjectParticipantsStorageTrait;
 
   private static $recursionLevel = 0;
 

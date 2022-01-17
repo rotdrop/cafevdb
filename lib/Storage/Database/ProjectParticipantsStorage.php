@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Events;
 
@@ -48,6 +49,11 @@ use OCA\CAFEVDB\Events;
  */
 class ProjectParticipantsStorage extends Storage
 {
+  use ProjectParticipantsStorageTrait;
+
+  /** @var Entities\Musician */
+  private $musician;
+
   /** @var Entities\Project */
   private $project;
 
@@ -65,6 +71,7 @@ class ProjectParticipantsStorage extends Storage
     parent::__construct($params);
     $this->participant = $params['participant'];
     $this->project = $this->participant->getProject();
+    $this->musician = $this->participant->getMusician();
     $this->projectService = $this->di(ProjectService::class);
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
@@ -82,6 +89,7 @@ class ProjectParticipantsStorage extends Storage
             'musician' => $musicianId,
           ]);
         $this->project = $this->participant->getProject();
+        $this->musician = $this->participant->getMusician();
       } catch (\Throwable $t) {
         $this->logException($t);
       }
@@ -134,16 +142,46 @@ class ProjectParticipantsStorage extends Storage
       }
     }
 
+    // add supporting documents for composite payments (may belong to more
+    // than one project, at least technically)
+
+    $paymentRecordsDirectory = $this->getPaymentRecordsFolderName();
+
+    /** @var Entities\CompositePayment $compositePayment */
+    foreach ($this->musician->getPayments() as $compositePayment) {
+      $projectPayments = $compositePayment->getProjectPayments()->matching(
+        DBUtil::criteriaWhere([ 'project' => $this->project ])
+      );
+      if ($projectPayments->count() == 0) {
+        continue;
+      }
+      $file = $compositePayment->getSupportingDocument();
+      if (empty($file)) {
+        continue;
+      }
+      // enforce the "correct" file-name
+      $dbFileName = $file->getFileName();
+      $baseName = $this->getPaymentRecordFileName($compositePayment) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+      $fileName = $this->buildPath($paymentRecordsDirectory . self::PATH_SEPARATOR . $baseName);
+      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+      if ($fileDirName == $dirName) {
+        $this->files[$dirName][$baseName] = $file;
+      } else if (strpos($fileDirName, $dirName) === 0) {
+        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+        $this->files[$dirName][$baseName] = $baseName;
+      }
+    }
+
     // also link in the debit-mandate hard-copies in their own sub-folder
     // subDir: $this->l->t('DebitMandates'),
     // Link in all project-related and the general debit-mandates
 
-    $debitMandatesDirectory = $this->l->t('DebitMandates');
+    $debitMandatesDirectory = $this->getDebitMandatesFolderName();
     $membersProjectId = $this->getClubMembersProjectId();
-    $projectId = $this->participant->getProject()->getId();
+    $projectId = $this->project->getId();
 
     /** @var Entities\SepaDebitMandate $debitMandate */
-    foreach ($this->participant->getMusician()->getSepaDebitMandates() as $debitMandate) {
+    foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
       $mandateProjectId = $debitMandate->getProject()->getId();
       if ($mandateProjectId !== $membersProjectId && $mandateProjectId !== $projectId) {
         continue;
@@ -154,7 +192,7 @@ class ProjectParticipantsStorage extends Storage
       }
       // enforce the "correct" file-name
       $dbFileName = $file->getFileName();
-      $baseName = $debitMandate->getMandateReference() . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+      $baseName = $this->getDebitMandateFileName($debitMandate) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
       $fileName = $this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . $baseName);
       list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
       if ($fileDirName == $dirName) {

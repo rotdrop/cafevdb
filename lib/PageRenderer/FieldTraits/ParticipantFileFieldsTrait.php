@@ -40,6 +40,7 @@ trait ParticipantFileFieldsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use ParticipantFieldsCgiNameTrait;
 
   /** @var ProjectService */
@@ -98,6 +99,8 @@ trait ParticipantFileFieldsTrait
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
         'optionValue' => $optionValue,
+        'musicianId' => $musician->getId(),
+        'projectId' => empty($project) ? 0 : $project->getId(),
         'subDir' => $subDir,
         'fileBase' => $fileBase,
         'fileName' => $fileName,
@@ -192,6 +195,8 @@ trait ParticipantFileFieldsTrait
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
         'optionValue' => $optionValue,
+        'musicianId' => $musician->getId(),
+        'projectId' => empty($project) ? 0 : $project->getId(),
         'fileBase' => $fileBase,
         'fileName' => $fileName,
         'participantFolder' => $participantFolder,
@@ -209,29 +214,36 @@ trait ParticipantFileFieldsTrait
   /**
    * Generate a link to the files-app if appropriate
    */
-  private function getFilesAppLink(Entities\ProjectParticipantField $field, Entities\Musician $musician)
+  private function getFilesAppLink(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
   {
     $pathChain = [];
-    switch ($field->getDataType()) {
-      case FieldType::SERVICE_FEE:
-      case FieldType::DB_FILE:
-        $pathChain[] = $this->getDocumentsFolderName();
-        if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
-          $pathChain[] = $field->getName();
-        }
-        break;
-      case FieldType::CLOUD_FILE:
-        if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
+    $project = $project??$this->project;
+    if (!empty($field)) {
+      $project = $project??field->getProject();
+      switch ($field->getDataType()) {
+        case FieldType::SERVICE_FEE:
+        case FieldType::DB_FILE:
+          $pathChain[] = $this->getDocumentsFolderName();
+          if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
+            $pathChain[] = $field->getName();
+          }
+          break;
+        case FieldType::CLOUD_FILE:
+          if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
+            $pathChain[] = $field->getUntranslatedName();
+          }
+          break;
+        case FieldType::CLOUD_FOLDER:
           $pathChain[] = $field->getUntranslatedName();
-        }
-        break;
-      case FieldType::CLOUD_FOLDER:
-        $pathChain[] = $field->getUntranslatedName();
-        break;
-      default:
-        return null;
+          break;
+        default:
+          return null;
+      }
     }
-    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+    if (!empty($subFolder)) {
+      $pathChain[] = $subFolder;
+    }
+    $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
     array_unshift($pathChain, $participantFolder);
     $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
     try {
@@ -244,9 +256,9 @@ trait ParticipantFileFieldsTrait
     return [ $filesAppLink, $filesAppTarget ];
   }
 
-  private function getFilesAppAnchor(Entities\ProjectParticipantField $field, Entities\Musician $musician)
+  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
   {
-    list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician);
+    list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
     $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
        title="'.$this->toolTipsService['participant-attachment-open-parent'].'"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"

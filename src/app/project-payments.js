@@ -143,7 +143,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
           if (musicianIds.length > 1) {
             Dialogs.alert(
               t(appName, 'Too many Musicians'),
-              t(appName, 'Currently merging composite-payments for different musicians ({musicians}) is not supported, sorry.',
+              t(appName, 'Internal error: splits of composite-payments cannot belong to different musicians ({musicians}).',
                 { musicians: musicianIds.join(', ') }),
               false, true);
           }
