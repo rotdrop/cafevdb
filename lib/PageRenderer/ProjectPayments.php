@@ -729,14 +729,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'php|ACP' => function($value, $action, $k, $row, $recordId, $pme) {
 
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
+        /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
-        $fileName = implode('-', [$this->l->t('payment-record'), $recordId['id']]);
-
-        $fileName = $this->getPaymentRecordsFolderName() . UserStorage::PATH_SEP . $fileName;
+        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
-            . $this->dbFileUploadRowHtml($writtenMandateId,
+            . $this->dbFileUploadRowHtml($value,
                                          fieldId: $musicianId,
                                          optionKey: $recordId['id'],
                                          subDir: $this->getPaymentRecordsFolderName(),

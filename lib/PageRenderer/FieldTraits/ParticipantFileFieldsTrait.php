@@ -129,7 +129,7 @@ trait ParticipantFileFieldsTrait
     }
     if (!empty($optionValue)) {
       /** @var Entities\File $file */
-      $file = $this->getDatabaseRepository(Entities\File::class)->find($optionValue);
+      $file = $this->findEntity(Entities\File::class, $optionValue);
       $dbPathName = $file->getFileName();
       if (!empty($dbPathName)) {
         $dbPathInfo = pathinfo($dbPathName);
