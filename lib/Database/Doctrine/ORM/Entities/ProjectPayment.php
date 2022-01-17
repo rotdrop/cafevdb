@@ -87,15 +87,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   private $projectParticipant;
 
-  /**
-   * @var EncryptedFile
-   *
-   * Optional. ATM only used for particular auto-generated monetary fields.
-   *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
-   */
-  private $supportingDocument;
-
   public function __construct() {
     $this->arrayCTOR();
   }
@@ -315,30 +306,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getReceivableOption()
   {
     return $this->receivableOption;
-  }
-
-  /**
-   * Set supportingDocument.
-   *
-   * @param null|EncryptedFile $supportingDocument
-   *
-   * @return ProjectPayment
-   */
-  public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectPayment
-  {
-    $this->supportingDocument = $supportingDocument;
-
-    return $this;
-  }
-
-  /**
-   * Get supportingDocument.
-   *
-   * @return null|EncryptedFile
-   */
-  public function getSupportingDocument():?EncryptedFile
-  {
-    return $this->supportingDocument;
   }
 
   /** \JsonSerializable interface */
