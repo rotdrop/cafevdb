@@ -51,6 +51,7 @@ trait ParticipantFieldsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use ParticipantFileFieldsTrait;
+  use ParticipantFieldsCgiNameTrait;
 
   /** @var UserStorage */
   protected $userStorage = null;
@@ -1398,21 +1399,6 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $sep   = '<span class="allowed-option-separator '.$innerCss.'">&nbsp;</span>';
     $value = '<span class="allowed-option-value '.$innerCss.'">'.$value.'</span>';
     return '<span class="allowed-option '.$css.'"'.$htmlData.'>'.$label.$sep.$value.'</span>';
-  }
-
-  static protected function participantFieldTableName($fieldId)
-  {
-    return self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
-  }
-
-  static protected function participantFieldValueFieldName($fieldId)
-  {
-    return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_value');
-  }
-
-  static protected function participantFieldKeyFieldName($fieldId)
-  {
-    return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_key');
   }
 
   /**

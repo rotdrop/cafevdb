@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCP\AppFramework\Http\TemplateResponse;
+
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
 
@@ -38,6 +40,7 @@ trait ParticipantFileFieldsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use ParticipantFieldsCgiNameTrait;
 
   /** @var ProjectService */
   protected $projectService;
@@ -113,8 +116,10 @@ trait ParticipantFileFieldsTrait
 
   protected function dbFileUploadRowHtml($optionValue, int $fieldId, string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician, ?Entities\Project $project = null, bool $overrideFileName = false)
   {
-    $project = $project??$this->project;
-    $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
+    $project = ($project??$this->project)??null;
+    $participantFolder = empty($project)
+      ? ''
+      : $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
     $subDirPrefix = UserStorage::PATH_SEP . $this->getDocumentsFolderName();
     if (!empty($subDir)) {
       $subDirPrefix .= UserStorage::PATH_SEP . $subDir;
@@ -139,6 +144,9 @@ trait ParticipantFileFieldsTrait
         $fileName .= '.' . $dbExtension;
       }
     } else if (!empty($fileBase)) {
+      if (empty($project)) {
+        throw new \RuntimeException($this->l->t('No project given, unable generate a file-name.'));
+      }
       $fileName = $this->projectService->participantFilename($fileBase, $project, $musician);
       if (!empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
@@ -163,10 +171,14 @@ trait ParticipantFileFieldsTrait
     } else {
       $downloadLink = $dbFileName = $dbExtension = '';
     }
-    try {
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
-    } catch (\OCP\Files\NotFoundException $e) {
-      $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
+    if (!empty($participantFolder)) {
+      try {
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+      } catch (\OCP\Files\NotFoundException $e) {
+        $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
+        $filesAppLink = '';
+      }
+    } else {
       $filesAppLink = '';
     }
     $placeHolder = empty($fileName)
