@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -231,13 +231,26 @@ trait EntityManagerTrait {
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function find($id, $lockMode = null, $lockVersion = null) {
-
-    if ($this->entityClassName == \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class) {
-      \OCP\Util::writeLog('ORM', 'PROJECT ' . print_r($id, true), \OCP\Util::INFO);
-    }
-
+  protected function find($id, $lockMode = null, $lockVersion = null)
+  {
     return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
+  }
+
+  /**
+   * Finds an entity by its primary key / identifier.
+   *
+   * @param string   $entityClassName
+   * @param mixed    $id          The identifier.
+   * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
+   *                              or NULL if no specific lock mode should be used
+   *                              during the search.
+   * @param int|null $lockVersion The lock version.
+   *
+   * @return object|null The entity instance or NULL if the entity can not be found.
+   */
+  protected function findEntity(string $entityClassName, $id, $lockMode = null, $lockVersion = null)
+  {
+    return $this->entityManager->find($entityClassName, $id, $lockMode, $lockVersion);
   }
 
   /**
