@@ -160,13 +160,13 @@ class SepaBankAccounts extends PMETableViewBase
   ];
 
   /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
+  protected $participantFieldsService;
 
   /** @var FinanceService */
   private $financeService;
 
   /** @var ProjectService */
-  private $projectService;
+  protected $projectService;
 
   /** @var UserStorage */
   protected $userStorage;

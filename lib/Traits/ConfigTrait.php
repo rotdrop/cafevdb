@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -450,6 +450,16 @@ trait ConfigTrait {
   protected function getOutBoxFolderPath()
   {
     return $this->getSharedSubFolderPath(ConfigService::OUTBOX_FOLDER);
+  }
+
+  /**
+   * Get the name of the per-participant document folder
+   *
+   * @return string Translated name of the documents sub-folder.
+   */
+  protected function getDocumentsFolderName()
+  {
+    return $this->l->t('documents');
   }
 
   public function getIcon()

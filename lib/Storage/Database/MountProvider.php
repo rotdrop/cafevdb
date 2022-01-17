@@ -220,7 +220,7 @@ class MountProvider implements IMountProvider
         '/' . $user->getUID()
         . '/files'
         . $folder
-        . '/'. $this->l->t('documents'),
+        . '/'. $this->getDocumentsFolderName(),
         null,
         $loader,
         [

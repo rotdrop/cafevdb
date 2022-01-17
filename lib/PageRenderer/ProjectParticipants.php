@@ -192,10 +192,10 @@ class ProjectParticipants extends PMETableViewBase
   private $insuranceService;
 
   /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
+  protected $participantFieldsService;
 
   /** @var ProjectService */
-  private $projectService;
+  protected $projectService;
 
   /** @var Entities\Project */
   private $project;

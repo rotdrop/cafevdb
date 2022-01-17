@@ -79,10 +79,10 @@ class ProjectService
   private $participantFieldsService;
 
   /** @var WikiRPC */
-  private $wikiRPC;
+  private $wikiRPCInstance;
 
   /** @var OCA\Redaxo4Embedded\Service\RPC */
-  private $webPagesRPC;
+  private $webPagesRPCInstance;
 
   /** @var ProjectsRepository */
   private $repository;
@@ -99,8 +99,6 @@ class ProjectService
     , UserStorage $userStorage
     , ProjectParticipantFieldsService $participantFieldsService
     , MusicianService $musicianService
-    , WikiRPC $wikiRPC
-    , WebPagesRPC $webPagesRPC
     , IEventDispatcher $eventDispatcher
   ) {
     $this->configService = $configService;
@@ -110,13 +108,6 @@ class ProjectService
     $this->musicianService = $musicianService;
     $this->eventDispatcher = $eventDispatcher;
 
-    $this->wikiRPC = $wikiRPC;
-    $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
-    $this->webPagesRPC = $webPagesRPC;
-    $this->webPagesRPC->errorReporting(WebPagesRPC::ON_ERROR_THROW);
-    //$this->logInfo(print_r($this->webPagesRPC->getCategories(), true));
-    //$this->logInfo(print_r($this->webPagesRPC->getTemplates(), true));
-    //$this->logInfo(print_r($this->webPagesRPC->getModules(), true));
     try {
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (\Throwable $t) {
@@ -144,6 +135,25 @@ class ProjectService
         $this->repository = $this->getDatabaseRepository(Entities\Project::class);
       }
     );
+  }
+
+  /** Lazy getter for WikiRPC */
+  private function wikiRPC():WikiRPC
+  {
+    if (empty($this->wikiRPCInstance)) {
+      $this->wikiRPCInstance = $this->di(WikiRPC::class);
+      $this->wikiRPCInstance->errorReporting(WikiRPC::ON_ERROR_THROW);
+    }
+    return $this->wikiRPCInstance;
+  }
+
+  private function WebPagesRPC():WebPagesRPC
+  {
+    if (empty($this->webPagesRPCInstance)) {
+      $this->webPagesRPCInstance = $this->di(WebPagesRPC::class);
+      $this->webPagesRPCInstance->errorReporting(WebPagesRPC::ON_ERROR_THROW);
+    }
+    return $this->webPagesRPCInstance;
   }
 
   /**
@@ -676,6 +686,87 @@ class ProjectService
   }
 
   /**
+   * Fetch the (encrypted) file for a field-datum and return path-info like
+   * information for the file.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @return null|array
+   * ```
+   * [
+   *   'file' => ENTITY,
+   *   'baseName' => BASENAME, // generated, l10n
+   '   'dirName' => DIRENAME, // generated, l10n
+   *   'extension' => FILE EXTENSION, // from db-file
+   *   'fileName' => FILENAME, // basename without extension
+   *   'pathName' => DIRNAME/BASENAME,
+   *   'dbFileName' => FILENAME_AS_STORED_IN_DB_TABLE,
+   * ]
+   * ```
+   */
+  public function participantFileInfo(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $includeDeleted = false):?array
+  {
+    if (!$includeDeleted && $fieldDatum->isDeleted()) {
+      return null;
+    }
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $fieldDatum->getField();
+    if (!$includeDeleted && $field->isDeleted()) {
+      return null;
+    }
+    /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+    $fieldOption = $fieldDatum->getDataOption();
+    if (!$includeDeleted && $fieldOption->isDeleted()) {
+      return null;
+    }
+    $dataType = $field->getDataType();
+    switch ($dataType) {
+      case FieldDataType::DB_FILE:
+        $fileId = (int)$fieldDatum->getOptionValue();
+        $file = $this->findEntity(Entities\File::class, $fileId);
+        break;
+      case FieldDataType::SERVICE_FEE:
+        $file = $fieldDatum->getSupportingDocument();
+        break;
+      default:
+        return null;
+    }
+    if (empty($file)) {
+      return null;
+    }
+    /** @var Entities\File $file */
+    $dbFileName = $file->getFileName();
+    $extension = pathinfo($dbFileName, PATHINFO_EXTENSION);
+    $fieldName = $field->getName();
+
+    if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
+      // construct the file-name from the field-name
+      $fileName = $this->participantFilename($fieldName, $fieldDatum->getProject(), $fieldDatum->getMusician());
+      $dirName = null;
+    } else {
+      // construct the file-name from the option label if non-empty or the file-name of the DB-file
+      $optionLabel = $fieldOption->getLabel();
+      if (!empty($optionLabel)) {
+        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getProject(), $fieldDatum->getMusician());
+      } else {
+        $fileName = basename($dbFileName, '.' . $extension);
+      }
+      $dirName = $fieldName;
+    }
+    $baseName = $fileName . '.' . $extension;
+    $pathName = empty($dirName) ? $baseName : $dirName . UserStorage::PATH_SEP . $baseName;
+    return [
+      'file' => $file,
+      'baseName' => $baseName,
+      'dirName' => $dirName,
+      'extension' => $extension,
+      'fileName' => $fileName,
+      'pathName' => $pathName,
+      'dbFileName' => $dbFileName,
+    ];
+  }
+
+  /**
    * Rename all project-participants folders in order to reflect changes in
    * the user-id-slug (== user-name). This functions registers suitable
    * IUndoable actions with the EntityManager which are executed pre-commit.
@@ -831,9 +922,9 @@ class ProjectService
     $projectsName = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
     $pageName = $this->projectWikiLink($projectsName);
 
-    return $this->wikiRPC->putPage($pageName, $page,
-                                   [ "sum" => "Automatic CAFEVDB synchronization",
-                                     "minor" => true ]);
+    return $this->wikiRPC()->putPage($pageName, $page,
+                                     [ "sum" => "Automatic CAFEVDB synchronization",
+                                       "minor" => true ]);
   }
 
   /**Generate an almost empty project page. This spares people the
@@ -876,9 +967,9 @@ Whatever.',
                  [ $projectName ]);
 
       $pagename = $this->projectWikiLink($projectName);
-      $this->wikiRPC->putPage($pagename, $page,
-                              [ "sum" => "Automatic CAFEVDB synchronization, project created",
-                                "minor" => true ]);
+      $this->wikiRPC()->putPage($pagename, $page,
+                                [ "sum" => "Automatic CAFEVDB synchronization, project created",
+                                  "minor" => true ]);
   }
 
   /**
@@ -890,13 +981,14 @@ Whatever.',
    */
   public function deleteProjectWikiPage($project):int
   {
+    $wikiRPC = $this->wikiRPC();
     $projectName = $project['name'];
     $pagename = $this->projectWikiLink($projectName);
 
-    list('version' => $pageVersion) = $this->wikiRPC->getPageInfo($pagename);
-    $this->wikiRPC->putPage($pagename, '',
-                            [ "sum" => "Automatic CAFEVDB synchronization, project deleted.",
-                              "minor" => true ]);
+    list('version' => $pageVersion) = $wikiRPC->getPageInfo($pagename);
+    $wikiRPC->putPage($pagename, '',
+                      [ "sum" => "Automatic CAFEVDB synchronization, project deleted.",
+                        "minor" => true ]);
     return $pageVersion;
   }
 
@@ -909,18 +1001,19 @@ Whatever.',
    */
   public function restoreProjectWikiPage($project, ?int $version = null)
   {
+    $wikiRPC = $this->wikiRPC();
     $projectName = $project['name'];
     $pagename = $this->projectWikiLink($projectName);
 
     if (empty($version)) {
-      $pageVersions = $this->wikiRPC->getPageVersions($pagename);
+      $pageVersions = $wikiRPC->getPageVersions($pagename);
       $version = $pageVersions[0]['version']??null;
       if (empty($version)) {
         return false;
       }
     }
-    $page = $this->wikiRPC->getPage($pagename, $version);
-    $this->wikiRPC->putPage(
+    $page = $wikiRPC->getPage($pagename, $version);
+    $wikiRPC->putPage(
       $pagename, $page,
       [ "sum" => "Automatic CAFEVDB synchronization, undo project deletion.",
         "minor" => true ]);
@@ -938,13 +1031,14 @@ Whatever.',
    */
   public function renameProjectWikiPage($newProject, $oldProject)
   {
+    $wikiRPC = $this->wikiRPC();
     $oldName = $oldProject['name'];
     $newName = $newProject['name'];
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
     $oldPage = ' *  '.$this->l->t('%1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
-    $newPage = $this->wikiRPC->getPage($oldPageName);
+    $newPage = $wikiRPC->getPage($oldPageName);
 
     $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
     $this->logInfo('NEW '.$newPageName.' / '.$newPage);
@@ -953,11 +1047,11 @@ Whatever.',
     $newPage = str_replace($oldName, $newName, $newPage);
 
     if ($newPage) {
-      $this->wikiRPC->putPage(
+      $wikiRPC->putPage(
         $newPageName, $newPage,
         [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
       // Generate stuff if there is an old page
-      $this->wikiRPC->putPage(
+      $wikiRPC->putPage(
         $oldPageName, $oldPage,
         [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
     }
@@ -969,12 +1063,12 @@ Whatever.',
    */
   public function webPageCMSURL($articleId, $editMode = false)
   {
-    return $this->webPagesRPC->redaxoURL($articleId, $editMode);
+    return $this->webPagesRPC()->redaxoURL($articleId, $editMode);
   }
 
   public function pingWebPages()
   {
-    return $this->webPagesRPC->ping();
+    return $this->webPagesRPC()->ping();
   }
 
   /**
@@ -1027,7 +1121,7 @@ Whatever.',
     $otherPages = [];
     foreach ($categories as $category) {
       // Fetch all articles and remove those already registered
-      $pages = $this->webPagesRPC->articlesByName('.*', $category['id']);
+      $pages = $this->webPagesRPC()->articlesByName('.*', $category['id']);
       $this->logDebug("Projects: ".$category['id']);
       if (is_array($pages)) {
         foreach ($pages as $idx => $article) {
@@ -1062,6 +1156,7 @@ Whatever.',
    */
   public function createProjectWebPage($projectId, $kind = self::WEBPAGE_TYPE_CONCERT)
   {
+    $webPagesRPC = $this->webPagesRPC();
     $project = $this->repository->find($projectId);
     if (empty($project)) {
       throw new \Exception($this->l->t('Empty project.'));
@@ -1088,7 +1183,7 @@ Whatever.',
 
     $pageName = $prefix.$projectName;
     try {
-      $articles = $this->webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
+      $articles = $webPagesRPC()->articlesByName($pageName.'(-[0-9]+)?', $category);
     } catch (\Throwable $t)  {
       throw new \Exception(
         $this->l->t('Unable to fetch web-pages like "%s".', [ $pageName ]),
@@ -1111,7 +1206,7 @@ Whatever.',
     }
 
     try {
-      $article = $this->webPagesRPC->addArticle($pageName, $category, $pageTemplate);
+      $article = $webPagesRPC->addArticle($pageName, $category, $pageTemplate);
     } catch (\Throwable $t) {
       throw new \Exception(
         $this->l->t('Unable to create web-page "%s".', [ $pageName ]),
@@ -1127,7 +1222,7 @@ Whatever.',
     try {
       // insert into the db table to form the link
       $this->attachProjectWebPage($projectId, $article);
-      $this->webPagesRPC->addArticleBlock($article['articleId'], $module);
+      $webPagesRPC->addArticleBlock($article['articleId'], $module);
 
       $this->flush();
       $this->entityManager->commit();
@@ -1157,6 +1252,7 @@ Whatever.',
    */
   public function deleteProjectWebPage($projectId, $article)
   {
+    $webPagesRPC = $this->webPagesRPC();
     $articleId = $article['articleId'];
     $categoryId = $article['categoryId'];
 
@@ -1166,8 +1262,8 @@ Whatever.',
       $trashCategory = $this->getConfigValue('redaxoTrashbin');
 
       // try moving to tash if the article exists in its category.
-      if (!empty($this->webPagesRPC->articlesById([ $articleId ], $categoryId))) {
-        $result = $this->webPagesRPC->moveArticle($articleId, $trashCategory);
+      if (!empty($webPagesRPC->articlesById([ $articleId ], $categoryId))) {
+        $result = $webPagesRPC->moveArticle($articleId, $trashCategory);
       }
 
       $this->flush();
@@ -1193,7 +1289,7 @@ Whatever.',
   public function restoreProjectWebPage($projectId, $article)
   {
     $trashCategory = $this->getConfigValue('redaxoTrashbin');
-    $result = $this->webPagesRPC->moveArticle($article['articleId'], $article['categoryId']);
+    $result = $this->webPagesRPC()->moveArticle($article['articleId'], $article['categoryId']);
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
     $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $article);
   }
@@ -1241,7 +1337,7 @@ Whatever.',
         $destinationCategory = $this->getConfigValue('redaxoPreview');
       }
       $articleId = $article['articleId'];
-      $result = $this->webPagesRPC->moveArticle($articleId, $destinationCategory);
+      $result = $this->webPagesRPC()->moveArticle($articleId, $destinationCategory);
       if ($result === false) {
         $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
       } else {
@@ -1292,7 +1388,7 @@ Whatever.',
         }
         ++$concertNr;
       }
-      if ($this->webPagesRPC->setArticleName($article['articleId'], $newName)) {
+      if ($this->webPagesRPC()->setArticleName($article['articleId'], $newName)) {
         // if successful then also update the data-base entry
         $webPagesRepository->mergeAttributes(
           [ 'articleId' => $article['articleId'] ],
@@ -1312,6 +1408,7 @@ Whatever.',
    */
   public function attachMatchingWebPages($projectOrId)
   {
+    $webPagesRPC = $this->webPagesRPC();
     $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project->getId();
     $projectName = $project->getName();
@@ -1322,15 +1419,15 @@ Whatever.',
 
     $cntRe = '(?:-[0-9]+)?';
 
-    $preview = $this->webPagesRPC->articlesByName($projectName.$cntRe, $previewCat);
+    $preview = $webPagesRPC->articlesByName($projectName.$cntRe, $previewCat);
     if (!is_array($preview)) {
       return false;
     }
-    $archive = $this->webPagesRPC->articlesByName($projectName.$cntRe, $archiveCat);
+    $archive = $webPagesRPC->articlesByName($projectName.$cntRe, $archiveCat);
     if (!is_array($archive)) {
       return false;
     }
-    $rehearsals = $this->webPagesRPC->articlesByName($this->l->t('Rehearsals').' '.$projectName.$cntRe, $rehearsalsCat);
+    $rehearsals = $webPagesRPC->articlesByName($this->l->t('Rehearsals').' '.$projectName.$cntRe, $rehearsalsCat);
     if (!is_array($rehearsals)) {
       return false;
     }

@@ -118,55 +118,19 @@ class ProjectParticipantsStorage extends Storage
     $this->files[$dirName] = [];
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
-      if ($fieldDatum->isDeleted()) {
+
+      $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+      if (empty($fileInfo)) {
         continue;
       }
-      /** @var Entities\ProjectParticipantField $field */
-      $field = $fieldDatum->getField();
-      if ($field->isDeleted()) {
-        continue;
-      }
-      $dataType = $field->getDataType();
-      switch ($dataType) {
-      case FieldType::DB_FILE:
-        $fileId = (int)$fieldDatum->getOptionValue();
-        $file = $this->filesRepository->find($fileId);
-        break;
-      case FieldType::SERVICE_FEE:
-        $file = $fieldDatum->getSupportingDocument();
-        break;
-      default:
-        $file = null;
-      }
-      /** @var Entities\File $file */
-      if (!empty($file)) {
 
-        $dbFileName = $file->getFileName();
-        $fieldName = $field->getName();
-
-        if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
-          // construct the file-name from the field-name
-          $fileName = $this->projectService->participantFilename($fieldName, $this->project, $this->participant->getMusician()) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
-        } else {
-          // construct the file-name from the option label if non-empty or the file-name of the DB-file
-          /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
-          $fieldOption = $fieldDatum->getDataOption();
-          $optionLabel = $fieldOption->getLabel();
-          if (!empty($optionLabel)) {
-            $baseName = $this->projectService->participantFilename($fieldOption->getLabel(), $this->project, $this->participant->getMusician()) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
-          } else {
-            $baseName = basename($dbFileName);
-          }
-          $fileName = $fieldName . self::PATH_SEPARATOR . $baseName;
-        }
-        $fileName = $this->buildPath($fileName);
-        list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-        if ($fileDirName == $dirName) {
-          $this->files[$dirName][$baseName] = $file;
-        } else if (strpos($fileDirName, $dirName) === 0) {
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = $baseName;
-        }
+      $fileName = $this->buildPath($fileInfo['pathName']);
+      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+      if ($fileDirName == $dirName) {
+        $this->files[$dirName][$baseName] = $fileInfo['file'];
+      } else if (strpos($fileDirName, $dirName) === 0) {
+        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+        $this->files[$dirName][$baseName] = $baseName;
       }
     }
 
