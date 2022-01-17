@@ -282,9 +282,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts['groupby_where'] = true;
 
     $opts['css']['postfix'] = [
-      'project-payments',
-      'direct-change',
-      'show-hide-disabled',
+      self::TEMPLATE,
+      self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
+      self::CSS_TAG_SHOW_HIDE_DISABLED,
+      self::CSS_TAG_DIRECT_CHANGE,
     ];
 
     // in order to be able to collapse payment details:
@@ -723,6 +724,28 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'css' => [ 'postfix' => [ 'supporting-document', ], ],
       'name' => $this->l->t('Supporting Document'),
       'options' => 'ACDPV',
+      'php|ACP' => function($value, $action, $k, $row, $recordId, $pme) {
+
+        $musicianId = $row['qf'.$pme->fdn['musician_id']];
+        $musician = $this->findEntity(Entities\Musician::class, $musicianId);
+        $fileName = implode('-', [$this->l->t('project-payment-record'), $recordId['id']]);
+
+        $fileName = $this->getPaymentRecordsFolderName() . UserStorage::PATH_SEP . $fileName;
+
+        return '<div class="file-upload-wrapper">
+  <table class="file-upload">'
+            . $this->dbFileUploadRowHtml($writtenMandateId,
+                                         fieldId: $musicianId,
+                                         optionKey: $recordId['id'],
+                                         subDir: $this->getPaymentRecordsFolderName(),
+                                         fileBase: $fileName,
+                                         overrideFileName: true,
+                                         musician: $musician,
+                                         project: null)
+            . '
+  </table>
+</div>';
+      },
     ];
 
     $this->makeJoinTableField(
@@ -848,6 +871,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $subjectIndex = $pme->fdn['subject'];
         $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
         $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
+        $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
 
         if (str_starts_with($row['qf'.$rowTagIndex], self::ROW_TAG_PREFIX)) {
           $this->logDebug('COMPOSITE ROW');
@@ -873,6 +897,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$amountIndex]['input'] = 'HR';
           $pme->fdd[$paymentsAmountIndex]['input'] = 'M';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
+          $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
         }
         return true;
       };

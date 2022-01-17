@@ -462,6 +462,16 @@ trait ConfigTrait {
     return $this->l->t('documents');
   }
 
+  /**
+   * Get the name of the sub-folder holding payment records.
+   *
+   * @return string Translated name of the payment-records sub-folder.
+   */
+  protected function getPaymentRecordsFolderName()
+  {
+    return $this->l->t('payment-records');
+  }
+
   public function getIcon()
   {
     return $this->configService->getIcon();

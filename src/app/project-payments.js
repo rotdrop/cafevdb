@@ -26,9 +26,15 @@ import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
-import { sys as pmeSys, data as pmeData, formSelector as pmeFormSelector } from './pme-selectors.js';
+import initFileUploadRow from './pme-file-upload-row.js';
+import {
+  sys as pmeSys,
+  data as pmeData,
+  formSelector as pmeFormSelector,
+} from './pme-selectors.js';
 
 require('project-payments.scss');
+require('project-participant-fields-display.scss');
 
 const isCompositeRow = function(rowTag) {
   return rowTag.startsWith('0;');
@@ -155,6 +161,22 @@ const ready = function(selector, pmeParameters, resizeCB) {
         }
         return false;
       });
+
+    // upload supporting document(s)
+    const musicianId = findByName($container, pmeData('Musicians:id')).val();
+    $container
+      .find('tr.supporting-document td.pme-value .file-upload-row')
+      .each(function() {
+        initFileUploadRow.call(
+          this,
+          -1, // projectId
+          musicianId,
+          resizeCB, {
+            upload: 'finance/payments/documents/upload',
+            delete: 'finance/payments/documents/delete',
+          });
+      });
+
   } // reason === 'dialogOpen'
 
   const tableOptions = pmeParameters.tableOptions || {};

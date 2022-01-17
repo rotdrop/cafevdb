@@ -422,6 +422,11 @@ $routes = [
       'url' => '/finance/sepa/bulk-transactions/{topic}',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'payments#documents',
+      'url' => '/finance/payments/documents/{operation}',
+      'verb' => 'POST',
+    ],
     /**
      * Insurances
      */
