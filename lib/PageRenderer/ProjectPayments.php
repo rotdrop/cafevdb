@@ -689,9 +689,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
         'values2glue' => '<br/>',
         'display' => [
-          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
-          'postfix' => '</div></div>',
-          'popup' => 'data',
+          'prefix' => function($op, $where, $k, $row, $pme) {
+            if ($this->isCompositeRow($k, $row, $pme)) {
+              return '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+            }
+          },
+          'postfix' => function($op, $where, $k, $row, $pme) {
+            if ($this->isCompositeRow($k, $row, $pme)) {
+              return '</div></div>';
+            }
+          },
+          'popup' => function($cellData, $k, $row, $pme) {
+            return $this->isCompositeRow($k, $row, $pme) ? $cellData : '';
+          },
         ],
         'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
           return $this->createSupportingDocumentsDownload($value, $action, $k, $row, $recordId, $pme);

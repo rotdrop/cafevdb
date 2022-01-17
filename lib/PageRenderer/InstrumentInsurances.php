@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -249,7 +249,7 @@ class InstrumentInsurances extends PMETableViewBase
         // 'filters' => parent::musicianInProjectSql($this->projectId),
       ],
       'display' => [
-        'prefix' => function($op, $pos, $row, $k, $pme) {
+        'prefix' => function($op, $pos, $k, $row, $pme) {
           $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
           $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
           $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
@@ -279,7 +279,7 @@ class InstrumentInsurances extends PMETableViewBase
         //'filters' => parent::musicianInProjectSql($this->projectId),
       ],
       'display' => [
-        'prefix' => function($op, $pos, $row, $k, $pme) {
+        'prefix' => function($op, $pos, $k, row, $pme) {
           $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
           $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
           $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];

@@ -1274,10 +1274,10 @@ WHERE pp.project_id = $this->projectId",
                 'popup' => 'data:next',
               ],
               'display|ACP' => [
-                'prefix' => function($op, $pos, $row, $k, $pme) use ($css) {
+                'prefix' => function($op, $pos, $k, $row, $pme) use ($css) {
                   return '<label class="'.implode(' ', $css).'">';
                 },
-                'postfix' => function($op, $pos, $row, $k, $pme) use ($dataOptions, $dataType, $keyFddIndex) {
+                'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $keyFddIndex) {
                   $selectedKey = $row['qf'.$keyFddIndex];
                   $html = '';
                   foreach ($dataOptions  as $dataOption) {

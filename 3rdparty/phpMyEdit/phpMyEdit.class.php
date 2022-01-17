@@ -2189,15 +2189,15 @@ class phpMyEdit
 	} /* }}} */
 
 	/**
-	 * Generate HTML  attributes from the fdd values. For technical reasons readonly is handled in a special way.
+	 * Generate HTML attributes from the fdd values. For technical reasons readonly is handled in a special way.
 	 */
-	protected function htmlAttributes($k, &$readonly = null)
+	protected function htmlAttributes($op, $k, $row, &$readonly = null)
 	{
 		$htmlFragment = '';
 		if (isset($this->fdd[$k]['display']['attributes'])) {
 			$attributes = $this->fdd[$k]['display']['attributes'];
 			if (is_callable($attributes)) {
-				$attributes = call_user_func($attributes, 'add', null, [], $k, $this);
+				$attributes = call_user_func($attributes, $op, $k, $row, $this);
 			}
 			if (!is_array($attributes)) {
 				$attributes= [ $attributes ];
@@ -2263,7 +2263,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['prefix'])) {
 				$prefix = $this->fdd[$k]['display']['prefix'];
 				if (is_callable($prefix)) {
-					echo call_user_func($prefix, 'add', 'prefix', $row, $k, $this);
+					echo call_user_func($prefix, 'add', 'prefix', $k, $row, $this);
 				} else {
 					echo $this->fdd[$k]['display']['prefix'];
 				}
@@ -2314,7 +2314,7 @@ class phpMyEdit
 
 				$strip_tags = true;
 
-				$attributes = $this->htmlAttributes($k);
+				$attributes = $this->htmlAttributes('add', $k, []);
 
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
@@ -2359,7 +2359,7 @@ class phpMyEdit
 					echo " data-pme-values='".json_encode($valgrp)."'";
 				}
 
-				echo $this->htmlAttributes($k, $readonly);
+				echo $this->htmlAttributes('add', $k, [], $readonly);
 
 				echo ($readonly !== false ? ' '.$readonly : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
@@ -2476,7 +2476,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			$prefix = $this->fdd[$k]['display']['prefix'];
 			if (is_callable($prefix)) {
-				echo call_user_func($prefix, $operation, 'prefix', $row, $k, $this);
+				echo call_user_func($prefix, $operation, 'prefix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['prefix'];
 			}
@@ -2546,7 +2546,7 @@ class phpMyEdit
 			}
 			$strip_tags = true;
 
-			$attributes = $this->htmlAttributes($k);
+			$attributes = $this->htmlAttributes($operation, $k, $row);
 
 			// "readonly" is not possible for selects, radio stuff and
 			// check-boxes. Display is "disbled", if read-only is
@@ -2606,7 +2606,7 @@ class phpMyEdit
 				echo " data-pme-values='".json_encode($valgrp)."'";
 			}
 
-			echo $this->htmlAttributes($k, $readonly);
+			echo $this->htmlAttributes($operation, $k, $row, $readonly);
 
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
@@ -2622,7 +2622,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['postfix'])) {
 			$postfix = $this->fdd[$k]['display']['postfix'];
 			if (is_callable($postfix)) {
-				echo call_user_func($postfix, $operation, 'postfix', $row, $k, $this);
+				echo call_user_func($postfix, $operation, 'postfix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['postfix'];
 			}
@@ -2638,7 +2638,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			$prefix = $this->fdd[$k]['display']['prefix'];
 			if (is_callable($prefix)) {
-				echo call_user_func($prefix, 'password', 'prefix', $row, $k, $this);
+				echo call_user_func($prefix, 'password', 'prefix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['prefix'];
 			}
@@ -2662,7 +2662,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['postfix'])) {
 			$postfix = $this->fdd[$k]['display']['postfix'];
 			if (is_callable($postfix)) {
-				echo call_user_func($postfix, 'password', 'postfix', $row, $k, $this);
+				echo call_user_func($postfix, 'password', 'postfix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['postfix'];
 			}
@@ -2679,7 +2679,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			$prefix = $this->fdd[$k]['display']['prefix'];
 			if (is_callable($prefix)) {
-				echo call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+				echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['prefix'];
 			}
@@ -2688,7 +2688,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['postfix'])) {
 			$postfix = $this->fdd[$k]['display']['postfix'];
 			if (is_callable($postfix)) {
-				echo call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+				echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k]['display']['postfix'];
 			}
@@ -3076,7 +3076,7 @@ class phpMyEdit
 				if (empty($cell_data)) {
 					$cell_data = $this->cellDisplay($k, $row);
 				}
-				$cell_popup = call_user_func($popup, $cell_data);
+				$cell_popup = call_user_func($popup, $cell_data, $k, $row, $this);
 			} else if (is_string($popup)) {
 				switch ($popup) {
 				case 'data'.substr($popup, strlen('data')):
@@ -4339,7 +4339,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['prefix'])) {
 					$prefix = $this->fdd[$k]['display']['prefix'];
 					if (is_callable($prefix)) {
-						$cell .= call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+						$cell .= call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 					} else {
 						$cell .= $this->fdd[$k]['display']['prefix'];
 					}
@@ -4348,7 +4348,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['postfix'])) {
 					$postfix = $this->fdd[$k]['display']['postfix'];
 					if (is_callable($postfix)) {
-						$cell .= call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+						$cell .= call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 					} else {
 						$cell .= $this->fdd[$k]['display']['postfix'];
 					}
@@ -4849,7 +4849,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['prefix'])) {
 					$prefix = $this->fdd[$k]['display']['prefix'];
 					if (is_callable($prefix)) {
-						echo call_user_func($prefix, 'display', 'prefix', $row, $k, $this);
+						echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 					} else {
 						echo $this->fdd[$k]['display']['prefix'];
 					}
@@ -4858,7 +4858,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k]['display']['postfix'])) {
 					$postfix = $this->fdd[$k]['display']['postfix'];
 					if (is_callable($postfix)) {
-						echo call_user_func($postfix, 'display', 'postfix', $row, $k, $this);
+						echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 					} else {
 						echo $this->fdd[$k]['display']['postfix'];
 					}

@@ -452,12 +452,12 @@ __EOT__;
         ],
         'display|CAP' => [ // add, change, paste (copy)
           'popup' => false,
-          'prefix' => function($op, $when, $row, $k, $pme) {
+          'prefix' => function($op, $when, $k, $row, $pme) {
             return '<div class="cell-wrapper">
   <div class="dropdown-menu">
 ';
           },
-          'postfix' => function($op, $when, $row, $k, $pme) {
+          'postfix' => function($op, $when, $k, $row, $pme) {
             $html = '';
             if ($op == 'copy') {
               $html .= '

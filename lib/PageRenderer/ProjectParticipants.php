@@ -442,7 +442,7 @@ class ProjectParticipants extends PMETableViewBase
         'sql|LFVD' => 'IF($join_col_fqn IS NULL OR $join_col_fqn = \'\', $table.first_name, $join_col_fqn)',
         'maxlen'   => 384,
         'display|ACP' => [
-          'attributes' => function($op, $value, $row, $k, $pme) {
+          'attributes' => function($op, $k, $row, $pme) {
             $firstName = $row['qf'.($k-1)];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
@@ -460,7 +460,7 @@ class ProjectParticipants extends PMETableViewBase
               ];
             }
           },
-          'postfix' => function($op, $pos, $row, $k, $pme) {
+          'postfix' => function($op, $pos, $k, $row, $pme) {
             $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-nickname"
   '.$checked.'
@@ -481,7 +481,7 @@ class ProjectParticipants extends PMETableViewBase
         'sql|LFVD' => parent::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
-          'attributes' => function($op, $value, $row, $k, $pme) {
+          'attributes' => function($op, $k, $row, $pme) {
             $surName = $row['qf'.($k-3)];
             $firstName = $row['qf'.($k-2)];
             $nickName = $row['qf'.($k-1)];
@@ -503,7 +503,7 @@ class ProjectParticipants extends PMETableViewBase
               ];
             }
           },
-          'postfix' => function($op, $pos, $row, $k, $pme) {
+          'postfix' => function($op, $pos, $k, $row, $pme) {
             $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-displayname"
   type="checkbox"
@@ -527,7 +527,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'   => 256,
         'sort'     => true,
         'display|ACP' => [
-          'attributes' => function($op, $value, $row, $k, $pme) {
+          'attributes' => function($op, $k, $row, $pme) {
             $surName = $row['qf'.($k-4)];
             $firstName = $row['qf'.($k-3)];
             $nickName = $row['qf'.($k-2)];
@@ -537,7 +537,7 @@ class ProjectParticipants extends PMETableViewBase
               'readonly' => true,
             ];
           },
-          'postfix' => function($op, $pos, $row, $k, $pme) {
+          'postfix' => function($op, $pos, $k, $row, $pme) {
             $checked = 'checked="checked" ';
             return '<input id="pme-musician-user-id-slug"
   type="checkbox"
@@ -633,11 +633,11 @@ class ProjectParticipants extends PMETableViewBase
           ],
         ],
         'display|CAP' => [
-          'prefix' => function($op, $when, $row, $k, $pme) {
+          'prefix' => function($op, $when, $k, $row, $pme) {
             return '<div class="cell-wrapper">
   <div class="dropdown-menu">';
           },
-          'postfix' => function($op, $when, $row, $k, $pme) {
+          'postfix' => function($op, $when, $k, $row, $pme) {
             $html = '</div>
 '; // close dropdown-menu
 

@@ -414,7 +414,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 380,
       'sort'     => true,
       'display|ACP' => [
-        'attributes' => function($op, $value, $row, $k, $pme) {
+        'attributes' => function($op, $k, $row, $pme) {
           $firstName = $row['qf'.($k-1)] ?? '';
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
           $unlockedPlaceholder = $this->l->t('e.g. Cathy');
@@ -432,7 +432,7 @@ make sure that the musicians are also automatically added to the
             ];
           }
         },
-        'postfix' => function($op, $pos, $row, $k, $pme) {
+        'postfix' => function($op, $pos, $k, $row, $pme) {
           $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-nickname"
   '.$checked.'
@@ -463,7 +463,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'select'   => 'T',
       'display|ACP' => [
-        'attributes' => function($op, $value, $row, $k, $pme) {
+        'attributes' => function($op, $k, $row, $pme) {
           // $this->logInfo('OP '.$op);
           $surName = $row['qf'.($k-3)] ?? '';
           $firstName = $row['qf'.($k-2)] ?? '';
@@ -486,7 +486,7 @@ make sure that the musicians are also automatically added to the
             ];
           }
         },
-        'postfix' => function($op, $pos, $row, $k, $pme) {
+        'postfix' => function($op, $pos, $k, $row, $pme) {
           $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-displayname"
   type="checkbox"
@@ -510,7 +510,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'   => 256,
       'sort'     => true,
       'display|ACP' => [
-        'attributes' => function($op, $value, $row, $k, $pme) {
+        'attributes' => function($op, $k, $row, $pme) {
           $surName = $row['qf'.($k-4)] ?? '';
           $firstName = $row['qf'.($k-3)] ?? '';
           $nickName = $row['qf'.($k-2)] ?? '';
@@ -520,7 +520,7 @@ make sure that the musicians are also automatically added to the
             'readonly' => true,
           ];
         },
-        'postfix' => function($op, $pos, $row, $k, $pme) {
+        'postfix' => function($op, $pos, $k, $row, $pme) {
           $checked = 'checked="checked" ';
           return '<input id="pme-musician-user-id-slug"
   type="checkbox"
