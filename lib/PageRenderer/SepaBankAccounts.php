@@ -799,9 +799,9 @@ class SepaBankAccounts extends PMETableViewBase
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }
-          $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($recordId['musician_id']);
+          $musician = $this->findEntity(Entities\Musician::class, $recordId['musician_id']);
           $projectId = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id', $pme->fdd)];
-          $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+          $project = $this->findEntity(Entities\Project::class, $projectId);
 
           return '<div class="file-upload-wrapper">
   <table class="file-upload">'
