@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -56,6 +56,13 @@ class DatabaseStorageUtil
     $this->l = $l10n;
   }
 
+  /**
+   * Find a database file by entity, file-id or file-name.
+   *
+   * @param Entities\File|string|int $fileIdentifier
+   *
+   * @return null|Entities\File
+   */
   public function get($fileIdentifier):?Entities\File
   {
     if ($fileIdentifier instanceof Entities\File) {
@@ -74,7 +81,17 @@ class DatabaseStorageUtil
     return null;
   }
 
-  public function getDownloadLink($fileIdentifier, $fileName = null)
+  /**
+   * Get a download-link for either a single database file or a collection of
+   * database files.
+   *
+   * @param string|int|Entities\File|array $fileIdentifier Either a single
+   * object understood by DatabaseStorageUtil::get().
+   *
+   * @return string Return a download-link for the requested objects.
+   *
+   */
+  public function getDownloadLink($fileIdentifier, $fileName = null):string
   {
     $urlGenerator = \OC::$server->getURLGenerator();
     $queryParameters = [
@@ -100,7 +117,7 @@ class DatabaseStorageUtil
 
       $filesUrl = $urlGenerator->linkToRoute(
         $this->appName.'.downloads.get', [
-          'section' => 'database',
+          'section' => DownloadsController::SECTION_DATABASE,
           'object' => $id,
         ]);
     }
