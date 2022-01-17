@@ -56,6 +56,8 @@ class Storage extends AbstractStorage
 
   public function __construct($params)
   {
+    parent::__construct($params);
+
     $this->configService = \OC::$server->query(ConfigService::class);
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
