@@ -93,6 +93,9 @@ const ready = function(selector, pmeParameters, resizeCB) {
 
     $container
       .on('click', 'table.pme-main tr.composite-payment.first td', function(event) {
+        if ($(event.target).is('a.download-link, a.open-parent')) {
+          return;
+        }
         const $row = $(this).closest('tr.composite-payment.first');
         event.stopImmediatePropagation();
         $row.toggleClass('following-hidden');

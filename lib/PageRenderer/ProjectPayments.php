@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -40,17 +41,32 @@ use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCA\CAFEVDB\Controller\DownloadsController;
+
 /**Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
+  use FieldTraits\ParticipantFileFieldsTrait;
+
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   const ROW_TAG_PREFIX = '0;';
 
+  /** @var ProjectService */
+  protected $projectService;
+
   /** @var FinanceService */
   private $financeService;
+
+  /** @var UserStorage */
+  protected $userStorage;
+
+  /** @var DatabaseStorageUtil */
+  protected $databaseStorageUtil;
 
   /** @var array */
   private $compositePaymentExpanded = [];
@@ -191,12 +207,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
+    , ProjectService $projectService
     , FinanceService $financeService
+    , UserStorage $userStorage
+    , DatabaseStorageUtil $databaseStorageUtil
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    $this->projectService = $projectService;
     $this->financeService = $financeService;
+    $this->userStorage = $userStorage;
+    $this->databaseStorageUtil = $databaseStorageUtil;
     $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
   }
 
@@ -599,13 +621,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'valueGroups|CP' => [ -1 => $this->l->t('Operations'), ],
         'values2|CP' => [ -1 => $this->l->t('Add a new Receivable'), ],
         'values2glue' => '<br/>',
+        'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+          $compositeKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')];
+          return $this->createSupportingDocumentsDownload($value, $action, $compositeKeyIndex, $row, $recordId, $pme);
+        },
       ]);
 
     list(, $compositeKeyKey) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key',
       [
         'tab' => [ 'id' => [ 'booking', 'transaction' ] ],
-        'name' => $this->l->t('Receivable'),
+        'name' => $this->l->t('Receivables'),
         'select' => 'M',
         'select|ACP' => 'D',
         'input' => 'M',
@@ -667,8 +693,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'postfix' => '</div></div>',
           'popup' => 'data',
         ],
+        'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+          return $this->createSupportingDocumentsDownload($value, $action, $k, $row, $recordId, $pme);
+        },
       ]);
 
+    // Restrict the choices to the receivables of the actual musician.
     $opts['fdd'][$compositeKeyKey]['values|C'] = $opts['fdd'][$compositeKeyKey]['values'];
     $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
       ' AND $table.composite_key
@@ -677,6 +707,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   WHERE ppfd.musician_id = (SELECT cp.musician_id FROM ' . self::COMPOSITE_PAYMENTS_TABLE . ' cp WHERE cp.id = $record_id[id])'
       . ($projectMode ? ' AND ppfd.project_id = '.$projectId : '')
       . ')';
+
+    $opts['fdd']['supporting_document_id'] = [
+      'tab' => [ 'id' => [ 'booking', ] ],
+      'css' => [ 'postfix' => [ 'supporting-document', ], ],
+      'name' => $this->l->t('Supporting Document'),
+      'options' => 'ACDPV',
+    ];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
@@ -1054,5 +1091,72 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     } else {
     }
     return '';
+  }
+
+  /**
+   * Callback-hook for download-link display (view, delete, list)
+   */
+  private function createSupportingDocumentsDownload($value, $action, $k, $row, $recordId, $pme)
+  {
+    $musicianId = $row['qf'.$pme->fdn['musician_id']];
+    if ($this->isCompositeRow($k, $row, $pme)) {
+      $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
+      $supportingDocument = $row['qf'.$pme->fdn['supporting_document_id']];
+      if (!empty($supportingDocument) || count($receivables) > 1) {
+        if (empty($receivables)) {
+          // single supporting document for composite payment (bill ...)
+          // @todo
+          return $value;
+        }
+        $supportingDocuments = [];
+        foreach ($receivables as $receivable) {
+          list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          $fieldDatum = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->find([
+            'field' => $fieldId,
+            'project' => $projectId,
+            'musician' => $musicianId,
+            'optionKey' => $optionKey,
+          ]);
+          if (empty($fieldDatum)) {
+            $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
+            continue;
+          }
+          $supportingDocuments[] = $fieldDatum->getSupportingDocument();
+        }
+        $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
+        $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
+        $fileName = implode('-', [$dateOfReceipt, $this->l->t('project-payment'), $recordId['id'], $subject]);
+        $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
+        return '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
+        return $value;
+      }
+      $filesAppButton = false;
+    } else {
+      $filesAppButton = true;
+    }
+
+    // fall-through, single or no supporting document
+    $receivable = $row['qf'.$k.'_idx'];
+    list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
+    $this->logInfo('FDN MUSICIAN ' . $pme->fdn['musician_id'] . ' ' . $musicianId);
+
+    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+    $fieldDatum = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->find([
+      'field' => $fieldId,
+      'project' => $projectId,
+      'musician' => $musicianId,
+      'optionKey' => $optionKey,
+    ]);
+    if (empty($fieldDatum)) {
+      $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
+      return $value;
+    }
+    $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+
+    $filesAppAnchor = !$filesAppButton ? '' : $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
+    $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
+
+    return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
   }
 }
