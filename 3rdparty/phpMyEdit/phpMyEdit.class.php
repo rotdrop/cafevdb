@@ -2937,7 +2937,7 @@ class phpMyEdit
 	function formatValue($value, $k, $css, $key_rec)
 	{
 		$original_value = $value;
-		if ($num_ar = @$this->fdd[$k]['number_format']) {
+		if ($num_ar = ($this->fdd[$k]['number_format']??null)) {
 			if (! is_array($num_ar)) {
 				$num_ar = array($num_ar);
 			}
