@@ -33,6 +33,7 @@ import * as Page from './page.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
+import generateUrl from './generate-url.js';
 import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
@@ -281,8 +282,21 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   tableDialogHandlers(options, callback, triggerData);
 };
 
-const pmePost = function(post, callbacks) {
-  return $.post(CAFEVDB.generateUrl('page/pme/load'), post)
+const pmeHalt = function() {
+  PHPMyEdit.stopped = true;
+};
+
+const pmeIsHalted = function() {
+  return !!PHPMyEdit.stopped;
+};
+
+const pmePost = function(post) {
+  if (pmeIsHalted()) {
+    // just return a promise which is never resolved.
+    console.info('PME is halted, returning never-resolved promise.');
+    return $.Deferred().promise();
+  }
+  return $.post(generateUrl('page/pme/load'), post)
     .then(
       function(htmlContent, textStatus, request) {
         const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
@@ -607,6 +621,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             changeCallback({
               reason: 'dialogClose',
               htmlResponse: htmlContent,
+              closedBy: saveButton.attr('name'),
               triggerData,
             });
 
@@ -1868,6 +1883,8 @@ export {
   pmeClassSelectors as classSelectors,
   pmeOpenRowDialog as openRowDialog,
   pmePushCancellable as pushCancellable,
+  pmeHalt as halt,
+  pmeIsHalted as halted,
 };
 
 // Local Variables: ***
