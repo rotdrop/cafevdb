@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -61,7 +61,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    * @ORM\Column(type="integer", options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
    * @ORM\Id
    */
-  private $voice = 0;
+  private $voice = ProjectInstrument::UNVOICED;
 
   /**
    * @var int

@@ -50,6 +50,8 @@ class ProjectInstrument implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
+  const UNVOICED = 0;
+
   /**
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantInstruments", fetch="EXTRA_LAZY")
    * @ORM\Id
@@ -74,7 +76,7 @@ class ProjectInstrument implements \ArrayAccess
    * @ORM\Column(type="integer", nullable=false, options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
    * @ORM\Id
    */
-  private $voice = 0;
+  private $voice = self::UNVOICED;
 
   /**
    * @var bool

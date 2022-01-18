@@ -1565,15 +1565,19 @@ Whatever.',
           }
           $ranking = $musicianInstrument['ranking'];
 
-          // if voice == -1 exist, use it (no voice), otherwise use
-          // the one with the least registerd musicians or the
-          // potentially less demanding (highest numbered) voice.
-          $voice = 0;
+          // if voice == UNVOICED exist and has a quantity > 0, use it (no
+          // voice), otherwise use the one with the least registerd musicians
+          // or the potentially less demanding (highest numbered) voice.
+          $voice = Entities\ProjectInstrument::UNVOICED;
           $neededMost = PHP_INT_MIN;
+          /** @var Entities\ProjectInstrumentationNumber $number */
           foreach ($numbers as $number) {
-            if ($number['voice'] == -1) {
-              $voice = -1;
-              break;
+            if ($number->getVoice() == Entities\ProjectInstrument::UNVOICED) {
+              if ($number->getQuantity() > 0) {
+                $voice = Entities\ProjectInstrument::UNVOICED;
+                break;
+              }
+              continue;
             }
             $needed = $number['quantity'] - count($number['instruments']);
             if ($needed > $neededMost ||
