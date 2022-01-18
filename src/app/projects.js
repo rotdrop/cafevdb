@@ -882,7 +882,17 @@ const changeArticleLoad = function(containerContext, iframe) {
 };
 
 const tableLoadCallback = function(selector, parameters, resizeCB) {
+
   if (parameters.reason === 'dialogClose') {
+    if (parameters.closedBy !== undefined && parameters.closedBy === pmeSys('savedelete')) {
+      const templateRenderer = $(parameters.tableOptions.ambientContainerSelector).find('input[name="templateRenderer"]').val();
+      if (templateRenderer !== 'template:projects') {
+        // we have to reload the default page as the underlying page
+        // most likely depends on the now deleted project
+        window.location.replace(generateUrl('') + '?history=discard');
+        PHPMyEdit.halt();
+      }
+    }
     return;
   }
 
