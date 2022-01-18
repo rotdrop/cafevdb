@@ -439,7 +439,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
 
   public function setColumnValue($entity, string $column, $value)
   {
-    $this->logInfo('Set column value for ' . $column . ' to ' . $value);
+    $this->logDebug('Set column value for ' . $column . ' to ' . $value);
 
     $meta = $this->metaData;
     $numSetters = 0;
@@ -490,7 +490,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
     }
     if ($numSetters == 0) {
       // throw new \RuntimeException($this->l->t('Unable to feed a single field with the value of the column "' . $column . '".'));
-      $this->logInfo('Remember value for column ' . $column . ': ' . $value);
+      $this->logDebug('Remember value for column ' . $column . ': ' . $value);
       $this->temporaryColumnStorage[$column] = $value;
     } else {
       unset($this->temporaryColumnStorage[$column]);
