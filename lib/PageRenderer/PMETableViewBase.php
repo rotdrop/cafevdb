@@ -1489,11 +1489,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
           }
         } else {
+          $this->debug('PIVOT-COLUMN ' . $key . ' -> ' . print_r($pivotColumn, true));
           if (!is_array($pivotColumn)) {
-            $idKey = $pivotColumn;
-            $identifier[$key] = $newvals[$idKey];
-            unset($changeSet[$idKey]);
-            Util::unsetValue($changed, $idKey);
+            $identifier[$key] = $newvals[$pivotColumn];
+            unset($changeSet[$key]);
+            Util::unsetValue($changed, $key);
           } else if (!empty($pivotColumn['value'])) {
             $identifier[$key] = $pivotColumn['value'];
           } else if (!empty($pivotColumn['self'])) {
@@ -1533,6 +1533,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
           // e.g. $selfField == ProjectInstruments:voice
           $selfField = $value['self'];
+          $this->debug('FETCH VALUE FOR SELF-FIELD ' . $selfField);
 
           foreach ($addIdentifier as $key => &$idValues) {
             foreach ($idValues as &$idValuesTuple) {
@@ -1566,13 +1567,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 $addIdentifier[$key][] = $idValuesTuple;
               }
             }
-            $this->debug('ADDIDS SO FAR: '.print_r($addIdentifier, true));
+            $this->debug('ADDIDS SO FAR: ' . print_r($addIdentifier, true));
           }
 
           // just make sure that the self-value has a value in any case
           foreach ($addIdentifier as $key => &$idValues) {
             foreach ($idValues as &$idValuesTuple) {
               if (empty($idValuesTuple[$selfKey])) {
+                $this->debug('SET SELF KEY TO DEFAULT ' . $selfField . ' / ' . $selfKey . ' -> ' . $pme->fdd[$selfField]['default']);
                 $idValuesTuple[$selfKey] = $pme->fdd[$selfField]['default'];
               }
               if ($idValuesTuple[$selfKey] === null) {
@@ -1640,7 +1642,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->debug('VAL '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUS '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
@@ -1657,7 +1659,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
             $this->debug('ENTITY ID ' . print_r($entityId, true));
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
-            $this->debug('MULTIPLE KEYS ' . $multipleIndex);
+            $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
               $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
               $meta->setColumnValue($entity, $column, $value);
@@ -1732,6 +1734,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $masterEntity = $entity;
           $identifier = $meta->getIdentifierColumnValues($masterEntity);
           foreach (array_keys($this->pme->key) as $key) {
+            $this->debug('INJECT MASTER KEY ' . $key . ' -> ' . $identifier[$key]);
             $newvals[$key] = $identifier[$key];
           }
 
@@ -1741,7 +1744,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             if ($childJoinInfo['flags'] & self::JOIN_MASTER) {
               continue;
             }
-            $this->logInfo('MANIP CHANGESET ' . $table . ' ' . print_r($childChangeSet, true));
+            $this->debug('ORIG CHILD CHANGESET ' . $table . ' ' . print_r($childChangeSet, true));
             foreach (array_keys($this->pme->key) as $key) {
               foreach (['identifier', 'filter'] as $columnRestriction) {
                 foreach ($childJoinInfo[$columnRestriction] as $column => $target) {
@@ -1752,8 +1755,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 }
               }
             }
+            $this->debug('MANIP CHILD CHANGESET ' . $table . ' ' . print_r($childChangeSet, true));
           }
-          unset($childChangeSet); // beak reference
+          $this->debug('MANIP newvals ' . print_r($newvals, true));
+          unset($childChangeSet); // break reference
         }
       }
     }
