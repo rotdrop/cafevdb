@@ -20,6 +20,7 @@
  */
 
 import * as ncAuth from '@nextcloud/auth';
+import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
 
 const appInfo = require('appinfo/info.xml');
 const appName = appInfo.info.id[0];
@@ -51,7 +52,7 @@ try {
 const PHPMyEdit = initialState.PHPMyEdit;
 const CAFEVDB = initialState.CAFEFDB;
 const webRoot = OC.appswebroots[appName] + '/';
-const cloudWebRoot = OC.webRoot;
+const cloudWebRoot = getCloudRootUrl();
 const cloudUser = ncAuth.getCurrentUser();
 
 function appPrefix(id, join) { return appName + (join || '-') + id; }
