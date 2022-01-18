@@ -27,6 +27,7 @@ import * as SelectUtils from './select-utils.js';
 import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
+import fileDownload from './file-download.js';
 import {
   sys as pmeSys,
   data as pmeData,
@@ -89,6 +90,14 @@ const ready = function(selector, pmeParameters, resizeCB) {
   const $container = $(selector);
 
   if (pmeParameters.reason === 'dialogOpen') {
+
+    // AJAX download support
+    $container
+      .on('click', 'a.download-link.ajax-download', function(event) {
+        const $this = $(this);
+        fileDownload($this.attr('href'));
+        return false;
+      });
 
     $container
       .on('dblclick', 'table.pme-main tr.composite-payment.first td', function(event) {
