@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,7 +30,7 @@ use OCA\DAV\Events\CalendarObjectCreatedEvent;
 use OCA\DAV\Events\CalendarObjectDeletedEvent;
 use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 
-use OCA\CAFEVDB\Events\ProjectDeletedEvent;
+use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -180,9 +180,9 @@ class EventsService
     }
   }
 
-  public function onProjectDeleted(ProjectDeletedEvent $event)
+  public function onProjectDeleted(BeforeProjectDeletedEvent $event)
   {
-    $projectId = $event->getProject();
+    $projectId = $event->getProjectId();
     $projectEvents = $this->projectEvents($projectId);
     foreach ($projectEvents as $projectEvent) {
       $eventUri = $projectEvent->getEventUri();
