@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2021
+ * @copyright Claus-Justus Heine 2014-2022
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -131,6 +131,12 @@ class PageController extends Controller {
    */
   public function index()
   {
+    if ($this->parameterService->getParam('history', '') == 'discard') {
+      $this->historyService->push([]);
+      $this->historyService->store();
+      $this->session->close();
+      return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
+    }
     if ($this->getUserValue('restorehistory') === 'on'
         && empty($this->parameterService->getParam('template'))) {
       return $this->history(0, 'user');

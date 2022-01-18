@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -394,6 +394,7 @@ class Navigation
       $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
       $class = empty($tag['class']) ? '' : ' class="'.$tag['class'].'"';
       $disabled = (isset($tag['disabled']) && $tag['disabled']) ? ' disabled' : '';
+      $formAction = empty($tag['formaction']) ? '' : ' formaction="'.$tag['formaction'].'"';
       $data = '';
       if (isset($tag['data'])) {
         $dataArray = $tag['data'];
@@ -419,7 +420,7 @@ class Navigation
         $method = isset($tag['method']) ? ' formmethod="'.$tag['method'].'"' : '';
         $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
         $html .= ''
-              .'<button type="'.$buttonType.'" '.$method.$disabled.$class.$value.$title.$data.$id.$style.'>';
+              .'<button type="'.$buttonType.'" '.$method.$formAction.$disabled.$class.$value.$title.$data.$id.$style.'>';
         if (isset($tag['image'])) {
           $images = false;
           if (!is_array($tag['image'])) {
