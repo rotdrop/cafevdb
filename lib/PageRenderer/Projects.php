@@ -221,7 +221,7 @@ class Projects extends PMETableViewBase
       'input|LFAP' => 'RH', // always auto-increment
       'options'  => 'LFAVCPD',
       'maxlen'   => 11,
-      'default'  => '0', // auto increment
+      'default'  => null, // auto increment
       'sort'     => true,
     ];
 
@@ -433,7 +433,7 @@ __EOT__;
         'name|CAP'  => $this->l->t('Voices'),
         'name|LFVD' => $this->l->t('Instrumentation'),
         'decoration' => [ 'slug' => 'instrumentation-voices' ],
-        'default|A' => '',
+        // 'default|A' => '',
         'values|A' => null,
         'values2|A' => [],
         'input|A' => 'R',
