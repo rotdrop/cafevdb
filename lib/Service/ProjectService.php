@@ -40,6 +40,7 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Common\UndoableFileRename;
@@ -1183,7 +1184,7 @@ Whatever.',
 
     $pageName = $prefix.$projectName;
     try {
-      $articles = $webPagesRPC()->articlesByName($pageName.'(-[0-9]+)?', $category);
+      $articles = $webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
     } catch (\Throwable $t)  {
       throw new \Exception(
         $this->l->t('Unable to fetch web-pages like "%s".', [ $pageName ]),
@@ -1653,6 +1654,7 @@ Whatever.',
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
 
+    // not an entity-manager run-queue
     $runQueue = (new UndoableRunQueue($this->Logger(), $this->l10n()))
       ->register(new GenericUndoable(
         function() use ($project) {
@@ -1692,7 +1694,7 @@ Whatever.',
       $runQueue->executeActions();
     } catch (Exceptions\UndoableRunQueueException $qe) {
       $qe->getRunQueue()->executeUndo();
-      throw new \RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId(I)), $qe->getCode(), $qe);
+      throw new \RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId()), $qe->getCode(), $qe);
     }
   }
 
