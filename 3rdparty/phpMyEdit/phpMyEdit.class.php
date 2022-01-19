@@ -2330,6 +2330,7 @@ class phpMyEdit
 										   $helptip, $attributes);
 				}
 			} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
+				$attributes = $this->htmlAttributes('add', $k, []);
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
 										 $k, $value, $escape, $helptip, $attributes);
@@ -2578,6 +2579,7 @@ class phpMyEdit
 									   $help, $attributes);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
+			$attributes = $this->htmlAttributes($operation, $k, $row);
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 									 $css_class_name,
 									 $k, $row["qf$k"], $escape, $help, $attributes);
