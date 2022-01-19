@@ -301,7 +301,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $lastCompositeId = $compositePaymentId;
         $oddProjectPayment = true;
         $cssClasses[] = 'first';
-        if (!$this->compositePaymentExpanded[$compositePaymentId]) {
+        if (!($this->compositePaymentExpanded[$compositePaymentId]??false)) {
           $cssClasses[] = 'following-hidden';
         }
         $cssClasses[] = 'disable-row-click';
