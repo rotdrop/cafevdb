@@ -124,10 +124,14 @@ const updateInsuranceFee = function(elements) {
 };
 
 const enableScopeOptions = function($scopeSelect, $broker) {
-  if ($broker.length === 0) {
+  if ($broker.length === 0 || $broker.val() === '') {
     return;
   }
   const rates = $broker.data('data');
+  if (rates === undefined) {
+    console.error('RATES UNDEFINED', $broker.data());
+    return;
+  }
   $scopeSelect.find('option').each(function(idx) {
     const $option = $(this);
     $option.prop('disabled', rates.find(rate => rate.geographicalScope === $option.val()) === undefined);
@@ -144,6 +148,7 @@ const pmeFormInit = function(containerSel) {
   const submits = form.find(submitSel);
 
   if (submits.length > 0) {
+
     const rateDialog = container.find('select.broker').length > 0;
     const brokerDialog = container.find('input.broker').length > 0;
 
@@ -328,7 +333,7 @@ const pmeFormInit = function(containerSel) {
         }
       });
 
-  }
+  } // found submit inputs
 
   container
     .off('click', '.instrument-insurance-bill a.bill')
@@ -396,7 +401,6 @@ const documentReady = function() {
         });
       }
       resizeCB();
-
     },
     context: globalState,
     parameters: [],
