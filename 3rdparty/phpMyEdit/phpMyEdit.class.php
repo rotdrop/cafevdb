@@ -2263,7 +2263,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['prefix'])) {
 				$prefix = $this->fdd[$k]['display']['prefix'];
 				if (is_callable($prefix)) {
-					echo call_user_func($prefix, 'add', 'prefix', $k, $row, $this);
+					echo call_user_func($prefix, 'add', 'prefix', $k, [], $this);
 				} else {
 					echo $this->fdd[$k]['display']['prefix'];
 				}
@@ -2298,10 +2298,10 @@ class phpMyEdit
 			if ($this->col_has_php($k)) {
 				$php = $this->fdd[$k]['php'];
 				if (is_callable($php)) {
-					echo call_user_func($php, false, 'add', $k, false, -1, $this);
+					echo call_user_func($php, false, 'add', $k, false, $this->rec, $this);
 				} else if (is_array($php)) {
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], false, $opts, 'add', $k, false, -1, $this);
+					echo call_user_func($php['function'], false, $opts, 'add', $k, false, $this->rec, $this);
 				} else if (file_exists($php)) {
 					echo include($php);
 				}
