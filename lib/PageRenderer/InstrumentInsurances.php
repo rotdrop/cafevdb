@@ -250,12 +250,14 @@ class InstrumentInsurances extends PMETableViewBase
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
-          $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-          $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-          $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
           $css = [ 'cell-wrapper' ];
-          $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
-          $css[] = $instrumentHolder == $billToParty ? 'is-bill-to-party' : 'not-the-bill-to-party';
+          if ($op != 'add') {
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
+            $css[] = $instrumentHolder == $billToParty ? 'is-bill-to-party' : 'not-the-bill-to-party';
+          }
           return '<div class="' . implode(' ', $css) . '">';
         },
         'postfix' => '</div>',
@@ -280,15 +282,18 @@ class InstrumentInsurances extends PMETableViewBase
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
-          $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-          $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-          $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
           $css = [ 'cell-wrapper', 'tooltip-auto' ];
-          $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
-          $css[] = $instrumentHolder == $billToParty ? 'is-instrument-holder' : 'not-the-instrument-holder';
-          $title = $isClubMember
-                 ? ''
-                 : ' title="' . $this->toolTipsService['instrument-insurance:not-a-club-member'] . '"';
+          $title = '';
+          if ($op != 'add') {
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
+            $css[] = $instrumentHolder == $billToParty ? 'is-instrument-holder' : 'not-the-instrument-holder';
+            $title = $isClubMember
+              ? ''
+              : ' title="' . $this->toolTipsService['instrument-insurance:not-a-club-member'] . '"';
+          }
           return '<div class="' . implode(' ', $css) . '"' . $title . '>';
         },
         'postfix' => '</div>',
@@ -542,7 +547,7 @@ GROUP BY b.short_name',
       'input' => 'VR',
       'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
-      'php' => function($musicianId, $op, $field, $row, $recordId, $pme) {
+      'php|LFCDV' => function($musicianId, $op, $field, $row, $recordId, $pme) {
         $post = [
           'musicianId' => $musicianId,
           'insuranceId' => $recordId['id'],
@@ -570,8 +575,8 @@ GROUP BY b.short_name',
 </div>
 __EOT__;
         }
-          return $html;
-        }
+        return $html;
+      }
     ];
 
     //
