@@ -519,6 +519,7 @@ Störung.';
         'Files' => [],
         'Events' => [],
       ],
+      'FailedRecipients' => [],
       'MailerExceptions' => [],
       'MailerErrors' => [],
       'Duplicates' => [],
@@ -2347,7 +2348,10 @@ Störung.';
             // least currently this happens only with smtp, which is just the
             // send-method we are using.
             $failedRecipients = $phpMailer->failedRecipients($e->getMessage());
-            $this->diagnostics['FailedRecipients'] = $failedRecipients;
+            $this->diagnostics['FailedRecipients'] = array_merge(
+              $this->diagnostics['FailedRecipients'],
+              $failedRecipients
+            );
             // something was sent in this case, so do not terminate and record
             // the sent message in the sent-folder and the DB.
             break;
