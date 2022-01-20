@@ -1983,7 +1983,7 @@ Störung.';
    */
   private function getOutboundService(bool $authenticate = false):PHPMailer
   {
-    $phpMailer = new PHPMailer(true);
+    $phpMailer = new PHPMailer(exceptions: true);
     $phpMailer->setLanguage($this->getLanguage());
     $phpMailer->CharSet = 'utf-8';
     $phpMailer->SingleTo = false;
@@ -2301,8 +2301,7 @@ Störung.';
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] =
-        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
+      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
 
       return false;
     }
@@ -2337,24 +2336,35 @@ Störung.';
 
     // Finally the point of no return. Send it out!!!
     try {
-      if (!$phpMailer->Send()) {
-        // in principle this cannot happen as the mailer DOES use
-        // exceptions ...
-        $this->executionStatus = false;
-        $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
-        return false;
-      } else {
-        // catch errors?
-        $sentEmail->setMessageId($phpMailer->getLastMessageID());
-        $this->persist($sentEmail);
-        // $this->flush();
+      // PHPMailer does only throw \Exception(), but sets the code in order to
+      // distinguish between fatal and not fatal errors.
+      try {
+        $phpMailer->Send();
+      } catch (\Exception $e) {
+        switch ($e->getCode()) {
+          case PHPMailer::STOP_CONTINUE:
+            // this actually just means that some recipients have failed. At
+            // least currently this happens only with smtp, which is just the
+            // send-method we are using.
+            $failedRecipients = $phpMailer->failedRecipients($e->getMessage());
+            $this->diagnostics['FailedRecipients'] = $failedRecipients;
+            // something was sent in this case, so do not terminate and record
+            // the sent message in the sent-folder and the DB.
+            break;
+          case PHPMailer::STOP_MESSAGE:
+            // fallthrough
+          case PHPMailer::STOP_CRITICAL:
+          default:
+            throw $t;
+        }
       }
+      $sentEmail->setMessageId($phpMailer->getLastMessageID());
+      $this->persist($sentEmail);
+      // $this->flush();
     } catch (\Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] =
-        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
+      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
       $this->logException($t);
-
       return false;
     }
 
@@ -2690,8 +2700,7 @@ Störung.';
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] =
-        $t->getFile() . '(' .$t->getLine() . '): ' . $t->getMessage();
+      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
 
       return null;
     }
@@ -2706,20 +2715,11 @@ Störung.';
 
     // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
     try {
-      if (!$phpMailer->preSend()) {
-        // in principle this cannot happen as the mailer DOES use
-        // exceptions ...
-        $this->executionStatus = false;
-        $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
-        return null;
-      } else {
-        // success, would log success if we really were sending
-      }
+      $phpMailer->preSend();
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] =
-        $t->getFile() . '(' . $t->getLine() . '): ' . $t->getMessage();
+      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
 
       return null;
     }
@@ -4320,5 +4320,12 @@ Störung.';
   public function statusDiagnostics()
   {
     return $this->diagnostics;
+  }
+
+  private function formatExceptionMessage(\Throwable $t)
+  {
+    return $this->l->t('code %1$d, %2$s:%3$d -- %4$s', [
+      $t->getCode(), $t->getFile(), $t->getLine(), $t->getMessage()
+    ]);
   }
 }

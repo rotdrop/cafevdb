@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -185,5 +185,44 @@ class PHPMailer extends PHPMailerUpstream
       $header .= $this->headerLine('References', implode(self::$LE . ' ', $this->references));
     }
     return $header;
+  }
+
+  /**
+   * Parse a failed-recipients error string and explode into a list of failed
+   * recipients. Return null if $errorMessages does not refer to failed recipients.
+   *
+   * @param string $errorMessage Error message, e.g. from an exception.
+   *
+   */
+  public function failedRecipients(string $errorMessage)
+  {
+    // throw new Exception($this->lang('recipients_failed') . $errstr, self::STOP_CONTINUE);
+    $failedRecipientsL10N = $this->lang('recipients_failed');
+    if (!str_starts_with($errorMessage, $failedRecipientsL10N)) {
+      return null;
+    }
+    $failedRecipientLines = preg_split('/\r\n|\r|\n/', substr($errorMessage, strlen($failedRecipientsL10N)));
+    $failedRecipients = [];
+    foreach ($failedRecipientLines as $failedRecipientLine) {
+      // Probably depending on the server setup, the error message may even
+      // contain multiple repetitions of the email address (the first one is
+      // from the phpMailer class)
+      //
+      // mail@michaelaneuwirth.de: <mail@michaelaneuwirth.de>
+      // <mail@michaelaneuwirth.de>: Recipient address rejected: Domain not
+      // found
+      list($email, $rest) = explode(':', $failedRecipientLine, 2);
+      trim($email);
+      trim($rest);
+      $errorParts = explode(':', $rest, 2);
+      if (count($errorParts) > 1) {
+        $smtpAddressTag = $errorParts[0];
+        if (empty(trim(str_replace($email, '', $smtpAddressTag), ' <>:'))) {
+          $rest = trim($errorParts[1]);
+        }
+      }
+      $failedRecipients[$email] = $rest;
+    }
+    return $failedRecipients;
   }
 }

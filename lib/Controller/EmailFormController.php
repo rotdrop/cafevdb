@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -260,10 +260,12 @@ class EmailFormController extends Controller {
     switch ($operation) {
     case 'send':
       $composer->sendMessages();
+      $diagnostics = $composer->statusDiagnostics();
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
       if (!$composer->errorStatus()) {
         // Echo something back on success, error diagnostics are handled
         // in a unified way at the end of this script.
-        $diagnostics = $composer->statusDiagnostics();
         $caption = $diagnostics['caption'];
 
         $roles = $this->appContainer->get(OrganizationalRolesService::class);
@@ -283,10 +285,6 @@ class EmailFormController extends Controller {
         // Update list of drafts after sending the message (draft has
         // been deleted)
         $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
-      } else {
-        $requestData['errorStatus'] = $composer->errorStatus();
-        $requestData['diagnostics'] = $composer->statusDiagnostics();
-        $diagnostics = $composer->statusDiagnostics();
       }
       break;
     case 'preview':

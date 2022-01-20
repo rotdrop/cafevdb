@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -634,6 +634,7 @@ class GeoCodingService
             'geoPostalCode' => $geoPostalCode,
             'target' => $lang,
           ]);
+          $isNew = empty($entity);
           if (empty($entity)) {
             $entity = GeoPostalCodeTranslation::create()
                     ->setGeoPostalCode($geoPostalCode)
@@ -647,7 +648,12 @@ class GeoCodingService
           if ($hasChanged) {
             $entity->setTranslation($translation);
             $this->persist($entity);
-            $this->flush();
+            try {
+              $this->flush();
+            } catch (\Throwable $t) {
+              $this->logError('PostalCodeTranslation ' . $geoPostalCode->getId() . ' target ' . $lang . ' new ' . (int)$isNew . ' but caught exception');
+              $this->logException($t);
+            }
           }
         }
 
