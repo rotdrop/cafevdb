@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,17 +27,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
 
+/**
+ * DBAL wrapper. In principle no longer neccessary, but we keep it in order to
+ * separate the DI features of the app-container from the actual DB backend.
+ */
 class Connection extends \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection
 {
-  // use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  const CHARSET = 'utf8mb4';
-
-  protected $connection;
-
   public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
     parent::__construct($params, $driver, $config, $eventManager);
-    // $this->configService = $params['configService'];
   }
 }
 
