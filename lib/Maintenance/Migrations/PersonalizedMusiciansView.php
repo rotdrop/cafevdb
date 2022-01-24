@@ -91,7 +91,7 @@ WHERE m.user_id_slug = MUSICIAN_USER_ID()",
       throw new \RuntimeException($this->l->t('Cloud database server "%s" and app database server "%s" must coincide.',  [ $cloudDbHost, $appDbHost ]));
     }
 
-    self::$sql[] = [
+    self::$sql[self::STRUCTURAL][] = [
       'statement' => "GRANT SELECT ON PersonalizedMusiciansView TO  ?@'localhost'",
       'bind' => function(DBALStatement $statement) use ($cloudDbUser) {
         $statement->bindParam(1, $cloudDbUser);
