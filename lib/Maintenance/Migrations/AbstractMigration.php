@@ -74,7 +74,13 @@ abstract class AbstractMigration implements IMigration
 
     try {
       foreach (static::$sql[self::STRUCTURAL] as $sql) {
-        $statement = $connection->prepare($sql);
+        if (!is_array($sql)) {
+          $sql = [ 'statement' => $sql, 'bind' => null ];
+        }
+        $statement = $connection->prepare($sql['statement']);
+        if (is_callable($sql['bind']??null)) {
+            call_user_func($sql['bind'], $statement);
+        }
         $statement->execute();
       }
     } catch (\Throwable $t) {
@@ -85,6 +91,13 @@ abstract class AbstractMigration implements IMigration
       $connection->beginTransaction();
       try {
         foreach (static::$sql[self::TRANSACTIONAL] as $sql) {
+          if (!is_array($sql)) {
+            $sql = [ 'statement' => $sql, 'bind' => null ];
+          }
+          $statement = $connection->prepare($sql['statement']);
+          if (is_callable($sql['bind']??null)) {
+            call_user_func($sql['bind'], $statement);
+          }
           $statement = $connection->prepare($sql);
           $statement->execute();
         }
