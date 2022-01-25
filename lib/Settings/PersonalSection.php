@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,10 +26,14 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\Settings\IIconSection;
 use OCP\IURLGenerator;
 
-class PersonalSection implements IIconSection {
+class PersonalSection implements IIconSection
+{
 
   /** @var string */
   private $appName;
+
+  /** @var IURLGenerator */
+  private $urlGenerator;
 
   public function __construct(
     $appName
@@ -47,10 +52,6 @@ class PersonalSection implements IIconSection {
     return $this->appName;
   }
 
-  public function getIcon() {
-    return $this->urlGenerator->imagePath($this->appName, 'app.svg');
-  }
-
   /**
    * returns the translated name as it should be displayed, e.g. 'LDAP / AD
    * integration'. Use the L10N service to translate it.
@@ -60,6 +61,14 @@ class PersonalSection implements IIconSection {
   public function getName() {
     // @@todo make this configurable
     return 'Camerata DB';
+  }
+
+  /**
+   * @return The relative path to a an icon describing the section
+   */
+  public function getIcon()
+  {
+    return $this->urlGenerator->imagePath($this->appName, $this->appName . '.svg');
   }
 
   /**
