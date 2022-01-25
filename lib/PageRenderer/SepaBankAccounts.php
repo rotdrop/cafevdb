@@ -299,7 +299,6 @@ class SepaBankAccounts extends PMETableViewBase
       $haveGenerators = $monetaryFields->exists(function($key, $field) {
         return $field->getMultiplicity() == FieldMultiplicity::RECURRING();
       });
-      $this->logInfo('HAVE GENERATORS: '.(int)$haveGenerators);
 
       // Control to select what we want to debit
       $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions');
