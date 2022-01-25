@@ -45,10 +45,14 @@ class CloudSymmetricCryptor implements ICryptor
    * Set the encryption-key to use. If left empty then the data will be left unencrypted and decrypted.
    *
    * @param null|string $encryptionKey
+   *
+   * @return null|string The old encryption get.
    */
-  public function setEncryptionKey(?string $encryptionKey)
+  public function setEncryptionKey(?string $encryptionKey):?string
   {
+    $oldEncryptionKey = $this->encryptionKey;
     $this->encryptionKey = $encryptionKey;
+    return $oldEncryptionKey;
   }
 
   /**
