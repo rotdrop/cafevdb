@@ -575,8 +575,8 @@ class EntityManager extends EntityManagerDecorator
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
-    $transformerPool['encrypt'] = new Listeners\Transformable\Encryption(
-      $this->encryptionService->getAppCryptor()
+    $transformerPool['encrypt'] = $this->appContainer->get(
+      Listeners\Transformable\Encryption::class
     );
     $transformerPool['hash'] = new Transformable\Transformer\PhpHashTransformer([
       'algorithm' => 'sha256',
@@ -1022,15 +1022,12 @@ class EntityManager extends EntityManagerDecorator
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool['encrypt'];
 
-    /** @var Crypto\CloudSymmetricCryptor $cryptor */
-    $cryptor = $transformer->getCryptor();
-
     $encryptedEntities = [];
     $this->beginTransaction();
     try {
       // make sure decryption is still with the old key if it is given
       if (!empty($oldEncryptionKey)) {
-        $cryptor->setEncryptionKey($oldEncryptionKey);
+        $transformer->setAppEncryptionKey($oldEncryptionKey);
       }
 
       $transformer->setCachable(false);
@@ -1056,9 +1053,9 @@ class EntityManager extends EntityManagerDecorator
 
       // Set new encryption key
       if (empty($oldEncryptionKey)) {
-        $oldEncryptionKey = $cryptor->getEncryptionKey();
+        $oldEncryptionKey = $transformer->getAppEncryptionKey();
       }
-      $cryptor->setEncryptionKey($encryptionKey);
+      $transformer->setAppEncryptionKey($encryptionKey);
 
       // Flush to disk with new encryption key
       $this->flush();
@@ -1078,7 +1075,7 @@ class EntityManager extends EntityManagerDecorator
     } catch (\Throwable $t) {
       // $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
-      $cryptor->setEncryptionKey($oldEncryptionKey);
+      $transformer->setAppEncryptionKey($oldEncryptionKey);
       $this->reopen();
       throw new \RuntimeException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),

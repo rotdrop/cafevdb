@@ -25,39 +25,55 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
-use OCA\CAFEVDB\Common\Crypto\ICryptor;
+use OCA\CAFEVDB\Common\Crypto;
+use OCA\CAFEVDB\Common\Util;
 
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
   /** @var string */
-  private $encryptionKey;
+  private $managementGroupId;
 
-  /** @var ICryptor */
-  private $cryptor;
+  /** @var Crypto\CloudSymmetricCryptor */
+  private $appCryptor;
+
+  /** @var Crypto\SealCryptor */
+  private $sealCryptor;
 
   /** @var bool */
   private $cachable;
 
-  public function __construct(ICryptor $cryptor)
-  {
-    $this->cryptor = $cryptor;
+  public function __construct(
+    $managementGroupId
+    , Crypto\CloudSymmetricCryptor $appCryptor
+    , Crypto\SealCryptor $sealCryptor
+  ) {
+    $this->managementGroupId = '@' . $managementGroupId;
+    $this->appCryptor = $appCryptor;
+    // The seal-cryptor carries state, namely the array of key-cryptors, so
+    // better take a copy here.
+    $this->sealCryptor = clone $sealCryptor;
     $this->cachable = true;
   }
 
   /**
-   * @param ICryptor $cryptor
+   * Install a new encryption key, return the old one.
+   *
+   * @param null|string $encryptionKey The new encryption key.
+   *
+   * @return null|string The old global shared encryption key.
    */
-  public function setCryptor(ICryptor $cryptor)
+  public function setAppEncryptionKey(?string $encryptionKey):?string
   {
-    $this->cryptor = $cryptor;
+    return $this->appCryptor->setEncryptionKey($encryptionKey);
   }
 
   /**
-   * @return ICryptor
+   * @return null|string The global shared encryption key of the management
+   * board.
    */
-  public function getCryptor():ICryptor
+  public function getAppEncryptionKey():?string
   {
-    return $this->cryptor;
+    return $this->appCryptor->getEncryptionKey();
   }
 
   /**
@@ -69,23 +85,45 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   }
 
   /**
+   * Forward transform to data-base.
+   *
    * @param string $value Unencrypted data.
    *
    * @return string Encrypted data.
    */
   public function transform($value)
   {
-    return $this->cryptor->encrypt($value);
+    if (!$this->isEncrypted()) {
+      return $value;
+    }
+
+    $sealCryptors = [];
+    foreach ($context as $encryptionId) {
+      $sealCryptors[] = $this->getSealCryptor($encryptionId);
+    }
+    $this->sealCryptor->setSealCryptors($sealCryptors);
+
+    return $this->sealCryptor->encrypt($value);
   }
 
   /**
+   * Decrypt.
+   *
    * @param string $value Encrypted data.
    *
    * @return string Decrypted data.
    */
   public function reverseTransform($value)
   {
-    return $this->cryptor->decrypt($value);
+    $context = $this->manageEncryptionContext($value, $context);
+
+    $sealCryptors = [];
+    foreach ($context as $encryptionId) {
+      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
+    }
+    $this->sealCryptor->setSealCryptors($sealCryptors);
+
+    return $this->sealCryptor->decrypt($value);
   }
 
   /**
@@ -96,5 +134,37 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   public function isCachable()
   {
     return $this->cachable;
+  }
+
+  public function isEncrypted():bool
+  {
+    return !empty($this->appCryptor->getEncryptionKey());
+  }
+
+  private function getSealCryptor(string $encryptionId):Crypto\ICryptor
+  {
+    if ($encryptionId != $this->managementGroupId) {
+      throw new \RuntimeException('Not yet implemented, encryption ids are tied to the global orchestra id.');
+    }
+    return $this->appCryptor;
+  }
+
+  private function manageEncryptionContext(string $value, $context)
+  {
+    if (empty($context)) {
+      return [ $this->managementGroupId ];
+    }
+    if (is_string($context)) {
+      try {
+        $context = json_decode($context);
+      } catch (\Throwable $t) {
+        $context = Util::explode(',', $context);
+      }
+    }
+    if (!is_array($context)) {
+      throw new \RuntimeException('Encryption context must be an array of user- or @group-ids.');
+    }
+    $context[] = $this->managementGroupId;
+    return array_unique($context);
   }
 };
