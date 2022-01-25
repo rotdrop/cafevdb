@@ -41,6 +41,27 @@ use OCA\CAFEVDB\Exceptions;
  */
 class PersonalizedMusiciansView extends AbstractMigration
 {
+  const MUSICIAN_ID_TABLES = [
+    'SepaBankAcounts' => 'musician_id',
+    'SepaDebitMandates' => 'musician_id',
+    'ProjectParticipants' => 'musician_id',
+    'MusicianInstruments' => 'musician_id',
+    'ProjectInstruments' => 'musician_id',
+    'ProjectParticipantFieldsData' => 'musician_id',
+    'ProjectPayments' => 'musician_id',
+    'CompositePayments' => 'musician_id',
+  ];
+  const PROJECT_ID_TABLES = [
+    'Projects' => 'id',
+  ];
+  const PARTICIPANT_FIELD_ID_TABLES = [
+    'ProjectParticipantFields' => 'id',
+    'ProjectParticpantFieldsDataOptions' => 'field_id',
+  ];
+  const UNRESTRICTED_TABLES = [
+    'TableFieldTranslations',
+  ];
+
   protected static $sql = [
     self::STRUCTURAL => [
       "CREATE OR REPLACE FUNCTION MUSICIAN_USER_ID() RETURNS VARCHAR(256) CHARSET ascii
@@ -50,12 +71,6 @@ class PersonalizedMusiciansView extends AbstractMigration
 BEGIN
   RETURN COALESCE(@CLOUD_USER_ID, SUBSTRING_INDEX(USER(), '@', 1));
 END",
-      "CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW PersonalizedMusiciansView
-AS
-SELECT * FROM Musicians m
-WHERE m.user_id_slug = MUSICIAN_USER_ID()",
     ],
   ];
 
@@ -68,6 +83,11 @@ WHERE m.user_id_slug = MUSICIAN_USER_ID()",
   public function description():string
   {
     return $this->l->t('Add a view which only allows access to the row referring to the currently logged in cloud-user.');
+  }
+
+  private function restrictedViewName($table)
+  {
+    return 'Personalized' . $table . 'View';
   }
 
   public function __construct(
@@ -92,11 +112,76 @@ WHERE m.user_id_slug = MUSICIAN_USER_ID()",
     }
 
     self::$sql[self::STRUCTURAL][] = [
-      'statement' => "GRANT SELECT ON PersonalizedMusiciansView TO  ?@'localhost'",
-      'bind' => function(DBALStatement $statement) use ($cloudDbUser) {
-        $statement->bindParam(1, $cloudDbUser);
-      },
+      "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $this->restrictedViewName('Musicians') . "
+AS
+SELECT *
+FROM Musicians m
+WHERE m.user_id_slug = MUSICIAN_USER_ID()",
     ];
+
+    foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
+      $viewName = $this->restrictedViewName($table);
+      self::$sql[self::STRUCTURAL][] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->restrictedViewName('Musicians') . " pmv
+  INNER JOIN " . $table . " t
+    ON t." . $column . " = pmv.id";
+    }
+
+    foreach (self::PROJECT_ID_TABLES as $table => $column) {
+      $viewName = $this->restrictedViewName($table);
+      self::$sql[self::STRUCTURAL][] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->restrictedViewName('ProjectParticipants') . " pppv
+  INNER JOIN " . $table . " t
+    ON t." . $column . " = pppv.project_id";
+    }
+
+    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $column) {
+      $viewName = $this->restrictedViewName($table);
+      self::$sql[self::STRUCTURAL][] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->restrictedViewName('ProjectParticipantFieldsData'). " pppfdv
+  INNER JOIN " . $table . " t
+    ON t." . $column . " = pppfdv.field_id";
+    }
+
+    foreach (self::UNRESTRICTED_TABLES as $table) {
+      $viewName = $this->restrictedViewName($table);
+      self::$sql[self::STRUCTURAL][] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* " . $table . " t";
+    }
+
+    $grantTables = array_merge(
+      [ 'Musicians' ],
+      array_keys(MUSICIAN_ID_TABLES),
+      array_keys(PROJECT_ID_TABLES),
+      array_keys(PARTICIPANT_FIELDS_TABLES),
+      UNRESTRICTED_TABLES,
+    );
+    foreach ($grantTables as $table) {
+      $viewName = $this->restrictedViewName($table);
+      self::$sql[self::STRUCTURAL][] = [
+        'statement' => "GRANT SELECT ON " . $viewName . " TO  ?@'localhost'",
+        'bind' => function(DBALStatement $statement) use ($cloudDbUser) {
+          $statement->bindParam(1, $cloudDbUser);
+        },
+      ];
+    }
   }
 };
 
