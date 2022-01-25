@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Exceptions;
 class PersonalizedMusiciansView extends AbstractMigration
 {
   const MUSICIAN_ID_TABLES = [
-    'SepaBankAcounts' => 'musician_id',
+    'SepaBankAccounts' => 'musician_id',
     'SepaDebitMandates' => 'musician_id',
     'ProjectParticipants' => 'musician_id',
     'MusicianInstruments' => 'musician_id',
@@ -56,7 +56,7 @@ class PersonalizedMusiciansView extends AbstractMigration
   ];
   const PARTICIPANT_FIELD_ID_TABLES = [
     'ProjectParticipantFields' => 'id',
-    'ProjectParticpantFieldsDataOptions' => 'field_id',
+    'ProjectParticipantFieldsDataOptions' => 'field_id',
   ];
   const UNRESTRICTED_TABLES = [
     'TableFieldTranslations',
@@ -111,15 +111,14 @@ END",
       throw new \RuntimeException($this->l->t('Cloud database server "%s" and app database server "%s" must coincide.',  [ $cloudDbHost, $appDbHost ]));
     }
 
-    self::$sql[self::STRUCTURAL][] = [
-      "CREATE OR REPLACE
+    self::$sql[self::STRUCTURAL][] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $this->restrictedViewName('Musicians') . "
 AS
 SELECT *
 FROM Musicians m
-WHERE m.user_id_slug = MUSICIAN_USER_ID()",
-    ];
+WHERE m.user_id_slug = MUSICIAN_USER_ID()";
+
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->restrictedViewName($table);
@@ -163,7 +162,7 @@ SELECT t.*
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
-SELECT t.* " . $table . " t";
+SELECT t.* FROM " . $table . " t";
     }
 
     $grantTables = array_merge(
