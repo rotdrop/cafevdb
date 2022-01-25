@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/*
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,16 +23,36 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\IConfig;
 
+use OCA\CAFEVDB\Common\Crypto\CloudSymmetricCryptor;
 
 class Registration
 {
-  static public function register($context)
+  const MANAGEMENT_GROUP_ID = 'ManagementGroupId';
+
+  static public function register(IRegistrationContext $context)
   {
     $context->registerServiceAlias(
       'export:bank-bulk-transactions:aqbanking',
       Finance\AqBankingBulkTransactionExporter::class);
+    $context->registerService('AppCryptor', function(ContainerInterface $container) {
+      return $container->get(EncryptionService::class)->getAppCryptor();
+    });
+    $context->registerService(CloudSymmetricCryptor::class, function(ContainerInterface $container) {
+      return $container->get('AppCryptor');
+    });
+
+    $context->registerService(ucfirst(self::MANAGEMENT_GROUP_ID), function(ContainerInterface $container) {
+      return $container->get(IConfig::class)->getAppValue(
+        $container->get('AppName'),
+        'usergroup', // TODO: use class-const from somewhere
+        null
+      );
+    });
+    $context->registerServiceAlias(lcfirst(self::MANAGEMENT_GROUP_ID), ucfirst(self::MANAGEMENT_GROUP_ID));
   }
 }
 
