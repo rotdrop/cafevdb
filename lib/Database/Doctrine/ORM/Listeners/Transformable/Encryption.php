@@ -101,7 +101,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Encrypted data.
    */
-  public function transform($value)
+  public function transform($value, &$context = null)
   {
     if (!$this->isEncrypted()) {
       return $value;
@@ -125,7 +125,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Decrypted data.
    */
-  public function reverseTransform($value)
+  public function reverseTransform($value, &$context = null)
   {
     // For now allow mixing the seal-scheme with the stand cloud-cryptor in
     // order to be able to switch between git-branches without changing the
@@ -157,7 +157,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return bool
    */
-  public function isCachable()
+  public function isCachable():bool
   {
     return $this->cachable;
   }
