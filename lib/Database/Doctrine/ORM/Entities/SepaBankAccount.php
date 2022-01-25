@@ -84,7 +84,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $iban;
 
@@ -92,7 +92,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bic;
 
@@ -100,7 +100,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $blz;
 
@@ -108,9 +108,16 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=512, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bankAccountOwner;
+
+  /**
+   * @var mixed
+   *
+   * In memory encryption context to support multi user encryption.
+   */
+  private $encryptionContext;
 
   /**
    * @var Collection

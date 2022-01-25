@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,7 +37,14 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 class EncryptedFileData extends FileData
 {
   /**
-   * @MediaMonks\Transformable(name="encrypt", override=true)
+   * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
    */
   private $data;
+
+  /**
+   * @var mixed
+   *
+   * In memory encryption context to support multi user encryption.
+   */
+  private $encryptionContext;
 }
