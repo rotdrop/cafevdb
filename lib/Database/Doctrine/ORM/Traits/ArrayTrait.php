@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,7 +31,7 @@ trait ArrayTrait
 
   /**
    * Use reflection inspection to export all of the private keys;
-   * automatically called on post-load.
+   * automatically called on post-load if the entity used lifecycle-callbacks.
    *
    * @ORM\PostLoad
    */
