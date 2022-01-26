@@ -83,41 +83,48 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
+   * Encryption with 16 bytes iv, 64 bytes HMAC (sha512) and perhaps more data for a multi-user seal.
+   *
+   * For now calculate wtih 256 bytes for the encrypted data itself + another
+   * 256 bytes for each multi-user seal. Using 2k of data should be plenty
+   * given that we probably only need two users: the management board with a
+   * shared encryption key and the respective orchestra member with its own key.
+   *
+   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $iban;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
+   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $bic;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
+   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $blz;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=512, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
+   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $bankAccountOwner;
 
   /**
-   * @var mixed
+   * @var array
    *
    * In memory encryption context to support multi user encryption.
    */
-  private $encryptionContext;
+  private $encryptionContext = [];
 
   /**
    * @var Collection
