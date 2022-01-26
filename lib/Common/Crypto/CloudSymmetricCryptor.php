@@ -83,7 +83,8 @@ class CloudSymmetricCryptor implements ICryptor
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
       // not encrypted hack
-      if (substr($data, -2, 2) !== '|3') {
+      $version = $data[-1];
+      if ($data[-2] !== '|' || !preg_match('/[0-9a-zA-Z]/', $version)) {
         return $data;
       }
       try {
