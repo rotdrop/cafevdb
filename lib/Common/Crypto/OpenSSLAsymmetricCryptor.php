@@ -39,9 +39,13 @@ class OpenSSLAsymmetricCryptor implements ICryptor
 
   public function setPrivateKey($privKey, $password = null):OpenSSLAsymmetricCryptor
   {
-    $this->privKey = openssl_pkey_get_private($privKey, $password);
-    $details = openssl_pkey_get_details($this->privKey);
-    $this->setPublicKey($details['key']);
+    if ($privKey !== null) {
+      $this->privKey = openssl_pkey_get_private($privKey, $password);
+      $details = openssl_pkey_get_details($this->privKey);
+      $this->setPublicKey($details['key']);
+    } else {
+      $this->privKey = $privKey;
+    }
     return $this;
   }
 
@@ -56,14 +60,14 @@ class OpenSSLAsymmetricCryptor implements ICryptor
   {
     $encryptedData = null;
     openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
-    return $encryptedData;
+    return base64_encode($encryptedData);
   }
 
   /** {@inheritdoc} */
   public function decrypt(?string $encryptedData):?string
   {
     $decryptedData = null;
-    openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
+    openssl_private_decrypt(base64_decode($encryptedData), $decryptedData, $this->privKey);
     return $decryptedData;
   }
 
