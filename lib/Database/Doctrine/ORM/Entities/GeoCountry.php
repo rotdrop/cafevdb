@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/*
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,6 +27,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * GeoCountries
@@ -63,7 +66,7 @@ class GeoCountry implements \ArrayAccess
   private $l10nName;
 
   /**
-   * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries")
+   * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries", fetch="EAGER")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
    *   @ORM\JoinColumn(name="target", referencedColumnName="target")
@@ -166,7 +169,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return GeoContinent
    */
-  public function getContinent():GeoContinent
+  public function getContinent():?GeoContinent
   {
     return $this->continent;
   }

@@ -360,7 +360,7 @@ class GeoCodingService
       }
     }
 
-    $languages = $this->languages();
+    $languages = $this->getLanguages();
 
     $locations = [];
     foreach ($remoteLocations as $zipCodePlace) {
@@ -740,7 +740,7 @@ class GeoCodingService
    */
   public function updateCountries($force = false)
   {
-    $languages = $this->languages();
+    $languages = $this->getLanguages();
 
     foreach ($languages as $lang) {
       $numRows = $this->updateCountriesForLanguage($lang, $force);
@@ -782,43 +782,48 @@ class GeoCodingService
       }
 
       $this->setDatabaseRepository(GeoCountry::class);
+      /** @var GeoCountry $countryEntity */
+      $countryEntity = null;
       if (!empty($name)) {
-        $entity = $this->find(['iso' => $code, 'target' => $target]);
-        if (empty($entity)) {
-          $entity = GeoCountry::create()
+        $countryEntity = $this->find(['iso' => $code, 'target' => $lang]);
+        if (empty($countryEntity)) {
+          $countryEntity = GeoCountry::create()
             ->setIso($code)
-            ->setTarget($target);
+            ->setTarget($lang);
         } else {
-          $numRows += (int)($entity->getL10nName() != $name);
+          $numRows += (int)($countryEntity->getL10nName() != $name);
         }
-        $entity
-          ->setL10nName($name)
-          ->setContinentCode($continent);
-        $this->persist($entity);
+        $countryEntity->setL10nName($name);
+        $this->persist($countryEntity);
       }
 
       if (!empty($continentName)) {
         // Update continent table
-        /** @var GeoContinent $entity */
+        /** @var GeoContinent $continentEntity */
         $this->setDatabaseRepository(GeoContinent::class);
-        $entity = $this->find(['code' => $continent, 'target' => $lang]);
-        if (empty($entity)) {
-          $entity = GeoContinent::create()
+        $continentEntity = $this->find(['code' => $continent, 'target' => $lang]);
+        if (empty($continentEntity)) {
+          $continentEntity = GeoContinent::create()
                   ->setCode($continent)
                   ->setTarget($lang);
         } else {
-          $numRows += (int)($entity->getL10nName() != $continentName);
+          $numRows += (int)($continentEntity->getL10nName() != $continentName);
         }
-        $entity->setL10nName($continentName);
-        $this->persist($entity);
+        $continentEntity->setL10nName($continentName);
+        if (!empty($countryEntity)) {
+          $countryEntity->setContinent($continentEntity);
+        }
+        $this->persist($continentEntity);
       }
     }
+
+    $this->flush();
 
     return $numRows;
   }
 
-  /**Get the number of languages supported in the database tables. */
-  public function languages($extraLang = null)
+  /** Return the languages supported in the database tables. */
+  public function getLanguages($extraLang = null)
   {
     $languages = $this->languages;
     if (empty($languages)) {

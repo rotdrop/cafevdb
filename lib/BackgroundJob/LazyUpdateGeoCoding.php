@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -54,7 +54,7 @@ class LazyUpdateGeoCoding extends TimedJob
    * @param array $arguments
    */
   public function run($arguments = []) {
-    foreach ($this->geoCodingService->languages() as $lang) {
+    foreach ($this->geoCodingService->getLanguages() as $lang) {
       $this->geoCodingService->updateCountriesForLanguage($lang);
       $this->geoCodingService->updatePostalCodes($lang, 1);
     }
