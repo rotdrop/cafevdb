@@ -24,15 +24,19 @@
 namespace OCA\CAFEVDB\Common\Crypto;
 
 use OCP\Security\ICrypto;
+use OCP\ILogger;
 
 class SealService
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var ICrypto */
   private $crypto;
 
-  public function __construct(ICrypto $crypto)
+  public function __construct(ICrypto $crypto, ILogger $logger)
   {
     $this->crypto = $crypto;
+    $this->logger = $logger;
   }
 
   /**
@@ -61,7 +65,7 @@ class SealService
 
     /** @var ICryptor $sealCryptor */
     foreach ($keyEncryption as $userId => $sealCryptor) {
-      $sealData[] = $userId . ':' . base64_encode($sealCryptor->encrypt($sealKey));
+      $sealData[] = $userId . ':' . $sealCryptor->encrypt($sealKey);
     }
     $sealedData = sprintf('%08d|', strlen($encryptedData));
     $sealedData .= $encryptedData . '|';
@@ -70,7 +74,8 @@ class SealService
   }
 
   /**
-   * Loose check if the given $data may be a valid seal.
+   * Loose check if the given $data may be a valid seal. This may lead to
+   * false positives.
    *
    * @param string $data
    *
@@ -136,6 +141,7 @@ class SealService
       return null;
     }
     $key = $keyCryptor->decrypt($sealedKey);
+
     return $this->crypto->decrypt($seal['data'], $key);
   }
 
