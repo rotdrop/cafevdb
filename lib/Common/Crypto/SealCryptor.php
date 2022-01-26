@@ -40,21 +40,43 @@ class SealCryptor implements ICryptor
     $this->sealService = $sealService;
   }
 
+  /**
+   * Replace the set of seal-cryptors by the given one.
+   *
+   * @param array<string, ICryptor>  $sealCryptors
+   */
   public function setSealCryptors(array $sealCryptors)
   {
     $this->sealCryptors = $sealCryptors;
   }
 
+  /**
+   * Return the set of currently used seal-cryptors.
+   *
+   * @return array<string, ICryptor>
+   */
   public function getSealCryptors():array
   {
     return $this->sealCryptors;
   }
 
+  /**
+   * Add a new cryptor to the set of seal-cryptors.
+   *
+   * @param string $userId
+   *
+   * @param ICryptor $cryptor
+   */
   public function addSealCryptor(string $userId, ICryptor $cryptor)
   {
     $this->sealCryptors[$userId] = $cryptor;
   }
 
+  /**
+   * Remove the seal-cryptor for the given user-id.
+   *
+   * @param string $userId
+   */
   public function removeSealCryptor(string $userId)
   {
     unset($this->sealCryptors[$userId]);
@@ -104,5 +126,11 @@ class SealCryptor implements ICryptor
       }
     }
     return true;
+  }
+
+  /** Return the used SealService instance. */
+  public function getSealService():SealService
+  {
+    return $this->sealService;
   }
 };
