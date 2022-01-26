@@ -581,7 +581,7 @@ class GeoCodingService
         $name = $zipCodePlace['placeName'];
 
         $translations = [];
-        foreach ($this->languages($language) as $lang) {
+        foreach ($this->getLanguages($language) as $lang) {
           $translation = $this->translatePlaceName($name, $country, $lang);
           $translation = Util::normalizeSpaces($translation);
           $this->debug(print_r($translations, true));
