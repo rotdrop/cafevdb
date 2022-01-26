@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 
+use OCP\ILogger;
+
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 use OCA\CAFEVDB\Common\Crypto;
@@ -30,6 +32,8 @@ use OCA\CAFEVDB\Common\Util;
 
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var string */
   private $managementGroupId;
 
@@ -39,6 +43,9 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var Crypto\SealCryptor */
   private $sealCryptor;
 
+  /** @var Crypto\SealService */
+  private $sealService;
+
   /** @var bool */
   private $cachable;
 
@@ -46,13 +53,16 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $managementGroupId
     , Crypto\CloudSymmetricCryptor $appCryptor
     , Crypto\SealCryptor $sealCryptor
+    , ILogger $logger
   ) {
     $this->managementGroupId = '@' . $managementGroupId;
     $this->appCryptor = $appCryptor;
     // The seal-cryptor carries state, namely the array of key-cryptors, so
     // better take a copy here.
     $this->sealCryptor = clone $sealCryptor;
+    $this->sealService = $this->sealCryptor->getSealService();
     $this->cachable = true;
+    $this->logger = $logger;
   }
 
   /**
@@ -97,9 +107,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
       return $value;
     }
 
+    $context = $this->manageEncryptionContext(null, $context);
+
     $sealCryptors = [];
     foreach ($context as $encryptionId) {
-      $sealCryptors[] = $this->getSealCryptor($encryptionId);
+      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
     }
     $this->sealCryptor->setSealCryptors($sealCryptors);
 
@@ -115,6 +127,20 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform($value)
   {
+    // For now allow mixing the seal-scheme with the stand cloud-cryptor in
+    // order to be able to switch between git-branches without changing the
+    // data-base.
+    // @todo Remove when ready.
+    if (!$this->sealService->isSealedData($value)) {
+      if ($this->isEncrypted()) {
+        try {
+          return $this->appCryptor->decrypt($value);
+        } catch (\Throwable $t) {
+          return $value;
+        }
+      }
+    }
+
     $context = $this->manageEncryptionContext($value, $context);
 
     $sealCryptors = [];
@@ -149,7 +175,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     return $this->appCryptor;
   }
 
-  private function manageEncryptionContext(string $value, $context)
+  private function manageEncryptionContext(?string $value, $context)
   {
     if (empty($context)) {
       return [ $this->managementGroupId ];
