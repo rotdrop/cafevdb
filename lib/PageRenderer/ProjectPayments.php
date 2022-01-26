@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\ParticipantFileFieldsTrait;
+  use CryptoTrait;
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
@@ -225,6 +226,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
       $this->projectName = $this->project->getName();
     }
+    $this->initCrypto();
   }
 
   public function shortTitle()
@@ -834,8 +836,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
-          'encrypt' => function($value) { return $this->encrypt($value); },
-          'decrypt' => function($value) { return $this->decrypt($value); },
+          'encrypt' => function($value) { return $this->ormEncrypt($value); },
+          'decrypt' => function($value) { return $this->ormDecrypt($value); },
         ],
         'display' => [
           'popup' => function($data) {

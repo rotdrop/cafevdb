@@ -51,6 +51,7 @@ class SepaBankAccounts extends PMETableViewBase
   use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
+  use CryptoTrait;
 
   const AMOUNT_TAB_ID = 'amount';
 
@@ -192,6 +193,7 @@ class SepaBankAccounts extends PMETableViewBase
     $this->financeService = $financeService;
     $this->projectService = $projectService;
     $this->userStorage = $userStorage;
+    $this->initCrypto();
   }
 
   public function shortTitle()
@@ -550,8 +552,8 @@ class SepaBankAccounts extends PMETableViewBase
       'select|LF' => 'D',
       'maxlen' => 80,
       'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
+        'encrypt' => function($value) { return $this->ormEncrypt($value); },
+        'decrypt' => function($value) { return $this->ormDecrypt($value); },
       ],
       'values|LF'  => [
         'table' => self::TABLE,
@@ -590,8 +592,8 @@ class SepaBankAccounts extends PMETableViewBase
       'select|LF' => 'D',
       'maxlen' => 35,
       'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
+        'encrypt' => function($value) { return $this->ormEncrypt($value); },
+        'decrypt' => function($value) { return $this->ormDecrypt($value); },
       ],
       'values|LFVD' => [
         'table' => self::TABLE,
@@ -630,8 +632,8 @@ class SepaBankAccounts extends PMETableViewBase
       'input|LF' => 'H',
       'maxlen' => 12,
       'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
+        'encrypt' => function($value) { return $this->ormEncrypt($value); },
+        'decrypt' => function($value) { return $this->ormDecrypt($value); },
       ],
     ];
 
@@ -642,8 +644,8 @@ class SepaBankAccounts extends PMETableViewBase
       'select' => 'T',
       'maxlen' => 35,
       'encryption' => [
-        'encrypt' => function($value) { return $this->encrypt($value); },
-        'decrypt' => function($value) { return $this->decrypt($value); },
+        'encrypt' => function($value) { return $this->ormEncrypt($value); },
+        'decrypt' => function($value) { return $this->ormDecrypt($value); },
       ],
     ];
 
@@ -1156,5 +1158,4 @@ received so far'),
     }
     return $idOrName;
   }
-
 }

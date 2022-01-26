@@ -93,6 +93,12 @@ class EntityManager extends EntityManagerDecorator
   const PROXY_DIR = __DIR__ . "/Doctrine/ORM/Proxies";
   const DEV_MODE = true;
 
+  /** @var Encryption-transformer key, see $this->getDataTransformer() */
+  const TRANSFORM_ENCRYPT = 'encrypt';
+
+  /** @var Hash-transformer key, see $this->getDataTransformer() */
+  const TRANSFORM_HASH = 'hash';
+
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
   private $entityManager;
 
@@ -575,10 +581,10 @@ class EntityManager extends EntityManagerDecorator
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
-    $transformerPool['encrypt'] = $this->appContainer->get(
+    $transformerPool[self::TRANSFORM_ENCRYPT] = $this->appContainer->get(
       Listeners\Transformable\Encryption::class
     );
-    $transformerPool['hash'] = new Transformable\Transformer\PhpHashTransformer([
+    $transformerPool[self::TRANSFORM_HASH] = new Transformable\Transformer\PhpHashTransformer([
       'algorithm' => 'sha256',
       'binary' => false,
     ]);
@@ -1001,6 +1007,19 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Return the data-transformer for the given key.
+   *
+   * @param string $key Currently may be either self::TRANSFORM_ENCRYPT or
+   * self::TRANSFORM_HASH.
+   *
+   * @return null|Transformable\Transformer\TransformerInterface
+   */
+  public function getDataTransformer(string $key):Transformable\Transformer\TransformerInterface
+  {
+    return $transformer = $this->transformerPool[$key]??null;
+  }
+
+  /**
    * In order to change the encryption key the encrypted data has to
    * be decrypted with the old key and re-encrypted with the new key.
    *
@@ -1020,7 +1039,7 @@ class EntityManager extends EntityManagerDecorator
     $unitOfWork = $this->getUnitOfWork();
 
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
-    $transformer = $this->transformerPool['encrypt'];
+    $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
 
     $encryptedEntities = [];
     $this->beginTransaction();
@@ -1035,7 +1054,7 @@ class EntityManager extends EntityManagerDecorator
       foreach ($transformables as $annotationInfo) {
         $encryptedProperties = false;
         foreach ($annotationInfo['properties'] as $field => $transformable) {
-          if ($transformable->name == 'encrypt') {
+          if ($transformable->name == self::TRANSFORM_ENCRYPT) {
             $encryptedProperties = true;
             $encryptedEntities[] = $annotationInfo['entity'];
             break;
@@ -1055,7 +1074,7 @@ class EntityManager extends EntityManagerDecorator
       if (empty($oldEncryptionKey)) {
         $oldEncryptionKey = $transformer->getAppEncryptionKey();
       }
-      $transformer->setAppEncryptionKey($encryptionKey);
+      $transformer->setAppEncryptionKey($newEncryptionKey);
 
       // Flush to disk with new encryption key
       $this->flush();
@@ -1073,7 +1092,7 @@ class EntityManager extends EntityManagerDecorator
 
       $this->commit();
     } catch (\Throwable $t) {
-      // $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
+      $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
       $transformer->setAppEncryptionKey($oldEncryptionKey);
       $this->reopen();
