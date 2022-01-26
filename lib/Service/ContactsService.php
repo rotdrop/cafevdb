@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -360,7 +360,7 @@ class ContactsService
           }
 
           $geoCodingService = $this->geoCodingService();
-          $languages = $geoCodingService->languages(true);
+          $languages = $geoCodingService->getLanguages(true);
           foreach($languages as $language) {
             $countries = $geoCodingService->countryNames($language);
             $iso = array_search($entity['country'], $countries);
