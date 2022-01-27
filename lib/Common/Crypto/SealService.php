@@ -81,13 +81,16 @@ class SealService
    *
    * @return bool
    */
-  public function isSealedData(string $data):bool
+  public function isSealedData(?string $data):bool
   {
+    if (strlen($data??'') < 10) {
+      return false;
+    }
     if ($data[8] != '|') {
       return false;
     }
     $length = (int)substr($data, 0, 8);
-    if ($data[8+1+$length] != '|') {
+    if (strlen($data) < (10+$length) || $data[8+1+$length] != '|') {
       return false;
     }
     return true;
