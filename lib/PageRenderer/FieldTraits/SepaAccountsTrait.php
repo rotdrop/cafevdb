@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,6 +30,8 @@ use OCA\CAFEVDB\Common\Util;
 /** SEPA bank account. */
 trait SepaAccountsTrait
 {
+  use CryptoTrait;
+
   /**
    * Generate join-structure and field-descriptions for the SEPA information.
    *
@@ -40,6 +42,8 @@ trait SepaAccountsTrait
    */
   public function renderSepaAccounts($musicianIdField = 'id', $projectRestrictions = [], $financeTab = 'finance')
   {
+    $this->initCrypto();
+
     $joinStructure = [
       self::SEPA_BANK_ACCOUNTS_TABLE => [
         'entity' => Entities\SepaBankAccount::class,
@@ -138,14 +142,14 @@ trait SepaAccountsTrait
             'encrypt' => function($value) {
               $values = Util::explode(',', $value);
               foreach ($values as &$value) {
-                $value = $this->encrypt($value);
+                $value = $this->ormEncrypt($value);
               }
               return implode(',', $values);
             },
             'decrypt' => function($value) {
               $values = Util::explode(',', $value);
               foreach ($values as &$value) {
-                $value = $this->decrypt($value);
+                $value = $this->ormDecrypt($value);
               }
               return implode(',', $values);
             },
@@ -154,14 +158,14 @@ trait SepaAccountsTrait
             'encrypt' => function($value) {
               $values = Util::explodeIndexed($value);
               foreach ($values as $key => $value) {
-                $values[$key] = $key.self::JOIN_KEY_SEP.$this->encrypt($value);
+                $values[$key] = $key . self::JOIN_KEY_SEP . $this->ormEncrypt($value);
               }
               return implode(',', $values);
             },
             'decrypt' => function($value) {
               $values = Util::explodeIndexed($value);
               foreach ($values as $key => $value) {
-                $values[$key] = $key.self::JOIN_KEY_SEP.$this->decrypt($value);
+                $values[$key] = $key . self::JOIN_KEY_SEP . $this->ormDecrypt($value);
               }
               return implode(',', $values);
             },

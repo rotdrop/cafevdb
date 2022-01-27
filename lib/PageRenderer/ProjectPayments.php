@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\ParticipantFileFieldsTrait;
-  use CryptoTrait;
+  use FieldTraits\CryptoTrait;
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;

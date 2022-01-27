@@ -23,7 +23,7 @@
  *
  */
 
-namespace OCA\CAFEVDB\PageRenderer;
+namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Database\EntityManager;

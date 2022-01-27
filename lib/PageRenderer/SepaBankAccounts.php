@@ -51,7 +51,7 @@ class SepaBankAccounts extends PMETableViewBase
   use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
-  use CryptoTrait;
+  use FieldTraits\CryptoTrait;
 
   const AMOUNT_TAB_ID = 'amount';
 
