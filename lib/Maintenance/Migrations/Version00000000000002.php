@@ -53,6 +53,7 @@ select p.id AS gid,
        0 AS is_admin
 from Projects p
 where p.type = 'permanent'",
+    //
     "CREATE OR REPLACE VIEW NextcloudUserGroupView AS
 select m.user_id_slug AS uid,
        pp.project_id AS gid
@@ -60,6 +61,7 @@ from ProjectParticipants pp
 left join Musicians m on m.id = pp.musician_id
 left join Projects p on p.id = pp.project_id
 where p.type = 'permanent'",
+    //
     "CREATE OR REPLACE VIEW NextcloudUserView AS
 select m.id AS id,
        m.user_id_slug AS uid,
