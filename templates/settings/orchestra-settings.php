@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -297,7 +297,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="presidentGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']); ?>
+                <?php echo PageNavigation::selectOptions($_['userGroups'], $_['presidentGroupId']); ?>
               </select>
             </div>
             <div class="email row">
@@ -340,7 +340,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="secretaryGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
+                <?php echo PageNavigation::selectOptions($_['userGroups'], $_['secretaryGroupId']); ?>
               </select>
             </div>
             <div class="email">
@@ -383,7 +383,7 @@ foreach ($localeCountryNames as $country => $name) {
                       name="treasurerGroupId"
                       class="executive-board-ids tooltip-left">
                 <option></option>
-                <?php echo PageNavigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
+                <?php echo PageNavigation::selectOptions($_['userGroups'], $_['treasurerGroupId']); ?>
               </select>
             </div>
             <div class="email">

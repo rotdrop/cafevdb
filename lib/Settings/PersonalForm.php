@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -281,7 +281,9 @@ class PersonalForm {
             'executiveBoardProjectId' => $executiveBoardProjectId,
             'executiveBoardMembers' => $executiveBoardMembers,
             'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
-            'userGroups' => array_map(function($group) { return $group->getGID(); }, $this->groupManager()->search('')),
+            'userGroups' => array_map(function($group) {
+              return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
+            }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),
 
             'dbserver' => $this->getConfigValue('dbserver'),
