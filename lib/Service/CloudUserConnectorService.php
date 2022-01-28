@@ -59,7 +59,8 @@ SELECT %2$s AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
-WHERE p.type = "permanent"';
+WHERE p.type = "permanent"
+WITH CHECK OPTION';
 
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -70,6 +71,7 @@ FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
 WHERE p.type = "permanent"';
+  // WITH CHECK OPTION. But view is not updatable. Ok.
 
   const USER_SQL_USER_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -92,7 +94,8 @@ WHERE m.id in
     (SELECT pp.musician_id
      FROM ProjectParticipants pp
      LEFT JOIN Projects p ON pp.project_id = p.id
-     WHERE p.type = "permanent")';
+     WHERE p.type = "permanent")
+WITH CHECK OPTION';
 
   const USER_SQL_VIEWS = [
     'User' => self::USER_SQL_USER_VIEW,
@@ -238,7 +241,7 @@ WHERE m.id in
         }
         foreach ($statements as $sql) {
           $currentStatement = $sql;
-          $this->logInfo('SQL ' . $currentStatement);
+          $this->logDebug('SQL ' . $currentStatement);
           $this->connection->prepare($sql)->execute();
         }
       }
@@ -265,7 +268,7 @@ WHERE m.id in
       foreach (self::USER_SQL_VIEWS as $name => $sql) {
         $viewName = $this->viewName($dataBaseName, self::USER_SQL_PREFIX, $name);
         $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
-        $this->logInfo('SQL ' . $currentStatement);
+        $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
       }
     } catch (\Throwable $t) {
@@ -324,6 +327,7 @@ WHERE m.id in
       'db.table.user_group.column.gid' => 'gid',
       'db.table.user_group.column.uid' => 'uid',
       'opt.case_insensitive_username' => true,
+      'opt.password_change' => true,
       'opt.crypto_class' => $cryptoClass,
       'opt.crypto_param_0' => $cryptoMemoryCost,
       'opt.crypto_param_1' => $cryptoTimeCost,
@@ -338,7 +342,8 @@ WHERE m.id in
       'opt.quota_sync' => null,
       'opt.reverse_active' => false,
       'opt.safe_store' => false,
-      'opt.user_cache' => false,
+      'opt.use_cache' => true,
+      'opt.name_change' => false,
     ];
   }
 
