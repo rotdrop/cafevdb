@@ -26,17 +26,19 @@
     <nextcloud min-version="22" max-version="23" />
   </dependencies>
   <navigations>
+    <!--
     <navigation>
       <id>cafevdb</id>
       <name>CafevDB</name>
       <route>cafevdb.page.index</route>
     </navigation>
+    -->
   </navigations>
   <settings>
     <admin>OCA\CAFEVDB\Settings\Admin</admin>
     <admin-section>OCA\CAFEVDB\Settings\AdminSection</admin-section>
-    <personal>OCA\CAFEVDB\Settings\Personal</personal>
-    <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section>
+    <!-- <personal>OCA\CAFEVDB\Settings\Personal</personal>
+    <personal-section>OCA\CAFEVDB\Settings\PersonalSection</personal-section> -->
   </settings>
   <commands>
     <command>OCA\CAFEVDB\Command\HelloWorld</command>

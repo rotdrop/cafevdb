@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2021
+ * @copyright Claus-Justus Heine 2014-2022
  */
 
 namespace OCA\CAFEVDB\AppInfo;
@@ -26,6 +26,21 @@ use OCP\IL10N;
 
 use OC\L10N\Events\TranslationNotFound;
 use OCA\CAFEVDB\Listener\TranslationNotFoundListener;
+
+/*
+ *
+ **********************************************************
+ *
+ * Navigation and settings depending on the group-membership
+ *
+ */
+use OCP\INavigationManager;
+use OCP\Settings\IManager as ISettingsManager;
+use OCP\IURLGenerator;
+
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Settings\Personal;
+use OCA\CAFEVDB\Settings\PersonalSection;
 
 /*
  *
@@ -74,7 +89,8 @@ class Application extends App implements IBootstrap
   /** @var string */
   protected $appName;
 
-  public function __construct (array $urlParams=array()) {
+  public function __construct (array $urlParams = [])
+  {
     $infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
     $this->appName = (string)$infoXml->id;
     parent::__construct($this->appName, $urlParams);
@@ -83,6 +99,36 @@ class Application extends App implements IBootstrap
   // Called later than "register".
   public function boot(IBootContext $context): void
   {
+    $context->injectFn(function(
+      $userId
+      , AuthorizationService $authorizationService
+      , IURLGenerator $urlGenerator
+      , INavigationManager $navigationManager
+    ) {
+      if ($authorizationService->authorized($userId))  {
+        $navigationManager->add([
+          'id' => $this->appName,
+          'name' => 'CAFeVDB',
+          'href' => $urlGenerator->linkToRoute(implode('.', [ $this->appName, 'page', 'index' ])),
+          'icon' => $urlGenerator->imagePath($this->appName, 'app.svg'),
+          'type' => 'link',
+          'order' => 1,
+        ]);
+      }
+    });
+
+    $context->injectFn(function(
+      $userId
+      , AuthorizationService $authorizationService
+      , IURLGenerator $urlGenerator
+      , ISettingsManager $settingsManager
+    ) {
+      if ($authorizationService->authorized($userId)) {
+        $settingsManager->registerSection('personal', PersonalSection::class);
+        $settingsManager->registerSetting('personal', Personal::class);
+      }
+    });
+
     $context->injectFn(function(
       \OCP\Contacts\IManager $contactsManager
     ) {
