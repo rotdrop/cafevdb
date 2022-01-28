@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -77,6 +78,9 @@ class PersonalForm {
   /** @var UserStorage */
   private $userStorage;
 
+  /** @var CloudUserConnectorService */
+  private $cloudUserService;
+
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
@@ -88,6 +92,7 @@ class PersonalForm {
     , WebPagesRPC $webPagesRPC
     , AddressBookProvider $addressBookProvider
     , UserStorage $userStorage
+    , CloudUserConnectorService $cloudUserService
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
@@ -99,10 +104,12 @@ class PersonalForm {
     $this->webPagesRPC = $webPagesRPC;
     $this->addressBookProvider = $addressBookProvider;
     $this->userStorage = $userStorage;
+    $this->cloudUserService = $cloudUserService;
     $this->l = $this->l10N();
   }
 
-  public function getForm() {
+  public function getForm()
+  {
     if (!$this->inGroup()) {
       return new TemplateResponse(
         $this->appName(),
@@ -285,6 +292,12 @@ class PersonalForm {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),
+
+            'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
+              $this->getConfigValue('cloudUserViewsDatabase')
+            ),
+            'importClubMembersAsCloudUsers' => $this->getConfigValue('importClubMembersAsCloudUsers', 'off') === 'on',
+            'cloudUserViewsDatabase' => $this->getConfigValue('cloudUserViewsDatabase'),
 
             'dbserver' => $this->getConfigValue('dbserver'),
             'dbname' => $this->getConfigValue('dbname'),
