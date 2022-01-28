@@ -28,12 +28,32 @@ import './app/jquery-cafevdb-tooltips.js';
 
 require('admin-settings.scss');
 
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
 $(function() {
 
   const $container = $('#' + appName + '-admin-settings');
   const $msg = $container.find('.msg');
 
   $container.find('[title]').cafevTooltip({ placement: 'auto' });
+
+  const $orchestraUserGroup = $container.find('input.orchestraUserGroup');
+
+  const orchestraUserGroupAutocomplete = [];
+  for (const [key, value] of Object.entries($orchestraUserGroup.data('cloudGroups'))) {
+    orchestraUserGroupAutocomplete.push(key);
+    orchestraUserGroupAutocomplete.push(value);
+  }
+
+  console.info('GROUP AC', orchestraUserGroupAutocomplete);
+
+  $orchestraUserGroup.autocomplete({
+    source: orchestraUserGroupAutocomplete,
+    open(event, ui) {
+      $.fn.cafevTooltip.remove();
+    },
+  });
 
   $container.find('input[type="text"]').blur(function(event) {
     const $self = $(this);

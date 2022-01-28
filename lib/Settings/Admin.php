@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\App\IAppManager;
+use OCP\IGroup;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -71,6 +72,13 @@ class Admin implements ISettings {
       }));
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
 
+    $groupList = $this->groupManager()->search('');
+    $groups = [];
+    /** @var IGroup $group */
+    foreach ($groupList as $group) {
+      $groups[$group->getGID()] = $group->getDisplayName();
+    }
+
     return new TemplateResponse(
       $this->appName(),
       self::TEMPLATE,
@@ -81,6 +89,7 @@ class Admin implements ISettings {
         ],
         'appName' => $this->appName(),
         'userGroup' => $this->getAppValue('usergroup'),
+        'cloudGroups' => $groups,
         'personalAppSettingsLink' => $personalAppSettingsLink,
         'wikiNameSpace' => $this->getAppValue('wikinamespace'),
         'wikiVersion' => $this->wikiRPC->version(),
@@ -89,6 +98,7 @@ class Admin implements ISettings {
         'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
         'haveCloudUserBackendConfig' => $haveCloudUserBackendConfig,
         'toolTips' => $this->toolTipsService(),
+        'requesttoken' => \OCP\Util::callRegister(),
       ]);
   }
 

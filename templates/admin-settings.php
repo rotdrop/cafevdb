@@ -22,6 +22,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Common\Util;
+
 script($appName, $assets['js']['asset']);
 style($appName, $assets['css']['asset']);
 
@@ -68,6 +72,7 @@ if (!empty($cloudUserBackendRestrictions)) {
 <div class="section <?php p($appName); ?>-admin-settings">
   <h2 class="heading">Camerata DB</h2>
   <form id="<?php p($appName); ?>-admin-settings">
+    <input type="hidden" name="requesttoken" value="<?php p($requesttoken); ?>"/>
     <div>
       <input type="text"
              class="<?php p($userGroupTag); ?>"
@@ -75,7 +80,9 @@ if (!empty($cloudUserBackendRestrictions)) {
              id="<?php p($userGroupTag); ?>"
              value="<?php p($userGroup); ?>"
              title="<?php p($toolTips['settings:admin:user-group']); ?>"
-             placeholder="<?php p($l->t('Group')); ?>" />
+             placeholder="<?php p($l->t('Group')); ?>"
+             data-cloud-groups='<?php echo json_encode($cloudGroups); ?>'
+      />
       <label for="<?php p($userGroupTag); ?>"><?php p($l->t('User Group')); ?></label>
     </div>
     <div class="<?php p($wikiShow); ?>">
