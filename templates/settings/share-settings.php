@@ -313,7 +313,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <form id="cloud-user-form"
           class="cloud-user">
       <div class="cloud-user hints">
-      <?php foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
+      <?php if (!empty($importClubMembersAsCloudUsers)) foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
         <div class="cloud-user hint"><?php p($hint); ?></div>
       <?php } ?>
       </div>

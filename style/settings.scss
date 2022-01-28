@@ -301,6 +301,19 @@ input.randomkey {
           background-repeat:no-repeat;
           background-size:24px 24px;
           font-size:0;
+          &.busy {
+            background-image:url('../../../core/img/loading.gif');
+          }
+        }
+        input.checkbox.busy {
+          &, &:checked {
+            & + label::before {
+              background-image:url('../../../core/img/loading.gif');
+              background-color:unset;
+              border:0;
+              background-size:contain;
+            }
+          }
         }
         input.checkbox.user-sql.separate-database {
           &:checked ~, &:checked ~ label {

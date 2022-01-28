@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -68,36 +68,37 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
     msgElement = $();
   }
   element.on(eventType, function(event) {
-    const $self = $(this);
+    const self = this;
+    const $self = $(self);
     msgElement.hide();
     $('.statusmessage').hide();
     let name;
     let value;
-    if ((value = callbacks.getValue($self, msgElement)) !== undefined) {
+    if ((value = callbacks.getValue.call(self, $self, msgElement)) !== undefined) {
       name = value.name;
       value = value.value;
     }
     console.debug('value', value);
     if (value === undefined) {
-      callbacks.cleanup();
+      callbacks.cleanup.apply(self);
     } else {
-      callbacks.setup();
+      callbacks.setup.apply(self);
       callbacks
         .post(name, value)
         .fail(function(xhr, textStatus, errorThrown) {
           let message = Ajax.failMessage(xhr, textStatus, errorThrown);
           message = Notification.messages(message, { timeout: 15 });
           msgElement.html(message).show();
-          callbacks.fail(xhr, textStatus, errorThrown);
-          callbacks.cleanup();
+          callbacks.fail.call(self, xhr, textStatus, errorThrown);
+          callbacks.cleanup.apply(self);
         })
         .done(function(data) {
           if (data.message) {
             data.message = Notification.messages(data.message, { timeout: 15 });
             msgElement.html(data.message.join('; ')).show();
           }
-          callbacks.success($self, data, value, msgElement);
-          callbacks.cleanup();
+          callbacks.success.call(self, $self, data, value, msgElement);
+          callbacks.cleanup.apply(self);
         });
     }
     return false;
