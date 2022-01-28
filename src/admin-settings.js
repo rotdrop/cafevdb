@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -24,13 +24,18 @@
 import { $, appName } from './app/globals.js';
 import * as Ajax from './app/ajax.js';
 import generateUrl from './app/generate-url.js';
+import './app/jquery-cafevdb-tooltips.js';
+
+require('admin-settings.scss');
 
 $(function() {
 
   const $container = $('#' + appName + '-admin-settings');
   const $msg = $container.find('.msg');
 
-  $container.find('input').blur(function(event) {
+  $container.find('[title]').cafevTooltip({ placement: 'auto' });
+
+  $container.find('input[type="text"]').blur(function(event) {
     const $self = $(this);
 
     const name = $self.attr('name');
@@ -52,6 +57,29 @@ $(function() {
         $msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
       });
   });
+
+  $container.on('click', 'input[type="button"]', function(event) {
+    const $self = $(this);
+
+    const name = $self.attr('name');
+
+    $msg.hide();
+
+    $.post(
+      generateUrl('/settings/admin/set/' + name), { value: name })
+      .done(function(data) {
+        console.log(data);
+        const message = Array.isArray(data.message)
+          ? data.message.join('<br/>')
+          : data.message;
+        $msg.html(message).show();
+      })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown);
+        $msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
+      });
+  });
+
 });
 
 // Local Variables: ***

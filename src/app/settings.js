@@ -541,6 +541,88 @@ const afterLoad = function(container) {
       }
     });
     sharedFolder('outboxfolder');
+
+    const $importClubMembersFieldSet = container.find('fieldset.user-sql');
+    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]');
+    const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
+    const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
+    const $enabledIfImport = $importClubMembersFieldSet.find('.enable-if-user-sql-backend');
+
+    /*
+      <div class="cloud-user hints">
+      <?php foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
+        <div class="cloud-user hint"><?php p($hint); ?></div>
+      <?php } ?>
+      </div>
+    */
+    const $cloudUserHints = $importClubMembersFieldSet.find('div.cloud-user.hints');
+
+    const updateHints = function(hints) {
+      $cloudUserHints.empty();
+      if (!Array.isArray(hints) || hints.length === 0) {
+        return;
+      }
+      for (const hint of hints) {
+        $cloudUserHints.append('<div class0"cloud-user hint">' + hint + '</div>');
+      }
+    };
+
+    simpleSetValueHandler(
+      $importClubMembersAsCloudUsers, 'change', undefined, {
+        success($element, data) {
+          if ($element.is(':checked')) {
+            $enabledIfImport.prop('disabled', false).find('*').prop('disabled', false);
+            $shownIfImport.removeClass('hidden');
+          } else {
+            $enabledIfImport.prop('disabled', true).find('*').prop('disabled', true);
+            $shownIfImport.addClass('hidden');
+          }
+          updateHints(data.hints);
+        },
+        getValue($element, msgElement) {
+          const isChecked = $element.prop('checked');
+          $importClubMembersFieldSet.toggleClass('club-member-users-enabled', isChecked);
+          $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
+          return {
+            name: $element.attr('name'),
+            value: isChecked,
+          };
+        },
+      });
+
+    const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]');
+    const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database');
+
+    $cloudUserViewsDatabaseCheckbox
+      .on('change', function(event) {
+        const $this = $cloudUserViewsDatabaseCheckbox;
+        const $databaseValue = $cloudUserViewsDatabase.val();
+        if ($this.prop('checked')) {
+          if ($databaseValue !== ($this.data('savedDatabaseValue') || '')) {
+            $cloudUserViewsDatabase.val($this.data('savedDatabaseValue'));
+            $cloudUserViewsDatabase.trigger('blur');
+          }
+        } else {
+          $this.data('savedDatabaseValue', $databaseValue);
+          if ($databaseValue !== '') {
+            $cloudUserViewsDatabase.val('');
+            $cloudUserViewsDatabase.trigger('blur');
+          }
+        }
+        return false;
+      });
+    simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
+      success($element, data) {
+        updateHints(data.hints);
+      },
+    });
+
+    simpleSetValueHandler($recreateViewsButton, 'click', undefined, {
+      success($element, data) {
+        updateHints(data.hints);
+      },
+    });
+
   } // shared objects
 
   /****************************************************************************

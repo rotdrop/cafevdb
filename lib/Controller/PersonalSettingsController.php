@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -1308,6 +1309,71 @@ class PersonalSettingsController extends Controller {
       $this->setUserValue($parameter, $realValue);
       return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
 
+    case 'importClubMembersAsCloudUsers':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
+      }
+      $stringValue = $realValue ? 'on' : 'off';
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        if ($realValue) {
+          $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
+          $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
+        } else {
+          $userConnectorService->removeUserSqlViews($cloudUserViewsDatabase);
+          $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase, delete: true);
+        }
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
+        'message' => $requirements['hints'],
+        'hints' => $requirements['hints'],
+      ]);
+    case 'userSqlBackendRecreateViews':
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
+        $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return self::dataResponse([
+        'message' => array_merge(
+          [ $this->l->t('Cloud-user-views have been regenerated successfully.'), ],
+          $requirements['hints']),
+        'hints' => $requirements['hints'],
+      ]);
+    case 'cloudUserViewsDatabase':
+      $newValue = Util::normalizeSpaces($value);
+      $oldValue = $this->getConfigValue($parameter, null);
+      $this->logInfo('OLD / NEW ' . $oldValue . ' / ' . $newValue);
+      if ($newValue != $oldValue) {
+        try {
+          /** @var CloudUserConnectorService $userConnectorService */
+          $userConnectorService = $this->di(CloudUserConnectorService::class);
+          $requirements = $userConnectorService->checkRequirements($newValue);
+          $userConnectorService->removeUserSqlViews($oldValue);
+          $userConnectorService->updateUserSqlViews($newValue);
+          $userConnectorService->writeUserSqlConfig($newValue);
+        } catch(\Throwable $t) {
+          $this->logException($t);
+          return self::grumble($this->exceptionChainData($t));
+        }
+      }
+      return $this->setSimpleConfigValue($parameter, $value, furtherData: [
+        'message' => $requirements['hints'],
+        'hints' => $requirements['hints'],
+      ]);
     case 'keydistribute':
       list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
       $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));
@@ -1816,7 +1882,7 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
-  private function setSimpleConfigValue($key, $value, $reportValue = null)
+  private function setSimpleConfigValue($key, $value, $reportValue = null, array $furtherData = [])
   {
     $realValue = Util::normalizeSpaces($value);
     if (empty($reportValue)) {
@@ -1825,21 +1891,24 @@ class PersonalSettingsController extends Controller {
 
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
-      return self::dataResponse([
-        'message' => $this->l->t('Erased config value for parameter "%s".', $key),
-        $key => $value,
-      ]);
+      return self::dataResponse(
+        Util::arrayMergeRecursive([
+          'message' => [ $this->l->t('Erased config value for parameter "%s".', $key), ],
+          $key => $value,
+        ], $furtherData)
+      );
     } else {
       $this->setConfigValue($key, $realValue);
 
       if (preg_match('/.*password.*/i', $key)) {
         $realValue = '••••••••';
       }
-      return self::dataResponse([
-        'message' => $this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ]),
-        $key => $reportValue,
-        $key.'Raw' => $realValue,
-      ]);
+      return self::dataResponse(
+        Util::arrayMergeRecursive([
+          'message' => [ $this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ]), ],
+          $key => $reportValue,
+          $key.'Raw' => $realValue,
+        ], $furtherData));
     }
   }
 

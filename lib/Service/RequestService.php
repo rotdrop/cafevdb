@@ -5,25 +5,28 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
 
+use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\ISession;
 use OCP\ILogger;
 use OCP\IL10N;
 
@@ -31,21 +34,31 @@ class RequestService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const JSON = 'json';
+  const URL_ENCODED = 'urlencoded';
+
+  /** @var IRequest */
+  private $request;
+
   /** @var IURLGenerator */
   private $urlGenerator;
 
-  /** @var ILogger */
-  private $logger;
+  /** @var ISession */
+  private $session;
 
   /** @var IL10N */
   private $l;
 
   public function __construct(
-    IURLGenerator $urlGenerator
+    IRequest $request
+    , IURLGenerator $urlGenerator
+    , ISession $session
     , ILogger $logger
     , IL10N $l10n
   ) {
+    $this->request = $request;
     $this->urlGenerator = $urlGenerator;
+    $this->session = $session;
     $this->logger = $logger;
     $this->l = $l10n;
   }
@@ -66,8 +79,12 @@ class RequestService
   public function postToRoute(string $route,
                               array $routeParams = [],
                               array $postData = [],
-                              string $type = 'json')
+                              string $type = self::JSON)
   {
+    if (!$this->session->isClosed()) {
+      throw new \RuntimeException($this->l->t('Cannot post to internal route while the session is open.'));
+    }
+
     $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);
 
     $requestToken = \OCP\Util::callRegister();
@@ -75,76 +92,58 @@ class RequestService
     $url .= '?requesttoken='.urlencode($requestToken);
 
     switch ($type) {
-    case 'json':
-      if (is_array($postData)) {
-        $postData = \OC_JSON::encode($postData);
-      }
-      $httpHeader = 'Content-Type: application/json'."\r\n".
-                  'Content-Length: '.strlen($postData);
-      break;
-    case 'urlencoded':
-      if (is_array($postData)) {
-        $postData = http_build_query($postData, '', '&');
-      }
-      $httpHeader = 'Content-Type: application/x-www-form-urlencoded'."\r\n".
-                  'Content-Length: '.strlen($postData);
-      break;
+      case self::JSON:
+        if (is_array($postData)) {
+          $postData = \OC_JSON::encode($postData);
+        }
+        $httpHeader = 'Content-Type: application/json'."\r\n"
+          . 'Content-Length: '.strlen($postData);
+        break;
+      case self::URL_ENCODED:
+        if (is_array($postData)) {
+          $postData = http_build_query($postData, '', '&');
+        }
+        $httpHeader = 'Content-Type: application/x-www-form-urlencoded'."\r\n"
+          . 'Content-Length: '.strlen($postData);
+        break;
     default:
-      throw new \InvalidArgumentException($this->l->t("Supported data formats are JSON and URLENCODED"));
+      throw new \InvalidArgumentException(
+        $this->l->t('Supported data formats are "%1$s" and "%2$s".', [
+          self::JSON, self::URL_ENCODED,
+        ]));
       break;
     }
 
-    if (function_exists('curl_version')) {
-      $cookies = array();
-      foreach($_COOKIE as $name => $value) {
-        $cookies[] = "$name=".urlencode($value);
-      }
-      session_write_close(); // avoid deadlock
-      $c = curl_init($url);
-      curl_setopt($c, CURLOPT_VERBOSE, 0);
-      curl_setopt($c, CURLOPT_POST, 1);
-      curl_setopt($c, CURLOPT_POSTFIELDS, $postData);
-      if (count($cookies) > 0) {
-        curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
-      }
-      curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-      $result = curl_exec($c);
-      curl_close($c);
-      session_start(); // restart it
-    } else {
-      $cookies = array();
-      foreach($_COOKIE as $name => $value) {
-        $cookies[] = "$name=".urlencode($value);
-      }
-      $cookies = (count($cookies) > 0) ? "Cookie: " . join("; ", $cookies) . "\r\n" : '';
-
-      $context = stream_context_create([
-        'http' => [
-          'method' => 'post',
-          'header' => $httpHeader."\r\n".$cookies,
-          'content' => $postData,
-          'follow_location' => 1,
-        ],
-      ]);
-
-      // session_write_close(); // avoid deadlock
-
-      $fp = fopen($url, 'rb', false, $context);
-
-      if ($fp === false) {
-        throw new \RunTimeException($this->l->t("Unable to post to route %s (%s)", array($route, $url)));
-      }
-
-      $result = stream_get_contents($fp);
-      fclose($fp);
-
-      // session_start(); // restart it
+    $cookies = array();
+    foreach($this->request->cookies as $name => $value) {
+      $cookies[] = "$name=" . urlencode($value);
     }
+
+    $c = curl_init($url);
+    curl_setopt($c, CURLOPT_VERBOSE, 0);
+    curl_setopt($c, CURLOPT_POST, 1);
+    curl_setopt($c, CURLOPT_POSTFIELDS, $postData);
+    if (count($cookies) > 0) {
+      curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
+    }
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($c);
+    curl_close($c);
+
 
     $data = json_decode($result, true);
     if (!is_array($data) || (count($data) > 0 && !isset($data['data']))) {
       throw new \RunTimeException(
-        $this->l->t("Invalid response from API call: %s", print_r($result, true)));
+        $this->l->t('Invalid response from API call: "%s"', print_r($result, true)));
+    }
+
+    // Some apps still return HTTP_STATUS_OK and code errors and success in
+    // the old way ...
+    if (($data['status']??null) != 'success' && isset($data['data'])) {
+      throw new \RuntimeException(
+        $this->l->t('Error response from call to internal route "%1$s": %2$s', [
+          $route, $data['data']['message']??print_r($data, true)
+        ]));
     }
 
     if (isset($data['data'])) {

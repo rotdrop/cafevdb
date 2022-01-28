@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -129,7 +129,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @param mixed $value
    */
   public function offsetSet($offset, $value) {
-    throw new \RuntimeException($l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
+    throw new \RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
 
   /**
@@ -137,7 +137,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @param string $offset
    */
   public function offsetUnset($offset) {
-    throw new \RuntimeException($l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
+    throw new \RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
 
   private function preProcessKey($key)
@@ -1018,6 +1018,23 @@ and contact the treasurer for further instructions.',
       'projectsfolder' => $this->l->t('Shared folder for per-project data.'),
       'projectparticipantsfolder' => $this->l->t('Shared folder for per-project per-participant data'),
       'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
+
+      'settings' => [
+        'admin' => [
+          'user-group' => $this->l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'),
+          'wiki-name-space' => $this->l->t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.'),
+          'cloud-user-backend-conf' => $this->l->t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
+        ],
+        'personal' => [
+          'sharing' => [
+            'user-sql' => [
+              'enable' => $this->l->t('Import the orchestra club-members into the ambient cloud as ordinary cloud-users. This requires in particular GRANT privileges for the database. It also requires further configuration of the underlying "%s"-app as admin-user.', 'user_sql'),
+              'recreate-views' => $this->l->t('Recreate all "%1$s" views and grant permissions to use them to the cloud dastabase-user.', 'user_sql'),
+              'separate-database' => $this->l->t('In order to isolate the SQL-views for the cloud-user-backend from the rest of the database tables it is possible to put them into their own separate database. Please note that it is neccessary that the app\'s database account has all -- and in particular: GRANT -- privileges on that dedicated database.'),
+            ],
+          ],
+        ],
+      ],
 
       'settings-button' => $this->l->t('Personal application settings.'),
 

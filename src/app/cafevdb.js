@@ -21,7 +21,6 @@
  */
 
 import { globalState, appName, $, jQuery } from './globals.js';
-import generateUrl from './generate-url.js';
 import { urlDecode } from './url-decode.js';
 import { token as pmeToken } from './pme-selectors.js';
 
@@ -145,47 +144,6 @@ const formSubmit = function(url, values, method) {
   }
   form.appendTo($('div#content')); // needed?
   form.submit();
-};
-
-/**
- * A variant of the old fashioned appsettings with a callback
- * instead of script loading
- *
- * @param {String} route TBD.
- *
- * @param {Function} callback TBD.
- */
-const appSettings = function(route, callback) {
-  const popup = $('#appsettings_popup');
-  if (popup.is(':visible')) {
-    popup.addClass('hidden').html('');
-    // popup.hide().html('');
-  } else {
-    // const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
-    $.get(generateUrl(route))
-      .done(function(data) {
-        popup
-          .html(data)
-          .ready(function() {
-            // assume the first element is a container div
-            if (popup.find('.popup-title').length > 0) {
-              popup.find('.popup-title').append('<a class="close"></a>');
-              // popup.find(">:first-child").prepend('<a class="close"></a>').show();
-            } else {
-              popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
-            }
-            popup.find('.close').bind('click', function() {
-              popup.addClass('hidden').html('');
-            });
-            callback(popup);
-            popup.find('>:first-child').removeClass('hidden');
-            popup.removeClass('hidden');
-          });
-      })
-      .fail(function(data) {
-        console.log(data);
-      });
-  }
 };
 
 const attachToolTip = function(selector, options) {
@@ -378,7 +336,6 @@ export {
   unfocus,
   modalWaitNotification,
   formSubmit,
-  appSettings,
   snapperClose,
   attachToolTip,
   applyToolTips,

@@ -1,9 +1,11 @@
-/**Orchestra member, musicion and project management application.
+<?php
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,6 +21,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#cafevdbadmin img.cafevdblogo {
-  width:32px;
-};
+namespace OCA\CAFEVDB\Exceptions;
+
+class DatabaseCloudConnectorViewException extends DatabaseException
+{
+}

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,10 +25,12 @@ namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
+use OCP\App\IAppManager;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
 class Admin implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -41,17 +43,34 @@ class Admin implements ISettings {
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
+  /** @var IAppManager */
+  private $appManager;
+
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
     , WikiRPC $wikiRPC
+    , IAppManager $appManager
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
+    $this->toolTipsService = $toolTipsService;
     $this->wikiRPC = $wikiRPC;
+    $this->appManager = $appManager;
   }
 
-  public function getForm() {
+  public function getForm()
+  {
+    $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
+    $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
+    $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
+    $haveCloudUserBackendConfig = !empty(array_filter(
+      $this->cloudConfig()->getAppKeys($this->appName()),
+      function($value) use ($cloudUserBackend) {
+        return str_starts_with($value, $cloudUserBackend . ':');
+      }));
+    $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
+
     return new TemplateResponse(
       $this->appName(),
       self::TEMPLATE,
@@ -62,8 +81,14 @@ class Admin implements ISettings {
         ],
         'appName' => $this->appName(),
         'userGroup' => $this->getAppValue('usergroup'),
+        'personalAppSettingsLink' => $personalAppSettingsLink,
         'wikiNameSpace' => $this->getAppValue('wikinamespace'),
         'wikiVersion' => $this->wikiRPC->version(),
+        'cloudUserBackend' => $cloudUserBackend,
+        'cloudUserBackendEnabled' => $cloudUserBackendEnabled,
+        'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
+        'haveCloudUserBackendConfig' => $haveCloudUserBackendConfig,
+        'toolTips' => $this->toolTipsService(),
       ]);
   }
 

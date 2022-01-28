@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -214,36 +214,117 @@ input.randomkey {
   width: 18em;
 }
 
-/* #personal-settings-container { */
-/*     display:none; */
-/* } */
+#personal-settings-container {
 
-#personal-settings-container div.settings-control {
-  margin:0.2ex 0 0.2ex 0;
-}
+  .popup-title .heading {
+    background-image:url('../img/logo-greyf-large.svg');
+    background-repeat:no-repeat;
+    background-origin:padding-box;
+    background-size:contain;
+    padding-left:45px;
+  }
 
-#personal-settings-container div.locale.information {
-  margin-top:1ex;
-}
+  div.settings-control {
+    margin:0.2ex 0 0.2ex 0;
+  }
 
-#personal-settings-container span.locale.heading {
-  font-weight:bold;
-}
+  div.locale.information {
+    margin-top:1ex;
+  }
 
-#personal-settings-container span.locale.timestamp {
-  color:red;
-}
+  span.locale.heading {
+    font-weight:bold;
+  }
 
-#personal-settings-container span.locale.time {
-  color:blue;
-}
+  span.locale.timestamp {
+    color:red;
+  }
 
-#personal-settings-container span.locale.timezone {
-  color:red;
-}
+  span.locale.time {
+    color:blue;
+  }
 
-#personal-settings-container span.locale.thelocale {
-  color:blue;
+  span.locale.timezone {
+    color:red;
+  }
+
+  span.locale.thelocale {
+    color:blue;
+  }
+
+  fieldset legend {
+    font-weight:bold;
+    font-style:italic;
+  }
+
+  div.flex-container {
+    display:flex;
+    flex-flow: row nowrap;
+  }
+  span.flex-container {
+    display:inline-flex;
+  }
+  .flex-container {
+    &.flex-center {
+      align-items:center;
+    }
+    &.flex-baseline {
+      align-items:baseline;
+    }
+    &.flex-justify-full {
+      justify-content:space-between;
+    }
+  }
+
+  #sharing-settings {
+    form.cloud-user {
+      .info, .hint {
+        font-style:italic;
+        color:blue;
+        margin-left:3ex;
+        padding-left:16px;
+        background-image: url('../../../core/img/actions/info.svg');
+        background-position:left center;
+        background-repeat:no-repeat;
+        background-origin:padding-box;
+        background-size:16px;
+      }
+      a.info {
+        background-position:right center;
+        padding:0 16px 0 0;
+        margin:0;
+      }
+      fieldset.user-sql {
+        input.user-sql.recreate-views {
+          background-image:url('../img/reload-solid.svg');
+          background-position:center center;
+          background-repeat:no-repeat;
+          background-size:24px 24px;
+          font-size:0;
+        }
+        input.checkbox.user-sql.separate-database {
+          &:checked ~, &:checked ~ label {
+            .hide-if-user-sql-separate-database {
+              display:none;
+            }
+          }
+          &:not(:checked) ~, &:not(:checked) ~ label {
+            .show-if-user-sql-separate-database {
+              display:none;
+            }
+          }
+        }
+        input[name="cloudUserViewsDatabase"] {
+          margin-left:1ex;
+        }
+        &.club-member-users-disabled {
+          .info {
+            display:none;
+          }
+        }
+      }
+    }
+  }
 }
 
 #app-settings-content input[type="checkbox"].checkbox + label {

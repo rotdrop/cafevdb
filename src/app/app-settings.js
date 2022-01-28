@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -23,7 +23,59 @@
 // @@TODO these are rather personal settings
 
 import { $ } from './globals.js';
-import { appSettings, unfocus } from './cafevdb.js';
+import { unfocus } from './cafevdb.js';
+import generateUrl from './generate-url.js';
+
+/**
+ * A variant of the old fashioned appsettings with a callback
+ * instead of script loading
+ *
+ * @param {String} route TBD.
+ *
+ * @param {Object} callbacks TBD.
+ */
+const appSettings = function(route, callbacks) {
+  const defaultCallbacks = {
+    done() {},
+    fail() {},
+    always() {},
+  };
+  callbacks = $.extend({}, defaultCallbacks, callbacks);
+  const $popup = $('#appsettings_popup');
+  if ($popup.is(':visible')) {
+    $popup.addClass('hidden').html('');
+    // $popup.hide().html('');
+  } else {
+    // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
+    $.get(generateUrl(route))
+      .done(function(data) {
+        $popup
+          .html(data)
+          .ready(function() {
+            // assume the first element is a container div
+            if ($popup.find('.popup-title').length > 0) {
+              $popup.find('.popup-title').append('<a class="close"></a>');
+              // $popup.find(">:first-child").prepend('<a class="close"></a>').show();
+            } else {
+              $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
+            }
+            $popup.find('.close').bind('click', function() {
+              $popup.addClass('hidden').html('');
+            });
+            callbacks.done.apply($popup.get(0), arguments);
+            $popup.find('>:first-child').removeClass('hidden');
+            $popup.removeClass('hidden');
+          });
+      })
+      .fail(function() {
+        console.log(arguments);
+        callbacks.fail.apply($popup.get(0), arguments);
+      })
+      .always(function() {
+        callbacks.always.apply($popup.get(0), arguments);
+      });
+  }
+};
 
 const documentReady = function() {
 
@@ -41,10 +93,17 @@ const documentReady = function() {
   });
 
   appNav.on('click', '#app-settings-further-settings', function(event) {
+    const $self = $(this);
+    $self.addClass('loading');
     appSettings(
-      'settings/personal/form',
-      function(container) {
-        container.trigger('cafevdb:content-update'); // perhaps remove this
+      'settings/personal/form', {
+        done() {
+          const $popup = $(this);
+          $popup.trigger('cafevdb:content-update'); // perhaps remove this
+        },
+        always() {
+          $self.removeClass('loading');
+        },
       });
 
     return false;

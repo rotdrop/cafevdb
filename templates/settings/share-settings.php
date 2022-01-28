@@ -5,21 +5,27 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
 $alloff = $_['orchestra'] == '' ? $alloff = 'disabled' : '';
 $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
@@ -300,6 +306,87 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           <?php echo $l->t('force');?>
         </label>
         <input name="balancesfolder-check" id="balancesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
+    </form>
+    <!-- Cloud-User Connector -->
+    <h4><?php p($l->t('Members as Cloud-Users')); ?></h4>
+    <form id="cloud-user-form"
+          class="cloud-user">
+      <div class="cloud-user hints">
+      <?php foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
+        <div class="cloud-user hint"><?php p($hint); ?></div>
+      <?php } ?>
+      </div>
+      <fieldset id="user-sql-fieldset"
+                class="user-sql"
+                <?php ($cloudUserRequirements['status'] != CloudUserConnectorService::REQUIREMENTS_OK) && p('disabled'); ?>
+      >
+        <?php $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND; ?>
+        <legend class="user-sql">
+          <?php p($l->t('Import club-members as cloud-user-accounts into the cloud')); ?>
+        </legend>
+        <div>
+          <input id="user-sql-backend-checkbox"
+                 <?php $importClubMembersAsCloudUsers && p('checked'); ?>
+                 name="importClubMembersAsCloudUsers"
+                 type="checkbox"
+                 class="checkbox user-sql"/>
+          <label for="user-sql-backend-checkbox"
+                 title="<?php p($toolTips['settings:personal:sharing:user-sql:enable']); ?>">
+            <?php p($l->t('Generate database-views for the "%s" cloud user-backend', $cloudUserBackend)); ?>
+          </label>
+          <?php $link = 'https://apps.nextcloud.com/apps/' . $cloudUserBackend; ?>
+          (<a target="<?php p(\md5($link)); ?>"
+             href="<?php p($link); ?>"
+             class="external info"
+          >
+            <?php p($l->t('%s info', $cloudUserBackend)); ?>
+          </a>)
+          <div class="show-if-user-sql-backend info<?php empty($importClubMembersAsCloudUsers) && p(' hidden'); ?>">
+            <?php p($l->t('Please log in as administrator and configure the "%1$s"-user-backend.', $cloudUserBackend)); ?>
+          </div>
+        </div>
+        <div class="enable-if-user-sql-backend">
+          <input id="user-sql-separate-database-checkbox"
+                 type="checkbox"
+                 class="checkbox user-sql separate-database"
+                 <?php !empty($cloudUserViewsDatabase) && p('checked'); ?>
+                 <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
+          />
+          <label for="user-sql-separate-database-checkbox"
+                 title="<?php p($toolTips['settings:personal:sharing:user-sql:separate-database']); ?>">
+            <span class="hide-if-user-sql-separate-database">
+              <?php p($l->t('Use a separate dedicated database for the SQL-views.')); ?>
+            </span>
+            <span class="show-if-user-sql-separate-database">
+              <?php p($l->t('Views-Database')); ?>
+            </span>
+          </label>
+          <input type="text"
+                 placeholder="<?php p($l->t('Databasename')); ?>"
+                 class="show-if-user-sql-separate-database"
+                 name="cloudUserViewsDatabase"
+                 value="<?php p($cloudUserViewsDatabase); ?>"
+                 <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
+          />
+          <div class="show-if-user-sql-separate-database info">
+            <?php p($l->t('Please make sure the data-base user "%1$s@%2$s" has all -- and in particluar: GRANT -- privileges on the dedicated database.', [ $dbuser, $dbserver ])); ?>
+          </div>
+        </div>
+        <div class="enable-if-user-sql-backend flex-container flex-center">
+          <input id="user-sql-recreate-views-button"
+                 class="user-sql recreate-views"
+                 <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
+                 type="button"
+                 name="userSqlBackendRecreateViews"
+                 value="<?php p($l->t('Recreate')); ?>"
+                 title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>"
+          />
+          <label for="user-sql-recreate-views-button"
+                 title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>">
+            <?php p($l->t('Recreate the database-views for the "%1$s"-user-backend.',  $cloudUserBackend)); ?>
+          </label>
+        </div>
       </fieldset>
     </form>
   </div>
