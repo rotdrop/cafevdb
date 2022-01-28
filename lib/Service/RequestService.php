@@ -127,6 +127,10 @@ class RequestService
       curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
     }
     curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+    // this is internal, so there is no point in verifying certs:
+    curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+
     $result = curl_exec($c);
     curl_close($c);
 
