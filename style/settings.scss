@@ -265,6 +265,9 @@ input.randomkey {
     display:inline-flex;
   }
   .flex-container {
+    &.flex-wrap {
+      flex-wrap:wrap;
+    }
     &.flex-center {
       align-items:center;
     }
@@ -273,6 +276,28 @@ input.randomkey {
     }
     &.flex-justify-full {
       justify-content:space-between;
+    }
+    .flex-wrapper {
+      width:100%;
+      height:0;
+    }
+  }
+  .flex-grow {
+    flex-grow: 10;
+    &-1 {
+      flex-grow: 1;
+    }
+    &-2 {
+      flex-grow: 2;
+    }
+    &-3 {
+      flex-grow: 3;
+    }
+    &-4 {
+      flex-grow: 4;
+    }
+    &-5 {
+      flex-grow: 5;
     }
   }
 
@@ -293,6 +318,11 @@ input.randomkey {
         background-position:right center;
         padding:0 16px 0 0;
         margin:0;
+      }
+      div, span {
+        &.info, &.hint {
+          max-width:90ex;
+        }
       }
       fieldset.user-sql {
         input.user-sql.recreate-views {
@@ -329,6 +359,7 @@ input.randomkey {
         }
         input[name="cloudUserViewsDatabase"] {
           margin-left:1ex;
+          max-width:60ex;
         }
         &.club-member-users-disabled {
           .info {

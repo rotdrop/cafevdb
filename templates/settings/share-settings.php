@@ -346,7 +346,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
             <?php p($l->t('Please log in as administrator and configure the "%1$s"-user-backend.', $cloudUserBackend)); ?>
           </div>
         </div>
-        <div class="enable-if-user-sql-backend">
+        <div class="enable-if-user-sql-backend flex-container flex-center flex-wrap">
           <input id="user-sql-separate-database-checkbox"
                  type="checkbox"
                  class="checkbox user-sql separate-database"
@@ -364,11 +364,12 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           </label>
           <input type="text"
                  placeholder="<?php p($l->t('Databasename')); ?>"
-                 class="show-if-user-sql-separate-database"
+                 class="show-if-user-sql-separate-database flex-grow"
                  name="cloudUserViewsDatabase"
                  value="<?php p($cloudUserViewsDatabase); ?>"
                  <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
           />
+          <div class="flex-wrapper"></div>
           <div class="show-if-user-sql-separate-database info">
             <?php p($l->t('Please make sure the data-base user "%1$s@%2$s" has all -- and in particluar: GRANT -- privileges on the dedicated database.', [ $dbuser, $dbserver ])); ?>
           </div>
