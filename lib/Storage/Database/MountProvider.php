@@ -205,12 +205,17 @@ class MountProvider implements IMountProvider
 
       /** @var Entities\ProjectParticipant $participant */
       foreach ($project->getParticipants() as $participant) {
-        $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
-        $storage = new ProjectParticipantsStorage([
-          'participant' => $participant,
-        ]);
-        $bulkLoadStorageIds[] = $storage->getId();
-        $participantStorages[$folder] = $storage;
+        try {
+          $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
+          $storage = new ProjectParticipantsStorage([
+            'participant' => $participant,
+          ]);
+          $bulkLoadStorageIds[] = $storage->getId();
+          $participantStorages[$folder] = $storage;
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Caught an exception trying to generate project-participant mounts.');
+          continue;
+        }
       }
     }
 
