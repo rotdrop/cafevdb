@@ -179,6 +179,10 @@ class AdminSettingsController extends Controller {
 
     /** @var RequestService $requestService */
     $requestService = $this->di(RequestService::class);
+
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache($requestService, $cloudUserBackend, $messages);
+
     $route = implode('.', [
       $cloudUserBackend,
       'settings',
@@ -187,7 +191,14 @@ class AdminSettingsController extends Controller {
     $result = $requestService->postToRoute($route, postData: $cloudUserBackendParams, type: RequestService::URL_ENCODED);
     $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', $cloudUserBackend);
 
-    // try also to clear the cache after changing the configuration
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache($requestService, $cloudUserBackend, $messages);
+
+    return $messages;
+  }
+
+  private function clearUserBackendCache(RequestService $requestService, string $cloudUserBackend, array &$messages)
+  {
     $route = implode('.', [
       $cloudUserBackend,
       'settings',
@@ -204,7 +215,6 @@ class AdminSettingsController extends Controller {
         $t->getMessage(),
       ]);
     }
-    return $messages;
   }
 }
 
