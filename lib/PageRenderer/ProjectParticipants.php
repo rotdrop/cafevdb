@@ -891,6 +891,44 @@ class ProjectParticipants extends PMETableViewBase
         'tooltip' => $this->toolTipsService['member-status'],
       ]);
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_deactivated', [
+        'name' => $this->l->t('Cloud Account Deactivated'),
+        'input' => ($this->expertMode ? null : 'HR'),
+        'select' => 'C',
+        'css' => [ 'postfix' => [ 'cloud-account-deactivated', ], ],
+        'sort' => true,
+        'default' => null,
+        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|LVDF' => [
+          0 => '',
+          1 => '&#10004;',
+        ],
+        'align|LF' => 'center',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-deactivated'],
+        'display' => [ 'popup' => 'tooltip' ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_disabled', [
+        'name' => $this->l->t('Hidden from Cloud'),
+        'input' => ($this->expertMode ? null : 'HR'),
+        'select' => 'C',
+        'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
+        'sort' => true,
+        'default' => null,
+        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|LVDF' => [
+          0 => '',
+          1 => '&#10004;',
+        ],
+        'align|LF' => 'center',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-disabled'],
+        'display' => [ 'popup' => 'tooltip' ],
+      ]);
+
     /*
      *
      **************************************************************************

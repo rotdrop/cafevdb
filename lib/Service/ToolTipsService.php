@@ -378,6 +378,13 @@ invited to have a look, but please do not change anything unless you know what y
         'year-of-construction' => $this->l->t('Year of manufacture, if known. "Fuzzy" expression like "unknown", "end of 19th century", "around 1900" etc. are allowed.'),
       ],
 
+      'page-renderer' => [
+        'musicians' => [
+          'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
+          'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
+        ],
+      ],
+
       'participant-fields' => [
       ],
 

@@ -52,6 +52,14 @@ class CloudUserConnectorService
 
   const USER_SQL_PREFIX = 'Nextcloud';
 
+  /**
+   * @var string
+   *
+   * The SQL to define the group-connector view for the user_sql
+   * user-backend. Only projects with active users show up.
+   *
+   *
+   */
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
@@ -59,7 +67,7 @@ SELECT %2$s AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
-WHERE p.type = "permanent"
+WHERE p.id IN (SELECT DISTINCT pp.project_id FROM ProjectParticipants pp WHERE pp.deleted IS NULL)
 WITH CHECK OPTION';
 
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
@@ -69,10 +77,18 @@ SELECT m.user_id_slug AS uid,
        %2$s AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE p.type = "permanent"';
+LEFT JOIN Projects p ON p.id = pp.project_id';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
+  /**
+   * @var string
+   *
+   * The SQL query to define the user-connector view for the user_sql
+   * user-backend. Note that active/inactive could be omitted as this status
+   * is maintained by the cloud itself in the user preferences table. The
+   * "disabled" switch -- if set -- prevents the user to show up in the cloud
+   * at all.
+   */
   const USER_SQL_USER_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
@@ -85,8 +101,8 @@ SELECT m.id AS id,
        m.email AS email,
        NULL AS quota,
        NULL AS home,
-       IF(m.deleted IS NULL, 1, 0) AS active,
-       IF(m.deleted IS NULL, 0, 1) AS disabled,
+       m.cloud_account_deactivated AS inactive,
+       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
        0 AS avatar,
        NULL AS salt
 FROM Musicians m
@@ -237,7 +253,10 @@ WITH CHECK OPTION';
           sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser),
         ];
         if ($name === 'User') {
+          // allow changing the password from the cloud
           $statements[] = sprintf(self::GRANT_FIELD_UPDATE, $viewName, $cloudDbUser, 'password');
+          // allow deactivation of users from the cloud
+          $statements[] = sprintf(self::GRANT_FIELD_UPDATE, $viewName, $cloudDbUser, 'inactive');
         }
         foreach ($statements as $sql) {
           $currentStatement = $sql;
@@ -312,7 +331,8 @@ WITH CHECK OPTION';
       'db.table.group.column.gid' => 'gid',
       'db.table.group.column.name' => 'display_name',
       'db.table.user' => $this->viewName(null, self::USER_SQL_PREFIX, 'User'),
-      'db.table.user.column.active' => 'active',
+      'db.table.user.column.active' => 'inactive',
+      'opt.reverse_active' => true,
       'db.table.user.column.avatar' => null,
       'db.table.user.column.disabled' => 'disabled',
       'db.table.user.column.email' => 'email',
@@ -340,7 +360,6 @@ WITH CHECK OPTION';
       'opt.name_sync' => 'force_sql',
       'opt.provide_avatar' => true,
       'opt.quota_sync' => null,
-      'opt.reverse_active' => false,
       'opt.safe_store' => false,
       'opt.use_cache' => true,
       'opt.name_change' => false,
