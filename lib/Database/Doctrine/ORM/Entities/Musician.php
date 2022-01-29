@@ -209,6 +209,34 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $remarks;
 
   /**
+   * @var bool|null
+   *
+   * Set to true if for whatever reason the user remains undeleted in the
+   * musician-database but its cloud-account needs to be deactivated, for
+   * instance to prevent abuse after a password breach or things like that.
+   *
+   * This only affects the cloud-account of DB-musicians. It can be set by
+   * admins and group-admins through the cloud admin UI.
+   *
+   * @ORM\Column(type="boolean", nullable=true)
+   */
+  private $cloudAccountDeactivated;
+
+  /**
+   * @var bool|null
+   *
+   * Set to true if the cloud user-account should not be generated at
+   * all. This differs from $cloudAccountDeactivated in that with
+   * "...Disabled" the musician is not even exported as user account, while
+   * the "...Deactivated" flag can be changed by the cloud administrator.
+   *
+   * Not that deleted users are also not exported to the cloud.
+   *
+   * @ORM\Column(type="boolean", nullable=true)
+   */
+  private $cloudAccountDisabled;
+
+  /**
    * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", orphanRemoval=true)
    */
   private $instruments;
