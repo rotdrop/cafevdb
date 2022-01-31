@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,6 +30,9 @@ class AfterProjectDeletedEvent extends Event {
   /** @var int */
   private $projectId;
 
+  /** @var string */
+  private $projectName;
+
   /**
    * @var bool
    *
@@ -37,17 +40,26 @@ class AfterProjectDeletedEvent extends Event {
    */
   private $disabled;
 
-  public function __construct($projectId, $disabled) {
+  public function __construct(int $projectId, string $projectName, bool $disabled)
+  {
     parent::__construct();
     $this->projectId = $projectId;
+    $this->projectName = $projectName;
     $this->diabled = $disabled;
   }
 
-  public function getProjectId(): int {
+  public function getProjectId():int
+  {
     return $this->projectId;
   }
 
-  public function getDisabled(): bool {
+  public function getProjectName():string
+  {
+    return $this->projectName;
+  }
+
+  public function getDisabled():bool
+  {
     return $this->disabled;
   }
 }

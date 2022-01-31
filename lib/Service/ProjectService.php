@@ -1713,6 +1713,7 @@ Whatever.',
    */
   public function createProject(string $name, ?int $year = null, $type = ProjectType::TEMPORARY):?Entities\Project
   {
+    /** @var Entities\Project $project */
     $project = null;
 
     $this->entityManager->beginTransaction();
@@ -1744,6 +1745,13 @@ Whatever.',
         $t->getCode(),
         $t);
     }
+
+    $this->eventDispatcher->dispatchTyped(
+      new Events\ProjectCreatedEvent(
+        $project->getId(),
+        $project->getName(),
+        $project->getYear(),
+        $project->getType()));
 
     return $project;
   }
@@ -1821,7 +1829,7 @@ Whatever.',
     try {
 
       $this->eventDispatcher->dispatchTyped(
-        new Events\BeforeProjectDeletedEvent($project->getId(), $softDelete));
+        new Events\BeforeProjectDeletedEvent($project->getId(), $project->getName(), $softDelete));
 
       $this->entityManager->executePreFlushActions();
 
@@ -1882,8 +1890,12 @@ Whatever.',
         $t);
     }
 
-    $this->eventDispatcher->dispatchTyped(
-      new Events\AfterProjectDeletedEvent($project->getId(), $softDelete));
+    try {
+      $this->eventDispatcher->dispatchTyped(
+        new Events\AfterProjectDeletedEvent($project->getId(), $project->getName(), $softDelete));
+    } catch (\Throwable $t) {
+      $this->logException($t, 'After project-deleted handlers failed.');
+    }
 
     return $softDelete ? $project : null;
   }

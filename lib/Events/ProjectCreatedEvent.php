@@ -25,7 +25,9 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
-class BeforeProjectDeletedEvent extends Event {
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+
+class ProjectCreatedEvent extends Event {
 
   /** @var int */
   private $projectId;
@@ -33,19 +35,22 @@ class BeforeProjectDeletedEvent extends Event {
   /** @var string */
   private $projectName;
 
-  /**
-   * @var bool
-   *
-   * Set to true if the project was kept but disabled.
-   */
-  private $disabled;
+  /** @var int */
+  private $projectYear;
 
-  public function __construct($projectId, $projectName, $disabled)
-  {
+  /** @var ProjectType */
+  private $projectType;
+
+  public function __construct(
+    int $projectId
+    , string $projectName
+    , int $projectYear
+    , ProjectType $projectType) {
     parent::__construct();
     $this->projectId = $projectId;
     $this->projectName = $projectName;
-    $this->diabled = $disabled;
+    $this->projectYear = $projectYear;
+    $this->projectType = $projectType;
   }
 
   public function getProjectId():int
@@ -58,9 +63,14 @@ class BeforeProjectDeletedEvent extends Event {
     return $this->projectName;
   }
 
-  public function getDisabled():bool
+  public function getProjectYear():int
   {
-    return $this->disabled;
+    return $this->projectYear;
+  }
+
+  public function getProjectType():ProjectType
+  {
+    return $this->projectType;
   }
 }
 

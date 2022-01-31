@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,10 +30,20 @@ class ProjectUpdatedEvent extends Event {
   /** @var int */
   private $projectId;
 
-  /** @var array */
+  /**
+   * @var array
+   * ```
+   * [ 'id' => PROJECT_ID, 'name' => NAME, 'year' => YEAR ]
+   * ```
+   */
   private $oldData;
 
-  /** @var array */
+  /**
+   * @var array
+   * ```
+   * [ 'id' => PROJECT_ID, 'name' => NAME, 'year' => YEAR ]
+   * ```
+   */
   private $newData;
 
   public function __construct($projectId, $oldData, $newData) {
