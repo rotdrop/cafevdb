@@ -55,7 +55,6 @@ class Admin implements ISettings {
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
-    $this->toolTipsService = $toolTipsService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
   }
