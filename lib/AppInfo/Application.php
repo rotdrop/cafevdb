@@ -120,7 +120,6 @@ class Application extends App implements IBootstrap
     $context->injectFn(function(
       $userId
       , AuthorizationService $authorizationService
-      , IURLGenerator $urlGenerator
       , ISettingsManager $settingsManager
     ) {
       if ($authorizationService->authorized($userId)) {
