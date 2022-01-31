@@ -266,7 +266,7 @@ WITH CHECK OPTION';
       }
     } catch (\Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
-        $this->l->t('Unable to create or update the user-sql cloud-connector views: .', $currentStatement),
+        $this->l->t('Unable to create or update the user-sql cloud-connector views: %s.', $currentStatement),
         $t->getCode(),
         $t
       );
@@ -292,7 +292,7 @@ WITH CHECK OPTION';
       }
     } catch (\Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
-        $this->l->t('Unable to delete the user-sql cloud-connector views: .', $currentStatement),
+        $this->l->t('Unable to delete the user-sql cloud-connector views: %s.', $currentStatement),
         $t->getCode(),
         $t
       );
