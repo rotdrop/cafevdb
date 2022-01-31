@@ -96,15 +96,11 @@ class RequestService
         if (is_array($postData)) {
           $postData = \OC_JSON::encode($postData);
         }
-        $httpHeader = 'Content-Type: application/json'."\r\n"
-          . 'Content-Length: '.strlen($postData);
         break;
       case self::URL_ENCODED:
         if (is_array($postData)) {
           $postData = http_build_query($postData, '', '&');
         }
-        $httpHeader = 'Content-Type: application/x-www-form-urlencoded'."\r\n"
-          . 'Content-Length: '.strlen($postData);
         break;
     default:
       throw new \InvalidArgumentException(
