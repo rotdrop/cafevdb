@@ -469,7 +469,7 @@ class SepaDebitMandatesController extends Controller {
       }
 
       $message[] = $this->l->t(
-        'Value for `%s\' set to `%s\'.', [ $changed, $value ]);
+        'Value for "%s" set to "%s".', [ $changed, $value ]);
       $result[$changed] = $value;
 
       foreach ($newValidations as $validation) {
