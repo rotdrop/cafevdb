@@ -314,7 +314,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function __wakeup()
   {
     $this->arrayCTOR();
-    $this->postLoad();
+    $this->keys[] = 'publicName';
   }
 
   /**
@@ -1131,6 +1131,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function postLoad()
   {
-    $this->keys[] = 'publicName';
+    $this->__wakeup();
   }
 }
