@@ -183,7 +183,7 @@ class PaymentsController extends Controller {
         $file['meta'] = [
           'musicianId' => $musicianId,
           'projectId' => $projectId,
-          'pathChain' => $pathChain,
+          // 'pathChain' => $pathChain, ?? needed ??
           'dirName' => $pathInfo['dirname'],
           'baseName' => $pathInfo['basename'],
           'extension' => $pathInfo['extension']?:'',

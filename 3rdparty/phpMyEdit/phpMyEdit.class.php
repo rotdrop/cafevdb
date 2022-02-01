@@ -1564,7 +1564,7 @@ class phpMyEdit
 			if (empty($this->fdd[$main_column][self::FDD_VALUES])) {
 				continue;
 			}
-			$join        = $this->fdd[$main_column][self::FDD_VALUES]['join'];
+			$join = $this->fdd[$main_column][self::FDD_VALUES]['join']??null;
 			if (is_array($join)) {
 				if (isset($join['condition'])) {
 					$join = $join['condition'];

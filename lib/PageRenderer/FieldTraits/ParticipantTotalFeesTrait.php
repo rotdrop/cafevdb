@@ -49,7 +49,6 @@ trait ParticipantTotalFeesTrait
   / COUNT($join_table.id))',
         'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetaryFields) {
 
-          $project_id = $recordId['project_id'];
           $musicianId = $recordId['musician_id'];
 
           $amountInvoiced = 0.0;

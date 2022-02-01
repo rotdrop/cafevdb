@@ -1765,7 +1765,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     }
 
     // sort by option label, then option data, then value
-    uasort($options, function($a, $b) use ($values, $emptyLastCmp) {
+    uasort($options, function($a, $b) use ($values) {
       /** @var Entities\ProjectParticipantFieldDataOption $a */
       /** @var Entities\ProjectParticipantFieldDataOption $b */
       $cmp = Functions\strCmpEmptyLast($a->getLabel(), $b->getLabel());

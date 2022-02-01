@@ -1156,7 +1156,7 @@ class SepaDebitMandatesController extends Controller {
 
         unset($file['tmp_name']);
         $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                       [ $file['name'], $filePath ]);
+                                       [ $file['name'], $writtenMandateFileName ]);
         $file['name'] = $writtenMandateFileName;
 
         $pathInfo = pathinfo($writtenMandateFileName);
@@ -1165,8 +1165,8 @@ class SepaDebitMandatesController extends Controller {
 
         $file['meta'] = [
           'musicianId' => $musicianId,
-          'projectId' => $projectId,
-          'pathChain' => $pathChain,
+          'projectId' => $debitMandate->getProject()->getId(),
+          // 'pathChain' => $pathChain, ?? needed ??
           'dirName' => $pathInfo['dirname'],
           'baseName' => $pathInfo['basename'],
           'extension' => $pathInfo['extension']?:'',
