@@ -1008,13 +1008,15 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
 
   const $element = $(this);
 
+  console.info('VALIDATE PME', $element, event);
+
   const $form = $element.closest('form.' + pmeToken('form'));
 
   if (typeof validateLockCB === 'undefined') {
     validateLockCB = function(lock, validateOk) {};
   }
 
-  if ($element.prop('readonly')) {
+  if ($element.is(event.target) && $element.prop('readonly')) {
     validateLockCB(false, null);
     return false;
   }
@@ -1678,36 +1680,40 @@ const mandateReady = function(selector, resizeCB) {
   form
     .off('click', submitSel)
     .on('click', submitSel, function(event) {
-      const button = $(this);
+      const $button = $(this);
       if (submitActive) {
-        button.blur();
+        $button.blur();
         return false;
       }
 
       // allow delete button, validation makes no sense here
-      if (button.attr('name') === PHPMyEdit.sys('savedelete')) {
+      if ($button.attr('name') === PHPMyEdit.sys('savedelete')) {
         return true;
       }
 
       submitActive = true;
 
-      const inputs = $pmeTable.find('input[type="text"]');
+      const $inputs = $pmeTable.find('input[type="text"]');
 
       $.fn.cafevTooltip.hide();
-      inputs.prop('readonly', true);
-      button.blur();
+      $inputs.prop('readonly', true);
+      $button.blur();
 
-      mandateValidatePME.call({ name: pmeData('iban') }, event, function(lock, validateOk) {
+      // need only real valid input element
+      const $ibanInput = $inputs.filter('[name="' + pmeData('iban') + '"]');
+      console.info('INPUTS', $inputs, $ibanInput, pmeData('iban'));
+
+      mandateValidatePME.call($ibanInput, event, function(lock, validateOk) {
         if (lock) {
-          inputs.prop('readonly', true);
+          $inputs.prop('readonly', true);
         } else {
           submitActive = false;
-          button.blur();
-          inputs.prop('readonly', false);
+          $button.blur();
+          $inputs.prop('readonly', false);
           if (validateOk) {
             // submit the form ...
             form.off('click', submitSel);
-            button.trigger('click');
+            $button.trigger('click');
           }
         }
       });
