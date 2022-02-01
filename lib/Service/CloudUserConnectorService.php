@@ -93,8 +93,8 @@ LEFT JOIN Projects p ON p.id = pp.project_id';
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.id AS id,
-       m.user_id_slug AS uid,
-       m.user_id_slug AS username,
+       CAST(m.user_id_slug AS CHAR CHARACTER SET utf8mb4) AS uid,
+       CAST(m.user_id_slug AS CHAR CHARACTER SET utf8mb4) AS username,
        m.user_passphrase AS password,
        CONCAT_WS(" ", IF(m.nick_name IS NULL
                          OR m.nick_name = "", m.first_name, m.nick_name), m.sur_name) AS name,
@@ -220,7 +220,7 @@ WITH CHECK OPTION';
       $hints[] = $this->l->t('The requird user-backend "%1$s" seems to be installed and enabled, however, the following app-restriction have been imposed on the app: "%2$s".', [ self::CLOUD_USER_BACKEND, implode(', ', $userBackendRestrictions), ]);
     }
 
-    if (!empty($dataBaseName) && $dataBaseName != $this->appDatabaseName) {
+    if (!empty($dataBaseName) && $dataBaseName != $this->appDbName) {
       $hints[] = $this->l->t(
         'Please make sure that the user "%1$s@%2$s" has all -- and in particular: GRANT -- privileges on the database "%3$s".', [
           $this->appDbUser, $this->appDbHost, $dataBaseName
