@@ -2517,11 +2517,26 @@ class phpMyEdit
 			// ok, this stuff is just left completely to the caller
 			if (!empty($vals)) {
 				if ($this->col_has_multiple($k)) {
-					$value = array();
-					foreach(self::explodeValueArray($row["qf$k"]) as $key) {
-						$value[] = $vals[$key];
+					// actually, it seems that $row['qf'.$k] may already
+					// contain the correctly imploded data. So better
+					// cross-check before generating nulls.
+					$rowValues = self::explodeValueArray($row["qf$k"]);
+					if (array_intersect($rowValues, array_keys($vals)) == $rowValues) {
+						$value = array();
+						foreach($rowValues as $key) {
+							$value[] = $vals[$key];
+						}
+						$value = self::implodeValueArray($value, onlyFlat: false);
+					} else if (array_intersect($rowValues, $vals) == $rowValues) {
+						// assume the row already contains the imploded values
+						$value = $row["qf$k"];
+					} else {
+						throw new \RuntimeException(
+							'Unexpected multi-value column data: '
+							. $row['qf'.$k]
+							. ' / ' . print_r($rowValues, true)
+							. ' / ' . print_r($vals, true));
 					}
-					$value = self::implodeValueArray($value, onlyFlat: false);
 				} else {
 					$value = $vals[$row["qf$k"]]??null;
 				}
