@@ -615,7 +615,7 @@ class SepaBankAccounts extends PMETableViewBase
         'popup' => function($data) {
           $info  = $this->financeService->getIbanInfo($data);
           $result = '';
-          foreach ($info as $key => $value) {
+          foreach ($info??[] as $key => $value) {
             $result .= $this->l->t($key).': '.$value.'<br/>';
           }
           return $result;
@@ -710,7 +710,12 @@ class SepaBankAccounts extends PMETableViewBase
           if (empty($mandateReference)) {
             return $this->l->t('generated on save');
           }
-          return (string)$value;
+          // In order not to trigger erroneous update of unchanged value we
+          // emit the sequence value as hidden input. It is further protected
+          // by an udpate "trigger" which just forces it to remain unchanged.
+          $html = $pme->htmlHiddenData($pme->fds[$k], $value);
+          $html .= '<span class="cell-wrapper">' . (string)$value . '</span>';
+          return $html;
         },
       ]);
 
@@ -868,6 +873,7 @@ class SepaBankAccounts extends PMETableViewBase
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
     }
 
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
 
@@ -879,7 +885,6 @@ class SepaBankAccounts extends PMETableViewBase
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row)
         use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex){
-          $this->logInfo('REC ' . print_r($pme->rec, true));
           switch ($op) {
             case PHPMyEdit::SQL_QUERY_UPDATE:
               if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', $pme->fdd)])) {
@@ -964,6 +969,38 @@ received so far'),
     ];
 
     return $tabs;
+  }
+
+  /**
+   * Safe-guard against unwanted changes
+   */
+  public function beforeUpdateSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  {
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    $accountSequence = 'sequence';
+    $mandateSequence = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $readOnlyKeys = [ $accountSequence, $mandateSequence ];
+    $unsafeChanged = array_intersect($changed, $readOnlyKeys);
+    if (!empty($unsafeChanged)) {
+      throw new Exceptions\DatabaseInconsistentValueException(
+        $this->l->t(
+          'The change-set contains read-only keys: %s.',
+          implode(', ', $unsafeChanged)
+        ));
+    }
+    $mandateNonRecurring = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
+    $newValues[$mandateNonRecurring] = (int)$newValues[$mandateNonRecurring];
+    $oldValues[$mandateNonRecurring] = (int)$oldValues[$mandateNonRecurring];
+    if ($oldValues[$mandateNonRecurring] == $newValues[$mandateNonRecurring]) {
+      Util::unsetValue($changed, $mandateNonRecurring);
+    } else {
+      $changed[] = $mandateNonRecurring;
+      $changed = array_unique($changed);
+    }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
+    return true;
   }
 
   /**
