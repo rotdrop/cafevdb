@@ -189,7 +189,7 @@ trait ParticipantFieldsTrait
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.option_key),
-      $join_col_fqn
+      COALESCE($join_col_fqn, "")
     )
   )
   ORDER BY $order_by))',
@@ -831,7 +831,7 @@ trait ParticipantFieldsTrait
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.option_key),
-      $join_table.option_value
+      COALESCE($join_table.option_value, "")
     ),
     NULL
   )
@@ -849,7 +849,7 @@ trait ParticipantFieldsTrait
     CONCAT_WS(
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.option_key),
-      $join_col_fqn
+      COALESCE($join_col_fqn, "")
     ),
     NULL
   )
@@ -1459,6 +1459,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         ])
         . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
     }
+    $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'number' : 'text';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
     $html = '
