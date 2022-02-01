@@ -1331,7 +1331,7 @@ const mandateInsuranceReady = function(selector) {
 };
 
 // PME handlers, not for the popup dialog
-const mandateReady = function(selector, resizeCB) {
+const mandateReady = function(selector, parameters, resizeCB) {
 
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
@@ -1755,6 +1755,13 @@ const mandateReady = function(selector, resizeCB) {
             upload: 'finance/sepa/debit-mandates/hardcopy/upload',
             delete: 'finance/sepa/debit-mandates/hardcopy/delete',
           });
+        $(this).on('pme:upload-done pme:upload-deleted', function(event) {
+          if (parameters.tableOptions && parameters.tableOptions.ambientContainerSelector) {
+            const ambientContainerSelector = parameters.tableOptions.ambientContainerSelector;
+            $(ambientContainerSelector).trigger('pmedialog:changed');
+            PHPMyEdit.submitOuterForm(ambientContainerSelector);
+          }
+        });
       });
   }
 };
@@ -1766,7 +1773,7 @@ const mandatesDocumentReady = function() {
     {
       callback(selector, parameters, resizeCB) {
         if (parameters.reason !== 'dialogClose') {
-          mandateReady(selector, resizeCB);
+          mandateReady(selector, parameters, resizeCB);
         }
         resizeCB();
       },
@@ -1782,7 +1789,6 @@ const mandatesDocumentReady = function() {
 };
 
 export {
-  mandateReady as ready,
   mandatesDocumentReady as documentReady,
   mandatePopupInit as popupInit,
   mandateInsuranceReady as insuranceReady,

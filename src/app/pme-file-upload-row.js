@@ -108,6 +108,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       $deleteUndelete.prop('disabled', noFile);
     }
     $.fn.cafevTooltip.remove();
+    $thisRow.trigger('pme:upload-done');
   };
 
   FileUpload.init({
@@ -181,6 +182,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
                     doneCallback(file, index, $uploadUi);
                   });
                   $this.removeClass('busy');
+                  $thisRow.trigger('pme:upload-done');
                 });
             });
         },
@@ -238,6 +240,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         }
         Notification.messages(data.message);
         cleanup();
+        $thisRow.trigger('pme:upload-deleted');
       });
   });
 };
