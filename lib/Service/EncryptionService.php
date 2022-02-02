@@ -261,7 +261,7 @@ class EncryptionService
     $group = $this->getAppValue('usergroup');
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
-      $this->logError('Cannot initialize SSL key-pair without user-group and encryption key');
+      $this->logDebug('Cannot initialize SSL key-pair without user-group and encryption key');
       return;
     }
     $group = '@' . $group;
