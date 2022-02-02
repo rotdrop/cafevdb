@@ -979,8 +979,8 @@ received so far'),
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $accountSequence = 'sequence';
-    $mandateSequence = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
-    $readOnlyKeys = [ $accountSequence, $mandateSequence ];
+    $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $readOnlyKeys = [ $accountSequence, $debitMandateSequenceKey ];
     $unsafeChanged = array_intersect($changed, $readOnlyKeys);
     if (!empty($unsafeChanged)) {
       throw new Exceptions\DatabaseInconsistentValueException(
@@ -989,6 +989,8 @@ received so far'),
           implode(', ', $unsafeChanged)
         ));
     }
+    $debitMandateSequence = $newValues[$debitMandateSequenceKey];
+
     $mandateNonRecurring = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
     $newValues[$mandateNonRecurring] = (int)$newValues[$mandateNonRecurring];
     $oldValues[$mandateNonRecurring] = (int)$oldValues[$mandateNonRecurring];
@@ -997,6 +999,24 @@ received so far'),
     } else {
       $changed[] = $mandateNonRecurring;
       $changed = array_unique($changed);
+    }
+
+    // Remove "written-mandate-id" because it is handled separately
+    $writtenMandateIdKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
+    unset($newValues[$writtenMandateIdKey]);
+    unset($oldValues[$writtenMandateIdKey]);
+    Util::unsetValue($changed, $writtenMandateIdKey);
+
+    // convert to the KEY:VALUE format understood by beforeUpdateDoUpdateAll()
+    foreach (['newValues', 'oldValues'] as $valueSet) {
+      foreach (${$valueSet} as $key => $value) {
+        if ($key == $debitMandateSequenceKey) {
+          continue;
+        }
+        if (strpos($key, self::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
+          ${$valueSet}[$key] = $debitMandateSequence . self::JOIN_KEY_SEP . $value;
+        }
+      }
     }
 
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');

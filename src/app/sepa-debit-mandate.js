@@ -1143,7 +1143,7 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
       }
       if (data.mandateNonRecurring !== undefined) {
         mandateInputs.mandateNonRecurring.readonly(!hasReference);
-        mandateInputs.mandateNonRecurring.prop('checked', data.mandateNonRecurring === true);
+        mandateInputs.mandateNonRecurring.prop('checked', !!data.mandateNonRecurring);
       }
 
       Notification.hide();

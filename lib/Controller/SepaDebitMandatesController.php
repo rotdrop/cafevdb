@@ -219,7 +219,7 @@ class SepaDebitMandatesController extends Controller {
           }
         }
       case 'mandateNonRecurring':
-        $mandateNonRecurring = $value;
+        $mandateNonRecurring = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         break;
       case 'mandateDate':
         // Whatever the user likes ;)
@@ -501,7 +501,7 @@ class SepaDebitMandatesController extends Controller {
           'bic' => $BIC,
           'owner' => $owner,
           'feedback' => $feedback,
-          'mandateNonRecurring' => $mandateNonRecurring,
+          'mandateNonRecurring' => (int)$mandateNonRecurring,
         ]);
 
     } // validation loop
@@ -1169,7 +1169,7 @@ class SepaDebitMandatesController extends Controller {
           // 'pathChain' => $pathChain, ?? needed ??
           'dirName' => $pathInfo['dirname'],
           'baseName' => $pathInfo['basename'],
-          'extension' => $pathInfo['extension']?:'',
+          'extension' => $pathInfo['extension']??'',
           'fileName' => $pathInfo['filename'],
           'download' => $downloadLink,
           'conflict' => $conflict,

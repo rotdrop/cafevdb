@@ -895,7 +895,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           ];
           // handle "deleted" information if present. This is meant for disabled instruments and the like
           $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
-          if (!empty($oldvals[$deletedField])) {
+          if (!empty($oldvals[$deletedField]) && !preg_match('/^\\d+:/', $oldvals[$deletedField])) {
             $deletedKeys = Util::explode(self::VALUES_SEP, $oldvals[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
               $identifier[$key]['old'][] = $deletedKey;
@@ -1192,6 +1192,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->debug('CHANGESET: ' . print_r($changeSet, true));
         foreach ($changeSet as $column => $field) {
           $this->debug('GET MULTIPLE FOR ' . $column . ' / ' . $field);
+          $this->debug('ROW MULTIPLE DATA ' . $newvals[$field]);
           // convention for multiple change-sets:
           //
           // KEY00-KEY01:VALUE0,KEY10-KEY11:VALUE1,...
