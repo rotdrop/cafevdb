@@ -198,6 +198,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
 
   $deleteUndelete.off('click').on('click', function(event) {
     const $thisInput = $(this);
+
     const cleanup = function(thisRemoved) {
       Page.busyIcon(false);
       modalizer(false);
@@ -210,38 +211,74 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     $thisInput.addClass('busy');
     $deleteUndelete.prop('disabled', true);
 
-    $.post(
-      generateUrl(uploadUrls.delete), {
-        musicianId,
-        projectId,
-        fieldId,
-        optionKey,
-        subDir,
-        fileName,
-      })
-      .fail(function(xhr, status, errorThrown) {
+    const postData = {
+      musicianId,
+      projectId,
+      fieldId,
+      optionKey,
+      subDir,
+      fileName,
+    };
+    const failHandler = function(xhr, status, errorThrown) {
+      const data = Ajax.failData(xhr, status, errorThrown);
+      console.debug('FAIL DATA', data);
+      if (data.confirmation
+          && data.confirmation.question
+          && data.confirmation.override) {
+        const text = [];
+        if (data.message) {
+          if (Array.isArray(data.message)) {
+            text.push(...data.message);
+          } else {
+            text.push(data.message);
+          }
+        }
+        text.push(data.confirmation.question);
+        Dialogs.confirm(
+          text.join('<br/>'),
+          data.confirmation.title || t(appName, 'Confirmation Required!'),
+          function(answer) {
+            if (answer) { // try again with force parameter
+              postData[data.confirmation.override] = true;
+              $.post(
+                generateUrl(uploadUrls.delete),
+                postData)
+                .fail(failHandler)
+                .done(doneHandler);
+            }
+          },
+          true,
+          true);
+      } else {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
-      })
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, ['message'], cleanup)) {
-          return;
-        }
-        if (isCloudFolder) {
-          const widgetId = $thisRow.data('uploadFormId');
-          $('#' + widgetId).remove();
-          $.fn.cafevTooltip.remove();
-          $thisRow.remove();
-          resizeCB();
-        } else {
-          $downloadLink.attr('href', '');
-          $downloadLink.html('');
-          $placeholder.val('');
-          $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-        }
-        Notification.messages(data.message);
-        cleanup();
-        $thisRow.trigger('pme:upload-deleted');
-      });
+      }
+    };
+    const doneHandler = function(data) {
+      if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+        return;
+      }
+      if (isCloudFolder) {
+        const widgetId = $thisRow.data('uploadFormId');
+        $('#' + widgetId).remove();
+        $.fn.cafevTooltip.remove();
+        $thisRow.remove();
+        resizeCB();
+      } else {
+        $downloadLink.attr('href', '');
+        $downloadLink.html('');
+        $placeholder.val('');
+        $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+      }
+      Notification.messages(data.message);
+      cleanup();
+      $thisRow.trigger('pme:upload-deleted');
+    };
+
+    $.post(
+      generateUrl(uploadUrls.delete),
+      postData)
+      .fail(failHandler)
+      .done(doneHandler);
   });
 };
 

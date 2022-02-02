@@ -1050,7 +1050,7 @@ class SepaDebitMandatesController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function mandateHardcopy($operation, $musicianId, $mandateSequence)
+  public function mandateHardcopy(string $operation, int $musicianId, ?int $mandateSequence, bool $force = false)
   {
     switch ($operation) {
       case self::HARDCOPY_ACTION_UPLOAD:
@@ -1183,8 +1183,14 @@ class SepaDebitMandatesController extends Controller {
           // ok, it is not there ...
           return self::response($this->l->t('We have no hard-copy of the written-mandate for "%1$s", so we cannot delete it.', $mandateReference));
         }
-        if (!$debitMandate->unused()) {
-          return self::grumble($this->l->t('The debit mandate "%1$s" is already in use, the hard-copy of the written-mandate may only be replaced, but not deleted.', $mandateReference));
+        if (!$debitMandate->unused() && !$force) {
+          return self::grumble([
+            'message' => $this->l->t('The debit mandate "%1$s" is already in use, the hard-copy of the written-mandate should only be replaced, but not deleted.', $mandateReference),
+            'confirmation' => [
+              'question' => $this->l->t('Are you sure you want to proceed?'),
+              'override' => 'force',
+            ],
+          ]);
         }
 
         // ok, delete it
