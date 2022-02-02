@@ -27,7 +27,7 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
-use OCA\CAFEVDB\Common\Crypto;
+use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Common\Util;
 
 class Encryption implements Transformable\Transformer\TransformerInterface

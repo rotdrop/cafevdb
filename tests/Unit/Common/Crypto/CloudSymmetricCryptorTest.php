@@ -21,13 +21,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common\Crypto;
+namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 
 use PHPUnit\Framework\TestCase;
 
 use OCP\Security\ICrypto;
 
-use OCA\CAFEVDB\Common\Crypto\CloudSymmetricCryptor;
+use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
 class CloudSymmetricCryptorTest extends TestCase
 {

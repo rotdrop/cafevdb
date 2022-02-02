@@ -21,7 +21,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Common\Crypto;
+namespace OCA\CAFEVDB\Crypto;
 
 /** Asymmetric encryption using the OpenSSL extension of PHP */
 class OpenSSLAsymmetricCryptor implements ICryptor

@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 
-use OCA\CAFEVDB\Common\Crypto;
+use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;

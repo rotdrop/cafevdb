@@ -27,7 +27,7 @@ use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\IConfig;
 
-use OCA\CAFEVDB\Common\Crypto\CloudSymmetricCryptor;
+use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
 class Registration
 {

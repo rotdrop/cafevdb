@@ -36,7 +36,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 
-use OCA\CAFEVDB\Common\Crypto;
+use OCA\CAFEVDB\Crypto;
 
 /**
  * This kludge is here as long as our slightly over-engineered
