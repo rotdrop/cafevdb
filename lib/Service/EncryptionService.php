@@ -71,6 +71,9 @@ class EncryptionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const PUBLIC_SSL_KEY = Crypto\AsymmetricKeyService::PUBLIC_SSL_KEY_CONFIG;
+  const PRIVATE_SSL_KEY = Crypto\AsymmetricKeyService::PRIVATE_SSL_KEY_CONFIG;
+
   const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
   const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
@@ -104,6 +107,9 @@ class EncryptionService
   /** @var IEventDispatcher */
   private $eventDispatcher;
 
+  /** @var Crypto\AsymmetricKeyService */
+  private $asymKeyService;
+
   /** @var Crypto\SealService */
   private $sealService;
 
@@ -130,6 +136,7 @@ class EncryptionService
     , AuthorizationService $authorization
     , IConfig $containerConfig
     , IUserSession $userSession
+    // , Crypto\AsymmetricKeyService $asymKeyService
     , Crypto\SealService $sealService
     , ICrypto $crypto
     , IHasher $hasher
@@ -140,6 +147,7 @@ class EncryptionService
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
+    $this->asymKeyService = new Crypto\AsymmetricKeyService($appName, $containerConfig, $l10n);
     $this->sealService = $sealService;
     $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
     $this->appAsymmetricCryptor = new Crypto\OpenSSLAsymmetricCryptor;
@@ -238,34 +246,14 @@ class EncryptionService
    */
   public function initUserKeyPair($forceNewKeyPair = false)
   {
-    if (empty($this->userId) || empty($this->userPassword)) {
-      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize SSL key-pair without user and password'));
-    }
-
-    if (!$forceNewKeyPair) {
-      $privKey = $this->getUserValue($this->userId, 'privateSSLKey', null);
-      $pubKey = $this->getUserValue($this->userId, 'publicSSLKey', null);
-    }
-    if (empty($privKey) || empty($pubKey)) {
-      // Ok, generate one. But this also means that we have not yet
-      // access to the data-base encryption key.
-      $keys = $this->generateUserKeyPair($this->userId, $this->userPassword);
-      if ($keys === false) {
-        throw new Exceptions\EncryptionKeyException($this->l->t('Unable to generate SSL key pair for user "%s".', [ $this->userId ]));
-      }
-      list($privKey, $pubKey) = $keys;
-    }
-
-    $privKey = openssl_pkey_get_private($privKey, $this->userPassword);
-
-    if ($privKey === false) {
+    try {
+      list(self::PRIVATE_SSL_KEY => $this->userPrivateKey, self::PUBLIC_SSL_KEY => $this->userPublicKey) =
+        $this->asymKeyService->initSSLKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
+    } catch (Exceptions\EncryptionException $e) {
       $this->userPrivateKey = null;
       $this->userPublicKey = null;
-      throw new Exceptions\EncryptionKeyException($this->l->t('Unable to unlock private key for user "%s"', [ $this->userId ]));
+      throw $e;
     }
-
-    $this->userPrivateKey = $privKey;
-    $this->userPublicKey = $pubKey;
   }
 
   public function initAppKeyPair($forceNewKeyPair = false)
@@ -276,70 +264,18 @@ class EncryptionService
       $this->logError('Cannot initialize SSL key-pair without user-group and encryption key');
       return;
     }
-
     $group = '@' . $group;
 
-    if (!$forceNewKeyPair) {
-      $privKey = $this->getUserValue($group, 'privateSSLKey', null);
-      $pubKey = $this->getUserValue($group, 'publicSSLKey', null);
-    }
-    if (empty($privKey) || empty($pubKey)) {
-      // Ok, generate one.
-      $keys = $this->generateUserKeyPair($group, $encryptionKey);
-      if ($keys === false) {
-        $this->logError(sprintf('Unable to generate SSL key pair for user-group "%s".', $group));
-        return;
-      }
-      list($privKey, $pubKey) = $keys;
-    }
-
-    $privKey = openssl_pkey_get_private($privKey, $encryptionKey);
-
-    if ($privKey === false) {
+    try {
+      list(self::PRIVATE_SSL_KEY => $privKay, self::PUBLIC_SSL_KEY => $pubKey) =
+        $this->asymKeyService->initSSLKeyPair($group, $encryptionKey, $forceNewKeyPair);
+    } catch (Exceptions\EncryptionException $e) {
       $this->appAsymmetricCryptor->setPrivateKey(null);
       $this->appAsymmetricCryptor->setPublicKey(null);
-      $this->logError(sprintf('Unable to unlock private key for user-group "%s"', $group));
-      return;
+      throw $e;
     }
-
     $this->appAsymmetricCryptor->setPrivateKey($privKey);
     $this->appAsymmetricCryptor->setPublicKey($pubKey);
-  }
-
-  // To distribute the encryption key for the data base and
-  // application configuration values we use a public/private key pair
-  // for each user. Then the admin-user can distribute the global
-  // encryption key to each authorized user (in the orchestra-group)
-  // using the public key. When the user logs into the cloud, the key
-  // is decrypted with the users private key (which again is secured
-  // by the user's password.
-  private function generateUserKeyPair($login, $password)
-  {
-    /* Create the private and public key */
-    $res = openssl_pkey_new();
-
-    /* Extract the private key from $res to $privKey */
-    if (!openssl_pkey_export($res, $privKey, $password)) {
-      return false;
-    }
-
-    /* Extract the public key from $res to $pubKey */
-    $pubKey = openssl_pkey_get_details($res);
-
-    if ($pubKey === false) {
-      return false;
-    }
-
-    $pubKey = $pubKey['key'];
-
-    // We now store the public key unencrypted in the user preferences.
-    // The private key already is encrypted with the user's password,
-    // so there is no need to encrypt it again.
-
-    $this->setUserValue($login, 'publicSSLKey', $pubKey);
-    $this->setUserValue($login, 'privateSSLKey', $privKey);
-
-    return [ $privKey, $pubKey ];
   }
 
   /**
@@ -411,7 +347,7 @@ class EncryptionService
   public function initAppEncryptionKey()
   {
     if (!$this->bound()) {
-      throw new Exceptions\EncryptionKeyException($this->l-t>('Cannot initialize global encryption key without bound user credentials.'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize global encryption key without bound user credentials.'));
     }
 
     $usrdbkey = $this->getUserEncryptionKey();
