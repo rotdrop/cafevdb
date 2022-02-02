@@ -1468,6 +1468,9 @@ const mandateReady = function(selector, parameters, resizeCB) {
 
   const validateInput = function(event) {
     const $input = $(this);
+    if ($input.prop('readonly')) {
+      return;
+    }
     mandateValidatePME.call(this, event, function(lock) {
       $input.readonly(lock);
     });
