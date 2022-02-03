@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -91,6 +91,13 @@ class Storage extends AbstractStorage
 
   protected function getDirectoryModificationTime(string $dirName):\DateTimeInterface
   {
+    // This is a hack around the task to track the deletion time of
+    // objects. As a result all directories will have the same modification
+    // time which is just the time-stamp of the latests log-entry. Inefficient
+    // and ugly, but should hack most cases.
+    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+
+    // How it should be ...
     $date = (new \DateTimeImmutable)->setTimestamp(0);
     /** @var Entities\File $node */
     foreach ($this->findFiles($dirName) as $node) {
@@ -114,7 +121,8 @@ class Storage extends AbstractStorage
 
   protected function getStorageModificationTime():int
   {
-    return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
+    // return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
+    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime()->getTimestamp();
   }
 
   /** {@inheritdoc} */

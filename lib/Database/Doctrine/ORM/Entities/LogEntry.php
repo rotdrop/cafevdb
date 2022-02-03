@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
  *      @ORM\Index(name="log_version_lookup_idx", columns={"object_id", "object_class", "version"})
  *  }
  * )
- * @ORM\Entity(repositoryClass="Loggable\Entity\Repository\LogEntryRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\LogEntriesRepository")
  */
 class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
 {
