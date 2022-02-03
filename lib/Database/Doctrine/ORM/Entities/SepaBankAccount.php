@@ -75,8 +75,8 @@ class SepaBankAccount implements \ArrayAccess
    * @ORM\Column(type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="NONE")
-   * @ ORM\GeneratedValue(strategy="CUSTOM")
-   * @ ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
+   * _AT_ORM\GeneratedValue(strategy="CUSTOM")
+   * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
   private $sequence;
 
