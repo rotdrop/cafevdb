@@ -387,8 +387,13 @@ class phpMyEdit
 		$wparts = [];
 		foreach ($keyRecord as $key => $rec) {
 			$delim = isset($this->key_delim[$key]) ? $this->key_delim[$key] : "'";
-			// no need for fqn. ?
-			$wparts[] = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
+			$comp = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
+			if (empty($rec)) {
+				// should we === null?
+				$comp = '(' . $comp . ' OR '
+					. $this->fqn($key, self::VANILLA) . ' IS NULL)';
+			}
+			$wparts[] = $comp;
 		}
 		return '('.implode(' AND ', $wparts).')';
 	}
@@ -6450,16 +6455,21 @@ class phpMyEdit
 		}
 		$key = $this->cgi['prefix']['sys'].'rec';
 		if (isset($opquery[$key])) {
-			$this->rec = $opquery[$key];
+			if (is_string($opquery[$key])) {
+				$tryJson = json_decode($opquery[$key], true);
+			}
+			$this->rec = $tryJson??$opquery[$key];
 		}
 		if (!empty($this->rec) && !is_array($this->rec)) {
 			$this->rec = [ array_keys($this->key)[0] => $this->rec ];
 		}
 		$key = $this->cgi['prefix']['sys'].'groupby_rec';
 		if (isset($opquery[$key])) {
-			$this->groupby_rec = $opquery[$key];
+			if (is_string($opquery[$key])) {
+				$tryJson = json_decode($opquery[$key], true);
+			}
+			$this->groupby_rec = $tryJson??$opquery[$key];
 		}
-
 
 		/* echo '<PRE>'; */
 		/* print_r($opquery); */
