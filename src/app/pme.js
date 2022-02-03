@@ -1494,6 +1494,17 @@ const installTabHandler = function(containerSel, changeCallback) {
     });
 };
 
+/**
+ * Open the view or modification dialog for the data-set of the
+ * respective row after clicking on the row.
+ *
+ * @param {jQuery} element The tr element of the list-view.
+ *
+ * @param {object} event The event which triggered the handler.
+ *
+ * @param {jQuery} container The form or div containing the form.
+ *
+ */
 const pmeOpenRowDialog = function(element, event, container) {
 
   if (event.target !== element) {
@@ -1536,9 +1547,7 @@ const pmeOpenRowDialog = function(element, event, container) {
   const recordId = $row.data(pmePrefix + '_sys_rec');
   const recordKey = pmeSys('rec');
   if (typeof recordId === 'object' && recordId !== null) {
-    for (const property in recordId) {
-      recordQuery.push(recordKey + '[' + property + ']=' + recordId[property]);
-    }
+    recordQuery.push(recordKey + '=' + encodeURIComponent(JSON.stringify(recordId)));
   } else {
     console.error('SCALAR RECORD ID', recordKey, recordId);
     console.trace('SCALAR RECORD ID');
@@ -1548,9 +1557,7 @@ const pmeOpenRowDialog = function(element, event, container) {
   const groupByRecordId = $row.data(pmePrefix + '_sys_groupby_rec');
   const groupByRecordKey = pmeSys('groupby_rec');
   if (typeof groupByRecordId === 'object' && groupByRecordId !== null) {
-    for (const property in groupByRecordId) {
-      recordQuery.push(groupByRecordKey + '[' + property + ']=' + groupByRecordId[property]);
-    }
+    recordQuery.push(groupByRecordKey + '=' + encodeURIComponent(JSON.stringify(groupByRecordId)));
   }
 
   recordQuery = recordQuery.join('&');
