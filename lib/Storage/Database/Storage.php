@@ -83,7 +83,7 @@ class Storage extends AbstractStorage
         $this->files[$dirName][$baseName] = $file;
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = $baseName;
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
       }
     }
     return $this->files[$dirName];
@@ -96,8 +96,14 @@ class Storage extends AbstractStorage
     foreach ($this->findFiles($dirName) as $node) {
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
+      } else if ($node instanceof DirectoryNode) {
+        $updated = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
+        if ($node->minimalModificationTime > $updated) {
+          $updated = $node->minimalModificationTime;
+        }
       } else {
-        $updated = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node);
+        $this->logError('Unknown directory entry in ' .$dirName);
+        $updated = $date;
       }
       if ($updated > $date) {
         $date = $updated;
@@ -279,7 +285,7 @@ class Storage extends AbstractStorage
     if ($path === '' || $path == self::PATH_SEPARATOR) {
       return true;
     }
-    if (is_string($this->fileFromFileName($path))) {
+    if ($this->fileFromFileName($path) instanceof DirectoryNode) {
       return true;
     }
     if (!empty($this->filesRepository->findOneLike([ 'fileName' => trim($path, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . '%' ]))) {

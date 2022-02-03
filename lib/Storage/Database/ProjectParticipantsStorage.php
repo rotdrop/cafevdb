@@ -138,7 +138,7 @@ class ProjectParticipantsStorage extends Storage
         $this->files[$dirName][$baseName] = $fileInfo['file'];
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = $baseName;
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
       }
     }
 
@@ -168,7 +168,7 @@ class ProjectParticipantsStorage extends Storage
         $this->files[$dirName][$baseName] = $file;
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = $baseName;
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
       }
     }
 
@@ -187,19 +187,18 @@ class ProjectParticipantsStorage extends Storage
         continue;
       }
       $file = $debitMandate->getWrittenMandate();
-      if (empty($file)) {
-        continue;
-      }
       // enforce the "correct" file-name
-      $dbFileName = $file->getFileName();
-      $baseName = $this->getDebitMandateFileName($debitMandate) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+      $extension = empty($file) ? '' : '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+      $baseName = $this->getDebitMandateFileName($debitMandate) . $extension;
       $fileName = $this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . $baseName);
       list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
       if ($fileDirName == $dirName) {
-        $this->files[$dirName][$baseName] = $file;
+        if (!empty($file)) {
+          $this->files[$dirName][$baseName] = $file;
+        }
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = $baseName;
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
       }
     }
 

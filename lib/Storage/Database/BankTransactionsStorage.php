@@ -96,7 +96,7 @@ class BankTransactionsStorage extends Storage
           $this->files[$dirName][$baseName] = $file;
         } else if (strpos($fileDirName, $dirName) === 0) {
           list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = $baseName;
+          $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
         }
       }
     }
