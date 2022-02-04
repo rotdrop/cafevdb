@@ -117,8 +117,6 @@ class PaymentsController extends Controller {
           return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
         }
 
-        $this->logInfo('FILE ' . print_r($file, true));
-
         // Ok, got it, set or replace the hard-copy file
         $fileContent = $this->getUploadContent($file);
 
