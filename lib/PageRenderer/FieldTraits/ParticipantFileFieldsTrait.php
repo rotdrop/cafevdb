@@ -250,7 +250,7 @@ trait ParticipantFileFieldsTrait
       $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
       $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
     } catch (/*\OCP\Files\NotFoundException*/ \Throwable $e) {
-      $this->logException($e);
+      $this->logException($e, [ 'level' => \OCP\ILogger::DEBUG ]);
       $filesAppLink = '';
     }
     return [ $filesAppLink, $filesAppTarget ];

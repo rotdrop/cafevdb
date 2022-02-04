@@ -1157,7 +1157,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
             continue;
           }
-          $supportingDocuments[] = $fieldDatum->getSupportingDocument();
+          if (!empty($document = $fieldDatum->getSupportingDocument())) {
+            $supportingDocuments[] = $document;
+          }
           $project = $project??$fieldDatum->getProject();
         }
         $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
@@ -1170,7 +1172,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
         return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
-        return $value;
       }
     }
 
@@ -1189,11 +1190,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
       return $value;
     }
-    $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
-
     $filesAppAnchor = $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
-    $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
+    $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+    if (!empty($fileInfo)) {
+      $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
+      $downloadAnchor = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
+    } else {
+      $downloadAnchor = $value;
+    }
 
-    return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
+    return $filesAppAnchor . $downloadAnchor;
   }
 }
