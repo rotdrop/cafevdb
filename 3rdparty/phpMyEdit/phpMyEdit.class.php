@@ -6338,7 +6338,7 @@ class phpMyEdit
 				$this->navigation .= 'D'; // down position is default
 			}
 		}
-		$this->buttons = @$opts['buttons'];
+		$this->buttons = $opts['buttons'] ?? null;
 		// Language labels (must go after navigation)
 		$this->labels = $this->make_language_labels(isset($opts['language'])
 													? $opts['language'] : $this->get_server_var('HTTP_ACCEPT_LANGUAGE'));
