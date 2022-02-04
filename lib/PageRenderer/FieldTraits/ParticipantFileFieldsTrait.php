@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
