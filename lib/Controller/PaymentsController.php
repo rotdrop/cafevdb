@@ -117,6 +117,8 @@ class PaymentsController extends Controller {
           return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
         }
 
+        $this->logInfo('FILE ' . print_r($file, true));
+
         // Ok, got it, set or replace the hard-copy file
         $fileContent = $this->getUploadContent($file);
 
@@ -138,7 +140,11 @@ class PaymentsController extends Controller {
         $mimeType = $mimeTypeDetector->detectString($fileContent);
         $fileData->setData($fileContent);
 
+        $supportingDocumentFileName = basename($supportingDocumentFileName);
         $extension = Util::fileExtensionFromMimeType($mimeType);
+        if (empty($extension) && $file['name']) {
+          $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        }
         if (!empty($extension)) {
           $supportingDocumentFileName .= '.' . $extension;
         }
@@ -175,7 +181,7 @@ class PaymentsController extends Controller {
 
         unset($file['tmp_name']);
         $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                       [ $file['name'], $filePath ]);
+                                       [ $file['name'], $supportingDocumentFileName ]);
         $file['name'] = $supportingDocumentFileName;
 
         $pathInfo = pathinfo($supportingDocumentFileName);
