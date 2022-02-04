@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -65,8 +65,15 @@ trait LoggerTrait
 
     $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
 
-    empty($message) && ($message = "Caught an Exception");
-    $this->logger->logException($exception, [ 'message' => $prefix.$message ]);
+    if (is_array($message)) {
+      $context = $message;
+      $message = null;
+    } else {
+      $context = [];
+    }
+    $message = $message ?? ($context['message'] ?? 'Caught an Exception');
+    $context['message'] = $prefix.$message;
+    $this->logger->logException($exception, $context);
   }
 
   public function logError(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
