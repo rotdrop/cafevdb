@@ -160,17 +160,8 @@ trait ParticipantFileFieldsTrait
       $fileName = null;
     }
     if (!empty($optionValue)) {
-      $requestData = [
-        'requesttoken' => \OCP\Util::callRegister(),
-      ];
-      if (!empty($fileName)) {
-        $requestData['fileName'] = $fileName;
-      }
-      $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-          'section' => 'database',
-          'object' => $optionValue,
-      ])
-        . '?' . http_build_query($requestData);
+      $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
+        $optionValue, $fileName);
     } else {
       $downloadLink = $dbFileName = $dbExtension = '';
     }

@@ -349,16 +349,8 @@ trait ParticipantFieldsTrait
               $fileBase = $field->getName();
               $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
               $fileName .= '.' . $extension;
-              $downloadLink = $this->urlGenerator()
-                ->linkToRoute($this->appName().'.downloads.get', [
-                                       'section' => DownloadsController::SECTION_DATABASE,
-                                       'object' => $value,
-                ])
-                . '?'
-                . http_build_query([
-                  'requesttoken'  => \OCP\Util::callRegister(),
-                    'fileName' => $fileName,
-                ]);
+              $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
+                $value, $fileName);
               $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
               return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';

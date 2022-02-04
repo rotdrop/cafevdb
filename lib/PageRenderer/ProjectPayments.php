@@ -747,6 +747,47 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   </table>
 </div>';
       },
+      'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+
+        $musicianId = $row['qf'.$pme->fdn['musician_id']];
+        /** @var Entities\Musician $musician */
+        $musician = $this->findEntity(Entities\Musician::class, $musicianId);
+        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
+
+        if (!empty($value)) {
+
+          /** @var Entities\File $file */
+          $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
+          if (empty($file)) {
+            $this->logError('File not found for musician "' . $musician->getPublicName(). ' file-id ' . $value);
+            return $value;
+          }
+
+          $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+
+          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
+            $value, $fileName);
+
+          $subDirPrefix =
+            UserStorage::PATH_SEP . $this->getDocumentsFolderName()
+            . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+          $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+          try {
+            $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
+            $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+            $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+       title="'.$this->toolTipsService['project-payments:payment:open-parent'].'"
+       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+       ></a>';
+          } catch (\OCP\Files\NotFoundException $e) {
+            $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
+            $filesAppLink = '';
+          }
+          return $filesAppLink.'<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:payment:document'].'" href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
+        } else {
+          return $value;
+        }
+      },
     ];
 
     $this->makeJoinTableField(
@@ -1166,6 +1207,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
 
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
+
+        if (!empty($supportingDocument)) {
+          $value = $fileName . '<br/>' . $value;
+        }
 
         // there should be at least one project ...
         $subFolder = empty($supportingDocument) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
