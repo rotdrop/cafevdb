@@ -289,9 +289,9 @@ trait ParticipantFieldsTrait
             $valueFdd['php|VDLF'] = function($value) {
               return $this->moneyValue($value);
             };
-            $valueFdd['display|CAP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
-            if (!empty($defaultValue)) {
-              $valueFdd['display|CAP']['postfix'] .=
+            $valueFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
+            if ($defaultValue !== '' && $defaultValue !== null) {
+              $valueFdd['display|ACP']['postfix'] .=
                 str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultValue' ], $defaultButton);
             }
 
@@ -315,9 +315,9 @@ trait ParticipantFieldsTrait
             ]);
             $depositFdd = &$fieldDescData[$depositFddName];
 
-            $depositFdd['display|CAP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
-            if (!empty($defaultValue)) {
-              $depositFdd['display|CAP']['postfix'] .=
+            $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
+            if ($defaultValue !== '' && $defaultValue !== null) {
+              $depositFdd['display|ACP']['postfix'] .=
                 str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
             }
 
@@ -325,7 +325,7 @@ trait ParticipantFieldsTrait
 
           case FieldType::DB_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+            $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $key = $dataOptions->first()->getKey();
               $fileBase = $field->getName();
@@ -366,7 +366,7 @@ trait ParticipantFieldsTrait
             break;
           case FieldType::CLOUD_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+            $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
@@ -406,7 +406,7 @@ trait ParticipantFieldsTrait
             if (empty($this->userStorage)) {
               $this->userStorage = $this->di(UserStorage::class);
             }
-            $valueFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+            $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
@@ -485,9 +485,9 @@ trait ParticipantFieldsTrait
             // fall through
           default:
             if (!empty($defaultValue)) {
-              $valueFdd['display|CAP'] = $valueFdd['display|CAP'] ?? [];
-              $valueFdd['display|CAP']['postfix'] =
-                ($valueFdd['display|CAP']['postfix'] ?? '')
+              $valueFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
+              $valueFdd['display|ACP']['postfix'] =
+                ($valueFdd['display|ACP']['postfix'] ?? '')
                 . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
             }
             break;
@@ -500,7 +500,7 @@ trait ParticipantFieldsTrait
            *
            */
           reset($values2); $key = key($values2);
-          $keyFdd['values2|CAP'] = [ $key => '' ]; // empty label for simple checkbox
+          $keyFdd['values2|ACP'] = [ $key => '' ]; // empty label for simple checkbox
           $keyFdd['values2|LVDF'] = [
             0 => $this->l->t('false'),
             $key => $this->l->t('true'),
@@ -508,7 +508,7 @@ trait ParticipantFieldsTrait
           $keyFdd['select'] = 'C';
           // make sure we get 0 not null
           $keyFdd['sql|LVDF'] = 'COALESCE(' . $keyFdd['sql'] . ', 0)';
-          $keyFdd['sql|CAP'] = $keyFdd['sql'];
+          $keyFdd['sql|ACP'] = $keyFdd['sql'];
           $keyFdd['default'] = $field->getDefaultValue() === null ? false : $key;
           $keyFdd['css']['postfix'][] = 'boolean';
           $keyFdd['css']['postfix'][] = 'single-valued';
@@ -531,7 +531,7 @@ trait ParticipantFieldsTrait
                 0 => $noMoney, //'-,--',
                 $key => $money,
               ];
-              $keyFdd['values2|CAP'] = [ $key => $money, ];
+              $keyFdd['values2|ACP'] = [ $key => $money, ];
               unset($keyFdd['mask']);
               $keyFdd['php|VDLF'] = function($value) {
                 return $this->moneyValue($value);
@@ -559,7 +559,7 @@ trait ParticipantFieldsTrait
                   $key => $dataValue,
                 ];
               }
-              $keyFdd['values2|CAP'] = [ $key => $dataValue ];
+              $keyFdd['values2|ACP'] = [ $key => $dataValue ];
               break;
           } // data-type switch
           break;
@@ -573,7 +573,7 @@ trait ParticipantFieldsTrait
           switch ($dataType) {
           case FieldType::CLOUD_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
               $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
               $values = array_combine($optionKeys, $optionValues);
@@ -642,7 +642,7 @@ trait ParticipantFieldsTrait
             break;
           case FieldType::DB_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $keyFdd['php|CAP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
               $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
               $values = array_combine($optionKeys, $optionValues);
