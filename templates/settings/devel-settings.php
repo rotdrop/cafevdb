@@ -23,10 +23,10 @@
 
 namespace OCA\CAFEVDB;
 
-function linkToolTip(string $tag, ?string $value)
+$linkToolTip = function(string $tag, ?string $value) use ($toolTips)
 {
   return empty($value) ? $toolTips[$tag] : $value;
-}
+};
 
 ?>
 <div id="tabs-<?php echo $tabNr; ?>" class="personalblock admin devel">
@@ -44,7 +44,7 @@ function linkToolTip(string $tag, ?string $value)
              name="phpmyadmin"
              placeholder="<?php echo $appName.'@phpmyadmin'; ?>"
              value="<?php echo $phpmyadmin; ?>"
-             title="<?php p(linkToolTip('phpmyadmin-link', $phpmyadmin)); ?>" />
+             title="<?php p($linkToolTip('phpmyadmin-link', $phpmyadmin)); ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to %s', 'phpMyAdmin'); ?></label>
       <br/>
       <input type="button"
@@ -58,7 +58,7 @@ function linkToolTip(string $tag, ?string $value)
              name="phpmyadmincloud"
              placeholder="Owncloud@phpMyAdmin"
              value="<?php echo $phpmyadmincloud; ?>"
-             title="<?php p(linkToolTip('phpmyadmincloud-link', $phpmyadmincloud)); ?>" />
+             title="<?php p($linkToolTip('phpmyadmincloud-link', $phpmyadmincloud)); ?>" />
       <label for="phpmyadmincloud"><?php echo $l->t('Link to Cloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
       <input type="button"
@@ -72,7 +72,7 @@ function linkToolTip(string $tag, ?string $value)
              name="sourcecode"
              placeholder="<?php echo $l->t('Link to the source-code'); ?>"
              value="<?php echo $sourcecode; ?>"
-             title="<?php p(linkToolTip('sourcecode-link', $sourcecode)); ?>" />
+             title="<?php p($linkToolTip('sourcecode-link', $sourcecode)); ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code'); ?></label>
       <br/>
       <input type="button"
@@ -87,7 +87,7 @@ function linkToolTip(string $tag, ?string $value)
              name="sourcedocs"
              placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>"
              value="<?php echo $sourcedocs; ?>"
-             title="<?php p(linkToolTip('sourcedocs-link', $sourcedocs)); ?>"/>
+             title="<?php p($linkToolTip('sourcedocs-link', $sourcedocs)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Link to the source-code documentation'); ?></label>
       <br/>
       <input type="button"
@@ -101,7 +101,7 @@ function linkToolTip(string $tag, ?string $value)
              name="clouddev"
              placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
              value="<?php echo $clouddev; ?>"
-             title="<?php p(linkToolTip('clouddev-link', $clouddev)); ?>"/>
+             title="<?php p($linkToolTip('clouddev-link', $clouddev)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
       <br/>
       <input type="button"
@@ -115,7 +115,7 @@ function linkToolTip(string $tag, ?string $value)
              name="cspfailurereporting"
              placeholder="<?php echo $l->t('Link for uploading CSP failure information'); ?>"
              value="<?php echo $cspfailurereporting; ?>"
-             title="<?php p(linkToolTip('cspfailure-link', $cspfailurereporting)); ?>"/>
+             title="<?php p($linkToolTip('cspfailure-link', $cspfailurereporting)); ?>"/>
       <label for="phpmyadmin"><?php echo $l->t('CSP-failure upload link'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
