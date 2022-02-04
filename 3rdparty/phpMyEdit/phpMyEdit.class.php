@@ -638,11 +638,10 @@ class phpMyEdit
 		if (is_numeric($k)) {
 			$k = $this->fds[$k];
 		}
-		$options = @$this->fdd[$k]['options'];
-		if (! isset($options)) {
+		if (!isset($this->fdd[$k]['options'])) {
 			return true;
 		}
-		return $this->checkOperationOption($options);
+		return $this->checkOperationOption($this->fdd[$k]['options']);
 	} /* }}} */
 
 	function filtered($k) /* {{{ */
@@ -659,11 +658,7 @@ class phpMyEdit
 			&& stripos('MCOD', $fdd[self::FDD_SELECT]) === false) {
 			return false;
 		}
-		$options = @$fdd['options'];
-		if (! isset($options)) {
-			return true;
-		}
-		return stristr($options, 'F') !== false;
+		return stristr($fdd['options'] ?? 'F', 'F') !== false;
 	} /* }}} */
 
 	function debug_var($name, $val) /* {{{ */
@@ -1485,22 +1480,22 @@ class phpMyEdit
 			$ret  = 'SELECT ';
 			$ret .= $parts[self::QPARTS_SELECT];
 			$ret .= ' FROM '.$parts[self::QPARTS_FROM];
-			if (strlen(@$parts[self::QPARTS_WHERE]) > 0) {
+			if (!empty($parts[self::QPARTS_WHERE]) > 0) {
 				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			}
-			if (strlen(@$parts[self::QPARTS_GROUPBY]) > 0) {
+			if (!empty($parts[self::QPARTS_GROUPBY]) > 0) {
 				$ret .= ' GROUP BY '.$parts[self::QPARTS_GROUPBY];
 			}
-			if (strlen(@$parts[self::QPARTS_HAVING]) > 0) {
+			if (!empty($parts[self::QPARTS_HAVING]) > 0) {
 				$ret .= ' HAVING '.$parts[self::QPARTS_HAVING];
 			}
-			if (strlen(@$parts[self::QPARTS_ORDERBY]) > 0) {
+			if (!empty($parts[self::QPARTS_ORDERBY]) > 0) {
 				$ret .= ' ORDER BY '.$parts[self::QPARTS_ORDERBY];
 			}
-			if (strlen(@$parts[self::QPARTS_LIMIT]) > 0) {
+			if (!empty($parts[self::QPARTS_LIMIT]) > 0) {
 				$ret .= ' '.$parts[self::QPARTS_LIMIT];
 			}
-			if (strlen(@$parts[self::QPARTS_PROCEDURE]) > 0) {
+			if (!empty($parts[self::QPARTS_PROCEDURE]) > 0) {
 				$ret .= ' PROCEDURE '.$parts[self::QPARTS_PROCEDURE];
 			}
 			break;
@@ -2872,8 +2867,8 @@ class phpMyEdit
 			: '';
 		$prefix_found  = false;
 		$postfix_found = false;
-		$prefix_ar	   = @$this->fdd[$k]['URLprefix'];
-		$postfix_ar	   = @$this->fdd[$k]['URLpostfix'];
+		$prefix_ar	   = $this->fdd[$k]['URLprefix'] ?? null;
+		$postfix_ar	   = $this->fdd[$k]['URLpostfix'] ?? null;
 		is_array($prefix_ar)  || $prefix_ar	 = array($prefix_ar);
 		is_array($postfix_ar) || $postfix_ar = array($postfix_ar);
 		foreach ($prefix_ar as $prefix) {
@@ -2971,7 +2966,7 @@ class phpMyEdit
 				$value = number_format($value, $nbDec, $decPoint, $thSep);
 			}
 		}
-		if (@$this->fdd[$k]['mask']) {
+		if (!empty($this->fdd[$k]['mask'])) {
 			$value = sprintf($this->fdd[$k]['mask'], $value);
 		}
 		if ($this->col_has_URL($k)) {
@@ -3043,14 +3038,14 @@ class phpMyEdit
 		} else {
 			$value = $this->formatValue($row["qf$k"], $k, $css, $key_rec);
 		}
-		if (@$this->fdd[$k]['strip_tags']) {
+		if (!empty($this->fdd[$k]['strip_tags'])) {
 			$value = strip_tags($value);
 		}
-		if (intval(@$this->fdd[$k]['trimlen']) > 0 && strlen($value) > $this->fdd[$k]['trimlen']) {
+		if (intval($this->fdd[$k]['trimlen'] ?? 0) > 0 && strlen($value) > $this->fdd[$k]['trimlen']) {
 			$value = preg_replace("/[\r\n\t ]+/",' ',$value);
 			$value = substr($value, 0, $this->fdd[$k]['trimlen'] - 3).'...';
 		}
-		if (@$this->fdd[$k]['phpview']) {
+		if (!empty($this->fdd[$k]['phpview'])) {
 			$value = include($this->fdd[$k]['phpview']);
 		}
 		if ($this->col_has_php($k)) {
@@ -5777,7 +5772,7 @@ class phpMyEdit
 				&& !isset($this->fdd[$key][self::FDD_VALUES]['join']['table'])) {
 				$this->fdd[$key][self::FDD_VALUES]['table'] = $this->fdd[$ref][self::FDD_VALUES]['table'];
 			}
-			if (is_array(@$this->fdd[$key][self::FDD_VALUES])
+			if (is_array($this->fdd[$key][self::FDD_VALUES] ?? null)
 				&& empty($this->fdd[$key][self::FDD_VALUES]['table'])) {
 				foreach ($this->fdd[$key][self::FDD_VALUES] as $val) {
 					$this->fdd[$key][self::FDD_VALUES2][$val] = $val;
@@ -6190,7 +6185,7 @@ class phpMyEdit
 				$this->groupby = array($this->groupby);
 			}
 			$this->groupby = array_values(array_unique(array_merge(array_keys($this->key), $this->groupby)));
-			$this->groupby_where = @$opts['groupby_where'];
+			$this->groupby_where = $opts['groupby_where'] ?? false;
 			if ($this->groupby_where === true) {
 				$this->groupby_where = 'ACDPV'; // any single record view
 			}
@@ -6260,12 +6255,12 @@ class phpMyEdit
 		}
 		// at this point $this->having is a normalized array
 
-		$this->triggers	 = @$opts[self::OPT_TRIGGERS];
-		$this->notify	 = @$opts['notify'];
-		$this->logtable	 = @$opts['logtable'];
-		$this->miscphp	 = @$opts['misc']['php'];
-		$this->misccss   = @$opts['misc']['css']['major'];
-		$this->misccss2  = @$opts['misc']['css']['minor'];
+		$this->triggers	 = $opts[self::OPT_TRIGGERS] ?? null;
+		$this->notify	 = $opts['notify'] ?? null;
+		$this->logtable	 = $opts['logtable'] ?? null;
+		$this->miscphp	 = $opts['misc']['php'] ?? null;
+		$this->misccss   = $opts['misc']['css']['major'] ?? null;
+		$this->misccss2  = $opts['misc']['css']['minor'] ?? null;
 		if (empty($this->misccss)) {
 			$this->misccss = 'misc';
 		} else if (is_array($this->misccss)) {
