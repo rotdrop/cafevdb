@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -79,8 +79,19 @@ class BankTransactionsStorage extends Storage
     $dirName = self::normalizeDirectoryName($dirName);
     $this->files[$dirName] = [];
     $transactions = $this->transactionsRepository->findAll();
+
+    // This is a hack around the task to track the deletion time of
+    // objects.
+    $databaseMTime = $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+
+    $directories = [];
+
     /** @var Entities\SepaBulkTransaction $transaction */
     foreach ($transactions as $transaction) {
+
+      $modificationTime = $transaction->getSepaTransactionDataChanged()
+        ?? $databaseMTime;
+
       /** @var Entities\File $file */
       foreach ($transaction->getSepaTransactionData() as $file) {
         // @todo For now generate sub-directories for every year. This should
@@ -96,16 +107,24 @@ class BankTransactionsStorage extends Storage
           $this->files[$dirName][$baseName] = $file;
         } else if (strpos($fileDirName, $dirName) === 0) {
           list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
+          if (empty($directories[$baseName]) || $directories[$baseName] < $modificationTime) {
+            $directories[$baseName] = $modificationTime;
+          }
         }
       }
     }
+    foreach ($directories as $name => $mtime) {
+      $this->files[$dirName][$name] = new DirectoryNode($name, $mtime);
+    }
+
+    $this->logDebug('FOUND ' . count($this->files[$dirName]) . ' entries for "' . $dirName . '"');
+
     return $this->files[$dirName];
   }
 
-  protected function getStorageModificationTime():int
+  protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    return $this->getDirectoryModificationTime('')->getTimestamp();
+    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
   }
 
   /** {@inheritdoc} */

@@ -116,6 +116,11 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * {@inheritdoc}
+   *
+   * We expose all found documents in the projectParticipantFieldsData(),
+   * payments() and the debitMandates(). Changes including deletions are
+   * tracked in dedicated fields of the ProjectParticipant and Musician
+   * entity.
    */
   protected function findFiles(string $dirName)
   {
@@ -124,6 +129,10 @@ class ProjectParticipantsStorage extends Storage
 
     $dirName = self::normalizeDirectoryName($dirName);
     $this->files[$dirName] = [];
+
+    $modificationTime = $this->participant->getParticipantFieldsDataChanged()
+      ?? new \DateTimeImmutable('@0');
+
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
 
@@ -138,7 +147,7 @@ class ProjectParticipantsStorage extends Storage
         $this->files[$dirName][$baseName] = $fileInfo['file'];
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
       }
     }
 
@@ -146,6 +155,9 @@ class ProjectParticipantsStorage extends Storage
     // than one project, at least technically)
 
     $paymentRecordsDirectory = $this->getPaymentRecordsFolderName();
+
+    $modificationTime = $this->musician->getPaymentsChanged()
+      ?? new \DateTimeImmutable('@0');
 
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($this->musician->getPayments() as $compositePayment) {
@@ -168,7 +180,7 @@ class ProjectParticipantsStorage extends Storage
         $this->files[$dirName][$baseName] = $file;
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
       }
     }
 
@@ -179,6 +191,8 @@ class ProjectParticipantsStorage extends Storage
     $debitMandatesDirectory = $this->getDebitMandatesFolderName();
     $membersProjectId = $this->getClubMembersProjectId();
     $projectId = $this->project->getId();
+    $modificationTime = $this->musician->getSepaDebitMandatesChanged()
+      ?? new \DateTimeImmutable('@0');
 
     /** @var Entities\SepaDebitMandate $debitMandate */
     foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
@@ -198,7 +212,7 @@ class ProjectParticipantsStorage extends Storage
         }
       } else if (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
+        $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
       }
     }
 
@@ -209,10 +223,16 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * {@inheritdoc}
+   *
    */
-  protected function getStorageModificationTime():int
+  protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return $this->getDirectoryModificationTime('')->getTimestamp();
+    $mtime = max(
+      $this->participant->getParticipantFieldsDataChanged(),
+      $this->musician->getSepaDebitMandatesChanged(),
+      $this->musician->getPaymentsChanged()
+    );
+    return $mtime;
   }
 
   /** {@inheritdoc} */

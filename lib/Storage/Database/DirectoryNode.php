@@ -36,7 +36,7 @@ class DirectoryNode
   /** @var string */
   public string $name;
 
-  /** @var null|DateTimeImmutable */
+  /** @var null|\DateTimeInterface */
   public ?\DateTimeInterface $minimalModificationTime;
 
   public function __construct(string $name, ?\DateTimeInterface $minimalModificationTime = null)

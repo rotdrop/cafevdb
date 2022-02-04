@@ -91,14 +91,14 @@ class Storage extends AbstractStorage
 
   protected function getDirectoryModificationTime(string $dirName):\DateTimeInterface
   {
-    // This is a hack around the task to track the deletion time of
-    // objects. As a result all directories will have the same modification
-    // time which is just the time-stamp of the latests log-entry. Inefficient
-    // and ugly, but should hack most cases.
-    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+    $directory = $this->fileFromFileName($dirName);
+    if ($directory instanceof DirectoryNode) {
+      $date = $directory->minimalModificationTime;
+    } else {
+      $date = new \DateTimeImmutable('@0');
+    }
 
-    // How it should be ...
-    $date = (new \DateTimeImmutable)->setTimestamp(0);
+    // maybe we should skip the read-dir for performance reasons.
     /** @var Entities\File $node */
     foreach ($this->findFiles($dirName) as $node) {
       if ($node instanceof Entities\File) {
@@ -116,13 +116,21 @@ class Storage extends AbstractStorage
         $date = $updated;
       }
     }
+
+    $this->logDebug('MTIME FOR ' . get_class($this) . ' ' . $dirName . ' is ' . print_r($date, true));
+
     return $date;
+  }
+
+  protected function getStorageModificationDateTime():?\DateTimeInterface
+  {
+    // return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
+    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
   }
 
   protected function getStorageModificationTime():int
   {
-    // return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
-    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime()->getTimestamp();
+    return $this->getStorageModificationDateTime()->getTimestamp();
   }
 
   /** {@inheritdoc} */
