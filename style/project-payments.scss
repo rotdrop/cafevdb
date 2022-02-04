@@ -20,58 +20,63 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pme-form.pme-list.project-payments {
+.pme-form.project-payments.pme- {
 
-  tr.pme-row {
+  &list {
+    tr.pme-row {
 
-    &.composite-payment:not(.following-hidden,.project-payment) td {
-      font-weight:bold;
-    }
+      &.composite-payment:not(.following-hidden,.project-payment) td {
+        font-weight:bold;
+      }
 
-    &.composite-payment {
-      &.following-hidden {
+      &.composite-payment {
+        &.following-hidden {
+          &.odd:not(:hover) td {
+            background:#B7CEEC;
+          }
+          &.even:not(:hover) td {
+            background:#C6DEFF;
+          }
+          &.first ~ tr.pme-row.composite-payment.following {
+            display:none;
+          }
+        }
+      }
+
+      &.project-payment {
         &.odd:not(:hover) td {
-          background:#B7CEEC;
+          background:#bfdeb9;
         }
         &.even:not(:hover) td {
-          background:#C6DEFF;
+          background:#f6ffda;
         }
-        &.first ~ tr.pme-row.composite-payment.following {
-          display:none;
+        &:hover td {
+          background:#96b183;
+        }
+        td.instrumentation-id {
+          padding-left:1em;
         }
       }
     }
-
-    &.project-payment {
-      &.odd:not(:hover) td {
-        background:#bfdeb9;
-      }
-      &.even:not(:hover) td {
-        background:#f6ffda;
-      }
-      &:hover td {
-        background:#96b183;
-      }
-      td.instrumentation-id {
-        padding-left:1em;
-      }
-    }
-
-    td.pme-cell {
-      .operation {
-        display:inline-block;
-        background-repeat:no-repeat;
-        background-size: 20px 20px;
-        background-position: center;
-        width:24px;
-        height:24px;
-        min-height:unset;
-        margin:0;
-        vertical-align:middle;
-        padding:4px;
-        margin-right:0.5em;
-        &.open-parent {
-          background-image:url('../../../core/img/filetypes/folder-external.svg');
+  }
+  &list, &view, &copy, &change {
+    td.pme- {
+      &cell, &value {
+        .operation {
+          display:inline-block;
+          background-repeat:no-repeat;
+          background-size: 20px 20px;
+          background-position: center;
+          width:24px;
+          height:24px;
+          min-height:unset;
+          margin:0;
+          vertical-align:middle;
+          padding:4px;
+          margin-right:0.5em;
+          &.open-parent {
+            background-image:url('../../../core/img/filetypes/folder-external.svg');
+          }
         }
       }
     }
