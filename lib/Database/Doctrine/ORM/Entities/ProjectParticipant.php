@@ -84,6 +84,16 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $participantFieldsData;
 
+ /**
+   * @var \DateTimeImmutable
+   *
+   * Tracks changes in the fields data, in particular to catch deleted files
+   * for the database file-space.
+   *
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $participantFieldsDataChanged;
+
   /**
    * Link in the project instruments, may be more than one per participant.
    *
@@ -111,7 +121,7 @@ class ProjectParticipant implements \ArrayAccess
    * @var SepaDebitMandate
    *
    * Optional link to a SEPA debit-mandate used for this project.
-   * @todo Remove, this is a relict from pre-ORM times.
+   * @todo Remove, this is a relict from pre-ORM times. Is it really a relict?
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
    * @ORM\JoinColumns(
@@ -246,6 +256,16 @@ class ProjectParticipant implements \ArrayAccess
   public function getParticipantFieldsData():Collection
   {
     return $this->participantFieldsData;
+  }
+
+  /**
+   * Get participantFieldsDataChanged.
+   *
+   * @return Collection
+   */
+  public function getParticipantFieldsDataChanged():?\DateTimeInterface
+  {
+    return $this->participantFieldsDataChanged;
   }
 
   /**

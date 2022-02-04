@@ -285,9 +285,28 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $sepaDebitMandates;
 
   /**
+   * @var \DateTimeImmutable
+   *
+   * Tracks changes in the sepa-debit-mandates. In particular used to track deletions.
+   *
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $sepaDebitMandatesChanged;
+
+  /**
    * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $payments;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Tracks changes in the payments, in particular to track modification
+   * (including deletion) of supporting documents).
+   *
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $paymentsChanged;
 
   /**
    * @var \DateTimeImmutable
@@ -908,6 +927,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Get paymentsChanged.
+   *
+   * @return Collection
+   */
+  public function getPaymentsChanged():?\DateTimeInterface
+  {
+    return $this->paymentsChanged;
+  }
+
+  /**
    * Set sepaBankAccounts.
    *
    * @param Collection $sepaBankAccounts
@@ -953,6 +982,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Get sepaDebitMandatesChanged.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandatesChanged():?\DateTimeInterface
+  {
+    return $this->sepaDebitMandatesChanged;
   }
 
   /**

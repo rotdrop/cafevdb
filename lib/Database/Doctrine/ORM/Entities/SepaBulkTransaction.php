@@ -25,9 +25,11 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * SepaBulkTransaction
@@ -68,6 +70,18 @@ class SepaBulkTransaction implements \ArrayAccess
    * )
    */
   private $sepaTransactionData;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * This should track changes in the transaction-data in order to catch
+   * deletions in the file-system export. This propably cannot work ATM for
+   * collection-valued fields ...
+   *
+   * @Gedmo\Timestampable(on={"change"}, field={"sepaTransactionData.changed"})
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $sepaTransactionDataChanged;
 
   /**
    * @var \DateTimeImmutable
@@ -182,6 +196,16 @@ class SepaBulkTransaction implements \ArrayAccess
   public function getSepaTransactionData():Collection
   {
     return $this->sepaTransactionData;
+  }
+
+  /**
+   * Get sepaTransactionDataChanged.
+   *
+   * @return Collection
+   */
+  public function getSepaTransactionDataChanged():?\DateTimeInterface
+  {
+    return $this->sepaTransactionDataChanged;
   }
 
   /**

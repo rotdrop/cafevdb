@@ -7,6 +7,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
@@ -108,7 +109,10 @@ class CompositePayment implements \ArrayAccess
   private $notificationMessageId;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
+   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="supportingDocument", timestampField="paymentsChanged")
    */
   private $musician;
 

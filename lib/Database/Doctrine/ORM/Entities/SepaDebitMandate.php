@@ -60,8 +60,11 @@ class SepaDebitMandate implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
    * @ORM\Id
+   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="writtenMandate", timestampField="sepaDebitMandatesChanged")
    */
   private $musician;
 
