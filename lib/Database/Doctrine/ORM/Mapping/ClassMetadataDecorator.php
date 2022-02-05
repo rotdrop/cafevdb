@@ -427,6 +427,14 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
 
   private function doSetFieldValue($meta, $entity, $field, $value)
   {
+    // try to convert string to correct type if possible
+    $dbalTypeName = $meta->getTypeOfField($field);
+    if (!empty($dbalTypeName)) {
+      $dbalType = Type::getType($dbalTypeName);
+      if (!empty($dbalType) && is_string($value)) {
+        $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
+      }
+    }
     // try first the setter/getter of the entity
     $method = 'set'.ucfirst($field);
     if (is_callable([ $entity, $method ])) {
