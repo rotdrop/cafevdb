@@ -1300,6 +1300,7 @@ class ProjectParticipants extends PMETableViewBase
     foreach ($instrumentVoices as $instrument => &$voices) {
       $voices = array_merge($voices, $voiceValues[$instrument]??[]);
     }
+    unset($voices); // break reference
 
     $this->debug('VOICES '.print_r($instrumentVoices, true));
 
