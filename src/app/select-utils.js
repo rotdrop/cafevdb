@@ -135,7 +135,6 @@ const selectedValues = function($select, values, trigger) {
       const selectize = $select[0].selectize;
       selectize.clear(true);
       selectize.addItems(values, true);
-      selectize.deselectAll();
       selectize.refreshItems(true);
     } else {
       $select.val(values);
