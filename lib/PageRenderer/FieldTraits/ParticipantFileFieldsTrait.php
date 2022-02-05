@@ -57,7 +57,7 @@ trait ParticipantFileFieldsTrait
   protected $pme;
 
   /** Generate one HTML input row for a cloud-file field. */
-  protected function cloudFileUploadRowHtml($value, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician)
+  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     // make sure $subDir exists
@@ -69,15 +69,15 @@ trait ParticipantFileFieldsTrait
     }
     if (!empty($fileBase)) {
       $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
-      if (!empty($value)) {
-        $fileName .= '.' . pathinfo($value, PATHINFO_EXTENSION);
+      if (!empty($optionValue)) {
+        $fileName .= '.' . pathinfo($optionValue, PATHINFO_EXTENSION);
       }
       $placeHolder = $this->l->t('Load %s', $fileName);
     } else {
-      $fileName = $value;
+      $fileName = $optionValue;
       $placeHolder = $this->l->t('Drop files here or click to upload fileds.');
     }
-    if (!empty($value)) {
+    if (!empty($optionValue)) {
       $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
@@ -85,7 +85,7 @@ trait ParticipantFileFieldsTrait
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
         $filesAppLink = '#';
-        $value = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
+        $optionValue = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
     } else {
       $downloadLink = '';

@@ -574,13 +574,13 @@ trait ParticipantFieldsTrait
               $subDir = $field->getUntranslatedName();
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               /** @var Entities\ProjectParticipantFieldDataOption $option */
-              $html = '<div class="file-upload-wrapper" data-option-key="'.$key.'">
+              $html = '<div class="file-upload-wrapper">
   <table class="file-upload">';
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
                 $fileBase = $option->getUntranslatedLabel();
                 $policy = $option->getData()?:'rename';
-                $html .= $this->cloudFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
+                $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
               }
               $html .= '
   </table>
@@ -648,7 +648,7 @@ trait ParticipantFieldsTrait
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
                 $fileBase = $option->getLabel();
-                $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, $fileBase, $musician);
+                $html .= $this->dbFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $subDir, $fileBase, $musician);
               }
               $html .= '
   </table>
