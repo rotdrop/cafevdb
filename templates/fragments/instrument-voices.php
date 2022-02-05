@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,7 +35,7 @@
   <?php foreach ($instruments as $instrument) { ?>
   <div class="instrument-voice container request instrument-<?php p($instrument); ?> hidden">
     <label for="instrument-voice-request-<?php p($instrument); ?>"
-           class="instrument-'.$instrument.' tooltip-auto"
+           class="instrument-<?php p($instrument); ?> tooltip-auto"
            title="<?php p($toolTips[$toolTipSlug]); ?>">
       <?php p(call_user_func($inputLabel, $instrument)); ?>
       <input type="number"
