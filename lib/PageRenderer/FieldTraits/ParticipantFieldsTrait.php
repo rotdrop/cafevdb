@@ -1565,7 +1565,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         $changed[] = $keyName;
         // tweak the option value to have the desired form
         $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
-        $newValues[$depositName] = $key.self::JOIN_KEY_SEP.$newValues[$depositName];
+        if (isset($newValues[$depositName])) {
+          $newValues[$depositName] = $key.self::JOIN_KEY_SEP.$newValues[$depositName];
+        }
         break;
       case FieldMultiplicity::RECURRING:
         if (array_search($valueName, $changed) === false
