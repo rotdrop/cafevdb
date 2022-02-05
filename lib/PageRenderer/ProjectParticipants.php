@@ -642,7 +642,7 @@ class ProjectParticipants extends PMETableViewBase
 '; // close dropdown-menu
 
             $instrumentsIndex = $k - 2;
-            $instruments = explode(',', $row['qf'.$instrumentsIndex]);
+            $instruments = Util::explode(',', $row['qf'.$instrumentsIndex]);
             $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
 
             $templateParameters = [
