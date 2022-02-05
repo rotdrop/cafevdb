@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -326,6 +326,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'select' => 'N',
       'sort' => $sort,
       'align' => 'right',
+      'display' => [
+        'attributes' => [
+          'min' => 0,
+        ],
+      ],
     ];
     $this->addSlug('required', $opts['fdd']['quantity']);
 
