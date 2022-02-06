@@ -91,6 +91,13 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   }
 
   /** {@inheritdoc} */
+  public function wipeKeyPair(string $ownerId)
+  {
+    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PRIVATE_ENCRYPTION_KEY);
+    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
+  }
+
+  /** {@inheritdoc} */
   public function getPublicKey(string $ownerId)
   {
     $pubKeyMaterial = $this->getUserValue($ownerId, self::PUBLIC_ENCRYPTION_KEY);

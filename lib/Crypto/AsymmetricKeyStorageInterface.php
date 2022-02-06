@@ -122,4 +122,12 @@ interface AsymmetricKeyStorageInterface
    * ```
    */
   public function initializeKeyPair(string $ownerId, string $keyPassphrase, bool $forceNewKeypair = false);
+
+  /**
+   * Remove the stored key-pair for the given owner.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'.
+   */
+  public function wipeKeyPair(string $ownerId);
 }
