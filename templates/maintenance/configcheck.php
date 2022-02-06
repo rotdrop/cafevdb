@@ -186,20 +186,20 @@ group-administrator for the group `%s\'.',
     case 'encryptionkey':
       $key = 'encryptionkey';
       $encrkey = $encryptionkey;
-      $cfgkey  = $configkey;
+      $encrkeyhash = $encryptionkeyhash;
       $error   = $cfgchk[$key]['message'];
       if ($error != '') {
             $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
       }
 
-      if ($encrkey != '') {
+      if (!empty($encrkey)) {
         $ok    = 'set';
         $tok   = $l->t('is set');
         $value = 'XXXXXXXX'; // $encrkey;
         $text  = '';
-      } else if ($cfgkey != '') {
+      } else if (!empty($encrkeyhash)) {
         $ok    = 'missing';
-        $tok   = $l->t('is set, but inaccessible');
+        $tok   = $appconfigkey . ' / ' . $userconfigkey . ' / ' . $l->t('is set, but inaccessible');
         $value = '';
         $text  = $missingtext[$key];
       } else {

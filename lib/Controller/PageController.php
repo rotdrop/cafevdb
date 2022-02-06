@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
@@ -316,7 +317,7 @@ class PageController extends Controller {
       'urlGenerator' => $this->urlGenerator,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
-      'configkey' => ($this->getConfigValue('encryptionkey')?: $this->getAppValue('encryptionkey')),
+      'encryptionkeyhash' => $this->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY),
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'projectName' => $projectName,
