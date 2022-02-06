@@ -20,7 +20,7 @@
     "doctrine/orm": "dev-production/2.11.x/cafevdb",
     "symfony/cache": "*",
     "gedmo/doctrine-extensions": "3.6.x-dev",
-    "mediamonks/doctrine-extensions": "dev-feature/gedmo-dev",
+    "mediamonks/doctrine-extensions": "0.1.x-dev",
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^1.6",
