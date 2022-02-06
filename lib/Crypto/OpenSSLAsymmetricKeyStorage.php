@@ -38,7 +38,7 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
     $privKey = openssl_pkey_new(self::KEY_CONFIG);
 
     /* Extract the public key from $res to $pubKey */
-    $pubKey = openssl_pkey_get_details($res);
+    $pubKey = openssl_pkey_get_details($privKey);
 
     if ($pubKey === false) {
       return null;
