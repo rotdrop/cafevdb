@@ -136,7 +136,7 @@ class EncryptionService
     , AuthorizationService $authorization
     , IConfig $containerConfig
     , IUserSession $userSession
-    // , Crypto\AsymmetricKeyService $asymKeyService
+    , Crypto\AsymmetricKeyService $asymKeyService
     , Crypto\SealService $sealService
     , ICrypto $crypto
     , IHasher $hasher
@@ -147,7 +147,7 @@ class EncryptionService
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
-    $this->asymKeyService = new Crypto\AsymmetricKeyService($appName, $containerConfig, $l10n);
+    $this->asymKeyService = $asymKeyService;
     $this->sealService = $sealService;
     $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
     $this->appAsymmetricCryptor = new Crypto\OpenSSLAsymmetricCryptor;
@@ -248,7 +248,7 @@ class EncryptionService
   {
     try {
       list(self::PRIVATE_ENCRYPTION_KEY => $this->userPrivateKey, self::PUBLIC_ENCRYPTION_KEY => $this->userPublicKey) =
-        $this->asymKeyService->initSSLKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
+        $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
       $this->userPrivateKey = null;
       $this->userPublicKey = null;
@@ -268,7 +268,7 @@ class EncryptionService
 
     try {
       list(self::PRIVATE_ENCRYPTION_KEY => $privKay, self::PUBLIC_ENCRYPTION_KEY => $pubKey) =
-        $this->asymKeyService->initSSLKeyPair($group, $encryptionKey, $forceNewKeyPair);
+        $this->asymKeyService->initEncryptionKeyPair($group, $encryptionKey, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
       $this->appAsymmetricCryptor->setPrivateKey(null);
       $this->appAsymmetricCryptor->setPublicKey(null);
