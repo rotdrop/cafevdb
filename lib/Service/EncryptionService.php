@@ -71,8 +71,8 @@ class EncryptionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const PUBLIC_SSL_KEY = Crypto\AsymmetricKeyService::PUBLIC_SSL_KEY_CONFIG;
-  const PRIVATE_SSL_KEY = Crypto\AsymmetricKeyService::PRIVATE_SSL_KEY_CONFIG;
+  const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
+  const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
   const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
   const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
@@ -247,7 +247,7 @@ class EncryptionService
   public function initUserKeyPair($forceNewKeyPair = false)
   {
     try {
-      list(self::PRIVATE_SSL_KEY => $this->userPrivateKey, self::PUBLIC_SSL_KEY => $this->userPublicKey) =
+      list(self::PRIVATE_ENCRYPTION_KEY => $this->userPrivateKey, self::PUBLIC_ENCRYPTION_KEY => $this->userPublicKey) =
         $this->asymKeyService->initSSLKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
       $this->userPrivateKey = null;
@@ -267,7 +267,7 @@ class EncryptionService
     $group = '@' . $group;
 
     try {
-      list(self::PRIVATE_SSL_KEY => $privKay, self::PUBLIC_SSL_KEY => $pubKey) =
+      list(self::PRIVATE_ENCRYPTION_KEY => $privKay, self::PUBLIC_ENCRYPTION_KEY => $pubKey) =
         $this->asymKeyService->initSSLKeyPair($group, $encryptionKey, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
       $this->appAsymmetricCryptor->setPrivateKey(null);
@@ -289,8 +289,8 @@ class EncryptionService
   public function deleteUserKeyPair($login)
   {
     $this->logDebug('REMOVING ENCRYPTION DATA FOR USER ' . $login);
-    $this->containerConfig->deleteUserValue($login, $this->appName, 'publicSSLKey');
-    $this->containerConfig->deleteUserValue($login, $this->appName, 'privateSSLKey');
+    $this->containerConfig->deleteUserValue($login, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
+    $this->containerConfig->deleteUserValue($login, $this->appName, self::PRIVATE_ENCRYPTION_KEY);
     foreach (self::SHARED_PRIVATE_VALUES as $key) {
       $this->containerConfig->deleteUserValue($login, $this->appName, $key);
     }
@@ -432,7 +432,7 @@ class EncryptionService
       $userPublicKey = $this->userPublicKey;
     } else {
       // encrypt for different than bound user
-      $userPublicKey = $this->getUserValue($userId, 'publicSSLKey');
+      $userPublicKey = $this->getUserValue($userId, self::PUBLIC_ENCRYPTION_KEY);
       if (empty($userPublicKey)) {
         throw new Exceptions\EncryptionKeyException($this->l->t('Cannot encrypt private values for user "%s" without public SSL key.', $userId));
       }

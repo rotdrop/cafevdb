@@ -27,14 +27,16 @@ namespace OCA\CAFEVDB\Crypto;
 use OCP\IConfig;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Exceptions;
+
 /**
  * Support functions encapsulating the underlying encryption framework
  * (currently openssl)
  */
 class AsymmetricKeyService
 {
-  const PUBLIC_SSL_KEY_CONFIG = 'publicSSLKey';
-  const PRIVATE_SSL_KEY_CONFIG = 'privateSSLKey';
+  const PUBLIC_ENCRYPTION_KEY_CONFIG = 'publicSSLKey';
+  const PRIVATE_ENCRYPTION_KEY_CONFIG = 'privateSSLKey';
 
   /** @var string */
   private $appName;
@@ -82,8 +84,8 @@ class AsymmetricKeyService
     }
 
     if (!$forceNewKeyPair) {
-      $privKey = $this->getUserValue($ownerId, self::PRIVATE_SSL_KEY_CONFIG, null);
-      $pubKey = $this->getUserValue($ownerId, self::PUBLIC_SSL_KEY_CONFIG, null);
+      $privKey = $this->getUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY_CONFIG, null);
+      $pubKey = $this->getUserValue($ownerId, self::PUBLIC_ENCRYPTION_KEY_CONFIG, null);
     }
     if (empty($privKey) || empty($pubKey)) {
       // Ok, generate one. But this also means that we have not yet
@@ -101,7 +103,7 @@ class AsymmetricKeyService
       throw new Exceptions\EncryptionKeyException($this->l->t('Unable to unlock private key for user "%s"', [ $ownerId ]));
     }
 
-    return [ self::PRIVATE_SSL_KEY_CONFIG => $privKey, self::PUBLIC_SSL_KEY_CONFIG => $pubKey ];
+    return [ self::PRIVATE_ENCRYPTION_KEY_CONFIG => $privKey, self::PUBLIC_ENCRYPTION_KEY_CONFIG => $pubKey ];
   }
 
   /**
@@ -142,10 +144,10 @@ class AsymmetricKeyService
     // The private key already is encrypted with the user's password,
     // so there is no need to encrypt it again.
 
-    $this->setUserValue($ownerId, self::PUBLIC_SSL_KEY_CONFIG, $pubKey);
-    $this->setUserValue($ownerId, self::PRIVATE_SSL_KEY_CONFIG, $privKey);
+    $this->setUserValue($ownerId, self::PUBLIC_ENCRYPTION_KEY_CONFIG, $pubKey);
+    $this->setUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY_CONFIG, $privKey);
 
-    return [ self::PRIVATE_SSL_KEY_CONFIG => $privKey, self::PUBLIC_SSL_KEY_CONFIG => $pubKey ];
+    return [ self::PRIVATE_ENCRYPTION_KEY_CONFIG => $privKey, self::PUBLIC_ENCRYPTION_KEY_CONFIG => $pubKey ];
   }
 
   private function getUserValue(string $ownerId, string $key, mixed $default)
