@@ -164,6 +164,14 @@ class Application extends App implements IBootstrap
       return $c->query(EntityManager::class)->getConnection();
     });
 
+    $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricKeyStorageInterface::class, function($c) {
+      return $c->get(\OCA\CAFEVDB\Crypto\OpenSSLAsymmetricKeyStorage::class);
+    });
+
+    $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricCryptorInterface::class, function($c) {
+      return $c->get(\OCA\CAFEVDB\Crypto\OpenSSLAsymmetricCryptor::class);
+    });
+
     // Register Middleware
     $context->registerServiceAlias('SubadminMiddleware', SubadminMiddleware::class);
     $context->registerMiddleWare('SubadminMiddleware');

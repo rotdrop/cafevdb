@@ -27,7 +27,7 @@ use ParagonIE\Halite;
 use ParagonIE\HiddenString\HiddenString;
 
 /** Asymmetric encryption using the OpenSSL extension of PHP */
-class HaliteAsymmetricCryptor implements ICryptor
+class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
 {
   private $privKey = null;
 

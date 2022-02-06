@@ -24,7 +24,7 @@
 namespace OCA\CAFEVDB\Crypto;
 
 /** Asymmetric encryption using the OpenSSL extension of PHP */
-class OpenSSLAsymmetricCryptor implements ICryptor
+class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
 {
   private $privKey = null;
 
