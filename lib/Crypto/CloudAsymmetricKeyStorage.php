@@ -63,12 +63,14 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   public function getKeyPair(string $ownerId, string $keyPassphrase)
   {
     $privKeyMaterial = $this->getUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY);
-    $privKeyMaterial = $this->crypto->decrypt($privKeyMaterial, $keyPassphrase);
-    $privKey = $this->unserializeKey($privKeyMaterial, self::PRIVATE_ENCRYPTION_KEY);
-
+    if (!empty($privKeyMaterial)) {
+      $privKeyMaterial = $this->crypto->decrypt($privKeyMaterial, $keyPassphrase);
+      $privKey = $this->unserializeKey($privKeyMaterial, self::PRIVATE_ENCRYPTION_KEY);
+      $pubKey = $this->getPublicKey($ownerId);
+    }
     return [
-      self::PRIVATE_ENCRYPTION_KEY => $privKey,
-      self::PUBLIC_ENCRYPTION_KEY => $this->getPublicKey($ownerId),
+      self::PRIVATE_ENCRYPTION_KEY => $privKey ?? null,
+      self::PUBLIC_ENCRYPTION_KEY => $pubKey ?? null,
     ];
   }
 
@@ -121,7 +123,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   /** Serialize key to string for storage in whatever storage backend */
   abstract protected function serializeKey(mixed $key, string $which):string;
 
-  private function getUserValue(string $ownerId, string $key, mixed $default)
+  private function getUserValue(string $ownerId, string $key, mixed $default = null)
   {
     return $this->cloudConfig->getUserValue($ownerId, $this->appName, $key, $default);
   }
