@@ -438,6 +438,13 @@ class EncryptionService
       }
     }
 
+    // We maintain empty values as empty values ATM. This is problematic as it
+    // also reveals the value of the setting as empty
+    if (empty($value)) {
+      $this->deleteUserValue($userId, $key);
+      return;
+    }
+
     if (openssl_public_encrypt($value, $encrypted, $userPublicKey) === false) {
       throw new Exceptions\EncryptionFailedException($this->l->t('Encrypting value for key "%s" with public key of user "%s" failed.', [ $key, $userId ]));
     }
@@ -512,6 +519,11 @@ class EncryptionService
   public function setUserValue($userId, $key, $value)
   {
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
+  }
+
+  public function deleteUserValue($userId, $key)
+  {
+    return $this->containerConfig->deleteUserValue($userId, $this->appName, $key);
   }
 
   public function getConfigValue($key, $default = null)
