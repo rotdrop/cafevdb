@@ -76,12 +76,15 @@ function documentReady() {
                     + ' '
                     + data.migrations.handled.join(', '),
                   { timeout: 30 });
-                const redirectTimeout = 10;
-                Notification.show(t(
-                  appName,
-                  'Redirecting to the orchestra app in {timeout} seconds.',
-                  { timeout: redirectTimeout }));
-                setTimeout(function() {
+                let redirectTimeout = 10;
+                const makeText = timeout => t(appName, 'Redirecting to the orchestra app in {timeout} seconds.', { timeout: redirectTimeout });
+                const row = Notification.show(makeText(redirectTimeout));
+                const second = 1000;
+                const notifier = setInterval(() => {
+                  row.text(makeText(--redirectTimeout));
+                }, second);
+                setTimeout(() => {
+                  clearInterval(notifier);
                   window.location.reload();
                 }, redirectTimeout * 1000);
               });
