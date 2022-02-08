@@ -30,10 +30,7 @@ Features include
 - export of bulk-transactions in form suitable for input to AqBanking-CLI
 
 The orchestra data-base is held separate from the cloud database and
-is based on Doctrine/ORM. This is also the reason why the App
-currently does not work with Nextcloud later than v20, as Doctrine/ORM
-still does not support Doctrine/DBAL 3.0, but Nextcloud >= 21 depends
-on DBAL v3.
+is based on Doctrine/ORM.
 
 --
 cH
