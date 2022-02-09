@@ -15,7 +15,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * transaction parts are ProjectPayment entities.
  *
  * @ORM\Table(name="CompositePayments")
- *    uniqueConstraints={@ ORM\UniqueConstraint(columns={"notification_message_id"})}
+ *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
  * @ORM\Entity
  */
 class CompositePayment implements \ArrayAccess

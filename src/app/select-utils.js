@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,9 +31,9 @@ const findOptionByValue = function($select, value) {
 /**
  * Determine if the given element is managed by jQuery chosen.
  *
- * @param{jQuery} $select TBD.
+ * @param {jQuery} $select TBD.
  *
- * @returns{bool}
+ * @returns {bool}
  */
 const chosenActive = function($select) {
   return $select.data('chosen') !== undefined;
@@ -70,9 +70,9 @@ const makePlaceholder = function($select) {
 /**
  * Determine if the given element is managed by selectize.
  *
- * @param{jQuery} $select TBD.
+ * @param {jQuery} $select TBD.
  *
- * @returns{bool}
+ * @returns {bool}
  */
 const selectizeActive = function($select) {
   return !!($select.length > 0 && ($select[0].selectize !== undefined));
@@ -97,16 +97,16 @@ const deselectAll = function($select) {
  * underlying "selectize" or "chosen" widget. Works for "multiple" as
  * well as single selects.
  *
- * @param{jQuery} $select collection with a single select.
+ * @param {jQuery} $select collection with a single select.
  *
- * @param{(string|string[])} [values] If given then set the given
+ * @param {(string|string[])} [values] If given then set the given
  * values into the select. If the select is not multiple and value is
  * an array then use values[0] as selected value.
  *
- * @param{bool} [trigger=false] If trigger === true then trigger a
+ * @param {bool} [trigger=false] If trigger === true then trigger a
  * change-event on the select after installing the new values.
  *
- * @returns{(Array|string|null)} Always return an array for multiple
+ * @returns {(Array|string|null)} Always return an array for multiple
  * selects and a string or null for single selects. When setting new
  * values return the previously set values.
  */
@@ -154,7 +154,7 @@ const selectedValues = function($select, values, trigger) {
  * original select element. This currently support jQuery chosen and
  * selectize.
  *
- * @param{jQuery} $select TBD.
+ * @param {jQuery} $select TBD.
  */
 const refreshSelectWidget = function($select) {
   if (chosenActive($select)) {

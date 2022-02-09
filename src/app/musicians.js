@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -39,9 +39,9 @@ require('sepa-bank-accounts.scss');
 /**
  * Add several musicians.
  *
- * @param{jQuery} $form TBD.
+ * @param {jQuery} $form TBD.
  *
- * @param{Object} post TBD.
+ * @param {Object} post TBD.
  */
 const addMusicians = function($form, post) {
   const projectId = $form.find('input[name="projectId"]').val();
@@ -102,7 +102,7 @@ const addMusicians = function($form, post) {
  * in particular personal data. In principle this is only relevant in
  * change and add mode.
  *
- * @param{jQuery|string} container TBD.
+ * @param {jQuery|string} container TBD.
  */
 const contactValidation = function(container) {
 

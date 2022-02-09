@@ -197,9 +197,9 @@ const cancelDeferredReload = function(container) {
  * Create a jQuery Deferred object in order post-one form submission
  * until after validation of data, for example.
  *
- * @param{jQuery} container TBD.
+ * @param {jQuery} container TBD.
  *
- * @returns{Deferred}
+ * @returns {Deferred}
  */
 const pmeDeferReload = function(container) {
   const defer = $.Deferred();

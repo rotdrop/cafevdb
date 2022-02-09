@@ -1168,11 +1168,11 @@ let mandateValidatePMEPromise = {};
  * validation may lead to a modification of input elements, which in
  * turn have to serve as input to the next validation call.
  *
- * @param{Object} event TBD.
+ * @param {Object} event TBD.
  *
- * @param{function} validateLockCB TBD.
+ * @param {function} validateLockCB TBD.
  *
- * @returns{boolean} false
+ * @returns {boolean} false
  */
 const mandateValidatePME = function(event, validateLockCB) {
   const self = this;

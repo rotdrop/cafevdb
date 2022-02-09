@@ -45,7 +45,7 @@ class BlogMapper extends Mapper
    *            has clicked away the alert box.
    *            as a one-time popup.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function createNote($author, $inReply, $content, $priority = false, $popup = false)
   {
@@ -79,7 +79,7 @@ class BlogMapper extends Mapper
    * @param $reader Comma separated list of users for which the note is marked
    *            as read. If false, nothing changes. If < 0 remove all readers.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function modifyNote($author, $blogId, $content = '', $priority = false, $popup = null, $reader = false)
   {
@@ -134,7 +134,7 @@ class BlogMapper extends Mapper
    * @param $drop If @c true then really delete the message,
    * otherwise just mark them as deleted.
    *
-   * @return bool, @c true on success.
+   * @return bool @c true on success.
    */
   public function deleteNote($blogId, $drop = false)
   {
@@ -224,7 +224,7 @@ class BlogMapper extends Mapper
    * date (newest first). The dangling threads are sorted according to
    * date (oldest first).
    *
-   * @return Tree-like nested array structure modelling the message
+   * @return array Tree-like nested array structure modelling the message
    * threads.
    */
   public function findThreadDisplay()
