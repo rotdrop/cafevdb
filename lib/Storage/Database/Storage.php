@@ -121,8 +121,6 @@ class Storage extends AbstractStorage
       }
     }
 
-    $this->logDebug('MTIME FOR ' . get_class($this) . ' "' . $dirName . '" is ' . $date->format('Y-m-d H:i:s'));
-
     return $date;
   }
 

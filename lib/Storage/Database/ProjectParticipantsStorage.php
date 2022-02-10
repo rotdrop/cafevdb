@@ -132,120 +132,131 @@ class ProjectParticipantsStorage extends Storage
       '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
     ];
 
-    $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+    $dirMatch = false;
 
-    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-    foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
+    if (!$dirMatch) {
+      // add supporting documents for composite payments (may belong to more
+      // than one project, at least technically)
 
-      $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
-      if (empty($fileInfo)) {
-        continue;
-      }
+      $paymentRecordsDirectory = $this->getPaymentRecordsFolderName();
+      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($paymentRecordsDirectory . self::PATH_SEPARATOR . '_'));
 
-      $fileName = $this->buildPath($fileInfo['pathName']);
-      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-      if ($fileDirName == $dirName) {
-        $this->files[$dirName][$baseName] = $fileInfo['file'];
-      } else if (strpos($fileDirName, $dirName) === 0) {
-        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-      }
-    }
-    if (!empty($modificationTime)) {
-      // update the time-stamp of the parent
-      $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-    }
+      if (strpos($fileDirName, $dirName) === 0) {
+        $dirMatch = true;
+        $payments = $this->musician->getPayments();
+        if ($fileDirName != $dirName) {
+          // parent directory, just add the subdirectory with proper mtime if there ever has been an entry
 
-    // add supporting documents for composite payments (may belong to more
-    // than one project, at least technically)
-
-    $paymentRecordsDirectory = $this->getPaymentRecordsFolderName();
-    list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($paymentRecordsDirectory . self::PATH_SEPARATOR . '_'));
-
-    if (strpos($fileDirName, $dirName) === 0) {
-      $payments = $this->musician->getPayments();
-      if ($fileDirName != $dirName) {
-        // parent directory, just add the subdirectory with proper mtime if there ever has been an entry
-
-        $modificationTime = $this->musician->getPaymentsChanged();
-        if (!empty($modificationTime) && $payments->count() == 0) {
-          // just update the time-stamp of the parent
-          $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-        } else if (!empty($modificationTime) || $payments->count() > 0) {
-          // add a directory entry
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-        }
-      } else {
-        // payments-directory, loop over documents
-        /** @var Entities\CompositePayment $compositePayment */
-        foreach ($payments as $compositePayment) {
-          $projectPayments = $compositePayment->getProjectPayments()->matching(
-            DBUtil::criteriaWhere([ 'project' => $this->project ])
-          );
-          if ($projectPayments->count() == 0) {
-            continue;
+          $modificationTime = $this->musician->getPaymentsChanged();
+          if (!empty($modificationTime) && $payments->count() == 0) {
+            // just update the time-stamp of the parent
+            $this->files[$dirName]['.']->updateModificationTime($modificationTime);
+          } else if (!empty($modificationTime) || $payments->count() > 0) {
+            // add a directory entry
+            list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+            $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
           }
-          $file = $compositePayment->getSupportingDocument();
-          if (empty($file)) {
-            continue;
+        } else {
+          // payments-directory, loop over documents
+          /** @var Entities\CompositePayment $compositePayment */
+          foreach ($payments as $compositePayment) {
+            $projectPayments = $compositePayment->getProjectPayments()->matching(
+              DBUtil::criteriaWhere([ 'project' => $this->project ])
+            );
+            if ($projectPayments->count() == 0) {
+              continue;
+            }
+            $file = $compositePayment->getSupportingDocument();
+            if (empty($file)) {
+              continue;
+            }
+            // enforce the "correct" file-name
+            $dbFileName = $file->getFileName();
+            $baseName = $this->getPaymentRecordFileName($compositePayment) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+            $fileName = $this->buildPath($paymentRecordsDirectory . self::PATH_SEPARATOR . $baseName);
+            list('basename' => $baseName) = self::pathInfo($fileName);
+            $this->files[$dirName][$baseName] = $file;
           }
-          // enforce the "correct" file-name
-          $dbFileName = $file->getFileName();
-          $baseName = $this->getPaymentRecordFileName($compositePayment) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
-          $fileName = $this->buildPath($paymentRecordsDirectory . self::PATH_SEPARATOR . $baseName);
-          list('basename' => $baseName) = self::pathInfo($fileName);
-          $this->files[$dirName][$baseName] = $file;
         }
       }
     }
 
-    // also link in the debit-mandate hard-copies in their own sub-folder
-    // subDir: $this->l->t('DebitMandates'),
-    // Link in all project-related and the general debit-mandates
+    if (!$dirMatch) {
 
-    $debitMandatesDirectory = $this->getDebitMandatesFolderName();
-    list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . '_'));
+      // also link in the debit-mandate hard-copies in their own sub-folder
+      // subDir: $this->l->t('DebitMandates'),
+      // Link in all project-related and the general debit-mandates
 
-    if (strpos($fileDirName, $dirName) === 0) {
+      $debitMandatesDirectory = $this->getDebitMandatesFolderName();
+      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . '_'));
 
-      $membersProjectId = $this->getClubMembersProjectId();
-      $projectId = $this->project->getId();
+      if (strpos($fileDirName, $dirName) === 0) {
+        $dirMatch = true;
 
-      /** @var Entities\SepaDebitMandate $debitMandate */
-      $projectMandates = $this->musician->getSepaDebitMandates()->filter(
-        function($debitMandate) use ($membersProjectId, $projectId) {
-          $mandateProjectId = $debitMandate->getProject()->getId();
-          return $mandateProjectId === $membersProjectId || $mandateProjectId === $projectId;
-        });
-
-      if ($fileDirName != $dirName) {
-        // parent directory, just add the subdirectory with proper mtime if there ever has been an entry
-
-        $modificationTime = $this->musician->getSepaDebitMandatesChanged();
-        if (!empty($modificationTime) && $projectMandates->count() == 0) {
-          // just update the time-stamp of the parent
-          $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-        } else if (!empty($modificationTime) || $projectMandates->count() > 0) {
-          // add a directory entry
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-        }
-      } else {
+        $membersProjectId = $this->getClubMembersProjectId();
+        $projectId = $this->project->getId();
 
         /** @var Entities\SepaDebitMandate $debitMandate */
-        foreach ($projectMandates as $debitMandate) {
-          $file = $debitMandate->getWrittenMandate();
-          if (empty($file)) {
-            continue;
+        $projectMandates = $this->musician->getSepaDebitMandates()->filter(
+          function($debitMandate) use ($membersProjectId, $projectId) {
+            $mandateProjectId = $debitMandate->getProject()->getId();
+            return $mandateProjectId === $membersProjectId || $mandateProjectId === $projectId;
+          });
+
+        if ($fileDirName != $dirName) {
+          // parent directory, just add the subdirectory with proper mtime if there ever has been an entry
+
+          $modificationTime = $this->musician->getSepaDebitMandatesChanged();
+          if (!empty($modificationTime) && $projectMandates->count() == 0) {
+            // just update the time-stamp of the parent
+            $this->files[$dirName]['.']->updateModificationTime($modificationTime);
+          } else if (!empty($modificationTime) || $projectMandates->count() > 0) {
+            // add a directory entry
+            list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+            $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
           }
-          // enforce the "correct" file-name
-          $extension = '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
-          $baseName = $this->getDebitMandateFileName($debitMandate) . $extension;
-          $fileName = $this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . $baseName);
-          list('basename' => $baseName) = self::pathInfo($fileName);
-          $this->files[$dirName][$baseName] = $file;
+        } else {
+
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          foreach ($projectMandates as $debitMandate) {
+            $file = $debitMandate->getWrittenMandate();
+            if (empty($file)) {
+              continue;
+            }
+            // enforce the "correct" file-name
+            $extension = '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+            $baseName = $this->getDebitMandateFileName($debitMandate) . $extension;
+            $fileName = $this->buildPath($debitMandatesDirectory . self::PATH_SEPARATOR . $baseName);
+            list('basename' => $baseName) = self::pathInfo($fileName);
+            $this->files[$dirName][$baseName] = $file;
+          }
         }
+      }
+    }
+
+    if (!$dirMatch) {
+      $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
+
+        $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+        if (empty($fileInfo)) {
+          continue;
+        }
+
+        $fileName = $this->buildPath($fileInfo['pathName']);
+        list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+        if ($fileDirName == $dirName) {
+          $this->files[$dirName][$baseName] = $fileInfo['file'];
+        } else if (strpos($fileDirName, $dirName) === 0) {
+          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+          $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+        }
+      }
+      if (!empty($modificationTime)) {
+        // update the time-stamp of the parent
+        $this->files[$dirName]['.']->updateModificationTime($modificationTime);
       }
     }
 
