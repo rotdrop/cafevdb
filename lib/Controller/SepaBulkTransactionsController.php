@@ -688,7 +688,7 @@ class SepaBulkTransactionsController extends Controller {
         $this->persist($exportFile);
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwabled $t) {
+      } catch (\Throwable $t) {
         $this->entityManager->rollback();
         $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
