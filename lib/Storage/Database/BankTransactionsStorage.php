@@ -77,39 +77,49 @@ class BankTransactionsStorage extends Storage
   protected function findFiles(string $dirName)
   {
     $dirName = self::normalizeDirectoryName($dirName);
-    $this->files[$dirName] = [];
-    $transactions = $this->transactionsRepository->findAll();
+    $this->files[$dirName] = [
+      '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
+    ];
 
-    // This is a hack around the task to track the deletion time of
-    // objects.
-    $databaseMTime = $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+    $transactions = $this->transactionsRepository->findAll();
 
     $directories = [];
 
     /** @var Entities\SepaBulkTransaction $transaction */
     foreach ($transactions as $transaction) {
 
-      $modificationTime = $transaction->getSepaTransactionDataChanged()
-        ?? $databaseMTime;
+      // choose the createdAt field for the subdirectory name
+      $year = $transaction->getCreated()->format('Y');
+      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($year . self::PATH_SEPARATOR . '_'));
+      if (strpos($fileDirName, $dirName) !== 0) {
+        // not our directory
+        continue;
+      }
+      $sepaTransactionData = $transaction->getSepaTransactionData();
+      if ($fileDirName != $dirName) {
+        // parent directory of year directory
+        $modificationTime = $transaction->getSepaTransactionDataChanged();
+        // should just be the year ...
+        list($yearBaseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
 
-      /** @var Entities\File $file */
-      foreach ($transaction->getSepaTransactionData() as $file) {
-        // @todo For now generate sub-directories for every year. This should
-        // perhaps be changed ...
-        $fileName = $file->getFileName();
-        if (preg_match('/^([0-9]{4})[0-9]{4}-[0-9]{6}/', $fileName, $matches)) {
-          $year = $matches[1];
-          $fileName = $year . self::PATH_SEPARATOR . $fileName;
-        }
-        $fileName = $this->buildPath($fileName);
-        list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-        if ($fileDirName == $dirName) {
-          $this->files[$dirName][$baseName] = $file;
-        } else if (strpos($fileDirName, $dirName) === 0) {
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          if (empty($directories[$baseName]) || $directories[$baseName] < $modificationTime) {
-            $directories[$baseName] = $modificationTime;
+        if (!empty($modificationTime) && $sepaTransactionData->count() == 0) {
+          // just update the timestamp of the parent
+          $this->files[$dirName]['.']->updateModificationTime($modificationTime);
+        } else if (!empty($modificationTime) || $sepaTransactionData->count() > 0) {
+          // add a directory entry
+          if (empty($directories[$yearBaseName]) || $directories[$yearBaseName] < $modificationTime) {
+            $directories[$yearBaseName] = $modificationTime;
           }
+        }
+      } else {
+        // just inside the year sub-directory
+        /** @var Entities\File $file */
+        foreach ($sepaTransactionData as $file) {
+          $fileName = $file->getFileName();
+          $fileName = $year . self::PATH_SEPARATOR . $fileName;
+          $fileName = $this->buildPath($fileName);
+          list('basename' => $baseName) = self::pathInfo($fileName);
+          $this->files[$dirName][$baseName] = $file;
         }
       }
     }
@@ -117,14 +127,12 @@ class BankTransactionsStorage extends Storage
       $this->files[$dirName][$name] = new DirectoryNode($name, $mtime);
     }
 
-    $this->logDebug('FOUND ' . count($this->files[$dirName]) . ' entries for "' . $dirName . '"');
-
     return $this->files[$dirName];
   }
 
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+    return $this->transactionsRepository->sepaTransactionDataModificationTime();
   }
 
   /** {@inheritdoc} */

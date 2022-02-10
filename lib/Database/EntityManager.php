@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -461,6 +461,7 @@ class EntityManager extends EntityManagerDecorator
     // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
     $config->addCustomDatetimeFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\TimestampDiff::class);
     $config->addCustomStringFunction('greatest', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Greatest::class);
+    $config->addCustomStringFunction('year', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Year::class);
   }
 
   private function createSimpleConfiguration():array
