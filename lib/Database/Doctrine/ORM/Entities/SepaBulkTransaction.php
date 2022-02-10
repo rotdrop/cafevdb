@@ -61,7 +61,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var EncryptedFile
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -78,7 +78,7 @@ class SepaBulkTransaction implements \ArrayAccess
    * deletions in the file-system export. This propably cannot work ATM for
    * collection-valued fields ...
    *
-   * @Gedmo\Timestampable(on={"change"}, field={"sepaTransactionData.changed"})
+   * @Gedmo\Timestampable(on={"change"}, field="sepaTransactionData")
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
   private $sepaTransactionDataChanged;
