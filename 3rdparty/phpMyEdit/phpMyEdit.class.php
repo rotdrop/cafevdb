@@ -515,14 +515,14 @@ class phpMyEdit
 	function view_enabled()	  { return stristr($this->options, 'V'); }
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tab_names) > 0; }
-	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
-	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
-	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
-	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
-	function mandatory($k)	  { return stristr(@$this->fdd[$k]['input'],'M'); }
-	function annotation($k)	  { return stristr(@$this->fdd[$k]['input'],'A'); }
-	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->virtual($k);		}
-	function virtual($k)	  { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
+	function hidden($k)		  { return stristr($this->fdd[$k]['input'] ?? '','H'); }
+	function skipped($k)	  { return stristr($this->fdd[$k]['input'] ?? '','S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
+	function password($k)	  { return stristr($this->fdd[$k]['input'] ?? '','W'); }
+	function readonly($k)	  { return stristr($this->fdd[$k]['input'] ?? '','R'); }
+	function mandatory($k)	  { return stristr($this->fdd[$k]['input'] ?? '','M'); }
+	function annotation($k)	  { return stristr($this->fdd[$k]['input'] ?? '','A'); }
+	function disabled($k)	  { return stristr($this->fdd[$k]['input'] ?? '','D') || $this->virtual($k);		}
+	function virtual($k)	  { return stristr($this->fdd[$k]['input'] ?? '','V') && $this->col_has_sql($k); }
 
 	function add_operation()	{ return $this->label_cmp($this->operation, 'Add')	  && $this->add_enabled();	  }
 	function change_operation() { return $this->label_cmp($this->operation, 'Change') && $this->change_enabled(); }
