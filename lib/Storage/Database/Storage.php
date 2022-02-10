@@ -93,7 +93,7 @@ class Storage extends AbstractStorage
   {
     $directory = $this->fileFromFileName($dirName);
     if ($directory instanceof DirectoryNode) {
-      $date = $directory->minimalModificationTime;
+      $date = $directory->minimalModificationTime ?? (new \DateTimeImmutable('@0'));
     } else {
       $date = new \DateTimeImmutable('@0');
     }
@@ -104,20 +104,24 @@ class Storage extends AbstractStorage
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
       } else if ($node instanceof DirectoryNode) {
-        $updated = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
-        if ($node->minimalModificationTime > $updated) {
-          $updated = $node->minimalModificationTime;
+        $nodeName = $node->name;
+        $updated = $node->minimalModificationTime ?? (new \DateTimeImmutable('@0'));
+        if ($nodeName != '.') {
+          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
+          if ($recursiveModificationTime > $updated) {
+            $updated = $recursiveModificationTime;
+          }
         }
       } else {
         $this->logError('Unknown directory entry in ' .$dirName);
-        $updated = $date;
+        $updated = new \DateTimeImmutable('@0');
       }
       if ($updated > $date) {
         $date = $updated;
       }
     }
 
-    $this->logDebug('MTIME FOR ' . get_class($this) . ' ' . $dirName . ' is ' . print_r($date, true));
+    $this->logDebug('MTIME FOR ' . get_class($this) . ' "' . $dirName . '" is ' . $date->format('Y-m-d H:i:s'));
 
     return $date;
   }
@@ -288,7 +292,9 @@ class Storage extends AbstractStorage
       return false;
     }
     $fileNames = array_keys($this->findFiles($path));
-    return IteratorDirectory::wrap($fileNames);
+    Util::unsetValue($fileNames, '.');
+    Util::unsetValue($fileNames, '..');
+    return IteratorDirectory::wrap(array_values($fileNames));
   }
 
   public function mkdir($path)

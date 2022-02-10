@@ -44,4 +44,12 @@ class DirectoryNode
     $this->name = $name;
     $this->minimalModificationTime = $minimalModificationTime;
   }
+
+  public function updateModificationTime(?\DateTimeInterface $mtime = null):DirectoryNode
+  {
+    if (!empty($mtime)) {
+      $this->minimalModificationTime = max($mtime, $this->minimalModificationTime);
+    }
+    return $this;
+  }
 }
