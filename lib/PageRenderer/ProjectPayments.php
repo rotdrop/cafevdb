@@ -1069,6 +1069,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       foreach (['newValues', 'oldValues'] as $dataSet) {
         ${$dataSet}[$rowTagKey] = ${$dataSet}[$paymentIdKey];
       }
+      // remove supporting_document_id is it is handled separately by direct
+      // db manipulation.
+      $tag = 'supporting_document_id';
+      unset($newValues[$tag]);
+      unset($oldValues[$tag]);
+      Util::unsetValue($changed, $tag);
     }
 
     $changed = [];
