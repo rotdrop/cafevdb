@@ -32,6 +32,7 @@ use OCP\IUser;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
@@ -52,13 +53,19 @@ class MountProvider implements IMountProvider
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use ProjectParticipantsStorageTrait;
 
+  /** @var OrganizationalRolesService */
+  private $organizationalRolesService;
+
+  /** @var int */
   private static $recursionLevel = 0;
 
   public function __construct(
     ConfigService $configService
+    , OrganizationalRolesService $organizationalRolesService
     , EntityManager $entityManager
   ) {
     $this->configService = $configService;
+    $this->organizationalRolesService = $organizationalRolesService;
     $this->l = $this->l10n();
     $this->entityManager = $entityManager;
   }
@@ -78,17 +85,19 @@ class MountProvider implements IMountProvider
       return [];
     }
 
-    if (!$this->inGroup($user->getUID())) {
+    $userId = $user->getUID();
+
+    if (!$this->inGroup($userId)) {
       return [];
     }
 
     if (!$this->entityManager->connected()) {
       // probably no credentials ...
-      $this->logDebug('EntityManager is not connected for user ' . $user->getUID());
+      $this->logDebug('EntityManager is not connected for user ' . $userId);
       return [];
     }
 
-    if ($user->getUID() == $this->shareOwnerId()) {
+    if ($userId == $this->shareOwnerId()) {
       // do not try to establish virtual mounts for the dummy user
       return [];
     }
@@ -109,7 +118,7 @@ class MountProvider implements IMountProvider
     }
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-      $this->logException(new \Exception('No shared folder for ' . $user->getUID()));
+      $this->logException(new \Exception('No shared folder for ' . $userId));
       --self::$recursionLevel;
       return [];
     }
@@ -117,29 +126,29 @@ class MountProvider implements IMountProvider
     try {
       $node = $node->get($projectsFolder);
       if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-        $this->logException(new MissingProjectsFolderException('No projects folder for ' . $user->getUID()));
+        $this->logException(new MissingProjectsFolderException('No projects folder for ' . $userId));
         --self::$recursionLevel;
         return [];
       }
     } catch (\Throwable $t) {
-      $this->logException(new MissingProjectsFolderException('No projects folder ' . $projectsFolder . ' for ' . $user->getUID()));
+      $this->logException(new MissingProjectsFolderException('No projects folder ' . $projectsFolder . ' for ' . $userId));
       --self::$recursionLevel;
       return [];
     }
 
-    $this->logDebug($user->getUID() . ' ' . $sharedFolder);
+    $this->logDebug($userId . ' ' . $sharedFolder);
 
     $mounts = [];
     $bulkLoadStorageIds = [];
 
-    if ($user->getUID() === $this->shareOwnerId()) {
+    if ($userId === $this->shareOwnerId()) {
 
       $storage = new Storage([]);
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
         $storage,
-        '/' . $user->getUID()
+        '/' . $userId
         . '/files'
         . '/' . $this->getSharedFolderPath()
         . '/' . $this->appName() . '-database',
@@ -155,23 +164,27 @@ class MountProvider implements IMountProvider
 
     }
 
-    $storage = new BankTransactionsStorage([]);
-    $bulkLoadStorageIds[] = $storage->getId();
+    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
+      // block for non-treasurers
 
-    $mounts[] = new class(
-      $storage,
-      '/' . $user->getUID()
-      . '/files'
-      . '/' . $this->getBankTransactionsPath(),
-      null,
-      $loader,
-      [
-        'filesystem_check_changes' => 1,
-        'readonly' => true,
-        'previews' => true,
-        'enable_sharing' => true,
-      ]
-    ) extends MountPoint { public function getMountType() { return 'database'; } };
+      $storage = new BankTransactionsStorage([]);
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        $storage,
+        '/' . $userId
+        . '/files'
+        . '/' . $this->getBankTransactionsPath(),
+        null,
+        $loader,
+        [
+          'filesystem_check_changes' => 1,
+          'readonly' => true,
+          'previews' => true,
+          'enable_sharing' => true,
+        ]
+      ) extends MountPoint { public function getMountType() { return 'database'; } };
+    }
 
     $fieldsRepo = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
     $fields = $fieldsRepo->findBy([ 'dataType' => FieldType::DB_FILE, 'deleted' => null ]);
@@ -223,7 +236,7 @@ class MountProvider implements IMountProvider
 
       $mounts[] = new class(
         $storage,
-        '/' . $user->getUID()
+        '/' . $userId
         . '/files'
         . $folder
         . '/'. $this->getDocumentsFolderName(),
