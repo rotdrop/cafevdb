@@ -25,7 +25,14 @@
 namespace OCA\CAFEVDB\Crypto;
 
 use OCP\IL10N;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\EventDispatcher\Event;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\IUserSession;
+
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Events;
 
 /**
  * Support functions encapsulating the underlying encryption framework
@@ -36,29 +43,52 @@ class AsymmetricKeyService
   const PUBLIC_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PUBLIC_ENCRYPTION_KEY;
   const PRIVATE_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PRIVATE_ENCRYPTION_KEY;
 
+  /** @var IUserSession */
+  private $userSession;
+
+  /** @var ICredentialsStore */
+  private $credentialsStore;
+
+  /** @var IEventDispatcher */
+  private $eventDispatcher;
+
   /** @var IL10N */
   private $l;
 
   /** @var AsymmetricKeyStorageInterface */
   private $keyStorage;
 
+  /** @var array */
+  static private $keyPairs = [];
+
   public function __construct(
-    IL10N $l10n
+    IUserSession $userSession
+    , ICredentialsStore $credentialsStore
+    , IEventDispatcher $eventDispatcher
+    , IL10N $l10n
     , AsymmetricKeyStorageInterface $keyStorage
   ) {
+    $this->userSession = $userSession;
+    $this->credentialsStore = $credentialsStore;
+    $this->eventDispatcher = $eventDispatcher;
     $this->l = $l10n;
     $this->keyStorage = $keyStorage;
   }
 
   /**
    * Initialize a private/public key-pair by either retreiving it from the
-   * config-space or generating a new one.
+   * config-space or generating a new one. If a new key-pair has to be
+   * generated the two events Events\BeforeEncryptionKeyPairChanged and
+   * Events\AfterEncryptionKeyPairChanged are fired. The old key-pair may be
+   * missing if the password used to secure the old private key is not
+   * available.
    *
-   * @param string $ownerId The owner-id. If used for a group then it should
-   * be prefixed by '@'.
+   * @param null|string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
    *
-   * @param string $keyPassphrase The passphrase used to protect the private
-   * key.
+   * @param null|string $keyPassphrase The passphrase used to protect the
+   * private key. If null then the currently logged in user's password is used
+   * if the cloud's credentials store is able to provide the password.
    *
    * @param bool $forceNewKeyPair Generate a new key pair even if an
    * old one is found.
@@ -73,19 +103,69 @@ class AsymmetricKeyService
    * ]
    * ```
    */
-  public function initEncryptionKeyPair(?string $ownerId, ?string $keyPassphrase, bool $forceNewKeyPair = false)
+  public function initEncryptionKeyPair(?string $ownerId = null, ?string $keyPassphrase = null, bool $forceNewKeyPair = false)
   {
+    if (empty($ownerId)) {
+      $ownerId = $this->getSessionUserId();
+    }
+
+    if (empty($keyPassphrase)) {
+      $keyPassphrase = $this->getLoginPassword();
+    }
+
     if (empty($ownerId) || empty($keyPassphrase)) {
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize SSL key-pair without user and password'));
     }
 
-    if ($forceNewKeyPair) {
-      return $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
+    if (!$forceNewKeyPair && !empty($this->keyPairs[$ownerId])) {
+      return $this->keyPairs[$ownerId];
     }
-    $keyPair = $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+
+    $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
-      return $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
+
+      $oldKeyPair = $this->keyPairs[$ownerId] ?? null;
+      if (empty($oldKeyPair) && $ownerId == $this->getSessionUserId()) {
+        $loginPassword = $this->getLoginPassword();
+        if (!empty($loginPassword)) {
+          $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
+        }
+      }
+
+      $this->eventDispatcher->dispatchTyped(new Events\BeforeEncryptionKeyPairChanged($ownerId, $oldKeyPair));
+
+      $keyPair = $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
+
+      $this->eventDispatcher->dispatchTyped(new Events\AfterEncryptionKeyPairChanged($ownerId, $oldKeyPair, $keyPair));
     }
+
+    $this->keyPairs[$ownerId] = $keyPair;
+
     return $keyPair;
+  }
+
+  private function getSessionUserId()
+  {
+    $user = $this->userSession->getUser();
+    return empty($user) ? null : $user->getUID();
+  }
+
+  private function getLoginPassword()
+  {
+    /** @var ICredentials */
+    $loginCredentials = $this->credentialsStore->getLoginCredentials();
+    if (!empty($loginCredentials)) {
+      $password = $loginCredentials->getPassword();
+      $credentialsUid = $loginCredentials->getUID();
+      if ($credentialsUid != $ownerId) {
+        throw new Exceptions\EncryptionKeyException(
+          $this->l->t(
+            'Given user id "%1$s" and user-id "%2$s" from login-credentials diff.', [
+              $ownerId, $credentialsUid
+            ])
+        );
+      }
+    }
+    return $password ?? null;
   }
 }
