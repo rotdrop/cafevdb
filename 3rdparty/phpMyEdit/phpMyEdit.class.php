@@ -2241,7 +2241,7 @@ class phpMyEdit
 			}
 			$helptip        = $this->fieldTooltip($k);
 			$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
-			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+			$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? [];
 			$css_class_name = $this->getCSSclass('input', null, 'next', $css_postfix);
 			$value          = $this->get_data_cgi_var($this->fds[$k]);
 			$defaulted = $value === null;
@@ -2404,7 +2404,7 @@ class phpMyEdit
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
 					if (!in_array($k, $this->key_num) || $this->change_operation()) {
-						$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+						$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
 						if ($this->col_has_multiple($k)) {
 							$hiddenValues = self::explodeValueArray($row["qf$k"]);
@@ -2418,7 +2418,7 @@ class phpMyEdit
 					}
 					continue;
 				}
-				$css_postfix = @$this->fdd[$k]['css']['postfix'];
+				$css_postfix = $this->fdd[$k]['css']['postfix'] ?? null;
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
 				echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'"',$helptip,'>';
 				echo $this->fdd[$k]['name'],'</td>',"\n";
@@ -2443,7 +2443,7 @@ class phpMyEdit
 				if ($this->hidden($k)) {
 					continue;
 				}
-				$css_postfix = @$this->fdd[$k]['css']['postfix'];
+				$css_postfix = $this->fdd[$k]['css']['postfix'] ?? null;
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
 				echo '<td',
 					' ', 'class="' . $this->getCSSclass('key', null, true, $css_postfix) . '"',
@@ -2468,7 +2468,7 @@ class phpMyEdit
 
 	function display_change_field($row, $k, $help = NULL) /* {{{ */
 	{
-		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+		$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
 		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 		$operation      = $this->copy_operation() ? 'copy' : 'change';
@@ -2649,7 +2649,7 @@ class phpMyEdit
 
 	function display_password_field($row, $k, $help = NULL) /* {{{ */
 	{
-		$css_postfix = @$this->fdd[$k]['css']['postfix'];
+		$css_postfix = $this->fdd[$k]['css']['postfix'] ?? null;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
@@ -2689,7 +2689,7 @@ class phpMyEdit
 
 	function display_delete_field($row, $k, $cell_popup) /* {{{ */
 	{
-		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+		$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
 		$title          = !empty($cell_popup) ? ' title="'.$this->enc($cell_popup).'"' : '';
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
@@ -2982,7 +2982,7 @@ class phpMyEdit
 		}
 		$escape	 = !empty($this->fdd[$k]['escape']) && !$this->col_has_URL($k);
 		if (empty($css)) {
-			$css_postfix = @$this->fdd[$k]['css']['postfix'];
+			$css_postfix = $this->fdd[$k]['css']['postfix'] ?? null;
 			$css = $this->getCSSclass('cell', null, true, $css_postfix);
 		}
 		if ($css == 'noescape') {
@@ -4129,7 +4129,7 @@ class phpMyEdit
 			if (! $this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
-			$css_postfix	  = @$this->fdd[$k]['css']['postfix'];
+			$css_postfix	  = $this->fdd[$k]['css']['postfix'] ?? null;
 			$css_class_name	  = $this->getCSSclass('filter', null, null, $css_postfix);
 			$fd				  = $this->fds[$k];
 			$this->field	  = $this->fdd[$fd];
@@ -4553,7 +4553,7 @@ class phpMyEdit
 			if (! $this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
-			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+			$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 			$css_class_name = $this->getCSSclass('header', null, null, $css_postfix);
 			$css_sort_class = $this->getCSSclass('sortfield');
 			$css_nosort_class = $this->getCSSclass('nosort');
@@ -4856,7 +4856,7 @@ class phpMyEdit
 				if (! $this->displayed[$k] || $this->hidden($k)) {
 					continue;
 				}
-				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+				$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
 				$css_align = $this->getColAlign($k);
 				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
