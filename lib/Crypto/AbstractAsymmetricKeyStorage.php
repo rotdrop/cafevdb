@@ -32,18 +32,4 @@ abstract class AbstractAsymmetricKeyStorage implements AsymmetricKeyStorageInter
     $keyPair = $this->getKeyPair($ownerId, $keyPassphrase);
     return $keyPair[self::PRIVATE_ENCRYPTION_KEY]??null;
   }
-
-  /** {@inheritdoc} */
-  public function initializeKeyPair(string $ownerId, string $keyPassphrase, bool $forceNewKeypair = false)
-  {
-    if ($forceNewKeypair) {
-      return $this->generateKeyPair($ownerId, $keyPassphrase);
-    }
-    $keyPair = $this->getKeyPair($ownerId, $keyPassphrase);
-    if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY])) {
-      return $this->generateKeyPair($ownerId, $keyPassphrase);
-    }
-    return $keyPair;
-  }
-
 }

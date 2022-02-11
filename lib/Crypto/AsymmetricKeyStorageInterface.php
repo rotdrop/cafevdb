@@ -101,29 +101,6 @@ interface AsymmetricKeyStorageInterface
   public function setPrivateKeyPassphrase(string $ownerId, $privateKey, string $newPassphrase);
 
   /**
-   * Initialize a private/public key-pair by either retreiving it from the
-   * config-space or generating a new one. The returned private key is already
-   * unlocked.
-   *
-   * @param string $ownerId The owner-id. If used for a group then it should
-   * be prefixed by '@'.
-   *
-   * @param string $keyPassphrase The passphrase used to protect the private
-   * key.
-   *
-   * @param bool $forceNewKeyPair Generate a new key pair even if an
-   * old one is found.
-   *
-   * @throws Exceptions\EncryptionKeyException
-   *
-   * @return array<string, string>
-   * ```
-   * [ 'privateEncryptionKey' => PRIV_KEY, 'publicEncryptionKey' => PUB_KEY ]
-   * ```
-   */
-  public function initializeKeyPair(string $ownerId, string $keyPassphrase, bool $forceNewKeypair = false);
-
-  /**
    * Remove the stored key-pair for the given owner.
    *
    * @param string $ownerId The owner-id. If used for a group then it should

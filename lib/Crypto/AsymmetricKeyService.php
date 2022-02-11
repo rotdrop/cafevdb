@@ -67,7 +67,10 @@ class AsymmetricKeyService
    *
    * @return array<string, string>
    * ```
-   * [ 'privateSSLKey' => PRIV_KEY, 'publicSSLKey' => PUB_KEY ]
+   * [
+   *   self::PRIVATE_ENCRYPTION_KEY_CONFIG => PRIV_KEY,
+   *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
+   * ]
    * ```
    */
   public function initEncryptionKeyPair(?string $ownerId, ?string $keyPassphrase, bool $forceNewKeyPair = false)
@@ -76,6 +79,13 @@ class AsymmetricKeyService
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize SSL key-pair without user and password'));
     }
 
-    return $this->keyStorage->initializeKeyPair($ownerId, $keyPassphrase, $forceNewKeyPair);
+    if ($forceNewKeyPair) {
+      return $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
+    }
+    $keyPair = $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+    if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
+      return $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
+    }
+    return $keyPair;
   }
 }
