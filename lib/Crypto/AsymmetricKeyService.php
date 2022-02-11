@@ -110,23 +110,23 @@ class AsymmetricKeyService
     }
 
     if (empty($keyPassphrase)) {
-      $keyPassphrase = $this->getLoginPassword();
+      $keyPassphrase = $this->getLoginPassword($ownerId);
     }
 
     if (empty($ownerId) || empty($keyPassphrase)) {
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize SSL key-pair without user and password'));
     }
 
-    if (!$forceNewKeyPair && !empty($this->keyPairs[$ownerId])) {
-      return $this->keyPairs[$ownerId];
+    if (!$forceNewKeyPair && !empty(self::$keyPairs[$ownerId])) {
+      return self::$keyPairs[$ownerId];
     }
 
     $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
 
-      $oldKeyPair = $this->keyPairs[$ownerId] ?? null;
+      $oldKeyPair = self::$keyPairs[$ownerId] ?? null;
       if (empty($oldKeyPair) && $ownerId == $this->getSessionUserId()) {
-        $loginPassword = $this->getLoginPassword();
+        $loginPassword = $this->getLoginPassword($ownerId);
         if (!empty($loginPassword)) {
           $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
         }
@@ -139,7 +139,7 @@ class AsymmetricKeyService
       $this->eventDispatcher->dispatchTyped(new Events\AfterEncryptionKeyPairChanged($ownerId, $oldKeyPair, $keyPair));
     }
 
-    $this->keyPairs[$ownerId] = $keyPair;
+    self::$keyPairs[$ownerId] = $keyPair;
 
     return $keyPair;
   }
@@ -150,7 +150,7 @@ class AsymmetricKeyService
     return empty($user) ? null : $user->getUID();
   }
 
-  private function getLoginPassword()
+  private function getLoginPassword(string $ownerId)
   {
     /** @var ICredentials */
     $loginCredentials = $this->credentialsStore->getLoginCredentials();
@@ -160,7 +160,7 @@ class AsymmetricKeyService
       if ($credentialsUid != $ownerId) {
         throw new Exceptions\EncryptionKeyException(
           $this->l->t(
-            'Given user id "%1$s" and user-id "%2$s" from login-credentials diff.', [
+            'Given user id "%1$s" and user-id "%2$s" from login-credentials differ.', [
               $ownerId, $credentialsUid
             ])
         );
