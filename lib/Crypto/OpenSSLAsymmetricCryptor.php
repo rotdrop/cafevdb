@@ -37,7 +37,8 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     }
   }
 
-  public function setPrivateKey($privKey, $password = null):OpenSSLAsymmetricCryptor
+  /** {@inheritdoc} */
+  public function setPrivateKey($privKey, ?string $password = null):AsymmetricCryptorInterface
   {
     if ($privKey !== null) {
       $this->privKey = openssl_pkey_get_private($privKey, $password);
@@ -49,7 +50,8 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     return $this;
   }
 
-  public function setPublicKey($pubKey):OpenSSLAsymmetricCryptor
+  /** {@inheritdoc} */
+  public function setPublicKey($pubKey):AsymmetricCryptorInterface
   {
     $this->pubKey = $pubKey;
     return $this;

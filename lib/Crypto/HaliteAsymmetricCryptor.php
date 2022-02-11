@@ -26,27 +26,38 @@ namespace OCA\CAFEVDB\Crypto;
 use ParagonIE\Halite;
 use ParagonIE\HiddenString\HiddenString;
 
-/** Asymmetric encryption using the OpenSSL extension of PHP */
+use OCA\CAFEVDB\Exceptions;
+
+/** Asymmetric encryption using the ParagonIE\Halite library */
 class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
 {
   private $privKey = null;
 
   private $pubKey = null;
 
-  public function __construct($privKey = null, string $password = null)
+  public function __construct($privKey = null, ?string $password = null)
   {
     if (!empty($privKey)) {
       $this->setPrivateKey($privKey, $password);
     }
   }
 
-  public function setPrivateKey($privKey):HaliteAsymmetricCryptor
+  /**
+   * {@inheritdoc}
+   *
+   * The paramter $password is ignored and must be kept at null.
+   */
+  public function setPrivateKey($privKey, ?string $password = null):AsymmetricCryptorInterface
   {
+    if ($password !== null) {
+      throw new Exceptions\EncryptionKeyException('The private key has to be unlocked before passing it here.');
+    }
     $this->privKey = $privKey;
     return $this;
   }
 
-  public function setPublicKey($pubKey):OpenSSLAsymmetricCryptor
+  /** {@inheritdoc} */
+  public function setPublicKey($pubKey):AsymmetricCryptorInterface
   {
     $this->pubKey = $pubKey;
     return $this;

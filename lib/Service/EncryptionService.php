@@ -116,7 +116,7 @@ class EncryptionService
   /** @var Crypto\CloudSymmetricCryptor */
   private $appCryptor;
 
-  /** @var Crypto\OpenSSLAsymmetricCryptor */
+  /** @var Crypto\AsymmetricCryptorInterface */
   private $appAsymmetricCryptor;
 
   /** @var string */
@@ -125,11 +125,8 @@ class EncryptionService
   /** @var string */
   private $userPassword = null;
 
-  /** @var string */
-  private $userPrivateKey = null;
-
-  /** @var string */
-  private $userPublicKey = null;
+  /** @var Crypto\AsymmetricCryptorInterface */
+  private $userAsymmetricCryptor;
 
   public function __construct(
     $appName
@@ -150,7 +147,6 @@ class EncryptionService
     $this->asymKeyService = $asymKeyService;
     $this->sealService = $sealService;
     $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
-    $this->appAsymmetricCryptor = new Crypto\OpenSSLAsymmetricCryptor;
     $this->crypto = $crypto;
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
@@ -169,14 +165,14 @@ class EncryptionService
     try {
       $userPassword = $credentialsStore->getLoginCredentials()->getPassword();
     } catch (\Throwable $t) {
-      $this->logException($t);
+      $this->logException($t, 'Unable to obtain login-password for "' . $userId . '".');
       $userPassword = null;
     }
     if (!empty($userId) && !empty($userPassword)) {
       try {
         $this->bind($userId, $userPassword);
       } catch (\Throwable $t) {
-        $this->logException($t);
+        $this->logException($t, 'Unable to bind to "' . $userId . '".');
       }
     }
   }
@@ -203,8 +199,9 @@ class EncryptionService
   {
     return !empty($this->userId)
       && !empty($this->userPassword)
-      && !empty($this->userPrivateKey)
-      && !empty($this->userPublicKey);
+      && !empty($this->userAsymmetricCryptor)
+      && $this->userAsymmetricCryptor->canDecrypt()
+      && $this->userAsymmetricCryptor->canEncrypt();
   }
 
   /**
@@ -246,12 +243,28 @@ class EncryptionService
    */
   public function initUserKeyPair($forceNewKeyPair = false)
   {
+    $e = null;
     try {
-      list(self::PRIVATE_ENCRYPTION_KEY => $this->userPrivateKey, self::PUBLIC_ENCRYPTION_KEY => $this->userPublicKey) =
-        $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
+      $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
-      $this->userPrivateKey = null;
-      $this->userPublicKey = null;
+      // Gracefully accept a broken key-pair if the app-encryption key is empty.
+      try {
+        $userKey = $this->getUserEncryptionKey();
+        $e = null;
+        if (empty($userKey)) {
+          // after all, this means that all values are unencrypted, so be graceful here
+          $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, forceNewKeyPair: true);
+        }
+      } catch (\Throwable $t) {
+        // give up
+        $this->logException($t, 'User\'s "' . $this->userId . '" asymmetric key pair is broken and encryption key appears to be non-empty.');
+      }
+    }
+    $this->userAsymmetricCryptor = $this->asymKeyService->getCryptor($this->userId);
+    if (!empty($e)) {
+      $this->userAsymmetricCryptor
+        ->setPrivateKey(null)
+        ->setPublicKey(null);
       throw $e;
     }
   }
@@ -266,16 +279,18 @@ class EncryptionService
     }
     $group = '@' . $group;
 
+    $e = null;
     try {
-      list(self::PRIVATE_ENCRYPTION_KEY => $privKay, self::PUBLIC_ENCRYPTION_KEY => $pubKey) =
-        $this->asymKeyService->initEncryptionKeyPair($group, $encryptionKey, $forceNewKeyPair);
+      $this->asymKeyService->initEncryptionKeyPair($group, $encryptionKey, $forceNewKeyPair);
     } catch (Exceptions\EncryptionException $e) {
+      // empty, see below
+    }
+    $this->appAsymmetricCryptor = $this->asymKeyService->getCryptor($group);
+    if (!empty($e)) {
       $this->appAsymmetricCryptor->setPrivateKey(null);
       $this->appAsymmetricCryptor->setPublicKey(null);
       throw $e;
     }
-    $this->appAsymmetricCryptor->setPrivateKey($privKey);
-    $this->appAsymmetricCryptor->setPublicKey($pubKey);
   }
 
   /**
@@ -284,16 +299,12 @@ class EncryptionService
    * encrypted data unavailable, so as a side-effect all encrypted
    * data is removed.
    *
-   * @param string $login
+   * @param string $userId
    */
-  public function deleteUserKeyPair($login)
+  public function deleteUserKeyPair($userId)
   {
     $this->logDebug('REMOVING ENCRYPTION DATA FOR USER ' . $login);
-    $this->containerConfig->deleteUserValue($login, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
-    $this->containerConfig->deleteUserValue($login, $this->appName, self::PRIVATE_ENCRYPTION_KEY);
-    foreach (self::SHARED_PRIVATE_VALUES as $key) {
-      $this->containerConfig->deleteUserValue($login, $this->appName, $key);
-    }
+    $this->asymKeyService->deleteEncryptionKeyPair($userId);
   }
 
   public function getUserEncryptionKey()
@@ -312,30 +323,6 @@ class EncryptionService
   public function setUserEncryptionKey($key, ?string $userId = null)
   {
     return $this->setSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, $key, $userId);
-  }
-
-  /**
-   * Recrypt the user's shared private values, e.g. when the password
-   * was updated. We assume here that we still have access to the old
-   * values. We generate a new private/public SSL key pair and recrypt
-   * the values.
-   */
-  public function recryptSharedPrivateValues(string $newPassword)
-  {
-    $decrypted = [];
-    foreach (self::SHARED_PRIVATE_VALUES as $key) {
-      $value = $this->getSharedPrivateValue($key);
-      if (!empty($value)) {
-        $decrypted[$key] = $value;
-      } else {
-        $this->containerConfig->deleteUserValue($this->userId, $this->appName, $key);
-      }
-    }
-    $this->userPassword = $newPassword;
-    $this->initUserKeyPair(true);
-    foreach ($decrypted as $key => $value) {
-      $this->setSharedPrivateValue($key, $value);
-    }
   }
 
   /**
@@ -388,22 +375,7 @@ class EncryptionService
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot decrypt private values without bound user credentials'));
     }
 
-    // Fetch the encrypted "user" key from the preferences table
-    $value = $this->getUserValue($this->userId, $key, $default);
-
-    // we allow null values without encryption
-    if (empty($value) || $value === $default) {
-      return $value;
-    }
-
-    $value = base64_decode($value);
-
-    // Try to decrypt the $usrdbkey
-    if (openssl_private_decrypt($value, $value, $this->userPrivateKey) === false) {
-      throw new Exceptions\DecryptionFailedException($this->l->t('Decryption of "%s" with private key of user "%s" failed.', [ $key, $this->userId ]));
-    }
-
-    return $value;
+    return $this->asymKeyService->getSharedPrivateValue($this->userId, $key, $default);
   }
 
   /**
@@ -429,29 +401,8 @@ class EncryptionService
         throw new Exceptions\EncryptionKeyException($this->l->t('Cannot encrypt private values without bound user credentials'));
       }
       $userId = $this->userId;
-      $userPublicKey = $this->userPublicKey;
-    } else {
-      // encrypt for different than bound user
-      $userPublicKey = $this->getUserValue($userId, self::PUBLIC_ENCRYPTION_KEY);
-      if (empty($userPublicKey)) {
-        throw new Exceptions\EncryptionKeyException($this->l->t('Cannot encrypt private values for user "%s" without public SSL key.', $userId));
-      }
     }
-
-    // We maintain empty values as empty values ATM. This is problematic as it
-    // also reveals the value of the setting as empty
-    if (empty($value)) {
-      $this->deleteUserValue($userId, $key);
-      return;
-    }
-
-    if (openssl_public_encrypt($value, $encrypted, $userPublicKey) === false) {
-      throw new Exceptions\EncryptionFailedException($this->l->t('Encrypting value for key "%s" with public key of user "%s" failed.', [ $key, $userId ]));
-    }
-
-    $encrypted = base64_encode($encrypted);
-
-    $this->setUserValue($userId, $key, $encrypted);
+    $this->asymKeyService->setSharedPrivateValue($userId, $key, $value);
   }
 
   /**

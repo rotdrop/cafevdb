@@ -24,11 +24,13 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+use OCP\ILogger;
 use OCP\IL10N;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\Event;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\IConfig;
 use OCP\IUserSession;
 
 use OCA\CAFEVDB\Exceptions;
@@ -40,8 +42,15 @@ use OCA\CAFEVDB\Events;
  */
 class AsymmetricKeyService
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const PUBLIC_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PUBLIC_ENCRYPTION_KEY;
   const PRIVATE_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PRIVATE_ENCRYPTION_KEY;
+
+  const CONFIG_KEY_PREFIX = 'private:';
+
+  /** @var string */
+  private $appName;
 
   /** @var IUserSession */
   private $userSession;
@@ -52,27 +61,48 @@ class AsymmetricKeyService
   /** @var IEventDispatcher */
   private $eventDispatcher;
 
+  /** @var IConfig */
+  private $cloudConfig;
+
   /** @var IL10N */
   private $l;
 
   /** @var AsymmetricKeyStorageInterface */
   private $keyStorage;
 
-  /** @var array */
+  /** @var AsymmetricCryptorInterface */
+  private $cryptorPrototype;
+
+  /** @var array<string, AsymmetricCryptorInterface> */
+  static private $cryptors = [];
+
+  /** @var array<string, array> */
   static private $keyPairs = [];
 
+  /**
+   * @todo We might want to use the \OCP\IAppContainer instead and only fetch
+   * the needed service-classes on demand.
+   */
   public function __construct(
-    IUserSession $userSession
+    string $appName
+    , IUserSession $userSession
     , ICredentialsStore $credentialsStore
+    , IConfig $cloudConfig
     , IEventDispatcher $eventDispatcher
     , IL10N $l10n
+    , ILogger $logger
     , AsymmetricKeyStorageInterface $keyStorage
+    , AsymmetricCryptorInterface $cryptorPrototype
   ) {
+    $this->appName = $appName;
     $this->userSession = $userSession;
     $this->credentialsStore = $credentialsStore;
+    $this->cloudConfig = $cloudConfig;
     $this->eventDispatcher = $eventDispatcher;
+    $this->logger = $logger;
     $this->l = $l10n;
     $this->keyStorage = $keyStorage;
+    $this->cryptorPrototype = $cryptorPrototype;
   }
 
   /**
@@ -128,9 +158,16 @@ class AsymmetricKeyService
       if (empty($oldKeyPair) && $ownerId == $this->getSessionUserId()) {
         $loginPassword = $this->getLoginPassword($ownerId);
         if (!empty($loginPassword)) {
-          $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
+          try {
+            $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
+          }
         }
       }
+
+      // make sure the old key-pair cache is set
+      self::$keyPairs[$ownerId] = $oldKeyPair;
 
       $this->eventDispatcher->dispatchTyped(new Events\BeforeEncryptionKeyPairChanged($ownerId, $oldKeyPair));
 
@@ -141,16 +178,46 @@ class AsymmetricKeyService
 
     self::$keyPairs[$ownerId] = $keyPair;
 
+    // ensure that the cached cryptor has the correct key
+    $cryptor = $this->getCryptor($ownerId)
+      ->setPrivateKey($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null)
+      ->setPublicKey($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? null);
+
     return $keyPair;
   }
 
-  private function getSessionUserId()
+  /**
+   * Remove the key pair and all config-data for the given id.
+   *
+   * @param string $ownerId
+   */
+  public function deleteEncryptionKeyPair(string $ownerId)
+  {
+    $this->keyStorage->wipeKeyPair($ownerId);
+    $this->removeSharedPrivateValues($ownerId);
+    unset(self::$cryptors[$ownerId]);
+    unset(self::$keyPairs[$ownerId]);
+  }
+
+  /**
+   * Fetch the user-id for the currently logged in user.
+   *
+   * @return null|string
+   */
+  private function getSessionUserId():?string
   {
     $user = $this->userSession->getUser();
     return empty($user) ? null : $user->getUID();
   }
 
-  private function getLoginPassword(string $ownerId)
+  /**
+   * Fetch the password for the given user-id from the credentials store.
+   *
+   * @param string $ownerId
+   *
+   * @return null|string
+   */
+  private function getLoginPassword(string $ownerId):?string
   {
     /** @var ICredentials */
     $loginCredentials = $this->credentialsStore->getLoginCredentials();
@@ -167,5 +234,115 @@ class AsymmetricKeyService
       }
     }
     return $password ?? null;
+  }
+
+  /**
+   * Get a suitable asymmetric cryptor for the given user and used backend.
+   *
+   * @param string $ownerId
+   *
+   * @return AsymmetricCryptorInterface
+   */
+  public function getCryptor(string $ownerId):AsymmetricCryptorInterface
+  {
+    /** @var AsymmetricCryptorInterface $cryptor */
+    $cryptor = self::$cryptors[$ownerId] ?? null;
+    if (empty($cryptor)) {
+      $keyPair = self::$keyPairs[$ownerId] ?? null;
+      $privKey = $keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null;
+      $pubKey = $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? $this->keyStorage->getPublicKey($ownerId);
+      $cryptor = clone $this->cryptorPrototype;
+      $cryptor->setPrivateKey($privKey);
+      $cryptor->setPublicKey($pubKey);
+      self::$cryptors[$ownerId] = $cryptor;
+    }
+    return $cryptor;
+  }
+
+  /**
+   * Encrypt and set one private value
+   *
+   * @param string $ownerId
+   *
+   * @param string $key
+   *
+   * @param mixed $value Must be convertible to string.
+   */
+  public function setSharedPrivateValue(string $ownerId, string $key, mixed $value)
+  {
+    $value = (string)$value;
+    $configKey = self::CONFIG_KEY_PREFIX . $key;
+    if (empty($value)) {
+      $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
+      return;
+    }
+    $cryptor = $this->getCryptor($ownerId);
+    if (!$cryptor->canEncrypt()) {
+      throw new Exceptions\EncryptionException($this->l->t('Cannot encrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
+    }
+    $this->cloudConfig->setUserValue($ownerId, $this->appName, $configKey, $cryptor->encrypt($value));
+  }
+
+  /**
+   * Fetch and decrypt one private value
+   *
+   * @param string $ownerId
+   *
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @return string|null
+   */
+  public function getSharedPrivateValue(string $ownerId, string $key, mixed $default = null):?string
+  {
+    $configKey = self::CONFIG_KEY_PREFIX . $key;
+    $value = $this->cloudConfig->getUserValue($ownerId, $this->appName, $configKey, $default);
+    if (empty($value) || $value === $default) { // allow empty and default values
+      return $value === null ? null : (string)$value;
+    }
+    $cryptor = $this->getCryptor($ownerId);
+    if (!$cryptor->canDecrypt()) {
+      throw new Exceptions\EncryptionException($this->l->t('Cannot decrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
+    }
+    return $cryptor->decrypt($value);
+  }
+
+  /**
+   * Return the entire encrypted config-space.
+   *
+   * @param string $ownerId
+   *
+   * @return array<string, string> Configs as KEY => DECRYPTED_VALUE
+   */
+  public function getSharedPrivateValues(string $ownerId):array
+  {
+    $privateConfigKeys = array_filter(
+      $this->cloudConfig->getUserKeys($ownerId, $this->appName),
+      function($configKey) {
+        return str_starts_with($configKey, self::CONFIG_KEY_PREFIX);
+      });
+    $privateConfig = [];
+    foreach ($privateConfigKeys as $configKey) {
+      $configKey = substr($configKey, strlen(self::CONFIG_KEY_PREFIX));
+      $privateConfig[$configKey] = $this->getSharedPrivateValue($ownerId, $configKey);
+    }
+    return $privateConfig;
+  }
+
+  /**
+   * Remove all shared private values, e.g. after a password was lost.
+   *
+   * @param string $ownerId
+   */
+  public function removeSharedPrivateValues($ownerId)
+  {
+    array_walk(
+      $this->cloudConfig->getUserKeys($ownerId, $this->appName),
+      function($configKey) use ($ownerId) {
+        if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
+          $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
+        }
+      });
   }
 }

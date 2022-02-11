@@ -25,4 +25,22 @@ namespace OCA\CAFEVDB\Crypto;
 
 /** Just there in order to branch depending on container specialization */
 interface AsymmetricCryptorInterface extends ICryptor
-{};
+{
+  /**
+   * @param mixed $privKey
+   *
+   * @param ?string $password Maybe ignored depending on the implementation,
+   * i.e. the key may have to be unlocked or decrypted before passing it to
+   * the cryptor.
+   *
+   * @return AsymmetricCryptorInterface $this
+   */
+  public function setPrivateKey($privKey, ?string $password = null):AsymmetricCryptorInterface;
+
+  /**
+   * @param mixed $pubKey
+   *
+   * @return AsymmetricCryptorInterface $this
+   */
+  public function setPublicKey($pubKey):AsymmetricCryptorInterface;
+};
