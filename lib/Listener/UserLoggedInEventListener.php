@@ -52,16 +52,9 @@ class UserLoggedInEventListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
-  public function __construct(
-    $appName
-    , IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
-  ) {
-    $this->appName = $appName;
+  public function __construct(IAppContainer $appContainer)
+  {
     $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   public function handle(Event $event): void
@@ -69,6 +62,11 @@ class UserLoggedInEventListener implements IEventListener
     if (!($event instanceOf Event1) && !($event instanceOf Event2)) {
       return;
     }
+
+    // initialize only now in order to keep the overhead for unhandled events small
+    $this->appName = $this->appContainer->get('appName');
+    $this->logger = $this->appContainer->get(ILogger::class);
+    $this->l = $this->appContainer->get(IL10N::class);
 
     $userId = $event->getUser()->getUID();
 
@@ -90,7 +88,7 @@ class UserLoggedInEventListener implements IEventListener
       }
 
       /** @var EncryptionService $encryptionService */
-      $encryptionService = \OC::$server->query(EncryptionService::class);
+      $encryptionService = $this->appContainer->get(EncryptionService::class);
       if (!$encryptionService->bound()) {
         $encryptionService->bind($userId, $event->getPassword());
       }
