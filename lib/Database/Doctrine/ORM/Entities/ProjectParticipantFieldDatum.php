@@ -205,6 +205,32 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Set projectParticipant.
+   *
+   * @param ProjectParticipant $projectParticipant
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setProjectParticipant($projectParticipant):ProjectParticipantFieldDatum
+  {
+    $this->projectParticipant = $projectParticipant;
+    $this->musician = $projectParticipant->getMusician();
+    $this->project = $projectParticipant->getProject();
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipant.
+   *
+   * @return ProjectParticipant
+   */
+  public function getProjectParticipant():ProjectParticipant
+  {
+    return $this->projectParticipant;
+  }
+
+  /**
    * Set field.
    *
    * @param int $field
@@ -235,9 +261,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setDataOption($dataOption):ProjectParticipantFieldDatum
+  public function setDataOption(ProjectParticipantFieldDataOption $dataOption):ProjectParticipantFieldDatum
   {
     $this->dataOption = $dataOption;
+    $this->field = $dataOption->getField();
+    $this->optionKey = $dataOption->getKey();
 
     return $this;
   }
