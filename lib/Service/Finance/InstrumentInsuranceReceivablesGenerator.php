@@ -223,10 +223,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         // add a new option
         /** @var Entities\ProjectParticipantFieldDatum $datum */
         $datum = (new Entities\ProjectParticipantFieldDatum)
-               ->setField($receivable->getField())
-               ->setMusician($musician)
-               ->setProject($participant->getProject())
-               ->setOptionKey($receivable->getKey())
+               ->setDataOption($receivable)
+               ->setProjectParticipant($participant)
                ->setOptionValue($fee);
 
         if (!$openingBalance) {
