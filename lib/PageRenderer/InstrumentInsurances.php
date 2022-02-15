@@ -320,17 +320,24 @@ class InstrumentInsurances extends PMETableViewBase
         },
       ]);
 
-    $joinTables[self::BROKER_TABLE] = 'PMEjoin'.count($opts['fdd']);
-    $opts['fdd']['broker_id'] = [
-      'tab'      => [ 'id' => 'overview'],
-      'name'     => $this->l->t('Insurance Broker'),
-      'css'      => [ 'postfix' => [ 'broker-select', ], ],
-      'select'   => 'D',
-      'maxlen'   => 384,
-      'sort'     => true,
-      'default'  => '',
-      'values' => [
-        'table' => 'SELECT
+    if ($this->pmeBare) {
+      // export mode, export just the short name
+      $opts['fdd']['broker_id'] = [
+        'name'     => $this->l->t('Insurance Broker'),
+        'select'   => 'T',
+      ];
+    } else {
+      $joinTables[self::BROKER_TABLE] = 'PMEjoin'.count($opts['fdd']);
+      $opts['fdd']['broker_id'] = [
+        'tab'      => [ 'id' => 'overview'],
+        'name'     => $this->l->t('Insurance Broker'),
+        'css'      => [ 'postfix' => [ 'broker-select', ], ],
+        'select'   => 'D',
+        'maxlen'   => 384,
+        'sort'     => true,
+        'default'  => '',
+        'values' => [
+          'table' => 'SELECT
   b.*,
   GROUP_CONCAT(DISTINCT r.geographical_scope ORDER BY r.geographical_scope ASC) AS geographical_scopes,
   CONCAT("[", GROUP_CONCAT(DISTINCT
@@ -344,17 +351,18 @@ FROM '.self::BROKER_TABLE.' b
 LEFT JOIN '.self::RATES_TABLE.' r
   ON r.broker_id = b.short_name
 GROUP BY b.short_name',
-        'column' => 'short_name',
-        'description' => [
-          'columns' => [ 'long_name', 'REPLACE($table.address, "\n", ", ")' ],
-          'divs' => '; ',
-          'cast' => [ false, false ],
+          'column' => 'short_name',
+          'description' => [
+            'columns' => [ 'long_name', 'REPLACE($table.address, "\n", ", ")' ],
+            'divs' => '; ',
+            'cast' => [ false, false ],
+          ],
+          'join' => '$join_col_fqn = $main_table.broker_id',
+          // 'data' => '$table.geographical_scopes',
+          'data' => '$table.insurance_rates',
         ],
-        'join' => '$join_col_fqn = $main_table.broker_id',
-        // 'data' => '$table.geographical_scopes',
-        'data' => '$table.insurance_rates',
-      ],
-    ];
+      ];
+    }
 
     $opts['fdd']['geographical_scope'] = [
       'tab'      => [ 'id' => 'overview' ],

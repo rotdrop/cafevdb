@@ -161,6 +161,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $renderer->navigation(false); // inhibit navigation elements
     $renderer->render(false); // dry-run, prepare export
 
+    $humanDate = $this->dateTimeFormatter()->formatDate(new \DateTimeImmutable);
+
     $renderer->export(
       // Cell-data filter
       function ($i, $j, $cellData) {
@@ -199,7 +201,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
           $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
 
-          $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']);
+          $sheet->setCellValue("A1", $name . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name'] . ', ' . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['address']);
           $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
           $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
           $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
@@ -229,7 +231,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $rowCnt = 0;
             $this->dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
 
-            $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']);
+            $sheet->setCellValue(
+              "A1", $name
+              . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']
+              . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['address']
+            );
             $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
             $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
             $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
