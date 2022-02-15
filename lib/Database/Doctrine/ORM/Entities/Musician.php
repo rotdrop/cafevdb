@@ -673,6 +673,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set cloudAccountDisabled.
+   *
+   * @param null|bool $cloudAccountDisabled
+   *
+   * @return Musician
+   */
+  public function setCloudAccountDisabled(?bool $cloudAccountDisabled):Musician
+  {
+    $this->CloudAccountDisabled = $cloudAccountDisabled;
+
+    return $this;
+  }
+
+  /**
+   * Get cloudAccountDisabled.
+   *
+   * @return null|bool
+   */
+  public function getCloudAccountDisabled():?bool
+  {
+    return $this->cloudAccountDisabled;
+  }
+
+  /**
+   * Set cloudAccountDeactivated.
+   *
+   * @param null|bool $cloudAccountDeactivated
+   *
+   * @return Musician
+   */
+  public function setCloudAccountDeactivated(?bool $cloudAccountDeactivated):Musician
+  {
+    $this->CloudAccountDeactivated = $cloudAccountDeactivated;
+
+    return $this;
+  }
+
+  /**
+   * Get cloudAccountDeactivated.
+   *
+   * @return null|bool
+   */
+  public function getCloudAccountDeactivated():?bool
+  {
+    return $this->cloudAccountDeactivated;
+  }
+
+  /**
    * Set instruments.
    *
    * @param Collection $instruments
