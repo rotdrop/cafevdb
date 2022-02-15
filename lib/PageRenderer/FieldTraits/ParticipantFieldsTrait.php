@@ -868,7 +868,7 @@ trait ParticipantFieldsTrait
             $labelled = false;
             $options = self::fetchValueOptions($field, $values, $labelled);
 
-            $invoices = Util::explodeIndexed($row['qf'.($k+1)]);
+            $invoices = Util::explodeIndexed($row['qf'.($k+2)]);
             $valueLabel = $this->l->t('Value');
             $invoiceLabel = $this->l->t('Documents');
             $valueInputType = 'text';
