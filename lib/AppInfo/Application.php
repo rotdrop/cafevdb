@@ -142,7 +142,7 @@ class Application extends App implements IBootstrap
 
     $context->injectFn(function(IMountProviderCollection $mountProviderCollection, DatabaseMountProvider $mountProvider) {
       $mountProviderCollection->registerProvider($mountProvider, PHP_INT_MAX);
-     });
+    });
   }
 
   // Called earlier than boot, so anything initialized in the
@@ -187,6 +187,8 @@ class Application extends App implements IBootstrap
 
     // Register Service stuff
     ServiceRegistration::register($context);
+
+    $context->registerNotifierService(\OCA\CAFEVDB\Notifications\Notifier::class);
   }
 
 }
