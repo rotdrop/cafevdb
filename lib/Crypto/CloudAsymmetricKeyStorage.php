@@ -72,7 +72,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
         // exceptions are ok, but we want to stick to Exceptions\EncryptionException
         throw new Exceptions\EncryptionKeyException(
           $this->l->t('Unable to decrypt private key for owner "%s".', $ownerId),
-          $t->code, $t
+          $t->getCode(), $t
         );
       }
       $privKey = $this->unserializeKey($privKeyMaterial, self::PRIVATE_ENCRYPTION_KEY);
