@@ -371,10 +371,6 @@ class EncryptionService
    */
   public function getSharedPrivateValue($key, $default = null)
   {
-    if (!$this->bound()) {
-      throw new Exceptions\EncryptionKeyException($this->l->t('Cannot decrypt private values without bound user credentials'));
-    }
-
     return $this->asymKeyService->getSharedPrivateValue($this->userId, $key, $default);
   }
 
