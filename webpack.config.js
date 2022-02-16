@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -27,6 +28,7 @@ module.exports = {
   entry: {
     app: './src/app.js',
     'admin-settings': './src/admin-settings.js',
+    'admin-settings-vue': './src/admin-settings-vue.js',
     settings: './src/settings.js',
   },
   output: {
@@ -115,6 +117,7 @@ module.exports = {
         'src/legacy',
       ],
     }),
+    new VueLoaderPlugin(),
   ],
   module: {
     noParse: /(ckeditor.js|tinymce.min.js)/,
@@ -191,11 +194,15 @@ module.exports = {
           extensions: '.handlebars',
         },
       },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
     ],
   },
   resolve: {
     modules: [
-      'node_modules',
+      path.resolve(__dirname, 'node_modules'),
       path.resolve(__dirname, 'style'),
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, '3rdparty'),
@@ -212,6 +219,7 @@ module.exports = {
     fallback: {
       path: require.resolve('path-browserify'),
     },
+    extensions: ['*', '.js', '.vue'],
   },
   // externals: {
   //   tinymce: 'window tinymce',

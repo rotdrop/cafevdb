@@ -49,7 +49,7 @@ module.exports = {
           './3rdparty',
           './',
         ],
-        tryExtensions: ['.js', '.json', '.node', '.css'],
+        tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
       },
     ],
     'operator-linebreak': [

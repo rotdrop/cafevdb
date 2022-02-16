@@ -29,6 +29,8 @@ use OCA\CAFEVDB\Common\Util;
 script($appName, $assets['js']['asset']);
 style($appName, $assets['css']['asset']);
 
+script($appName, $assets['vue_js']['asset']);
+
 if (empty($wikiVersion)) {
   $wikiHide = '';
   $wikiShow = 'hidden';
@@ -116,3 +118,4 @@ if (!empty($cloudUserBackendRestrictions)) {
     <span class="msg"></span>
   </form>
 </div>
+<div id="admin-settings-vue" data-initial="<?php p(json_encode($_, true)); ?>"></div>
