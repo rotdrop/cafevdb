@@ -312,6 +312,11 @@ trait ConfigTrait {
     return $this->configService->isSubAdminOfGroup($userId, $groupId);
   }
 
+  protected function getGroupSubAdmins(?string $groupId = null)
+  {
+    return $this->configService->getGroupSubAdmins($groupId);
+  }
+
   public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName)
   {
     if (empty($firstName) && empty($nickName)) {

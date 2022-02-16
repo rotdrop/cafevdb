@@ -373,6 +373,17 @@ class OrganizationalRolesService
     }
     return $contacts;
   }
+
+  /**
+   * Get all the sub-admins of the dedicated group
+   *
+   * @return IUser[]
+   */
+  public function getGroupAdmins():array
+  {
+    return $this->getGroupSubAdmins();
+  }
+
 }
 
 // Local Variables: ***
