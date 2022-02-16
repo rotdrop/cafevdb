@@ -337,12 +337,10 @@ class AsymmetricKeyService
    */
   public function removeSharedPrivateValues($ownerId)
   {
-    array_walk(
-      $this->cloudConfig->getUserKeys($ownerId, $this->appName),
-      function($configKey) use ($ownerId) {
-        if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
-          $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
-        }
-      });
+    foreach ($this->cloudConfig->getUserKeys($ownerId, $this->appName) as $configKey) {
+      if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
+        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
+      }
+    }
   }
 }
