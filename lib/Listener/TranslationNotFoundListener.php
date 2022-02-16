@@ -5,27 +5,29 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Listener;
 
 use OCP\ILogger;
-use OCP\IUserSession;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\AppFramework\IAppContainer;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
 
 use OCA\CAFEVDB\Service\L10N\TranslationService;
@@ -38,36 +40,39 @@ class TranslationNotFoundListener implements IEventListener
 
   const EVENT = HandledEvent::class;
 
-  /** @var string */
-  protected $appName;
+  /** @var IAppContainer */
+  protected $appContainer;
 
-  /** @var IUser */
-  private $user;
-
-  public function __construct(
-    $appName
-    , IUserSession $userSession
-    , ILogger $logger
-  ) {
-    $this->appName = $appName;
-    $this->user = $userSession->getUser();
-    $this->logger = $logger;
+  public function __construct(IAppContainer $appContainer)
+  {
+    $this->appContainer = $appContainer;
   }
 
   public function handle(Event $event): void {
+
+    /** @var HandledEvent $event */
     if (!($event instanceOf HandledEvent)) {
       return;
     }
-    $appName = $event->getAppName();
-    if ($appName != $this->appName) {
+
+    $appName = $this->appContainer->get('appName');
+
+    if ($appName != $event->getAppName()) {
       return;
     }
-    if (empty($this->user)) {
+
+    /** @var EncryptionService $encryptionService */
+    $encryptionService = $this->appContainer->get(EncryptionService::class);
+    if (!$encryptionService->bound()) {
+      // no point in trying to continue
       return;
     }
+
+    $this->logger = $this->appContainer->get(ILogger::class);
+
     $debugMode = ConfigService::DEBUG_NONE;
     try {
-      $debugMode = \OC::$server->query(EncryptionService::class)->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
+      $debugMode = $encryptionService->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
     } catch (\Throwable $t) {
       // just ignore
     }
