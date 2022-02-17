@@ -21,21 +21,21 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app/globals.js';
-// import { generateFilePath } from '@nextcloud/router';
+import { appName } from './app/app-info.js';
+import { generateFilePath } from '@nextcloud/router';
 
 import Vue from 'vue';
 import AdminSettings from './components/AdminSettings';
 
 // eslint-disable-next-line
-///__webpack_public_path__ = generateFilePath(appName, '', '');
+__webpack_public_path__ = generateFilePath(appName, '', 'js');
 
 Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
-const vueAnchorId = '#admin-settings-vue';
+const vueAnchorId = 'admin-settings-vue';
 const vueAnchor = document.getElementById(vueAnchorId);
 
 export default new Vue({
-  el: vueAnchorId,
+  el: '#' + vueAnchorId,
   render: h => h(AdminSettings, { props: { initial: JSON.parse(vueAnchor.dataset.initial) } }),
 });

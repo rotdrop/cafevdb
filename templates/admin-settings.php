@@ -30,6 +30,7 @@ script($appName, $assets['js']['asset']);
 style($appName, $assets['css']['asset']);
 
 script($appName, $assets['vue_js']['asset']);
+style($appName, $assets['vue_css']['asset']);
 
 if (empty($wikiVersion)) {
   $wikiHide = '';

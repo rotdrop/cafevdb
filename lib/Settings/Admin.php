@@ -106,6 +106,7 @@ class Admin implements ISettings {
           AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
           'vue' . '_' . AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE . '-' . 'vue'),
+          'vue' . '_' . AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE . '-' . 'vue'),
         ],
         'appName' => $this->appName(),
         'userGroup' => $this->getAppValue('usergroup'),
