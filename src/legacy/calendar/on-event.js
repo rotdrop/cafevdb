@@ -1,4 +1,4 @@
-import { $ } from '../../app/globals.js';
+import $ from '../../app/jquery.js';
 import Calendar from './calendar.js';
 import fileDownload from '../../app/file-download.js';
 

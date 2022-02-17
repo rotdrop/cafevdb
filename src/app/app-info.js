@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,30 +20,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @file
- *
- * Collect some jQuery tweaks in this file.
- *
- */
 
-import $ from './jquery.js';
+const appInfo = require('appinfo/info.xml');
+const appName = appInfo.info.id[0];
+const appVersion = appInfo.info.version[0];
 
-require('jquery-ui/ui/widgets/progressbar');
-
-$.widget('ui.progressbar', $.ui.progressbar, {
-  _create() {
-    console.debug('OVERRIDE PROGRESSBAR');
-    this._super();
-  },
-  _refreshValue() {
-    this._super();
-    const percentage = this._percentage();
-    this.valueDiv.width(percentage.toFixed(6) + '%');
-  },
-});
+export default appInfo;
+export {
+  appName,
+  appVersion,
+  appInfo,
+};
 
 // Local Variables: ***
-// indent-tabs-mode: nil ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***
