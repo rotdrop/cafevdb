@@ -24,20 +24,30 @@
 namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
-use OCP\IInitialStateService;
-use OCP\IGroup;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
-class Admin implements ISettings {
+class Admin implements IDelegatedSettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
+
+  const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
+  const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
+  const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
+
+  const DELEGATABLE = 'delegatable';
+  const ADMIN_ONLY = 'admin_only';
+  const SETTINGS_PROPERTIES = [
+    self::ORCHESTRA_USER_GROUP_KEY => self::ADMIN_ONLY,
+    self::WIKI_NAME_SPACE_KEY => self::DELEGATABLE,
+    self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
+  ];
 
   /** @var AssetService */
   private $assetService;
@@ -65,24 +75,23 @@ class Admin implements ISettings {
     $this->initialStateService = $initialStateService;
   }
 
+  public function haveCloudUserBackendConfig()
+  {
+    return !empty(array_filter(
+      $this->cloudConfig()->getAppKeys($this->appName()),
+      function($value) {
+        return str_starts_with($value, CloudUserConnectorService::CLOUD_USER_BACKEND . ':');
+      }));
+  }
+
   public function getForm()
   {
     $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
     $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
     $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
-    $haveCloudUserBackendConfig = !empty(array_filter(
-      $this->cloudConfig()->getAppKeys($this->appName()),
-      function($value) use ($cloudUserBackend) {
-        return str_starts_with($value, $cloudUserBackend . ':');
-      }));
-    $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
+    $haveCloudUserBackendConfig = $this->haveCloudUserBackendConfig();
 
-    $groupList = $this->groupManager()->search('');
-    $groups = [];
-    /** @var IGroup $group */
-    foreach ($groupList as $group) {
-      $groups[$group->getGID()] = $group->getDisplayName();
-    }
+    $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
 
     // Initial state injecton for JS
     $this->initialStateService->provideInitialState(
@@ -107,17 +116,16 @@ class Admin implements ISettings {
           AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
-        'userGroup' => $this->getAppValue('usergroup'),
-        'cloudGroups' => $groups,
-        'personalAppSettingsLink' => $personalAppSettingsLink,
-        'wikiNameSpace' => $this->getAppValue('wikinamespace'),
-        'wikiVersion' => $this->wikiRPC->version(),
-        'cloudUserBackend' => $cloudUserBackend,
-        'cloudUserBackendEnabled' => $cloudUserBackendEnabled,
-        'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
-        'haveCloudUserBackendConfig' => $haveCloudUserBackendConfig,
-        'toolTips' => $this->toolTipsService(),
-        'requesttoken' => \OCP\Util::callRegister(),
+        'config' => [
+          self::ORCHESTRA_USER_GROUP_KEY =>  $this->getAppValue('usergroup'),
+          'personalAppSettingsLink' => $personalAppSettingsLink,
+          self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
+          'wikiVersion' => $this->wikiRPC->version(),
+          'cloudUserBackend' => $cloudUserBackend,
+          'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
+          self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
+          'settingsProperties' => self::SETTINGS_PROPERTIES,
+        ],
       ]);
   }
 
@@ -140,6 +148,14 @@ class Admin implements ISettings {
   public function getPriority() {
     // @@todo could be made a configure option.
     return 50;
+  }
+
+  public function getName(): ?string {
+    return null; // Only one setting in this section
+  }
+
+  public function getAuthorizedAppConfig(): array {
+    return []; // Custom controller
   }
 }
 

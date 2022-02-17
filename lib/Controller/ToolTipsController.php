@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -20,61 +21,60 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+/**
+ * @file Expose tooltips as AJAY controllers, fetching them by their key.
+ */
 
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\ILogger;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 use OCA\CAFEVDB\Common\Util;
 
-class ValidationController extends Controller {
+class ToolTipsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParametereService */
-  private $parameterService;
+  /** @var IL10N */
+  protected $l;
 
-  /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
-  private $fuzzyInput;
+  /** @var ToolTipsService */
+  private $toolTipsService;
 
   public function __construct(
     $appName
     , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , FuzzyInputService $fuzzyInput
+    , ToolTipsService $toolTipsService
+    , ILogger $logger
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->fuzzyInput = $fuzzyInput;
-    $this->l = $this->l10N();
+    $this->toolTipsService = $toolTipsService;
+    $this->logger = $logger;
   }
 
   /**
    * @NoAdminRequired
+   * @NoGroupMemberRequired
    */
-  public function serviceSwitch($topic, $value)
+  public function get(string $key, ?bool $debug = null, bool $unescaped = false)
   {
-    switch ($topic) {
-    case 'monetary_value':
-    case 'monetary-value':
-      $value = Util::normalizeSpaces($value);
-      $amount = 0;
-      if (!empty($value)) {
-        $amount = $this->fuzzyInput->currencyValue($value);
-        if ($amount === false) {
-          return self::grumble($this->l->t('Could not parse number: "%s"', [ $value ]));
-        }
-      }
-      return self::dataResponse([ 'amount' => $amount ]);
+    $this->toolTipsService->debug($debug);
+    $tooltip = $this->toolTipsService[$key];
+    if (!$unescaped) {
+      $tooltip = Util::htmlEscape($tooltip);
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    if (empty($tooltip)) {
+      return new DataResponse([ 'key' => $key ], Http::STATUS_NOT_FOUND);
+    } else {
+      return new DataResponse([ 'key' => $key, 'tooltip' => $tooltip ], Http::STATUS_OK);
+    }
   }
 
 }

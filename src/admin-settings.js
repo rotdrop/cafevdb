@@ -22,87 +22,20 @@
  */
 
 import { appName } from './app/app-info.js';
-import $ from './app/jquery.js';
-import * as Ajax from './app/ajax.js';
-import generateUrl from './app/generate-url.js';
-import './app/jquery-cafevdb-tooltips.js';
+import { generateFilePath } from '@nextcloud/router';
 
-require('admin-settings.scss');
+import Vue from 'vue';
+import AdminSettings from './components/AdminSettings';
 
-require('jquery-ui/ui/widgets/autocomplete');
-require('jquery-ui/themes/base/autocomplete.css');
+// eslint-disable-next-line
+__webpack_public_path__ = generateFilePath(appName, '', 'js');
 
-$(function() {
+Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
-  const $container = $('#' + appName + '-admin-settings');
-  const $msg = $container.find('.msg');
+const vueAnchorId = 'admin-settings-vue';
+const vueAnchor = document.getElementById(vueAnchorId);
 
-  $container.find('[title]').cafevTooltip({ placement: 'auto' });
-
-  const $orchestraUserGroup = $container.find('input.orchestraUserGroup');
-
-  const orchestraUserGroupAutocomplete = [];
-  for (const [key, value] of Object.entries($orchestraUserGroup.data('cloudGroups'))) {
-    orchestraUserGroupAutocomplete.push(key);
-    orchestraUserGroupAutocomplete.push(value);
-  }
-
-  console.info('GROUP AC', orchestraUserGroupAutocomplete);
-
-  $orchestraUserGroup.autocomplete({
-    source: orchestraUserGroupAutocomplete,
-    open(event, ui) {
-      $.fn.cafevTooltip.remove();
-    },
-  });
-
-  $container.find('input[type="text"]').blur(function(event) {
-    const $self = $(this);
-
-    const name = $self.attr('name');
-    const value = $self.val();
-
-    $msg.hide();
-
-    $.post(
-      generateUrl('/settings/admin/set/' + name), { value })
-      .done(function(data) {
-        console.log(data);
-        $msg.html(data.message).show();
-        if (data.wikiNameSpace !== undefined) {
-          $container.find('input.wikiNameSpace').val(data.wikiNameSpace);
-        }
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown);
-        $msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-      });
-  });
-
-  $container.on('click', 'input[type="button"]', function(event) {
-    const $self = $(this);
-
-    const name = $self.attr('name');
-
-    $msg.hide();
-
-    $.post(
-      generateUrl('/settings/admin/set/' + name), { value: name })
-      .done(function(data) {
-        console.log(data);
-        const message = Array.isArray(data.message)
-          ? data.message.join('<br/>')
-          : data.message;
-        $msg.html(message).show();
-      })
-      .fail(function(xhr, status, errorThrown) {
-        Ajax.handleError(xhr, status, errorThrown);
-        $msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-      });
-  });
-
+export default new Vue({
+  el: '#' + vueAnchorId,
+  render: h => h(AdminSettings, { props: { config: JSON.parse(vueAnchor.dataset.config) } }),
 });
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// End: ***

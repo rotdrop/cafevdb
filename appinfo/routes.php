@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+
 /**
  * @file
  * Create your routes in here. The name is the lowercase name of the controller
@@ -116,9 +118,25 @@ $routes = [
     ],
     // admin settings
     [
-      'name' => 'admin_settings#set',
-      'url' => '/settings/admin/set/{parameter}',
+      'name' => 'admin_settings#set_admin_only',
+      'url' => '/settings/admin/{parameter}',
       'verb' => 'POST',
+      'requirements' => [
+        'parameter' => AdminSettings::WIKI_NAME_SPACE_KEY . '|' . AdminSettings::ORCHESTRA_USER_GROUP_KEY,
+      ],
+    ],
+    [
+      'name' => 'admin_settings#set_delegated',
+      'url' => '/settings/admin/{parameter}',
+      'verb' => 'POST',
+      'requirements' => [
+        'parameter' => AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY, // regexp, can add more
+      ],
+    ],
+    [
+      'name' => 'admin_settings#get',
+      'url' => '/settings/admin/{parameter}',
+      'verb' => 'GET',
     ],
     // personal settings
     [
@@ -495,6 +513,14 @@ $routes = [
       'name' => 'validation#service_switch',
       'url' => '/validate/general/{topic}',
       'verb' => 'POST',
+    ],
+    /**
+     * Fetch a tooltip by its key
+     */
+    [
+      'name' => 'tool_tips#get',
+      'url' => '/tooltips/{key}',
+      'verb' => 'GET',
     ],
     /**
      * Attempt a catch all ...
