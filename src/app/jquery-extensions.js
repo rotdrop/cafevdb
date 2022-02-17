@@ -27,7 +27,7 @@
  *
  */
 
-import { $ } from './globals.js';
+import $ from './jquery.js';
 import * as CAFEVDB from './cafevdb.js';
 import './jquery-cafevdb-tooltips.js';
 

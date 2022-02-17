@@ -27,7 +27,7 @@
  *
  */
 
-import { $ } from './globals.js';
+import $ from './jquery.js';
 import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.css');

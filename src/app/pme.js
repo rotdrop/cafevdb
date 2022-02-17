@@ -25,7 +25,7 @@
  * General PME table stuff, popup-handling.
  */
 
-import { $, jQuery } from './globals.js';
+import jQuery from './jquery.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -63,6 +63,8 @@ import 'selectize/dist/css/selectize.bootstrap4.css';
 require('cafevdb-selectize.scss');
 
 require('pme-table.scss');
+
+const $ = jQuery;
 
 const popupPosition = {
   my: 'left top',
