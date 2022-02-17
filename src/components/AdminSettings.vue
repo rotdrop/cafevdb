@@ -107,9 +107,7 @@
        const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appName + '</a>'
        this.forword = t(
          appName,
-         'Further detailed configurations are necessary after configuring the user-group. '
-         + 'Please configure a dedicated group-admin for the user-group and '
-         + 'then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
+         'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
            personalSettingsLink
        }, undefined, { escape: false });
      },
@@ -162,7 +160,7 @@
      },
      async tooltip(key) {
        try {
-         const response = await axios.get(generateUrl('apps/' + appName + '/tooltips/{key}', { key }), {})
+         const response = await axios.get(generateUrl('apps/' + appName + '/tooltips/{key}', { key }), { params: { unescaped: true } })
          console.debug('GOT TOOLTIP', response.data.tooltip || '');
          return response.data.tooltip;
        } catch (e) {
