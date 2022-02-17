@@ -24,7 +24,7 @@
 namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
-class Admin implements ISettings {
+class Admin implements IDelegatedSettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
@@ -129,6 +129,14 @@ class Admin implements ISettings {
   public function getPriority() {
     // @@todo could be made a configure option.
     return 50;
+  }
+
+  public function getName(): ?string {
+    return null; // Only one setting in this section
+  }
+
+  public function getAuthorizedAppConfig(): array {
+    return []; // Custom controller
   }
 }
 

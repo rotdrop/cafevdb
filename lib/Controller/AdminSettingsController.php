@@ -59,6 +59,8 @@ class AdminSettingsController extends Controller
 
   /**
    * @NoGroupMemberRequired
+   * @SubAdminRequired
+   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function get($parameter)
   {
@@ -84,7 +86,26 @@ class AdminSettingsController extends Controller
   /**
    * @NoGroupMemberRequired
    */
-  public function set($parameter, $value)
+  public function setAdminOnly($parameter, $value)
+  {
+    return $this->set($parameter, $value);
+  }
+
+  /**
+   * @NoGroupMemberRequired
+   * @SubAdminRequired
+   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
+   */
+  public function setDelegated($parameter, $value)
+  {
+    switch ($parameter) {
+      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+        return $this->set($parameter, $value);
+    }
+    return self::grumble($this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter));
+  }
+
+  private function set($parameter, $value)
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');

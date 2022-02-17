@@ -44,7 +44,9 @@
       @update="saveSetting(...arguments, 'wikiNameSpace')"
     />
     <button type="button"
-            @click="saveSetting(...arguments, 'cloudUserBackendConfig')"
+            name="cloudUserBackendConfig"
+            value="update"
+            @click="saveSetting(undefined, 'cloudUserBackendConfig')"
             :disabled="!config.cloudUserBackendConfig"
     >
       {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
@@ -112,6 +114,7 @@
        }, undefined, { escape: false });
      },
      async saveSetting(value, settingsKey, force) {
+       console.info('ARGS', arguments)
        const self = this
        try {
          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
@@ -149,7 +152,11 @@
            message = e.response.data.message
            console.error('RESPONSE', e.response)
          }
-         showError(t(appName, 'Could not set value for {settingsKey} to {value}: {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+         if (value !== undefined) {
+           showError(t(appName, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+         } else {
+           showError(t(appName, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+         }
          self.getData()
        }
      },
