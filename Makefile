@@ -216,7 +216,7 @@ $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCD
 	make -C $(ABSSRCDIR)/3rdparty/selectize
 
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
-JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js")
+JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue")
 
 SELECTIZE_DIST =\
  $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js\
