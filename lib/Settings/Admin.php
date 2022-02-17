@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\App\IAppManager;
+use OCP\IInitialStateService;
 use OCP\IGroup;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
@@ -47,16 +48,21 @@ class Admin implements ISettings {
   /** @var IAppManager */
   private $appManager;
 
+  /** @var IInitialStateService */
+  private $initialStateService;
+
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
     , WikiRPC $wikiRPC
     , IAppManager $appManager
+    , IInitialStateService $initialStateService
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
+    $this->initialStateService = $initialStateService;
   }
 
   public function getForm()
@@ -77,6 +83,20 @@ class Admin implements ISettings {
     foreach ($groupList as $group) {
       $groups[$group->getGID()] = $group->getDisplayName();
     }
+
+    // Initial state injecton for JS
+    $this->initialStateService->provideInitialState(
+      $this->appName(),
+      'CAFEVDB',
+      [
+        'appName' => $this->appName(),
+        'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
+        'language' => $this->getUserValue('lang', 'en'),
+        'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
+        'expertMode' => $this->getUserValue('expertmode'),
+      ]);
+    $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
+    $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
 
     return new TemplateResponse(
       $this->appName(),
