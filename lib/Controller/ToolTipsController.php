@@ -31,6 +31,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\ILogger;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 
@@ -39,6 +40,7 @@ use OCA\CAFEVDB\Common\Util;
 class ToolTipsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var IL10N */
   protected $l;
@@ -50,21 +52,23 @@ class ToolTipsController extends Controller
     $appName
     , IRequest $request
     , ToolTipsService $toolTipsService
+    , ILogger $logger
   ) {
     parent::__construct($appName, $request);
-    $ths->l = $l10n;
     $this->toolTipsService = $toolTipsService;
+    $this->logger = $logger;
   }
 
   /**
    * @NoAdminRequired
+   * @NoGroupMemberRequired
    */
   public function get(string $key, ?bool $debug = null, bool $unescaped = false)
   {
     $this->toolTipsService->debug($debug);
     $tooltip = $this->toolTipsService[$key];
     if (!$unescaped) {
-      $tooltip = Util::htmlEscape($tootip);
+      $tooltip = Util::htmlEscape($tooltip);
     }
     if (empty($tooltip)) {
       return new DataResponse([ 'key' => $key ], Http::STATUS_NOT_FOUND);

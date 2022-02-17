@@ -28,7 +28,7 @@
       <SettingsSelectGroup
         v-model="orchestraUserGroup"
         :label="t(appName, 'User Group')"
-        :hint="t(appName, 'Access to the app is restricted to this group, only group-admins of this group are granted access to basic configuration options for the app.')"
+        :hint="hints['settings:admin:user-group']"
         :multiple="false"
         @update="saveTextInput(...arguments, 'orchestraUserGroup')"
       />
@@ -36,7 +36,7 @@
     <SettingsInputText
       v-model="wikiNameSpace"
       :label="t(appName, 'Wiki Name-Space')"
-      :hint="t(appName, 'The name-space in the orchestra-wiki below which all documentation and notes will be placed.')"
+      :hint="hints['settings:admin:wiki-name-space']"
       @update="saveTextInput(...arguments, 'wikiNameSpace')"
     />
     <button type="button"
@@ -45,8 +45,7 @@
       {{ t(appName, 'Autoconfigure "{userBackend}" app', { userBackend: 'user_sql' }) }}
     </button>
     <p class="hint">
-      {{ t(appName, 'Configure the user backend which exports the orchestra members to the cloud as cloud-user-accounts.') }}
-      {{ tooltip('settings:admin:cloud-user-backend-conf') }}
+      {{ hints['settings:admin:cloud-user-backend-conf'] }}
     </p>
   </SettingsSection>
 </template>
@@ -57,6 +56,7 @@
  import SettingsSelectGroup from './SettingsSelectGroup'
  import { showError, /* showSuccess, showInfo, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
  import axios from '@nextcloud/axios'
+ import { generateUrl } from '@nextcloud/router'
  export default {
    name: 'AdminSettings',
    components: {
@@ -74,13 +74,22 @@
      return {
        orchestraUserGroup: '',
        wikiNameSpace: '',
+       hints: {
+         'settings:admin:cloud-user-backend-conf': '',
+         'settings:admin:wiki-name-space': '',
+         'settings:admin:user-group': '',
+       },
      }
    },
    created() {
      this.getData()
    },
    methods: {
-     async getData() {},
+     async getData() {
+       for (const [key, value] of Object.entries(this.hints)) {
+         this.hints[key] = await this.tooltip(key);
+       }
+     },
      async saveTextInput(value, settingsKey, force) {
        showError(t(appName, 'UNIMPLEMENTED'), { timeout: TOAST_PERMANENT_TIMEOUT, });
      },
@@ -89,10 +98,11 @@
      },
      async tooltip(key) {
        try {
-         let response = await axios.get(generateUrl('apps/' + appName + '/tooltips', { key }), {})
+         let response = await axios.get(generateUrl('apps/' + appName + '/tooltips/{key}', { key }), {})
+         console.info('GOT TOOLTIP', response.data.tooltip || '');
          return response.data.tooltip;
        } catch (e) {
-         console.error('ERROR FETCHING TOOLTIP', e);
+         console.error('ERROR FETCHING TOOLTIP ' + key, e);
          return '';
        }
      },
