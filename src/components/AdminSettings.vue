@@ -46,6 +46,7 @@
     </button>
     <p class="hint">
       {{ t(appName, 'Configure the user backend which exports the orchestra members to the cloud as cloud-user-accounts.') }}
+      {{ tooltip('settings:admin:cloud-user-backend-conf') }}
     </p>
   </SettingsSection>
 </template>
@@ -55,7 +56,7 @@
  import SettingsInputText from './SettingsInputText'
  import SettingsSelectGroup from './SettingsSelectGroup'
  import { showError, /* showSuccess, showInfo, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
- import escapeHtml from 'escape-html'
+ import axios from '@nextcloud/axios'
  export default {
    name: 'AdminSettings',
    components: {
@@ -85,7 +86,16 @@
      },
      async autoconfigureUserBackend() {
        showError(t(appName, 'UNIMPLEMENTED'), { timeout: TOAST_PERMANENT_TIMEOUT, });
-     }
+     },
+     async tooltip(key) {
+       try {
+         let response = await axios.get(generateUrl('apps/' + appName + '/tooltips', { key }), {})
+         return response.data.tooltip;
+       } catch (e) {
+         console.error('ERROR FETCHING TOOLTIP', e);
+         return '';
+       }
+     },
    },
  }
 </script>
