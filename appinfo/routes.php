@@ -73,6 +73,18 @@ $routes = [
       'verb' => 'GET',
       'requirements' => [
         'apiVersion' => 'v1',
+        'topic' => '^(?!encryption).*$',
+      ],
+    ],
+    [
+      'name' => 'encryption#getRecryptRequests',
+      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+      'verb' => 'GET',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
+      'defaults' => [
+        'userId' => null
       ],
     ],
   ],

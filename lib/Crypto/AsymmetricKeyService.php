@@ -392,6 +392,26 @@ class AsymmetricKeyService
     }
   }
 
+  /**
+   * Fetch the list of all or a matching encryption request.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @return array<string, string> USER_ID => REQUEST_VALUE
+   */
+  public function getEncryptionRequests(?string $ownerId = null):array
+  {
+    if (!empty($ownerId)) {
+      $requestValue = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+      $requests[$ownerId] = $requestValue;
+    } else  {
+      $recryptionUsers = $this->cloudConfig->getUsersForUserValue($this->appName, self::RECRYPTION_REQUEST_KEY);
+      $requests = $this->cloudConfig->getUserValueForUsers($this->appName, self::RECRYPTION_REQUEST_KEY, $recryptionUsers);
+    }
+    return $requests;
+  }
+
   /*
    * Push a new recryption-request notification and record the request int the user preferences.
    *
