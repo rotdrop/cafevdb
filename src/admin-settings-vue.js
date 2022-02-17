@@ -37,5 +37,5 @@ const vueAnchor = document.getElementById(vueAnchorId);
 
 export default new Vue({
   el: '#' + vueAnchorId,
-  render: h => h(AdminSettings, { props: { initial: JSON.parse(vueAnchor.dataset.initial) } }),
+  render: h => h(AdminSettings, { props: { config: JSON.parse(vueAnchor.dataset.config) } }),
 });

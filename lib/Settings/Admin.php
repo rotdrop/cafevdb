@@ -26,8 +26,6 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\App\IAppManager;
-use OCP\IInitialStateService;
-use OCP\IGroup;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -39,6 +37,18 @@ class Admin implements ISettings {
 
   const TEMPLATE = "admin-settings";
 
+  const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
+  const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
+  const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
+
+  const DELEGATABLE = 'delegatable';
+  const ADMIN_ONLY = 'admin_only';
+  const SETTINGS_PROPERTIES = [
+    self::ORCHESTRA_USER_GROUP_KEY => self::ADMIN_ONLY,
+    self::WIKI_NAME_SPACE_KEY => self::DELEGATABLE,
+    self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
+  ];
+
   /** @var AssetService */
   private $assetService;
 
@@ -48,21 +58,25 @@ class Admin implements ISettings {
   /** @var IAppManager */
   private $appManager;
 
-  /** @var IInitialStateService */
-  private $initialStateService;
-
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
     , WikiRPC $wikiRPC
     , IAppManager $appManager
-    , IInitialStateService $initialStateService
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
-    $this->initialStateService = $initialStateService;
+  }
+
+  public function haveCloudUserBackendConfig()
+  {
+    return !empty(array_filter(
+      $this->cloudConfig()->getAppKeys($this->appName()),
+      function($value) {
+        return str_starts_with($value, CloudUserConnectorService::CLOUD_USER_BACKEND . ':');
+      }));
   }
 
   public function getForm()
@@ -70,56 +84,29 @@ class Admin implements ISettings {
     $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
     $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
     $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
-    $haveCloudUserBackendConfig = !empty(array_filter(
-      $this->cloudConfig()->getAppKeys($this->appName()),
-      function($value) use ($cloudUserBackend) {
-        return str_starts_with($value, $cloudUserBackend . ':');
-      }));
+    $haveCloudUserBackendConfig = $this->haveCloudUserBackendConfig();
+
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
-
-    $groupList = $this->groupManager()->search('');
-    $groups = [];
-    /** @var IGroup $group */
-    foreach ($groupList as $group) {
-      $groups[$group->getGID()] = $group->getDisplayName();
-    }
-
-    // Initial state injecton for JS
-    $this->initialStateService->provideInitialState(
-      $this->appName(),
-      'CAFEVDB',
-      [
-        'appName' => $this->appName(),
-        'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
-        'language' => $this->getUserValue('lang', 'en'),
-        'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
-        'expertMode' => $this->getUserValue('expertmode'),
-      ]);
-    $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
-    $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
 
     return new TemplateResponse(
       $this->appName(),
       self::TEMPLATE,
       [
         'assets' => [
-          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
           'vue' . '_' . AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE . '-' . 'vue'),
           'vue' . '_' . AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE . '-' . 'vue'),
         ],
         'appName' => $this->appName(),
-        'userGroup' => $this->getAppValue('usergroup'),
-        'cloudGroups' => $groups,
-        'personalAppSettingsLink' => $personalAppSettingsLink,
-        'wikiNameSpace' => $this->getAppValue('wikinamespace'),
-        'wikiVersion' => $this->wikiRPC->version(),
-        'cloudUserBackend' => $cloudUserBackend,
-        'cloudUserBackendEnabled' => $cloudUserBackendEnabled,
-        'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
-        'haveCloudUserBackendConfig' => $haveCloudUserBackendConfig,
-        'toolTips' => $this->toolTipsService(),
-        'requesttoken' => \OCP\Util::callRegister(),
+        'config' => [
+          self::ORCHESTRA_USER_GROUP_KEY =>  $this->getAppValue('usergroup'),
+          'personalAppSettingsLink' => $personalAppSettingsLink,
+          self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
+          'wikiVersion' => $this->wikiRPC->version(),
+          'cloudUserBackend' => $cloudUserBackend,
+          'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
+          self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
+          'settingsProperties' => self::SETTINGS_PROPERTIES,
+        ],
       ]);
   }
 

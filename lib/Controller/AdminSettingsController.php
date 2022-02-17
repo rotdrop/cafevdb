@@ -33,8 +33,10 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\RequestService;
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 
-class AdminSettingsController extends Controller {
+class AdminSettingsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
@@ -58,12 +60,37 @@ class AdminSettingsController extends Controller {
   /**
    * @NoGroupMemberRequired
    */
-  public function set($parameter, $value) {
+  public function get($parameter)
+  {
+    $value = null;
+    switch ($parameter) {
+      case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
+        $value = $this->getAppValue('usergroup');
+        break;
+      case AdminSettings::WIKI_NAME_SPACE_KEY:
+        $value = $this->getAppValue('wikinamespace');
+        break;
+      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+        $value = $this->di(AdminSettings::class)->haveCloudUserBackendConfig();
+        break;
+    }
+    if ($value != null) {
+      return new DataResponse([ 'value' => $value ]);
+    } else {
+      return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
+    }
+  }
+
+  /**
+   * @NoGroupMemberRequired
+   */
+  public function set($parameter, $value)
+  {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');
     try {
       switch ($parameter) {
-        case 'orchestraUserGroup':
+        case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
           $realValue = trim($value);
           if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
             $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
@@ -80,9 +107,10 @@ class AdminSettingsController extends Controller {
           }
           $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
           $result['message'] = $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]);
+          $result['messages']['transient'] = [ $result['message'] ];
           return self::dataResponse($result);
           break;
-        case 'wikiNameSpace':
+        case AdminSettings::WIKI_NAME_SPACE_KEY:
           if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
             $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
           }
@@ -96,9 +124,10 @@ class AdminSettingsController extends Controller {
           }
 
           $result['message'] = $this->l->t('Setting wiki name-space to "%s".', [$realValue]);
+          $result['messages']['transient'] = [ $result['message'] ];
           return self::dataResponse($result);
           break;
-        case 'cloudUserBackendConf':
+        case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
           $messages = [];
           $responses = $this->configureCloudUserBackend();
           $messages[] = $this->l->t('"%1$s" controller answered with "%2$s".', [
@@ -114,8 +143,12 @@ class AdminSettingsController extends Controller {
             '<a class="external settings" href="' . $cloudUserBackendSettings . '" target="' . \md5($cloudUserBackendSettings) . '">' . CloudUserConnectorService::CLOUD_USER_BACKEND . '</a>',
             CloudUserConnectorService::CLOUD_USER_BACKEND,
           ]);
-          $messages[] = $settingsHint;
-          return self::dataResponse([ 'message' => $messages ]);
+          return self::dataResponse([
+            'messages' => [
+              'transient' => $messages,
+              'permanent' => [ $settingsHint, ],
+            ],
+          ]);
           break;
         default:
           break;

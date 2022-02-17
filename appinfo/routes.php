@@ -117,8 +117,13 @@ $routes = [
     // admin settings
     [
       'name' => 'admin_settings#set',
-      'url' => '/settings/admin/set/{parameter}',
+      'url' => '/settings/admin/{parameter}',
       'verb' => 'POST',
+    ],
+    [
+      'name' => 'admin_settings#get',
+      'url' => '/settings/admin/{parameter}',
+      'verb' => 'GET',
     ],
     // personal settings
     [
