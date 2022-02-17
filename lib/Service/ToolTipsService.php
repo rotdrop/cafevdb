@@ -155,7 +155,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    *
    * @param string $key
    */
-  private function fetch($key)
+  public function fetch($key, bool $escape = true)
   {
     $this->lastKey = $key;
     $this->makeToolTips();
@@ -186,7 +186,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
       }
     }
 
-    return empty($tip) ? null : htmlspecialchars($tip);
+    return empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
   }
 
   private function makeToolTips()

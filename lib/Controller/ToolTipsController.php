@@ -66,7 +66,7 @@ class ToolTipsController extends Controller
   public function get(string $key, ?bool $debug = null, bool $unescaped = false)
   {
     $this->toolTipsService->debug($debug);
-    $tooltip = $this->toolTipsService[$key];
+    $tooltip = $this->toolTipsService->fetch($key, escape: false);
     if (!$unescaped) {
       $tooltip = Util::htmlEscape($tooltip);
     }
