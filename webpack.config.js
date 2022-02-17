@@ -195,7 +195,7 @@ module.exports = {
   },
   resolve: {
     modules: [
-      'node_modules',
+      path.resolve(__dirname, 'node_modules'),
       path.resolve(__dirname, 'style'),
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, '3rdparty'),
