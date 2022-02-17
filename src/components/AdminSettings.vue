@@ -24,11 +24,13 @@
 </script>
 <template>
   <SettingsSection :title="t(appName, 'Camerata DB')">
-    <p class="info" v-html="forword">
-      {{ forword }}
-    </p>
-    <hr/>
-    <div>
+    <div v-if="config.isAdmin">
+      <p class="info" v-html="forword">
+        {{ forword }}
+      </p>
+      <hr/>
+    </div>
+    <div v-if="config.isAdmin">
       <SettingsSelectGroup
         v-model="settings.orchestraUserGroup"
         :label="t(appName, 'User Group')"
@@ -38,6 +40,7 @@
       />
     </div>
     <SettingsInputText
+      v-if="config.isAdmin"
       v-model="settings.wikiNameSpace"
       :label="t(appName, 'Wiki Name-Space')"
       :hint="hints['settings:admin:wiki-name-space']"

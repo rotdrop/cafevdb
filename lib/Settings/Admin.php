@@ -58,9 +58,6 @@ class Admin implements IDelegatedSettings {
   /** @var IAppManager */
   private $appManager;
 
-  /** @var IInitialStateService */
-  private $initialStateService;
-
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
@@ -109,6 +106,7 @@ class Admin implements IDelegatedSettings {
           'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
           self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
           'settingsProperties' => self::SETTINGS_PROPERTIES,
+          'isAdmin' => $this->groupManager()->isAdmin($this->userId()),
         ],
       ]);
   }

@@ -32,6 +32,8 @@ use OCP\ILogger;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
 use OCP\IDateTimeFormatter;
+use OCP\IUserManager;
+use OCP\IGroupManager;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -123,12 +125,12 @@ trait ConfigTrait {
     return $this->configService->getUrlGenerator();
   }
 
-  protected function userManager()
+  protected function userManager():IUserManager
   {
     return $this->configService->getUserManager();
   }
 
-  protected function groupManager()
+  protected function groupManager():IGroupManager
   {
     return $this->configService->getGroupManager();
   }
