@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-02-06 12:08+0100\n"
-"PO-Revision-Date: 2022-02-06 12:16+0100\n"
+"POT-Creation-Date: 2022-02-17 20:50+0100\n"
+"PO-Revision-Date: 2022-02-17 20:55+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -103,7 +103,13 @@ msgstr "Eine PHP-Erweiterung hat das Laden der Datei beendet."
 msgid "Unknown upload error"
 msgstr "Irgendein Hochlade-Fehler"
 
-#: lib/Controller/AdminSettingsController.php:82
+#: lib/Controller/AdminSettingsController.php:105
+#, php-format
+msgid "Settings is reserved to cloud-administrators: \"%s\"."
+msgstr ""
+"Die Einstellung \"%s\" können ausschließlich Administratoren vornehmen."
+
+#: lib/Controller/AdminSettingsController.php:130
 #, php-format
 msgid ""
 "Setting orchestra group to \"%s\". Please login as group administrator and "
@@ -113,17 +119,17 @@ msgstr ""
 "Gruppenadministrator-Account einloggen und die `Camerata DB'-Anwendung "
 "konfigurieren."
 
-#: lib/Controller/AdminSettingsController.php:98
+#: lib/Controller/AdminSettingsController.php:147
 #, php-format
 msgid "Setting wiki name-space to \"%s\"."
 msgstr "Setze den Wiki-Namensraum auf \"%s\""
 
-#: lib/Controller/AdminSettingsController.php:104
+#: lib/Controller/AdminSettingsController.php:154
 #, php-format
 msgid "\"%1$s\" controller answered with \"%2$s\"."
 msgstr "\"%1$s\" Kontrollsoftware hat mit \"%2$s\" geantwortet."
 
-#: lib/Controller/AdminSettingsController.php:113
+#: lib/Controller/AdminSettingsController.php:163
 #, php-format
 msgid ""
 "Please head over to the %1$s settings and check the generated \"%2$s\"-"
@@ -132,7 +138,7 @@ msgstr ""
 "Bitte die %1$s-Einstellungen öffnen und die dort automatisch eingetragenen "
 "\"%2$s\"-Einstellungen überprüfen."
 
-#: lib/Controller/AdminSettingsController.php:126
+#: lib/Controller/AdminSettingsController.php:180
 #: lib/Controller/PersonalSettingsController.php:1638
 #: lib/Controller/PersonalSettingsController.php:1670
 #: lib/Controller/ProjectParticipantsController.php:704
@@ -140,20 +146,20 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: lib/Controller/AdminSettingsController.php:192
+#: lib/Controller/AdminSettingsController.php:246
 #, php-format
 msgid "\"%s\" configuration may have succeeded."
 msgstr ""
 "Die \"%s\"-Konfiguration wurde möglicherweise erfolgreich durchgeführt."
 
-#: lib/Controller/AdminSettingsController.php:209
+#: lib/Controller/AdminSettingsController.php:263
 #, php-format
 msgid "Clearing \"%s\"'s cache may have succeeded."
 msgstr ""
 "Das Löschen des Zwischenspeichers der \"%s\"-App war möglicherweise "
 "erfolgreich."
 
-#: lib/Controller/AdminSettingsController.php:213
+#: lib/Controller/AdminSettingsController.php:267
 #, php-format
 msgid "An attempt to clear the cache of the \"%1$s\"-app has failed: %2$s."
 msgstr ""
@@ -221,7 +227,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/ProjectWebPagesController.php:160
 #: lib/Controller/ProjectsController.php:156
 #: lib/Controller/ProjectsController.php:173
-#: lib/Controller/ValidationController.php:76
+#: lib/Controller/ValidationController.php:77
 msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
 
@@ -674,22 +680,22 @@ msgstr "Vervollständigungsanfrage für \"%s\" wird nicht unterstützt."
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen: %s"
 
-#: lib/Controller/PageController.php:159
+#: lib/Controller/PageController.php:160
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr "Abfragen an die Adresse \"%s\" sind nicht implementiert."
 
-#: lib/Controller/PageController.php:162
+#: lib/Controller/PageController.php:163
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr "Abfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
 
-#: lib/Controller/PageController.php:280
+#: lib/Controller/PageController.php:281
 #, php-format
 msgid "Template-renderer for template `%s' is empty."
 msgstr "Inhalts-Erzeuger für Schablone `%s' ist leer."
 
-#: lib/Controller/PageController.php:398
+#: lib/Controller/PageController.php:399
 #, php-format
 msgid "Page `%s\\' not found."
 msgstr "Seite `%s' nicht gefunden."
@@ -1329,7 +1335,7 @@ msgid "\"%s\" does not seem to be a valid email address"
 msgstr "\"%s\" scheint keine gültige Email-Adresse zu sein."
 
 #: lib/Controller/PersonalSettingsController.php:1521
-#: lib/Settings/PersonalForm.php:389
+#: lib/Settings/PersonalForm.php:392
 #, php-format
 msgid "%d days"
 msgstr "%d Tage"
@@ -1663,7 +1669,7 @@ msgstr "Keine oder zu viele Einträge vorhanden: %s"
 
 #: lib/Controller/ProjectParticipantFieldsController.php:493
 #: lib/Controller/ProjectParticipantFieldsController.php:500
-#: lib/Controller/ValidationController.php:71
+#: lib/Controller/ValidationController.php:72
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr "Kann die Zahlangabe \"%s\" nicht interpretieren."
@@ -2521,17 +2527,17 @@ msgstr ""
 "Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
 "der einzigen Verknüpfungs-Spalte."
 
-#: lib/Database/EntityManager.php:840 lib/Database/EntityManager.php:885
+#: lib/Database/EntityManager.php:841 lib/Database/EntityManager.php:886
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Database/EntityManager.php:1009
+#: lib/Database/EntityManager.php:1010
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
-#: lib/Database/EntityManager.php:1078
+#: lib/Database/EntityManager.php:1079
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -3148,29 +3154,29 @@ msgstr "Person"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
 #: lib/PageRenderer/InstrumentInsurances.php:189
-#: lib/PageRenderer/InstrumentInsurances.php:373
+#: lib/PageRenderer/InstrumentInsurances.php:381
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
-#: lib/PageRenderer/InstrumentInsurances.php:392
+#: lib/PageRenderer/InstrumentInsurances.php:400
 msgid "Accessory"
 msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
-#: lib/PageRenderer/InstrumentInsurances.php:409
+#: lib/PageRenderer/InstrumentInsurances.php:417
 #: lib/Service/Finance/InstrumentInsuranceService.php:745
 msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:153
-#: lib/PageRenderer/InstrumentInsurances.php:436
+#: lib/PageRenderer/InstrumentInsurances.php:444
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:154
 #: lib/PageRenderer/InstrumentInsurances.php:194
-#: lib/PageRenderer/InstrumentInsurances.php:454
+#: lib/PageRenderer/InstrumentInsurances.php:462
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
@@ -3178,25 +3184,25 @@ msgstr "Versicherungssumme"
 msgid "Musician Insurance Total"
 msgstr "Gesamtversicherungssumme der Person"
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:204
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:234
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:206
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:240
 #: lib/PageRenderer/InsuranceRates.php:183
 msgid "Policy Number"
 msgstr "Versicherungsnummer"
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:205
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:235
-#: lib/PageRenderer/InstrumentInsurances.php:361
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:207
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:241
+#: lib/PageRenderer/InstrumentInsurances.php:369
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:206
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:236
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:208
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:242
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:882
 msgid "Date"
 msgstr "Datum"
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:421
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:427
 msgid "Total Insurance Amount"
 msgstr "Gesamtversicherungssumme"
 
@@ -3566,58 +3572,59 @@ msgid "Club Member"
 msgstr "Vereinsmitglied"
 
 #: lib/PageRenderer/InstrumentInsurances.php:326
+#: lib/PageRenderer/InstrumentInsurances.php:333
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/PageRenderer/InstrumentInsurances.php:414
+#: lib/PageRenderer/InstrumentInsurances.php:422
 msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
 msgstr "z.B. Bilbo Beutlin, Hobbingen, Auenland"
 
-#: lib/PageRenderer/InstrumentInsurances.php:425
+#: lib/PageRenderer/InstrumentInsurances.php:433
 #, php-format
 msgid "around %1$04d"
 msgstr "um %1$04d"
 
-#: lib/PageRenderer/InstrumentInsurances.php:429
+#: lib/PageRenderer/InstrumentInsurances.php:437
 #, php-format
 msgid "end of %1$02dth century"
 msgstr "Ende des %1$02en Jahrhunderts"
 
-#: lib/PageRenderer/InstrumentInsurances.php:442
+#: lib/PageRenderer/InstrumentInsurances.php:450
 msgid "e.g. \"1921\" or \"around 1900\""
 msgstr "z.B. \"1921\" oder \"um 1900\""
 
-#: lib/PageRenderer/InstrumentInsurances.php:471
+#: lib/PageRenderer/InstrumentInsurances.php:479
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/InstrumentInsurances.php:489
+#: lib/PageRenderer/InstrumentInsurances.php:497
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:489
+#: lib/PageRenderer/InstrumentInsurances.php:497
 msgid "including taxes"
 msgstr "inklusive Steuern"
 
-#: lib/PageRenderer/InstrumentInsurances.php:509
+#: lib/PageRenderer/InstrumentInsurances.php:517
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/PageRenderer/InstrumentInsurances.php:520
+#: lib/PageRenderer/InstrumentInsurances.php:528
 #: lib/PageRenderer/Musicians.php:826
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/PageRenderer/InstrumentInsurances.php:539
+#: lib/PageRenderer/InstrumentInsurances.php:547
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/PageRenderer/InstrumentInsurances.php:545
+#: lib/PageRenderer/InstrumentInsurances.php:553
 msgid "Bill"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/InstrumentInsurances.php:558
+#: lib/PageRenderer/InstrumentInsurances.php:566
 msgid "bill"
 msgstr "Rechnung"
 
@@ -4782,7 +4789,9 @@ msgstr ""
 #: lib/PageRenderer/SepaBankAccounts.php:988
 #, php-format
 msgid "The change-set contains read-only keys: %s."
-msgstr "Der Änderungsmenge enthält Zeilen-Schlüssel, die nicht verändert werden dürfen: %s"
+msgstr ""
+"Der Änderungsmenge enthält Zeilen-Schlüssel, die nicht verändert werden "
+"dürfen: %s"
 
 #: lib/PageRenderer/SepaBankAccounts.php:1050
 #, php-format
@@ -5104,7 +5113,6 @@ msgstr ""
 "installieren und einzuschalten."
 
 #: lib/Service/CloudUserConnectorService.php:220
-#: templates/admin-settings.php:64
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
@@ -5354,17 +5362,17 @@ msgstr "Anfangsbestand"
 msgid "Insurance Fee %d"
 msgstr "Versicherungs-Beitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:250
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:248
 #, php-format
 msgid "Keeping opening balance of %s."
 msgstr "Anfangsbestand %s unverändert beibehalten."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:252
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:250
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:269
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:267
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -5896,7 +5904,7 @@ msgstr "Vorschau"
 
 #: lib/Service/ProjectService.php:1116 lib/Service/ProjectService.php:1169
 #: lib/Service/ProjectService.php:1335 lib/Service/ProjectService.php:1373
-#: lib/Service/ProjectService.php:1431 lib/Settings/PersonalForm.php:309
+#: lib/Service/ProjectService.php:1431 lib/Settings/PersonalForm.php:312
 msgid "Rehearsals"
 msgstr "Proben"
 
@@ -8542,31 +8550,31 @@ msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 msgid "Default Event Notification"
 msgstr "Termin-Erinnerung (Voreinstellung)"
 
-#: lib/Settings/PersonalForm.php:197
+#: lib/Settings/PersonalForm.php:200
 msgid "ClubMembers"
 msgstr "Vereinsmitglieder"
 
-#: lib/Settings/PersonalForm.php:199
+#: lib/Settings/PersonalForm.php:202
 msgid "ExecutiveBoardMembers"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:308
+#: lib/Settings/PersonalForm.php:311
 msgid "Concerts"
 msgstr "Konzerte"
 
-#: lib/Settings/PersonalForm.php:310
+#: lib/Settings/PersonalForm.php:313
 msgid "Other"
 msgstr "Sonstiges"
 
-#: lib/Settings/PersonalForm.php:311
+#: lib/Settings/PersonalForm.php:314
 msgid "Management"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:312
+#: lib/Settings/PersonalForm.php:315
 msgid "Finance"
 msgstr "Kasse"
 
-#: lib/Settings/PersonalForm.php:315
+#: lib/Settings/PersonalForm.php:318
 msgid "Miscellaneous"
 msgstr "Sonstiges"
 
@@ -8688,6 +8696,71 @@ msgstr "CAFeV DB"
 #: specialAppInfoFakeDummyForL10nScript.php:3
 msgid "Orchestra Management Application."
 msgstr "Orchester-Verwaltungs-Anwendung"
+
+#. TRANSLATORS src/components/AdminSettings.vue:26
+#: specialVueFakeDummyForL10nScript.js:2
+msgid "Camerata DB"
+msgstr "Camerata DB"
+
+#. TRANSLATORS src/components/AdminSettings.vue:34
+#: specialVueFakeDummyForL10nScript.js:4
+msgid "User Group"
+msgstr "Benutzer-Gruppe"
+
+#. TRANSLATORS src/components/AdminSettings.vue:42
+#: specialVueFakeDummyForL10nScript.js:6
+msgid "Wiki Name-Space"
+msgstr "Wiki Namensraum"
+
+#. TRANSLATORS src/components/AdminSettings.vue:52
+#: specialVueFakeDummyForL10nScript.js:8
+msgid "Autoconfigure \"{cloudUserBackend}\" app"
+msgstr "Autokonfiguration für die \"{cloudUserBackend}\"-App vornehmen"
+
+#. TRANSLATORS src/components/AdminSettings.vue:108
+#: specialVueFakeDummyForL10nScript.js:10
+msgid ""
+"Further detailed configurations are necessary after configuring the user-"
+"group. Please configure a dedicated group-admin for the user-group and then "
+"log-in as this group-admin and head over to the {personalSettingsLink} "
+"settings."
+msgstr ""
+"Nach der Konfiguration der Benutzer-Gruppe müssen weitere detaillierte\n"
+"Einstellungen vorgenommen werden. Zunächst muss ein\n"
+"Gruppen-Administrator für the Benutzer-Gruppe eingestellt werden. Als\n"
+"Gruppen-Administrator müssen und können danach weitere Einstellungen\n"
+"bei den \"persönlichen\" Einstellungen der App unter\n"
+"{personalSettingsLink} vorgenommen werden."
+
+#. TRANSLATORS src/components/AdminSettings.vue:123
+#: specialVueFakeDummyForL10nScript.js:12
+msgid "Confirmation Required"
+msgstr "Bestätigung erforderlich"
+
+#. TRANSLATORS src/components/AdminSettings.vue:128
+#: specialVueFakeDummyForL10nScript.js:14
+msgid "Unconfirmed, reverting to old value."
+msgstr "Bestätigung nicht erfolgt, setze auf den alten Wert zurück."
+
+#. TRANSLATORS src/components/AdminSettings.vue:138
+#: specialVueFakeDummyForL10nScript.js:16
+msgid "Successfully set value for {settingsKey} to {value}"
+msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
+
+#. TRANSLATORS src/components/AdminSettings.vue:148
+#: specialVueFakeDummyForL10nScript.js:18
+msgid "reason unknown"
+msgstr "Grund unbekannt"
+
+#. TRANSLATORS src/components/AdminSettings.vue:154
+#: specialVueFakeDummyForL10nScript.js:20
+msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
+msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
+
+#. TRANSLATORS src/components/AdminSettings.vue:156
+#: specialVueFakeDummyForL10nScript.js:22
+msgid "Could not set \"{settingsKey}\": {message}"
+msgstr "Konnte \"{settingsKey}\" nicht einstellen: {message}"
 
 #: src/app/ajax.js:29
 msgid "OK"
@@ -8961,12 +9034,12 @@ msgstr "Abgebrochen"
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
 #: src/app/blog.js:386 src/app/email.js:73 src/app/email.js:564
-#: src/app/email.js:658 src/app/inlineimage.js:54 src/app/inlineimage.js:61
-#: src/app/inlineimage.js:156 src/app/inlineimage.js:427
-#: src/app/pme-file-upload-row.js:149 src/app/pme-file-upload-row.js:165
+#: src/app/email.js:658 src/app/inlineimage.js:56 src/app/inlineimage.js:63
+#: src/app/inlineimage.js:158 src/app/inlineimage.js:429
+#: src/app/pme-file-upload-row.js:151 src/app/pme-file-upload-row.js:167
 #: src/app/sepa-debit-mandate.js:285 src/app/sepa-debit-mandate.js:301
-#: src/app/settings.js:1186 src/app/settings.js:1199
-#: src/legacy/calendar/calendar.js:337
+#: src/app/settings.js:1188 src/app/settings.js:1201
+#: src/legacy/calendar/calendar.js:338
 msgid "Error"
 msgstr "Fehler"
 
@@ -9054,7 +9127,7 @@ msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
-#: src/app/app-settings.js:60 templates/settings/email-settings.php:40
+#: src/app/app-settings.js:59 templates/settings/email-settings.php:40
 #: templates/settings/part.side-menu-settings.php:45 templates/settings.php:62
 msgid "Settings"
 msgstr "Einstellungen"
@@ -9098,55 +9171,55 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
-#: src/app/check-invalid-inputs.js:131
+#: src/app/check-invalid-inputs.js:134
 msgid "Unknown input element"
 msgstr "Unbekanntes Eingabefeld"
 
-#: src/app/check-invalid-inputs.js:138
+#: src/app/check-invalid-inputs.js:141
 msgid "invalid data \"{value}\""
 msgstr "ungültige Eingabedaten: \"{value}\""
 
-#: src/app/check-invalid-inputs.js:139
+#: src/app/check-invalid-inputs.js:142
 msgid "no or invalid data"
 msgstr "Keine oder ungültige Daten"
 
-#: src/app/check-invalid-inputs.js:145
+#: src/app/check-invalid-inputs.js:148
 msgid ""
 "The following required fields are empty or contain otherwise invalid data:"
 msgstr ""
 "Die folgenden erforderlichen Eingabefelder sind leer oder enthalten "
 "ungültige Eingabedaten:"
 
-#: src/app/check-invalid-inputs.js:149
+#: src/app/check-invalid-inputs.js:152
 msgid "Please add the missing data!"
 msgstr "Bitte die fehlenden Daten ergänzen!"
 
-#: src/app/check-invalid-inputs.js:151
+#: src/app/check-invalid-inputs.js:154
 msgid "Missing Input Data"
 msgstr "Fehlende Eingabedaten"
 
-#: src/app/chosen-popup.js:32
+#: src/app/chosen-popup.js:34
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:39 src/app/sepa-debit-mandate.js:593
+#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:593
 #: templates/settings/share-settings.php:221
 #: templates/settings/share-settings.php:244
 msgid "Save"
 msgstr "Speichern"
 
-#: src/app/chosen-popup.js:42
+#: src/app/chosen-popup.js:44
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: src/app/chosen-popup.js:43 src/app/inlineimage.js:245
+#: src/app/chosen-popup.js:45 src/app/inlineimage.js:247
 #: templates/blog/blogedit.php:40
 #: templates/emailform/part.emailform.composer.php:331
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/app/chosen-popup.js:46
+#: src/app/chosen-popup.js:48
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
@@ -9154,22 +9227,22 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: src/app/configcheck.js:61
+#: src/app/configcheck.js:63
 msgid ""
 "Data-migrations need to be performed before proceeding to the orchestra app."
 msgstr ""
 "Daten-Migrationen müssen vorgenommen werden, bevor die Orchester-App "
 "gestartet werden kann."
 
-#: src/app/configcheck.js:65
+#: src/app/configcheck.js:67
 msgid "Click the \"ok\" button to start the migrations."
 msgstr "Den \"ok\"-Button anklicken, um die Daten-Migration zu starten."
 
-#: src/app/configcheck.js:66
+#: src/app/configcheck.js:68
 msgid "Data Migration"
 msgstr "Daten-Migration"
 
-#: src/app/configcheck.js:75
+#: src/app/configcheck.js:77
 msgid "Successfully applied the following migrations:"
 msgstr "Die folgenden Daten-Migrationen wurden erfolgreich ausgeführt:"
 
@@ -9177,11 +9250,11 @@ msgstr "Die folgenden Daten-Migrationen wurden erfolgreich ausgeführt:"
 msgid "Redirecting to the orchestra app in {timeout} seconds."
 msgstr "Leite in {timeout} Sekunden zur Orchester-App weiter."
 
-#: src/app/configcheck.js:100
+#: src/app/configcheck.js:105
 msgid "Unable to download test-letter."
 msgstr "Kann den Test-Brief nicht herunter laden."
 
-#: src/app/dialog-utils.js:40
+#: src/app/dialog-utils.js:41
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
@@ -9192,13 +9265,13 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: src/app/dialog-utils.js:91
+#: src/app/dialog-utils.js:92
 msgid "Maximize this dialog to cover the entire browser window."
 msgstr ""
 "Maximiert das aktuelle Fenster, so dass es das gesamte Browser-Fenster "
 "ausfüllt."
 
-#: src/app/dialog-utils.js:145
+#: src/app/dialog-utils.js:146
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -9209,7 +9282,7 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: src/app/dialogs.js:83
+#: src/app/dialogs.js:84
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
@@ -9454,19 +9527,19 @@ msgstr "Wirklich löschen?"
 msgid "Unable to download calendar events."
 msgstr "Kann die Kalender-Einträge nicht laden."
 
-#: src/app/expertmode.js:82
+#: src/app/expertmode.js:84
 msgid "Successfull:"
 msgstr "Erfolgreich:"
 
-#: src/app/expertmode.js:86
+#: src/app/expertmode.js:88
 msgid "Unsuccessfull:"
 msgstr "Erfolglos:"
 
-#: src/app/expertmode.js:91
+#: src/app/expertmode.js:93
 msgid "Result of expert operation \"setupdb\""
 msgstr "Ergebnis der Experten-Operation \"setupdb\""
 
-#: src/app/file-download.js:48
+#: src/app/file-download.js:50
 msgid "Unable to download data from \"{url}\": "
 msgstr "Kann die Daten nicht von \"{url}\" laden: "
 
@@ -9499,11 +9572,11 @@ msgstr "Die Eigentschaft \"{property}\" fehlt."
 msgid " Error: {error}."
 msgstr "Fehler: {error}."
 
-#: src/app/inlineimage.js:54
+#: src/app/inlineimage.js:56
 msgid "No files selected for upload."
 msgstr "Keine Dateien zum Hochladen ausgewählt."
 
-#: src/app/inlineimage.js:61
+#: src/app/inlineimage.js:63
 msgid ""
 "The file you are trying to upload exceed the maximum size of {max} for file "
 "uploads on this server."
@@ -9511,27 +9584,27 @@ msgstr ""
 "Die Größe der Datei, die Sie hochladen wollen, übersteigt die Maximalgröße "
 "von {max}, die von diesem Server unterstützt wird."
 
-#: src/app/inlineimage.js:156
+#: src/app/inlineimage.js:158
 msgid "Could not open image."
 msgstr "Die Bilddatei konnte nicht geöffnet werden."
 
-#: src/app/inlineimage.js:232
+#: src/app/inlineimage.js:234
 msgid "Edit inline image"
 msgstr "Bild editieren"
 
-#: src/app/inlineimage.js:238
+#: src/app/inlineimage.js:240
 msgid "Ok"
 msgstr "Fertig"
 
-#: src/app/inlineimage.js:260
+#: src/app/inlineimage.js:262
 msgid "Error loading inline image."
 msgstr "Fehler beim Laden des Bildes."
 
-#: src/app/inlineimage.js:356
+#: src/app/inlineimage.js:358
 msgid "Select image"
 msgstr "Bild auswählen"
 
-#: src/app/inlineimage.js:417
+#: src/app/inlineimage.js:419
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
@@ -9539,19 +9612,19 @@ msgstr ""
 "Die Größe der Datei, die Sie hochladen wollen, übersteigt die Maximalgröße, "
 "die von diesem Server unterstützt wird."
 
-#: src/app/inlineimage.js:417
+#: src/app/inlineimage.js:419
 msgid "Upload too large"
 msgstr "Datei zu groß zum Laden"
 
-#: src/app/inlineimage.js:421
+#: src/app/inlineimage.js:423
 msgid "Only image files can be used as profile picture."
 msgstr "Für das Avatar-Bild können nur Bild-Dateien verwendet werden."
 
-#: src/app/inlineimage.js:421
+#: src/app/inlineimage.js:423
 msgid "Wrong file type"
 msgstr "Ungültiger Dateityp."
 
-#: src/app/inlineimage.js:427
+#: src/app/inlineimage.js:429
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
@@ -9559,7 +9632,7 @@ msgstr ""
 "Ihr Web-Browser harmoniert nicht mit den üblichen Web-Applikationen. Bitte "
 "klicken Sie auf das Bild, um eine neue Bilddatei hoch zu laden."
 
-#: src/app/inlineimage.js:529
+#: src/app/inlineimage.js:531
 msgid "Photo Zoom"
 msgstr "Großes Foto"
 
@@ -9567,27 +9640,27 @@ msgstr "Großes Foto"
 msgid "Unable to export insurance overview."
 msgstr "Kann die Versicherungs-Übersicht nicht exportieren."
 
-#: src/app/location.js:68
+#: src/app/location.js:69
 msgid "Browser determined position"
 msgstr "Vom Web-Browser übermittelte Position."
 
-#: src/app/location.js:81
+#: src/app/location.js:82
 msgid "Detailed search at Google-Maps"
 msgstr "Detaillierte Suchfunktion bei Google-Maps"
 
-#: src/app/location.js:116
+#: src/app/location.js:117
 msgid "Location not found:"
 msgstr "Ort nicht gefunden:"
 
-#: src/app/location.js:118
+#: src/app/location.js:119
 msgid "No location specified."
 msgstr "Kein Ort angegeben."
 
-#: src/app/location.js:120
+#: src/app/location.js:121
 msgid "Unknown location"
 msgstr "Unbekannter Ort."
 
-#: src/app/lock-input.js:75
+#: src/app/lock-input.js:77
 msgid ""
 "Lock or unlock this widget. Under certain circumstances the unlock-"
 "functionality is disabled or only available in expert mode."
@@ -9596,23 +9669,23 @@ msgstr ""
 "nicht entsperrt werden, oder eine Entsprerrung ist nur im\n"
 "Expertenmodus möglich."
 
-#: src/app/lock-input.js:110 src/app/lock-input.js:118
+#: src/app/lock-input.js:112 src/app/lock-input.js:120
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: src/app/musicians.js:179
+#: src/app/musicians.js:181
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: src/app/musicians.js:229
+#: src/app/musicians.js:231
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: src/app/musicians.js:292
+#: src/app/musicians.js:294
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: src/app/musicians.js:564
+#: src/app/musicians.js:566
 msgid ""
 "You definitely do not want to add duplicates to the database.\n"
 "Please answer \"no\" in order to add a new musician,\n"
@@ -9625,11 +9698,11 @@ msgstr ""
 "hinzuzufügen. Im Zweifel aber bitte mit \"ja\" antworten. Im Folgenden\n"
 "wird dann die bereits eingetragene Person angezeigt."
 
-#: src/app/musicians.js:574
+#: src/app/musicians.js:576
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 
-#: src/app/musicians.js:606
+#: src/app/musicians.js:608
 msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
@@ -9637,11 +9710,11 @@ msgstr "Doppelter Datenbankeintag?"
 msgid "Display the application menu and settings side-bar"
 msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 
-#: src/app/pme-export.js:52
+#: src/app/pme-export.js:54
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr "Kann die Tabelle nicht als \"{format}\" von \"{url}\" laden: "
 
-#: src/app/pme-file-upload-row.js:80
+#: src/app/pme-file-upload-row.js:82
 msgid ""
 "File-upload feedback does not contain the required meta-information, the "
 "upload has probably failed."
@@ -9649,61 +9722,61 @@ msgstr ""
 "Der Datei-Upload-Feedback enthält nicht die benötigte\n"
 "Meta-Information, das Hochladen ist wahrscheinlich fehlgeschlagen."
 
-#: src/app/pme-file-upload-row.js:141
+#: src/app/pme-file-upload-row.js:143
 msgid "Select cloud-files for {object}"
 msgstr "\"Cloud\"-Dateien für {object} auswählen"
 
-#: src/app/pme-file-upload-row.js:142
+#: src/app/pme-file-upload-row.js:144
 msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
-#: src/app/pme-file-upload-row.js:149 src/app/sepa-debit-mandate.js:285
-#: src/app/settings.js:1186
+#: src/app/pme-file-upload-row.js:151 src/app/sepa-debit-mandate.js:285
+#: src/app/settings.js:1188
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
-#: src/app/pme-file-upload-row.js:164 src/app/sepa-debit-mandate.js:300
+#: src/app/pme-file-upload-row.js:166 src/app/sepa-debit-mandate.js:300
 msgid "Unable to copy selected file(s) {file}."
 msgstr "Kann die ausgwählte(n) Datei(en) {file} nicht kopieren."
 
-#: src/app/pme-file-upload-row.js:239
+#: src/app/pme-file-upload-row.js:241
 msgid "Confirmation Required!"
 msgstr "Bestätigung erforderlich!"
 
-#: src/app/pme-querylog.js:45
+#: src/app/pme-querylog.js:47
 msgid "Query"
 msgstr "Abfrage"
 
-#: src/app/pme-querylog.js:46
+#: src/app/pme-querylog.js:48
 msgid "copy"
 msgstr "kopieren"
 
-#: src/app/pme-querylog.js:49
+#: src/app/pme-querylog.js:51
 msgid "Duration"
 msgstr "Dauer"
 
-#: src/app/pme-querylog.js:51
+#: src/app/pme-querylog.js:53
 msgid "Affected Rows"
 msgstr "Betroffenen Zeilen"
 
-#: src/app/pme-querylog.js:53
+#: src/app/pme-querylog.js:55
 msgid "Error Code"
 msgstr "Fehler-Code"
 
-#: src/app/pme-querylog.js:57
+#: src/app/pme-querylog.js:59
 msgid "Selected SQL-Query"
 msgstr "Ausgewählte SQL-Abfrage"
 
-#: src/app/pme-querylog.js:67
+#: src/app/pme-querylog.js:69
 msgid "Query has been copied to the clipboard."
 msgstr "Die Abfrage wurde in die Zwischenablage kopiert."
 
-#: src/app/pme-querylog.js:69
+#: src/app/pme-querylog.js:71
 msgid "Failed copying query to the clipboard: {reason}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {reason}."
 
-#: src/app/pme.js:610
+#: src/app/pme.js:612
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -9712,15 +9785,15 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1213
+#: src/app/pme.js:1215
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1222
+#: src/app/pme.js:1224
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: src/app/project-participant-fields-display.js:88
+#: src/app/project-participant-fields-display.js:90
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
@@ -9728,7 +9801,7 @@ msgstr ""
 "Das Eingabefeld enthält Daten, soll es wirklich auf den voreingestellten "
 "Wert zurück gesetzt werden?"
 
-#: src/app/project-participant-fields-display.js:89
+#: src/app/project-participant-fields-display.js:91
 msgid "Revert to default value?"
 msgstr "Auf Voreinstellung zurücksetzen?"
 
@@ -9764,7 +9837,7 @@ msgstr ""
 msgid "Overwrite Existing Records?"
 msgstr "Existierende Daten überschreiben?"
 
-#: src/app/project-participants.js:728
+#: src/app/project-participants.js:729
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
@@ -9772,11 +9845,11 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-payments.js:147
+#: src/app/project-payments.js:149
 msgid "Too many Projects"
 msgstr "Zu viele Projekte"
 
-#: src/app/project-payments.js:148
+#: src/app/project-payments.js:150
 msgid ""
 "Currently merging composite-payments for different projects ({projects}) is "
 "not supported, sorry."
@@ -9784,11 +9857,11 @@ msgstr ""
 "Zur Zeit können Sammelbuchungen nicht mehrere Projekte ({projects}) "
 "zusammenfassen, tut uns leid."
 
-#: src/app/project-payments.js:154
+#: src/app/project-payments.js:156
 msgid "Too many Musicians"
 msgstr "Zu viele Personen"
 
-#: src/app/project-payments.js:155
+#: src/app/project-payments.js:157
 msgid ""
 "Internal error: splits of composite-payments cannot belong to different "
 "musicians ({musicians})."
@@ -9831,7 +9904,7 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: src/app/sepa-bulk-transactions.js:77
+#: src/app/sepa-bulk-transactions.js:79
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
@@ -9967,137 +10040,88 @@ msgstr ""
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
-#: src/app/settings.js:95
+#: src/app/settings.js:97
 msgid "You must type in your login password."
 msgstr "Sie müssen Ihr Anmelde-Passwort eingeben."
 
-#: src/app/settings.js:184
+#: src/app/settings.js:186
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: src/app/settings.js:302
+#: src/app/settings.js:304
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: src/app/settings.js:397 src/app/settings.js:691
+#: src/app/settings.js:399 src/app/settings.js:693
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1124 src/app/settings.js:1145
+#: src/app/settings.js:1126 src/app/settings.js:1147
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1198
+#: src/app/settings.js:1200
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: src/app/settings.js:1342
+#: src/app/settings.js:1344
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
-#: src/app/user-manual.js:60
+#: src/app/user-manual.js:62
 msgid "User Manual: {section}"
 msgstr "Benutzerhandbuch: {section}"
 
-#: src/legacy/calendar/calendar.js:24
+#: src/legacy/calendar/calendar.js:25
 msgid "Missing or invalid fields"
 msgstr "Fehlende oder ungültige Felder"
 
-#: src/legacy/calendar/calendar.js:25
+#: src/legacy/calendar/calendar.js:26
 #: templates/legacy/calendar/part.showevent.php:11
 msgid "Title"
 msgstr "Überschrift"
 
-#: src/legacy/calendar/calendar.js:26
+#: src/legacy/calendar/calendar.js:27
 #: templates/legacy/calendar/part.eventform.php:22
 #: templates/legacy/calendar/part.showevent.php:37
 msgid "Calendar"
 msgstr "Kalender"
 
-#: src/legacy/calendar/calendar.js:27
+#: src/legacy/calendar/calendar.js:28
 msgid "From Date"
 msgstr "Anfangsdatum"
 
-#: src/legacy/calendar/calendar.js:28
+#: src/legacy/calendar/calendar.js:29
 msgid "From Time"
 msgstr "Anfangszeit"
 
-#: src/legacy/calendar/calendar.js:29
+#: src/legacy/calendar/calendar.js:30
 msgid "To Date"
 msgstr "Enddatum"
 
-#: src/legacy/calendar/calendar.js:30
+#: src/legacy/calendar/calendar.js:31
 msgid "To Time"
 msgstr "Endzeit"
 
-#: src/legacy/calendar/calendar.js:31
+#: src/legacy/calendar/calendar.js:32
 msgid "The event ends before it starts"
 msgstr "Das Ereignis endet bevor es beginnt"
 
-#: src/legacy/calendar/calendar.js:32
+#: src/legacy/calendar/calendar.js:33
 msgid "There was a database fail"
 msgstr "Datenbankfehler"
 
-#: src/legacy/calendar/calendar.js:33
+#: src/legacy/calendar/calendar.js:34
 msgid "Interval is not valid. It must be a positive integer!"
 msgstr "Der Zeitraum ist ungültig, muss eine positive Ganzzahl sein."
 
-#: src/legacy/calendar/calendar.js:298
+#: src/legacy/calendar/calendar.js:299
 msgid "Deletion failed"
 msgstr "Löschen ist fehlgeschlagen"
 
-#: src/legacy/calendar/calendar.js:369
+#: src/legacy/calendar/calendar.js:370
 msgid "Calendar event validation caught an error."
 msgstr "Termin-Validierung fehlgeschlagen"
-
-#: templates/admin-settings.php:48
-#, php-format
-msgid ""
-"In order to use the \"%1$s\"-app to add user-accounts for the orchestra club-"
-"members you first have to configure the necessary infra-structure in the "
-"personal-settings dialog of this app. Please head over to %2$s. You need to "
-"have group-admin rights for the orchestra group \"%3$s\"."
-msgstr ""
-"Um die \"%1$s\"-App für die Cloud-Accounts der Orchester-Mitglieder\n"
-"verwenden zu können, muss zunächst die nötige Infrastruktur in den\n"
-"Einstellungen dieser App erzeugt werden. Bitte dazu \"%2$s\"\n"
-"anschauen. Um die Einstellungen vornehmen zu können, muss man\n"
-"Gruppen-Administrator-Rechte für die Orchester-Verwaltungs-Gruppe\n"
-"\"%3$s\" haben."
-
-#: templates/admin-settings.php:56
-#, php-format
-msgid ""
-"In order to be able to import the orchestra club-members as cloud-users the\n"
-"\"%1$s\"-app needs to be enabled."
-msgstr ""
-"Um die Orchester-Miglieder in die Cloud als Benutzer-Accounts zu\n"
-"importieren, muss die \"%1$s\"-App installiert und aktiviert sein."
-
-#: templates/admin-settings.php:83
-msgid "Group"
-msgstr "Benutzer-Gruppe"
-
-#: templates/admin-settings.php:86
-msgid "User Group"
-msgstr "Benutzer-Gruppe"
-
-#: templates/admin-settings.php:95
-msgid "Wiki NameSpace"
-msgstr "Wiki Namensraum"
-
-#: templates/admin-settings.php:96
-msgid "Wiki Name-Space"
-msgstr "Wiki Namensraum"
-
-#: templates/admin-settings.php:99
-msgid "Wiki is inaccessible"
-msgstr "Das Wiki kann nicht erreicht werden"
-
-#: templates/admin-settings.php:104
-#, php-format
-msgid "Autoconfigure \"%s\" app"
-msgstr "Autokonfiguration für die \"%s\"-App vornehmen"
 
 #: templates/blog/blog.php:41
 #, php-format
@@ -13096,6 +13120,38 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid ""
+#~ "In order to use the \"%1$s\"-app to add user-accounts for the orchestra "
+#~ "club-members you first have to configure the necessary infra-structure in "
+#~ "the personal-settings dialog of this app. Please head over to %2$s. You "
+#~ "need to have group-admin rights for the orchestra group \"%3$s\"."
+#~ msgstr ""
+#~ "Um die \"%1$s\"-App für die Cloud-Accounts der Orchester-Mitglieder\n"
+#~ "verwenden zu können, muss zunächst die nötige Infrastruktur in den\n"
+#~ "Einstellungen dieser App erzeugt werden. Bitte dazu \"%2$s\"\n"
+#~ "anschauen. Um die Einstellungen vornehmen zu können, muss man\n"
+#~ "Gruppen-Administrator-Rechte für die Orchester-Verwaltungs-Gruppe\n"
+#~ "\"%3$s\" haben."
+
+#, php-format
+#~ msgid ""
+#~ "In order to be able to import the orchestra club-members as cloud-users "
+#~ "the\n"
+#~ "\"%1$s\"-app needs to be enabled."
+#~ msgstr ""
+#~ "Um die Orchester-Miglieder in die Cloud als Benutzer-Accounts zu\n"
+#~ "importieren, muss die \"%1$s\"-App installiert und aktiviert sein."
+
+#~ msgid "Group"
+#~ msgstr "Benutzer-Gruppe"
+
+#~ msgid "Wiki NameSpace"
+#~ msgstr "Wiki Namensraum"
+
+#~ msgid "Wiki is inaccessible"
+#~ msgstr "Das Wiki kann nicht erreicht werden"
 
 #~ msgid "Create views for user_sql auth backend."
 #~ msgstr "Ansichten für das \"user_sql\" Backend der Cloud erzeugen."
