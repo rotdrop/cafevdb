@@ -81,6 +81,9 @@ class PersonalForm {
   /** @var CloudUserConnectorService */
   private $cloudUserService;
 
+  /** @var IInitialStateService */
+  private $initialStateService;
+
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
