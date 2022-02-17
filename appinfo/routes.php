@@ -497,6 +497,14 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Fetch a tooltip by its key
+     */
+    [
+      'name' => 'tool_tips#get',
+      'url' => '/tooltips/{key}',
+      'verb' => 'GET',
+    ],
+    /**
      * Attempt a catch all ...
      */
     [
