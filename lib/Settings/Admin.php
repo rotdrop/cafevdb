@@ -66,13 +66,11 @@ class Admin implements IDelegatedSettings {
     , AssetService $assetService
     , WikiRPC $wikiRPC
     , IAppManager $appManager
-    , IInitialStateService $initialStateService
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
-    $this->initialStateService = $initialStateService;
   }
 
   public function haveCloudUserBackendConfig()
@@ -92,20 +90,6 @@ class Admin implements IDelegatedSettings {
     $haveCloudUserBackendConfig = $this->haveCloudUserBackendConfig();
 
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
-
-    // Initial state injecton for JS
-    $this->initialStateService->provideInitialState(
-      $this->appName(),
-      'CAFEVDB',
-      [
-        'appName' => $this->appName(),
-        'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
-        'language' => $this->getUserValue('lang', 'en'),
-        'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
-        'expertMode' => $this->getUserValue('expertmode'),
-      ]);
-    $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
-    $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
 
     return new TemplateResponse(
       $this->appName(),
