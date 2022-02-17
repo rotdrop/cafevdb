@@ -32,9 +32,14 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\IConfig;
 use OCP\IUserSession;
+use OCP\AppFramework\IAppContainer;
+use OCP\Notification\INotification;
+use OCP\Notification\IManager as NotificationManager;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Notifications\Notifier;
 
 /**
  * Support functions encapsulating the underlying encryption framework
@@ -49,8 +54,13 @@ class AsymmetricKeyService
 
   const CONFIG_KEY_PREFIX = 'private:';
 
+  const RECRYPTION_REQUEST_KEY = Notifier::RECRYPT_USER_SUBJECT;
+
   /** @var string */
   private $appName;
+
+  /** @var IAppContainer */
+  private $appContainer;
 
   /** @var IUserSession */
   private $userSession;
@@ -85,6 +95,7 @@ class AsymmetricKeyService
    */
   public function __construct(
     string $appName
+    , IAppContainer $appContainer
     , IUserSession $userSession
     , ICredentialsStore $credentialsStore
     , IConfig $cloudConfig
@@ -95,6 +106,7 @@ class AsymmetricKeyService
     , AsymmetricCryptorInterface $cryptorPrototype
   ) {
     $this->appName = $appName;
+    $this->appContainer = $appContainer;
     $this->userSession = $userSession;
     $this->credentialsStore = $credentialsStore;
     $this->cloudConfig = $cloudConfig;
@@ -335,12 +347,94 @@ class AsymmetricKeyService
    *
    * @param string $ownerId
    */
-  public function removeSharedPrivateValues($ownerId)
+  public function removeSharedPrivateValues(string $ownerId)
   {
     foreach ($this->cloudConfig->getUserKeys($ownerId, $this->appName) as $configKey) {
       if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
         $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
       }
     }
+  }
+
+  /**
+   * Recrypt all shared private values with a new key.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @param array<string, string> $oldKeyPair
+   * ```
+   * [
+   *   self::PRIVATE_ENCRYPTION_KEY_CONFIG => PRIV_KEY,
+   *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
+   * ]
+   * ```
+   *
+   * @param array<string, string> $newKeyPair
+   * ```
+   * [
+   *   self::PRIVATE_ENCRYPTION_KEY_CONFIG => PRIV_KEY,
+   *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
+   * ]
+   * ```
+   */
+  public function recryptSharedPrivateValue(string $ownerId, array $oldKeyPair, array $newKeyPair)
+  {
+    $cryptor = $this->getCryptor($ownerId)
+      ->setPrivateKey($oldKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
+      ->setPublicKey($oldKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
+    $configValues = $keyService->getSharedPrivateValues($ownerId);
+    $cryptor = $keyService->getCryptor($ownerId)
+      ->setPrivateKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
+      ->setPublicKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]);
+    foreach ($configValues as $configKey => $configValue)  {
+      $keyService->setSharedPrivateValue($ownerId, $configKey, $configValue);
+    }
+  }
+
+  /*
+   * Push a new recryption-request notification and record the request int the user preferences.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @param array<string, string> $keyPair
+   * ```
+   * [
+   *   self::PRIVATE_ENCRYPTION_KEY_CONFIG => PRIV_KEY,
+   *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
+   * ]
+   * ```
+   */
+  public function pushRecryptionNotification(string $ownerId, array $keyPair):INotification
+  {
+    $cloudConfig->setUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY, $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
+
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setDateTime(new \DateTime)
+      ->setObject('owner_id', $ownerId)
+      ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [
+        self::PUBLIC_ENCRYPTION_KEY_CONFIG => $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]
+      ])
+      ->addAction($notification->createAction()
+        ->setLabel(Notifier::ACCEPT_ACTION)
+        ->setLink('user_recrypt_request', 'POST'))
+      ->addAction($notification->createAction()
+        ->setLabel(Notifier::DECLINE_ACTION)
+        ->setLink('user_recrypt_request', 'DELETE'));
+
+    /** @var OrganizationalRolesService $organizationalRoles */
+    $organizationalRoles = $this->appContainer->get(OrganizationalRolesService::class);
+    /** @var \OCP\IUser $groupAdmin */
+    foreach ($organizationalRoles->getGroupAdmins() as $groupAdmin) {
+      $notification->setUser($groupAdmin->getUID());
+      $notificationManager->notify($notification);
+    }
+
+    return $notification;
   }
 }

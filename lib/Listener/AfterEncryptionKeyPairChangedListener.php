@@ -80,50 +80,11 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
       // want to enqueue a restore request if this happened
       $keyService->removeSharedPrivateValues($ownerId);
 
-      // for the code below install the new keys
-      $cryptor = $keyService->getCryptor($ownerId)
-        ->setPrivateKey($newKeyPair[AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null)
-        ->setPublicKey($newKeyPair[AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? null);
-
-      // @todo the following should be moved into a service class
-
-      /** @var \OCP\IConfig $cloudConfig */
-      $cloudConfig = $this->appContainer->get(\OCP\IConfig::class);
-      $cloudConfig->setUserValue($ownerId, $appName, Notifier::RECRYPT_USER_SUBJECT, $newKeyPair[AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG]);
-
-      /** @var NotificationManager $notificationManager */
-      $notificationManager = $this->appContainer->get(NotificationManager::class);
-      $notification = $notificationManager->createNotification();
-
-      $notification->setApp($this->appContainer->get('appName'))
-        ->setDateTime(new \DateTime)
-        ->setObject('owner_id', $ownerId)
-        ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [ AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG => $newKeyPair[AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG] ])
-        ->addAction($notification->createAction()
-          ->setLabel(Notifier::ACCEPT_ACTION)
-          ->setLink('user_recrypt_request', 'POST'))
-        ->addAction($notification->createAction()
-          ->setLabel(Notifier::DECLINE_ACTION)
-          ->setLink('user_recrypt_request', 'DELETE'));
-
-      /** @var OrganizationalRolesService $organizationalRoles */
-      $organizationalRoles = $this->appContainer->get(OrganizationalRolesService::class);
-      /** @var \OCP\IUser $groupAdmin */
-      foreach ($organizationalRoles->getGroupAdmins() as $groupAdmin) {
-        $notification->setUser($groupAdmin->getUID());
-        $notificationManager->notify($notification);
-      }
-
-      // $this->logInfo('CREATED NOTIFICATION ' . (new \Exception('blah'))->getTraceAsString());
+      // enqueue a recryption request
+      $keyService->pushRecryptionNotification($ownerId, $newKeyPair);
 
     } else {
-      $configValues = $keyService->getSharedPrivateValues($ownerId);
-      $cryptor = $keyService->getCryptor($ownerId)
-        ->setPrivateKey($newKeyPair[AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null)
-        ->setPublicKey($newKeyPair[AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null);
-      foreach ($configValues as $configKey => $configValue)  {
-        $keyService->setSharedPrivateValue($ownerId, $configKey, $configValue);
-      }
+      $keyService->recryptSharedPrivateValue($ownerId, $oldKeyPair, $newKeyPair);
     }
   }
 }
