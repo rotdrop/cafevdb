@@ -24,9 +24,8 @@
 
 namespace OCA\CAFEVDB;
 
-script($appName, $assets['vue_js']['asset']);
-style($appName, $assets['vue_css']['asset']);
+script($appName, $assets['js']['asset']);
+style($appName, $assets['css']['asset']);
 
 ?>
-
 <div id="admin-settings-vue" data-config="<?php p(json_encode($config, true)); ?>"></div>

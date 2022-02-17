@@ -55,7 +55,7 @@
   </SettingsSection>
 </template>
 <script>
- import { appName } from '../app/config.js'
+ import { appName } from '../app/app-info.js'
  import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
  import SettingsInputText from './SettingsInputText'
  import SettingsSelectGroup from './SettingsSelectGroup'
@@ -103,7 +103,6 @@
          this.hints[key] = await this.tooltip(key);
        }
        const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appName + '</a>'
-       console.info('LINK', personalSettingsLink)
        this.forword = t(
          appName,
          'Further detailed configurations are necessary after configuring the user-group. '
@@ -111,7 +110,6 @@
          + 'then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
            personalSettingsLink
        }, undefined, { escape: false });
-       console.info('SELF', this);
      },
      async saveSetting(value, settingsKey, force) {
        const self = this

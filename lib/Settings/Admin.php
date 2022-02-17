@@ -93,8 +93,8 @@ class Admin implements ISettings {
       self::TEMPLATE,
       [
         'assets' => [
-          'vue' . '_' . AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE . '-' . 'vue'),
-          'vue' . '_' . AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE . '-' . 'vue'),
+          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
         'config' => [

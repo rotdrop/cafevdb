@@ -27,7 +27,7 @@ const productionMode = process.env.NODE_ENV === 'production';
 module.exports = {
   entry: {
     app: './src/app.js',
-    'admin-settings-vue': './src/admin-settings-vue.js',
+    'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
   },
   output: {
