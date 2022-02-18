@@ -55,7 +55,6 @@ class EncryptionController extends OCSController
     , IL10N $l10n
   ) {
     parent::__construct($appName, $request);
-    $this->toolTipsService = $toolTipsService;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->keyService = $keyService;
@@ -70,8 +69,13 @@ class EncryptionController extends OCSController
    */
   public function getRecryptRequests(?string $userId = null)
   {
+    $recryptRequests = $this->keyService->getEncryptionRequests();
+    //// Testing
+    $testUser = 'bilbo.baggins';
+    $recryptRequests[$testUser] = $this->keyService->getCryptor($testUser)->getPublicKey();
+    ////
     return new DataResponse(
-      $this->keyService->getEncryptionRequests()
+      $recryptRequests
     );
   }
 }
