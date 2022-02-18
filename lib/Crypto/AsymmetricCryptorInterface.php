@@ -43,4 +43,7 @@ interface AsymmetricCryptorInterface extends ICryptor
    * @return AsymmetricCryptorInterface $this
    */
   public function setPublicKey($pubKey):AsymmetricCryptorInterface;
+
+  /** Return the currently used public key. */
+  public function getPublicKey();
 };

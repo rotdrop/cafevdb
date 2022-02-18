@@ -58,6 +58,12 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
+  public function getPublicKey()
+  {
+    return $this->pubKey;
+  }
+
+  /** {@inheritdoc} */
   public function encrypt(?string $decryptedData):?string
   {
     $encryptedData = null;
