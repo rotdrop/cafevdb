@@ -59,7 +59,7 @@ class AdminSettingsController extends Controller
 
   /**
    * @NoGroupMemberRequired
-   * @SubAdminRequired
+   * _AT_SubAdminRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function get($parameter)
