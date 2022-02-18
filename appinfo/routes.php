@@ -134,7 +134,7 @@ $routes = [
       'url' => '/settings/admin/{parameter}',
       'verb' => 'POST',
       'requirements' => [
-        'parameter' => AdminSettings::WIKI_NAME_SPACE_KEY . '|' . AdminSettings::ORCHESTRA_USER_GROUP_KEY,
+        'parameter' => '^(?!' . AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY . ').*$',
       ],
     ],
     [
