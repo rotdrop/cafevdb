@@ -88,6 +88,9 @@ class Admin implements IDelegatedSettings {
 
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
 
+    $isAdmin = $this->groupManager()->isAdmin($this->userId());
+    $isSubAdmin = $this->isSubAdminOfGroup();
+
     return new TemplateResponse(
       $this->appName(),
       self::TEMPLATE,
@@ -106,7 +109,8 @@ class Admin implements IDelegatedSettings {
           'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
           self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
           'settingsProperties' => self::SETTINGS_PROPERTIES,
-          'isAdmin' => $this->groupManager()->isAdmin($this->userId()),
+          'isAdmin' => $isAdmin,
+          'isSubAdmin' => $isSubAdmin,
         ],
       ]);
   }

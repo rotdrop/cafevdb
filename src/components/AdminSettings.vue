@@ -23,41 +23,48 @@
  */
 </script>
 <template>
-  <SettingsSection :title="t(appName, 'Camerata DB')">
-    <div v-if="config.isAdmin">
-      <p class="info" v-html="forword">
-        {{ forword }}
-      </p>
-      <hr/>
-    </div>
-    <div v-if="config.isAdmin">
-      <SettingsSelectGroup
-        v-model="settings.orchestraUserGroup"
-        :label="t(appName, 'User Group')"
-        :hint="hints['settings:admin:user-group']"
-        :multiple="false"
-        @update="saveSetting(...arguments, 'orchestraUserGroup')"
+  <div class="templateroot">
+    <SettingsSection class="major" :title="t(appName, 'Camerata DB')">
+      <div v-if="config.isAdmin">
+        <p class="info" v-html="forword">
+          {{ forword }}
+        </p>
+        <hr/>
+      </div>
+      <div v-if="config.isAdmin">
+        <SettingsSelectGroup
+          v-model="settings.orchestraUserGroup"
+          :label="t(appName, 'User Group')"
+          :hint="hints['settings:admin:user-group']"
+          :multiple="false"
+          @update="saveSetting(...arguments, 'orchestraUserGroup')"
+        />
+      </div>
+      <SettingsInputText
+        v-if="config.isAdmin"
+        v-model="settings.wikiNameSpace"
+        :label="t(appName, 'Wiki Name-Space')"
+        :hint="hints['settings:admin:wiki-name-space']"
+        @update="saveSetting(...arguments, 'wikiNameSpace')"
       />
-    </div>
-    <SettingsInputText
-      v-if="config.isAdmin"
-      v-model="settings.wikiNameSpace"
-      :label="t(appName, 'Wiki Name-Space')"
-      :hint="hints['settings:admin:wiki-name-space']"
-      @update="saveSetting(...arguments, 'wikiNameSpace')"
-    />
-    <button type="button"
-            name="cloudUserBackendConfig"
-            value="update"
-            @click="saveSetting(undefined, 'cloudUserBackendConfig')"
-            :disabled="!config.cloudUserBackendConfig"
-    >
-      {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
-    </button>
-    <p class="hint">
-      {{ hints['settings:admin:cloud-user-backend-conf'] }}
-    </p>
-  </SettingsSection>
+      <div>
+        <button type="button"
+                name="cloudUserBackendConfig"
+                value="update"
+                @click="saveSetting(undefined, 'cloudUserBackendConfig')"
+                :disabled="!config.cloudUserBackendConfig"
+        >
+          {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
+        </button>
+        <p class="hint">
+          {{ hints['settings:admin:cloud-user-backend-conf'] }}
+        </p>
+      </div>
+    </SettingsSection>
+    <SettingsSection v-if="config.isSubAdmin" :title="t(appName, 'Recryption Requests')">
+      <p class="info">Hello</p>
+    </SettingsSection>
+  </div>
 </template>
 <script>
  import { appName } from '../app/app-info.js'
@@ -112,7 +119,9 @@
          appName,
          'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
            personalSettingsLink
-       }, undefined, { escape: false });
+         }, undefined, { escape: false });
+       // curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H "OCS-APIRequest: true"
+       // fetch recryption requests
      },
      async saveSetting(value, settingsKey, force) {
        console.info('ARGS', arguments)
@@ -186,7 +195,7 @@
      background-size:16px 16px;
      padding-right:20px;
    }
-   ::v-deep &__title {
+   &.major::v-deep &__title {
      background-image:url('../../img/logo-greyf-large.svg');
      background-repeat:no-repeat;
      background-origin:padding-box;
