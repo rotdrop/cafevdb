@@ -28,8 +28,8 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\App\IAppManager;
+use OCP\AppFramework\IAppContainer;
 
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
@@ -47,6 +47,7 @@ class CloudUserConnectorService
   const REQUIREMENTS_MISSING = false;
 
   const CLOUD_USER_BACKEND = 'user_sql';
+  const CLOUD_USER_GROUP_ID = self::CLOUD_USER_BACKEND;
 
   const VIEW_POSTFIX = 'View';
 
@@ -58,12 +59,13 @@ class CloudUserConnectorService
    * The SQL to define the group-connector view for the user_sql
    * user-backend. Only projects with active users show up.
    *
-   *
+   * %1$s is the view-name
+   * %2$s is the app-name
    */
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT %2$s AS gid,
+SELECT CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
@@ -74,10 +76,15 @@ WITH CHECK OPTION';
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.user_id_slug AS uid,
-       %2$s AS gid
+       CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id';
+LEFT JOIN Projects p ON p.id = pp.project_id
+WHERE pp.musician_id in
+    (SELECT pp1.musician_id
+     FROM ProjectParticipants pp1
+     LEFT JOIN Projects p1 ON pp1.project_id = p1.id
+     WHERE p1.type = "permanent")';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
   /**
@@ -125,6 +132,9 @@ WITH CHECK OPTION';
   /** @var string */
   private $appName;
 
+  /** @var IAppContainer */
+  private $appContainer;
+
   /** @var IL10N */
   private $l;
 
@@ -151,23 +161,26 @@ WITH CHECK OPTION';
 
   public function __construct(
     $appName
+    , IAppContainer $appContainer
     , ILogger $logger
     , IL10N $l10n
     , IConfig $cloudConfig
     , EncryptionService $encryptionService
-    , Connection $connection
     , IAppManager $appManager
   ) {
     $this->appName = $appName;
+    $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->cloudConfig = $cloudConfig;
-    $this->encryptionService = $encryptionService;
-    $this->connection = $connection;
     $this->appManager = $appManager;
-    $this->appDbName = $this->encryptionService->getConfigValue('dbname');
-    $this->appDbUser = $this->encryptionService->getConfigValue('dbuser');
-    $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
+    $this->encryptionService = $encryptionService;
+    if ($this->encryptionService->bound()) {
+      $this->connection = $this->appContainer->get(Connection::class);
+      $this->appDbName = $this->encryptionService->getConfigValue('dbname');
+      $this->appDbUser = $this->encryptionService->getConfigValue('dbuser');
+      $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
+    }
   }
 
   private function viewName(?string $dataBaseName, string $prefix, string $baseName):string
@@ -177,11 +190,6 @@ WITH CHECK OPTION';
       $viewName = $dataBaseName . '.' . $viewName;
     }
     return $viewName;
-  }
-
-  private function userSqlGid()
-  {
-    return "CONCAT(_ascii '" . $this->appName . ":', p.id) COLLATE ascii_bin";
   }
 
   private function checkAndGetCloudDbUser():string
@@ -249,7 +257,7 @@ WITH CHECK OPTION';
       foreach (self::USER_SQL_VIEWS as $name => $sql) {
         $viewName = $this->viewName($dataBaseName, self::USER_SQL_PREFIX, $name);
         $statements = [
-          sprintf($sql, $viewName, $this->userSqlGid()),
+          sprintf($sql, $viewName, $this->appName),
           sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser),
         ];
         if ($name === 'User') {
@@ -317,6 +325,12 @@ WITH CHECK OPTION';
     $cryptoMemoryCost = max($this->cloudConfig->getSystemValueInt('hashingMemoryCost', PASSWORD_ARGON2_DEFAULT_MEMORY_COST), $cryptoThreads * 8);
     $cryptoTimeCost = max($this->cloudConfig->getSystemValueInt('hashingTimeCost', PASSWORD_ARGON2_DEFAULT_TIME_COST), 1);
 
+    $catchAllGroup = $this->encryptionService->getConfigValue('musiciansaddressbook');
+    if (empty($catchAllGroup)) {
+      $orchestraName = ucfirst($this->encryptionService->getConfigValue('orchestra'));
+      $catchAllGroup = $orchestraName . ' ' . $this->l->t('Musicians');
+    }
+
     return [
       'db.database' => $dataBaseName??$this->appDbName,
       'db.driver' => $this->connection->getDriver()->getDatabasePlatform()->getName(),
@@ -363,14 +377,11 @@ WITH CHECK OPTION';
       'opt.safe_store' => false,
       'opt.use_cache' => true,
       'opt.name_change' => false,
+      'opt.default_group' => $catchAllGroup,
     ];
   }
 
   /**
-   * This function hijacks the user_sql app. user_sql has no configuration
-   * API, but it is just handy to do some auto-configuration here. Of course,
-   * the auto-conf may fail if some things change in the future.
-   *
    * For the moment this just fills in our own app-config. Idea is to have the
    * admin-settings actually flush this data to the config space, either
    * directly or by using a call to set settings route of the user_sql app.
@@ -383,11 +394,119 @@ WITH CHECK OPTION';
         $this->cloudConfig->deleteAppValue($this->appName, self::CLOUD_USER_BACKEND . ':' . $key);
       }
     } else {
-
       foreach ($config as $key => $value) {
         $this->cloudConfig->setAppValue($this->appName, self::CLOUD_USER_BACKEND . ':' . $key, $value);
       }
     }
+  }
+
+  /**
+   * Hijack the user-sql backend by flushing pre-computed values into its
+   * config-space. This variant uses the routes of the user_sql app. Hence it
+   * will only work if the logged-in user is allowed to write to the user-sql
+   * config space.
+   */
+  public function configureCloudUserBackend(bool $erase = false)
+  {
+    /** @var RequestService $requestService */
+    $requestService = $this->appContainer->get(RequestService::class);
+
+    $configKeys = $this->cloudConfig->getAppKeys($this->appName);
+    $prefix = self::CLOUD_USER_BACKEND . ':';
+    $prefixLen = strlen($prefix);
+    $cloudUserBackendKeys = array_map(function($key) use ($prefixLen) {
+      return substr($key, $prefixLen);
+    }, array_filter($configKeys, function($key) use ($prefix) {
+      return str_starts_with($key, $prefix);
+    }));
+
+    $this->logDebug('USER SQL KEYS ' . print_r($cloudUserBackendKeys, true));
+
+    $cloudUserBackendParams = [];
+    foreach ($cloudUserBackendKeys as $cloudUserBackendKey) {
+      $cloudUserBackendValue = $erase ? '' : $this->cloudConfig->getAppValue($this->appName, $prefix . $cloudUserBackendKey);
+      if (preg_match('/%system:(\w+)%/', $cloudUserBackendValue, $matches)) {
+        $cloudUserBackendValue = $this->cloudConfig->getSystemValue($matches[1]);
+      }
+      // $this->cloudConfig->setAppValue(self::CLOUD_USER_BACKEND, $cloudUserBackendKey, $cloudUserBackendValue);
+      $cloudUserBackendParams[str_replace('.', '-', $cloudUserBackendKey)] = $cloudUserBackendValue;
+    }
+    $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
+
+    $messages = [];
+
+    /** @var RequestService $requestService */
+    $requestService = $this->appContainer->get(RequestService::class);
+
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache($requestService, $messages);
+
+    $route = implode('.', [
+      self::CLOUD_USER_BACKEND,
+      'settings',
+      'saveProperties',
+    ]);
+    $result = $requestService->postToRoute($route, postData: $cloudUserBackendParams, type: RequestService::URL_ENCODED);
+    $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
+
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache($requestService, $messages);
+
+    return $messages;
+  }
+
+  /**
+   * Clear the backend cache, for use in controllers, back-reportings messages.
+   */
+  private function clearUserBackendCache(RequestService $requestService, array &$messages)
+  {
+    $route = implode('.', [
+      self::CLOUD_USER_BACKEND,
+      'settings',
+      'clearCache',
+    ]);
+    try {
+      $result = $requestService->postToRoute($route);
+      $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', self::CLOUD_USER_BACKEND);
+    } catch (\Throwable $t) {
+      // essentially ignore ...
+      $this->logError($t);
+      $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
+        self::CLOUD_USER_BACKEND,
+        $t->getMessage(),
+      ]);
+    }
+  }
+
+  public function setCloudUserSubAdmins(bool $delete = false)
+  {
+    /** @var ConfigService $configService */
+    $configService = $this->appContainer->get(ConfigService::class);
+
+    // finally add all sub-admins of the orchestra group to the catch-all-group of the backend
+    $subAdmins = $configService->getGroupSubAdmins();
+    $catchAllGroup = $configService->getGroup(self::CLOUD_USER_BACKEND); // same name as backend
+    if (!empty($catchAllGroup)) {
+      $subAdminManager = $configService->getSubAdminManager();
+      foreach ($subAdmins as $subAdmin) {
+        $isSubAdmin = $subAdminManager->isSubAdminOfGroup($subAdmin, $catchAllGroup);
+        if ($delete && $isSubAdmin) {
+          $configService->getSubAdminManager()->deleteSubAdmin($subAdmin, $catchAllGroup);
+        } else if (!($delete || $isSubAdmin)) {
+          $configService->getSubAdminManager()->createSubAdmin($subAdmin, $catchAllGroup);
+        }
+      }
+    }
+  }
+
+  /** Check for cached cloud user-backend config */
+  public function haveCloudUserBackendConfig()
+  {
+    return !empty(array_filter(
+      $this->cloudConfig->getAppKeys($this->appName),
+      function($value) {
+        return str_starts_with($value, self::CLOUD_USER_BACKEND . ':');
+      }));
   }
 
 };

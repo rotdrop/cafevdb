@@ -283,9 +283,10 @@ class PersonalSettingsController extends Controller {
    *
    * @NoAdminRequired
    * @SubAdminRequired
-   * @UseSession
+   * _AT_UseSession
    *
    * @bug This function is too big.
+   * @todo decrease usage of session. Where is it needed?
    */
   public function setApp($parameter, $value) {
     switch ($parameter) {
@@ -1327,7 +1328,22 @@ class PersonalSettingsController extends Controller {
         if ($realValue) {
           $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
           $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
+          // following can fail
+          try {
+            $userConnectorService->configureCloudUserBackend();
+            $userConnectorService->setCloudUserSubAdmins();
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to configure "' . CloudUserConnectorService::CLOUD_USER_BACKEND . '".');
+          }
         } else {
+          // following can fail
+          try {
+            $userConnectorService->setCloudUserSubAdmins(delete: true);
+            $userConnectorService->configureCloudUserBackend(erase: true);
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Perhaps unable to deconfigure "' . CloudUserConnectorService::CLOUD_USER_BACKEND . '".');
+          }
+          // remove remnants
           $userConnectorService->removeUserSqlViews($cloudUserViewsDatabase);
           $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase, delete: true);
         }
@@ -1347,6 +1363,15 @@ class PersonalSettingsController extends Controller {
         $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
         $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
         $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
+
+        // also try to re-grant the sub-admin right and reconfigure user-sql
+        try {
+          $userConnectorService->configureCloudUserBackend();
+          $userConnectorService->setCloudUserSubAdmins();
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to configure "' . CloudUserConnectorService::CLOUD_USER_BACKEND . '".');
+        }
+
       } catch(\Throwable $t) {
          $this->logException($t);
         return self::grumble($this->exceptionChainData($t));
@@ -1634,7 +1659,7 @@ class PersonalSettingsController extends Controller {
       }
       $this->setConfigValue($parameter, $realValue);
       return self::valueResponse(
-        $realvalue,
+        $realValue,
         $this->l->t('Redaxo categorie Id for "%s" set to "%s".', [ $key, $realValue ])
       );
     default:

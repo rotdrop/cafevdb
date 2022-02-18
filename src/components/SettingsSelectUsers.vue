@@ -1,5 +1,5 @@
 <!--
-  - @copyright Copyright (c) 2019, 2022 Julius Härtl <jus@bitgrid.net>
+  - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
   -
@@ -24,29 +24,26 @@
   <form @submit.prevent="">
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
-      <Multiselect v-model="inputValObject"
-                   :value="inputValObject"
+      <Multiselect v-model="inputValObjects"
                    :id="id"
-                   :options="groupsArray"
+                   :options="usersArray"
                    :options-limit="100"
                    :placeholder="label"
                    :hint="hint"
                    track-by="id"
                    label="displayname"
                    class="multiselect-vue"
-                   :multiple="false"
-                   :close-on-select="true"
+                   :multiple="true"
+                   :close-on-select="false"
                    :tag-width="60"
                    :disabled="disabled"
-                   :show-labels="true"
-                   :allow-empty="false"
-                   :deselect-label="t('Cannot deselect')"
                    @input="emitInput"
-                   @search-change="asyncFindGroup">
+                   @search-change="asyncFindUser">
       </Multiselect>
       <input type="submit"
              class="icon-confirm"
              value=""
+             :disabled="disabled"
              @click="emitUpdate">
     </div>
     <p v-if="hint !== ''" class="hint">
@@ -61,7 +58,7 @@
 
  let uuid = 0
  export default {
-   name: 'SettingsSelectGroup',
+   name: 'SettingsSelectUsers',
    components: {
      Multiselect,
    },
@@ -75,8 +72,8 @@
        default: '',
      },
      value: {
-       type: String,
-       default: '',
+       type: Array,
+       default: () => [],
      },
      disabled: {
        type: Boolean,
@@ -85,60 +82,60 @@
    },
    data() {
      return {
-       inputValObject: {},
-       currentInputValObject: {},
-       groups: {},
+       inputValObjects: [],
+       users: {},
      }
    },
    computed: {
      id() {
-       return 'settings-select-group-' + this.uuid
+       return 'settings-select-user-' + this.uuid
      },
-     groupsArray() {
-       return Object.values(this.groups)
+     usersArray() {
+       return Object.values(this.users)
      },
    },
    watch: {
      value(newVal) {
-       this.inputValObject = this.getValueObject()
+       this.inputValObjects = this.getValueObject()
      },
    },
    created() {
      this.uuid = uuid.toString()
      uuid += 1
-     this.asyncFindGroup('').then((result) => {
-       this.inputValObject = this.getValueObject()
+     this.asyncFindUser('').then((result) => {
+       this.inputValObjects = this.getValueObject()
      })
    },
    methods: {
      getValueObject() {
-       const id = this.value
-       if (typeof this.groups[id] === 'undefined') {
-         return {
-           id,
-           displayname: id,
+       return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map(
+         (id) => {
+           if (typeof this.users[id] === 'undefined') {
+             return {
+               id,
+               displayname: id,
+             }
+           }
+           return this.users[id]
          }
-       }
-       return this.groups[id]
+       )
      },
      emitInput() {
-       console.info('INPUT INPUTVAL', this)
        if (this.inputValObject) {
-         this.$emit('input', this.inputValObject.id)
+         this.$emit('input', this.inputValObjects.map((element) => element.id))
        }
      },
      emitUpdate() {
-       console.info('UPDATE INPUTVAL', this.inputValObject)
-       this.$emit('update', this.inputValObject.id)
+       this.$emit('update', this.inputValObjects.map((element) => element.id))
      },
-     asyncFindGroup(query) {
+     asyncFindUser(query) {
        query = typeof query === 'string' ? encodeURI(query) : ''
-       return axios.get(OC.linkToOCS(`cloud/groups/details?search=${query}&limit=10`, 2))
+       return axios.get(OC.linkToOCS(`cloud/users/details?search=${query}&limit=10`, 2))
                    .then((response) => {
-                     if (Object.keys(response.data.ocs.data.groups).length > 0) {
-                       response.data.ocs.data.groups.forEach((element) => {
-                         if (typeof this.groups[element.id] === 'undefined') {
-                           this.$set(this.groups, element.id, element)
+                     if (Object.keys(response.data.ocs.data.users).length > 0) {
+                       Object.values(response.data.ocs.data.users).forEach((element) => {
+                         if (typeof this.users[element.id] === 'undefined') {
+                           this.$set(this.users, element.id, element)
                          }
                        })
                        return true
@@ -158,8 +155,10 @@
     width: 100%;
     max-width: 400px;
     align-items: center;
-    div.multiselect.multiselect-vue.multiselect--single {
-      height:34px;
+    div.multiselect.multiselect-vue.multiselect--multiple {
+      &:not(.multiselect--active) {
+        height:35.2px;
+      }
       flex-grow:1;
       &:hover .multiselect__tags {
         border-color: var(--color-primary-element);
@@ -170,7 +169,13 @@
         border-left-color: transparent !important;
         z-index: 2;
       }
+      &.multiselect--active + .icon-confirm {
+        display:none;
+      }
       + .icon-confirm {
+        &:disabled {
+          background-color: var(--color-background-dark) !important;
+        }
         margin-left: -8px !important;
         border-left-color: transparent !important;
         border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
@@ -178,8 +183,8 @@
         background-color: var(--color-main-background) !important;
         opacity: 1;
         padding: 7px 6px;
-        height:34px;
-        width:34px;
+        height:35.2px;
+        width:35.2px;
         margin-right:0;
         z-index:2;
         &:hover, &:focus {

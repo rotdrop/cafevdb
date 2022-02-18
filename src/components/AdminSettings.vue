@@ -39,6 +39,13 @@
           :multiple="false"
           @update="saveSetting(...arguments, 'orchestraUserGroup')"
         />
+        <SettingsSelectUsers
+          v-model="settings.orchestraUserGroupAdmins"
+          :label="t(appName, 'User Group Admins')"
+          :hint="hints['settings:admin:user-group:admins']"
+          @update="saveSetting(...arguments, 'orchestraUserGroupAdmins')"
+          :disabled="groupAdminsDisabled"
+        />
       </div>
       <SettingsInputText
         v-if="config.isAdmin"
@@ -71,6 +78,7 @@
  import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
  import SettingsInputText from './SettingsInputText'
  import SettingsSelectGroup from './SettingsSelectGroup'
+ import SettingsSelectUsers from './SettingsSelectUsers'
  import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
  import axios from '@nextcloud/axios'
  import { generateUrl } from '@nextcloud/router'
@@ -80,6 +88,7 @@
      SettingsSection,
      SettingsInputText,
      SettingsSelectGroup,
+     SettingsSelectUsers,
    },
    props: {
      config: {
@@ -91,6 +100,7 @@
      return {
        settings: {
          orchestraUserGroup: '',
+         orchestraUserGroupAdmins: [],
          wikiNameSpace: '',
          cloudUserBackendConfig: '',
        },
@@ -104,6 +114,11 @@
    },
    created() {
      this.getData()
+   },
+   computed: {
+     groupAdminsDisabled() {
+       return this.settings.orchestraUserGroup == ''
+     },
    },
    methods: {
      async getData() {
@@ -146,7 +161,10 @@
            const messages = responseData.messages || {};
            const transient = messages.transient || [];
            const permanent = messages.permanent || [];
-           if (permanent.length === 0 && transient.length === null) {
+           if (permanent.length === 0 && transient.length === 0) {
+             if (Array.isArray(value)) {
+               value = value.join(', ')
+             }
              transient.push(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }));
            }
            for (const message of transient) {
@@ -163,6 +181,9 @@
            console.error('RESPONSE', e.response)
          }
          if (value !== undefined) {
+           if (Array.isArray(value)) {
+             value = value.join(', ')
+           }
            showError(t(appName, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
          } else {
            showError(t(appName, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })

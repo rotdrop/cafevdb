@@ -58,25 +58,21 @@ class Admin implements IDelegatedSettings {
   /** @var IAppManager */
   private $appManager;
 
+  /** @var CloudUserConnectorService */
+  private $cloudUserConnector;
+
   public function __construct(
     ConfigService $configService
     , AssetService $assetService
     , WikiRPC $wikiRPC
     , IAppManager $appManager
+    , CloudUserConnectorService $cloudUserConnector
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
-  }
-
-  public function haveCloudUserBackendConfig()
-  {
-    return !empty(array_filter(
-      $this->cloudConfig()->getAppKeys($this->appName()),
-      function($value) {
-        return str_starts_with($value, CloudUserConnectorService::CLOUD_USER_BACKEND . ':');
-      }));
+    $this->cloudUserConnector = $cloudUserConnector;
   }
 
   public function getForm()
@@ -84,7 +80,7 @@ class Admin implements IDelegatedSettings {
     $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
     $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
     $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
-    $haveCloudUserBackendConfig = $this->haveCloudUserBackendConfig();
+    $haveCloudUserBackendConfig = $this->cloudUserConnector->haveCloudUserBackendConfig();
 
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
 

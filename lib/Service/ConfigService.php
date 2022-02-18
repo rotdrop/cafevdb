@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\IUser;
+use OCP\IGroup;
 use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\IL10N;
@@ -48,7 +49,8 @@ use OCP\ILogger;
  * @bug This class is too big.
  *
  */
-class ConfigService {
+class ConfigService
+{
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
@@ -166,6 +168,9 @@ class ConfigService {
     'user' => 'mailingListRestUser',
     'password' => 'mailingListRestPassword',
   ];
+
+  /** @var string */
+  const USER_GROUP_KEY = 'usergroup';
 
   /** @var array */
   protected $encryptionCache;
@@ -313,19 +318,24 @@ class ConfigService {
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
   }
 
-  public function getUserSession()
+  public function getUserSession():IUserSession
   {
     return $this->userSession;
   }
 
-  public function getUserManager()
+  public function getUserManager():IUserManager
   {
     return $this->userManager;
   }
 
-  public function getGroupManager()
+  public function getGroupManager():IGroupManager
   {
     return $this->groupManager;
+  }
+
+  public function getSubAdminManager():ISubAdmin
+  {
+    return $this->groupSubAdmin;
   }
 
   public function getUrlGenerator()
@@ -394,7 +404,13 @@ class ConfigService {
 
   public function getGroupId()
   {
-    return $this->getAppValue('usergroup');
+    return $this->getAppValue(self::USER_GROUP_KEY);
+  }
+
+  public function getGroup($groupId = null)
+  {
+    empty($groupId) && ($groupId = $this->getGroupId());
+    return empty($groupId) ? null : $this->groupManager->get($groupId);
   }
 
   public function groupExists($groupId = null)
@@ -411,12 +427,6 @@ class ConfigService {
       return false;
     }
     return $this->groupManager->isInGroup($userId, $groupId);
-  }
-
-  public function getGroup($groupId = null)
-  {
-    empty($groupId) && ($groupId = $this->getGroupId());
-    return empty($groupId) ? null : $this->groupManager->get($groupId);
   }
 
   public function isSubAdminOfGroup($userId = null, $groupId = null)
@@ -441,6 +451,43 @@ class ConfigService {
     return $this->groupSubAdmin->getGroupsSubAdmins($group);
   }
 
+  /**
+   * Return the id of the dedicated admin-group which contains all sub-admins
+   *
+   * @return string
+   */
+  public function getSubAdminGroupId():string
+  {
+    return $this->getGroupId() . '-admin';
+  }
+
+  /**
+   * Return the dedicated admin-group if it exists.
+   *
+   * @return null|IGroup
+   */
+  public function getSubAdminGroup():?IGroup
+  {
+    return $this->getGroup($this->getSubAdminGroupId());
+  }
+
+  /**
+   * Check if the currently logged in or given user-id belongs to the
+   * dedicated sub-admin group.
+   *
+   * @param null|string $userId
+   *
+   * @return bool
+   */
+  public function inSubAdminGroup(?string $userId = null):bool
+  {
+    empty($userId) && ($userId = $this->getUserId());
+    if (empty($userId)) {
+      return false;
+    }
+    $groupId = $this->getSubAdminGroupId();
+    return $this->groupManager->isInGroup($userId, $groupId);
+  }
   /*
    ****************************************************************************
    *

@@ -69,11 +69,19 @@ class AdminSettingsController extends Controller
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
         $value = $this->getAppValue('usergroup');
         break;
+      case AdminSettings::ORCHESTRA_USER_GROUP_KEY . 'Admins':
+        $admins = $this->configService->getGroupSubAdmins();
+        $value = [];
+        /** @var \OCP\IUser $admin */
+        foreach ($admins as $admin) {
+          $value[] = $admin->getUID();
+        }
+        break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
         $value = $this->getAppValue('wikinamespace');
         break;
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
-        $value = $this->di(AdminSettings::class)->haveCloudUserBackendConfig();
+        $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
         break;
     }
     if ($value != null) {
@@ -93,7 +101,7 @@ class AdminSettingsController extends Controller
 
   /**
    * @NoGroupMemberRequired
-   * @SubAdminRequired
+   * _AT_SubAdminRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function setDelegated($parameter, $value)
@@ -105,7 +113,7 @@ class AdminSettingsController extends Controller
     return self::grumble($this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter));
   }
 
-  private function set($parameter, $value)
+  private function set($parameter, $value = null)
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');
@@ -127,10 +135,60 @@ class AdminSettingsController extends Controller
             $result['wikiNameSpace'] = $wikiNameSpace;
           }
           $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
-          $result['message'] = $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]);
-          $result['messages']['transient'] = [ $result['message'] ];
+          $result = [
+            'messages' => [
+              'transient' => [
+                $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]),
+              ],
+            ],
+          ];
           return self::dataResponse($result);
-          break;
+
+        case AdminSettings::ORCHESTRA_USER_GROUP_KEY . 'Admins':
+          if (!is_array($value)) {
+            return self::grumble($this->l->t('Expecting a list of user-ids.'));
+          }
+          $userGroup = $this->group();
+          if (empty($userGroup)) {
+            return self::grumble($this->l->t('Orchestra management group is unset or non-existent'));
+          }
+          $currentAdmins = array_map(function($user) { return $user->getUID(); }, $this->getGroupSubAdmins());
+          $missing = array_diff($value, $currentAdmins);
+          $remaining = array_intersect($value, $currentAdmins);
+          $excess = array_diff($currentAdmins, $value);
+          $success = [];
+          $failure = [];
+          if (!empty($remaining)) {
+            $success[] = $this->l->t('Already as sub-admin of "%1$s" configured: %2$s.', [ $userGroup->getGID(), implode(', ', $remaining) ]);
+          }
+          foreach ($missing as $userId) {
+            try {
+              $user = $this->user($userId);
+              $this->subAdminManager()->createSubAdmin($user, $userGroup);
+              $success[] = $this->l->t('Added "%1$s" as sub-admin of "%2$s".', [ $userId, $userGroup->getGID(), ]);
+            } catch (\Throwable $t) {
+              $this->logException($t);
+              $failure[] = $this->t->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
+            }
+          }
+          foreach ($excess as $userId) {
+            try {
+              $user = $this->user($userId);
+              $this->subAdminManager()->deleteSubAdmin($user, $userGroup);
+              $success[] = $this->l->t('Deleted "%1$s" as sub-admin from "%2$s".', [ $userId, $userGroup->getGID(), ]);
+            } catch (\Throwable $t) {
+              $this->logException($t);
+              $failure[] = $this->t->t('Failed to delete "%1$s" as sub-admin from "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
+            }
+          }
+          $result = [
+            'messages' => [
+              'transient' => $success,
+              'permanent' => $failure,
+            ],
+          ];
+          return self::dataResponse($result);
+
         case AdminSettings::WIKI_NAME_SPACE_KEY:
           if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
             $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
@@ -144,13 +202,28 @@ class AdminSettingsController extends Controller
             $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
           }
 
-          $result['message'] = $this->l->t('Setting wiki name-space to "%s".', [$realValue]);
-          $result['messages']['transient'] = [ $result['message'] ];
+          $result = [
+            'messages' => [
+              'transient' => [
+                $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
+              ],
+            ],
+          ];
           return self::dataResponse($result);
-          break;
+
         case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+          $delete = $value !== null && $value !== '' && filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === false;
           $messages = [];
-          $responses = $this->configureCloudUserBackend();
+          /** @var CloudUserConnectorService $cloudUserConnector */
+          $cloudUserConnector = $this->di(CloudUserConnectorService::class);
+          if ($delete) {
+            $cloudUserConnector->setCloudUserSubAdmins(delete: true);
+            $responses = $cloudUserConnector->configureCloudUserBackend(erase: true);
+          } else {
+            $cloudUserConnector = $this->di(CloudUserConnectorService::class);
+            $responses = $cloudUserConnector->configureCloudUserBackend(erase: false);
+            $cloudUserConnector->setCloudUserSubAdmins(delete: false);
+          }
           $messages[] = $this->l->t('"%1$s" controller answered with "%2$s".', [
             CloudUserConnectorService::CLOUD_USER_BACKEND,
             implode('", "', $responses)
@@ -170,11 +243,12 @@ class AdminSettingsController extends Controller
               'permanent' => [ $settingsHint, ],
             ],
           ]);
-          break;
+
         default:
           break;
       }
     } catch (\Throwable $t) {
+      $this->logException($t);
       return self::grumble($this->exceptionChainData($t));
     }
     return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
@@ -196,79 +270,6 @@ class AdminSettingsController extends Controller
   {
     $this->wikiRPC->delAcl('*', '@'.$group);
     $this->wikiRPC->delAcl($nameSpace.':*', '@'.$group);
-  }
-
-  /**
-   * Hijack the user-sql backend by flushing pre-computed values into its
-   * config-space.
-   */
-  private function configureCloudUserBackend()
-  {
-    $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
-
-    $cloudConfig = $this->cloudConfig();
-    $configKeys = $cloudConfig->getAppKeys($this->appName);
-    $prefix = $cloudUserBackend . ':';
-    $prefixLen = strlen($prefix);
-    $cloudUserBackendKeys = array_map(function($key) use ($prefixLen) {
-      return substr($key, $prefixLen);
-    }, array_filter($configKeys, function($key) use ($prefix) {
-      return str_starts_with($key, $prefix);
-    }));
-
-    $this->logDebug('USER SQL KEYS ' . print_r($cloudUserBackendKeys, true));
-
-    $cloudUserBackendParams = [];
-    foreach ($cloudUserBackendKeys as $cloudUserBackendKey) {
-      $cloudUserBackendValue = $cloudConfig->getAppValue($this->appName, $prefix . $cloudUserBackendKey);
-      if (preg_match('/%system:(\w+)%/', $cloudUserBackendValue, $matches)) {
-        $cloudUserBackendValue = $cloudConfig->getSystemValue($matches[1]);
-      }
-      // $cloudConfig->setAppValue($cloudUserBackend, $cloudUserBackendKey, $cloudUserBackendValue);
-      $cloudUserBackendParams[str_replace('.', '-', $cloudUserBackendKey)] = $cloudUserBackendValue;
-    }
-    $this->logDebug('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
-
-    $messages = [];
-
-    /** @var RequestService $requestService */
-    $requestService = $this->di(RequestService::class);
-
-    // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $cloudUserBackend, $messages);
-
-    $route = implode('.', [
-      $cloudUserBackend,
-      'settings',
-      'saveProperties',
-    ]);
-    $result = $requestService->postToRoute($route, postData: $cloudUserBackendParams, type: RequestService::URL_ENCODED);
-    $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', $cloudUserBackend);
-
-    // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $cloudUserBackend, $messages);
-
-    return $messages;
-  }
-
-  private function clearUserBackendCache(RequestService $requestService, string $cloudUserBackend, array &$messages)
-  {
-    $route = implode('.', [
-      $cloudUserBackend,
-      'settings',
-      'clearCache',
-    ]);
-    try {
-      $result = $requestService->postToRoute($route);
-      $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', $cloudUserBackend);
-    } catch (\Throwable $t) {
-      // essentially ignore ...
-      $this->logError($t);
-      $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
-        $cloudUserBackend,
-        $t->getMessage(),
-      ]);
-    }
   }
 }
 

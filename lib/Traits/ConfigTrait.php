@@ -34,6 +34,7 @@ use OCP\IURLGenerator;
 use OCP\IDateTimeFormatter;
 use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\Group\ISubAdmin;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -133,6 +134,11 @@ trait ConfigTrait {
   protected function groupManager():IGroupManager
   {
     return $this->configService->getGroupManager();
+  }
+
+  protected function subAdminManager():ISubAdmin
+  {
+    return $this->configService->getSubAdminManager();
   }
 
   protected function getUserValue($key, $default = null, $userId = null)
@@ -315,6 +321,21 @@ trait ConfigTrait {
   protected function getGroupSubAdmins(?string $groupId = null)
   {
     return $this->configService->getGroupSubAdmins($groupId);
+  }
+
+  protected function subAdminGroupId():string
+  {
+    return $this->configService->getSubAdminGroupId();
+  }
+
+  protected function subAdminGroup():?IGroup
+  {
+    return $this->configService->getSubAdminGroup();
+  }
+
+  protected function inSubAdminGroup(?string $userId = null):bool
+  {
+    return $this->configService->inSubAdminGroup($userId);
   }
 
   public function defaultUserIdSlug(?string $surName, ?string $firstName, ?string $nickName)
