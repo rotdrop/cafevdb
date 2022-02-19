@@ -428,7 +428,7 @@ class AsymmetricKeyService
    */
   public function pushRecryptionNotification(string $ownerId, array $keyPair):INotification
   {
-    $cloudConfig->setUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY, $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
+    $this->cloudConfig->setUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY, $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -457,4 +457,18 @@ class AsymmetricKeyService
 
     return $notification;
   }
+
+  public function removeRecryptionNotification(string $ownerId)
+  {
+    $this->cloudConfig->deleteUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY);
+
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setObject('owner_id', $ownerId);
+    $notificationManager->markProcessed($notification);
+  }
+
 }
