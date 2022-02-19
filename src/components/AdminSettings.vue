@@ -203,6 +203,7 @@
              }
            }
          }
+         this.recryption.allRequestsMarked = ''
        }
      },
      async saveSetting(settingsKey, value, force) {
