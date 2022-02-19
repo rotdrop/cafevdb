@@ -68,20 +68,54 @@
         </p>
       </div>
     </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin" :title="t(appName, 'Recryption Requests')">
-      <p class="info">Hello</p>
+    <SettingsSection class="sub-admin" v-if="config.isSubAdmin" :title="t(appName, 'Recryption Requests')">
+      <div class="recryption-request-container" v-for="(request, userId) in recryption.requests" v-bind:key="request.id">
+        <input v-model="recryption.requests[userId].marked"
+               :id="['mark',userId].join('-')"
+               type="checkbox"
+               class="checkbox request-mark"
+               @change="markRecryptionRequest(...arguments, userId)"
+        />
+        <label :for="['mark',userId].join('-')"></label>
+        <Actions>
+          <ActionButton icon="icon-confirm">{{ t(appName, 'recrypt') }}</ActionButton>
+          <ActionButton icon="icon-delete">{{ t(appName, 'reject') }}</ActionButton>
+        </Actions>
+        <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
+          <span class="display-name" :title="userId">{{ request.displayName }}</span>
+          <span :class="'user-tag' + ' ' + 'organizer' + ' ' + (request.isOrganizer ? 'set' : 'unset')">{{ t(appName, 'organizer') }}</span>
+          <span :class="'user-tag' + ' ' + 'group-admin' + ' ' + (request.isGroupAdmin ? 'set' : 'unset')">{{ t(appName, 'group-admin') }}</span>
+        </div>
+      </div>
+      <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations">
+        <input v-model="recryption.allRequestsMarked"
+               id="mark-all"
+               type="checkbox"
+               class="checkbox request-mark"
+               @change="markAllRecryptionRequests(...arguments)"
+        />
+        <label for="mark-all">{{ t(appName, 'mark/unmark all.') }}</label>
+        <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
+        <Actions>
+          <ActionButton icon="icon-confirm">{{ t(appName, 'recrypt') }}</ActionButton>
+          <ActionButton icon="icon-delete">{{ t(appName, 'reject') }}</ActionButton>
+        </Actions>
+      </div>
     </SettingsSection>
   </div>
 </template>
 <script>
  import { appName } from '../app/app-info.js'
+ import Actions from '@nextcloud/vue/dist/Components/Actions'
+ import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
+ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
  import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
  import SettingsInputText from './SettingsInputText'
  import SettingsSelectGroup from './SettingsSelectGroup'
  import SettingsSelectUsers from './SettingsSelectUsers'
  import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
  import axios from '@nextcloud/axios'
- import { generateUrl } from '@nextcloud/router'
+ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
  export default {
    name: 'AdminSettings',
    components: {
@@ -89,6 +123,9 @@
      SettingsInputText,
      SettingsSelectGroup,
      SettingsSelectUsers,
+     Actions,
+     ActionButton,
+     ActionCheckbox,
    },
    props: {
      config: {
@@ -110,6 +147,10 @@
          'settings:admin:user-group': '',
        },
        forword: '',
+       recryption: {
+         requests: {},
+         allRequestsMarked: ''
+       },
      }
    },
    created() {
@@ -137,9 +178,34 @@
          }, undefined, { escape: false });
        // curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H "OCS-APIRequest: true"
        // fetch recryption requests
+       {
+         const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'));
+         if (Object.keys(response.data.ocs.data.requests).length > 0) {
+           const recryptionRequests = response.data.ocs.data.requests
+           for (const [userId, publicKey] of Object.entries(recryptionRequests)) {
+             try {
+               const response = await axios.get(generateOcsUrl('cloud/users/' + userId))
+               const user = response.data.ocs.data
+               const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
+               const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
+               this.$set(this.recryption.requests, userId, {
+                 id: userId,
+                 publicKey,
+                 displayName: user.displayname,
+                 groups: user.groups,
+                 enabled: user.enabled,
+                 isOrganizer,
+                 isGroupAdmin,
+                 marked: '',
+               })
+             } catch (e) {
+               console.error('Unable to fetch data for user ' + userId, e)
+             }
+           }
+         }
+       }
      },
      async saveSetting(value, settingsKey, force) {
-       console.info('ARGS', arguments)
        const self = this
        try {
          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
@@ -201,6 +267,21 @@
          return '';
        }
      },
+     markAllRecryptionRequests(event) {
+       const value = !!this.recryption.allRequestsMarked
+       for (const request of Object.values(this.recryption.requests)) {
+         request.marked = value
+       }
+     },
+     markRecryptionRequest(event, userId) {
+       const allRequests = Object.values(this.recryption.requests)
+       const marked = allRequests.filter(request => request.marked)
+       if (marked.length === allRequests.length) {
+         this.recryption.allRequestsMarked = true
+       } else {
+         this.recryption.allRequestsMarked = false
+       }
+     }
    },
  }
 </script>
@@ -216,12 +297,34 @@
      background-size:16px 16px;
      padding-right:20px;
    }
-   &.major::v-deep &__title {
+   &.major ::v-deep &__title {
      background-image:url('../../img/logo-greyf-large.svg');
      background-repeat:no-repeat;
      background-origin:padding-box;
      background-size:contain;
      padding-left:45px;
+   }
+   &.sub-admin ::v-deep .recryption-request-container {
+     display:flex;
+     align-items: center;
+     width:100%;
+     .recryption-request-data {
+       display:inline-block;
+       .user-tag {
+         &.unset {
+           display:none;
+         }
+         &.group-admin {
+           color: red;
+         }
+         &.organizer {
+           color: green;
+         }
+       }
+     }
+     .checkbox.request-mark + label {
+       display:inline-block;
+     }
    }
  }
 </style>

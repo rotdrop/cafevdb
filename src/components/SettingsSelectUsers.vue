@@ -1,7 +1,9 @@
 <!--
+  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
   - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
+  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -21,7 +23,7 @@
   -->
 
 <template>
-  <form @submit.prevent="">
+  <form class="settings-select-users" @submit.prevent="">
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
       <Multiselect v-model="inputValObjects"
@@ -54,6 +56,7 @@
 
 <script>
  import axios from '@nextcloud/axios'
+ import { generateOcsUrl } from '@nextcloud/router'
  import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
  let uuid = 0
@@ -130,7 +133,7 @@
      },
      asyncFindUser(query) {
        query = typeof query === 'string' ? encodeURI(query) : ''
-       return axios.get(OC.linkToOCS(`cloud/users/details?search=${query}&limit=10`, 2))
+       return axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
                    .then((response) => {
                      if (Object.keys(response.data.ocs.data.users).length > 0) {
                        Object.values(response.data.ocs.data.users).forEach((element) => {
@@ -149,59 +152,60 @@
  }
 </script>
 <style lang="scss">
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-    div.multiselect.multiselect-vue.multiselect--multiple {
-      &:not(.multiselect--active) {
-        height:35.2px;
-      }
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .icon-confirm {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      &.multiselect--active + .icon-confirm {
-        display:none;
-      }
-      + .icon-confirm {
-        &:disabled {
-          background-color: var(--color-background-dark) !important;
+  .settings-select-users {
+    .input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 400px;
+      align-items: center;
+      div.multiselect.multiselect-vue.multiselect--multiple {
+        &:not(.multiselect--active) {
+          height:35.2px;
         }
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
-        height:35.2px;
-        width:35.2px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
+        flex-grow:1;
+        &:hover .multiselect__tags {
+          border-color: var(--color-primary-element);
+          outline: none;
+        }
+        &:hover + .icon-confirm {
           border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
+          border-left-color: transparent !important;
+          z-index: 2;
         }
+        &.multiselect--active + .icon-confirm {
+          display:none;
+        }
+        + .icon-confirm {
+          &:disabled {
+            background-color: var(--color-background-dark) !important;
+          }
+          margin-left: -8px !important;
+          border-left-color: transparent !important;
+          border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
+          background-clip: padding-box;
+          background-color: var(--color-main-background) !important;
+          opacity: 1;
+          padding: 7px 6px;
+          height:35.2px;
+          width:35.2px;
+          margin-right:0;
+          z-index:2;
+          &:hover, &:focus {
+            border-color: var(--color-primary-element) !important;
+            border-radius: var(--border-radius) !important;
+          }
+        }
+      }
+
+      label {
+        width: 100%;
       }
     }
-  }
 
-  label {
-    width: 100%;
+    .hint {
+      color: var(--color-text-lighter);
+      font-size:80%;
+    }
   }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-
 </style>

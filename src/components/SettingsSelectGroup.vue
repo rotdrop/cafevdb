@@ -1,7 +1,9 @@
 <!--
   - @copyright Copyright (c) 2019, 2022 Julius Härtl <jus@bitgrid.net>
+  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
   -
   - @author Julius Härtl <jus@bitgrid.net>
+  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -21,7 +23,7 @@
   -->
 
 <template>
-  <form @submit.prevent="">
+  <form @submit.prevent="" class="settings-select-group">
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
       <Multiselect v-model="inputValObject"
@@ -57,6 +59,7 @@
 
 <script>
  import axios from '@nextcloud/axios'
+ import { generateOcsUrl } from '@nextcloud/router'
  import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
  let uuid = 0
@@ -133,7 +136,7 @@
      },
      asyncFindGroup(query) {
        query = typeof query === 'string' ? encodeURI(query) : ''
-       return axios.get(OC.linkToOCS(`cloud/groups/details?search=${query}&limit=10`, 2))
+       return axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=10`, 2))
                    .then((response) => {
                      if (Object.keys(response.data.ocs.data.groups).length > 0) {
                        response.data.ocs.data.groups.forEach((element) => {
@@ -152,51 +155,52 @@
  }
 </script>
 <style lang="scss">
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-    div.multiselect.multiselect-vue.multiselect--single {
-      height:34px;
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .icon-confirm {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      + .icon-confirm {
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
+  .settings-select-group {
+    .input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 400px;
+      align-items: center;
+      div.multiselect.multiselect-vue.multiselect--single {
         height:34px;
-        width:34px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
+        flex-grow:1;
+        &:hover .multiselect__tags {
+          border-color: var(--color-primary-element);
+          outline: none;
+        }
+        &:hover + .icon-confirm {
           border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
+          border-left-color: transparent !important;
+          z-index: 2;
+        }
+        + .icon-confirm {
+          margin-left: -8px !important;
+          border-left-color: transparent !important;
+          border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
+          background-clip: padding-box;
+          background-color: var(--color-main-background) !important;
+          opacity: 1;
+          padding: 7px 6px;
+          height:34px;
+          width:34px;
+          margin-right:0;
+          z-index:2;
+          &:hover, &:focus {
+            border-color: var(--color-primary-element) !important;
+            border-radius: var(--border-radius) !important;
+          }
         }
       }
+
+      label {
+        width: 100%;
+      }
+    }
+
+    .hint {
+      color: var(--color-text-lighter);
+      font-size:80%;
     }
   }
-
-  label {
-    width: 100%;
-  }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-
 </style>
