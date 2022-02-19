@@ -63,8 +63,6 @@ class EncryptionController extends OCSController
   /**
    * curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H 'Accept: application/json' -H "OCS-APIRequest: true"
    *
-   * @CORS
-   * @NoCSRFRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function getRecryptRequests(?string $userId = null)
@@ -73,10 +71,12 @@ class EncryptionController extends OCSController
     //// Testing
     $testUser = 'bilbo.baggins';
     $recryptRequests[$testUser] = $this->keyService->getCryptor($testUser)->getPublicKey();
+    $testUser = 'claus';
+    $recryptRequests[$testUser] = $this->keyService->getCryptor($testUser)->getPublicKey();
     ////
-    return new DataResponse(
-      $recryptRequests
-    );
+    return new DataResponse([
+      'requests' => $recryptRequests,
+    ]);
   }
 }
 
