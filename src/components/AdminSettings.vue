@@ -37,13 +37,13 @@
           :label="t(appName, 'User Group')"
           :hint="hints['settings:admin:user-group']"
           :multiple="false"
-          @update="saveSetting(...arguments, 'orchestraUserGroup')"
+          @update="saveSetting('orchestraUserGroup', ...arguments)"
         />
         <SettingsSelectUsers
           v-model="settings.orchestraUserGroupAdmins"
           :label="t(appName, 'User Group Admins')"
           :hint="hints['settings:admin:user-group:admins']"
-          @update="saveSetting(...arguments, 'orchestraUserGroupAdmins')"
+          @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
           :disabled="groupAdminsDisabled"
         />
       </div>
@@ -52,13 +52,13 @@
         v-model="settings.wikiNameSpace"
         :label="t(appName, 'Wiki Name-Space')"
         :hint="hints['settings:admin:wiki-name-space']"
-        @update="saveSetting(...arguments, 'wikiNameSpace')"
+        @update="saveSetting('wikiNameSpace', ...arguments)"
       />
       <div>
         <button type="button"
                 name="cloudUserBackendConfig"
                 value="update"
-                @click="saveSetting(undefined, 'cloudUserBackendConfig')"
+                @click="saveSetting('cloudUserBackendConfig')"
                 :disabled="!config.cloudUserBackendConfig"
         >
           {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
@@ -74,12 +74,12 @@
                :id="['mark',userId].join('-')"
                type="checkbox"
                class="checkbox request-mark"
-               @change="markRecryptionRequest(...arguments, userId)"
+               @change="markRecryptionRequest(userId, ...arguments)"
         />
         <label :for="['mark',userId].join('-')"></label>
         <Actions>
-          <ActionButton icon="icon-confirm">{{ t(appName, 'recrypt') }}</ActionButton>
-          <ActionButton icon="icon-delete">{{ t(appName, 'reject') }}</ActionButton>
+          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">{{ t(appName, 'recrypt') }}</ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">{{ t(appName, 'reject') }}</ActionButton>
         </Actions>
         <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
           <span class="display-name" :title="userId">{{ request.displayName }}</span>
@@ -94,11 +94,11 @@
                class="checkbox request-mark"
                @change="markAllRecryptionRequests(...arguments)"
         />
-        <label for="mark-all">{{ t(appName, 'mark/unmark all.') }}</label>
+        <label for="mark-all">{{ t(appName, 'Mark/unmark all.') }}</label>
         <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
         <Actions>
-          <ActionButton icon="icon-confirm">{{ t(appName, 'recrypt') }}</ActionButton>
-          <ActionButton icon="icon-delete">{{ t(appName, 'reject') }}</ActionButton>
+          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">{{ t(appName, 'recrypt') }}</ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">{{ t(appName, 'reject') }}</ActionButton>
         </Actions>
       </div>
     </SettingsSection>
@@ -205,7 +205,7 @@
          }
        }
      },
-     async saveSetting(value, settingsKey, force) {
+     async saveSetting(settingsKey, value, force) {
        const self = this
        try {
          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
@@ -216,7 +216,7 @@
              t(appName, 'Confirmation Required'),
              function(answer) {
                if (answer) {
-                 self.saveTextInput(value, settingsKey, true);
+                 self.saveSetting(settingsKey, value, true);
                } else {
                  showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
                  self.getData()
@@ -273,7 +273,7 @@
          request.marked = value
        }
      },
-     markRecryptionRequest(event, userId) {
+     markRecryptionRequest(userId, event) {
        const allRequests = Object.values(this.recryption.requests)
        const marked = allRequests.filter(request => request.marked)
        if (marked.length === allRequests.length) {
@@ -281,7 +281,66 @@
        } else {
          this.recryption.allRequestsMarked = false
        }
-     }
+     },
+     async handleRecryptionRequest(userId) {
+       try {
+         const response = await axios.post(
+           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'), { userId }
+         );
+         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
+       } catch (e) {
+         if (e.response) {
+           console.error('RESPONSE', e.response)
+         }
+         let message = t(appName, 'reason unknown')
+         if (e.response && e.response.data && e.response.data.ocs) {
+           message = e.response.data.ocs.meta.message
+                   + ' ('
+                   + e.response.data.ocs.meta.statuscode
+                   + ', ' + e.response.data.ocs.meta.status
+                   + ')';
+         }
+         showError(t(appName, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+         this.getData()
+       }
+     },
+     async deleteRecryptionRequest(userId) {
+       try {
+         const response = await axios.delete(
+           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'), {
+             data: { userId }
+         });
+         showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
+       } catch (e) {
+         if (e.response) {
+           console.error('RESPONSE', e.response)
+         }
+         let message = t(appName, 'reason unknown')
+         if (e.response && e.response.data && e.response.data.ocs) {
+           message = e.response.data.ocs.meta.message
+                   + ' ('
+                   + e.response.data.ocs.meta.statuscode
+                   + ', ' + e.response.data.ocs.meta.status
+                   + ')';
+         }
+         showError(t(appName, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+         this.getData()
+       }
+     },
+     async handleMarkedRecrytpionRequests() {
+       const allRequests = Object.values(this.recryption.requests)
+       const marked = allRequests.filter(request => request.marked)
+       for (const request of marked) {
+         this.handleRecryptionRequest(request.id)
+       }
+     },
+     async deleteMarkedRecryptionRequests() {
+       const allRequests = Object.values(this.recryption.requests)
+       const marked = allRequests.filter(request => request.marked)
+       for (const request of marked) {
+         this.deleteRecryptionRequest(request.id)
+       }
+     },
    },
  }
 </script>

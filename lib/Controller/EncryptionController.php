@@ -28,6 +28,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\OCSController;
+use OCP\AppFramework\OCS;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -61,8 +62,6 @@ class EncryptionController extends OCSController
   }
 
   /**
-   * curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H 'Accept: application/json' -H "OCS-APIRequest: true"
-   *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function getRecryptRequests(?string $userId = null)
@@ -77,6 +76,22 @@ class EncryptionController extends OCSController
     return new DataResponse([
       'requests' => $recryptRequests,
     ]);
+  }
+
+  /**
+   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
+   */
+  public function deleteRecryptRequest(string $userId)
+  {
+    throw new OCS\OCSNotFoundException('DUMMY');
+  }
+
+  /**
+   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
+   */
+  public function handleRecryptRequest(string $userId)
+  {
+    throw new OCS\OCSNotFoundException('DUMMY');
   }
 }
 
