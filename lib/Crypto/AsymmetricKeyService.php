@@ -451,6 +451,7 @@ class AsymmetricKeyService
     $organizationalRoles = $this->appContainer->get(OrganizationalRolesService::class);
     /** @var \OCP\IUser $groupAdmin */
     foreach ($organizationalRoles->getGroupAdmins() as $groupAdmin) {
+      $this->logInfo('Notifying ' . $groupAdmin->getUID());
       $notification->setUser($groupAdmin->getUID());
       $notificationManager->notify($notification);
     }
@@ -474,6 +475,7 @@ class AsymmetricKeyService
     $notification = $notificationManager->createNotification();
 
     $notification->setApp($this->appName)
+      ->setSubject(Notifier::RECRYPT_USER_SUBJECT)
       ->setObject('owner_id', $ownerId);
     $notificationManager->markProcessed($notification);
   }
@@ -488,7 +490,11 @@ class AsymmetricKeyService
    */
   public function pushRecryptionRequestDeniedNotification($ownerId, bool $allowProtest = true)
   {
-    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+    $requestData = 12; //$this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+
+    if (empty($requestData)) {
+      throw new Exceptions\RecryptionRequestNotFoundException($this->l->t('No pending recryption-request for user "%s".', $ownerId));
+    }
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -504,6 +510,8 @@ class AsymmetricKeyService
         ->setLabel(Notifier::PROTEST_ACTION)
         ->setLink('user_recrypt_request', 'PUT'));
     }
+
+    $this->logInfo('PUSHING RECRYPTION DENIED ' . $ownerId . ', VALID ' . (int)$notification->isValid());
 
     $notificationManager->notify($notification);
 
@@ -535,9 +543,13 @@ class AsymmetricKeyService
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
    */
-  public function pushRecryptionRequestHandledNotification($ownerIde)
+  public function pushRecryptionRequestHandledNotification($ownerId)
   {
     $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+
+    if (empty($requestData)) {
+      throw new Exceptions\RecryptionRequestNotFoundException($this->l->t('No pending recryption-request for user "%s".', $ownerId));
+    }
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);

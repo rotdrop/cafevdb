@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file Expose tooltips as AJAY controllers, fetching them by their key.
+ * @file Handle various requests associated with asymmetric encryption
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -32,15 +32,22 @@ use OCP\AppFramework\OCS;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\IAppContainer;
 use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Exceptions;
 
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  /** @var IAppContainer */
+  private $appContainer;
 
   /** @var AsymmetricKeyService */
   private $keyService;
@@ -51,11 +58,13 @@ class EncryptionController extends OCSController
   public function __construct(
     $appName
     , IRequest $request
+    , IAppContainer $appContainer
     , AsymmetricKeyService $keyService
     , ILogger $logger
     , IL10N $l10n
   ) {
     parent::__construct($appName, $request);
+    $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->keyService = $keyService;
@@ -67,12 +76,18 @@ class EncryptionController extends OCSController
   public function getRecryptRequests(?string $userId = null)
   {
     $recryptRequests = $this->keyService->getRecryptionRequests();
-    //// Testing
-    $testUser = 'bilbo.baggins';
-    $recryptRequests[$testUser] = time(); // $this->keyService->getCryptor($testUser)->getPublicKey();
-    $testUser = 'claus';
-    $recryptRequests[$testUser] = time(); $this->keyService->getCryptor($testUser)->getPublicKey();
-    ////
+    // Testing
+    // $testUser = 'bilbo.baggins';
+    // $recryptRequests[$testUser] = time(); // $this->keyService->getCryptor($testUser)->getPublicKey();
+    // $testUser = 'claus';
+    // $recryptRequests[$testUser] = time(); $this->keyService->getCryptor($testUser)->getPublicKey();
+    //
+    if (!empty($userId)) {
+      $recryptRequests = $recryptRequests[$userId] || [];
+      if (empty($recryptRequests)) {
+        throw new OCS\OCSNotFoundException($this->l->t('Recryption-request for user "%s" not found.', $userId));
+      }
+    }
     return new DataResponse([
       'requests' => $recryptRequests,
     ]);
@@ -83,7 +98,31 @@ class EncryptionController extends OCSController
    */
   public function deleteRecryptRequest(string $userId)
   {
-    throw new OCS\OCSNotFoundException('DUMMY');
+    try {
+      $this->keyService->pushRecryptionRequestDeniedNotification($userId);
+      $this->keyService->removeRecryptionRequestNotification($userId);
+    } catch (Exceptions\RecryptionRequestNotFoundException $e) {
+      throw new OCS\OCSNotFoundException($this->l->t('Recryption-request for user "%s" not found.', $userId), $e);
+    }
+    return new DataResponse([
+      'ownerId' => $userId,
+    ]);
+  }
+
+  /**
+   * @NoAdminRequired
+   * @NoGroupMemberRequired
+   */
+  public function putRecryptRequest(string $userId)
+  {
+    try {
+      $this->keyService->pushRecryptionRequestNotification($userId, []);
+    } catch (Exceptions\RecryptionRequestNotFoundException $e) {
+      throw new OCS\OCSBadRequestException($this->l->t('Unable to issue encryption request'), $e);
+    }
+    return new DataResponse([
+      'ownerId' => $userId,
+    ]);
   }
 
   /**
@@ -91,7 +130,41 @@ class EncryptionController extends OCSController
    */
   public function handleRecryptRequest(string $userId)
   {
-    throw new OCS\OCSNotFoundException('DUMMY');
+    try {
+      // As long as we do not support access to the personal data we simply
+      // install the management encryption key for members of the management
+      // board and otherwise do nothing. Once we have personally sealed data
+      // we need to re-crypt all data records related to the target-user of
+      // the recryption request.
+
+      /** @var AuthorizationService $authorizationService */
+      $authorizationService = $this->appContainer->get(AuthorizationService::class);
+      if ($authorizationService->authorized($userId)) {
+        // set encryption key for this user
+         /** @var EncryptionService $encryptionService */
+        $encryptionService = $this->appContainer->get(EncryptionService::class);
+        if (!$encryptionService->encryptionKeyValid()) {
+          throw new OCS\OCSBadRequestException($this->l->t('Encryption key is invalid'));
+        }
+        try {
+          $appEncryptionKey = $encryptionService->getAppEncryptionKey();
+          $encryptionService->setUserEncryptionKey($appEncryptionKey, $userId);
+        } catch (Exceptions\EncryptionException $e) {
+          throw new OCS\OCSBadRequestException($this->l->t('Unable to set app-encryption-key for user "%s".', $userId), $e);
+        }
+      }
+
+      $this->keyService->pushRecryptionRequestHandledNotification($userId);
+      $this->keyService->removeRecryptionRequestDeniedNotification($userId);
+      $this->keyService->removeRecryptionRequestNotification($userId);
+
+      return new DataResponse([
+        'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
+      ]);
+
+    } catch (Exceptions\RecryptionRequestNotFoundException $e) {
+      throw new OCS\OCSNotFoundException($this->l->t('Recryption-request for user "%s" not found.', $userId), $e);
+    }
   }
 }
 

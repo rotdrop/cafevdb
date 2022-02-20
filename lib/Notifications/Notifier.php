@@ -91,17 +91,18 @@ class Notifier implements \OCP\Notification\INotifier
     $l = $this->l10nFactory->get($this->appName, $languageCode);
 
     $notification
-      ->setIcon($this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath($this->appName, 'app.svg')))
-      ->setLink($this->urlGenerator->linkToRouteAbsolute('settings.AdminSettings.index', [ 'section' => $this->appName ]));
+      ->setIcon($this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath($this->appName, 'app.svg')));
 
     //https://localhost/nextcloud-git/index.php/settings/admin/cafevdb
     switch ($notification->getSubject())
     {
       case self::RECRYPT_USER_SUBJECT:
 
+        $notification->setLink($this->urlGenerator->linkToRouteAbsolute('settings.AdminSettings.index', [ 'section' => $this->appName ]));
+
         $parameters = $notification->getSubjectParameters();
         $notification->setRichSubject(
-          $l->t('User Recrypt Request "{fancy}"'), [
+          $l->t('User Recryption Request for {fancy}'), [
             'fancy' => [
               'type' => 'highlight',
               'id' => $notification->getObjectId(),
@@ -114,27 +115,68 @@ class Notifier implements \OCP\Notification\INotifier
         foreach ($notification->getActions() as $action) {
           switch ($action->getLabel()) {
             case self::ACCEPT_ACTION:
+              $url = $this->urlGenerator->linkToOCSRouteAbsolute($this->appName . '.encryption.handleRecryptRequest', [ 'apiVersion' => 'v1', 'userId' => $notification->getObjectId() ]);
               $action->setParsedLabel($l->t('Accept'))
-                ->setLink('deadlink', 'POST');
+                ->setLink($url, 'POST');
               break;
             case self::DECLINE_ACTION:
+              $url = $this->urlGenerator->linkToOCSRouteAbsolute($this->appName . '.encryption.deleteRecryptRequest', [ 'apiVersion' => 'v1', 'userId' => $notification->getObjectId() ]);
               $action->setParsedLabel($l->t('Decline'))
-                ->setLink('deadlink', 'DELETE');
+                ->setLink($url, 'DELETE');
               break;
           }
           $notification->addParsedAction($action);
         }
 
-
-        // Set the plain text subject automatically
-        $this->setParsedSubjectFromRichSubject($notification);
-
-        return $notification;
         break;
+
+      case self::RECRYPT_USER_HANDLED_SUBJECT:
+        $parameters = $notification->getSubjectParameters();
+        $notification->setRichSubject(
+          $l->t('Recryption Request Handled for {fancy}'), [
+            'fancy' => [
+              'type' => 'highlight',
+              'id' => $notification->getObjectId(),
+              'name' => $notification->getObjectId(),
+            ]
+          ]);
+        break;
+
+      case self::RECRYPT_USER_DENIED_SUBJECT:
+        $parameters = $notification->getSubjectParameters();
+
+        $notification->setRichSubject(
+          $l->t('User Recryption Request Denied for {fancy}'), [
+            'fancy' => [
+              'type' => 'highlight',
+              'id' => $notification->getObjectId(),
+              'name' => $notification->getObjectId(),
+              'link' => $notification->getLink(),
+            ]
+          ]);
+
+        // Deal with the actions for a known subject
+        foreach ($notification->getActions() as $action) {
+          switch ($action->getLabel()) {
+            case self::PROTEST_ACTION:
+              $url = $this->urlGenerator->linkToOCSRouteAbsolute($this->appName . '.encryption.putRecryptRequest', [ 'apiVersion' => 'v1', 'userId' => $notification->getObjectId() ]);
+              $action->setParsedLabel($l->t('Protest'))
+                ->setLink($url, 'PUT');
+              break;
+          }
+          $notification->addParsedAction($action);
+        }
+        break;
+
       default:
         // Unknown subject => Unknown notification => throw
         throw new \InvalidArgumentException();
     }
+
+    // Set the plain text subject automatically
+    $this->setParsedSubjectFromRichSubject($notification);
+
+    return $notification;
   }
 
   // This is a little helper function which automatically sets the simple parsed subject

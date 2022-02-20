@@ -101,6 +101,9 @@
           <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">{{ t(appName, 'reject') }}</ActionButton>
         </Actions>
       </div>
+      <div v-else>
+        <span class="hint">{{ t(appName, 'No recryption requests are pending.') }}</span>
+      </div>
     </SettingsSection>
   </div>
 </template>
@@ -179,12 +182,12 @@
        // curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H "OCS-APIRequest: true"
        // fetch recryption requests
        {
-         const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'));
+         const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'))
          if (Object.keys(response.data.ocs.data.requests).length > 0) {
            const recryptionRequests = response.data.ocs.data.requests
            for (const [userId, publicKey] of Object.entries(recryptionRequests)) {
              try {
-               const response = await axios.get(generateOcsUrl('cloud/users/' + userId))
+               const response = await axios.get(generateOcsUrl('cloud/users/{userId}', { userId }))
                const user = response.data.ocs.data
                const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
                const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
@@ -217,7 +220,7 @@
              t(appName, 'Confirmation Required'),
              function(answer) {
                if (answer) {
-                 self.saveSetting(settingsKey, value, true);
+                 self.saveSetting(settingsKey, value, true)
                } else {
                  showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
                  self.getData()
@@ -225,20 +228,20 @@
              },
              true)
          } else {
-           const messages = responseData.messages || {};
-           const transient = messages.transient || [];
-           const permanent = messages.permanent || [];
+           const messages = responseData.messages || {}
+           const transient = messages.transient || []
+           const permanent = messages.permanent || []
            if (permanent.length === 0 && transient.length === 0) {
              if (Array.isArray(value)) {
                value = value.join(', ')
              }
-             transient.push(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }));
+             transient.push(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
            }
            for (const message of transient) {
-             showInfo(message, { timeout: TOAST_DEFAULT_TIMEOUT, isHTML: true });
+             showInfo(message, { timeout: TOAST_DEFAULT_TIMEOUT, isHTML: true })
            }
            for (const message of permanent) {
-             showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true });
+             showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true })
            }
          }
        } catch (e) {
@@ -261,11 +264,11 @@
      async tooltip(key) {
        try {
          const response = await axios.get(generateUrl('apps/' + appName + '/tooltips/{key}', { key }), { params: { unescaped: true } })
-         console.debug('GOT TOOLTIP', response.data.tooltip || '');
-         return response.data.tooltip;
+         console.debug('GOT TOOLTIP', response.data.tooltip || '')
+         return response.data.tooltip
        } catch (e) {
-         console.error('ERROR FETCHING TOOLTIP ' + key, e);
-         return '';
+         console.error('ERROR FETCHING TOOLTIP ' + key, e)
+         return ''
        }
      },
      markAllRecryptionRequests(event) {
@@ -286,8 +289,9 @@
      async handleRecryptionRequest(userId) {
        try {
          const response = await axios.post(
-           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'), { userId }
-         );
+           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+             userId
+         }))
          showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
        } catch (e) {
          if (e.response) {
@@ -299,7 +303,7 @@
                    + ' ('
                    + e.response.data.ocs.meta.statuscode
                    + ', ' + e.response.data.ocs.meta.status
-                   + ')';
+                   + ')'
          }
          showError(t(appName, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
          this.getData()
@@ -308,9 +312,9 @@
      async deleteRecryptionRequest(userId) {
        try {
          const response = await axios.delete(
-           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'), {
-             data: { userId }
-         });
+           generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+             userId
+         }))
          showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
        } catch (e) {
          if (e.response) {
@@ -322,7 +326,7 @@
                    + ' ('
                    + e.response.data.ocs.meta.statuscode
                    + ', ' + e.response.data.ocs.meta.status
-                   + ')';
+                   + ')'
          }
          showError(t(appName, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
          this.getData()

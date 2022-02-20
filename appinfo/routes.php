@@ -79,23 +79,34 @@ $routes = [
     ],
     [
       'name' => 'encryption#getRecryptRequests',
-      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt',
+      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
       'verb' => 'GET',
       'requirements' => [
         'apiVersion' => 'v1',
       ],
+      'defaults' => [
+        'userId' => null,
+      ],
     ],
     [
       'name' => 'encryption#deleteRecryptRequest',
-      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt',
+      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
       'verb' => 'DELETE',
       'requirements' => [
         'apiVersion' => 'v1',
       ],
     ],
     [
+      'name' => 'encryption#putRecryptRequest',
+      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+      'verb' => 'PUT',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
+    ],
+    [
       'name' => 'encryption#handleRecryptRequest',
-      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt',
+      'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
       'verb' => 'POST',
       'requirements' => [
         'apiVersion' => 'v1',
