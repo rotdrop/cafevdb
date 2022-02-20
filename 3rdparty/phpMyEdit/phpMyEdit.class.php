@@ -605,8 +605,8 @@ class phpMyEdit
 		if ($this->virtual($k)) {
 			return false;
 		}
-		$options = @$this->fdd[$k]['options'];
-		if (! isset($options)) {
+		$options = $this->fdd[$k]['options'] ?? null;
+		if (empty($options)) {
 			return true;
 		}
 		return
@@ -2246,7 +2246,7 @@ class phpMyEdit
 			$value          = $this->get_data_cgi_var($this->fds[$k]);
 			$defaulted = $value === null;
 			if ($defaulted) {
-				$value  = @$this->fdd[$k]['default'];
+				$value  = $this->fdd[$k]['default'] ?? null;
 				$escape && $value = $this->enc($value);
 				//error_log('default: '.$this->fdd[$k]['name'].': '.$value);
 			}
@@ -2556,9 +2556,9 @@ class phpMyEdit
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
 			$mandatory = $this->mandatory($k);
-			$selected = @$row["qf$k"];
+			$selected = $row["qf$k"] ?? null;
 			if ($selected === null) {
-				$selected = @$this->fdd[$k]['default'];
+				$selected = $this->fdd[$k]['default'] ?? null;
 			}
 			$strip_tags = true;
 
@@ -5171,7 +5171,7 @@ class phpMyEdit
 			$this->rec = $key_col_val;
 		}
 		// Notify list
-		if (@$this->notify[self::SQL_QUERY_INSERT] || @$this->notify['all']) {
+		if (!empty($this->notify[self::SQL_QUERY_INSERT]) || !empty($this->notify['all'])) {
 			$this->email_notify(false, $newvals);
 		}
 		// Note change in log table
@@ -5452,7 +5452,7 @@ class phpMyEdit
 			}
 		}
 		// Notify list
-		if (@$this->notify[self::SQL_QUERY_UPDATE] || @$this->notify['all']) {
+		if (!empty($this->notify[self::SQL_QUERY_UPDATE]) || !empty($this->notify['all'])) {
 			if (count($changed) > 0) {
 				$this->email_notify($oldvals, $newvals);
 			}
