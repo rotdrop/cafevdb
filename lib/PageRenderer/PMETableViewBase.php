@@ -1631,7 +1631,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'data' => [],
             'default' => $pme->fdd[$field]['default']??null,
           ];
-          if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
+          if (!str_starts_with($field, $table . self::JOIN_KEY_SEP)) {
+            // This happens if the master table injects auto-increment ids. In
+            // this case $field is one of the identifier fields of the master
+            // table. We slightly mis-use the default field in order to inject
+            // the correct value.
+            $multipleValues[$column]['default'] = $newvals[$field];
+          } else if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
             // assume everything after the first self::JOIN_KEY_SEP is
             // the one and only value
             list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
@@ -1663,6 +1669,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
               $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
+              $this->debug('Set ' . $entityClass . '::' . $column . ' -> ' . $value);
               $meta->setColumnValue($entity, $column, $value);
             }
 
@@ -1748,7 +1755,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             $this->debug('ORIG CHILD CHANGESET ' . $table . ' ' . print_r($childChangeSet, true));
             foreach (array_keys($this->pme->key) as $key) {
               foreach (['identifier', 'filter'] as $columnRestriction) {
-                foreach ($childJoinInfo[$columnRestriction] as $column => $target) {
+                foreach (($childJoinInfo[$columnRestriction]??[]) as $column => $target) {
                   if ($target === $key) {
                     // $newvals[$this->joinTableFieldName($table, $column)] = $newvals[$key];
                     $childChangeSet[$column] = $key;
