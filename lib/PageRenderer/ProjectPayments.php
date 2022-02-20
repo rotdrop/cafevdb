@@ -71,6 +71,9 @@ class ProjectPayments extends PMETableViewBase
   /** @var array */
   private $compositePaymentExpanded = [];
 
+  /** @var Entities\Project */
+  private $project;
+
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
@@ -218,6 +221,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $this->userStorage = $userStorage;
     $this->databaseStorageUtil = $databaseStorageUtil;
     $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    }
   }
 
   public function shortTitle()
@@ -235,9 +242,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $recordsPerPage  = $this->recordsPerPage;
 
     $projectMode = $this->projectId > 0;
-    if ($projectMode)  {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
     if (!$projectMode) {
       throw new \InvalidArgumentException('Project-id and/or -name must be given.');
     }
@@ -381,7 +385,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'sort'     => true,
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
-        if ($this->isCompositeRow($k, $row, $pme)) {
+        if ($this->isCompositeRow($row, $pme)) {
           $html = '<input type="hidden" class="expanded-marker" name="compositePaymentExpanded['.$recordId['id'].']" value="'.(int)($this->compositePaymentExpanded[$recordId['id']]??0).'"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
@@ -479,7 +483,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             return $html;
           },
           'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
-            if ($this->isCompositeRow($k, $row, $pme)) {
+            if ($this->isCompositeRow($row, $pme)) {
               return $this->moneyValue($value);
             }
             return '';
@@ -692,17 +696,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'values2glue' => '<br/>',
         'display' => [
           'prefixBlah' => function($op, $where, $k, $row, $pme) {
-            if ($this->isCompositeRow($k, $row, $pme)) {
+            if ($this->isCompositeRow($row, $pme)) {
               return '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
             }
           },
           'postfixBlah' => function($op, $where, $k, $row, $pme) {
-            if ($this->isCompositeRow($k, $row, $pme)) {
+            if ($this->isCompositeRow($row, $pme)) {
               return '</div></div>';
             }
           },
           'popup' => function($cellData, $k, $row, $pme) {
-            return $this->isCompositeRow($k, $row, $pme) ? strip_tags($cellData, '<br>') : '';
+            return $this->isCompositeRow($row, $pme) ? strip_tags($cellData, '<br>') : '';
           },
         ],
         'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
@@ -724,9 +728,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'tab' => [ 'id' => [ 'booking', ] ],
       'css' => [ 'postfix' => [ 'supporting-document', ], ],
       'name' => $this->l->t('Supporting Document'),
-      'input|LF' => 'HR',
+      'input|ALF' => 'HR',
       'options' => 'LFACDPV',
-      'php|ACP' => function($value, $action, $k, $row, $recordId, $pme) {
+      'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
 
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         /** @var Entities\Musician $musician */
@@ -944,9 +948,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         return true;
       };
 
-    if ($projectMode) {
-      $opts['filters'] = 'FIND_IN_SET('.$projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
-    }
+    // Real insert (not copy) has no data-triger. We use the pre-trigger to
+    // tweak the set of selectable fields.
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_PRE][] = function(&$pme, $op) {
+      // $this->logInfo('PRE-TRIGGER OPERATION ' . $op);
+      $subjectIndex = $pme->fdn['subject'];
+      $pme->fdd[$subjectIndex]['input'] = 'HR';
+      // $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
+      // $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
+      return true;
+    };
 
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateSanitizeFields' ];
@@ -954,6 +965,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
+
+    if ($projectMode) {
+      $opts['filters'] = 'FIND_IN_SET('.$projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+    }
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -970,7 +985,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    * Remap the input values in order to satisfy the data-model:
    *
    * - one receivable per ProjectPayment
-   * - CompositePaymnt amount must be sum of all partial payments
+   * - CompositePayment amount must be sum of all partial payments
    * - CompositePayment subject is constructed from individual payments
    *
    * However, on insert we only add a single "split" transaction. Further
@@ -1026,6 +1041,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $newValues['musician_id'] = $musicianId;
 
     if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+      // current update dialog refers to a split payment
 
       $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['flags'] |= self::JOIN_SINGLE_VALUED;
 
@@ -1064,12 +1080,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       }
       unset($value); // break reference
     } else {
+      // Composite payment
+
       // "row_tag" is used as "column" in $this->joinStructure, so transfer
       // the ProjectPayments ids to that field.
       foreach (['newValues', 'oldValues'] as $dataSet) {
         ${$dataSet}[$rowTagKey] = ${$dataSet}[$paymentIdKey];
       }
-      // remove supporting_document_id is it is handled separately by direct
+
+      // remove supporting_document_id as it is handled separately by direct
       // db manipulation.
       $tag = 'supporting_document_id';
       unset($newValues[$tag]);
@@ -1130,6 +1149,30 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
 
+    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+
+    // "row_tag" is used as "column" in $this->joinStructure, so transfer
+    // the ProjectPayments ids to that field.
+    $paymentId =
+      $newValues[$paymentIdKey] =
+      $newValues[$rowTagKey] = 0;
+
+    // index all values by the key in order to please the
+    // PMETableViewBase::beforeUpdateDoUpdateAll() machine
+    foreach ($newValues as $key => &$value) {
+      if ($key == $paymentIdKey || $key == $rowTagKey) {
+        continue;
+      }
+      if (empty($value)) {
+          continue;
+      }
+      if (strpos($key, self::PROJECT_PAYMENTS_TABLE . self::JOIN_KEY_SEP) === 0) {
+        $value = $paymentId . self::JOIN_KEY_SEP . $value;
+      }
+    }
+    unset($value); // break reference
+
     $changed = array_keys($newValues);
 
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
@@ -1159,14 +1202,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   }
 
   /** Decide whether the current row refers to the composite payment or to a "split" project-payment */
-  private function isCompositeRow($k, $row, $pme)
+  private function isCompositeRow($row, $pme)
   {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
   }
 
   private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme) {
-    $compositeRow = $this->isCompositeRow($k, $row, $pme);
+    $compositeRow = $this->isCompositeRow($row, $pme);
     $composite = $where === 'composite';
     $component = $where === 'component';
     if (($compositeRow && $composite) || (!$compositeRow && $component)) {
@@ -1182,7 +1225,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   private function createSupportingDocumentsDownload($value, $action, $k, $row, $recordId, $pme)
   {
     $musicianId = $row['qf'.$pme->fdn['musician_id']];
-    if ($this->isCompositeRow($k, $row, $pme)) {
+    if ($this->isCompositeRow($row, $pme)) {
       $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
       // $receivables must contain at least one element.
       $supportingDocument = $row['qf'.$pme->fdn['supporting_document_id']];
