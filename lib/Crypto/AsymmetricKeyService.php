@@ -35,6 +35,7 @@ use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
 use OCP\Notification\INotification;
 use OCP\Notification\IManager as NotificationManager;
+use OCP\AppFramework\Utility\ITimeFactory;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
@@ -400,7 +401,7 @@ class AsymmetricKeyService
    *
    * @return array<string, string> USER_ID => REQUEST_VALUE
    */
-  public function getEncryptionRequests(?string $ownerId = null):array
+  public function getRecryptionRequests(?string $ownerId = null):array
   {
     if (!empty($ownerId)) {
       $requestValue = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
@@ -426,9 +427,10 @@ class AsymmetricKeyService
    * ]
    * ```
    */
-  public function pushRecryptionNotification(string $ownerId, array $keyPair):INotification
+  public function pushRecryptionRequestNotification(string $ownerId, array $keyPair):INotification
   {
-    $this->cloudConfig->setUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY, $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
+    $requestData = $this->appContainer->get(ITimeFactory::class)->getTime();
+    $this->cloudConfig->setUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY, $requestData);
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -437,9 +439,7 @@ class AsymmetricKeyService
     $notification->setApp($this->appName)
       ->setDateTime(new \DateTime)
       ->setObject('owner_id', $ownerId)
-      ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [
-        self::PUBLIC_ENCRYPTION_KEY_CONFIG => $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]
-      ])
+      ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [ 'timestamp' => $requestData ])
       ->addAction($notification->createAction()
         ->setLabel(Notifier::ACCEPT_ACTION)
         ->setLink('user_recrypt_request', 'POST'))
@@ -458,9 +458,16 @@ class AsymmetricKeyService
     return $notification;
   }
 
-  public function removeRecryptionNotification(string $ownerId)
+  /**
+   * Remove a recryption request notification, e.g. after processing the
+   * request. This actually also removes the request itself from the queue.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   */
+  public function removeRecryptionRequestNotification(string $ownerId)
   {
-    $this->cloudConfig->deleteUserValue($ownerId, $appName, self::RECRYPTION_REQUEST_KEY);
+    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -471,4 +478,99 @@ class AsymmetricKeyService
     $notificationManager->markProcessed($notification);
   }
 
+  /**
+   * Push a new recryption-request-denied notification to the requesting party.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @param bool $allowProtest Add a button for re-requesting recryption.
+   */
+  public function pushRecryptionRequestDeniedNotification($ownerId, bool $allowProtest = true)
+  {
+    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setUser($ownerId)
+      ->setDateTime(new \DateTime)
+      ->setObject('owner_id', $ownerId)
+      ->setSubject(Notifier::RECRYPT_USER_DENIED_SUBJECT, [ 'timestamp' => $requestData ]);
+    if ($allowProtest) {
+      $notification->addAction($notification->createAction()
+        ->setLabel(Notifier::PROTEST_ACTION)
+        ->setLink('user_recrypt_request', 'PUT'));
+    }
+
+    $notificationManager->notify($notification);
+
+    return $notification;
+  }
+
+  /**
+   * Remove the "denied" notification, for example after accepting a "veto"
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   */
+  public function removeRecryptionRequestDeniedNotification($ownerId)
+  {
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setUser($ownerId)
+      ->setSubject(Notifier::RECRYPT_USER_DENIED_SUBJECT)
+      ->setObject('owner_id', $ownerId);
+    $notificationManager->markProcessed($notification);
+  }
+
+  /**
+   * Push a new recryption-request-handled notification to the requesting party.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   */
+  public function pushRecryptionRequestHandledNotification($ownerIde)
+  {
+    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setUser($ownerId)
+      ->setDateTime(new \DateTime)
+      ->setObject('owner_id', $ownerId)
+      ->setSubject(Notifier::RECRYPT_USER_HANDLED_SUBJECT, [ 'timestamp' => $requestData ]);
+
+    $notificationManager->notify($notification);
+
+    return $notification;
+  }
+
+  /**
+   * Remove the "handled" notification, for example after things have been
+   * messed up, a new encryption request was posted etc.
+   *
+   * @param string $ownerId The owner-id. If used for a group then it should
+   * be prefixed by '@'. If null then the currently logged in user is used.
+   */
+  public function removeRecryptionRequestHandledNotification($ownerId)
+  {
+    /** @var NotificationManager $notificationManager */
+    $notificationManager = $this->appContainer->get(NotificationManager::class);
+    $notification = $notificationManager->createNotification();
+
+    $notification->setApp($this->appName)
+      ->setUser($ownerId)
+      ->setSubject(Notifier::RECRYPT_USER_HANDLED_SUBJECT)
+      ->setObject('owner_id', $ownerId);
+    $notificationManager->markProcessed($notification);
+  }
 }

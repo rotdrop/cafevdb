@@ -66,12 +66,12 @@ class EncryptionController extends OCSController
    */
   public function getRecryptRequests(?string $userId = null)
   {
-    $recryptRequests = $this->keyService->getEncryptionRequests();
+    $recryptRequests = $this->keyService->getRecryptionRequests();
     //// Testing
     $testUser = 'bilbo.baggins';
-    $recryptRequests[$testUser] = $this->keyService->getCryptor($testUser)->getPublicKey();
+    $recryptRequests[$testUser] = time(); // $this->keyService->getCryptor($testUser)->getPublicKey();
     $testUser = 'claus';
-    $recryptRequests[$testUser] = $this->keyService->getCryptor($testUser)->getPublicKey();
+    $recryptRequests[$testUser] = time(); $this->keyService->getCryptor($testUser)->getPublicKey();
     ////
     return new DataResponse([
       'requests' => $recryptRequests,

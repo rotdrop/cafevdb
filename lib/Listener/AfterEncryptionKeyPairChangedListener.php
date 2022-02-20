@@ -81,7 +81,7 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
       $keyService->removeSharedPrivateValues($ownerId);
 
       // enqueue a recryption request
-      $keyService->pushRecryptionNotification($ownerId, $newKeyPair);
+      $keyService->pushRecryptionRequestNotification($ownerId, $newKeyPair);
 
     } else {
       $keyService->recryptSharedPrivateValue($ownerId, $oldKeyPair, $newKeyPair);

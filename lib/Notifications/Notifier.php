@@ -32,8 +32,11 @@ class Notifier implements \OCP\Notification\INotifier
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   const RECRYPT_USER_SUBJECT = 'recrypt_user';
+  const RECRYPT_USER_DENIED_SUBJECT = 'recrypt_user_denied';
+  const RECRYPT_USER_HANDLED_SUBJECT = 'recrypt_user_handled';
   const ACCEPT_ACTION = 'accept';
   const DECLINE_ACTION = 'decline';
+  const PROTEST_ACTION = 'protest';
 
   /** @var string */
   protected $appName;
