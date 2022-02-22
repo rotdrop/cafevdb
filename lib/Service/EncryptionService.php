@@ -232,6 +232,14 @@ class EncryptionService
   }
 
   /**
+   * @return Crypto\ICryptor
+   */
+  public function getAppAsymmetricCryptor():Crypto\ICryptor
+  {
+    return $this->appAsymmetricCryptor;
+  }
+
+  /**
    * Initialize the per-user public/private key pair, which
    * inparticular is used to propagate the app's encryption key to all
    * relevant users.

@@ -38,11 +38,15 @@ class Registration
     $context->registerServiceAlias(
       'export:bank-bulk-transactions:aqbanking',
       Finance\AqBankingBulkTransactionExporter::class);
+
     $context->registerService('AppCryptor', function(ContainerInterface $container) {
       return $container->get(EncryptionService::class)->getAppCryptor();
     });
     $context->registerService(CloudSymmetricCryptor::class, function(ContainerInterface $container) {
       return $container->get('AppCryptor');
+    });
+    $context->registerService('AppAsymmetricCryptor', function(ContainerInterface $container) {
+      return $container->get(EncryptionService::class)->getAppAsymmetricCryptor();
     });
 
     $context->registerService(ucfirst(self::MANAGEMENT_GROUP_ID), function(ContainerInterface $container) {
