@@ -1026,7 +1026,7 @@ class EntityManager extends EntityManagerDecorator
    * @bug This function does not seem to belong here ...
    * @todo Find out where this function belongs to ...
    */
-  public function recryptEncryptedProperties(string $newEncryptionKey, ?string $oldEncryptionKey)
+  public function recryptEncryptedProperties(Crypto\ICryptor $newAppCryptor, ?Crypto\ICryptor $oldAppCryptor)
   {
     if (!$this->connected()) {
       throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
@@ -1045,8 +1045,8 @@ class EntityManager extends EntityManagerDecorator
     $this->beginTransaction();
     try {
       // make sure decryption is still with the old key if it is given
-      if (!empty($oldEncryptionKey)) {
-        $transformer->setAppEncryptionKey($oldEncryptionKey);
+      if (!empty($oldAppCryptor)) {
+        $transformer->setAppCryptor($oldAppCryptor);
       }
 
       $transformer->setCachable(false);
@@ -1071,10 +1071,10 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Set new encryption key
-      if (empty($oldEncryptionKey)) {
-        $oldEncryptionKey = $transformer->getAppEncryptionKey();
+      if (empty($oldAppCryptor)) {
+        $oldAppCryptor = $transformer->getAppCryptor();
       }
-      $transformer->setAppEncryptionKey($newEncryptionKey);
+      $transformer->setAppCryptor($newAppCryptor);
 
       // Flush to disk with new encryption key
       $this->flush();
@@ -1094,7 +1094,7 @@ class EntityManager extends EntityManagerDecorator
     } catch (\Throwable $t) {
       $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
-      $transformer->setAppEncryptionKey($oldEncryptionKey);
+      $transformer->setAppCryptor($oldAppCryptor);
       $this->reopen();
       throw new \RuntimeException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),

@@ -42,9 +42,6 @@ class Registration
     $context->registerService('AppCryptor', function(ContainerInterface $container) {
       return $container->get(EncryptionService::class)->getAppCryptor();
     });
-    $context->registerService(CloudSymmetricCryptor::class, function(ContainerInterface $container) {
-      return $container->get('AppCryptor');
-    });
     $context->registerService('AppAsymmetricCryptor', function(ContainerInterface $container) {
       return $container->get(EncryptionService::class)->getAppAsymmetricCryptor();
     });

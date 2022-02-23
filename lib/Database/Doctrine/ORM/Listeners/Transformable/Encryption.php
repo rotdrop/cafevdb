@@ -27,6 +27,7 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
+use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Common\Util;
 
@@ -37,7 +38,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var string */
   private $managementGroupId;
 
-  /** @var Crypto\CloudSymmetricCryptor */
+  /** @var Crypto\ICryptor */
   private $appCryptor;
 
   /** @var Crypto\SealCryptor */
@@ -51,12 +52,12 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
   public function __construct(
     $managementGroupId
-    , Crypto\CloudSymmetricCryptor $appCryptor
+    , EncryptionService $encryptionService
     , Crypto\SealCryptor $sealCryptor
     , ILogger $logger
   ) {
     $this->managementGroupId = '@' . $managementGroupId;
-    $this->appCryptor = $appCryptor;
+    $this->appCryptor = $encryptionService->getAppAsymmetricCryptor();
     // The seal-cryptor carries state, namely the array of key-cryptors, so
     // better take a copy here.
     $this->sealCryptor = clone $sealCryptor;
@@ -66,24 +67,19 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   }
 
   /**
-   * Install a new encryption key, return the old one.
-   *
-   * @param null|string $encryptionKey The new encryption key.
-   *
-   * @return null|string The old global shared encryption key.
+   * Set the shared app-cryptor which is used to encrypt the database values
    */
-  public function setAppEncryptionKey(?string $encryptionKey):?string
+  public function setAppCryptor(?Crypto\ICryptor $appCryptor)
   {
-    return $this->appCryptor->setEncryptionKey($encryptionKey);
+    $this->appCryptor = $appCryptor;
   }
 
   /**
-   * @return null|string The global shared encryption key of the management
-   * board.
+   * Return the shared app-cryptor which is used to encrypt the database values
    */
-  public function getAppEncryptionKey():?string
+  public function getAppCryptor():?Crypto\ICryptor
   {
-    return $this->appCryptor->getEncryptionKey();
+    return $this->appCryptor;
   }
 
   /**
@@ -127,18 +123,8 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform($value, &$context = null)
   {
-    // For now allow mixing the seal-scheme with the stand cloud-cryptor in
-    // order to be able to switch between git-branches without changing the
-    // data-base.
-    // @todo Remove when ready.
-    if (!$this->sealService->isSealedData($value)) {
-      if ($this->isEncrypted()) {
-        try {
-          return $this->appCryptor->decrypt($value);
-        } catch (\Throwable $t) {
-          return $value;
-        }
-      }
+    if (!$this->isEncrypted()) {
+      return $value;
     }
 
     $context = $this->manageEncryptionContext($value, $context);
@@ -164,7 +150,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
   public function isEncrypted():bool
   {
-    return !empty($this->appCryptor->getEncryptionKey());
+    return !empty($this->appCryptor);
   }
 
   private function getSealCryptor(string $encryptionId):Crypto\ICryptor

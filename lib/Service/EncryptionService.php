@@ -232,9 +232,9 @@ class EncryptionService
   }
 
   /**
-   * @return Crypto\ICryptor
+   * @return null|Crypto\AsymmetricCryptorInterface
    */
-  public function getAppAsymmetricCryptor():Crypto\ICryptor
+  public function getAppAsymmetricCryptor():?Crypto\AsymmetricCryptorInterface
   {
     return $this->appAsymmetricCryptor;
   }

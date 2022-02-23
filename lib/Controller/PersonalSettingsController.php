@@ -365,7 +365,7 @@ class PersonalSettingsController extends Controller {
       //$this->logInfo(print_r($configValues, true));
 
       // make a backup by just copying plain values which can be
-      // restore disregarding any encryption key.
+      // restored disregarding any encryption key.
       $backupSuffix = '::'.(new \DateTime())->format('YmdHis');
       try {
         foreach (array_keys($configValues) as $configKey) {
@@ -388,15 +388,23 @@ class PersonalSettingsController extends Controller {
 
       try {
 
-        $encryptionService->setAppEncryptionKey($systemKey);
+        $encryptionService->initAppKeyPair();
+        $oldDatabaseCryptor = $encryptionService->getAppAsymmetricCryptor();
+        if (!empty($oldDatabaseCryptor)) {
+          $oldDatabaseCryptor = clone $oldDatabaseCryptor;
+        }
 
-        // re-generate the private/public key pair
-        $this->encryptionService()->initAppKeyPair(forceNewKeyPair: true);
+        $encryptionService->setAppEncryptionKey($systemKey);
 
         // re-crypt the config-space
         $this->configService->encryptConfigValues([
           EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
         ]);
+
+
+        // re-generate the private/public key pair
+        $encryptionService->initAppKeyPair(forceNewKeyPair: true);
+        $newDatabaseCryptor = $encryptionService->getAppAsymmetricCryptor();
 
         // re-crypt the data-base columns. Changing the data-base
         // values is wrapped into a transaction, so it should clean-up
@@ -404,7 +412,7 @@ class PersonalSettingsController extends Controller {
         // between.
         /** @var EntityManager $entityManager */
         $entityManager = $this->di(EntityManager::class);
-        $entityManager->recryptEncryptedProperties($systemKey, $oldKey);
+        $entityManager->recryptEncryptedProperties($newDatabaseCryptor, $oldDatabaseCryptor);
 
       } catch (\Throwable $t) {
         $this->logException($t);
