@@ -81,12 +81,41 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   /** {@inheritdoc} */
   public function decrypt(?string $encryptedData):?string
   {
+    $encryptedData = base64_decode($encryptedData);
+    if ($encryptedData === false) {
+      throw new Exceptions\EncryptionException('Base64-decode of the encrypted data failed.');
+    }
     $decryptedData = null;
-    $result = openssl_private_decrypt(base64_decode($encryptedData), $decryptedData, $this->privKey);
+    $result = openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
     if ($result !== false) {
       throw new Exceptions\DecryptionFailedException('Decryption failed: ' + openssl_error_string());
     }
     return $decryptedData;
+  }
+
+
+  /** {@inheritdoc} */
+  public function sign($data):string
+  {
+    $result = openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
+    if ($result === false) {
+      throw new Exceptions\EncryptionException('Signing data failed: ' + openssl_error_string());
+    }
+    return base64_encode($signature);
+  }
+
+  /** {@inheritdoc} */
+  public function verify($data, string $signature):bool
+  {
+    $signature = base64_decode($signature);
+    if ($signature === false) {
+      throw new Exceptions\EncryptionException('Base64-decode of the signature failed.');
+    }
+    $result = openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
+    if ($result === -1 || $result === false) {
+      throw new Exceptions\EncryptionException('Verify signature failed: ' + openssl_error_string());
+    }
+    return $result;
   }
 
   /** {@inheritdoc} */
@@ -112,25 +141,5 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   public function canVerify():bool
   {
     return $this->canEncrypt();
-  }
-
-  /** {@inheritdoc} */
-  public function sign($data):string
-  {
-    $result = openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
-    if ($result === false) {
-      throw new Exceptions\EncryptionException('Signing data failed: ' + openssl_error_string());
-    }
-    return $signature;
-  }
-
-  /** {@inheritdoc} */
-  public function verify($data, string $signature):bool
-  {
-    $result = openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
-    if ($result === -1 || $result === false) {
-      throw new Exceptions\EncryptionException('Verify signature failed: ' + openssl_error_string());
-    }
-    return $result;
   }
 };
