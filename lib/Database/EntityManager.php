@@ -964,8 +964,8 @@ class EntityManager extends EntityManagerDecorator
    */
   public function entitiesByAnnotation(string $annotationClass)
   {
-    if (is_array($this->annotationsEntites[$annotationClass])) {
-      return $this->annotationsEntites[$annotationClass];
+    if (is_array($this->annotationEntites[$annotationClass])) {
+      return $this->annotationEntites[$annotationClass];
     }
     $this->annotationEntites[$annotationClass] = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
@@ -982,8 +982,8 @@ class EntityManager extends EntityManagerDecorator
    */
   public function propertiesByAnnotation(string $annotationClass)
   {
-    if (is_array($this->annotationsProperties[$annotationClass])) {
-      return $this->annotationsProperties[$annotationClass];
+    if (is_array($this->annotationProperties[$annotationClass])) {
+      return $this->annotationProperties[$annotationClass];
     }
     $this->annotationProperties[$annotationClass] = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
