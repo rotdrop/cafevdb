@@ -31,14 +31,18 @@ use OCA\CAFEVDB\Exceptions;
 /** Asymmetric encryption using the ParagonIE\Halite library */
 class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
 {
-  private $privKey = null;
+  private $privSignKey = null;
 
-  private $pubKey = null;
+  private $pubSignKey = null;
 
-  public function __construct($privKey = null, ?string $password = null)
+  private $privEncKey = null;
+
+  private $pubEncKey = null;
+
+  public function __construct($privSignKey = null, ?string $password = null)
   {
-    if (!empty($privKey)) {
-      $this->setPrivateKey($privKey, $password);
+    if (!empty($privSignKey)) {
+      $this->setPrivateKey($privSignKey, $password);
     }
   }
 
@@ -47,26 +51,28 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
    *
    * The paramter $password is ignored and must be kept at null.
    */
-  public function setPrivateKey($privKey, ?string $password = null):AsymmetricCryptorInterface
+  public function setPrivateKey($privSignKey, ?string $password = null):AsymmetricCryptorInterface
   {
     if ($password !== null) {
       throw new Exceptions\EncryptionKeyException('The private key has to be unlocked before passing it here.');
     }
-    $this->privKey = $privKey;
+    $this->privSignKey = $privSignKey;
+    $this->privEncKey = $privSignKey->getEncryptionPrivateKey();
     return $this;
   }
 
   /** {@inheritdoc} */
-  public function setPublicKey($pubKey):AsymmetricCryptorInterface
+  public function setPublicKey($pubSignKey):AsymmetricCryptorInterface
   {
-    $this->pubKey = $pubKey;
+    $this->pubSignKey = $pubSignKey;
+    $this->pubEncKey = $pubSignKey->getEncryptionPublicKey();
     return $this;
   }
 
   /** {@inheritdoc} */
   public function getPublicKey()
   {
-    return $this->pubKey;
+    return $this->pubSignKey;
   }
 
   /** {@inheritdoc} */
@@ -77,7 +83,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     }
     return Halite\Asymmetric\Crypto::seal(
       new HiddenString($decryptedData),
-      $this->pubKey,
+      $this->pubEncKey,
       Halite::ENCODE_BASE64URLSAFE
     );
   }
@@ -90,7 +96,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     }
     return Halite\Asymmetric\Crypto::unseal(
       $encryptedData,
-      $this->privKey,
+      $this->privEncKey,
       Halite::ENCODE_BASE64URLSAFE
     );
   }
@@ -98,12 +104,45 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   /** {@inheritdoc} */
   public function canEncrypt():bool
   {
-    return $this->pubKey !== null;
+    return $this->pubSignKey !== null;
   }
 
   /** {@inheritdoc} */
   public function canDecrypt():bool
   {
-    return $this->privKey !== null;
+    return $this->privSignKey !== null;
+  }
+
+  /** {@inheritdoc} */
+  public function canSign():bool
+  {
+    return $this->canDecrypt();
+  }
+
+  /** {@inheritdoc} */
+  public function canVerify():bool
+  {
+    return $this->canEncrypt();
+  }
+
+  /** {@inheritdoc} */
+  public function sign($data):string
+  {
+    return Halite\Asymmetric\Crypto::sign(
+      $data,
+      $this->privSignKey,
+      Halite::ENCODE_BASE64URLSAFE
+    );
+  }
+
+  /** {@inheritdoc} */
+  public function verify($data, string $signature):bool
+  {
+    return Halite\Asymmetric\Crypto::verify(
+      $data,
+      $this->pubSignKey,
+      $signature,
+      Halite::ENCODE_BASE64URLSAFE
+    );
   }
 };

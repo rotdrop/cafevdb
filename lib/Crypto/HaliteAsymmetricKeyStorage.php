@@ -33,7 +33,7 @@ class HaliteAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
   /** create a key-pair, but don't store it */
   protected function createKeyPair()
   {
-    $keyPair = Halite\KeyFactory::generateEncryptionKeyPair();
+    $keyPair = Halite\KeyFactory::generateSignatureKeyPair();
     return [
       self::PRIVATE_ENCRYPTION_KEY => $keyPair->getSecretKey(),
       self::PUBLIC_ENCRYPTION_KEY => $keyPair->getPublicKey(),
@@ -44,13 +44,13 @@ class HaliteAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
   protected function unserializeKey(string $rawKeyMaterial, string $which)
   {
     if ($which == self::PRIVATE_ENCRYPTION_KEY) {
-      return Halite\Asymmetric\EncryptionSecretKey(
+      return Halite\Asymmetric\SignatureSecretKey(
         new HiddenString(
           base64_decode($rawKeyMaterial)
         )
       );
     } else {
-      return Halite\Asymmetric\EncryptionPublicKey(
+      return Halite\Asymmetric\SignaturePublicKey(
         new HiddenString(
           base64_decode($rawKeyMaterial)
         )

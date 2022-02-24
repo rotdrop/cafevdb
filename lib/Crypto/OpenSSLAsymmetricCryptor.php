@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Crypto;
 /** Asymmetric encryption using the OpenSSL extension of PHP */
 class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
 {
+  private const SIGNING_ALGORITHM = OPENSSL_ALGO_SHA512;
+
   private $privKey = null;
 
   private $pubKey = null;
@@ -89,5 +91,31 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   public function canDecrypt():bool
   {
     return $this->privKey !== null;
+  }
+
+
+  /** {@inheritdoc} */
+  public function canSign():bool
+  {
+    return $this->canDecrypt();
+  }
+
+  /** {@inheritdoc} */
+  public function canVerify():bool
+  {
+    return $this->canEncrypt();
+  }
+
+  /** {@inheritdoc} */
+  public function sign($data):string
+  {
+    openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
+    return $signature;
+  }
+
+  /** {@inheritdoc} */
+  public function verify($data, string $signature):bool
+  {
+    return openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
   }
 };

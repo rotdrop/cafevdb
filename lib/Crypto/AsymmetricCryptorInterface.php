@@ -46,4 +46,12 @@ interface AsymmetricCryptorInterface extends ICryptor
 
   /** Return the currently used public key. */
   public function getPublicKey();
+
+  public function sign($data):string;
+
+  public function verify($data, string $signature):bool;
+
+  public function canSign():bool;
+
+  public function canVerify():bool;
 };
