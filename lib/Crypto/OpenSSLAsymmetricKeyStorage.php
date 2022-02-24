@@ -26,10 +26,15 @@ namespace OCA\CAFEVDB\Crypto;
 
 class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
 {
+  // NOPE. OpenSSL supports RSA-encryption only.
+  // const KEY_CONFIG = [
+  //   'private_key_type' => OPENSSL_KEYTYPE_EC,
+  //   'private_key_bits' => 512,
+  //   'curve_name' => 'prime256v1',
+  // ];
   const KEY_CONFIG = [
-    'private_key_type' => OPENSSL_KEYTYPE_EC,
-    'private_key_bits' => 512,
-    'curve_name' => 'prime256v1',
+    'private_key_type' => OPENSSL_KEYTYPE_RSA,
+    'private_key_bits' => 4096,
   ];
 
   /** create a key-pair, but don't store it */
