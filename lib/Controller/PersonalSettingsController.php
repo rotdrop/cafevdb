@@ -332,7 +332,7 @@ class PersonalSettingsController extends Controller {
       $encryptionService = $this->encryptionService();
 
       $storedKeyHash = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY);
-      if (!$encryptionService->verifyHash($oldKey, $hash)) {
+      if (!$encryptionService->verifyHash($oldKey, $storedKeyHash)) {
         return self::grumble($this->l->t('Wrong old encryption key'));
       }
 
