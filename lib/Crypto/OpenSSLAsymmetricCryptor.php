@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+use OCA\CAFEVDB\Exceptions;
+
 /** Asymmetric encryption using the OpenSSL extension of PHP */
 class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
 {
@@ -69,7 +71,10 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   public function encrypt(?string $decryptedData):?string
   {
     $encryptedData = null;
-    openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
+    $result = openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
+    if ($result !== true) {
+      throw new Exceptions\EncryptionFailedException('Encryption failed: ' + openssl_error_string());
+    }
     return base64_encode($encryptedData);
   }
 
@@ -77,7 +82,10 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   public function decrypt(?string $encryptedData):?string
   {
     $decryptedData = null;
-    openssl_private_decrypt(base64_decode($encryptedData), $decryptedData, $this->privKey);
+    $result = openssl_private_decrypt(base64_decode($encryptedData), $decryptedData, $this->privKey);
+    if ($result !== false) {
+      throw new Exceptions\DecryptionFailedException('Decryption failed: ' + openssl_error_string());
+    }
     return $decryptedData;
   }
 
@@ -109,13 +117,20 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   /** {@inheritdoc} */
   public function sign($data):string
   {
-    openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
+    $result = openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
+    if ($result === false) {
+      throw new Exceptions\EncryptionException('Signing data failed: ' + openssl_error_string());
+    }
     return $signature;
   }
 
   /** {@inheritdoc} */
   public function verify($data, string $signature):bool
   {
-    return openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
+    $result = openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
+    if ($result === -1 || $result === false) {
+      throw new Exceptions\EncryptionException('Verify signature failed: ' + openssl_error_string());
+    }
+    return $result;
   }
 };
