@@ -73,7 +73,7 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     $encryptedData = null;
     $result = openssl_public_encrypt($decryptedData, $encryptedData, $this->pubKey);
     if ($result !== true) {
-      throw new Exceptions\EncryptionFailedException('Encryption failed: ' + openssl_error_string());
+      throw new Exceptions\EncryptionFailedException('Encryption failed: ' . openssl_error_string());
     }
     return base64_encode($encryptedData);
   }
@@ -87,8 +87,8 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     }
     $decryptedData = null;
     $result = openssl_private_decrypt($encryptedData, $decryptedData, $this->privKey);
-    if ($result !== false) {
-      throw new Exceptions\DecryptionFailedException('Decryption failed: ' + openssl_error_string());
+    if ($result !== true) {
+      throw new Exceptions\DecryptionFailedException('Decryption failed: ' . openssl_error_string());
     }
     return $decryptedData;
   }
@@ -99,7 +99,7 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   {
     $result = openssl_sign($data, $signature, $this->privKey, self::SIGNING_ALGORITHM);
     if ($result === false) {
-      throw new Exceptions\EncryptionException('Signing data failed: ' + openssl_error_string());
+      throw new Exceptions\EncryptionException('Signing data failed: ' . openssl_error_string());
     }
     return base64_encode($signature);
   }
@@ -113,7 +113,7 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     }
     $result = openssl_verify($data, $signature, $this->pubKey, self::SIGNING_ALGORITHM);
     if ($result === -1 || $result === false) {
-      throw new Exceptions\EncryptionException('Verify signature failed: ' + openssl_error_string());
+      throw new Exceptions\EncryptionException('Verify signature failed: ' . openssl_error_string());
     }
     return $result;
   }
