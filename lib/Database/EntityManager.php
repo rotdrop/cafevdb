@@ -982,7 +982,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function propertiesByAnnotation(string $annotationClass)
   {
-    if (is_array($this->annotationProperties[$annotationClass])) {
+    if (is_array($this->annotationProperties[$annotationClass] ?? null)) {
       return $this->annotationProperties[$annotationClass];
     }
     $this->annotationProperties[$annotationClass] = [];
