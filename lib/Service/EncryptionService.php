@@ -345,24 +345,24 @@ class EncryptionService
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize global encryption key without bound user credentials.'));
     }
 
-    $usrdbkey = $this->getUserEncryptionKey();
-    if (empty($usrdbkey)) {
+    $userDatabaseKey = $this->getUserEncryptionKey();
+    if (empty($userDatabaseKey)) {
       // No key -> unencrypted
       $this->logDebug("No Encryption Key, setting to empty string in order to disable encryption.");
       $this->appCryptor->setEncryptionKey(''); // not null, just empty
     } else {
-      $this->appCryptor->setEncryptionKey($usrdbkey);
+      $this->appCryptor->setEncryptionKey($userDatabaseKey);
     }
 
     // compare the user-key with the stored encryption key hash
-    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
-    if (!$this->verifyHash($usrdbkey, $sysdbkeyhash)) {
+    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
       // Failed
       $this->appCryptor->setEncryptionKey(null);
       throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key.'));
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
-      $this->logDebug('Encryption keys validated'.(empty($usrdbkey) ? ' (no encryption)' : '').'.');
+      $this->logDebug('Encryption keys validated'.(empty($userDatabaseKey) ? ' (no encryption)' : '').'.');
     }
 
     return true;
@@ -434,10 +434,10 @@ class EncryptionService
       $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
     }
 
-    $sysdbkeyhash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
 
-    if (empty($sysdbkeyhash) !== empty($encryptionKey)) {
-      if (empty($sysdbkeyhash)) {
+    if (empty($sysDatabaseKeyHash) !== empty($encryptionKey)) {
+      if (empty($sysDatabaseKeyHash)) {
         $this->logError('Stored encryption key is empty while provided encryption key is not empty.');
       } else {
         $this->logError('Stored encryption key is not empty while provided encryption key is empty.');
@@ -445,7 +445,7 @@ class EncryptionService
       return false;
     }
 
-    $match = $this->verifyHash($encryptionKey, $sysdbkeyhash);
+    $match = $this->verifyHash($encryptionKey, $sysDatabaseKeyHash);
 
     if (!$match) {
       $this->logError('Unable to validate HASH for encryption key.');
