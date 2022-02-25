@@ -37,6 +37,8 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
     'private_key_bits' => 4096,
   ];
 
+  static $name = 'openssl';
+
   /** create a key-pair, but don't store it */
   protected function createKeyPair()
   {

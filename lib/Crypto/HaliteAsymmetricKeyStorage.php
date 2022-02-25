@@ -30,6 +30,8 @@ use ParagonIE\HiddenString\HiddenString;
 class HaliteAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
 {
 
+  static $name = 'halite';
+
   /** create a key-pair, but don't store it */
   protected function createKeyPair()
   {

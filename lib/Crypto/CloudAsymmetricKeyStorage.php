@@ -35,6 +35,11 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const NAME_SEPARATOR = ';';
+
+  /** @var string */
+  static $name = null;
+
   /** @var string */
   private $appName;
 
@@ -135,11 +140,25 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 
   private function getUserValue(string $ownerId, string $key, mixed $default = null)
   {
-    return $this->cloudConfig->getUserValue($ownerId, $this->appName, $key, $default);
+    $value = $this->cloudConfig->getUserValue($ownerId, $this->appName, $key, $default);
+    if (!empty($value)) {
+      $separatorPos = strpos($value, self::NAME_SEPARATOR);
+      if ($separatorPos !== false) {
+        $name = substr($value, 0, $separatorPos);
+        if ($name != static::$name) {
+          throw new \InvalidArgumentException($this->l->t('Key-storage mismatch: %1$s / %2$s', [ $name, static::$name ]));
+        }
+        $value = substr($value, $separatorPos+1);
+      }
+    }
+    return $value;
   }
 
   private function setUserValue(string $ownerId, string $key, mixed $value)
   {
+    if (!empty(static::$name)) {
+      $value = static::$name . self::NAME_SEPARATOR . $value;
+    }
     return $this->cloudConfig->setUserValue($ownerId, $this->appName, $key, $value);
   }
 }
