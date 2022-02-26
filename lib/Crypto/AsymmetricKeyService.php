@@ -164,7 +164,12 @@ class AsymmetricKeyService
       return self::$keyPairs[$ownerId];
     }
 
-    $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+    try {
+      $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
+    } catch (\Throwable $t) {
+      $this->logException($t, $this->l->t('Unable to retrieve old key-pair for "%s".', $ownerId));
+      $keyPair = [];
+    }
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
 
       $oldKeyPair = self::$keyPairs[$ownerId] ?? null;
