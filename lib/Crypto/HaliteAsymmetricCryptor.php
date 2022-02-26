@@ -57,7 +57,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
       throw new Exceptions\EncryptionKeyException('The private key has to be unlocked before passing it here.');
     }
     $this->privSignKey = $privSignKey;
-    $this->privEncKey = $privSignKey->getEncryptionPrivateKey();
+    $this->privEncKey = $privSignKey->getEncryptionSecretKey();
     return $this;
   }
 

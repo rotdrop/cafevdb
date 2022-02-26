@@ -46,13 +46,13 @@ class HaliteAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
   protected function unserializeKey(string $rawKeyMaterial, string $which)
   {
     if ($which == self::PRIVATE_ENCRYPTION_KEY) {
-      return Halite\Asymmetric\SignatureSecretKey(
+      return new Halite\Asymmetric\SignatureSecretKey(
         new HiddenString(
           base64_decode($rawKeyMaterial)
         )
       );
     } else {
-      return Halite\Asymmetric\SignaturePublicKey(
+      return new Halite\Asymmetric\SignaturePublicKey(
         new HiddenString(
           base64_decode($rawKeyMaterial)
         )
