@@ -55,12 +55,16 @@ class HaliteSymmetricCryptor implements ICryptor
     $oldEncryptionKey = $this->encryptionKey;
     $this->encryptionKey = $encryptionKey;
 
-    // Halite will compute a hash of its own. We rather assume that the
-    // $encryptionKey is more or less random and not a simple password and
-    // just split it in order to avoid passing 0-bytes as salt.
-    // $salt = substr($encryptionKey, -SODIUM_CRYPTO_PWHASH_SALTBYTES);
-    $salt = str_pad('', SODIUM_CRYPTO_PWHASH_SALTBYTES, chr(0));
-    $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey($encryptionKey, $salt);
+    if (!empty($encryptionKey)) {
+      // Halite will compute a hash of its own. We rather assume that the
+      // $encryptionKey is more or less random and not a simple password and
+      // just split it in order to avoid passing 0-bytes as salt.
+      // $salt = substr($encryptionKey, -SODIUM_CRYPTO_PWHASH_SALTBYTES);
+      $salt = str_pad('', SODIUM_CRYPTO_PWHASH_SALTBYTES, chr(0));
+      $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey($encryptionKey, $salt);
+    } else {
+      $this->haliteEncryptionKey = null;
+    }
 
     return $oldEncryptionKey;
   }
