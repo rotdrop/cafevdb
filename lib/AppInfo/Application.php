@@ -165,11 +165,11 @@ class Application extends App implements IBootstrap
     });
 
     $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricKeyStorageInterface::class, function($c) {
-      return $c->get(\OCA\CAFEVDB\Crypto\OpenSSLAsymmetricKeyStorage::class);
+      return $c->get(\OCA\CAFEVDB\Crypto\HaliteAsymmetricKeyStorage::class);
     });
 
     $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricCryptorInterface::class, function($c) {
-      return $c->get(\OCA\CAFEVDB\Crypto\OpenSSLAsymmetricCryptor::class);
+      return $c->get(\OCA\CAFEVDB\Crypto\HaliteAsymmetricCryptor::class);
     });
 
     // Register Middleware

@@ -146,7 +146,7 @@ class EncryptionService
     $this->containerConfig = $containerConfig;
     $this->asymKeyService = $asymKeyService;
     $this->sealService = $sealService;
-    $this->appCryptor = new Crypto\CloudSymmetricCryptor($crypto);
+    $this->appCryptor = new Crypto\HaliteSymmetricCryptor;
     $this->crypto = $crypto;
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
