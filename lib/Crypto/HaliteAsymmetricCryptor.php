@@ -31,12 +31,16 @@ use OCA\CAFEVDB\Exceptions;
 /** Asymmetric encryption using the ParagonIE\Halite library */
 class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
 {
+  /** @var Halite\Asymmetric\SignatureSecretKey */
   private $privSignKey = null;
 
+  /** @var Halite\Asymmetric\SignaturePublicKey */
   private $pubSignKey = null;
 
+  /** @var Halite\Asymmetric\EncryptionSecretKey */
   private $privEncKey = null;
 
+  /** @var Halite\Asymmetric\EncryptionPublicKey */
   private $pubEncKey = null;
 
   public function __construct($privSignKey = null, ?string $password = null)
@@ -94,9 +98,32 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     if (empty($encryptedData)) {
       return $encryptedData;
     }
-    return Halite\Asymmetric\Crypto::unseal(
+    /** @var HiddenString $result */
+    $result = Halite\Asymmetric\Crypto::unseal(
       $encryptedData,
       $this->privEncKey,
+      Halite\Halite::ENCODE_BASE64URLSAFE
+    );
+    return $result->getString();
+  }
+
+  /** {@inheritdoc} */
+  public function sign($data):string
+  {
+    return Halite\Asymmetric\Crypto::sign(
+      $data,
+      $this->privSignKey,
+      Halite\Halite::ENCODE_BASE64URLSAFE
+    );
+  }
+
+  /** {@inheritdoc} */
+  public function verify($data, string $signature):bool
+  {
+    return Halite\Asymmetric\Crypto::verify(
+      $data,
+      $this->pubSignKey,
+      $signature,
       Halite\Halite::ENCODE_BASE64URLSAFE
     );
   }
@@ -123,26 +150,5 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   public function canVerify():bool
   {
     return $this->canEncrypt();
-  }
-
-  /** {@inheritdoc} */
-  public function sign($data):string
-  {
-    return Halite\Asymmetric\Crypto::sign(
-      $data,
-      $this->privSignKey,
-      Halite\Halite::ENCODE_BASE64URLSAFE
-    );
-  }
-
-  /** {@inheritdoc} */
-  public function verify($data, string $signature):bool
-  {
-    return Halite\Asymmetric\Crypto::verify(
-      $data,
-      $this->pubSignKey,
-      $signature,
-      Halite\Halite::ENCODE_BASE64URLSAFE
-    );
   }
 };
