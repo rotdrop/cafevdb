@@ -84,7 +84,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     return Halite\Asymmetric\Crypto::seal(
       new HiddenString($decryptedData),
       $this->pubEncKey,
-      Halite::ENCODE_BASE64URLSAFE
+      Halite\Halite::ENCODE_BASE64URLSAFE
     );
   }
 
@@ -97,7 +97,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     return Halite\Asymmetric\Crypto::unseal(
       $encryptedData,
       $this->privEncKey,
-      Halite::ENCODE_BASE64URLSAFE
+      Halite\Halite::ENCODE_BASE64URLSAFE
     );
   }
 
@@ -131,7 +131,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
     return Halite\Asymmetric\Crypto::sign(
       $data,
       $this->privSignKey,
-      Halite::ENCODE_BASE64URLSAFE
+      Halite\Halite::ENCODE_BASE64URLSAFE
     );
   }
 
@@ -142,7 +142,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
       $data,
       $this->pubSignKey,
       $signature,
-      Halite::ENCODE_BASE64URLSAFE
+      Halite\Halite::ENCODE_BASE64URLSAFE
     );
   }
 };

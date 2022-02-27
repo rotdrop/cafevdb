@@ -61,7 +61,10 @@ class HaliteSymmetricCryptor implements ICryptor
       // just split it in order to avoid passing 0-bytes as salt.
       // $salt = substr($encryptionKey, -SODIUM_CRYPTO_PWHASH_SALTBYTES);
       $salt = str_pad('', SODIUM_CRYPTO_PWHASH_SALTBYTES, chr(0));
-      $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey($encryptionKey, $salt);
+      $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey(
+        new HiddenString($encryptionKey),
+        $salt
+      );
     } else {
       $this->haliteEncryptionKey = null;
     }
@@ -87,7 +90,7 @@ class HaliteSymmetricCryptor implements ICryptor
         $data = Halite\Symmetric\Crypto::encrypt(
           new HiddenString($data),
           $this->haliteEncryptionKey,
-          Halite::ENCODE_BASE64URLSAFE);
+          Halite\Halite::ENCODE_BASE64URLSAFE);
       } catch (\Throwable $t) {
         throw new Exceptions\EncryptionFailedException('Encrypt failed', $t->getCode(), $t);
       }
@@ -99,7 +102,8 @@ class HaliteSymmetricCryptor implements ICryptor
   public function decrypt(?string $data):?string
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
-      if (substr($data, 0, Halite\Halite::VERSION_TAG_LEN) != Halite\Halite::VERSION_PREFIX) {
+      if (!str_starts_with($data, Halite\Halite::VERSION_PREFIX)) {
+        \OCP\Util::writeLog('cafevdb', 'NOT ENCRYPTED HACK ' . substr($data, 0, Halite\Halite::VERSION_TAG_LEN) . ' / ' . Halite\Halite::VERSION_PREFIX, \OCP\Util::INFO);
         // not encrypted hack
         return $data;
       }
@@ -108,7 +112,7 @@ class HaliteSymmetricCryptor implements ICryptor
         $data = Halite\Symmetric\Crypto::decrypt(
           $data,
           $this->haliteEncryptionKey,
-          Halite::ENCODE_BASE64URLSAFE);
+          Halite\Halite::ENCODE_BASE64URLSAFE);
         $data = $data->getString();
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
