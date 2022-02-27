@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20220126220000 extends EnlargeEncryptedVarCharColumns {};
+class Version20220227220000 extends EnlargeEncryptedVarCharColumns {};
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
