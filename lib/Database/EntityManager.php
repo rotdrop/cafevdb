@@ -332,7 +332,7 @@ class EntityManager extends EntityManagerDecorator
         }
       }
     } catch (\Throwable $t) {
-      $this->logException($t);
+      $this->logException($t, 'Caught execption trying to ping database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
       return false;
     }
     return true;
@@ -1095,7 +1095,11 @@ class EntityManager extends EntityManagerDecorator
       $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
       $this->rollback();
       $transformer->setAppCryptor($oldAppCryptor);
-      $this->reopen();
+      try {
+        $this->reopen();
+      } catch (\Throwable $t2) {
+        $this->logException($t2, 'Reopening entity-manager failed.');
+      }
       throw new \RuntimeException(
         $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
         $t->getCode(), $t);
