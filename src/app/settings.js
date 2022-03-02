@@ -214,7 +214,7 @@ const afterLoad = function(container) {
             $('.statusmessage.changed').show();
             if (data.message) {
               Notification.messages(data.message);
-              // container.find('.statusmessage.general').html(data.message).show();
+              container.find('.statusmessage.general').html(data.message).show();
             }
           })
           .fail(function(xhr, status, errorThrown) {
