@@ -23,19 +23,18 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
-use OCP\Security\ICrypto;
 use OCP\ILogger;
 
 class SealService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  /** @var ICrypto */
-  private $crypto;
+  /** @var SymmetricCryptorInterface */
+  private $dataCryptor;
 
-  public function __construct(ICrypto $crypto, ILogger $logger)
+  public function __construct(CryptoFactoryInterface $cryptoFactory, ILogger $logger)
   {
-    $this->crypto = $crypto;
+    $this->dataCryptor = $cryptoFactory->getSymmetricCryptor();
     $this->logger = $logger;
   }
 
@@ -45,7 +44,7 @@ class SealService
    *
    * @param string $data The data to seal
    *
-   * @param ICryptor[] $keyEncryption The encryption classes to encode the
+   * @param AsymmetricCryptorInterface[] $keyEncryption The encryption classes to encode the
    * user-keys with, an array of the form:
    * ```
    * [ USER1 => CRYPTOR1, USER2 => CRYPTOR2, ... ]
@@ -61,7 +60,8 @@ class SealService
   public function seal(string $data, array $keyEncryption):?string
   {
     $sealKey = \random_bytes(64);
-    $encryptedData = $this->crypto->encrypt($data, $sealKey);
+    $this->dataCryptor->setEncryptionKey($sealKey);
+    $encryptedData = $this->dataCryptor->encrypt($data);
 
     /** @var ICryptor $sealCryptor */
     foreach ($keyEncryption as $userId => $sealCryptor) {
@@ -145,7 +145,8 @@ class SealService
     }
     $key = $keyCryptor->decrypt($sealedKey);
 
-    return $this->crypto->decrypt($seal['data'], $key);
+    $this->dataCryptor->setEncryptionKey($key);
+    return $this->dataCryptor->decrypt($seal['data']);
   }
 
 

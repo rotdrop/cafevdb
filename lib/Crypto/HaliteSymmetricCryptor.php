@@ -29,7 +29,7 @@ use ParagonIE\HiddenString\HiddenString;
 use OCA\CAFEVDB\Exceptions;
 
 /** Use the encryption service provided by the ambient cloud software. */
-class HaliteSymmetricCryptor implements ICryptor
+class HaliteSymmetricCryptor implements SymmetricCryptorInterface
 {
   /** @var null|string */
   private $encryptionKey;
@@ -103,7 +103,6 @@ class HaliteSymmetricCryptor implements ICryptor
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
       if (!str_starts_with($data, Halite\Halite::VERSION_PREFIX)) {
-        \OCP\Util::writeLog('cafevdb', 'NOT ENCRYPTED HACK ' . substr($data, 0, Halite\Halite::VERSION_TAG_LEN) . ' / ' . Halite\Halite::VERSION_PREFIX, \OCP\Util::INFO);
         // not encrypted hack
         return $data;
       }

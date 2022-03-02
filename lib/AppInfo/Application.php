@@ -53,6 +53,7 @@ use OCA\CAFEVDB\Settings\PersonalSection;
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
+use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -164,14 +165,6 @@ class Application extends App implements IBootstrap
       return $c->query(EntityManager::class)->getConnection();
     });
 
-    $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricKeyStorageInterface::class, function($c) {
-      return $c->get(\OCA\CAFEVDB\Crypto\HaliteAsymmetricKeyStorage::class);
-    });
-
-    $context->registerService(\OCA\CAFEVDB\Crypto\AsymmetricCryptorInterface::class, function($c) {
-      return $c->get(\OCA\CAFEVDB\Crypto\HaliteAsymmetricCryptor::class);
-    });
-
     // Register Middleware
     $context->registerServiceAlias('SubadminMiddleware', SubadminMiddleware::class);
     $context->registerMiddleWare('SubadminMiddleware');
@@ -187,6 +180,9 @@ class Application extends App implements IBootstrap
 
     // Register Service stuff
     ServiceRegistration::register($context);
+
+    // Register crypto implementation
+    CryptoRegistration::register($context);
 
     $context->registerNotifierService(\OCA\CAFEVDB\Notifications\Notifier::class);
   }

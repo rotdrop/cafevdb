@@ -23,7 +23,6 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
-use OCP\Security\ICrypto;
 use OCA\CAFEVDB\Exceptions;
 
 /** Use the encryption service provided by the ambient cloud software. */

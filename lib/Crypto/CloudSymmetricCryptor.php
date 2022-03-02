@@ -27,7 +27,7 @@ use OCP\Security\ICrypto;
 use OCA\CAFEVDB\Exceptions;
 
 /** Use the encryption service provided by the ambient cloud software. */
-class CloudSymmetricCryptor implements ICryptor
+class CloudSymmetricCryptor implements SymmetricCryptorInterface
 {
   /** @var ICrypto */
   private $crypto;
