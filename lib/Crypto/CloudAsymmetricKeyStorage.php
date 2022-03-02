@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Crypto;
 
 use OCP\ILogger;
 use OCP\IL10N;
-use OCP\Security\ICrypto;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Exceptions;
@@ -46,8 +45,8 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   /** @var IConfig */
   private $cloudConfig;
 
-  /** @var ICrypto */
-  private $crypto;
+  /** @var SymmetricCryptorInterface */
+  private $cryptor;
 
   /** @var IL10N */
   protected $l;
@@ -57,13 +56,13 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     , ILogger $logger
     , IL10N $l10n
     , IConfig $cloudConfig
-    , ICrypto $crypto
+    , SymmetricCryptorInterface $cryptor
   ) {
     $this->appName = $appName;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->cloudConfig = $cloudConfig;
-    $this->crypto = $crypto;
+    $this->cryptor = $cryptor;
   }
 
   /** {@inheritdoc} */
@@ -72,7 +71,8 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     $privKeyMaterial = $this->getUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY);
     if (!empty($privKeyMaterial)) {
       try {
-        $privKeyMaterial = $this->crypto->decrypt($privKeyMaterial, $keyPassphrase);
+        $this->cryptor->setEncryptionKey($keyPassphrase);
+        $privKeyMaterial = $this->cryptor->decrypt($privKeyMaterial);
       } catch(\Throwable $t) {
         // exceptions are ok, but we want to stick to Exceptions\EncryptionException
         throw new Exceptions\EncryptionKeyException(
@@ -98,7 +98,8 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     ) = $keyPair = $this->createKeyPair();
 
     $privKeyMaterial = $this->serializeKey($privKey, self::PRIVATE_ENCRYPTION_KEY);
-    $privKeyMaterial = $this->crypto->encrypt($privKeyMaterial, $keyPassphrase);
+    $this->cryptor->setEncryptionKey($keyPassphrase);
+    $privKeyMaterial = $this->cryptor->encrypt($privKeyMaterial);
     $this->setUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY, $privKeyMaterial);
 
     $pubKeyMaterial = $this->serializeKey($pubKey, self::PUBLIC_ENCRYPTION_KEY);

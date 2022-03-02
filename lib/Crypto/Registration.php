@@ -33,19 +33,24 @@ class Registration
   static public function register(IRegistrationContext $context)
   {
     $context->registerService(CryptoFactoryInterface::class, function(ContainerInterface $container) {
-      return $container->get(HaliteCryptoFactory::class);
+      return self::getCryptoFactory($container);
     });
 
-    $context->registerService(ICryptor::class, function(ContainerInterface $container) {
-      return $container->get(CryptoFactoryInterface::class)->getCryptor();
+    $context->registerService(SymmetricCryptorInterface::class, function(ContainerInterface $container) {
+      return self::getCryptoFactory($container)->getSymmetricCryptor();
     });
 
     $context->registerService(AsymmetricCryptorInterface::class, function(ContainerInterface $container) {
-      return $container->get(CryptoFactoryInterface::class)->getAsymmetricCryptor();
+      return self::getCryptoFactory($container)->getAsymmetricCryptor();
     });
 
     $context->registerService(AsymmetricKeyStorageInterface::class, function(ContainerInterface $container) {
-      return $container->get(CryptoFactoryInterface::class)->getAsymmetricKeyStorage();
+      return self::getCryptoFactory($container)->getAsymmetricKeyStorage();
     });
+  }
+
+  static private function getCryptoFactory(ContainerInterface $container):CryptoFactoryInterface
+  {
+    return $container->get(HaliteCryptoFactory::class);
   }
 }
