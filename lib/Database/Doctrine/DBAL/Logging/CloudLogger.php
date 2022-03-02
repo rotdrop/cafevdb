@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -55,7 +55,9 @@ class CloudLogger implements SQLLogger
     $this->l = $l10n;
     $this->enabled = false;
     if ($this->encryptionService->bound()) {
-      $this->enabled = 0 != ($encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+      $debugMode = $encryptionService->getConfigValue('debugmode', 0);
+      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+      $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
     }
   }
 
