@@ -232,7 +232,9 @@ class EntityManager extends EntityManagerDecorator
     $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
-      $this->debug = 0 != ($this->encryptionService->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY);
+      $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
+      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+      $this->debug = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
       $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
       $this->decorateClassMetadata = true;
     }
@@ -1026,7 +1028,7 @@ class EntityManager extends EntityManagerDecorator
    * @bug This function does not seem to belong here ...
    * @todo Find out where this function belongs to ...
    */
-  public function recryptEncryptedProperties(Crypto\ICryptor $newAppCryptor, ?Crypto\ICryptor $oldAppCryptor)
+  public function recryptEncryptedProperties(?Crypto\ICryptor $newAppCryptor, ?Crypto\ICryptor $oldAppCryptor)
   {
     if (!$this->connected()) {
       throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
@@ -1044,10 +1046,7 @@ class EntityManager extends EntityManagerDecorator
     $encryptedEntities = [];
     $this->beginTransaction();
     try {
-      // make sure decryption is still with the old key if it is given
-      if (!empty($oldAppCryptor)) {
-        $transformer->setAppCryptor($oldAppCryptor);
-      }
+      $transformer->setAppCryptor($oldAppCryptor);
 
       $transformer->setCachable(false);
 
@@ -1071,9 +1070,6 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Set new encryption key
-      if (empty($oldAppCryptor)) {
-        $oldAppCryptor = $transformer->getAppCryptor();
-      }
       $transformer->setAppCryptor($newAppCryptor);
 
       // Flush to disk with new encryption key
@@ -1089,6 +1085,8 @@ class EntityManager extends EntityManagerDecorator
       }
 
       $transformer->setCachable(true);
+
+      // throw new \Exception('ARTIFICIAL EXCEPTION');
 
       $this->commit();
     } catch (\Throwable $t) {
