@@ -45,9 +45,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
 
   public function __construct($privSignKey = null, ?string $password = null)
   {
-    if (!empty($privSignKey)) {
-      $this->setPrivateKey($privSignKey, $password);
-    }
+    $this->setPrivateKey($privSignKey, $password);
   }
 
   /**
@@ -61,7 +59,11 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
       throw new Exceptions\EncryptionKeyException('The private key has to be unlocked before passing it here.');
     }
     $this->privSignKey = $privSignKey;
-    $this->privEncKey = $privSignKey->getEncryptionSecretKey();
+    if (!empty($privSignKey)) {
+      $this->privEncKey = $privSignKey->getEncryptionSecretKey();
+    } else {
+      $this->privEncKey = null;
+    }
     return $this;
   }
 
@@ -69,7 +71,11 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   public function setPublicKey($pubSignKey):AsymmetricCryptorInterface
   {
     $this->pubSignKey = $pubSignKey;
-    $this->pubEncKey = $pubSignKey->getEncryptionPublicKey();
+    if (!empty($pubSignKey)) {
+      $this->pubEncKey = $pubSignKey->getEncryptionPublicKey();
+    } else {
+      $this->pubEncKey = null;
+    }
     return $this;
   }
 
@@ -82,7 +88,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   /** {@inheritdoc} */
   public function encrypt(?string $decryptedData):?string
   {
-    if (empty($decryptedData)) {
+    if (empty($decryptedData) || empty($this->pubEncKey)) {
       return $decryptedData;
     }
     return Halite\Asymmetric\Crypto::seal(
@@ -95,7 +101,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   /** {@inheritdoc} */
   public function decrypt(?string $encryptedData):?string
   {
-    if (empty($encryptedData)) {
+    if (empty($encryptedData) || empty($this->privEncKey)) {
       return $encryptedData;
     }
     /** @var HiddenString $result */
