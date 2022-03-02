@@ -401,7 +401,6 @@ class PersonalSettingsController extends Controller {
           EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
         ]);
 
-
         // re-generate the private/public key pair
         $encryptionService->initAppKeyPair(forceNewKeyPair: true);
         $newDatabaseCryptor = $encryptionService->getAppAsymmetricCryptor();
@@ -417,6 +416,7 @@ class PersonalSettingsController extends Controller {
       } catch (\Throwable $t) {
         $this->logException($t);
         $encryptionService->setAppEncryptionKey($oldKey);
+        $encryptionService->restoreAppKeyPair();
         $responseData = $this->exceptionChainData($t);
         $messages = [ $responseData['message'] ];
         $failed = [];
@@ -431,7 +431,7 @@ class PersonalSettingsController extends Controller {
         }
         if (!empty($failed)) {
           $responseData['message'] =
-          $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(',', $failed), $backupSuffix ]);
+          $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(', ', $failed), $backupSuffix ]);
         } else {
           $failed = [];
           foreach (array_keys($configValues) as $configKey) {
@@ -440,14 +440,21 @@ class PersonalSettingsController extends Controller {
               $this->deleteAppValue($backupConfigKey);
             } catch (\Throwable $t2) {
               // $this->logException($t2);
-              $failed = [];
+              $failed[] = $configKey;
             }
           }
           if (!empty($failed)) {
-            $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(',', $failed));
+            $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(', ', $failed));
+          } else {
+            $this->logInfo('Deleting config-lock');
+            $this->deleteAppValue('configlock');
           }
         }
-        $responseData['message'] = $messages;
+        $responseData = [
+          'message' => $messages,
+          'distributeStatus' => null,
+          'keyStatus' => Http::STATUS_BAD_REQUEST,
+        ];
         return self::grumble($responseData);
       }
 
@@ -459,7 +466,7 @@ class PersonalSettingsController extends Controller {
           $this->deleteAppValue($backupConfigKey);
         } catch (\Throwable $t2) {
           // $this->logException($t2);
-          $failed = [];
+          $failed[] = $configKey;
         }
       }
       if (!empty($failed)) {
@@ -481,7 +488,13 @@ class PersonalSettingsController extends Controller {
       } else {
         $messages[] = $this->l->t('Stored the new encryption key, however, distributing the new encryption key failed for at least some of the users.');
       }
-      return self::dataResponse([ 'message' => $messages ], $distributeStatus);
+      return self::dataResponse(
+        [
+          'message' => $messages,
+          'distributeStatus' => $distributeStatus,
+          'keyStatus' => Http::STATUS_OK,
+        ],
+        Http::STATUS_OK);
     case 'streetAddressName01':
     case 'streetAddressName02':
     case 'streetAddressStreet':
@@ -1972,9 +1985,11 @@ class PersonalSettingsController extends Controller {
       try {
         $this->encryptionService()->setUserEncryptionKey($appEncryptionKey, $userId);
         $modifiedUsers[] = $userId;
-      } catch (Exceptions\EncryptionKeyException $e) {
+      } catch (Exceptions\CannotEncryptException $e) {
+        $this->logException($e, 'Unable to distribute key to user ' . $userId);
         $noKeyUsers[$userId] = $e->getMessage();
       } catch (\Throwable $t) {
+        $this->logException($t, 'Unable to distribute key to user ' . $userId);
         $fatalUsers[$userId] = $t->getMessage();
       }
     }
@@ -1985,7 +2000,7 @@ class PersonalSettingsController extends Controller {
       $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
     }
     if (!empty($noKeyUsers)) {
-      $message = $this->l->t('Public SSL key missing for %s, key distribution failed.', implode(', ', array_keys($noKeyUsers)));
+      $message = $this->l->t('Public key missing for %s, key distribution failed.', implode(', ', array_keys($noKeyUsers)));
       $this->logError($message);
       $messages[] = $message;
     }

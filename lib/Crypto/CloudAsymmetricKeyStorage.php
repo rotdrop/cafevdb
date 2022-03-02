@@ -114,11 +114,12 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
   }
 
+
   /** {@inheritdoc} */
   public function getPublicKey(string $ownerId)
   {
     $pubKeyMaterial = $this->getUserValue($ownerId, self::PUBLIC_ENCRYPTION_KEY);
-    return $this->unserializeKey($pubKeyMaterial, self::PUBLIC_ENCRYPTION_KEY);
+    return empty($pubKeyMaterial) ? null : $this->unserializeKey($pubKeyMaterial, self::PUBLIC_ENCRYPTION_KEY);
   }
 
   /** {@inheritdoc} */
@@ -127,6 +128,34 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     $privKeyMaterial = $this->serializeKey($privateKey, self::PRIVATE_ENCRYPTION_KEY);
     $privKeyMaterial = $this->crypto->encrypt($privKeyMaterial, $newPassphrase);
     $this->setUserValue($ownerId, self::PRIVATE_ENCRYPTION_KEY, $privKeyMaterial);
+  }
+
+  /** {@inheritdoc} */
+  public function backupKeyPair(string $ownerId, string $tag = 'old')
+  {
+    foreach ([self::PUBLIC_ENCRYPTION_KEY, self::PRIVATE_ENCRYPTION_KEY] as $key) {
+      $value = $this->getUserValue($ownerId, $key);
+      $backupKey = $key . '.' . $tag;
+      if (!empty($value)) {
+        $this->setUserValue($ownerId, $backupKey, $value);
+      } else {
+        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $backupKey);
+      }
+    }
+  }
+
+  /** {@inheritdoc} */
+  public function restoreKeyPair(string $ownerId, string $tag = 'old')
+  {
+    foreach ([self::PUBLIC_ENCRYPTION_KEY, self::PRIVATE_ENCRYPTION_KEY] as $key) {
+      $backupKey = $key . '.' . $tag;
+      $value = $this->getUserValue($ownerId, $backupKey);
+      if (!empty($value)) {
+        $this->setUserValue($ownerId, $key, $value);
+      } else {
+        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $key);
+      }
+    }
   }
 
   /** create a key-pair, but don't store it */

@@ -189,6 +189,7 @@ class AsymmetricKeyService
 
       $this->eventDispatcher->dispatchTyped(new Events\BeforeEncryptionKeyPairChanged($ownerId, $oldKeyPair));
 
+      $this->keyStorage->backupKeyPair($ownerId); // make a backup-copy if old key exists
       $keyPair = $this->keyStorage->generateKeyPair($ownerId, $keyPassphrase);
 
       $this->eventDispatcher->dispatchTyped(new Events\AfterEncryptionKeyPairChanged($ownerId, $oldKeyPair, $keyPair));
@@ -215,6 +216,16 @@ class AsymmetricKeyService
     $this->removeSharedPrivateValues($ownerId);
     unset(self::$cryptors[$ownerId]);
     unset(self::$keyPairs[$ownerId]);
+  }
+
+  /**
+   * Restore the key-pair from a potential backup e.g. in case of a failure
+   * while changing the key. This is desctructive, the current key is
+   * overwritten.
+   */
+  public function restoreEncryptionKeyPair(string $ownerId)
+  {
+    $this->keyStorage->restoreKeyPair($ownerId);
   }
 
   /**
@@ -296,7 +307,7 @@ class AsymmetricKeyService
     }
     $cryptor = $this->getCryptor($ownerId);
     if (!$cryptor->canEncrypt()) {
-      throw new Exceptions\EncryptionException($this->l->t('Cannot encrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
+      throw new Exceptions\CannotEncryptException($this->l->t('Cannot encrypt personal value "%1$s" for "%2$s".', [ $key, $ownerId ]));
     }
     $this->cloudConfig->setUserValue($ownerId, $this->appName, $configKey, $cryptor->encrypt($value));
   }
@@ -321,7 +332,7 @@ class AsymmetricKeyService
     }
     $cryptor = $this->getCryptor($ownerId);
     if (!$cryptor->canDecrypt()) {
-      throw new Exceptions\EncryptionException($this->l->t('Cannot decrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
+      throw new Exceptions\CannotDecryptException($this->l->t('Cannot decrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
     }
     return $cryptor->decrypt($value);
   }
@@ -389,12 +400,12 @@ class AsymmetricKeyService
     $cryptor = $this->getCryptor($ownerId)
       ->setPrivateKey($oldKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
       ->setPublicKey($oldKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
-    $configValues = $keyService->getSharedPrivateValues($ownerId);
-    $cryptor = $keyService->getCryptor($ownerId)
+    $configValues = $this->getSharedPrivateValues($ownerId);
+    $cryptor = $this->getCryptor($ownerId)
       ->setPrivateKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
-      ->setPublicKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]);
+      ->setPublicKey($newKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
     foreach ($configValues as $configKey => $configValue)  {
-      $keyService->setSharedPrivateValue($ownerId, $configKey, $configValue);
+      $this->setSharedPrivateValue($ownerId, $configKey, $configValue);
     }
   }
 

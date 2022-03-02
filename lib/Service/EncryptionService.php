@@ -25,7 +25,6 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IConfig;
 use OCP\IUserSession;
-use OCP\Security\ICrypto;
 use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
@@ -98,9 +97,6 @@ class EncryptionService
   /** @var IConfig */
   private $containerConfig;
 
-  /** @var ICrypto */
-  private $crypto;
-
   /** @var IHasher */
   private $hasher;
 
@@ -109,9 +105,6 @@ class EncryptionService
 
   /** @var Crypto\AsymmetricKeyService */
   private $asymKeyService;
-
-  /** @var Crypto\SealService */
-  private $sealService;
 
   /** @var Crypto\CloudSymmetricCryptor */
   private $appCryptor;
@@ -134,8 +127,7 @@ class EncryptionService
     , IConfig $containerConfig
     , IUserSession $userSession
     , Crypto\AsymmetricKeyService $asymKeyService
-    , Crypto\SealService $sealService
-    , ICrypto $crypto
+    , Crypto\CryptoFactoryInterface $cryptoFactory
     , IHasher $hasher
     , ICredentialsStore $credentialsStore
     , IEventDispatcher $eventDispatcher
@@ -145,9 +137,7 @@ class EncryptionService
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->asymKeyService = $asymKeyService;
-    $this->sealService = $sealService;
-    $this->appCryptor = new Crypto\HaliteSymmetricCryptor;
-    $this->crypto = $crypto;
+    $this->appCryptor = $cryptoFactory->getSymmetricCryptor();
     $this->hasher = $hasher;
     $this->eventDispatcher = $eventDispatcher;
     $this->logger = $logger;
@@ -282,7 +272,8 @@ class EncryptionService
     $group = $this->getAppValue('usergroup');
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
-      $this->logDebug('Cannot initialize SSL key-pair without user-group and encryption key');
+      $this->logDebug('Cannot initialize encryption key-pair without user-group and encryption key');
+      $this->appAsymmetricCryptor = null;
       return;
     }
     $group = '@' . $group;
@@ -299,6 +290,24 @@ class EncryptionService
       $this->appAsymmetricCryptor->setPublicKey(null);
       throw $e;
     }
+    // remove any pending notifications for the (forced) regeneration of the
+    // shared orchestra key.
+    $this->asymKeyService->removeRecryptionRequestNotification($group);
+  }
+
+  /** Restore a potential backup e.g. after recryption failure. */
+  public function restoreAppKeyPair()
+  {
+    $group = $this->getAppValue('usergroup');
+    $encryptionKey = $this->getAppEncryptionKey();
+    if (empty($group) || empty($encryptionKey)) {
+      $this->logDebug('Cannot restore encryption key-pair without user-group and encryption key');
+      $this->appAsymmetricCryptor = null;
+      return;
+    }
+    $group = '@' . $group;
+    $this->asymKeyService->restoreEncryptionKeyPair($group);
+    $this->initAppKeyPair();
   }
 
   /**
