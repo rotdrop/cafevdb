@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -40,6 +40,9 @@ class Config extends DefaultOptions
     $this->configService = $configService;
     $this->l = $this->l10n();
 
+    $debugMode = $this->getConfigValue('debugmode', 0);
+    $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+
     $options = [
       'language' => locale_get_primary_language($this->l10n()->getLanguageCode()),
       'url' => [
@@ -48,7 +51,7 @@ class Config extends DefaultOptions
       'page_name' => $urlGenerator->linkToRoute($this->appName().'.page.index'),
       'tooltips' => $toolTipsService,
       'inc' => $this->getUserValue('pagerows', 20),
-      'debug' => 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_QUERY),
+      'debug' => 0 != ($debugMode & ConfigService::DEBUG_QUERY),
       'misc' => [
         'css' => [ 'minor' => 'email tooltip-right' ],
       ],
