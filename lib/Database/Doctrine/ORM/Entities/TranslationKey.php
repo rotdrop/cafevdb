@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,10 +36,10 @@ use OCP\ILogger;
  *
  * Table to store the original phrase of source-code translations.
  *
- * @ORM\Table(name="TranslationKeys",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"phrase"})
- *   })
+ * @ORM\Table(
+ *   name="TranslationKeys",
+ *   uniqueConstraints={@ORM\UniqueConstraint(columns={"phrase_hash"})}
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationKeysRepository")
  * @Gedmo\Loggable(enabled=false)
  */
@@ -60,12 +60,22 @@ class TranslationKey implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=768, nullable=false,
+   * @ORM\Column(type="text", nullable=false,
    *   options={
-   *     "comment":"Keyword to be translated. Normally en_US, but could be any unique tag"
+   *     "comment":"Keyword to be translated. Normally the untranslated text in locale en_US, but could be any unique tag"
    *   })
    */
   private $phrase;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
+   * @Gedmo\Slug(fields={"phrase"}, updatable=true, unique=true, handlers={
+   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
+   * })
+   */
+  private $phraseHash;
 
   /**
    * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationKey", cascade={"all"}, fetch="EXTRA_LAZY")

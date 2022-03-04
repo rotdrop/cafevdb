@@ -32,22 +32,22 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCP\ILogger;
 
 /**
- * TranslationLocations
+ * MissingTranslations
  *
  * Table to store source-code locations where the phrases stored in
  * the TranslationKey entities are found.
  *
- * @ORM\Table(name="TranslationLocations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
+ * @ORM\Table(name="MissingTranslations")
+ * @ORM\Entity
  * @Gedmo\Loggable(enabled=false)
  */
-class TranslationLocation implements \ArrayAccess
+class MissingTranslation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
+   * @ORM\ManyToOne(targetEntity="TranslationKey")
    * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
    * @ORM\Id
    */
@@ -56,18 +56,10 @@ class TranslationLocation implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=766, nullable=false)
+   * @ORM\Column(type="string", length=5, nullable=false)
    * @ORM\Id
    */
-  private $file;
-
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", length=11, nullable=false)
-   * @ORM\Id
-   */
-  private $line;
+  private $locale;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -98,51 +90,26 @@ class TranslationLocation implements \ArrayAccess
   }
 
   /**
-   * Set file.
+   * Set locale.
    *
-   * @param string $file
+   * @param string $locale
    *
    * @return TranslationLocation
    */
-  public function setFile($file)
+  public function setLocale($locale)
   {
-    $this->file = $file;
+    $this->locale = $locale;
 
     return $this;
   }
 
   /**
-   * Get file.
+   * Get locale.
    *
    * @return string
    */
-  public function getFile()
+  public function getLocale()
   {
-    return $this->file;
+    return $this->locale;
   }
-
-  /**
-   * Set line.
-   *
-   * @param int $line
-   *
-   * @return TranslationLocation
-   */
-  public function setLine($line)
-  {
-    $this->line = $line;
-
-    return $this;
-  }
-
-  /**
-   * Get line.
-   *
-   * @return int
-   */
-  public function getLine()
-  {
-    return $this->line;
-  }
-
 }

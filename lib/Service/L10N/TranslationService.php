@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Translation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MissingTranslation;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -54,15 +55,15 @@ class TranslationService
   {
     $this->entityManager->suspendLogging();
     $this->setDataBaseRepository(TranslationKey::class);
-    $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
+    $translationKey = $this->findOneBy([ 'phraseHash' => md5($phrase) ]);
     if (empty($translationKey)) {
       $translationKey = TranslationKey::create()->setPhrase($phrase);
       try {
-        $translationKey = $this->merge($translationKey);
+        $this->persist($translationKey);
+        $this->flush();
       } catch (\Throwable $t) {
         $this->logException($t);
       }
-      //$this->flush();
       $this->logDebug('Translation key for "'.$phrase.'" was empty, new id '.$translationKey->getId());
     } else {
       $this->logDebug('Existing translation key for "'.$phrase.'" has id '.$translationKey->getId());
@@ -72,7 +73,8 @@ class TranslationService
     $location = $this->findOneBy([
       'translationKey' => $translationKey,
       'file' => $file,
-      'line' => $line ]);
+      'line' => $line,
+    ]);
     if (empty($location)) {
       $this->logDebug('Empty location for key '.$translationKey->getId());
       $location = TranslationLocation::create()
@@ -80,10 +82,32 @@ class TranslationService
                 ->setFile($file)
                 ->setLine($line);
       try {
-        $this->merge($location);
+        $this->persist($location);
+        $this->flush();
       } catch (\Throwable $t) {
         $this->logException($t);
       }
+    }
+    $this->setDatabaseRepository(MissingTranslation::class);
+    $missingLocale = $this->findOneBy([
+      'translationKey' => $translationKey,
+      'locale' => $locale,
+    ]);
+    if (empty($missingLocale)) {
+      $missingLocale = MissingTranslation::create()
+        ->setTranslationKey($translationKey)
+        ->setLocale($locale);
+      try {
+        $this->persist($missingLocale);
+        $this->flush();
+      } catch (\Throwable $t) {
+        $this->logException($t);
+      }
+    }
+    try {
+      $this->flush();
+    } catch (\Throwable $t) {
+      $this->logException($t);
     }
     $this->entityManager->resumeLogging();
   }
@@ -109,7 +133,8 @@ class TranslationService
     if (empty($translationKey)) {
       $translationKey = TranslationKey::create()->setPhrase($phrase);
       try {
-        $translationKey = $this->merge($translationKey);
+        $this->persist($translationKey);
+        $this->flush();
       } catch (\Throwable $t) {
         $this->logException($t);
         return false;
@@ -133,11 +158,20 @@ class TranslationService
     }
     if ($changed) {
       try {
-        $this->merge($translation);
+        $this->persist($translation);
+        $this->flush();
       } catch (\Throwable $t) {
         $this->logException($t);
         return false;
       }
+    }
+    $this->setDatabaseRepository(MissingTranslation::class);
+    $missingLocale = $this->findOneBy([
+      'translationKey' => $translationKey,
+      'locale' => $locale,
+    ]);
+    if (!empty($missingLocale)) {
+      $this->remove($missingLocale, flush: true);
     }
     return true;
   }
@@ -195,7 +229,7 @@ class TranslationService
   public function eraseTranslationKeys(string $phrase)
   {
     $repository = $this->getDatabaseRepository(TranslationKey::class);
-    $translationKeys = $repository->findLike([ 'phrase' => $phrase]);
+    $translationKeys = $repository->findLike([ 'phraseHash' => md5($phrase) ]);
     if (count($translationKeys) == 0) {
       $this->logWarn('Not translation-keys found to erase.');
     } else {
