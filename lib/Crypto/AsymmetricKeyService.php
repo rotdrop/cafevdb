@@ -332,7 +332,7 @@ class AsymmetricKeyService
     }
     $cryptor = $this->getCryptor($ownerId);
     if (!$cryptor->canDecrypt()) {
-      throw new Exceptions\CannotDecryptException($this->l->t('Cannot decrypt personal value "%1$s" for "%2$s".'), [ $key, $ownerId ]);
+      throw new Exceptions\CannotDecryptException($this->l->t('Cannot decrypt personal value "%1$s" for "%2$s".', [ $key, $ownerId ]));
     }
     return $cryptor->decrypt($value);
   }
