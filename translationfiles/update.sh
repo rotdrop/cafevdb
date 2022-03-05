@@ -1,6 +1,6 @@
 #! /bin/bash
 
-LANG=de
+LANG=${1:-de}
 
 APPDIR=$(realpath "$(dirname "$0")/..")
 APP=$(basename "$APPDIR")
