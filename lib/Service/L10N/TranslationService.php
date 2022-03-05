@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Service\L10N;
 
 use OCP\ILogger;
+use OCP\L10N\IFactory as IL10NFactory;
 
 use \Doctrine\ORM\Query\Expr\Join;
 
@@ -43,16 +44,30 @@ class TranslationService
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  /** @var array */
+  private $availableLanguages;
+
   public function __construct(
-    EntityManager $entityManager
+    $appName
+    , EntityManager $entityManager
+    , IL10NFactory $l10nFactory
     , ILogger $logger
   ) {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
+    $this->availableLanguages = array_values(
+      array_filter(
+        $l10nFactory->findAvailableLanguages($appName),
+        function($lang) { return !str_starts_with($lang, 'en'); }
+      )
+    );
   }
 
   public function recordUntranslated($phrase, $locale, $file, $line)
   {
+    if (array_search($locale, $this->availableLanguages) === false) {
+      return;
+    }
     $this->entityManager->suspendLogging();
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKey = $this->findOneBy([ 'phraseHash' => md5($phrase) ]);
@@ -229,9 +244,9 @@ class TranslationService
   public function eraseTranslationKeys(string $phrase)
   {
     $repository = $this->getDatabaseRepository(TranslationKey::class);
-    $translationKeys = $repository->findLike([ 'phraseHash' => md5($phrase) ]);
+    $translationKeys = $repository->findLike([ 'phrase' => $phrase ]);
     if (count($translationKeys) == 0) {
-      $this->logWarn('Not translation-keys found to erase.');
+      $this->logWarn('Not translation-keys found to erase for phrase "' . $phrase . '".');
     } else {
       $this->logWarn('About to erase '.count($translationKeys).' translation-keys.');
     }
