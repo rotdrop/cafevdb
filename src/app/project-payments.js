@@ -60,7 +60,7 @@ const findByName = function($container, name) {
  * { projectName: 'NAME', projectId: XX }
  */
 const projectPaymentPopup = function(containerSel, post) {
-  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
+  // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
