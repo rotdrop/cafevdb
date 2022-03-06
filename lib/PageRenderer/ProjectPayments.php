@@ -380,7 +380,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'name'     => 'id',
       'select'   => 'T',
       'input'    => ($this->expertMode ? 'R' : 'RH'),
-      'input|AP' => 'RH',
+      'input|A' => 'RH',
       'options'  => 'LFAVCPD',
       'maxlen'   => 11,
       'default'  => null,
@@ -966,7 +966,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
 
     if ($projectMode) {
       $opts['filters'] = 'FIND_IN_SET('.$projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
@@ -981,6 +981,27 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /** Sub-payment aware delet. */
+  public function beforeDeleteDoDeleteSubPayments(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+
+    if (!str_starts_with($oldValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+      $paymentId = $oldValues[$rowTagKey] ?? $oldValues[$paymentIdKey];
+      $this->setDatabaseRepository(Entities\ProjectPayment::class);
+      $this->remove($paymentId, true);
+    } else {
+      $this->setDatabaseRepository(Entities\CompositePayment::class);
+      return $this->beforeDeleteSimplyDoDelete($pme, $op, $step, $oldValues, $changed, $newValues);
+    }
+
+    $changed = [];
+    return true;
   }
 
   /**
@@ -1128,6 +1149,32 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
+    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+
+    $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
+    $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
+
+
+    if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+      $this->logInfo('SHOULD BE COPY OF SUBPAYMENT ' . (int)$this->copyOperation());
+
+      // redirect to change operation ...
+      $oldValues = $newValues;
+
+      // flag key generation
+      $newValues[$paymentIdKey] = $newValues[$rowTagKey] = 0;
+
+      $changed = [];
+      $changed[] = $amountKey;
+      $changed[] = $subjectKey;
+
+      if ($this->beforeUpdateSanitizeFields($pme, $op, $step, $oldValues, $changed, $newValues)) {
+        $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changed, $newValues);
+      }
+      return false;
+    }
+
     // Clone
     // ProjectPayments:subject -> subject
     // ProjectPayments:amount -> amount
@@ -1143,16 +1190,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
 
     $newValues['musician_id'] = $musicianId;
-    $newValues['amount'] = $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount')];
-    $newValues['subject'] = $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
+    $newValues['amount'] = $newValues[$amountKey];
+    $newValues['subject'] = $newValues[$subjectKey];
 
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
-
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
 
     // "row_tag" is used as "column" in $this->joinStructure, so transfer
     // the ProjectPayments ids to that field.

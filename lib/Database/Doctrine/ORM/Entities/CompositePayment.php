@@ -66,7 +66,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="compositePayment", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="compositePayment", cascade={"persist","remove"}, fetch="EXTRA_LAZY")
    */
   private $projectPayments;
 
