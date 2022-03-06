@@ -546,7 +546,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ]);
 
     /**
-     * The following is there in order to remove split-transaction. There will
+     * The following is there in order to remove split-transactions. There will
      * also be a dedicated "add a new split".
      */
     $this->makeJoinTableField(
@@ -556,7 +556,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'name' => $this->l->t('Receivables'),
         'select' => 'M',
         'input|LF' => 'H',
-        'options' => 'CDV',
+        'options' => 'PCDV',
         'sql' => 'GROUP_CONCAT($join_col_fqn)',
         'values' => [
           'table' => 'SELECT
@@ -718,7 +718,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     // Restrict the choices to the receivables of the actual musician.
     $opts['fdd'][$compositeKeyKey]['values|C'] = $opts['fdd'][$compositeKeyKey]['values'];
-    $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
+    $musicianReceivableFilter = $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
       ' AND $table.composite_key
          IN (SELECT DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", ppfd.project_id, ppfd.field_id, BIN2UUID(ppfd.option_key))
   FROM ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' ppfd
@@ -879,20 +879,20 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
-        $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
-        if (!empty($bulkTransactionId)) {
-          $pme->options = 'LVF';
-          if ($op !== 'select' ) {
-            throw new \BadFunctionCallException(
-              $this->l->t('Payments resulting from direct debit transfers cannot be changed.')
-            );
-          }
-        } else {
-          $pme->options = $opts['options'];
+      $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+      if (!empty($bulkTransactionId)) {
+        $pme->options = 'LVF';
+        if ($op !== 'select' ) {
+          throw new \BadFunctionCallException(
+            $this->l->t('Payments resulting from direct debit transfers cannot be changed.')
+          );
         }
+      } else {
+        $pme->options = $opts['options'];
+      }
 
-        return true;
-      };
+      return true;
+    };
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] = $readOnlySafeGuard;
 
@@ -902,13 +902,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
-      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) {
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row)
+        use ($musicianReceivableFilter) {
 
         if ($this->listOperation()) {
           return true;
         }
 
-        $receivableKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')];
+        $receivableKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key');
+        $receivableKeyIndex = $pme->fdn[$receivableKeyKey];
         $amountIndex = $pme->fdn['amount'];
 
         $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
@@ -922,7 +924,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
 
         if (str_starts_with($row['qf'.$rowTagIndex], self::ROW_TAG_PREFIX)) {
-          $this->logDebug('COMPOSITE ROW');
+          $this->logInfo('COMPOSITE ROW');
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
           $pme->fdd[$amountIndex]['input'] = 'M';
           $pme->fdd[$paymentsAmountIndex]['input'] = 'HR';
@@ -936,9 +938,28 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ];
           $pme->fdd[$subjectIndex]['input'] = 'M';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
+
+          if ($this->copyOperation()) {
+            $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
+            $pme->fdd[$receivableKeyIndex]['select'] = 'D';
+            $pme->fdd[$receivableKeyIndex]['input'] = 'M';
+            $pme->fdd[$paymentsIdIndex]['input'] = 'RH';
+
+            // Only copy the first receivable
+            foreach ([$receivableKeyIndex, $paymentsIdIndex] as $index) {
+              $rowIndex = 'qf' . $index;
+              list($row[$rowIndex],) = explode(self::VALUES_SEP, $row[$rowIndex]);
+            }
+            foreach ([$paymentsAmountIndex, $paymentsSubjectIndex] as $index) {
+              $rowIndex = 'qf' . $index;
+              $row[$rowIndex] = null;
+            }
+          }
+
         } else {
           $this->logDebug('COMPONENT ROW');
           $pme->fdd[$receivableKeyIndex]['select'] = 'D';
+          $pme->fdd[$receivableKeyIndex]['values']['filters'] = $musicianReceivableFilter;
           $pme->fdd[$paymentsIdIndex]['input'] = 'RH';
           $pme->fdd[$subjectIndex]['input'] = 'HR';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'M';
@@ -946,6 +967,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$paymentsAmountIndex]['input'] = 'M';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
           $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
+          $pme->fdd[$musicianIdIndex]['input'] = 'R';
         }
         return true;
       };
@@ -983,7 +1005,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     }
   }
 
-  /** Sub-payment aware delet. */
+  /**
+   * Sub-payment aware delete.
+   *
+   */
   public function beforeDeleteDoDeleteSubPayments(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
@@ -1142,8 +1167,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    * However, on insert we only add a single "split" transaction. Further
    * parts have to be added afterwards.
    *
-   * @todo The UI should rather expose multiple edit lines and provide a
-   * "feeling" like e.g. in GnuCash for split-bookings.
+   * Copying sub-transactions is supported.
    */
   public function beforeInsertSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
@@ -1155,25 +1179,35 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
     $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
 
-
     if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
-      $this->logInfo('SHOULD BE COPY OF SUBPAYMENT ' . (int)$this->copyOperation());
+      // Sub-payment, redirect to change mode
+
+      $compositeKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
 
       // redirect to change operation ...
       $oldValues = $newValues;
 
       // flag key generation
+      $oldValues[$paymentIdKey] = $oldValues[$rowTagKey] = '';
       $newValues[$paymentIdKey] = $newValues[$rowTagKey] = 0;
 
       $changed = [];
       $changed[] = $amountKey;
       $changed[] = $subjectKey;
+      $changed[] = $compositeKeyKey;
+      foreach ($changed as $key) {
+        $oldValues[$key] = '';
+      }
 
       if ($this->beforeUpdateSanitizeFields($pme, $op, $step, $oldValues, $changed, $newValues)) {
         $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changed, $newValues);
       }
       return false;
     }
+
+    // clean left-over from expert-mode while copying
+    unset($newValues['id']);
+    Util::unsetValue($changed, 'id');
 
     // Clone
     // ProjectPayments:subject -> subject
@@ -1190,8 +1224,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
 
     $newValues['musician_id'] = $musicianId;
-    $newValues['amount'] = $newValues[$amountKey];
-    $newValues['subject'] = $newValues[$subjectKey];
+    if ($newValues[$amountKey]??null === null) {
+      $newValues[$amountKey] = $newValues['amount'];
+    } else {
+      $newValues['amount'] = $newValues[$amountKey];
+    }
+    if ($newValues[$subjectKey]??null === null) {
+      $newValues[$subjectKey] = $newValues['subject'];
+    } else {
+      $newValues['subject'] = $newValues[$subjectKey];
+    }
+    unset($newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')]);
 
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
