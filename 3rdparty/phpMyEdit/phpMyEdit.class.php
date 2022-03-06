@@ -379,7 +379,7 @@ class phpMyEdit
 	 */
 	private function key_record_where()
 	{
-		if (!empty($this->groupby_rec && $this->checkOperationOption($this->groupby_where))) {
+		if (!empty($this->groupby_rec) && $this->checkOperationOption($this->groupby_where)) {
 			$keyRecord = $this->groupby_rec;
 		} else {
 			$keyRecord = $this->rec;
@@ -5192,54 +5192,52 @@ class phpMyEdit
 		$where_part = " WHERE ".$this->key_record_where();
 		$query_groups = array($this->tb => '');
 		$where_groups = array($this->tb => $where_part);
-		$query_oldrec = '';
 		$newvals	  = array();
 		$oldvals	  = array();
 		$changed	  = array();
 		$stamps		  = array();
 		$checks       = array();
 		$defaults     = array();
+
 		// Prepare query to retrieve oldvals
+		$query_parts = [];
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if ($this->processed($k)) {
-				$fd = $this->fds[$k];
-				$fn = $this->get_data_cgi_var($fd);
-				//error_log(__METHOD__.' got value for '.$fd.': '.print_r($fn, true).' post '.print_r($_POST[$fd], true));
-				if ($this->col_has_datemask($k)) {
-					if ($fn == '') {
-						$stamps[$fd] = false;
-					} else {
-						// Convert back to a date/time object understood by mySQL
-						$stamps[$fd] = $this->makeTimeStampFromUser($fn);
-						$fn = $this->timestampToDatabase($stamps[$fd], $k);
-						// $fn = date('Y-m-d H:i:s', $stamps[$fd]);
-						// echo "<!-- ".$fn." -->\n";
-					}
-				}
-				if ($this->col_has_checkboxes($k) ||
-					($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
-					$checks[$fd] = true;
-					$defaults[$fd] = @$this->fdd[$k]['default'];
-					//error_log('checkbox: '.$fd.' value '.$fn);
-				}
-				// Don't include disabled fields into newvals, but
-				// keep for reference in oldvals. Keep readonly-fields in newvals
-				if (!$this->disabled($k) || $this->readonly($k)) {
-					// leave complictated arrays to the trigger hooks.
-					if (is_array($fn)) {
-						$newvals[$fd] = self::implodeValueArray($fn, onlyFlat: true);
-					} else {
-						$newvals[$fd] = $fn;
-					}
-				}
-				$query_part = $this->sql_field($k)." AS '".$fd."'";
-				if ($query_oldrec == '') {
-					$query_oldrec = 'SELECT '.$query_part;
+			if (!$this->processed($k)) {
+				continue;
+			}
+			$fd = $this->fds[$k];
+			$fn = $this->get_data_cgi_var($fd);
+			//error_log(__METHOD__.' got value for '.$fd.': '.print_r($fn, true).' post '.print_r($_POST[$fd], true));
+			if ($this->col_has_datemask($k)) {
+				if ($fn == '') {
+					$stamps[$fd] = false;
 				} else {
-					$query_oldrec .= ','.$query_part;
+					// Convert back to a date/time object understood by mySQL
+					$stamps[$fd] = $this->makeTimeStampFromUser($fn);
+					$fn = $this->timestampToDatabase($stamps[$fd], $k);
+					// $fn = date('Y-m-d H:i:s', $stamps[$fd]);
+					// echo "<!-- ".$fn." -->\n";
 				}
 			}
+			if ($this->col_has_checkboxes($k) ||
+				($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
+				$checks[$fd] = true;
+				$defaults[$fd] = @$this->fdd[$k]['default'];
+				//error_log('checkbox: '.$fd.' value '.$fn);
+			}
+			// Don't include disabled fields into newvals, but
+			// keep for reference in oldvals. Keep readonly-fields in newvals
+			if (!$this->disabled($k) || $this->readonly($k)) {
+				// leave complictated arrays to the trigger hooks.
+				if (is_array($fn)) {
+					$newvals[$fd] = self::implodeValueArray($fn, onlyFlat: true);
+				} else {
+					$newvals[$fd] = $fn;
+				}
+			}
+			$query_parts[] = $this->sql_field($k)." AS '".$fd."'";
 		}
+		$query_oldrec = 'SELECT ' . implode(',', $query_parts);
 		$joinTables = $this->get_SQL_join_clause();
 		$query_newrec  = $query_oldrec.' FROM ' . $joinTables;
 		$query_oldrec .= ' FROM ' . $joinTables . $where_part;
@@ -5470,21 +5468,54 @@ class phpMyEdit
 
 	function do_delete_record() /* {{{ */
 	{
-		// Additional query
-		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
-				 .' AS '.$this->sd.self::MAIN_ALIAS.$this->ed
-			.' WHERE '.$this->key_record_where();
+		// Additional query.
+
+		// Do an entire join-table query in order to provide the
+		// before-trigger with all the data it may need.
+		$where_part = " WHERE ".$this->key_record_where();
+
+		// Prepare query to retrieve oldvals
+		$query_parts = [];
+		for ($k = 0; $k < $this->num_fds; $k++) {
+			if (!$this->processed($k)) {
+				continue;
+			}
+			$fd = $this->fds[$k];
+			$stamps[$fd] = $this->col_has_datemask($k);
+			$query_parts[] = $this->sql_field($k)." AS '".$fd."'";
+		}
+		$query = 'SELECT '
+			. implode(',', $query_parts)
+			. ' FROM ' . $this->get_SQL_join_clause()
+			. ' WHERE ' . $this->key_record_where();
+
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
+
+		foreach ($oldvals as $fd => $value) {
+			// newvals is passed-in unencrypted, so we should also
+			// decrypt the old values.
+			$fdn = $this->fdn[$fd];
+			$fdd = $this->fdd[$fdn];
+			if (!empty($fdd['encryption']['decrypt'])) {
+				// encrypt the value
+				$oldvals[$fd] = call_user_func($fdd['encryption']['decrypt'], $value);
+			}
+			if ($stamps[$fd]??false) {
+				$oldvals[$fd] = $this->makeTimeStampFromDatabase($value);
+			}
+		}
+
 		// Creating array of changed keys ($changed)
-		// how the heck could this be empty?
-		$changed = is_array($oldvals) ? array_keys($oldvals) : array();
+		$changed = array_keys($oldvals ?? []);
 		$newvals = array();
+
 		// Before trigger
 		if ($this->exec_triggers(self::SQL_QUERY_DELETE, self::TRIGGER_BEFORE, $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
+
 		if (!empty($changed)) {
 			// Real query
 			$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where();
@@ -5502,7 +5533,7 @@ class phpMyEdit
 		}
 
 		// Notify list
-		if (@$this->notify[self::SQL_QUERY_DELETE] || @$this->notify['all']) {
+		if (!empty($this->notify[self::SQL_QUERY_DELETE]) || !empty($this->notify['all'])) {
 			$this->email_notify($oldvals, false);
 		}
 		// Note change in log table
