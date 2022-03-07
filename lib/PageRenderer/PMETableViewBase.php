@@ -1492,7 +1492,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           $this->debug('PIVOT-COLUMN ' . $key . ' -> ' . print_r($pivotColumn, true));
           if (!is_array($pivotColumn)) {
-            $identifier[$key] = $newvals[$pivotColumn];
+            $identifier[$key] = $newvals[$pivotColumn]??null;
             unset($changeSet[$key]);
             Util::unsetValue($changed, $key);
           } else if (!empty($pivotColumn['value'])) {
