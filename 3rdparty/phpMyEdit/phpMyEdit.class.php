@@ -5170,6 +5170,15 @@ class phpMyEdit
 		} else if (count($key_col_val) == count($this->key)) {
 			$this->rec = $key_col_val;
 		}
+
+		// Update group-by fields. This can happen
+		foreach ($this->groupby_rec as $key => &$groupByValue) {
+			if (!empty($newvals[$key])) {
+				$groupByValue = $newvals[$key];
+			}
+		}
+		unset($groupByValue);
+
 		// Notify list
 		if (!empty($this->notify[self::SQL_QUERY_INSERT]) || !empty($this->notify['all'])) {
 			$this->email_notify(false, $newvals);
