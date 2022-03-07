@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,7 +38,7 @@ trait ParticipantTotalFeesTrait
       [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Total Project Fees'),
-        'css'      => [ 'postfix' => ' total-project-fees money' ],
+        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
         'sort'    => false,
         'options' => 'VDLF', // wrong in change mode
         'input' => 'VR',
@@ -72,7 +72,7 @@ trait ParticipantTotalFeesTrait
                 $fieldValue = $row[$qf];
               }
             }
-            $fieldValue = null; // break reference to previous field
+            unset($fieldValue); // break reference to previous field
 
             if (empty($fieldValues['key']) && empty($fieldValues['value'])) {
               continue;
