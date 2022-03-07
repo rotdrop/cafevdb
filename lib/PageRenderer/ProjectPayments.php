@@ -1179,7 +1179,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
     $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
 
-    if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+    if (!empty($newValues[$rowTagKey]) && !str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
       // Sub-payment, redirect to change mode
 
       $compositeKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
@@ -1200,7 +1200,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       }
 
       if ($this->beforeUpdateSanitizeFields($pme, $op, $step, $oldValues, $changed, $newValues)) {
-        $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changed, $newValues);
+        return $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changed, $newValues);
       }
       return false;
     }
@@ -1224,12 +1224,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
 
     $newValues['musician_id'] = $musicianId;
-    if ($newValues[$amountKey]??null === null) {
+    if (($newValues[$amountKey]??null) === null) {
       $newValues[$amountKey] = $newValues['amount'];
     } else {
       $newValues['amount'] = $newValues[$amountKey];
     }
-    if ($newValues[$subjectKey]??null === null) {
+    if (($newValues[$subjectKey]??null) === null) {
       $newValues[$subjectKey] = $newValues['subject'];
     } else {
       $newValues['subject'] = $newValues[$subjectKey];
