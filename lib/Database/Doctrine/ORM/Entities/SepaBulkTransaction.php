@@ -112,42 +112,42 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
   private $submissionEventUri;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
   private $submissionEventUid;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
   private $submissionTaskUri;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
   private $submissionTaskUid;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
   private $dueEventUri;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object UID"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
   private $dueEventUid;
 

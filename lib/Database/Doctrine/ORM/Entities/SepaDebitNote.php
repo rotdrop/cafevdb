@@ -36,23 +36,37 @@ class SepaDebitNote extends SepaBulkTransaction
    *
    * Latest date for the pre-notification of the debitors
    *
-   * @ORM\Column(type="date_immutable", nullable=false)
+   * @ORM\Column(type="date_immutable", nullable=true)
    */
   private $preNotificationDeadline;
 
   /**
-   * @var int
+   * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
   private $preNotificationEventUri;
 
   /**
-   * @var int
+   * @var string
    *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"comment"="Cloud Calendar Object URI"})
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
+   */
+  private $preNotificationEventUid;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
   private $preNotificationTaskUri;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
+   */
+  private $preNotificationTaskUid;
 
   /**
    * Set preNotificationDeadline.
@@ -81,11 +95,11 @@ class SepaDebitNote extends SepaBulkTransaction
   /**
    * Set preNotificationEventUri.
    *
-   * @param int $preNotificationEventUri
+   * @param null|string $preNotificationEventUri
    *
    * @return SepaDebitNote
    */
-  public function setPreNotificationEventUri($preNotificationEventUri):SepaBulkTransaction
+  public function setPreNotificationEventUri(?string $preNotificationEventUri):SepaBulkTransaction
   {
     $this->preNotificationEventUri = $preNotificationEventUri;
 
@@ -97,19 +111,43 @@ class SepaDebitNote extends SepaBulkTransaction
    *
    * @return string
    */
-  public function getPreNotificationEventUri()
+  public function getPreNotificationEventUri():?string
   {
     return $this->preNotificationEventUri;
   }
 
   /**
-   * Set preNotificationTaskUri.
+   * Set preNotificationEventUid.
    *
-   * @param int $preNotificationTaskUri
+   * @param null|string $preNotificationEventUid
    *
    * @return SepaDebitNote
    */
-  public function setPreNotificationTaskUri($preNotificationTaskUri):SepaBulkTransaction
+  public function setPreNotificationEventUid(?string $preNotificationEventUid):SepaBulkTransaction
+  {
+    $this->preNotificationEventUid = $preNotificationEventUid;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationEventUid.
+   *
+   * @return string
+   */
+  public function getPreNotificationEventUid():?string
+  {
+    return $this->preNotificationEventUid;
+  }
+
+  /**
+   * Set preNotificationTaskUri.
+   *
+   * @param null|string $preNotificationTaskUri
+   *
+   * @return SepaDebitNote
+   */
+  public function setPreNotificationTaskUri(?string $preNotificationTaskUri):SepaBulkTransaction
   {
     $this->preNotificationTaskUri = $preNotificationTaskUri;
 
@@ -119,10 +157,34 @@ class SepaDebitNote extends SepaBulkTransaction
   /**
    * Get preNotificationTaskUri.
    *
-   * @return string
+   * @return null|string
    */
-  public function getPreNotificationTaskUri()
+  public function getPreNotificationTaskUri():?string
   {
     return $this->preNotificationTaskUri;
+  }
+
+  /**
+   * Set preNotificationTaskUid.
+   *
+   * @param null|string $preNotificationTaskUid
+   *
+   * @return SepaDebitNote
+   */
+  public function setPreNotificationTaskUid(?string $preNotificationTaskUid):SepaBulkTransaction
+  {
+    $this->preNotificationTaskUid = $preNotificationTaskUid;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationTaskUid.
+   *
+   * @return null|string
+   */
+  public function getPreNotificationTaskUid():?string
+  {
+    return $this->preNotificationTaskUid;
   }
 }

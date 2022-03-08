@@ -338,6 +338,7 @@ class SepaBulkTransactionsController extends Controller {
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables, $dueDateEstimate);
       if ($compositePayment->getAmount() == 0.0) {
+        // $this->logInfo('AMOUNT IS 0 ' . $participant->getMusician()->getPublicName());
         // @todo Check whether this should be communicated to the musician anyway
         continue;
       }
@@ -486,8 +487,8 @@ class SepaBulkTransactionsController extends Controller {
               $bulkTransaction->setSubmissionEventUid($eventUid);
               return $eventUri;
             },
-            function($done) {
-              $this->financeService->deleteFinanceCalendarEntry($done);
+            function($uri) {
+              $this->financeService->deleteFinanceCalendarEntry($uri);
             }
           ))
           ->register(new GenericUndoable(
@@ -503,8 +504,8 @@ class SepaBulkTransactionsController extends Controller {
               $bulkTransaction->setSubmissionTaskUid($taskUid);
               return $taskUri;
             },
-            function($done) {
-              $this->financeService->deleteFinanceCalendarEntry($done);
+            function($uri) {
+              $this->financeService->deleteFinanceCalendarEntry($uri);
             }
           ))
           ->register(new GenericUndoable(
@@ -518,8 +519,8 @@ class SepaBulkTransactionsController extends Controller {
               $bulkTransaction->setDueEventUid($eventUid);
               return $eventUri;
             },
-            function($done) {
-              $this->financeService->deleteFinanceCalendarEntry($done);
+            function($uri) {
+              $this->financeService->deleteFinanceCalendarEntry($uri);
             }
           ));
       }
@@ -530,7 +531,7 @@ class SepaBulkTransactionsController extends Controller {
       $this->entityManager
         ->registerPreFlushAction(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
-            $calendarUri = $this->financeService->financeEvent(
+            list($eventUri, $eventUid) = $this->financeService->financeEvent(
               $bulkSubmissionNames['debitNotes']['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
@@ -539,16 +540,17 @@ class SepaBulkTransactionsController extends Controller {
               $project,
               $debitNote->getPreNotificationDeadline(),
               SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
-            $debitNote->setPreNotificationEventUri($calendarUri);
-            return $calendarUri;
+            $debitNote->setPreNotificationEventUri($eventUri);
+            $debitNote->setPreNotificationEventUid($eventUid);
+            return $eventUri;
           },
-          function($done) {
-            $this->financeService->deleteFinanceCalendarEntry($done);
+          function($uri) {
+            $this->financeService->deleteFinanceCalendarEntry($uri);
           }
         ))
         ->register(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
-            $calendarUri = $this->financeService->financeTask(
+            list($taskUri, $taskUid) = $this->financeService->financeTask(
               $bulkSubmissionNames['debitNotes']['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
@@ -557,11 +559,12 @@ class SepaBulkTransactionsController extends Controller {
               $project,
               $debitNote->getPreNotificationDeadline(),
               SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
-            $debitNote->setPreNotificationTaskUri($calendarUri);
-            return $calendarUri;
+            $debitNote->setPreNotificationTaskUri($taskUri);
+            $debitNote->setPreNotificationTaskUid($taskUid);
+            return $taskUri;
           },
-          function($done) {
-            $this->financeService->deleteFinanceCalendarEntry($done);
+          function($uri) {
+            $this->financeService->deleteFinanceCalendarEntry($uri);
           }
         ));
     }
@@ -572,7 +575,7 @@ class SepaBulkTransactionsController extends Controller {
       // action must come before persist
       $this->entityManager->executePreFlushActions();
 
-      if (!empty($debitMandate)) {
+      if (!empty($debitNote)) {
         $this->persist($debitNote);
       }
       if (!empty($bankTransfer)) {
@@ -597,18 +600,17 @@ class SepaBulkTransactionsController extends Controller {
     if (!empty($bankTransfer)) {
       $messages[] = $this->l->n(
         'Scheduled %n bank-transfer, due on %s',
-        'Scheduled %n bank-transfers, due on %s', [
-          $bankTransfer->getPayments()->count(),
-          $this->dateTimeFormatter->formatDate($bankTransfer->getDueDate(), 'long'),
-        ]);
+        'Scheduled %n bank-transfers, due on %s',
+        $bankTransfer->getPayments()->count(),
+        [ $this->dateTimeFormatter->formatDate($bankTransfer->getDueDate(), 'long'), ]);
     }
     if (!empty($debitNote)) {
       $messages[] = $this->l->n(
         'Scheduled %n debit-note, due on %s',
-        'Scheduled %n debit-notes, due on %s', [
-          $debitNote->getPayments()->count(),
-          $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
-        ]);
+        'Scheduled %n debit-notes, due on %s',
+        $debitNote->getPayments()->count(),
+        [ $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'), ]
+      );
     }
 
     $responseData = [
