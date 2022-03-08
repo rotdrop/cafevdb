@@ -482,7 +482,7 @@ Störung.';
       if (!empty($this->bulkTransaction) && empty($template)) {
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
         $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $this->l->t('announcement') . '-' . $template;
+        $template = $template . '-' . $this->l->t('announcement');
         list($template,) = $this->normalizeTemplateName($template);
       }
     }
@@ -1597,12 +1597,20 @@ Störung.';
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
       if (!empty($compositePayment)) {
+        $supportingDocument = $compositePayment->getSupportingDocument();
+        if (!empty($supportingDocument)) {
+          $personalAttachments[] = function() use ($supportingDocument) {
+            return [
+              'data' => $supportingDocument->getFileData()->getData(),
+              'fileName' => $supportingDocument->getFileName(),
+              'encoding' => 'base64',
+              'mimeType' => $supportingDocument->getMimeType(),
+            ];
+          };
+        }
         /** @var Entities\ProjectPayment $projectPayment */
         foreach ($compositePayment->getProjectPayments() as $projectPayment) {
-          $supportingDocument = $projectPayment->getSupportingDocument();
-          if (empty($supportingDocument)) {
-            $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
-          }
+          $supportingDocument = $projectPayment->getReceivable()->getSupportingDocument();
           if (!empty($supportingDocument)) {
             $personalAttachments[] = function() use ($supportingDocument) {
               return [
@@ -3391,19 +3399,31 @@ Störung.';
     } else {
       $words = [];
       foreach (explode(' ', Util::camelCaseToDashes($normalizedName, ' ')) as $word) {
-        $translatedWord = $this->l->t($word);
-        if ($translatedWord == $word) {
-          $words = null;
-          break;
+        $wordVariants = [
+          $word,
+          strtolower($word),
+          ucfirst(strtolower($word)),
+          strtoupper($word),
+        ];
+        $translatedWord = $word;
+        foreach ($wordVariants as $variant) {
+          $translatedVariant = $this->l->t($variant);
+          if ($translatedVariant != $variant) {
+            $translatedWord = $translatedVariant;
+            break;
+          }
         }
-        $words[] = $translatedWord;
+        $words[] = strtolower($translatedWord);
       }
       if (!empty($words)) {
         $translation = Util::dashesToCamelCase(implode(' ', $words), true, ' ');
         array_unshift($result, $translation);
       }
     }
-    return $result;
+    return array_map(
+      function($template) { $this->transliterate($template); },
+      array_unique($result)
+    );
   }
 
   /**
