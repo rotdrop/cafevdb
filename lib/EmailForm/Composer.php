@@ -482,6 +482,7 @@ Störung.';
       if (!empty($this->bulkTransaction) && empty($template)) {
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
         $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
+        $template = $this->l->t('announcement') . '-' . $template;
         list($template,) = $this->normalizeTemplateName($template);
       }
     }
