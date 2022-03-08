@@ -708,7 +708,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen' => 3,
         'sort'   => true,
         'php|ACP' => function($value, $op, $k, $row, $recordId, $pme) {
-          $mandateReference = $row['qf'.($k+1)];
+          $mandateReference = $row['qf'.($k+1)] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('generated on save');
           }
@@ -803,7 +803,7 @@ class SepaBankAccounts extends PMETableViewBase
         'sort'     => true,
         'css'      => [ 'postfix' => [ 'written-mandate', 'empty-mandate-project-hidden', ], ],
         'php|ACP' => function($writtenMandateId, $op, $k, $row, $recordId, $pme) {
-          $mandateReference = $row['qf'.($k - 3)];
+          $mandateReference = $row['qf'.($k - 3)] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }
