@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-04 22:12+0100\n"
-"PO-Revision-Date: 2022-03-05 12:02+0100\n"
+"POT-Creation-Date: 2022-03-08 18:23+0100\n"
+"PO-Revision-Date: 2022-03-08 18:30+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -125,7 +125,8 @@ msgstr "Erwartete eine Liste von Benutzer-Ids."
 
 #: lib/Controller/AdminSettingsController.php:153
 msgid "Orchestra management group is unset or non-existent"
-msgstr "Die Orchester-Benutzer-Gruppe ist nicht eingestellt oder existiert nicht"
+msgstr ""
+"Die Orchester-Benutzer-Gruppe ist nicht eingestellt oder existiert nicht"
 
 #: lib/Controller/AdminSettingsController.php:162
 #, php-format
@@ -140,7 +141,9 @@ msgstr "\"%1$s\" als Gruppen-Administrator von \"%2$s\" eingetragen."
 #: lib/Controller/AdminSettingsController.php:171
 #, php-format
 msgid "Failed to add \"%1$s\" as sub-admin to \"%2$s\": %3$s"
-msgstr "Konnte \"%1$s\" nicht als Gruppen-Administrator für \"%2$s\" eingetragen: %3$s"
+msgstr ""
+"Konnte \"%1$s\" nicht als Gruppen-Administrator für \"%2$s\" eingetragen: "
+"%3$s"
 
 #: lib/Controller/AdminSettingsController.php:178
 #, php-format
@@ -150,7 +153,8 @@ msgstr "\"%1$s\" als Gruppenadministrator von \"%2$s\" ausgetragen."
 #: lib/Controller/AdminSettingsController.php:181
 #, php-format
 msgid "Failed to delete \"%1$s\" as sub-admin from \"%2$s\": %3$s"
-msgstr "Konnte \"%1$s\" nicht als Gruppen-Administrator von \"%2$s\" austragen: %3$s"
+msgstr ""
+"Konnte \"%1$s\" nicht als Gruppen-Administrator von \"%2$s\" austragen: %3$s"
 
 #: lib/Controller/AdminSettingsController.php:208
 #, php-format
@@ -407,7 +411,8 @@ msgstr "Der Verschlüsselungs-Schlüssel ist ungültig."
 #: lib/Controller/EncryptionController.php:153
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
-msgstr "Kann den App-Verschlüsselungs-Schlüssel für den Benutzer \"%s\" nicht setzen."
+msgstr ""
+"Kann den App-Verschlüsselungs-Schlüssel für den Benutzer \"%s\" nicht setzen."
 
 #: lib/Controller/ExpertModeController.php:144
 msgid "Triggered GeoCoding update."
@@ -1511,7 +1516,9 @@ msgstr ""
 #: lib/Controller/PersonalSettingsController.php:2003
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
-msgstr "Kann den App-Verschlüsselungs-Schlüssel nicht an die Person %s weitergeben, da deren öffentlicher Verschlüsselungs-Schlüssel fehlt."
+msgstr ""
+"Kann den App-Verschlüsselungs-Schlüssel nicht an die Person %s weitergeben, "
+"da deren öffentlicher Verschlüsselungs-Schlüssel fehlt."
 
 #: lib/Controller/PersonalSettingsController.php:2008
 #, php-format
@@ -2079,7 +2086,7 @@ msgid ""
 msgstr ""
 "Die übermittelte Lastschrift-Id \"%s\" gehört zu keinem bekannten Daten-Feld."
 
-#: lib/Controller/SepaBulkTransactionsController.php:353
+#: lib/Controller/SepaBulkTransactionsController.php:354
 #, php-format
 msgid ""
 "Musician \"%s\" has to pay an amount of %s, but there is no debit-note-"
@@ -2088,17 +2095,17 @@ msgstr ""
 "Die Person \"%s\" muss einen Betrag von %s bezahlen, uns liegt aber kein "
 "Lastschriftmandat vor."
 
-#: lib/Controller/SepaBulkTransactionsController.php:366
 #: lib/Controller/SepaBulkTransactionsController.php:367
+#: lib/Controller/SepaBulkTransactionsController.php:368
 msgid "recurring"
 msgstr "wiederkehrend"
 
-#: lib/Controller/SepaBulkTransactionsController.php:366
 #: lib/Controller/SepaBulkTransactionsController.php:367
+#: lib/Controller/SepaBulkTransactionsController.php:368
 msgid "non-recurring"
 msgstr "einmalig"
 
-#: lib/Controller/SepaBulkTransactionsController.php:363
+#: lib/Controller/SepaBulkTransactionsController.php:364
 #, php-format
 msgid ""
 "The debit-mandate for a bulk-transaction must either be all recurring or all "
@@ -2110,7 +2117,7 @@ msgstr ""
 "der Person \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten "
 "Mandate waren %s.;\n"
 
-#: lib/Controller/SepaBulkTransactionsController.php:416
+#: lib/Controller/SepaBulkTransactionsController.php:417
 #, php-format
 msgid ""
 "Due-deadline %s conflicts with the pre-notification dead-line %s for the "
@@ -2119,70 +2126,70 @@ msgstr ""
 "Fälligkeitsdatum %s kollidiert mit der Vorab-Informations-Frist %s des "
 "Lastschriftmandates \"%s\"."
 
-#: lib/Controller/SepaBulkTransactionsController.php:462
+#: lib/Controller/SepaBulkTransactionsController.php:463
 #, php-format
 msgid "Debit notes submission deadline for %s"
 msgstr "Lastschrift-Einreichungsfrist für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:463
+#: lib/Controller/SepaBulkTransactionsController.php:464
 #, php-format
 msgid "Debit notes due for %s"
 msgstr "Lastschriften fällig für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:464
+#: lib/Controller/SepaBulkTransactionsController.php:465
 #, php-format
 msgid "Debit notes pre-notification deadline for %s"
 msgstr "Lastschrift-Vorab-Informations-Frist für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:467
+#: lib/Controller/SepaBulkTransactionsController.php:468
 #, php-format
 msgid "Bank transfers submission deadline for %s"
 msgstr "Bankauftragseinreichungsausschlußdatum für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:468
+#: lib/Controller/SepaBulkTransactionsController.php:469
 #, php-format
 msgid "Bank transfers due for %s"
 msgstr "Fälligkeit Überweisungen für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:480
-#: lib/Controller/SepaBulkTransactionsController.php:497
+#: lib/Controller/SepaBulkTransactionsController.php:481
+#: lib/Controller/SepaBulkTransactionsController.php:498
 #, php-format
 msgid "Due date: %s"
 msgstr "Fälligkeitstermin: %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:514
+#: lib/Controller/SepaBulkTransactionsController.php:515
 msgid "TODO: add more information like the list of export-files, totals etc."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:535
-#: lib/Controller/SepaBulkTransactionsController.php:553
+#: lib/Controller/SepaBulkTransactionsController.php:536
+#: lib/Controller/SepaBulkTransactionsController.php:555
 #, php-format
 msgid "Submission-deadline: %s, due date: %s."
 msgstr "Einreichungsdatum: %s, Fälligkeitsdatum: %s."
 
-#: lib/Controller/SepaBulkTransactionsController.php:599
+#: lib/Controller/SepaBulkTransactionsController.php:602
 msgid "Scheduled %n bank-transfer, due on %s"
 msgid_plural "Scheduled %n bank-transfers, due on %s"
 msgstr[0] "Es wurde %n Überweisung geplant, die am %s fälllig ist."
 msgstr[1] "Es wurden %n Überweisungen geplant, die am %s fälllig sind."
 
-#: lib/Controller/SepaBulkTransactionsController.php:607
+#: lib/Controller/SepaBulkTransactionsController.php:609
 msgid "Scheduled %n debit-note, due on %s"
 msgid_plural "Scheduled %n debit-notes, due on %s"
 msgstr[0] "Es wurde %n Lastschrift geplant, die am %s fällig ist."
 msgstr[1] "Es wurden %n Lastschriften geplant, die am %s fällig sind."
 
-#: lib/Controller/SepaBulkTransactionsController.php:632
+#: lib/Controller/SepaBulkTransactionsController.php:634
 #, php-format
 msgid "Submitted value \"%s\" is not a positive integer."
 msgstr "Der übermittelte Wert \"%s\" ist keine positive Ganzzahl."
 
-#: lib/Controller/SepaBulkTransactionsController.php:645
+#: lib/Controller/SepaBulkTransactionsController.php:647
 #, php-format
 msgid "Unable to find bulk-transaction with id %d."
 msgstr "Kann den Sammelauftrag mit Id %d nicht finden."
 
-#: lib/Controller/SepaBulkTransactionsController.php:660
+#: lib/Controller/SepaBulkTransactionsController.php:662
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
@@ -2555,7 +2562,9 @@ msgstr "Kann das alte Schlüsselpaar für \"%s\" nicht abrufen."
 #, php-format
 msgid ""
 "Given user id \"%1$s\" and user-id \"%2$s\" from login-credentials differ."
-msgstr "Aktuelle Benutzer-Id \"%1$s\" und Benutzer-Id \"%2$s\" der Anmelde-Informationen unterscheiden sich."
+msgstr ""
+"Aktuelle Benutzer-Id \"%1$s\" und Benutzer-Id \"%2$s\" der Anmelde-"
+"Informationen unterscheiden sich."
 
 #: lib/Crypto/AsymmetricKeyService.php:310
 #, php-format
@@ -2571,7 +2580,8 @@ msgstr "Kann den persönlichen Wert \"%1$s\" für \"%2$s\" nicht entschlüsseln.
 #: lib/Crypto/AsymmetricKeyService.php:567
 #, php-format
 msgid "No pending recryption-request for user \"%s\"."
-msgstr "Es sind keine Neuverschlüsselungsanfragen für die Person \"%s\" anhängig."
+msgstr ""
+"Es sind keine Neuverschlüsselungsanfragen für die Person \"%s\" anhängig."
 
 #: lib/Crypto/CloudAsymmetricKeyStorage.php:79
 #, php-format
@@ -2676,25 +2686,29 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: lib/EmailForm/Composer.php:549
+#: lib/EmailForm/Composer.php:485
+msgid "announcement"
+msgstr "Ankündigung"
+
+#: lib/EmailForm/Composer.php:550
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:555 src/app/email.js:1101
+#: lib/EmailForm/Composer.php:556 src/app/email.js:1101
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:875
+#: lib/EmailForm/Composer.php:876
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:876 lib/EmailForm/Composer.php:898
-#: lib/EmailForm/Composer.php:1194 lib/EmailForm/Composer.php:1201
+#: lib/EmailForm/Composer.php:877 lib/EmailForm/Composer.php:899
+#: lib/EmailForm/Composer.php:1195 lib/EmailForm/Composer.php:1202
 #: lib/PageRenderer/ProjectPayments.php:451
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:876
+#: lib/EmailForm/Composer.php:877
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:311
 #: lib/PageRenderer/ProjectParticipantFields.php:546
 #: lib/PageRenderer/ProjectParticipantFields.php:1910
@@ -2702,40 +2716,40 @@ msgstr "Gesamtbetrag"
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:877 lib/EmailForm/Composer.php:1202
+#: lib/EmailForm/Composer.php:878 lib/EmailForm/Composer.php:1203
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:878 lib/EmailForm/Composer.php:1203
+#: lib/EmailForm/Composer.php:879 lib/EmailForm/Composer.php:1204
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:879 lib/PageRenderer/PMETableViewBase.php:626
+#: lib/EmailForm/Composer.php:880 lib/PageRenderer/PMETableViewBase.php:626
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1014
+#: lib/EmailForm/Composer.php:1015
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1199
+#: lib/EmailForm/Composer.php:1200
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1200
+#: lib/EmailForm/Composer.php:1201
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1341
+#: lib/EmailForm/Composer.php:1342
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1414
+#: lib/EmailForm/Composer.php:1415
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2070
+#: lib/EmailForm/Composer.php:2071
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2783,81 +2797,81 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2803
+#: lib/EmailForm/Composer.php:2804
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2987
+#: lib/EmailForm/Composer.php:2988
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3000
+#: lib/EmailForm/Composer.php:3001
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3092 lib/EmailForm/Composer.php:3107
+#: lib/EmailForm/Composer.php:3093 lib/EmailForm/Composer.php:3108
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3191 lib/EmailForm/Composer.php:3244
-#: lib/EmailForm/Composer.php:3254
+#: lib/EmailForm/Composer.php:3192 lib/EmailForm/Composer.php:3245
+#: lib/EmailForm/Composer.php:3255
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3219
+#: lib/EmailForm/Composer.php:3220
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3535
+#: lib/EmailForm/Composer.php:3536
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3543
+#: lib/EmailForm/Composer.php:3544
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3567
+#: lib/EmailForm/Composer.php:3568
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3598
+#: lib/EmailForm/Composer.php:3599
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3656 lib/EmailForm/Composer.php:3767
+#: lib/EmailForm/Composer.php:3657 lib/EmailForm/Composer.php:3768
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3684
+#: lib/EmailForm/Composer.php:3685
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:3709
+#: lib/EmailForm/Composer.php:3710
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4213
+#: lib/EmailForm/Composer.php:4214
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4214
+#: lib/EmailForm/Composer.php:4215
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4216
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4331
+#: lib/EmailForm/Composer.php:4332
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -3096,6 +3110,10 @@ msgstr "Der inhaltliche Teil der Datenmigration \"%s\" ist fehlgeschlagen."
 msgid "Add auto-generation flag to email-drafts."
 msgstr "\"automatisch generiert\"-Markierung zu Email-Entwürfen hinzufügen."
 
+#: lib/Maintenance/Migrations/AddPreNotificationCalObjectUid.php:40
+msgid "Add pre-notification event/task UID in addition to URI"
+msgstr "Task/Event-UID zusätzlich zur URI speichern (Lastschriften)"
+
 #: lib/Maintenance/Migrations/AddSupportingDocumentToCompositePayments.php:49
 #: lib/Maintenance/Migrations/RemoveSupportingDocumentFromProjectPayments.php:49
 msgid "Add supporting-document to composite payments."
@@ -3122,12 +3140,16 @@ msgstr "Querverbindungen für Versicherungstabellen aufräumen."
 #: lib/Maintenance/Migrations/EnlargeEncryptedVarCharColumns.php:44
 msgid ""
 "Enlarge encrypted VARCHAR columns to make room for multi-user encryption."
-msgstr "Verschlüsselte VARCHAR-Spalten vergrößern um Platz für Multi-Benutzer-Verschlüsselung zu schaffen."
+msgstr ""
+"Verschlüsselte VARCHAR-Spalten vergrößern um Platz für Multi-Benutzer-"
+"Verschlüsselung zu schaffen."
 
 #: lib/Maintenance/Migrations/EnlargeTranslationKeyPhrase.php:48
 msgid ""
 "Use \"text\" for translation phrase in order to allow for larger phrases."
-msgstr "\"text\" als Datentyp für Übersetzungs-Ausdruck verwenden um Platz für längere Text-Phrasen zu schaffen."
+msgstr ""
+"\"text\" als Datentyp für Übersetzungs-Ausdruck verwenden um Platz für "
+"längere Text-Phrasen zu schaffen."
 
 #: lib/Maintenance/Migrations/GeoContinentsFixedWidth.php:47
 msgid "Pin the data-type of the GeoContinents table to 2-char-fixed-width."
@@ -5297,7 +5319,9 @@ msgstr "Ausstehende Datenmigrationen: %s."
 
 #: lib/Service/EncryptionService.php:354
 msgid "Cannot initialize global encryption key without bound user credentials."
-msgstr "Kann den globalen Verschlüsselungs-Schlüssel der App nicht ohne Benutzer-Daten initialisieren."
+msgstr ""
+"Kann den globalen Verschlüsselungs-Schlüssel der App nicht ohne Benutzer-"
+"Daten initialisieren."
 
 #: lib/Service/EncryptionService.php:371
 msgid "Failed to validate user encryption key."
@@ -8916,7 +8940,9 @@ msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet."
 #. TRANSLATORS src/components/AdminSettings.vue:308
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not resolve the recryption request for {userId}: {message}"
-msgstr "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: {message}"
+msgstr ""
+"Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: "
+"{message}"
 
 #. TRANSLATORS src/components/AdminSettings.vue:318
 #: specialVueFakeDummyForL10nScript.js:52
@@ -8926,7 +8952,8 @@ msgstr "Neu-Verschlüsselungs-Anfrage für {userid} erfolgreich gelöscht."
 #. TRANSLATORS src/components/AdminSettings.vue:331
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "Could not delete the recryption request for {userId}: {message}"
-msgstr "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
+msgstr ""
+"Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
 
 #: src/app/ajax.js:29
 msgid "OK"
@@ -13127,28 +13154,28 @@ msgstr "abbrechen"
 msgid "extra field type cloud-folder"
 msgstr "Cloud-Ordner"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:168
+#: templates/settings/orchestra-settings.php:168
 #, php-format
 msgid "Select member data update"
 msgstr "Formular für Mitgliedsdaten-Aktualisierung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4016
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:180
+#: lib/EmailForm/Composer.php:4016
+#: templates/settings/orchestra-settings.php:180
 #, php-format
 msgid "member data update"
 msgstr "Mitgliedsdaten-Aktualisierung"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "general"
 msgstr "Allgemeines"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "bills and receipts"
 msgstr "Rechnungen und Quittungen"
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4215
 #, php-format
 msgid "concerts"
 msgstr "Konzerte"

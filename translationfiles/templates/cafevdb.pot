@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-05 12:26+0100\n"
+"POT-Creation-Date: 2022-03-08 18:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1952,24 +1952,24 @@ msgid ""
 "option uuid."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:353
+#: lib/Controller/SepaBulkTransactionsController.php:354
 #, php-format
 msgid ""
 "Musician \"%s\" has to pay an amount of %s, but there is no debit-note-"
 "mandate for the musician."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:366
 #: lib/Controller/SepaBulkTransactionsController.php:367
+#: lib/Controller/SepaBulkTransactionsController.php:368
 msgid "recurring"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:366
 #: lib/Controller/SepaBulkTransactionsController.php:367
+#: lib/Controller/SepaBulkTransactionsController.php:368
 msgid "non-recurring"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:363
+#: lib/Controller/SepaBulkTransactionsController.php:364
 #, php-format
 msgid ""
 "The debit-mandate for a bulk-transaction must either be all recurring or all "
@@ -1977,77 +1977,77 @@ msgid ""
 "\"%s\" is %s, the previous mandates were %s."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:416
+#: lib/Controller/SepaBulkTransactionsController.php:417
 #, php-format
 msgid ""
 "Due-deadline %s conflicts with the pre-notification dead-line %s for the "
 "debit-mandate \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:462
+#: lib/Controller/SepaBulkTransactionsController.php:463
 #, php-format
 msgid "Debit notes submission deadline for %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:463
+#: lib/Controller/SepaBulkTransactionsController.php:464
 #, php-format
 msgid "Debit notes due for %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:464
+#: lib/Controller/SepaBulkTransactionsController.php:465
 #, php-format
 msgid "Debit notes pre-notification deadline for %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:467
+#: lib/Controller/SepaBulkTransactionsController.php:468
 #, php-format
 msgid "Bank transfers submission deadline for %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:468
+#: lib/Controller/SepaBulkTransactionsController.php:469
 #, php-format
 msgid "Bank transfers due for %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:480
-#: lib/Controller/SepaBulkTransactionsController.php:497
+#: lib/Controller/SepaBulkTransactionsController.php:481
+#: lib/Controller/SepaBulkTransactionsController.php:498
 #, php-format
 msgid "Due date: %s"
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:514
+#: lib/Controller/SepaBulkTransactionsController.php:515
 msgid "TODO: add more information like the list of export-files, totals etc."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:535
-#: lib/Controller/SepaBulkTransactionsController.php:553
+#: lib/Controller/SepaBulkTransactionsController.php:536
+#: lib/Controller/SepaBulkTransactionsController.php:555
 #, php-format
 msgid "Submission-deadline: %s, due date: %s."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:599
+#: lib/Controller/SepaBulkTransactionsController.php:602
 msgid "Scheduled %n bank-transfer, due on %s"
 msgid_plural "Scheduled %n bank-transfers, due on %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:607
+#: lib/Controller/SepaBulkTransactionsController.php:609
 msgid "Scheduled %n debit-note, due on %s"
 msgid_plural "Scheduled %n debit-notes, due on %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:632
+#: lib/Controller/SepaBulkTransactionsController.php:634
 #, php-format
 msgid "Submitted value \"%s\" is not a positive integer."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:645
+#: lib/Controller/SepaBulkTransactionsController.php:647
 #, php-format
 msgid "Unable to find bulk-transaction with id %d."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:660
+#: lib/Controller/SepaBulkTransactionsController.php:662
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr ""
@@ -2484,28 +2484,32 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:549
+#: lib/EmailForm/Composer.php:485
+msgid "announcement"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:550
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:555
+#: lib/EmailForm/Composer.php:556
 #: src/app/email.js:1101
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:875
+#: lib/EmailForm/Composer.php:876
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:876
-#: lib/EmailForm/Composer.php:898
-#: lib/EmailForm/Composer.php:1194
-#: lib/EmailForm/Composer.php:1201
+#: lib/EmailForm/Composer.php:877
+#: lib/EmailForm/Composer.php:899
+#: lib/EmailForm/Composer.php:1195
+#: lib/EmailForm/Composer.php:1202
 #: lib/PageRenderer/ProjectPayments.php:451
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:876
+#: lib/EmailForm/Composer.php:877
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:311
 #: lib/PageRenderer/ProjectParticipantFields.php:546
 #: lib/PageRenderer/ProjectParticipantFields.php:1910
@@ -2513,43 +2517,43 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:877
-#: lib/EmailForm/Composer.php:1202
+#: lib/EmailForm/Composer.php:878
+#: lib/EmailForm/Composer.php:1203
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:878
-#: lib/EmailForm/Composer.php:1203
+#: lib/EmailForm/Composer.php:879
+#: lib/EmailForm/Composer.php:1204
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:879
+#: lib/EmailForm/Composer.php:880
 #: lib/PageRenderer/PMETableViewBase.php:626
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1014
+#: lib/EmailForm/Composer.php:1015
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1199
+#: lib/EmailForm/Composer.php:1200
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1200
+#: lib/EmailForm/Composer.php:1201
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1341
+#: lib/EmailForm/Composer.php:1342
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1414
+#: lib/EmailForm/Composer.php:1415
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2070
+#: lib/EmailForm/Composer.php:2071
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2575,82 +2579,82 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2803
+#: lib/EmailForm/Composer.php:2804
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2987
+#: lib/EmailForm/Composer.php:2988
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3000
+#: lib/EmailForm/Composer.php:3001
 msgid "musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3092
-#: lib/EmailForm/Composer.php:3107
+#: lib/EmailForm/Composer.php:3093
+#: lib/EmailForm/Composer.php:3108
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3191
-#: lib/EmailForm/Composer.php:3244
-#: lib/EmailForm/Composer.php:3254
+#: lib/EmailForm/Composer.php:3192
+#: lib/EmailForm/Composer.php:3245
+#: lib/EmailForm/Composer.php:3255
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3219
+#: lib/EmailForm/Composer.php:3220
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3535
+#: lib/EmailForm/Composer.php:3536
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3543
+#: lib/EmailForm/Composer.php:3544
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3567
+#: lib/EmailForm/Composer.php:3568
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3598
+#: lib/EmailForm/Composer.php:3599
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3656
-#: lib/EmailForm/Composer.php:3767
+#: lib/EmailForm/Composer.php:3657
+#: lib/EmailForm/Composer.php:3768
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3684
+#: lib/EmailForm/Composer.php:3685
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3709
+#: lib/EmailForm/Composer.php:3710
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4213
+#: lib/EmailForm/Composer.php:4214
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4214
+#: lib/EmailForm/Composer.php:4215
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4216
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4331
+#: lib/EmailForm/Composer.php:4332
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -2886,6 +2890,10 @@ msgstr ""
 
 #: lib/Maintenance/Migrations/AddEmailDraftsAutoGenerated.php:47
 msgid "Add auto-generation flag to email-drafts."
+msgstr ""
+
+#: lib/Maintenance/Migrations/AddPreNotificationCalObjectUid.php:40
+msgid "Add pre-notification event/task UID in addition to URI"
 msgstr ""
 
 #: lib/Maintenance/Migrations/AddSupportingDocumentToCompositePayments.php:49
@@ -11801,28 +11809,28 @@ msgstr ""
 msgid "extra field type cloud-folder"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:168
+#: templates/settings/orchestra-settings.php:168
 #, php-format
 msgid "Select member data update"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4016
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:180
+#: lib/EmailForm/Composer.php:4016
+#: templates/settings/orchestra-settings.php:180
 #, php-format
 msgid "member data update"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "general"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "bills and receipts"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4215
 #, php-format
 msgid "concerts"
 msgstr ""
