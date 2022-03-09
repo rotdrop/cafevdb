@@ -5,20 +5,21 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -43,6 +44,7 @@ class CalDavService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const WRITE_PERMISSIONS = (Constants::PERMISSION_CREATE|Constants::PERMISSION_UPDATE);
+  const URI_SUFFIX = '.ics';
 
   /** @var CalDavBackend */
   private $calDavBackend;
@@ -54,15 +56,15 @@ class CalDavService
   private $calendarUserId;
 
   public function __construct(
-    ConfigService $configService,
-    \OCP\Calendar\IManager $calendarManager,
-    CalDavBackend $calDavBackend
-  )
-  {
+    ConfigService $configService
+    , \OCP\Calendar\IManager $calendarManager
+    , CalDavBackend $calDavBackend
+  ) {
     $this->configService = $configService;
     $this->calendarManager = $calendarManager;
     $this->calDavBackend = $calDavBackend;
     $this->calendarUserId = $this->userId();
+    $this->l = $this->l10n();
   }
 
   /**Get or create a calendar.
@@ -318,8 +320,9 @@ class CalDavService
     return $localUri;
   }
 
-  /** Update an entry in the given calendar from either a VCalendar
-   ** blob or a Sabre VCalendar object.
+  /**
+   * Update an entry in the given calendar from either a VCalendar blob or a
+   * Sabre VCalendar object.
    *
    * @bug This function uses internal APIs.
    */
@@ -332,13 +335,21 @@ class CalDavService
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
   }
 
-  /** Update an entry in the given calendar from either a VCalendar
-   ** blob or a Sabre VCalendar object.
+  /**
+   * Remove the given calendar object.
+   *
+   * @param string $objectIdentifier Either the URI or the UID of the
+   * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
+   * other the UID.
    *
    * @bug This function uses internal APIs.
    */
-  public function deleteCalendarObject($calendarId, $localUri)
+  public function deleteCalendarObject($calendarId, $objectIdentifier)
   {
+    $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
+    if (empty($localUri)) {
+      throw new \InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
+    }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
 
@@ -358,9 +369,13 @@ class CalDavService
    *   * component - optional, a string containing the type of object, such
    *     as 'vevent' or 'vtodo'. If specified, this will be used to populate
    *     the Content-Type header.
+   *   * calendarid - The passed argument $calendarId
    *
    * @param mixed $calendarId
-   * @return array
+   *
+   * @param string $objectIdentifier Either the URI or the UID of the
+   * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
+   * other the UID.
    *
    * @return array|null
    *
@@ -369,13 +384,49 @@ class CalDavService
    * respectively an arry/proxy object with calendarId, uri and the
    * calendar data.
    */
-  public function getCalendarObject($calendarId, $localUri)
+  public function getCalendarObject($calendarId, string  $objectIdentifier):?array
   {
+    $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
+    if (empty($localUri)) {
+      return null;
+    }
     $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
     if (!empty($result)) {
       $result['calendarid'] = $calendarId;
     }
     return $result;
+  }
+
+  /**
+   * Convert an object UID to its local URI.
+   *
+   * @param mixed $calendarId
+   *
+   * @param string $objectIdentifier Either the URI or the UID of the
+   * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
+   * other the UID.
+   *
+   * @return string|null The local URI (basename).
+   *
+   * @bug This function uses internal APIs.
+   */
+  private function getObjectUri($calendarId, string $objectIdentifier):?string
+  {
+    if (str_ends_with($objectIdentifier, self::URI_SUFFIX)) {
+      $localUri = $objectIdentifier;
+    } else {
+      $uid = $objectIdentifier;
+      $principalUri = $this->calendarPrincipalUri($calendarId);
+      if (empty($principalUri)) {
+        return null;
+      }
+      $uri = $this->calDavBackend->getCalendarObjectByUID($principalUri, $uid);
+      if (empty($uri)) {
+        return null;
+      }
+      $localUri = basename($uri);
+    }
+    return $localUri;
   }
 
   /**

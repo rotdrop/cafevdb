@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -476,7 +476,7 @@ class SepaBulkTransactionsController extends Controller {
         $this->entityManager
           ->registerPreFlushAction(new GenericUndoable(
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-              list($eventUri, $eventUid) = $this->financeService->financeEvent(
+              list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
                 $bulkSubmissionNames[$bulkTag]['submission'],
                 $this->l->t('Due date: %s',
                             $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
@@ -493,7 +493,7 @@ class SepaBulkTransactionsController extends Controller {
           ))
           ->register(new GenericUndoable(
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-              list($taskUri, $taskUid) = $this->financeService->financeTask(
+              list('uri' => $taskUri, 'uid' => $taskUid) = $this->financeService->financeTask(
                 $bulkSubmissionNames[$bulkTag]['submission'],
                 $this->l->t('Due date: %s',
                             $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
@@ -510,7 +510,7 @@ class SepaBulkTransactionsController extends Controller {
           ))
           ->register(new GenericUndoable(
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
-              list($eventUri, $eventUid) = $this->financeService->financeEvent(
+              list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
                 $bulkSubmissionNames[$bulkTag]['due'],
                 $this->l->t('TODO: add more information like the list of export-files, totals etc.'),
                 $project,
@@ -531,7 +531,7 @@ class SepaBulkTransactionsController extends Controller {
       $this->entityManager
         ->registerPreFlushAction(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
-            list($eventUri, $eventUid) = $this->financeService->financeEvent(
+            list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
               $bulkSubmissionNames['debitNotes']['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
@@ -550,7 +550,7 @@ class SepaBulkTransactionsController extends Controller {
         ))
         ->register(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
-            list($taskUri, $taskUid) = $this->financeService->financeTask(
+            list('uri' => $taskUri, 'uid' => $taskUid) = $this->financeService->financeTask(
               $bulkSubmissionNames['debitNotes']['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),

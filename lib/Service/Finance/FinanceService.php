@@ -286,7 +286,10 @@ class FinanceService
    * @param \DateTimeInterface $timeStamp
    * @param int $alarm (maybe <= 0 for no alarm)
    *
-   * @return null|array new [ EVENT_URI, EVENT_UID ]
+   * @return null|array new
+   * ```
+   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
+   * ```
    */
   public function financeEvent($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
   {
@@ -327,7 +330,10 @@ class FinanceService
    * @param \DateTimeInterface $time
    * @param int $alarm (maybe <= 0 for no alarm)
    *
-   * @return null|array new [ TASK_URI, TASK_UID ]
+   * @return null|array new
+   * ```
+   * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
+   * ```
    */
   public function financeTask($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
   {
@@ -359,13 +365,36 @@ class FinanceService
 
   /**
    * Delete an entry from the finance calendar.
+   *
+   * @param mixed $objectIdentifier Either the local URI, or the UID or an
+   * array [ 'uri' => OBJECT_URI, 'uid' => OBJECT_UID ].
    */
-  public function deleteFinanceCalendarEntry($localUri)
+  public function deleteFinanceCalendarEntry($objectIdentifier)
   {
     $taskKind = 'finance';
     $calKey = $taskKind.'calendar';
     $calendarId = $this->getConfigValue($calKey.'id', false);
-    $this->eventsService->deleteCalendarEntry($calendarId, $localUri);
+    if (!is_array($objectIdentifier)) {
+      $objectIdentifier = [ $objectIdentifier ];
+    }
+    foreach ($objectIdentifier as $id) {
+      if (!empty($this->eventsService->findCalendarEntry($calendarId, $id))) {
+        $this->eventsService->deleteCalendarEntry($calendarId, $id);
+        return;
+      }
+    }
+    throw new \InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%2$s" in calendar with id "%1$s".', [ $calendarId, implode(', ', $objectIdentifier) ]));
+  }
+
+  /**
+   * Find a finance calendar entry by its uri.
+   */
+  public function findFinanceCalendarEntry($localUri)
+  {
+    $taskKind = 'finance';
+    $calKey = $taskKind.'calendar';
+    $calendarId = $this->getConfigValue($calKey.'id', false);
+    return $this->eventsService->findCalendarEntry($calendarId, $localUri);
   }
 
   /**

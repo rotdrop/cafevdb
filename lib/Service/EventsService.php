@@ -867,6 +867,9 @@ class EventsService
    * errors.
    *
    * @return array task-uri, task-uid on success, null on error.
+   * ```
+   * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
+   * ```
    */
   public function newTask(array $taskData):?array
   {
@@ -883,7 +886,7 @@ class EventsService
       if (!empty($taskObject)) {
         $vCalendar  = VCalendarService::getVCalendar($taskObject);
         $taskUid   = VCalendarService::getUid($vCalendar);
-        return [ $taskUri, $taskUid ];
+        return [ 'uri' => $taskUri, 'uid' => $taskUid ];
       }
     }
     return NULL;
@@ -913,6 +916,9 @@ class EventsService
    * errors.
    *
    * @return array|null event-uri, event-uid or null on error.
+   * ```
+   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
+   * ```
    */
   public function newEvent(array $eventData): ?array
   {
@@ -929,15 +935,38 @@ class EventsService
       if (!empty($eventObject)) {
         $vCalendar  = VCalendarService::getVCalendar($eventObject);
         $eventUid   = VCalendarService::getUid($vCalendar);
-        return [ $eventUri, $eventUid ];
+        return [ 'uri' => $eventUri, 'uid' => $eventUid ];
       }
     }
     return NULL;
   }
 
-  public function deleteCalendarEntry($calId, $objectUri)
+  /**
+   * Delete a calendar object given by its URI or UID.
+   *
+   * @param string $objectIdentifier Either the URI or the UID of the
+   * object. If the identifier ends with '.ics' it is assumed to be an URI,
+   * other a UID.
+   */
+  public function deleteCalendarEntry($calId, $objectIdentifier)
   {
-    return $this->calDavService->deleteCalendarObject($calId, $objectUri);
+    return $this->calDavService->deleteCalendarObject($calId, $objectIdentifier);
+  }
+
+  /**
+   * Find a calendar object by its URI or UID.
+   *
+   * @param mixed $calId
+   *
+   * @param string $objectIdentifier Either the URI or the UID of the
+   * object. If the identifier ends with '.ics' it is assumed to be an URI,
+   * other a UID.
+   *
+   * @return array|null
+   */
+  public function findCalendarEntry($calId, $objectIdentifier)
+  {
+    return $this->calDavService->getCalendarObject($calId, $objectIdentifier);
   }
 
   public function playground() {
