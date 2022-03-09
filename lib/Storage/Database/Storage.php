@@ -120,7 +120,6 @@ class Storage extends AbstractStorage
         $date = $updated;
       }
     }
-
     return $date;
   }
 
@@ -185,7 +184,7 @@ class Storage extends AbstractStorage
    *
    * @param string $name
    *
-   * @return null|string|Enties\File
+   * @return null|string|Entities\File
    */
   protected function fileFromFileName(string $name)
   {
@@ -214,10 +213,22 @@ class Storage extends AbstractStorage
     }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
-      return 0;
+      return false;
     }
     $updated = $file->getUpdated();
     return empty($updated) ? 0 : $updated->getTimestamp();
+  }
+
+  /**
+   * The AbstractStorage class relies on mtime($path) > $time for triggering a
+   * cache invalidation. This, however, does not cover cases where a directory
+   * has been removed. Hence we also return true if mtime returns false
+   * meaning that the file does not exist.
+   */
+  public function hasUpdated($path, $time)
+  {
+    $mtime = $this->filemtime($path);
+    return $mtime === false || ($mtime > $time);
   }
 
   public function filesize($path)
