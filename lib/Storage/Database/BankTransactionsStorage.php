@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class BankTransactionsStorage extends Storage
 {
-  /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
+  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;
 
   /** @var array */
@@ -77,11 +77,20 @@ class BankTransactionsStorage extends Storage
   protected function findFiles(string $dirName)
   {
     $dirName = self::normalizeDirectoryName($dirName);
+    if (!empty($this->files[$dirName])) {
+      return $this->files[$dirName];
+    }
+
     $this->files[$dirName] = [
       '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
     ];
 
-    $transactions = $this->transactionsRepository->findAll();
+    $directoryYear = (int)basename($dirName);
+    if ($directoryYear >= 1000 && $directoryYear <= 9999) {
+      $transactions = $this->transactionsRepository->findByCreationYear($directoryYear);
+    } else {
+      $transactions = $this->transactionsRepository->findAll();
+    }
 
     $directories = [];
 

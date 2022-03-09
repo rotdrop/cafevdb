@@ -46,6 +46,15 @@ class SepaBulkTransactionsRepository extends EntityRepository
     // Because of the aggregate MAX() result is a string
     return new \DateTimeImmutable($result, new \DateTimeZone('UTC'));
   }
+
+  public function findByCreationYear($year)
+  {
+    return $this->createQueryBuilder('t')
+      ->where('YEAR(t.created) = :year')
+      ->setParameter('year', $year)
+      ->getQuery()
+      ->getResult();
+  }
 }
 
 // Local Variables: ***

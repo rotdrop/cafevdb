@@ -129,13 +129,17 @@ class ProjectParticipantsStorage extends Storage
    */
   protected function findFiles(string $dirName)
   {
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter('soft-deleteable');
-
     $dirName = self::normalizeDirectoryName($dirName);
+    if (!empty($this->files[$dirName])) {
+      return $this->files[$dirName];
+    }
+
     $this->files[$dirName] = [
       '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
     ];
+
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter('soft-deleteable');
 
     $dirMatch = false;
 
