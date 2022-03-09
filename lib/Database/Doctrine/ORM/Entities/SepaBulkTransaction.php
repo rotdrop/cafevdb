@@ -75,8 +75,7 @@ class SepaBulkTransaction implements \ArrayAccess
    * @var \DateTimeImmutable
    *
    * This should track changes in the transaction-data in order to catch
-   * deletions in the file-system export. This propably cannot work ATM for
-   * collection-valued fields ...
+   * deletions in the file-system export.
    *
    * @Gedmo\Timestampable(on={"change"}, field="sepaTransactionData")
    * @ORM\Column(type="datetime_immutable", nullable=true)
