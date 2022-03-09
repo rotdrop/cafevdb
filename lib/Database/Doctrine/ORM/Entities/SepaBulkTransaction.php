@@ -61,7 +61,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var EncryptedFile
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
