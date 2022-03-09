@@ -74,6 +74,7 @@ class CompositePayment implements \ArrayAccess
    * @var SepaBulkTransaction
    *
    * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="payments", fetch="EXTRA_LAZY")
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="sepaTransactionDataChanged")
    */
   private $sepaTransaction = null;
 
