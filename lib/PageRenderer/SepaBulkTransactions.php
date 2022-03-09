@@ -275,7 +275,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $lastBulkTransactionId = $bulkTransactionId;
         $oddCompositePayment = true;
         $cssClasses[] = 'first';
-        if (!$this->bulkTransactionExpanded[$bulkTransactionId]) {
+        if (empty($this->bulkTransactionExpanded[$bulkTransactionId])) {
           $cssClasses[] = 'following-hidden';
         }
         $cssClasses[] = $evenOdd[(int)$oddBulkTransaction];
