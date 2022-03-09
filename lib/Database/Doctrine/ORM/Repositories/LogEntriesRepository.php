@@ -27,6 +27,10 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
 class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
 {
+  const ACTION_CREATE = Loggable\LoggableListener::ACTION_CREATE;
+  const ACTION_UPDATE = Loggable\LoggableListener::ACTION_UPDATE;
+  const ACTION_REMOVE = Loggable\LoggableListener::ACTION_REMOVE;
+
   /**
    * Return the most recent modification time. Theoretically this should
    * coincide with the highest id ...
@@ -35,17 +39,34 @@ class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
    */
   public function modificationTime(?string $entityClass = null):?\DateTimeInterface
   {
+    return $this->getModificationTime($entityClass, null);
+  }
+
+  /**
+   * Return the most recent modification time. Theoretically this should
+   * coincide with the highest id ...
+   *
+   * @param null|string $entityClass Restrict the query to the given entity class.
+   *
+   * @param null|string $action Restrict the query to the given action.
+   */
+  public function getModificationTime(?string $entityClass = null, ?string $action = null):?\DateTimeInterface
+  {
     $qb = $this->createQueryBuilder('l')
-      ->select('MAX(l.loggedAt) as modificationTime');
+      ->select('l.loggedAt as modificationTime')
+      ->orderBy('l.id', 'DESC')
+      ->setMaxResults(1);
     if (!empty($entityClass)) {
-      $qb->where('l.objectClass = :objectClass')
+      $qb->andWhere('l.objectClass = :objectClass')
         ->setParameter('objectClass', $entityClass);
     }
-    $result = $qb->getQuery()->getSingleScalarResult();
-
-    // Because of the aggregate MAX() this is now a string
-    return new \DateTimeImmutable($result, new \DateTimeZone('UTC'));
+    if (!empty($action)) {
+      $qb->andWhere('l.action = :action')
+        ->setParameter('action', $action);
+    }
+    return $qb->getQuery()->getOneOrNullResult();
   }
+
 }
 
 // Local Variables: ***
