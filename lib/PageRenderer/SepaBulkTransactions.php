@@ -31,11 +31,13 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
@@ -50,6 +52,9 @@ class SepaBulkTransactions extends PMETableViewBase
 
   /** @var FinanceService */
   private $financeService;
+
+  /** @var SepaBulkTransactionService */
+  private $bulkTransactionService;
 
   /** @var array */
   private $bulkTransactionExpanded = [];
@@ -147,11 +152,13 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , FinanceService $financeService
+    , SepaBulkTransactionService $bulkTransactionService
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->financeService = $financeService;
+    $this->bulkTransactionService = $bulkTransactionService;
     $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
   }
 
@@ -319,7 +326,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'sort'     => true,
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
-        if ($this->isBulkTransactionRow($k, $row, $pme)) {
+        if ($this->isBulkTransactionRow($row, $pme)) {
           $html = '<input type="hidden" class="expanded-marker" name="bulkTransactionExpanded['.$recordId['id'].']" value="'.(int)($this->bulkTransactionExpanded[$recordId['id']]??0).'"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
@@ -332,7 +339,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH' ]);
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH', ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECTS_TABLE, 'id',
@@ -519,7 +526,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'sql' => '$main_table.id',
       'sort'  => false,
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        if (!$this->isBulkTransactionRow($k, $row, $pme)) {
+        if (!$this->isBulkTransactionRow($row, $pme)) {
           return '';
         }
         $post = json_encode([
@@ -567,6 +574,7 @@ __EOT__;
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts)  {
       if (empty($row['qf'.$submitIdx])) {
@@ -586,7 +594,59 @@ __EOT__;
     }
   }
 
-  private function isBulkTransactionRow($k , $row, $pme)
+  /**
+   * Use ORM to actually delete stuff.
+   */
+  public function beforeDeleteTrigger($pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    /** @var Entities\SepaBulkTransaction $bulkTransaction */
+    $bulkTransaction = $this->legacyRecordToEntity($pme->rec);
+
+    if (!empty($bulkTransaction->submitDate)) {
+      throw new Exceptions\DatabaseReadonlyException(
+        $this->l->t(
+          'The bulk-transaction with id "%1$d" has already been submitted to the bank, it cannot be deleted.', $bulkTransaction->getId())
+      );
+    }
+
+    $rowTagKey = $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
+
+    $paymentId = null;
+
+    if (!str_starts_with($oldValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+      $paymentId = $oldValues[$rowTagKey];
+
+      if ($bulkTransaction->getPayments()->count() == 1) {
+        // delete the entire transaction if the last single part is removed.
+        /** @var Entities\CompositePayment $payment */
+        $payment = $bulkTransaction->getPayments()->first();
+        if ($payment->getId() != $paymentId) {
+          throw new Exceptions\DatabaseInconsistentValueException(
+            $this->l->t('Data inconsistency in bulk-transaction payments: %d / %d', [
+              $payment->getId(), $paymentId
+            ])
+          );
+        }
+        $paymentId = null;
+      }
+
+    }
+
+    if ($paymentId === null) {
+      $this->bulkTransactionService->removeBulkTransaction($bulkTransaction);
+    } else {
+      // @todo: we should update/remove the transaction data.
+      $this->setDatabaseRepository(Entities\CompositePayment::class);
+      $this->remove($paymentId, flush: true);
+    }
+
+    $changed = [];
+    return true;
+  }
+
+  private function isBulkTransactionRow($row, $pme)
   {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
@@ -599,7 +659,7 @@ __EOT__;
    * the composite row, then the missing data should also be printed.
    */
   public function bulkTransactionRowOnly($value, $action, $k, $row, $recordId, $pme) {
-    if ($this->isBulkTransactionRow($k, $row, $pme)) {
+    if ($this->isBulkTransactionRow($row, $pme)) {
       return $value;
     } else {
       return '';

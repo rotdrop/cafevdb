@@ -39,8 +39,11 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Common\GenericUndoable;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service;
 
 class SepaBulkTransactionService
 {
@@ -65,13 +68,18 @@ class SepaBulkTransactionService
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var FinanceService */
+  private $financeService;
+
   public function __construct(
     EntityManager $entityManager
+    , FinanceService $financeService
     , IAppContainer $appContainer
     , ILogger $logger
     , IL10N $l10n
   ) {
     $this->entityManager = $entityManager;
+    $this->financeService = $financeService;
     $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
@@ -274,46 +282,80 @@ class SepaBulkTransactionService
     return $purpose;
   }
 
-  // public static function removeDebitNote(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  // {
-  //   if ($op !== 'delete') {
-  //     return false;
-  //   }
+  public function removeBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $force = false)
+  {
+    if (!$force && $bulkTransaction->getSubmitDate() !== null) {
+      throw new Exceptions\DatabaseReadonlyException(
+        $this->l->t(
+          'The bulk-transaction with id "%1$d" has already been submitted to the bank, it cannot be deleted.', $bulkTransaction->getId())
+      );
+    }
 
-  //   if (empty($oldvals['Id'])) {
-  //     return false;
-  //   }
+    // Undoing calendar entry deletion would be a bit hard ... so just
+    // delete them after we have successfully removed the bulk-transaction.
+    $calendarObjects = [
+      [
+        'uri' => $bulkTransaction->getSubmissionEventUri(),
+        'uid' => $bulkTransaction->getSubmissionEventUid(),
+      ], [
+        'uri' => $bulkTransaction->getSubmissionTaskUri(),
+        'uid' => $bulkTransaction->getSubmissionTaskUid(),
+      ], [
+        'uri' => $bulkTransaction->getDueEventUri(),
+        'uid' => $bulkTransaction->getDueEventUid(),
+      ],
+    ];
 
-  //   if (!empty($oldvals['SubmitDate'])) {
-  //     return false;
-  //   }
+    if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+      /** @var Entities\SepaDebitNote $bulkTransaction */
+      $calendarObjects[] = [
+        'uri' => $bulkTransaction->getPreNotificationEventUri(),
+        'uid' => $bulkTransaction->getPreNotificationEventUid(),
+      ];
+      $calendarObjects[] = [
+        'uri' => $bulkTransaction->getPreNotificationTaskUri(),
+        'uid' => $bulkTransaction->getPreNotificationTaskUid(),
+      ];
+    }
 
-  //   $debitNoteId = $oldvals['Id'];
+    /** @var Service\CalDavService $calDavService */
+    $calDavService = $this->appContainer->get(Service\CalDavService::class);
 
-  //   $result = true;
+    $this->entityManager->beginTransaction();
+    try {
 
-  //   // remove all associated payments
-  //   $result = ProjectPayments::deleteDebitNotePayments($debitNoteId, $pme->dbh);
+      /** @var Entities\EncryptedFile $transactionData */
+      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
+        $bulkTransaction->getSepaTransactionData()->removeElement($transactionData);
+      }
+      $this->remove($bulkTransaction, flush: true);
 
-  //   // remove all the data (one item, probably)
-  //   $result = self::deleteDebitNoteData($debitNoteId, $pme->dbh);
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->entityManager->rollback();
+      if (!$this->entityManager->isTransactionActive()) {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      }
+      throw new Exceptions\DatabaseException(
+        $this->l->t('Failed to remove bulk-transaction with id %d', $bulkTransaction->getId()),
+        $t->getCode(),
+        $t
+      );
+    }
 
-  //   try {
-  //     // remove the associated OwnCloud events and task.
-  //     $result = \OC_Calendar_Object::delete($oldvals['SubmissionEvent']);
-  //   } catch (\Exception $e) {}
-
-  //   try {
-  //     $result = \OC_Calendar_Object::delete($oldvals['DueEvent']);
-  //   } catch (\Exception $e) {}
-
-  //   try {
-  //     $result = Util::postToRoute('tasks.tasks.deleteTask',
-  //                                 array('taskID' => $oldvals['SubmissionTask']));
-  //   } catch (\Exception $e) {}
-
-  //   return true;
-  // }
+    // ok try to remove the remaining artifacts ...
+    foreach ($calendarObjects as $calIds) {
+      if (empty($calIds['uri']) && empty($calIds['uid'])) {
+        continue;
+      }
+      try {
+        $this->financeService->deleteFinanceCalendarEntry($calIds);
+      } catch (\Throwable $t) {
+        $this->logException($t, 'Unable to remove calendar entry "' . implode(', ', $calIds) . '".');
+      }
+    }
+  }
 
   // /** */
   // public function recordDebitNote($project, $job, $dateIssued, $submissionDeadline, $dueDate, $calObjIds):DebitNote
