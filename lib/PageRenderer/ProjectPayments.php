@@ -417,10 +417,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [ 'name' => 'row_tag', 'input' => 'RH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [
+        'name' => 'row_tag',
+        'input' => 'RH',
+      ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id', [ 'name' => 'composite_payment_id', 'input' => 'RH' ]);
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id', [
+        'name' => 'composite_payment_id',
+        'input' => 'RH',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
@@ -444,7 +450,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [ 'input' => 'RH' ]);
+      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
+        'name' => $this->l->t('User Id'),
+        'input' => 'RH',
+      ]);
 
     $opts['fdd']['amount'] = array_merge(
       $this->defaultFDD['money'], [
