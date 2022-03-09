@@ -2162,6 +2162,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   {
     if (is_string($tableInfo) && isset($fdd['values']['join'])) {
       $defaultFDD = [
+        'name' => $column,
         'select' => 'T',
         'maxlen' => 128,
         'sort' => true,
@@ -2182,6 +2183,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
       }
       $defaultFDD = [
+        'name' => $column,
         'select' => 'T',
         'maxlen' => 128,
         'sort' => true,
