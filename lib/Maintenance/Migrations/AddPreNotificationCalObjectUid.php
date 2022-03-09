@@ -31,7 +31,10 @@ class AddPreNotificationCalObjectUid extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "ALTER TABLE SepaBulkTransactions ADD pre_notification_event_uid VARCHAR(256) DEFAULT NULL COMMENT 'Cloud Calendar Object UID', ADD pre_notification_task_uid VARCHAR(256) DEFAULT NULL COMMENT 'Cloud Calendar Object UID'",
+      "ALTER TABLE SepaBulkTransactions
+   ADD pre_notification_event_uid VARCHAR(256) DEFAULT NULL COMMENT 'Cloud Calendar Object UID',
+   ADD pre_notification_task_uid VARCHAR(256) DEFAULT NULL COMMENT 'Cloud Calendar Object UID'
+",
     ],
   ];
 
