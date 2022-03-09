@@ -482,7 +482,7 @@ Störung.';
       if (!empty($this->bulkTransaction) && empty($template)) {
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
         $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $template . '-' . $this->l->t('announcement');
+        $template = $template . '-' . 'announcement';
         list($template,) = $this->normalizeTemplateName($template);
       }
     }
@@ -3421,7 +3421,7 @@ Störung.';
       }
     }
     return array_map(
-      function($template) { $this->transliterate($template); },
+      function($template) { return $this->transliterate($template); },
       array_unique($result)
     );
   }
