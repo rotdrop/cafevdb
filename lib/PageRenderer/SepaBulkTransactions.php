@@ -637,9 +637,15 @@ __EOT__;
     if ($paymentId === null) {
       $this->bulkTransactionService->removeBulkTransaction($bulkTransaction);
     } else {
-      // @todo: we should update/remove the transaction data.
       $this->setDatabaseRepository(Entities\CompositePayment::class);
-      $this->remove($paymentId, flush: true);
+      $payment = $this->find($paymentId);
+      $bulkTransaction->getPayments()->removeElement($payment);
+      // Remove the transaction data in order to force recomputation
+      $bulkTransactionData = $bulkTransaction->getSepaTransactionData();
+      foreach ($bulkTransactionData as $exportFile) {
+        $bulkTransactionData->removeElement($exportFile);
+      }
+      $this->flush();
     }
 
     $changed = [];

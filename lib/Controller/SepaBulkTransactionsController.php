@@ -638,6 +638,8 @@ class SepaBulkTransactionsController extends Controller {
     if ((int)$projectId > 0) {
       /** @var Entities\Project $project */
       $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    } else {
+      $project = null;
     }
 
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
@@ -647,54 +649,11 @@ class SepaBulkTransactionsController extends Controller {
       return self::grumble($this->l->t('Unable to find bulk-transaction with id %d.', $id));
     }
 
-    $transcationData = $bulkTransaction->getSepaTransactionData();
-    /** @var Entities\EncryptedFile $exportFile */
-    foreach ($transcationData as $exportFile) {
-      if (strpos($exportFile->getFileName(), $format) !== false) {
-        break;
-      }
-      $exportFile = null;
-    }
-    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
-      /** @var IBulkTransactionExporter $exporter */
-      $exporter = $this->bulkTransactionService->getTransactionExporter($format);
-      if (empty($exporter)) {
-        return self::grumble($this->l->t('Unable to find exporter for format "%s".', $format));
-      }
-      if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
-        $transactionType = 'banktransfer';
-      } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
-        $transactionType = 'debitnote';
-      }
-      $fileName = implode('-', array_filter([
-        $this->timeStamp(),
-        $transactionType,
-        !empty($project) ? $project->getName() : null,
-        $format,
-      ])) . '.' . $exporter->fileExtension($bulkTransaction);
-
-      $fileData = $exporter->fileData($bulkTransaction);
-
-      if (empty($exportFile)) {
-        $exportFile = new Entities\EncryptedFile($fileName, $fileData, $exporter->mimeType($bulkTransaction));
-        $bulkTransaction->getSepaTransactionData()->add($exportFile);
-      } else {
-        $exportFile->setFileName($fileName)
-                   ->setMimeType($exporter->mimeType($bulkTransaction))
-                   ->setSize(strlen($fileData));
-        $exportFile->getFileData()->setData($fileData);
-      }
-
-      $this->entityManager->beginTransaction();
-      try {
-        $this->persist($exportFile);
-        $this->flush();
-        $this->entityManager->commit();
-      } catch (\Throwable $t) {
-        $this->entityManager->rollback();
-        $this->logException($t);
-        return self::grumble($this->exceptionChainData($t));
-      }
+    try {
+      $exportFile = $this->bulkTransactionService->generateTransactionData($bulkTransaction, $project, $format);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return self::grumble($this->exceptionChainData($t));
     }
 
     return new RedirectResponse(

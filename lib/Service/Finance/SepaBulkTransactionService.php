@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -324,9 +324,10 @@ class SepaBulkTransactionService
     $this->entityManager->beginTransaction();
     try {
 
+      $bulkTransactionData = $bulkTransaction->getSepaTransactionData();
       /** @var Entities\EncryptedFile $transactionData */
-      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
-        $bulkTransaction->getSepaTransactionData()->removeElement($transactionData);
+      foreach ($bulkTransactionData as $transactionData) {
+        $bulkTransactionData->removeElement($transactionData);
       }
       $this->remove($bulkTransaction, flush: true);
 
@@ -357,92 +358,70 @@ class SepaBulkTransactionService
     }
   }
 
-  // /** */
-  // public function recordDebitNote($project, $job, $dateIssued, $submissionDeadline, $dueDate, $calObjIds):DebitNote
-  // {
-  //   $debitNote = (new DebitNote)
-  //              ->setProject($project)
-  //              ->setJob($job)
-  //              ->setDateIssued($dateIssued)
-  //              ->setSubmissionDeadline($submissionDeadline)
-  //              ->setDueDate($dueDate)
-  //              ->setSubmissionEventUri($calObjIds[0])
-  //              ->setSubmissionTaskUri($calObjIds[1])
-  //              ->setDueEventUri($calObjIds[2]);
-  //   return $debitNote;
-  // }
+  /**
+   * Generate the export data for the given bulk-transaction and project.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction
+   *
+   * @param null|Entities\Project $project Project the transaction belongs to.
+   *
+   * @return null|Entities\EncryptedFile The generated export set.
+   *
+   */
+  public function generateTransactionData(Entities\SepaBulkTransaction $bulkTransaction, ?Entities\Project $project, string $format = self::EXPORT_AQBANKING):?Entites\EncryptedFile
+  {
+    $transcationData = $bulkTransaction->getSepaTransactionData();
+    /** @var Entities\EncryptedFile $exportFile */
+    foreach ($transcationData as $exportFile) {
+      if (strpos($exportFile->getFileName(), $format) !== false) {
+        break;
+      }
+      $exportFile = null;
+    }
+    if (empty($exportFile)
+        || $bulkTransaction->getUpdated() > $exportFile->getUpdated()
+        || $bulkTransaction->getSepaTransactionDataChanged() > $exportFile->getUpdated()) {
+      /** @var IBulkTransactionExporter $exporter */
+      $exporter = $this->bulkTransactionService->getTransactionExporter($format);
+      if (empty($exporter)) {
+        throw new \InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
+      }
+      if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
+        $transactionType = 'banktransfer';
+      } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $transactionType = 'debitnote';
+      }
+      $fileName = implode('-', array_filter([
+        $this->timeStamp(),
+        $transactionType,
+        !empty($project) ? $project->getName() : null,
+        $format,
+      ])) . '.' . $exporter->fileExtension($bulkTransaction);
 
-  // /**
-  //  * Generate the data-entity for the given debit-note
-  //  *
-  //  * @param DebitNote $debitNote
-  //  *
-  //  * @param string $fileName Download file-name.
-  //  *
-  //  * @param string $mimeType Download mime-type.
-  //  *
-  //  * @param string $exportData Download data.
-  //  *
-  //  * @return DebitNote
-  //  */
-  // public function recordDebitNoteData(DebitNote $debitNote, $fileName, $mimeType, $exportData):DebitNote
-  // {
-  //   /** @var DataEntity */
-  //   $debitNoteData = (new DataEntity)
-  //                  ->setDebitNote($debitNote)
-  //                  ->setFileName($fileName)
-  //                  ->setMimeType($mimeType)
-  //                  ->setData($exportData);
-  //   $debitNote->setSepaDebitNoteData($debitNoteData);
+      $fileData = $exporter->fileData($bulkTransaction);
 
-  //   return $debitNote;
-  // }
+      if (empty($exportFile)) {
+        $exportFile = new Entities\EncryptedFile($fileName, $fileData, $exporter->mimeType($bulkTransaction));
+        $bulkTransaction->getSepaTransactionData()->add($exportFile);
+      } else {
+        $exportFile->setFileName($fileName)
+                   ->setMimeType($exporter->mimeType($bulkTransaction))
+                   ->setSize(strlen($fileData));
+        $exportFile->getFileData()->setData($fileData);
+      }
 
-  // /**
-  //  * Generate the payment entities for the given debit-note
-  //  *
-  //  * @param DebitNote $debitNote
-  //  *
-  //  * @param array<int, SepaDebitNoteData> $payments Exported debit-note payments.
-  //  *
-  //  * @param DateTime $dueDate
-  //  *
-  //  * @return DebitNote
-  //  */
-  // public function recordDebitNotePayments(DebitNote $debitNote, array $payments, DateTime $dueDate):DebitNote
-  // {
-  //   foreach ($payments as $paymentData) {
-  //     $debitNotePayment = (new Entities\ProjectPayment)
-  //                       ->setProject($debitNote->getProject())
-  //                       ->setMusician($paymentData['musicianId'])
-  //                       ->setAmount($paymentData['amount'])
-  //                       ->setDateOfReceipt($dueDate)
-  //                       ->setSubject(implode("\n", $paymentData['purpose']))
-  //                       ->setDebitNote($debitNote)
-  //                       ->setMandateReference($paymentData['mandateReference']);
-  //     $debitNote->getProjectPayments()->add($debitNotePayment);
-  //   }
-  //   return $debitNote;
-  // }
-
-  // /** Return the name for the default email-template for the given job-type. */
-  // public function emailTemplate($debitNoteJob)
-  // {
-  //   switch($debitNoteJob) {
-  //   case 'remaining':
-  //     return $this->l->t('DebitNoteAnnouncementProjectRemaining');
-  //   case 'amount':
-  //     return $this->l->t('DebitNoteAnnouncementProjectAmount');
-  //   case 'deposit':
-  //     return $this->l->t('DebitNoteAnnouncementProjectDeposit');
-  //   case 'insurance':
-  //     return $this->l->t('DebitNoteAnnouncementInsurance');
-  //   case 'membership-fee':
-  //     return $this->l->t('DebitNoteAnnouncementMembershipFee');
-  //   default:
-  //     return $this->l->t('DebitNoteAnnouncementUnknown');
-  //   }
-  // }
+      $this->entityManager->beginTransaction();
+      try {
+        $this->persist($exportFile);
+        $this->flush();
+        $this->entityManager->commit();
+      } catch (\Throwable $t) {
+        $this->entityManager->rollback();
+        throw new Exceptions\DatabaseException($this->l->t('Unable to generate export data for bulk-transaction id %1$d, format "%2$s".', [ $bulkTransaction->getId(), $format ]), $t->getCode(), $t);
+      }
+    }
+    return $exportFile;
+  }
 
 };
 
