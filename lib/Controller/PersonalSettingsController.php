@@ -1310,6 +1310,7 @@ class PersonalSettingsController extends Controller {
           $this->l->t('Failure checking address book "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
       }
+
     case 'musiciansaddressbook':
       $real = trim($value);
       $this->setConfigValue($parameter, $real);
@@ -1376,6 +1377,7 @@ class PersonalSettingsController extends Controller {
         'message' => $requirements['hints'],
         'hints' => $requirements['hints'],
       ]);
+
     case 'userSqlBackendRecreateViews':
       try {
         $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
@@ -1403,6 +1405,7 @@ class PersonalSettingsController extends Controller {
           $requirements['hints']),
         'hints' => $requirements['hints'],
       ]);
+
     case 'cloudUserViewsDatabase':
       $newValue = Util::normalizeSpaces($value);
       $oldValue = $this->getConfigValue($parameter, null);
@@ -1415,6 +1418,9 @@ class PersonalSettingsController extends Controller {
           $userConnectorService->removeUserSqlViews($oldValue);
           $userConnectorService->updateUserSqlViews($newValue);
           $userConnectorService->writeUserSqlConfig($newValue);
+
+          $userConnectorService->removeMusicianPersonalizedViews($oldValue);
+          $userConnectorService->updateMusicianPersonalizedViews($newValue);
         } catch(\Throwable $t) {
           $this->logException($t);
           return self::grumble($this->exceptionChainData($t));
@@ -1424,6 +1430,50 @@ class PersonalSettingsController extends Controller {
         'message' => $requirements['hints'],
         'hints' => $requirements['hints'],
       ]);
+
+    case 'musicianPersonalizedViews':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
+      }
+      $stringValue = $realValue ? 'on' : 'off';
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        if ($realValue) {
+          $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
+        } else {
+          $userConnectorService->removeMusicianPersonalizedViews($cloudUserViewsDatabase);
+        }
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
+        'message' => $requirements['hints'],
+        'hints' => $requirements['hints'],
+      ]);
+
+    case 'musicianPersonalizedViewsRecreateViews':
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return self::dataResponse([
+        'message' => array_merge(
+          [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
+          $requirements['hints']),
+        'hints' => $requirements['hints'],
+      ]);
+
     case 'keydistribute':
       list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
       $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));

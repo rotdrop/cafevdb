@@ -545,26 +545,27 @@ const afterLoad = function(container) {
     sharedFolder('outboxfolder');
 
     const $cloudUserForm = container.find('form.cloud-user');
+
     const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
     const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]');
     const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
     const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
-    const $enabledIfImport = $importClubMembersFieldSet.find('.enable-if-user-sql-backend');
+    const $enabledIfImport = $cloudUserForm.find('.enable-if-user-sql-backend');
 
-    /*
-      <div class="cloud-user hints">
-      <?php foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
-        <div class="cloud-user hint"><?php p($hint); ?></div>
-      <?php } ?>
-      </div>
-    */
+    const $personalizedViewsFieldSet = $cloudUserForm.find('fieldset.personalized-views');
+    const $musicianPersonalizedViews = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViews"]');
+    const $recreatePersonalizedViewsButton = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViewsRecreateViews"]');
+    const $enabledIfPersonalizedViews = $cloudUserForm.find('.enable-if-personalized-views');
+
     const $cloudUserHints = $cloudUserForm.find('div.cloud-user.hints');
 
     const updateHints = function(hints) {
       $cloudUserHints.empty();
       if (!Array.isArray(hints) || hints.length === 0) {
+        $cloudUserHints.closest('fieldset').hide();
         return;
       }
+      $cloudUserHints.closest('fieldset').toggleClass('hidden', !$importClubMembersAsCloudUsers.is(':checked'));
       for (const hint of hints) {
         $cloudUserHints.append('<div class="cloud-user hint">' + hint + '</div>');
       }
@@ -572,11 +573,16 @@ const afterLoad = function(container) {
 
     const updateOtherOnImportChange = function($element) {
       const isChecked = $element.prop('checked');
-      $cloudUserHints.toggleClass('hidden', !isChecked);
+      $cloudUserHints.closest('fieldset').toggleClass('hidden', !isChecked);
       $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
       $shownIfImport.toggleClass('hidden', !isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-enabled', isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
+    };
+
+    const updateOtherOnPersonalizedViewsChange = function($element) {
+      const isChecked = $element.prop('checked');
+      $enabledIfPersonalizedViews.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
     };
 
     simpleSetValueHandler(
@@ -625,6 +631,7 @@ const afterLoad = function(container) {
         }
         return false;
       });
+
     simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
       success($element, data) {
         updateHints(data.hints);
@@ -637,6 +644,39 @@ const afterLoad = function(container) {
         updateHints(data.hints);
       },
       cleanup() { $recreateViewsButton.removeClass('busy'); },
+    });
+
+    simpleSetValueHandler(
+      $musicianPersonalizedViews, 'change', undefined, {
+        setup() {
+          const $this = $(this);
+          $this.addClass('busy');
+          // updateOtherOnPersonalizedViewsChange($this);
+        },
+        cleanup() {
+          const $this = $(this);
+          updateOtherOnPersonalizedViewsChange($this);
+          $this.removeClass('busy');
+        },
+        success($element, data) {
+          console.info('DATA', data);
+          updateHints(data.hints);
+        },
+        fail(xhr, textStatus, errorThrown) {
+          const $this = $(this);
+          Ajax.handleError(xhr, textStatus, errorThrown);
+          // revert on failure
+          $this.prop('checked', !$this.is(':checked'));
+          updateOtherOnPersonalizedViewsChange($this);
+        },
+      });
+
+    simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
+      setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
+      success($element, data) {
+        updateHints(data.hints);
+      },
+      cleanup() { $recreatePersonalizedViewsButton.removeClass('busy'); },
     });
 
   } // shared objects
