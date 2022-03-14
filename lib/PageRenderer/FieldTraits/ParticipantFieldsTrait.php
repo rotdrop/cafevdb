@@ -247,6 +247,7 @@ trait ParticipantFieldsTrait
               throw new \Exception($this->l->t('Not default style for "%s" available.', $dataType));
             }
             unset($style['name']);
+            unset($style['display|ACP']['postfix']);
             $fdd = array_merge($fdd, $style);
             $fdd['css']['postfix'] = array_merge($fdd['css']['postfix'], $css);
             break;
@@ -871,12 +872,10 @@ trait ParticipantFieldsTrait
             $invoices = Util::explodeIndexed($row['qf'.($k+2)]);
             $valueLabel = $this->l->t('Value');
             $invoiceLabel = $this->l->t('Documents');
-            $valueInputType = 'text';
             switch ($dataType) {
               case FieldType::SERVICE_FEE:
                 $valueLabel = $this->l->t('Value [%s]', $this->currencySymbol());
                 $invoiceLabel = $this->l->t('Invoice');
-                $valueInputType = 'number';
                 break;
               case FieldType::DATE:
                 $valueLabel = $this->l->t('Date');
@@ -1451,7 +1450,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         ])
         . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
     }
-    $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'number' : 'text';
+    $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'type="number" step="0.01"' : 'type="text"';
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
     $html = '
@@ -1475,7 +1474,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
   <td class="input">
     <input id="receivable-input-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
     <label class="'.$lockCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$optionKey.'"></label>
-    <input class="pme-input '.$dataType.'" type="'.$valueInputType.'"'.($locked ? ' readonly' : '').' name="'.$optionValueName.'['.$idx.']" value="'.$value.'"/>
+    <input class="pme-input '.$dataType.'" ' . $valueInputType . ($locked ? ' readonly' : '').' name="'.$optionValueName.'['.$idx.']" value="'.$value.'"/>
     <input class="pme-input '.$dataType.'" type="hidden" name="'.$optionKeyName.'['.$idx.']" value="'.$optionKey.'"/>
   </td>
   <td class="documents document-count-'.count($invoices).'">
