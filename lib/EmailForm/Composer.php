@@ -1597,7 +1597,8 @@ Störung.';
 
     $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()] = [];
 
-    // Find payments and potential attachments.
+    // Find payments and potential attachments. Always attached a pre-filled
+    // member-data update-form
     if (!empty($this->bulkTransaction)) {
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
@@ -4147,7 +4148,8 @@ Störung.';
         'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
-      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+      if ((!empty($this->bulkTransaction) && $templateId == ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE)
+          || isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
         $attachment['status'] = 'selected';
       } else {
         $attachment['status'] = 'inactive';
@@ -4180,7 +4182,7 @@ Störung.';
       }
       ++$numAttachments;
     }
-     return $numAttachments;
+    return $numAttachments;
   }
 
   /**
