@@ -33,6 +33,8 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**
  * Manage database-views and grants in order to selectively provide only the
  * neccessary information to the ambient cloud system.
@@ -145,6 +147,9 @@ WITH CHECK OPTION';
     'ProjectParticipantFieldsDataOptions' => 'field_id',
   ];
   const UNRESTRICTED_TABLES = [
+    'Instruments',
+    'InstrumentFamilies',
+    'instrument_instrument_family',
     'TableFieldTranslations',
   ];
 
@@ -207,7 +212,7 @@ WITH CHECK OPTION';
 
   private function viewName(?string $dataBaseName, string $prefix, string $baseName):string
   {
-    $viewName = $prefix . $baseName . self::VIEW_POSTFIX;
+    $viewName = $prefix . Util::dashesToCamelCase($baseName, true, '_') . self::VIEW_POSTFIX;
     if (!empty($dataBaseName)) {
       $viewName = $dataBaseName . '.' . $viewName;
     }
