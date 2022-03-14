@@ -130,7 +130,7 @@ class ProjectParticipantsStorage extends Storage
   protected function findFiles(string $dirName)
   {
     $dirName = self::normalizeDirectoryName($dirName);
-    if (!empty($this->files[$dirName])) {
+    if (false && !empty($this->files[$dirName])) {
       return $this->files[$dirName];
     }
 
@@ -146,7 +146,7 @@ class ProjectParticipantsStorage extends Storage
     $userId = $this->entityManager->getUserId();
     if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
 
-      if (!$dirMatch) {
+      if (empty($dirName) || !$dirMatch) {
         // add supporting documents for composite payments (may belong to more
         // than one project, at least technically)
 
@@ -193,7 +193,7 @@ class ProjectParticipantsStorage extends Storage
         }
       }
 
-      if (!$dirMatch) {
+      if (empty($dirName) || !$dirMatch) {
 
         // also link in the debit-mandate hard-copies in their own sub-folder
         // subDir: $this->l->t('DebitMandates'),
@@ -247,7 +247,7 @@ class ProjectParticipantsStorage extends Storage
       }
     }
 
-    if (!$dirMatch) {
+    if (empty($dirName) || !$dirMatch) {
       $modificationTime = $this->participant->getParticipantFieldsDataChanged();
 
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
