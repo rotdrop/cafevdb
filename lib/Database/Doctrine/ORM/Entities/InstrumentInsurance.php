@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,6 +28,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
@@ -127,8 +129,16 @@ class InstrumentInsurance implements \ArrayAccess
    */
   private $startOfInsurance;
 
+  /**
+   * @var Collection|null
+   *
+   * @ORM\OneToMany(targetEntity="InsuranceClaim", mappedBy="instrumentInsurance", fetch="EXTRA_LAZY")
+   */
+  private $insuranceClaims;
+
   public function __construct() {
     $this->arrayCTOR();
+    $this->insuranceClaims = new ArrayCollection();
   }
 
   /**
@@ -382,7 +392,7 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set insuranceRate.
    *
-   * @param int $insuranceRate
+   * @param InsuranceRate $insuranceRate
    *
    * @return InstrumentInsurance
    */
@@ -400,5 +410,28 @@ class InstrumentInsurance implements \ArrayAccess
   public function getInsuranceRate():InsuranceRate
   {
     return $this->insuranceRate;
+  }
+
+  /**
+   * Set insuranceClaims.
+   *
+   * @param Collection $insuranceClaims
+   *
+   * @return InstrumentInsurance
+   */
+  public function setInsuranceClaims(?Collection $insuranceClaims):InstrumentInsurance
+  {
+    $this->insuranceClaims = $insuranceClaims;
+    return $this;
+  }
+
+  /**
+   * Get insuranceClaims.
+   *
+   * @return InsuranceClaim
+   */
+  public function getInsuranceClaims():Collection
+  {
+    return $this->insuranceClaims;
   }
 }
