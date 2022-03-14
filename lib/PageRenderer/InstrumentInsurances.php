@@ -159,6 +159,10 @@ class InstrumentInsurances extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
 
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -547,6 +551,17 @@ GROUP BY b.short_name',
         'name' => $this->l->t('Start of Insurance'),
         'input' => 'M', // required
       ]);
+
+    if ($this->showDisabled) {
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'tab'  => [ 'id' => 'overview' ],
+          'name' => $this->l->t('End of Insurance'),
+          'dateformat' => 'medium',
+          'timeformat' => null,
+        ],
+      );
+    }
 
     $opts['fdd']['bill'] = [
       'tab'   => [ 'id' => 'tab-all' ],
