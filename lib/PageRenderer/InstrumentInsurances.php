@@ -335,7 +335,7 @@ class InstrumentInsurances extends PMETableViewBase
       $opts['fdd']['broker_id'] = [
         'tab'      => [ 'id' => 'overview'],
         'name'     => $this->l->t('Insurance Broker'),
-        'css'      => [ 'postfix' => [ 'broker-select', ], ],
+        'css'      => [ 'postfix' => [ 'broker-select', 'squeeze-subsequent-lines', ], ],
         'select'   => 'D',
         'maxlen'   => 384,
         'sort'     => true,
@@ -357,14 +357,24 @@ LEFT JOIN '.self::RATES_TABLE.' r
 GROUP BY b.short_name',
           'column' => 'short_name',
           'description' => [
-            'columns' => [ 'long_name', 'REPLACE($table.address, "\n", ", ")' ],
-            'divs' => '; ',
+            'columns' => [ 'long_name', 'REPLACE($table.address, "\n", "<br/>")' ],
+            'divs' => '<br/>',
             'cast' => [ false, false ],
           ],
           'join' => '$join_col_fqn = $main_table.broker_id',
           // 'data' => '$table.geographical_scopes',
           'data' => '$table.insurance_rates',
         ],
+        'display|LFVD' => [
+          'popup' => 'data',
+          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
+      ];
+      $opts['fdd']['broker_id']['values|ACP'] = $opts['fdd']['broker_id']['values'];
+      $opts['fdd']['broker_id']['values|ACP']['description'] = [
+        'columns' => [ 'long_name' ],
+        'cast' => [ false ],
       ];
     }
 
