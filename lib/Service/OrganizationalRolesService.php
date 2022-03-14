@@ -72,10 +72,10 @@ class OrganizationalRolesService
   }
 
   /**
-   * Return email and display name of the treasurer user for error
-   * feedback messages.
+   * Return email and display name of one of the principal organizators for error
+   * feedback messages and substitutions.
    */
-  private function dedicatedBoardMemberContact(string $role)
+  public function dedicatedBoardMemberContact(string $role)
   {
     $participant = $this->dedicatedBoardMemberParticipant($role);
     if (empty($participant)) {
