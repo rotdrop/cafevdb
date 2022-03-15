@@ -3351,8 +3351,8 @@ class phpMyEdit
 		if ($readonly == 'readonly') {
 			// selects can only be disabled, but not made readonly.
 			foreach ($selected as $value) {
-				$name = $this->enc($name).($multiple ? '[]' : '');
-				$ret .= $this->htmlHidden($name, $value, $css);
+				$hiddenName = $this->enc($name).($multiple ? '[]' : '');
+				$ret .= $this->htmlHidden($hiddenName, $value, $css);
 				if (!$multiple) {
 					break;
 				}
@@ -5294,6 +5294,9 @@ class phpMyEdit
 			} else if ($value != $oldvals[$fd]) {
 				$fdn = $this->fdn[$fd]; // $fdn == field number
 				if ($this->col_has_multiple($fdn) && !$this->skipped($fdn)) {
+					if (is_array($value)) {
+						$this->logInfo('UNEXPECTED ARRAY ' . $fd . ' ' . print_r($value, true));
+					}
 					$tmpval1 = self::explodeValueArray($value);
 					sort($tmpval1);
 					$tmpval2 = self::explodeValueArray($oldvals[$fd]);
