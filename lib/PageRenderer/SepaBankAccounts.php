@@ -276,10 +276,13 @@ class SepaBankAccounts extends PMETableViewBase
 
     if ($projectMode) {
       $opts['options'] .= 'M';
+
+      // controls display an location of edit/misc buttons
+      $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+      $opts['misc']['css']['major'] = 'misc';
+      $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
+      $opts['labels']['Misc'] = $this->l->t('Debit');
     }
-    $opts['misc']['css']['major'] = 'misc';
-    $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
-    $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';

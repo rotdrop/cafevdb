@@ -168,6 +168,9 @@ class InstrumentInsurances extends PMETableViewBase
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACVDFM';
 
+    // controls display an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
 

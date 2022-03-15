@@ -311,7 +311,7 @@ class phpMyEdit
 	function nav_buttons()		 { return !empty($this->navigation) && stristr($this->navigation, 'B'); }
 	function nav_text_links()	 { return !empty($this->navigation) && stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return !empty($this->navigation) && stristr($this->navigation, 'G'); }
-	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M') && $this->misc_enabled(); }
+	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M'); }
 	function nav_up()			 { return !empty($this->navigation) && stristr($this->navigation, 'U') && (!isset($this->buttons[$this->page_type]['up']) || !($this->buttons[$this->page_type]['up'] === false)); }
 	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
@@ -4837,6 +4837,10 @@ class phpMyEdit
 						// 	// Remove, remember all others
 						// 	unset($this->mrecs[$mrecs_key]);
 						// }
+						if (!$this->misc_enabled()) {
+							// well, then it is disabled
+							echo ' disabled';
+						}
 
 						echo ' /><div class="'.$css.'"></div></label></td>'."\n";
 

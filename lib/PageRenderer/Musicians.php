@@ -269,15 +269,14 @@ make sure that the musicians are also automatically added to the
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACPVDFM';
 
+    // controls display an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+
     // needed early as otherwise the add_operation() etc. does not work.
     $this->pme->setOptions($opts);
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
-
-    // Navigation style: B - buttons (default), T - text links, G - graphic links
-    // Buttons position: U - up, D - down (default)
-    //$opts['navigation'] = 'DB';
 
     if (!$this->projectMode) {
       $export = $this->pageNavigation->tableExportButton();
