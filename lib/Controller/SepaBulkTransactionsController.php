@@ -140,7 +140,8 @@ class SepaBulkTransactionsController extends Controller {
    * @param array $bulkTransactions Actually the options from
    * Entities\ProjectParticipantFieldDataOption to take into account.
    *
-   * @bug This function is too long.
+   * @bug This function is too long; the functionality should be splitted and
+   * moved to a service class.
    */
   private function generateBulkTransactions($projectId, $bankAccountRecords, $bulkTransactions, $dueDeadline = null)
   {
@@ -175,6 +176,11 @@ class SepaBulkTransactionsController extends Controller {
         return self::grumble($this->l->t('Bank account for musician-id %d, sequence %d not found.',
                                          [ $musicianId, $sequence ]));
       }
+      if ($account->isDeleted()) {
+        // This can happen when forcing display of soft-deleted rows in expert mode.
+        return self::grumble($this->l->t('Refusing to use a revoked or disabled bank account. The bank-account %1$s for %2$s (musician-id %3$d, sequence %4$d) has been revoked or deleted on %5$s.',
+                                         [ $account->getIban(), $account->getMusician()->getPublicName(), $musicianId, $sequence, $this->formatDate($account->getDeleted()) ]));
+      }
       if (!empty($bankAccounts[$musicianId])) {
         return self::grumble(
           $this->l->t('More than one bank account submitted for musician %s, multiple IBANs %s, %s.',
@@ -202,8 +208,8 @@ class SepaBulkTransactionsController extends Controller {
           'sequence' => $mandateSequence,
         ]);
         if (empty($mandate)) {
-        return self::grumble($this->l->t('Debit-mandate for musician-id %d, sequence %d not found.',
-                                         [ $musicianId, $mandateSequence ]));
+          return self::grumble($this->l->t('Debit-mandate for musician-id %d, sequence %d not found.',
+                                           [ $musicianId, $mandateSequence ]));
         }
         if (!empty($debitMandates[$musicianId])) {
           return self::grumble(
@@ -219,6 +225,17 @@ class SepaBulkTransactionsController extends Controller {
             $this->l->t('Debit-mandate is for bank-account "%s", but the current bank-account is "%s".', [
               $mandate->getSepaBankAccount()->getIban(), $account->getIban()
             ]));
+        }
+        if ($mandate->isDeleted()) {
+          // This can happen when forcing display of soft-deleted rows in expert mode.
+          return self::grumble($this->l->t('Refusing to use a revoked or disabled debit-mandate. The debit-mandate %1$s for the bank-account %2$s of %3$s (musician-id %4$d, mandate-sequence %5$d) has been revoked or deleted on %6$s.', [
+            $mandate->getMandateReference(),
+            $account->getIban(),
+            $account->getMusician()->getPublicName(),
+            $musicianId,
+            $mandateSequence,
+            $this->formatDate($mandate->getDeleted()),
+          ]));
         }
         $debitMandates[$musicianId] = $mandate;
         // $this->logInfo('MANDATE '.\OCA\CAFEVDB\Common\Functions\dump($mandate));

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1712,7 +1712,7 @@ function emailFormPopup(post, modal, single, afterInit) {
       const composerPanel = dialogHolder.find('div#emailformcomposer');
 
       let dlgTitle = '';
-      if (data.projectId >= 0) {
+      if (data.projectId > 0) {
         dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName });
       } else {
         dlgTitle = t(appName, 'Em@il Form');
@@ -1721,16 +1721,6 @@ function emailFormPopup(post, modal, single, afterInit) {
       if (modal) {
         modalizer(true);
       }
-
-      let recipientsAlertText;
-      if (data.projectId > 0) {
-        recipientsAlertText = t(appName, 'Email will be sent with an open recipients list!');
-      } else {
-        recipientsAlertText = t(appName, 'Email will be sent with a hidden recipients list!');
-      }
-      // Dialogs.alert(recipientsAlertText, t(appName, 'Notice'), undefined, true);
-      Notification.hide();
-      Notification.show(recipientsAlertText, { timeout: 15 });
 
       dialogHolder.cafevDialog({
         title: dlgTitle,

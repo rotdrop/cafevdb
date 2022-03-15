@@ -276,10 +276,13 @@ class SepaBankAccounts extends PMETableViewBase
 
     if ($projectMode) {
       $opts['options'] .= 'M';
+
+      // controls display an location of edit/misc buttons
+      $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+      $opts['misc']['css']['major'] = 'misc';
+      $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
+      $opts['labels']['Misc'] = $this->l->t('Debit');
     }
-    $opts['misc']['css']['major'] = 'misc';
-    $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
-    $opts['labels']['Misc'] = $this->l->t('Debit');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -900,6 +903,21 @@ class SepaBankAccounts extends PMETableViewBase
           }
           return true;
         };
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])
+          || !empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'deleted', $pme->fdd)])) {
+        // disable the "misc" checkboxes essentially disabling the possibility
+        // to draw debit-mandates from deleted/revoked bank accounts and debit
+        // mandates. There is also a corresponding check in the backend which
+        // protects the "API" calls.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 

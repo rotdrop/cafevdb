@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -371,7 +372,10 @@ Störung.';
   private $progressStatusService;
 
   /** @var SimpleSharingService */
-  private $simpleShareingService;
+  private $simpleSharingService;
+
+  /** @var OrganizationalRolesService */
+  private $organizationalRolesService;
 
   /** @var AppStorage */
   private $appStorage;
@@ -420,13 +424,15 @@ Störung.';
     , ProjectParticipantFieldsService $participantFieldsService
     , ProgressStatusService $progressStatusService
     , SimpleSharingService $simpleSharingService
+    , OrganizationalRolesService $organizationRolesService
     , AppStorage $appStorage
     , UserStorage $userStorage
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->progressStatusService = $progressStatusService;
-    $this->simpleShareingService = $simpleSharingService;
+    $this->simpleSharingService = $simpleSharingService;
+    $this->organizationalRolesService = $organizationRolesService;
     $this->appStorage = $appStorage;
     $this->userStorage = $userStorage;
     $this->entityManager = $entityManager;
@@ -600,7 +606,6 @@ Störung.';
   {
     $this->generateGlobalSubstitutionHandlers();
 
-    // @todo fill with real contents
     foreach (self::MEMBER_VARIABLES as $key) {
       $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
         $field = Util::dashesToCamelCase(strtolower($key), false, '_');
@@ -1276,7 +1281,7 @@ Störung.';
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler) { return $handler($keyArg, $musician); };
+        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) { $keyArg[0] = $key; return $handler($keyArg, $musician); };
       }
     }
   }
@@ -1592,7 +1597,8 @@ Störung.';
 
     $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()] = [];
 
-    // Find payments and potential attachments.
+    // Find payments and potential attachments. Always attached a pre-filled
+    // member-data update-form
     if (!empty($this->bulkTransaction)) {
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
@@ -2069,7 +2075,7 @@ Störung.';
           $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
         }
         if (!empty($downloadFile)) {
-          $shareLink = $this->simpleShareingService->linkShare(
+          $shareLink = $this->simpleSharingService->linkShare(
             $downloadFile,
             $this->shareOwnerId(),
             sharePerms: \OCP\Constants::PERMISSION_READ,
@@ -3211,10 +3217,33 @@ Störung.';
     /** @var IDateTimeFormatter */
     $formatter = $this->appContainer()->get(IDateTimeFormatter::class);
 
+    $organizationalRoleContact = function(array $arg) {
+      $role = strtolower($arg[0]);
+      $contact = $this->organizationalRolesService->dedicatedBoardMemberContact($role);
+      $subField = Util::dashesToCamelCase(strtolower($arg[1]));
+      if (empty($subField)) {
+        throw new Exceptions\SubstitutionException($this->l->t('Contact subfield for "%1$s" is missing, should be one of %2$s.', [
+          $arg[0],
+          implode(', ', array_map('strtoupper', array_keys($contact)))
+        ]));
+      }
+      if (!isset($contact[$subField])) {
+        throw new Exceptions\SubstitutionException($this->l->t('Contact subfield "%3$s"" for "%1$s" is unknown, should be one of %2$s.', [
+          $arg[0],
+          implode(', ', array_map('strtoupper', array_keys($contact))),
+          $arg[1],
+        ]));
+      }
+      return $contact[$subField];
+    };
+
     $this->substitutions[self::GLOBAL_NAMESPACE] = [
       'ORGANIZER' => function($key) {
         return $this->fetchExecutiveBoard();
       },
+      'PRESIDENT' => $organizationalRoleContact,
+      'TREASURER' => $organizationalRoleContact,
+      'SECRETARY' => $organizationalRoleContact,
       'CREDITOR_IDENTIFIER' => function($key) {
         return $this->getConfigValue('bankAccountCreditorIdentifier');
       },
@@ -3892,7 +3921,7 @@ Störung.';
         foreach ($node->getDirectoryListing() as $fileAttachment) {
           $this->logDebug('TRY EXPIRE ' . $fileAttachment->getName());
           $numChangedShares +=
-            $this->simpleShareingService->expire($fileAttachment, $this->shareOwnerId());
+            $this->simpleSharingService->expire($fileAttachment, $this->shareOwnerId());
         }
       }
     }
@@ -4119,7 +4148,8 @@ Störung.';
         'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
-      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+      if ((!empty($this->bulkTransaction) && $templateId == ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE)
+          || isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
         $attachment['status'] = 'selected';
       } else {
         $attachment['status'] = 'inactive';
@@ -4152,7 +4182,7 @@ Störung.';
       }
       ++$numAttachments;
     }
-     return $numAttachments;
+    return $numAttachments;
   }
 
   /**

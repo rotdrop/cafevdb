@@ -269,15 +269,14 @@ make sure that the musicians are also automatically added to the
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACPVDFM';
 
+    // controls display an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+
     // needed early as otherwise the add_operation() etc. does not work.
     $this->pme->setOptions($opts);
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
-
-    // Navigation style: B - buttons (default), T - text links, G - graphic links
-    // Buttons position: U - up, D - down (default)
-    //$opts['navigation'] = 'DB';
 
     if (!$this->projectMode) {
       $export = $this->pageNavigation->tableExportButton();
@@ -947,6 +946,18 @@ make sure that the musicians are also automatically added to the
     };
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+        // disable misc-checkboxes for soft-deleted musicians in order to
+        // avoid sending them bulk-email.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts = $this->mergeDefaultOptions($opts);
 

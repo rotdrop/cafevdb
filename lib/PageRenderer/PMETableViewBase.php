@@ -139,6 +139,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const CSS_TAG_SHOW_HIDE_DISABLED = 'show-hide-disabled';
   const CSS_TAG_DIRECT_CHANGE = 'direct-change';
 
+  protected const PME_NAVIGATION_NO_MULTI = 'GUD';
+  protected const PME_NAVIGATION_MULTI = 'GUDM';
+
   /** @var RequestParameterService */
   protected $requestParameters;
 
@@ -271,6 +274,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       'cgi' => [ 'persist' => [] ],
       'display' => [],
       'css' => [ 'postfix' => [], ],
+      'navigation' => self::PME_NAVIGATION_NO_MULTI,
     ];
     $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
@@ -2157,6 +2161,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param string $column SQL column.
    *
    * @param array $fdd Override FDD, see phpMyEdit.
+   *
+   * @return array
+   * ```
+   * [ INDEX, FIELDNAME ]
+   * ```
    */
   protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd)
   {

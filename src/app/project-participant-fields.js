@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -253,11 +253,14 @@ const ready = function(selector, resizeCB) {
     $(dateTimePickerSelector).remove();
     switch (dataType) {
     case 'service-fee':
-      $dataInputs.attr('type', 'number');
+      $dataInputs
+        .attr('type', 'number')
+        .attr('step', '0.01');
       break;
     case 'date':
       $dataInputs
         .attr('type', 'text')
+        .removeAttr('step')
         .datepicker({
           minDate: '01.01.1940', // birthday
         });
@@ -271,12 +274,15 @@ const ready = function(selector, resizeCB) {
     case 'datetime':
       $dataInputs
         .attr('type', 'text')
+        .removeAttr('step')
         .datetimepicker({
           step: 5,
         });
       break;
     default:
-      $dataInputs.attr('type', 'text');
+      $dataInputs
+        .attr('type', 'text')
+        .removeAttr('step');
       break;
     }
   };

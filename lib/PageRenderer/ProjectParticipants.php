@@ -316,6 +316,9 @@ class ProjectParticipants extends PMETableViewBase
     $opts['options'] = 'CPVDF';
     $opts['options'] .= 'M'; // misc
 
+    // controls display an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_MULTI;
+
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
 
@@ -891,6 +894,21 @@ class ProjectParticipants extends PMETableViewBase
         'tooltip' => $this->toolTipsService['member-status'],
       ]);
 
+    // soft-deleted musician kept to keep the instrumentation for the old project
+    list($index, $fieldName) = $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'deleted', array_merge(
+        $this->defaultFDD['deleted'], [
+          'input' => ($this->showDisabled && $this->expertMode ? '' : 'HR'),
+          'name' => $this->l->t('Musician Deleted'),
+          'dateformat' => 'medium',
+          'timeformat' => 'short',
+          'maxlen' => 19,
+        ]
+      )
+    );
+    Util::unsetValue($opts['fdd'][$fieldName]['css']['postfix'], 'date');
+    $opts['fdd'][$fieldName]['css']['postfix'][] = 'datetime';
+
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_deactivated', [
         'name' => $this->l->t('Cloud Account Deactivated'),
@@ -1208,6 +1226,19 @@ class ProjectParticipants extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])
+          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted', $pme->fdd)])) {
+        // disable misc-checkboxes for soft-deleted musicians in order to
+        // avoid sending them bulk-email.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts = $this->mergeDefaultOptions($opts);
 

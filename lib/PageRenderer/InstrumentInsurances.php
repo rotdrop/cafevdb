@@ -151,18 +151,27 @@ class InstrumentInsurances extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      'projectId' => $this->projectId,
+      'projectName' => $this->projectName,
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'id' => 'int', ];
+    $opts['key'] = [ 'id' => 'int', 'bill_to_party_id' => 'int' ];
 
     // Sorting field(s)
     $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
+
+    if (!$this->showDisabled) {
+      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+    }
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACVDFM';
+
+    // controls display an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_MULTI;
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -331,7 +340,7 @@ class InstrumentInsurances extends PMETableViewBase
       $opts['fdd']['broker_id'] = [
         'tab'      => [ 'id' => 'overview'],
         'name'     => $this->l->t('Insurance Broker'),
-        'css'      => [ 'postfix' => [ 'broker-select', ], ],
+        'css'      => [ 'postfix' => [ 'broker-select', 'squeeze-subsequent-lines', ], ],
         'select'   => 'D',
         'maxlen'   => 384,
         'sort'     => true,
@@ -353,14 +362,24 @@ LEFT JOIN '.self::RATES_TABLE.' r
 GROUP BY b.short_name',
           'column' => 'short_name',
           'description' => [
-            'columns' => [ 'long_name', 'REPLACE($table.address, "\n", ", ")' ],
-            'divs' => '; ',
+            'columns' => [ 'long_name', 'REPLACE($table.address, "\n", "<br/>")' ],
+            'divs' => '<br/>',
             'cast' => [ false, false ],
           ],
           'join' => '$join_col_fqn = $main_table.broker_id',
           // 'data' => '$table.geographical_scopes',
           'data' => '$table.insurance_rates',
         ],
+        'display|LFVD' => [
+          'popup' => 'data',
+          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+        ],
+      ];
+      $opts['fdd']['broker_id']['values|ACP'] = $opts['fdd']['broker_id']['values'];
+      $opts['fdd']['broker_id']['values|ACP']['description'] = [
+        'columns' => [ 'long_name' ],
+        'cast' => [ false ],
       ];
     }
 
@@ -548,6 +567,17 @@ GROUP BY b.short_name',
         'input' => 'M', // required
       ]);
 
+    if ($this->showDisabled) {
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'tab'  => [ 'id' => 'overview' ],
+          'name' => $this->l->t('End of Insurance'),
+          'dateformat' => 'medium',
+          'timeformat' => null,
+        ],
+      );
+    }
+
     $opts['fdd']['bill'] = [
       'tab'   => [ 'id' => 'tab-all' ],
       'name'  => $this->l->t('Bill'),
@@ -598,6 +628,18 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
     // merge default options
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+        // disable misc-checkboxes for soft-deleted musicians in order to
+        // avoid sending them bulk-email.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 

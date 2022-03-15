@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -65,6 +65,7 @@ class RecipientsFilter
   private const MUSICIAN_KEY = [
     'Musicians' => 'id',
     'ProjectParticipants' => 'musician_id',
+    'InstrumentInsurances' => 'bill_to_party_id',
   ];
 
   /** @var null|Entities\Project */

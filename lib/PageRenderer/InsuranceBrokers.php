@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -153,13 +153,19 @@ class InsuranceBrokers extends PMETableViewBase
 
     $opts['fdd']['address'] = [
       'name'     => $this->l->t('Address'),
-      'css'      => [ 'postfix' => ' brokeraddress' ],
+      'css'      => [ 'postfix' => [ 'brokeraddress', 'squeeze-subsequent-lines', ], ],
       'select'   => 'T',
       'maxlen'   => 512,
+      'sql|LFVD' => 'REPLACE($join_col_fqn, "\n", "<br/>")',
       'textarea' => [
         'css' => 'wysiwygeditor',
         'rows' => 5,
         'cols' => 50,
+      ],
+      'display|LFVD' => [
+        'popup' => 'data',
+        'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+        'postfix' => '</div></div>',
       ],
       'escape'   => false,
       'sort'     => $sort,

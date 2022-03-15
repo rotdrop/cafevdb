@@ -311,7 +311,7 @@ class phpMyEdit
 	function nav_buttons()		 { return !empty($this->navigation) && stristr($this->navigation, 'B'); }
 	function nav_text_links()	 { return !empty($this->navigation) && stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return !empty($this->navigation) && stristr($this->navigation, 'G'); }
-	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M') && $this->misc_enabled(); }
+	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M'); }
 	function nav_up()			 { return !empty($this->navigation) && stristr($this->navigation, 'U') && (!isset($this->buttons[$this->page_type]['up']) || !($this->buttons[$this->page_type]['up'] === false)); }
 	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
@@ -3351,8 +3351,8 @@ class phpMyEdit
 		if ($readonly == 'readonly') {
 			// selects can only be disabled, but not made readonly.
 			foreach ($selected as $value) {
-				$name = $this->enc($name).($multiple ? '[]' : '');
-				$ret .= $this->htmlHidden($name, $value, $css);
+				$hiddenName = $this->enc($name).($multiple ? '[]' : '');
+				$ret .= $this->htmlHidden($hiddenName, $value, $css);
 				if (!$multiple) {
 					break;
 				}
@@ -4564,7 +4564,7 @@ class phpMyEdit
 				|| $this->password($k)) {
 				echo '<th class="',$css_class_name,' ',$css_nosort_class,$css_align,'"';
 				if (!empty($this->fdd[$k]['tooltip'])) {
-					echo ' ','title="'.$this->fdd[$k]['tooltip'].'"',' ';
+					echo ' ',$this->fieldTooltip($k, true),' ';
 				}
 				echo '>',$fdn,'</th>',"\n";
 			} else {
@@ -4574,7 +4574,7 @@ class phpMyEdit
 
 				echo '<th class="'.$css_class_name.' '.$css_sort_class.$css_align.'"';
 				if (!empty($this->fdd[$k]['tooltip'])) {
-					echo ' ','title="'.$this->fdd[$k]['tooltip'].'"';
+					echo ' ',$this->fieldTooltip($k, true);
 				}
 				echo '>';
 				// tri-state: sort off - > sort fwrd -> sort rvrs -> sort off
@@ -4837,6 +4837,10 @@ class phpMyEdit
 						// 	// Remove, remember all others
 						// 	unset($this->mrecs[$mrecs_key]);
 						// }
+						if (!$this->misc_enabled()) {
+							// well, then it is disabled
+							echo ' disabled';
+						}
 
 						echo ' /><div class="'.$css.'"></div></label></td>'."\n";
 
@@ -5290,6 +5294,9 @@ class phpMyEdit
 			} else if ($value != $oldvals[$fd]) {
 				$fdn = $this->fdn[$fd]; // $fdn == field number
 				if ($this->col_has_multiple($fdn) && !$this->skipped($fdn)) {
+					if (is_array($value)) {
+						$this->logInfo('UNEXPECTED ARRAY ' . $fd . ' ' . print_r($value, true));
+					}
 					$tmpval1 = self::explodeValueArray($value);
 					sort($tmpval1);
 					$tmpval2 = self::explodeValueArray($oldvals[$fd]);
