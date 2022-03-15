@@ -1712,7 +1712,7 @@ function emailFormPopup(post, modal, single, afterInit) {
       const composerPanel = dialogHolder.find('div#emailformcomposer');
 
       let dlgTitle = '';
-      if (data.projectId >= 0) {
+      if (data.projectId > 0) {
         dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName });
       } else {
         dlgTitle = t(appName, 'Em@il Form');
