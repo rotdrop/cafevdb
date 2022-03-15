@@ -2161,6 +2161,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param string $column SQL column.
    *
    * @param array $fdd Override FDD, see phpMyEdit.
+   *
+   * @return array
+   * ```
+   * [ INDEX, FIELDNAME ]
+   * ```
    */
   protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd)
   {
