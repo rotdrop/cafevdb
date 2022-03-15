@@ -151,10 +151,12 @@ class InstrumentInsurances extends PMETableViewBase
       'template' => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
+      'projectId' => $this->projectId,
+      'projectName' => $this->projectName,
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'id' => 'int', ];
+    $opts['key'] = [ 'id' => 'int', 'bill_to_party_id' => 'int' ];
 
     // Sorting field(s)
     $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
@@ -626,6 +628,18 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
     // merge default options
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+        // disable misc-checkboxes for soft-deleted musicians in order to
+        // avoid sending them bulk-email.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
