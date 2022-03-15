@@ -904,6 +904,19 @@ class SepaBankAccounts extends PMETableViewBase
           return true;
         };
 
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+        // disable the "misc" checkboxes essentially disabling the possibility
+        // to draw debit-mandates from deleted/revoked debit mandates. There
+        // is also a corresponding check in the backend which protects the
+        // "API" calls.
+        $pme->options = str_replace('M', '', $opts['options']);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
