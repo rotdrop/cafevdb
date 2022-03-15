@@ -368,7 +368,7 @@ class SepaBulkTransactionService
    * @return null|Entities\EncryptedFile The generated export set.
    *
    */
-  public function generateTransactionData(Entities\SepaBulkTransaction $bulkTransaction, ?Entities\Project $project, string $format = self::EXPORT_AQBANKING):?Entites\EncryptedFile
+  public function generateTransactionData(Entities\SepaBulkTransaction $bulkTransaction, ?Entities\Project $project, string $format = self::EXPORT_AQBANKING):?Entities\EncryptedFile
   {
     $transcationData = $bulkTransaction->getSepaTransactionData();
     /** @var Entities\EncryptedFile $exportFile */
@@ -382,7 +382,7 @@ class SepaBulkTransactionService
         || $bulkTransaction->getUpdated() > $exportFile->getUpdated()
         || $bulkTransaction->getSepaTransactionDataChanged() > $exportFile->getUpdated()) {
       /** @var IBulkTransactionExporter $exporter */
-      $exporter = $this->bulkTransactionService->getTransactionExporter($format);
+      $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
         throw new \InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
       }
@@ -391,8 +391,12 @@ class SepaBulkTransactionService
       } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
         $transactionType = 'debitnote';
       }
+
+      // FIXME: just for the timeStamp() function ...
+      $timeStamp = $this->appContainer->get(Service\ConfigService::class)->timeStamp();
+
       $fileName = implode('-', array_filter([
-        $this->timeStamp(),
+        $timeStamp,
         $transactionType,
         !empty($project) ? $project->getName() : null,
         $format,
