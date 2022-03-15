@@ -35,9 +35,16 @@ require('sepa-bulk-transactions.scss');
 const ready = function(container, resizeCB) {
 
   // sanitize
-  container = PHPMyEdit.container(container);
+  const $container = PHPMyEdit.container(container);
 
-  container
+  $container
+    .on('dblclick', 'table.pme-main tr.bulk-transaction.first td', function(event) {
+      event.stopImmediatePropagation();
+      PHPMyEdit.openRowDialog(this, event, $container);
+      return false;
+    });
+
+  $container
     .on('click', 'table.pme-main tr.bulk-transaction.first td', function(event) {
       const $row = $(this).closest('tr.bulk-transaction.first');
       event.stopImmediatePropagation();
@@ -46,7 +53,7 @@ const ready = function(container, resizeCB) {
       return false;
     });
 
-  container
+  $container
     .on('click', '.bulk-transaction-actions a.announce', function(event) {
       const self = $(this);
       const post = self.data('post');
@@ -56,7 +63,7 @@ const ready = function(container, resizeCB) {
       return false;
     });
 
-  container
+  $container
     .on('click', '.bulk-transaction-actions a.download', function(event) {
       const self = $(this);
 
@@ -91,13 +98,13 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
 
-    const container = PHPMyEdit.container();
+    const $container = PHPMyEdit.container();
 
-    if (!container.hasClass('sepa-bulk-transactions')) {
+    if (!$container.hasClass('sepa-bulk-transactions')) {
       return;
     }
 
-    ready(container, function() {});
+    ready($container, function() {});
   });
 
 };
