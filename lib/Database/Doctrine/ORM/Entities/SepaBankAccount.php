@@ -122,7 +122,10 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * @var array
    *
-   * In memory encryption context to support multi user encryption.
+   * @ORM\Column(type="json")
+   *
+   * In memory encryption context to support multi user encryption. This is a
+   * multi-field encryption context indexed by the property name.
    */
   private $encryptionContext = [];
 

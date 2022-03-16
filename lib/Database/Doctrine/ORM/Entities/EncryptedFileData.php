@@ -42,7 +42,9 @@ class EncryptedFileData extends FileData
   private $data;
 
   /**
-   * @var mixed
+   * @var array
+   *
+   * @ORM\Column(type="json")
    *
    * In memory encryption context to support multi user encryption.
    */
