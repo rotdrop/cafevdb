@@ -84,6 +84,7 @@ class EncryptionService
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
+    'orchestra', // used in the member's app for the front-page announcement
     self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
 
