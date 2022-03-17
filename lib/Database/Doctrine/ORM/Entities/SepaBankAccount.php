@@ -372,9 +372,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param string $personality
    *
-   * @return EncryptedFileData
+   * @return SepaBankAccount
    */
-  public function addEncryptionIdentity(string $personality):EncryptedFileData
+  public function addEncryptionIdentity(string $personality):SepaBankAccount
   {
     if (empty($this->encryptionContext)) {
       $this->encryptionContext = [];
@@ -391,9 +391,9 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @param string $personality
    *
-   * @return EncryptedFileData
+   * @return SepaBankAccount
    */
-  public function removeEncryptionIdentity(string $personality):EncryptedFileData
+  public function removeEncryptionIdentity(string $personality):SepaBankAccount
   {
     $pos = array_search($personality, $this->encryptionContext??[]);
     if ($pos !== false) {
