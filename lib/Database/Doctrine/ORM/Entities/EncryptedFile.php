@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 class EncryptedFile extends File
 {
   /**
-   * @var FileData
+   * @var EncryptedFileData
    *
    * @ORM\OneToOne(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
@@ -55,15 +55,17 @@ class EncryptedFile extends File
    */
   private $owners;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null) {
+  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
-    if (!empty($data)) {
-      $fileData = new EncryptedFileData;
-      $fileData->setData($data);
-      $fileData->setFile($this);
-      $this->setFileData($fileData)
-           ->setSize(strlen($data));
+    $data = $data ?? '';
+    $fileData = new EncryptedFileData;
+    $fileData->setData($data);
+    $fileData->setFile($this);
+    $this->setFileData($fileData)
+      ->setSize(strlen($data));
+    if (!empty($owner)) {
+      $this->addOwner($owner);
     }
   }
 

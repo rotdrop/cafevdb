@@ -70,7 +70,7 @@ class FileData implements \ArrayAccess
   private $dataHash;
 
   /**
-   * @var string|null
+   * @var string
    *
    * @ORM\Column(type="blob", nullable=false)
    */

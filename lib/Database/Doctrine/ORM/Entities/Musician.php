@@ -1055,6 +1055,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set encryptedFiles.
+   *
+   * @param Collection $encryptedFiles
+   *
+   * @return Musician
+   */
+  public function setEncryptedFiles(Collection $encryptedFiles):Musician
+  {
+    $this->encryptedFiles = $encryptedFiles;
+
+    return $this;
+  }
+
+  /**
+   * Get encryptedFiles.
+   *
+   * @return Collection
+   */
+  public function getEncryptedFiles():Collection
+  {
+    return $this->encryptedFiles;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName

@@ -106,13 +106,12 @@ class File implements \ArrayAccess
     $this->arrayCTOR();
     $this->setFileName($fileName);
     $this->setMimeType($mimeType);
-    if (!empty($data)) {
-      $fileData = new FileData;
-      $fileData->setData($data);
-      $fileData->setFile($this);
-      $this->setFileData($fileData)
-           ->setSize(strlen($data));
-    }
+    $data = $data ?? '';
+    $fileData = new FileData;
+    $fileData->setData($data);
+    $fileData->setFile($this);
+    $this->setFileData($fileData)
+      ->setSize(strlen($data));
   }
 
   /**

@@ -29,6 +29,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
+
 /**
  * EncryptedFileData
  *
@@ -105,7 +107,7 @@ class EncryptedFileData extends FileData
   public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
   {
     /** @var Musician $owner */
-    foreach ($this->file->owners as $owner) {
+    foreach (($this->file->owners??[]) as $owner) {
       $userIdSlug = $owner->getUserIdSlug();
       if (!in_array($userIdSlug, $this->encryptionContext ?? [])) {
         $this->encryptionContext[] = $userIdSlug;
