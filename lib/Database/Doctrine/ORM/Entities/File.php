@@ -28,6 +28,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * An entity which modesl a file-system file. While it is not always
  * advisable to store file-system data in a data-base, we do so
@@ -84,9 +87,23 @@ class File implements \ArrayAccess
   /**
    * @var FileData
    *
-   * @ORM\OneToOne(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
+   * Note that it is not possible to override the targetEntity in a
+   * child class. OTOH, lazy-loading is only possible with leaf-classes. So
+   * the OneToOne annotation must go to the leaf-classes. Hence, the
+   * File-entity can only be used through its base-classes.
+   *
+   * _AT_ORM\OneToOne(targetEntity="FileData", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * _AT_ORM\JoinColumns(
+   *   _AT_ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
+   * )
+   *
    */
-  private $fileData;
+  // protected $fileData;
 
   /**
    * @var string|null
@@ -109,7 +126,6 @@ class File implements \ArrayAccess
     $data = $data ?? '';
     $fileData = new FileData;
     $fileData->setData($data);
-    $fileData->setFile($this);
     $this->setFileData($fileData)
       ->setSize(strlen($data));
   }
@@ -257,13 +273,14 @@ class File implements \ArrayAccess
   /**
    * Set FileData.
    *
-   * @param FileData|null $data
+   * @param FileData $data
    *
    * @return File
    */
-  public function setFileData($fileData = null)
+  public function setFileData(FileData $fileData):File
   {
     $this->fileData = $fileData;
+    $fileData->setFile($this);
 
     return $this;
   }
@@ -271,9 +288,9 @@ class File implements \ArrayAccess
   /**
    * Get FileData.
    *
-   * @return FileData|null
+   * @return FileData
    */
-  public function getFileData():?FileData
+  public function getFileData():FileData
   {
     return $this->fileData;
   }

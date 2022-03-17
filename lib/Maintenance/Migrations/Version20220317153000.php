@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -21,22 +21,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
+class Version20220317153000 extends FixFileDataLazyLoading {};
 
-/**
- * Enum for data transformations.
- *
- * @method static EnumFileType GENERIC()
- * @method static EnumFileType IMAGE()
- * @method static EnumFileType ENCRYPTED()
- *
- * @todo This should rather be specified per project.
- */
-class EnumFileType extends EnumType
-{
-  public const GENERIC = 'generic';
-  public const IMAGE = 'image';
-  public const ENCRYPTED = 'encrypted';
-}
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***

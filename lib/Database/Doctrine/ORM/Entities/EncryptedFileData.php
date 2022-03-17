@@ -43,8 +43,13 @@ class EncryptedFileData extends FileData
   /**
    * @var EncryptedFile
    *
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="EncryptedFile", inversedBy="fileData", cascade={"all"})
+   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"all"})
    */
   private $file;
 

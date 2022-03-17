@@ -623,7 +623,7 @@ class ProjectParticipantsController extends Controller {
           case FieldDataType::DB_FILE:
             /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
             $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-            $mimeTyppe = $mimeTypeDetector->detectString($fileData);
+            $mimeType = $mimeTypeDetector->detectString($fileData);
 
             if (empty($dbFile)) {
               /** @var Entities\EncryptedFile $dbFilew */

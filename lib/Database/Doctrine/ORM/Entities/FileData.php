@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="FileData")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
- * @ORM\DiscriminatorMap({"identity"="FileData","encrypted"="EncryptedFileData"})
+ * @ORM\DiscriminatorMap({"identity"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})
  * @ORM\Entity
  * @Gedmo\Loggable(enabled=false)
  */
@@ -48,8 +48,13 @@ class FileData implements \ArrayAccess
   /**
    * @var File
    *
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="File", inversedBy="fileData", cascade={"all"})
+   * @ORM\OneToOne(targetEntity="File", cascade={"all"})
    */
   private $file;
 
