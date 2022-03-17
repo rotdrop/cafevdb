@@ -91,7 +91,7 @@ class SepaBankAccount implements \ArrayAccess
    * shared encryption key and the respective orchestra member with its own key.
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $iban;
 
@@ -99,7 +99,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bic;
 
@@ -107,7 +107,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $blz;
 
@@ -115,7 +115,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bankAccountOwner;
 
@@ -359,5 +359,63 @@ class SepaBankAccount implements \ArrayAccess
   public function usage():int
   {
     return $this->payments->count() + $this->sepaDebitMandates->count();
+  }
+
+  /**
+   * Return the encryption context which is an array of user-ids.
+   *
+   * @return null|array<int, string>
+   */
+  public function getEncryptionContext():?array
+  {
+    return $this->encryptionContext;
+  }
+
+  /**
+   * Set the array of authorized users.
+   *
+   * @param array<int, string> $context
+   *
+   * @return EncryptedFileData
+   */
+  public function setEncryptionContext(?array $context):EncryptedFileData
+  {
+    $this->encryptionContext = $context;
+    return $this;
+  }
+
+  /**
+   * Add a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return EncryptedFileData
+   */
+  public function addEncryptionIdentity(string $personality):EncryptedFileData
+  {
+    if (empty($this->encryptionContext)) {
+      $this->encryptionContext = [];
+    }
+    $this->encryptionContext[] = $personality;
+    return $this;
+  }
+
+  /**
+   * Remove a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return EncryptedFileData
+   */
+  public function removeEncryptionIdentity(string $personality):EncryptedFileData
+  {
+    $pos = array_search($personality, $this->encryptionContext??[]);
+    if ($pos !== false) {
+      unset($this->encryptionContext[pos]);
+      $this->encryptionContext = array_values($this->encryptionContext);
+    }
+    return $this;
   }
 }
