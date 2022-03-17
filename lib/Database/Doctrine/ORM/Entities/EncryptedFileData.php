@@ -33,9 +33,19 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
  * EncryptedFileData
  *
  * @ORM\Entity
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class EncryptedFileData extends FileData
 {
+  /**
+   * @var EncryptedFile
+   *
+   * @ORM\Id
+   * @ORM\OneToOne(targetEntity="EncryptedFile", inversedBy="fileData", cascade={"all"})
+   */
+  private $file;
+
   /**
    * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
    */
@@ -44,34 +54,9 @@ class EncryptedFileData extends FileData
   /**
    * @var array
    *
-   * @ORM\Column(type="json")
-   *
    * In memory encryption context to support multi user encryption.
    */
   private $encryptionContext;
-
-  /**
-   * Return the encryption context which is an array of user-ids.
-   *
-   * @return null|array<int, string>
-   */
-  public function getEncryptionContext():?array
-  {
-    return $this->encryptionContext;
-  }
-
-  /**
-   * Set the array of authorized users.
-   *
-   * @param array<int, string> $context
-   *
-   * @return EncryptedFileData
-   */
-  public function setEncryptionContext(?array $context):EncryptedFileData
-  {
-    $this->encryptionContext = $context;
-    return $this;
-  }
 
   /**
    * Add a user-id or group-id to the list of "encryption identities",
@@ -86,7 +71,9 @@ class EncryptedFileData extends FileData
     if (empty($this->encryptionContext)) {
       $this->encryptionContext = [];
     }
-    $this->encryptionContext[] = $personality;
+    if (!in_array($personality, $this->encryptionContext)) {
+      $this->encryptionContext[] = $personality;
+    }
     return $this;
   }
 
@@ -106,5 +93,23 @@ class EncryptedFileData extends FileData
       $this->encryptionContext = array_values($this->encryptionContext);
     }
     return $this;
+  }
+
+  /**
+   * _AT_ORM\PostLoad -- this would fetch the entire musician entity on load
+   * @ORM\PrePersist
+   * @ORM\PreUpdate
+   *
+   * Ensure that the encryptionContext contains the user-id of the owning musician.
+   */
+  public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
+  {
+    /** @var Musician $owner */
+    foreach ($this->file->owners as $owner) {
+      $userIdSlug = $owner->getUserIdSlug();
+      if (!in_array($userIdSlug, $this->encryptionContext ?? [])) {
+        $this->encryptionContext[] = $userIdSlug;
+      }
+    }
   }
 }

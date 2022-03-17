@@ -24,12 +24,15 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
+// annotations
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
+// types
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * SepaBankAccount.
@@ -49,6 +52,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class SepaBankAccount implements \ArrayAccess
 {
@@ -60,6 +65,8 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
@@ -121,8 +128,6 @@ class SepaBankAccount implements \ArrayAccess
 
   /**
    * @var array
-   *
-   * @ORM\Column(type="json")
    *
    * In memory encryption context to support multi user encryption. This is a
    * multi-field encryption context indexed by the property name.
@@ -362,29 +367,6 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * Return the encryption context which is an array of user-ids.
-   *
-   * @return null|array<int, string>
-   */
-  public function getEncryptionContext():?array
-  {
-    return $this->encryptionContext;
-  }
-
-  /**
-   * Set the array of authorized users.
-   *
-   * @param array<int, string> $context
-   *
-   * @return EncryptedFileData
-   */
-  public function setEncryptionContext(?array $context):EncryptedFileData
-  {
-    $this->encryptionContext = $context;
-    return $this;
-  }
-
-  /**
    * Add a user-id or group-id to the list of "encryption identities",
    * i.e. the list of identities which can read and write this entry.
    *
@@ -397,7 +379,9 @@ class SepaBankAccount implements \ArrayAccess
     if (empty($this->encryptionContext)) {
       $this->encryptionContext = [];
     }
-    $this->encryptionContext[] = $personality;
+    if (!in_array($personality, $this->encryptionContext)) {
+      $this->encryptionContext[] = $personality;
+    }
     return $this;
   }
 
@@ -417,5 +401,20 @@ class SepaBankAccount implements \ArrayAccess
       $this->encryptionContext = array_values($this->encryptionContext);
     }
     return $this;
+  }
+
+  /**
+   * _AT_ORM\PostLoad -- this would fetch the entire musician entity on load
+   * @ORM\PrePersist
+   * @ORM\PreUpdate
+   *
+   * Ensure that the encryptionContext contains the user-id of the owning musician.
+   */
+  public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
+  {
+    $userIdSlug = $this->musician->getUserIdSlug();
+    if (!in_array($userIdSlug, $this->encryptionContext ?? [])) {
+      $this->encryptionContext[] = $userIdSlug;
+    }
   }
 }

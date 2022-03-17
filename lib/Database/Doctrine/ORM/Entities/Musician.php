@@ -299,6 +299,18 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $payments;
 
   /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="owners", indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(name="EncryptedFileOwners")
+   *
+   * The list of files owned by this musician. This is in particular important for
+   * encrypted files where the list of owners determines the encryption keys
+   * which are used to seal the data.
+   */
+  private $encryptedFiles;
+
+  /**
    * @var \DateTimeImmutable
    *
    * Tracks changes in the payments, in particular to track modification

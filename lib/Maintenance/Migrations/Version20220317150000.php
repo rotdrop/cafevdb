@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20220316130000 extends PersistentEncryptionContexts {};
+class Version20220317150000 extends AddEncryptedFileOwners {};
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
