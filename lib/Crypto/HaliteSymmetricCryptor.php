@@ -87,10 +87,14 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
   {
     if (!empty($this->encryptionKey)) {
       try {
+        // $startTime = microtime(true);
+        // \OCP\Util::writeLog('cafevdb', 'Start encrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
         $data = Halite\Symmetric\Crypto::encrypt(
           new HiddenString($data),
           $this->haliteEncryptionKey,
           Halite\Halite::ENCODE_BASE64URLSAFE);
+        // $duration = microtime(true) - $startTime;
+        // \OCP\Util::writeLog('cafevdb', 'End encrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
         throw new Exceptions\EncryptionFailedException('Encrypt failed', $t->getCode(), $t);
       }
@@ -107,12 +111,16 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
         return $data;
       }
       try {
+        // $startTime = microtime(true);
+        // \OCP\Util::writeLog('cafevdb', 'Start Decrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
         /** @var HiddenString $data */
         $data = Halite\Symmetric\Crypto::decrypt(
           $data,
           $this->haliteEncryptionKey,
           Halite\Halite::ENCODE_BASE64URLSAFE);
         $data = $data->getString();
+        // $duration = microtime(true) - $startTime;
+        // \OCP\Util::writeLog('cafevdb', 'End Decrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
       }
