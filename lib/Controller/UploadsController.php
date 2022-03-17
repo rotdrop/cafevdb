@@ -72,13 +72,14 @@ class UploadsController extends Controller {
   /**
    * @NoAdminRequired
    *
-   * @param string $stahedFile
+   * @param string $stashedFile
    * @param string $destinationPath
    * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
    * @param bool $encrypted Whether to store the data encrypted (DB only).
+   * @param int $ownerId Musician-id of owner of encrypted file
    * @param string $appDirectory
    */
-  public function move(string $stashedFile, string $destinationPath, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, string $appDirectory = AppStorage::UPLOAD_FOLDER)
+  public function move(string $stashedFile, string $destinationPath, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, int $ownerId = 0, string $appDirectory = AppStorage::UPLOAD_FOLDER)
   {
     $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
     switch ($storage) {
@@ -100,12 +101,16 @@ class UploadsController extends Controller {
         if (empty($this->entityManager)) {
           $this->entityManager = $this->di(EntityManager::class);
         }
-        $dbFile = $encrypted ? new Entities\EncryptedFile : new Entities\File;
-
-        $dbFile->getFileData()->setData($appFile->getContent());
-        $dbFile->setMimeType($appFile->getMimeType())
-          ->setSize($appFile->getSize())
-          ->setFileName($destinationPath);
+        $dbFileClass = $encrypted ? Entities\EncryptedFile::class : Entities\File::class;
+        $dbFile = new $dbFileClass(
+          fileName: $destinationPath,
+          data: $appFile->getContent(),
+          mimeType: $appFile->getMimeType()
+        );
+        if ($encrypted && $ownerId > 0) {
+          $owner = $this->getDatabaseRepository(Entities\Musician::class)->find($ownerId);
+          $dbFile->addOwner($owner);
+        }
 
         $this->entityManager->beginTransaction();
         try {
