@@ -467,8 +467,13 @@ class AsymmetricKeyService
     $organizationalRoles = $this->appContainer->get(OrganizationalRolesService::class);
     /** @var \OCP\IUser $groupAdmin */
     foreach ($organizationalRoles->getGroupAdmins() as $groupAdmin) {
-      $this->logInfo('Notifying ' . $groupAdmin->getUID());
-      $notification->setUser($groupAdmin->getUID());
+      $groupAdminUid = $groupAdmin->getUID();
+      if ($groupAdminUid == $ownerId) {
+        $this->logInfo('Omitting key-owner from recryption notification.');
+        continue;
+      }
+      $this->logInfo('Notifying ' . $groupAdminUid);
+      $notification->setUser($groupAdminUid);
       $notificationManager->notify($notification);
     }
 
