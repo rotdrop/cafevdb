@@ -1078,7 +1078,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       if (saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
         const current = currentTemplate.val();
-        if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
+        if (storedEmailsSelector.find('option').filter(function() {
+          return $(this).html().trim() === current;
+        }).length > 0) {
           Dialogs.confirm(
             t(appName, 'Do you really want to delete the template with the name `{emailTemplateName}\'?',
               { emailTemplateName: current }),
