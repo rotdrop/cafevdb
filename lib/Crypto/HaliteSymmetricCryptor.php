@@ -28,7 +28,9 @@ use ParagonIE\HiddenString\HiddenString;
 
 use OCA\CAFEVDB\Exceptions;
 
-/** Use the encryption service provided by the ambient cloud software. */
+/**
+ * Use libsodium through Halite.
+ */
 class HaliteSymmetricCryptor implements SymmetricCryptorInterface
 {
   /** @var null|string */
