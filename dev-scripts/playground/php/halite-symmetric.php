@@ -14,14 +14,18 @@ $password = 'foo!bar';
 $salt = random_bytes(SODIUM_CRYPTO_PWHASH_SALTBYTES);
 $encryptionKey = Halite\KeyFactory::deriveEncryptionKey(new HiddenString($password), $salt);
 
-$data = file_get_contents("php://stdin");
+$data = 'FooBlah This is just some random data string';
 
-echo 'DATA OF SIZE ' . strlen($data) . PHP_EOL;
-$timeStart = microtime(true);
 $encrypted = Halite\Symmetric\Crypto::encrypt(new HiddenString($data), $encryptionKey);
-$timeEnd = microtime(true);
-echo 'ENCRYPTION SECONDS ' . ($timeEnd - $timeStart) . PHP_EOL;
-$decrypted = Halite\Symmetric\Crypto::decrypt($encrypted, $encryptionKey);
-$decrypted = $decrypted->getString();
-echo 'DECRYPTION SECONDS ' . (microtime(true) - $timeEnd) . PHP_EOL;
-echo "CORRECT " . (int)($decrypted == $data) . PHP_EOL;
+
+echo $encrypted . PHP_EOL;
+
+use OCP\Security\ICrypto;
+
+$crypto = \OC::$server->get(ICrypto::class);
+
+
+$encrypted = $crypto->encrypt($data, $password);
+echo $encrypted . PHP_EOL;
+echo (int)SODIUM_CRYPTO_STREAM_KEYBYTES . PHP_EOL;
+echo (int)SODIUM_CRYPTO_PWHASH_SALTBYTES . PHP_EOL;
