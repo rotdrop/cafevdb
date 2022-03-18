@@ -25,19 +25,21 @@ namespace OCA\CAFEVDB\Crypto;
 
 use ParagonIE\Halite;
 use ParagonIE\HiddenString\HiddenString;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 use OCA\CAFEVDB\Exceptions;
 
 /**
- * Use libsodium through Halite.
+ * Lik HaliteSymmetricCryptor, but use the stream-versions which work on
+ * chunks of 1M and thus scale better for large data than the non-streamed
+ * versions. Implementation uses php://memory which involves copying the data
+ * yet another time. However, the non-streamed versions use that
+ * HiddenString class of Halite which also copies the data just again and
+ * again.
  */
-class HaliteSymmetricCryptor implements SymmetricCryptorInterface
+class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
 {
-  /**
-   * @var string
-   * The magic bytes at the start of the encrypted data.
-   */
-  private const HALITE_MAGIC = Halite\Halite::VERSION_PREFIX;
+  private const HALITE_MAGIC = 'MUEFA';
 
   /** @var null|string */
   private $encryptionKey;
@@ -97,10 +99,18 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
       try {
         // $startTime = microtime(true);
         // \OCP\Util::writeLog('cafevdb', 'Start encrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
-        $data = Halite\Symmetric\Crypto::encrypt(
-          new HiddenString($data),
-          $this->haliteEncryptionKey,
-          Halite\Halite::ENCODE_BASE64URLSAFE);
+        $inputStream = fopen('php://memory', 'w+');
+        fwrite($inputStream, $data, strlen($data));
+        rewind($inputStream);
+        $haliteInput = new Halite\Stream\WeakReadOnlyFile($inputStream);
+
+        $outputStream = fopen('php://memory', 'w+');
+        $haliteOutput = new Halite\Stream\MutableFile($outputStream);
+
+        Halite\File::encrypt($haliteInput, $haliteOutput, $this->haliteEncryptionKey);
+        rewind($outputStream);
+
+        $data = Base64UrlSafe::encode(stream_get_contents($outputStream));
         // $duration = microtime(true) - $startTime;
         // \OCP\Util::writeLog('cafevdb', 'End encrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
@@ -121,12 +131,19 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
       try {
         // $startTime = microtime(true);
         // \OCP\Util::writeLog('cafevdb', 'Start Decrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
-        /** @var HiddenString $data */
-        $data = Halite\Symmetric\Crypto::decrypt(
-          $data,
-          $this->haliteEncryptionKey,
-          Halite\Halite::ENCODE_BASE64URLSAFE);
-        $data = $data->getString();
+        $data = Base64UrlSafe::decode($data);
+        $inputStream = fopen('php://memory', 'w+');
+        fwrite($inputStream, $data, strlen($data));
+        rewind($inputStream);
+        $haliteInput = new Halite\Stream\WeakReadOnlyFile($inputStream);
+
+        $outputStream = fopen('php://memory', 'w+');
+        $haliteOutput = new Halite\Stream\MutableFile($outputStream);
+
+        Halite\File::decrypt($haliteInput, $haliteOutput, $this->haliteEncryptionKey);
+        rewind($outputStream);
+
+        $data = stream_get_contents($outputStream);
         // $duration = microtime(true) - $startTime;
         // \OCP\Util::writeLog('cafevdb', 'End Decrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
