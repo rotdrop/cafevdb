@@ -542,7 +542,7 @@ GROUP BY b.short_name',
       'sort' =>false,
       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
         $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
-        $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
+        $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
         $bval = $this->l->t(
           'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
         $tip = $this->toolTipsService['musician-instrument-insurance'];

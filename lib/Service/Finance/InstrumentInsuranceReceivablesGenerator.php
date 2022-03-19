@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -193,7 +193,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $referenceDate = new \DateTimeImmutable($year.'-06-01');
 
       // Compute the actual fee
-      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
+      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
       // @todo: use new OpenDocument stuff
