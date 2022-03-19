@@ -404,6 +404,12 @@ class InstrumentInsuranceService
       $lastDueDate = $dueDate->modify('-1 year');
 
       if (!empty($insuranceEnd) && $lastDueDate > $insuranceEnd) {
+        // exclude instruments which are no longer insured
+        continue;
+      }
+
+      if ($dueDate <= $insuranceStart) {
+        // exclude instruments which were not yet insured in that year
         continue;
       }
 
