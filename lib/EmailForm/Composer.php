@@ -274,8 +274,8 @@ Störung.';
 [CSSPREFIX]table.monetary-fields tr.totalsum td.row-label {
   text-align:right;
 }
-[CSSPREFIX]table.monetary-fields.number-of-fields-0 tr.totalsum,
-[CSSPREFIX]table.monetary-fields.number-of-fields-1 tr.totalsum,
+[CSSPREFIX]table.monetary-fields tr.totalsum.total-number-of-options-0,
+[CSSPREFIX]table.monetary-fields tr.totalsum.total-number-of-options-1,
 [CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-0,
 [CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-1,
 [CSSPREFIX]table.monetary-fields tr.field-header.number-of-options-0,
@@ -905,6 +905,7 @@ Störung.';
             $totalSum['label'] = $this->l->t('Total Amount');
             $totalSum['dueDate'] = null;
 
+            $totalNumberOfOptions = 0;
             foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
               /** @var Entities\ProjectParticipantField $field */
               foreach ($fields as $field) {
@@ -924,6 +925,7 @@ Störung.';
                 }
 
                 $numberOfOptions = $field->getSelectableOptions()->count();
+                $totalNumberOfOptions += $numberOfOptions;
 
                 // generate a field-header for multiple options
                 $replacements = [
@@ -1064,6 +1066,7 @@ Störung.';
             }
             $cssClass = implode(' ', [
               self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
+              'total-number-of-options-' . $totalNumberOfOptions,
             ]);
             $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
             $html .= $footer;
