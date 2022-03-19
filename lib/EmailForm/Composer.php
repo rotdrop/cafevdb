@@ -704,9 +704,9 @@ Störung.';
       // per-participant project-data
       $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
 
-        if (empty($musician)) {
-          return $keyArg[0];
-        }
+        if (empty($musician) || count($keyArg) > 2) {
+          return implode(':', $keyArg);
+	}
 
         /** @var Entities\ProjectParticipant $projectParticipant */
         $projectParticipant = $musician->getProjectParticipantOf($this->project);
@@ -742,6 +742,7 @@ Störung.';
         if (count($keyArg) == 2) {
           $found = false;
           $selector = strtolower($keyArg[1]);
+
           $specificField = $participantFields->filter(function($field) use ($selector) {
             /** @var Entities\ProjectParticipantField $field */
             return strtolower($field->getName()) == $selector;
@@ -992,18 +993,24 @@ Störung.';
 
                   // compute substitution values
                   $replacements = [];
+		  $nonZeroData = false;
                   foreach ($replacementKeys as $key) {
                     if ($key == 'option' || $key == 'dueDate' ) {
                       $replacements[$key] = ${$key};
                       continue;
                     }
                     if (${$key} != '--') {
+		      $nonZeroData = $nonZeroData || !empty(${$key});
                       $totalSum[$key] += ${$key};
                       $replacements[$key] = $this->moneyValue(${$key});
                     } else {
                       $replacements[$key] = ${$key};
                     }
                   }
+
+		  if (!$nonZeroData) {
+		    continue;
+		  }
 
                   // inject into template
                   $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
