@@ -204,4 +204,12 @@ interface IRecurringReceivablesGenerator
    * field-data for all participants.
    */
   public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+
+  /**
+   * Fetch the due-date for the given receivable or the maximum of all due-dates.
+   *
+   * @param null|Entities\ProjectParticipantFieldDataOption $receivable
+   */
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface;
+
 }

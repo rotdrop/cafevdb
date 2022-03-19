@@ -317,4 +317,23 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       'notices' => $notices,
     ];
   }
+
+    /**
+   * {@inheritdoc}
+   */
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface
+  {
+    $timeZone = $this->getDateTimeZone();
+    if ($receivable === null) {
+      $year = (int)(new \DateTimeImmutable)->setTimezone($timeZone)->format('Y');
+    } else {
+      $year = (int)$receivable->getData();
+      if ($year == 0) {
+        return null;
+      }
+    }
+    $dueDate = $this->serviceFeeField->getDueDate()->setTimezone($timeZone);
+    $dueYear = (int)$dueDate->format('Y');
+    return $dueDate->modify('+'.($year - $dueYear).' years');
+  }
 }

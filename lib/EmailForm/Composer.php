@@ -52,6 +52,8 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -250,11 +252,6 @@ Störung.';
 }
 [CSSPREFIX]table.monetary-fields tbody.field-option.number-of-options-1 td.row-label {
   font-style:italic;
-}
-[CSSPREFIX]table.monetary-fields td.date {
-  font-style:italic;
-  text-align:center;
-  opacity:0;
 }
 [CSSPREFIX]table.monetary-fields tbody.footer td.date,
 [CSSPREFIX]table.monetary-fields tbody.number-of-options-1 td.date {
@@ -798,9 +795,8 @@ Störung.';
 
           $numberOfFields = $fields->count();
 
-          // First output the simple options, then the ones with
-          // multiple options, then the recurring options. Also sort by
-          // name.
+          // First output the simple options, then the ones with multiple
+          // options. Also sort by name.
           $fieldsByMultiplicity = [
             // only one possible option
             'single' => (function($fields) {
@@ -910,7 +906,13 @@ Störung.';
               /** @var Entities\ProjectParticipantField $field */
               foreach ($fields as $field) {
 
-                $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
+                if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+                  /** @var IRecurringReceivablesGenerator $receivablesGenerator  */
+                  $receivablesGenerator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+                  $dueDate = $receivablesGenerator->dueDate();
+                } else {
+                  $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
+                }
                 if (!empty($dueDate)) {
                   if (empty($totalSum['dueDate'])) {
                     $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
@@ -956,6 +958,15 @@ Störung.';
                 /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
                 foreach ($field->getSelectableOptions() as $fieldOption) {
 
+                  if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+                    $receivableDueDate = $receivablesGenerator->dueDate($fieldOption) ?? '';
+                    if (!empty($receivableDueDate)) {
+                      $receivableDueDate = $formatter->formatDate($receivableDueDate, 'medium');
+                    }
+                  } else {
+                    $receivableDueDate = '';
+                  }
+
                   $option = $fieldOption->getLabel() ?: $field->getName();
 
                   $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
@@ -997,8 +1008,12 @@ Störung.';
                   $replacements = [];
 		  $nonZeroData = false;
                   foreach ($replacementKeys as $key) {
-                    if ($key == 'option' || $key == 'dueDate' ) {
+                    if ($key == 'option') {
                       $replacements[$key] = ${$key};
+                      continue;
+                    }
+                    if ($key == 'dueDate' ) {
+                      $replacements[$key] = $receivableDueDate ?? '';
                       continue;
                     }
                     if (${$key} != '--') {
