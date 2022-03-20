@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-08 18:23+0100\n"
-"PO-Revision-Date: 2022-03-08 18:30+0100\n"
+"POT-Creation-Date: 2022-03-20 12:08+0100\n"
+"PO-Revision-Date: 2022-03-20 13:00+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -565,10 +565,10 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:315
 #: lib/Documents/OpenDocumentFiller.php:316
 #: lib/Documents/OpenDocumentFiller.php:319
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1634
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376
-#: lib/Service/Finance/InstrumentInsuranceService.php:889
 #: lib/Service/Finance/InstrumentInsuranceService.php:893
+#: lib/Service/Finance/InstrumentInsuranceService.php:897
 #: lib/Service/PhoneNumberService.php:88 lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:41 src/app/cafevdb.js:42
 msgid "unknown"
@@ -2018,19 +2018,27 @@ msgstr ""
 "Ein Projekt mit dem Namen \"%s\" gibt es bereits für das Jahr %s. Bitte "
 "wählen Sie einen anderen Namen oder ein anderes Jahr."
 
-#: lib/Controller/SepaBulkTransactionsController.php:150
+#: lib/Controller/SepaBulkTransactionsController.php:151
 #, php-format
 msgid "Unable to retrieve project with id %d from data-base."
 msgstr "Konnte das Projekt mit der Id %d nicht aus der Datenbank laden."
 
-#: lib/Controller/SepaBulkTransactionsController.php:175
+#: lib/Controller/SepaBulkTransactionsController.php:176
 #, php-format
 msgid "Bank account for musician-id %d, sequence %d not found."
 msgstr ""
 "Die Bankverbindung für die Person mit Id %d, lfd. Nr. %d, wurde nicht "
 "gefunden."
 
-#: lib/Controller/SepaBulkTransactionsController.php:180
+#: lib/Controller/SepaBulkTransactionsController.php:181
+#, php-format
+msgid ""
+"Refusing to use a revoked or disabled bank account. The bank-account %1$s "
+"for %2$s (musician-id %3$d, sequence %4$d) has been revoked or deleted on "
+"%5$s."
+msgstr "Ich weigere mich, eine gelöschte oder gesperrte Bankverbindung zu verwenden. Die Bankverbindung %1$s von %2$s (Musiker-Id %3$d, Sequenz %4$d) wurde am %5$s gelöscht oder gesperrt."
+
+#: lib/Controller/SepaBulkTransactionsController.php:186
 #, php-format
 msgid ""
 "More than one bank account submitted for musician %s, multiple IBANs %s, %s."
@@ -2038,19 +2046,19 @@ msgstr ""
 "Mehrere Bankverbindungen der Person %s wurden übermittelt, insbesondere %s, "
 "%s."
 
-#: lib/Controller/SepaBulkTransactionsController.php:192
+#: lib/Controller/SepaBulkTransactionsController.php:198
 #, php-format
 msgid "Musician \"%s\" does not seem to belong to project \"%s\"."
 msgstr "Die Person \"%s\" scheint nicht zum Projekt \"%s\" zu gehören."
 
-#: lib/Controller/SepaBulkTransactionsController.php:205
+#: lib/Controller/SepaBulkTransactionsController.php:211
 #, php-format
 msgid "Debit-mandate for musician-id %d, sequence %d not found."
 msgstr ""
 "Lastschrift-Mandat für die Person %d, lfd. Nr. %d konnte nicht gefunden "
 "werden."
 
-#: lib/Controller/SepaBulkTransactionsController.php:210
+#: lib/Controller/SepaBulkTransactionsController.php:216
 #, php-format
 msgid ""
 "More than one debit-mandate submitted for musician %s, multiple references "
@@ -2059,7 +2067,7 @@ msgstr ""
 "Mehrere Lastschriftmandate der Person %s wurden übermittelt, insbesondere "
 "%s, %s."
 
-#: lib/Controller/SepaBulkTransactionsController.php:219
+#: lib/Controller/SepaBulkTransactionsController.php:225
 #, php-format
 msgid ""
 "Debit-mandate is for bank-account \"%s\", but the current bank-account is "
@@ -2068,8 +2076,20 @@ msgstr ""
 "Das Lastschriftmandat ist an die Bankverbindung \"%s\" gebunden, aber\n"
 "die aktulle Bankverbindung lautet \"%s\"."
 
-#: lib/Controller/SepaBulkTransactionsController.php:246
-#: lib/Controller/SepaBulkTransactionsController.php:257
+#: lib/Controller/SepaBulkTransactionsController.php:231
+#, php-format
+msgid ""
+"Refusing to use a revoked or disabled debit-mandate. The debit-mandate %1$s "
+"for the bank-account %2$s of %3$s (musician-id %4$d, mandate-sequence %5$d) "
+"has been revoked or deleted on %6$s."
+msgstr ""
+"Ich weigere mich, ein gelöschtes oder gesperrtes Lastschrift-Mandat zu\n"
+"verwenden. Das Lastschriftmandat %1$s für die Bankverbindung %2$s von\n"
+"%3$s (Musiker-Id %4$d, Sequenz %5$d) wurde am %6$s gelöscht oder\n"
+"gesperrt."
+
+#: lib/Controller/SepaBulkTransactionsController.php:263
+#: lib/Controller/SepaBulkTransactionsController.php:274
 #, php-format
 msgid ""
 "Internal data inconsistency, field-project \"%s\" does not match current "
@@ -2078,7 +2098,7 @@ msgstr ""
 "Interner Fehler, inkonsistente Daten, das Datenfeld-Projekt \"%s\"\n"
 "unterscheidet sich vom aktuellen Projekt \"%s\"."
 
-#: lib/Controller/SepaBulkTransactionsController.php:262
+#: lib/Controller/SepaBulkTransactionsController.php:279
 #, php-format
 msgid ""
 "Submitted debit-job id \"%s\" is neither a participant field nor a field-"
@@ -2086,7 +2106,7 @@ msgid ""
 msgstr ""
 "Die übermittelte Lastschrift-Id \"%s\" gehört zu keinem bekannten Daten-Feld."
 
-#: lib/Controller/SepaBulkTransactionsController.php:354
+#: lib/Controller/SepaBulkTransactionsController.php:371
 #, php-format
 msgid ""
 "Musician \"%s\" has to pay an amount of %s, but there is no debit-note-"
@@ -2095,17 +2115,17 @@ msgstr ""
 "Die Person \"%s\" muss einen Betrag von %s bezahlen, uns liegt aber kein "
 "Lastschriftmandat vor."
 
-#: lib/Controller/SepaBulkTransactionsController.php:367
-#: lib/Controller/SepaBulkTransactionsController.php:368
+#: lib/Controller/SepaBulkTransactionsController.php:384
+#: lib/Controller/SepaBulkTransactionsController.php:385
 msgid "recurring"
 msgstr "wiederkehrend"
 
-#: lib/Controller/SepaBulkTransactionsController.php:367
-#: lib/Controller/SepaBulkTransactionsController.php:368
+#: lib/Controller/SepaBulkTransactionsController.php:384
+#: lib/Controller/SepaBulkTransactionsController.php:385
 msgid "non-recurring"
 msgstr "einmalig"
 
-#: lib/Controller/SepaBulkTransactionsController.php:364
+#: lib/Controller/SepaBulkTransactionsController.php:381
 #, php-format
 msgid ""
 "The debit-mandate for a bulk-transaction must either be all recurring or all "
@@ -2117,7 +2137,7 @@ msgstr ""
 "der Person \"%s\", Mandatsreferenz \"%s\", ist %s, die bislang verarbeiteten "
 "Mandate waren %s.;\n"
 
-#: lib/Controller/SepaBulkTransactionsController.php:417
+#: lib/Controller/SepaBulkTransactionsController.php:434
 #, php-format
 msgid ""
 "Due-deadline %s conflicts with the pre-notification dead-line %s for the "
@@ -2126,73 +2146,68 @@ msgstr ""
 "Fälligkeitsdatum %s kollidiert mit der Vorab-Informations-Frist %s des "
 "Lastschriftmandates \"%s\"."
 
-#: lib/Controller/SepaBulkTransactionsController.php:463
+#: lib/Controller/SepaBulkTransactionsController.php:480
 #, php-format
 msgid "Debit notes submission deadline for %s"
 msgstr "Lastschrift-Einreichungsfrist für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:464
+#: lib/Controller/SepaBulkTransactionsController.php:481
 #, php-format
 msgid "Debit notes due for %s"
 msgstr "Lastschriften fällig für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:465
+#: lib/Controller/SepaBulkTransactionsController.php:482
 #, php-format
 msgid "Debit notes pre-notification deadline for %s"
 msgstr "Lastschrift-Vorab-Informations-Frist für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:468
+#: lib/Controller/SepaBulkTransactionsController.php:485
 #, php-format
 msgid "Bank transfers submission deadline for %s"
 msgstr "Bankauftragseinreichungsausschlußdatum für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:469
+#: lib/Controller/SepaBulkTransactionsController.php:486
 #, php-format
 msgid "Bank transfers due for %s"
 msgstr "Fälligkeit Überweisungen für %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:481
 #: lib/Controller/SepaBulkTransactionsController.php:498
+#: lib/Controller/SepaBulkTransactionsController.php:515
 #, php-format
 msgid "Due date: %s"
 msgstr "Fälligkeitstermin: %s"
 
-#: lib/Controller/SepaBulkTransactionsController.php:515
+#: lib/Controller/SepaBulkTransactionsController.php:532
 msgid "TODO: add more information like the list of export-files, totals etc."
 msgstr ""
 
-#: lib/Controller/SepaBulkTransactionsController.php:536
-#: lib/Controller/SepaBulkTransactionsController.php:555
+#: lib/Controller/SepaBulkTransactionsController.php:553
+#: lib/Controller/SepaBulkTransactionsController.php:572
 #, php-format
 msgid "Submission-deadline: %s, due date: %s."
 msgstr "Einreichungsdatum: %s, Fälligkeitsdatum: %s."
 
-#: lib/Controller/SepaBulkTransactionsController.php:602
+#: lib/Controller/SepaBulkTransactionsController.php:619
 msgid "Scheduled %n bank-transfer, due on %s"
 msgid_plural "Scheduled %n bank-transfers, due on %s"
 msgstr[0] "Es wurde %n Überweisung geplant, die am %s fälllig ist."
 msgstr[1] "Es wurden %n Überweisungen geplant, die am %s fälllig sind."
 
-#: lib/Controller/SepaBulkTransactionsController.php:609
+#: lib/Controller/SepaBulkTransactionsController.php:626
 msgid "Scheduled %n debit-note, due on %s"
 msgid_plural "Scheduled %n debit-notes, due on %s"
 msgstr[0] "Es wurde %n Lastschrift geplant, die am %s fällig ist."
 msgstr[1] "Es wurden %n Lastschriften geplant, die am %s fällig sind."
 
-#: lib/Controller/SepaBulkTransactionsController.php:634
+#: lib/Controller/SepaBulkTransactionsController.php:651
 #, php-format
 msgid "Submitted value \"%s\" is not a positive integer."
 msgstr "Der übermittelte Wert \"%s\" ist keine positive Ganzzahl."
 
-#: lib/Controller/SepaBulkTransactionsController.php:647
+#: lib/Controller/SepaBulkTransactionsController.php:666
 #, php-format
 msgid "Unable to find bulk-transaction with id %d."
 msgstr "Kann den Sammelauftrag mit Id %d nicht finden."
-
-#: lib/Controller/SepaBulkTransactionsController.php:662
-#, php-format
-msgid "Unable to find exporter for format \"%s\"."
-msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
 #: lib/Controller/SepaDebitMandatesController.php:120
 #, php-format
@@ -2686,70 +2701,66 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: lib/EmailForm/Composer.php:485
-msgid "announcement"
-msgstr "Ankündigung"
-
-#: lib/EmailForm/Composer.php:550
+#: lib/EmailForm/Composer.php:553
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:556 src/app/email.js:1101
+#: lib/EmailForm/Composer.php:559 src/app/email.js:1103
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:876
+#: lib/EmailForm/Composer.php:878
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:877 lib/EmailForm/Composer.php:899
-#: lib/EmailForm/Composer.php:1195 lib/EmailForm/Composer.php:1202
-#: lib/PageRenderer/ProjectPayments.php:451
+#: lib/EmailForm/Composer.php:879 lib/EmailForm/Composer.php:901
+#: lib/EmailForm/Composer.php:1225 lib/EmailForm/Composer.php:1232
+#: lib/PageRenderer/ProjectPayments.php:460
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:877
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:311
+#: lib/EmailForm/Composer.php:879
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:312
 #: lib/PageRenderer/ProjectParticipantFields.php:546
 #: lib/PageRenderer/ProjectParticipantFields.php:1910
 #: lib/PageRenderer/ProjectParticipantFields.php:1919
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:878 lib/EmailForm/Composer.php:1203
+#: lib/EmailForm/Composer.php:880 lib/EmailForm/Composer.php:1233
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:879 lib/EmailForm/Composer.php:1204
+#: lib/EmailForm/Composer.php:881 lib/EmailForm/Composer.php:1234
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:880 lib/PageRenderer/PMETableViewBase.php:626
+#: lib/EmailForm/Composer.php:882 lib/PageRenderer/PMETableViewBase.php:630
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1015
+#: lib/EmailForm/Composer.php:1044
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1200
+#: lib/EmailForm/Composer.php:1230
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1201
+#: lib/EmailForm/Composer.php:1231
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1342
+#: lib/EmailForm/Composer.php:1372
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1415
+#: lib/EmailForm/Composer.php:1445
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2071
+#: lib/EmailForm/Composer.php:2110
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2797,97 +2808,108 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2804
+#: lib/EmailForm/Composer.php:2843
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2988
+#: lib/EmailForm/Composer.php:3027
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3001
+#: lib/EmailForm/Composer.php:3040
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3093 lib/EmailForm/Composer.php:3108
+#: lib/EmailForm/Composer.php:3132 lib/EmailForm/Composer.php:3147
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3192 lib/EmailForm/Composer.php:3245
-#: lib/EmailForm/Composer.php:3255
+#: lib/EmailForm/Composer.php:3231 lib/EmailForm/Composer.php:3307
+#: lib/EmailForm/Composer.php:3317
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3220
+#: lib/EmailForm/Composer.php:3250
+#, php-format
+msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
+msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
+
+#: lib/EmailForm/Composer.php:3256
+#, php-format
+msgid ""
+"Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
+msgstr "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder sind %2$s."
+
+#: lib/EmailForm/Composer.php:3282
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3536
+#: lib/EmailForm/Composer.php:3610
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3544
+#: lib/EmailForm/Composer.php:3618
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3568
+#: lib/EmailForm/Composer.php:3642
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3599
+#: lib/EmailForm/Composer.php:3673
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3657 lib/EmailForm/Composer.php:3768
+#: lib/EmailForm/Composer.php:3731 lib/EmailForm/Composer.php:3842
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3685
+#: lib/EmailForm/Composer.php:3759
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:3710
+#: lib/EmailForm/Composer.php:3784
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4214
+#: lib/EmailForm/Composer.php:4289
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4290
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4216
+#: lib/EmailForm/Composer.php:4291
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4332
+#: lib/EmailForm/Composer.php:4407
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:411
+#: lib/EmailForm/RecipientsFilter.php:412
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:437
+#: lib/EmailForm/RecipientsFilter.php:438
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:626
-#: lib/PageRenderer/PMETableViewBase.php:358
+#: lib/EmailForm/RecipientsFilter.php:627
+#: lib/PageRenderer/PMETableViewBase.php:362
 msgid "member status "
 msgstr "Mitglieds-Status"
 
@@ -3110,7 +3132,7 @@ msgstr "Der inhaltliche Teil der Datenmigration \"%s\" ist fehlgeschlagen."
 msgid "Add auto-generation flag to email-drafts."
 msgstr "\"automatisch generiert\"-Markierung zu Email-Entwürfen hinzufügen."
 
-#: lib/Maintenance/Migrations/AddPreNotificationCalObjectUid.php:40
+#: lib/Maintenance/Migrations/AddPreNotificationCalObjectUid.php:43
 msgid "Add pre-notification event/task UID in addition to URI"
 msgstr "Task/Event-UID zusätzlich zur URI speichern (Lastschriften)"
 
@@ -3164,6 +3186,10 @@ msgstr ""
 msgid "Add some additional search indexes"
 msgstr "Einige Such-Indexe hinzufügen."
 
+#: lib/Maintenance/Migrations/LogEntryIndexes.php:41
+msgid "Improve log-entry indexing"
+msgstr "Such-Indizes der Log-Tabelle verbessern."
+
 #: lib/Maintenance/Migrations/MoveProjectPosters.php:68
 msgid "Move project posters from database to filesystem storage."
 msgstr "Verschiebe die Projekt-Plakate aus der Datenbank in das Dateisystem."
@@ -3204,6 +3230,10 @@ msgstr ""
 "\"cloud-disabled\" und \"-deactivated\"-Schalter zur Musiker-Entität "
 "hinzugefügt um die Konfiguration der Cloud-Accounts für die Orchester-"
 "Mitglieder zu vereinfachen."
+
+#: lib/Maintenance/Migrations/NullifyBankTransactionEvents.php:49
+msgid "Make calendar links nullable."
+msgstr "Kalender-Verweise \"nullable\" machen."
 
 #: lib/Maintenance/Migrations/ParticipantFieldsTypeCloudFolder.php:48
 msgid "Add cloud-folder type to catalog of participant fields."
@@ -3265,7 +3295,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:119 src/app/email.js:1551
+#: lib/Notifications/Notifier.php:119 src/app/email.js:1553
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -3290,38 +3320,38 @@ msgid "Instrument Insurances"
 msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:149
-#: lib/PageRenderer/InstrumentInsurances.php:238
-#: lib/PageRenderer/ProjectPayments.php:428
-#: lib/PageRenderer/SepaBankAccounts.php:520
-#: lib/PageRenderer/SepaBulkTransactions.php:370
+#: lib/PageRenderer/InstrumentInsurances.php:247
+#: lib/PageRenderer/ProjectPayments.php:434
+#: lib/PageRenderer/SepaBankAccounts.php:523
+#: lib/PageRenderer/SepaBulkTransactions.php:377
 msgid "Musician"
 msgstr "Person"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
-#: lib/PageRenderer/InstrumentInsurances.php:189
-#: lib/PageRenderer/InstrumentInsurances.php:381
+#: lib/PageRenderer/InstrumentInsurances.php:198
+#: lib/PageRenderer/InstrumentInsurances.php:400
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
-#: lib/PageRenderer/InstrumentInsurances.php:400
+#: lib/PageRenderer/InstrumentInsurances.php:419
 msgid "Accessory"
 msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
-#: lib/PageRenderer/InstrumentInsurances.php:417
-#: lib/Service/Finance/InstrumentInsuranceService.php:745
+#: lib/PageRenderer/InstrumentInsurances.php:436
+#: lib/Service/Finance/InstrumentInsuranceService.php:749
 msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:153
-#: lib/PageRenderer/InstrumentInsurances.php:444
+#: lib/PageRenderer/InstrumentInsurances.php:463
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:154
-#: lib/PageRenderer/InstrumentInsurances.php:194
-#: lib/PageRenderer/InstrumentInsurances.php:462
+#: lib/PageRenderer/InstrumentInsurances.php:203
+#: lib/PageRenderer/InstrumentInsurances.php:481
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
@@ -3331,19 +3361,19 @@ msgstr "Gesamtversicherungssumme der Person"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:206
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:240
-#: lib/PageRenderer/InsuranceRates.php:183
+#: lib/PageRenderer/InsuranceRates.php:193
 msgid "Policy Number"
 msgstr "Versicherungsnummer"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:207
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:241
-#: lib/PageRenderer/InstrumentInsurances.php:369
+#: lib/PageRenderer/InstrumentInsurances.php:388
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:208
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:242
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:882
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:881
 msgid "Date"
 msgstr "Datum"
 
@@ -3403,7 +3433,7 @@ msgid "yes"
 msgstr "ja"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:120
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:498
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:499
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:906
 #: lib/PageRenderer/ProjectParticipantFields.php:1793
@@ -3417,7 +3447,7 @@ msgid "no"
 msgstr "nein"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:124
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:497
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:498
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:907
 #: lib/PageRenderer/ProjectParticipantFields.php:1793
@@ -3473,40 +3503,40 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:182
 #: lib/PageRenderer/InstrumentFamilies.php:248
-#: lib/PageRenderer/Instruments.php:300 lib/PageRenderer/Musicians.php:541
+#: lib/PageRenderer/Instruments.php:300 lib/PageRenderer/Musicians.php:540
 #: lib/PageRenderer/ProjectParticipantFields.php:358
-#: lib/PageRenderer/ProjectParticipants.php:557
+#: lib/PageRenderer/ProjectParticipants.php:560
 #: lib/PageRenderer/Projects.php:278
 msgid "Deleted"
 msgstr "Gelöscht"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:247
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:472
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:473
 #, php-format
 msgid "Not default style for \"%s\" available."
 msgstr "Kein Voreinstellungs-Stil für \"%s\" vorhanden."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:279
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:280
 msgid "Revert to default"
 msgstr "Auf Voreinstellung zurücksetzen."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:389
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:390
 #: lib/PageRenderer/FieldTraits/ParticipantFileFieldsTrait.php:88
 #, php-format
 msgid "The file \"%s\" could not be found on the server."
 msgstr "Die Datei \"%s\" konnte nicht auf dem Server gefunden werden."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:457
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:619
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:458
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:620
 #, php-format
 msgid "The folder \"%s\" could not be found on the server."
 msgstr "Die Ordner \"%s\" konnte nicht auf dem Server gefunden werden."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:872
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:873
 msgid "Value"
 msgstr "Wert"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:873
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
 msgid "Documents"
 msgstr "Dokumente"
 
@@ -3519,56 +3549,56 @@ msgstr "Wert [%s]"
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:885
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:884
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:889
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:888
 msgid "File"
 msgstr "Datei"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:908
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:907
 #: lib/PageRenderer/Projects.php:297 lib/PageRenderer/Projects.php:304
-#: lib/PageRenderer/SepaBulkTransactions.php:516
+#: lib/PageRenderer/SepaBulkTransactions.php:523
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:909
-#: lib/PageRenderer/ProjectPayments.php:509
-#: lib/PageRenderer/ProjectPayments.php:530
-#: lib/PageRenderer/SepaBulkTransactions.php:456
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:908
+#: lib/PageRenderer/ProjectPayments.php:518
+#: lib/PageRenderer/ProjectPayments.php:539
+#: lib/PageRenderer/SepaBulkTransactions.php:463
 #: templates/emailform/part.emailform.composer.php:182
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:955
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:954
 #: lib/PageRenderer/ProjectParticipantFields.php:1703
-#: lib/PageRenderer/SepaBankAccounts.php:349
+#: lib/PageRenderer/SepaBankAccounts.php:352
 msgid "In case of Conflict"
 msgstr "Bei Konflikt"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:987
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1083
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1149
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:986
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1082
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1148
 msgid "without group"
 msgstr "Ohne Gruppe"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1050
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1226
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1310
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1049
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1225
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1309
 msgid "deleted"
 msgstr "gelöscht"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1160
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1159
 msgid "add to this group"
 msgstr "zu dieser Gruppe hinzufügen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1484
-#: lib/PageRenderer/SepaBulkTransactions.php:533
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1483
+#: lib/PageRenderer/SepaBulkTransactions.php:540
 msgid "download"
 msgstr "herunterladen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1530
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
@@ -3577,7 +3607,7 @@ msgstr ""
 "Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
 "\""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1652
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -3665,7 +3695,7 @@ msgid "Family"
 msgstr "Familie"
 
 #: lib/PageRenderer/InstrumentFamilies.php:221
-#: lib/PageRenderer/Musicians.php:552
+#: lib/PageRenderer/Musicians.php:551
 msgid "Instruments"
 msgstr "Instrumente"
 
@@ -3673,104 +3703,108 @@ msgstr "Instrumente"
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:183
+#: lib/PageRenderer/InstrumentInsurances.php:192
 msgid "Insurance brief, item, musician, broker"
 msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
-#: lib/PageRenderer/InstrumentInsurances.php:184
+#: lib/PageRenderer/InstrumentInsurances.php:193
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/PageRenderer/InstrumentInsurances.php:188
+#: lib/PageRenderer/InstrumentInsurances.php:197
 msgid "Details about the insured item"
 msgstr "Details über die versicherten Gegenstände"
 
-#: lib/PageRenderer/InstrumentInsurances.php:193
+#: lib/PageRenderer/InstrumentInsurances.php:202
 msgid "Insurance rate and total sum of insurance police"
 msgstr "Versicherungsraten und Gesamtbeitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:199
-#: lib/PageRenderer/Musicians.php:306
+#: lib/PageRenderer/InstrumentInsurances.php:208
+#: lib/PageRenderer/Musicians.php:305
 msgid "Miscellaneous Data"
 msgstr "Veschiedenes"
 
-#: lib/PageRenderer/InstrumentInsurances.php:204
-#: lib/PageRenderer/Musicians.php:309
+#: lib/PageRenderer/InstrumentInsurances.php:213
+#: lib/PageRenderer/Musicians.php:308
 #: lib/PageRenderer/ProjectParticipantFields.php:253
-#: lib/PageRenderer/ProjectParticipants.php:1396
+#: lib/PageRenderer/ProjectParticipants.php:1427
 #: lib/PageRenderer/ProjectPayments.php:370
-#: lib/PageRenderer/SepaBankAccounts.php:970
-#: lib/PageRenderer/SepaBulkTransactions.php:248
+#: lib/PageRenderer/SepaBankAccounts.php:988
+#: lib/PageRenderer/SepaBulkTransactions.php:255
 #: lib/Service/InstrumentationService.php:182
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:222
+#: lib/PageRenderer/InstrumentInsurances.php:231
 msgid "Insurance Id"
 msgstr "Versicherungs-Id"
 
-#: lib/PageRenderer/InstrumentInsurances.php:270
+#: lib/PageRenderer/InstrumentInsurances.php:279
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/PageRenderer/InstrumentInsurances.php:306
+#: lib/PageRenderer/InstrumentInsurances.php:315
 msgid "Club Member"
 msgstr "Vereinsmitglied"
 
-#: lib/PageRenderer/InstrumentInsurances.php:326
-#: lib/PageRenderer/InstrumentInsurances.php:333
+#: lib/PageRenderer/InstrumentInsurances.php:335
+#: lib/PageRenderer/InstrumentInsurances.php:342
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/PageRenderer/InstrumentInsurances.php:422
+#: lib/PageRenderer/InstrumentInsurances.php:441
 msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
 msgstr "z.B. Bilbo Beutlin, Hobbingen, Auenland"
 
-#: lib/PageRenderer/InstrumentInsurances.php:433
+#: lib/PageRenderer/InstrumentInsurances.php:452
 #, php-format
 msgid "around %1$04d"
 msgstr "um %1$04d"
 
-#: lib/PageRenderer/InstrumentInsurances.php:437
+#: lib/PageRenderer/InstrumentInsurances.php:456
 #, php-format
 msgid "end of %1$02dth century"
 msgstr "Ende des %1$02en Jahrhunderts"
 
-#: lib/PageRenderer/InstrumentInsurances.php:450
+#: lib/PageRenderer/InstrumentInsurances.php:469
 msgid "e.g. \"1921\" or \"around 1900\""
 msgstr "z.B. \"1921\" oder \"um 1900\""
 
-#: lib/PageRenderer/InstrumentInsurances.php:479
+#: lib/PageRenderer/InstrumentInsurances.php:498
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/InstrumentInsurances.php:497
+#: lib/PageRenderer/InstrumentInsurances.php:516
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:497
+#: lib/PageRenderer/InstrumentInsurances.php:516
 msgid "including taxes"
 msgstr "inklusive Steuern"
 
-#: lib/PageRenderer/InstrumentInsurances.php:517
+#: lib/PageRenderer/InstrumentInsurances.php:536
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/PageRenderer/InstrumentInsurances.php:528
-#: lib/PageRenderer/Musicians.php:826
+#: lib/PageRenderer/InstrumentInsurances.php:547
+#: lib/PageRenderer/Musicians.php:825
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/PageRenderer/InstrumentInsurances.php:547
+#: lib/PageRenderer/InstrumentInsurances.php:566
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/PageRenderer/InstrumentInsurances.php:553
+#: lib/PageRenderer/InstrumentInsurances.php:574
+msgid "End of Insurance"
+msgstr "Versicherungsende"
+
+#: lib/PageRenderer/InstrumentInsurances.php:583
 msgid "Bill"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/InstrumentInsurances.php:566
+#: lib/PageRenderer/InstrumentInsurances.php:596
 msgid "bill"
 msgstr "Rechnung"
 
@@ -3820,7 +3854,7 @@ msgid "Short Name"
 msgstr "Kurzbezeichnung"
 
 #: lib/PageRenderer/InsuranceBrokers.php:147
-#: lib/PageRenderer/ProjectParticipants.php:421
+#: lib/PageRenderer/ProjectParticipants.php:424
 msgid "Name"
 msgstr "Name"
 
@@ -3836,13 +3870,13 @@ msgstr "Instrumenten-Versicherungs-Raten"
 msgid "Broker"
 msgstr "Anbieter"
 
-#: lib/PageRenderer/InsuranceRates.php:158
-#: lib/Service/Finance/InstrumentInsuranceService.php:743
+#: lib/PageRenderer/InsuranceRates.php:168
+#: lib/Service/Finance/InstrumentInsuranceService.php:747
 msgid "Scope"
 msgstr "Bereich"
 
-#: lib/PageRenderer/InsuranceRates.php:167
-#: lib/Service/Finance/InstrumentInsuranceService.php:747
+#: lib/PageRenderer/InsuranceRates.php:177
+#: lib/Service/Finance/InstrumentInsuranceService.php:751
 msgid "Rate"
 msgstr "Rate"
 
@@ -3891,192 +3925,193 @@ msgstr ""
 "aktuellen\n"
 "Projekt."
 
-#: lib/PageRenderer/Musicians.php:297
+#: lib/PageRenderer/Musicians.php:296
 msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
-#: lib/PageRenderer/Musicians.php:300
+#: lib/PageRenderer/Musicians.php:299
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
-#: lib/PageRenderer/Musicians.php:303
+#: lib/PageRenderer/Musicians.php:302
 msgid "Financial Topics"
 msgstr "Finanzielles"
 
-#: lib/PageRenderer/Musicians.php:352
+#: lib/PageRenderer/Musicians.php:351
 #, php-format
 msgid "Add to %s"
 msgstr "Zu %s"
 
-#: lib/PageRenderer/Musicians.php:357
+#: lib/PageRenderer/Musicians.php:356
 msgid "Add Musicians"
 msgstr "Musizierende hinzufügen"
 
-#: lib/PageRenderer/Musicians.php:388
+#: lib/PageRenderer/Musicians.php:387
 msgid "Surname"
 msgstr "Nachname"
 
-#: lib/PageRenderer/Musicians.php:399
+#: lib/PageRenderer/Musicians.php:398
 msgid "Forename"
 msgstr "Vorname"
 
-#: lib/PageRenderer/Musicians.php:409
-#: lib/PageRenderer/ProjectParticipants.php:439
+#: lib/PageRenderer/Musicians.php:408
+#: lib/PageRenderer/ProjectParticipants.php:442
 msgid "Nickname"
 msgstr "Rufname"
 
-#: lib/PageRenderer/Musicians.php:420
-#: lib/PageRenderer/ProjectParticipants.php:448
+#: lib/PageRenderer/Musicians.php:419
+#: lib/PageRenderer/ProjectParticipants.php:451
 msgid "e.g. Cathy"
 msgstr "z.B. Michi"
 
-#: lib/PageRenderer/Musicians.php:451
-#: lib/PageRenderer/ProjectParticipants.php:478
+#: lib/PageRenderer/Musicians.php:450
+#: lib/PageRenderer/ProjectParticipants.php:481
 msgid "Display-Name"
 msgstr "Anzeigename"
 
-#: lib/PageRenderer/Musicians.php:472
-#: lib/PageRenderer/ProjectParticipants.php:489
+#: lib/PageRenderer/Musicians.php:471
+#: lib/PageRenderer/ProjectParticipants.php:492
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
-#: lib/PageRenderer/Musicians.php:505
-#: lib/PageRenderer/ProjectParticipants.php:522
+#: lib/PageRenderer/Musicians.php:504
+#: lib/PageRenderer/ProjectParticipants.php:525
+#: lib/PageRenderer/ProjectPayments.php:454
 msgid "User Id"
 msgstr "Benutzerkennung"
 
-#: lib/PageRenderer/Musicians.php:580
-#: lib/PageRenderer/ProjectParticipants.php:608
+#: lib/PageRenderer/Musicians.php:579
+#: lib/PageRenderer/ProjectParticipants.php:611
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
-#: lib/PageRenderer/Musicians.php:594
-#: lib/PageRenderer/ProjectParticipants.php:856
+#: lib/PageRenderer/Musicians.php:593
+#: lib/PageRenderer/ProjectParticipants.php:859
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
-#: lib/PageRenderer/Musicians.php:614
-#: lib/PageRenderer/ProjectParticipants.php:886
+#: lib/PageRenderer/Musicians.php:613
+#: lib/PageRenderer/ProjectParticipants.php:889
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/PageRenderer/Musicians.php:625
-#: lib/PageRenderer/ProjectParticipants.php:896
+#: lib/PageRenderer/Musicians.php:624
+#: lib/PageRenderer/ProjectParticipants.php:914
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
-#: lib/PageRenderer/Musicians.php:644
-#: lib/PageRenderer/ProjectParticipants.php:915
+#: lib/PageRenderer/Musicians.php:643
+#: lib/PageRenderer/ProjectParticipants.php:933
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
-#: lib/PageRenderer/Musicians.php:667
-#: lib/PageRenderer/ProjectParticipants.php:969
+#: lib/PageRenderer/Musicians.php:666
+#: lib/PageRenderer/ProjectParticipants.php:987
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/PageRenderer/Musicians.php:688
-#: lib/PageRenderer/ProjectParticipants.php:994
+#: lib/PageRenderer/Musicians.php:687
+#: lib/PageRenderer/ProjectParticipants.php:1012
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/PageRenderer/Musicians.php:702
-#: lib/PageRenderer/ProjectParticipants.php:1009
+#: lib/PageRenderer/Musicians.php:701
+#: lib/PageRenderer/ProjectParticipants.php:1027
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/PageRenderer/Musicians.php:720
-#: lib/PageRenderer/ProjectParticipants.php:1024
+#: lib/PageRenderer/Musicians.php:719
+#: lib/PageRenderer/ProjectParticipants.php:1042
 msgid "Street"
 msgstr "Straße"
 
-#: lib/PageRenderer/Musicians.php:730
-#: lib/PageRenderer/ProjectParticipants.php:1033
+#: lib/PageRenderer/Musicians.php:729
+#: lib/PageRenderer/ProjectParticipants.php:1051
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/PageRenderer/Musicians.php:739
-#: lib/PageRenderer/ProjectParticipants.php:1042
+#: lib/PageRenderer/Musicians.php:738
+#: lib/PageRenderer/ProjectParticipants.php:1060
 msgid "City"
 msgstr "Stadt"
 
-#: lib/PageRenderer/Musicians.php:751
-#: lib/PageRenderer/ProjectParticipants.php:1054
+#: lib/PageRenderer/Musicians.php:750
+#: lib/PageRenderer/ProjectParticipants.php:1072
 msgid "Country"
 msgstr "Land"
 
-#: lib/PageRenderer/Musicians.php:766
-#: lib/PageRenderer/ProjectParticipants.php:1072
+#: lib/PageRenderer/Musicians.php:765
+#: lib/PageRenderer/ProjectParticipants.php:1090
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/PageRenderer/Musicians.php:784
-#: lib/PageRenderer/ProjectParticipants.php:1092
+#: lib/PageRenderer/Musicians.php:783
+#: lib/PageRenderer/ProjectParticipants.php:1110
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/PageRenderer/Musicians.php:814
+#: lib/PageRenderer/Musicians.php:813
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/PageRenderer/Musicians.php:845
-#: lib/PageRenderer/ProjectParticipants.php:1104
+#: lib/PageRenderer/Musicians.php:844
+#: lib/PageRenderer/ProjectParticipants.php:1122
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/PageRenderer/Musicians.php:907
-#: lib/PageRenderer/ProjectParticipants.php:1163
+#: lib/PageRenderer/Musicians.php:906
+#: lib/PageRenderer/ProjectParticipants.php:1181
 #: lib/PageRenderer/Projects.php:780
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/PageRenderer/Musicians.php:919
-#: lib/PageRenderer/ProjectParticipants.php:1175 src/app/ajax.js:30
+#: lib/PageRenderer/Musicians.php:918
+#: lib/PageRenderer/ProjectParticipants.php:1193 src/app/ajax.js:30
 msgid "Created"
 msgstr "Erzeugt"
 
-#: lib/PageRenderer/Musicians.php:932
+#: lib/PageRenderer/Musicians.php:931
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
 
-#: lib/PageRenderer/PME/Config.php:58 lib/PageRenderer/PMETableViewBase.php:581
+#: lib/PageRenderer/PME/Config.php:58 lib/PageRenderer/PMETableViewBase.php:585
 #: lib/PageRenderer/Projects.php:967 lib/PageRenderer/Projects.php:1031
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/PageRenderer/PMETableViewBase.php:310
+#: lib/PageRenderer/PMETableViewBase.php:314
 msgid "%n data field affected"
 msgid_plural "%n data fields affected"
 msgstr[0] "%n Daten-Feld betroffen"
 msgstr[1] "%n Daten-Felder betroffen"
 
-#: lib/PageRenderer/PMETableViewBase.php:320
+#: lib/PageRenderer/PMETableViewBase.php:324
 msgid "Query Log"
 msgstr "Abfrage-Protokoll"
 
-#: lib/PageRenderer/PMETableViewBase.php:425
+#: lib/PageRenderer/PMETableViewBase.php:429
 #, php-format
 msgid "SQL Transaction failed: %s"
 msgstr "SQL Transaktion fehlgeschlagen: %s"
 
-#: lib/PageRenderer/PMETableViewBase.php:593
+#: lib/PageRenderer/PMETableViewBase.php:597
 msgid "Fees"
 msgstr "Beiträge"
 
-#: lib/PageRenderer/PMETableViewBase.php:593
+#: lib/PageRenderer/PMETableViewBase.php:597
 msgid "expenses negative"
 msgstr "Ausgaben negativ"
 
-#: lib/PageRenderer/PMETableViewBase.php:634
+#: lib/PageRenderer/PMETableViewBase.php:638
 msgid "Revoked"
 msgstr "Entwertung"
 
-#: lib/PageRenderer/PMETableViewBase.php:644
+#: lib/PageRenderer/PMETableViewBase.php:648
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/PageRenderer/PMETableViewBase.php:888
+#: lib/PageRenderer/PMETableViewBase.php:892
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
@@ -4085,8 +4120,8 @@ msgstr ""
 "Tabelle \"%s\": fehlender Id-Wert für Datenbank-Feld \"%s\" und das "
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:921
-#: lib/PageRenderer/PMETableViewBase.php:1484
+#: lib/PageRenderer/PMETableViewBase.php:925
+#: lib/PageRenderer/PMETableViewBase.php:1488
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
@@ -4096,10 +4131,10 @@ msgstr ""
 "mehr als einen Schlüssel: \"%s\" / \"%s\".\n"
 "\n"
 
-#: lib/PageRenderer/PMETableViewBase.php:938
-#: lib/PageRenderer/PMETableViewBase.php:1279
-#: lib/PageRenderer/PMETableViewBase.php:1508
-#: lib/PageRenderer/PMETableViewBase.php:1709
+#: lib/PageRenderer/PMETableViewBase.php:942
+#: lib/PageRenderer/PMETableViewBase.php:1283
+#: lib/PageRenderer/PMETableViewBase.php:1512
+#: lib/PageRenderer/PMETableViewBase.php:1713
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -4108,39 +4143,39 @@ msgstr ""
 "Feld \"%s.%s\": geschachtelte Multi-Key Verknüpfungstabelle mit unerwarteter "
 "Pivot-Spalte: %s."
 
-#: lib/PageRenderer/PMETableViewBase.php:1015
+#: lib/PageRenderer/PMETableViewBase.php:1019
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister Löschversuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1042
+#: lib/PageRenderer/PMETableViewBase.php:1046
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister Einfüge-Versuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1069
+#: lib/PageRenderer/PMETableViewBase.php:1073
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister verbleibende Daten für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1094
-#: lib/PageRenderer/PMETableViewBase.php:1582
+#: lib/PageRenderer/PMETableViewBase.php:1098
+#: lib/PageRenderer/PMETableViewBase.php:1586
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1121
+#: lib/PageRenderer/PMETableViewBase.php:1125
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: lib/PageRenderer/PMETableViewBase.php:1272
-#: lib/PageRenderer/PMETableViewBase.php:1702
+#: lib/PageRenderer/PMETableViewBase.php:1276
+#: lib/PageRenderer/PMETableViewBase.php:1706
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
@@ -4150,17 +4185,17 @@ msgstr ""
 "inkonsistenten Daten für die Spalte \"%2$s\",\n"
 "der fest eingestellte Wert war \"%3$s\", der neue Wert ist \"%4$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1293
+#: lib/PageRenderer/PMETableViewBase.php:1297
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: lib/PageRenderer/PMETableViewBase.php:1357
+#: lib/PageRenderer/PMETableViewBase.php:1361
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: lib/PageRenderer/PMETableViewBase.php:1469
+#: lib/PageRenderer/PMETableViewBase.php:1473
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -4168,30 +4203,30 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1558
+#: lib/PageRenderer/PMETableViewBase.php:1562
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr "Inkonsister Einfüge-Versuch für \"%1$s\", Haupt-Id \"%2$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1601
+#: lib/PageRenderer/PMETableViewBase.php:1605
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: lib/PageRenderer/PMETableViewBase.php:1779
+#: lib/PageRenderer/PMETableViewBase.php:1783
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: lib/PageRenderer/PMETableViewBase.php:1987
+#: lib/PageRenderer/PMETableViewBase.php:1991
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:2123
+#: lib/PageRenderer/PMETableViewBase.php:2127
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: lib/PageRenderer/PMETableViewBase.php:2179
+#: lib/PageRenderer/PMETableViewBase.php:2189
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
@@ -4218,7 +4253,7 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:172
 #: lib/PageRenderer/ProjectParticipantFields.php:290
-#: lib/PageRenderer/SepaBulkTransactions.php:341
+#: lib/PageRenderer/SepaBulkTransactions.php:348
 msgid "Project"
 msgstr "Projekt"
 
@@ -4235,7 +4270,7 @@ msgid "Orchestral Sorting"
 msgstr "Orchestersortierung"
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:274
-#: lib/PageRenderer/ProjectParticipants.php:624
+#: lib/PageRenderer/ProjectParticipants.php:627
 msgid "Voice"
 msgstr "Stimme"
 
@@ -4243,7 +4278,7 @@ msgstr "Stimme"
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:291
 #: lib/PageRenderer/ProjectParticipantFields.php:673
 #: lib/PageRenderer/ProjectParticipantFields.php:682
-#: lib/PageRenderer/ProjectParticipants.php:722
+#: lib/PageRenderer/ProjectParticipants.php:725
 msgid "n/a"
 msgstr "n/a"
 
@@ -4439,10 +4474,10 @@ msgid "Limit"
 msgstr "Obergrenze"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:2196
-#: lib/PageRenderer/ProjectPayments.php:465
-#: lib/PageRenderer/SepaBankAccounts.php:932
-#: lib/PageRenderer/SepaBulkTransactions.php:362
-#: lib/Service/Finance/InstrumentInsuranceService.php:746
+#: lib/PageRenderer/ProjectPayments.php:474
+#: lib/PageRenderer/SepaBankAccounts.php:950
+#: lib/PageRenderer/SepaBulkTransactions.php:369
+#: lib/Service/Finance/InstrumentInsuranceService.php:750
 msgid "Amount"
 msgstr "Betrag"
 
@@ -4468,42 +4503,42 @@ msgstr "Bearbeiten der Daten der angezeigten Person."
 msgid "Instrumentation for Project \"%s\""
 msgstr "Besetzung für das Projekt \"%s\""
 
-#: lib/PageRenderer/ProjectParticipants.php:380
+#: lib/PageRenderer/ProjectParticipants.php:383
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
-#: lib/PageRenderer/ProjectParticipants.php:392
+#: lib/PageRenderer/ProjectParticipants.php:395
 #: lib/PageRenderer/ProjectPayments.php:401
-#: lib/PageRenderer/SepaBankAccounts.php:445
+#: lib/PageRenderer/SepaBankAccounts.php:448
 msgid "Musician-Id"
 msgstr "Musizierenden-Id"
 
-#: lib/PageRenderer/ProjectParticipants.php:430
+#: lib/PageRenderer/ProjectParticipants.php:433
 msgid "First Name"
 msgstr "Vorname"
 
-#: lib/PageRenderer/ProjectParticipants.php:569
+#: lib/PageRenderer/ProjectParticipants.php:572
 msgid "Project Instrument"
 msgstr "Instrument"
 
-#: lib/PageRenderer/ProjectParticipants.php:730
+#: lib/PageRenderer/ProjectParticipants.php:733
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/PageRenderer/ProjectParticipants.php:789
+#: lib/PageRenderer/ProjectParticipants.php:792
 #, php-format
 msgid "Set to \"%s\" in order to mark the section leader."
 msgstr "Auf \"%s\" setzen, um die Person als Stimmführer zu markieren."
 
-#: lib/PageRenderer/ProjectParticipants.php:791
+#: lib/PageRenderer/ProjectParticipants.php:794
 msgid "Check in order to mark the section leader."
 msgstr "Anklicken, um die Person als Stimmführer zu markieren."
 
-#: lib/PageRenderer/ProjectParticipants.php:796
+#: lib/PageRenderer/ProjectParticipants.php:799
 msgid "Registration"
 msgstr "Anmeldung"
 
-#: lib/PageRenderer/ProjectParticipants.php:809
+#: lib/PageRenderer/ProjectParticipants.php:812
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -4512,7 +4547,7 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Personen zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: lib/PageRenderer/ProjectParticipants.php:811
+#: lib/PageRenderer/ProjectParticipants.php:814
 msgid ""
 "Check in order to mark participants who passed a personally signed "
 "registration form to us."
@@ -4520,37 +4555,41 @@ msgstr ""
 "Anklicken um offiziell angemeldete Personen zu markieren (unterschriebene "
 "Anmeldung liegt vor)."
 
-#: lib/PageRenderer/ProjectParticipants.php:821
+#: lib/PageRenderer/ProjectParticipants.php:824
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/PageRenderer/ProjectParticipants.php:1360
+#: lib/PageRenderer/ProjectParticipants.php:902
+msgid "Musician Deleted"
+msgstr "Person gelöscht"
+
+#: lib/PageRenderer/ProjectParticipants.php:1391
 #: lib/Service/InstrumentationService.php:153
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1365
+#: lib/PageRenderer/ProjectParticipants.php:1396
 #: lib/Service/InstrumentationService.php:158
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1372
+#: lib/PageRenderer/ProjectParticipants.php:1403
 #: lib/Service/InstrumentationService.php:165
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1379
+#: lib/PageRenderer/ProjectParticipants.php:1410
 #: lib/Service/InstrumentationService.php:172
 msgid "Project file attachments"
 msgstr "Datei-Anhänge"
 
-#: lib/PageRenderer/ProjectParticipants.php:1384
+#: lib/PageRenderer/ProjectParticipants.php:1415
 #: lib/Service/InstrumentationService.php:177
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1391
-#: lib/PageRenderer/SepaBankAccounts.php:963
+#: lib/PageRenderer/ProjectParticipants.php:1422
+#: lib/PageRenderer/SepaBankAccounts.php:981
 msgid "Miscinfo"
 msgstr "Verschiedenes"
 
@@ -4579,61 +4618,61 @@ msgstr "Bankauftrag"
 msgid "Bulk-Transaction Id"
 msgstr "Sammelauftrags-Id"
 
-#: lib/PageRenderer/ProjectPayments.php:478
+#: lib/PageRenderer/ProjectPayments.php:487
 msgid "Imbalance"
 msgstr "Fehlbetrag"
 
-#: lib/PageRenderer/ProjectPayments.php:504
+#: lib/PageRenderer/ProjectPayments.php:513
 msgid "Date of Receipt"
 msgstr "Eingangsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:556
-#: lib/PageRenderer/ProjectPayments.php:642
+#: lib/PageRenderer/ProjectPayments.php:565
+#: lib/PageRenderer/ProjectPayments.php:651
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/ProjectPayments.php:626
-#: lib/PageRenderer/ProjectPayments.php:690
+#: lib/PageRenderer/ProjectPayments.php:635
+#: lib/PageRenderer/ProjectPayments.php:699
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/ProjectPayments.php:629
+#: lib/PageRenderer/ProjectPayments.php:638
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/ProjectPayments.php:630
+#: lib/PageRenderer/ProjectPayments.php:639
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/ProjectPayments.php:732
+#: lib/PageRenderer/ProjectPayments.php:741
 msgid "Supporting Document"
 msgstr "Beleg"
 
-#: lib/PageRenderer/ProjectPayments.php:804
-#: lib/PageRenderer/SepaBulkTransactions.php:239
+#: lib/PageRenderer/ProjectPayments.php:813
+#: lib/PageRenderer/SepaBulkTransactions.php:246
 msgid "Bulk Transaction"
 msgstr "Sammelauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:822
+#: lib/PageRenderer/ProjectPayments.php:831
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:833
-#: lib/PageRenderer/SepaBulkTransactions.php:400
+#: lib/PageRenderer/ProjectPayments.php:842
+#: lib/PageRenderer/SepaBulkTransactions.php:407
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/ProjectPayments.php:860
-#: lib/PageRenderer/SepaBankAccounts.php:728
-#: lib/PageRenderer/SepaBulkTransactions.php:430
+#: lib/PageRenderer/ProjectPayments.php:869
+#: lib/PageRenderer/SepaBankAccounts.php:731
+#: lib/PageRenderer/SepaBulkTransactions.php:437
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/ProjectPayments.php:868
+#: lib/PageRenderer/ProjectPayments.php:877
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/ProjectPayments.php:887
+#: lib/PageRenderer/ProjectPayments.php:896
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
@@ -4837,94 +4876,94 @@ msgstr "Übersicht über alle SEPA-Bankverbindungen für %s"
 msgid "Overview over all SEPA Bank Accounts"
 msgstr "Übersicht über alle SEPA Bankverbindungen"
 
-#: lib/PageRenderer/SepaBankAccounts.php:282
+#: lib/PageRenderer/SepaBankAccounts.php:284
 msgid "Debit"
 msgstr "Einziehen"
 
-#: lib/PageRenderer/SepaBankAccounts.php:309
+#: lib/PageRenderer/SepaBankAccounts.php:312
 msgid "SEPA Bulk Transactions"
 msgstr "SEPA Sammelaufträge"
 
-#: lib/PageRenderer/SepaBankAccounts.php:331
+#: lib/PageRenderer/SepaBankAccounts.php:334
 msgid "SEPA due date"
 msgstr "SEPA Fälligkeitsdatum"
 
-#: lib/PageRenderer/SepaBankAccounts.php:342
+#: lib/PageRenderer/SepaBankAccounts.php:345
 msgid "Recompute"
 msgstr "Neuberechnung"
 
-#: lib/PageRenderer/SepaBankAccounts.php:458
+#: lib/PageRenderer/SepaBankAccounts.php:461
 msgid "Bank-Account-Sequence"
 msgstr "Lfd.-Nr. Bankverbindung"
 
-#: lib/PageRenderer/SepaBankAccounts.php:547
+#: lib/PageRenderer/SepaBankAccounts.php:550
 msgid "Bank Account Owner"
 msgstr "Kontoinhaber:in"
 
-#: lib/PageRenderer/SepaBankAccounts.php:630
+#: lib/PageRenderer/SepaBankAccounts.php:633
 msgid "Bank Code"
 msgstr "BLZ"
 
-#: lib/PageRenderer/SepaBankAccounts.php:658
+#: lib/PageRenderer/SepaBankAccounts.php:661
 msgid "Mandate Project"
 msgstr "Mandats-Projekt"
 
-#: lib/PageRenderer/SepaBankAccounts.php:673
+#: lib/PageRenderer/SepaBankAccounts.php:676
 msgid "Choose a Project to define a Mandate"
 msgstr "Für Mandatseingabe Projekt auswählen"
 
-#: lib/PageRenderer/SepaBankAccounts.php:704
+#: lib/PageRenderer/SepaBankAccounts.php:707
 msgid "Mandate Sequence"
 msgstr "Mandats-Revision"
 
-#: lib/PageRenderer/SepaBankAccounts.php:713
+#: lib/PageRenderer/SepaBankAccounts.php:716
 msgid "generated on save"
 msgstr "wird beim Speichern erzeugt"
 
-#: lib/PageRenderer/SepaBankAccounts.php:768
+#: lib/PageRenderer/SepaBankAccounts.php:771
 msgid "Non-Recurring"
 msgstr "Einmalig"
 
-#: lib/PageRenderer/SepaBankAccounts.php:785
+#: lib/PageRenderer/SepaBankAccounts.php:788
 msgid "Date Issued"
 msgstr "Ausstellungsdatum"
 
-#: lib/PageRenderer/SepaBankAccounts.php:799
+#: lib/PageRenderer/SepaBankAccounts.php:802
 msgid "Written Mandate"
 msgstr "Unterschriebenes Mandat"
 
-#: lib/PageRenderer/SepaBankAccounts.php:808
+#: lib/PageRenderer/SepaBankAccounts.php:811
 msgid "please upload written mandate after saving"
 msgstr "bitte unterschriebenes Mandat nach dem Speichern laden"
 
-#: lib/PageRenderer/SepaBankAccounts.php:834
+#: lib/PageRenderer/SepaBankAccounts.php:837
 msgid "Mandate Revoked"
 msgstr "Mandat annuliert"
 
-#: lib/PageRenderer/SepaBankAccounts.php:842
+#: lib/PageRenderer/SepaBankAccounts.php:845
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
 
-#: lib/PageRenderer/SepaBankAccounts.php:918
+#: lib/PageRenderer/SepaBankAccounts.php:936
 msgid "Bank account associated to this debit mandate."
 msgstr "Bankverbindung, die zu diesem Mandat gehört."
 
-#: lib/PageRenderer/SepaBankAccounts.php:919
+#: lib/PageRenderer/SepaBankAccounts.php:937
 #: templates/sepa-debit-mandate.php:120
 #: templates/settings/orchestra-settings.php:109
 #: templates/settings/orchestra-settings.php:111
 msgid "Bank Account"
 msgstr "Bankverbindung"
 
-#: lib/PageRenderer/SepaBankAccounts.php:923
+#: lib/PageRenderer/SepaBankAccounts.php:941
 msgid "Debit mandate, mandate-id, last used date, recurrence"
 msgstr "Lastschrift-Mandate, Mandats-Referenz, Datum, Art des Mandats."
 
-#: lib/PageRenderer/SepaBankAccounts.php:924
+#: lib/PageRenderer/SepaBankAccounts.php:942
 msgid "Mandate"
 msgstr "Mandat"
 
-#: lib/PageRenderer/SepaBankAccounts.php:930
+#: lib/PageRenderer/SepaBankAccounts.php:948
 msgid ""
 "Show the amounts to draw by debit transfer, including sum of payments\n"
 "received so far"
@@ -4932,14 +4971,14 @@ msgstr ""
 "Zeigt die Beträge, der eingezogen werden könnten, sowie die bereits\n"
 "eingegangenen Zahlungen."
 
-#: lib/PageRenderer/SepaBankAccounts.php:990
+#: lib/PageRenderer/SepaBankAccounts.php:1008
 #, php-format
 msgid "The change-set contains read-only keys: %s."
 msgstr ""
 "Der Änderungsmenge enthält Zeilen-Schlüssel, die nicht verändert werden "
 "dürfen: %s"
 
-#: lib/PageRenderer/SepaBankAccounts.php:1052
+#: lib/PageRenderer/SepaBankAccounts.php:1070
 #, php-format
 msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
@@ -4948,7 +4987,7 @@ msgstr ""
 "Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
 "\" nicht finden."
 
-#: lib/PageRenderer/SepaBankAccounts.php:1083
+#: lib/PageRenderer/SepaBankAccounts.php:1101
 #, php-format
 msgid ""
 "More than one (%1$d) active bank account found for musician \"%2$s\" and "
@@ -4957,42 +4996,55 @@ msgstr ""
 "Mehr als eine (%1$d) aktive Bankverbindung für die  Person \"%2$s\" und IBAN "
 "\"%3$s\"."
 
-#: lib/PageRenderer/SepaBulkTransactions.php:160
+#: lib/PageRenderer/SepaBulkTransactions.php:167
 #, php-format
 msgid "Bulk-transactions for project \"%s\""
 msgstr "Sammelaufträge für das Projekt \"%s\""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:240
+#: lib/PageRenderer/SepaBulkTransactions.php:247
 msgid "Transaction"
 msgstr "Bankauftrag"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:243
+#: lib/PageRenderer/SepaBulkTransactions.php:250
 msgid "Booking Entries"
 msgstr "Buchungen"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:244
+#: lib/PageRenderer/SepaBulkTransactions.php:251
 msgid "Bookings"
 msgstr "Buchungen"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:312
+#: lib/PageRenderer/SepaBulkTransactions.php:319
 msgid "Id"
 msgstr "Id"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:478
+#: lib/PageRenderer/SepaBulkTransactions.php:485
 msgid "Time Created"
 msgstr "Erstellungszeit"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:488
+#: lib/PageRenderer/SepaBulkTransactions.php:495
 msgid "Submission Deadline"
 msgstr "Einreichungsfrist"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:499
+#: lib/PageRenderer/SepaBulkTransactions.php:506
 msgid "Date of Submission"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/SepaBulkTransactions.php:538
+#: lib/PageRenderer/SepaBulkTransactions.php:545
 msgid "announce"
 msgstr "ankündigen"
+
+#: lib/PageRenderer/SepaBulkTransactions.php:610
+#: lib/Service/Finance/SepaBulkTransactionService.php:290
+#, php-format
+msgid ""
+"The bulk-transaction with id \"%1$d\" has already been submitted to the "
+"bank, it cannot be deleted."
+msgstr "Der Sammelauftrag mit der Id \"%1$d\" wurde bereits bei der Bank eingereicht und wird deshalb nicht gelöscht."
+
+#: lib/PageRenderer/SepaBulkTransactions.php:627
+#, php-format
+msgid "Data inconsistency in bulk-transaction payments: %d / %d"
+msgstr "Inkonsistente Daten bei den Buchungen für den Sammelauftrag: %d / %d"
 
 #: lib/PageRenderer/Util/Navigation.php:217
 msgid "Export Table"
@@ -5239,6 +5291,13 @@ msgstr ""
 "Installationsproblem; die %s-Ressource \"%s\" ist nicht auf dem Server "
 "installiert, bitte kontaktieren Sie den Systemadministrator!"
 
+#: lib/Service/CalDavService.php:351
+#, php-format
+msgid ""
+"Unable to find calendar entry with identifier \"%1$s\" in calendar with id "
+"\"%2$s\"."
+msgstr "Kann den Kalender-Eintrag \"%1$s\" im Kalender mit der Id \"\"%2$s\" nicht finden."
+
 #: lib/Service/CloudUserConnectorService.php:202
 #, php-format
 msgid ""
@@ -5414,55 +5473,62 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:299
-#: lib/Service/Finance/FinanceService.php:340
+#: lib/Service/Finance/FinanceService.php:302
+#: lib/Service/Finance/FinanceService.php:346
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:429
+#: lib/Service/Finance/FinanceService.php:386
+#, php-format
+msgid ""
+"Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
+"\"%1$s\"."
+msgstr "Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht finden."
+
+#: lib/Service/Finance/FinanceService.php:458
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:445
+#: lib/Service/Finance/FinanceService.php:474
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:469
+#: lib/Service/Finance/FinanceService.php:498
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:757
+#: lib/Service/Finance/FinanceService.php:786
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaber:innen:feld."
 
-#: lib/Service/Finance/FinanceService.php:768
+#: lib/Service/Finance/FinanceService.php:797
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:777
+#: lib/Service/Finance/FinanceService.php:806
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:783
+#: lib/Service/Finance/FinanceService.php:812
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:787
+#: lib/Service/Finance/FinanceService.php:816
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:792
+#: lib/Service/Finance/FinanceService.php:821
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:86
-#: lib/Service/Finance/InstrumentInsuranceService.php:480 :-1
+#: lib/Service/Finance/InstrumentInsuranceService.php:484 :-1
 #, php-format
 msgid "insurance"
 msgstr "Versicherung"
@@ -5498,7 +5564,7 @@ msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:509
+#: lib/Service/Finance/InstrumentInsuranceService.php:513
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
@@ -5508,32 +5574,32 @@ msgstr ""
 "Versicherungsübersicht. Bitte ein passendes Dokument bei den\n"
 "App-Einstellungen (Orchester->Dokumentenvorlagen) einstellen."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:624
+#: lib/Service/Finance/InstrumentInsuranceService.php:628
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:628
+#: lib/Service/Finance/InstrumentInsuranceService.php:632
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:643
+#: lib/Service/Finance/InstrumentInsuranceService.php:647
 #: templates/instrument-insurance.php:55 templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:665
+#: lib/Service/Finance/InstrumentInsuranceService.php:669
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:666
+#: lib/Service/Finance/InstrumentInsuranceService.php:670
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:671
+#: lib/Service/Finance/InstrumentInsuranceService.php:675
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -5552,33 +5618,33 @@ msgstr ""
 "dann, wenn sich an der Versicherung etwas ändern\n"
 "sollte."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:679
+#: lib/Service/Finance/InstrumentInsuranceService.php:683
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr "Gesamtversicherungsbeitrag %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:692
+#: lib/Service/Finance/InstrumentInsuranceService.php:696
 msgid "Annual amount excluding taxes"
 msgstr "Jahresbeitrag ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:696
-#: lib/Service/Finance/InstrumentInsuranceService.php:836
+#: lib/Service/Finance/InstrumentInsuranceService.php:700
+#: lib/Service/Finance/InstrumentInsuranceService.php:840
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr "%s %% Versicherungssteuer"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:700
+#: lib/Service/Finance/InstrumentInsuranceService.php:704
 msgid "Total amount to pay"
 msgstr "Rechnungsbetrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:710
+#: lib/Service/Finance/InstrumentInsuranceService.php:714
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 "Der Versicherungsbeitrag wird immer im voraus für das nächste "
 "Versicherungsjahr gezahlt."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:711
+#: lib/Service/Finance/InstrumentInsuranceService.php:715
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
@@ -5588,11 +5654,11 @@ msgstr ""
 "reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
 "Versicherungsjahre auf Monatsbasis berechnet wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:713
+#: lib/Service/Finance/InstrumentInsuranceService.php:717
 msgid "This is detailed in the table on the following page."
 msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:721
+#: lib/Service/Finance/InstrumentInsuranceService.php:725
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
@@ -5600,7 +5666,7 @@ msgstr ""
 "Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
 "nicht gekündigt wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:727
+#: lib/Service/Finance/InstrumentInsuranceService.php:731
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -5612,57 +5678,57 @@ msgstr ""
 "rechtzeitig im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:734
+#: lib/Service/Finance/InstrumentInsuranceService.php:738
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:735
+#: lib/Service/Finance/InstrumentInsuranceService.php:739
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:742
+#: lib/Service/Finance/InstrumentInsuranceService.php:746
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:744
+#: lib/Service/Finance/InstrumentInsuranceService.php:748
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:748
+#: lib/Service/Finance/InstrumentInsuranceService.php:752
 msgid "Start"
 msgstr "Beginn"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:749
+#: lib/Service/Finance/InstrumentInsuranceService.php:753
 msgid "Valid until"
 msgstr "Laufzeit bis"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:750
+#: lib/Service/Finance/InstrumentInsuranceService.php:754
 msgid "Months"
 msgstr "Monate"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:751
+#: lib/Service/Finance/InstrumentInsuranceService.php:755
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:787
+#: lib/Service/Finance/InstrumentInsuranceService.php:791
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:820
+#: lib/Service/Finance/InstrumentInsuranceService.php:824
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:830
+#: lib/Service/Finance/InstrumentInsuranceService.php:834
 msgid "Totals excluding taxes"
 msgstr "Gesamtsumme ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:843
+#: lib/Service/Finance/InstrumentInsuranceService.php:847
 msgid "Totals including taxes"
 msgstr "Gesamtsumme mit Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:884
+#: lib/Service/Finance/InstrumentInsuranceService.php:888
 msgid "Jane"
 msgstr "Susanne"
 
@@ -5706,7 +5772,7 @@ msgstr "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\"."
 msgid "Unable to construct generator class \"%s\"."
 msgstr "Kann den Generatorklasse \"%s\" nicht erzeugen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:175
+#: lib/Service/Finance/SepaBulkTransactionService.php:183
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
@@ -5716,7 +5782,7 @@ msgstr ""
 "Aktuelles Projekt is \"%s\", die Forderung ist aber an das Projekt \"%s\" "
 "gebunden."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:188
+#: lib/Service/Finance/SepaBulkTransactionService.php:196
 #, php-format
 msgid ""
 "Payable amount \"%f\" and deposit amount \"%f\" should have the compatible "
@@ -5724,6 +5790,22 @@ msgid ""
 msgstr ""
 "Der Endbetrag \"%f\" und die Anzahlung \"%f\" sollten das gleiche Vorzeichen "
 "haben."
+
+#: lib/Service/Finance/SepaBulkTransactionService.php:342
+#, php-format
+msgid "Failed to remove bulk-transaction with id %d"
+msgstr "Kann den Sammelauftrag mit Id %d nicht löschen."
+
+#: lib/Service/Finance/SepaBulkTransactionService.php:387
+#, php-format
+msgid "Unable to find exporter for format \"%s\"."
+msgstr "Export in das Format \"%s\" ist nicht implementiert."
+
+#: lib/Service/Finance/SepaBulkTransactionService.php:424
+#, php-format
+msgid ""
+"Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
+msgstr "Kann die Bank-Export-Daten für den Sammelauftrag %1$d nicht erzeugen, angefragtes Format war \"%2$s\"."
 
 #: lib/Service/FuzzyInputService.php:93
 #, php-format
@@ -8615,6 +8697,12 @@ msgstr ""
 
 #: lib/Service/ToolTipsService.php:1076
 msgid ""
+"A fillable form in order to collect address updates and for renewal of debit-"
+"mandates."
+msgstr "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate zu erneuern."
+
+#: lib/Service/ToolTipsService.php:1078
+msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
@@ -8623,11 +8711,42 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsService.php:1080
+#: lib/Service/ToolTipsService.php:1081
+msgid "Delete this document template from the server"
+msgstr "Diese Dokumentenvorlage vom Server löschen"
+
+#: lib/Service/ToolTipsService.php:1084
+msgid "Choose a template file from the cloud storage."
+msgstr "Dokumentenvorlage-Datei aus der \"Cloud\" auswählen"
+
+#: lib/Service/ToolTipsService.php:1085
+msgid "Upload a document template from your computer or mobile."
+msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
+
+#: lib/Service/ToolTipsService.php:1089
+msgid ""
+"Test the form-filling features with a test-data-set. The file-format of the "
+"generated download remains the same as of the original template."
+msgstr "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
+
+#: lib/Service/ToolTipsService.php:1090
+msgid ""
+"Test the form-filling features with a test-data-set and convert the "
+"generated file to PDF, providing a fillable PDF-form if the original "
+"document contains form-elements."
+msgstr "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-Datensatz testen und das Egebnis in das PDF-Format konvertieren. Falls die Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-Dokument erstellt."
+
+#: lib/Service/ToolTipsService.php:1091
+msgid ""
+"Just download the test-data set as JSON data for inspection and for "
+"debugging."
+msgstr "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur Fehlersuche."
+
+#: lib/Service/ToolTipsService.php:1095
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsService.php:1082
+#: lib/Service/ToolTipsService.php:1097
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -8637,7 +8756,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsService.php:1086
+#: lib/Service/ToolTipsService.php:1101
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -8645,7 +8764,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsService.php:1088
+#: lib/Service/ToolTipsService.php:1103
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -8654,7 +8773,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsService.php:1090
+#: lib/Service/ToolTipsService.php:1105
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -8663,7 +8782,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsService.php:1092
+#: lib/Service/ToolTipsService.php:1107
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -9537,11 +9656,11 @@ msgstr ""
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: src/app/email.js:603 src/app/email.js:1716
+#: src/app/email.js:603 src/app/email.js:1718
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:605 src/app/email.js:1718
+#: src/app/email.js:605 src/app/email.js:1720
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
@@ -9610,7 +9729,7 @@ msgstr ""
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1083
+#: src/app/email.js:1085
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -9618,17 +9737,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1085
+#: src/app/email.js:1087
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1099
+#: src/app/email.js:1101
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1109
+#: src/app/email.js:1111
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -9636,19 +9755,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1111
+#: src/app/email.js:1113
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1152
+#: src/app/email.js:1154
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1153
+#: src/app/email.js:1155
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1193
+#: src/app/email.js:1195
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -9656,49 +9775,41 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1195
+#: src/app/email.js:1197
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1349
+#: src/app/email.js:1351
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1350 src/app/email.js:1492
+#: src/app/email.js:1352 src/app/email.js:1494
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1451
+#: src/app/email.js:1453
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1491
+#: src/app/email.js:1493
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1550 templates/emailform/part.emailform.composer.php:158
+#: src/app/email.js:1552 templates/emailform/part.emailform.composer.php:158
 #: templates/emailform/part.emailform.composer.php:177
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1554
+#: src/app/email.js:1556
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1557
+#: src/app/email.js:1559
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
-
-#: src/app/email.js:1727
-msgid "Email will be sent with an open recipients list!"
-msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
-
-#: src/app/email.js:1729
-msgid "Email will be sent with a hidden recipients list!"
-msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
 
 #: src/app/events.js:46
 msgid "Do you really want to delete this event?"
@@ -10093,7 +10204,7 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: src/app/sepa-bulk-transactions.js:79
+#: src/app/sepa-bulk-transactions.js:86
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
@@ -13310,6 +13421,15 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#~ msgid "announcement"
+#~ msgstr "Ankündigung"
+
+#~ msgid "Email will be sent with an open recipients list!"
+#~ msgstr "Email wird mit einer offenen (Cc:) Adressaten-Liste gesendet!"
+
+#~ msgid "Email will be sent with a hidden recipients list!"
+#~ msgstr "Email wird mit versteckter (Bcc:) Adressaten-Liste gesendet!"
+
 #~ msgid "Cannot decrypt private values without bound user credentials"
 #~ msgstr ""
 #~ "Kann private Konfigurationswerte nicht ohne Benuzter-Daten entschlüseln"
@@ -13940,9 +14060,6 @@ msgstr "ZUSATZKOSTEN"
 #~ msgid "Remaining Project Fees"
 #~ msgstr "Restbetrag der Projekt-Gebühren"
 
-#~ msgid "Musician Id"
-#~ msgstr "Musiker-Id"
-
 #~ msgid "Musican Instrument"
 #~ msgstr "Instrument"
 
@@ -14122,13 +14239,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Debit-note with id %d does not seem to exists."
 #~ msgstr "Eine Lastschrift mit der Id %d scheint es nicht zu geben."
-
-#~ msgid ""
-#~ "Debit note with id %d has already been submitted and therefore will\n"
-#~ "not be deleted."
-#~ msgstr ""
-#~ "Die Lastschrift mit der Id %d wurde bereits eingereicht und wird deshalb "
-#~ "nicht gelöscht."
 
 #~ msgid "Provide Basic DB Layout"
 #~ msgstr "Grundlegendes Datenbank Layout"
