@@ -1073,8 +1073,23 @@ the individual table views.'),
 
         'generalDebitNoteMandateForm' => $this->l->t('A fillable PDF form for debit-mandates not bound to special projects. The app is able to auto-fill form-fields with the names "bankAccountOwner", "projectParticipant", "bankAccountIBAN", "bankAccountBIC", "bank". The fields in the PDF-form are identified by these names. Auto-filled mandates can be downloaed from the musician and member\'s project view.'),
 
+        'memberDataUpdateForm' => $this->l->t('A fillable form in order to collect address updates and for renewal of debit-mandates.'),
+
         'instrumentInsuranceRecord' => $this->l->t('An office document with variable substitutions "[PLACEHOLDER]" used to communicate the
 yearly insurance fees to the club-members.'),
+
+        'delete' => $this->l->t('Delete this document template from the server'),
+
+        'upload' => [
+          'cloud' => [ 'default' => $this->l->t('Choose a template file from the cloud storage.'), ],
+          'client' => [ 'default' => $this->l->t('Upload a document template from your computer or mobile.'), ],
+        ],
+
+        'auto-fill-test' => [
+          'default' => $this->l->t('Test the form-filling features with a test-data-set. The file-format of the generated download remains the same as of the original template.'),
+          'pdf' => $this->l->t('Test the form-filling features with a test-data-set and convert the generated file to PDF, providing a fillable PDF-form if the original document contains form-elements.'),
+          'data' => $this->l->t('Just download the test-data set as JSON data for inspection and for debugging.'),
+        ],
       ],
 
       'test-cafevdb_dbpassword' => $this->l->t('Test data-base passphrase.'),
