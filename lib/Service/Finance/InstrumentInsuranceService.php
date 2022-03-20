@@ -238,7 +238,7 @@ class InstrumentInsuranceService
    *
    * @param bool $currentYearOnly
    */
-  public function insuranceFee($musicianId, $date = null, array &$dueInterval = [])
+  public function insuranceFee($musicianId, $date = null, ?array &$dueInterval = null)
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -404,6 +404,12 @@ class InstrumentInsuranceService
       $lastDueDate = $dueDate->modify('-1 year');
 
       if (!empty($insuranceEnd) && $lastDueDate > $insuranceEnd) {
+        // exclude instruments which are no longer insured
+        continue;
+      }
+
+      if ($dueDate <= $insuranceStart) {
+        // exclude instruments which were not yet insured in that year
         continue;
       }
 

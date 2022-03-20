@@ -163,12 +163,12 @@ foreach ($localeCountryNames as $country => $name) {
                  <?php empty(${$documentTemplate . 'FileName'}) && p('disabled'); ?>
           />
           <input type="button"
-                 title="<?php p($toolTips['templates:' . $documentTemplate . '-cloud']); ?>"
+                 title="<?php p($toolTips['templates:upload:cloud:' . $documentTemplate]); ?>"
                  class="operation select-cloud document-template <?php p($documentTemplate); ?>"
                  data-placeholder="<?php p($l->t('Select '.$placeholder)); ?>"
           />
           <input type="button"
-                 title="<?php p($toolTips['templates:' . $documentTemplate . '-upload']); ?>"
+                 title="<?php p($toolTips['templates:upload:client:' . $documentTemplate]); ?>"
                  class="operation upload-replace document-template <?php p($documentTemplate); ?>"
           />
           <input class="<?php p($documentTemplate); ?> document-template upload-placeholder<?php !empty(${$documentTemplate . 'FileName'}) && p(' hidden'); ?>"
