@@ -238,7 +238,7 @@ class InstrumentInsuranceService
    *
    * @param bool $currentYearOnly
    */
-  public function insuranceFee($musicianId, $date = null, array &$dueInterval = [])
+  public function insuranceFee($musicianId, $date = null, ?array &$dueInterval = null)
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
