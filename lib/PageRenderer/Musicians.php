@@ -820,7 +820,7 @@ make sure that the musicians are also automatically added to the
        'css' => [ 'postfix' => [ 'restrict-height', ], ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
          $musicianId = $recordId['id'];
-         $annualFee = $this->insuranceService->insuranceFee($musicianId, null, true);
+         $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
          $bval = $this->l->t(
            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
          $tip = $this->toolTipsService['musician-instrument-insurance'];

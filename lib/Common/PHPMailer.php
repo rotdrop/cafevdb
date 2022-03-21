@@ -106,6 +106,20 @@ class PHPMailer extends PHPMailerUpstream
     $this->SMTPDebug = 1;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Override the vanilla method to use a more decent html to text converter
+   * by default.
+   */
+  public function html2text($html, $advanced = false)
+  {
+    if ($advanced !== false) {
+      return parent::html2text($html, $advanced);
+    }
+    return Html2Text::convert($html);
+  }
+
   public function setProgressCallback($progressCallback)
   {
     $this->progressCallback = $progressCallback;

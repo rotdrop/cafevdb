@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -124,14 +124,9 @@ class InstrumentInsuranceService
    * @param string|\DateTimeInterface $dueDate The end of the
    * insurance year for this contract.
    *
-   * @param bool $currentYearOnly Only take the current insurance-year
-   * into account, yielding a fraction of 1 for all year safe the
-   * first one after $insuranceStart.
-   *
    * @return float Fraction
-   *
    */
-  private function yearFraction($insuranceStart, $dueDate, bool $currentYearOnly = false)
+  private function yearFraction($insuranceStart, $dueDate)
   {
     $timeZone = $this->getDateTimeZone();
     $startDate = Util::dateTime($insuranceStart)->setTimezone($timeZone);
@@ -148,11 +143,8 @@ class InstrumentInsuranceService
     // full months
     $distance->d = 0;
 
-    if ($currentYearOnly) {
-      $fraction = $distance->y > 0 ? 1.0 : $distance->m / 12.0;
-    } else {
-      $fraction = $distance->y + $distance->m / 12.0;
-    }
+    $fraction = $distance->y > 0 ? 1.0 : $distance->m / 12.0;
+
     return $fraction;
   }
 
@@ -206,7 +198,7 @@ class InstrumentInsuranceService
         if ($lastDueDate > $insuranceEnd) {
           break;
         }
-        $yearFraction = $this->yearFraction($insuranceStart, $dueDate, true);
+        $yearFraction = $this->yearFraction($insuranceStart, $dueDate);
         if ($yearFraction != 0.0) {
           $fee = $yearFraction * $annualFee * self::TAXES;
           $result[$year] = ($result[$year] ?? 0.0) + $fee;
@@ -246,7 +238,7 @@ class InstrumentInsuranceService
    *
    * @param bool $currentYearOnly
    */
-  public function insuranceFee($musicianId, $date = null, bool $currentYearOnly = true)
+  public function insuranceFee($musicianId, $date = null, ?array &$dueInterval = null)
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -257,6 +249,9 @@ class InstrumentInsuranceService
     $payables = $this->billableInsurances($musicianId);
 
     $fee = 0.0;
+    /** @var \DateTimeInterface $minDueDate */
+    /** @var \DateTimeInterface $maxDueDate */
+    $minDueDate = $maxDueDate = null;
     /** @var Entities\InstrumentInsurance $insurance */
     foreach ($payables as $insurance) {
       $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
@@ -273,12 +268,15 @@ class InstrumentInsuranceService
       if (!empty($insuranceEnd) && $dueDate->modify('-1 year') > $insuranceEnd) {
         continue;
       }
+      $minDueDate = empty($minDueDate) ? $dueDate : min($dueDate, $minDueDate);
+      $maxDueDate = empty($maxDueDate) ? $dueDate : max($dueDate, $maxDueDate);
 
       $amount = $insurance->getInsuranceAmount();
       $annualFee = $amount * $rate->getRate();
-      $annualFee *= $this->yearFraction($insuranceStart, $dueDate, $currentYearOnly);
+      $annualFee *= $this->yearFraction($insuranceStart, $dueDate);
       $fee += $annualFee * (1.0 + self::TAXES);
     }
+    $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];
     return round($fee, 2);
   }
 
@@ -406,11 +404,17 @@ class InstrumentInsuranceService
       $lastDueDate = $dueDate->modify('-1 year');
 
       if (!empty($insuranceEnd) && $lastDueDate > $insuranceEnd) {
+        // exclude instruments which are no longer insured
+        continue;
+      }
+
+      if ($dueDate <= $insuranceStart) {
+        // exclude instruments which were not yet insured in that year
         continue;
       }
 
       $amount = $insurance->getInsuranceAmount();
-      $fraction = $this->yearFraction($insuranceStart, $dueDate, true);
+      $fraction = $this->yearFraction($insuranceStart, $dueDate);
       $annualFee = $amount * $rate->getRate();
 
       $instrumentHolder = $insurance->getInstrumentHolder();

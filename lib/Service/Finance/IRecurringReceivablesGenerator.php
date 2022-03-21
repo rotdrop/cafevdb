@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -96,7 +96,7 @@ interface IRecurringReceivablesGenerator
   static public function updateStrategyChoices():array;
 
   /**
-   * Return an array of or just one description button-labels, indexed by
+   * Return an array of button-labels (or just one label), indexed by
    * operation slug. If a label is literal false the corresponding UI element
    * can be hidden, if true a default element will be used. For
    * labelled control elements a string can be returned.
@@ -204,4 +204,12 @@ interface IRecurringReceivablesGenerator
    * field-data for all participants.
    */
   public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+
+  /**
+   * Fetch the due-date for the given receivable or the maximum of all due-dates.
+   *
+   * @param null|Entities\ProjectParticipantFieldDataOption $receivable
+   */
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface;
+
 }

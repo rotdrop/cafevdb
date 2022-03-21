@@ -193,7 +193,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $referenceDate = new \DateTimeImmutable($year.'-06-01');
 
       // Compute the actual fee
-      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate);
+      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
       // @todo: use new OpenDocument stuff
@@ -316,5 +316,24 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       'skipped' => (int)$skipped,
       'notices' => $notices,
     ];
+  }
+
+    /**
+   * {@inheritdoc}
+   */
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface
+  {
+    $timeZone = $this->getDateTimeZone();
+    if ($receivable === null) {
+      $year = (int)(new \DateTimeImmutable)->setTimezone($timeZone)->format('Y');
+    } else {
+      $year = (int)$receivable->getData();
+      if ($year == 0) {
+        return null;
+      }
+    }
+    $dueDate = $this->serviceFeeField->getDueDate()->setTimezone($timeZone);
+    $dueYear = (int)$dueDate->format('Y');
+    return $dueDate->modify('+'.($year - $dueYear).' years');
   }
 }

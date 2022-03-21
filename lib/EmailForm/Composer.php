@@ -52,6 +52,8 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -251,11 +253,6 @@ Störung.';
 [CSSPREFIX]table.monetary-fields tbody.field-option.number-of-options-1 td.row-label {
   font-style:italic;
 }
-[CSSPREFIX]table.monetary-fields td.date {
-  font-style:italic;
-  text-align:center;
-  opacity:0;
-}
 [CSSPREFIX]table.monetary-fields tbody.footer td.date,
 [CSSPREFIX]table.monetary-fields tbody.number-of-options-1 td.date {
   opacity:inherit;
@@ -274,8 +271,8 @@ Störung.';
 [CSSPREFIX]table.monetary-fields tr.totalsum td.row-label {
   text-align:right;
 }
-[CSSPREFIX]table.monetary-fields.number-of-fields-0 tr.totalsum,
-[CSSPREFIX]table.monetary-fields.number-of-fields-1 tr.totalsum,
+[CSSPREFIX]table.monetary-fields tr.totalsum.total-number-of-options-0,
+[CSSPREFIX]table.monetary-fields tr.totalsum.total-number-of-options-1,
 [CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-0,
 [CSSPREFIX]table.monetary-fields tbody.field-header.number-of-options-1,
 [CSSPREFIX]table.monetary-fields tr.field-header.number-of-options-0,
@@ -704,9 +701,9 @@ Störung.';
       // per-participant project-data
       $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
 
-        if (empty($musician)) {
-          return $keyArg[0];
-        }
+        if (empty($musician) || count($keyArg) > 2) {
+          return implode(':', $keyArg);
+	}
 
         /** @var Entities\ProjectParticipant $projectParticipant */
         $projectParticipant = $musician->getProjectParticipantOf($this->project);
@@ -742,6 +739,7 @@ Störung.';
         if (count($keyArg) == 2) {
           $found = false;
           $selector = strtolower($keyArg[1]);
+
           $specificField = $participantFields->filter(function($field) use ($selector) {
             /** @var Entities\ProjectParticipantField $field */
             return strtolower($field->getName()) == $selector;
@@ -797,9 +795,8 @@ Störung.';
 
           $numberOfFields = $fields->count();
 
-          // First output the simple options, then the ones with
-          // multiple options, then the recurring options. Also sort by
-          // name.
+          // First output the simple options, then the ones with multiple
+          // options. Also sort by name.
           $fieldsByMultiplicity = [
             // only one possible option
             'single' => (function($fields) {
@@ -904,11 +901,18 @@ Störung.';
             $totalSum['label'] = $this->l->t('Total Amount');
             $totalSum['dueDate'] = null;
 
+            $totalNumberOfOptions = 0;
             foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
               /** @var Entities\ProjectParticipantField $field */
               foreach ($fields as $field) {
 
-                $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
+                if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+                  /** @var IRecurringReceivablesGenerator $receivablesGenerator  */
+                  $receivablesGenerator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field);
+                  $dueDate = $receivablesGenerator->dueDate();
+                } else {
+                  $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
+                }
                 if (!empty($dueDate)) {
                   if (empty($totalSum['dueDate'])) {
                     $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
@@ -923,6 +927,7 @@ Störung.';
                 }
 
                 $numberOfOptions = $field->getSelectableOptions()->count();
+                $totalNumberOfOptions += $numberOfOptions;
 
                 // generate a field-header for multiple options
                 $replacements = [
@@ -952,6 +957,15 @@ Störung.';
 
                 /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
                 foreach ($field->getSelectableOptions() as $fieldOption) {
+
+                  if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+                    $receivableDueDate = $receivablesGenerator->dueDate($fieldOption) ?? '';
+                    if (!empty($receivableDueDate)) {
+                      $receivableDueDate = $formatter->formatDate($receivableDueDate, 'medium');
+                    }
+                  } else {
+                    $receivableDueDate = '';
+                  }
 
                   $option = $fieldOption->getLabel() ?: $field->getName();
 
@@ -992,18 +1006,28 @@ Störung.';
 
                   // compute substitution values
                   $replacements = [];
+		  $nonZeroData = false;
                   foreach ($replacementKeys as $key) {
-                    if ($key == 'option' || $key == 'dueDate' ) {
+                    if ($key == 'option') {
                       $replacements[$key] = ${$key};
                       continue;
                     }
+                    if ($key == 'dueDate' ) {
+                      $replacements[$key] = $receivableDueDate ?? '';
+                      continue;
+                    }
                     if (${$key} != '--') {
+		      $nonZeroData = $nonZeroData || !empty(${$key});
                       $totalSum[$key] += ${$key};
                       $replacements[$key] = $this->moneyValue(${$key});
                     } else {
                       $replacements[$key] = ${$key};
                     }
                   }
+
+		  if (!$nonZeroData) {
+		    continue;
+		  }
 
                   // inject into template
                   $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
@@ -1057,6 +1081,7 @@ Störung.';
             }
             $cssClass = implode(' ', [
               self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
+              'total-number-of-options-' . $totalNumberOfOptions,
             ]);
             $footer = str_replace('[CSSCLASS]', $cssClass, $footer);
             $html .= $footer;
@@ -2215,7 +2240,7 @@ Störung.';
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../', true);
+      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2619,7 +2644,7 @@ Störung.';
       $logMessage->subject = $phpMailer->Subject;
 
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();

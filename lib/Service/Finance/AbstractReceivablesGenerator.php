@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -275,4 +275,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface
+  {
+    return $this->serviceFeeField->getDueDate();
+  }
 }
