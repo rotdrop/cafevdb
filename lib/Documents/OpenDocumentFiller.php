@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -48,6 +48,13 @@ class OpenDocumentFiller
 
   /** @var TemplateService */
   private $templateService;
+
+  /**
+   * @var array
+   *
+   * A cache of documents filled in this run. Just for the current session.
+   */
+  private $cache = [];
 
   public function __construct(
     ConfigService $configService
@@ -117,8 +124,13 @@ class OpenDocumentFiller
   {
     ob_start();
 
+    $fillData = $this->fillData($templateData);
+
     $this->backend->ResetVarRef(false);
-    $this->backend->VarRef = $this->fillData($templateData);
+    $this->backend->VarRef = $fillData;
+
+    unset($fillData['now']); // the cache is just for this request, so "now" from the first call is good enough
+    $templateDataHash = md5(json_encode($fillData));
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 
@@ -134,78 +146,99 @@ class OpenDocumentFiller
     });
 
     // do a serialize - unserialize
-    $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
+    $fileHash = $templateFile->getEtag();
 
-    // Do an opportunistic block-merge for every key with is an array
-    foreach ($this->backend->VarRef as $key => $value) {
-      if (is_array($value)) {
-        // try to do a block-merge primarily to have shorter names in
-        // the tempalte. If the array is not a numeric array, then
-        // wrap it into a single element numeric array in order to
-        // please TBS.
+    if (empty($this->cache[$fileHash][$templateDataHash])) {
+
+      $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
+
+      // Do an opportunistic block-merge for every key with is an array
+      foreach ($this->backend->VarRef as $key => $value) {
+        if (is_array($value)) {
+          // try to do a block-merge primarily to have shorter names in
+          // the tempalte. If the array is not a numeric array, then
+          // wrap it into a single element numeric array in order to
+          // please TBS.
+          $keys = array_keys($value);
+          if ($keys != array_filter($keys, 'is_int')) {
+            $value = [ $value ];
+          }
+          $this->backend->MergeBlock($key, $value);
+        }
+      }
+
+      // Do a block-merge for every explicitly defined block
+      foreach ($blocks as $key => $reference) {
+        $indices = explode('.', $reference);
+        $value = $this->backend->VarRef;
+        while (!empty($indices) && !empty($value)) {
+          $index = array_shift($indices);
+          $value = $value[$index]??null;
+        }
+        if (empty($value)) {
+          throw new \RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
+        }
         $keys = array_keys($value);
         if ($keys != array_filter($keys, 'is_int')) {
           $value = [ $value ];
         }
         $this->backend->MergeBlock($key, $value);
       }
+
+      $this->backend->show(OPENTBS_STRING);
+
+      $output = ob_get_contents();
+      ob_end_clean();
+
+      if (!empty($output)) {
+        throw new Exceptions\Exception($output);
+      }
+
+      $fileData = $this->backend->Source;
+      $mimeType = $templateFile->getMimeType();
+
+      $this->cache[$fileHash][$templateDataHash] = [
+        'fileData' => $fileData,
+        'mimeType' => $mimeType,
+      ];
+    } else {
+      list('fileData' => $fileData, 'mimeType' => $mimeType) = $this->cache[$fileHash][$templateDataHash];
     }
 
-    // Do a block-merge for every explicitly defined block
-    foreach ($blocks as $key => $reference) {
-      $indices = explode('.', $reference);
-      $value = $this->backend->VarRef;
-      while (!empty($indices) && !empty($value)) {
-        $index = array_shift($indices);
-        $value = $value[$index]??null;
-      }
-      if (empty($value)) {
-        throw new \RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
-      }
-      $keys = array_keys($value);
-      if ($keys != array_filter($keys, 'is_int')) {
-        $value = [ $value ];
-      }
-      $this->backend->MergeBlock($key, $value);
-    }
-
-    $this->backend->show(OPENTBS_STRING);
-
-    $output = ob_get_contents();
-    ob_end_clean();
-
-    if (!empty($output)) {
-      throw new Exceptions\Exception($output);
-    }
-
-    $fileData = $this->backend->Source;
-    $mimeType = $templateFile->getMimeType();
     $fileName = basename($templateFileName);
 
     if ($asPdf) {
-      $unoconv = (new ExecutableFinder)->find('unoconv');
-      if (empty($unoconv)) {
-        throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "unoconv" program on the server.'));
-      }
-      $retry = false;
-      do {
-        $pdfConvert = new Process([
-          $unoconv,
-          '-f', 'pdf',
-          '--stdin', '--stdout',
-          '-e', 'ExportNotes=False'
-        ]);
-        $pdfConvert->setInput($fileData);
-        try  {
-          $pdfConvert->run();
-          $retry = false;
-        } catch (\Throwable $t) {
-          $this->logException($t);
-          $this->logError('RETRY');
-          $retry = true;
+
+      if (empty($this->cache[$fileHash][$templateDataHash]['pdfData'])) {
+
+        $unoconv = (new ExecutableFinder)->find('unoconv');
+        if (empty($unoconv)) {
+          throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "unoconv" program on the server.'));
         }
-      } while ($retry);
-      $fileData = $pdfConvert->getOutput();
+        $retry = false;
+        do {
+          $pdfConvert = new Process([
+            $unoconv,
+            '-f', 'pdf',
+            '--stdin', '--stdout',
+            '-e', 'ExportNotes=False'
+          ]);
+          $pdfConvert->setInput($fileData);
+          try  {
+            $pdfConvert->run();
+            $retry = false;
+          } catch (\Throwable $t) {
+            $this->logException($t);
+            $this->logError('RETRY');
+            $retry = true;
+          }
+        } while ($retry);
+        $fileData = $pdfConvert->getOutput();
+        $this->cache[$fileHash][$templateDataHash]['pdfData'] = $fileData;
+      } else {
+        $fileData = $this->cache[$fileHash][$templateDataHash]['pdfData'];
+      }
+
       $mimeType = 'application/pdf';
       $pathInfo = pathinfo($fileName);
       $fileName = $pathInfo['filename'] . '.pdf';
