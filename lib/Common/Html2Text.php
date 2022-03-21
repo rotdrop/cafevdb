@@ -51,6 +51,8 @@ class Html2Text
     ],
     'w3m' => [
       '-dump',
+      '-I', 'utf-8',
+      '-O', 'utf-8',
       '-T',
       'text/html',
     ],
@@ -88,7 +90,7 @@ class Html2Text
       return null;
     }
     array_unshift($arguments, $converter);
-    $htmlConvert = new Process($arguments);
+    $htmlConvert = new Process($arguments, null, [ 'LC_ALL' => 'en_US.UTF-8' ]);
     $htmlConvert->setInput($html);
     $htmlConvert->run();
     $text = $htmlConvert->getOutput();
