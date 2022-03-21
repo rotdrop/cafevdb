@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1595,19 +1595,22 @@ __EOT__;
    *
    * @param int $fieldId Id of the current field in change mode.
    *
+   * @param int $numberOfOptions The number of already set options s.t. the
+   * placeholder row can generator indices for new options.
+   *
    * @param null|array|Entities\ProjectParticipantFieldDataOption $generatorItem
    *     Special data item with key Uuid::NIL which holds
    *     the data for auto-generated fields.
    *
    * @return string HTML data for the generator button.
    */
-  private function dataOptionGeneratorHtml($fieldId, $generatorItem)
+  private function dataOptionGeneratorHtml($fieldId, $numberOfOptions, $generatorItem)
   {
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
 <tr class="data-line data-options placeholder active multiplicity-recurring-hidden"
     data-field-id="'.$fieldId.'"
-    data-index="0"
+    data-index="'.$numberOfOptions.'"
 >
   <td class="placeholder" colspan="6">
     <input
@@ -2016,7 +2019,7 @@ __EOT__;
           $html .= $this->dataOptionInputRowHtml($value, $idx, $used, $dataType);
           $idx++;
         }
-        $html .= $this->dataOptionGeneratorHtml($fieldId, $generatorItem);
+        $html .= $this->dataOptionGeneratorHtml($fieldId, $idx, $generatorItem);
         break;
     }
     $html .= '
@@ -2137,8 +2140,12 @@ __EOT__;
     // deposit displayed in own extra field
     foreach (['key', 'label',/* 'deposit',*/ 'limit', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
+      $cssClass = implode(' ', array_merge(
+        $cssBase, [
+          'field-'.$field,
+        ]));
       $html .=<<<__EOT__
-<input class="{$cssBase} field-{$field}"
+<input class="{$cssClass}"
        type="hidden"
        value="{$value}"
        name="{$name}[{$key}][{$field}]"
