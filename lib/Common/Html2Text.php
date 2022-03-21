@@ -34,30 +34,27 @@ use Html2Text\Html2Text as PhpHtml2Text;
  */
 class Html2Text
 {
-  public static function convert($html)
-  {
-    $text = self::convertLynx($html);
-    if ($text === null) {
-      $text = self::convertPhp($html);
-    }
-    return $text;
-  }
-
-  public static function convertPhp($html)
-  {
-    $html2Text = new PhpHtml2Text;
-    $html2Text->setHtml($html);
-    return $html2Text->convert();
-  }
-
-  public static function convertLynx($html)
-  {
-    $lynx = (new ExecutableFinder)->find('lynx');
-    if (empty($lynx)) {
-      return null;
-    }
-    $htmlConvert = new Process([
-      $lynx,
+  /**
+   * @var array
+   *
+   * List of possible html to text programs. The programs listed below have at
+   * least rudimentary support for HTML tables, in contrast to the various PHP
+   * implementations of html2text which all are loosing when it comes to
+   * tables.
+   *
+   * None of the external programs seems to have support for CSS ... Oops.
+   */
+  private const HTML_CONVERTERS = [
+    'elinks' => [
+      '-dump',
+      '-force-html',
+    ],
+    'w3m' => [
+      '-dump',
+      '-T',
+      'text/html',
+    ],
+    'lynx' => [
       '-force_html',
       '-noreferer',
       '-nomargins',
@@ -67,7 +64,31 @@ class Html2Text
       '-width=80',
       '-dump',
       '-stdin',
-    ]);
+    ],
+  ];
+
+  public static function convert($html)
+  {
+    foreach (self::HTML_CONVERTERS as $converter => $arguments) {
+      $text = self::callConverter($converter, $arguments, $html);
+      if ($text !== null) {
+        return $text;
+      }
+    }
+    // Fallback. Not support for tables.
+    $html2Text = new PhpHtml2Text;
+    $html2Text->setHtml($html);
+    return $html2Text->convert();
+  }
+
+  private static function callConverter(string $converter, array $arguments, string $html):?string
+  {
+    $converter = (new ExecutableFinder)->find($converter);
+    if (empty($converter)) {
+      return null;
+    }
+    array_unshift($arguments, $converter);
+    $htmlConvert = new Process($arguments);
     $htmlConvert->setInput($html);
     $htmlConvert->run();
     $text = $htmlConvert->getOutput();

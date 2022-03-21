@@ -2240,7 +2240,7 @@ Störung.';
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../', true);
+      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2644,7 +2644,7 @@ Störung.';
       $logMessage->subject = $phpMailer->Subject;
 
       // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../../', true);
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
