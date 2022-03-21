@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -195,6 +195,7 @@
     }
 
     @include defaultHiddenColumn();
+    @include defaultHiddenRow("&", "");
     @each $dataType in service-fee, date-time, date {
       @include columnShownIfDataType($dataType);
     }
@@ -318,7 +319,7 @@
     table.pme-main {
       /* tr.multiplicity contains the data-type and multiplicity tags */
       tr.multiplicity {
-        @include  defaultHiddenRow();
+        @include defaultHiddenRow();
         @each $dataType in service-fee, cloud-file, db-file {
           @include rowShownIfDataType($dataType);
         }
