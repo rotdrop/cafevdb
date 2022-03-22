@@ -131,31 +131,37 @@ class ConfigService
       'name' => 'orchestra logo',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_SEAL => [
       'name' => 'orchestra seal',
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
       'name' => 'project debit-note mandate',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
       'name' => 'general debit-note mandate',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE => [
       'name' => 'member data update',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
       'name' => 'instrument insurance record template',
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => false,
     ],
   ];
 

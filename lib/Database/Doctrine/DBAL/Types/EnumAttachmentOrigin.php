@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,10 +31,12 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * @method static EnumAttachmentOrigin UPLOAD()
  * @method static EnumAttachmentOrigin CLOUD()
  * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
+ * @method static EnumAttachmentOrigin TEMPLATE()
  */
 class EnumAttachmentOrigin extends EnumType
 {
   public const UPLOAD = 'upload';
   public const CLOUD = 'cloud';
   public const PARTICIPANT_FIELD = 'participant-field';
+  public const TEMPLATE = 'template';
 }

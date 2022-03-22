@@ -386,7 +386,14 @@ Störung.';
   /** @var array */
   private $substitutions;
 
-  /***
+  /**
+   * @var array
+   *
+   * Template file-attachment without personalization, i.e. blank PDF forms.
+   */
+  private $templateFileAttachments = null;
+
+  /**
    * @var array
    *
    * Personal file-attachments stemming form ProjectParticipantField
@@ -394,14 +401,14 @@ Störung.';
    */
   private $personalFileAttachments = null;
 
-  /***
+  /**
    * @var array
    *
    * "Global" file attachments from upload or the cloud file-system.
    */
   private $globalFileAttachments = null;
 
-  /***
+  /**
    * @var array
    *
    * Potential personal file-attachments deduced from parsing the personal
@@ -2150,7 +2157,67 @@ Störung.';
         $file->getContent(),
         basename($attachment['name']),
         $encoding,
-          $attachment['type']);
+        $attachment['type']);
+    }
+
+    // add "global" blank template attachments with just the orchestra-data
+    // filled. This is needed for bulk-email as personalization just takes too
+    // long.
+    foreach ($this->templateAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
+      }
+
+      if (isset($attachment['template_id'])) {
+        $templateId = $attachment['template_id'];
+        if (!empty($this->project)
+            && $this->project->getId() == $this->getClubMembersProjectId()
+            && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
+          $templateId = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+        }
+
+        /** @var FinanceService $financeService */
+        $financeService = $this->di(FinanceService::class);
+        switch ($templateId) {
+          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+            $membersProject = $this->entityManager->find(
+              Entities\Project::class,
+              $this->getClubMembersProjectId()
+            );
+            if (empty($membersProject)) {
+              continue 2;
+            }
+            list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
+              null, $membersProject, null, formName: $templateId);
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+            $membersProject = $this->entityManager->find(
+              Entities\Project::class,
+              $this->getClubMembersProjectId()
+            );
+            if (empty($membersProject)) {
+              continue 2;
+            }
+            list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
+              null, $membersProject, null, formName: $templateId);
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+            if (empty($this->project)) {
+              continue 2;
+            }
+            list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
+              null, $this->project, null, formName: $templateId);
+            break;
+          default:
+            continue 2;
+        }
+        $phpMailer->AddStringAttachment(
+          $fileData,
+          $fileName,
+          'base64',
+          $mimeType);
+        continue;
+      }
     }
   }
 
@@ -4065,6 +4132,62 @@ Störung.';
   }
 
   /**
+   * Return non-personalized document templates for use in mass-email.
+   *
+   * Rationale: personalizing templates takes too much time for
+   * mass-email. Also, attaching personalized attachments means that each
+   * recipients has to be addressed by its own private email. So for
+   * mass-email we just want the unfilled PDF forms.
+   */
+  private function templateAttachments()
+  {
+    if ($this->templateFileAttachments !== null) {
+      return $this->personalFileAttachments;
+    }
+
+    if (empty($this->project)) {
+      $this->personalFileAttachments = [];
+      return $this->templateFileAttachments;
+    }
+    $selectedAttachments = array_flip($this->cgiValue('attachedFiles', []));
+
+    $this->templateFileAttachments = [];
+
+    $origin = AttachmentOrigin::TEMPLATE;
+
+    $templateAttachments = [];
+    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE
+          || !$documentTemplate['blank']) {
+        continue;
+      }
+      $attachment = [
+        'value' => 'template_id',
+        'template_id' => $templateId,
+        'name' => $this->l->t($documentTemplate['name']),
+        'origin' => $origin,
+        'sub_selection' => false,
+      ];
+      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+        $attachment['status'] = 'selected';
+      } else {
+        $attachment['status'] = 'inactive';
+      }
+      $templateAttachments[] = $attachment;
+    }
+
+    $comparator = function($a, $b) {
+      return strcmp(
+        $a['origin'].$a['sub_topic'].$a['name'],
+        $b['origin'].$b['sub_topic'].$b['name']
+      );
+    };
+    usort($templateAttachments, $comparator);
+
+    return $this->templateFileAttachments = $templateAttachments;
+  }
+
+  /**
    * Return the file attachment data.
    *
    * @return array
@@ -4081,7 +4204,7 @@ Störung.';
    * ]
    * ```
    */
-  public function personalAttachments()
+  private function personalAttachments()
   {
     if ($this->personalFileAttachments !== null) {
       return $this->personalFileAttachments;
@@ -4197,7 +4320,7 @@ Störung.';
     return $this->personalFileAttachments;
   }
 
-  public function activePersonalAttachments()
+  private function activePersonalAttachments()
   {
     $numAttachments = 0;
     // walk through the list of configured attachments and attach all requested.
@@ -4274,7 +4397,7 @@ Störung.';
    */
   public function fileAttachmentOptions()
   {
-    $fileAttachments = array_merge($this->fileAttachments(), $this->personalAttachments());
+    $fileAttachments = array_merge($this->fileAttachments(), $this->templateAttachments(), $this->personalAttachments());
 
     $selectOptions = [];
     foreach($fileAttachments as $attachment) {
@@ -4286,6 +4409,7 @@ Störung.';
       }
       $origin = $attachment['origin'];
       switch ($origin) {
+        case AttachmentOrigin::TEMPLATE: $group = $this->l->t('Blank Template'); $name .= ' (' . $this->l->t('blank') . ')'; break;
         case AttachmentOrigin::PARTICIPANT_FIELD: $group = $this->l->t('Personalized'); break;
         case AttachmentOrigin::CLOUD: $group = $this->l->t('Cloud'); break;
         case AttachmentOrigin::UPLOAD: $group = $this->l->t('Local Filesystem'); break;

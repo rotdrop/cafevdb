@@ -160,7 +160,7 @@ class EmailFormController extends Controller {
       'message' => $composer->messageText(),
       'sender' => $composer->fromName(),
       'catchAllEmail' => $composer->fromAddress(),
-      'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+      'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
       'fileAttachmentData' => json_encode($fileAttachments),
       'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
       'composerFormData' => $composer->formData(),
@@ -347,7 +347,7 @@ class EmailFormController extends Controller {
           'message' => $composer->messageText(),
           'sender' => $composer->fromName(),
           'catchAllEmail' => $composer->fromAddress(),
-          'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+          'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
           'fileAttachmentData' => json_encode($fileAttachments),
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
@@ -371,7 +371,7 @@ class EmailFormController extends Controller {
         case 'fileAttachments':
           $fileAttachments = $composer->fileAttachments();
           $elementData = [
-            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions($fileAttachments)),
+            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
             'attachments' => $fileAttachments,
           ];
           break;
@@ -461,7 +461,7 @@ class EmailFormController extends Controller {
           'message' => $composer->messageText(),
           'sender' => $composer->fromName(),
           'catchAllEmail' => $composer->fromAddress(),
-          'fileAttachmentOptions' => $composer->fileAttachmentOptions($fileAttachments),
+          'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
           'fileAttachmentData' => json_encode($fileAttachments),
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
