@@ -196,10 +196,6 @@ class FinanceService
       }
     }
 
-    if (empty($musician)) {
-      return [];
-    }
-
     if (empty($projectOrId) && $this->isClubMember($musician)) {
       // assume a general debit mandate
       $project = $this->ensureProject($this->getClubMembersProjectId());
@@ -224,30 +220,6 @@ class FinanceService
       return  [];
     }
 
-    $formData = [
-      'projectName' => $project->getName(),
-      'bankAccountOwner' => $musician->getPublicName(),
-      'projectParticipant' => $musician->getPublicName(),
-      'memberName' => $musician->getPublicName(),
-      'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
-      'memberAddress' => implode(', ', [ $musician->getStreet(), $musician->getPostalCode(), $musician->getCity(), ]),
-      'memberEmail' => $musician->getEmail(),
-      'memberFixedLinePhone' => $musician->getFixedLinePhone(),
-      'memberMobilePhone' => $musician->getMobilePhone(),
-    ];
-
-    if (!empty($bankAccount)) {
-      $info = $this->getIbanInfo($bankAccount->getIban());
-      $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
-
-      $formData = array_merge($formData, [
-        'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
-        'bankAccountIBAN' => $bankAccount->getIban(),
-        'bankAccountBIC' => $bankAccount->getBic(),
-        'bankAccountBank' => $bank,
-      ]);
-    }
-
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
 
@@ -264,16 +236,46 @@ class FinanceService
       $fileData = $formFile->getContent();
     }
 
-    $formFiller = $this->di(PDFFormFiller::class)->fill($fileData, $formData);
+    if (empty($musician)) {
+      $fileName = pathinfo($formFile->getName(), PATHINFO_FILENAME) . '.pdf';
+    } else {
 
-    $fileParts = [
-      $this->timeStamp('Ymd'),
-      pathinfo($formFile->getName(), PATHINFO_FILENAME),
-      str_replace('.', '-', $musician->getUserIdSlug()),
-    ];
-    $fileName = implode('-', $fileParts) . '.pdf';
+      $formData = [
+        'projectName' => $project->getName(),
+        'bankAccountOwner' => $musician->getPublicName(),
+        'projectParticipant' => $musician->getPublicName(),
+        'memberName' => $musician->getPublicName(),
+        'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
+        'memberAddress' => implode(', ', [ $musician->getStreet(), $musician->getPostalCode(), $musician->getCity(), ]),
+        'memberEmail' => $musician->getEmail(),
+        'memberFixedLinePhone' => $musician->getFixedLinePhone(),
+        'memberMobilePhone' => $musician->getMobilePhone(),
+      ];
 
-    return [ $formFiller->getContent(), 'application/pdf', $fileName ];
+      if (!empty($bankAccount)) {
+        $info = $this->getIbanInfo($bankAccount->getIban());
+        $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
+
+        $formData = array_merge($formData, [
+          'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
+          'bankAccountIBAN' => $bankAccount->getIban(),
+          'bankAccountBIC' => $bankAccount->getBic(),
+          'bankAccountBank' => $bank,
+        ]);
+      }
+
+      $formFiller = $this->di(PDFFormFiller::class)->fill($fileData, $formData);
+
+      $fileParts = [
+        $this->timeStamp('Ymd'),
+        pathinfo($formFile->getName(), PATHINFO_FILENAME),
+        str_replace('.', '-', $musician->getUserIdSlug()),
+      ];
+      $fileName = implode('-', $fileParts) . '.pdf';
+      $fileData = $formFiller->getContent();
+    }
+
+    return [ $fileData, 'application/pdf', $fileName ];
   }
 
   /**
