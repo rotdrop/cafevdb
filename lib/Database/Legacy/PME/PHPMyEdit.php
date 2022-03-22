@@ -371,7 +371,7 @@ class PHPMyEdit extends \phpMyEdit
       if (!empty($missingColumns)) {
         // We assume that this is caused by an optimization bug and that
         // either the corresponding qfNN_idx column or the corresponding
-        // non-..._idx column is there and contains the correft data
+        // non-..._idx column is there and contains the correct data
         $this->logError('Potential MariaDB missing-columns bug (https://jira.mariadb.org/browse/MDEV-27323): ' . print_r($missingColumns, true));
         $postfix = '_idx';
         foreach ($missingColumns as $column) {
