@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-20 12:08+0100\n"
-"PO-Revision-Date: 2022-03-20 13:00+0100\n"
+"POT-Creation-Date: 2022-03-22 16:26+0100\n"
+"PO-Revision-Date: 2022-03-22 16:27+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -423,7 +423,7 @@ msgid "TO BE IMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
 #: lib/Controller/ExpertModeController.php:152
-#: lib/PageRenderer/ProjectParticipantFields.php:1811
+#: lib/PageRenderer/ProjectParticipantFields.php:1814
 #: templates/expertmode.php:117 templates/expertmode.php:118
 msgid "empty"
 msgstr "leer"
@@ -559,12 +559,12 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:271
-#: lib/Database/EntityManager.php:232 lib/Documents/OpenDocumentFiller.php:281
-#: lib/Documents/OpenDocumentFiller.php:298
-#: lib/Documents/OpenDocumentFiller.php:309
-#: lib/Documents/OpenDocumentFiller.php:315
-#: lib/Documents/OpenDocumentFiller.php:316
-#: lib/Documents/OpenDocumentFiller.php:319
+#: lib/Database/EntityManager.php:232 lib/Documents/OpenDocumentFiller.php:314
+#: lib/Documents/OpenDocumentFiller.php:331
+#: lib/Documents/OpenDocumentFiller.php:342
+#: lib/Documents/OpenDocumentFiller.php:348
+#: lib/Documents/OpenDocumentFiller.php:349
+#: lib/Documents/OpenDocumentFiller.php:352
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376
 #: lib/Service/Finance/InstrumentInsuranceService.php:893
@@ -2036,7 +2036,10 @@ msgid ""
 "Refusing to use a revoked or disabled bank account. The bank-account %1$s "
 "for %2$s (musician-id %3$d, sequence %4$d) has been revoked or deleted on "
 "%5$s."
-msgstr "Ich weigere mich, eine gelöschte oder gesperrte Bankverbindung zu verwenden. Die Bankverbindung %1$s von %2$s (Musiker-Id %3$d, Sequenz %4$d) wurde am %5$s gelöscht oder gesperrt."
+msgstr ""
+"Ich weigere mich, eine gelöschte oder gesperrte Bankverbindung zu verwenden. "
+"Die Bankverbindung %1$s von %2$s (Musiker-Id %3$d, Sequenz %4$d) wurde am "
+"%5$s gelöscht oder gesperrt."
 
 #: lib/Controller/SepaBulkTransactionsController.php:186
 #, php-format
@@ -2659,12 +2662,12 @@ msgstr ""
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr "Hilfe-Tag \"%1$s\", unauffindbare Tags %2$s"
 
-#: lib/Documents/OpenDocumentFiller.php:111
+#: lib/Documents/OpenDocumentFiller.php:118
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 
-#: lib/Documents/OpenDocumentFiller.php:163
+#: lib/Documents/OpenDocumentFiller.php:179
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
@@ -2673,7 +2676,7 @@ msgstr ""
 "Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen "
 "gefunden."
 
-#: lib/Documents/OpenDocumentFiller.php:188
+#: lib/Documents/OpenDocumentFiller.php:216
 msgid "Please install the \"unoconv\" program on the server."
 msgstr "Bitte das \"unoconv\" Programm auf dem Server installieren."
 
@@ -2701,66 +2704,66 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: lib/EmailForm/Composer.php:553
+#: lib/EmailForm/Composer.php:560
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:559 src/app/email.js:1103
+#: lib/EmailForm/Composer.php:566 src/app/email.js:1103
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:878
+#: lib/EmailForm/Composer.php:885
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:879 lib/EmailForm/Composer.php:901
-#: lib/EmailForm/Composer.php:1225 lib/EmailForm/Composer.php:1232
+#: lib/EmailForm/Composer.php:886 lib/EmailForm/Composer.php:908
+#: lib/EmailForm/Composer.php:1232 lib/EmailForm/Composer.php:1239
 #: lib/PageRenderer/ProjectPayments.php:460
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:879
+#: lib/EmailForm/Composer.php:886
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:312
 #: lib/PageRenderer/ProjectParticipantFields.php:546
-#: lib/PageRenderer/ProjectParticipantFields.php:1910
-#: lib/PageRenderer/ProjectParticipantFields.php:1919
+#: lib/PageRenderer/ProjectParticipantFields.php:1913
+#: lib/PageRenderer/ProjectParticipantFields.php:1922
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:880 lib/EmailForm/Composer.php:1233
+#: lib/EmailForm/Composer.php:887 lib/EmailForm/Composer.php:1240
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:881 lib/EmailForm/Composer.php:1234
+#: lib/EmailForm/Composer.php:888 lib/EmailForm/Composer.php:1241
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:882 lib/PageRenderer/PMETableViewBase.php:630
+#: lib/EmailForm/Composer.php:889 lib/PageRenderer/PMETableViewBase.php:630
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1044
+#: lib/EmailForm/Composer.php:1051
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1230
+#: lib/EmailForm/Composer.php:1237
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1231
+#: lib/EmailForm/Composer.php:1238
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1372
+#: lib/EmailForm/Composer.php:1379
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1445
+#: lib/EmailForm/Composer.php:1452
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2110
+#: lib/EmailForm/Composer.php:2117
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2808,92 +2811,102 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2843
+#: lib/EmailForm/Composer.php:2910
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3027
+#: lib/EmailForm/Composer.php:3094
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3040
+#: lib/EmailForm/Composer.php:3107
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3132 lib/EmailForm/Composer.php:3147
+#: lib/EmailForm/Composer.php:3199 lib/EmailForm/Composer.php:3214
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3231 lib/EmailForm/Composer.php:3307
-#: lib/EmailForm/Composer.php:3317
+#: lib/EmailForm/Composer.php:3298 lib/EmailForm/Composer.php:3374
+#: lib/EmailForm/Composer.php:3384
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3250
+#: lib/EmailForm/Composer.php:3317
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3256
+#: lib/EmailForm/Composer.php:3323
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
-msgstr "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder sind %2$s."
+msgstr ""
+"Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
+"sind %2$s."
 
-#: lib/EmailForm/Composer.php:3282
+#: lib/EmailForm/Composer.php:3349
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3610
+#: lib/EmailForm/Composer.php:3677
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3618
+#: lib/EmailForm/Composer.php:3685
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3642
+#: lib/EmailForm/Composer.php:3709
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3673
+#: lib/EmailForm/Composer.php:3740
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3731 lib/EmailForm/Composer.php:3842
+#: lib/EmailForm/Composer.php:3798 lib/EmailForm/Composer.php:3909
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3759
+#: lib/EmailForm/Composer.php:3826
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:3784
+#: lib/EmailForm/Composer.php:3851
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4289
+#: lib/EmailForm/Composer.php:4412
+msgid "Blank Template"
+msgstr "Blanko-Vorlage"
+
+#: lib/EmailForm/Composer.php:4412
+msgid "blank"
+msgstr "blanko"
+
+#: lib/EmailForm/Composer.php:4413
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4290
+#: lib/EmailForm/Composer.php:4414
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4291
+#: lib/EmailForm/Composer.php:4415
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4407
+#: lib/EmailForm/Composer.php:4531
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -3436,7 +3449,7 @@ msgstr "ja"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:499
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:906
-#: lib/PageRenderer/ProjectParticipantFields.php:1793
+#: lib/PageRenderer/ProjectParticipantFields.php:1796
 #: lib/Service/ProjectParticipantFieldsService.php:531
 msgid "true"
 msgstr "wahr"
@@ -3450,7 +3463,7 @@ msgstr "nein"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:498
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:907
-#: lib/PageRenderer/ProjectParticipantFields.php:1793
+#: lib/PageRenderer/ProjectParticipantFields.php:1796
 #: lib/Service/ProjectParticipantFieldsService.php:531
 #: templates/pme-table.php:73
 msgid "false"
@@ -3572,7 +3585,7 @@ msgid "Subject"
 msgstr "Betreff"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:954
-#: lib/PageRenderer/ProjectParticipantFields.php:1703
+#: lib/PageRenderer/ProjectParticipantFields.php:1706
 #: lib/PageRenderer/SepaBankAccounts.php:352
 msgid "In case of Conflict"
 msgstr "Bei Konflikt"
@@ -4370,8 +4383,8 @@ msgid "Default"
 msgstr "Voreinstellung"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:517
-#: lib/PageRenderer/ProjectParticipantFields.php:1909
-#: lib/PageRenderer/ProjectParticipantFields.php:1918
+#: lib/PageRenderer/ProjectParticipantFields.php:1912
+#: lib/PageRenderer/ProjectParticipantFields.php:1921
 msgid "Data"
 msgstr "Daten"
 
@@ -4400,8 +4413,8 @@ msgid "replace"
 msgstr "ersetzen"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:823
-#: lib/PageRenderer/ProjectParticipantFields.php:1912
-#: lib/PageRenderer/ProjectParticipantFields.php:1921
+#: lib/PageRenderer/ProjectParticipantFields.php:1915
+#: lib/PageRenderer/ProjectParticipantFields.php:1924
 msgid "Tooltip"
 msgstr "Kontext-Hilfe"
 
@@ -4438,42 +4451,42 @@ msgstr "Schreiben"
 msgid "Simple field-option key is not an UUID: \"%s\"."
 msgstr "Einfachauswahl Options-Id ist keine UUID: \"%s\"."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1620
+#: lib/PageRenderer/ProjectParticipantFields.php:1623
 msgid "new option"
 msgstr "neue Auswahloption"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1723
+#: lib/PageRenderer/ProjectParticipantFields.php:1726
 msgid "field generator"
 msgstr "z.B. \\OCA\\CAFEVDB\\FieldGenerator"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1747
+#: lib/PageRenderer/ProjectParticipantFields.php:1750
 msgid "start date"
 msgstr "Anfangsdatum"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1819
+#: lib/PageRenderer/ProjectParticipantFields.php:1822
 msgid "Show deleted items."
 msgstr "Gelöschte Einträge anzeigen."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1821
+#: lib/PageRenderer/ProjectParticipantFields.php:1824
 msgid "Show data-fields."
 msgstr "Daten-Feld anzeigen."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1907
-#: lib/PageRenderer/ProjectParticipantFields.php:1916
+#: lib/PageRenderer/ProjectParticipantFields.php:1910
+#: lib/PageRenderer/ProjectParticipantFields.php:1919
 msgid "Key"
 msgstr "Schlüssel"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1908
-#: lib/PageRenderer/ProjectParticipantFields.php:1917
+#: lib/PageRenderer/ProjectParticipantFields.php:1911
+#: lib/PageRenderer/ProjectParticipantFields.php:1920
 msgid "Label"
 msgstr "Bezeichnung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1911
-#: lib/PageRenderer/ProjectParticipantFields.php:1920
+#: lib/PageRenderer/ProjectParticipantFields.php:1914
+#: lib/PageRenderer/ProjectParticipantFields.php:1923
 msgid "Limit"
 msgstr "Obergrenze"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2196
+#: lib/PageRenderer/ProjectParticipantFields.php:2203
 #: lib/PageRenderer/ProjectPayments.php:474
 #: lib/PageRenderer/SepaBankAccounts.php:950
 #: lib/PageRenderer/SepaBulkTransactions.php:369
@@ -5039,7 +5052,9 @@ msgstr "ankündigen"
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
 "bank, it cannot be deleted."
-msgstr "Der Sammelauftrag mit der Id \"%1$d\" wurde bereits bei der Bank eingereicht und wird deshalb nicht gelöscht."
+msgstr ""
+"Der Sammelauftrag mit der Id \"%1$d\" wurde bereits bei der Bank eingereicht "
+"und wird deshalb nicht gelöscht."
 
 #: lib/PageRenderer/SepaBulkTransactions.php:627
 #, php-format
@@ -5296,7 +5311,9 @@ msgstr ""
 msgid ""
 "Unable to find calendar entry with identifier \"%1$s\" in calendar with id "
 "\"%2$s\"."
-msgstr "Kann den Kalender-Eintrag \"%1$s\" im Kalender mit der Id \"\"%2$s\" nicht finden."
+msgstr ""
+"Kann den Kalender-Eintrag \"%1$s\" im Kalender mit der Id \"\"%2$s\" nicht "
+"finden."
 
 #: lib/Service/CloudUserConnectorService.php:202
 #, php-format
@@ -5473,56 +5490,58 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:302
-#: lib/Service/Finance/FinanceService.php:346
+#: lib/Service/Finance/FinanceService.php:304
+#: lib/Service/Finance/FinanceService.php:348
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:386
+#: lib/Service/Finance/FinanceService.php:388
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
 "\"%1$s\"."
-msgstr "Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht finden."
+msgstr ""
+"Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht "
+"finden."
 
-#: lib/Service/Finance/FinanceService.php:458
+#: lib/Service/Finance/FinanceService.php:460
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:474
+#: lib/Service/Finance/FinanceService.php:476
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:498
+#: lib/Service/Finance/FinanceService.php:500
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:786
+#: lib/Service/Finance/FinanceService.php:788
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaber:innen:feld."
 
-#: lib/Service/Finance/FinanceService.php:797
+#: lib/Service/Finance/FinanceService.php:799
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:806
+#: lib/Service/Finance/FinanceService.php:808
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:812
+#: lib/Service/Finance/FinanceService.php:814
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:816
+#: lib/Service/Finance/FinanceService.php:818
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:821
+#: lib/Service/Finance/FinanceService.php:823
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
@@ -5805,7 +5824,9 @@ msgstr "Export in das Format \"%s\" ist nicht implementiert."
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
-msgstr "Kann die Bank-Export-Daten für den Sammelauftrag %1$d nicht erzeugen, angefragtes Format war \"%2$s\"."
+msgstr ""
+"Kann die Bank-Export-Daten für den Sammelauftrag %1$d nicht erzeugen, "
+"angefragtes Format war \"%2$s\"."
 
 #: lib/Service/FuzzyInputService.php:93
 #, php-format
@@ -8699,7 +8720,9 @@ msgstr ""
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
-msgstr "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate zu erneuern."
+msgstr ""
+"Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate "
+"zu erneuern."
 
 #: lib/Service/ToolTipsService.php:1078
 msgid ""
@@ -8727,20 +8750,28 @@ msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
-msgstr "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
+msgstr ""
+"Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
+"Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
 
 #: lib/Service/ToolTipsService.php:1090
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
 "document contains form-elements."
-msgstr "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-Datensatz testen und das Egebnis in das PDF-Format konvertieren. Falls die Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-Dokument erstellt."
+msgstr ""
+"Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
+"Datensatz testen und das Egebnis in das PDF-Format konvertieren. Falls die "
+"Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-"
+"Dokument erstellt."
 
 #: lib/Service/ToolTipsService.php:1091
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
-msgstr "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur Fehlersuche."
+msgstr ""
+"Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur "
+"Fehlersuche."
 
 #: lib/Service/ToolTipsService.php:1095
 msgid "Test data-base passphrase."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-20 13:00+0100\n"
+"POT-Creation-Date: 2022-03-22 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -405,7 +405,7 @@ msgid "TO BE IMPLEMENTED"
 msgstr ""
 
 #: lib/Controller/ExpertModeController.php:152
-#: lib/PageRenderer/ProjectParticipantFields.php:1811
+#: lib/PageRenderer/ProjectParticipantFields.php:1814
 #: templates/expertmode.php:117
 #: templates/expertmode.php:118
 msgid "empty"
@@ -535,12 +535,12 @@ msgstr ""
 
 #: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Database/EntityManager.php:232
-#: lib/Documents/OpenDocumentFiller.php:281
-#: lib/Documents/OpenDocumentFiller.php:298
-#: lib/Documents/OpenDocumentFiller.php:309
-#: lib/Documents/OpenDocumentFiller.php:315
-#: lib/Documents/OpenDocumentFiller.php:316
-#: lib/Documents/OpenDocumentFiller.php:319
+#: lib/Documents/OpenDocumentFiller.php:314
+#: lib/Documents/OpenDocumentFiller.php:331
+#: lib/Documents/OpenDocumentFiller.php:342
+#: lib/Documents/OpenDocumentFiller.php:348
+#: lib/Documents/OpenDocumentFiller.php:349
+#: lib/Documents/OpenDocumentFiller.php:352
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376
 #: lib/Service/Finance/InstrumentInsuranceService.php:893
@@ -2453,19 +2453,19 @@ msgstr ""
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:111
+#: lib/Documents/OpenDocumentFiller.php:118
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:163
+#: lib/Documents/OpenDocumentFiller.php:179
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
 "substitution data."
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:188
+#: lib/Documents/OpenDocumentFiller.php:216
 msgid "Please install the \"unoconv\" program on the server."
 msgstr ""
 
@@ -2495,72 +2495,72 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:553
+#: lib/EmailForm/Composer.php:560
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:559
+#: lib/EmailForm/Composer.php:566
 #: src/app/email.js:1103
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:878
+#: lib/EmailForm/Composer.php:885
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:879
-#: lib/EmailForm/Composer.php:901
-#: lib/EmailForm/Composer.php:1225
+#: lib/EmailForm/Composer.php:886
+#: lib/EmailForm/Composer.php:908
 #: lib/EmailForm/Composer.php:1232
+#: lib/EmailForm/Composer.php:1239
 #: lib/PageRenderer/ProjectPayments.php:460
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:879
+#: lib/EmailForm/Composer.php:886
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:312
 #: lib/PageRenderer/ProjectParticipantFields.php:546
-#: lib/PageRenderer/ProjectParticipantFields.php:1910
-#: lib/PageRenderer/ProjectParticipantFields.php:1919
+#: lib/PageRenderer/ProjectParticipantFields.php:1913
+#: lib/PageRenderer/ProjectParticipantFields.php:1922
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:880
-#: lib/EmailForm/Composer.php:1233
+#: lib/EmailForm/Composer.php:887
+#: lib/EmailForm/Composer.php:1240
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:881
-#: lib/EmailForm/Composer.php:1234
+#: lib/EmailForm/Composer.php:888
+#: lib/EmailForm/Composer.php:1241
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:882
+#: lib/EmailForm/Composer.php:889
 #: lib/PageRenderer/PMETableViewBase.php:630
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1044
+#: lib/EmailForm/Composer.php:1051
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1230
+#: lib/EmailForm/Composer.php:1237
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1231
+#: lib/EmailForm/Composer.php:1238
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1372
+#: lib/EmailForm/Composer.php:1379
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1445
+#: lib/EmailForm/Composer.php:1452
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2110
+#: lib/EmailForm/Composer.php:2117
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -2586,93 +2586,101 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2843
+#: lib/EmailForm/Composer.php:2910
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3027
+#: lib/EmailForm/Composer.php:3094
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3040
+#: lib/EmailForm/Composer.php:3107
 msgid "musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3132
-#: lib/EmailForm/Composer.php:3147
+#: lib/EmailForm/Composer.php:3199
+#: lib/EmailForm/Composer.php:3214
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3231
-#: lib/EmailForm/Composer.php:3307
-#: lib/EmailForm/Composer.php:3317
+#: lib/EmailForm/Composer.php:3298
+#: lib/EmailForm/Composer.php:3374
+#: lib/EmailForm/Composer.php:3384
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3250
+#: lib/EmailForm/Composer.php:3317
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3256
+#: lib/EmailForm/Composer.php:3323
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3282
+#: lib/EmailForm/Composer.php:3349
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3610
+#: lib/EmailForm/Composer.php:3677
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3618
+#: lib/EmailForm/Composer.php:3685
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3642
+#: lib/EmailForm/Composer.php:3709
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3673
+#: lib/EmailForm/Composer.php:3740
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3731
-#: lib/EmailForm/Composer.php:3842
+#: lib/EmailForm/Composer.php:3798
+#: lib/EmailForm/Composer.php:3909
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3759
+#: lib/EmailForm/Composer.php:3826
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3784
+#: lib/EmailForm/Composer.php:3851
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4289
+#: lib/EmailForm/Composer.php:4412
+msgid "Blank Template"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4412
+msgid "blank"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4413
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4290
+#: lib/EmailForm/Composer.php:4414
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4291
+#: lib/EmailForm/Composer.php:4415
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4407
+#: lib/EmailForm/Composer.php:4531
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -3191,7 +3199,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:499
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:906
-#: lib/PageRenderer/ProjectParticipantFields.php:1793
+#: lib/PageRenderer/ProjectParticipantFields.php:1796
 #: lib/Service/ProjectParticipantFieldsService.php:531
 msgid "true"
 msgstr ""
@@ -3205,7 +3213,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:498
 #: lib/PageRenderer/ProjectParticipantFields.php:685
 #: lib/PageRenderer/ProjectParticipantFields.php:907
-#: lib/PageRenderer/ProjectParticipantFields.php:1793
+#: lib/PageRenderer/ProjectParticipantFields.php:1796
 #: lib/Service/ProjectParticipantFieldsService.php:531
 #: templates/pme-table.php:73
 msgid "false"
@@ -3325,7 +3333,7 @@ msgid "Subject"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:954
-#: lib/PageRenderer/ProjectParticipantFields.php:1703
+#: lib/PageRenderer/ProjectParticipantFields.php:1706
 #: lib/PageRenderer/SepaBankAccounts.php:352
 msgid "In case of Conflict"
 msgstr ""
@@ -4094,8 +4102,8 @@ msgid "Default"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:517
-#: lib/PageRenderer/ProjectParticipantFields.php:1909
-#: lib/PageRenderer/ProjectParticipantFields.php:1918
+#: lib/PageRenderer/ProjectParticipantFields.php:1912
+#: lib/PageRenderer/ProjectParticipantFields.php:1921
 msgid "Data"
 msgstr ""
 
@@ -4124,8 +4132,8 @@ msgid "replace"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:823
-#: lib/PageRenderer/ProjectParticipantFields.php:1912
-#: lib/PageRenderer/ProjectParticipantFields.php:1921
+#: lib/PageRenderer/ProjectParticipantFields.php:1915
+#: lib/PageRenderer/ProjectParticipantFields.php:1924
 msgid "Tooltip"
 msgstr ""
 
@@ -4162,42 +4170,42 @@ msgstr ""
 msgid "Simple field-option key is not an UUID: \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1620
+#: lib/PageRenderer/ProjectParticipantFields.php:1623
 msgid "new option"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1723
+#: lib/PageRenderer/ProjectParticipantFields.php:1726
 msgid "field generator"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1747
+#: lib/PageRenderer/ProjectParticipantFields.php:1750
 msgid "start date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1819
+#: lib/PageRenderer/ProjectParticipantFields.php:1822
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1821
+#: lib/PageRenderer/ProjectParticipantFields.php:1824
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1907
-#: lib/PageRenderer/ProjectParticipantFields.php:1916
+#: lib/PageRenderer/ProjectParticipantFields.php:1910
+#: lib/PageRenderer/ProjectParticipantFields.php:1919
 msgid "Key"
-msgstr ""
-
-#: lib/PageRenderer/ProjectParticipantFields.php:1908
-#: lib/PageRenderer/ProjectParticipantFields.php:1917
-msgid "Label"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1911
 #: lib/PageRenderer/ProjectParticipantFields.php:1920
+msgid "Label"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1914
+#: lib/PageRenderer/ProjectParticipantFields.php:1923
 msgid "Limit"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2196
+#: lib/PageRenderer/ProjectParticipantFields.php:2203
 #: lib/PageRenderer/ProjectPayments.php:474
 #: lib/PageRenderer/SepaBankAccounts.php:950
 #: lib/PageRenderer/SepaBulkTransactions.php:369
@@ -5118,56 +5126,56 @@ msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:302
-#: lib/Service/Finance/FinanceService.php:346
+#: lib/Service/Finance/FinanceService.php:304
+#: lib/Service/Finance/FinanceService.php:348
 msgid "finance"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:386
+#: lib/Service/Finance/FinanceService.php:388
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
 "\"%1$s\"."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:458
+#: lib/Service/Finance/FinanceService.php:460
 msgid "The given mandate does not contain a valid project-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:474
+#: lib/Service/Finance/FinanceService.php:476
 msgid "The given mandate does not contain a valid musician-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:498
+#: lib/Service/Finance/FinanceService.php:500
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:786
+#: lib/Service/Finance/FinanceService.php:788
 msgid "Illegal characters in bank account owner field."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:797
+#: lib/Service/Finance/FinanceService.php:799
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:806
+#: lib/Service/Finance/FinanceService.php:808
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:812
+#: lib/Service/Finance/FinanceService.php:814
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:816
+#: lib/Service/Finance/FinanceService.php:818
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:821
+#: lib/Service/Finance/FinanceService.php:823
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
