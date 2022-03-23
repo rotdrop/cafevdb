@@ -1,25 +1,25 @@
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:168
+#: templates/settings/orchestra-settings.php:168
 #, php-format
 msgid "Select member data update"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4016
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/templates/settings/orchestra-settings.php:180
+#: lib/EmailForm/Composer.php:4016
+#: templates/settings/orchestra-settings.php:180
 #, php-format
 msgid "member data update"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "general"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4139
 #, php-format
 msgid "bills and receipts"
 msgstr ""
 
-#: /var/www/localhost/htdocs/nextcloud-git/apps/cafevdb/lib/EmailForm/Composer.php:4215
+#: lib/EmailForm/Composer.php:4215
 #, php-format
 msgid "concerts"
 msgstr ""
