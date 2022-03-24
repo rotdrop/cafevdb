@@ -2163,7 +2163,7 @@ Störung.';
     // add "global" blank template attachments with just the orchestra-data
     // filled. This is needed for bulk-email as personalization just takes too
     // long.
-    foreach ($this->templateAttachments() as $attachment) {
+    foreach ($this->blankTemplateAttachments() as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue;
       }
@@ -4139,16 +4139,12 @@ Störung.';
    * recipients has to be addressed by its own private email. So for
    * mass-email we just want the unfilled PDF forms.
    */
-  private function templateAttachments()
+  private function blankTemplateAttachments()
   {
     if ($this->templateFileAttachments !== null) {
-      return $this->personalFileAttachments;
-    }
-
-    if (empty($this->project)) {
-      $this->personalFileAttachments = [];
       return $this->templateFileAttachments;
     }
+
     $selectedAttachments = array_flip($this->cgiValue('attachedFiles', []));
 
     $this->templateFileAttachments = [];
@@ -4178,8 +4174,8 @@ Störung.';
 
     $comparator = function($a, $b) {
       return strcmp(
-        $a['origin'].$a['sub_topic'].$a['name'],
-        $b['origin'].$b['sub_topic'].$b['name']
+        $a['origin'].$a['name'],
+        $b['origin'].$b['name']
       );
     };
     usort($templateAttachments, $comparator);
@@ -4397,7 +4393,7 @@ Störung.';
    */
   public function fileAttachmentOptions()
   {
-    $fileAttachments = array_merge($this->fileAttachments(), $this->templateAttachments(), $this->personalAttachments());
+    $fileAttachments = array_merge($this->fileAttachments(), $this->blankTemplateAttachments(), $this->personalAttachments());
 
     $selectOptions = [];
     foreach($fileAttachments as $attachment) {
