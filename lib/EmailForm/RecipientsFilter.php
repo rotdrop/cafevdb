@@ -58,6 +58,7 @@ class RecipientsFilter
   ];
   private const MUSICIANS_FROM_PROJECT = (1 << 0);
   private const MUSICIANS_EXCEPT_PROJECT = (1 << 1);
+  private const ANNOUNCEMENTS_MAILINGLIST = (1 << 2);
   private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
   private const NO_MUSICIANS = 0;
 
@@ -159,6 +160,8 @@ class RecipientsFilter
       isset($this->cgiData['basicRecipientsSet']['fromProject']);
     $this->cgiData['basicRecipientsSet']['exceptProject'] =
       isset($this->cgiData['basicRecipientsSet']['exceptProject']);
+    $this->cgiData['basicRecipientsSet']['announcementsMailingList'] =
+      isset($this->cgiData['basicRecipientsSet']['announcementsMailingList']);
 
     $this->projectId = $this->parameterService->getParam('projectId', -1);
     $this->projectName = $this->parameterService->getParam('projectName', '');
@@ -735,7 +738,8 @@ class RecipientsFilter
     return [
       'fromProject' => ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0,
       'exceptProject' => ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0,
-      ];
+      'announcementsMailingList' => ($this->userBase & self::ANNOUNCEMENTS_MAILINGLIST) != 0,
+    ];
   }
 
   /**
