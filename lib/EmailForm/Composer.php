@@ -2852,7 +2852,7 @@ Störung.';
       $cloudCache = $this->di(\OCP\ICache::class);
       $cacheKey = (string)Uuid::create();
       $attachment['data'] =
-        $cloudCache->set($cacheKey, $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA], self::ATTACHMENT_PREVIEW_CACHE_TTL)
+        $cloudCache->set($cacheKey, $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA] ?? '', self::ATTACHMENT_PREVIEW_CACHE_TTL)
         ? $cacheKey
         : null;
       $cloudCache->set($cacheKey . '-meta', json_encode($attachment));
