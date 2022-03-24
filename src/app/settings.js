@@ -756,6 +756,7 @@ const afterLoad = function(container) {
       console.log('************', container);
 
       const blurInputs = container.find([
+        'input#announcements-mailing-list',
         'input#emailfromname',
         'input#emailfromaddress',
         'input.attachmentLinkSizeLimit',

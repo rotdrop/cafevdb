@@ -269,6 +269,15 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
       'emailtest' => $this->l->t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
 
       'emailform' => [
+        'sender' => [
+          'name' => $this->l->t('Real name part of the sender address.'),
+          'address' => $this->l->t('Email address part of the sender address.'),
+        ],
+        'transport' => [
+          'announcements' => [
+            'mailinglist' => $this->l->t('Optional email-address of a mailing list which can optionally be used to send "global" announcements to. If set then global @all emails are rather sent by default to this mailing list than sending it to each individual recipient by Bcc: as the latter may have legal implications unless you have obtained permission to do so from each individual musician. Mailing list transport will not be used when restricting the set of musicians by their instrument or member status, or when individual recipients are selected. It can also optionally be disabled in the email-form\'s address selection tab.'),
+          ],
+        ],
         'storage' => [
           'messages' => [
             'select' => $this->l->t('Select either a message draft or template as base for the current message.'),
@@ -338,6 +347,7 @@ or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
               'from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
               'except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+              'announcements-mailing-list' => $this->l->t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
             ],
             'member-status' => $this->l->t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
@@ -362,7 +372,7 @@ you can also simply double-click inside the boxed filter-region in order to acti
           ],
           'broken-emails' => $this->l->t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
         ],
-      ],
+      ], // emailform
 
       'executive-board-project' => $this->l->t('Name of the pseudo-project listing the members of the executive board.'),
 

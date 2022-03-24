@@ -1538,6 +1538,7 @@ class PersonalSettingsController extends Controller {
       }
       $stringValue = $realValue ? 'on' : 'off';
       return $this->setSimpleConfigValue($parameter, $stringValue);
+    case 'announcementsMailingList':
     case 'emailtestaddress':
     case 'emailfromaddress':
       $realValue = Util::normalizeSpaces($value);

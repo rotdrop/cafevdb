@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -112,24 +112,49 @@ use OCA\CAFEVDB\Common\Util;
         <!-- span class="statusmessage" id="email-account-distribute-message"></span -->
       </fieldset>
     </form>
-    <h4><?php echo $l->t('Bulk Mail Composition'); ?></h4>
+    <h4><?php echo $l->t('Bulk Email Composition'); ?></h4>
     <form class="bulk-email-settings">
+      <fieldset clas="emailtransport">
+        <legend><?php p($l->t('Bulk Email Transport')); ?></legend>
+        <input type="text"
+               name="announcementsMailingList"
+               id="announcements-mailing-list"
+               value="<?php p($announcementsMailingList); ?>"
+               placeholder="<?php p($l->t('Mailing List')); ?>"
+               title="<?php echo $toolTips['emailform:transport:announcements:mailinglist']; ?>"
+        />
+        <label for="announcement-mailing-list"
+               title="<?php echo $toolTips['emailform:transport:announcements:mailinglist']; ?>"
+        >
+          <?php p($l->t('Announcement Mailing List')); ?>
+        </label>
+      </fieldset>
       <fieldset class="emailidentity">
-        <legend><?php p($l->t('Bulk Mail Identity')); ?></legend>
+        <legend><?php p($l->t('Bulk Email Identity')); ?></legend>
         <input type="text"
                name="emailfromname"
                id="emailfromname"
                value="<?php echo $_['emailfromname']; ?>"
                placeholder="<?php echo $l->t('Real Sender Name');?>"
+               title="<?php echo $toolTips['emailform:sender:name']; ?>"
         />
-        <label for="emailfromname"><?php echo $l->t('From: name');?></label>
+        <label for="emailfromname"
+               title="<?php echo $toolTips['emailform:sender:name']; ?>"
+        >
+          <?php echo $l->t('From: name');?>
+        </label>
         <input type="text"
              name="emailfromaddress"
                id="emailfromaddress"
                value="<?php echo $_['emailfromaddress']; ?>"
                placeholder="<?php echo $l->t('Email From Adress');?>"
+               title="<?php echo $toolTips['emailform:sender:name']; ?>"
         />
-        <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+        <label for="emailfromaddress"
+               title="<?php echo $toolTips['emailform:sender:name']; ?>"
+        >
+          <?php echo $l->t('From: address');?>
+        </label>
       </fieldset>
       <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -78,11 +78,11 @@ $containerClass = $appName.'-'.'container';
               <?php echo $l->t('Basic Recipients Set'); ?>
             </label>
           </span>
-          <span class="basic-recipients-set from-project inner vmiddle <?php p($containerClass); ?>">
+          <span class="ifproject basic-recipients-set from-project inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-from-project"
                    class="basic-recipients-set from-project tip"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>"
+                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>"
                    name="emailRecipients[basicRecipientsSet][fromProject]"
                    value="1"
             <?php echo $basicRecipientsSet['fromProject'] ? 'checked="checked"' : ''; ?>
@@ -95,11 +95,11 @@ $containerClass = $appName.'-'.'container';
               </label>
             </span>
           </span>
-          <span class="basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
+          <span class="ifproject basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>"
+                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>"
                    name="emailRecipients[basicRecipientsSet][exceptProject]"
                    value="1"
             <?php echo $basicRecipientsSet['exceptProject'] ? 'checked="checked"' : ''; ?>
@@ -109,6 +109,23 @@ $containerClass = $appName.'-'.'container';
                      class="tip"
                      title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
                 <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
+              </label>
+            </span>
+          </span>
+          <span class="basic-recipients-set announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
+            <input type="checkbox"
+                   id="basic-recipients-set-announcements-mailing-list"
+                   class="basic-recipients-set announcements-mailing-list tip"
+                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']; ?>"
+                   name="emailRecipients[basicRecipientsSet][announcementsMailinglist]"
+                   value="1"
+            <?php echo $basicRecipientsSet['announcementsMailingList'] ? 'checked="checked"' : ''; ?>
+                   />
+            <span class="label right">
+              <label for="basic-recipients-set-announcements-mailing-list"
+                     class="tip"
+                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']; ?>">
+                <span class="basic-recipients-set announcements-mailing-list button"><?php p($l->t('Mailing List')); ?></span>
               </label>
             </span>
           </span>
