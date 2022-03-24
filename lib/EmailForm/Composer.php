@@ -2170,11 +2170,6 @@ Störung.';
 
       if (isset($attachment['template_id'])) {
         $templateId = $attachment['template_id'];
-        if (!empty($this->project)
-            && $this->project->getId() == $this->getClubMembersProjectId()
-            && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
-          $templateId = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
-        }
 
         /** @var FinanceService $financeService */
         $financeService = $this->di(FinanceService::class);
