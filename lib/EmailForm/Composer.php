@@ -3820,7 +3820,7 @@ Störung.';
         }
         $this->forgetTemporaryFile($fileName);
       } catch (\Throwable $t) {
-        $this->logException($t);
+        $this->logException($t, 'Unable to remove temporary file.');
       }
     }
     $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
