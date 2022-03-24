@@ -45,10 +45,6 @@ class Html2Text
    * None of the external programs seems to have support for CSS ... Oops.
    */
   private const HTML_CONVERTERS = [
-    'elinks' => [
-      '-dump',
-      '-force-html',
-    ],
     'w3m' => [
       '-dump',
       '-I', 'utf-8',
@@ -66,6 +62,11 @@ class Html2Text
       '-width=80',
       '-dump',
       '-stdin',
+    ],
+    // elinks is really SSSSLLLLOOOOWWWW
+    'elinks' => [
+      '-dump',
+      '-force-html',
     ],
   ];
 
