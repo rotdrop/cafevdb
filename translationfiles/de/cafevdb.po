@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-24 17:35+0100\n"
-"PO-Revision-Date: 2022-03-24 17:45+0100\n"
+"POT-Creation-Date: 2022-03-25 23:28+0100\n"
+"PO-Revision-Date: 2022-03-25 23:33+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -567,8 +567,8 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:352
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376
-#: lib/Service/Finance/InstrumentInsuranceService.php:893
-#: lib/Service/Finance/InstrumentInsuranceService.php:897
+#: lib/Service/Finance/InstrumentInsuranceService.php:921
+#: lib/Service/Finance/InstrumentInsuranceService.php:925
 #: lib/Service/PhoneNumberService.php:88 lib/Service/PhoneNumberService.php:216
 #: src/app/cafevdb.js:41 src/app/cafevdb.js:42
 msgid "unknown"
@@ -2811,35 +2811,35 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2910
+#: lib/EmailForm/Composer.php:2905
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3094
+#: lib/EmailForm/Composer.php:3089
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3107
+#: lib/EmailForm/Composer.php:3102
 msgid "musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3199 lib/EmailForm/Composer.php:3214
+#: lib/EmailForm/Composer.php:3194 lib/EmailForm/Composer.php:3209
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3298 lib/EmailForm/Composer.php:3374
-#: lib/EmailForm/Composer.php:3384
+#: lib/EmailForm/Composer.php:3293 lib/EmailForm/Composer.php:3369
+#: lib/EmailForm/Composer.php:3379
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3317
+#: lib/EmailForm/Composer.php:3312
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3323
+#: lib/EmailForm/Composer.php:3318
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -2847,81 +2847,81 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:3349
+#: lib/EmailForm/Composer.php:3344
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3677
+#: lib/EmailForm/Composer.php:3672
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3685
+#: lib/EmailForm/Composer.php:3680
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3709
+#: lib/EmailForm/Composer.php:3704
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3740
+#: lib/EmailForm/Composer.php:3735
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3798 lib/EmailForm/Composer.php:3909
+#: lib/EmailForm/Composer.php:3793 lib/EmailForm/Composer.php:3904
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3826
+#: lib/EmailForm/Composer.php:3821
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:3851
+#: lib/EmailForm/Composer.php:3846
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4408
+#: lib/EmailForm/Composer.php:4403
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:4408
+#: lib/EmailForm/Composer.php:4403
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:4409
+#: lib/EmailForm/Composer.php:4404
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4410
+#: lib/EmailForm/Composer.php:4405
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4411
+#: lib/EmailForm/Composer.php:4406
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4527
+#: lib/EmailForm/Composer.php:4522
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:412
+#: lib/EmailForm/RecipientsFilter.php:415
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:438
+#: lib/EmailForm/RecipientsFilter.php:441
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:627
+#: lib/EmailForm/RecipientsFilter.php:630
 #: lib/PageRenderer/PMETableViewBase.php:362
 msgid "member status "
 msgstr "Mitglieds-Status"
@@ -3353,7 +3353,7 @@ msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
 #: lib/PageRenderer/InstrumentInsurances.php:436
-#: lib/Service/Finance/InstrumentInsuranceService.php:749
+#: lib/Service/Finance/InstrumentInsuranceService.php:777
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -3884,12 +3884,12 @@ msgid "Broker"
 msgstr "Anbieter"
 
 #: lib/PageRenderer/InsuranceRates.php:168
-#: lib/Service/Finance/InstrumentInsuranceService.php:747
+#: lib/Service/Finance/InstrumentInsuranceService.php:775
 msgid "Scope"
 msgstr "Bereich"
 
 #: lib/PageRenderer/InsuranceRates.php:177
-#: lib/Service/Finance/InstrumentInsuranceService.php:751
+#: lib/Service/Finance/InstrumentInsuranceService.php:779
 msgid "Rate"
 msgstr "Rate"
 
@@ -4486,11 +4486,11 @@ msgstr "Bezeichnung"
 msgid "Limit"
 msgstr "Obergrenze"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2203
+#: lib/PageRenderer/ProjectParticipantFields.php:2204
 #: lib/PageRenderer/ProjectPayments.php:474
 #: lib/PageRenderer/SepaBankAccounts.php:950
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: lib/Service/Finance/InstrumentInsuranceService.php:750
+#: lib/Service/Finance/InstrumentInsuranceService.php:778
 msgid "Amount"
 msgstr "Betrag"
 
@@ -5547,7 +5547,7 @@ msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:86
-#: lib/Service/Finance/InstrumentInsuranceService.php:484 :-1
+#: lib/Service/Finance/InstrumentInsuranceService.php:512 :-1
 #, php-format
 msgid "insurance"
 msgstr "Versicherung"
@@ -5583,7 +5583,7 @@ msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:513
+#: lib/Service/Finance/InstrumentInsuranceService.php:541
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
@@ -5593,32 +5593,32 @@ msgstr ""
 "Versicherungsübersicht. Bitte ein passendes Dokument bei den\n"
 "App-Einstellungen (Orchester->Dokumentenvorlagen) einstellen."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:628
+#: lib/Service/Finance/InstrumentInsuranceService.php:656
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:632
+#: lib/Service/Finance/InstrumentInsuranceService.php:660
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:647
+#: lib/Service/Finance/InstrumentInsuranceService.php:675
 #: templates/instrument-insurance.php:55 templates/project-payments.php:61
 #: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:669
+#: lib/Service/Finance/InstrumentInsuranceService.php:697
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:670
+#: lib/Service/Finance/InstrumentInsuranceService.php:698
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:675
+#: lib/Service/Finance/InstrumentInsuranceService.php:703
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -5637,33 +5637,33 @@ msgstr ""
 "dann, wenn sich an der Versicherung etwas ändern\n"
 "sollte."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:683
+#: lib/Service/Finance/InstrumentInsuranceService.php:711
 #, php-format
 msgid "Total Insurance Fees %s"
 msgstr "Gesamtversicherungsbeitrag %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:696
+#: lib/Service/Finance/InstrumentInsuranceService.php:724
 msgid "Annual amount excluding taxes"
 msgstr "Jahresbeitrag ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:700
-#: lib/Service/Finance/InstrumentInsuranceService.php:840
+#: lib/Service/Finance/InstrumentInsuranceService.php:728
+#: lib/Service/Finance/InstrumentInsuranceService.php:868
 #, php-format
 msgid "%s %% insurance taxes"
 msgstr "%s %% Versicherungssteuer"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:704
+#: lib/Service/Finance/InstrumentInsuranceService.php:732
 msgid "Total amount to pay"
 msgstr "Rechnungsbetrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:714
+#: lib/Service/Finance/InstrumentInsuranceService.php:742
 msgid ""
 "The insurance fee is always paid in advance for the next insurance period."
 msgstr ""
 "Der Versicherungsbeitrag wird immer im voraus für das nächste "
 "Versicherungsjahr gezahlt."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:715
+#: lib/Service/Finance/InstrumentInsuranceService.php:743
 msgid ""
 "The amount to pay for newly insured items can be smaller than the regular "
 "annual\n"
@@ -5673,11 +5673,11 @@ msgstr ""
 "reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
 "Versicherungsjahre auf Monatsbasis berechnet wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:717
+#: lib/Service/Finance/InstrumentInsuranceService.php:745
 msgid "This is detailed in the table on the following page."
 msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:725
+#: lib/Service/Finance/InstrumentInsuranceService.php:753
 msgid ""
 "The insurance always rolls over to the next year unless explicitly "
 "terminated by you."
@@ -5685,7 +5685,7 @@ msgstr ""
 "Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
 "nicht gekündigt wird."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:731
+#: lib/Service/Finance/InstrumentInsuranceService.php:759
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -5697,57 +5697,57 @@ msgstr ""
 "rechtzeitig im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:738
+#: lib/Service/Finance/InstrumentInsuranceService.php:766
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:739
+#: lib/Service/Finance/InstrumentInsuranceService.php:767
 #: templates/settings/orchestra-settings.php:357
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:746
+#: lib/Service/Finance/InstrumentInsuranceService.php:774
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:748
+#: lib/Service/Finance/InstrumentInsuranceService.php:776
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:752
+#: lib/Service/Finance/InstrumentInsuranceService.php:780
 msgid "Start"
 msgstr "Beginn"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:753
+#: lib/Service/Finance/InstrumentInsuranceService.php:781
 msgid "Valid until"
 msgstr "Laufzeit bis"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:754
+#: lib/Service/Finance/InstrumentInsuranceService.php:782
 msgid "Months"
 msgstr "Monate"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:755
+#: lib/Service/Finance/InstrumentInsuranceService.php:783
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:791
+#: lib/Service/Finance/InstrumentInsuranceService.php:819
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:824
+#: lib/Service/Finance/InstrumentInsuranceService.php:852
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:834
+#: lib/Service/Finance/InstrumentInsuranceService.php:862
 msgid "Totals excluding taxes"
 msgstr "Gesamtsumme ohne Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:847
+#: lib/Service/Finance/InstrumentInsuranceService.php:875
 msgid "Totals including taxes"
 msgstr "Gesamtsumme mit Steuern"
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:888
+#: lib/Service/Finance/InstrumentInsuranceService.php:916
 msgid "Jane"
 msgstr "Susanne"
 
@@ -10750,48 +10750,52 @@ msgstr ""
 msgid "Musicians without or obviously broken email-address"
 msgstr "Personen ohne oder mit offensichtlich ungültiger Em@il"
 
-#: templates/emailform/part.emailform.recipients.php:78
+#: templates/emailform/part.emailform.recipients.php:77
 msgid "Basic Recipients Set"
 msgstr "Auswahl-Kontext"
 
-#: templates/emailform/part.emailform.recipients.php:128
+#: templates/emailform/part.emailform.recipients.php:129
+msgid "Database"
+msgstr "Datenbank"
+
+#: templates/emailform/part.emailform.recipients.php:147
 #: templates/settings/email-settings.php:123
 msgid "Mailing List"
 msgstr "Mailing-Liste"
 
-#: templates/emailform/part.emailform.recipients.php:143
+#: templates/emailform/part.emailform.recipients.php:161
 msgid "Member-Status"
 msgstr "Mitgliedsstatus"
 
-#: templates/emailform/part.emailform.recipients.php:151
+#: templates/emailform/part.emailform.recipients.php:169
 msgid "Select Members by Status"
 msgstr "Empfänger gemäß Status"
 
-#: templates/emailform/part.emailform.recipients.php:163
+#: templates/emailform/part.emailform.recipients.php:181
 msgid "Email Recipients"
 msgstr "Em@il Empfänger"
 
-#: templates/emailform/part.emailform.recipients.php:179
+#: templates/emailform/part.emailform.recipients.php:197
 msgid "Instruments Filter"
 msgstr "Instrumenten-Filter"
 
-#: templates/emailform/part.emailform.recipients.php:188
+#: templates/emailform/part.emailform.recipients.php:206
 msgid "Select Instruments"
 msgstr "Instrumente auswählen"
 
-#: templates/emailform/part.emailform.recipients.php:221
+#: templates/emailform/part.emailform.recipients.php:239
 msgid "Apply Filter"
 msgstr "Filter anwenden"
 
-#: templates/emailform/part.emailform.recipients.php:227
+#: templates/emailform/part.emailform.recipients.php:245
 msgid "Undo Filter"
 msgstr "Filter `Undo'"
 
-#: templates/emailform/part.emailform.recipients.php:234
+#: templates/emailform/part.emailform.recipients.php:252
 msgid "Redo Filter"
 msgstr "Filter `Redo'"
 
-#: templates/emailform/part.emailform.recipients.php:241
+#: templates/emailform/part.emailform.recipients.php:259
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
@@ -12028,9 +12032,6 @@ msgid "Database Server"
 msgstr "Datenbank-Server"
 
 #: templates/settings/app-settings.php:88
-msgid "Database"
-msgstr "Datenbank-Name"
-
 #: templates/settings/app-settings.php:90
 msgid "Database Name"
 msgstr "Datenbank-Name"
