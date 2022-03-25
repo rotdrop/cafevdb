@@ -348,6 +348,7 @@ give you the choice to select any musician as recipient.'),
               'from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
               'except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
               'announcements-mailing-list' => $this->l->t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
+              'database' => $this->l->t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
             'member-status' => $this->l->t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),

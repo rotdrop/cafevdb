@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -85,7 +85,7 @@ $off = $_['orchestra'] == '' ? 'disabled' : '';
              name="dbname"
              id="dbname"
              value="<?php echo $_['dbname']; ?>"
-             placeholder="<?php echo $l->t('Database');?>"
+             placeholder="<?php echo $l->t('Database Name');?>"
       />
       <label for="dbname"><?php echo $l->t('Database Name');?></label>
       <br/>

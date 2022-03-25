@@ -125,7 +125,9 @@
           }
 
           &:not(.inverted) input[type=checkbox]:checked,
-          &.inverted input[type=checkbox] {
+          &.inverted input[type=checkbox],
+          &:not(.inverted) input[type=radio]:checked,
+          &.inverted input[type=radio] {
             & + label span.button {
               background-color:red;
               box-shadow:2px 2px 2px #080808 inset;
@@ -133,14 +135,17 @@
           }
 
           &:not(.inverted) input[type=checkbox],
-          &.inverted input[type=checkbox]:checked {
+          &.inverted input[type=checkbox]:checked,
+          &:not(.inverted) input[type=radio],
+          &.inverted input[type=radio]:checked {
             & + label span.button {
               background-color: var(--color-background-dark);
               box-shadow:unset;
             }
           }
 
-          input[type=checkbox] {
+          input[type=checkbox],
+          input[type=radio] {
             &:disabled ~ * {
               opacity:20%;
             }
@@ -742,13 +747,16 @@ form#cafevdb-email-form {
     max-width:35%;
   }
 
-  input[type=checkbox].basic-recipients-set {
-    position: absolute;
-    left:-10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+  input[type=checkbox],
+  input[type=radio] {
+    &.basic-recipients-set {
+      position: absolute;
+      left:-10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
   }
   span.basic-recipients-set.#{$cssPrefix}container.outer {
     max-width:100%;
@@ -756,26 +764,32 @@ form#cafevdb-email-form {
     overflow:hidden;
   }
 
-  input[type=checkbox] + .label {
-    width:100%;
+  input[type=checkbox], input[type=radio] {
+    + .label {
+      width:100%;
+    }
   }
 
-  input[type=checkbox] + .label span.button {
-    display:inline-block;
-    background-color:#F4F4F4 !important;
-    box-shadow:1px 1px 1px #080808;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:100%;
+  input[type=checkbox], input[type=radio] {
+    + .label span.button {
+      display:inline-block;
+      background-color:#F4F4F4 !important;
+      box-shadow:1px 1px 1px #080808;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:100%;
+    }
   }
 
-  input[type=checkbox]:checked + .label span.button {
-    display:inline-block;
-    background-color:LightSteelBlue !important;
-    box-shadow:1px 1px 1px #080808 inset;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+  input[type=checkbox], input[type=radio] {
+    &:checked + .label span.button {
+      display:inline-block;
+      background-color:LightSteelBlue !important;
+      box-shadow:1px 1px 1px #080808 inset;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
   }
 
   .recipients-select.#{$cssPrefix}container {
