@@ -3613,7 +3613,7 @@ Störung.';
       $this->diagnostics['SubjectValidation'] = true;
     }
 
-    $autoSave = filter_var($this->parameterService[self::POST_TAG]['autoSave'],  FILTER_VALIDATE_BOOLEAN);
+    $autoSave = filter_var($this->parameterService[self::POST_TAG]['draftAutoSave'],  FILTER_VALIDATE_BOOLEAN);
 
     $draftData = [
       'projectId' => $this->parameterService['projectId'],
@@ -3626,7 +3626,7 @@ Störung.';
     unset($draftData[self::POST_TAG]['request']);
     unset($draftData[self::POST_TAG]['submitAll']);
     unset($draftData[self::POST_TAG]['saveMessage']);
-    unset($draftData[self::POST_TAG]['autoSave']);
+    unset($draftData[self::POST_TAG]['draftAutoSave']);
 
     // $dataJSON = json_encode($draftData);
     $subject = $this->subjectTag() . ' ' . $this->subject();
