@@ -549,7 +549,7 @@ class ProjectParticipantFields extends PMETableViewBase
             'deposit-' . $multiplicityVariant,
             'default-hidden',
             'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden',
-            'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-required',
+            'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-' . ($multiplicityVariant == 'simple' ? 'not-' : '') . 'required',
           ],
         ],
         'sql' => '$main_table.id',
@@ -1337,7 +1337,7 @@ __EOT__;
           continue;
         }
         if (empty($value)) {
-          $value = null;
+          $value = is_numeric($value) ? $value : null;
         } else if ($key != Uuid::NIL && $field == 'data') {
           switch ($newvals['data_type']) {
             case DataType::DATE:
@@ -1351,7 +1351,7 @@ __EOT__;
           }
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-        $optionValues[$field][] = empty($value) ? null : $key.self::JOIN_KEY_SEP.$value;
+        $optionValues[$field][] = $value === null ? null : $key.self::JOIN_KEY_SEP.$value;
       }
       if (($newvals['multiplicity'] == Multiplicity::SIMPLE
            || $newvals['multiplicity'] == Multiplicity::SINGLE)
@@ -2101,13 +2101,14 @@ __EOT__;
       'pme-input',
       'data-options-'.$multiplicityVariant,
     ];
+    $simple = $multiplicityVariant == 'simple';
     $cssClass = implode(' ', array_merge(
       $cssBase, [
         'field-'.$field,
         'data-type-html-hidden',
         'data-type-html-disabled',
-        'service-fee-data-type-required',
-        'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
+        $simple ? null : 'service-fee-data-type-required',
+        $simple ? null : 'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
       ]));
     $html  .=<<<__EOT__
 <input class="{$cssClass}"

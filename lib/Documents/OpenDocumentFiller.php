@@ -140,7 +140,7 @@ class OpenDocumentFiller
     array_walk_recursive($this->backend->VarRef, function(&$value, $key) {
       if ($value instanceof \DateTimeInterface) {
         $stamp = $value->getTimestamp();
-        $stamp -= $value->getOffset();
+        $stamp += $value->getOffset();
         $value = $stamp;
       }
     });

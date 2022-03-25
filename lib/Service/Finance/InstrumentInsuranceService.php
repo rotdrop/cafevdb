@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Common\Functions;
 /** Collective instrument insurance. */
 class InstrumentInsuranceService
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
@@ -101,12 +102,11 @@ class InstrumentInsuranceService
     if (empty($date)) {
       $date = new \DateTimeImmutable();
     }
-    $date = Util::dateTime($date)->setTimezone($timeZone);
+    $date = self::convertToTimezoneDate(self::convertToDateTime($date), $timeZone);
     $year = (int)$date->format('Y');
 
-    $dueDate = Util::dateTime($dueDate)
-             ->setTimezone($timeZone)
-             ->modify('+'.($year - $dueDate->format('Y') + 1).' years');
+    $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone)
+      ->modify('+'.($year - $dueDate->format('Y') + 1).' years');
 
     return $dueDate;
   }
@@ -118,32 +118,56 @@ class InstrumentInsuranceService
    *
    * The time slots or rounded down to full-months.
    *
-   * @param string|\DateTimeInterface $insuranceStart The start-date
+   * @param \DateTimeInterface $insuranceStart The start-date
    * of the instrument insurance.
    *
-   * @param string|\DateTimeInterface $dueDate The end of the
+   * @param null|\DateTimeInterface $insuranceEnd The end date of the
+   * instrument insurance, e.g. after total damage or if the musician has
+   * with-drawn its instrument or something.
+   *
+   * @param \DateTimeInterface $dueDate The end of the
    * insurance year for this contract.
    *
    * @return float Fraction
    */
-  private function yearFraction($insuranceStart, $dueDate)
+  private function yearFraction(\DateTimeInterface $insuranceStart, ?\DateTimeInterface $insuranceEnd, \DateTimeInterface $dueDate)
   {
     $timeZone = $this->getDateTimeZone();
-    $startDate = Util::dateTime($insuranceStart)->setTimezone($timeZone);
-    $dueDate = Util::dateTime($dueDate)->setTimezone($timeZone);
+    $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
+    $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone);
 
-    $distance = $startDate->diff($dueDate);
+    $startDistance = $startDate->diff($dueDate);
 
     // $dueDate is before $insuranceStart
-    if ($distance->invert) {
+    if ($startDistance->invert) {
       return 0.0;
     }
 
     // for our purpose everything > 0 days is a month, we only charge
     // full months
-    $distance->d = 0;
+    $startDistance->d = 0;
 
-    $fraction = $distance->y > 0 ? 1.0 : $distance->m / 12.0;
+    $months = $startDistance->y > 0 ? 12.0 : $startDistance->m;
+
+    if (!empty($insuranceEnd)) {
+      // to get the diff right -- $insuranceEnd is the last day where the
+      // instrument was included by into the insurance, we have to add one
+      // day. E.g.: Start 01.07.YYYY, end 31.07.ZZZZ should yield one year and
+      // not 365 days.
+      $endDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceEnd), $timeZone)->modify('+1 day');
+      $endDistance = $dueDate->diff($endDate);
+      if ($endDistance->invert) {
+        // due-date after end-date
+        if ($endDistance->y > 0) {
+          // ended longer than one year ago, so return 0
+          return 0.0;
+        }
+        $endDistance->d = 0; // just include fractional months
+        $months -= $endDistance->m;
+      }
+    }
+
+    $fraction = $months / 12.0;
 
     return $fraction;
   }
@@ -176,7 +200,8 @@ class InstrumentInsuranceService
     if (empty($date)) {
       $date = new DateTime();
     }
-    $yearUntil = $date->setTimezone($timeZone)->format('Y');
+    $date = self::convertToTimezoneDate($date, $timeZone);
+    $yearUntil = $date->format('Y');
 
     $result = [];
 
@@ -188,8 +213,11 @@ class InstrumentInsuranceService
       $rate = $insurance->getInsuranceRate();
       $annualFee = $amount * $rate->getRate();
 
-      $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
-      $insuranceEnd = $insurance->getDeleted()->setTimezone($timeZone);
+      $insuranceStart = self::convertToTimezoneDate($insurance->getStartOfInsurance(), $timeZone);
+      $insuranceEnd = $insurance->getDeleted();
+      if (!empty($insuranceEnd)) {
+        $insuranceEnd = self::convertToTimezoneDate($insuranceEnd, $timeZone);
+      }
       $startYear = $insuranceStart->format('Y');
 
       $lastDueDate = $this->dueDate($rate->getDueDate(), ($startYear - 1).'-06-01');
@@ -198,7 +226,7 @@ class InstrumentInsuranceService
         if ($lastDueDate > $insuranceEnd) {
           break;
         }
-        $yearFraction = $this->yearFraction($insuranceStart, $dueDate);
+        $yearFraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
         if ($yearFraction != 0.0) {
           $fee = $yearFraction * $annualFee * self::TAXES;
           $result[$year] = ($result[$year] ?? 0.0) + $fee;
@@ -242,9 +270,9 @@ class InstrumentInsuranceService
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
-      $date = new DateTime();
+      $date = new \DateTimeImmutable();
     }
-    $date = $date->setTimezone($timeZone);
+    $date = self::convertToTimezoneDate($date, $timeZone);
 
     $payables = $this->billableInsurances($musicianId);
 
@@ -254,10 +282,10 @@ class InstrumentInsuranceService
     $minDueDate = $maxDueDate = null;
     /** @var Entities\InstrumentInsurance $insurance */
     foreach ($payables as $insurance) {
-      $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
+      $insuranceStart = self::convertToTimezoneDate($insurance->getStartOfInsurance(), $timeZone);
       $insuranceEnd = $insurance->getDeleted();
       if (!empty($insuranceEnd)) {
-        $insuranceEnd = $insuranceEnd->setTimezone($timeZone);
+        $insuranceEnd = self::convertToTimezoneDate($insuranceEnd, $timeZone);
       }
 
       /** @var Entities\InsuranceRate $rate */
@@ -273,7 +301,7 @@ class InstrumentInsuranceService
 
       $amount = $insurance->getInsuranceAmount();
       $annualFee = $amount * $rate->getRate();
-      $annualFee *= $this->yearFraction($insuranceStart, $dueDate);
+      $annualFee *= $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
       $fee += $annualFee * (1.0 + self::TAXES);
     }
     $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];
@@ -372,7 +400,7 @@ class InstrumentInsuranceService
     if (empty($date)) {
       $date = new DateTime();
     }
-    $date = $date->setTimezone($timeZone);
+    $date = self::convertToTimezoneDate($date, $timeZone);
 
     /** @var Entities\Musician $musician */
     $billToParty = $this->ensureMusician($musicianOrId);
@@ -388,10 +416,10 @@ class InstrumentInsuranceService
 
     /** @var Entities\InstrumentInsurance $insurance */
     foreach ($payableInsurances as $insurance) {
-      $insuranceStart = $insurance->getStartOfInsurance()->setTimezone($timeZone);
+      $insuranceStart = self::convertToTimezoneDate($insurance->getStartOfInsurance(), $timeZone);
       $insuranceEnd = $insurance->getDeleted();
       if (!empty($insuranceEnd)) {
-        $insuranceEnd = $insuranceEnd->setTimezone($timeZone);
+        $insuranceEnd = self::convertToTimezoneDate($insuranceEnd, $timeZone);
       }
 
       /** @var Entities\InsuranceRate $rate */
@@ -414,7 +442,7 @@ class InstrumentInsuranceService
       }
 
       $amount = $insurance->getInsuranceAmount();
-      $fraction = $this->yearFraction($insuranceStart, $dueDate);
+      $fraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
       $annualFee = $amount * $rate->getRate();
 
       $instrumentHolder = $insurance->getInstrumentHolder();
@@ -435,7 +463,7 @@ class InstrumentInsuranceService
         'amount' => (float)$amount,
         'rate' => $rate->getRate(),
         'lastDue' => $lastDueDate,
-        'due' => $dueDate,
+        'due' => empty($insuranceEnd) ? $dueDate : $insuranceEnd,
         'start' => $insuranceStart,
         'fullFee' => $annualFee,
         'fraction' => $fraction,
