@@ -235,7 +235,7 @@ class EmailFormController extends Controller {
       'projectName' => $projectName,
       'bulkTransactionId' => -1,
     ];
-    $requestData = array_merge($defaultData, $this->parameterService->getParam('emailComposer', []));
+    $requestData = array_merge($defaultData, $this->parameterService->getParam(Composer::POST_TAG, []));
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
     $bulkTransactionId = $requestData['bulkTransactionId'];
@@ -407,6 +407,7 @@ class EmailFormController extends Controller {
         if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
           return self::grumble($this->l->t('Invalid draft name "%s".', $value));
         }
+
         $draftId = $matches[1];
         $draftParameters = $composer->loadDraft($draftId);
         if ($composer->errorStatus()) {
@@ -418,11 +419,21 @@ class EmailFormController extends Controller {
            $requestData['messageDraftId'] = $draftId;
 
         $requestParameters = $this->parameterService->getParams();
+
+        // Loading a draft message means that the project-relation of the
+        // stored draft should be re-established. Unfortunately, it is stored
+        // in two redundant positions ...
+        foreach (['projectId', 'projectName', 'bulkTransactionId'] as $draftPriorityKey) {
+          $requestParameters[$draftPriorityKey] = null;
+          $requestParameters[Composer::POST_TAG][$draftPriorityKey] = null;
+        }
+
         $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
         // Update project name and id
         $projectId = $requestData['projectId'] = $requestParameters['projectId'];
         $projectName = $requestData['projectName'] = $requestParameters['projectName'];
+
         $bulkTransactionId = $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
         // install new request parameters
@@ -581,8 +592,6 @@ class EmailFormController extends Controller {
       return self::grumble($this->l->t("Unknown request: `%s'.", $request));
     }
 
-    // $this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
-
     if ($requestData['errorStatus']) {
       $caption = $requestData['diagnostics']['caption'];
 
@@ -598,8 +607,6 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->dateTimeFormatter(),
         ],
         'blank'))->render();
-
-      // $this->logInfo('STATUS TEXT ' . $messageText);
 
       return self::grumble([
         'operation' => $operation,
