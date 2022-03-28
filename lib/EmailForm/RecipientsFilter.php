@@ -659,7 +659,17 @@ class RecipientsFilter
    */
   private function defaultUserBase()
   {
-    return ($this->projectId >= 0) ? self::MUSICIANS_FROM_PROJECT : 0;
+    if ($this->projectId > 0) {
+      return self::MUSICIANS_FROM_PROJECT;
+    } else {
+      if ($this->frozenRecipients()) {
+        return 0;
+      }
+      if (!empty($this->emailRecs)) {
+        return 0;
+      }
+      return self::ANNOUNCEMENTS_MAILINGLIST;
+    }
   }
 
   /**
@@ -845,8 +855,9 @@ class RecipientsFilter
     return $eMails;
   }
 
-  /**Return true if the list of recipients is frozen,
-   * i.e. restricted to the pre-selected recipients.
+  /**
+   * Return true if the list of recipients is frozen, i.e. restricted to the
+   * pre-selected recipients.
    */
   public function frozenRecipients()
   {

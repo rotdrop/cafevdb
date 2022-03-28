@@ -33,7 +33,7 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
-import { deselectAll as selectDeselectAll, refreshWidget as refreshSelectWidget } from './select-utils.js';
+import { deselectAll as selectDeselectAll } from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -44,6 +44,7 @@ import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
 
+require('./jquery-readonly.js');
 require('bootstrap4-duallistbox');
 require('emailform.scss');
 
@@ -145,7 +146,8 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
   fieldset.find('#instruments-filter option[value="*"]').remove();
   fieldset.find('#instruments-filter option[value=""]').remove();
   fieldset.find('#instruments-filter').chosen();
-  fieldset.find('#recipients-select').bootstrapDualListbox({
+  const $recipientsSelect = fieldset.find('#recipients-select');
+  $recipientsSelect.bootstrapDualListbox({
     // moveOnSelect: false,
     // preserveSelectionOnMove : 'all',
     moveAllLabel: t(appName, 'Move all'),
@@ -165,11 +167,16 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     filterTextClear: t(appName, 'show all'),
     selectorMinimalHeight: 200,
   });
-  const dualSelect = fieldset.find('div.bootstrap-duallistbox-container select');
+  const $dualListBoxContainer = fieldset.find('.bootstrap-duallistbox-container');
+  const dualSelect = $dualListBoxContainer.find('select');
   dualSelect.attr(
     'title',
     t(appName, 'Click on the names to move the respective person to the other box'));
   dualSelect.addClass('tooltip-top');
+
+  if ($recipientsSelect.attr('readonly')) {
+    $dualListBoxContainer.find('input, select, button').prop('disabled', true);
+  }
 
   CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformrecipients'));
 };
@@ -308,6 +315,34 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     applyRecipientsFilter.call(this, event);
   });
 
+  const readonlyFiltersControls = function(state) {
+    const $otherInputs = fieldset.find('input, select, button').not('.announcements-mailing-list, .database');
+
+    if (state) {
+      // Disable all recipient filters as they do not make any
+      // sense. Sending to the mailing list means to just send to
+      // the one global announcements list.
+      $otherInputs.each(function(index) {
+        const $this = $(this);
+        $this.data('disabledStatus', $this.prop('readonly'));
+        $this.readonly('true');
+        if ($this.is(':button, :submit')) {
+          $this.prop('disabled', true);
+        }
+      });
+      fieldset.find('.bootstrap-duallistbox-container').find('input, select, button').prop('disabled', true);
+    } else {
+      $otherInputs.each(function(index) {
+        const $this = $(this);
+        $this.readonly($this.data('disabledStatus') || false);
+        $this.removeData('disabledStatus');
+        if ($this.is(':button, :submit')) {
+          $this.prop('disabled', $this.prop('readonly'));
+        }
+      });
+    }
+  };
+
   // Basic set
   const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
   const basicRecipientsSet = basicRecipientsSetContainer.find('input[type="checkbox"], input[type="radio"]');
@@ -320,33 +355,12 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       const $this = $(this);
       const mailingListRecipients = $this.is('.announcements-mailing-list') && $this.prop('checked');
 
-      const $otherInputs = fieldset.find('input, select, button, label').not('.announcements-mailing-list, .database');
-
-      if (mailingListRecipients) {
-        // Disable all recipient filters as they do not make any
-        // sense. Sending to the mailing list means to just send to
-        // the one global announcements list.
-        $otherInputs.each(function(index) {
-          $(this).data('disabledStatus', $(this).prop('disabled'));
-          $(this).prop('disabled', true);
-        });
-        $otherInputs.each(function(index) {
-          if ($(this).is('select')) {
-            refreshSelectWidget($(this));
-          }
-        });
-      } else {
-        $otherInputs.each(function(index) {
-          $(this).prop('disabled', $(this).data('disabledStatus'));
-          $(this).removeData('disabledStatus');
-        });
-        $otherInputs.each(function(index) {
-          if ($(this).is('select')) {
-            refreshSelectWidget($(this));
-          }
-        });
-      }
+      readonlyFiltersControls(mailingListRecipients);
+      return false;
     });
+  if (basicRecipientsSet.filter('.announcements-mailing-list').prop('checked')) {
+    readonlyFiltersControls(true);
+  }
 
   basicRecipientsSetProject
     .off('change')
@@ -378,8 +392,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     });
 
   missingAddresses
-    .off('click', 'span.personal-record')
-    .on('click', 'span.personal-record', function(event) {
+    .off('click', '.personal-record')
+    .on('click', '.personal-record', function(event) {
       event.preventDefault();
 
       const formData = form.find('fieldset.form-data');

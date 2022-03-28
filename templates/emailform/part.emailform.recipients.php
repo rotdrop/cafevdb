@@ -60,6 +60,12 @@ $frozen = $frozenRecipients;
 $rowClass = $appName.'-'.'row';
 $containerClass = $appName.'-'.'container';
 
+$filterReadonly = $basicRecipientsSet['announcementsMailingList'] ? 'readonly' : '';
+
+$announcementsMailingListTitle = !empty($announcementsMailingList)
+ ? $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']
+ : $l->t('The global announcements mailing list is not configured. This can be changed by a group-administrator in the email-settings section of the app.');
+
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
@@ -120,7 +126,7 @@ $containerClass = $appName.'-'.'container';
                  disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>"
                  name="emailRecipients[basicRecipientsSet][announcementsMailinglist]"
                  value="0"
-                 <?php $basicRecipientsSet['announcementsMailingList'] || p('checked'); ?>
+                 <?php $basicRecipientsSet['announcementsMailingList'] || empty($announcementsMailingList) || p('checked'); ?>
           />
           <span class="label right">
             <label for="basic-recipients-set-database"
@@ -140,11 +146,12 @@ $containerClass = $appName.'-'.'container';
                  name="emailRecipients[basicRecipientsSet][announcementsMailinglist]"
                  value="1"
                  <?php $basicRecipientsSet['announcementsMailingList'] && p('checked'); ?>
+                 <?php empty($announcementsMailingList) && p('disabled'); ?>
           />
           <span class="label right">
             <label for="basic-recipients-set-announcements-mailing-list"
                    class="tip"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']; ?>">
+                   title="<?php echo $announcementsMailingListTitle; ?>">
               <span class="basic-recipients-set announcements-mailing-list button"><?php p($l->t('Mailing List')); ?></span>
             </label>
           </span>
@@ -168,7 +175,9 @@ $containerClass = $appName.'-'.'container';
               class="member-status-filter"
               title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
-              name="emailRecipients[memberStatusFilter][]">
+              name="emailRecipients[memberStatusFilter][]"
+              <?php p($filterReadonly); ?>
+      >
         <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
       </select>
     </span>
@@ -185,7 +194,9 @@ $containerClass = $appName.'-'.'container';
               multiple="multiple"
               size="18"
               title="<?php echo $toolTips['emailform:recipients:choices']; ?>"
-              name="emailRecipients[selectedRecipients][]">
+              name="emailRecipients[selectedRecipients][]"
+              <?php p($filterReadonly); ?>
+      >
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
@@ -205,7 +216,9 @@ $containerClass = $appName.'-'.'container';
                 class="instruments-filter"
                 title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
-                name="emailRecipients[instrumentsFilter][]">
+                name="emailRecipients[instrumentsFilter][]"
+                <?php p($filterReadonly); ?>
+        >
           <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
         </select>
       </span>
@@ -228,8 +241,8 @@ $containerClass = $appName.'-'.'container';
         $separator = '';
         foreach ($missingEmailAddresses as $id => $name) {
           echo $separator; $separator = ', ';
-          echo '<span class="missing-email-addresses personal-record" '.
-               '      data-id="'.$id.'">'.$name.'</span>';
+          echo '<a href="#" class="missing-email-addresses personal-record" '.
+               '      data-id="'.$id.'">'.$name.'</a>';
         }
         ?>
       </span>
@@ -240,27 +253,35 @@ $containerClass = $appName.'-'.'container';
              value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
              title="<?php echo $toolTips['emailform:recipients:filter:apply']; ?>"
-             name="emailRecipients[applyInstrumentsFilter]" />
+             name="emailRecipients[applyInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
       <input type="button"
              id="instruments-filter-undo"
              value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
              title="<?php echo $toolTips['emailform:recipients:filter:undo']; ?>"
              disabled
-             name="emailRecipients[undoInstrumentsFilter]" />
+             name="emailRecipients[undoInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
              title="<?php echo $toolTips['emailform:recipients:filter:redo']; ?>"
              disabled
-             name="emailRecipients[redoInstrumentsFilter]" />
+             name="emailRecipients[redoInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
       <input type="button"
              id="instruments-filter-reset"
              value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
              title="<?php echo $toolTips['emailform:recipients:filter:reset']; ?>"
-             name="emailRecipients[resetInstrumentsFilter]" />
+             name="emailRecipients[resetInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
     </span>
   </div>
 </fieldset>

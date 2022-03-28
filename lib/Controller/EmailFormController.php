@@ -173,6 +173,7 @@ class EmailFormController extends Controller {
       'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
       'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+      'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
 
       'toolTips' => $this->toolTipsService(),
     ];
@@ -353,6 +354,7 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -477,6 +479,7 @@ class EmailFormController extends Controller {
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -502,6 +505,7 @@ class EmailFormController extends Controller {
           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -664,6 +668,7 @@ class EmailFormController extends Controller {
         'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
         'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
         'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+        'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
 
         'toolTips' => $this->toolTipsService(),
       ];
