@@ -33,7 +33,7 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
+import { deselectAll as selectDeselectAll, refreshWidget as refreshSelectWidget } from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -309,50 +309,93 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   });
 
   // Basic set
-  const basicRecipientsSet = fieldset.find('.basic-recipients-set.' + appPrefix('container') + 'r input[type="checkbox"]');
-  basicRecipientsSet.off('change');
-  basicRecipientsSet.on('change', function(event) {
-    applyRecipientsFilter.call(this, event);
-  });
+  const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
+  const basicRecipientsSet = basicRecipientsSetContainer.find('input[type="checkbox"], input[type="radio"]');
+  const basicRecipientsSetProject = basicRecipientsSet.not('.announcements-mailing-list, .database');
+  const basicRecipientsSetMailingList = basicRecipientsSet.filter('.announcements-mailing-list, .database');
+
+  basicRecipientsSetMailingList
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      const mailingListRecipients = $this.is('.announcements-mailing-list') && $this.prop('checked');
+
+      const $otherInputs = fieldset.find('input, select, button, label').not('.announcements-mailing-list, .database');
+
+      if (mailingListRecipients) {
+        // Disable all recipient filters as they do not make any
+        // sense. Sending to the mailing list means to just send to
+        // the one global announcements list.
+        $otherInputs.each(function(index) {
+          $(this).data('disabledStatus', $(this).prop('disabled'));
+          $(this).prop('disabled', true);
+        });
+        $otherInputs.each(function(index) {
+          if ($(this).is('select')) {
+            refreshSelectWidget($(this));
+          }
+        });
+      } else {
+        $otherInputs.each(function(index) {
+          $(this).prop('disabled', $(this).data('disabledStatus'));
+          $(this).removeData('disabledStatus');
+        });
+        $otherInputs.each(function(index) {
+          if ($(this).is('select')) {
+            refreshSelectWidget($(this));
+          }
+        });
+      }
+    });
+
+  basicRecipientsSetProject
+    .off('change')
+    .on('change', function(event) {
+      applyRecipientsFilter.call(this, event);
+    });
 
   // "submit" when hitting any of the control buttons
-  controlsContainer.off('click', '**');
-  controlsContainer.on('click', 'input', function(event) {
-    applyRecipientsFilter.call(this, event);
-  });
+  controlsContainer
+    .off('click', '**')
+    .on('click', 'input', function(event) {
+      applyRecipientsFilter.call(this, event);
+    });
 
   // Record history when the select box changes. Maybe too slow, but
   // we will see.
-  recipientsSelect.off('change');
-  recipientsSelect.on('change', function(event) {
-    applyRecipientsFilter.call(this, event, true);
-  });
+  recipientsSelect
+    .off('change')
+    .on('change', function(event) {
+      applyRecipientsFilter.call(this, event, true);
+    });
 
   // Give the user a chance to change broken or missing email
   // addresses from here.
-  dialogHolder.off('pmedialog:changed');
-  dialogHolder.on('pmedialog:changed', function(event) {
-    applyRecipientsFilter.call(this, event);
-  });
+  dialogHolder
+    .off('pmedialog:changed')
+    .on('pmedialog:changed', function(event) {
+      applyRecipientsFilter.call(this, event);
+    });
 
-  missingAddresses.off('click', 'span.personal-record');
-  missingAddresses.on('click', 'span.personal-record', function(event) {
-    event.preventDefault();
+  missingAddresses
+    .off('click', 'span.personal-record')
+    .on('click', 'span.personal-record', function(event) {
+      event.preventDefault();
 
-    const formData = form.find('fieldset.form-data');
-    const projectId = formData.find('input[name="projectId"]').val();
-    const projectName = formData.find('input[name="projectName"]').val();
+      const formData = form.find('fieldset.form-data');
+      const projectId = formData.find('input[name="projectId"]').val();
+      const projectName = formData.find('input[name="projectName"]').val();
 
-    ProjectParticipants.personalRecordDialog(
-      $(this).data('id'), {
-        projectId,
-        projectName,
-        initialValue: 'Change',
-        ambientContainerSelector: '#emailformdialog',
-      });
+      ProjectParticipants.personalRecordDialog(
+        $(this).data('id'), {
+          projectId,
+          projectName,
+          initialValue: 'Change',
+          ambientContainerSelector: '#emailformdialog',
+        });
 
-    return false;
-  });
+      return false;
+    });
 
   panelHolder
     .off('resize')
@@ -406,8 +449,33 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   }
 
   const formData = form.find('fieldset.form-data');
-  const projectId = formData.find('input[name="projectId"]').val();
-  const projectName = formData.find('input[name="projectName"]').val();
+  const $projectId = formData.find('input[name="projectId"]');
+  const $projectName = formData.find('input[name="projectName"]');
+  const $bulkTransactionId = formData.find('input[name="bulkTransactionid"]');
+  const projectId = function(value) {
+    if (value === undefined) {
+      return $projectId.val();
+    } else {
+      $projectId.val(value);
+      return value;
+    }
+  };
+  const projectName = function(value) {
+    if (value === undefined) {
+      return $projectName.val();
+    } else {
+      $projectName.val(value);
+      return value;
+    }
+  };
+  const bulkTransactionId = function(value) {
+    if (value === undefined) {
+      return $bulkTransactionId.val();
+    } else {
+      $bulkTransactionId.val(value);
+      return value;
+    }
+  };
 
   const debugOutput = form.find('#emailformdebug');
   const storedEmailsSelector = fieldset.find('select.stored-messages-selector');
@@ -607,10 +675,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             dialogHolder.dialog('option', 'title', dlgTitle);
 
             // update the "global" project name and id
-            const formData = form.find('fieldset.form-data');
-            formData.find('input[name="projectId"]').val(requestData.projectId);
-            formData.find('input[name="projectName"]').val(requestData.projectName);
-            formData.find('input[name="bulkTransactionId"]').val(requestData.bulkTransactionId);
+            projectId(requestData.projectId);
+            projectName(requestData.projectName);
+            bulkTransactionId(requestData.bulkTransactionId);
 
             // Make the debug output less verbose
             delete requestData.composerForm;
@@ -775,8 +842,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               progressToken,
               send: 'ThePointOfNoReturn',
               submitAll: true,
-              projectId,
-              projectName,
+              projectId: projectId(),
+              projectName: projectName(),
             },
             function(lock) {
               if (lock) {
@@ -893,8 +960,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         operation: 'cancel',
         formStatus: 'submitted',
         singleItem: true,
-        projectId,
-        projectName,
+        projectId: projectId(),
+        projectName: projectName(),
       });
       // Close the dialog in any case.
       dialogHolder.dialog('close');
@@ -924,8 +991,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         topic: 'draft',
         submitAll: true,
         noDebug: true,
-        projectId,
-        projectName,
+        projectId: projectId(),
+        projectName: projectName(),
         autoSave: true,
       },
       function(lock) {
@@ -962,8 +1029,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 topic: 'draft',
                 messageDraftId: draftId,
                 noDebug: true,
-                projectId,
-                projectName,
+                projectId: projectId(),
+                projectName: projectName(),
               }
             );
           } else {
@@ -974,8 +1041,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 topic: 'draft',
                 submitAll: true,
                 noDebug: true,
-                projectId,
-                projectName,
+                projectId: projectId(),
+                projectName: projectName(),
                 autoSave: false,
               });
           }
@@ -1090,8 +1157,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 applyComposerControls.call(self, event, {
                   operation: 'delete',
                   topic: 'template',
-                  projectId,
-                  projectName,
+                  projectId: projectId(),
+                  projectName: projectName(),
                 });
               }
             },
@@ -1117,8 +1184,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                   operation: 'delete',
                   topic: 'draft',
                   messageDraftId: draftId,
-                  projectId,
-                  projectName,
+                  projectId: projectId(),
+                  projectName: projectName(),
                 });
               }
             },
@@ -1138,8 +1205,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           this, event, {
             operation: 'load',
             topic: 'draft',
-            projectId,
-            projectName,
+            projectId: projectId(),
+            projectName: projectName(),
           },
           function(lock) {
             if (lock) {
@@ -1160,8 +1227,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         applyComposerControls.call(this, event, {
           operation: 'load',
           topic: 'template',
-          projectId,
-          projectName,
+          projectId: projectId(),
+          projectName: projectName(),
         });
       }
       return false;
@@ -1222,8 +1289,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       recipients: $self.val(),
       header,
       singleItem: true,
-      projectId,
-      projectName,
+      projectId: projectId(),
+      projectName: projectName(),
     };
     request[header] = request.Recipients; // remove duplicate later
     applyComposerControls.call(
@@ -1271,8 +1338,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       }
       eventAttachmentsRow.addClass('show-selectable');
       Projects.eventsPopup({
-        projectId,
-        projectName,
+        projectId: projectId(),
+        projectName: projectName(),
         eventSelect: events,
       },
       false /* only move to top if already open */);
@@ -1288,17 +1355,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   dialogHolder
     .off('cafevdb:events_changed')
     .on('cafevdb:events_changed', function(event, events) {
-      const formData = form.find('fieldset.form-data');
-      const projectId = formData.find('input[name="projectId"]').val();
-      const projectName = formData.find('input[name="projectName"]').val();
       const requestData = {
         operation: 'update',
         topic: 'element',
         formElement: 'eventAttachments',
         singleItem: true,
         attachedEvents: events,
-        projectId,
-        projectName,
+        projectId: projectId(),
+        projectName: projectName(),
       };
       applyComposerControls.call(this, event, requestData);
       return false;
@@ -1414,8 +1478,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       formElement: 'fileAttachments',
       fileAttachments, // JSON data of all files
       formStatus: 'submitted',
-      projectId,
-      projectName,
+      projectId: projectId(),
+      projectName: projectName(),
     };
     if (selectedAttachments) {
       requestData.attachedFiles = selectedAttachments;

@@ -741,54 +741,47 @@ form#cafevdb-email-form {
     width:auto !important;
   }
 
-  .basic-recipients-set.#{$cssPrefix}container.inner {
-    margin: 0 0.5em 0 0.5em;
-    position:relative;
-    max-width:35%;
-  }
-
-  input[type=checkbox],
-  input[type=radio] {
-    &.basic-recipients-set {
-      position: absolute;
-      left:-10000px;
-      top: auto;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-    }
-  }
   span.basic-recipients-set.#{$cssPrefix}container.outer {
     max-width:100%;
     white-space:nowrap;
     overflow:hidden;
-  }
 
-  input[type=checkbox], input[type=radio] {
-    + .label {
-      width:100%;
-    }
-  }
+    .basic-recipients-set.#{$cssPrefix}container.inner {
+      margin: 0 0.5em 0 0.5em;
+      position:relative;
+      max-width:35%;
 
-  input[type=checkbox], input[type=radio] {
-    + .label span.button {
-      display:inline-block;
-      background-color:#F4F4F4 !important;
-      box-shadow:1px 1px 1px #080808;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:100%;
-    }
-  }
+      input[type=checkbox], input[type=radio] {
+        position: absolute;
+        left:-10000px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
 
-  input[type=checkbox], input[type=radio] {
-    &:checked + .label span.button {
-      display:inline-block;
-      background-color:LightSteelBlue !important;
-      box-shadow:1px 1px 1px #080808 inset;
-      white-space:nowrap;
-      text-overflow:ellipsis;
+        + .label {
+          width:100%;
+        }
+        + .label span.button {
+          display:inline-block;
+          background-color:#F4F4F4 !important;
+          box-shadow:1px 1px 1px #080808;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          max-width:100%;
+        }
+        &:checked + .label span.button {
+          display:inline-block;
+          background-color:LightSteelBlue !important;
+          box-shadow:1px 1px 1px #080808 inset;
+          white-space:nowrap;
+          text-overflow:ellipsis;
+        }
+        &:disabled + .label {
+          opacity: 0.3;
+        }
+      }
     }
   }
 
