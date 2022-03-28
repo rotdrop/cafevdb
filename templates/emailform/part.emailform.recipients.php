@@ -130,6 +130,7 @@ $containerClass = $appName.'-'.'container';
             </label>
           </span>
         </span>
+        <span class="fill-word conjuntction"><?php p($l->t('CONJUNCTION: or')); ?></span>
         <?php } ?>
         <span class="basic-recipients-set announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
           <input type="<?php $projectId > 0 ? p('checkbox') : p('radio'); ?>"
