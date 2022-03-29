@@ -49,13 +49,16 @@ $.fn.readonly = function(state) {
           }
         });
       } else {
-        const name = $this.attr('name') + '[]';
+        let name = $this.attr('name');
+        if (!name.endsWith('[]')) {
+          name += '[]';
+        }
         $this.find('option').each(function() {
           const $option = $(this);
           let placeholder = $option.data('readonlyPlaceholder');
           if (!placeholder) {
             placeholder = $('<input type="hidden" name="' + name + '"/>');
-            $this.after(placeholder);
+            $this.before(placeholder);
             $option.data('readonlyPlaceholder', placeholder);
           }
           placeholder.attr('value', $option.attr('value') || $option.text());
@@ -72,7 +75,7 @@ $.fn.readonly = function(state) {
         });
       }
       refreshSelectWidget($this);
-    } else if ($this.is('radio')) {
+    } else if ($this.is(':radio')) {
       let $container = $this.closest('fieldset');
       if (!$container) {
         $container = $this.closest('form');
@@ -94,11 +97,11 @@ $.fn.readonly = function(state) {
           $radio.prop('disabled', !$radio.prop('checked'));
         }
       });
-    } else if ($this.is('checkbox')) {
+    } else if ($this.is(':checkbox')) {
       let placeholder = $this.data('readonlyPlaceholder');
       if (!placeholder) {
         placeholder = $('<input type="hidden" name="' + $this.attr('name') + '"/>');
-        $this.after(placeholder);
+        $this.before(placeholder);
         $this.data('readonlyPlaceholder', placeholder);
       }
       placeholder.attr('value', $this.attr('value') || 'on');
