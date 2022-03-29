@@ -124,7 +124,7 @@ $announcementsMailingListTitle = !empty($announcementsMailingList)
                  id="basic-recipients-set-database"
                  class="basic-recipients-set database tip"
                  disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>"
-                 name="emailRecipients[basicRecipientsSet][announcementsMailinglist]"
+                 name="emailRecipients[basicRecipientsSet][announcementsMailingList]"
                  value="0"
                  <?php $basicRecipientsSet['announcementsMailingList'] || empty($announcementsMailingList) || p('checked'); ?>
           />
@@ -143,7 +143,7 @@ $announcementsMailingListTitle = !empty($announcementsMailingList)
                  id="basic-recipients-set-announcements-mailing-list"
                  class="basic-recipients-set announcements-mailing-list tip"
                  disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']; ?>"
-                 name="emailRecipients[basicRecipientsSet][announcementsMailinglist]"
+                 name="emailRecipients[basicRecipientsSet][announcementsMailingList]"
                  value="1"
                  <?php $basicRecipientsSet['announcementsMailingList'] && p('checked'); ?>
                  <?php empty($announcementsMailingList) && p('disabled'); ?>

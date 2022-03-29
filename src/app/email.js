@@ -33,7 +33,7 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
+import { deselectAll as selectDeselectAll, optionByValue as selectOptionByValue } from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -321,10 +321,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     if (state) {
       // Disable all recipient filters as they do not make any
       // sense. Sending to the mailing list means to just send to
-      // the one global announcements list.
+      // the one global announcements list address.
       $otherInputs.each(function(index) {
         const $this = $(this);
-        $this.data('disabledStatus', $this.prop('readonly'));
         $this.readonly('true');
         if ($this.is(':button, :submit')) {
           $this.prop('disabled', true);
@@ -334,12 +333,12 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     } else {
       $otherInputs.each(function(index) {
         const $this = $(this);
-        $this.readonly($this.data('disabledStatus') || false);
-        $this.removeData('disabledStatus');
+        $this.readonly(false);
         if ($this.is(':button, :submit')) {
-          $this.prop('disabled', $this.prop('readonly'));
+          $this.prop('disabled', false);
         }
       });
+      fieldset.find('.bootstrap-duallistbox-container').find('input, select, button').prop('disabled', false);
     }
   };
 
@@ -356,10 +355,15 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       const mailingListRecipients = $this.is('.announcements-mailing-list') && $this.prop('checked');
 
       readonlyFiltersControls(mailingListRecipients);
+      basicRecipientsSetProject.readonly(mailingListRecipients);
+      if (!mailingListRecipients) {
+        applyRecipientsFilter.call(this, event);
+      }
       return false;
     });
   if (basicRecipientsSet.filter('.announcements-mailing-list').prop('checked')) {
     readonlyFiltersControls(true);
+    basicRecipientsSetProject.readonly(true);
   }
 
   basicRecipientsSetProject
@@ -1187,10 +1191,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
 
         if (draftId > 0) {
+          // find the draft data in the select which we mis-use as data-storage here
+          const $draftOption = selectOptionByValue(storedEmailsSelector, '__draft-' + draftId);
+          let draftMeta = '';
+          if ($draftOption.length === 1) {
+            const title = $draftOption.attr('title') || $draftOption.attr('data-original-title') || $draftOption.html();
+            draftMeta = '<br/>' + title;
+          }
           Dialogs.confirm(
             t(appName,
               'Do you really want to delete the backup copy of the current message (id = {id})?',
-              { id: draftId }),
+              { id: draftId })
+              + draftMeta,
             t(appName, 'Really Delete Draft?'),
             function(confirmed) {
               if (confirmed) {
@@ -1203,6 +1215,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 });
               }
             },
+            true,
             true);
         }
       }

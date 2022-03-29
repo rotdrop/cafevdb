@@ -708,23 +708,26 @@ span.error.contents.item.substitutions {
 form#cafevdb-email-form {
 
   .missing-email-addresses {
-    span.personal-record {
+    .personal-record {
       color:red;
       font-style:italic;
-      text-decoration:undline;
+      text-decoration:underline;
       font-weight:bold;
       cursor:pointer;
       padding:2px;
     }
 
-    span.personal-record:hover {
-      box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
-      /*background-color:LightSteelBlue;*/
-      background-color:rgba(250,250,250,0.9);
+    .personal-record:hover {
+      /* box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
+      /* background-color:LightSteelBlue; */
+      color: var(--color-main-text);
+      background-color:rgba(250,250,250,1.0);
+
     }
 
-    span.personal-record:active {
-      box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+    .personal-record:active {
+      /* box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+      color: var(--color-main-text);
       background-color:LightSteelBlue;
     }
   }

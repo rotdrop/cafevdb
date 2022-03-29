@@ -692,6 +692,9 @@ class RecipientsFilter
         if (!empty($userBase['exceptProject'])) {
           $this->userBase |= self::MUSICIANS_EXCEPT_PROJECT;
         }
+        if (!empty($userBase['announcementsMailingList'])) {
+          $this->userBase |= self::ANNOUNCEMENTS_MAILINGLIST;
+        }
       }
     }
   }
