@@ -1542,13 +1542,46 @@ class PersonalSettingsController extends Controller {
     case 'emailtestaddress':
     case 'emailfromaddress':
       $realValue = Util::normalizeSpaces($value);
+      $parser = new \Mail_RFC822(null, null, null, false);
+      $parsedEmail = $parser->parseAddressList($realValue);
+      $parseError = $parser->parseError();
+      if ($parseError !== false) {
+        return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $parseError['message'] ]));
+      }
+      if (count($parsedEmail) !== 1) {
+        return self::grumble($this->l->t('"%s" seems to contain multiple email address, only a single address is allowed here.', $value));
+      }
+      $parsedEmail = $parsedEmail[0];
+      if (empty($parsedEmail->host)) {
+        return self::grumble($this->l->t('"%s" does not contain the host-part of the email-address, local addresses are not allowed here.', $value));
+      }
+      $realValue = $parsedEmail->mailbox . '@' . $parsedEmail->host;
       if (!empty($realValue) && filter_var($realValue, FILTER_VALIDATE_EMAIL) === false) {
         return self::grumble($this->l->t('"%s" does not seem to be a valid email address', $value));
       }
+      if (!empty($parsedEmail->personal)) {
+        $displayName = $parsedEmail->personal;
+      } else if (!empty($parsedEmail->comment)) {
+        $displayName = implode(', ', $parsedEmail->comment);
+      }
+      if (!empty($displayName)) {
+        switch ($parameter) {
+          case 'announcementsMailingList':
+            $this->setSimpleConfigValue('announcementsMailingListName', $displayName, responseData: $nameData);
+            $reportValue = $displayName . ' <' . $realValue . '>';
+            break;
+          case 'emailtestaddress':
+            break; // ignore
+          case 'emailfromaddress':
+            $this->setSimpleConfigValue('emailfromname', $displayName, responseData: $nameData);
+            break;
+        }
+      }
+    case 'announcementsMailingListName':
     case 'emailuser':
     case 'emailpassword':
     case 'emailfromname':
-      return $this->setSimpleConfigValue($parameter, $value);
+      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $nameData ?? []);
 
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -1933,7 +1966,7 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
-  private function setSimpleConfigValue($key, $value, $reportValue = null, array $furtherData = [])
+  private function setSimpleConfigValue($key, $value, $reportValue = null, array $furtherData = [], ?array &$responseData = null)
   {
     $realValue = Util::normalizeSpaces($value);
     if (empty($reportValue)) {
@@ -1943,7 +1976,7 @@ class PersonalSettingsController extends Controller {
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
       return self::dataResponse(
-        Util::arrayMergeRecursive([
+        $responseData = Util::arrayMergeRecursive([
           'message' => [ $this->l->t('Erased config value for parameter "%s".', $key), ],
           $key => $value,
         ], $furtherData)
@@ -1955,8 +1988,8 @@ class PersonalSettingsController extends Controller {
         $realValue = '••••••••';
       }
       return self::dataResponse(
-        Util::arrayMergeRecursive([
-          'message' => [ $this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ]), ],
+        $responseData = Util::arrayMergeRecursive([
+          'message' => [ htmlspecialchars($this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ])), ],
           $key => $reportValue,
           $key.'Raw' => $realValue,
         ], $furtherData));

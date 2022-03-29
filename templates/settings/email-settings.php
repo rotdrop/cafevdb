@@ -114,7 +114,7 @@ use OCA\CAFEVDB\Common\Util;
     </form>
     <h4><?php echo $l->t('Bulk Email Composition'); ?></h4>
     <form class="bulk-email-settings">
-      <fieldset clas="emailtransport">
+      <fieldset class="emailtransport">
         <legend><?php p($l->t('Bulk Email Transport')); ?></legend>
         <input type="text"
                name="announcementsMailingList"
@@ -123,10 +123,10 @@ use OCA\CAFEVDB\Common\Util;
                placeholder="<?php p($l->t('Mailing List')); ?>"
                title="<?php echo $toolTips['emailform:transport:announcements:mailinglist']; ?>"
         />
-        <label for="announcement-mailing-list"
+        <label for="announcements-mailing-list"
                title="<?php echo $toolTips['emailform:transport:announcements:mailinglist']; ?>"
         >
-          <?php p($l->t('Announcement Mailing List')); ?>
+          <?php p($l->t('Announcements Mailing List')); ?>
         </label>
       </fieldset>
       <fieldset class="emailidentity">

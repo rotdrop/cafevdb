@@ -482,6 +482,13 @@ input.randomkey {
 }
 
 #email-settings {
+  form.bulk-email-settings {
+    fieldset.emailtransport {
+      input#announcements-mailing-list {
+        width:32ex;
+      }
+    }
+  }
   form.mailing-list {
     input[type="text"], input[type="password"] {
       width:200px;

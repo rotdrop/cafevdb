@@ -848,7 +848,6 @@ class RecipientsFilter
       $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_unique($selectedRecipients);
-    //$_POST['blah'] = print_r($this->eMails, true);
     $eMails = [];
     foreach ($selectedRecipients as $key) {
       if (isset($this->eMails[$key])) {
