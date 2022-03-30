@@ -517,7 +517,7 @@ class RecipientsFilter
               'email'   => $emailVal,
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
-              'project' => $this->projectId??-1,
+              'project' => $this->projectId ?? 0,
               'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
@@ -842,6 +842,18 @@ class RecipientsFilter
    */
   public function selectedRecipients()
   {
+    if ($this->userBase & self::ANNOUNCEMENTS_MAILINGLIST) {
+      return [
+        [
+          'email' => $this->getConfigValue('announcementsMailingList'),
+          'name' =>  $this->getConfigValue('announcementsMailingListName'),
+          'status' => DBTypes\EnumMemberStatus::REGULAR,
+          'project' => $this->projectId ?? 0,
+          'dbdata' => null,
+        ],
+      ];
+    }
+
     if ($this->submitted) {
       $selectedRecipients = $this->cgiValue('selectedRecipients', []);
     } else {
