@@ -1564,24 +1564,42 @@ class PersonalSettingsController extends Controller {
       } else if (!empty($parsedEmail->comment)) {
         $displayName = implode(', ', $parsedEmail->comment);
       }
+      $furtherData = [];
       if (!empty($displayName)) {
         switch ($parameter) {
           case 'announcementsMailingList':
-            $this->setSimpleConfigValue('announcementsMailingListName', $displayName, responseData: $nameData);
+            $this->setSimpleConfigValue('announcementsMailingListName', $displayName, responseData: $furtherData);
             $reportValue = $displayName . ' <' . $realValue . '>';
             break;
           case 'emailtestaddress':
             break; // ignore
           case 'emailfromaddress':
-            $this->setSimpleConfigValue('emailfromname', $displayName, responseData: $nameData);
+            $this->setSimpleConfigValue('emailfromname', $displayName, responseData: $furtherData);
             break;
+        }
+      }
+      if ($parameter === 'announcementsMailingList') {
+        try {
+          /** @var MailingListsService $listsService */
+          $listsService = $this->di(MailingListsService::class);
+          $listInfo = $listsService->getListInfo($realValue);
+          $this->logInfo('LIST INFO ' . print_r($listInfo, true));
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $furtherData = Util::arrayMergeRecursive($furtherData, [
+            'message' => [
+              $this->l->t('The Mailing list "%1$s" does not seem to exist on the configured mailing-list service.', [
+                $realValue,
+              ])
+            ],
+          ]);
         }
       }
     case 'announcementsMailingListName':
     case 'emailuser':
     case 'emailpassword':
     case 'emailfromname':
-      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $nameData ?? []);
+      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData);
 
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -1630,8 +1648,9 @@ class PersonalSettingsController extends Controller {
         $oldValue = $this->getConfigValue($parameter);
         $this->setConfigValue($parameter, ${$parameter});
         try {
-          $listService = $this->di(MailingListsService::class);
-          if (empty($listService->getServerConfiguration())) {
+          /** @var MailingListsService $listsService */
+          $listsService = $this->di(MailingListsService::class);
+          if (empty($listsService->getServerConfig())) {
             $this->setConfigValue($parameter, $oldValue);
             return self::grumble(
               $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
