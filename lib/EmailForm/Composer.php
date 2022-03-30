@@ -2940,6 +2940,18 @@ Störung.';
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
+      if (!empty($this->recipientsFilter->basicRecipientsSet()['announcementsMailingList'])) {
+        $this->executionStatus = false;
+        $this->diagnostics['TemplateValidation']['PreconditionError'] = [ $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.') ];
+        if ($hasPersonalSubstitutions) {
+          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
+        }
+        if ($hasPersonalAttachments) {
+          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
+        }
+        return null;
+      }
+
       $this->logInfo(
         'Composing separately because of personal substitutions / attachments '
         . (int)$hasPersonalSubstitutions

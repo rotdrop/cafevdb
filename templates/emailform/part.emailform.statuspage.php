@@ -137,14 +137,17 @@ if (!empty($templateDiag)) {
     'MemberErrors' => $l->t('Failed individual substitutions'),
     'GlobalErrors' => $l->t('Failed global substitutions'),
     'SpuriousErrors' => $l->t('Other failed substitutions'),
+    'PreconditionError' => $l->t('Precondition failed'),
   ];
   echo '
 <div class="emailform error group substitutions">
   <span class="error caption substitutions">
-  '.$l->t('The operation failed due to template validation errors. '.
-          'The following template substitutions could not be resolved:').'
+  '.$l->t('The operation failed due to template validation errors.
+Not all variable substitutions could be resolved:').'
   </span>';
+  $needExplanations = false;
   foreach ($templateDiag as $key => $failed) {
+    $needExplanations = $needExplanations || ($key != 'PreconditionError');
     $cssTag = Util::camelCaseToDashes($key);
     echo '
   <div class="error contents substitutions '.$cssTag.'">
@@ -158,26 +161,27 @@ if (!empty($templateDiag)) {
     </ul>
   </div>';
   }
-  $explanations =
-    $l->t("Please understand that the software is really `picky'; ".
-          "names have to match exactly. ".
-          "Please use only capital letters for variable names. ".
-          "Please do not use spaces. Vaiable substitutions have to start with ".
-          "a dollar-sign `%s', be enclosed by curly braces `%s' and consist of a ".
-          "category-name (e.g. `%s') separated by double colons `%s' from ".
-          "the variable name itself (e.g. `%s'). An example is ".
-          "`%s'. ".
-          "Please have a look at the example template `%s' which contains ".
-          "a complete list of all known substitutions.",
-          [
-	    '<span class="error code">$</span>',
-            '<span class="error code">{...}</span>',
-            '<span class="error code">GLOBAL</span>',
-            '<span class="error code">::</span>',
-            '<span class="error code">ORGANIZER</span>',
-            '<span class="error code">${GLOBAL::ORGANIZER}</span>',
-            '<span class="error code">All Variables</span>',
-	  ]);
+  $explanations = !$needExplanations
+    ? ''
+    : $l->t("Please understand that the software is really `picky'; ".
+            "names have to match exactly. ".
+            "Please use only capital letters for variable names. ".
+            "Please do not use spaces. Vaiable substitutions have to start with ".
+            "a dollar-sign `%s', be enclosed by curly braces `%s' and consist of a ".
+            "category-name (e.g. `%s') separated by double colons `%s' from ".
+            "the variable name itself (e.g. `%s'). An example is ".
+            "`%s'. ".
+            "Please have a look at the example template `%s' which contains ".
+            "a complete list of all known substitutions.",
+            [
+	      '<span class="error code">$</span>',
+              '<span class="error code">{...}</span>',
+              '<span class="error code">GLOBAL</span>',
+              '<span class="error code">::</span>',
+              '<span class="error code">ORGANIZER</span>',
+              '<span class="error code">${GLOBAL::ORGANIZER}</span>',
+              '<span class="error code">All Variables</span>',
+            ]);
   echo ' <div class="error contents explanations">
   '.$explanations.'
   </div>';
