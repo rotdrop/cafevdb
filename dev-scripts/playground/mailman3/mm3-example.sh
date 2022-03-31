@@ -9,8 +9,8 @@
 # >>> response, content = Http().request(url, 'GET', None, headers)
 # >>> print(response.status)
 
-LISTNAME="resttest@lists.renovation.cafev.de"
-LISTID="resttest.lists.renovation.cafev.de"
+LISTNAME="resttest@lists.cafev.de"
+LISTID="resttest.lists.cafev.de"
 
 # list of mailing lists
 # curl \
