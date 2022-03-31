@@ -605,54 +605,61 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             fieldset = panelHolder.find('fieldset.email-composition.page');
             emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
             break;
-          case 'element':
-            switch (requestData.formElement) {
-            case 'to': {
-              const toSpan = fieldset.find('span.email-recipients');
-              let rcpts = requestData.elementData;
-              if (rcpts.length === 0) {
-                rcpts = toSpan.data('placeholder');
+          case 'element': {
+            const formElements = Array.isArray(requestData.formElement)
+              ? requestData.formElement
+              : [requestData.formElement];
+            for (const formElement of formElements) {
+              const elementData = requestData.elementData[formElement];
+              switch (formElement) {
+              case 'to': {
+                const toSpan = fieldset.find('span.email-recipients');
+                let rcpts = elementData;
+                if (rcpts.length === 0) {
+                  rcpts = toSpan.data('placeholder');
+                }
+                const title = toSpan.data('titleIntro') + '<br>' + rcpts;
+
+                toSpan.html(rcpts);
+                toSpan.attr('title', title);
+                toSpan.cafevTooltip();
+                break;
               }
-              const title = toSpan.data('titleIntro') + '<br>' + rcpts;
+              case 'fileAttachments': {
+                const options = elementData.options;
+                // alert('options: '+JSON.stringify(options));
+                const fileAttachments = requestData.elementData.attachments;
+                fieldset.find('input.file-attachments').val(JSON.stringify(fileAttachments));
+                fileAttachmentsSelector.html(options);
+                fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
+                fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                fileAttachmentsSelector.trigger('chosen:updated');
+                panelHolder.trigger('resize', { position: 'bottom' });
+                break;
+              }
+              case 'eventAttachments': {
+                const options = elementData.options;
+                // const eventAttachments = requestData.elementData.attachments;
+                eventAttachmentsSelector.html(options);
+                eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
+                eventAttachmentsSelector.trigger('chosen:updated');
+                panelHolder.trigger('resize');
 
-              toSpan.html(rcpts);
-              toSpan.attr('title', title);
-              toSpan.cafevTooltip();
-              break;
-            }
-            case 'fileAttachments': {
-              const options = requestData.elementData.options;
-              // alert('options: '+JSON.stringify(options));
-              const fileAttachments = requestData.elementData.attachments;
-              fieldset.find('input.file-attachments').val(JSON.stringify(fileAttachments));
-              fileAttachmentsSelector.html(options);
-              fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
-              fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-              fileAttachmentsSelector.trigger('chosen:updated');
-              panelHolder.trigger('resize', { position: 'bottom' });
-              break;
-            }
-            case 'eventAttachments': {
-              const options = requestData.elementData.options;
-              // const eventAttachments = requestData.elementData.attachments;
-              eventAttachmentsSelector.html(options);
-              eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-              eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
-              eventAttachmentsSelector.trigger('chosen:updated');
-              panelHolder.trigger('resize');
-
-              break;
-            }
-            default:
-              postponeEnable = true;
-              Dialogs.alert(
-                t(appName, 'Unknown form element: {FormElement}', { FormElement: requestData.formElement }),
-                t(appName, 'Error'),
-                validateUnlock,
-                true, true);
-              break;
+                break;
+              }
+              default:
+                postponeEnable = true;
+                Dialogs.alert(
+                  t(appName, 'Unknown form element: {formElement}', { formElement }),
+                  t(appName, 'Error'),
+                  validateUnlock,
+                  true, true);
+                break;
+              }
             }
             break; // element
+          }
           }
           break; // update
         case 'validateEmailRecipients':
@@ -1913,7 +1920,7 @@ function emailFormPopup(post, modal, single, afterInit) {
               // we better serialize the entire form here
               let post = emailForm.serialize();
               // place our update request
-              post += '&emailComposer[request]=update&emailComposer[formElement]=TO';
+              post += '&emailComposer[request]=update&emailComposer[formElement][]=to&emailComposer[formElement][]=subjectTag';
               const url = generateComposerUrl('update', 'element');
               $.post(url, post)
                 .fail(Ajax.handleError)
@@ -1925,7 +1932,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                   }
                   // could check whether formElement is indeed 'TO' ...
                   const toSpan = emailForm.find('span.email-recipients');
-                  let rcpts = data.requestData.elementData;
+                  let rcpts = data.requestData.elementData.to;
 
                   if (rcpts.length === 0) {
                     rcpts = toSpan.data('placeholder');
@@ -1935,6 +1942,10 @@ function emailFormPopup(post, modal, single, afterInit) {
                   toSpan.html(rcpts);
                   toSpan.attr('title', title);
                   toSpan.cafevTooltip();
+
+                  const subjectTag = data.requestData.elementData.subjectTag;
+                  const $subjectTag = emailForm.find('span.subject.tag');
+                  $subjectTag.html(subjectTag);
                 });
               return true;
             },

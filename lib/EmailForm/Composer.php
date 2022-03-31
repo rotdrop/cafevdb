@@ -2940,7 +2940,7 @@ Störung.';
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
-      if (!empty($this->recipientsFilter->basicRecipientsSet()['announcementsMailingList'])) {
+      if ($this->recipientsFilter->announcementsMailingList()) {
         $this->executionStatus = false;
         $this->diagnostics['TemplateValidation']['PreconditionError'] = [ $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.') ];
         if ($hasPersonalSubstitutions) {
@@ -3110,14 +3110,22 @@ Störung.';
    */
   private function setSubjectTag()
   {
-    $tagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
-    if (!empty($tagPrefix)) {
-      $tagPrefix = $tagPrefix . '-';
-    }
-    if ($this->projectId < 0 || $this->projectName == '') {
-      $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('musicians')) . ']';
+    if ($this->recipientsFilter->announcementsMailingList()) {
+      if ($this->projectId <= 0 || $this->projectName == '') {
+        $this->messageTag = ''; // the mailing list has its own tag
+      } else {
+        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag
+      }
     } else {
-      $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
+      $tagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+      if (!empty($tagPrefix)) {
+        $tagPrefix = $tagPrefix . '-';
+      }
+      if ($this->projectId <= 0 || $this->projectName == '') {
+        $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('ALL_PERSONS: musicians')) . ']';
+      } else {
+        $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
+      }
     }
   }
 

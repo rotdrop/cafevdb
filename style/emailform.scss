@@ -543,30 +543,36 @@
             }
           }
 
-          td.subject.input span.subject.tag {
-            font-family:monospace;
-            font-size:100%;
-            width:auto;
-            max-width:30%;
-            text-align:right;
-            font-weight:bold;
-            display:inline-block;
-            float:left;
-            line-height:2.5em;
-            overflow:hidden;
-            text-overflow:ellipsis;
-          }
+          td.subject.input {
+            span.subject.tag {
+              font-family:monospace;
+              font-size:100%;
+              width:auto;
+              max-width:30%;
+              text-align:right;
+              font-weight:bold;
+              display:inline-block;
+              float:left;
+              line-height:2.5em;
+              overflow:hidden;
+              text-overflow:ellipsis;
 
-          td.subject.input span.subject.input {
-            width:67%;
-            /* padding: 0 1em 0 0; */
-            display:inline-block;
-            line-height:2.5em;
-            float:right;
-          }
+              &:empty ~ span.subject.input {
+                width:100%;
+              }
+            }
 
-          td.subject.input input {
-            width:100%;
+            span.subject.input {
+              width:67%;
+              /* padding: 0 1em 0 0; */
+              display:inline-block;
+              line-height:2.5em;
+              float:right;
+            }
+
+            input {
+              width:100%;
+            }
           }
 
           td.messagetext {

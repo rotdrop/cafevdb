@@ -161,7 +161,8 @@ class RecipientsFilter
     $this->cgiData['basicRecipientsSet']['exceptProject'] =
       isset($this->cgiData['basicRecipientsSet']['exceptProject']);
     $this->cgiData['basicRecipientsSet']['announcementsMailingList'] =
-      isset($this->cgiData['basicRecipientsSet']['announcementsMailingList']);
+      isset($this->cgiData['basicRecipientsSet']['announcementsMailingList'])
+      && !empty($this->cgiData['basicRecipientsSet']['announcementsMailingList']);
 
     $this->projectId = $this->parameterService->getParam('projectId', -1);
     $this->projectName = $this->parameterService->getParam('projectName', '');
@@ -753,6 +754,21 @@ class RecipientsFilter
       'exceptProject' => ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0,
       'announcementsMailingList' => ($this->userBase & self::ANNOUNCEMENTS_MAILINGLIST) != 0,
     ];
+  }
+
+  public function recipientsFromProject():bool
+  {
+    return ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0;
+  }
+
+  public function recipientsExceptProject():bool
+  {
+    return ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0;
+  }
+
+  public function announcementsMailingList():bool
+  {
+    return ($this->userBase & self::ANNOUNCEMENTS_MAILINGLIST) != 0;
   }
 
   /**

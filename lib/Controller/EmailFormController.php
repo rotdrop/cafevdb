@@ -241,7 +241,7 @@ class EmailFormController extends Controller {
     $projectName = $requestData['projectName'];
     $bulkTransactionId = $requestData['bulkTransactionId'];
 
-    /** @var Composer */
+    /** @var Composer $composer */
     $composer = $this->appContainer->get(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
 
@@ -365,33 +365,39 @@ class EmailFormController extends Controller {
           'blank'))->render();
         break;
       case 'element':
-        $formElement = $requestData['formElement'];
-        switch ($formElement) {
-        case 'TO':
-          $elementData = $composer->toString();
-          break;
-        case 'fileAttachments':
-          $fileAttachments = $composer->fileAttachments();
-          $elementData = [
-            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
-            'attachments' => $fileAttachments,
-          ];
-          break;
-        case 'eventAttachments':
-          $eventAttachments = $composer->eventAttachments();
-          $elementData = [
-            'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
-            'attachments' => $eventAttachments,
-          ];
-          break;
-        default:
-          return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+        $formElements = $requestData['formElement'];
+        $formElements = is_array($formElements) ? $formElements : [ $formElements ];
+        foreach ($formElements as $formElement) {
+          switch (strtolower($formElement)) {
+            case 'to':
+              $elementData[$formElement] = $composer->toString();
+              break;
+            case 'subjecttag':
+              $elementData[$formElement] = $composer->subjectTag();
+              break;
+            case 'fileattachments':
+              $fileAttachments = $composer->fileAttachments();
+              $elementData[$formElement] = [
+                'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
+                'attachments' => $fileAttachments,
+              ];
+              break;
+            case 'eventattachments':
+              $eventAttachments = $composer->eventAttachments();
+              $elementData[$formElement] = [
+                'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
+                'attachments' => $eventAttachments,
+              ];
+              break;
+            default:
+              return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+          }
         }
         break;
       default:
         return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
       }
-      $requestData['formElement'] = $formElement;
+      $requestData['formElement'] = $formElements ?? null;
       $requestData['elementData'] = $elementData;
       break;
     case 'load':
