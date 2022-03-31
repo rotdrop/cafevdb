@@ -25,6 +25,8 @@ namespace OCA\CAFEVDB\Service;
 
 use GuzzleHttp\Client as RestClient;
 
+use OCA\CAFEVDB\Common\Util;
+
 /** Handle participant mailing-list services. */
 class MailingListsService
 {
@@ -261,6 +263,75 @@ class MailingListsService
       'auth' => $this->restAuth,
     ]);
     return true;
+  }
+
+  /**
+   * Ensure that the given folder exists and is anonymously shared.
+   *
+   * @param string $folder The template folder to check for.The $folderName is
+   * always treated relative to the shared orchestra file-space. If
+   * $folderName is an absolute path, it is still relative to the shared
+   * file-space of the orchestra. If $folderName is a relative path then it is
+   * treated as relative to the configured document-templates folder.
+   *
+   * @return string The URL in order to access the folder.
+   */
+  public function ensureTemplateFolder(string $folderName)
+  {
+    $shareOwnerUid = $this->getConfigValue('shareowner');
+    if ($folderName[0] != '/') {
+      // relative path
+      $l = $this->appL10n();
+      $listsFolder = Util::dashesToCamelCase($l->t('mailing lists'), capitalizeFirstCharacter: true);
+      $folderPath = $this->getDocumentTemplatesPath() . '/' . $listsFolder . '/' . $folderName;
+      if ($folderPath[0] != '/') {
+        $folderPath = '/' . $folderPath;
+      }
+    } else {
+      // absolute path
+      $folderPath = $folderName;
+    }
+
+    // try to create or use the folder and share it by a public link
+    $result = $this->sudo($shareOwner, function() use ($folderPath, $shareOwnerUid) {
+
+      $shareOwner = $this->user();
+      $rootView = $this->rootFolder->getUserFolder($shareOwnerUid);
+
+      if ($rootView->nodeExists($folderPath)
+          && (($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER
+              || !$node->isShareable())) {
+        try {
+          $node->delete();
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          return null;
+        }
+      }
+
+      if (!$rootView->nodeExists($folderPath) && !$rootView->newFolder($folderPath)) {
+        return null;
+      }
+
+      if (!$rootView->nodeExists($folderPath)
+          || ($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER) {
+        throw new \Exception($this->l->t('Folder \`%s\' could not be created', [$folderPath]));
+      }
+
+      // Now it should exist as directory and $node should contain its file-info
+
+      if ($node) {
+        $url = $this->sharingService->linkShare($node, $shareOwnerUid, sharePerm: \OCP\Constants::PERMISSION_READ);
+        if (empty($url)) {
+          return null;
+        }
+      } else {
+        $this->logError('No file info for ' . $folderPath);
+        return null;
+      }
+
+      return $url;
+    });
   }
 
   // ensure that the given string is a list-id, if it is a FQDN then try to
