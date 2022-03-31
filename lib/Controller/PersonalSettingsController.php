@@ -1596,10 +1596,11 @@ class PersonalSettingsController extends Controller {
         }
       }
     case 'announcementsMailingListName':
+    case 'bulkEmailSubjectTag':
     case 'emailuser':
     case 'emailpassword':
     case 'emailfromname':
-      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData);
+      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
 
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);

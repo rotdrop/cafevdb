@@ -156,6 +156,20 @@ use OCA\CAFEVDB\Common\Util;
           <?php echo $l->t('From: address');?>
         </label>
       </fieldset>
+      <fieldset class="bulk-email-subject">
+        <legend><?php p($l->t('Bulk Email Subject')); ?></legend>
+        <span class="bulk-email-subject tag">[</span>
+        <input type="text"
+               name="bulkEmailSubjectTag"
+               id="bulk-email-subject-tag"
+               class="tooltip-auto"
+               value="<?php p($bulkEmailSubjectTag); ?>"
+               title="<?php echo $toolTips['emailform:composer:subject:tag']; ?>"
+               size="5"
+        />
+        <span class="bulk-email-subject tag"><?php p('-' . $l->t('ProjectNameYYYY') . ']'); ?></span>
+        <span class="bulk-email-subject"><?php p($l->t('Example Subject')); ?></span>
+      </fieldset>
       <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>
         <input type="text"
@@ -164,11 +178,11 @@ use OCA\CAFEVDB\Common\Util;
                class="attachmentLinkSizeLimit tooltip-auto"
                value="<?php p($attachmentLinkSizeLimit); ?>"
                placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
+               title="<?php echo $toolTips['emailform:composer:attachments:link:size-limit']; ?>"
         />
         <label for="attachmentLinkSizeLimit"
                class="tooltip-auto"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
+               title="<?php echo $toolTips['emailform:composer:attachments:link:size-limit']; ?>"
         >
           <?php p($l->t('Attachment Link Size Limit')); ?>
         </label>

@@ -3110,10 +3110,14 @@ Störung.';
    */
   private function setSubjectTag()
   {
+    $tagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+    if (!empty($tagPrefix)) {
+      $tagPrefix = $tagPrefix . '-';
+    }
     if ($this->projectId < 0 || $this->projectName == '') {
-      $this->messageTag = '[CAF-'.ucfirst($this->l->t('musicians')).']';
+      $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('musicians')) . ']';
     } else {
-      $this->messageTag = '[CAF-'.$this->projectName.']';
+      $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
     }
   }
 

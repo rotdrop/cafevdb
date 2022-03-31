@@ -488,6 +488,18 @@ input.randomkey {
         width:32ex;
       }
     }
+    fieldset.bulk-email-subject {
+      span.bulk-email-subject {
+        font-family:monospace;
+        font-size:1em;
+        font-weight:bold;
+      }
+      input#bulk-email-subject-tag {
+        width:4em;
+        font-family:monospace;
+        font-size:1em;
+      }
+    }
   }
   form.mailing-list {
     input[type="text"], input[type="password"] {

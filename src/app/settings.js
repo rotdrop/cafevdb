@@ -759,6 +759,7 @@ const afterLoad = function(container) {
         'input#announcements-mailing-list',
         'input#emailfromname',
         'input#emailfromaddress',
+        'input#bulk-email-subject-tag',
         'input.attachmentLinkSizeLimit',
         'input.attachmentLinkExpirationLimit',
       ].join(','));

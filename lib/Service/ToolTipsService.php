@@ -305,6 +305,9 @@ of this button.'),
           ],
         ],
         'composer' => [
+          'subject' => [
+            'tag' => $this->l->t('A very short (around 3 characters) tag which is used to construct the subject of a bulk email. More specifically, the subject has the form "[TAG-ProjectNameYYYY] Example Subject" where "TAG" is just the short tag entered here, "ProjectName" is the short project-name, "YYYY" the year of the project, "Example Subject" is just any custom subject string which is supplied through the email editor.'),
+          ],
           'recipients' => [
             'listing' => $this->l->t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
             'freeform-BCC' => $this->l->t('Add arbitrary further hidden recipients.'),

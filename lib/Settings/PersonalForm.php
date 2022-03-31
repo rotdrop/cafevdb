@@ -385,6 +385,7 @@ class PersonalForm {
           $this->parameterFromConfig($templateParameters, 'email'.$key);
         }
         $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
+        $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
 
         $key = 'attachmentLinkExpirationLimit';
         $templateParameters[$key] = $this->getConfigValue($key);
