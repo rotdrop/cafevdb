@@ -1033,6 +1033,12 @@ and contact the treasurer for further instructions.',
           'cloud-user-backend-conf' => $this->l->t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
         ],
         'personal' => [
+          'general' => [
+            'orchestra' => [
+              'name' => $this->l->t('Short descriptive name of the orchestra, e.g. use "camerata" instead of "camerata academica freiburg e.V.". The short name is used in various places. It should be lower-case and "handy", without spaces.'),
+              'locale' => $this->l->t('The locale of the orchestral organization. In particular, this determines the currency and the name of some directories in the file-system. Note that the timezone is always the same as the one used by the server the app runs on.'),
+            ],
+          ],
           'sharing' => [
             'user-sql' => [
               'enable' => $this->l->t('Import the orchestra club-members into the ambient cloud as ordinary cloud-users. This requires in particular GRANT privileges for the database. It also requires further configuration of the underlying "%s"-app as admin-user.', 'user_sql'),

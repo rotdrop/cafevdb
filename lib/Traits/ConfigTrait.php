@@ -76,6 +76,11 @@ trait ConfigTrait {
     return $this->configService->getL10n();
   }
 
+  protected function appL10n():IL10N
+  {
+    return $this->configService->getAppL10n();
+  }
+
   protected function logger():ILogger
   {
     return $this->configService->logger();
