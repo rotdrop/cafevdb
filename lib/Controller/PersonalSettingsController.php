@@ -291,6 +291,8 @@ class PersonalSettingsController extends Controller {
   public function setApp($parameter, $value) {
     switch ($parameter) {
     case 'orchestra':
+      $value = strtolower(Util::removeSpaces($value));
+    case 'orchestraLocale': // could check for valid locale ...
     case 'dbserver': // could check for valid hostname
     case 'dbname':
     case 'dbuser':
@@ -1633,6 +1635,7 @@ class PersonalSettingsController extends Controller {
         : $this->humanFileSize($realValue);
       return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
       break;
+
     case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
       foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
         ${$listConfig} = $this->getConfigValue($listConfig);

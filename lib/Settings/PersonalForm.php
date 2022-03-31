@@ -177,6 +177,7 @@ class PersonalForm {
         'locales' => $this->findAvailableLocales(),
         'languages' => $this->findAvailableLanguages(),
         'localeCountryNames' => $this->localeCountryNames(),
+        'localeLanguageNames' => $this->localeLanguageNames(),
         'timezone' => $this->getTimezone(),
         'adminsettings' => $isGroupAdmin,
         'encryptionkey' => $this->getAppEncryptionKey(),
@@ -295,6 +296,7 @@ class PersonalForm {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),
+            'orchestraLocale' => $this->getConfigValue('orchestraLocale', $this->getLocale()),
 
             'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
               $this->getConfigValue('cloudUserViewsDatabase')
