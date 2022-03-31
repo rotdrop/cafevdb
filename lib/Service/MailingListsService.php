@@ -30,6 +30,13 @@ class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  private const DEFAULT_SUBSCRIPTION_DATA = [
+    'pre_verified' => true,
+    'pre_confirmed' => true,
+    'pre_approved' => true,
+    'send_welcome_message' => true,
+  ];
+
   /** @var string
    * Default rest URI
    */
@@ -41,10 +48,18 @@ class MailingListsService
   /** @var array */
   private $restAuth;
 
+  /**
+   * @var array
+   *
+   * Cache the fqdn -> list-id mapping for the current request.
+   */
+  private $listIdByFqdn = [];
+
   public function __construct(
     ConfigService $configService
   ) {
     $this->configService = $configService;
+    $this->l = $this->l10n();
 
     $this->restClient = new RestClient([ 'base_uri' => $this->getConfigValue(
       ConfigService::MAILING_LIST_CONFIG['url'],
@@ -122,13 +137,47 @@ class MailingListsService
   }
 
   /**
+   * Install a message template.
+   *
+   * @param string $listId List-id or FQDN. If FQDN, an additional query is
+   * necessary to retrieve the list-id from the server.
+   */
+  public function setMessageTemplate(string $listId, string $template, ?string $uri)
+  {
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+
+    if ($uri === null) {
+      // delete
+      $response = $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
+        'auth' => $this->restAuth,
+      ]);
+    } else {
+      $response = $this->restClient->patch('/3.1/lists/' . $listId . '/uris', [
+        'json' => [
+        $template => $uri,
+        ],
+        'auth' => $this->restAuth,
+      ]);
+    }
+    return true;
+  }
+
+  /**
    * Fetch the list-id of the given list. Normally it is just the
    * email-address with @ replaced by a dot
    */
   public function getListId(string $fqdnName)
   {
-    $listInfo = $this->getListInfo($fqdnName);
-    return empty($listInfo) ? null : $listInfo['list_id'];
+    if (empty($this->listIdByFqdn[$fqdnName])) {
+      $listInfo = $this->getListInfo($fqdnName);
+      if (empty($listInfo)) {
+        return null;
+      }
+      $this->listIdByFqdn[$fqdnName] = $listInfo['list_id'];
+    }
+    return $this->listIdByFqdn[$fqdnName];
   }
 
   /**
@@ -137,12 +186,10 @@ class MailingListsService
    */
   public function getSubscription(string $listId, string $subscriptionAddress)
   {
-    if (strpos($listId, '@') !== false) {
-      $listId = $this->getListId($listId);
-      if (empty($listId)) {
-        return null;
-      }
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
     }
+
     $response = $this->restClient->post(
       '/3.1/members/find', [
         'json' => [
@@ -161,7 +208,73 @@ class MailingListsService
     return reset($response['entries']);
   }
 
+  /**
+   * Subscribe a victim to the email-list.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param array $subscriptionData The data array which at least the field
+   * 'subscriber' which is the email-address to subscribe. It should also
+   * contain a display name. All other parameters understood by the rest-API
+   * are passed on the the list-server. The 'list_id' is overridden by the
+   * first parameter.
+   */
+  public function subscribe(string $listId, array $subscriptionData)
+  {
+    if (empty($subscriptionData['subscriber'])) {
+      throw new \InvalidArgumentException($this->l->t('Missing subscriber email-address.'));
+    }
 
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+
+    $subscriptionData = array_merge(self::DEFAULT_SUBSCRIPTION_DATA, $subscriptionData);
+    $subscriptionData['list_id'] = $listId;
+
+    $this->restClient->post('/3.1/members', [
+      'json' => $subscriptionData,
+      'auth' => $this->restAuth,
+    ]);
+    return true;
+  }
+
+  /**
+   * Unsubscribe the given email-address.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriber The email-address of the subscriber.
+   */
+  public function unsubscribe(string $listId, string $subscriber)
+  {
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+    $subscriptionData = $this->getSubscription($listId, $subscriber);
+    if (empty($subscriptionData['self_link'])) {
+      return false;
+    }
+    $this->restClient->delete($subscriptionData['self_link'], [
+      'auth' => $this->restAuth,
+    ]);
+    return true;
+  }
+
+  // ensure that the given string is a list-id, if it is a FQDN then try to
+  // retrieve the list-id.
+  private function ensureListId(string $identifier)
+  {
+    if (strpos($identifier, '@') !== false) {
+      $identifier = $this->getListId($identifier);
+      if (empty($identifier)) {
+        return null;
+      }
+    }
+    return $identifier;
+  }
 }
 
 // Local Variables: ***
