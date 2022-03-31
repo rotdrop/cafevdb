@@ -158,17 +158,19 @@ use OCA\CAFEVDB\Common\Util;
       </fieldset>
       <fieldset class="bulk-email-subject">
         <legend><?php p($l->t('Bulk Email Subject')); ?></legend>
-        <span class="bulk-email-subject tag">[</span>
-        <input type="text"
-               name="bulkEmailSubjectTag"
-               id="bulk-email-subject-tag"
-               class="tooltip-auto"
-               value="<?php p($bulkEmailSubjectTag); ?>"
-               title="<?php echo $toolTips['emailform:composer:subject:tag']; ?>"
-               size="5"
-        />
-        <span class="bulk-email-subject tag"><?php p('-' . $l->t('ProjectNameYYYY') . ']'); ?></span>
-        <span class="bulk-email-subject"><?php p($l->t('Example Subject')); ?></span>
+        <div class="bulk-email-subject container">
+          <span class="bulk-email-subject tag">[</span>
+          <input type="text"
+                 name="bulkEmailSubjectTag"
+                 id="bulk-email-subject-tag"
+                 class="tooltip-auto"
+                 value="<?php p($bulkEmailSubjectTag); ?>"
+                 title="<?php echo $toolTips['emailform:composer:subject:tag']; ?>"
+                 size="5"
+          />
+          <span class="bulk-email-subject tag"><?php p('-' . $l->t('ProjectNameYYYY') . ']'); ?></span>
+          <span class="bulk-email-subject"><?php p($l->t('Example Subject')); ?></span>
+        </div>
       </fieldset>
       <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>
