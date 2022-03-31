@@ -384,7 +384,13 @@ class PersonalForm {
         foreach (['user', 'password', 'fromname', 'fromaddress', 'testaddress', 'testmode'] as $key) {
           $this->parameterFromConfig($templateParameters, 'email'.$key);
         }
-        $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
+        $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+        $announcementsMailingListName = $this->getConfigValue('announcementsMailingListName');
+        if (!empty($announcementsMailingListName)) {
+          $announcementsMailingList =  $announcementsMailingListName . ' <' . $announcementsMailingList . '>';
+        }
+        $templateParameters['announcementsMailingList'] = $announcementsMailingList;
+        // $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
 
         $key = 'attachmentLinkExpirationLimit';
