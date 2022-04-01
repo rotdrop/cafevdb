@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-28 09:00+0200\n"
+"POT-Creation-Date: 2022-04-01 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,8 +166,8 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/AdminSettingsController.php:254
-#: lib/Controller/PersonalSettingsController.php:1689
-#: lib/Controller/PersonalSettingsController.php:1721
+#: lib/Controller/PersonalSettingsController.php:1749
+#: lib/Controller/PersonalSettingsController.php:1781
 #: lib/Controller/ProjectParticipantsController.php:704
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -195,7 +195,7 @@ msgstr ""
 
 #: lib/Controller/BlogController.php:183
 #: lib/Controller/PersonalSettingsController.php:185
-#: lib/Controller/PersonalSettingsController.php:1556
+#: lib/Controller/PersonalSettingsController.php:1614
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
@@ -247,131 +247,131 @@ msgstr ""
 msgid "File with cache-key \"%s\" not found in user's file-cache."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:313
+#: lib/Controller/EmailFormController.php:314
 msgid "Preview generation successful."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:386
+#: lib/Controller/EmailFormController.php:393
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:390
-#: lib/Controller/EmailFormController.php:523
-#: lib/Controller/EmailFormController.php:549
-#: lib/Controller/EmailFormController.php:577
+#: lib/Controller/EmailFormController.php:398
+#: lib/Controller/EmailFormController.php:533
+#: lib/Controller/EmailFormController.php:559
+#: lib/Controller/EmailFormController.php:587
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:400
+#: lib/Controller/EmailFormController.php:408
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:408
+#: lib/Controller/EmailFormController.php:416
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:519
+#: lib/Controller/EmailFormController.php:529
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:531
+#: lib/Controller/EmailFormController.php:541
 msgid "Email template name must not be empty"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:553
+#: lib/Controller/EmailFormController.php:563
 #, php-format
 msgid "%s could not be saved"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:569
+#: lib/Controller/EmailFormController.php:579
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:588
+#: lib/Controller/EmailFormController.php:598
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:592
+#: lib/Controller/EmailFormController.php:602
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:725
+#: lib/Controller/EmailFormController.php:736
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:755
+#: lib/Controller/EmailFormController.php:766
 msgid "Form Input"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:830
+#: lib/Controller/EmailFormController.php:841
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:836
+#: lib/Controller/EmailFormController.php:847
 #: lib/Controller/PaymentsController.php:214
 #: lib/Controller/SepaDebitMandatesController.php:1202
 msgid "UNIMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:857
+#: lib/Controller/EmailFormController.php:868
 msgid "Attachment file-names were not submitted"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:866
+#: lib/Controller/EmailFormController.php:877
 #: lib/Controller/UploadsController.php:162
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:869
+#: lib/Controller/EmailFormController.php:880
 #: lib/Controller/UploadsController.php:165
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:883
-#: lib/Controller/EmailFormController.php:941
+#: lib/Controller/EmailFormController.php:894
+#: lib/Controller/EmailFormController.php:952
 #: lib/Controller/UploadsController.php:241
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:901
+#: lib/Controller/EmailFormController.php:912
 #: lib/Controller/FileUploadRowTrait.php:60
 #: lib/Controller/UploadsController.php:197
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:909
+#: lib/Controller/EmailFormController.php:920
 #: lib/Controller/FileUploadRowTrait.php:68
 #: lib/Controller/UploadsController.php:205
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:911
+#: lib/Controller/EmailFormController.php:922
 #: lib/Controller/FileUploadRowTrait.php:70
 #: lib/Controller/UploadsController.php:207
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:923
+#: lib/Controller/EmailFormController.php:934
 #: lib/Controller/FileUploadRowTrait.php:98
 #: lib/Controller/UploadsController.php:219
 msgid "Not enough storage available"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:947
+#: lib/Controller/EmailFormController.php:958
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
@@ -652,7 +652,7 @@ msgid "Unknown Request \"%s\"."
 msgstr ""
 
 #: lib/Controller/MusiciansController.php:143
-#: lib/Controller/PersonalSettingsController.php:562
+#: lib/Controller/PersonalSettingsController.php:564
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
@@ -761,13 +761,13 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:189
-#: lib/Controller/PersonalSettingsController.php:1560
+#: lib/Controller/PersonalSettingsController.php:1618
 #, php-format
 msgid "Switching %2$s %1$s"
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:196
-#: lib/Controller/PersonalSettingsController.php:1333
+#: lib/Controller/PersonalSettingsController.php:1335
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr ""
@@ -814,630 +814,660 @@ msgid ""
 "Value \"%1$s\" for set \"%2$s\" must be a non-negative integer or false."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:299
-#: lib/Controller/PersonalSettingsController.php:814
-#: lib/Controller/PersonalSettingsController.php:837
+#: lib/Controller/PersonalSettingsController.php:301
+#: lib/Controller/PersonalSettingsController.php:816
+#: lib/Controller/PersonalSettingsController.php:839
 #, php-format
 msgid "\"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:306
+#: lib/Controller/PersonalSettingsController.php:308
 msgid "DB-test passed and DB-password set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:309
+#: lib/Controller/PersonalSettingsController.php:311
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:314
+#: lib/Controller/PersonalSettingsController.php:316
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:316
+#: lib/Controller/PersonalSettingsController.php:318
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:320
+#: lib/Controller/PersonalSettingsController.php:322
 #, php-format
 msgid "DB-test failed with exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:325
+#: lib/Controller/PersonalSettingsController.php:327
 #, php-format
 msgid "Missing parameter \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:336
+#: lib/Controller/PersonalSettingsController.php:338
 msgid "Wrong old encryption key"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:345
-#: lib/Controller/PersonalSettingsController.php:351
+#: lib/Controller/PersonalSettingsController.php:347
+#: lib/Controller/PersonalSettingsController.php:353
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:434
+#: lib/Controller/PersonalSettingsController.php:436
 #, php-format
 msgid ""
 "Failed to restore config-values %s, keeping all backup values with suffix "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:447
-#: lib/Controller/PersonalSettingsController.php:473
+#: lib/Controller/PersonalSettingsController.php:449
+#: lib/Controller/PersonalSettingsController.php:475
 #, php-format
 msgid "Failed to remove backups for config-values %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:487
+#: lib/Controller/PersonalSettingsController.php:489
 msgid "Stored new encryption key."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:489
+#: lib/Controller/PersonalSettingsController.php:491
 msgid ""
 "Stored the new encryption key, however, distributing the new encryption key "
 "failed for at least some of the users."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:509
-#: lib/Controller/PersonalSettingsController.php:1661
+#: lib/Controller/PersonalSettingsController.php:511
+#: lib/Controller/PersonalSettingsController.php:1721
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:515
-#: lib/Controller/PersonalSettingsController.php:1085
-#: lib/Controller/PersonalSettingsController.php:1163
+#: lib/Controller/PersonalSettingsController.php:517
+#: lib/Controller/PersonalSettingsController.php:1087
+#: lib/Controller/PersonalSettingsController.php:1165
 msgid "Invalid request parameters: "
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:524
-#: lib/Controller/PersonalSettingsController.php:1095
-#: lib/Controller/PersonalSettingsController.php:1173
+#: lib/Controller/PersonalSettingsController.php:526
+#: lib/Controller/PersonalSettingsController.php:1097
+#: lib/Controller/PersonalSettingsController.php:1175
 #, php-format
 msgid "Submitted \"%s\" != \"%s\" (stored)"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:528
+#: lib/Controller/PersonalSettingsController.php:530
 msgid "Share-owner user id must not be empty."
-msgstr ""
-
-#: lib/Controller/PersonalSettingsController.php:533
-#, php-format
-msgid "New share-owner \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:535
 #, php-format
+msgid "New share-owner \"%s\"."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:537
+#, php-format
 msgid "Failure creating account for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:542
+#: lib/Controller/PersonalSettingsController.php:544
 #, php-format
 msgid "Failure checking account for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:545
+#: lib/Controller/PersonalSettingsController.php:547
 #, php-format
 msgid "Share-owner user \"%s\" ok."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:559
+#: lib/Controller/PersonalSettingsController.php:561
 #, php-format
 msgid "Orchestra Phone Number set to %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:587
-#: lib/Controller/PersonalSettingsController.php:780
-#: lib/Controller/PersonalSettingsController.php:1947
+#: lib/Controller/PersonalSettingsController.php:589
+#: lib/Controller/PersonalSettingsController.php:782
+#: lib/Controller/PersonalSettingsController.php:2007
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:599
-#: lib/Controller/PersonalSettingsController.php:606
-#: lib/Controller/PersonalSettingsController.php:616
-#: lib/Controller/PersonalSettingsController.php:640
-#: lib/Controller/PersonalSettingsController.php:652
-#: lib/Controller/PersonalSettingsController.php:661
-#: lib/Controller/PersonalSettingsController.php:671
-#: lib/Controller/PersonalSettingsController.php:704
-#: lib/Controller/PersonalSettingsController.php:716
-#: lib/Controller/PersonalSettingsController.php:737
-#: lib/Controller/PersonalSettingsController.php:752
+#: lib/Controller/PersonalSettingsController.php:601
+#: lib/Controller/PersonalSettingsController.php:608
+#: lib/Controller/PersonalSettingsController.php:618
+#: lib/Controller/PersonalSettingsController.php:642
+#: lib/Controller/PersonalSettingsController.php:654
+#: lib/Controller/PersonalSettingsController.php:663
+#: lib/Controller/PersonalSettingsController.php:673
+#: lib/Controller/PersonalSettingsController.php:706
+#: lib/Controller/PersonalSettingsController.php:718
+#: lib/Controller/PersonalSettingsController.php:739
+#: lib/Controller/PersonalSettingsController.php:754
 #: lib/Controller/SepaDebitMandatesController.php:472
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:680
+#: lib/Controller/PersonalSettingsController.php:682
 #, php-format
 msgid "Invalid IBAN: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:759
+#: lib/Controller/PersonalSettingsController.php:761
 #, php-format
 msgid "Value for \"%s\" invalid: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:786
+#: lib/Controller/PersonalSettingsController.php:788
 msgid "Delete old Project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:788
+#: lib/Controller/PersonalSettingsController.php:790
 #, php-format
 msgid "Delete old project \"%s\" (%d) and all its associated data?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:804
+#: lib/Controller/PersonalSettingsController.php:806
 #, php-format
 msgid "Sanitized project name from \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:825
+#: lib/Controller/PersonalSettingsController.php:827
 msgid "Rename Project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:827
+#: lib/Controller/PersonalSettingsController.php:829
 #, php-format
 msgid "\"%s\" project already exists, rename it from \"%s\" to \"%s?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:843
+#: lib/Controller/PersonalSettingsController.php:845
 #, php-format
 msgid "Type of project \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:848
+#: lib/Controller/PersonalSettingsController.php:850
 msgid "Create project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:850
+#: lib/Controller/PersonalSettingsController.php:852
 #, php-format
 msgid "A project with name \"%s\" does not exist, shall we create it?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:869
+#: lib/Controller/PersonalSettingsController.php:871
 #, php-format
 msgid ""
 "Configured project-id %d and submitted project id %d differ, please reload "
 "the page."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:883
+#: lib/Controller/PersonalSettingsController.php:885
 #, php-format
 msgid "Unable to create project with name \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:887
+#: lib/Controller/PersonalSettingsController.php:889
 #, php-format
 msgid "Created Project \"%s\" with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:897
+#: lib/Controller/PersonalSettingsController.php:899
 #, php-format
 msgid "Unable to find project with id %d."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:906
+#: lib/Controller/PersonalSettingsController.php:908
 #, php-format
 msgid "Project \"%s\" successfully validated."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:919
+#: lib/Controller/PersonalSettingsController.php:921
 #, php-format
 msgid "Deleted project \"%s\" with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:921
+#: lib/Controller/PersonalSettingsController.php:923
 #, php-format
 msgid ""
 "Project \"%s\", id \"%d\" has been marked as disabled as it is still needed "
 "for financial book-keeping."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:927
+#: lib/Controller/PersonalSettingsController.php:929
 #: lib/Service/ProjectService.php:1887
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:947
+#: lib/Controller/PersonalSettingsController.php:949
 msgid "Result of rename is empty without throwing an exception."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:952
+#: lib/Controller/PersonalSettingsController.php:954
 #, php-format
 msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:960
+#: lib/Controller/PersonalSettingsController.php:962
 #: lib/Service/ProjectService.php:2075
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:988
+#: lib/Controller/PersonalSettingsController.php:990
 #, php-format
 msgid "SETTING %s NOT YET IMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:994
+#: lib/Controller/PersonalSettingsController.php:996
 msgid "Please create the share-owner user first."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:998
+#: lib/Controller/PersonalSettingsController.php:1000
 msgid "Share-owner does not seem to exist, please recreate."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1001
+#: lib/Controller/PersonalSettingsController.php:1003
 msgid "Authentication backend does not support changing passwords."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1005
+#: lib/Controller/PersonalSettingsController.php:1007
 msgid "Password must not be empty"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1008
+#: lib/Controller/PersonalSettingsController.php:1010
 #, php-format
 msgid "Unable to set password for \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1011
+#: lib/Controller/PersonalSettingsController.php:1013
 #, php-format
 msgid "Successfully changed passsword for \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1026
+#: lib/Controller/PersonalSettingsController.php:1028
 msgid "Shared folder is not configured, cannot store templates."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1031
+#: lib/Controller/PersonalSettingsController.php:1033
 msgid "Document template folder is not configured, cannot store templates."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1046
+#: lib/Controller/PersonalSettingsController.php:1048
 #, php-format
 msgid "Removed setting for document-template \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1051
+#: lib/Controller/PersonalSettingsController.php:1053
 #, php-format
 msgid "Unable to find file \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1055
+#: lib/Controller/PersonalSettingsController.php:1057
 #, php-format
 msgid "Document-template \"%s\" successfully set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1064
+#: lib/Controller/PersonalSettingsController.php:1066
 #, php-format
 msgid "Successfully deleted old document-template \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1076
-#: lib/Controller/PersonalSettingsController.php:1149
+#: lib/Controller/PersonalSettingsController.php:1078
+#: lib/Controller/PersonalSettingsController.php:1151
 msgid "App user-group is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1080
-#: lib/Controller/PersonalSettingsController.php:1153
+#: lib/Controller/PersonalSettingsController.php:1082
+#: lib/Controller/PersonalSettingsController.php:1155
 msgid "Share-owner is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1092
-#: lib/Controller/PersonalSettingsController.php:1170
+#: lib/Controller/PersonalSettingsController.php:1094
+#: lib/Controller/PersonalSettingsController.php:1172
 msgid "Folder must not be empty."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1109
-#: lib/Controller/PersonalSettingsController.php:1222
+#: lib/Controller/PersonalSettingsController.php:1111
+#: lib/Controller/PersonalSettingsController.php:1224
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1113
-#: lib/Controller/PersonalSettingsController.php:1226
+#: lib/Controller/PersonalSettingsController.php:1115
+#: lib/Controller/PersonalSettingsController.php:1228
 #, php-format
 msgid "Failed to create new shared folder \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1125
-#: lib/Controller/PersonalSettingsController.php:1249
+#: lib/Controller/PersonalSettingsController.php:1127
+#: lib/Controller/PersonalSettingsController.php:1251
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1129
-#: lib/Controller/PersonalSettingsController.php:1253
+#: lib/Controller/PersonalSettingsController.php:1131
+#: lib/Controller/PersonalSettingsController.php:1255
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1134
-#: lib/Controller/PersonalSettingsController.php:1258
+#: lib/Controller/PersonalSettingsController.php:1136
+#: lib/Controller/PersonalSettingsController.php:1260
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1157
+#: lib/Controller/PersonalSettingsController.php:1159
 msgid "Shared folder is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1179
+#: lib/Controller/PersonalSettingsController.php:1181
 #, php-format
 msgid "Participants-folder set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1182
+#: lib/Controller/PersonalSettingsController.php:1184
 #, php-format
 msgid "Posters-folder set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1189
+#: lib/Controller/PersonalSettingsController.php:1191
 #, php-format
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1279
+#: lib/Controller/PersonalSettingsController.php:1281
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1280
+#: lib/Controller/PersonalSettingsController.php:1282
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1283
+#: lib/Controller/PersonalSettingsController.php:1285
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1288
+#: lib/Controller/PersonalSettingsController.php:1290
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1300
+#: lib/Controller/PersonalSettingsController.php:1302
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1306
+#: lib/Controller/PersonalSettingsController.php:1308
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1310
+#: lib/Controller/PersonalSettingsController.php:1312
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1320
+#: lib/Controller/PersonalSettingsController.php:1322
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1322
+#: lib/Controller/PersonalSettingsController.php:1324
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1325
+#: lib/Controller/PersonalSettingsController.php:1327
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1336
+#: lib/Controller/PersonalSettingsController.php:1338
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1341
-#: lib/Controller/PersonalSettingsController.php:1537
+#: lib/Controller/PersonalSettingsController.php:1343
+#: lib/Controller/PersonalSettingsController.php:1539
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1402
+#: lib/Controller/PersonalSettingsController.php:1404
 msgid "Cloud-user-views have been regenerated successfully."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1451
+#: lib/Controller/PersonalSettingsController.php:1453
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1453
+#: lib/Controller/PersonalSettingsController.php:1455
 msgid "Unable to distribute the email credentials to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1456
+#: lib/Controller/PersonalSettingsController.php:1458
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1459
+#: lib/Controller/PersonalSettingsController.php:1461
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1479
+#: lib/Controller/PersonalSettingsController.php:1481
 #, php-format
 msgid "%s connection seems functional."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1480
+#: lib/Controller/PersonalSettingsController.php:1482
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1501
+#: lib/Controller/PersonalSettingsController.php:1503
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1512
+#: lib/Controller/PersonalSettingsController.php:1514
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1521
+#: lib/Controller/PersonalSettingsController.php:1523
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1527
+#: lib/Controller/PersonalSettingsController.php:1529
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1546
+#: lib/Controller/PersonalSettingsController.php:1551
+#, php-format
+msgid "Unable to parse email address \"%1$s\": %2$s"
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1554
+#, php-format
+msgid ""
+"\"%s\" seems to contain multiple email address, only a single address is "
+"allowed here."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1558
+#, php-format
+msgid ""
+"\"%s\" does not contain the host-part of the email-address, local addresses "
+"are not allowed here."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1562
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1572
-#: lib/Settings/PersonalForm.php:392
+#: lib/Controller/PersonalSettingsController.php:1595
+#, php-format
+msgid ""
+"The Mailing list \"%1$s\" does not seem to exist on the configured mailing-"
+"list service."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1602
+msgid "announcements"
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1630
+#: lib/Settings/PersonalForm.php:401
 #, php-format
 msgid "%d days"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1604
-#: lib/Controller/PersonalSettingsController.php:1610
+#: lib/Controller/PersonalSettingsController.php:1664
+#: lib/Controller/PersonalSettingsController.php:1670
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1617
+#: lib/Controller/PersonalSettingsController.php:1677
 msgid "Empty translation phrase or language"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1620
+#: lib/Controller/PersonalSettingsController.php:1680
 msgid "Missing translation"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1624
+#: lib/Controller/PersonalSettingsController.php:1684
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1628
+#: lib/Controller/PersonalSettingsController.php:1688
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1632
+#: lib/Controller/PersonalSettingsController.php:1692
 msgid "Recording the translation failed"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1634
+#: lib/Controller/PersonalSettingsController.php:1694
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1637
+#: lib/Controller/PersonalSettingsController.php:1697
 msgid "Failed to erase all recorded translations."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1639
+#: lib/Controller/PersonalSettingsController.php:1699
 msgid "All recorded translations have been erased."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1651
+#: lib/Controller/PersonalSettingsController.php:1711
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1655
+#: lib/Controller/PersonalSettingsController.php:1715
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1676
+#: lib/Controller/PersonalSettingsController.php:1736
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1680
+#: lib/Controller/PersonalSettingsController.php:1740
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1685
+#: lib/Controller/PersonalSettingsController.php:1745
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1713
+#: lib/Controller/PersonalSettingsController.php:1773
 #, php-format
 msgid "Unknown link target %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1747
-#: lib/Controller/PersonalSettingsController.php:1887
+#: lib/Controller/PersonalSettingsController.php:1807
+#: lib/Controller/PersonalSettingsController.php:1947
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1769
-#: lib/Controller/PersonalSettingsController.php:1796
-#: lib/Controller/PersonalSettingsController.php:1822
-#: lib/Controller/PersonalSettingsController.php:1853
+#: lib/Controller/PersonalSettingsController.php:1829
+#: lib/Controller/PersonalSettingsController.php:1856
+#: lib/Controller/PersonalSettingsController.php:1882
+#: lib/Controller/PersonalSettingsController.php:1913
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1871
+#: lib/Controller/PersonalSettingsController.php:1931
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1916
+#: lib/Controller/PersonalSettingsController.php:1976
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1933
+#: lib/Controller/PersonalSettingsController.php:1993
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/SepaBulkTransactionsController.php:128
 #, php-format
 msgid "Unknown Request: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1959
+#: lib/Controller/PersonalSettingsController.php:2019
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1976
+#: lib/Controller/PersonalSettingsController.php:2036
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1999
+#: lib/Controller/PersonalSettingsController.php:2059
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2001
+#: lib/Controller/PersonalSettingsController.php:2061
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2004
+#: lib/Controller/PersonalSettingsController.php:2064
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2009
+#: lib/Controller/PersonalSettingsController.php:2069
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2500,7 +2530,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:566
-#: src/app/email.js:1173
+#: src/app/email.js:1195
 msgid "Unknown Template"
 msgstr ""
 
@@ -2590,112 +2620,126 @@ msgstr ""
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3089
+#: lib/EmailForm/Composer.php:2945
+msgid ""
+"Cannot substitute personal information in mailing list post. Personalized "
+"emails have to be send individually."
+msgstr ""
+
+#: lib/EmailForm/Composer.php:2947
+msgid "The email text contains personalized substitutions."
+msgstr ""
+
+#: lib/EmailForm/Composer.php:2950
+msgid "The email contains personalized attachments."
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3101
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3102
-msgid "musicians"
+#: lib/EmailForm/Composer.php:3125
+msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3194
-#: lib/EmailForm/Composer.php:3209
+#: lib/EmailForm/Composer.php:3218
+#: lib/EmailForm/Composer.php:3233
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3293
-#: lib/EmailForm/Composer.php:3369
-#: lib/EmailForm/Composer.php:3379
+#: lib/EmailForm/Composer.php:3317
+#: lib/EmailForm/Composer.php:3393
+#: lib/EmailForm/Composer.php:3403
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3312
+#: lib/EmailForm/Composer.php:3336
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3318
+#: lib/EmailForm/Composer.php:3342
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3344
+#: lib/EmailForm/Composer.php:3368
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3672
+#: lib/EmailForm/Composer.php:3696
 msgid "Unable to load draft without id"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:3680
-#, php-format
-msgid "Draft %s could not be loaded"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:3704
 #, php-format
+msgid "Draft %s could not be loaded"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3728
+#, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3735
+#: lib/EmailForm/Composer.php:3759
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3793
-#: lib/EmailForm/Composer.php:3904
+#: lib/EmailForm/Composer.php:3817
+#: lib/EmailForm/Composer.php:3928
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3821
+#: lib/EmailForm/Composer.php:3845
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3846
+#: lib/EmailForm/Composer.php:3870
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4403
+#: lib/EmailForm/Composer.php:4427
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4403
+#: lib/EmailForm/Composer.php:4427
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4404
+#: lib/EmailForm/Composer.php:4428
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4405
+#: lib/EmailForm/Composer.php:4429
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4406
+#: lib/EmailForm/Composer.php:4430
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4522
+#: lib/EmailForm/Composer.php:4546
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:415
+#: lib/EmailForm/RecipientsFilter.php:416
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:441
+#: lib/EmailForm/RecipientsFilter.php:442
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:630
+#: lib/EmailForm/RecipientsFilter.php:631
 #: lib/PageRenderer/PMETableViewBase.php:362
 msgid "member status "
 msgstr ""
@@ -3060,7 +3104,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:119
-#: src/app/email.js:1620
+#: src/app/email.js:1651
 msgid "Accept"
 msgstr ""
 
@@ -4908,8 +4952,8 @@ msgid "Run brief sanity checks on the configuration options."
 msgstr ""
 
 #: lib/PageRenderer/Util/Navigation.php:647
-#: lib/Service/ToolTipsService.php:838
-#: lib/Service/ToolTipsService.php:874
+#: lib/Service/ToolTipsService.php:841
+#: lib/Service/ToolTipsService.php:877
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -5034,6 +5078,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
+#: lib/Service/MailingListsService.php:319
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
@@ -5109,7 +5154,7 @@ msgid "Unsupported bulk-transaction class: \"%s\"."
 msgstr ""
 
 #: lib/Service/Finance/DoNothingReceivablesGenerator.php:49
-#: lib/Service/ToolTipsService.php:589
+#: lib/Service/ToolTipsService.php:592
 #: templates/project-web-articles.php:71
 msgid "nothing"
 msgstr ""
@@ -5496,6 +5541,14 @@ msgstr ""
 msgid "42, Undiscoverable"
 msgstr ""
 
+#: lib/Service/MailingListsService.php:228
+msgid "Missing subscriber email-address."
+msgstr ""
+
+#: lib/Service/MailingListsService.php:285
+msgid "mailing lists"
+msgstr ""
+
 #: lib/Service/MigrationsService.php:130
 #, php-format
 msgid "Migration %s has failed to execute."
@@ -5692,7 +5745,7 @@ msgstr ""
 #: lib/Service/ProjectService.php:1335
 #: lib/Service/ProjectService.php:1373
 #: lib/Service/ProjectService.php:1431
-#: lib/Settings/PersonalForm.php:312
+#: lib/Settings/PersonalForm.php:314
 msgid "Rehearsals"
 msgstr ""
 
@@ -6087,25 +6140,35 @@ msgstr ""
 
 #: lib/Service/ToolTipsService.php:309
 msgid ""
-"List of selected musicians; can be changed in the `Em@il-Recipients' panel."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:310
-msgid "Add arbitrary further hidden recipients."
-msgstr ""
-
-#: lib/Service/ToolTipsService.php:311
-msgid "Add arbitrary further recipients."
+"A very short (around 3 characters) tag which is used to construct the "
+"subject of a bulk email. More specifically, the subject has the form \"[TAG-"
+"ProjectNameYYYY] Example Subject\" where \"TAG\" is just the short tag "
+"entered here, \"ProjectName\" is the short project-name, \"YYYY\" the year "
+"of the project, \"Example Subject\" is just any custom subject string which "
+"is supplied through the email editor."
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:312
+msgid ""
+"List of selected musicians; can be changed in the `Em@il-Recipients' panel."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:313
+msgid "Add arbitrary further hidden recipients."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:314
+msgid "Add arbitrary further recipients."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:315
 msgid ""
 "Opens a select-box with choices from the shared Cloud-addressbook. You can "
 "also add new em@il-addresses to the address-book for later reusal. The "
 "addresses can also be added in the Cloud `Contacts'-App."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:313
+#: lib/Service/ToolTipsService.php:316
 msgid ""
 "Unchecking this option discloses the bulk-recipients of this message. Only "
 "recipients of project-related emails can be disclosed. Normally this should "
@@ -6113,53 +6176,53 @@ msgid ""
 "list."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:316
+#: lib/Service/ToolTipsService.php:319
 msgid ""
 "Choose a file to attach from the files stored remotely on in the Cloud "
 "storage area."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:317
+#: lib/Service/ToolTipsService.php:320
 msgid "Select calendar attachments from the associated project events."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:318
+#: lib/Service/ToolTipsService.php:321
 msgid ""
 "Choose a file to attach from the project's per-musician file-attachments."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:319
+#: lib/Service/ToolTipsService.php:322
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:321
+#: lib/Service/ToolTipsService.php:324
 msgid ""
 "Hide or show the select boxes in order to select appropriate attachments."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:323
+#: lib/Service/ToolTipsService.php:326
 msgid ""
 "Select-box with all project-events. You can select events as attachments to "
 "your email."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:324
+#: lib/Service/ToolTipsService.php:327
 msgid ""
 "Clear the list of selected event-attachments. Of course, this does not "
 "delete the events from their respective calendar, it just de-selects all "
 "events such that no event will be attached to the email."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:325
+#: lib/Service/ToolTipsService.php:328
 msgid ""
 "Deselects all file-attachments. The uploaded attachments are kept on the "
 "server until the email-form dialog is closed and can be reselected without "
 "uploading them again."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:327
+#: lib/Service/ToolTipsService.php:330
 msgid ""
 "Attachments exceeding this size limit will be replaced by download-links. "
 "Set to 0 to convert all attachments to download links. Set to a negative "
@@ -6167,7 +6230,7 @@ msgid ""
 "or any usual storage unit, e.g. \"16.5 MiB\"."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:328
+#: lib/Service/ToolTipsService.php:331
 msgid ""
 "Download-links will expire after this time after sending the email. Set to 0 "
 "in order to never expire download-links. The time interval may be given in "
@@ -6175,14 +6238,14 @@ msgid ""
 "rounded to full days."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:329
+#: lib/Service/ToolTipsService.php:332
 msgid ""
 "If checked attachments originating from the cloud storage will always be "
 "replaced by a download-link. If unchecked \"cloud-files\" are just treated "
 "like uploaded attachments."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:332
+#: lib/Service/ToolTipsService.php:335
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -6190,41 +6253,41 @@ msgid ""
 "the `Debug' tab"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:336
+#: lib/Service/ToolTipsService.php:339
 msgid ""
 "Export the email text as HTML. In the case of per-member variable\n"
 "substitutions this will result in a multi-page document with proper page "
 "breaks after each message, with all variables substituted."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:338
+#: lib/Service/ToolTipsService.php:341
 msgid ""
 "Cancel the email composition and close the input form. This has the\n"
 "same effect as clicking the close button on top of the dialog-window. No "
 "email will be sent."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:342
+#: lib/Service/ToolTipsService.php:345
 msgid "Select the recipients for your email!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:345
+#: lib/Service/ToolTipsService.php:348
 msgid ""
 "Choose either among all musicians currently registered for the project\n"
 "or from the complement set. Obviously, selecting both options will\n"
 "give you the choice to select any musician as recipient."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:348
+#: lib/Service/ToolTipsService.php:351
 msgid "Choose among all musicians currently registered for this project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:349
+#: lib/Service/ToolTipsService.php:352
 msgid ""
 "Choose among all musicians currently <b>NOT</b> registered for this project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:350
+#: lib/Service/ToolTipsService.php:353
 msgid ""
 "Post to the global announcements mailing list instead of sending to the "
 "musicians registered in the data-base. Using the mailing list should be the "
@@ -6234,38 +6297,38 @@ msgid ""
 "explicitly selected."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:351
+#: lib/Service/ToolTipsService.php:354
 msgid ""
 "Post to the musicians registered in the database. Unless instrument-filters "
 "are active or specific recipients are explicitly selected the global "
 "announcement mailing list should be preferred for @all emails."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:353
+#: lib/Service/ToolTipsService.php:356
 msgid ""
 "Select recipients by member status. Normally, conductors and soloists\n"
 "are excluded from receiving mass-email. Please be careful when modifying the "
 "default selection!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:355
+#: lib/Service/ToolTipsService.php:358
 msgid ""
 "Apply the currently selected instruments as filter. At your option,\n"
 "-you can also simply double-click inside the boxed filter-region in order to "
 "activate your filter-choice."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:357
+#: lib/Service/ToolTipsService.php:360
 msgid ""
 "Undo the last recipient filter operation and restore the previous selection "
 "of musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:358
+#: lib/Service/ToolTipsService.php:361
 msgid "Redo the last operation undone by the undo button."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:359
+#: lib/Service/ToolTipsService.php:362
 msgid ""
 "Reset to the initial pre-selection which was activ when entering this\n"
 "form. This will <b>REALLY</b> void all your recipient selections and\n"
@@ -6274,78 +6337,78 @@ msgid ""
 "list."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:365
+#: lib/Service/ToolTipsService.php:368
 msgid ""
 "Restrict the basic set of musicians to the instruments selected\n"
 "here. The filter is additive: selecting more than one instruments will\n"
 "include the musicians playing either of them."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:368
-#: lib/Service/ToolTipsService.php:369
+#: lib/Service/ToolTipsService.php:371
+#: lib/Service/ToolTipsService.php:372
 msgid ""
 "A double click inside the boxed filter-region will apply the instruments-"
 "filter"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:370
+#: lib/Service/ToolTipsService.php:373
 msgid ""
 "Apply the currently selected instruments as filter. At your option,\n"
 "you can also simply double-click inside the boxed filter-region in order to "
 "activate your filter-choice."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:374
+#: lib/Service/ToolTipsService.php:377
 msgid ""
 "List of musicians without or with ill-formed email-addresses. You can click "
 "on the names in order to open a dialog with the personal data of the "
 "respective musician and correct the email addresses there."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:378
+#: lib/Service/ToolTipsService.php:381
 msgid "Name of the pseudo-project listing the members of the executive board."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:380
+#: lib/Service/ToolTipsService.php:383
 msgid ""
 "Display additional ``expert'' settings. Despite the name you are\n"
 "invited to have a look, but please do not change anything unless you know "
 "what your are doing. Thanks!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:383
+#: lib/Service/ToolTipsService.php:386
 msgid "For those who know what they are doing, which essentially means: don't."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:386
+#: lib/Service/ToolTipsService.php:389
 msgid ""
 "The bill-to-party of an instrument-insurance must be a club-member. This "
 "seems not to be the case."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:387
+#: lib/Service/ToolTipsService.php:390
 msgid ""
 "Generate a PDF with detailed records of the insured items and the resulting "
 "insurance fee."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:388
+#: lib/Service/ToolTipsService.php:391
 msgid "Manufacturer and (brief) place of manufacture if know."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:389
+#: lib/Service/ToolTipsService.php:392
 msgid ""
 "Year of manufacture, if known. \"Fuzzy\" expression like \"unknown\", \"end "
 "of 19th century\", \"around 1900\" etc. are allowed."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:394
+#: lib/Service/ToolTipsService.php:397
 msgid ""
 "Expert-setting. \"Deactivating the cloud account\" means that this musician "
 "will show up in the user list of the cloud but will not be able to log-in."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:395
+#: lib/Service/ToolTipsService.php:398
 msgid ""
 "Expert-setting. \"Disabling the cloud account\" means that this musician "
 "will be hidden from the user-management of the cloud, there will be not "
@@ -6353,76 +6416,76 @@ msgid ""
 "also have the effect to hide the person from the cloud."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:402
+#: lib/Service/ToolTipsService.php:405
 msgid ""
 "Delete this file attachment. Undelete may be possible using the file-app of "
 "the cloud-software."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:404
+#: lib/Service/ToolTipsService.php:407
 msgid ""
 "Upload a new attachment. The old file will be overwritten but possibly may "
 "be restored using hte file-app of the cloud-software."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:406
+#: lib/Service/ToolTipsService.php:409
 msgid ""
 "Upload a new attachment. The old file will be renamed by attaching the "
 "current time to its name."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:408
+#: lib/Service/ToolTipsService.php:411
 msgid ""
 "Click to upload the relevant file or use drag and drop anywhere in this data-"
 "row."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:410
+#: lib/Service/ToolTipsService.php:413
 msgid "Click to download this file."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:412
+#: lib/Service/ToolTipsService.php:415
 msgid "Open the containing folder using the file-app of the cloud."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:415
+#: lib/Service/ToolTipsService.php:418
 msgid ""
 "Multiplicity of the field, e.g. free-text, single choice, multiple choice "
 "etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:417
+#: lib/Service/ToolTipsService.php:420
 msgid "Group of people, e.g. to define room-mates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:419
+#: lib/Service/ToolTipsService.php:422
 msgid ""
 "Group of people with predefined group-names and a potentially\n"
 "different maximal number of people fitting in the group. For example to "
 "define room-mates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:422
+#: lib/Service/ToolTipsService.php:425
 msgid "Multiple choices, excluding each other."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:424
+#: lib/Service/ToolTipsService.php:427
 msgid "Multiple choices where, more than one option can be selected."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:426
+#: lib/Service/ToolTipsService.php:429
 msgid "Simple yes-no choice."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:428
+#: lib/Service/ToolTipsService.php:431
 msgid "General date field with the respective meaning."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:432
+#: lib/Service/ToolTipsService.php:435
 msgid "Data type of the field, e.g service-fee, text, HTML-text etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:436
+#: lib/Service/ToolTipsService.php:439
 msgid ""
 "Hit this button to delete or undelete each item. Note that items that\n"
 "already have been associated with musicians in the data-base can no\n"
@@ -6434,18 +6497,18 @@ msgid ""
 "but clicking this button again."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:445
+#: lib/Service/ToolTipsService.php:448
 msgid "Table with all admissible values for this multiple choice option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:446
+#: lib/Service/ToolTipsService.php:449
 msgid ""
 "In order to add a new option just enter its name here and hit enter or\n"
 "just click somewhere else. Further attributes can be changed later (data-"
 "base key, label, data, context help)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:448
+#: lib/Service/ToolTipsService.php:451
 msgid ""
 "Please enter here a unique short non-nonsense key. You will no longer\n"
 "be able to change this db-key once this option has be attached to a\n"
@@ -6453,96 +6516,96 @@ msgid ""
 "is always possible."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:451
+#: lib/Service/ToolTipsService.php:454
 msgid ""
 "Just the display-label shown in the select-boxes in the instrumentation "
 "table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:452
+#: lib/Service/ToolTipsService.php:455
 msgid ""
 "For surcharge-items this is just the surcharge-amount associated with\n"
 "the option. For other multi-choice items this is just one arbitrary\n"
 "string. Please entry the surcharge amount for surcharge items here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:455
+#: lib/Service/ToolTipsService.php:458
 msgid ""
 "An extra-tooltip which can be associated to this specific option. A\n"
 "help text in order to inform others what this option is about."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:457
+#: lib/Service/ToolTipsService.php:460
 msgid "The maximum allowed number of people in a \"group of people\" field"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:459
-#: lib/Service/ToolTipsService.php:460
+#: lib/Service/ToolTipsService.php:462
+#: lib/Service/ToolTipsService.php:463
 msgid ""
 "For a yes/no option please enter here the single item to select, e.g. the "
 "surcharge amount for a service-fee field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:461
+#: lib/Service/ToolTipsService.php:464
 msgid "Please enter the default value for this free-text option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:466
+#: lib/Service/ToolTipsService.php:469
 msgid ""
 "Delete or undelete the receivable for this musician. The data will only be "
 "deleted when hitting the \"save\"-button of the form. Undelete is only "
 "possible until the \"save\"-button has been clicked."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:467
+#: lib/Service/ToolTipsService.php:470
 msgid ""
 "Recompute the values of this particular recurring field. The action will be "
 "performed immediately."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:469
+#: lib/Service/ToolTipsService.php:472
 msgid ""
 "Recompute all receivables for the musician. Note that this will reload the "
 "input-form discarding all changes which have not been saved yet."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:470
+#: lib/Service/ToolTipsService.php:473
 msgid "Recompute the values of all recurring fields for all participants."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:471
+#: lib/Service/ToolTipsService.php:474
 msgid ""
 "Make sure that at least one new empty input field is available. Note that "
 "this will reload the input-form discarding all changes which have not been "
 "saved yet."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:473
+#: lib/Service/ToolTipsService.php:476
 msgid ""
 "Name of a the generator for this field. Can be be a fully-qualified PHP "
 "class-name or one of the known short-cuts."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:474
+#: lib/Service/ToolTipsService.php:477
 msgid ""
 "Starting date for the receivable generation. Maybe overridden by the "
 "concrete generator framework."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:475
+#: lib/Service/ToolTipsService.php:478
 msgid ""
 "Run the value generator. Depending on the generator this might result in new "
 "fields or just does nothing if all relevant fields are already there."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:478
-#: lib/Service/ToolTipsService.php:480
-#: lib/Service/ToolTipsService.php:484
+#: lib/Service/ToolTipsService.php:481
+#: lib/Service/ToolTipsService.php:483
+#: lib/Service/ToolTipsService.php:487
 msgid ""
 "Specify a default value for the custom field here. Leave blank if unsure."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:482
+#: lib/Service/ToolTipsService.php:485
 msgid ""
 "Default policy when replacing files with new uploads. Default is to rename "
 "the old file by attaching a time-stamp. \"replace\" will just overwrite the "
@@ -6550,31 +6613,31 @@ msgid ""
 "may provide undelete operations and versioning of overwritten files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:486
+#: lib/Service/ToolTipsService.php:489
 msgid ""
 "Disable this extra field. This will not erase any data in the\n"
 "data-base, but simply mark the field as unused and hide it from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:489
+#: lib/Service/ToolTipsService.php:492
 msgid ""
 "Define the display priority. Larger values will move the item more to\n"
 "the left or the top inside its table-tab."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:492
+#: lib/Service/ToolTipsService.php:495
 msgid ""
 "Expert use: store encrypted values in the data-base. If unsure: <em>DON'T</"
 "em>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:494
+#: lib/Service/ToolTipsService.php:497
 msgid ""
 "Extra-tab to group project-specific data which just didn't fit\n"
 "somewhere else."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:497
+#: lib/Service/ToolTipsService.php:500
 msgid ""
 "Just the name for this option. Please keep the name as <em>short</em> as\n"
 "possible, but try to be descriptive. If further explanations are\n"
@@ -6583,25 +6646,25 @@ msgid ""
 "<strong>Display</strong> tab."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:502
+#: lib/Service/ToolTipsService.php:505
 msgid "The maximum number of peopel allowed in the group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:504
+#: lib/Service/ToolTipsService.php:507
 msgid ""
 "Define a new table-tab. In order to do so, first deselect any\n"
 "predefined tab in the select box above, then enter the new name. The\n"
 "new tab-name will also be available as tab-option for other fields."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:508
+#: lib/Service/ToolTipsService.php:511
 msgid ""
 "Members of these Cloud user-groups are allowed to view the\n"
 "field. If left blank, every logged in user is allowed to view the\n"
 "field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:512
+#: lib/Service/ToolTipsService.php:515
 msgid ""
 "Each option has an optional data-entry attached to it. Normally, this\n"
 "is only useful for surcharge options, where the \"data-entry\" just is\n"
@@ -6610,7 +6673,7 @@ msgid ""
 "click here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:518
+#: lib/Service/ToolTipsService.php:521
 msgid ""
 "Options already attached to musicians can no longer be deleted in\n"
 "order to prevent data-loss in the underlying data-base. It is even\n"
@@ -6619,7 +6682,7 @@ msgid ""
 "clicking the \"recover\" button to the left of each deleted entry."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:523
+#: lib/Service/ToolTipsService.php:526
 msgid ""
 "Define the table-tab this entry should be grouped with. It is also\n"
 "possible to define new table-tabs. In order to do so, first deselect\n"
@@ -6627,32 +6690,32 @@ msgid ""
 "input box below."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:528
+#: lib/Service/ToolTipsService.php:531
 msgid ""
 "Optionally define a tool-tip (context-help) for the field. The tooltip\n"
 "may contain HTML formatting."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:531
+#: lib/Service/ToolTipsService.php:534
 msgid ""
 "Members of these Cloud user-groups are allowed to change the\n"
 "field. If left blank, every logged in user is allowed to change this field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:534
+#: lib/Service/ToolTipsService.php:537
 msgid ""
 "Select-box with all currently uploaded attachments. Note that a file will "
 "only be attached to a message if it is also checked in this select box."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:536
+#: lib/Service/ToolTipsService.php:539
 msgid ""
 "Try to restore the last visited table view whenreloading the entire page "
 "with the web-browser. If unchecked either the musician's view or the blog-"
 "page is loaded."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:538
+#: lib/Service/ToolTipsService.php:541
 msgid ""
 "Toggle the initial display of the search-filters for data-base tables\n"
 "in order to make the table view a little less crowded. Search-filters\n"
@@ -6660,11 +6723,11 @@ msgid ""
 "each individual table view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:543
+#: lib/Service/ToolTipsService.php:546
 msgid "Further personal settings, normally not needed use with care."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:546
+#: lib/Service/ToolTipsService.php:549
 #: lib/Service/ToolTipsService.php:430
 #, php-format
 msgid ""
@@ -6672,7 +6735,7 @@ msgid ""
 "section is split by voices, e.g. \"violin 1\", \"violin 2\")"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:548
+#: lib/Service/ToolTipsService.php:551
 #: lib/Service/ToolTipsService.php:432
 #, php-format
 msgid ""
@@ -6681,7 +6744,7 @@ msgid ""
 "to distinguish between violin 1 and violin 2, thought ..."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:550
+#: lib/Service/ToolTipsService.php:553
 #: lib/Service/ToolTipsService.php:434
 #, php-format
 msgid ""
@@ -6689,14 +6752,14 @@ msgid ""
 "registered / confirmed musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:553
+#: lib/Service/ToolTipsService.php:556
 msgid ""
 "Instruments which are already used by musicians or\n"
 "projects cannot be deleted; instead \"deleting\" them flags them as "
 "\"Disabled\"."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:556
+#: lib/Service/ToolTipsService.php:559
 msgid ""
 "A flag which indicates not so much social or functional status, but\n"
 "default behaviour for mass-emails as follows\n"
@@ -6722,18 +6785,18 @@ msgid ""
 "in the email form."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:575
+#: lib/Service/ToolTipsService.php:578
 msgid "Display name, pre-name, phone number, email, street-address."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:577
+#: lib/Service/ToolTipsService.php:580
 msgid ""
 "Musicians which already paid something for the project cannot be\n"
 "deleted in order not to loose track of the payments. Instead, they are\n"
 "simply marked as \"disabled\" and normally are hidden from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:581
+#: lib/Service/ToolTipsService.php:584
 #: lib/Service/ToolTipsService.php:467
 #, php-format
 msgid ""
@@ -6742,24 +6805,24 @@ msgid ""
 "again to the list of the musician's instruments."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:583
+#: lib/Service/ToolTipsService.php:586
 msgid ""
 "Opens a new table view with the insured items for the respective musician."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:585
+#: lib/Service/ToolTipsService.php:588
 msgid "Further information like birthday, a photo, date of last change."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:587
+#: lib/Service/ToolTipsService.php:590
 msgid "Display name, pre-name, instruments, status, general remarks."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:591
+#: lib/Service/ToolTipsService.php:594
 msgid "Web-link to the current Cloud developer documentation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:593
+#: lib/Service/ToolTipsService.php:596
 #, php-format
 msgid ""
 "Status of outstanding project fees:\n"
@@ -6777,35 +6840,35 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:609
+#: lib/Service/ToolTipsService.php:612
 msgid ""
 "Link to the data-base administration tool for the underlying data-base. "
 "Swiss-army-knife-like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:611
+#: lib/Service/ToolTipsService.php:614
 msgid "Link to the documentation for the database-management tool."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:614
+#: lib/Service/ToolTipsService.php:617
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:617
-#: lib/Service/ToolTipsService.php:789
+#: lib/Service/ToolTipsService.php:620
+#: lib/Service/ToolTipsService.php:792
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:619
+#: lib/Service/ToolTipsService.php:622
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:623
+#: lib/Service/ToolTipsService.php:626
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -6814,7 +6877,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:629
+#: lib/Service/ToolTipsService.php:632
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -6822,7 +6885,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:634
+#: lib/Service/ToolTipsService.php:637
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -6832,24 +6895,24 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:642
+#: lib/Service/ToolTipsService.php:645
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:645
+#: lib/Service/ToolTipsService.php:648
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:648
+#: lib/Service/ToolTipsService.php:651
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:652
+#: lib/Service/ToolTipsService.php:655
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -6857,20 +6920,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:659
+#: lib/Service/ToolTipsService.php:662
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:662
+#: lib/Service/ToolTipsService.php:665
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:667
+#: lib/Service/ToolTipsService.php:670
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -6878,7 +6941,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:673
+#: lib/Service/ToolTipsService.php:676
 msgid ""
 "Click me to export a CSV-table with the selected debit notes suitable for "
 "use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
@@ -6887,21 +6950,21 @@ msgid ""
 "debiting their bank account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:675
+#: lib/Service/ToolTipsService.php:678
 msgid "Select all displayed debit-notes for export."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:677
+#: lib/Service/ToolTipsService.php:680
 msgid "Deselect all displayed debit-notes from export selection."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:679
+#: lib/Service/ToolTipsService.php:682
 msgid ""
 "Select this debit note for debiting the project fees. In order to actually "
 "export the debit-note you have to hit the `Debit' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:682
+#: lib/Service/ToolTipsService.php:685
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -6910,7 +6973,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:689
+#: lib/Service/ToolTipsService.php:692
 msgid ""
 "Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -6922,7 +6985,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:698
+#: lib/Service/ToolTipsService.php:701
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -6934,14 +6997,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:707
+#: lib/Service/ToolTipsService.php:710
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:711
+#: lib/Service/ToolTipsService.php:714
 msgid ""
 "Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -6950,30 +7013,30 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:717
+#: lib/Service/ToolTipsService.php:720
 msgid ""
 "Click to generate bulk-transactions for the selected musicians and "
 "receivables."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:719
+#: lib/Service/ToolTipsService.php:722
 msgid ""
 "Click to select all displayed participants for bulk-transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:721
+#: lib/Service/ToolTipsService.php:724
 msgid ""
 "Click to deselect all displayed participants from the bulk-transaction "
 "generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:723
+#: lib/Service/ToolTipsService.php:726
 msgid ""
 "Select and deselect this participant and bank-acccount to and from bulk-"
 "transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:725
+#: lib/Service/ToolTipsService.php:728
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -6981,29 +7044,29 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:727
+#: lib/Service/ToolTipsService.php:730
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:729
+#: lib/Service/ToolTipsService.php:732
 msgid "Export in OpenDocument-format (LibreOffice/OpenOffice)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:731
+#: lib/Service/ToolTipsService.php:734
 msgid "Export as PDF in A3/Landscape, scaled to fit the page size"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:733
+#: lib/Service/ToolTipsService.php:736
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:735
+#: lib/Service/ToolTipsService.php:738
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:737
+#: lib/Service/ToolTipsService.php:740
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -7039,53 +7102,53 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:769
+#: lib/Service/ToolTipsService.php:772
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:771
+#: lib/Service/ToolTipsService.php:774
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:774
+#: lib/Service/ToolTipsService.php:777
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:779
+#: lib/Service/ToolTipsService.php:782
 msgid ""
 "Click to unlock if the field is empty, click again to clear the field if the "
 "field contains data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:781
+#: lib/Service/ToolTipsService.php:784
 msgid "Click to lock and unlock this input field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:784
+#: lib/Service/ToolTipsService.php:787
 msgid "Some usefull convenience actions (click me for details!)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:787
+#: lib/Service/ToolTipsService.php:790
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:788
+#: lib/Service/ToolTipsService.php:791
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:792
+#: lib/Service/ToolTipsService.php:795
 msgid ""
 "Limits the number of rows per page to the given value. A \"∞\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:795
+#: lib/Service/ToolTipsService.php:798
 #, php-format
 msgid ""
 "Klick mich, um die\n"
@@ -7094,76 +7157,76 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:802
+#: lib/Service/ToolTipsService.php:805
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:803
+#: lib/Service/ToolTipsService.php:806
 msgid ""
 "Discards all unsaved data and reloads all fields form the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:805
+#: lib/Service/ToolTipsService.php:808
 msgid ""
 "Discards all unsaved data and reloads all fields from the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:810
+#: lib/Service/ToolTipsService.php:813
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:811
+#: lib/Service/ToolTipsService.php:814
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:815
+#: lib/Service/ToolTipsService.php:818
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:819
+#: lib/Service/ToolTipsService.php:822
 msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:821
+#: lib/Service/ToolTipsService.php:824
 msgid ""
 "Click me to sort by this field! Click again to reverse the search direction. "
 "Click another time to disable sorting by this field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:823
+#: lib/Service/ToolTipsService.php:826
 msgid "Click me to reverse the sort order by this field!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:825
+#: lib/Service/ToolTipsService.php:828
 msgid "Click me to remove this field from the sorting criteria!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:827
+#: lib/Service/ToolTipsService.php:830
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:830
+#: lib/Service/ToolTipsService.php:833
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:835
-#: lib/Service/ToolTipsService.php:865
+#: lib/Service/ToolTipsService.php:838
+#: lib/Service/ToolTipsService.php:868
 msgid ""
 "Define participant-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:840
+#: lib/Service/ToolTipsService.php:843
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
 "exceptional case for \"virtual pseudo projects\". The latter in\n"
@@ -7173,29 +7236,29 @@ msgid ""
 "permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:848
+#: lib/Service/ToolTipsService.php:851
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:852
+#: lib/Service/ToolTipsService.php:855
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:854
+#: lib/Service/ToolTipsService.php:857
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:858
+#: lib/Service/ToolTipsService.php:861
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:860
-#: lib/Service/ToolTipsService.php:926
+#: lib/Service/ToolTipsService.php:863
+#: lib/Service/ToolTipsService.php:929
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -7203,55 +7266,55 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:868
+#: lib/Service/ToolTipsService.php:871
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:870
+#: lib/Service/ToolTipsService.php:873
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:876
+#: lib/Service/ToolTipsService.php:879
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:879
+#: lib/Service/ToolTipsService.php:882
 msgid ""
 "Some people gave us debit mandates but still want to pay by bank-transfer. "
 "Uncheck in order to exclude the person from direct debits transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:881
+#: lib/Service/ToolTipsService.php:884
 msgid "Sum of the fees for all booked etra items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:883
+#: lib/Service/ToolTipsService.php:886
 msgid ""
 "Everything related to project fees, surcharges, bank transfers, debit\n"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:886
+#: lib/Service/ToolTipsService.php:889
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:888
+#: lib/Service/ToolTipsService.php:891
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:890
+#: lib/Service/ToolTipsService.php:893
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:892
+#: lib/Service/ToolTipsService.php:895
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -7266,7 +7329,7 @@ msgid ""
 "Thanks."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:901
+#: lib/Service/ToolTipsService.php:904
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -7274,19 +7337,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:905
+#: lib/Service/ToolTipsService.php:908
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:907
+#: lib/Service/ToolTipsService.php:910
 #: lib/Service/ToolTipsService.php:775
 #, php-format
 msgid "Further \"not so important\" data of the participant."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:909
+#: lib/Service/ToolTipsService.php:912
 #: lib/Service/ToolTipsService.php:777
 #, php-format
 msgid ""
@@ -7294,26 +7357,26 @@ msgid ""
 "special field for the things you want to note"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:912
+#: lib/Service/ToolTipsService.php:915
 msgid ""
 "The accumulated total of all service fees, reimbursements and salaries the "
 "participant has to pay or to receive (TOTALS/PAID/REMAINING)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:914
+#: lib/Service/ToolTipsService.php:917
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:916
+#: lib/Service/ToolTipsService.php:919
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:919
+#: lib/Service/ToolTipsService.php:922
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -7323,34 +7386,34 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:921
+#: lib/Service/ToolTipsService.php:924
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:923
+#: lib/Service/ToolTipsService.php:926
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:932
+#: lib/Service/ToolTipsService.php:935
 msgid "Modify the event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:934
+#: lib/Service/ToolTipsService.php:937
 msgid ""
 "Clone (duplicate) the event. A new event-form will popup with just the data "
 "from this event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:936
+#: lib/Service/ToolTipsService.php:939
 msgid "Delete the event from the system (no undo possible)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:938
+#: lib/Service/ToolTipsService.php:941
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -7360,7 +7423,7 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:945
+#: lib/Service/ToolTipsService.php:948
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -7370,7 +7433,7 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:956
+#: lib/Service/ToolTipsService.php:959
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -7381,129 +7444,129 @@ msgid ""
 "the event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:964
+#: lib/Service/ToolTipsService.php:967
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:966
+#: lib/Service/ToolTipsService.php:969
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:968
+#: lib/Service/ToolTipsService.php:971
 msgid "Add a non-categorized event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:970
+#: lib/Service/ToolTipsService.php:973
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:972
+#: lib/Service/ToolTipsService.php:975
 msgid ""
 "Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
 "transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:975
+#: lib/Service/ToolTipsService.php:978
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:979
+#: lib/Service/ToolTipsService.php:982
 msgid "Select all events for email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:981
+#: lib/Service/ToolTipsService.php:984
 msgid "Exclude all events from email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:983
+#: lib/Service/ToolTipsService.php:986
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
 "tablet or desktop computer."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:987
+#: lib/Service/ToolTipsService.php:990
 msgid "Reload all events from the cloud-calendars."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:992
+#: lib/Service/ToolTipsService.php:995
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:995
+#: lib/Service/ToolTipsService.php:998
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:997
+#: lib/Service/ToolTipsService.php:1000
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:999
+#: lib/Service/ToolTipsService.php:1002
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1001
+#: lib/Service/ToolTipsService.php:1004
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1003
+#: lib/Service/ToolTipsService.php:1006
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1005
+#: lib/Service/ToolTipsService.php:1008
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1008
+#: lib/Service/ToolTipsService.php:1011
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1010
+#: lib/Service/ToolTipsService.php:1013
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1013
+#: lib/Service/ToolTipsService.php:1016
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1016
+#: lib/Service/ToolTipsService.php:1019
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
 "base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1017
+#: lib/Service/ToolTipsService.php:1020
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1018
+#: lib/Service/ToolTipsService.php:1021
 msgid "Add a new dialog for defining a new bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1019
+#: lib/Service/ToolTipsService.php:1022
 msgid "Show also the disabled bank accounts, if any."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1022
+#: lib/Service/ToolTipsService.php:1025
 msgid ""
 "Used SEPA mandates are not deleted from the DB, but just flagged as\n"
 "\"inactive\" if they expire or are manually pseudo-deleted."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1025
+#: lib/Service/ToolTipsService.php:1028
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -7512,7 +7575,7 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1027
+#: lib/Service/ToolTipsService.php:1030
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -7520,48 +7583,48 @@ msgid ""
 "and contact the treasurer for further instructions."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1033
+#: lib/Service/ToolTipsService.php:1036
 msgid "Folder shared by the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1034
+#: lib/Service/ToolTipsService.php:1037
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1035
+#: lib/Service/ToolTipsService.php:1038
 msgid "Shared folder for document templates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1036
+#: lib/Service/ToolTipsService.php:1039
 msgid "Shared folder for per-project data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1037
+#: lib/Service/ToolTipsService.php:1040
 msgid "Shared folder for per-project per-participant data"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1038
+#: lib/Service/ToolTipsService.php:1041
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1042
+#: lib/Service/ToolTipsService.php:1045
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1043
+#: lib/Service/ToolTipsService.php:1046
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
 "spaces or fancy characters."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1044
+#: lib/Service/ToolTipsService.php:1047
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -7571,7 +7634,22 @@ msgid ""
 "the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1049
+#: lib/Service/ToolTipsService.php:1052
+msgid ""
+"Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
+"\"camerata academica freiburg e.V.\". The short name is used in various "
+"places. It should be lower-case and \"handy\", without spaces."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1053
+msgid ""
+"The locale of the orchestral organization. In particular, this determines "
+"the currency and the name of some directories in the file-system. Note that "
+"the timezone is always the same as the one used by the server the app runs "
+"on."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1058
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -7580,14 +7658,14 @@ msgid ""
 "user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1050
+#: lib/Service/ToolTipsService.php:1059
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
 "dastabase-user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1051
+#: lib/Service/ToolTipsService.php:1060
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -7595,19 +7673,19 @@ msgid ""
 "has all -- and in particular: GRANT -- privileges on that dedicated database."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1057
+#: lib/Service/ToolTipsService.php:1066
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1059
+#: lib/Service/ToolTipsService.php:1068
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1061
+#: lib/Service/ToolTipsService.php:1070
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1063
+#: lib/Service/ToolTipsService.php:1072
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -7616,34 +7694,34 @@ msgid ""
 "these data-items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1069
+#: lib/Service/ToolTipsService.php:1078
 #: templates/part.common.header.php:104
 #: templates/part.common.header.php:110
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1071
+#: lib/Service/ToolTipsService.php:1080
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1073
+#: lib/Service/ToolTipsService.php:1082
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1075
+#: lib/Service/ToolTipsService.php:1084
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1077
+#: lib/Service/ToolTipsService.php:1086
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1082
+#: lib/Service/ToolTipsService.php:1091
 #: lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
@@ -7651,7 +7729,7 @@ msgid ""
 "is substituted into document templates using the \"[LOGO]\" placeholder."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1083
+#: lib/Service/ToolTipsService.php:1092
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -7661,7 +7739,7 @@ msgid ""
 "project-participant views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1085
+#: lib/Service/ToolTipsService.php:1094
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -7670,80 +7748,80 @@ msgid ""
 "mandates can be downloaed from the musician and member's project view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1087
+#: lib/Service/ToolTipsService.php:1096
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1089
+#: lib/Service/ToolTipsService.php:1098
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1092
+#: lib/Service/ToolTipsService.php:1101
 msgid "Delete this document template from the server"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1095
+#: lib/Service/ToolTipsService.php:1104
 msgid "Choose a template file from the cloud storage."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1096
+#: lib/Service/ToolTipsService.php:1105
 msgid "Upload a document template from your computer or mobile."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1100
+#: lib/Service/ToolTipsService.php:1109
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1101
+#: lib/Service/ToolTipsService.php:1110
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
 "document contains form-elements."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1102
+#: lib/Service/ToolTipsService.php:1111
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1106
+#: lib/Service/ToolTipsService.php:1115
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1108
+#: lib/Service/ToolTipsService.php:1117
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1112
+#: lib/Service/ToolTipsService.php:1121
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1114
+#: lib/Service/ToolTipsService.php:1123
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1116
+#: lib/Service/ToolTipsService.php:1125
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1118
+#: lib/Service/ToolTipsService.php:1127
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -7751,31 +7829,31 @@ msgstr ""
 msgid "Default Event Notification"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:200
+#: lib/Settings/PersonalForm.php:201
 msgid "ClubMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:202
+#: lib/Settings/PersonalForm.php:203
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:311
+#: lib/Settings/PersonalForm.php:313
 msgid "Concerts"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:313
+#: lib/Settings/PersonalForm.php:315
 msgid "Other"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:314
+#: lib/Settings/PersonalForm.php:316
 msgid "Management"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:315
+#: lib/Settings/PersonalForm.php:317
 msgid "Finance"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:318
+#: lib/Settings/PersonalForm.php:320
 msgid "Miscellaneous"
 msgstr ""
 
@@ -8297,9 +8375,9 @@ msgstr ""
 #: src/app/blog.js:337
 #: src/app/blog.js:363
 #: src/app/blog.js:386
-#: src/app/email.js:73
-#: src/app/email.js:635
-#: src/app/email.js:728
+#: src/app/email.js:74
+#: src/app/email.js:655
+#: src/app/email.js:750
 #: src/app/inlineimage.js:56
 #: src/app/inlineimage.js:63
 #: src/app/inlineimage.js:158
@@ -8308,8 +8386,8 @@ msgstr ""
 #: src/app/pme-file-upload-row.js:167
 #: src/app/sepa-debit-mandate.js:285
 #: src/app/sepa-debit-mandate.js:301
-#: src/app/settings.js:1189
-#: src/app/settings.js:1202
+#: src/app/settings.js:1197
+#: src/app/settings.js:1210
 #: src/legacy/calendar/calendar.js:338
 msgid "Error"
 msgstr ""
@@ -8527,100 +8605,100 @@ msgstr ""
 msgid "Debug Information"
 msgstr ""
 
-#: src/app/email.js:73
+#: src/app/email.js:74
 msgid "Not called from main email-form."
 msgstr ""
 
-#: src/app/email.js:151
+#: src/app/email.js:153
 msgid "Move all"
 msgstr ""
 
-#: src/app/email.js:152
+#: src/app/email.js:154
 msgid "Move selected"
 msgstr ""
 
-#: src/app/email.js:153
+#: src/app/email.js:155
 msgid "Remove selected"
 msgstr ""
 
-#: src/app/email.js:154
+#: src/app/email.js:156
 msgid "Remove all"
 msgstr ""
 
-#: src/app/email.js:155
+#: src/app/email.js:157
 msgid "Remaining Recipients"
 msgstr ""
 
-#: src/app/email.js:156
+#: src/app/email.js:158
 msgid "Selected Recipients"
 msgstr ""
 
-#: src/app/email.js:159
+#: src/app/email.js:161
 msgid "Filtered"
 msgstr ""
 
-#: src/app/email.js:161
+#: src/app/email.js:163
 #: templates/legacy/calendar/part.eventform.php:43
 msgid "from"
 msgstr ""
 
-#: src/app/email.js:163
+#: src/app/email.js:165
 msgid "Empty list"
 msgstr ""
 
-#: src/app/email.js:164
+#: src/app/email.js:166
 msgid "Filter"
 msgstr ""
 
-#: src/app/email.js:165
+#: src/app/email.js:167
 msgid "show all"
 msgstr ""
 
-#: src/app/email.js:171
+#: src/app/email.js:174
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.js:634
-msgid "Unknown form element: {FormElement}"
+#: src/app/email.js:654
+msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.js:674
-#: src/app/email.js:1785
+#: src/app/email.js:696
+#: src/app/email.js:1816
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.js:676
-#: src/app/email.js:1787
+#: src/app/email.js:698
+#: src/app/email.js:1818
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.js:727
+#: src/app/email.js:749
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.js:787
+#: src/app/email.js:809
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.js:789
+#: src/app/email.js:811
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.js:818
+#: src/app/email.js:840
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.js:854
+#: src/app/email.js:876
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.js:989
+#: src/app/email.js:1011
 msgid "Dummy Autosave Subject"
 msgstr ""
 
-#: src/app/email.js:1021
+#: src/app/email.js:1043
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -8628,98 +8706,98 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.js:1026
+#: src/app/email.js:1048
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.js:1087
+#: src/app/email.js:1109
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.js:1088
+#: src/app/email.js:1110
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.js:1120
+#: src/app/email.js:1142
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.js:1122
+#: src/app/email.js:1144
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.js:1155
+#: src/app/email.js:1177
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
 msgstr ""
 
-#: src/app/email.js:1157
+#: src/app/email.js:1179
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.js:1171
+#: src/app/email.js:1193
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.js:1181
+#: src/app/email.js:1210
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.js:1183
+#: src/app/email.js:1213
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.js:1224
+#: src/app/email.js:1255
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.js:1225
+#: src/app/email.js:1256
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.js:1265
+#: src/app/email.js:1296
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.js:1267
+#: src/app/email.js:1298
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.js:1418
+#: src/app/email.js:1449
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.js:1419
-#: src/app/email.js:1561
+#: src/app/email.js:1450
+#: src/app/email.js:1592
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.js:1520
+#: src/app/email.js:1551
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1560
+#: src/app/email.js:1591
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1619
+#: src/app/email.js:1650
 #: templates/emailform/part.emailform.composer.php:158
 #: templates/emailform/part.emailform.composer.php:177
 msgid "Address Book"
 msgstr ""
 
-#: src/app/email.js:1623
+#: src/app/email.js:1654
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1626
+#: src/app/email.js:1657
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -8927,7 +9005,7 @@ msgstr ""
 
 #: src/app/pme-file-upload-row.js:151
 #: src/app/sepa-debit-mandate.js:285
-#: src/app/settings.js:1189
+#: src/app/settings.js:1197
 msgid "Empty response from file selection!"
 msgstr ""
 
@@ -9206,29 +9284,29 @@ msgstr ""
 msgid "You must type in your login password."
 msgstr ""
 
-#: src/app/settings.js:186
+#: src/app/settings.js:193
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: src/app/settings.js:304
+#: src/app/settings.js:311
 msgid "Empty password, trying to use configured credentials."
 msgstr ""
 
-#: src/app/settings.js:399
-#: src/app/settings.js:693
+#: src/app/settings.js:406
+#: src/app/settings.js:700
 msgid "Password field must not be empty"
 msgstr ""
 
-#: src/app/settings.js:1127
-#: src/app/settings.js:1148
+#: src/app/settings.js:1135
+#: src/app/settings.js:1156
 msgid "Unable to download auto-fill result."
 msgstr ""
 
-#: src/app/settings.js:1201
+#: src/app/settings.js:1209
 msgid "Unable to copy selected file {file}."
 msgstr ""
 
-#: src/app/settings.js:1345
+#: src/app/settings.js:1353
 msgid "Unable to download translation templates."
 msgstr ""
 
@@ -9530,56 +9608,62 @@ msgstr ""
 msgid "Musicians without or obviously broken email-address"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:77
+#: templates/emailform/part.emailform.recipients.php:67
+msgid ""
+"The global announcements mailing list is not configured. This can be changed "
+"by a group-administrator in the email-settings section of the app."
+msgstr ""
+
+#: templates/emailform/part.emailform.recipients.php:83
 msgid "Basic Recipients Set"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:129
+#: templates/emailform/part.emailform.recipients.php:135
 msgid "Database"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:133
+#: templates/emailform/part.emailform.recipients.php:139
 msgid "CONJUNCTION: or"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:148
+#: templates/emailform/part.emailform.recipients.php:155
 #: templates/settings/email-settings.php:123
 msgid "Mailing List"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:162
+#: templates/emailform/part.emailform.recipients.php:169
 msgid "Member-Status"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:170
+#: templates/emailform/part.emailform.recipients.php:177
 msgid "Select Members by Status"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:182
+#: templates/emailform/part.emailform.recipients.php:191
 msgid "Email Recipients"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:198
+#: templates/emailform/part.emailform.recipients.php:209
 msgid "Instruments Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:207
+#: templates/emailform/part.emailform.recipients.php:218
 msgid "Select Instruments"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:240
+#: templates/emailform/part.emailform.recipients.php:253
 msgid "Apply Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:246
+#: templates/emailform/part.emailform.recipients.php:261
 msgid "Undo Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:253
+#: templates/emailform/part.emailform.recipients.php:270
 msgid "Redo Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:260
+#: templates/emailform/part.emailform.recipients.php:279
 msgid "Reset Filter"
 msgstr ""
 
@@ -9636,13 +9720,17 @@ msgstr ""
 msgid "Other failed substitutions"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:144
-msgid ""
-"The operation failed due to template validation errors. The following "
-"template substitutions could not be resolved:"
+#: templates/emailform/part.emailform.statuspage.php:140
+msgid "Precondition failed"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:162
+#: templates/emailform/part.emailform.statuspage.php:145
+msgid ""
+"The operation failed due to template validation errors.\n"
+"Not all variable substitutions could be resolved:"
+msgstr ""
+
+#: templates/emailform/part.emailform.statuspage.php:166
 #, php-format
 msgid ""
 "Please understand that the software is really `picky'; names have to match "
@@ -9654,18 +9742,18 @@ msgid ""
 "contains a complete list of all known substitutions."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:201
+#: templates/emailform/part.emailform.statuspage.php:205
 msgid ""
 "The following email addresses appear to be syntactically incorrect, meaning "
 "that they have not the form of an email address:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:212
+#: templates/emailform/part.emailform.statuspage.php:216
 #, php-format
 msgid "Broken `%s' addresses"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:226
+#: templates/emailform/part.emailform.statuspage.php:230
 msgid ""
 "No email will be sent out unless these errors are corrected. Please separate "
 "individual emails by commas. Please use standard-address notation (see "
@@ -9673,21 +9761,21 @@ msgid ""
 "quotes if it contains a comma. Some valid examples are:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:241
-#: templates/emailform/part.emailform.statuspage.php:331
-#: templates/emailform/part.emailform.statuspage.php:367
-#: templates/emailform/part.emailform.statuspage.php:444
-#: templates/emailform/part.emailform.statuspage.php:491
-#: templates/emailform/part.emailform.statuspage.php:561
-#: templates/emailform/part.emailform.statuspage.php:619
+#: templates/emailform/part.emailform.statuspage.php:245
+#: templates/emailform/part.emailform.statuspage.php:335
+#: templates/emailform/part.emailform.statuspage.php:371
+#: templates/emailform/part.emailform.statuspage.php:448
+#: templates/emailform/part.emailform.statuspage.php:495
+#: templates/emailform/part.emailform.statuspage.php:565
+#: templates/emailform/part.emailform.statuspage.php:623
 msgid "Explanations"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:261
+#: templates/emailform/part.emailform.statuspage.php:265
 msgid "Empty Subject"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:262
+#: templates/emailform/part.emailform.statuspage.php:266
 #, php-format
 msgid ""
 "The subject must not consist of \"%s\" as only part. Please correct that "
@@ -9695,11 +9783,11 @@ msgid ""
 "message as draft. Thanks."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:275
+#: templates/emailform/part.emailform.statuspage.php:279
 msgid "Empty Sender Name"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:276
+#: templates/emailform/part.emailform.statuspage.php:280
 #, php-format
 msgid ""
 "The sender name should not be empty. Originally, it used to be %s, but "
@@ -9707,11 +9795,11 @@ msgid ""
 "name before hitting the \"Send\"-button again."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:290
+#: templates/emailform/part.emailform.statuspage.php:294
 msgid "No Recipients"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:291
+#: templates/emailform/part.emailform.statuspage.php:295
 msgid ""
 "You did not specify any recipients (Cc: and Bcc: does not count here!)."
 "Please got to the `Em@il Recipients' panel and select some before hitting "
@@ -9719,38 +9807,38 @@ msgid ""
 "without email address at the bottom of the `Em@il Recipients' panel."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:312
+#: templates/emailform/part.emailform.statuspage.php:316
 msgid ""
 "The files(s) with the following name(s) could not be attached; they do not "
 "seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:326
-#: templates/emailform/part.emailform.statuspage.php:362
+#: templates/emailform/part.emailform.statuspage.php:330
+#: templates/emailform/part.emailform.statuspage.php:366
 msgid ""
 "This is probably an internal error. It may be possible to simply click on "
 "the red, underlined text in order to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:351
+#: templates/emailform/part.emailform.statuspage.php:355
 msgid ""
 "The event(s) with the following id(s) could not be attached; they do not "
 "seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:389
+#: templates/emailform/part.emailform.statuspage.php:393
 msgid ""
 "While sending the message the following recipients failed. All other "
 "recipients were successfully sumitted to the email-server, but you should "
 "still monitor the email-inbox for messages returned later."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:420
+#: templates/emailform/part.emailform.statuspage.php:424
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:433
+#: templates/emailform/part.emailform.statuspage.php:437
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to %s."
@@ -9758,13 +9846,13 @@ msgid ""
 "compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:467
+#: templates/emailform/part.emailform.statuspage.php:471
 msgid ""
 "While trying to send the message(s), the following error(s) have been "
 "encountered:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:480
+#: templates/emailform/part.emailform.statuspage.php:484
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to "
@@ -9772,16 +9860,16 @@ msgid ""
 "to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:512
+#: templates/emailform/part.emailform.statuspage.php:516
 msgid "Message Duplicates Detected!"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:526
+#: templates/emailform/part.emailform.statuspage.php:530
 #, php-format
 msgid "Message already sent at time %s to the following recipient(s):"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:551
+#: templates/emailform/part.emailform.statuspage.php:555
 #, php-format
 msgid ""
 "The email-form refuses to send email twice to the same recipients. In order "
@@ -9793,21 +9881,21 @@ msgid ""
 "Please add a detailed description."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:582
+#: templates/emailform/part.emailform.statuspage.php:586
 msgid "Copy to Sent-Folder has Failed"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:591
+#: templates/emailform/part.emailform.statuspage.php:595
 #, php-format
 msgid "Could not authenticate with IMAP-server: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:600
+#: templates/emailform/part.emailform.statuspage.php:604
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:611
+#: templates/emailform/part.emailform.statuspage.php:615
 #, php-format
 msgid ""
 "If no other error messages are echoed on this page, then the emails have "
@@ -9817,19 +9905,19 @@ msgid ""
 "the red, underlined text in order to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:640
+#: templates/emailform/part.emailform.statuspage.php:644
 msgid "The Following Events have been attached to the Message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:668
+#: templates/emailform/part.emailform.statuspage.php:672
 msgid "The following files have been attached to the message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:696
+#: templates/emailform/part.emailform.statuspage.php:700
 msgid "First Few Lines of Sent Message"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:712
+#: templates/emailform/part.emailform.statuspage.php:716
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
@@ -10571,116 +10659,120 @@ msgstr ""
 msgid "upload later"
 msgstr ""
 
-#: templates/settings/app-settings.php:28
+#: templates/settings/app-settings.php:40
 msgid "General settings"
 msgstr ""
 
-#: templates/settings/app-settings.php:35
-#: templates/settings/app-settings.php:36
+#: templates/settings/app-settings.php:47
+#: templates/settings/app-settings.php:48
 #: templates/settings/orchestra-settings.php:50
 #: templates/settings/orchestra-settings.php:56
 msgid "name of orchestra"
 msgstr ""
 
-#: templates/settings/app-settings.php:42
+#: templates/settings/app-settings.php:56
+msgid "locale of the orchestra"
+msgstr ""
+
+#: templates/settings/app-settings.php:62
 msgid "Encryption settings"
 msgstr ""
 
-#: templates/settings/app-settings.php:48
+#: templates/settings/app-settings.php:68
 msgid "Current Key"
 msgstr ""
 
-#: templates/settings/app-settings.php:51
-#: templates/settings/app-settings.php:54
-#: templates/settings/app-settings.php:106
+#: templates/settings/app-settings.php:71
+#: templates/settings/app-settings.php:74
+#: templates/settings/app-settings.php:126
 #: templates/settings/email-settings.php:96
-#: templates/settings/email-settings.php:269
+#: templates/settings/email-settings.php:285
 #: templates/settings/personal-settings.php:150
 #: templates/settings/personal-settings.php:159
 #: templates/settings/share-settings.php:53
 msgid "show"
 msgstr ""
 
-#: templates/settings/app-settings.php:52
+#: templates/settings/app-settings.php:72
 msgid "New Key"
 msgstr ""
 
-#: templates/settings/app-settings.php:55
+#: templates/settings/app-settings.php:75
 #: templates/settings/share-settings.php:54
 msgid "Generate"
 msgstr ""
 
-#: templates/settings/app-settings.php:55
+#: templates/settings/app-settings.php:75
 msgid "Generate a random encryption key"
 msgstr ""
 
-#: templates/settings/app-settings.php:56
+#: templates/settings/app-settings.php:76
 msgid "Change Encryption Key"
 msgstr ""
 
-#: templates/settings/app-settings.php:58
+#: templates/settings/app-settings.php:78
 msgid "The encryption key was changed"
 msgstr ""
 
-#: templates/settings/app-settings.php:59
+#: templates/settings/app-settings.php:79
 msgid "Unable to change the encryption key"
 msgstr ""
 
-#: templates/settings/app-settings.php:60
+#: templates/settings/app-settings.php:80
 msgid "Data will be stored unencrypted"
 msgstr ""
 
-#: templates/settings/app-settings.php:61
+#: templates/settings/app-settings.php:81
 msgid "The keys are the same and remain unchanged."
 msgstr ""
 
-#: templates/settings/app-settings.php:62
+#: templates/settings/app-settings.php:82
 msgid "Please standby, this action needs some seconds."
 msgstr ""
 
-#: templates/settings/app-settings.php:67
+#: templates/settings/app-settings.php:87
 msgid "Distribute Encryption Key"
 msgstr ""
 
-#: templates/settings/app-settings.php:67
+#: templates/settings/app-settings.php:87
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
 "respective user's public key."
 msgstr ""
 
-#: templates/settings/app-settings.php:73
+#: templates/settings/app-settings.php:93
 msgid "Database settings"
 msgstr ""
 
-#: templates/settings/app-settings.php:79
+#: templates/settings/app-settings.php:99
 msgid "Server"
 msgstr ""
 
-#: templates/settings/app-settings.php:81
+#: templates/settings/app-settings.php:101
 msgid "Database Server"
 msgstr ""
 
-#: templates/settings/app-settings.php:88
-#: templates/settings/app-settings.php:90
+#: templates/settings/app-settings.php:108
+#: templates/settings/app-settings.php:110
 msgid "Database Name"
 msgstr ""
 
-#: templates/settings/app-settings.php:97
-#: templates/settings/email-settings.php:248
+#: templates/settings/app-settings.php:117
+#: templates/settings/email-settings.php:264
 msgid "User"
 msgstr ""
 
-#: templates/settings/app-settings.php:99
+#: templates/settings/app-settings.php:119
 msgid "Database User"
 msgstr ""
 
-#: templates/settings/app-settings.php:104
+#: templates/settings/app-settings.php:124
 #: templates/settings/email-settings.php:86
 msgid "New Password"
 msgstr ""
 
-#: templates/settings/app-settings.php:107
+#: templates/settings/app-settings.php:127
 msgid "Test Database Password"
 msgstr ""
 
@@ -10797,7 +10889,7 @@ msgid "Bulk Email Transport"
 msgstr ""
 
 #: templates/settings/email-settings.php:129
-msgid "Announcement Mailing List"
+msgid "Announcements Mailing List"
 msgstr ""
 
 #: templates/settings/email-settings.php:133
@@ -10821,66 +10913,78 @@ msgid "From: address"
 msgstr ""
 
 #: templates/settings/email-settings.php:160
+msgid "Bulk Email Subject"
+msgstr ""
+
+#: templates/settings/email-settings.php:171
+msgid "ProjectNameYYYY"
+msgstr ""
+
+#: templates/settings/email-settings.php:172
+msgid "Example Subject"
+msgstr ""
+
+#: templates/settings/email-settings.php:176
 msgid "Attachment Policy"
 msgstr ""
 
-#: templates/settings/email-settings.php:166
+#: templates/settings/email-settings.php:182
 msgid "e.g. 4.7 GB"
 msgstr ""
 
-#: templates/settings/email-settings.php:173
+#: templates/settings/email-settings.php:189
 msgid "Attachment Link Size Limit"
 msgstr ""
 
-#: templates/settings/email-settings.php:182
+#: templates/settings/email-settings.php:198
 msgid "e.g. 7 days"
 msgstr ""
 
-#: templates/settings/email-settings.php:188
+#: templates/settings/email-settings.php:204
 msgid "Attachment Link Expiration Limit"
 msgstr ""
 
-#: templates/settings/email-settings.php:204
+#: templates/settings/email-settings.php:220
 msgid "Always Link Cloud Files"
 msgstr ""
 
-#: templates/settings/email-settings.php:208
+#: templates/settings/email-settings.php:224
 msgid "Test Settings"
 msgstr ""
 
-#: templates/settings/email-settings.php:213
+#: templates/settings/email-settings.php:229
 msgid "Test Email Setup"
 msgstr ""
 
-#: templates/settings/email-settings.php:223
+#: templates/settings/email-settings.php:239
 msgid "Email test-mode; send emails only to the email test-address."
 msgstr ""
 
-#: templates/settings/email-settings.php:224
+#: templates/settings/email-settings.php:240
 msgid "Test-Mode"
 msgstr ""
 
-#: templates/settings/email-settings.php:229
+#: templates/settings/email-settings.php:245
 msgid "Test Email Adress"
 msgstr ""
 
-#: templates/settings/email-settings.php:231
+#: templates/settings/email-settings.php:247
 msgid "Test address"
 msgstr ""
 
-#: templates/settings/email-settings.php:242
+#: templates/settings/email-settings.php:258
 msgid "Mailing-List REST URL"
 msgstr ""
 
-#: templates/settings/email-settings.php:251
+#: templates/settings/email-settings.php:267
 msgid "REST User"
 msgstr ""
 
-#: templates/settings/email-settings.php:258
+#: templates/settings/email-settings.php:274
 msgid "Password"
 msgstr ""
 
-#: templates/settings/email-settings.php:271
+#: templates/settings/email-settings.php:287
 msgid "REST Password"
 msgstr ""
 
