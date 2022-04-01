@@ -830,7 +830,7 @@ const afterLoad = function(container) {
       const password = container.find('#mailingListRestPassword');
       showPassword(password);
 
-      $('#mailingListServer, #mailingListRestUser, #mailingListRestPassword').blur(function(event) {
+      $('#mailingListRestUrl, #mailingListRestUser, #mailingListRestPassword').blur(function(event) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(

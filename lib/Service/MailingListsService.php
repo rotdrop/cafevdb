@@ -25,6 +25,9 @@ namespace OCA\CAFEVDB\Service;
 
 use GuzzleHttp\Client as RestClient;
 
+use OCP\Files\IRootFolder;
+use OCP\Files\FileInfo;
+
 use OCA\CAFEVDB\Common\Util;
 
 /** Handle participant mailing-list services. */
@@ -37,6 +40,21 @@ class MailingListsService
     'pre_confirmed' => true,
     'pre_approved' => true,
     'send_welcome_message' => true,
+  ];
+
+  const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
+  const TEMPLATE_DIR_AUTO_RESPONSES = 'auto responses';
+  const TYPE_ANNOUNCEMENTS = 'announcements';
+  const TYPE_PROJECTS = 'projects';
+
+  const TEMPLATE_FILE_PREFIX = 'list:';
+  const TEMPLATE_FILE_ADMIN = 'admin:';
+  const TEMPLATE_FILE_MEMBER = 'member:';
+  const TEMPLATE_FILE_USER = 'user';
+  const TEMPLATE_FILE_RCPTS = [
+    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_ADMIN,
+    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_MEMBER,
+    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER,
   ];
 
   /** @var string
@@ -266,6 +284,31 @@ class MailingListsService
   }
 
   /**
+   * Generate the full path to the given templates leaf-directory.
+   *
+   * @paran string $leafDirectory Leaf-component,
+   * e.g. self::TYPE_ANNOUNCEMENTS or self::TYPE_PROJECTS.
+   */
+  public function templateFolderPath(string $leafDirectory)
+  {
+    // relative path
+    $l = $this->appL10n();
+    $components = array_map(function($path) {
+      return Util::dashesToCamelCase($this->transliterate($path), capitalizeFirstCharacter: true, dashes: '_- ');
+    }, [
+      $l->t('mailing lists'),
+      $l->t('auto-responses'),
+      $leafDirectory,
+    ]);
+    array_unshift($components, $this->getDocumentTemplatesPath());
+    $folderPath = implode('/', $components);
+    if ($folderPath[0] != '/') {
+      $folderPath = '/' . $folderPath;
+    }
+    return $folderPath;
+  }
+
+  /**
    * Ensure that the given folder exists and is anonymously shared.
    *
    * @param string $folder The template folder to check for.The $folderName is
@@ -279,24 +322,18 @@ class MailingListsService
   public function ensureTemplateFolder(string $folderName)
   {
     $shareOwnerUid = $this->getConfigValue('shareowner');
-    if ($folderName[0] != '/') {
-      // relative path
-      $l = $this->appL10n();
-      $listsFolder = Util::dashesToCamelCase($l->t('mailing lists'), capitalizeFirstCharacter: true);
-      $folderPath = $this->getDocumentTemplatesPath() . '/' . $listsFolder . '/' . $folderName;
-      if ($folderPath[0] != '/') {
-        $folderPath = '/' . $folderPath;
-      }
-    } else {
-      // absolute path
-      $folderPath = $folderName;
-    }
+    $folderPath = $folderName[0] != '/'
+      ? $folderPath = $this->templateFolderPath($folderName)
+      : $folderName;
 
     // try to create or use the folder and share it by a public link
-    $result = $this->sudo($shareOwner, function() use ($folderPath, $shareOwnerUid) {
+    $result = $this->sudo($shareOwnerUid, function(string $shareOwnerUid) use ($folderPath) {
+
+      /** @var IRootFolder $rootFolder */
+      $rootFolder = $this->di(IRootFolder::class);
 
       $shareOwner = $this->user();
-      $rootView = $this->rootFolder->getUserFolder($shareOwnerUid);
+      $rootView = $rootFolder->getUserFolder($shareOwnerUid);
 
       if ($rootView->nodeExists($folderPath)
           && (($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER
@@ -320,8 +357,11 @@ class MailingListsService
 
       // Now it should exist as directory and $node should contain its file-info
 
+      /** @var SimpleSharingService $sharingService */
+      $sharingService = $this->di(SimpleSharingService::class);
+
       if ($node) {
-        $url = $this->sharingService->linkShare($node, $shareOwnerUid, sharePerm: \OCP\Constants::PERMISSION_READ);
+        $url = $sharingService->linkShare($node, $shareOwnerUid, sharePerms: \OCP\Constants::PERMISSION_READ);
         if (empty($url)) {
           return null;
         }
@@ -332,6 +372,8 @@ class MailingListsService
 
       return $url;
     });
+
+    return $result;
   }
 
   // ensure that the given string is a list-id, if it is a FQDN then try to

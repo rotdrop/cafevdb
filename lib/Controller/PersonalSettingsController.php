@@ -1581,13 +1581,15 @@ class PersonalSettingsController extends Controller {
         }
       }
       if ($parameter === 'announcementsMailingList') {
+        /** @var MailingListsService $listsService */
+        $listsService = $this->di(MailingListsService::class);
         try {
-          /** @var MailingListsService $listsService */
-          $listsService = $this->di(MailingListsService::class);
           $listInfo = $listsService->getListInfo($realValue);
           $this->logInfo('LIST INFO ' . print_r($listInfo, true));
         } catch (\Throwable $t) {
           $this->logException($t);
+          /** @var MailingListsService $listsService */
+          $listsService = $this->di(MailingListsService::class);
           $furtherData = Util::arrayMergeRecursive($furtherData, [
             'message' => [
               $this->l->t('The Mailing list "%1$s" does not seem to exist on the configured mailing-list service.', [
@@ -1596,6 +1598,10 @@ class PersonalSettingsController extends Controller {
             ],
           ]);
         }
+        // try to create the template folder even if the list does not exist
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
       }
     case 'announcementsMailingListName':
     case 'bulkEmailSubjectTag':
@@ -1648,6 +1654,7 @@ class PersonalSettingsController extends Controller {
           break;
         }
       }
+      $furtherData = [];
       if ($all) {
         $oldValue = $this->getConfigValue($parameter);
         $this->setConfigValue($parameter, ${$parameter});
@@ -1657,16 +1664,26 @@ class PersonalSettingsController extends Controller {
           if (empty($listsService->getServerConfig())) {
             $this->setConfigValue($parameter, $oldValue);
             return self::grumble(
-              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
           }
         } catch (\Throwable $t) {
           $this->setConfigValue($parameter, $oldValue);
           $this->logException($t);
           return self::grumble(
-            $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+            $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
         }
+
+        // try to generate the template directories
+        // try to create the template folder even if the list does not exist
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
+
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('projects'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for project mailing lists is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
       }
-      return $this->setSimpleConfigValue($parameter, $value);
+      return $this->setSimpleConfigValue($parameter, $value, furtherData: $furtherData);
 
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {

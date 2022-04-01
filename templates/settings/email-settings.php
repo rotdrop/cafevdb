@@ -249,13 +249,13 @@ use OCA\CAFEVDB\Common\Util;
     <h4>Mailing List Service</h4>
     <form class="mailing-list">
       <input type="text"
-             name="mailingListURL"
-             id="mailingListURL"
-             value="<?php echo $mailingListURL; ?>"
+             name="mailingListRestUrl"
+             id="mailingListRestUrl"
+             value="<?php echo $mailingListRestUrl; ?>"
              placeholder="<?php p('http://localhost:8001');?>"
              required
       />
-      <label for="mailing-list-server"><?php echo $l->t('Mailing-List REST URL');?></label>
+      <label for="mailingListRestUrl"><?php echo $l->t('Mailing-List REST URL');?></label>
       <br/>
       <input type="text"
              name="mailingListRestUser"
