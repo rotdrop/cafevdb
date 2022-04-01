@@ -170,7 +170,7 @@ class ConfigService
   const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
 
   const MAILING_LIST_CONFIG = [
-    'url' => 'mailingListURL',
+    'url' => 'mailingListRestUrl',
     'user' => 'mailingListRestUser',
     'password' => 'mailingListRestPassword',
   ];
@@ -727,7 +727,7 @@ class ConfigService
       return false;
     }
     try {
-      $result = $callback();
+      $result = $callback($uid);
     } catch (\Throwable $t) {
       $this->setUser($oldUser);
       throw new \RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
@@ -810,6 +810,14 @@ class ConfigService
     return $lang;
   }
 
+  /**
+   * Return the language part of the current or given locale.
+   */
+  public function getAppLanguage():string
+  {
+    return $this->getLanguage($this->getAppLocale());
+  }
+
   /**Return an array of supported country-codes and names*/
   public function localeCountryNames($locale = null)
   {
@@ -840,9 +848,6 @@ class ConfigService
     $result = [];
     if (method_exists($this->l10NFactory, 'getLanguages')) {
       $cloudLanguages = $this->l10NFactory->getLanguages();
-
-      $this->logInfo('cloud langs ' . print_r($cloudLanguages, true));
-
       $otherLanguages = array_column($cloudLanguages['otherLanguages'], 'name', 'code');
       $commonLanguages = array_column($cloudLanguages['commonLanguages'], 'name', 'code');
       $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
@@ -860,8 +865,6 @@ class ConfigService
         $result[$language] .= ' (' . $language . ')';
       }
     }
-
-    $this->logInfo('result langs ' . print_r($result, true));
 
     return $result;
   }
@@ -883,7 +886,7 @@ class ConfigService
   public function transliterate(string $string, $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
-    empty($locale) && $locale = $this->getLocale();
+    empty($locale) && $locale = $this->getAppLocale();
     setlocale(LC_CTYPE, $locale);
     $result = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
     setlocale(LC_CTYPE, $oldlocale);
