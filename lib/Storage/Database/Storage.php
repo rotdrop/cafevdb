@@ -93,9 +93,9 @@ class Storage extends AbstractStorage
   {
     $directory = $this->fileFromFileName($dirName);
     if ($directory instanceof DirectoryNode) {
-      $date = $directory->minimalModificationTime ?? (new \DateTimeImmutable('@0'));
+      $date = $directory->minimalModificationTime ?? (new \DateTimeImmutable('@1'));
     } else {
-      $date = new \DateTimeImmutable('@0');
+      $date = new \DateTimeImmutable('@1');
     }
 
     // maybe we should skip the read-dir for performance reasons.
@@ -105,7 +105,7 @@ class Storage extends AbstractStorage
         $updated = $node->getUpdated();
       } else if ($node instanceof DirectoryNode) {
         $nodeName = $node->name;
-        $updated = $node->minimalModificationTime ?? (new \DateTimeImmutable('@0'));
+        $updated = $node->minimalModificationTime ?? (new \DateTimeImmutable('@1'));
         if ($nodeName != '.') {
           $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
           if ($recursiveModificationTime > $updated) {
@@ -114,7 +114,7 @@ class Storage extends AbstractStorage
         }
       } else {
         $this->logError('Unknown directory entry in ' .$dirName);
-        $updated = new \DateTimeImmutable('@0');
+        $updated = new \DateTimeImmutable('@1');
       }
       if ($updated > $date) {
         $date = $updated;
