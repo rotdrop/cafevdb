@@ -40,12 +40,17 @@ class MailingListsService
     'pre_confirmed' => true,
     'pre_approved' => true,
     'send_welcome_message' => true,
+    'role' => self::ROLE_MEMBER,
   ];
 
   const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
   const TEMPLATE_DIR_AUTO_RESPONSES = 'auto responses';
   const TYPE_ANNOUNCEMENTS = 'announcements';
   const TYPE_PROJECTS = 'projects';
+
+  const ROLE_MEMBER = 'member';
+  const ROLE_MODERATOR = 'moderator';
+  const ROLE_OWNER = 'owner';
 
   const TEMPLATE_FILE_PREFIX = 'list:';
   const TEMPLATE_FILE_ADMIN = 'admin:';
@@ -202,30 +207,70 @@ class MailingListsService
 
   /**
    * Find the basic information about a subscription for the given
-   * email. Return null if not found.
+   * email.
    */
-  public function getSubscription(string $listId, string $subscriptionAddress)
+  public function getSubscription(string $listId, string $subscriptionAddress, string $role = self::ROLE_MEMBER)
   {
     if (empty($listId = $this->ensureListId($listId))) {
       return false;
     }
 
+    $post = [
+      'list_id' => $listId,
+      'subscriber' => $subscriptionAddress,
+      'role' => $role,
+    ];
+    $this->logInfo('POST DATA ' . print_r($post, true));
+
     $response = $this->restClient->post(
       '/3.1/members/find', [
-        'json' => [
-          'list_id' => $listId,
-          'subscriber' => $subscriptionAddress,
-        ],
+        'json' => $post,
         'auth' => $this->restAuth,
       ]);
     if (empty($response->getBody())) {
       return null;
     }
     $response = json_decode($response->getBody(), true);
-    if ($response['total_size'] !== 1) {
-      return null;
+
+    $this->logInfo('RESPONSE ' . print_r($response, true));
+
+    $result = [];
+    foreach (($response['entries'] ?? []) as $entry) {
+      $result[$entry['role']] = $entry;
     }
-    return reset($response['entries']);
+    return $result;
+  }
+
+  /**
+   * Get or check for a pending invitation (=== email confirmation request)
+   * for the given subscription-address.
+   *
+   * It is not possible to distinguish between an invitation and an email
+   * confirmation. The difference is that invitations are not moderated after
+   * the email address has been confirmed, but subscription requests may be
+   * moderated.
+   */
+  public function getSubscriptionRequest(string $listId, string $subscriptionAddress)
+  {
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+
+    $response = $this->restClient->get(
+      '/3.1/lists/' . $listId . '/requests', [
+        'auth' => $this->restAuth,
+      ]);
+    if (empty($response->getBody())) {
+      return false;
+    }
+    $response = json_decode($response->getBody(), true);
+    $result = [];
+    foreach (($response['entries'] ?? null) as $listRequest) {
+      if ($listRequest['email'] === $subscriptionAddress) {
+        $result[$listRequest['token_owner']] = $listRequest;
+      }
+    }
+    return $result;
   }
 
   /**
@@ -240,8 +285,17 @@ class MailingListsService
    * are passed on the the list-server. The 'list_id' is overridden by the
    * first parameter.
    */
-  public function subscribe(string $listId, array $subscriptionData)
+  public function subscribe(string $listId, ?string $email = null, ?string $displayName = null, ?string $role = null, array $subscriptionData = [])
   {
+    if (!empty($email)) {
+      $subscriptionData['subscriber'] = $email;
+    }
+    if (!empty($displayName)) {
+      $subscriptionData['display_name'] = $displayName;
+    }
+    if (!empty($role)) {
+      $subscriptionData['role'] = $role;
+    }
     if (empty($subscriptionData['subscriber'])) {
       throw new \InvalidArgumentException($this->l->t('Missing subscriber email-address.'));
     }
@@ -252,12 +306,35 @@ class MailingListsService
 
     $subscriptionData = array_merge(self::DEFAULT_SUBSCRIPTION_DATA, $subscriptionData);
     $subscriptionData['list_id'] = $listId;
-
-    $this->restClient->post('/3.1/members', [
+    foreach ($subscriptionData as $key => $value) {
+      // bloody Python rest implementation
+      if ($value === true) {
+        $subscriptionData[$key] = 'True';
+      } else if ($value === false) {
+        $subscriptionData[$key] = 'False';
+      }
+    }
+    $response = $this->restClient->post('/3.1/members', [
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
+    if (!empty($response->getBody())) {
+      $this->logInfo('SUBSCRIPTION RESPONSE: ' . print_r(json_decode($response->getBody(), true), true));
+    }
     return true;
+  }
+
+  /** Just send an invitation. */
+  public function invite(string $listId, string $email = null, ?string $displayName = null)
+  {
+    $subscriptionData = [
+      'subscriber' => $email,
+      'invitation' => true,
+    ];
+    if (!empty($displayName)) {
+      $subscriptionData['display_name'] = $displayName;
+    }
+    return $this->subscribe($listId, subscriptionData: $subscriptionData);
   }
 
   /**
@@ -268,18 +345,21 @@ class MailingListsService
    *
    * @param string $subscriber The email-address of the subscriber.
    */
-  public function unsubscribe(string $listId, string $subscriber)
+  public function unsubscribe(string $listId, string $subscriber, string $role = self::ROLE_MEMBER)
   {
     if (empty($listId = $this->ensureListId($listId))) {
       return false;
     }
     $subscriptionData = $this->getSubscription($listId, $subscriber);
-    if (empty($subscriptionData['self_link'])) {
+    $selfLink = $subscriptionData[$role]['self_link'] ?? null;
+    if (empty($selfLink)) {
       return false;
     }
-    $this->restClient->delete($subscriptionData['self_link'], [
+    $this->logInfo('POST DELETE TO ' . $selfLink);
+    $result = $this->restClient->delete($selfLink, [
       'auth' => $this->restAuth,
     ]);
+    $this->logInfo('RESULT ' . print_r($result, true));
     return true;
   }
 
@@ -381,12 +461,14 @@ class MailingListsService
   private function ensureListId(string $identifier)
   {
     if (strpos($identifier, '@') !== false) {
-      $identifier = $this->getListId($identifier);
-      if (empty($identifier)) {
+      $listId = $this->getListId($identifier);
+      if (empty($listId)) {
         return null;
       }
+    } else {
+      $listId = $identifier;
     }
-    return $identifier;
+    return $listId;
   }
 }
 

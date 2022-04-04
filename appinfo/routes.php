@@ -560,6 +560,14 @@ $routes = [
       'verb' => 'GET',
     ],
     /**
+     * Manage mailing list subscriptions
+     */
+    [
+      'name' => 'mailing_lists#service_switch',
+      'verb' => 'POST',
+      'url' => '/mailing-lists/{operation}',
+    ],
+    /**
      * Attempt a catch all ...
      */
     [

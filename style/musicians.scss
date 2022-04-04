@@ -1,0 +1,66 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#pme-table-container.musicians {
+
+  form.pme-form {
+
+    td.pme-value.mailing-list {
+      .status:not(.action-display) {
+        font-weight:bold;
+        font-style:italic;
+        margin: 3px 3px 3px 0;
+        padding: 6px 7px;
+      }
+      .operations {
+        &.action-display input.operation {
+          display:none;
+        }
+        input.operation {
+          background-repeat:no-repeat;
+          background-size: 24px 24px;
+          background-position: center;
+          width:28px;
+          height:28px;
+          vertical-align:middle;
+          text-indent:-9999px;
+          margin-left:5px;
+          &.invite {
+            background-image:url('../../../core/img/actions/confirm.svg');
+          }
+          &.subscribe {
+            background-image:url('../../../core/img/actions/add.svg');
+          }
+          &.unsubscribe {
+            background-image:url('../img/cafevdb-delete.svg');
+          }
+          &.busy {
+            background-image:url('../../../core/img/loading.gif') !important;
+          }
+        }
+      }
+    }
+
+  } /* form.pme-form */
+
+} /* page container */

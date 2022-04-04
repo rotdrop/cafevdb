@@ -31,12 +31,13 @@ import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
-import { token as pmeToken } from './pme-selectors.js';
+import { token as pmeToken, data as pmeData } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 require('sepa-bank-accounts.scss');
+require('musicians.scss');
 
 /**
  * Add several musicians.
@@ -235,6 +236,39 @@ const contactValidation = function(container) {
             cleanup();
           }
         });
+    });
+
+  const $mailingListStatus = $form.find('span.mailing-list.status');
+  const $mailingListOperations = $form.find('input.mailing-list.operation');
+  $mailingListOperations
+    .off('click')
+    .on('click', function(event) {
+      const email = $form.find('input[" + pmeData('email') + "]').val();
+      if (email === '') {
+        Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        return false;
+      }
+      const $displayName = $form.find('input[name="' + pmeData('display_name') + '"]');
+      const displayName = $displayName.val() || $displayName.attr('placeholder');
+      const action = $(this).attr('name');
+      $.post(generateUrl('mailing-lists/' + action), {
+        list: 'announcements',
+        email,
+        displayName,
+      })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+          });
+        })
+        .done(function(data) {
+          $mailingListStatus.html(t(appName, data.status));
+          const subscribed = data.status === 'subscribed';
+          $mailingListOperations.each(function(index) {
+            const $this = $(this);
+            $this.prop('disabled', ($this.hasClass('unsubscribe') && !subscribed) || (!$this.hasClass('unsubscribe') && subscribed));
+          });
+        });
+      return false;
     });
 
   const address = $form.find('input.musician-address');

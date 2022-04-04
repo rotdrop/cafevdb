@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\MusicianService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
 
@@ -68,6 +69,9 @@ class Musicians extends PMETableViewBase
 
   /** @var MusicianService */
   private $musicianService;
+
+  /** @var MailingListsService */
+  private $listsService;
 
   /**
    * @var bool Called with project-id in order to add musicians to an
@@ -144,6 +148,7 @@ class Musicians extends PMETableViewBase
     , PhoneNumberService $phoneNumberService
     , InstrumentInsuranceService $insuranceService
     , MusicianService $musicianService
+    , MailingListsService $listsService
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
@@ -151,6 +156,7 @@ class Musicians extends PMETableViewBase
     $this->phoneNumberService = $phoneNumberService;
     $this->insuranceService = $insuranceService;
     $this->musicianService = $musicianService;
+    $this->listsService = $listsService;
     $this->projectMode = false;
 
     if (empty($this->musicianId)) {
@@ -618,6 +624,47 @@ make sure that the musicians are also automatically added to the
       'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
       'values2' => $this->memberStatusNames,
       'tooltip' => $this->toolTipsService['member-status'],
+    ];
+
+    $opts['fdd']['mailing_list'] = [
+      'name'    => $this->l->t('Mailing List'),
+      'tab'     => [ 'id' => [ 'orchestra' ] ],
+      'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-wide', ], ],
+      'sql'     => '$table.email',
+      'options' => 'ACPVD',
+      'input'   => 'V',
+      'php' => function($email, $action, $k, $row, $recordId, $pme) {
+        $list = $this->getConfigValue('announcementsMailingList');
+        $subscription = $this->listsService->getSubscription($list, $email);
+        $subscribed = !empty($subscription['member']);
+        $statusText = $subscribed ? $this->l->t('subscribed') : $this->l->t('unsubscribed');
+        $subscribedDisabled = $subscribed ? ' disabled' : '';
+        $unsubscribedDisabled = !$subscribed ? ' disabled' : '';
+        $html = '
+<span class="mailing-list status action-' . $action . '">' . $statusText . '</span>
+<span class="mailing-list operations action-' . $action . '">
+  <input type="button"
+         name="invite"
+         class="mailing-list operation invite"
+         value="' . $this->l->t('invite') . '"
+         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:invite'] . '"
+         ' . $subscribedDisabled. '/>
+  <input type="button"
+         name="subscribe"
+         class="mailing-list operation subscribe"
+         value="' . $this->l->t('subscribe') . '"
+         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:subscribe'] . '"
+         ' . $subscribedDisabled. '/>
+  <input type="button"
+         name="unsubscribe"
+         class="mailing-list operation unsubscribe"
+         value="' . $this->l->t('unsubscribe') . '"
+         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:unsubscribe'] . '"
+         ' . $unsubscribedDisabled . '/>
+</span>
+';
+        return $html;
+      },
     ];
 
     $opts['fdd']['cloud_account_deactivated'] = [

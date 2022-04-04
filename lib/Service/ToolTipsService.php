@@ -396,6 +396,13 @@ invited to have a look, but please do not change anything unless you know what y
         'musicians' => [
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
+          'mailing-list' => [
+            'actions' => [
+              'invite' => $this->l->t('Invite the musician to join the announcements mailing list.'),
+              'subscribe' => $this->l->t('Per-force subscribe the musician to the announcements mailing list.'),
+              'unsubscribe' => $this->l->t('Unsubscribe the musician from the announcements mailing list.'),
+            ],
+          ],
         ],
       ],
 
