@@ -9,8 +9,9 @@
 # >>> response, content = Http().request(url, 'GET', None, headers)
 # >>> print(response.status)
 
-LISTNAME="resttest@lists.cafev.de"
-LISTID="resttest.lists.cafev.de"
+# LISTNAME="resttest@lists.cafev.de"
+# LISTID="resttest.lists.cafev.de"
+LISTID="playground.lists.cafev.de"
 
 # list of mailing lists
 # curl \
@@ -62,6 +63,34 @@ RESOURCE=display_name
 #     --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
 #     -X GET \
 #     "http://localhost:8001/3.1/lists/$LISTNAME/config/$RESOURCE"
+
+# get user
+
+curl \
+    --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+    -X GET \
+    "http://localhost:8001/3.1/users/himself@claus-justus-heine.de"
+
+echo
+
+curl \
+    --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+    -X POST \
+    -d "list_id=$LISTID" \
+    -d "subscriber=himself@claus-justus-heine.de" \
+    -d "role=member" \
+    "http://localhost:8001/3.1/members/find"
+
+echo
+
+TOKEN="c39c94638cdb5c121a8c34f1f0155e264d4efdfb"
+
+curl \
+    --user restadmin:n3G/cCyKXknkLLbRFPN0NSf5gBsbOH3NLGKPzy7M0MLQhmwM \
+    -X GET \
+    "http://localhost:8001/3.1/lists/$LISTID/requests/$TOKEN"
+
+exit 0
 
 # attributes we want:
 
