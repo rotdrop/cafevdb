@@ -26,10 +26,10 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeWrittenEvent;
-// use OCP\Files\Events\Node\NodeCopiedEvent; covered by NodeWrittenEvent
-use OCP\Files\Events\Node\NodeRenamedEvent; // covered by NodeWrittenEvent, but we need the source path
-use OCP\Files\Events\Node\NodeDeletedEvent; // not covered by NodeWrittenEvent
-use OCP\Files\Events\Node\NodeTouchedEvent; // not covered by NodeWrittenEvent
+use OCP\Files\Events\Node\NodeCopiedEvent;
+use OCP\Files\Events\Node\NodeRenamedEvent;
+use OCP\Files\Events\Node\NodeDeletedEvent;
+use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\IUser;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -50,7 +50,7 @@ class MailingListsAutoResponsesListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const EVENT = [ NodeRenamedEvent::class, NodeWrittenEvent::class, NodeDeletedEvent::class, NodeTouchedEvent::class ];
+  const EVENT = [ NodeRenamedEvent::class, NodeCopiedEvent::class, NodeWrittenEvent::class, NodeDeletedEvent::class, NodeTouchedEvent::class ];
 
   /** @var IL10N */
   private $l;
@@ -89,45 +89,53 @@ class MailingListsAutoResponsesListener implements IEventListener
     $this->logger = $this->appContainer->get(ILogger::class);
     $this->l = $this->appContainer->get(IL10N::class);
 
-    $remove = false;
-    $eventNode = null;
+    $nodes = [];
     switch ($eventClass) {
       case NodeDeletedEvent::class:
         /** @var NodeDeletedEvent $event */
-        $eventNode = $event->getNode();
-        $remove = true;
+        $nodes['remove'] = $event->getNode();
         break;
       case NodeRenamedEvent::class:
         /** @var NodeRenamedEvent $event */
-        $eventNode = $event->getSource();
+        $nodes['remove'] = $event->getSource();
+        $nodes['add'] = $event->getTarget();
         $remove = true;
         // rename gets another NodeWrittenEvent
         break;
       case NodeWrittenEvent::class:
         /** @var NodeWrittenEvent $event */
-        $eventNode = $event->getNode();
+        $nodes['add'] = $event->getNode();
+        break;
+      case NodeCopiedEvent::class:
+        /** @var NodeCopiedEvent $event */
+        $nodes['add'] = $event->getTarget();
         break;
       case NodeTouchedEvent::class:
         /** @var NodeTouchedEvent $event */
-        $eventNode = $event->getNode();
+        $nodes['add'] = $event->getNode();
         break;
       default:
         return;
     }
 
-    // Can ony use plain text files for the autoresponses.
-    $eventMimeType = $eventNode->getMimetype();
-    if ($eventMimeType != 'text/plain' && $eventMimeType != 'text/markdown') {
-      $this->logInfo('NOT A PLAIN TEXT FILE ' . $eventBaseName);
-      return;
+    /** @var \OCP\Files\Node $node */
+    foreach ($nodes as $key => $node) {
+      $nodePath = $node->getPath();
+      if ($key == 'add')  {
+        // Can ony use plain text files for the autoresponses.
+        $eventMimeType = $node->getMimetype();
+        if ($eventMimeType != 'text/plain' && $eventMimeType != 'text/markdown') {
+          unset($nodes[$key]);
+        }
+      }
+      $baseName = basename($nodePath);
+      // first look at the base name, it must start with one of the known prefixes.
+      if (!str_starts_with($baseName, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+        unset($nodes[$key]);
+      }
     }
 
-    $eventPath = $eventNode->getPath();
-
-    // first look at the base name, it must start with one of the known prefixes.
-    $eventBaseName = basename($eventPath);
-    if (!str_starts_with($eventBaseName, MailingListsService::TEMPLATE_FILE_PREFIX)) {
-      $this->logInfo('NOT A TEMPLATE FILE ' . $eventBaseName);
+    if (empty($nodes)) {
       return;
     }
 
@@ -147,40 +155,45 @@ class MailingListsAutoResponsesListener implements IEventListener
     /** @var MailingListsService $listsService */
     $listsService = $this->appContainer->get(MailingListsService::class);
 
-    $folderPath = rtrim($userFolder . $listsService->templateFolderPath(''), '/');
-    if (!$this->matchPrefixDirectory($eventPath, $folderPath)) {
-      // not an autoresponse file
-      $this->logInfo('UNMATCHED ' . $eventPath . ' not in ' . $folderPath);
-      return;
-    }
+    foreach ($nodes as $key => $node) {
+      $nodePath = $node->getPath();
+      $nodeBase = basename($nodePath);
 
-    foreach ([MailingListsService::TYPE_ANNOUNCEMENTS, MailingListsService::TYPE_PROJECTS] as $listType) {
-      $templateFolderPath = $listsService->templateFolderPath($this->l->t($listType));
-      $folderPath = $userFolder . $templateFolderPath;
-      if (!$this->matchPrefixDirectory($eventPath, $folderPath)) {
-        $this->logInfo('UNMATCHED ' . $eventPath . ' not in ' . $folderPath);
-        continue;
+      $folderPath = rtrim($userFolder . $listsService->templateFolderPath(''), '/');
+      if (!$this->matchPrefixDirectory($nodePath, $folderPath)) {
+        // not an autoresponse file
+        return;
       }
-      if ($listType == MailingListsService::TYPE_PROJECTS) {
-        $this->logError('Mailing-list type ' . $listType . ' not yet handled');
-        continue;
-      }
-      $template = pathinfo($eventBaseName, PATHINFO_FILENAME);
-      $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
 
-      if ($remove) {
-        foreach ($lists as $list) {
-          $listsService->setMessageTemplate($list, $template, null);
+      foreach ([MailingListsService::TYPE_ANNOUNCEMENTS, MailingListsService::TYPE_PROJECTS] as $listType) {
+        $templateFolderPath = $listsService->templateFolderPath($this->l->t($listType));
+        $folderPath = $userFolder . $templateFolderPath;
+
+        if (!$this->matchPrefixDirectory($nodePath, $folderPath)) {
+          continue;
         }
-      } else {
-        $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
-        $templateUri = $folderShareUri . '?path=/&files=' . $eventBaseName;
-        foreach ($lists as $list) {
-          $listsService->setMessageTemplate($list, $template, $templateUri);
-          $this->logInfo('SHARE URI ' . $templateUri);
+        if ($listType == MailingListsService::TYPE_PROJECTS) {
+          $this->logError('Mailing-list type ' . $listType . ' not yet handled');
+          continue;
         }
+        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
+        $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
+
+        if ($key == 'remove') {
+          foreach ($lists as $list) {
+            $listsService->setMessageTemplate($list, $template, null);
+            $this->logInfo('Removed ' . $template . ' from list ' . $list);
+          }
+        } else {
+          $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
+          $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
+          foreach ($lists as $list) {
+            $listsService->setMessageTemplate($list, $template, $templateUri);
+            $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
+          }
+        }
+        break;
       }
-      break;
     }
   }
 
