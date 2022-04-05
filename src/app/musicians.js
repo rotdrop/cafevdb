@@ -243,7 +243,7 @@ const contactValidation = function(container) {
   $mailingListOperations
     .off('click')
     .on('click', function(event) {
-      const email = $form.find('input[" + pmeData('email') + "]').val();
+      const email = $form.find('input[name="' + pmeData('email') + '"]').val();
       if (email === '') {
         Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
         return false;

@@ -47,6 +47,15 @@ class MailingListsController extends Controller
   const OPERATION_INVITE = 'invite';
   const OPERATION_SUBSCRIBE = 'subscribe';
   const OPERATION_UNSUBSCRIBE = 'unsubscribe';
+  const OPERATION_ACCEPT = 'accept';
+  const OPERATION_REJECT = 'reject';
+  const OPERATIONS = [
+    self::OPERATION_INVITE,
+    self::OPERATION_SUBSCRIBE,
+    self::OPERATION_UNSUBSCRIBE,
+    self::OPERATION_ACCEPT,
+    self::OPERATION_REJECT,
+  ];
 
   /** @var MailingListsService */
   private $listsService;
@@ -87,6 +96,10 @@ class MailingListsController extends Controller
         $this->listsService->unsubscribe($list, $email);
         $status = 'unsubscribed';
         break;
+      case self::OPERATION_ACCEPT:
+        break;
+      case self::OPERATION_REJECT:
+        break;
       default:
         return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
     }
@@ -97,6 +110,32 @@ class MailingListsController extends Controller
       'status' =>  $status,
     ]);
   }
+
+  /**
+   * @NoAdminRequired
+   *
+   * Get the status of the queried email-address.
+   *
+   * @return array
+   * ```
+   * [
+   *   'status' => { 'subscribed', 'unsubscribed', 'invited', 'waiting' }
+   * ]
+   * ```
+   *
+   */
+  public function getStatus(string $listId, string $email)
+  {
+    if (empty($listId)) {
+      return self::grumble($this->l->t('List-id must not be empty.'));
+    }
+    if (empty($email)) {
+      return self::grumble($this->l->t('Email-address must not be empty.'));
+    }
+    $status = $this->listsService->getSubscriptionStatus($listId, $email);
+    return self::dataResponse([ 'status' => $status ]);
+  }
+
 }
 
 // Local Variables: ***

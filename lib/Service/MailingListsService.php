@@ -62,6 +62,11 @@ class MailingListsService
     self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER,
   ];
 
+  const STATUS_SUBSCRIBED = 'subscribed';
+  const STATUS_UNSUBSCRIBED = 'unsubscribed';
+  const STATUS_INVITED = 'invited';
+  const STATUS_WAITING = 'waiting';
+
   /** @var string
    * Default rest URI
    */
@@ -271,6 +276,30 @@ class MailingListsService
       }
     }
     return $result;
+  }
+
+  /**
+   * Return a brief status for the requested list and email address
+   *
+   * @return string One of self::STATUS_UNSUBSCRIBED, self::STATUS_SUBSCRIBED,
+   * self::STATUS_INVITED, self::STATUS_WAITING;
+   */
+  public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
+  {
+    $result = self::STATUS_UNSUBSCRIBED;
+    $subscription = $this->getSubscription($listId, $subscriptionAddress);
+    if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
+      return self::STATUS_SUBSCRIBED;
+    } else {
+      // check for pending invitations or waiting membership-requests
+      $subscriptionRequest = $this->getSubscriptionRequest($listId, $subscriptionAddress);
+      if (!empty($subscriptionRequest['subscriber'])) {
+        return self::STATUS_INVITED;
+      } else if (!empty($subscriptionRequest['moderator'])) {
+        return self::STATUS_WAITING;
+      }
+    }
+    return self::STATUS_UNSUBSCRIBED;
   }
 
   /**

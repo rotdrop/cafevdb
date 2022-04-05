@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
 
@@ -635,32 +636,50 @@ make sure that the musicians are also automatically added to the
       'input'   => 'V',
       'php' => function($email, $action, $k, $row, $recordId, $pme) {
         $list = $this->getConfigValue('announcementsMailingList');
-        $subscription = $this->listsService->getSubscription($list, $email);
-        $subscribed = !empty($subscription['member']);
-        $statusText = $subscribed ? $this->l->t('subscribed') : $this->l->t('unsubscribed');
-        $subscribedDisabled = $subscribed ? ' disabled' : '';
-        $unsubscribedDisabled = !$subscribed ? ' disabled' : '';
+        try {
+          $status = $this->listsService->getSubscriptionStatus($list, $email);
+        } catch (\Throwable $t) {
+          $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
+          $status = 'unknown';
+        }
+        $statusText = $this->l->t($status);
+        $operations = [
+          MailingListsController::OPERATION_INVITE,
+          MailingListsController::OPERATION_ACCEPT,
+          MailingListsController::OPERATION_SUBSCRIBE,
+          MailingListsController::OPERATION_REJECT,
+          MailingListsController::OPERATION_UNSUBSCRIBE,
+        ];
+        $disabled = [
+          MailingListsController::OPERATION_INVITE => ($status != MailingListsService::STATUS_UNSUBSCRIBED),
+          MailingListsController::OPERATION_ACCEPT => ($status != MailingListsService::STATUS_WAITING),
+          MailingListsController::OPERATION_REJECT => ($status != MailingListsService::STATUS_INVITED && $status != MailingListsService::STATUS_WAITING),
+          MailingListsController::OPERATION_SUBSCRIBE => (!$this->expertMode || $status != MailingListsService::STATUS_UNSUBSCRIBED),
+          MailingListsController::OPERATION_UNSUBSCRIBE => ($status != MailingListsService::STATUS_SUBSCRIBED),
+        ];
+        $defaultCss = [ 'mailing-list', 'operation' ];
+        $cssClasses = [
+          MailingListsController::OPERATION_INVITE => [ 'status-unsubscribed-visible', ],
+          MailingListsController::OPERATION_ACCEPT => [ 'status-waiting-visible', ],
+          MailingListsController::OPERATION_REJECT => [ 'status-invited-visible', 'status-waiting-visible', ],
+          MailingListsController::OPERATION_SUBSCRIBE => [ 'status-unsubscribed-visible', ],
+          MailingListsController::OPERATION_UNSUBSCRIBE => [ 'status-subscribed-visible', ],
+        ];
         $html = '
-<span class="mailing-list status action-' . $action . '">' . $statusText . '</span>
-<span class="mailing-list operations action-' . $action . '">
+<span class="mailing-list status action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
+<span class="mailing-list operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
+';
+        foreach ($operations as $operation) {
+          $css = implode(' ', array_merge($defaultCss, $cssClasses[$operation], [ $operation ]));
+          $html .= '
   <input type="button"
-         name="invite"
-         class="mailing-list operation invite"
-         value="' . $this->l->t('invite') . '"
-         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:invite'] . '"
-         ' . $subscribedDisabled. '/>
-  <input type="button"
-         name="subscribe"
-         class="mailing-list operation subscribe"
-         value="' . $this->l->t('subscribe') . '"
-         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:subscribe'] . '"
-         ' . $subscribedDisabled. '/>
-  <input type="button"
-         name="unsubscribe"
-         class="mailing-list operation unsubscribe"
-         value="' . $this->l->t('unsubscribe') . '"
-         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:unsubscribe'] . '"
-         ' . $unsubscribedDisabled . '/>
+         name="' . $operation . '"
+         class="' . $css . '"
+         value="' . $this->l->t($operation) . '"
+         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
+         ' .  ($disabled[$operation] ? 'disabled' : '') . '/>';
+        }
+        $html .= '
 </span>
 ';
         return $html;

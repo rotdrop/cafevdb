@@ -398,9 +398,11 @@ invited to have a look, but please do not change anything unless you know what y
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
           'mailing-list' => [
             'actions' => [
-              'invite' => $this->l->t('Invite the musician to join the announcements mailing list.'),
-              'subscribe' => $this->l->t('Per-force subscribe the musician to the announcements mailing list.'),
+              'invite' => $this->l->t('Invite the musician to join the announcements mailing list. The musician will receive an email with explanations and needs to reply to the invitation. On reply the musician will be subscribed to the list without further action.'),
+              'subscribe' => $this->l->t('Per-force subscribe the musician to the announcements mailing list. This may contradict privacy regulations, so use this option with care.'),
               'unsubscribe' => $this->l->t('Unsubscribe the musician from the announcements mailing list.'),
+              'accept' => $this->l->t('Accept a pending subscription request of the musician.'),
+              'reject' => $this->l->t('Cancel a pending subscription or invitation request.'),
             ],
           ],
         ],

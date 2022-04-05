@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Service\MailingListsService;
 
 /**
  * @file
@@ -566,6 +567,11 @@ $routes = [
       'name' => 'mailing_lists#service_switch',
       'verb' => 'POST',
       'url' => '/mailing-lists/{operation}',
+    ],
+    [
+      'name' => 'mailing_lists#getStatus',
+      'verb' => 'GET',
+      'url' => '/mailing-lists/{listId}/{email}',
     ],
     /**
      * Attempt a catch all ...
