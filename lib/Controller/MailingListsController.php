@@ -84,28 +84,27 @@ class MailingListsController extends Controller
       case self::OPERATION_INVITE:
         $this->logInfo('INVITE ' . $list . ' / ' . $email);
         $this->listsService->invite($list, email: $email, displayName: $displayName);
-        $status = 'invited';
         break;
       case self::OPERATION_SUBSCRIBE:
         $this->logInfo('SUBSCRIBE ' . $list . ' / ' . $email);
         $this->listsService->subscribe($list, email: $email, displayName: $displayName, role: $role);
-        $status = 'subscribed';
         break;
       case self::OPERATION_UNSUBSCRIBE:
         $this->logInfo('UNSUBSCRIBE ' . $list . ' / ' . $email);
         $this->listsService->unsubscribe($list, $email);
-        $status = 'unsubscribed';
         break;
       case self::OPERATION_ACCEPT:
+        $this->logInfo('ACCEPT SUBSCRIPTION '  . $list  . ' / ' . $email);
+        $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_ACCEPT);
         break;
       case self::OPERATION_REJECT:
+        $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
+        $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
         break;
       default:
         return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
     }
-    if (empty($status)) {
-      return self::grumble($this->l->t('List-operations are not yet implemented.'));
-    }
+    $status = $this->listsService->getSubscriptionStatus($list, $email);
     return self::dataResponse([
       'status' =>  $status,
     ]);

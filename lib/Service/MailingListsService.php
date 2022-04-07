@@ -67,6 +67,23 @@ class MailingListsService
   const STATUS_INVITED = 'invited';
   const STATUS_WAITING = 'waiting';
 
+  const MODERATION_ACTION_ACCEPT = 'accept';
+  const MODERATION_ACTION_REJECT = 'reject';
+  const MODERATOIN_ACTOIN_DEFER = 'defer';
+  const MODERATION_ACTION_DISCARD = 'discard';
+  const MODERATION_ACTIONS = [
+    self::MODERATION_ACTION_ACCEPT,
+    self::MODERATION_ACTION_DISCARD,
+    self::MODERATION_ACTION_REJECT,
+    self::MODERATOIN_ACTOIN_DEFER,
+  ];
+  const REQUEST_OWNER_MODERATOR = 'moderator';
+  const REQUEST_OWNER_SUBSCRIBER = 'subscriber';
+  const REQUEST_OWNERS = [
+    self::REQUEST_OWNER_MODERATOR,
+    self::REQUEST_OWNER_SUBSCRIBER,
+  ];
+
   /** @var string
    * Default rest URI
    */
@@ -270,12 +287,49 @@ class MailingListsService
     }
     $response = json_decode($response->getBody(), true);
     $result = [];
-    foreach (($response['entries'] ?? null) as $listRequest) {
+    foreach (($response['entries'] ?? []) as $listRequest) {
       if ($listRequest['email'] === $subscriptionAddress) {
         $result[$listRequest['token_owner']] = $listRequest;
       }
     }
     return $result;
+  }
+
+  /**
+   * Dispose any pending subscription request with the given action. In
+   * principle there should only be one pending request, so this should be ok.
+   *
+   * @param string $listId
+   *
+   * @param string $subscriptionAddress
+   *
+   * @param string $action
+   */
+  public function handleSubscriptionRequest(string $listId, string $subscriptionAddress, string $action, ?string $reason = null)
+  {
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+    $requests = $this->getSubscriptionRequest($listId, $subscriptionAddress);
+    if (count($requests) > 1) {
+      throw new \RuntimeException($this->l->t('More than one pending subscription request, bailing out.'));
+    }
+    foreach ($requests as $owner => $request) {
+      $token = $request['token'];
+      $postData = [
+        'action' => $action,
+      ];
+      if (!empty($reason) && $action == self::MODERATION_ACTION_REJECT) {
+        $postData['reason'] = $reason;
+      }
+      $response = $this->restClient->post(
+        '/3.1/lists/' . $listId . '/requests/' . $token
+        , [
+          'json' => $postData,
+          'auth' => $this->restAuth,
+        ]);
+    }
+    return true;
   }
 
   /**

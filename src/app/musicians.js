@@ -239,7 +239,8 @@ const contactValidation = function(container) {
     });
 
   const $mailingListStatus = $form.find('span.mailing-list.status');
-  const $mailingListOperations = $form.find('input.mailing-list.operation');
+  const $mailingListOperationsContainer = $form.find('span.mailing-list.operations');
+  const $mailingListOperations = $mailingListOperationsContainer.find('input.mailing-list.operation');
   $mailingListOperations
     .off('click')
     .on('click', function(event) {
@@ -251,6 +252,9 @@ const contactValidation = function(container) {
       const $displayName = $form.find('input[name="' + pmeData('display_name') + '"]');
       const displayName = $displayName.val() || $displayName.attr('placeholder');
       const action = $(this).attr('name');
+
+      $.fn.cafevTooltip.remove(); // remove pending tooltips ...
+
       $.post(generateUrl('mailing-lists/' + action), {
         list: 'announcements',
         email,
@@ -261,11 +265,18 @@ const contactValidation = function(container) {
           });
         })
         .done(function(data) {
-          $mailingListStatus.html(t(appName, data.status));
-          const subscribed = data.status === 'subscribed';
+          const status = data.status;
+          $mailingListStatus.html(t(appName, status));
+          $mailingListOperationsContainer.data('status', status);
+          $mailingListOperationsContainer.attr(
+            'class',
+            $mailingListOperationsContainer.attr('class').replace(/(^|\s)status-\S+/, '$1status-' + status)
+          );
           $mailingListOperations.each(function(index) {
             const $this = $(this);
-            $this.prop('disabled', ($this.hasClass('unsubscribe') && !subscribed) || (!$this.hasClass('unsubscribe') && subscribed));
+            $this.prop('disabled', $this.is(':hidden')
+                       || ($this.hasClass('expert-mode-only')
+                           && !$('body').hasClass('cafevdb-expert-mode')));
           });
         });
       return false;

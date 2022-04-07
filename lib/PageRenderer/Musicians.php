@@ -461,6 +461,7 @@ make sure that the musicians are also automatically added to the
           'default-readonly',
           'tab-contact-readwrite',
           'tab-all-readwrite',
+          'tooltip-auto',
           $addCSS,
         ],
       ],
@@ -659,25 +660,40 @@ make sure that the musicians are also automatically added to the
         ];
         $defaultCss = [ 'mailing-list', 'operation' ];
         $cssClasses = [
-          MailingListsController::OPERATION_INVITE => [ 'status-unsubscribed-visible', ],
-          MailingListsController::OPERATION_ACCEPT => [ 'status-waiting-visible', ],
-          MailingListsController::OPERATION_REJECT => [ 'status-invited-visible', 'status-waiting-visible', ],
-          MailingListsController::OPERATION_SUBSCRIBE => [ 'status-unsubscribed-visible', ],
-          MailingListsController::OPERATION_UNSUBSCRIBE => [ 'status-subscribed-visible', ],
+          MailingListsController::OPERATION_INVITE => [
+            'status-unsubscribed-visible' => true,
+          ],
+          MailingListsController::OPERATION_ACCEPT => [
+            'status-waiting-visible' => true,
+          ],
+          MailingListsController::OPERATION_REJECT => [
+            'status-invited-visible' => true,
+            'status-waiting-visible' => true,
+          ],
+          MailingListsController::OPERATION_SUBSCRIBE => [
+            'status-unsubscribed-visible' => true,
+            'expert-mode-only' => true,
+          ],
+          MailingListsController::OPERATION_UNSUBSCRIBE => [
+            'status-subscribed-visible' => true,
+          ],
         ];
         $html = '
 <span class="mailing-list status action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
 <span class="mailing-list operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
 ';
         foreach ($operations as $operation) {
-          $css = implode(' ', array_merge($defaultCss, $cssClasses[$operation], [ $operation ]));
+          $operationClasses = $cssClasses[$operation];
+          $visible = $operationClasses['status-' . $status . '-visible'];
+          $disabled = !$visible || (!$this->expertMode && $operationClasses['expert-mode-only']);
+          $css = implode(' ', array_merge($defaultCss, array_keys($operationClasses), [ $operation ]));
           $html .= '
   <input type="button"
          name="' . $operation . '"
          class="' . $css . '"
          value="' . $this->l->t($operation) . '"
          title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
-         ' .  ($disabled[$operation] ? 'disabled' : '') . '/>';
+         ' .  ($disabled ? 'disabled' : '') . '/>';
         }
         $html .= '
 </span>
