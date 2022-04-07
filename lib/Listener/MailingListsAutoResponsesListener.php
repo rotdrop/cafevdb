@@ -179,20 +179,25 @@ class MailingListsAutoResponsesListener implements IEventListener
         $template = pathinfo($nodeBase, PATHINFO_FILENAME);
         $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
 
-        if ($key == 'remove') {
-          foreach ($lists as $list) {
-            $listsService->setMessageTemplate($list, $template, null);
-            $this->logInfo('Removed ' . $template . ' from list ' . $list);
+        try {
+
+          if ($key == 'remove') {
+            foreach ($lists as $list) {
+              $listsService->setMessageTemplate($list, $template, null);
+              $this->logInfo('Removed ' . $template . ' from list ' . $list);
+            }
+          } else {
+            $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
+            $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
+            foreach ($lists as $list) {
+              $listsService->setMessageTemplate($list, $template, $templateUri);
+              $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
+            }
           }
-        } else {
-          $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
-          $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
-          foreach ($lists as $list) {
-            $listsService->setMessageTemplate($list, $template, $templateUri);
-            $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
-          }
+          break;
+        } catch (\Throwable $t) {
+          $this->logError('Unable to modify template ' . $template);
         }
-        break;
       }
     }
   }

@@ -197,9 +197,18 @@ class MailingListsService
 
     if ($uri === null) {
       // delete
-      $response = $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
-        'auth' => $this->restAuth,
-      ]);
+      try {
+        $response = $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
+          'auth' => $this->restAuth,
+        ]);
+      } catch (\GuzzleHttp\Exception\ClientException $e) {
+        if ($e->getResponse()->getStatusCode() == 404) {
+          // ignore
+        } else {
+          $this->logException($e, 'Deleting tempalte ' . $template . ' failed');
+          return false;
+        }
+      }
     } else {
       $response = $this->restClient->patch('/3.1/lists/' . $listId . '/uris', [
         'json' => [
