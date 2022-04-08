@@ -1174,8 +1174,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
     ]);
   }
 
-  /** @var bool */
-  private $preUpdatePosted = false;
+  /**
+   * @var null|array
+   *
+   * The array of changed fields.
+   */
+  private $preUpdatePosted = null;
 
   /**
    * @ORM\PreUpdate
@@ -1185,13 +1189,19 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
     $field = 'userIdSlug';
-    if (!$event->hasChangedField($field)) {
-      return;
+    if ($event->hasChangedField($field)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $event->getOldValue($field), $event->getNewValue($field)));
+      $this->preUpdatePosted[$field] = true;
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $event->getOldValue($field), $event->getNewValue($field)));
-    $this->preUpdatePosted = true;
+    $field = 'email';
+    if ($event->hasChangedField($field)) {
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this, $event->getOldValue($field), $event->getNewValue($field)));
+      $this->preUpdatePosted[$field] = true;
+    }
+    // nothing
   }
 
   /**
@@ -1201,13 +1211,20 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
-    if (!$this->preUpdatePosted) {
-      return;
+    $field = 'userIdSlug';
+    if ($this->preUpdatePosted[$field]) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this));
+      unset($this->preUpdatePosted[$field]);
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this));
-    $this->preUpdatePosted = false;
+    $field = 'email';
+    if ($this->preUpdatePosted[$field]) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostChangeEmail($this));
+      unset($this->preUpdatePosted[$field]);
+    }
   }
 
   /**
