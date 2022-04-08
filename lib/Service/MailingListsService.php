@@ -251,7 +251,6 @@ class MailingListsService
       'subscriber' => $subscriptionAddress,
       'role' => $role,
     ];
-    $this->logInfo('POST DATA ' . print_r($post, true));
 
     $response = $this->restClient->post(
       '/3.1/members/find', [
@@ -262,8 +261,6 @@ class MailingListsService
       return null;
     }
     $response = json_decode($response->getBody(), true);
-
-    $this->logInfo('RESPONSE ' . print_r($response, true));
 
     $result = [];
     foreach (($response['entries'] ?? []) as $entry) {
@@ -410,9 +407,6 @@ class MailingListsService
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
-    if (!empty($response->getBody())) {
-      $this->logInfo('SUBSCRIPTION RESPONSE: ' . print_r(json_decode($response->getBody(), true), true));
-    }
     return true;
   }
 
@@ -447,11 +441,9 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    $this->logInfo('POST DELETE TO ' . $selfLink);
     $result = $this->restClient->delete($selfLink, [
       'auth' => $this->restAuth,
     ]);
-    $this->logInfo('RESULT ' . print_r($result, true));
     return true;
   }
 
