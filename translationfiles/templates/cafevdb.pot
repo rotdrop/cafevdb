@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-04 18:04+0200\n"
+"POT-Creation-Date: 2022-04-08 17:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -645,20 +645,16 @@ msgstr ""
 msgid "Method %s is not yet implemented."
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:91
+#: lib/Controller/MailingListsController.php:105
 #, php-format
 msgid "Unknown mailing list operation \"%s\""
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:94
-msgid "List-operations are not yet implemented."
-msgstr ""
-
-#: lib/Controller/MailingListsController.php:117
+#: lib/Controller/MailingListsController.php:129
 msgid "List-id must not be empty."
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:120
+#: lib/Controller/MailingListsController.php:132
 msgid "Email-address must not be empty."
 msgstr ""
 
@@ -3343,7 +3339,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:182
 #: lib/PageRenderer/InstrumentFamilies.php:248
 #: lib/PageRenderer/Instruments.php:300
-#: lib/PageRenderer/Musicians.php:546
+#: lib/PageRenderer/Musicians.php:548
 #: lib/PageRenderer/ProjectParticipantFields.php:358
 #: lib/PageRenderer/ProjectParticipants.php:560
 #: lib/PageRenderer/Projects.php:278
@@ -3531,7 +3527,7 @@ msgid "Family"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentFamilies.php:221
-#: lib/PageRenderer/Musicians.php:557
+#: lib/PageRenderer/Musicians.php:559
 msgid "Instruments"
 msgstr ""
 
@@ -3556,12 +3552,12 @@ msgid "Insurance rate and total sum of insurance police"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentInsurances.php:208
-#: lib/PageRenderer/Musicians.php:311
+#: lib/PageRenderer/Musicians.php:312
 msgid "Miscellaneous Data"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentInsurances.php:213
-#: lib/PageRenderer/Musicians.php:314
+#: lib/PageRenderer/Musicians.php:315
 #: lib/PageRenderer/ProjectParticipantFields.php:253
 #: lib/PageRenderer/ProjectParticipants.php:1427
 #: lib/PageRenderer/ProjectPayments.php:370
@@ -3623,7 +3619,7 @@ msgid "Total Insurance"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentInsurances.php:547
-#: lib/PageRenderer/Musicians.php:874
+#: lib/PageRenderer/Musicians.php:907
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
@@ -3716,215 +3712,203 @@ msgstr ""
 msgid "Rate"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:167
+#: lib/PageRenderer/Musicians.php:168
 msgid "New Musician"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:188
+#: lib/PageRenderer/Musicians.php:189
 msgid "Remove all data of the displayed musician?"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:190
+#: lib/PageRenderer/Musicians.php:191
 msgid "Copy the displayed musician?"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:192
+#: lib/PageRenderer/Musicians.php:193
 msgid "Display of all stored personal data for the shown musician."
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:194
+#: lib/PageRenderer/Musicians.php:195
 msgid "Edit the personal data of the displayed musician."
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:196
+#: lib/PageRenderer/Musicians.php:197
 msgid "Add a new musician to the data-base."
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:198
+#: lib/PageRenderer/Musicians.php:199
 msgid "Overview over all registered musicians"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:200
+#: lib/PageRenderer/Musicians.php:201
 #, php-format
 msgid "Add musicians to the project `%s'"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:208
+#: lib/PageRenderer/Musicians.php:209
 msgid ""
 "This page is the only way to add musicians to projects in order to\n"
 "make sure that the musicians are also automatically added to the\n"
 "`global' musicians data-base (and not only to the project)."
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:302
+#: lib/PageRenderer/Musicians.php:303
 msgid "Instruments and Status"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:305
+#: lib/PageRenderer/Musicians.php:306
 msgid "Contact Information"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:308
+#: lib/PageRenderer/Musicians.php:309
 msgid "Financial Topics"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:357
+#: lib/PageRenderer/Musicians.php:358
 #, php-format
 msgid "Add to %s"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:362
+#: lib/PageRenderer/Musicians.php:363
 msgid "Add Musicians"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:393
+#: lib/PageRenderer/Musicians.php:394
 msgid "Surname"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:404
+#: lib/PageRenderer/Musicians.php:405
 msgid "Forename"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:414
+#: lib/PageRenderer/Musicians.php:415
 #: lib/PageRenderer/ProjectParticipants.php:442
 msgid "Nickname"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:425
+#: lib/PageRenderer/Musicians.php:426
 #: lib/PageRenderer/ProjectParticipants.php:451
 msgid "e.g. Cathy"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:456
+#: lib/PageRenderer/Musicians.php:457
 #: lib/PageRenderer/ProjectParticipants.php:481
 msgid "Display-Name"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:477
+#: lib/PageRenderer/Musicians.php:479
 #: lib/PageRenderer/ProjectParticipants.php:492
 msgid "e.g. Doe, Cathy"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:510
+#: lib/PageRenderer/Musicians.php:512
 #: lib/PageRenderer/ProjectParticipants.php:525
 #: lib/PageRenderer/ProjectPayments.php:454
 msgid "User Id"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:585
+#: lib/PageRenderer/Musicians.php:587
 #: lib/PageRenderer/ProjectParticipants.php:611
 msgid "Instrument Sort Order"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:599
+#: lib/PageRenderer/Musicians.php:601
 #: lib/PageRenderer/ProjectParticipants.php:859
 msgid "Disabled Instruments"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:619
+#: lib/PageRenderer/Musicians.php:621
 #: lib/PageRenderer/ProjectParticipants.php:889
 msgid "Member Status"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:630
+#: lib/PageRenderer/Musicians.php:632
 #: templates/emailform/part.emailform.recipients.php:155
 #: templates/settings/email-settings.php:123
 msgid "Mailing List"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:641
+#: lib/PageRenderer/Musicians.php:643
 msgid "Unable to contact mailing lists service"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:651
-msgid "invite"
-msgstr ""
-
-#: lib/PageRenderer/Musicians.php:657
-msgid "subscribe"
-msgstr ""
-
-#: lib/PageRenderer/Musicians.php:663
-msgid "unsubscribe"
-msgstr ""
-
-#: lib/PageRenderer/Musicians.php:673
+#: lib/PageRenderer/Musicians.php:706
 #: lib/PageRenderer/ProjectParticipants.php:914
 msgid "Cloud Account Deactivated"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:692
+#: lib/PageRenderer/Musicians.php:725
 #: lib/PageRenderer/ProjectParticipants.php:933
 msgid "Hidden from Cloud"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:715
+#: lib/PageRenderer/Musicians.php:748
 #: lib/PageRenderer/ProjectParticipants.php:987
 msgid "Projects"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:736
+#: lib/PageRenderer/Musicians.php:769
 #: lib/PageRenderer/ProjectParticipants.php:1012
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:750
+#: lib/PageRenderer/Musicians.php:783
 #: lib/PageRenderer/ProjectParticipants.php:1027
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:768
+#: lib/PageRenderer/Musicians.php:801
 #: lib/PageRenderer/ProjectParticipants.php:1042
 msgid "Street"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:778
+#: lib/PageRenderer/Musicians.php:811
 #: lib/PageRenderer/ProjectParticipants.php:1051
 msgid "Postal Code"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:787
+#: lib/PageRenderer/Musicians.php:820
 #: lib/PageRenderer/ProjectParticipants.php:1060
 msgid "City"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:799
+#: lib/PageRenderer/Musicians.php:832
 #: lib/PageRenderer/ProjectParticipants.php:1072
 msgid "Country"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:814
+#: lib/PageRenderer/Musicians.php:847
 #: lib/PageRenderer/ProjectParticipants.php:1090
 msgid "Remarks"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:832
+#: lib/PageRenderer/Musicians.php:865
 #: lib/PageRenderer/ProjectParticipants.php:1110
 msgid "Language"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:862
+#: lib/PageRenderer/Musicians.php:895
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:893
+#: lib/PageRenderer/Musicians.php:926
 #: lib/PageRenderer/ProjectParticipants.php:1122
 msgid "Photo"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:955
+#: lib/PageRenderer/Musicians.php:988
 #: lib/PageRenderer/ProjectParticipants.php:1181
 #: lib/PageRenderer/Projects.php:780
 msgid "Last Updated"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:967
+#: lib/PageRenderer/Musicians.php:1000
 #: lib/PageRenderer/ProjectParticipants.php:1193
 #: src/app/ajax.js:30
 msgid "Created"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:980
+#: lib/PageRenderer/Musicians.php:1013
 #, php-format
 msgid "Add all to %s"
 msgstr ""
@@ -5010,8 +4994,8 @@ msgid "Run brief sanity checks on the configuration options."
 msgstr ""
 
 #: lib/PageRenderer/Util/Navigation.php:647
-#: lib/Service/ToolTipsService.php:848
-#: lib/Service/ToolTipsService.php:884
+#: lib/Service/ToolTipsService.php:850
+#: lib/Service/ToolTipsService.php:886
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -5136,7 +5120,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
-#: lib/Service/MailingListsService.php:464
+#: lib/Service/MailingListsService.php:527
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
@@ -5212,7 +5196,7 @@ msgid "Unsupported bulk-transaction class: \"%s\"."
 msgstr ""
 
 #: lib/Service/Finance/DoNothingReceivablesGenerator.php:49
-#: lib/Service/ToolTipsService.php:599
+#: lib/Service/ToolTipsService.php:601
 #: templates/project-web-articles.php:71
 msgid "nothing"
 msgstr ""
@@ -5599,15 +5583,19 @@ msgstr ""
 msgid "42, Undiscoverable"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:329
+#: lib/Service/MailingListsService.php:324
+msgid "More than one pending subscription request, bailing out."
+msgstr ""
+
+#: lib/Service/MailingListsService.php:392
 msgid "Missing subscriber email-address."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:408
+#: lib/Service/MailingListsService.php:471
 msgid "mailing lists"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:409
+#: lib/Service/MailingListsService.php:472
 msgid "auto-responses"
 msgstr ""
 
@@ -5616,21 +5604,21 @@ msgstr ""
 msgid "Migration %s has failed to execute."
 msgstr ""
 
-#: lib/Service/MusicianService.php:91
+#: lib/Service/MusicianService.php:96
 msgid ""
 "Musician \"%1$s\" cannot be removed because there are unbalanced financial "
 "obligations totals/payed/remaining = %$2d/%3d/%3d. A negative remaining "
 "amount means the musician still needs to be refund by the orchestra."
 msgstr ""
 
-#: lib/Service/MusicianService.php:102
+#: lib/Service/MusicianService.php:107
 #, php-format
 msgid ""
 "Musician \"%s\" cannot be removed because there are financial records which "
 "depend on this musician."
 msgstr ""
 
-#: lib/Service/MusicianService.php:188
+#: lib/Service/MusicianService.php:193
 #: templates/settings/personal-settings.php:137
 msgid "Dummy"
 msgstr ""
@@ -6493,81 +6481,87 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:403
-msgid ""
-"Unsubscribe the musician from the announcements mailing list or cancel any "
-"pending subscription request."
+msgid "Unsubscribe the musician from the announcements mailing list."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:412
+#: lib/Service/ToolTipsService.php:404
+msgid "Accept a pending subscription request of the musician."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:405
+msgid "Cancel a pending subscription or invitation request."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:414
 msgid ""
 "Delete this file attachment. Undelete may be possible using the file-app of "
 "the cloud-software."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:414
+#: lib/Service/ToolTipsService.php:416
 msgid ""
 "Upload a new attachment. The old file will be overwritten but possibly may "
 "be restored using hte file-app of the cloud-software."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:416
+#: lib/Service/ToolTipsService.php:418
 msgid ""
 "Upload a new attachment. The old file will be renamed by attaching the "
 "current time to its name."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:418
+#: lib/Service/ToolTipsService.php:420
 msgid ""
 "Click to upload the relevant file or use drag and drop anywhere in this data-"
 "row."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:420
+#: lib/Service/ToolTipsService.php:422
 msgid "Click to download this file."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:422
+#: lib/Service/ToolTipsService.php:424
 msgid "Open the containing folder using the file-app of the cloud."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:425
+#: lib/Service/ToolTipsService.php:427
 msgid ""
 "Multiplicity of the field, e.g. free-text, single choice, multiple choice "
 "etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:427
+#: lib/Service/ToolTipsService.php:429
 msgid "Group of people, e.g. to define room-mates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:429
+#: lib/Service/ToolTipsService.php:431
 msgid ""
 "Group of people with predefined group-names and a potentially\n"
 "different maximal number of people fitting in the group. For example to "
 "define room-mates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:432
+#: lib/Service/ToolTipsService.php:434
 msgid "Multiple choices, excluding each other."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:434
+#: lib/Service/ToolTipsService.php:436
 msgid "Multiple choices where, more than one option can be selected."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:436
+#: lib/Service/ToolTipsService.php:438
 msgid "Simple yes-no choice."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:438
+#: lib/Service/ToolTipsService.php:440
 msgid "General date field with the respective meaning."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:442
+#: lib/Service/ToolTipsService.php:444
 msgid "Data type of the field, e.g service-fee, text, HTML-text etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:446
+#: lib/Service/ToolTipsService.php:448
 msgid ""
 "Hit this button to delete or undelete each item. Note that items that\n"
 "already have been associated with musicians in the data-base can no\n"
@@ -6579,18 +6573,18 @@ msgid ""
 "but clicking this button again."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:455
+#: lib/Service/ToolTipsService.php:457
 msgid "Table with all admissible values for this multiple choice option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:456
+#: lib/Service/ToolTipsService.php:458
 msgid ""
 "In order to add a new option just enter its name here and hit enter or\n"
 "just click somewhere else. Further attributes can be changed later (data-"
 "base key, label, data, context help)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:458
+#: lib/Service/ToolTipsService.php:460
 msgid ""
 "Please enter here a unique short non-nonsense key. You will no longer\n"
 "be able to change this db-key once this option has be attached to a\n"
@@ -6598,96 +6592,96 @@ msgid ""
 "is always possible."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:461
+#: lib/Service/ToolTipsService.php:463
 msgid ""
 "Just the display-label shown in the select-boxes in the instrumentation "
 "table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:462
+#: lib/Service/ToolTipsService.php:464
 msgid ""
 "For surcharge-items this is just the surcharge-amount associated with\n"
 "the option. For other multi-choice items this is just one arbitrary\n"
 "string. Please entry the surcharge amount for surcharge items here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:465
+#: lib/Service/ToolTipsService.php:467
 msgid ""
 "An extra-tooltip which can be associated to this specific option. A\n"
 "help text in order to inform others what this option is about."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:467
+#: lib/Service/ToolTipsService.php:469
 msgid "The maximum allowed number of people in a \"group of people\" field"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:469
-#: lib/Service/ToolTipsService.php:470
+#: lib/Service/ToolTipsService.php:471
+#: lib/Service/ToolTipsService.php:472
 msgid ""
 "For a yes/no option please enter here the single item to select, e.g. the "
 "surcharge amount for a service-fee field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:471
+#: lib/Service/ToolTipsService.php:473
 msgid "Please enter the default value for this free-text option."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:476
+#: lib/Service/ToolTipsService.php:478
 msgid ""
 "Delete or undelete the receivable for this musician. The data will only be "
 "deleted when hitting the \"save\"-button of the form. Undelete is only "
 "possible until the \"save\"-button has been clicked."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:477
+#: lib/Service/ToolTipsService.php:479
 msgid ""
 "Recompute the values of this particular recurring field. The action will be "
 "performed immediately."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:479
+#: lib/Service/ToolTipsService.php:481
 msgid ""
 "Recompute all receivables for the musician. Note that this will reload the "
 "input-form discarding all changes which have not been saved yet."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:480
+#: lib/Service/ToolTipsService.php:482
 msgid "Recompute the values of all recurring fields for all participants."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:481
+#: lib/Service/ToolTipsService.php:483
 msgid ""
 "Make sure that at least one new empty input field is available. Note that "
 "this will reload the input-form discarding all changes which have not been "
 "saved yet."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:483
+#: lib/Service/ToolTipsService.php:485
 msgid ""
 "Name of a the generator for this field. Can be be a fully-qualified PHP "
 "class-name or one of the known short-cuts."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:484
+#: lib/Service/ToolTipsService.php:486
 msgid ""
 "Starting date for the receivable generation. Maybe overridden by the "
 "concrete generator framework."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:485
+#: lib/Service/ToolTipsService.php:487
 msgid ""
 "Run the value generator. Depending on the generator this might result in new "
 "fields or just does nothing if all relevant fields are already there."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:488
 #: lib/Service/ToolTipsService.php:490
-#: lib/Service/ToolTipsService.php:494
+#: lib/Service/ToolTipsService.php:492
+#: lib/Service/ToolTipsService.php:496
 msgid ""
 "Specify a default value for the custom field here. Leave blank if unsure."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:492
+#: lib/Service/ToolTipsService.php:494
 msgid ""
 "Default policy when replacing files with new uploads. Default is to rename "
 "the old file by attaching a time-stamp. \"replace\" will just overwrite the "
@@ -6695,31 +6689,31 @@ msgid ""
 "may provide undelete operations and versioning of overwritten files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:496
+#: lib/Service/ToolTipsService.php:498
 msgid ""
 "Disable this extra field. This will not erase any data in the\n"
 "data-base, but simply mark the field as unused and hide it from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:499
+#: lib/Service/ToolTipsService.php:501
 msgid ""
 "Define the display priority. Larger values will move the item more to\n"
 "the left or the top inside its table-tab."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:502
+#: lib/Service/ToolTipsService.php:504
 msgid ""
 "Expert use: store encrypted values in the data-base. If unsure: <em>DON'T</"
 "em>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:504
+#: lib/Service/ToolTipsService.php:506
 msgid ""
 "Extra-tab to group project-specific data which just didn't fit\n"
 "somewhere else."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:507
+#: lib/Service/ToolTipsService.php:509
 msgid ""
 "Just the name for this option. Please keep the name as <em>short</em> as\n"
 "possible, but try to be descriptive. If further explanations are\n"
@@ -6728,25 +6722,25 @@ msgid ""
 "<strong>Display</strong> tab."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:512
+#: lib/Service/ToolTipsService.php:514
 msgid "The maximum number of peopel allowed in the group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:514
+#: lib/Service/ToolTipsService.php:516
 msgid ""
 "Define a new table-tab. In order to do so, first deselect any\n"
 "predefined tab in the select box above, then enter the new name. The\n"
 "new tab-name will also be available as tab-option for other fields."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:518
+#: lib/Service/ToolTipsService.php:520
 msgid ""
 "Members of these Cloud user-groups are allowed to view the\n"
 "field. If left blank, every logged in user is allowed to view the\n"
 "field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:522
+#: lib/Service/ToolTipsService.php:524
 msgid ""
 "Each option has an optional data-entry attached to it. Normally, this\n"
 "is only useful for surcharge options, where the \"data-entry\" just is\n"
@@ -6755,7 +6749,7 @@ msgid ""
 "click here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:528
+#: lib/Service/ToolTipsService.php:530
 msgid ""
 "Options already attached to musicians can no longer be deleted in\n"
 "order to prevent data-loss in the underlying data-base. It is even\n"
@@ -6764,7 +6758,7 @@ msgid ""
 "clicking the \"recover\" button to the left of each deleted entry."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:533
+#: lib/Service/ToolTipsService.php:535
 msgid ""
 "Define the table-tab this entry should be grouped with. It is also\n"
 "possible to define new table-tabs. In order to do so, first deselect\n"
@@ -6772,32 +6766,32 @@ msgid ""
 "input box below."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:538
+#: lib/Service/ToolTipsService.php:540
 msgid ""
 "Optionally define a tool-tip (context-help) for the field. The tooltip\n"
 "may contain HTML formatting."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:541
+#: lib/Service/ToolTipsService.php:543
 msgid ""
 "Members of these Cloud user-groups are allowed to change the\n"
 "field. If left blank, every logged in user is allowed to change this field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:544
+#: lib/Service/ToolTipsService.php:546
 msgid ""
 "Select-box with all currently uploaded attachments. Note that a file will "
 "only be attached to a message if it is also checked in this select box."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:546
+#: lib/Service/ToolTipsService.php:548
 msgid ""
 "Try to restore the last visited table view whenreloading the entire page "
 "with the web-browser. If unchecked either the musician's view or the blog-"
 "page is loaded."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:548
+#: lib/Service/ToolTipsService.php:550
 msgid ""
 "Toggle the initial display of the search-filters for data-base tables\n"
 "in order to make the table view a little less crowded. Search-filters\n"
@@ -6805,11 +6799,11 @@ msgid ""
 "each individual table view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:553
+#: lib/Service/ToolTipsService.php:555
 msgid "Further personal settings, normally not needed use with care."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:556
+#: lib/Service/ToolTipsService.php:558
 #: lib/Service/ToolTipsService.php:430
 #, php-format
 msgid ""
@@ -6817,7 +6811,7 @@ msgid ""
 "section is split by voices, e.g. \"violin 1\", \"violin 2\")"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:558
+#: lib/Service/ToolTipsService.php:560
 #: lib/Service/ToolTipsService.php:432
 #, php-format
 msgid ""
@@ -6826,7 +6820,7 @@ msgid ""
 "to distinguish between violin 1 and violin 2, thought ..."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:560
+#: lib/Service/ToolTipsService.php:562
 #: lib/Service/ToolTipsService.php:434
 #, php-format
 msgid ""
@@ -6834,14 +6828,14 @@ msgid ""
 "registered / confirmed musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:563
+#: lib/Service/ToolTipsService.php:565
 msgid ""
 "Instruments which are already used by musicians or\n"
 "projects cannot be deleted; instead \"deleting\" them flags them as "
 "\"Disabled\"."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:566
+#: lib/Service/ToolTipsService.php:568
 msgid ""
 "A flag which indicates not so much social or functional status, but\n"
 "default behaviour for mass-emails as follows\n"
@@ -6867,18 +6861,18 @@ msgid ""
 "in the email form."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:585
+#: lib/Service/ToolTipsService.php:587
 msgid "Display name, pre-name, phone number, email, street-address."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:587
+#: lib/Service/ToolTipsService.php:589
 msgid ""
 "Musicians which already paid something for the project cannot be\n"
 "deleted in order not to loose track of the payments. Instead, they are\n"
 "simply marked as \"disabled\" and normally are hidden from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:591
+#: lib/Service/ToolTipsService.php:593
 #: lib/Service/ToolTipsService.php:467
 #, php-format
 msgid ""
@@ -6887,24 +6881,24 @@ msgid ""
 "again to the list of the musician's instruments."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:593
+#: lib/Service/ToolTipsService.php:595
 msgid ""
 "Opens a new table view with the insured items for the respective musician."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:595
+#: lib/Service/ToolTipsService.php:597
 msgid "Further information like birthday, a photo, date of last change."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:597
+#: lib/Service/ToolTipsService.php:599
 msgid "Display name, pre-name, instruments, status, general remarks."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:601
+#: lib/Service/ToolTipsService.php:603
 msgid "Web-link to the current Cloud developer documentation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:603
+#: lib/Service/ToolTipsService.php:605
 #, php-format
 msgid ""
 "Status of outstanding project fees:\n"
@@ -6922,35 +6916,35 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:619
+#: lib/Service/ToolTipsService.php:621
 msgid ""
 "Link to the data-base administration tool for the underlying data-base. "
 "Swiss-army-knife-like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:621
+#: lib/Service/ToolTipsService.php:623
 msgid "Link to the documentation for the database-management tool."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:624
+#: lib/Service/ToolTipsService.php:626
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:627
-#: lib/Service/ToolTipsService.php:799
+#: lib/Service/ToolTipsService.php:629
+#: lib/Service/ToolTipsService.php:801
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:629
+#: lib/Service/ToolTipsService.php:631
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:633
+#: lib/Service/ToolTipsService.php:635
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -6959,7 +6953,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:639
+#: lib/Service/ToolTipsService.php:641
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -6967,7 +6961,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:644
+#: lib/Service/ToolTipsService.php:646
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -6977,24 +6971,24 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:652
+#: lib/Service/ToolTipsService.php:654
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:655
+#: lib/Service/ToolTipsService.php:657
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:658
+#: lib/Service/ToolTipsService.php:660
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:662
+#: lib/Service/ToolTipsService.php:664
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -7002,20 +6996,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:669
+#: lib/Service/ToolTipsService.php:671
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:672
+#: lib/Service/ToolTipsService.php:674
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:677
+#: lib/Service/ToolTipsService.php:679
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -7023,7 +7017,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:683
+#: lib/Service/ToolTipsService.php:685
 msgid ""
 "Click me to export a CSV-table with the selected debit notes suitable for "
 "use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
@@ -7032,21 +7026,21 @@ msgid ""
 "debiting their bank account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:685
+#: lib/Service/ToolTipsService.php:687
 msgid "Select all displayed debit-notes for export."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:687
+#: lib/Service/ToolTipsService.php:689
 msgid "Deselect all displayed debit-notes from export selection."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:689
+#: lib/Service/ToolTipsService.php:691
 msgid ""
 "Select this debit note for debiting the project fees. In order to actually "
 "export the debit-note you have to hit the `Debit' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:692
+#: lib/Service/ToolTipsService.php:694
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -7055,7 +7049,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:699
+#: lib/Service/ToolTipsService.php:701
 msgid ""
 "Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -7067,7 +7061,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:708
+#: lib/Service/ToolTipsService.php:710
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -7079,14 +7073,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:717
+#: lib/Service/ToolTipsService.php:719
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:721
+#: lib/Service/ToolTipsService.php:723
 msgid ""
 "Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -7095,30 +7089,30 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:727
+#: lib/Service/ToolTipsService.php:729
 msgid ""
 "Click to generate bulk-transactions for the selected musicians and "
 "receivables."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:729
+#: lib/Service/ToolTipsService.php:731
 msgid ""
 "Click to select all displayed participants for bulk-transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:731
+#: lib/Service/ToolTipsService.php:733
 msgid ""
 "Click to deselect all displayed participants from the bulk-transaction "
 "generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:733
+#: lib/Service/ToolTipsService.php:735
 msgid ""
 "Select and deselect this participant and bank-acccount to and from bulk-"
 "transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:735
+#: lib/Service/ToolTipsService.php:737
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -7126,29 +7120,29 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:737
+#: lib/Service/ToolTipsService.php:739
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:739
+#: lib/Service/ToolTipsService.php:741
 msgid "Export in OpenDocument-format (LibreOffice/OpenOffice)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:741
+#: lib/Service/ToolTipsService.php:743
 msgid "Export as PDF in A3/Landscape, scaled to fit the page size"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:743
+#: lib/Service/ToolTipsService.php:745
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:745
+#: lib/Service/ToolTipsService.php:747
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:747
+#: lib/Service/ToolTipsService.php:749
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -7184,53 +7178,53 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:779
+#: lib/Service/ToolTipsService.php:781
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:781
+#: lib/Service/ToolTipsService.php:783
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:784
+#: lib/Service/ToolTipsService.php:786
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:789
+#: lib/Service/ToolTipsService.php:791
 msgid ""
 "Click to unlock if the field is empty, click again to clear the field if the "
 "field contains data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:791
+#: lib/Service/ToolTipsService.php:793
 msgid "Click to lock and unlock this input field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:794
+#: lib/Service/ToolTipsService.php:796
 msgid "Some usefull convenience actions (click me for details!)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:797
+#: lib/Service/ToolTipsService.php:799
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:798
+#: lib/Service/ToolTipsService.php:800
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:802
+#: lib/Service/ToolTipsService.php:804
 msgid ""
 "Limits the number of rows per page to the given value. A \"∞\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:805
+#: lib/Service/ToolTipsService.php:807
 #, php-format
 msgid ""
 "Klick mich, um die\n"
@@ -7239,76 +7233,76 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:812
+#: lib/Service/ToolTipsService.php:814
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:813
+#: lib/Service/ToolTipsService.php:815
 msgid ""
 "Discards all unsaved data and reloads all fields form the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:815
+#: lib/Service/ToolTipsService.php:817
 msgid ""
 "Discards all unsaved data and reloads all fields from the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:820
+#: lib/Service/ToolTipsService.php:822
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:821
+#: lib/Service/ToolTipsService.php:823
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:825
+#: lib/Service/ToolTipsService.php:827
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:829
+#: lib/Service/ToolTipsService.php:831
 msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:831
+#: lib/Service/ToolTipsService.php:833
 msgid ""
 "Click me to sort by this field! Click again to reverse the search direction. "
 "Click another time to disable sorting by this field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:833
+#: lib/Service/ToolTipsService.php:835
 msgid "Click me to reverse the sort order by this field!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:835
+#: lib/Service/ToolTipsService.php:837
 msgid "Click me to remove this field from the sorting criteria!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:837
+#: lib/Service/ToolTipsService.php:839
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:840
+#: lib/Service/ToolTipsService.php:842
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:845
-#: lib/Service/ToolTipsService.php:875
+#: lib/Service/ToolTipsService.php:847
+#: lib/Service/ToolTipsService.php:877
 msgid ""
 "Define participant-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:850
+#: lib/Service/ToolTipsService.php:852
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
 "exceptional case for \"virtual pseudo projects\". The latter in\n"
@@ -7318,29 +7312,29 @@ msgid ""
 "permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:858
+#: lib/Service/ToolTipsService.php:860
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:862
+#: lib/Service/ToolTipsService.php:864
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:864
+#: lib/Service/ToolTipsService.php:866
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:868
+#: lib/Service/ToolTipsService.php:870
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:870
-#: lib/Service/ToolTipsService.php:936
+#: lib/Service/ToolTipsService.php:872
+#: lib/Service/ToolTipsService.php:938
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -7348,55 +7342,55 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:878
+#: lib/Service/ToolTipsService.php:880
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:880
+#: lib/Service/ToolTipsService.php:882
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:886
+#: lib/Service/ToolTipsService.php:888
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:889
+#: lib/Service/ToolTipsService.php:891
 msgid ""
 "Some people gave us debit mandates but still want to pay by bank-transfer. "
 "Uncheck in order to exclude the person from direct debits transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:891
+#: lib/Service/ToolTipsService.php:893
 msgid "Sum of the fees for all booked etra items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:893
+#: lib/Service/ToolTipsService.php:895
 msgid ""
 "Everything related to project fees, surcharges, bank transfers, debit\n"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:896
+#: lib/Service/ToolTipsService.php:898
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:898
+#: lib/Service/ToolTipsService.php:900
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:900
+#: lib/Service/ToolTipsService.php:902
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:902
+#: lib/Service/ToolTipsService.php:904
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -7411,7 +7405,7 @@ msgid ""
 "Thanks."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:911
+#: lib/Service/ToolTipsService.php:913
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -7419,19 +7413,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:915
+#: lib/Service/ToolTipsService.php:917
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:917
+#: lib/Service/ToolTipsService.php:919
 #: lib/Service/ToolTipsService.php:775
 #, php-format
 msgid "Further \"not so important\" data of the participant."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:919
+#: lib/Service/ToolTipsService.php:921
 #: lib/Service/ToolTipsService.php:777
 #, php-format
 msgid ""
@@ -7439,26 +7433,26 @@ msgid ""
 "special field for the things you want to note"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:922
+#: lib/Service/ToolTipsService.php:924
 msgid ""
 "The accumulated total of all service fees, reimbursements and salaries the "
 "participant has to pay or to receive (TOTALS/PAID/REMAINING)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:924
+#: lib/Service/ToolTipsService.php:926
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:926
+#: lib/Service/ToolTipsService.php:928
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:929
+#: lib/Service/ToolTipsService.php:931
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -7468,34 +7462,34 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:931
+#: lib/Service/ToolTipsService.php:933
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:933
+#: lib/Service/ToolTipsService.php:935
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:942
+#: lib/Service/ToolTipsService.php:944
 msgid "Modify the event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:944
+#: lib/Service/ToolTipsService.php:946
 msgid ""
 "Clone (duplicate) the event. A new event-form will popup with just the data "
 "from this event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:946
+#: lib/Service/ToolTipsService.php:948
 msgid "Delete the event from the system (no undo possible)."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:948
+#: lib/Service/ToolTipsService.php:950
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -7505,7 +7499,7 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:955
+#: lib/Service/ToolTipsService.php:957
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -7515,7 +7509,7 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:966
+#: lib/Service/ToolTipsService.php:968
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -7526,129 +7520,129 @@ msgid ""
 "the event."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:974
+#: lib/Service/ToolTipsService.php:976
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:976
+#: lib/Service/ToolTipsService.php:978
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:978
+#: lib/Service/ToolTipsService.php:980
 msgid "Add a non-categorized event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:980
+#: lib/Service/ToolTipsService.php:982
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:982
+#: lib/Service/ToolTipsService.php:984
 msgid ""
 "Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
 "transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:985
+#: lib/Service/ToolTipsService.php:987
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:991
 msgid "Select all events for email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:991
+#: lib/Service/ToolTipsService.php:993
 msgid "Exclude all events from email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:993
+#: lib/Service/ToolTipsService.php:995
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
 "tablet or desktop computer."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:997
+#: lib/Service/ToolTipsService.php:999
 msgid "Reload all events from the cloud-calendars."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1002
+#: lib/Service/ToolTipsService.php:1004
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1005
+#: lib/Service/ToolTipsService.php:1007
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1007
+#: lib/Service/ToolTipsService.php:1009
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1009
+#: lib/Service/ToolTipsService.php:1011
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1011
+#: lib/Service/ToolTipsService.php:1013
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1013
+#: lib/Service/ToolTipsService.php:1015
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1015
+#: lib/Service/ToolTipsService.php:1017
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1018
+#: lib/Service/ToolTipsService.php:1020
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1020
+#: lib/Service/ToolTipsService.php:1022
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1023
+#: lib/Service/ToolTipsService.php:1025
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1026
+#: lib/Service/ToolTipsService.php:1028
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
 "base."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1027
+#: lib/Service/ToolTipsService.php:1029
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1028
+#: lib/Service/ToolTipsService.php:1030
 msgid "Add a new dialog for defining a new bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1029
+#: lib/Service/ToolTipsService.php:1031
 msgid "Show also the disabled bank accounts, if any."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1032
+#: lib/Service/ToolTipsService.php:1034
 msgid ""
 "Used SEPA mandates are not deleted from the DB, but just flagged as\n"
 "\"inactive\" if they expire or are manually pseudo-deleted."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1035
+#: lib/Service/ToolTipsService.php:1037
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -7657,7 +7651,7 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1037
+#: lib/Service/ToolTipsService.php:1039
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -7665,48 +7659,48 @@ msgid ""
 "and contact the treasurer for further instructions."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1043
+#: lib/Service/ToolTipsService.php:1045
 msgid "Folder shared by the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1044
+#: lib/Service/ToolTipsService.php:1046
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1045
+#: lib/Service/ToolTipsService.php:1047
 msgid "Shared folder for document templates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1046
+#: lib/Service/ToolTipsService.php:1048
 msgid "Shared folder for per-project data."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1047
+#: lib/Service/ToolTipsService.php:1049
 msgid "Shared folder for per-project per-participant data"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1048
+#: lib/Service/ToolTipsService.php:1050
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1052
+#: lib/Service/ToolTipsService.php:1054
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1053
+#: lib/Service/ToolTipsService.php:1055
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
 "spaces or fancy characters."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1054
+#: lib/Service/ToolTipsService.php:1056
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -7716,14 +7710,14 @@ msgid ""
 "the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1059
+#: lib/Service/ToolTipsService.php:1061
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
 "places. It should be lower-case and \"handy\", without spaces."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1060
+#: lib/Service/ToolTipsService.php:1062
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -7731,7 +7725,7 @@ msgid ""
 "on."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1065
+#: lib/Service/ToolTipsService.php:1067
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -7740,14 +7734,14 @@ msgid ""
 "user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1066
+#: lib/Service/ToolTipsService.php:1068
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
 "dastabase-user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1067
+#: lib/Service/ToolTipsService.php:1069
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -7755,19 +7749,19 @@ msgid ""
 "has all -- and in particular: GRANT -- privileges on that dedicated database."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1073
+#: lib/Service/ToolTipsService.php:1075
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1075
+#: lib/Service/ToolTipsService.php:1077
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1077
+#: lib/Service/ToolTipsService.php:1079
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1079
+#: lib/Service/ToolTipsService.php:1081
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -7776,34 +7770,34 @@ msgid ""
 "these data-items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1085
+#: lib/Service/ToolTipsService.php:1087
 #: templates/part.common.header.php:104
 #: templates/part.common.header.php:110
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1087
+#: lib/Service/ToolTipsService.php:1089
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1089
+#: lib/Service/ToolTipsService.php:1091
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1091
+#: lib/Service/ToolTipsService.php:1093
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1093
+#: lib/Service/ToolTipsService.php:1095
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1098
+#: lib/Service/ToolTipsService.php:1100
 #: lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
@@ -7811,7 +7805,7 @@ msgid ""
 "is substituted into document templates using the \"[LOGO]\" placeholder."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1099
+#: lib/Service/ToolTipsService.php:1101
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -7821,7 +7815,7 @@ msgid ""
 "project-participant views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1101
+#: lib/Service/ToolTipsService.php:1103
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -7830,80 +7824,80 @@ msgid ""
 "mandates can be downloaed from the musician and member's project view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1103
+#: lib/Service/ToolTipsService.php:1105
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1105
+#: lib/Service/ToolTipsService.php:1107
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1108
+#: lib/Service/ToolTipsService.php:1110
 msgid "Delete this document template from the server"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1111
+#: lib/Service/ToolTipsService.php:1113
 msgid "Choose a template file from the cloud storage."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1112
+#: lib/Service/ToolTipsService.php:1114
 msgid "Upload a document template from your computer or mobile."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1116
+#: lib/Service/ToolTipsService.php:1118
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1117
+#: lib/Service/ToolTipsService.php:1119
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
 "document contains form-elements."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1118
+#: lib/Service/ToolTipsService.php:1120
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1122
+#: lib/Service/ToolTipsService.php:1124
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1124
+#: lib/Service/ToolTipsService.php:1126
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1128
+#: lib/Service/ToolTipsService.php:1130
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1130
+#: lib/Service/ToolTipsService.php:1132
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1132
+#: lib/Service/ToolTipsService.php:1134
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1134
+#: lib/Service/ToolTipsService.php:1136
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -9042,15 +9036,15 @@ msgstr ""
 msgid "Email Validation"
 msgstr ""
 
-#: src/app/musicians.js:248
+#: src/app/musicians.js:249
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr ""
 
-#: src/app/musicians.js:328
+#: src/app/musicians.js:339
 msgid "Suggestions"
 msgstr ""
 
-#: src/app/musicians.js:600
+#: src/app/musicians.js:611
 msgid ""
 "You definitely do not want to add duplicates to the database.\n"
 "Please answer \"no\" in order to add a new musician,\n"
@@ -9059,11 +9053,11 @@ msgid ""
 "the personal data of the respective musician up-to-date."
 msgstr ""
 
-#: src/app/musicians.js:610
+#: src/app/musicians.js:621
 msgid "Avoid Possible Duplicate?"
 msgstr ""
 
-#: src/app/musicians.js:642
+#: src/app/musicians.js:653
 msgid "Possible Duplicate!"
 msgstr ""
 
@@ -12188,6 +12182,31 @@ msgstr ""
 #: lib/EmailForm/Composer.php:4215
 #, php-format
 msgid "concerts"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:646
+#, php-format
+msgid "invited"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "invite"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "accept"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "subscribe"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "unsubscribe"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
