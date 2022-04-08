@@ -31,14 +31,23 @@ class PostChangeMusicianEmail extends Event
   /** @var Entities\Musician */
   private $musician;
 
-  public function __construct(Entities\Musician $musician) {
+  /** @var string */
+  private $oldEmail;
+
+  public function __construct(Entities\Musician $musician, string $oldEmail) {
     parent::__construct();
     $this->musician = $musician;
+    $this->oldEmail = $oldEmail;
   }
 
   public function getMusician():Entities\Musician
   {
     return $this->musician;
+  }
+
+  public function getOldEmail():string
+  {
+    return $this->oldEmail;
   }
 }
 

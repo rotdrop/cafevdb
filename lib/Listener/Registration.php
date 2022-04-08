@@ -50,6 +50,7 @@ class Registration
     self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
     self::registerListener($context, SubAdminEventListener::class);
     self::registerListener($context, MailingListsAutoResponsesListener::class);
+    self::registerListener($context, MailingListsEmailChangedListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {

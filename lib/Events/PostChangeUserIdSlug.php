@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,14 +31,23 @@ class PostChangeUserIdSlug extends Event
   /** @var Entities\Musician */
   private $musician;
 
-  public function __construct(Entities\Musician $musician) {
+  /** @var string */
+  private $oldSlug;
+
+  public function __construct(Entities\Musician $musician, string $oldSlug) {
     parent::__construct();
     $this->musician = $musician;
+    $this->oldSlug = $oldSlug;
   }
 
   public function getMusician():Entities\Musician
   {
     return $this->musician;
+  }
+
+  public function getOldSlug():string
+  {
+    return $this->oldSlug;
   }
 }
 

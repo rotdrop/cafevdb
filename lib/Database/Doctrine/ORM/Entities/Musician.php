@@ -1177,9 +1177,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var null|array
    *
-   * The array of changed fields.
+   * The array of changed field values.
    */
-  private $preUpdatePosted = null;
+  private $preUpdateValue = null;
 
   /**
    * @ORM\PreUpdate
@@ -1192,14 +1192,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $event->getOldValue($field), $event->getNewValue($field)));
-      $this->preUpdatePosted[$field] = true;
+      $oldValue = $event->getOldValue($field);
+      $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $oldValue, $event->getNewValue($field)));
+      $this->preUpdateValue[$field] = $oldValue;
     }
     $field = 'email';
     if ($event->hasChangedField($field)) {
       $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this, $event->getOldValue($field), $event->getNewValue($field)));
-      $this->preUpdatePosted[$field] = true;
+      $oldValue = $event->getOldValue($field);
+      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this, $oldValue, $event->getNewValue($field)));
+      $this->preUpdateValue[$field] = $oldValue;
     }
     // nothing
   }
@@ -1212,18 +1214,18 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
     $field = 'userIdSlug';
-    if ($this->preUpdatePosted[$field]) {
+    if (isset($this->preUpdateValue[$field])) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this));
-      unset($this->preUpdatePosted[$field]);
+      $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this, $this->preUpdateValue[$field]));
+      unset($this->preUpdateValue[$field]);
     }
     $field = 'email';
-    if ($this->preUpdatePosted[$field]) {
+    if (isset($this->preUpdateValue[$field])) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PostChangeEmail($this));
-      unset($this->preUpdatePosted[$field]);
+      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this, $this->preUpdateValue[$field]));
+      unset($this->preUpdateValue[$field]);
     }
   }
 
