@@ -684,8 +684,8 @@ make sure that the musicians are also automatically added to the
 ';
         foreach ($operations as $operation) {
           $operationClasses = $cssClasses[$operation];
-          $visible = $operationClasses['status-' . $status . '-visible'];
-          $disabled = !$visible || (!$this->expertMode && $operationClasses['expert-mode-only']);
+          $visible = !empty($operationClasses['status-' . $status . '-visible']);
+          $disabled = !$visible || (!$this->expertMode && !empty($operationClasses['expert-mode-only']));
           $css = implode(' ', array_merge($defaultCss, array_keys($operationClasses), [ $operation ]));
           $html .= '
   <input type="button"
