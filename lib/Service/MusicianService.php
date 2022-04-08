@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -44,12 +44,17 @@ class MusicianService
 
   const DBTABLE = 'Musicians';
 
+  /** @var MailingListsService */
+  private $listsService;
+
   public function __construct(
     ConfigService $configService
     , EntityManager $entityManager
+    , MailingListsService $listsService
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->listsService = $listsService;
     $this->l = $this->l10n();
   }
 
@@ -200,6 +205,10 @@ class MusicianService
 
   public function deleteMusician(Entities\Musician $musician)
   {
+    // Unsubscribe the musician from the mailing-list
+    $list = $this->getConfigValue('announcementsMailingList');
+    $this->listsService->unsubscribe($list, $musician->getEmail());
+
     if (empty($musician->getDeleted())) {
       // $this->remove($musician, true); // this should be soft-delete
       // for now skip the soft-deleteable cascade and just set the deleted-data manually
