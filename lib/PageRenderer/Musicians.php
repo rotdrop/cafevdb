@@ -635,6 +635,13 @@ make sure that the musicians are also automatically added to the
       'sql'     => '$table.email',
       'options' => 'ACPVD',
       'input'   => 'V',
+      'php|AP' =>  function($email, $action, $k, $row, $recordId, $pme) {
+        return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="mailingListAction" checked/>
+<label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
+<input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="mailingListAction"/>
+<label for="mailing-list-action-invite">' . $this->l->t('subscribe') . '</label>
+';
+      },
       'php' => function($email, $action, $k, $row, $recordId, $pme) {
         $list = $this->getConfigValue('announcementsMailingList');
         try {
