@@ -421,9 +421,10 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
+          $nickNamePlaceholder = $this->l->t('e.g. Cathy');
           $firstName = $row['qf'.($k-1)] ?? '';
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
-          $unlockedPlaceholder = $this->l->t('e.g. Cathy');
+          $unlockedPlaceholder = $nickNamePlaceholder;
           if (empty($row['qf'.$k])) {
             return [
               'placeholder' => $lockedPlaceholder,
@@ -472,11 +473,12 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
           // $this->logInfo('OP '.$op);
+          $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
           $surName = $row['qf'.($k-3)] ?? '';
           $firstName = $row['qf'.($k-2)] ?? '';
           $nickName = $row['qf'.($k-1)] ?? '';
           $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
-          $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
+          $unlockedPlaceholder = $displayNamePlaceholder;
           if (empty($row['qf'.$k])) {
             return [
               'placeholder' => $lockedPlaceholder,
