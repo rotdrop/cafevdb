@@ -2371,7 +2371,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['postfix'])) {
 				$postfix = $this->fdd[$k]['display']['postfix'];
 				if (is_callable($postfix)) {
-					echo call_user_func($postfix, 'add', 'postfix', [], $k, $this);
+					echo call_user_func($postfix, 'add', 'postfix', $k, [], $this);
 				} else {
 					echo $this->fdd[$k]['display']['postfix'];
 				}
