@@ -208,9 +208,13 @@ class MusicianService
     if ($musician->getPayments()->count() == 0) {
       if ($musician->getProjectParticipation()->isEmpty()) {
         $this->logInfo($musician->getPublicName() . ' is unused, issuing hard-delete');
+        foreach ($musician->getInstruments() as $instrument) {
+          $this->remove($instrument, true);
+          $this->remove($instrument, true);
+        }
         $this->remove($musician, true); // this should be hard-delete
       } else {
-        $this->logInfo($musician->getPublicName() . ' is unused, trying to impersonate');
+        $this->logInfo($musician->getPublicName() . ' is used, trying to impersonate');
         // Perhaps: remove all personal data and keep a dummy record as
         // project-participant, until finally all projects have been deleted and
         // cleaned up.
