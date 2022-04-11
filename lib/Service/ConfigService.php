@@ -795,7 +795,7 @@ class ConfigService
    */
   public function getAppLocale():string
   {
-    return $this->getConfigValue('orchestraLocale', $this->getLocale());
+    return $this->getConfigValue('orchestraLocale', $this->getLocale()) ?? self::DEFAULT_LOCALE;
   }
 
   /**
