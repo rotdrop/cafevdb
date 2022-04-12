@@ -779,7 +779,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);
 
     foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ]));
+      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ] ?? ''));
       $ranking = [];
       foreach ($keys as $key) {
         $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
@@ -1776,7 +1776,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
-    $this->debug('BEFORE INS: '.print_r($changed, true));
+    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
     if (!empty($changed)) {
       throw new \Exception(
