@@ -637,14 +637,15 @@ make sure that the musicians are also automatically added to the
       'sql'     => '$table.email',
       'options' => 'ACPVD',
       'input'   => 'V',
-      'php|AP' =>  function($email, $action, $k, $row, $recordId, $pme) {
-        return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="mailingListAction" checked/>
+      'input|AP' => 'R',
+      'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
+        return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="' . $pme->cgiDataName('mailing_list') . '" checked/>
 <label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
-<input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="mailingListAction"/>
+<input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
 <label for="mailing-list-action-invite">' . $this->l->t('subscribe') . '</label>
 ';
       },
-      'php' => function($email, $action, $k, $row, $recordId, $pme) {
+      'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
         $list = $this->getConfigValue('announcementsMailingList');
         try {
           $status = $this->listsService->getSubscriptionStatus($list, $email);
