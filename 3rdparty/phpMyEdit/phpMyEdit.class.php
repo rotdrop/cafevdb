@@ -2060,7 +2060,7 @@ class phpMyEdit
 					$this->tab_names[$idx] = $tabdef['name'];
 					$this->tabs_by_id[$tabdef['id']]= $idx;
 					$this->tabs_by_name[$tabdef['name']] = $idx;
-					if (isset($tabdef['default']) && $tabdef['default']) {
+					if (!empty($tabdef['default'])) {
 						$this->cur_tab = $idx;
 					}
 					if (isset($tabdef['tooltip'])) {
