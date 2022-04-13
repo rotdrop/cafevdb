@@ -1031,22 +1031,33 @@ make sure that the musicians are also automatically added to the
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][] = function(&$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][] = function(PHPMyEdit &$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+
+      /** @var Entities\Musician $musician */
+      $musician = $this->legacyRecordToEntity($pme->rec);
+
       // add the new musician id to the persistent CGI array
       $pme->addPersistentCgi([
-        'musicianId' => $newVals['id'],
+        'musicianId' => $musician->getId(),
       ]);
 
-      switch ($newVals['mailing_list'] ?? '') {
-        case 'invite':
-          $this->logInfo('SHOULD INVITE TO MAILNG LIST');
-          break;
-        case 'subscribe':
-          $this->logInfo('SHOULD SUBSCRIBE TO MAILNG LIST');
-          break;
-        default:
-          $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
-          break;
+      // invite, subscribe or do nothing. If the person is already subscribed
+      // then it can unsubscribe by itself, so nothing more is needed here.
+      $list = $this->getConfigValue('announcementsMailingList');
+      if (!empty($list)) {
+        switch ($newVals['mailing_list'] ?? '') {
+          case 'invite':
+            $this->logInfo('SHOULD INVITE TO MAILNG LIST');
+            $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+            break;
+          case 'subscribe':
+            $this->logInfo('SHOULD SUBSCRIBE TO MAILNG LIST');
+            $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+            break;
+          default:
+            $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
+            break;
+        }
       }
       return true;
     };
