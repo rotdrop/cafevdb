@@ -642,7 +642,9 @@ make sure that the musicians are also automatically added to the
         return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="' . $pme->cgiDataName('mailing_list') . '" checked/>
 <label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
 <input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
-<label for="mailing-list-action-invite">' . $this->l->t('subscribe') . '</label>
+<label for="mailing-list-action-subscribe">' . $this->l->t('subscribe') . '</label>
+<input class="radio" type="radio" id="mailing-list-action-noop" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
+<label for="mailing-list-action-noop">' . $this->l->t('no action') . '</label>
 ';
       },
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
@@ -1034,6 +1036,18 @@ make sure that the musicians are also automatically added to the
       $pme->addPersistentCgi([
         'musicianId' => $newVals['id'],
       ]);
+
+      switch ($newVals['mailing_list'] ?? '') {
+        case 'invite':
+          $this->logInfo('SHOULD INVITE TO MAILNG LIST');
+          break;
+        case 'subscribe':
+          $this->logInfo('SHOULD SUBSCRIBE TO MAILNG LIST');
+          break;
+        default:
+          $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
+          break;
+      }
       return true;
     };
 
