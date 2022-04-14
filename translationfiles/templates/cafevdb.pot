@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-08 17:44+0200\n"
+"POT-Creation-Date: 2022-04-13 20:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3339,7 +3339,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:182
 #: lib/PageRenderer/InstrumentFamilies.php:248
 #: lib/PageRenderer/Instruments.php:300
-#: lib/PageRenderer/Musicians.php:548
+#: lib/PageRenderer/Musicians.php:550
 #: lib/PageRenderer/ProjectParticipantFields.php:358
 #: lib/PageRenderer/ProjectParticipants.php:560
 #: lib/PageRenderer/Projects.php:278
@@ -3527,7 +3527,7 @@ msgid "Family"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentFamilies.php:221
-#: lib/PageRenderer/Musicians.php:559
+#: lib/PageRenderer/Musicians.php:561
 msgid "Instruments"
 msgstr ""
 
@@ -3619,7 +3619,7 @@ msgid "Total Insurance"
 msgstr ""
 
 #: lib/PageRenderer/InstrumentInsurances.php:547
-#: lib/PageRenderer/Musicians.php:907
+#: lib/PageRenderer/Musicians.php:919
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
@@ -3786,129 +3786,145 @@ msgstr ""
 msgid "Nickname"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:426
+#: lib/PageRenderer/Musicians.php:424
 #: lib/PageRenderer/ProjectParticipants.php:451
 msgid "e.g. Cathy"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:457
+#: lib/PageRenderer/Musicians.php:458
 #: lib/PageRenderer/ProjectParticipants.php:481
 msgid "Display-Name"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:479
+#: lib/PageRenderer/Musicians.php:476
 #: lib/PageRenderer/ProjectParticipants.php:492
 msgid "e.g. Doe, Cathy"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:512
+#: lib/PageRenderer/Musicians.php:514
 #: lib/PageRenderer/ProjectParticipants.php:525
 #: lib/PageRenderer/ProjectPayments.php:454
 msgid "User Id"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:587
+#: lib/PageRenderer/Musicians.php:589
 #: lib/PageRenderer/ProjectParticipants.php:611
 msgid "Instrument Sort Order"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:601
+#: lib/PageRenderer/Musicians.php:603
 #: lib/PageRenderer/ProjectParticipants.php:859
 msgid "Disabled Instruments"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:621
+#: lib/PageRenderer/Musicians.php:623
 #: lib/PageRenderer/ProjectParticipants.php:889
 msgid "Member Status"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:632
+#: lib/PageRenderer/Musicians.php:634
 #: templates/emailform/part.emailform.recipients.php:155
 #: templates/settings/email-settings.php:123
 msgid "Mailing List"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:643
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "invite"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:645
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "subscribe"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:647
+msgid "no action"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:655
 msgid "Unable to contact mailing lists service"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:706
+#: lib/PageRenderer/Musicians.php:718
 #: lib/PageRenderer/ProjectParticipants.php:914
 msgid "Cloud Account Deactivated"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:725
+#: lib/PageRenderer/Musicians.php:737
 #: lib/PageRenderer/ProjectParticipants.php:933
 msgid "Hidden from Cloud"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:748
+#: lib/PageRenderer/Musicians.php:760
 #: lib/PageRenderer/ProjectParticipants.php:987
 msgid "Projects"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:769
+#: lib/PageRenderer/Musicians.php:781
 #: lib/PageRenderer/ProjectParticipants.php:1012
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:783
+#: lib/PageRenderer/Musicians.php:795
 #: lib/PageRenderer/ProjectParticipants.php:1027
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:801
+#: lib/PageRenderer/Musicians.php:813
 #: lib/PageRenderer/ProjectParticipants.php:1042
 msgid "Street"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:811
+#: lib/PageRenderer/Musicians.php:823
 #: lib/PageRenderer/ProjectParticipants.php:1051
 msgid "Postal Code"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:820
+#: lib/PageRenderer/Musicians.php:832
 #: lib/PageRenderer/ProjectParticipants.php:1060
 msgid "City"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:832
+#: lib/PageRenderer/Musicians.php:844
 #: lib/PageRenderer/ProjectParticipants.php:1072
 msgid "Country"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:847
+#: lib/PageRenderer/Musicians.php:859
 #: lib/PageRenderer/ProjectParticipants.php:1090
 msgid "Remarks"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:865
+#: lib/PageRenderer/Musicians.php:877
 #: lib/PageRenderer/ProjectParticipants.php:1110
 msgid "Language"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:895
+#: lib/PageRenderer/Musicians.php:907
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:926
+#: lib/PageRenderer/Musicians.php:938
 #: lib/PageRenderer/ProjectParticipants.php:1122
 msgid "Photo"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:988
+#: lib/PageRenderer/Musicians.php:1000
 #: lib/PageRenderer/ProjectParticipants.php:1181
 #: lib/PageRenderer/Projects.php:780
 msgid "Last Updated"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:1000
+#: lib/PageRenderer/Musicians.php:1012
 #: lib/PageRenderer/ProjectParticipants.php:1193
 #: src/app/ajax.js:30
 msgid "Created"
 msgstr ""
 
-#: lib/PageRenderer/Musicians.php:1013
+#: lib/PageRenderer/Musicians.php:1025
 #, php-format
 msgid "Add all to %s"
 msgstr ""
@@ -5120,7 +5136,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
-#: lib/Service/MailingListsService.php:527
+#: lib/Service/MailingListsService.php:519
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
@@ -5583,19 +5599,19 @@ msgstr ""
 msgid "42, Undiscoverable"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:324
+#: lib/Service/MailingListsService.php:321
 msgid "More than one pending subscription request, bailing out."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:392
+#: lib/Service/MailingListsService.php:389
 msgid "Missing subscriber email-address."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:471
+#: lib/Service/MailingListsService.php:463
 msgid "mailing lists"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:472
+#: lib/Service/MailingListsService.php:464
 msgid "auto-responses"
 msgstr ""
 
@@ -9136,11 +9152,11 @@ msgid ""
 "information is available. Sorry for that."
 msgstr ""
 
-#: src/app/pme.js:1215
+#: src/app/pme.js:1220
 msgid "#columns"
 msgstr ""
 
-#: src/app/pme.js:1224
+#: src/app/pme.js:1229
 msgid "#rows"
 msgstr ""
 
@@ -12191,17 +12207,7 @@ msgstr ""
 
 #: lib/PageRenderer/Musicians.php:694
 #, php-format
-msgid "invite"
-msgstr ""
-
-#: lib/PageRenderer/Musicians.php:694
-#, php-format
 msgid "accept"
-msgstr ""
-
-#: lib/PageRenderer/Musicians.php:694
-#, php-format
-msgid "subscribe"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:694
