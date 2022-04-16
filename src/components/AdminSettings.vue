@@ -76,7 +76,7 @@
                class="checkbox request-mark"
                @change="markRecryptionRequest(userId, ...arguments)"
         />
-        <label :for="['mark',userId].join('-')"></label>
+        <label :for="['mark', userId].join('-')"></label>
         <Actions>
           <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">{{ t(appName, 'recrypt') }}</ActionButton>
           <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">{{ t(appName, 'reject') }}</ActionButton>
@@ -108,6 +108,7 @@
   </div>
 </template>
 <script>
+ import Vue from 'vue'
  import { appName } from '../app/app-info.js'
  import Actions from '@nextcloud/vue/dist/Components/Actions'
  import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
@@ -183,6 +184,8 @@
        // fetch recryption requests
        {
          const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'))
+         Vue.set(this.recryption, 'requests', {})
+         Vue.set(this.recryption, 'allRequestsMarked', '')
          if (Object.keys(response.data.ocs.data.requests).length > 0) {
            const recryptionRequests = response.data.ocs.data.requests
            for (const [userId, publicKey] of Object.entries(recryptionRequests)) {
@@ -191,7 +194,7 @@
                const user = response.data.ocs.data
                const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
                const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
-               this.$set(this.recryption.requests, userId, {
+               Vue.set(this.recryption.requests, userId, {
                  id: userId,
                  publicKey,
                  displayName: user.displayname,
@@ -206,8 +209,8 @@
              }
            }
          }
-         this.recryption.allRequestsMarked = ''
        }
+       console.info('RECRYPTION', this.recryption)
      },
      async saveSetting(settingsKey, value, force) {
        const self = this
@@ -293,6 +296,7 @@
              userId
          }))
          showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
+         Vue.delete(this.recryption.requests, userId)
        } catch (e) {
          if (e.response) {
            console.error('RESPONSE', e.response)
@@ -316,6 +320,7 @@
              userId
          }))
          showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
+         Vue.delete(this.recryption.requests, userId)
        } catch (e) {
          if (e.response) {
            console.error('RESPONSE', e.response)
