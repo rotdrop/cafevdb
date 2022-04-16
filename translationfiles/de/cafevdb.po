@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-13 20:41+0200\n"
-"PO-Revision-Date: 2022-04-13 20:43+0200\n"
+"POT-Creation-Date: 2022-04-16 11:48+0200\n"
+"PO-Revision-Date: 2022-04-16 11:47+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -393,22 +393,22 @@ msgstr "Nicht genug Speicherplatz vorhanden."
 msgid "Unknown attachment source: \"%s\"."
 msgstr "Unbekannte Quelle für Anhänge: \"%s\"."
 
-#: lib/Controller/EncryptionController.php:88
-#: lib/Controller/EncryptionController.php:105
-#: lib/Controller/EncryptionController.php:166
+#: lib/Controller/EncryptionController.php:91
+#: lib/Controller/EncryptionController.php:109
+#: lib/Controller/EncryptionController.php:170
 #, php-format
 msgid "Recryption-request for user \"%s\" not found."
 msgstr "Neu-Verschlüsselungs-Anfrage für Benutzer \"%s\" nicht gefunden."
 
-#: lib/Controller/EncryptionController.php:121
+#: lib/Controller/EncryptionController.php:125
 msgid "Unable to issue encryption request"
 msgstr "Konnte die Neuverschlüsselungsanfrage nicht absetzten"
 
-#: lib/Controller/EncryptionController.php:147
+#: lib/Controller/EncryptionController.php:151
 msgid "Encryption key is invalid"
 msgstr "Der Verschlüsselungs-Schlüssel ist ungültig."
 
-#: lib/Controller/EncryptionController.php:153
+#: lib/Controller/EncryptionController.php:157
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
@@ -5496,7 +5496,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
-#: lib/Service/MailingListsService.php:519
+#: lib/Service/MailingListsService.php:578
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr "Der Ordner `%s' konnte nicht erzeugt werden."
@@ -6009,19 +6009,27 @@ msgstr "Nirgends"
 msgid "42, Undiscoverable"
 msgstr "Unauffindbarweg 42"
 
-#: lib/Service/MailingListsService.php:321
+#: lib/Service/MailingListsService.php:242
+#, fuzzy
+#| msgid "Nested multi-value join tables are not yet supported."
+msgid "Adding email alias is not yet supported"
+msgstr ""
+"Geschachtelte Multi-Key Verknüpfungstabellen werden derzeit nicht "
+"unterstützt."
+
+#: lib/Service/MailingListsService.php:380
 msgid "More than one pending subscription request, bailing out."
 msgstr "Es gib mehr als eine Abo-Anfrage, ich mach' nichts."
 
-#: lib/Service/MailingListsService.php:389
+#: lib/Service/MailingListsService.php:448
 msgid "Missing subscriber email-address."
 msgstr "Die Email-Adresse des Email-Verteiler-Abonnenten fehlt."
 
-#: lib/Service/MailingListsService.php:463
+#: lib/Service/MailingListsService.php:522
 msgid "mailing lists"
 msgstr "Email-Verteiler"
 
-#: lib/Service/MailingListsService.php:464
+#: lib/Service/MailingListsService.php:523
 msgid "auto-responses"
 msgstr "automatische Antworten"
 
@@ -9296,7 +9304,7 @@ msgstr "Mit den ausgewählten Anfragen die folgende Aktion ausführen:"
 msgid "No recryption requests are pending."
 msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 
-#. TRANSLATORS src/components/AdminSettings.vue:177
+#. TRANSLATORS src/components/AdminSettings.vue:178
 #: specialVueFakeDummyForL10nScript.js:32
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
@@ -9311,56 +9319,56 @@ msgstr ""
 "bei den \"persönlichen\" Einstellungen der App unter\n"
 "{personalSettingsLink} vorgenommen werden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:220
+#. TRANSLATORS src/components/AdminSettings.vue:223
 #: specialVueFakeDummyForL10nScript.js:34
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
-#. TRANSLATORS src/components/AdminSettings.vue:225
+#. TRANSLATORS src/components/AdminSettings.vue:228
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Unconfirmed, reverting to old value."
 msgstr "Bestätigung nicht erfolgt, setze auf den alten Wert zurück."
 
-#. TRANSLATORS src/components/AdminSettings.vue:238
+#. TRANSLATORS src/components/AdminSettings.vue:241
 #: specialVueFakeDummyForL10nScript.js:38
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
 
-#. TRANSLATORS src/components/AdminSettings.vue:248
+#. TRANSLATORS src/components/AdminSettings.vue:251
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:48
 #: specialVueFakeDummyForL10nScript.js:54
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
-#. TRANSLATORS src/components/AdminSettings.vue:257
+#. TRANSLATORS src/components/AdminSettings.vue:260
 #: specialVueFakeDummyForL10nScript.js:42
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:259
+#. TRANSLATORS src/components/AdminSettings.vue:262
 #: specialVueFakeDummyForL10nScript.js:44
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht einstellen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:295
+#. TRANSLATORS src/components/AdminSettings.vue:298
 #: specialVueFakeDummyForL10nScript.js:46
 msgid "Successfully handled recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:308
+#. TRANSLATORS src/components/AdminSettings.vue:312
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: "
 "{message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:318
+#. TRANSLATORS src/components/AdminSettings.vue:322
 #: specialVueFakeDummyForL10nScript.js:52
 msgid "Successfully deleted recryption request for {userId}."
-msgstr "Neu-Verschlüsselungs-Anfrage für {userid} erfolgreich gelöscht."
+msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich gelöscht."
 
-#. TRANSLATORS src/components/AdminSettings.vue:331
+#. TRANSLATORS src/components/AdminSettings.vue:336
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
@@ -14210,11 +14218,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Inconsisten join-structure"
 #~ msgstr "Inkonsistente Join-Struktur"
-
-#~ msgid "Nested multi-value join tables are not yet supported."
-#~ msgstr ""
-#~ "Geschachtelte Multi-Key Verknüpfungstabellen werden derzeit nicht "
-#~ "unterstützt."
 
 #~ msgid "Annual insurance fee for all insured items of all musicians"
 #~ msgstr "Jahresbeitrag für alle versicherten Gegenstände"

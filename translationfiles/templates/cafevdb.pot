@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-13 20:44+0200\n"
+"POT-Creation-Date: 2022-04-16 11:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,22 +376,22 @@ msgstr ""
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:88
-#: lib/Controller/EncryptionController.php:105
-#: lib/Controller/EncryptionController.php:166
+#: lib/Controller/EncryptionController.php:91
+#: lib/Controller/EncryptionController.php:109
+#: lib/Controller/EncryptionController.php:170
 #, php-format
 msgid "Recryption-request for user \"%s\" not found."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:121
+#: lib/Controller/EncryptionController.php:125
 msgid "Unable to issue encryption request"
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:147
+#: lib/Controller/EncryptionController.php:151
 msgid "Encryption key is invalid"
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:153
+#: lib/Controller/EncryptionController.php:157
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
@@ -5136,7 +5136,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
-#: lib/Service/MailingListsService.php:519
+#: lib/Service/MailingListsService.php:578
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
@@ -5599,19 +5599,23 @@ msgstr ""
 msgid "42, Undiscoverable"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:321
+#: lib/Service/MailingListsService.php:242
+msgid "Adding email alias is not yet supported"
+msgstr ""
+
+#: lib/Service/MailingListsService.php:380
 msgid "More than one pending subscription request, bailing out."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:389
+#: lib/Service/MailingListsService.php:448
 msgid "Missing subscriber email-address."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:463
+#: lib/Service/MailingListsService.php:522
 msgid "mailing lists"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:464
+#: lib/Service/MailingListsService.php:523
 msgid "auto-responses"
 msgstr ""
 
@@ -8128,7 +8132,7 @@ msgstr ""
 msgid "No recryption requests are pending."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:177
+#. TRANSLATORS src/components/AdminSettings.vue:178
 #: specialVueFakeDummyForL10nScript.js:32
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
@@ -8137,54 +8141,54 @@ msgid ""
 "settings."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:220
+#. TRANSLATORS src/components/AdminSettings.vue:223
 #: specialVueFakeDummyForL10nScript.js:34
 msgid "Confirmation Required"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:225
+#. TRANSLATORS src/components/AdminSettings.vue:228
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:238
+#. TRANSLATORS src/components/AdminSettings.vue:241
 #: specialVueFakeDummyForL10nScript.js:38
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:248
+#. TRANSLATORS src/components/AdminSettings.vue:251
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:48
 #: specialVueFakeDummyForL10nScript.js:54
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:257
+#. TRANSLATORS src/components/AdminSettings.vue:260
 #: specialVueFakeDummyForL10nScript.js:42
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:259
+#. TRANSLATORS src/components/AdminSettings.vue:262
 #: specialVueFakeDummyForL10nScript.js:44
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:295
+#. TRANSLATORS src/components/AdminSettings.vue:298
 #: specialVueFakeDummyForL10nScript.js:46
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:308
+#. TRANSLATORS src/components/AdminSettings.vue:312
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:318
+#. TRANSLATORS src/components/AdminSettings.vue:322
 #: specialVueFakeDummyForL10nScript.js:52
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:331
+#. TRANSLATORS src/components/AdminSettings.vue:336
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
