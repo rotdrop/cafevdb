@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -78,6 +78,15 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
   private $type = 'temporary';
+
+  /**
+   * @var string
+   *
+   * The list-id of the mailing list for the members
+   *
+   * @ORM\Column(type="string", nullable=true, length="128", options={"collation"="ascii_general_ci"})
+   */
+  private $mailingListId;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
