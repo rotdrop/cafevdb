@@ -221,6 +221,91 @@ use OCA\CAFEVDB\Common\Util;
         </label>
       </fieldset>
     </form>
+    <h4><?php p($l->t('Mailing List Service')); ?></h4>
+    <form class="mailing-list">
+      <fieldset class="web-interface">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailinglist:webpages']; ?>">
+          <?php p($l->t('List Configuration Pages')); ?>
+        </legend>
+        <input type="text"
+               name="mailingListWebPages"
+               id="mailingListWebPages"
+               value="<?php echo $mailingListWebPages; ?>"
+               placeholder="<?php p('https://lists.tld/mailman');?>"
+               required
+        />
+        <label for="mailingListWebPages"><?php echo $l->t('Mailing-List Configuration Pages');?></label>
+      </fieldset>
+      <fieldset class="rest-account">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailinglist:restapi']; ?>"
+        >
+          <?php p($l->t('REST API Account')); ?>
+        </legend>
+        <input type="text"
+               name="mailingListRestUrl"
+               id="mailingListRestUrl"
+               value="<?php echo $mailingListRestUrl; ?>"
+               placeholder="<?php p('http://localhost:8001');?>"
+               required
+        />
+        <label for="mailingListRestUrl"><?php echo $l->t('Mailing-List REST URL');?></label>
+        <br/>
+        <input type="text"
+               name="mailingListRestUser"
+               id="mailingListRestUser"
+               value="<?php echo $mailingListRestUser; ?>"
+               placeholder="<?php echo $l->t('User');?>"
+               required
+        />
+        <label for="mailingListRestUser"><?php echo $l->t('REST User');?></label>
+        <br/>
+        <input class="cafevdb-password"
+               type="password"
+               value="<?php echo $mailingListRestPassword; ?>"
+               id="mailingListRestPassword"
+               name="mailingListRestPassword"
+               placeholder="<?php echo $l->t('Password');?>"
+               data-typetoggle="#mailingListRestPassword-show"
+               required
+        />
+        <input class="cafevdb-password-show"
+               type="checkbox"
+               id="mailingListRestPassword-show"
+               name="mailingListRestPassword-show"
+        />
+        <label class="cafevdb-password-show"
+               for="mailingListRestPassword-show">
+          <?php echo $l->t('show');?>
+        </label>
+        <label for="mailingListRestPassword"><?php echo $l->t('REST Password');?></label>
+      </fieldset>
+      <fieldset class="auto-generated-list">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailinglist:generated:defaults']; ?>"
+        >
+          <?php p($l->t('Defaults for Generated Lists')); ?>
+        </legend>
+        <input type="text"
+               name="mailingListDefaultOwner"
+               id="mailingListDefaultOwner"
+               value="<?php p($mailingListDefaultOwner); ?>"
+               placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
+               title="<?php echo $toolTips['mailinglist:generated:defaults:owner']; ?>"
+        />
+        <label for="mailingListDefaultOwner"><?php p($l->t('Default List-Owner'));?></label>
+        <br/>
+        <input type="text"
+               name="mailingListDefaultModerator"
+               id="mailingListDefaultModerator"
+               value="<?php p($mailingListDefaultModerator); ?>"
+               placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
+               title="<?php echo $toolTips['mailinglist:generated:defaults:moderator']; ?>"
+        />
+        <label for="mailingListDefaultModerator"><?php p($l->t('Default List-Moderator'));?></label>
+      </fieldset>
+    </form>
     <h4><?php echo $l->t('Test Settings'); ?></h4>
     <form class="emailtest">
       <input type="button"
@@ -245,46 +330,6 @@ use OCA\CAFEVDB\Common\Util;
              placeholder="<?php echo $l->t('Test Email Adress');?>"
       />
       <label for="emailtestaddress"><?php echo $l->t('Test address');?></label>
-    </form>
-    <h4>Mailing List Service</h4>
-    <form class="mailing-list">
-      <input type="text"
-             name="mailingListRestUrl"
-             id="mailingListRestUrl"
-             value="<?php echo $mailingListRestUrl; ?>"
-             placeholder="<?php p('http://localhost:8001');?>"
-             required
-      />
-      <label for="mailingListRestUrl"><?php echo $l->t('Mailing-List REST URL');?></label>
-      <br/>
-      <input type="text"
-             name="mailingListRestUser"
-             id="mailingListRestUser"
-             value="<?php echo $mailingListRestUser; ?>"
-             placeholder="<?php echo $l->t('User');?>"
-             required
-      />
-      <label for="mailingListRestUser"><?php echo $l->t('REST User');?></label>
-      <br/>
-      <input class="cafevdb-password"
-             type="password"
-             value="<?php echo $mailingListRestPassword; ?>"
-             id="mailingListRestPassword"
-             name="mailingListRestPassword"
-             placeholder="<?php echo $l->t('Password');?>"
-             data-typetoggle="#mailingListRestPassword-show"
-             required
-      />
-      <input class="cafevdb-password-show"
-             type="checkbox"
-             id="mailingListRestPassword-show"
-             name="mailingListRestPassword-show"
-      />
-      <label class="cafevdb-password-show"
-             for="mailingListRestPassword-show">
-        <?php echo $l->t('show');?>
-      </label>
-      <label for="mailingListRestPassword"><?php echo $l->t('REST Password');?></label>
     </form>
   </div>
 </div>

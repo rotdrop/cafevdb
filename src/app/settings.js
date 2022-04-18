@@ -827,10 +827,21 @@ const afterLoad = function(container) {
       // mailing list REST stuff
       const container = emailContainer.find('form.mailing-list');
 
+      const prefix = 'mailingList';
+      const inputValues = [
+        'WebPages',
+        'RestUrl',
+        'RestUser',
+        'RestPassword',
+        'DefaultOwner',
+        'DefaultModerator',
+      ];
+      const $inputs = $(inputValues.map(x => '#' + prefix + x).join(', '));
+
       const password = container.find('#mailingListRestPassword');
       showPassword(password);
 
-      $('#mailingListRestUrl, #mailingListRestUser, #mailingListRestPassword').blur(function(event) {
+      $inputs.blur(function(event) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(

@@ -169,10 +169,15 @@ class ConfigService
 
   const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
 
-  const MAILING_LIST_CONFIG = [
+  const MAILING_LIST_REST_CONFIG = [
     'url' => 'mailingListRestUrl',
     'user' => 'mailingListRestUser',
     'password' => 'mailingListRestPassword',
+  ];
+  const MAILING_LIST_CONFIG = [
+    'web' => 'mailingListWebPages',
+    'owner' => 'mailingListDefaultOwner',
+    'moderator' => 'mailingListDefaultModerator',
   ];
 
   /** @var string */

@@ -267,7 +267,6 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
 
 
       'emailtest' => $this->l->t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
-
       'emailform' => [
         'sender' => [
           'name' => $this->l->t('Real name part of the sender address.'),
@@ -583,6 +582,22 @@ default behaviour for mass-emails as follows
 <br/>
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
+
+      'mailinglist' => [
+        'webpages' => [
+          'default' => $this->l->t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
+        ],
+        'restapi' => [
+          'default' => $this->l->t('REST API account for interaction with a Mailman3 server. Should be located on the same server or proxied via SSL.'),
+        ],
+        'generated' => [
+          'defaults' => [
+            'default' => $this->l->t('Some settings for generated per-project mailing lists. The detail configuration can be tuned by visiting the list-configuration pages.'),
+            'owner' => $this->l->t('An email address which owns all auto-generated mailing lists. This email will receive notifications by the mailing-list software about necessary administrative tasks.'),
+            'moderator' => $this->l->t('An email address which handle moderator-tasks for the mailing lists. List moderation is e.g. necessary for rejecting or accepting posts by non-members or to handle subscription requests.'),
+          ]
+        ],
+      ],
 
       'musican-contact-tab' => $this->l->t('Display name, pre-name, phone number, email, street-address.'),
 

@@ -84,6 +84,11 @@ class MailingListsService
     self::REQUEST_OWNER_SUBSCRIBER,
   ];
 
+  // some config keys to avoid typos
+  const LIST_CONFIG_DISPLAY_NAME = 'display_name';
+  const LIST_CONFIG_FQDN_LISTNAME = 'fqdn_listname';
+  const LIST_CONFIG_ACCEPTABLE_ALIASES = 'acceptabl_aliases';
+
   /** @var string
    * Default rest URI
    */
@@ -109,11 +114,11 @@ class MailingListsService
     $this->l = $this->l10n();
 
     $this->restClient = new RestClient([ 'base_uri' => $this->getConfigValue(
-      ConfigService::MAILING_LIST_CONFIG['url'],
+      ConfigService::MAILING_LIST_REST_CONFIG['url'],
       self::DEFAULT_REST_URI) ]);
     $this->restAuth = [
-      $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['user']),
-      $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['password']),
+      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['user']),
+      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['password']),
     ];
   }
 
@@ -181,6 +186,60 @@ class MailingListsService
       'auth' => $this->restAuth,
     ]);
     return true;
+  }
+
+  /** Delete an existing list */
+  public function deleteList(string $listId)
+  {
+    if (empty($listId = $this->ensureListId($listId))) {
+      return false;
+    }
+    $response = $this->restClient->delete('/3.1/lists/' . $listId, [
+      'auth' => $this->restAuth,
+    ]);
+    return true;
+  }
+
+  /**
+   * Rename an existing list.
+   *
+   * Unfortunately, changing the fqdn (email address) not supported or at
+   * least to exposed to the API by mm3. So we do not actually change the
+   * address of the list, but just the display name and add the desired
+   * email-address to the list of acceptable aliases and then: how to add an
+   * email-alias?
+   */
+  public function renameList(string $listId, ?string $newFqdn = null, ?string $newDisplayName = null)
+  {
+    $listConfig = $this->getListConfig($listId);
+    $acceptableAliases = $listConfig[self::LIST_CONFIG_ACCEPTABLE_ALIASES];
+    $displayName = $listConfig[self::LIST_CONFIG_DISPLAY_NAME];
+    $fqdnListName = $listConfig[self::LIST_CONFIG_FQDN_LISTNAME];
+    if (!empty($newFqdn) && $fqdnListName != $newFqdn) {
+      // - add a new entry to the acceptable aliases entries
+      // - add an email alias
+
+      $acceptableAliases[] = $newFqdn;
+      $this->addEmailAlias(fromAddress: $newFqdn, toAddress: $fqdnListName);
+    }
+    if (!empty($newDisplayName)) {
+      $displayName = $newDisplayName;
+    }
+    $response = $this->restClient->patch(
+      '/3.1/lists/' . $listId . '/config', [
+        'json' => [
+          self::LIST_CONFIG_DISPLAY_NAME => $displayName,
+          self::LIST_CONFIG_ACCEPTABLE_ALIASES => $acceptableAliases,
+        ],
+        'auth' => $this->restAuth,
+      ]);
+    return true;
+  }
+
+  /** Somehow add an email alias to the mail system ... */
+  private function addEmailAlias(string $fromAddress, string $toAddress)
+  {
+    throw new \RuntimeException($this->l->t('Adding email alias is not yet supported'));
   }
 
   /**

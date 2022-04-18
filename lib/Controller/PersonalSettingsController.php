@@ -1640,15 +1640,17 @@ class PersonalSettingsController extends Controller {
         ? null
         : $this->humanFileSize($realValue);
       return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
-      break;
 
     case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
-      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+      return $this->setSimpleConfigValue($parameter, $value);
+
+    case (in_array($parameter, ConfigService::MAILING_LIST_REST_CONFIG) ? $parameter : null):
+      foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
         ${$listConfig} = $this->getConfigValue($listConfig);
       }
       ${$parameter} = Util::normalizeSpaces($value);
       $all = true;
-      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+      foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
         if (empty(${$listConfig})) {
           $all = false;
           break;
