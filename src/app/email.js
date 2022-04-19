@@ -309,7 +309,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   });
 
   // Basic set
-  const basicRecipientsSet = fieldset.find('.basic-recipients-set.' + appPrefix('container') + 'r input[type="checkbox"]');
+  const basicRecipientsSet = fieldset.find('.basic-recipients-set.' + appPrefix('container') + ' input[type="checkbox"]');
   basicRecipientsSet.off('change');
   basicRecipientsSet.on('change', function(event) {
     applyRecipientsFilter.call(this, event);
