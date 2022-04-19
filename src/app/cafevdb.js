@@ -258,7 +258,7 @@ const snapperClose = function() {
  */
 const toolTipsInit = function(containerSel) {
   if (typeof containerSel === 'undefined') {
-    containerSel = '#content.app-cafevdb';
+    containerSel = '#content.app-' + appName;
   }
   const container = $(containerSel);
 
