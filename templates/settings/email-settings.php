@@ -225,14 +225,25 @@ use OCA\CAFEVDB\Common\Util;
     <form class="mailing-list">
       <fieldset class="web-interface">
         <legend class="tooltip-auto"
-                title="<?php echo $toolTips['mailinglist:webpages']; ?>">
-          <?php p($l->t('List Configuration Pages')); ?>
+                title="<?php echo $toolTips['mailinglist:domain']; ?>">
+          <?php p($l->t('Mailing Lists Domain')); ?>
         </legend>
+        <input type="text"
+               name="mailingListEmailDomain"
+               id="mailingListEmailDomain"
+               value="<?php echo $mailingListEmailDomain; ?>"
+               placeholder="<?php p('e.g. lists.tld');?>"
+               title="<?php echo $toolTips['mailinglist:domain:config']; ?>"
+               required
+        />
+        <label for="mailingListEmailDomain"><?php echo $l->t('Mailing-List Domain');?></label>
+        <br/>
         <input type="text"
                name="mailingListWebPages"
                id="mailingListWebPages"
                value="<?php echo $mailingListWebPages; ?>"
-               placeholder="<?php p('https://lists.tld/mailman');?>"
+               placeholder="<?php p('e.g. https://lists.tld/mailman');?>"
+               title="<?php echo $toolTips['mailinglist:domain:config']; ?>"
                required
         />
         <label for="mailingListWebPages"><?php echo $l->t('Mailing-List Configuration Pages');?></label>

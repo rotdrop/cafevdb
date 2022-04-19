@@ -407,6 +407,9 @@ class PersonalForm {
           $templateParameters[$key] = $this->humanFileSize($templateParameters[$key]);
         }
 
+        foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
+          $this->parameterFromConfig($templateParameters, $listConfig);
+        }
         foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
           $this->parameterFromConfig($templateParameters, $listConfig);
         }

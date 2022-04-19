@@ -175,7 +175,8 @@ class ConfigService
     'password' => 'mailingListRestPassword',
   ];
   const MAILING_LIST_CONFIG = [
-    'web' => 'mailingListWebPages',
+    'domain' => 'mailingListEmailDomain',
+    'config' => 'mailingListWebPages',
     'owner' => 'mailingListDefaultOwner',
     'moderator' => 'mailingListDefaultModerator',
   ];

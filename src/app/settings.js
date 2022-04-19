@@ -829,6 +829,7 @@ const afterLoad = function(container) {
 
       const prefix = 'mailingList';
       const inputValues = [
+        'EmailDomain',
         'WebPages',
         'RestUrl',
         'RestUser',
