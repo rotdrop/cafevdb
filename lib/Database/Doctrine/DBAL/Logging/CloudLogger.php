@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -23,15 +24,21 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
+
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger as LoggerInterface;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 
 class CloudLogger implements SQLLogger
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  /** @var IEventDispatcher */
+  private $eventDispatcher;
 
   /** @var \OCA\CAFEVDB\Service\EncryptionService */
   private $encryptionService;
@@ -47,17 +54,28 @@ class CloudLogger implements SQLLogger
 
   public function __construct(
     EncryptionService $encryptionService
+    , IEventDispatcher $eventDispatcher
     , LoggerInterface $logger
     , IL10N $l10n
   ) {
     $this->encryptionService = $encryptionService;
+    $this->eventDispatcher = $eventDispatcher;
     $this->logger = $logger;
     $this->l = $l10n;
     $this->enabled = false;
     if ($this->encryptionService->bound()) {
-      $debugMode = $encryptionService->getConfigValue('debugmode', 0);
+      $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
       $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+    } else {
+      $this->eventDispatcher->addListener(
+        Events\EntityManagerBoundEvent::class,
+        function(Events\EntityManagerBoundEvent $event) {
+          $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
+          $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+          $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+        }
+      );
     }
   }
 
