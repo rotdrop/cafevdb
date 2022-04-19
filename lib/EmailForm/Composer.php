@@ -339,6 +339,9 @@ Störung.';
   private $initialTemplate;
   private $templateName;
 
+  private $inReplyToId; ///< Message id of a to-be-replied message
+  private $referencing; ///< Further related message ids
+
   private $draftId; ///< The ID of the current message draft, or -1
 
   private $messageTag;
@@ -508,6 +511,9 @@ Störung.';
     $this->setDefaultTemplate();
 
     $this->draftId = $this->cgiValue('messageDraftId', 0);
+
+    $this->inReplyToId = $this->cgiValue('inReplyTo', '');
+    $this->referencing = $this->cgiValue('referencing', []);
 
     $this->progressToken = $this->cgiValue('progressToken');
 
@@ -2424,6 +2430,7 @@ Störung.';
         // the id of the master-copy
         $sentEmail->setReferencing($this->getReference(Entities\SentEmail::class, $references));
       } else {
+        $references = array_merge($references, $this->referencing);
         sort($references);
         foreach ($references as $reference) {
           // Adding references unfortunately is not enough, ORM does not match
@@ -2435,6 +2442,9 @@ Störung.';
         }
       }
       $phpMailer->setReferences((array)$references);
+    }
+    if (!empty($this->inReplyToId)) {
+      $phpMailer->addCustomHeader('In-Reply-To', $this->inReplyToId);
     }
 
     // Finally the point of no return. Send it out!!!
@@ -2818,6 +2828,12 @@ Störung.';
     }
     if (!empty($references)) {
       $phpMailer->setReferences((array)$references);
+    }
+    if (!empty($this->inReplyToId)) {
+      $phpMailer->addCustomHeader('In-Reply-To', $this->inReplyToId);
+    }
+    foreach ($this->referencing as $referenceMessageId) {
+      $phpMailer->addReference($referenceMessageId);
     }
 
     // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
@@ -3448,6 +3464,73 @@ Störung.';
   }
 
   /**
+   * Load an already sent email and prepare the data for a useful reply
+   */
+  public function loadSentEmail(string $messageId)
+  {
+    $messageId = trim($messageId, " \n\r\t\v\x00");
+    /** @var Entities\SentEmail $sentEmail */
+    $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->findOneLike([ 'messageId' => '%' . trim($messageId) . '%' ]);
+    if (empty($sentEmail)) {
+      $this->logInfo('UNABLE TO FETCH "' . $messageId . '"');
+      return $this->executionStatus = false;
+    }
+
+    // The following seems to be used by TB
+    // <blockquote type="cite" cite="mid:f1bfe41b-1f3e-8ea9-be96-374b2eaca6ea@ruhr-uni-bochum.de">
+    // Am 12.04.22 um 17:50 schrieb DIE ZEIT:
+    // On 12.04.22 17:50, DIE ZEIT wrote:
+
+    $dateSent = $sentEmail->getCreated();
+    $this->messageContents = '<p>'
+      . $this->l->t('REPLYTO: On %1$s %2$s, %3$s wrote:', [
+        $this->dateTimeFormatter()->formatDate($dateSent, 'medium'),
+        $this->dateTimeFormatter()->formatTime($dateSent, 'medium'),
+        $this->fromName(),
+      ])
+      . '</p>';
+    $this->messageContents .= '<blockquote type="cite" style="" cite="mid:' . trim($messageId, '<>') . '">' . $sentEmail->getHtmlBody() . '</blockquote>';
+    $this->cgiData['subject'] = preg_replace('/\[[^]]*\]\s+/', 'Re: ', $sentEmail->getSubject());
+
+    $this->cgiData['BCC'] = $sentEmail->getBcc();
+    $this->cgiData['CC'] = $sentEmail->getCc();
+    $this->cgiData['inReplyTo'] = $this->inReplyToId = $messageId;
+
+
+    $this->referencing = [ $this->inReplyTo() ];
+    $referencing = $sentEmail->getReferencing();
+    if (!empty($referencing)) {
+      $this->referencing[] = $referencing->getMessageId();
+    }
+    $referencedBy = $sentEmail->getReferencedBy();
+    foreach ($referencedBy as $referrer) {
+      $this->referencing[] = $refererrer->getMessageId();
+    }
+    $this->cgiData['referencing'] = $this->referencing;
+
+    $this->draftId = 0; // avoid accidental overwriting
+
+    $parser = new \Mail_RFC822(null, null, null, false);
+    $recipients = [];
+    foreach (explode(';', $sentEmail->getBulkRecipients()) as $recipient) {
+      $emailRecord = $parser->parseAddressList($recipient);
+      $parseError = $parser->parseError();
+      if ($parseError !== false || count($emailRecord) != 1) {
+        continue;
+      }
+      $emailRecord = reset($emailRecord);
+      $recipients[] = $emailRecord->mailbox . '@' . $emailRecord->host;
+    }
+    $musicianIds = $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]);
+
+    $this->recipientsFilter->setSelectedRecipients($musicianIds);
+    $this->recipients = $this->recipientsFilter->selectedRecipients();
+
+    return $this->executionStatus = true;
+  }
+
+
+  /**
    * Take the text supplied by $contents and store it in the DB
    * EmailTemplates table with tag $templateName. An existing template
    * with the same tag will be replaced.
@@ -3494,6 +3577,11 @@ Störung.';
     $this->templateName = $template->getTag();
     $this->messageContents = $template->getContents();
     $this->draftId = 0; // avoid accidental overwriting
+
+    // clear references, as this is a new shot
+    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
+    $this->referencing = $this->cgiData['referencing'] = [];
+
     return $this->executionStatus = true;
   }
 
@@ -3601,6 +3689,19 @@ Störung.';
   }
 
   /**
+   * Return the array or collection of sent-email related to the current
+   * project, or all sent-email which have been sent without project context.
+   */
+  private function fetchSentEmailsList()
+  {
+    return $this->getDatabaseRepository(Entities\SentEmail::class)->findBy([
+      'project' => $this->project
+    ], [
+      'created' => 'DESC',
+    ]);
+  }
+
+  /**
    * Store a draft message. The only constraint on the "operator
    * behaviour" is that the subject must not be empty. Otherwise in
    * any way incomplete messages may be stored as drafts.
@@ -3673,6 +3774,10 @@ Störung.';
       $this->diagnostics['caption'] = $this->l->t('Unable to load draft without id');
       return $this->executionStatus = false;
     }
+
+    // clear references, as this is a new shot
+    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
+    $this->referencing = $this->cgiData['referencing'] = [];
 
     /** @var Entities\EmailDraft $draft */
     $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
@@ -4027,6 +4132,8 @@ Störung.';
     return [
       'formStatus' => 'submitted',
       'messageDraftId' => $this->draftId,
+      'inReplyTo' => $this->inReplyToId,
+      'referencing' => $this->referencing,
     ];
   }
 
@@ -4071,6 +4178,14 @@ Störung.';
     ];
   }
 
+  /**
+   * Return a list of previously sent emails related to the current project.
+   */
+  public function sentEmails()
+  {
+    return $this->fetchSentEmailsList();
+  }
+
   /**Export the currently selected template name. */
   public function currentEmailTemplate()
   {
@@ -4081,6 +4196,12 @@ Störung.';
   public function messageDraftId()
   {
     return $this->draftId;
+  }
+
+  /** Export the currently replied-to message id */
+  public function inReplyTo()
+  {
+    return $this->inReplyToId;
   }
 
   /** Export the subject tag depending on whether we ar in "project-mode" or not. */

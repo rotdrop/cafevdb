@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * SentEmail
  *
  * @ORM\Table(name="SentEmails")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository")
  */
 class SentEmail
 {
@@ -433,7 +433,7 @@ class SentEmail
   /**
    * Returns referencing.
    *
-   * @return string|null
+   * @return SentEmail|null
    */
   public function getReferencing():?SentEmail
   {
