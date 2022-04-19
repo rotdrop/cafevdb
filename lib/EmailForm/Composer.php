@@ -2595,7 +2595,8 @@ Störung.';
       return $pair['name'].' <'.$pair['email'].'>';
     }, $logMessage->recipients);
 
-    $sentEmail->setBulkRecipients(implode(';', $bulkRecipients))
+    $sentEmail->setProject($this->project)
+              ->setBulkRecipients(implode(';', $bulkRecipients))
               ->setCc($logMessage->CC)
               ->setBcc($logMessage->BCC)
               ->setSubject($logMessage->subject)
