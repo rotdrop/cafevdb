@@ -92,9 +92,10 @@
     td.pme-cell {
       &.projects--instrumentation div.cell-wrapper,
       &.projects--participant-fields div.cell-wrapper,
-      &.projects--instrumentation-voices div.cell-wrapper {
-        width:12em;
-        max-width:12em;
+      &.projects--instrumentation-voices div.cell-wrapper,
+      &.projects--mailing-list-id div.cell-wrapper {
+        width:10em;
+        max-width:10em;
         /* max-height:1em; */
         white-space:nowrap;
         overflow:hidden;
@@ -169,6 +170,9 @@
           height:fit-content;
           background-color: lightgray;
           z-index:1;
+        }
+        &.status-unknown.dropdown-container {
+          display:none;
         }
         &.status-unset {
           .list-label {

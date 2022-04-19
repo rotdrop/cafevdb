@@ -295,6 +295,18 @@ class MailingListsService
     return $this->listIdByFqdn[$fqdnName];
   }
 
+  public function getConfigurationUrl(string $listId)
+  {
+    $listId = $this->ensureListId($listId);
+    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
+  }
+
+  public function getArchiveUrl(string $listId)
+  {
+    $listId = $this->ensureListId($listId);
+    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
+  }
+
   /**
    * Find the basic information about a subscription for the given
    * email.

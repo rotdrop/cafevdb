@@ -655,27 +655,47 @@ __EOT__;
         'prefix' => '<div class="cell-wrapper">',
         'postfix' => '</div>'
       ],
+      'php|LFD' => function($value, $op, $field, $row, $recordId, $pme) {
+        $html = $value;
+        if (!empty($value)) {
+          $listAddress = preg_replace('/\./', '@', $value, 1);
+          $configUrl = $this->listsService->getConfigurationUrl($value);
+          $html = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
+        }
+        return $html;
+      },
       'tooltip|AP' => $this->toolTipsService['projects:mailinglist:create'],
       'tooltip' => $this->toolTipsService['projects:mailinglist'],
       'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id'];
-        if (empty($value)) {
-          $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
-          $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
-          $l10nStatus = $this->l->t($status = 'unset');
-        } else {
-          // fetch the basic list-info from the lists-server
-          $listInfo = $this->listsService->getListInfo($value);
-          $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-          if (empty($this->listsService->getListConfig($value, 'allow_list_posts'))) {
-            $l10nStatus = $this->l->t($status = 'closed');
-          } else {
-            $l10nStatus = $this->l->t($status = 'active');
+        $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
+        $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
+        $l10nStatus = $this->l->t($status = 'unset');
+        $configUrl = '';
+        $archiveUrl = '';
+        if (!empty($value)) {
+          try {
+            // fetch the basic list-info from the lists-server
+            $listInfo = $this->listsService->getListInfo($value);
+            $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+            if (empty($this->listsService->getListConfig($value, 'allow_list_posts'))) {
+              $l10nStatus = $this->l->t($status = 'closed');
+            } else {
+              $l10nStatus = $this->l->t($status = 'active');
+            }
+            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+            $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to communicate with mailing list server.');
+            $l10nStatus = $this->l->t($status = 'unknown');
+            $listAddress = preg_replace('/\./', '@', $value, 1);
+            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($value));
           }
+          $configAnchor = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
         }
         return '<div class="cell-wrapper flex-container flex-center">
   <span class="list-id status-' . $status . '">
-    <span class="list-label">' . $listAddress . '</span>
+    <span class="list-label">' . $configAnchor . '</span>
     <span class="list-status">' . $l10nStatus . '</span>
   </span>
   <span class="list-id status-' . $status . ' dropdown-container dropdown-no-hover">
@@ -690,22 +710,24 @@ __EOT__;
             ' . $this->l->t('create') . '
           </a>
         </li>
-        <li class="list-action-manage"
+        <li class="list-action-manage tooltip-auto"
             title="' . $this->toolTipsService['projects:mailinglist:manage'] . '"
           >
-          <a href="#">
+          <a href="' . $configUrl . '" target="' . md5($listAddress) . '">
             <img alt="" src="">
             ' . $this->l->t('manage') . '
           </a>
         </li>
-        <li class="list-action-close"
+        <li class="list-action-close tooltip-auto"
+            title="' . $this->toolTipsService['projects:mailinglist:close'] . '"
         >
           <a href="#">
             <img alt="" src="">
             ' . $this->l->t('close') . '
           </a>
         </li>
-        <li class="list-action-delete"
+        <li class="list-action-delete tooltip-auto"
+            title="' . $this->toolTipsService['projects:mailinglist:delete'] . '"
         >
           <a href="#">
             <img alt="" src="">
@@ -719,7 +741,7 @@ __EOT__;
 ';
       }
     ];
-    $this->addSlug('mailing_list_id', $opts['fdd']['mailing_list_id']);
+    $this->addSlug('mailing-list-id', $opts['fdd']['mailing_list_id']);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
@@ -772,6 +794,7 @@ __EOT__;
             'project_id' => $projectId,
             'projectId' => $projectId,
           ];
+          $value = preg_replace('/,(\S)/', ', $1', $value);
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
           $tooltip = Util::htmlEscape($value);

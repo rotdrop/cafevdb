@@ -176,7 +176,7 @@ class ConfigService
   ];
   const MAILING_LIST_CONFIG = [
     'domain' => 'mailingListEmailDomain',
-    'config' => 'mailingListWebPages',
+    'web' => 'mailingListWebPages',
     'owner' => 'mailingListDefaultOwner',
     'moderator' => 'mailingListDefaultModerator',
   ];
