@@ -841,8 +841,6 @@ class ConfigService
     if (method_exists($this->l10NFactory, 'getLanguages')) {
       $cloudLanguages = $this->l10NFactory->getLanguages();
 
-      $this->logInfo('cloud langs ' . print_r($cloudLanguages, true));
-
       $otherLanguages = array_column($cloudLanguages['otherLanguages'], 'name', 'code');
       $commonLanguages = array_column($cloudLanguages['commonLanguages'], 'name', 'code');
       $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
@@ -860,8 +858,6 @@ class ConfigService
         $result[$language] .= ' (' . $language . ')';
       }
     }
-
-    $this->logInfo('result langs ' . print_r($result, true));
 
     return $result;
   }
