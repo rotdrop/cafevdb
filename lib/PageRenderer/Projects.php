@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -61,6 +62,9 @@ class Projects extends PMETableViewBase
 
   /** @var ImagesService */
   private $imagesService;
+
+  /** @var MailingListsService */
+  private $listsService;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -104,6 +108,7 @@ class Projects extends PMETableViewBase
     , ProjectService $projectService
     , EventsService $eventsService
     , ImagesService $imagesService
+    , MailingListsService $listsService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
@@ -113,6 +118,7 @@ class Projects extends PMETableViewBase
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->imagesService = $imagesService;
+    $this->listsService = $listsService;
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;
@@ -635,6 +641,85 @@ __EOT__;
     " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
         'default' => 0,
       ]);
+
+    $opts['fdd']['mailing_list_id'] = [
+      'name'    => $this->l->t('Mailing List'),
+      'select|AP' => 'C',
+      'values2|AP' => [ 1 => $this->l->t('create') ],
+      'select'  => 'T',
+      'sort'    => true,
+      'align'   => 'right',
+      'default' => 1,
+      'display|LFD'  => [
+        'popup' => 'data',
+        'prefix' => '<div class="cell-wrapper">',
+        'postfix' => '</div>'
+      ],
+      'tooltip|AP' => $this->toolTipsService['projects:mailinglist:create'],
+      'tooltip' => $this->toolTipsService['projects:mailinglist'],
+      'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
+        $projectId = $recordId['id'];
+        if (empty($value)) {
+          $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
+          $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
+          $l10nStatus = $this->l->t($status = 'unset');
+        } else {
+          // fetch the basic list-info from the lists-server
+          $listInfo = $this->listsService->getListInfo($value);
+          $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+          if (empty($this->listsService->getListConfig($value, 'allow_list_posts'))) {
+            $l10nStatus = $this->l->t($status = 'closed');
+          } else {
+            $l10nStatus = $this->l->t($status = 'active');
+          }
+        }
+        return '<div class="cell-wrapper flex-container flex-center">
+  <span class="list-id status-' . $status . '">
+    <span class="list-label">' . $listAddress . '</span>
+    <span class="list-status">' . $l10nStatus . '</span>
+  </span>
+  <span class="list-id status-' . $status . ' dropdown-container dropdown-no-hover">
+    <button class="menu-title action-menu-toggle">...</button>
+    <nav class="mailing-list-dropdown dropdown-content dropdown-align-right">
+      <ul>
+        <li class="list-action-create tooltip-auto"
+            title="' . $this->toolTipsService['projects:mailinglist:create'] . '"
+        >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('create') . '
+          </a>
+        </li>
+        <li class="list-action-manage"
+            title="' . $this->toolTipsService['projects:mailinglist:manage'] . '"
+          >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('manage') . '
+          </a>
+        </li>
+        <li class="list-action-close"
+        >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('close') . '
+          </a>
+        </li>
+        <li class="list-action-delete"
+        >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('delete') . '
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </span>
+</div>
+';
+      }
+    ];
+    $this->addSlug('mailing_list_id', $opts['fdd']['mailing_list_id']);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',

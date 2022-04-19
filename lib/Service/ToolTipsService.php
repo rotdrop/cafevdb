@@ -584,8 +584,10 @@ All classes of members can be explicitly added to a specific mass-emails through
 in the email form.'),
 
       'mailinglist' => [
-        'webpages' => [
-          'default' => $this->l->t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
+        'domain' => [
+          'default' => $this->l->t('Externally visible domains and configuration web-pages.'),
+          'config' => $this->l->t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
+          'email' => $this->l->t('The email-domain of the mailing lists.'),
         ],
         'restapi' => [
           'default' => $this->l->t('REST API account for interaction with a Mailman3 server. Should be located on the same server or proxied via SSL.'),
@@ -870,6 +872,13 @@ particular includes the pseudo-project for the administative board and
 the members of the registered orchestra association. Non-permanents
 always have per-force the project-year attached to their name,
 permanent "pseudo-projects" don\'t, as it does not make any sense.'),
+
+        'mailinglist' => [
+          'create' => $this->l->t('Create a mailing-list for the project participants. The list is open for posting from members, participants are auto-subscribed if they are accepted as project-participants, the list archives are accessible to members only.'),
+          'manage' => $this->l->t('External link to the list configuration page.'),
+          'close' => $this->l->t('Close the list, i.e. disallow further postings to the list.'),
+          'delete' => $this->l->t('Delete the list and all of its archived messages.'),
+        ],
       ],
 
       'project-actions' => $this->l->t('Pull-down menu with entries to move on
