@@ -29,11 +29,14 @@ const installActionMenuHandlers = function($container) {
   $container.on('click', '.dropdown-container.dropdown-no-hover', function(event) {
     const $this = $(this);
     $this.toggleClass('dropdown-shown');
-    return false;
+    if ($(event.target).is('button.action-menu-toggle')) {
+      return false;
+    }
   });
 
   $container.on('click', function(event) {
-    if (!$(event.target).is('.dropdown-container.dropdown-no-hover')) {
+    const $container = $(event.target).closest('.dropdown-container.dropdown-no-hover');
+    if ($container.length === 0) {
       $('.dropdown-container.dropdown-no-hover').removeClass('dropdown-shown');
     }
   });
