@@ -49,6 +49,8 @@
 
   #emailformdialog {
 
+    @import 'flex.scss';
+
     padding:0;
     border-top-right-radius:0;
     border-top-left-radius:0;
@@ -439,8 +441,17 @@
             }
           } /* td.stored-messages-storage */
 
-          .stored-messages-choose .chosen-container {
-            width:20em !important;
+          .stored-messages-choose {
+            .chosen-container {
+              flex-shrink:10;
+              flex-basis:100%;
+              min-width:10px; /* in order to have something left ... */
+              width:0!important;
+              &.chosen-with-drop {
+                flex-grow:10;
+                flex-shrink:0;
+              }
+            }
           }
 
           .chosen-container .chosen-default {
@@ -481,6 +492,7 @@
             }
 
             .flex-container {
+              width:100%;
               flex-wrap: nowrap;
               justify-content:space-between;
               flex-direction:row;
@@ -896,6 +908,22 @@ div#cafevdb-email-preview {
     @import 'sanitize.css/sanitize';
     @import '@csstools/normalize.css/normalize';
     /*@import 'normalize.css/normalize';*/
+
+    blockquote {
+      display: block;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      margin-left: 40px;
+      margin-right: 40px;
+      &[cite^="mid:"] {
+        border-left:2px solid blue;
+        margin-left:0;
+        padding-left:0.5em;
+        blockquote[cite^="mid:"] {
+          border-left:2px solid lightgrey;
+        }
+      }
+    }
 
     .flex-container {
       display:flex;
