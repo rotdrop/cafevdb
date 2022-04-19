@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { globalState, $, appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 // import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
@@ -35,6 +35,7 @@ import * as Dialogs from './dialogs.js';
 import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.js';
 import pmeExportMenu from './pme-export.js';
 import stopEnterSubmit from './stop-enter-submit.js';
+import actionMenuHandlers from './action-menu.js';
 
 const documentReady = function() {
 
@@ -90,8 +91,10 @@ const documentReady = function() {
    * insert another div-container inside #app-content.
    *
    */
-  const content = $('#content.app-cafevdb');
+  const content = $('#content.app-' + appName);
   // const appInnerContent = $('#app-inner-content');
+
+  actionMenuHandlers(content);
 
   // Display the overview-page for the given project.
   content.on(
