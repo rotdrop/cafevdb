@@ -734,6 +734,15 @@ __EOT__;
             ' . $this->l->t('manage') . '
           </a>
         </li>
+        <li class="list-action list-action-subscribe tooltip-auto"
+            data-operation="subscribe"
+            title="' . $this->toolTipsService['projects:mailinglist:subscribe'] . '"
+        >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('subscribe') . '
+          </a>
+        </li>
         <li class="list-action list-action-close tooltip-auto"
             data-operation="close"
             title="' . $this->toolTipsService['projects:mailinglist:close'] . '"
@@ -752,7 +761,7 @@ __EOT__;
             ' . $this->l->t('reopen') . '
           </a>
         </li>
-        <li class="list-action list-action-delete tooltip-auto"
+        <li class="list-action list-action-delete expert-mode-only tooltip-auto"
             data-operation="delete"
             title="' . $this->toolTipsService['projects:mailinglist:delete'] . '"
         >

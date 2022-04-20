@@ -1688,11 +1688,15 @@ Whatever.',
       $listsService->setListConfig($listId, $configuration);
       $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
       if (!empty($defaultOwner)) {
-        $listsService->subscribe($listId, email: $defaultOwner, role: 'owner');
+        if (empty($listsService->getSubscription($listId, $defaultOwner, MailingListsService::ROLE_OWNER))) {
+          $listsService->subscribe($listId, email: $defaultOwner, role: MailingListsService::ROLE_OWNER);
+        }
       }
       $defaultModerator = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']);
       if (!empty($defaultModerator)) {
-        $listsService->subscribe($listId, email: $defaultModerator, role: 'moderator');
+        if (empty($listsService->getSubscription($listId, $defaultModerator, MailingListsService::ROLE_MODERATOR))) {
+          $listsService->subscribe($listId, email: $defaultModerator, role: MailingListsService::ROLE_MODERATOR);
+        }
       }
 
       // install the list templates ...

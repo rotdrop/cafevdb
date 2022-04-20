@@ -46,6 +46,12 @@ class ProjectsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const LIST_OPERATION_CREATE = 'create';
+  const LIST_OPERATION_SUBSCRIBE = 'subscribe';
+  const LIST_OPERATION_CLOSE = 'close';
+  const LIST_OPERATION_REOPEN = 'reopen';
+  const LIST_OPERATION_DELETE = 'delete';
+
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
 
@@ -227,10 +233,10 @@ class ProjectsController extends Controller {
    *
    * @param string $operation One of create, close, delete
    */
-  public function mailingLists(string $operation, int $projectId)
+  public function mailingLists(string $operation, int $projectId, bool $force = false)
   {
     switch ($operation) {
-      case 'create':
+      case self::LIST_OPERATION_CREATE:
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
         $listInfo = $projectService->createProjectMailingList($projectId);
@@ -247,8 +253,8 @@ class ProjectsController extends Controller {
         $listInfo['l10nStatus'] = $l10nStatus;
         return self::dataResponse($listInfo);
 
-      case 'reopen':
-      case 'close':
+      case self::LIST_OPERATION_REOPEN:
+      case self::LIST_OPERATION_CLOSE:
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
         /** @var Entities\Project $project */
@@ -269,12 +275,18 @@ class ProjectsController extends Controller {
         $listInfo['l10nStatus'] = $l10nStatus;
         return self::dataResponse($listInfo);
 
-      case 'delete':
+      case self::LIST_OPERATION_DELETE:
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
         /** @var Entities\Project $project */
         $project = $projectService->findById($projectId);
         $listId = $project->getMailingListId();
+        if (!$force) {
+          return new DataResponse([
+              'status' => 'unconfirmed',
+              'feedback' => $this->l->t('Really delete the mailing list "%1$s" for the project "%2$s"?', [ $listId, $project->getName() ]),
+          ]);
+        }
         $projectService->deleteProjectMailingList($project);
         return self::dataResponse([
           'message' => $this->l->t('Successfully deleted "%s".', $listId),
@@ -282,6 +294,75 @@ class ProjectsController extends Controller {
           'fqdn_listname' => preg_replace('/\./', '@', $listId, 1),
           'status' => 'unset',
           'l10nStatus' => $this->l->t('unset'),
+        ]);
+
+      case self::LIST_OPERATION_SUBSCRIBE:
+        /** @var MailingListsService $listsService */
+        $listsService = $this->di(MailingListsService::class);
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        /** @var Entities\Project $project */
+        $project = $projectService->findById($projectId);
+        $listId = $project->getMailingListId();
+
+        $failures = [];
+        $newCount = 0;
+        $keptCount = 0;
+        $noEmailCount = 0;
+        $notConfirmedCount = 0;
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($project->getParticipants() as $participant) {
+          if (!$participant->getRegistration()) {
+            ++$notConfirmedCount;
+            continue; // only subscribe confirmed participants
+          }
+          $email = $participant->getMusician()->getEmail();
+          if (empty($email)) {
+            ++$noEmailCount;
+            continue; // after all, it is a mailing list ...
+          }
+          $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+          try {
+            if (empty($listsService->getSubscription($listId, $email))) {
+              $listsService->subscribe($listId, email: $email, displayName: $displayName);
+              ++$newCount;
+            } else {
+              ++$keptCount;
+            }
+          } catch (\Throwable $t) {
+            $failures[] = [
+              'email' => $email,
+              'displayName' => $displayName,
+              'message' => $t->getMessage(),
+            ];
+          }
+        }
+
+        $messages = [
+          $this->l->t('%1$d new subscriptions, %2$d existing subscriptions have been kept.', [ $newCount, $keptCount ]),
+        ];
+        if ($notConfirmedCount > 0) {
+          $messages[] = $this->l->n(
+            '%n person has not been subscribed because of unconfirmed participation.',
+            '%n persons have not been subscribed because their participation is not confirmed.',
+            $notConfirmedCount
+          );
+        }
+        if ($noEmailCount > 0) {
+          $messages[] = $this->l->t('%d persons have not been subscribed because we do not have their email-address.', $noEmailCount);
+        }
+        if (count($failures) > 0) {
+          $messages[] = $this->l->t('%d subscription requests have failed.', [ count($failures) ]);
+        }
+        foreach ($failures as $failure) {
+          $messages[] = $this->l->t('Error for "%1$s <%2$s>": %3$s', [
+            $failure['displayName'], $failure['email'], $failure['message'],
+          ]);
+        }
+        return self::dataResponse([
+          'message' => $messages,
+          'listId' => $listId,
+          'status' => 'unchanged',
         ]);
     }
     return self::grumble($this->l->t('Unknown Request: "%s".', $operation));

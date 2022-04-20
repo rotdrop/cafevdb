@@ -184,7 +184,7 @@
           .list-status {
             color:red;
           }
-          .list-action-manage, .list-action-close, .list-action-delete, .list-action-reopen {
+          .list-action-manage, .list-action-close, .list-action-delete, .list-action-reopen, .list-action-subscribe {
             display:none;
           }
         }
@@ -192,7 +192,7 @@
           .list-status {
             color:red;
           }
-          .list-action-create, .list-action-close {
+          .list-action-create, .list-action-close, .list-action-subscribe {
             display:none;
           }
         }
@@ -210,6 +210,20 @@
   } /* form.pme-form */
 
 } /* page container */
+
+body:not(.cafevdb-expert-mode) {
+  #pme-table-container.projects {
+    form.pme-form {
+      td {
+        .list-id {
+          .expert-mode-only {
+            display:none !important;
+          }
+        }
+      }
+    }
+  }
+}
 
 /*******************************************************************************
  *

@@ -794,6 +794,14 @@ class ProjectParticipants extends PMETableViewBase
        'tooltip|CAP' => $this->l->t('Check in order to mark the section leader.'),
       ]);
 
+    // @todo
+    // Replace by registration status
+    // - preliminary
+    //   just entered in the instrumentation table with or without communication
+    // - application
+    //   written and potentially signed application
+    // - accepted
+    //   participant has been accepted by the organizers and receives an email
     $opts['fdd']['registration'] = [
       'name|LF' => ' &#10004;',
       'name|CAPDV' => $this->l->t("Registration"),
