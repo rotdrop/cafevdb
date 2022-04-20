@@ -1644,6 +1644,119 @@ Whatever.',
     return true;
   }
 
+  public function createProjectMailingList($projectOrId)
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    $listId = $project->getMailingListId();
+    if (empty($listId)) {
+      $listId = strtolower($project->getName());
+      $listId .= '.' . $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['domain']);
+    }
+    $new = false;
+    if (empty($listsService->getListInfo($listId))) {
+      $listsService->createList($listId);
+      $new = true;
+    }
+    try {
+      $listInfo = $listsService->getListInfo($listId);
+      if (empty($listInfo)) {
+        throw new \RuntimeException(
+          $this->l->t('Unable to create project-mailing list "%1$s" for project "%1$s".',
+                      [ $listId, $project->getName() ]));
+      }
+      $displayName = $project->getName();
+      $tag = $this->getConfigValue('bulkEmailSubjectTag');
+      if (!empty($tag)) {
+        $displayName = $tag . '-' . $displayName;
+      }
+      $configuration = [
+        'display_name' => $displayName,
+        'advertised' => 'False',
+        'archive_policy' => 'private',
+        'subscription_policy' => 'moderate',
+        'preferred_language' => $this->appL10n()->getLanguageCode(),
+      ];
+      $listsService->setListConfig($listId, $configuration);
+      $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
+      if (!empty($defaultOwner)) {
+        $listsService->subscribe($listId, email: $defaultOwner, role: 'owner');
+      }
+      $defaultModerator = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']);
+      if (!empty($defaultModerator)) {
+        $listsService->subscribe($listId, email: $defaultModerator, role: 'moderator');
+      }
+
+      // install the list templates ...
+      $templateFolderPath = $listsService->templateFolderPath($this->l->t(MailingListsService::TYPE_PROJECTS));
+      $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
+
+      /** @var \OCP\Files\Folder $node */
+      foreach ($this->userStorage->getFolder($templateFolderPath)->getDirectoryListing() as $node) {
+        if ($node->getType() != \OCP\Files\FileInfo::TYPE_FILE) {
+          continue;
+        }
+        $mimeType = $node->getMimetype();
+        if ($mimeType != 'text/plain' && $mimeType != 'text/markdown') {
+          continue;
+        }
+        $nodeBase = baseName($node->getPath());
+        if (!str_starts_with($nodeBase, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+          continue;
+        }
+        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
+        $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
+        $listsService->setMessageTemplate($listId, $template, $templateUri);
+      }
+
+    } catch (\Throwable $t) {
+      if ($new) {
+        try {
+          $listsService->deleteList($listId);
+          $project->setMailingListId(null);
+          $this->flush();
+        } catch (\Throwable $t1) {
+          $this->logException($t1, 'Failure to clean-up failed list generation');
+        }
+      }
+      throw new \Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
+    }
+    $project->setMailingListId($listId);
+    $this->flush();
+
+    return $listInfo;
+  }
+
+  public function deleteProjectMailingList($projectOrId)
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+
+    $listId = $project->getMailingListId();
+    if (empty($listId)) {
+      return;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    $listsService->deleteList($listId);
+    $project->setMailingListId(null);
+    $this->flush();
+  }
+
   /**
    * Create the infra-structure to the given project. The function
    * assumes that the infrastructure does not yet exist and will
@@ -1692,6 +1805,15 @@ Whatever.',
              $this->deleteProjectWebPage($project->getId(), $page);
            }
         }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          $this->createProjectMailingList($project);
+          return $project->getMailingListId();
+        },
+        function($listId) use ($project) {
+          $this->deleteProjectMailingList($project);
+        },
       ));
 
     try {
@@ -1792,14 +1914,14 @@ Whatever.',
         }))
       ->register(new GenericUndoable(
         function() use ($project) {
-        try {
-          $pageVersion = $this->deleteProjectWikiPage($project);
-        } catch (\Throwable $t) {
-          $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
-          $pageVersion = null;
-        }
-        $this->generateWikiOverview([ $projectId ]);
-        return $pageVersion;
+          try {
+            $pageVersion = $this->deleteProjectWikiPage($project);
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
+            $pageVersion = null;
+          }
+          $this->generateWikiOverview([ $projectId ]);
+          return $pageVersion;
         },
         function($pageVersion) use ($project) {
           $this->restoreProjectWikiPage($project, $pageVersion);

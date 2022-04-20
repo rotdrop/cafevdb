@@ -678,10 +678,10 @@ __EOT__;
             // fetch the basic list-info from the lists-server
             $listInfo = $this->listsService->getListInfo($value);
             $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-            if (empty($this->listsService->getListConfig($value, 'allow_list_posts'))) {
-              $l10nStatus = $this->l->t($status = 'closed');
-            } else {
+            if (empty($this->listsService->getListConfig($value, 'emergency'))) {
               $l10nStatus = $this->l->t($status = 'active');
+            } else {
+              $l10nStatus = $this->l->t($status = 'closed');
             }
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
             $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
@@ -692,17 +692,20 @@ __EOT__;
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($value));
           }
           $configAnchor = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
+        } else {
+          $configAnchor = $listAddress;
         }
         return '<div class="cell-wrapper flex-container flex-center">
-  <span class="list-id status-' . $status . '">
+  <span class="list-id display status-' . $status . '" data-status="' . $status . '">
     <span class="list-label">' . $configAnchor . '</span>
     <span class="list-status">' . $l10nStatus . '</span>
   </span>
-  <span class="list-id status-' . $status . ' dropdown-container dropdown-no-hover">
+  <span class="list-id actions status-' . $status . ' dropdown-container dropdown-no-hover" data-status="' . $status . '">
     <button class="menu-title action-menu-toggle">...</button>
     <nav class="mailing-list-dropdown dropdown-content dropdown-align-right">
       <ul>
-        <li class="list-action-create tooltip-auto"
+        <li class="list-action list-action-create tooltip-auto"
+            data-operation="create"
             title="' . $this->toolTipsService['projects:mailinglist:create'] . '"
         >
           <a href="#">
@@ -710,7 +713,7 @@ __EOT__;
             ' . $this->l->t('create') . '
           </a>
         </li>
-        <li class="list-action-manage tooltip-auto"
+        <li class="list-action list-action-manage tooltip-auto"
             title="' . $this->toolTipsService['projects:mailinglist:manage'] . '"
           >
           <a href="' . $configUrl . '" target="' . md5($listAddress) . '">
@@ -718,7 +721,8 @@ __EOT__;
             ' . $this->l->t('manage') . '
           </a>
         </li>
-        <li class="list-action-close tooltip-auto"
+        <li class="list-action list-action-close tooltip-auto"
+            data-operation="close"
             title="' . $this->toolTipsService['projects:mailinglist:close'] . '"
         >
           <a href="#">
@@ -726,7 +730,17 @@ __EOT__;
             ' . $this->l->t('close') . '
           </a>
         </li>
-        <li class="list-action-delete tooltip-auto"
+        <li class="list-action list-action-reopen tooltip-auto"
+            data-operation="reopen"
+            title="' . $this->toolTipsService['projects:mailinglist:reopen'] . '"
+        >
+          <a href="#">
+            <img alt="" src="">
+            ' . $this->l->t('reopen') . '
+          </a>
+        </li>
+        <li class="list-action list-action-delete tooltip-auto"
+            data-operation="delete"
             title="' . $this->toolTipsService['projects:mailinglist:delete'] . '"
         >
           <a href="#">

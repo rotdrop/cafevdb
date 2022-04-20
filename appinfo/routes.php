@@ -407,6 +407,14 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Project mailing lists
+     */
+    [
+      'name' => 'projects#mailing_lists',
+      'url' => '/projects/mailing-lists/{operation}',
+      'verb' => 'POST',
+    ],
+    /**
      * Musicians
      */
     [

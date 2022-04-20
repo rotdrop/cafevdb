@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +31,8 @@ use OCP\ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -218,6 +220,71 @@ class ProjectsController extends Controller {
     $voicesSelectOptions = PageNavigation::selectOptions($voicesSelectArray, $voices);
 
     return self::dataResponse([ 'voices' => $voicesSelectOptions ]);
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * @param string $operation One of create, close, delete
+   */
+  public function mailingLists(string $operation, int $projectId)
+  {
+    switch ($operation) {
+      case 'create':
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        $listInfo = $projectService->createProjectMailingList($projectId);
+        $listId = $listInfo['list_id'];
+        /** @var MailingListsService $listsService */
+        $listsService = $this->di(MailingListsService::class);
+        if (empty($listsService->getListConfig($listId, 'allow_list_posts'))) {
+          $l10nStatus = $this->l->t($status = 'closed');
+        } else {
+          $l10nStatus = $this->l->t($status = 'active');
+        }
+        $listInfo['message'] = $this->l->t('Mailing-list "%s" successfully created.', $listInfo['fqdn_listname']);
+        $listInfo['status'] = $status;
+        $listInfo['l10nStatus'] = $l10nStatus;
+        return self::dataResponse($listInfo);
+
+      case 'reopen':
+      case 'close':
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        /** @var Entities\Project $project */
+        $project = $projectService->findById($projectId);
+        $listId = $project->getMailingListId();
+        /** @var MailingListsService $listsService */
+        $listsService = $this->di(MailingListsService::class);
+        $listsService->setListConfig($listId, 'emergency', $operation === 'close');
+        $listInfo = $listsService->getListInfo($listId);
+        if ($operation == 'close') {
+          $l10nStatus = $this->l->t($status = 'closed');
+          $listInfo['message'] = $this->l->t('Successfully closed "%s".', $listId);
+        } else {
+          $l10nStatus = $this->l->t($status = 'active');
+          $listInfo['message'] = $this->l->t('Successfully re-opened "%s".', $listId);
+        }
+        $listInfo['status'] = $status;
+        $listInfo['l10nStatus'] = $l10nStatus;
+        return self::dataResponse($listInfo);
+
+      case 'delete':
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        /** @var Entities\Project $project */
+        $project = $projectService->findById($projectId);
+        $listId = $project->getMailingListId();
+        $projectService->deleteProjectMailingList($project);
+        return self::dataResponse([
+          'message' => $this->l->t('Successfully deleted "%s".', $listId),
+          'list_id' => $listId,
+          'fqdn_listname' => preg_replace('/\./', '@', $listId, 1),
+          'status' => 'unset',
+          'l10nStatus' => $this->l->t('unset'),
+        ]);
+    }
+    return self::grumble($this->l->t('Unknown Request: "%s".', $operation));
   }
 
 }
