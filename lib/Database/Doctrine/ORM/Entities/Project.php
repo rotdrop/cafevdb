@@ -135,6 +135,13 @@ class Project implements \ArrayAccess
    */
   private $calendarEvents;
 
+  /**
+   * @var SentEmail
+   *
+   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="project")
+   */
+  private $sentEmail;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
@@ -145,6 +152,7 @@ class Project implements \ArrayAccess
     $this->participantInstruments = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->sentEmail = new ArrayCollection();
   }
 
   public function __clone()
@@ -412,6 +420,30 @@ class Project implements \ArrayAccess
   public function getPayments():Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * Set sentEmail.
+   *
+   * @param Collection $sentEmail
+   *
+   * @return Project
+   */
+  public function setSentEmail(Collection $sentEmail):Project
+  {
+    $this->sentEmail = $sentEmail;
+
+    return $this;
+  }
+
+  /**
+   * Get sentEmail.
+   *
+   * @return ArrayCollection
+   */
+  public function getSentEmail():Collection
+  {
+    return $this->sentEmail;
   }
 
   /**

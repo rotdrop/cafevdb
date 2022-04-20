@@ -885,9 +885,16 @@ class RecipientsFilter
     return $eMails;
   }
 
+  /** Set the given array of musician ids as selected recipients */
+  public function setSelectedRecipients(array $recipients)
+  {
+    $this->emailRecs = $recipients;
+    $this->cgiData['selectedRecipients'] = $recipients;
+  }
+
   /**
-   * Return true if the list of recipients is frozen, i.e. restricted to the
-   * pre-selected recipients.
+   * Return true if the list of recipients is frozen,
+   * i.e. restricted to the pre-selected recipients.
    */
   public function frozenRecipients()
   {

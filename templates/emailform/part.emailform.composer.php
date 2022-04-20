@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -46,20 +46,29 @@ foreach ($eventAttachmentOptions as $option) {
   <?php echo PageNavigation::persistentCGI('emailComposer', $composerFormData); ?>
   <table class="cafevdb-email-composition-form">
     <tr class="stored-messages">
-     <!-- <td class="caption stored-messages"><?php echo $l->t("Drafts"); ?>, <?php echo $l->t('Templates')?></td> -->
       <td colspan="2" class="stored-messages-choose stored-messages">
-        <label notitle="<?php echo $toolTips['emailform:storage:messages:select']; ?>">
+        <div class="flex-container flex-center flex-justify-full">
           <select size="<?php echo
-                              count($storedEmails['drafts']) +
-                              count($storedEmails['templates']); ?>"
+                        count($storedEmails['drafts']) +
+                        count($storedEmails['templates']); ?>"
                   class="stored-messages-selector"
                   title="<?php echo $toolTips['emailform:storage:messages:select']; ?>"
                   data-placeholder="<?php echo $l->t("Select draft or template"); ?>"
                   name="emailComposer[storedMessagesSelector]"
-                  id="cafevdb-stored-messages-selector">
+                  id="cafevdb-stored-messages-selector"
+          >
             <?php echo $this->inc('emailform/part.stored-email-options', []); ?>
           </select>
-        </label>
+          <select class="sent-messages-selector"
+                  title="<?php echo $toolTips['emailform:storage:sent:select']; ?>"
+                  data-placeholder="<?php p($l->t('Reply To')); ?>"
+                  name="emailComposer[sentMessagesSelector]"
+                  id="cafevdb-sent-messages-selector"
+          >
+            <option></option>
+            <?php echo $this->inc('emailform/part.sent-email-options', []); ?>
+          </select>
+        </div>
       </td>
       <td class="stored-messages-storage stored-messages">
         <input size="20"

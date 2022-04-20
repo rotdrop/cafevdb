@@ -100,7 +100,12 @@ trait FindLikeTrait
    */
   public function findOneLike($criteria)
   {
-    return $this->findLike($criteria, null, 1, null);
+    $results = $this->findLike($criteria, null, 1, null);
+    if (count($results) == 1) {
+      return reset($results);
+    } else {
+      return null;
+    }
   }
 
   /**

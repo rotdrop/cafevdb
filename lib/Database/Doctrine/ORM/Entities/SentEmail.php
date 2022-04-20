@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * SentEmail
  *
  * @ORM\Table(name="SentEmails")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository")
  */
 class SentEmail
 {
@@ -50,6 +50,13 @@ class SentEmail
    * @ORM\Id
    */
   private $messageId;
+
+  /**
+   * @var Project
+   *
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="sentEmail", fetch="EXTRA_LAZY")
+   */
+  private $project;
 
   /**
    * @var string
@@ -426,7 +433,7 @@ class SentEmail
   /**
    * Returns referencing.
    *
-   * @return string|null
+   * @return SentEmail|null
    */
   public function getReferencing():?SentEmail
   {
@@ -455,5 +462,29 @@ class SentEmail
   public function getReferencedBy():Collection
   {
     return $this->referencedBy;
+  }
+
+  /**
+   * Sets project.
+   *
+   * @param null|Project $project
+   *
+   * @return SentEmail $this
+   */
+  public function setProject(?Project $project):SentEmail
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Returns project.
+   *
+   * @return Project
+   */
+  public function getProject():?Project
+  {
+    return $this->project;
   }
 }
