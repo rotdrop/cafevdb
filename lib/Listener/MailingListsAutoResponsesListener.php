@@ -37,6 +37,9 @@ use OCP\IUserSession;
 use OCP\Files\IRootFolder;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -173,14 +176,23 @@ class MailingListsAutoResponsesListener implements IEventListener
           continue;
         }
         if ($listType == MailingListsService::TYPE_PROJECTS) {
-          $this->logError('Mailing-list type ' . $listType . ' not yet handled');
-          continue;
+          if (empty($projectsRepository)) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $this->appContainer->get(EntityManager::class);
+
+            /** @var Repositories\ProjectsRepository $projectsRepository */
+            $projectsRepository = $entityManager->getRepository(Entities\Project::class);
+
+            $projectLists = $projectsRepository->fetchMailingListIds();
+          }
+          $lists = $projectLists;
+        } else {
+          $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
         }
+
         $template = pathinfo($nodeBase, PATHINFO_FILENAME);
-        $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
 
         try {
-
           if ($key == 'remove') {
             foreach ($lists as $list) {
               $listsService->setMessageTemplate($list, $template, null);
