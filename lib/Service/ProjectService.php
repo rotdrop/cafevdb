@@ -1946,6 +1946,19 @@ Whatever.',
             }
           }
         }));
+    if ($softDelete && !empty($listId = $project->getMailingListId())) {
+      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+        function() use ($listId) {
+          /** @var MailingListsService $listsService */
+          $listService = $this->di(MailingListsService::class);
+          $listsService->setListConfig($listId, 'emergency', true);
+        },
+        function() use ($listId) {
+          /** @var MailingListsService $listsService */
+          $listService = $this->di(MailingListsService::class);
+          $listsService->setListConfig($listId, 'emergency', false);
+        }));
+    }
 
     $this->entityManager->beginTransaction();
     try {
@@ -2010,6 +2023,14 @@ Whatever.',
                     [ $project['name'], $project['id'] ]),
         $t->getCode(),
         $t);
+    }
+
+    if (!$softDelete) {
+      try {
+        $this->deleteProjectMailingList($project);
+      } catch (\Throwable $t) {
+        $this->logException($t, 'Removing the mailing list of the project failed.');
+      }
     }
 
     try {
