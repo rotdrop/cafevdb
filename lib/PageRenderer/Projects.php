@@ -231,6 +231,19 @@ class Projects extends PMETableViewBase
       'sort'     => true,
     ];
 
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
+      switch ($table) {
+      case self::PROJECT_PARTICIPANT_FIELDS_TABLE:
+        $tweakedJoinInfo = $joinInfo;
+        unset($tweakedJoinInfo['identifier']['project_id']);
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($tweakedJoinInfo, 'name');
+        break;
+      default:
+        break;
+      }
+    });
+
     $joinTables = $this->defineJoinStructure($opts);
 
     $currentYear = date('Y');
@@ -793,10 +806,10 @@ __EOT__;
         'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', 'tooltip-top', ], ],
         'options'  => 'LFCPVD',
         'input'    => 'R',
-        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.name ASC)',
+        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.l10n_name ASC)',
         'values' => [
           'description' => [
-            'columns' => '$table.name',
+            'columns' => '$table.l10n_name',
           ],
         ],
         'php|VDC'  => function($value, $op, $field, $row, $recordId, $pme) {
