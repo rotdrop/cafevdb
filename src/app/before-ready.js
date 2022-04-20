@@ -133,7 +133,7 @@ const documentReady = function() {
   console.debug('trigger loaded');
   $(document).trigger('cafevdb:donecafevdbjs');
 
-  if (globalState.expertMode) {
+  if (globalState.expertMode === 1 || (globalState.expertMode === 'on') {
     $('body').addClass('cafevdb-expert-mode');
   }
 
