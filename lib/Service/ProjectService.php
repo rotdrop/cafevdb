@@ -2131,6 +2131,7 @@ Whatever.',
   {
     // This may be inside a transaction where the project-entity
     // already reflects the new state, so rather rely on the data.
+    /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
 
@@ -2192,6 +2193,29 @@ Whatever.',
           );
         }
       ));
+
+    if (!empty($listId = $project->getMailingListId())) {
+      /** @var MailingListsService $listsService */
+      $listsService = $this->di(MailingListsService::class);
+      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $displayName = $newProject['name'];
+          $tag = $this->getConfigValue('bulkEmailSubjectTag');
+          if (!empty($tag)) {
+            $displayName = $tag . '-' . $displayName;
+          }
+          $listsService->renameList($listId, displayName: $displayName);
+        },
+        function() use ($oldProject, $newProject) {
+          $displayName = $oldProject['name'];
+          $tag = $this->getConfigValue('bulkEmailSubjectTag');
+          if (!empty($tag)) {
+            $displayName = $tag . '-' . $displayName;
+          }
+          $listsService->renameList($listId, displayName: $displayName);
+        }
+      ));
+    }
 
     $this->entityManager->beginTransaction();
     try {
