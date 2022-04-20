@@ -279,6 +279,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set mailingListId.
+   *
+   * @param null|string $mailingListId
+   *
+   * @return Project
+   */
+  public function setMailingListId(?string $mailingListId):Project
+  {
+    $this->mailingListId = $mailingListId;
+
+    return $this;
+  }
+
+  /**
+   * Get mailingListId.
+   *
+   * @return EnumProjectTemporalMailingListId
+   */
+  public function getMailingListId():?string
+  {
+    return $this->mailingListId;
+  }
+
+  /**
    * Set webPages.
    *
    * @param ArrayCollection $webPages
