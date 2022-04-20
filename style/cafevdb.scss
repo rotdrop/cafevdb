@@ -723,7 +723,7 @@ body.cafevdb-modalizer {
         float:none!important;
         label, label.menu-item,
         a, a.menu-item,
-        a:visited, a.menu-item:visited {
+        a:visited, a.menu-item:visited, a:link, a.menu-item:link {
           color: var(--color-main-text);
           padding: 10px 12px;
           font-weight: bold;
