@@ -122,6 +122,16 @@ class MailingListsService
     ];
   }
 
+  public function isConfigured():bool
+  {
+    foreach (ConfigService::MAILING_LIST_REST_CONFIG as $configKey) {
+      if (empty($this->getConfigValue($configKey))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Obtain the list configuration, this is rather for testing in
    * order to check the basic connectivity.
@@ -155,9 +165,14 @@ class MailingListsService
     return $response;
   }
 
-  public function setListConfig(string $fqdnName, $config, ?string $value = null)
+  public function setListConfig(string $fqdnName, $config, mixed $value = null)
   {
     if (!is_array($config)) {
+      if ($value === true) {
+        $value = 'True';
+      } else if ($value === false) {
+        $value = 'False';
+      }
       $config = [ $config => $value ];
     }
     $response = $this->restClient->patch(
@@ -169,20 +184,34 @@ class MailingListsService
   }
 
   /** Fetch the brief list-info. */
-  public function getListInfo(string $fqdnName)
+  public function getListInfo(string $fqdnName):?array
   {
-    $response = $this->restClient->get(
-      '/3.1/lists/' . $fqdnName, [
-        'auth' => $this->restAuth,
-      ]);
+    try {
+      $response = $this->restClient->get(
+        '/3.1/lists/' . $fqdnName, [
+          'auth' => $this->restAuth,
+        ]);
+    } catch (\GuzzleHttp\Exception\ClientException $e) {
+      if ($e->getResponse()->getStatusCode() == 404) {
+        return null;
+      }
+      throw $e;
+    }
     return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
   }
 
-  /** Create a non-existing list or no-op if list exists */
-  public function createList(string $fqdnName)
+  /** Create a non-existing list */
+  public function createList(string $fqdnName, string $style = 'private-default')
   {
+    // replace the first dot by @ if not @ is present
+    if (strpos($fqdnName, '@') === false) {
+      $fqdnName[strpos($fqdnName, '.')] = '@';
+    }
     $reponse = $this->restClient->post('/3.1/lists', [
-      'json' => [ 'fqdn_listname' => $fqdnName ],
+      'json' => [
+        'fqdn_listname' => $fqdnName,
+        'style_name' => $style,
+      ],
       'auth' => $this->restAuth,
     ]);
     return true;
