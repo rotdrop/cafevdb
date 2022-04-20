@@ -140,7 +140,7 @@ function updateComposerRecipients($emailForm) {
       }
       // could check whether formElement is indeed 'TO' ...
       const toSpan = $emailForm.find('span.email-recipients');
-      let rcpts = data.requestData.elementData;
+      let rcpts = data.requestData.elementData.TO;
 
       if (rcpts.length === 0) {
         rcpts = toSpan.data('placeholder');
