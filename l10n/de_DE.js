@@ -371,7 +371,7 @@ OC.L10N.register(
     "The year %s has been appended to the project-slug %s." : "Das Jahr %s wurde an den Projekt-\"Slug\" %s angehängt.",
     "A project with the name \"%1$s\" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year." : "Ein Projekt mit dem Namen \"%s\" gibt es bereits für das Jahr %s. Bitte wählen Sie einen anderen Namen oder ein anderes Jahr.",
     "closed" : "geschlossen",
-    "active" : "aktive",
+    "active" : "aktiv",
     "Mailing-list \"%s\" successfully created." : "Fortschrittsstatus \"%s\" wurde erfolgreich gelöscht.",
     "Successfully closed \"%s\"." : "Datei \"%s\" erfolgreich gelöscht.",
     "Successfully re-opened \"%s\"." : "Datei \"%s\" erfolgreich gelöscht.",
