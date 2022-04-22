@@ -31,6 +31,8 @@ use OCP\ILogger;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Events\PostChangeMusicianEmail as HandledEvent;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 /**
  * Listen to renamed and deleted events in order to keep the
@@ -40,6 +42,7 @@ use OCA\CAFEVDB\Events\PostChangeMusicianEmail as HandledEvent;
 class MailingListsEmailChangedListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = HandledEvent::class;
 
@@ -70,8 +73,15 @@ class MailingListsEmailChangedListener implements IEventListener
       return;
     }
 
-    $listId = $configService->getConfigValue('announcementsMailingList');
-    if (empty($listId)) {
+    $this->entityManager = $this->appContainer->get(EntityManager::class);
+    /** @var Repositories\ProjectsRepository $projectsRepository */
+    $projectsRepository = $this->getDatabaseRepository(Repositories\ProjectsRepository::class);
+    $listIds = $projectsRepository->fetchMailingListIds();
+
+    $listIds[] = $configService->getConfigValue('announcementsMailingList');
+    $listIds = array_filter($listIds);
+
+    if (empty($listIds)) {
       return;
     }
 
@@ -86,29 +96,32 @@ class MailingListsEmailChangedListener implements IEventListener
     $displayName = null;
     $subscribeNewEmail = false;
 
-    if (!empty($oldEmail)) {
-      try {
-        $subscription = $listsService->getSubscription($listId, $oldEmail);
-        if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
-          $subscription = $subscription[MailingListsService::ROLE_MEMBER];
-          $subscribeNewEmail = true;
-          $listsService->unsubscribe($listId, $oldEmail);
-          $displayName = $subscription['display_name'];
+    foreach ($listIds as $listId) {
+      if (!empty($oldEmail)) {
+        try {
+          $subscription = $listsService->getSubscription($listId, $oldEmail);
+          if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
+            $subscription = $subscription[MailingListsService::ROLE_MEMBER];
+            $subscribeNewEmail = true;
+            $listsService->unsubscribe($listId, $oldEmail);
+            $displayName = $subscription['display_name'];
+          }
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unsubscribing from old email failed.');
+          continue; // avoid duplicating subscriptions
         }
-      } catch (\Throwable $t) {
-        $this->logException($t, 'Unsubscribing from old email failed.');
-        return; // avoid duplicating subscriptions
+      }
+
+      if ($subscribeNewEmail && !empty($newEmail)) {
+        // subscribe
+        try {
+          $listsService->subscribe($listId, $newEmail, $displayName);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Subscribing to new email failed.');
+        }
       }
     }
 
-    if ($subscribeNewEmail && !empty($newEmail)) {
-      // subscribe
-      try {
-        $listsService->subscribe($listId, $newEmail, $displayName);
-      } catch (\Throwable $t) {
-        $this->logException($t, 'Subscribing to new email failed.');
-      }
-    }
   }
 }
 

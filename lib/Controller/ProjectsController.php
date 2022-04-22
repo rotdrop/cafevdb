@@ -323,12 +323,9 @@ class ProjectsController extends Controller {
           }
           $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
           try {
-            if (empty($listsService->getSubscription($listId, $email))) {
-              $listsService->subscribe($listId, email: $email, displayName: $displayName);
-              ++$newCount;
-            } else {
-              ++$keptCount;
-            }
+            $result = $projectService->ensureMailingListSubscription($participant);
+            $newCount += (int)$result;
+            $keptCount += (int)!$result;
           } catch (\Throwable $t) {
             $failures[] = [
               'email' => $email,

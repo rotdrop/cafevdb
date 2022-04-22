@@ -1762,6 +1762,65 @@ Whatever.',
   }
 
   /**
+   * Subscribe the participant to the mailing list if it is not already
+   * subscribed.
+   *
+   * @return null|boolean
+   * - null if nothing could be done, no email, no list id, no rest service
+   * - true if the musician has newly been added
+   * - false if the musician was already subscribed to the mailing list
+   */
+  public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
+  {
+    $listId = $participant->getProject()->getMailingListId();
+    $email = $participant->getMusician()->getEmail();
+
+    if (empty($listId) || empty($email)) {
+      return null;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+    if (!$listsService->isConfigured()) {
+      return null;
+    }
+
+    if (!empty($listsService->getSubscription($listId, $email))) {
+      return false;
+    }
+
+    $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+
+    $listsService->subscribe($listId, email: $email, displayName: $displayName);
+
+    return true;
+  }
+
+  /**
+   * Unsubscribe the participant from the mailing list if it is subscribed
+   */
+  public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant)
+  {
+    $listId = $participant->getProject()->getMailingListId();
+    $email = $participant->getMusician()->getEmail();
+
+    if (empty($listId) || empty($email)) {
+      return;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    if (!empty($listsService->getSubscription($listId, $email))) {
+      $listsService->unsubscribe($listId, $email);
+    }
+  }
+
+  /**
    * Create the infra-structure to the given project. The function
    * assumes that the infrastructure does not yet exist and will
    * remove any existing parts of the infrastructure on error.
@@ -2362,6 +2421,7 @@ Whatever.',
     }
   }
 
+  /** Delete or disable a project participant. */
   public function deleteProjectParticipant(Entities\ProjectParticipant $participant)
   {
     /** @var Entities\ProjectParticipant $participant */
@@ -2379,6 +2439,8 @@ Whatever.',
       }
       $this->remove($participant, true); // this should be hard-delete
     }
+
+    $this->ensureMailingListUnsubscription($participant);
   }
 
 }
