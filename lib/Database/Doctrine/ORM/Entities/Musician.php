@@ -1218,14 +1218,14 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
     $field = 'userIdSlug';
-    if (isset($this->preUpdateValue[$field])) {
+    if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
       $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
     $field = 'email';
-    if (isset($this->preUpdateValue[$field])) {
+    if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
       $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this, $this->preUpdateValue[$field]));
