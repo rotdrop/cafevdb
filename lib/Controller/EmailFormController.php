@@ -153,7 +153,7 @@ class EmailFormController extends Controller {
       'storedEmails' => $composer->storedEmails(),
       'sentEmails' => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
-      'TO' => $composer->toString(),
+      'TO' => $composer->toStringArray(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
       'mailTag' => $composer->subjectTag(),
@@ -167,19 +167,20 @@ class EmailFormController extends Controller {
       'composerFormData' => $composer->formData(),
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
-      'filterHistory' => $recipientsFilter->filterHistory(),
+      'filterHistory' => $recipientsFilter->filterHistory(), // Session Usage!
       'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
       'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
       'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
       'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
-      'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
+      RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+      RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
       'toolTips' => $this->toolTipsService(),
     ];
 
-    // Close the session
+    // Close the session ONLY AFTER fetching the filter history
     $this->session->close();
 
     $html = (new TemplateResponse(
@@ -363,7 +364,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -377,7 +378,8 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
-          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -393,7 +395,7 @@ class EmailFormController extends Controller {
         foreach ($formElements as $formElement) {
           switch (strtolower($formElement)) {
             case 'to':
-              $elementData[$formElement] = $composer->toString();
+              $elementData[$formElement] = $composer->toStringArray();
               break;
             case 'subjecttag':
               $elementData[$formElement] = $composer->subjectTag();
@@ -434,8 +436,6 @@ class EmailFormController extends Controller {
         $requestData['message'] = $composer->messageText();
         $requestData['subject'] = $composer->subject();
 
-        $this->logInfo('TO STRING ' . $composer->toString());
-
         // Composer template
         $fileAttachments = $composer->fileAttachments();
         $eventAttachments = $composer->eventAttachments();
@@ -454,7 +454,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -579,7 +579,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -592,7 +592,8 @@ class EmailFormController extends Controller {
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
-          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -620,7 +621,8 @@ class EmailFormController extends Controller {
           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
-          'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -783,7 +785,8 @@ class EmailFormController extends Controller {
         'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
         'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
         'frozenRecipients' => $recipientsFilter->frozenRecipients(),
-        'announcementsMailingList' => $this->getConfigValue('announcementsMailingList'),
+        RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+        RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
         'toolTips' => $this->toolTipsService(),
       ];

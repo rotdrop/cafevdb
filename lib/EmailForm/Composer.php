@@ -579,8 +579,10 @@ Störung.';
 
   /**
    * The email composer never goes without its recipients filter.
+   *
+   * @return RecipientsFilter
    */
-  public function getRecipientsFilter()
+  public function getRecipientsFilter():RecipientsFilter
   {
     return $this->recipientsFilter;
   }
@@ -1426,6 +1428,11 @@ Störung.';
     return str_replace('$$', '$', $message);
   }
 
+  /**
+   * Whether recipients are disclosed (send via Cc:) or undisclosed (send via
+   * Bcc:). If not in project mode recipients are never disclosed, unless
+   * there is only a single recipient, which is then addressed via To.
+   */
   public function discloseRecipients()
   {
     return $this->projectId >= 0
@@ -4168,24 +4175,34 @@ Störung.';
   }
 
   /**
+   * Compose one "readable", flat array of recipients,
+   * meant only for display. The real recipients list is composed
+   * somewhere else.
+   */
+  public function toStringArray()
+  {
+    $toString = [];
+    foreach($this->recipients as $recipient) {
+      $name = trim($recipient['name']);
+      $email = trim($recipient['email']);
+      if (!empty($name)) {
+        $email = $name.' <'.$email.'>';
+      }
+      $toString[] = Util::htmlEscape($email);
+    }
+    return $toString;
+  }
+
+  /**
    * Compose one "readable", comma separated list of recipients,
    * meant only for display. The real recipients list is composed
    * somewhere else.
    */
   public function toString()
   {
-    $toString = [];
-    foreach($this->recipients as $recipient) {
-      $name = trim($recipient['name']);
-      $email = trim($recipient['email']);
-      if ($name == '') {
-        $toString[] = $email;
-      } else {
-        $toString[] = $name.' <'.$email.'>';
-      }
-    }
-    return htmlspecialchars(implode(', ', $toString));
+    return implode(', ', $this->toStringArray());
   }
+
 
   /**
    * Export an option array suitable to load stored email messages,

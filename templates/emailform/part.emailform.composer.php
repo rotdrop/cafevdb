@@ -121,11 +121,11 @@ foreach ($eventAttachmentOptions as $option) {
       <td class="email-address email-recipients display" colspan="2">
         <span class="flex-container">
           <span class="email-address-holder email-recipients inner vmiddle tooltip-bottom tooltip-mostwide"
-                title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
+                title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars(implode(', ', $TO)); ?>"
                 data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
                 data-title-intro="<?php echo $toolTips['emailform:composer:recipients:listing']; ?>"
           >
-            <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
+            <?php echo empty($TO) ? $l->t('No recipients selected.') : implode(', ', $TO); ?>
           </span>
           <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto"
                 title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"

@@ -141,15 +141,16 @@ function updateComposerRecipients($emailForm) {
       // could check whether formElement is indeed 'TO' ...
       const toSpan = $emailForm.find('span.email-recipients');
       let rcpts = data.requestData.elementData.TO;
+      const numRcpts = rcpts.length;
 
-      if (rcpts.length === 0) {
-        rcpts = toSpan.data('placeholder');
-      }
+      rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
       const title = toSpan.data('titleIntro') + '<br>' + rcpts;
 
       toSpan.html(rcpts);
       toSpan.attr('title', title);
       toSpan.cafevTooltip();
+
+      $emailForm.find('#check-disclosed-recipients').prop('disabled', numRcpts <= 1);
     });
 }
 
@@ -235,11 +236,26 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const filterHistoryInput = fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
 
-  // Apply the instruments filter
-  const applyRecipientsFilter = function(event, historySnapshot) {
-    event.preventDefault();
+  let filterUpdateActive = false;
 
-    historySnapshot = historySnapshot !== undefined;
+  // Apply the instruments filter
+  const applyRecipientsFilter = function(event, parameters) {
+    const defaultParameters = {
+      historySnapshot: false,
+      cleanup() {},
+    };
+
+    if (filterUpdateActive) {
+      return false;
+    }
+
+    filterUpdateActive = true;
+
+    parameters = $.extend({}, defaultParameters, parameters);
+
+    event.preventDefault(); // ?? really needed
+
+    const historySnapshot = parameters.historySnapshot;
 
     let post = fieldset.serialize();
     if (historySnapshot) {
@@ -252,13 +268,21 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       }
     }
     $.post(generateUrl('recipients-filter'), post)
-      .fail(Ajax.handleError)
+      .fail(function(xhr, textStatus, errorThrown) {
+        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+          parameters.cleanup();
+          filterUpdateActive = false;
+        });
+      })
       .done(function(data) {
         const requiredResponse = historySnapshot
           ? ['filterHistory']
           : ['recipientsOptions', 'missingEmailAddresses', 'filterHistory'];
         if (!Ajax.validateResponse(data, requiredResponse)) {
-          return false;
+          console.trace('MISSING PARAMETERS');
+          parameters.cleanup();
+          filterUpdateActive = false;
+          return;
         }
         if (historySnapshot) {
           // Just update the history, but nothing else
@@ -315,9 +339,22 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
                            + '<br/>'
                            + $('<div></div>').text(urlDecode(post)).html());
         }
-        return false;
+        parameters.cleanup();
+        filterUpdateActive = false;
       });
     return false;
+  };
+
+  // Inhibit interaction, e.g. during loading
+  const readonlyFiltersControls = function(state, exceptions) {
+
+    fieldset.toggleClass('filter-controls-disabled', state);
+
+    const $otherInputs = fieldset.find('input, select, button').not(exceptions || '');
+    // Disable all recipient filters as they do not make any
+    // sense. Sending to the mailing lists means to just send to
+    // that list, further recipient choices are technically not possible.
+    $otherInputs.readonly(state);
   };
 
   // Attach above function to almost every sensible control :)
@@ -328,84 +365,68 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   // Instruments filter
   const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   instrumentsFilter.on('dblclick', function(event) {
-    applyRecipientsFilter.call(this, event);
+    readonlyFiltersControls(true);
+    applyRecipientsFilter.call(this, event, {
+      cleanup: () => readonlyFiltersControls(false),
+    });
   });
-  // // Alternatively:
-  // var instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container') + ' select');
-  // instrumentsFilter.off('change');
-  // instrumentsFilter.on('change', function(event) {
-  //   applyRecipientsFilter.call(this, event);
-  // });
 
   // Member status filter
   const memberStatusFilter = fieldset.find('select.member-status-filter');
   memberStatusFilter.off('change');
   memberStatusFilter.on('change', function(event) {
-    applyRecipientsFilter.call(this, event);
+    readonlyFiltersControls(true);
+    applyRecipientsFilter.call(this, event, {
+      cleanup: () => readonlyFiltersControls(false),
+    });
   });
 
-  const readonlyFiltersControls = function(state) {
-    const $otherInputs = fieldset.find('input, select, button').not('.announcements-mailing-list, .database');
-
-    if (state) {
-      // Disable all recipient filters as they do not make any
-      // sense. Sending to the mailing list means to just send to
-      // the one global announcements list address.
-      $otherInputs.each(function(index) {
-        const $this = $(this);
-        $this.readonly('true');
-        if ($this.is(':button, :submit')) {
-          $this.prop('disabled', true);
-        }
-      });
-      fieldset.find('.bootstrap-duallistbox-container').find('input, select, button').prop('disabled', true);
-    } else {
-      $otherInputs.each(function(index) {
-        const $this = $(this);
-        $this.readonly(false);
-        if ($this.is(':button, :submit')) {
-          $this.prop('disabled', false);
-        }
-      });
-      fieldset.find('.bootstrap-duallistbox-container').find('input, select, button').prop('disabled', false);
-    }
-  };
-
-  // Basic set
+  // Basic recipients set (from project, except project, use mailing lists)
   const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
   const basicRecipientsSet = basicRecipientsSetContainer.find('input[type="checkbox"], input[type="radio"]');
-  const basicRecipientsSetProject = basicRecipientsSet.not('.announcements-mailing-list, .database');
-  const basicRecipientsSetMailingList = basicRecipientsSet.filter('.announcements-mailing-list, .database');
+  const basicRecipientsSetProject = basicRecipientsSet.not('.mailing-list, .database');
+  const basicRecipientsSetMailingList = basicRecipientsSet.filter('.mailing-list, .database');
 
   basicRecipientsSetMailingList
     .off('change')
     .on('change', function(event) {
       const $this = $(this);
-      const mailingListRecipients = $this.is('.announcements-mailing-list') && $this.prop('checked');
+      const mailingListRecipients = $this.is('.mailing-list') && $this.prop('checked');
 
-      readonlyFiltersControls(mailingListRecipients);
-      basicRecipientsSetProject.readonly(mailingListRecipients);
-      if (!mailingListRecipients) {
-        applyRecipientsFilter.call(this, event);
+      if (mailingListRecipients) {
+        basicRecipientsSetMailingList.not(this).prop('checked', false);
+        readonlyFiltersControls(mailingListRecipients, '.mailing-list, .database');
+      } else {
+        readonlyFiltersControls(true);
+        applyRecipientsFilter.call(this, event, {
+          cleanup: () => readonlyFiltersControls(false),
+        });
       }
       return false;
     });
-  if (basicRecipientsSet.filter('.announcements-mailing-list').prop('checked')) {
-    readonlyFiltersControls(true);
-    basicRecipientsSetProject.readonly(true);
-  }
 
   basicRecipientsSetProject
     .off('change')
     .on('change', function(event) {
-      applyRecipientsFilter.call(this, event);
+      readonlyFiltersControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFiltersControls(false),
+      });
     });
+
+  // initialization
+  if (basicRecipientsSet.filter('.mailing-list').prop('checked')) {
+    readonlyFiltersControls(true, '.mailing-list, .database');
+  }
 
   // "submit" when hitting any of the control buttons
   controlsContainer
     .off('click', '**')
     .on('click', 'input', function(event) {
-      applyRecipientsFilter.call(this, event);
+      readonlyFiltersControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFiltersControls(false),
+      });
     });
 
   // Record history when the select box changes. Maybe too slow, but
@@ -413,7 +434,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   recipientsSelect
     .off('change')
     .on('change', function(event) {
-      applyRecipientsFilter.call(this, event, true);
+      applyRecipientsFilter.call(this, event, { historySnapshot: true });
     });
 
   // Give the user a chance to change broken or missing email
@@ -421,7 +442,10 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   dialogHolder
     .off('pmedialog:changed')
     .on('pmedialog:changed', function(event) {
-      applyRecipientsFilter.call(this, event);
+      readonlyFiltersControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFiltersControls(false),
+      });
     });
 
   missingAddresses
