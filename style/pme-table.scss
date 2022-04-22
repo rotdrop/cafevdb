@@ -22,28 +22,58 @@
 
 @import 'pme-table-tabs.scss';
 
-html:not(.ie8) input[type="checkbox"].pme-input + span.pme-label::before {
-	content: "";
-	display: inline-block;
-	height: 20px;
-	width: 20px;
-	vertical-align: middle;
-	background: url('../img/actions/checkbox.svg') left top no-repeat;
-	opacity: 0.7;
-}
-
 /* ie8 doesn't support :checked */
-html:not(.ie8) input[type="checkbox"].pme-input {
-	position: absolute;
-	left:-10000px;
-	top: auto;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-}
+html:not(.ie8) {
+  input[type="checkbox"].pme-input {
 
-html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before {
-  background-image: url('../img/actions/checkbox-checked.svg');
+    position: absolute;
+    left:-10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    + span.pme-label::before {
+      content: "";
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      vertical-align: middle;
+      background: url('../img/actions/checkbox.svg') left top no-repeat;
+      opacity: 0.7;
+    }
+
+    &:checked + span.pme-label::before {
+      background-image: url('../img/actions/checkbox-checked.svg');
+    }
+  }
+
+  input[type="radio"].pme-input {
+
+    position: absolute;
+    left:-10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    + span.pme-label::before {
+      content: "";
+      display: inline-block;
+      height: 14px;
+      width: 14px;
+      vertical-align: middle;
+      border-radius: 14px;
+      margin: 0 6px 3px 3px;
+      border: 1px solid #878787;
+    }
+
+    &:checked + span.pme-label::before {
+      box-shadow: inset 0px 0px 0px 2px var(--color-main-background);
+      background-color: var(--color-primary-element);
+      border-color: var(--color-primary-element);
+    }
+  }
 }
 
 input[type="radio"].pme-input {
