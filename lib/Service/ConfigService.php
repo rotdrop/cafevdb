@@ -165,21 +165,37 @@ class ConfigService
     ],
   ];
 
+  /**
+   * @var string
+   * Name of a participant field holding a personal signature. This is used by
+   * the OrganizationalRolesService in order to find images of signatures of
+   * the organizing committee.
+   */
   const SIGNATURE_FIELD_NAME = 'signature';
 
-  const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
+  /**
+   * @var int
+   * Default auto-save interval in seconds. Used by the email-form
+   */
+  const DEFAULT_AUTOSAVE_INTERVAL = 300;
 
+  /** @var array Config-keys for the mailing-list server REST access */
   const MAILING_LIST_REST_CONFIG = [
     'url' => 'mailingListRestUrl',
     'user' => 'mailingListRestUser',
     'password' => 'mailingListRestPassword',
   ];
+  /** @var array Config-keys for some general mailing list settings */
   const MAILING_LIST_CONFIG = [
     'domain' => 'mailingListEmailDomain',
     'web' => 'mailingListWebPages',
     'owner' => 'mailingListDefaultOwner',
     'moderator' => 'mailingListDefaultModerator',
   ];
+  /** @var string Config-key for the announcements mailing list */
+  const ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME = 'announcementsMailingList';
+  /** @var string Config-key for the announcements mailing list */
+  const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME = 'announcementsMailingListName';
 
   /** @var string */
   const USER_GROUP_KEY = 'usergroup';

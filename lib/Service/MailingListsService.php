@@ -89,6 +89,29 @@ class MailingListsService
   const LIST_CONFIG_FQDN_LISTNAME = 'fqdn_listname';
   const LIST_CONFIG_ACCEPTABLE_ALIASES = 'acceptabl_aliases';
 
+  // some list-info keys in order to avoid typos
+  const LIST_INFO_DISPLAY_NAME = self::LIST_CONFIG_DISPLAY_NAME;
+  const LIST_INFO_FQDN_LISTNAME = self::LIST_CONFIG_FQDN_LISTNAME;
+  const LIST_INFO_ADVERTISED = 'advertised';
+  const LIST_INFO_DESCRIPTION = 'description';
+  const LIST_INFO_LIST_NAME = 'list_name';
+  const LIST_INFO_MAIL_HOST = 'mail_host';
+  const LIST_INFO_MEMBER_COUNT = 'member_count';
+  /**
+   * @var array
+   *
+   * The array keys in the result of getListInfo().
+   */
+  const LIST_INFO_KEYS = [
+    self::LIST_INFO_DISPLAY_NAME,
+    self::LIST_INFO_FQDN_LISTNAME,
+    self::LIST_INFO_ADVERTISED,
+    self::LIST_INFO_DESCRIPTION,
+    self::LIST_INFO_LIST_NAME,
+    self::LIST_INFO_MAIL_HOST,
+    self::LIST_INFO_MEMBER_COUNT
+  ];
+
   /** @var string
    * Default rest URI
    */
