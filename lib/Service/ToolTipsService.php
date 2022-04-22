@@ -344,11 +344,12 @@ same effect as clicking the close button on top of the dialog-window. No email w
           'choices' => $this->l->t('Select the recipients for your email!'),
           'filter' => [
             'basic-set' => [
-              'default' => $this->l->t('Choose either among all musicians currently registered for the project
+              'disableddefault' => $this->l->t('Choose either among all musicians currently registered for the project
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
               'from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
               'except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+              'project-mailing-list' => $this->l->t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
               'announcements-mailing-list' => $this->l->t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
               'database' => $this->l->t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
