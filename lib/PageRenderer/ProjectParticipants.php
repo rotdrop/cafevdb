@@ -803,20 +803,25 @@ class ProjectParticipants extends PMETableViewBase
     // - accepted
     //   participant has been accepted by the organizers and receives an email
     $opts['fdd']['registration'] = [
-      'name|LF' => ' &#10004;',
-      'name|CAPDV' => $this->l->t("Registration"),
+      // 'name|LF' => ' &#10004;',
+      // 'name|CAPDV' => $this->l->t("Participation"),
+      'name' => $this->l->t("Participation"),
       'tab' => [ 'id' => [ 'project', 'instrumentation' ] ],
       'options'  => 'LAVCPDF',
       'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
+      'sql'  => 'IFNULL($join_col_fqn, 0)',
       'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
-      'values2|LVDF' => [
-        0 => '',
-        1 => '&#10004;'
-      ],
+      'values2' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|ACP' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|DV' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+      // 'values2|LF' => [
+      // 0 => '',
+      // 1 => '&#10004;'
+      // ],
       'tooltip|LFDV' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                                [ "&#10004;" ]),
       'tooltip|CAP' => $this->l->t("Check in order to mark participants who passed a personally signed registration form to us."),
