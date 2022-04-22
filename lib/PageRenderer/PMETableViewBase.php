@@ -37,9 +37,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\IUndoable;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
