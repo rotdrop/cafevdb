@@ -1017,13 +1017,13 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'email',
-      array_merge($this->defaultFDD['email'], [ 'tab' => ['id' => 'musician'], ]));
+      array_merge($this->defaultFDD['email'], [ 'tab' => [ 'id' => [ 'musician', 'contactdata', ], ], ]));
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
       [
         'name'     => $this->l->t('Mobile Phone'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
@@ -1038,7 +1038,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
       [
         'name'     => $this->l->t('Fixed Line Phone'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
@@ -1053,7 +1053,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'street',
       [
         'name'     => $this->l->t('Street'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'street', ], ],
         'maxlen'   => 128,
       ]);
@@ -1062,7 +1062,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
       [
         'name'     => $this->l->t('Postal Code'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'postal-code', ], ],
         'maxlen'   => 11,
       ]);
@@ -1071,7 +1071,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'city',
       [
         'name'     => $this->l->t('City'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'city', ], ],
         'maxlen'   => 128,
       ]);
@@ -1083,7 +1083,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'country',
       [
         'name'     => $this->l->t('Country'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => $this->getConfigValue('streetAddressCountry'),
@@ -1417,10 +1417,15 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
     $personal = [
+      // [
+      //   'id' => 'file-attachments',
+      //   'tooltip' => $this->toolTipsService['project-file-attachments-tab'],
+      //   'name' => $this->l->t('Project file attachments'),
+      // ],
       [
-        'id' => 'file-attachments',
-        'tooltip' => $this->toolTipsService['project-file-attachments-tab'],
-        'name' => $this->l->t('Project file attachments'),
+        'id' => 'contactdata',
+        'tooltip' => $this->toolTipsService['project-contactdata-tab'],
+        'name' => $this->l->t('Contact Information'),
       ],
       [
         'id' => 'musician',
@@ -1452,21 +1457,28 @@ class ProjectParticipants extends PMETableViewBase
    */
   private function tableTabs($participantFields = false, $useFinanceTab = false)
   {
+    $this->logInfo('HELLO');
+
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
     if (!is_iterable($participantFields)) {
+      $this->logInfo('UNITERABLE PART FIELDS');
       return $dfltTabs;
     }
 
     $extraTabs = [];
+    /** @var Entities\ProjectParticipantField $field */
     foreach ($participantFields as $field) {
-      if (empty($field['tab'])) {
+      $extraTab = $field['tab'] ?: ProjectParticipantFieldsService::defaultTabId($field->getMultiplicity(), $field->getDataType());
+      if (empty($extraTab)) {
         continue;
       }
 
-      $extraTab = $field['tab'];
       foreach ($dfltTabs as $tab) {
-        if ($extraTab === $tab['name'] || $extraTab === $this->l->t($tab['id'])) {
+        if ($extraTab == $tab['id']
+            || $extraTab == $this->l->t($tab['id'])
+            || $extraTab == $tab['name']
+            || $extraTab == $this->l->t($tab['name'])) {
           $extraTab = null;
           break;
         }
