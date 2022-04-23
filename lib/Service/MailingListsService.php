@@ -52,6 +52,16 @@ class MailingListsService
   const ROLE_MODERATOR = 'moderator';
   const ROLE_OWNER = 'owner';
 
+  const SUBSCRIBER_EMAIL = 'subscriber';
+  const MEMBER_DISPLAY_NAME = 'display_name';
+  const MEMBER_DELIVERY_STATUS = 'delivery_status';
+  const DELIVERY_STATUS_DISABLED_BY_USER = 'by_user';
+  const DELIVERY_STATUS_DISABLED_BY_MODERATOR = 'by_moderator';
+  const DELIVERY_STATUS_DISABLED_BY_BOUNCES = 'by_bounces';
+  const DELIVERY_STATUS_ENABLED = 'enabled';
+
+  const SUBSCRIPTION_SELF_LINK = 'self_link';
+
   const TEMPLATE_FILE_PREFIX = 'list:';
   const TEMPLATE_FILE_ADMIN = 'admin:';
   const TEMPLATE_FILE_MEMBER = 'member:';
@@ -130,6 +140,13 @@ class MailingListsService
    */
   private $listIdByFqdn = [];
 
+  /**
+   * @var array
+   *
+   * Cache the self-link for each subscription for the current request life-time.
+   */
+  private $selfLinkBySubscription = [];
+
   public function __construct(
     ConfigService $configService
   ) {
@@ -156,7 +173,7 @@ class MailingListsService
   }
 
   /**
-   * Obtain the list configuration, this is rather for testing in
+   * Obtain the server configuration, this is rather for testing in
    * order to check the basic connectivity.
    */
   public function getServerConfig()
@@ -166,6 +183,32 @@ class MailingListsService
         'auth' => $this->restAuth,
       ]);
     return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
+  }
+
+  /**
+   * Obtain the server versions.
+   */
+  public function getServerVersions(?array &$coreVersion = null)
+  {
+    $response = $this->restClient->get(
+      '/3.1/system/versions', [
+        'auth' => $this->restAuth,
+      ]);
+    $result = empty($response->getBody()) ? null : json_decode($response->getBody(), true);
+    if (!empty($result)) {
+      if (preg_match('/([0-9]+)\.([0-9]+)\.([0-9]+)/', $result['mailman_version'], $matches)) {
+        $coreVersion['major'] = $matches[1];
+        $coreVersion['minor'] = $matches[2];
+        $coreVersion['revision'] = $matches[3];
+        $coreVersion['combined'] = self::combinedVersion($matches[1], $matches[2], $matches[3]);
+      }
+    }
+    return $result;
+  }
+
+  static private function combinedVersion(int $major, int $minor, int $revision)
+  {
+    return $revision + 100 + ($minor + 100 * $major);
   }
 
   /**
@@ -388,6 +431,7 @@ class MailingListsService
     $result = [];
     foreach (($response['entries'] ?? []) as $entry) {
       $result[$entry['role']] = $entry;
+      $this->selfLinkBySubscription[$listId][$subscriptionAddress][$entry['role']] = $entry[self::SUBSCRIPTION_SELF_LINK];
     }
     return $result;
   }
@@ -518,6 +562,19 @@ class MailingListsService
 
     $subscriptionData = array_merge(self::DEFAULT_SUBSCRIPTION_DATA, $subscriptionData);
     $subscriptionData['list_id'] = $listId;
+
+    $quirkDeliveryStatus = false;
+    if (($subscriptionData[self::MEMBER_DELIVERY_STATUS] ?? self::DELIVERY_STATUS_ENABLED)
+        !=
+        self::DELIVERY_STATUS_ENABLED) {
+      $this->getServerVersions($coreVersion);
+      if ($coreVersion['combined'] < self::combinedVersion(3, 3, 4)) {
+        $quirkDeliveryStatus = true;
+        $deliveryStatus = $subscriptionData[self::MEMBER_DELIVERY_STATUS];
+        unset($subscriptionData[self::MEMBER_DELIVERY_STATUS]);
+      }
+    }
+
     foreach ($subscriptionData as $key => $value) {
       // bloody Python rest implementation
       if ($value === true) {
@@ -530,6 +587,16 @@ class MailingListsService
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
+
+    if ($quirkDeliveryStatus) {
+      $this->setSubscriptionPreferences(
+        $listId,
+        $subscriptionData[self::SUBSCRIBER_EMAIL],
+        $role ?? self::ROLE_MEMBER,
+        [ MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus ]
+      );
+    }
+
     return true;
   }
 
@@ -560,11 +627,48 @@ class MailingListsService
       return false;
     }
     $subscriptionData = $this->getSubscription($listId, $subscriber);
-    $selfLink = $subscriptionData[$role]['self_link'] ?? null;
+    $selfLink = $subscriptionData[$role][self::SUBSCRIPTION_SELF_LINK] ?? null;
     if (empty($selfLink)) {
       return false;
     }
     $result = $this->restClient->delete($selfLink, [
+      'auth' => $this->restAuth,
+    ]);
+    return true;
+  }
+
+  public function getSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER)
+  {
+    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+      $this->getSubscription($listId, $subscriber, $role);
+      $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    }
+    if (empty($selfLink)) {
+      return null;
+    }
+
+    $response = $this->restClient->get($selfLink . '/preferences', [
+      'auth' => $this->restAuth,
+    ]);
+    if (empty($response->getBody())) {
+      return null;
+    }
+    $response = json_decode($response->getBody(), true);
+
+    return $response;
+  }
+
+  public function setSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER, array $preferences = [])
+  {
+    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+      $this->getSubscription($listId, $subscriber, $role);
+      $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    }
+    if (empty($selfLink)) {
+      return false;
+    }
+    $response = $this->restClient->patch($selfLink . '/preferences', [
+      'json' => $preferences,
       'auth' => $this->restAuth,
     ]);
     return true;

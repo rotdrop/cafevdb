@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
@@ -1791,7 +1792,22 @@ Whatever.',
 
     $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
 
-    $listsService->subscribe($listId, email: $email, displayName: $displayName);
+    $memberStatus = $participant->getMusician()->getMemberStatus();
+
+    $deliveryStatus = ($memberStatus == MemberStatus::CONDUCTOR
+        || $memberStatus == MemberStatus::SOLOIST
+      || $memberStatus == MemberStatus::TEMPORARY)
+      ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER
+      : MailingListsService::DELIVERY_STATUS_ENABLED;
+
+    $subscriptionData = [
+      MailingListsService::SUBSCRIBER_EMAIL => $email,
+      MailingListsService::MEMBER_DISPLAY_NAME => $displayName,
+      MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus,
+      // MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER,
+    ];
+
+    $listsService->subscribe($listId, subscriptionData: $subscriptionData);
 
     return true;
   }
