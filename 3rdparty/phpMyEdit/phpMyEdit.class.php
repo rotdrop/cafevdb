@@ -2188,6 +2188,7 @@ class phpMyEdit
 			echo '<a href="#tab-'.$idx.'" data-tab-id="'.$id.'" data-tab-index="'.$idx.'">'.$name.'</a>'."\n";
 			echo '</li>'."\n";
 		}
+		echo '<li class="table-tabs scrollbar-compensator"></li>'."\n";
 		echo '</ul>'."\n";
 		echo '</div>'."\n";
 		echo '</td>'."\n";

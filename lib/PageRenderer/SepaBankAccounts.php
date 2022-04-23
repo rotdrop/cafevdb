@@ -953,13 +953,17 @@ received so far'),
 
     $extraTabs = [];
     foreach ($participantFields as $field) {
-      if (empty($field['tab'])) {
+
+      $extraTab = $field['tab'] ?: ProjectParticipantFieldsService::defaultTabId($field->getMultiplicity(), $field->getDataType());
+      if (empty($extraTab)) {
         continue;
       }
 
-      $extraTab = $field['tab'];
       foreach ($tabs as $tab) {
-        if ($extraTab === $tab['name'] || $extraTab === $this->l->t($tab['id'])) {
+        if ($extraTab == $tab['id']
+            || $extraTab == $this->l->t($tab['id'])
+            || $extraTab == $tab['name']
+            || $extraTab == $this->l->t($tab['name'])) {
           $extraTab = null;
           break;
         }

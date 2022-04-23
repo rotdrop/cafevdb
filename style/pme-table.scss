@@ -118,6 +118,15 @@ tr.table-tabs td li.table-tabs {
   background: url('../img/css/ui-bg_glass_100_f8f8f8_1x400.png') repeat-x scroll 50% 50% #F8F8F8;
   border-bottom-width:0px;
   opacity:0.9;
+  &.scrollbar-compensator {
+    border:0;
+    min-width:0;
+    width:20px;
+    flex: 0 1 auto;
+    opacity:0;
+    padding:0;
+    margin:0;
+  }
 }
 
 tr.table-tabs td li a {
@@ -139,7 +148,7 @@ tr.table-tabs td li.selected {
 
 tr.table-tabs ul.table-tabs {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   line-height:1.3;
   border-radius:4px;
   list-style:none outside none;
