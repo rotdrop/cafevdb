@@ -63,7 +63,7 @@ class ProjectParticipants extends PMETableViewBase
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
-  private const EXTRA_VOICES = 2;
+  private const EXTRA_VOICES = 0;
   private const INSERT_VOICES = 8;
 
   /**
@@ -727,6 +727,7 @@ class ProjectParticipants extends PMETableViewBase
         ],
         'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, self::INSERT_VOICES), range(1, self::INSERT_VOICES)),
         'align|LF' => 'center',
+        'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:voice'],
       ]);
 
     $this->makeJoinTableField(
@@ -792,9 +793,8 @@ class ProjectParticipants extends PMETableViewBase
        ],
        'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
        'align|LF' => 'center',
-       'tooltip|LFVD' => $this->l->t('Set to "%s" in order to mark the section leader.',
-                                     [ "&alpha;" ]),
-       'tooltip|CAP' => $this->l->t('Check in order to mark the section leader.'),
+       'tooltip|LFVD' => $this->toolTipsService['page-renderer:participants:section-leader:view'],
+       'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:section-leader'],
       ]);
 
     $opts['fdd']['registration'] = [
