@@ -1084,7 +1084,8 @@ class phpMyEdit
 			$decode = function($value) { return $value; };
 		}
 		while ($row = $this->sql_fetch($res, 'n')) {
-			if (empty($row[0])) {
+			if (empty($row[0])
+				&& !($row[0] === 0 || $row[0] === '0')) {
 				continue;
 			}
 			$colIdx = $idx;
