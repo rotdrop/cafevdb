@@ -1183,7 +1183,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * The array of changed field values.
    */
-  private $preUpdateValue = null;
+  private $preUpdateValue = [];
 
   /**
    * @ORM\PreUpdate

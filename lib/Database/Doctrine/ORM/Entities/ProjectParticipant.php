@@ -339,7 +339,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * The array of changed field values.
    */
-  private $preUpdateValue = null;
+  private $preUpdateValue = [];
 
   /**
    * @ORM\PreUpdate
