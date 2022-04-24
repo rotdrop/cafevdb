@@ -1645,6 +1645,12 @@ Whatever.',
     return true;
   }
 
+  /**
+   * Create a mailing list for the project and add the orchestra email address
+   * as list-member.
+   *
+   * @param string|Entities\Project $projectOrId
+   */
   public function createProjectMailingList($projectOrId)
   {
     /** @var Entities\Project $project */
@@ -1699,6 +1705,16 @@ Whatever.',
           $listsService->subscribe($listId, email: $defaultModerator, role: MailingListsService::ROLE_MODERATOR);
         }
       }
+
+      // subscribe the bulk-email-sender address
+      $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+      $bulkEmailFromName = $this->getConfigValue('emailfromname');
+
+      $subscriptionData = [
+        MailingListsService::SUBSCRIBER_EMAIL => $bulkEmailFromAddress,
+        MailingListsService::MEMBER_DISPLAY_NAME => $bulkEmailFromName,
+      ];
+      $listsService->subscribe($listId, subscriptionData: $subscriptionData);
 
       // install the list templates ...
       $templateFolderPath = $listsService->templateFolderPath($this->l->t(MailingListsService::TYPE_PROJECTS));
