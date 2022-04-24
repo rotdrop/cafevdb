@@ -889,7 +889,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row)
-        use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex){
+        use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex) {
           switch ($op) {
             case PHPMyEdit::SQL_QUERY_UPDATE:
               if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', $pme->fdd)])) {
