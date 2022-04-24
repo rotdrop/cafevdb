@@ -63,6 +63,9 @@ class ProjectParticipants extends PMETableViewBase
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
+  private const EXTRA_VOICES = 2;
+  private const INSERT_VOICES = 8;
+
   /**
    * Join table structure. All update are handled in
    * parent::beforeUpdateDoUpdateAll().
@@ -684,7 +687,7 @@ class ProjectParticipants extends PMETableViewBase
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
-  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', IF(n.seq <= MAX(pin.voice), n.seq, '?')) AS value,
+  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', IF(n.seq <= GREATEST(" . self::EXTRA_VOICES . ", MAX(pin.voice)), n.seq, '?')) AS value,
   pi.project_id,
   pi.musician_id,
   i.id AS instrument_id,
@@ -694,7 +697,7 @@ class ProjectParticipants extends PMETableViewBase
   GROUP_CONCAT(IF(pin.voice = n.seq, pin.quantity, NULL)) AS quantity,
   MAX(pin.voice) AS number_of_voices,
   n.seq
-  FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
+  FROM " . self::PROJECT_INSTRUMENTS_TABLE . " pi
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
@@ -704,8 +707,8 @@ class ProjectParticipants extends PMETableViewBase
       AND ft.foreign_key = i.id
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
-  JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= (1+pin.voice) AND n.seq >= 1 AND n.seq <= (1+(SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
+  JOIN " . self::SEQUENCE_TABLE . " n
+    ON n.seq <= (" . self::EXTRA_VOICES . " + 1 + pin.voice) AND n.seq >= 1 AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
@@ -714,7 +717,7 @@ class ProjectParticipants extends PMETableViewBase
     i.sort_order ASC, n.seq ASC",
           'column' => 'value',
           'description' => [
-            'columns' => [ '$table.l10n_name', 'IF($table.seq <= $table.number_of_voices, $table.seq, \'?\')' ],
+            'columns' => [ '$table.l10n_name', 'IF($table.seq <= GREATEST(' . self::EXTRA_VOICES . ', $table.number_of_voices), $table.seq, \'?\')' ],
             'divs' => ' ',
           ],
           'orderby' => '$table.sort_order ASC, $table.seq ASC',
@@ -722,7 +725,7 @@ class ProjectParticipants extends PMETableViewBase
           //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
           'join' => false,
         ],
-        'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+        'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, self::INSERT_VOICES), range(1, self::INSERT_VOICES)),
         'align|LF' => 'center',
       ]);
 
