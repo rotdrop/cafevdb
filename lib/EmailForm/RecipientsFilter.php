@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -1000,5 +1001,63 @@ class RecipientsFilter
       }
     }
     return $this->mailingListInfo[$which] ?? null;
+  }
+
+  /**
+   * Possibly replace part of the given recipients set by the project-mailing list:
+   * - if the list contains recipients NOT in the given set, then DON'T
+   * - if the given set covers the mailing list, then DO
+   * - in any case keep the recipients not contained in the mailing list
+   * - only recipients with active delivery are considered
+   *
+   * @param array $selectedRecipients Recipients-set in the form returned by
+   * RecipientsFilter::selectedRecipients()
+   *
+   *
+   */
+  public function substituteProjectMailingList(array $selectedRecipients)
+  {
+    if (count($selectedRecipients) == 1) {
+      // never send single-address email to the list
+      return $selectedRecipients;
+    }
+
+    $listInfo = $this->getMailingListInfo();
+    if (empty($listInfo)) {
+      return $selectedRecipients;
+    }
+    $listId = $listInfo['list_id'];
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+    $listMembers = $listsService->findMembers($listId, flat: true, criteria: [
+      MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
+      MailingListsService::MEMBER_DELIVERY_MODE => MailingListsService::DELIVERY_MODE_REGULAR,
+    ]);
+    $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+    Util::unsetValue($listMembers, $bulkEmailFromAddress);
+    $recipientsByEmail = [];
+    foreach ($selectedRecipients as $recipient) {
+      $recipientsByEmail[$recipient['email']] = $recipient;
+    }
+    $remainingRecipients = array_diff_key($recipientsByEmail, array_flip($listMembers));
+    $remainingListMembers = array_diff($listMembers, array_keys($recipientsByEmail));
+
+    if (!empty($remainingListMembers)) {
+      // list contains members not present in the recipients-set: bail out
+      $this->logInfo('Excess members ' . print_r($remainingListMembers, true));
+      return $selectedRecipients;
+    }
+
+    // throw away all recipients which are also reached by posting to the list
+    // and add the list address as additional recipient.
+    $selectedRecipients = array_values($remainingRecipients);
+    $selectedRecipients[] = [
+      'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
+      'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
+      'status' => DBTypes\EnumMemberStatus::REGULAR,
+      'project' => $this->projectId ?? 0,
+      'dbdata' => null,
+    ];
+    return $selectedRecipients;
   }
 }

@@ -2916,8 +2916,9 @@ Störung.';
     }
     $realRecipients = $this->recipients;
     $this->recipients = $previewRecipients;
-    if (!$this->preComposeValidation()) {
-      $this->recipients = $realRecipients;
+    $status = $this->preComposeValidation();
+    $this->recipients = $realRecipients;
+    if (!$status) {
       return null;
     }
 
@@ -3047,6 +3048,10 @@ Störung.';
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
+
+      // if in project mode potentially send to the mailing list instead of the individual recipients ...
+      $recipients = $this->recipientsFilter->substituteProjectMailingList($recipients);
+
       $message = $this->composeAndExport($messageTemplate, $recipients);
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
