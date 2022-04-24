@@ -55,10 +55,15 @@ class MailingListsService
   const SUBSCRIBER_EMAIL = 'subscriber';
   const MEMBER_DISPLAY_NAME = 'display_name';
   const MEMBER_DELIVERY_STATUS = 'delivery_status';
+  const MEMBER_DELIVERY_MODE = 'delivery_mode';
   const DELIVERY_STATUS_DISABLED_BY_USER = 'by_user';
   const DELIVERY_STATUS_DISABLED_BY_MODERATOR = 'by_moderator';
   const DELIVERY_STATUS_DISABLED_BY_BOUNCES = 'by_bounces';
   const DELIVERY_STATUS_ENABLED = 'enabled';
+  const DELIVERY_MODE_REGULAR = 'regular';
+  const DELIVERY_MODE_PLAINTEXT_DIGESTS = 'plaintext_digests';
+  const DELIVERY_MODE_MIME_DIGESTS = 'mime_digests';
+  const DELIVERY_MODE_SUMMARY_DIGESTS = 'summary_digests';
 
   const SUBSCRIPTION_SELF_LINK = 'self_link';
 
@@ -120,6 +125,10 @@ class MailingListsService
     self::LIST_INFO_LIST_NAME,
     self::LIST_INFO_MAIL_HOST,
     self::LIST_INFO_MEMBER_COUNT
+  ];
+
+  public const DEFAULT_MEMBER_SEARCH_CRITERIA = [
+    'role' => self::ROLE_MEMBER,
   ];
 
   /** @var string
@@ -273,7 +282,7 @@ class MailingListsService
     if (strpos($fqdnName, '@') === false) {
       $fqdnName[strpos($fqdnName, '.')] = '@';
     }
-    $reponse = $this->restClient->post('/3.1/lists', [
+    $response = $this->restClient->post('/3.1/lists', [
       'json' => [
         'fqdn_listname' => $fqdnName,
         'style_name' => $style,
@@ -673,6 +682,45 @@ class MailingListsService
     ]);
     return true;
   }
+
+  /**
+   * Find members matching criteria. Default is to return all members.
+   *
+   * @param string $listId The mailing list id to get the information for.
+   *
+   * @param array $criteria Search criteria in order to restrict the search.
+   *
+   * @param bool $flat Return the result as flat array of just email addresses.
+   */
+  public function findMembers(string $listId, array $criteria = [], bool $flat = false)
+  {
+    $criteria = array_merge(self::DEFAULT_MEMBER_SEARCH_CRITERIA, $criteria);
+
+    $criteria['list_id'] = $listId;
+
+    $response = $this->restClient->post('/3.1/members/find', [
+      'json' => $criteria,
+      'auth' => $this->restAuth,
+    ]);
+
+    if (empty($response->getBody())) {
+      return null;
+    }
+    $response = json_decode($response->getBody(), true);
+
+    $response['entries'] = $response['entries'] ?? [];
+
+    if ($flat) {
+      $members = [];
+      foreach ($response['entries'] as $member) {
+        $members[] = $member['email'];
+      }
+      return $members;
+    }
+
+    return $response;
+  }
+
 
   /**
    * Generate the full path to the given templates leaf-directory.
