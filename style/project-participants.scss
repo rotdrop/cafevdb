@@ -39,7 +39,13 @@
 
     @import 'mailing-lists.scss';
 
-    td {
+    td.pme-value.mailing-list.project {
+      .status-label:not(.action-display) {
+        font-weight:bold;
+        font-style:italic;
+        margin: 3px 3px 3px 0;
+        padding: 6px 7px;
+      }
       .subscription {
         &.dropdown-container {
           &.status-unknown, &.registration-unconfirmed.status-unsubscribed {
@@ -76,30 +82,6 @@
             @include styleDisabled
           }
         }
-        /* .subscription-action-subscribe {
-            display:none;
-          }
-          &.registration-confirmed {
-            .subscription-action-unsubscribe {
-              display:none;
-            }
-          }
-          &.delivery-enabled {
-            .subscription-action-enable-delivery {
-              display:none;
-            }
-          }
-          &.delivery-disabled {
-            .subscription-action-disable-delivery {
-              display:none;
-            }
-          }
-        }
-        &.status-unsubscribed {
-          .subscription-action-unsubscribe, .subscription-action-delivery {
-            display:none;
-          }
-        } */
       }
     }
 
@@ -110,13 +92,13 @@
 body.cafevdb-expert-mode {
   #pme-table-container.project-participants {
     form.pme-form {
-      td {
+      td.pme-value.mailing-list.project {
         .subscription {
           .subscription-action.expert-mode-enabled {
-            opacity:inherit;
-            text-decoration:inherit;
+            opacity:inherit !important;
+            text-decoration:inherit !important;
             &, * {
-              pointer-events:auto;
+              pointer-events:auto !important;
             }
           }
         }

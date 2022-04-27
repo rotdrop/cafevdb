@@ -57,11 +57,12 @@ trait MailingListsTrait
     $fdd = [
       'name'    => $this->l->t('Mailing List'),
       'tab'     => [ 'id' => $columnTabs ],
-      'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-wide', ], ],
+      'css'     => [ 'postfix' => [ 'mailing-list', 'announcements', 'tooltip-wide', ], ],
       'sql'     => $emailSql,
       'options' => 'ACPVD',
       'input'   => 'V',
       'input|AP' => 'R',
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:mailing-list'],
       'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
         return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="' . $pme->cgiDataName('mailing_list') . '" checked/>
 <label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
@@ -105,7 +106,7 @@ trait MailingListsTrait
           MailingListsController::OPERATION_REJECT => [
             'status-invited-visible' => true,
             'status-waiting-visible' => true,
-          ],
+           ],
           MailingListsController::OPERATION_SUBSCRIBE => [
             'status-unsubscribed-visible' => true,
             'expert-mode-only' => true,
@@ -114,26 +115,45 @@ trait MailingListsTrait
             'status-subscribed-visible' => true,
           ],
         ];
+        $icons = [
+          MailingListsController::OPERATION_INVITE => [ 'app' => 'core', 'image' => 'actions/confirm.svg' ],
+          MailingListsController::OPERATION_ACCEPT => [ 'app' => 'core', 'image' => 'actions/checkmark.svg' ],
+          MailingListsController::OPERATION_REJECT => [ 'app' => 'core', 'image' => 'actions/close.svg' ],
+          MailingListsController::OPERATION_SUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/add.svg' ],
+          MailingListsController::OPERATION_UNSUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/delete.svg' ],
+        ];
         $html = '
-<span class="mailing-list status action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
-<span class="mailing-list operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
+<span class="mailing-list announcements subscription status status-label action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
 ';
+        $html .= '
+<span class="dropdown-container dropdown-no-hover mailing-list announcements subscription operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
+  <button class="menu-title action-menu-toggle">...</button>
+  <nav class="announcements subscription-dropdown dropdown-content dropdown-align-right">
+    <ul>';
         foreach ($operations as $operation) {
           $operationClasses = $cssClasses[$operation];
+          $icon = $icons[$operation];
           $visible = !empty($operationClasses['status-' . $status . '-visible']);
           $disabled = !$visible || (!$this->expertMode && !empty($operationClasses['expert-mode-only']));
           $css = implode(' ', array_merge($defaultCss, array_keys($operationClasses), [ $operation ]));
+          $css .= ($disabled ? ' disabled' : '');
           $html .= '
-  <input type="button"
-         name="' . $operation . '"
-         class="' . $css . '"
-         value="' . $this->l->t($operation) . '"
-         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
-         ' .  ($disabled ? 'disabled' : '') . '/>';
+      <li class="subscription-action tooltip-auto ' . $css . '"
+          title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
+          data-operation="' .  $operation . '"
+          ' .  ($disabled ? 'disabled' : '') . '
+      >
+        <a href="#">
+          <img alt="" src="' . $this->urlGenerator()->imagePath($icon['app'], $icon['image']) . '"/>
+          ' . $this->l->t($operation) . '
+        </a>
+      </li>
+';
         }
         $html .= '
-</span>
-';
+    </ul>
+  </nav>
+</span>';
         return $html;
       },
     ];
@@ -150,6 +170,7 @@ trait MailingListsTrait
       'sql' => $emailSql,
       'options' => 'ACPVD',
       'input'   => 'V',
+      'tooltip' => $this->toolTipsService['page-renderer:participants:mailing-list'],
       // copy and add are disabled
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
         $displayStatus = $this->l->t($status = 'unknown');
@@ -175,6 +196,7 @@ trait MailingListsTrait
           $displayStatus = $this->l->t($summary['summary']);
         } catch (\Throwable $t) {
           $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
+          $statusFlags = [];
         }
 
         $statusData = htmlspecialchars(json_encode($statusFlags));

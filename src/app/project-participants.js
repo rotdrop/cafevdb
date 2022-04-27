@@ -747,7 +747,7 @@ const myReady = function(selector, resizeCB) {
   });
 
   // mailing list subscritions
-  form.find('.subscription-dropdown .subscription-action').on('click', function(event) {
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event) {
     const $this = $(this);
     const operation = $this.data('operation');
     if (!operation) {

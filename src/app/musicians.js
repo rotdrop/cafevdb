@@ -238,26 +238,31 @@ const contactValidation = function(container) {
         });
     });
 
-  const $mailingListStatus = $form.find('span.mailing-list.status');
-  const $mailingListOperationsContainer = $form.find('span.mailing-list.operations');
-  const $mailingListOperations = $mailingListOperationsContainer.find('input.mailing-list.operation');
+  const $mailingListStatus = $form.find('span.mailing-list.announcements.status.status-label');
+  const $mailingListOperationsContainer = $form.find('.mailing-list.announcements.dropdown-container');
+  const $mailingListOperations = $mailingListOperationsContainer.find('.subscription-action');
 
   const $displayNameInput = $form.find('input[name$="display_name"]').filter('[name^="' + pmeData('') + '"]');
 
   $mailingListOperations
     .off('click')
     .on('click', function(event) {
+      const $this = $(this);
+
+      const operation = $this.data('operation');
+      if (!operation) {
+        return;
+      }
       const email = $emailInput.val();
       if (email === '') {
         Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
         return false;
       }
       const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
-      const action = $(this).attr('name');
 
       $.fn.cafevTooltip.remove(); // remove pending tooltips ...
 
-      $.post(generateUrl('mailing-lists/' + action), {
+      $.post(generateUrl('mailing-lists/' + operation), {
         list: 'announcements',
         email,
         displayName,
@@ -269,6 +274,7 @@ const contactValidation = function(container) {
         .done(function(data) {
           const status = data.status;
           $mailingListStatus.html(t(appName, status));
+
           $mailingListOperationsContainer.data('status', status);
           $mailingListOperationsContainer.attr(
             'class',
@@ -279,6 +285,7 @@ const contactValidation = function(container) {
             $this.prop('disabled', $this.is(':hidden')
                        || ($this.hasClass('expert-mode-only')
                            && !$('body').hasClass('cafevdb-expert-mode')));
+            $this.toggleClass('disabled', $this.is(':hidden'));
           });
         });
       return false;

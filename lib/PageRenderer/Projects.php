@@ -640,6 +640,7 @@ __EOT__;
       [
         'name' => $this->l->t('Quantity'),
         'input' => 'RH',
+
         'sql' => "GROUP_CONCAT(
   DISTINCT
   CONCAT_WS(
@@ -657,6 +658,8 @@ __EOT__;
 
     $opts['fdd']['mailing_list_id'] = [
       'name'    => $this->l->t('Mailing List'),
+      'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-auto', ], ],
+      'tooltip|AP' => $this->toolTipsService['projects:mailing-list:create'],
       'select|AP' => 'C',
       'values2|AP' => [ 1 => $this->l->t('create') ],
       'select'  => 'T',
@@ -677,8 +680,7 @@ __EOT__;
         }
         return $html;
       },
-      'tooltip|AP' => $this->toolTipsService['projects:mailinglist:create'],
-      'tooltip' => $this->toolTipsService['projects:mailinglist'],
+      'display|CV' => [ 'popup' => false ],
       'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id'];
         $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
@@ -719,54 +721,54 @@ __EOT__;
       <ul>
         <li class="list-action list-action-create tooltip-auto"
             data-operation="create"
-            title="' . $this->toolTipsService['projects:mailinglist:create'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:create'] . '"
         >
           <a href="#">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/add.svg') . '">
             ' . $this->l->t('create') . '
           </a>
         </li>
         <li class="list-action list-action-manage tooltip-auto"
-            title="' . $this->toolTipsService['projects:mailinglist:manage'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:manage'] . '"
           >
           <a href="' . $configUrl . '" target="' . md5($listAddress) . '">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/settings-dark.svg') . '">
             ' . $this->l->t('manage') . '
           </a>
         </li>
         <li class="list-action list-action-subscribe tooltip-auto"
             data-operation="subscribe"
-            title="' . $this->toolTipsService['projects:mailinglist:subscribe'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:subscribe'] . '"
         >
           <a href="#">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/confirm.svg') . '">
             ' . $this->l->t('subscribe') . '
           </a>
         </li>
         <li class="list-action list-action-close tooltip-auto"
             data-operation="close"
-            title="' . $this->toolTipsService['projects:mailinglist:close'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:close'] . '"
         >
           <a href="#">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '">
             ' . $this->l->t('close') . '
           </a>
         </li>
         <li class="list-action list-action-reopen tooltip-auto"
             data-operation="reopen"
-            title="' . $this->toolTipsService['projects:mailinglist:reopen'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:reopen'] . '"
         >
           <a href="#">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/play.svg') . '">
             ' . $this->l->t('reopen') . '
           </a>
         </li>
         <li class="list-action list-action-delete expert-mode-only tooltip-auto"
             data-operation="delete"
-            title="' . $this->toolTipsService['projects:mailinglist:delete'] . '"
+            title="' . $this->toolTipsService['projects:mailing-list:delete'] . '"
         >
           <a href="#">
-            <img alt="" src="">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/delete.svg') . '">
             ' . $this->l->t('delete') . '
           </a>
         </li>
@@ -777,7 +779,7 @@ __EOT__;
 ';
       }
     ];
-    $this->addSlug('mailing-list-id', $opts['fdd']['mailing_list_id']);
+    $this->addSlug('mailing-list', $opts['fdd']['mailing_list_id']);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
