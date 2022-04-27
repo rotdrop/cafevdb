@@ -896,7 +896,7 @@ class PersonalSettingsController extends Controller {
         $project = $this->projectService->findById($projectId);
 
         if (empty($project)) {
-          return self::grumble($this->l->t('Unable to find project with id %d.', $projectId));
+          return self::grumble($this->l->t('Unable to find the project with id %d.', $projectId));
         }
 
         try {
@@ -1050,7 +1050,7 @@ class PersonalSettingsController extends Controller {
         try {
           $this->userStorage->get($templatesFolder . $value);
         } catch (\Throwable $t) {
-          return self::grumble($this->l->t('Unable to find file "%s".', $value));
+          return self::grumble($this->l->t('Unable to find the file "%s".', $value));
         }
         $this->setConfigValue($parameter, $value);
         $messages[] = $this->l->t(

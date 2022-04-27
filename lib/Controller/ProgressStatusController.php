@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -78,7 +78,7 @@ class ProgressStatusController extends Controller {
       return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
     if (empty($progress)) {
-      return self::grumble($this->l->t('Unable to find status of job "%s"', [ $id ]));
+      return self::grumble($this->l->t('Unable to find the status of the job "%s"', [ $id ]));
     }
     return self::progressResponse($progress);
   }

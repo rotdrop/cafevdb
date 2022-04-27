@@ -351,7 +351,7 @@ class ProjectParticipantsController extends Controller {
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       $fieldDatum = $participant->getParticipantFieldsDatum($optionKey);
       if (empty($fieldDatum)) {
-        return self::grumble($this->l->t('Unable to find data for option key "%s".', $optionKey));
+        return self::grumble($this->l->t('Unable to find any data for the option key "%s".', $optionKey));
       }
 
       $subDirPrefix = empty($subDir) ? '' : UserStorage::PATH_SEP . $subDir;
@@ -368,7 +368,7 @@ class ProjectParticipantsController extends Controller {
         $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
                        ->find($fieldDatum->getOptionValue());
         if (empty($dbFile)) {
-          return self::grumble($this->l->t('Unable to find associated file with id "%s" in data-base.',
+          return self::grumble($this->l->t('Unable to find the associated file with the id "%s" in data-base.',
                                            $fieldDatum->getOptionValue()));
         }
         break;
@@ -582,7 +582,7 @@ class ProjectParticipantsController extends Controller {
                 $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
                                ->find($fieldData->getOptionValue());
                 if (empty($dbFile)) {
-                  return self::grumble($this->l->t('Unable to find associated file with id "%s" in data-base.',
+                  return self::grumble($this->l->t('Unable to find the associated file with the id "%s" in data-base.',
                                                    $fieldData->getOptionValue()));
                 }
                 $conflict = 'replaced';
