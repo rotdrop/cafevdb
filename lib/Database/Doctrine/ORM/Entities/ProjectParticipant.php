@@ -162,7 +162,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Project
    */
-  public function getProject()
+  public function getProject():?Project
   {
     return $this->project;
   }
@@ -186,7 +186,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
