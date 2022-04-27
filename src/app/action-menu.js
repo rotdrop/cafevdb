@@ -29,6 +29,10 @@ const installActionMenuHandlers = function($container) {
   $container.on('click', '.dropdown-container.dropdown-no-hover', function(event) {
     const $this = $(this);
     $this.toggleClass('dropdown-shown');
+    if ($this.hasClass('dropdown-shown')) {
+      // only keep one menu open
+      $('.dropdown-container.dropdown-no-hover').not($this).removeClass('dropdown-shown');
+    }
     if ($(event.target).is('button.action-menu-toggle')) {
       return false;
     }
