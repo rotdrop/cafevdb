@@ -193,8 +193,9 @@ const contactValidation = function(container) {
         });
     });
 
-  $form.find('input.email')
-    .not('.pme-filter')
+  const $emailInput = $form.find('input[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+
+  $emailInput
     .off('blur')
     .on('blur', function(event) {
 
@@ -202,12 +203,11 @@ const contactValidation = function(container) {
 
       const submitDefer = PHPMyEdit.deferReload(container);
 
-      const email = $form.find('input.email');
       const post = $form.serialize();
-      email.prop('disabled', true);
+      $emailInput.prop('disabled', true);
 
       const cleanup = function() {
-        email.prop('disabled', false);
+        $emailInput.prop('disabled', false);
         submitDefer.resolve();
       };
 
@@ -222,7 +222,7 @@ const contactValidation = function(container) {
             return;
           }
           // inject the sanitized value into their proper input fields
-          $form.find('input[name$="email"]').val(data.email);
+          $emailInput.val(data.email);
           const message = Array.isArray(data.message)
             ? data.message.join('<br>')
             : data.message;
@@ -241,16 +241,18 @@ const contactValidation = function(container) {
   const $mailingListStatus = $form.find('span.mailing-list.status');
   const $mailingListOperationsContainer = $form.find('span.mailing-list.operations');
   const $mailingListOperations = $mailingListOperationsContainer.find('input.mailing-list.operation');
+
+  const $displayNameInput = $form.find('input[name$="display_name"]').filter('[name^="' + pmeData('') + '"]');
+
   $mailingListOperations
     .off('click')
     .on('click', function(event) {
-      const email = $form.find('input[name="' + pmeData('email') + '"]').val();
+      const email = $emailInput.val();
       if (email === '') {
         Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
         return false;
       }
-      const $displayName = $form.find('input[name="' + pmeData('display_name') + '"]');
-      const displayName = $displayName.val() || $displayName.attr('placeholder');
+      const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
       const action = $(this).attr('name');
 
       $.fn.cafevTooltip.remove(); // remove pending tooltips ...

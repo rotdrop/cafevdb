@@ -25,76 +25,7 @@
 
   form.pme-form {
 
-    td.pme-value.mailing-list {
-      .status:not(.action-display) {
-        font-weight:bold;
-        font-style:italic;
-        margin: 3px 3px 3px 0;
-        padding: 6px 7px;
-      }
-      .operations {
-        &.action-display input.operation {
-          display:none;
-        }
-        input.operation {
-          background-repeat:no-repeat;
-          background-size: 24px 24px;
-          background-position: center;
-          width:28px;
-          height:28px;
-          vertical-align:middle;
-          text-indent:-9999px;
-          margin-left:5px;
-          display:none;
-          &.invite {
-            background-image:url('../../../core/img/actions/confirm.svg');
-          }
-          &.accept {
-            background-image:url('../../../core/img/actions/checkmark.svg');
-          }
-          &.reject {
-            background-image:url('../../../core/img/actions/close.svg');
-          }
-          &.subscribe {
-            background-image:url('../../../core/img/actions/add.svg');
-          }
-          &.unsubscribe {
-            background-image:url('../../../core/img/actions/delete.svg');
-          }
-          &.busy {
-            background-image:url('../../../core/img/loading.gif') !important;
-          }
-        }
-        &.status-waiting {
-          input.operation {
-            &.status-waiting-visible {
-              display: inline-block;
-            }
-          }
-        }
-        &.status-invited {
-          input.operation {
-            &.status-invited-visible {
-              display: inline-block;
-            }
-          }
-        }
-        &.status-subscribed {
-          input.operation {
-            &.status-subscribed-visible {
-              display: inline-block;
-            }
-          }
-        }
-        &.status-unsubscribed {
-          input.operation {
-            &.status-unsubscribed-visible {
-              display: inline-block;
-            }
-          }
-        }
-      }
-    }
+    @import 'mailing-lists.scss';
 
   } /* form.pme-form */
 
