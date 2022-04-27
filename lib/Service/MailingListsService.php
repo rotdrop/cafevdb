@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Common\Util;
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   private const DEFAULT_SUBSCRIPTION_DATA = [
     'pre_verified' => true,
@@ -522,6 +523,10 @@ class MailingListsService
    */
   public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
   {
+    self::t('unsubscribed');
+    self::t('subscribed');
+    self::t('invited');
+    self::t('waiting');
     $result = self::STATUS_UNSUBSCRIBED;
     $subscription = $this->getSubscription($listId, $subscriptionAddress);
     if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
@@ -663,7 +668,9 @@ class MailingListsService
       return null;
     }
     $response = json_decode($response->getBody(), true);
-
+    if (empty($response[self::MEMBER_DELIVERY_STATUS])) {
+      $response[self::MEMBER_DELIVERY_STATUS] = self::DELIVERY_STATUS_ENABLED;
+    }
     return $response;
   }
 

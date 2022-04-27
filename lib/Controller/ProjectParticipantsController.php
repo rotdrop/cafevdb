@@ -32,6 +32,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -48,6 +49,19 @@ class ProjectParticipantsController extends Controller {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
+
+  const LIST_ACTION_SUBSCRIBE = 'subscribe';
+  const LIST_ACTION_UNSUBSCRIBE = 'unsubscribe';
+  const LIST_ACTION_ENABLE_DELIVERY = 'enable-delivery';
+  const LIST_ACTION_DISABLE_DELIVERY = 'disable-delivery';
+
+  const LIST_SUBSCRIPTION_DELIVERY_ENABLED = 'delivery-enabled';
+  const LIST_SUBSCRIPTION_DELIVERY_DISABLED = 'delivery-disabled';
+  const LIST_SUBSCRIPTION_DISABLED_BY_USER = 'disabled-by-user';
+  const LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES = 'disabled-by-bounces';
+  const LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR = 'disabled-by-moderator';
+  const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest';
 
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
@@ -704,6 +718,204 @@ class ProjectParticipantsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s"', $operation));
   }
 
+  /**
+   * @NoAdminRequired
+   *
+   * @param string $operation The operation to perform, see LIST_ACTION defines in this class.
+   *
+   * @param int $projectId
+   *
+   * @param int $musicianId
+   *
+   * @param bool $force
+   *
+   * @return OCP\AppFramework\Http\Response
+   */
+  public function mailingListSubscriptions(string $operation, int $projectId, int $musicianId, bool $force = false)
+  {
+    $displayStatus = $this->l->t($status = 'unknown');
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+    if (!$listsService->isConfigured()) {
+      return self::grumble($this->l->t('Mailing-lists REST API is not configured.'));
+    }
+
+    $participant = $this->projectService->findParticipant($projectId, $musicianId);
+    if (empty($participant)) {
+      return self::grumble($this->l->t('Unable to find the participant by project- and musician-id "%1$d / %2$d".', [ $projectId, $musicianId ]));
+    }
+
+    /** @var Entities\Project $project */
+    $project = $participant->getProject();
+    $listId = $project->getMailingListId();
+    if (empty($listId)) {
+      return self::grumble($this->l->t('The project "%s" does not yet have a mailing-list.', $project->getName));
+    }
+
+    /** @var Entities\Musician $musician */
+    $musician = $participant->getMusician();
+    $email = $musician->getEmail();
+    if (empty($email)) {
+      return self::grumble($this->l->t('The musician "%s" does not have an email-address.', $musician->getPublicName()));
+    }
+
+    $subscriptionStatus = $listsService->getSubscriptionStatus($listId, $email);
+    if ($subscriptionStatus == MailingListsService::STATUS_SUBSCRIBED) {
+      $subscription = $listsService->getSubscription($listId, $email);
+      $preferences = $listsService->getSubscriptionPreferences($listId, $email);
+      $deliveryStatus = $preferences[MailingListsService::MEMBER_DELIVERY_STATUS];
+      $deliveryMode = $subscription[MailingListsService::ROLE_MEMBER][MailingListsService::MEMBER_DELIVERY_MODE];
+    }
+
+    $messages = [];
+    switch ($operation) {
+      case self::LIST_ACTION_SUBSCRIBE:
+        if ($subscriptionStatus == MailingListsService::STATUS_SUBSCRIBED) {
+          return self::dataResponse([ 'status' => 'unchanged' ]);
+        }
+        if (!$force && empty($participant->getRegistration())) {
+          return self::dataResponse([
+            'status' => 'unconfirmed',
+            'feedback' => $this->l->t('%1$s participation has not been confirmed yet. Please consider to set the participation status to "confirmed" which also will subscribe %1$s to the project list and will send a notification to the participant. Are you sure that you want to subscribe an unconfirmed participant to the project mailing list?', [
+              $musician->getPublicName(firstNameFirst: true)
+            ]),
+          ]);
+        }
+        $this->projectService->ensureMailingListSubscription($participant);
+        $messages[] = $this->l->t('%1$s <%2$s> has been subscribed to %3$s.', [
+          $musician->getPublicName(firstNameFirst: true), $email, $listId
+        ]);
+        $messages[] = $this->l->t('A notification has been sent to %1$s <%2$s>.', [
+          $musician->getPublicName(firstNameFirst: true), $email
+        ]);
+        break;
+      case self::LIST_ACTION_UNSUBSCRIBE:
+        if ($subscriptionStatus != MailingListsService::STATUS_SUBSCRIBED) {
+          return self::dataResponse([ 'status' => 'unchanged' ]);
+        }
+        if (!$force && !empty($participant->getRegistration())) {
+          return self::dataResponse([
+            'status' => 'unconfirmed',
+            'feedback' => $this->l->t('The participation of %1$s has already been been confirmed. Are you really really sure that want to unsubscribe %1$s from the project mailing list?', [
+              $musician->getPublicName(firstNameFirst: true)
+            ]),
+          ]);
+        }
+        $this->projectService->ensureMailingListUnsubscription($participant);
+        $messages[] = $this->l->t('%1$s <%2$s> has been unsubscribed from %3$s.', [
+          $musician->getPublicName(firstNameFirst: true), $email, $listId
+        ]);
+        $messages[] = $this->l->t('A notification has been sent to %1$s <%2$s>.', [
+          $musician->getPublicName(firstNameFirst: true), $email
+        ]);
+        break;
+      case self::LIST_ACTION_ENABLE_DELIVERY:
+        if ($deliveryStatus == MailingListsService::DELIVERY_STATUS_ENABLED) {
+          return self::dataResponse([ 'status' => 'unchanged' ]);
+        }
+        if (!$force) {
+          return self::dataResponse([
+            'status' => 'unconfirmed',
+            'feedback' => $this->l->t('%1$s can enable message delivery by itself. Are you really sure that you want to enable message delivery for %1$s?', [
+              $musician->getPublicName(firstNameFirst: true)
+            ]),
+          ]);
+        }
+        $listsService->setSubscriptionPreferences($listId, $email, preferences: [
+          MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
+        ]);
+        $messages[] = $this->l->t('Re-enabled message delivery for %1$s <%2$s>.', [
+          $musician->getPublicName(firstNameFirst: true), $email
+        ]);
+        break;
+      case self::LIST_ACTION_DISABLE_DELIVERY:
+        if ($deliveryStatus == MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER ) {
+          return self::dataResponse([ 'status' => 'unchanged' ]);
+        }
+        if (!$force) {
+          return self::dataResponse([
+            'status' => 'unconfirmed',
+            'feedback' => $this->l->t('%1$s can disable message delivery by itself. Are you really sure that you want to disable message delivery for %1$s?', [
+              $musician->getPublicName(firstNameFirst: true)
+            ]),
+          ]);
+        }
+        // set to "disabled by user" s.t. the victim can re-enable it again by itself
+        $listsService->setSubscriptionPreferences($listId, $email, preferences: [
+          MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER,
+        ]);
+        $messages[] = $this->l->t('Disabled message delivery for %1$s <%2$s>.', [
+          $musician->getPublicName(firstNameFirst: true), $email
+        ]);
+        break;
+    }
+
+    // after performing the actions query the REST service again about the status
+    $summary = self::mailingListDeliveryStatus($listsService, $listId, $email);
+
+    $summary['status'] = 'success';
+    $summary['message'] = $messages;
+    return self::dataResponse($summary);
+  }
+
+  static public function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email)
+  {
+    $status = $listsService->getSubscriptionStatus($listId, $email);
+    $displayStatus = $status;
+    $statusFlags[] = 'status-' . $status;
+    switch ($status) {
+      case MailingListsService::STATUS_SUBSCRIBED:
+        $subscription = $listsService->getSubscription($listId, $email);
+        $preferences = $listsService->getSubscriptionPreferences($listId, $email);
+
+        \OCP\Util::writeLog('cafevdb', 'SUBSCRIPTION ' . print_r($subscription, true), \OCP\Util::INFO);
+        \OCP\Util::writeLog('cafevdb', 'PREFERENCES ' . print_r($preferences, true), \OCP\Util::INFO);
+
+        switch ($preferences[MailingListsService::MEMBER_DELIVERY_STATUS]) {
+          case MailingListsService::DELIVERY_STATUS_ENABLED:
+            $deliveryMode = $subscription[MailingListsService::ROLE_MEMBER][MailingListsService::MEMBER_DELIVERY_MODE];
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DELIVERY_ENABLED;
+            $statusFlags[] = 'mode-' . $deliveryMode;
+            switch ($deliveryMode) {
+              case MailingListsService::DELIVERY_MODE_REGULAR:
+                break;
+              case MailingListsService::DELIVERY_MODE_PLAINTEXT_DIGESTS:
+              case MailingListsService::DELIVERY_MODE_MIME_DIGESTS:
+              case MailingListsService::DELIVERY_MODE_SUMMARY_DIGESTS:
+                $this->l->t($displayStatus = 'digest');
+                $statusFlags[] = 'mode-digest';
+                break;
+            }
+            break;
+          case MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER:
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DELIVERY_DISABLED;
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DISABLED_BY_USER;
+            self::t($displayStatus = 'disabled by user');
+            break;
+          case MailingListsService::DELIVERY_STATUS_DISABLED_BY_BOUNCES:
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DELIVERY_DISABLED;
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES;
+            self::t($displayStatus = 'disabled because of bounces');
+            break;
+          case MailingListsService::DELIVERY_STATUS_DISABLED_BY_MODERATOR:
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DELIVERY_DISABLED;
+            $statusFlags[] = ProjectParticipantsController::LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR;
+            self::t($displayStatus = 'disabled by moderator');
+            break;
+        }
+        break;
+      case MailingListsService::STATUS_UNSUBSCRIBED:
+      case MailingListsService::STATUS_INVITED:
+      case MailingListsService::STATUS_WAITING:
+        // just use the given status
+        break;
+    }
+    return [
+      'subscriptionStatus' => $status,
+      'summary' => $displayStatus,
+      'statusTags' => $statusFlags,
+    ];
+  }
 }
 
 // Local Variables: ***

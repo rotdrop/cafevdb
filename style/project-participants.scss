@@ -1,0 +1,126 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@mixin styleDisabled() {
+  &, * {
+    pointer-events:none;
+  }
+  opacity:50%;
+  text-decoration:line-through;
+}
+
+@mixin styleHidden() {
+  display:none;
+}
+
+#pme-table-container.project-participants {
+
+  form.pme-form {
+
+    @import 'mailing-lists.scss';
+
+    td {
+      .subscription {
+        &.dropdown-container {
+          &.status-unknown, &.registration-unconfirmed.status-unsubscribed {
+            display:none;
+          }
+        }
+        &.status-subscribed {
+          .subscription-action.status-subscribed-disabled {
+            @include styleHidden
+          }
+        }
+        &:not(.status-subscribed) {
+          .subscription-action.status-not-subscribed-disabled {
+            @include styleHidden
+          }
+        }
+        &.delivery-enabled {
+          .subscription-action.delivery-enabled-disabled {
+            @include styleHidden
+          }
+        }
+        &.delivery-disabled {
+          .subscription-action.delivery-disabled-disabled {
+            @include styleHidden
+          }
+        }
+        &.registration-confirmed {
+          .subscription-action.registration-confirmed-disabled {
+            @include styleDisabled
+          }
+        }
+        &.registration-preliminary {
+          .subscription-action.registration-preliminary-disabled {
+            @include styleDisabled
+          }
+        }
+        /* .subscription-action-subscribe {
+            display:none;
+          }
+          &.registration-confirmed {
+            .subscription-action-unsubscribe {
+              display:none;
+            }
+          }
+          &.delivery-enabled {
+            .subscription-action-enable-delivery {
+              display:none;
+            }
+          }
+          &.delivery-disabled {
+            .subscription-action-disable-delivery {
+              display:none;
+            }
+          }
+        }
+        &.status-unsubscribed {
+          .subscription-action-unsubscribe, .subscription-action-delivery {
+            display:none;
+          }
+        } */
+      }
+    }
+
+  } /* form.pme-form */
+
+} /* page container */
+
+body.cafevdb-expert-mode {
+  #pme-table-container.project-participants {
+    form.pme-form {
+      td {
+        .subscription {
+          .subscription-action.expert-mode-enabled {
+            opacity:inherit;
+            text-decoration:inherit;
+            &, * {
+              pointer-events:auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}

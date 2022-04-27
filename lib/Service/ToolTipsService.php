@@ -406,6 +406,16 @@ invited to have a look, but please do not change anything unless you know what y
             ],
           ],
         ],
+        'participants' => [
+          'mailing-list' => [
+            'operation' => [
+              'subscribe' => $this->l->t('Subscribe the participant to the project mailing list. Normally a participant is automatically subscribed to the project mailing list when its participation status is changed from "preliminary" to "confirmed". It is not possible to subscribe non-confirmed participants. The participant will receive a welcome message when after subscribing it.'),
+              'unsubscribe' => $this->l->t('Unsubscribe the participant from the mailing list. Normally a participant is automatically unsubscribed when it is deleted from the project or it participation status is change back to "preliminary" after its participation had been confirmed previously.'),
+              'enable-delivery' => $this->l->t('Re-enable delivery of the mailing list traffic to this participant. Normally, list-traffic is disabled for soloist, temporaries and conductors while even these people are still subscribed to the mailing list.'),
+              'disable-delivery' => $this->l->t('Disable delivery of the mailing list traffic to this participant. This can as well be done by the participant itself by tuing its membership settings on the configuration pages of the mailing list software.'),
+            ],
+          ],
+        ],
       ],
 
       'participant-fields' => [

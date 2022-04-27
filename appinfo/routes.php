@@ -407,11 +407,16 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
-     * Project mailing lists
+     * Project mailing lists and subscriptions
      */
     [
       'name' => 'projects#mailing_lists',
       'url' => '/projects/mailing-lists/{operation}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'project_participants#mailing_list_subscriptions',
+      'url' => '/projects/participants/mailing-list/{operation}',
       'verb' => 'POST',
     ],
     /**

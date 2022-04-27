@@ -22,11 +22,13 @@
  */
 
 import $ from './jquery.js';
+import { appName } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
+import * as Dialogs from './dialogs.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import initFileUploadRow from './pme-file-upload-row.js';
@@ -41,6 +43,7 @@ import selectValues from './select-values.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
+require('project-participants.scss');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -743,6 +746,62 @@ const myReady = function(selector, resizeCB) {
     return false;
   });
 
+  // mailing list subscritions
+  form.find('.subscription-dropdown .subscription-action').on('click', function(event) {
+    const $this = $(this);
+    const operation = $this.data('operation');
+    if (!operation) {
+      return;
+    }
+    const post = function(force) {
+      $.post(
+        generateUrl('projects/participants/mailing-list/' + operation), {
+          projectId,
+          musicianId,
+          force,
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data, textStatus, request) {
+          if (data.status === 'unconfirmed') {
+            Dialogs.confirm(
+              data.feedback,
+              t(appName, 'Confirmation Required'), {
+                callback(answer) {
+                  if (answer) {
+                    post(true);
+                  } else {
+                    Notification.showTemporary(t(appName, 'Unconfirmed, doing nothing.'));
+                  }
+                },
+                modal: true,
+                default: 'cancel',
+              });
+          } else {
+            Notification.messages(data.message);
+            if (data.status !== 'unchanged') {
+              const $statusDisplay = $this.closest('.pme-value').find('.mailing-list.project.status.status-label');
+              const $statusDropDown = $this.closest('.pme-value').find('.mailing-list.project.status.dropdown-container');
+              const oldStatus = $statusDropDown.data('status');
+              $statusDropDown.data('status', data.statusTags);
+              for (const oldFlag of oldStatus) {
+                $statusDisplay.removeClass(oldFlag);
+                $statusDropDown.removeClass(oldFlag);
+              }
+              for (const newFlag of data.statusTags) {
+                $statusDisplay.addClass(newFlag);
+                $statusDropDown.addClass(newFlag);
+              }
+              $statusDisplay.html(t(appName, data.summary));
+            }
+          }
+        });
+    };
+    post(false);
+  });
+
+  // adding musicians
   container
     .find('form.pme-form input.pme-add')
     .addClass('pme-custom').prop('disabled', false)

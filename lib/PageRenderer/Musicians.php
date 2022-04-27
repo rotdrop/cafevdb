@@ -53,6 +53,7 @@ class Musicians extends PMETableViewBase
 {
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\MailingListsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
@@ -630,90 +631,6 @@ make sure that the musicians are also automatically added to the
       'tooltip' => $this->toolTipsService['member-status'],
     ];
 
-    $opts['fdd']['mailing_list'] = [
-      'name'    => $this->l->t('Mailing List'),
-      'tab'     => [ 'id' => [ 'orchestra' ] ],
-      'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-wide', ], ],
-      'sql'     => '$table.email',
-      'options' => 'ACPVD',
-      'input'   => 'V',
-      'input|AP' => 'R',
-      'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
-        return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="' . $pme->cgiDataName('mailing_list') . '" checked/>
-<label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
-<input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
-<label for="mailing-list-action-subscribe">' . $this->l->t('subscribe') . '</label>
-<input class="radio" type="radio" id="mailing-list-action-noop" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
-<label for="mailing-list-action-noop">' . $this->l->t('no action') . '</label>
-';
-      },
-      'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
-        $list = $this->getConfigValue('announcementsMailingList');
-        try {
-          $status = $this->listsService->getSubscriptionStatus($list, $email);
-        } catch (\Throwable $t) {
-          $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
-          $status = 'unknown';
-        }
-        $statusText = $this->l->t($status);
-        $operations = [
-          MailingListsController::OPERATION_INVITE,
-          MailingListsController::OPERATION_ACCEPT,
-          MailingListsController::OPERATION_SUBSCRIBE,
-          MailingListsController::OPERATION_REJECT,
-          MailingListsController::OPERATION_UNSUBSCRIBE,
-        ];
-        $disabled = [
-          MailingListsController::OPERATION_INVITE => ($status != MailingListsService::STATUS_UNSUBSCRIBED),
-          MailingListsController::OPERATION_ACCEPT => ($status != MailingListsService::STATUS_WAITING),
-          MailingListsController::OPERATION_REJECT => ($status != MailingListsService::STATUS_INVITED && $status != MailingListsService::STATUS_WAITING),
-          MailingListsController::OPERATION_SUBSCRIBE => (!$this->expertMode || $status != MailingListsService::STATUS_UNSUBSCRIBED),
-          MailingListsController::OPERATION_UNSUBSCRIBE => ($status != MailingListsService::STATUS_SUBSCRIBED),
-        ];
-        $defaultCss = [ 'mailing-list', 'operation' ];
-        $cssClasses = [
-          MailingListsController::OPERATION_INVITE => [
-            'status-unsubscribed-visible' => true,
-          ],
-          MailingListsController::OPERATION_ACCEPT => [
-            'status-waiting-visible' => true,
-          ],
-          MailingListsController::OPERATION_REJECT => [
-            'status-invited-visible' => true,
-            'status-waiting-visible' => true,
-          ],
-          MailingListsController::OPERATION_SUBSCRIBE => [
-            'status-unsubscribed-visible' => true,
-            'expert-mode-only' => true,
-          ],
-          MailingListsController::OPERATION_UNSUBSCRIBE => [
-            'status-subscribed-visible' => true,
-          ],
-        ];
-        $html = '
-<span class="mailing-list status action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
-<span class="mailing-list operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
-';
-        foreach ($operations as $operation) {
-          $operationClasses = $cssClasses[$operation];
-          $visible = !empty($operationClasses['status-' . $status . '-visible']);
-          $disabled = !$visible || (!$this->expertMode && !empty($operationClasses['expert-mode-only']));
-          $css = implode(' ', array_merge($defaultCss, array_keys($operationClasses), [ $operation ]));
-          $html .= '
-  <input type="button"
-         name="' . $operation . '"
-         class="' . $css . '"
-         value="' . $this->l->t($operation) . '"
-         title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
-         ' .  ($disabled ? 'disabled' : '') . '/>';
-        }
-        $html .= '
-</span>
-';
-        return $html;
-      },
-    ];
-
     $opts['fdd']['cloud_account_deactivated'] = [
       'name' => $this->l->t('Cloud Account Deactivated'),
       'tab' => [ 'id' => [ 'orchestra' ] ],
@@ -791,7 +708,7 @@ make sure that the musicians are also automatically added to the
       ];
 
     $opts['fdd']['fixed_line_phone'] = [
-      'tab'      => ['id' => 'contact'],
+      'tab'      => ['id' => [ 'contact', ], ],
       'name'     => $this->l->t('Fixed Line Phone'),
       'css'      => ['postfix' => [ 'phone-number', ], ],
       'display'  => [
@@ -807,6 +724,8 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
     $opts['fdd']['email']['input'] = ($opts['fdd']['email']['input'] ?? '') . 'M';
+
+    $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],

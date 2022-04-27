@@ -59,6 +59,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\MailingListsTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -1021,6 +1022,20 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'email',
       array_merge($this->defaultFDD['email'], [ 'tab' => [ 'id' => [ 'musician', 'contactdata', ], ], ]));
+
+    $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
+      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'css' => [ 'postfix' => [ 'project-mailing-list', ], ],
+      'name' => $this->l->t('Project Mailing List'),
+    ]);
+
+    $opts['fdd']['announcements_mailing_list'] = $this->announcementsSubscriptionControls(override: [
+      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'css' => [ 'postfix' => [ 'announcements-mailing-list', ], ],
+      'name' => $this->l->t('Announcements List'),
+    ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',

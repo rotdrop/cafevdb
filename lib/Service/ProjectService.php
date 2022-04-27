@@ -188,7 +188,12 @@ class ProjectService
     return $options;
   }
 
-  public function findParticipant($projectId, $musicianId)
+  /**
+   * Find the participant given by $projectId and $musicianId
+   *
+   * @return null|Entities\ProjectParticipant
+   */
+  public function findParticipant($projectId, $musicianId):?Entities\ProjectParticipant
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipant::class)
                 ->find([ 'project' => $projectId, 'musician' => $musicianId]);
