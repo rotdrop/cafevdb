@@ -274,7 +274,7 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
         ],
         'transport' => [
           'announcements' => [
-            'mailinglist' => $this->l->t('Optional email-address of a mailing list which can optionally be used to send "global" announcements to. If set then global @all emails are rather sent by default to this mailing list than sending it to each individual recipient by Bcc: as the latter may have legal implications unless you have obtained permission to do so from each individual musician. Mailing list transport will not be used when restricting the set of musicians by their instrument or member status, or when individual recipients are selected. It can also optionally be disabled in the email-form\'s address selection tab.'),
+            'mailing-list' => $this->l->t('Optional email-address of a mailing list which can optionally be used to send "global" announcements to. If set then global @all emails are rather sent by default to this mailing list than sending it to each individual recipient by Bcc: as the latter may have legal implications unless you have obtained permission to do so from each individual musician. Mailing list transport will not be used when restricting the set of musicians by their instrument or member status, or when individual recipients are selected. It can also optionally be disabled in the email-form\'s address selection tab.'),
           ],
         ],
         'storage' => [
@@ -397,6 +397,7 @@ invited to have a look, but please do not change anything unless you know what y
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
           'mailing-list' => [
+            'default' => $this->l->t('Musicians are normally invited to the announcements mailing list when they are registered with the orchestra app. The announcements mailing list is a receive-only list for announcing projects, concerts and other things "to the public". It may also be used to forward announcements of other orchestras or off-topic notices if this seems appropriate in a case-to-case manner.'),
             'actions' => [
               'invite' => $this->l->t('Invite the musician to join the announcements mailing list. The musician will receive an email with explanations and needs to reply to the invitation. On reply the musician will be subscribed to the list without further action.'),
               'subscribe' => $this->l->t('Per-force subscribe the musician to the announcements mailing list. This may contradict privacy regulations, so use this option with care.'),
@@ -408,6 +409,7 @@ invited to have a look, but please do not change anything unless you know what y
         ],
         'participants' => [
           'mailing-list' => [
+            'default' => $this->l->t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
             'operation' => [
               'subscribe' => $this->l->t('Subscribe the participant to the project mailing list. Normally a participant is automatically subscribed to the project mailing list when its participation status is changed from "preliminary" to "confirmed". It is not possible to subscribe non-confirmed participants. The participant will receive a welcome message when after subscribing it.'),
               'unsubscribe' => $this->l->t('Unsubscribe the participant from the mailing list. Normally a participant is automatically unsubscribed when it is deleted from the project or it participation status is change back to "preliminary" after its participation had been confirmed previously.'),
@@ -594,7 +596,7 @@ default behaviour for mass-emails as follows
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
 
-      'mailinglist' => [
+      'mailing-list' => [
         'domain' => [
           'default' => $this->l->t('Externally visible domains and configuration web-pages.'),
           'config' => $this->l->t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
@@ -884,7 +886,8 @@ the members of the registered orchestra association. Non-permanents
 always have per-force the project-year attached to their name,
 permanent "pseudo-projects" don\'t, as it does not make any sense.'),
 
-        'mailinglist' => [
+        'mailing-list' => [
+          'default' => $this->l->t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
           'create' => $this->l->t('Create a mailing-list for the project participants. The list is open for posting from members, participants are auto-subscribed if they are accepted as project-participants, the list archives are accessible to members only.'),
           'manage' => $this->l->t('External link to the list configuration page.'),
           'close' => $this->l->t('Close the list, i.e. disallow further postings to the list.'),
