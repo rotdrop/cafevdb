@@ -54,15 +54,42 @@ const info = function(text, title, callback, modal, allowHtml) {
   );
 };
 
-const confirm = function(text, title, callback, modal, allowHtml) {
+const confirm = function(text, title, options, modal, allowHtml) {
+  const defaultOptions = {
+    callback() {},
+    model: false,
+    allowHtml: false,
+    default: 'confirm',
+  };
+  if (typeof options === 'function') {
+    options = {
+      callback: options,
+      modal,
+      allowHtml,
+    };
+  }
+
+  let buttons;
+  if (options.default === 'cancel') {
+    buttons = {
+      type: OC.dialogs.YES_NO_BUTTONS,
+      confirm: t('core', 'No'),
+      cancel: t('core', 'Yes'),
+    };
+    const userCallback = options.callback;
+    options.callback = choice => userCallback(!choice);
+  } else {
+    buttons = OC.dialogs.YES_NO_BUTTONS;
+  }
+  options = $.extend({}, defaultOptions, options);
   return OC.dialogs.message(
     text,
     title,
     'notice',
-    OC.dialogs.YES_NO_BUTTONS,
-    callback,
-    modal,
-    allowHtml
+    buttons,
+    options.callback,
+    options.model,
+    options.allowHtml
   );
 };
 
