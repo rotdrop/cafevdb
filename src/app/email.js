@@ -284,6 +284,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           filterUpdateActive = false;
           return;
         }
+        let resize = false;
         if (historySnapshot) {
           // Just update the history, but nothing else
           filterHistoryInput.val(data.filterHistory);
@@ -293,11 +294,13 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           panelHolder.html(data.contents);
           fieldset = panelHolder.find('fieldset.email-recipients.page');
           emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
+          resize = true;
         } else {
           // Here goes the real work
           // We only need to update the select-element and the list
           // of musicians which should be possible recipients but
           // do not have an email address.
+          $.fn.cafevTooltip.hide();
           recipientsSelect.html(data.recipientsOptions);
           recipientsSelect.bootstrapDualListbox('refresh', true);
           filterHistoryInput.val(data.filterHistory);
@@ -309,6 +312,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             missingLabel.addClass('reallyhidden');
             noMissingLabel.removeClass('reallyhidden');
           }
+          resize = true;
         }
 
         const filterHistory = data.filterHistory;
@@ -340,13 +344,16 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
                            + $('<div></div>').text(urlDecode(post)).html());
         }
         parameters.cleanup();
+        if (resize) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
         filterUpdateActive = false;
       });
     return false;
   };
 
   // Inhibit interaction, e.g. during loading
-  const readonlyFiltersControls = function(state, exceptions) {
+  const readonlyFilterControls = function(state, exceptions) {
 
     fieldset.toggleClass('filter-controls-disabled', state);
 
@@ -365,9 +372,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   // Instruments filter
   const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   instrumentsFilter.on('dblclick', function(event) {
-    readonlyFiltersControls(true);
+    readonlyFilterControls(true);
     applyRecipientsFilter.call(this, event, {
-      cleanup: () => readonlyFiltersControls(false),
+      cleanup: () => readonlyFilterControls(false),
     });
   });
 
@@ -375,9 +382,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const memberStatusFilter = fieldset.find('select.member-status-filter');
   memberStatusFilter.off('change');
   memberStatusFilter.on('change', function(event) {
-    readonlyFiltersControls(true);
+    readonlyFilterControls(true);
     applyRecipientsFilter.call(this, event, {
-      cleanup: () => readonlyFiltersControls(false),
+      cleanup: () => readonlyFilterControls(false),
     });
   });
 
@@ -395,11 +402,11 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
       if (mailingListRecipients) {
         basicRecipientsSetMailingList.not(this).prop('checked', false);
-        readonlyFiltersControls(mailingListRecipients, '.mailing-list, .database');
+        readonlyFilterControls(mailingListRecipients, '.mailing-list, .database');
       } else {
-        readonlyFiltersControls(true);
+        readonlyFilterControls(true);
         applyRecipientsFilter.call(this, event, {
-          cleanup: () => readonlyFiltersControls(false),
+          cleanup: () => readonlyFilterControls(false),
         });
       }
       return false;
@@ -408,24 +415,24 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   basicRecipientsSetProject
     .off('change')
     .on('change', function(event) {
-      readonlyFiltersControls(true);
+      readonlyFilterControls(true);
       applyRecipientsFilter.call(this, event, {
-        cleanup: () => readonlyFiltersControls(false),
+        cleanup: () => readonlyFilterControls(false),
       });
     });
 
   // initialization
   if (basicRecipientsSet.filter('.mailing-list').prop('checked')) {
-    readonlyFiltersControls(true, '.mailing-list, .database');
+    readonlyFilterControls(true, '.mailing-list, .database');
   }
 
   // "submit" when hitting any of the control buttons
   controlsContainer
     .off('click', '**')
     .on('click', 'input', function(event) {
-      readonlyFiltersControls(true);
+      readonlyFilterControls(true);
       applyRecipientsFilter.call(this, event, {
-        cleanup: () => readonlyFiltersControls(false),
+        cleanup: () => readonlyFilterControls(false),
       });
     });
 
@@ -442,9 +449,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   dialogHolder
     .off('pmedialog:changed')
     .on('pmedialog:changed', function(event) {
-      readonlyFiltersControls(true);
+      readonlyFilterControls(true);
       applyRecipientsFilter.call(this, event, {
-        cleanup: () => readonlyFiltersControls(false),
+        cleanup: () => readonlyFilterControls(false),
       });
     });
 
@@ -1965,10 +1972,6 @@ function emailFormPopup(post, modal, single, afterInit) {
             return false;
           });
           const dialogWidget = dialogHolder.dialog('widget');
-          // if (false && single) {
-          //   dialogHolder.find('li#emailformrecipients-tab').prop('disabled', true);
-          //   dialogHolder.find('li#emailformrecipients-tab a').prop('disabled', true);
-          // }
 
           // this must come before calling emailFormRecipientsHandlers
           dialogHolder.tabs({
