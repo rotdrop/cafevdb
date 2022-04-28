@@ -109,7 +109,7 @@ function basicSetValue(string $key)
           </label>
         </span>
         <?php if ($projectId > 0) { ?>
-          <span class="ifproject basic-recipients-set from-project confirmed inner vmiddle <?php p($containerClass); ?>">
+          <span class="basic-recipients-set from-project confirmed inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-from-project-confirmed"
                    class="basic-recipients-set from-project confirmed"
@@ -125,7 +125,7 @@ function basicSetValue(string $key)
               </label>
             </span>
           </span>
-          <span class="ifproject basic-recipients-set from-project preliminary inner vmiddle <?php p($containerClass); ?>">
+          <span class="basic-recipients-set from-project preliminary inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-from-project-preliminary"
                    class="basic-recipients-set from-project prelminary"
@@ -141,11 +141,10 @@ function basicSetValue(string $key)
               </label>
             </span>
           </span>
-          <span class="ifproject basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
+          <span class="basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
                    id="basic-recipients-set-except-project"
                    class="basic-recipients-set except-project tip"
-                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>"
                    name="<?php echo basicSetName(RecipientsFilter::EXCEPT_PROJECT_KEY); ?>"
                    value="<?php echo basicSetValue(RecipientsFilter::EXCEPT_PROJECT_KEY); ?>"
                    <?php echo $basicRecipientsSet[RecipientsFilter::EXCEPT_PROJECT_KEY] ? 'checked' : ''; ?>
@@ -162,7 +161,6 @@ function basicSetValue(string $key)
             <input type="checkbox"
                    id="basic-recipients-set-project-mailing-list"
                    class="basic-recipients-set mailing-list project-mailing-list tip"
-                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:project-mailing-list']; ?>"
                    name="<?php echo basicSetName(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
                    value="<?php echo basicSetValue(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
                    <?php $basicRecipientsSet[RecipientsFilter::PROJECT_MAILING_LIST_KEY] && p('checked'); ?>
@@ -181,7 +179,6 @@ function basicSetValue(string $key)
           <input type="radio"
                  id="basic-recipients-set-database"
                  class="basic-recipients-set database tip"
-                 disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>"
                  name="<?php echo basicSetName(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
                  value="<?php echo basicSetValue(''); ?>"
                  <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] || empty($announcementsMailingList) || p('checked'); ?>
@@ -200,7 +197,6 @@ function basicSetValue(string $key)
           <input type="<?php p($projectId > 0 ? 'checkbox' : 'radio'); ?>"
                  id="basic-recipients-set-announcements-mailing-list"
                  class="basic-recipients-set mailing-list announcements-mailing-list tip"
-                 disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']; ?>"
                  name="<?php echo basicSetName(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
                  value="<?php echo basicSetValue(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
                  <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] && p('checked'); ?>
