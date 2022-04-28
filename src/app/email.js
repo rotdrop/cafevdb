@@ -205,7 +205,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
   dualSelect.addClass('tooltip-top');
 
   if ($recipientsSelect.attr('readonly')) {
-    $dualListBoxContainer.find('input, select, button').prop('disabled', true);
+    $dualListBoxContainer.find('input, select, button').readonly(true);
   }
 
   CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformrecipients'));
