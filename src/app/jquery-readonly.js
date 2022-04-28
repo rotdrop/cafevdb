@@ -101,7 +101,7 @@ $.fn.readonly = function(state) {
   this.each(function() {
     const $this = $(this);
     if ($this.hasClass(placeholderCssClass)) {
-      // do not allow to recurse in to the placeholders
+      // do not allow to recurse into the placeholders
       return;
     }
     if (state === $this.data(readonlyStateDataKey)) {
@@ -186,7 +186,12 @@ $.fn.readonly = function(state) {
       const $radioGroup = $container.find('input:radio[name="' + $this.attr('name') + '"]');
       $radioGroup.each(function() {
         const $radio = $(this);
+
+        // remember the current state in each group member's data-set
+        $radio.data(readonlyStateDataKey, state);
+        $radio.toggleClass(elementReadonlyClass, state);
         vanillaProp.call($radio, 'readonly', state);
+
         if (!state) {
           const restoreDisabled = $radio.data(restoreDisabledDataKey);
           if (restoreDisabled !== undefined) {
