@@ -21,7 +21,8 @@
  * You should have received a copy of the GNU Affero General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
+
+  /**
  * @file PHP snippet to render the list of broken emails.
  *
  * @param array $missingEmailAddresses
@@ -32,6 +33,9 @@ foreach ($missingEmailAddresses as $id => $missingInfo) {
   $isParticipant = $missingInfo['participant'];
   $label = $missingInfo['label'];
 ?>
+<?php if ($following) { ?>
+  <span class="separator">, </span>
+<?php } ?>
   <a href="#"
      class="missing-email-addresses personal-record"
      data-musician-id="<?php p($id); ?>"
@@ -39,10 +43,7 @@ foreach ($missingEmailAddresses as $id => $missingInfo) {
   >
     <?php echo $label; ?>
   </a>
-<?php if ($following) { ?>
-  <span class="separator">, </span>
 <?php
-  }
   $following = true;
 }
 ?>
