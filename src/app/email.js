@@ -362,6 +362,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     // sense. Sending to the mailing lists means to just send to
     // that list, further recipient choices are technically not possible.
     $otherInputs.readonly(state);
+
+    missingAddresses.toggleClass('disabled', state);
   };
 
   // Attach above function to almost every sensible control :)

@@ -726,6 +726,11 @@ span.error.contents.item.substitutions {
 form#cafevdb-email-form {
 
   .missing-email-addresses {
+    &.names.disabled .personal-record {
+      opacity:40%;
+      pointer-events:none;
+    }
+
     .personal-record {
       color:red;
       font-style:italic;
