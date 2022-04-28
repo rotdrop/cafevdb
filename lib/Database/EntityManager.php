@@ -471,6 +471,8 @@ class EntityManager extends EntityManagerDecorator
     $config->addCustomDatetimeFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\TimestampDiff::class);
     $config->addCustomStringFunction('greatest', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Greatest::class);
     $config->addCustomStringFunction('year', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Year::class);
+    $config->addCustomStringFunction('group_concat', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\GroupConcat::class);
+    $config->addCustomStringFunction('if', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\IfElse::class);
   }
 
   private function createSimpleConfiguration():array
