@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -163,6 +164,9 @@ trait FindLikeTrait
    *   prefixed by '(|' and '(&' to indicate the boolean junctor with the other
    *   criteria. Grouping is required by using '(' and ')'. The final closing
    *   paren may be omitted.
+   * - criteria can be passed as FIELD_EXPRESSION => VALUE or if this would
+   *   yield non-unique array keys also as pairs [ FIELD_EXPRESSION => VALUE ]
+   *
    *   Example:
    *   ```
    *   [
@@ -174,7 +178,7 @@ trait FindLikeTrait
    *        'blub' => 3,         //          and blub is 3 ...
    *       ')(&foo' => 5         //         ) or (foo is 5 ...
    *          'bar' => 6         //               and bar is 6
-   *        ')' => ANYTHING      //              ) close the AND-group
+   *       ')' => ANYTHING       //              ) close the AND-group
    *                             // implicitly close the first or group
    *   ],
    *   ```
@@ -237,80 +241,103 @@ trait FindLikeTrait
         unset($criteria[$key]);
       }
     }
-    $modifiers = []; // negation
-    $comparators = [];
-    $junctors = [];
-    $parens = [];
+
+    $whereCriteria = [];
+    $havingCriteria = [];
     foreach ($criteria as $key => $value) {
-      if (!preg_match('/^[!=<>&|()]+/', $key, $matches)) {
-        $modifiers[$key] = [];
-        $comparators[$key] = null;
-        $junctors[$key] = [];
-        $parens[$key] = null;
-        continue;
+      // if key is numeric we assume $value is a pair [ EXPR => VALUE ]
+      if (is_numeric($key)) {
+        $key = array_key_first($value);
+        $value = $value[$key];
       }
-      $operators = $matches[0];
-      unset($criteria[$key]);
-      $key = substr($key, strlen($operators));
-      $criteria[$key] = $value;
-      $modifiers[$key] = [];
-      $junctors[$key] = [];
-      $parens[$key] = [];
-      while (!empty($operators)) {
-        // reduce multiple ! signs
-        while (strpos($operators, '!!') !== false) {
-          $operators = str_replace('!!', '', $operators);
-        }
-        // (&, (|, !(|, !(&
-        foreach (self::$junctors as $abbr => $junctor) {
-          $pos = strpos($operators, $abbr);
-          if ($pos === 0) {
-            $operators = substr($operators, strlen($abbr));
-            $junctors[$key] = array_merge($junctors[$key], $junctor);
+      $groupFunction = null;
+      $fctPos = strpos($key, '@');
+      if ($fctPos !== false) {
+        $groupFunction = substr($key, $fctPos+1);
+        $key = substr($key, 0, $fctPos);
+      }
+
+      $criterion = [
+        'field' => $key,
+        'value' => $value,
+        'modifiers' => [],
+        'junctors' => [],
+        'comparator' => null,
+        'literal' => false,
+        'index' => count($whereCriteria) + count($havingCriteria),
+        'groupFunction' => $groupFunction,
+      ];
+
+      if (preg_match('/^[!=<>&|()]+/', $key, $matches)) {
+
+        $operators = $matches[0];
+        $key = substr($key, strlen($operators));
+
+        $criterion['field'] = $key;
+
+        while (!empty($operators)) {
+          // reduce multiple ! signs
+          while (strpos($operators, '!!') !== false) {
+            $operators = str_replace('!!', '', $operators);
           }
-          if (empty($operators)) {
-            break 2;
-          }
-        }
-        // this is only !
-        foreach (self::$modifiers as $abbr => $modifier) {
-          $pos = strpos($operators, $abbr);
-          if ($pos === 0) {
-            $operators = substr($operators, strlen($abbr));
-            $modifiers[$key][] = $modifier;
-          }
-          if (empty($operators)) {
-            break 2;
-          }
-        }
-        foreach (self::$comparisons as $abbr => $comparator) {
-          $pos = strpos($operators, $abbr);
-          if ($pos === 0) {
-            if (!empty($comparators[$key])) {
-              throw new \Exception('Comparison for key "'.$key.'" already set to "'.$comparators[$key].'".');
+          // (&, (|, !(|, !(&
+          foreach (self::$junctors as $abbr => $junctor) {
+            $pos = strpos($operators, $abbr);
+            if ($pos === 0) {
+              $operators = substr($operators, strlen($abbr));
+              $criterion['junctors'] = array_merge($criterion['junctors'], $junctor);
             }
-            if ($abbr == '=' && $value === null) {
-              throw new \Exception('Comparison with null is undefined, only equality is allowed.');
+            if (empty($operators)) {
+              break 2;
             }
-            if (is_array($value)) {
-              throw new \Exception('Array-valued comparisons are not allowed.');
-            }
-            $operators = substr($operators, strlen($abbr));
-            $comparators[$key] = $comparator;
           }
-          if (empty($operators)) {
-            break 2;
+          // this is only !
+          foreach (self::$modifiers as $abbr => $modifier) {
+            $pos = strpos($operators, $abbr);
+            if ($pos === 0) {
+              $operators = substr($operators, strlen($abbr));
+              $criterion['modifiers'][] = $modifier;
+            }
+            if (empty($operators)) {
+              break 2;
+            }
+          }
+          foreach (self::$comparisons as $abbr => $comparator) {
+            $pos = strpos($operators, $abbr);
+            if ($pos === 0) {
+              if (!empty($criterion['comparator'])) {
+                throw new \Exception('Comparison for key "' . $key . '" already set to "' . $criterion['comparator'] . '".');
+              }
+              if ($abbr == '=' && $value === null) {
+                throw new \Exception('Comparison with null is undefined, only equality is allowed.');
+              }
+              if (is_array($value)) {
+                throw new \Exception('Array-valued comparisons are not allowed.');
+              }
+              $operators = substr($operators, strlen($abbr));
+              $criterion['comparator'] = $comparator;
+            }
+            if (empty($operators)) {
+              break 2;
+            }
           }
         }
+      } // !empty($operators)
+
+      if ($groupFunction === null) {
+        $whereCriteria[] = $criterion;
+      } else {
+        $havingCriteria[] = $criterion;
       }
     }
 
     // walk through criteria and find associations ASSOCIATION.FIELD
     $joinEntities = [];
-    foreach ($criteria as $key => $value) {
-      $dotPos = strpos($key, '.');
+    foreach (array_merge($whereCriteria, $havingCriteria) as $criterion) {
+      $field = $criterion['field'];
+      $dotPos = strpos($field, '.');
       if ($dotPos !== false) {
-        $joinEntities[substr($key, 0, $dotPos)] = true;
+        $joinEntities[substr($field, 0, $dotPos)] = true;
       }
     }
     $indexBy = [];
@@ -332,13 +359,13 @@ trait FindLikeTrait
 
     // modify and also return
     $queryParts = [
-      'criteria' => $criteria,
+      'criteria' => [
+        'where' => $whereCriteria,
+        'having' => $havingCriteria,
+      ],
       'orderBy' => $orderBy,
       'joinEntities' => $joinEntities,
       'indexBy' => $indexBy,
-      'modifiers' => $modifiers,
-      'comparators' => $comparators,
-      'junctors' => $junctors,
       'collectionCriteria' => $collectionCriteria,
     ];
 
@@ -388,110 +415,133 @@ trait FindLikeTrait
       ${$key} = $part;
     }
 
-    if (!empty($criteria)) {
-      $groupExpression[0] = [
-        'junctor' => 'andX',
-        'components' => [],
-      ];
-      $groupLevel = 0;
+    foreach (['where', 'having'] as $conditionType) {
 
-      foreach ($criteria as $key => &$value) {
+      if (!empty($criteria[$conditionType])) {
+        $groupExpression = [
+          0 => [
+            'junctor' => 'andX',
+            'components' => [],
+          ]
+        ];
+        $groupLevel = 0;
 
-        foreach ($junctors[$key]??[] as $junctor) {
-          if ($junctor !== ')') {
-            $expression = [
-              'junctor' => $junctor,
-              'components' => [],
-            ];
-            $groupExpression[++$groupLevel] = $expression;
+        foreach ($criteria[$conditionType] as &$criterion) {
+
+          $field = $criterion['field'];
+          $value = $criterion['value'];
+
+          // $this->log('FIELD ' . $conditionType . ': ' . $field);
+
+          foreach ($criterion['junctors'] as $junctor) {
+            if ($junctor !== ')') {
+              $expression = [
+                'junctor' => $junctor,
+                'components' => [],
+              ];
+              $groupExpression[++$groupLevel] = $expression;
+            } else {
+              $expression = array_pop($groupExpression); $groupLevel--;
+              $junctor = $expression['junctor'];
+              $components = $expression['components'];
+              $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
+              $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+            }
+          }
+          if (empty($field)) {
+            continue;
+          }
+          // $this->log('FIELD ' . $field);
+          $dotPos = strpos($field, '.');
+          if ($dotPos !== false) {
+            $tableAlias = substr($field, 0, $dotPos);
           } else {
-            $expression = array_pop($groupExpression); $groupLevel--;
-            $junctor = $expression['junctor'];
-            $components = $expression['components'];
-            $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
+            $tableAlias = 'mainTable';
+            $field = $tableAlias . '.' . $field;
+          }
+          $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
+          if (!empty($criterion['groupFunction'])) {
+            $field = sprintf($criterion['groupFunction'], $field);
+          }
+          $comparator = $criterion['comparator'] ?? 'eq';
+          if ($value === null) {
+            $criterion['literal'] = true;
+            $expr = $qb->expr()->isNull($field);
+          } else if (is_array($value)) {
+            // special case empty array:
+            // - in principle always FALSE (nothing is in an empty set)
+            // - FIELD == NULL ? NULL in any given set would be FALSE, we
+            //   keep it that way, even if the set is empty
+            if (empty($value)) {
+              $criterion['literal'] = true;
+              // unfortunately, a literal 0 just cannot be modelled with the query builder
+              $expr = $qb->expr()->eq(1, 0);
+            } else {
+              $expr = $qb->expr()->in($field, ':' . $param);
+            }
+          } else if (is_string($value)) {
+            $value = str_replace('*', '%', $value);
+            if (strpos($value, '%') !== false) {
+              $expr = $qb->expr()->like($field, ':' . $param);
+            } else {
+              $expr = $qb->expr()->$comparator($field, ':' . $param);
+            }
+          } else {
+            $expr = $qb->expr()->$comparator($field, ':' . $param);
+          }
+          foreach ($criterion['modifiers'] as $modifier) {
+            $expr = $qb->expr()->$modifier($expr);
+          }
+          $groupExpression[$groupLevel]['components'][] = $expr;
+        }
+
+        // closing parenthesis maybe omitted at end, can be arbitrary many
+        while ($groupLevel >= 0) {
+          $expression = array_pop($groupExpression); $groupLevel--;
+          $junctor = $expression['junctor'];
+          $components = $expression['components'];
+          $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
+          if ($groupLevel >= 0) {
             $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+          } else {
+            $qb->{$conditionType}($compositeExpr);
           }
         }
-        $literal[$key] = false;
-        $dotPos = strpos($key, '.');
+        unset($criterion); // break reference
+      }
+
+      foreach ($criteria[$conditionType] as $criterion) {
+        if ($criterion['literal'])  {
+          continue;
+        }
+        $field = $criterion['field'];
+        if (empty($field)) {
+          continue;
+        }
+        // $this->log('PARAMETER ' . $field);
+        $dotPos = strpos($field, '.');
         if ($dotPos !== false) {
-          $tableAlias = substr($key, 0, $dotPos);
-          $field = $key;
+          $tableAlias = substr($field, 0, $dotPos);
+          $column = substr($field, $dotPos+1);
         } else {
           $tableAlias = 'mainTable';
-          $field = $tableAlias.'.'.$key;
+          $column = $field;
+          $field = $tableAlias . '.' . $column;
         }
-        $param = str_replace('.', '_', $field);
-        $comparator = $comparators[$key]??'eq';
-        if ($value === null) {
-          $literal[$key] = true;
-          $expr = $qb->expr()->isNull($field);
-        } else if (is_array($value)) {
-          // special case empty array:
-          // - in principle always FALSE (nothing is in an empty set)
-          // - FIELD == NULL ? NULL in any given set would be FALSE, we
-          //   keep it that way, even if the set is empty
-          if (empty($value)) {
-            $literal[$key] = true;
-            // unfortunately, a literal 0 just cannot be modelled with the query builder
-            $expr = $qb->expr()->eq(1, 0);
-          } else {
-            $expr = $qb->expr()->in($field, ':'.$param);
-          }
-        } else if (is_string($value)) {
-          $value = str_replace('*', '%', $value);
-          if (strpos($value, '%') !== false) {
-            $expr = $qb->expr()->like($field, ':'.$param);
-          } else {
-            $expr = $qb->expr()->$comparator($field, ':'.$param);
-          }
-        } else {
-          $expr = $qb->expr()->$comparator($field, ':'.$param);
-        }
-        foreach ($modifiers[$key] as $modifier) {
-          $expr = $qb->expr()->$modifier($expr);
-        }
-        $groupExpression[$groupLevel]['components'][] = $expr;
-      }
+        $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
 
-      // closing parenthesis maybe omitted at end, can be arbitrary many
-      while ($groupLevel >= 0) {
-        $expression = array_pop($groupExpression); $groupLevel--;
-        $junctor = $expression['junctor'];
-        $components = $expression['components'];
-        $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
-        if ($groupLevel > 0) {
-          $groupExpression[$groupLevel]['components'][] = $compositeExpr;
-        } else {
-          $qb->where($compositeExpr);
+        $value = $criterion['value'];
+        $fieldType = null;
+        if ($tableAlias == 'mainTable') {
+          if (!is_array($value)) {
+            // try to deduce the type as this is NOT done by ORM here
+            $fieldType = $this->getClassMetadata()->getTypeOfField($column);
+          }
         }
+        $qb->setParameter($param, $value, $fieldType);
       }
-      unset($value); // break reference
     }
 
-    foreach ($criteria as $key => $value) {
-      if ($literal[$key])  {
-        continue;
-      }
-      $dotPos = strpos($key, '.');
-      if ($dotPos !== false) {
-        $tableAlias = substr($key, 0, $dotPos);
-        $field = $key;
-      } else {
-        $tableAlias = 'mainTable';
-        $field = $tableAlias.'.'.$key;
-      }
-      $param = str_replace('.', '_', $field);
-
-      $fieldType = null;
-      if ($tableAlias == 'mainTable') {
-        if (!is_array($value)) {
-          // try to deduce the type as this is NOT done by ORM here
-          $fieldType = $this->getClassMetadata()->getTypeOfField($key);
-        }
-      }
-      $qb->setParameter($param, $value, $fieldType);
-    }
     self::addOrderBy($qb, $orderBy, $limit, $offset, 'mainTable');
 
     foreach ($collectionCriteria as $selectableCriteria) {
