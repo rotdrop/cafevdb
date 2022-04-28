@@ -803,16 +803,13 @@ class EmailFormController extends Controller {
     } else {
       $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
       $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
-      $missingEmailAddresses = '';
-      $separator = '';
-      foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
-        $missingEmailAddresses .= $separator;
-        $separator = ', ';
-        $missingEmailAddresses .=
-                               '<span class="missing-email-addresses personal-record" data-id="'.$id.'">'
-                               .$name
-                               .'</span>';
-      }
+
+      $missingEmailAddresses = (new TemplateResponse(
+        $this->appName,
+        'emailform/part.broken-email-addresses', [
+          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+        ],
+        'blank'))->render();
       $filterHistory = $recipientsFilter->filterHistory();
       $contents = '';
     }

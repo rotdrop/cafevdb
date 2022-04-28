@@ -460,14 +460,18 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   missingAddresses
     .off('click', '.personal-record')
     .on('click', '.personal-record', function(event) {
-      event.preventDefault();
+      const $this = $(this);
+
+      const musicianId = $this.data('musicianId');
+      const isParticipant = $this.data('isParticipant');
 
       const formData = form.find('fieldset.form-data');
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
 
       ProjectParticipants.personalRecordDialog(
-        $(this).data('id'), {
+        musicianId, {
+          table: isParticipant ? 'ProjectParticipants' : 'Musicians',
           projectId,
           projectName,
           initialValue: 'Change',

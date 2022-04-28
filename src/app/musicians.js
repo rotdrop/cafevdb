@@ -80,11 +80,7 @@ const addMusicians = function($form, post) {
           function() {
             Notification.messages(data.message);
             ProjectParticipants.personalRecordDialog(
-              {
-                projectId,
-                musicianId,
-              },
-              {
+              musicianId, {
                 projectId,
                 projectName,
                 initialValue: 'Change',

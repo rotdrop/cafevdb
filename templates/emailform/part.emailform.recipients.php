@@ -273,14 +273,7 @@ function basicSetValue(string $key)
         <?php echo $noMissingText; ?>
       </span>
       <span class="missing-email-addresses names">
-        <?php
-        $separator = '';
-        foreach ($missingEmailAddresses as $id => $name) {
-          echo $separator; $separator = ', ';
-          echo '<a href="#" class="missing-email-addresses personal-record" '.
-               '      data-id="'.$id.'">'.$name.'</a>';
-        }
-        ?>
+        <?php $this->inc('emailform/part.broken-email-addresses', $_); ?>
       </span>
     </span>
     <span class="<?php p($containerClass); ?> right filter-controls">

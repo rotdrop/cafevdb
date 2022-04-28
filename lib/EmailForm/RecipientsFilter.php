@@ -546,23 +546,34 @@ class RecipientsFilter
           if (!$mailer->validateAddress($emailVal)) {
             $bad = htmlspecialchars($displayName.' <'.$emailVal.'>');
             if (isset($this->brokenEMail[$rec])) {
-              $this->brokenEMail[$rec] .= ', '.$bad;
+              $this->brokenEMail[$rec]['label'] .= ', '.$bad;
             } else {
-              $this->brokenEMail[$rec] = $bad;
+              $this->brokenEMail[$rec] = [
+                'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
+                'label' => $bad,
+              ];
+
             }
           } else {
+            if ($musician->isMemberOf($this->projectId)) {
+              $this->logInfo('MEMBER ' . $musician->getPublicName());
+            }
             $this->eMails[$rec] = [
               'email'   => $emailVal,
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
               'project' => $this->projectId ?? 0,
+              'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
               'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
           }
         }
       } else {
-        $this->brokenEMail[$rec] = htmlspecialchars($displayName);
+        $this->brokenEMail[$rec] = [
+          'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
+          'label' => htmlspecialchars($displayName),
+        ];
       }
     }
 
@@ -871,13 +882,10 @@ class RecipientsFilter
   /** Return a list of musicians without email address, if any. */
   public function missingEmailAddresses()
   {
-    $result = [];
-    foreach ($this->brokenEMail as $key => $problem) {
-      if ($this->frozen && array_search($key, $this->emailRecs) === false) {
-        continue;
-      }
-      $result[$key] = $problem;
-    }
+    $result = array_filter($this->brokenEMail, function($key) {
+      return !$this->frozen || array_search($key, $this->emailRecs) !== false;
+    }, ARRAY_FILTER_USE_KEY);
+
     asort($result);
 
     return $result;

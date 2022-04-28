@@ -49,9 +49,10 @@ require('project-participants.scss');
  * Open a dialog in order to edit the personal reccords of one
  * musician.
  *
- * @param {int} record The record id. This is either the Id from the
- * Musiker table or the Id from the Besetzungen table, depending on
- * what else is passed in the second argument
+ * @param {int|Object} record The record id either as object or
+ * musician id. The format will be converted as appropriate depending
+ * on whether the ProjectParticipants table of the Musicians table is
+ * queried.
  *
  * @param {Object} options Additional option. In particular ProjectId
  * and ProjectName are honored, and the optiones IntialValue and
@@ -66,16 +67,20 @@ const myPersonalRecordDialog = function(record, options) {
       projectId: -1,
     };
   }
+
   if (typeof options.initialValue === 'undefined') {
     options.initialValue = 'View';
   }
   if (typeof options.reloadValue === 'undefined') {
     options.reloadValue = options.initialValue;
   }
-  if (typeof options.Project !== 'undefined') {
-    options.projectName = options.project;
-  } else if (typeof options.projectName !== 'undefined') {
-    options.project = options.projectName;
+
+  // treat integer record id as musician id
+  if (!isNaN(record)) {
+    record = { musicianId: record };
+  }
+  if (record.id) {
+    record.musicianId = record.id;
   }
 
   const pmeOperation = PHPMyEdit.sys('operation');
@@ -96,9 +101,6 @@ const myPersonalRecordDialog = function(record, options) {
     modified: false,
   };
 
-  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + record;
-  tableOptions[pmeRecord] = record;
-
   // Merge remaining options in.
   tableOptions = $.extend(tableOptions, options);
 
@@ -106,17 +108,27 @@ const myPersonalRecordDialog = function(record, options) {
     const projectMode = options.projectId > 0;
     tableOptions.template = projectMode ? 'add-musicians' : 'all-musicians';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+
+    // the proper record id is an object { id: ID }.
+    record = { id: record.musicianId };
   } else if (options.projectId > 0) {
-    tableOptions[pmeOperation] =
-      options.reloadValue + '?' + pmeRecord + '[project_id]=' + record.projectId + '&' + pmeRecord + '[musician_id]=' + record.musicianId;
     tableOptions.table = 'ProjectParticipants';
     tableOptions.template = 'project-participants';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+
+    // the proper record id is an object { project_id, musician_id }.
+    // eslint-disable-next-line camelcase
+    record = { musician_id: record.musicianId, project_id: options.projectId };
   } else {
     tableOptions.table = 'Musicians';
     tableOptions.template = 'all-musicians';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+    // the proper record id is an object { id: ID }.
+    record = { id: record.musicianId };
   }
+
+  tableOptions[pmeRecord] = record; // will be converted by $.param
+  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + encodeURIComponent(JSON.stringify(record));
 
   // alert('options: ' + CAFEVDB.print_r(tableOptions, true));
 
