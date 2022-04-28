@@ -288,7 +288,7 @@ function basicSetValue(string $key)
         <?php echo $noMissingText; ?>
       </span>
       <span class="missing-email-addresses names">
-        <?php $this->inc('emailform/part.broken-email-addresses', $_); ?>
+        <?php echo $this->inc('emailform/part.broken-email-addresses', []); ?>
       </span>
     </span>
     <span class="<?php p($containerClass); ?> right filter-controls">
@@ -328,4 +328,5 @@ function basicSetValue(string $key)
       />
     </span>
   </div>
+  <div class="busy-indicator hidden"><?php echo $l->t('Reloading recipients from database, please wait ...') ?></div>
 </fieldset>

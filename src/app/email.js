@@ -235,6 +235,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
   const filterHistoryInput = fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
+  const busyIndicator = fieldset.find('.busy-indicator');
 
   let filterUpdateActive = false;
 
@@ -250,6 +251,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     }
 
     filterUpdateActive = true;
+    busyIndicator.show();
 
     parameters = $.extend({}, defaultParameters, parameters);
 
@@ -271,6 +273,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       .fail(function(xhr, textStatus, errorThrown) {
         Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
           parameters.cleanup();
+          busyIndicator.hide();
           filterUpdateActive = false;
         });
       })
@@ -281,6 +284,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         if (!Ajax.validateResponse(data, requiredResponse)) {
           console.trace('MISSING PARAMETERS');
           parameters.cleanup();
+          busyIndicator.hide();
           filterUpdateActive = false;
           return;
         }
@@ -347,6 +351,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         if (resize) {
           panelHolder.trigger('resize', { position: 'bottom' });
         }
+
+        busyIndicator.hide();
         filterUpdateActive = false;
       });
     return false;
