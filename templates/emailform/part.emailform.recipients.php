@@ -239,12 +239,10 @@ function basicSetValue(string $key)
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
     </span>
-    <span class="instruments-filter <?php p($containerClass); ?> right tooltip-top"
-          title="<?php echo $toolTips['emailform:recipients:filter:instruments:container']; ?>">
+    <span class="instruments-filter <?php p($containerClass); ?> right tooltip-auto"
+          title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>">
       <span class="label top">
-        <label for="instruments-filter"
-               class="tooltip-off"
-               title="<?php echo $toolTips['emailform:recipients:filter:instruments:label']; ?>">
+        <label for="instruments-filter">
           <?php echo $l->t('Instruments Filter'); ?>
         </label>
       </span>
@@ -253,7 +251,6 @@ function basicSetValue(string $key)
                 multiple="multiple"
                 size="18"
                 class="instruments-filter"
-                title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[instrumentsFilter][]"
                 <?php p($filterReadonly); ?>
