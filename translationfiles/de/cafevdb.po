@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-28 09:06+0200\n"
-"PO-Revision-Date: 2022-04-28 09:11+0200\n"
+"POT-Creation-Date: 2022-04-28 19:49+0200\n"
+"PO-Revision-Date: 2022-04-28 19:51+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -321,51 +321,51 @@ msgstr "Em@il Adresse(n) ungültig"
 msgid "Unknown request: `%s'."
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: lib/Controller/EmailFormController.php:848
+#: lib/Controller/EmailFormController.php:845
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr "Analysieren der folgenden Email-Empfänger ist fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/EmailFormController.php:878
+#: lib/Controller/EmailFormController.php:875
 msgid "Form Input"
 msgstr "Formular Eingabe"
 
-#: lib/Controller/EmailFormController.php:953
+#: lib/Controller/EmailFormController.php:950
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr "Die folgenden Kontakte konnten leider nicht gespeichert werden: %s"
 
-#: lib/Controller/EmailFormController.php:959
+#: lib/Controller/EmailFormController.php:956
 #: lib/Controller/PaymentsController.php:214
 #: lib/Controller/SepaDebitMandatesController.php:1202
 msgid "UNIMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
-#: lib/Controller/EmailFormController.php:980
+#: lib/Controller/EmailFormController.php:977
 msgid "Attachment file-names were not submitted"
 msgstr "Dateinamen für Anhänge wurden nicht übermittelt"
 
-#: lib/Controller/EmailFormController.php:989
+#: lib/Controller/EmailFormController.php:986
 #: lib/Controller/UploadsController.php:162
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr "Datei \"%s\" konnte nicht im Cloud-Storage gefunden werden."
 
-#: lib/Controller/EmailFormController.php:992
+#: lib/Controller/EmailFormController.php:989
 #: lib/Controller/UploadsController.php:165
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 "Die Datei \"%s\" ist keine normale Datei, das ist nocht nicht implementiert."
 
-#: lib/Controller/EmailFormController.php:1006
-#: lib/Controller/EmailFormController.php:1064
+#: lib/Controller/EmailFormController.php:1003
+#: lib/Controller/EmailFormController.php:1061
 #: lib/Controller/UploadsController.php:241
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr "Konnte folgende Datei nicht zwischen-speichern: %s"
 
-#: lib/Controller/EmailFormController.php:1024
+#: lib/Controller/EmailFormController.php:1021
 #: lib/Controller/FileUploadRowTrait.php:60
 #: lib/Controller/UploadsController.php:197
 #, php-format
@@ -374,26 +374,26 @@ msgstr ""
 "Dateigröße %s sprengt das Hochlade-Limit %s, bitte den System-Administrator "
 "kontaktieren."
 
-#: lib/Controller/EmailFormController.php:1032
+#: lib/Controller/EmailFormController.php:1029
 #: lib/Controller/FileUploadRowTrait.php:68
 #: lib/Controller/UploadsController.php:205
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr "Es wurde keine Datei hochgeladen, Fehlermeldung war \"%s\"."
 
-#: lib/Controller/EmailFormController.php:1034
+#: lib/Controller/EmailFormController.php:1031
 #: lib/Controller/FileUploadRowTrait.php:70
 #: lib/Controller/UploadsController.php:207
 msgid "No file was uploaded. Unknown error"
 msgstr "Unbekannter Fehler. Es wurde keine Datei hochgeladen."
 
-#: lib/Controller/EmailFormController.php:1046
+#: lib/Controller/EmailFormController.php:1043
 #: lib/Controller/FileUploadRowTrait.php:98
 #: lib/Controller/UploadsController.php:219
 msgid "Not enough storage available"
 msgstr "Nicht genug Speicherplatz vorhanden."
 
-#: lib/Controller/EmailFormController.php:1070
+#: lib/Controller/EmailFormController.php:1067
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr "Unbekannte Quelle für Anhänge: \"%s\"."
@@ -2896,17 +2896,17 @@ msgstr ""
 "Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
 "der einzigen Verknüpfungs-Spalte."
 
-#: lib/Database/EntityManager.php:852 lib/Database/EntityManager.php:897
+#: lib/Database/EntityManager.php:854 lib/Database/EntityManager.php:899
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Database/EntityManager.php:1034
+#: lib/Database/EntityManager.php:1036
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
-#: lib/Database/EntityManager.php:1102
+#: lib/Database/EntityManager.php:1104
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -2974,7 +2974,7 @@ msgstr "Unterschrift"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:572 src/app/email.js:1290
+#: lib/EmailForm/Composer.php:572 src/app/email.js:1296
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -3199,17 +3199,17 @@ msgstr "Lokale Dateien"
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:453
+#: lib/EmailForm/RecipientsFilter.php:460
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:479
+#: lib/EmailForm/RecipientsFilter.php:486
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:668
+#: lib/EmailForm/RecipientsFilter.php:725
 #: lib/PageRenderer/PMETableViewBase.php:359
 msgid "member status "
 msgstr "Mitglieds-Status"
@@ -3604,7 +3604,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:119 src/app/email.js:1770
+#: lib/Notifications/Notifier.php:119 src/app/email.js:1776
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -3794,7 +3794,7 @@ msgstr "Kann keine Verbindung zum Mailing-List-Service aufnehmen."
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:167
 #: lib/PageRenderer/ProjectParticipants.php:1030
-#: templates/emailform/part.emailform.recipients.php:156
+#: templates/emailform/part.emailform.recipients.php:175
 msgid "Project Mailing List"
 msgstr "Projekt-Email-Verteiler"
 
@@ -9820,7 +9820,7 @@ msgstr ""
 "{personalSettingsLink} vorgenommen werden."
 
 #. TRANSLATORS src/components/AdminSettings.vue:223
-#: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:770
+#: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:782
 #: src/app/projects.js:487
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -10146,8 +10146,8 @@ msgstr "Abgebrochen"
 #: src/app/ajax.js:166 src/app/ajax.js:351 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
-#: src/app/blog.js:386 src/app/email.js:74 src/app/email.js:719
-#: src/app/email.js:845 src/app/inlineimage.js:56 src/app/inlineimage.js:63
+#: src/app/blog.js:386 src/app/email.js:74 src/app/email.js:725
+#: src/app/email.js:851 src/app/inlineimage.js:56 src/app/inlineimage.js:63
 #: src/app/inlineimage.js:158 src/app/inlineimage.js:429
 #: src/app/pme-file-upload-row.js:151 src/app/pme-file-upload-row.js:167
 #: src/app/sepa-debit-mandate.js:285 src/app/sepa-debit-mandate.js:301
@@ -10461,35 +10461,35 @@ msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:718
+#: src/app/email.js:724
 msgid "Unknown form element: {formElement}"
 msgstr "Unbekanntes Formularfeld: {formElement}"
 
-#: src/app/email.js:762 src/app/email.js:1935
+#: src/app/email.js:768 src/app/email.js:1941
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:764 src/app/email.js:1937
+#: src/app/email.js:770 src/app/email.js:1943
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:844
+#: src/app/email.js:850
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:904
+#: src/app/email.js:910
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht {active} von {total}"
 
-#: src/app/email.js:906
+#: src/app/email.js:912
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:935
+#: src/app/email.js:941
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:971
+#: src/app/email.js:977
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -10497,11 +10497,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:1106
+#: src/app/email.js:1112
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:1138
+#: src/app/email.js:1144
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -10514,19 +10514,19 @@ msgstr ""
 "gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
 "auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
-#: src/app/email.js:1143
+#: src/app/email.js:1149
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:1204
+#: src/app/email.js:1210
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:1205
+#: src/app/email.js:1211
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1237
+#: src/app/email.js:1243
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -10534,11 +10534,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1239
+#: src/app/email.js:1245
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1272
+#: src/app/email.js:1278
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -10546,17 +10546,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1274
+#: src/app/email.js:1280
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1288
+#: src/app/email.js:1294
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1305
+#: src/app/email.js:1311
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -10564,19 +10564,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1308
+#: src/app/email.js:1314
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1350
+#: src/app/email.js:1356
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1351
+#: src/app/email.js:1357
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1415
+#: src/app/email.js:1421
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -10584,36 +10584,36 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1417
+#: src/app/email.js:1423
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1568
+#: src/app/email.js:1574
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1569 src/app/email.js:1711
+#: src/app/email.js:1575 src/app/email.js:1717
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1670
+#: src/app/email.js:1676
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1710
+#: src/app/email.js:1716
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1769 templates/emailform/part.emailform.composer.php:167
+#: src/app/email.js:1775 templates/emailform/part.emailform.composer.php:167
 #: templates/emailform/part.emailform.composer.php:186
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1773
+#: src/app/email.js:1779
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1776
+#: src/app/email.js:1782
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -10782,23 +10782,23 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: src/app/musicians.js:182
+#: src/app/musicians.js:178
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: src/app/musicians.js:232
+#: src/app/musicians.js:228
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: src/app/musicians.js:258
+#: src/app/musicians.js:254
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr "die Email-Adresse is leer, kann dehalb nichts machen."
 
-#: src/app/musicians.js:348
+#: src/app/musicians.js:344
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: src/app/musicians.js:620
+#: src/app/musicians.js:616
 msgid ""
 "You definitely do not want to add duplicates to the database.\n"
 "Please answer \"no\" in order to add a new musician,\n"
@@ -10811,11 +10811,11 @@ msgstr ""
 "hinzuzufügen. Im Zweifel aber bitte mit \"ja\" antworten. Im Folgenden\n"
 "wird dann die bereits eingetragene Person angezeigt."
 
-#: src/app/musicians.js:630
+#: src/app/musicians.js:626
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 
-#: src/app/musicians.js:662
+#: src/app/musicians.js:658
 msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
@@ -10950,7 +10950,7 @@ msgstr ""
 msgid "Overwrite Existing Records?"
 msgstr "Existierende Daten überschreiben?"
 
-#: src/app/project-participants.js:732
+#: src/app/project-participants.js:744
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
@@ -10958,7 +10958,7 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:775 src/app/projects.js:492
+#: src/app/project-participants.js:787 src/app/projects.js:492
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
@@ -11499,56 +11499,71 @@ msgstr ""
 "Der Projekt-Email-Verteiler ist nicht konfiguriert. Das kann man als\n"
 "Gruppen-Administrator in den Email-Einstellungen der App ändern."
 
-#: templates/emailform/part.emailform.recipients.php:104
+#: templates/emailform/part.emailform.recipients.php:108
 msgid "Basic Recipients Set"
 msgstr "Auswahl-Kontext"
 
-#: templates/emailform/part.emailform.recipients.php:174
+#: templates/emailform/part.emailform.recipients.php:124
+#, php-format
+msgid "IS_PARTICIPANT_OF: &isin; %s (confirmed)"
+msgstr "Teilnehmende (bestätigt)"
+
+#: templates/emailform/part.emailform.recipients.php:140
+#, php-format
+msgid "IS_PARTICIPANT_OF: &isin; %s (preliminary)"
+msgstr "Teilnehmende (vorläufig)"
+
+#: templates/emailform/part.emailform.recipients.php:157
+#, php-format
+msgid "IS_NON_PARTICIPANT_OF: &notin; %s"
+msgstr "Nicht-Teilnehmende"
+
+#: templates/emailform/part.emailform.recipients.php:193
 msgid "Database"
 msgstr "Datenbank"
 
-#: templates/emailform/part.emailform.recipients.php:178
+#: templates/emailform/part.emailform.recipients.php:197
 msgid "CONJUNCTION: or"
 msgstr "oder"
 
-#: templates/emailform/part.emailform.recipients.php:194
+#: templates/emailform/part.emailform.recipients.php:213
 #: templates/settings/email-settings.php:129
 msgid "Announcements Mailing List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: templates/emailform/part.emailform.recipients.php:208
+#: templates/emailform/part.emailform.recipients.php:227
 msgid "Member-Status"
 msgstr "Mitgliedsstatus"
 
-#: templates/emailform/part.emailform.recipients.php:216
+#: templates/emailform/part.emailform.recipients.php:235
 msgid "Select Members by Status"
 msgstr "Empfänger gemäß Status"
 
-#: templates/emailform/part.emailform.recipients.php:230
+#: templates/emailform/part.emailform.recipients.php:249
 msgid "Email Recipients"
 msgstr "Em@il Empfänger"
 
-#: templates/emailform/part.emailform.recipients.php:246
+#: templates/emailform/part.emailform.recipients.php:265
 msgid "Instruments Filter"
 msgstr "Instrumenten-Filter"
 
-#: templates/emailform/part.emailform.recipients.php:254
+#: templates/emailform/part.emailform.recipients.php:273
 msgid "Select Instruments"
 msgstr "Instrumente auswählen"
 
-#: templates/emailform/part.emailform.recipients.php:289
+#: templates/emailform/part.emailform.recipients.php:301
 msgid "Apply Filter"
 msgstr "Filter anwenden"
 
-#: templates/emailform/part.emailform.recipients.php:297
+#: templates/emailform/part.emailform.recipients.php:309
 msgid "Undo Filter"
 msgstr "Filter `Undo'"
 
-#: templates/emailform/part.emailform.recipients.php:306
+#: templates/emailform/part.emailform.recipients.php:318
 msgid "Redo Filter"
 msgstr "Filter `Redo'"
 
-#: templates/emailform/part.emailform.recipients.php:315
+#: templates/emailform/part.emailform.recipients.php:327
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
