@@ -92,8 +92,12 @@ function basicSetValue(string $key)
   <?php echo PageNavigation::persistentCGI(RecipientsFilter::POST_TAG, $recipientsFormData); ?>
   <?php if ($projectId > 0 && $frozen) { ?>
     <input type="hidden"
-           name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_KEY); ?>"
-           value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_KEY); ?>"
+           name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+           value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+    />
+    <input type="hidden"
+           name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+           value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
     />
   <?php } else { ?>
     <div class="cafevdb-email-form <?php p($rowClass); ?>">
@@ -105,20 +109,35 @@ function basicSetValue(string $key)
           </label>
         </span>
         <?php if ($projectId > 0) { ?>
-          <span class="ifproject basic-recipients-set from-project inner vmiddle <?php p($containerClass); ?>">
+          <span class="ifproject basic-recipients-set from-project confirmed inner vmiddle <?php p($containerClass); ?>">
             <input type="checkbox"
-                   id="basic-recipients-set-from-project"
-                   class="basic-recipients-set from-project tip"
-                   disabledtitle="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>"
-                   name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_KEY); ?>"
-                   value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_KEY); ?>"
-            <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_KEY] ? 'checked' : ''; ?>
+                   id="basic-recipients-set-from-project-confirmed"
+                   class="basic-recipients-set from-project confirmed"
+                   name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+                   value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+            <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY] ? 'checked' : ''; ?>
                    />
             <span class="label right">
-              <label for="basic-recipients-set-from-project"
+              <label for="basic-recipients-set-from-project-confirmed"
                      class="tip"
-                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>">
-                <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
+                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:confirmed']; ?>">
+                <span class="basic-recipients-set from-project confirmed button"><?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (confirmed)', $projectName); ?></span>
+              </label>
+            </span>
+          </span>
+          <span class="ifproject basic-recipients-set from-project preliminary inner vmiddle <?php p($containerClass); ?>">
+            <input type="checkbox"
+                   id="basic-recipients-set-from-project-preliminary"
+                   class="basic-recipients-set from-project prelminary"
+                   name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+                   value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+            <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY] ? 'checked' : ''; ?>
+                   />
+            <span class="label right">
+              <label for="basic-recipients-set-from-project-preliminary"
+                     class="tip"
+                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:preliminary']; ?>">
+                <span class="basic-recipients-set from-project preliminary button"><?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (preliminary)', $projectName); ?></span>
               </label>
             </span>
           </span>
@@ -135,7 +154,7 @@ function basicSetValue(string $key)
               <label for="basic-recipients-set-except-project"
                      class="tip"
                      title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
-                <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
+                <span class="basic-recipients-set except-project button"><?php echo $l->t('IS_NON_PARTICIPANT_OF: &notin; %s', $projectName); ?></span>
               </label>
             </span>
           </span>
