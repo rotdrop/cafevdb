@@ -186,6 +186,10 @@ class ToolTipsService implements \ArrayAccess, \Countable
       }
     }
 
+    $tip = preg_replace('/(^\s*[\n])+/m', '<p class="tooltip-paragraph">', $tip);
+
+    // idea: allow markdown?
+
     return empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
   }
 
@@ -280,15 +284,19 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
         'storage' => [
           'messages' => [
             'select' => $this->l->t('Select either a message draft or template as base for the current message.'),
-            'new-template' => $this->l->t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
+            'new-template' => $this->l->t('Enter a short, no-nonsense name for the new template. The name will be converted to "camel-case", e.g. "hello world" will yield the name "HelloWorld".'),
             'save-as-template' => $this->l->t('Activate this checkbox in order to save the current email message as
 message template. If you leave this check-box unchecked, then messages
-will be saved as draft. The difference between a draft and a template
+will be saved as draft.
+
+The difference between a draft and a template
 is the following: draft messages will be deleted when the message is
 actually sent out (and potentially "inactive" drafts will be purged
 from the data-base after some time). Templates will never be
-purged. Also, draft messages will be saved with all attachment and --
-most important -- inlcuding the set of the currently selected
+purged.
+
+Also, draft messages will be saved with all attachment and --
+most important -- including the set of the currently selected
 recipients. Message templates, in contrast, are saved with an empty recipient list, as should be.'),
             'save-message' => $this->l->t('Save the currently active email message either as draft
 (i.e. including recipients and attachments) or as message template
@@ -367,9 +375,9 @@ list.'),
             'instruments' => [
               'filter' => $this->l->t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
-include the musicians playing either of them.'),
-              'container' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
-              'label' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
+include the musicians playing either of them.
+
+A double-click inside the filter-box will apply the filter.'),
               'apply' => $this->l->t('Apply the currently selected instruments as filter. At your option,
 you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
             ],
