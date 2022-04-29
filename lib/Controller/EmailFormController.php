@@ -429,7 +429,6 @@ class EmailFormController extends Controller {
       switch ($topic) {
       case 'sent':
         $value = $requestData['sentMessagesSelector'];
-        $this->logInfo('SENT EMAIL ID "' . $value . '"');
         if (!$composer->loadSentEmail($value)) {
           return self::grumble($this->l->t('Unable to load sent email with message-id "%s".', $value));
         }
@@ -795,7 +794,7 @@ class EmailFormController extends Controller {
         'toolTips' => $this->toolTipsService(),
       ];
 
-      $content = (new TemplateResponse(
+      $contents = (new TemplateResponse(
         $this->appName,
         'emailform/part.emailform.recipients',
         $templateParameters,
@@ -822,12 +821,20 @@ class EmailFormController extends Controller {
         ],
       'blank'))->render();
 
+    $instrumentsFilter = (new TemplateResponse(
+      $this->appName,
+        'emailform/part.instruments-filter', [
+          'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+        ],
+      'blank'))->render();
+
     return self::dataResponse([
       'projectName' => $projectName,
       'projectId' => $projectId,
       'recipientsOptions' => $recipientsOptions,
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
+      'instrumentsFilter' => $instrumentsFilter,
       // remaining parameter is expected by JS code and needs to be there
       'contents' => '',
     ]);

@@ -33,7 +33,11 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
-import { deselectAll as selectDeselectAll, optionByValue as selectOptionByValue } from './select-utils.js';
+import {
+  refreshWidget as refreshSelect,
+  deselectAll as selectDeselectAll,
+  optionByValue as selectOptionByValue,
+} from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -233,6 +237,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const missingAddresses = fieldset.find('.missing-email-addresses.names');
   const missingLabel = fieldset.find('.missing-email-addresses.label');
   const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
+  const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
+  const instrumentsSelect = instrumentsFilter.find('select');
   const filterHistoryInput = fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
   const busyIndicator = fieldset.find('.busy-indicator');
@@ -285,6 +291,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             'recipientsOptions',
             'missingEmailAddresses',
             'filterHistory',
+            'instrumentsFilter',
           ];
         if (!Ajax.validateResponse(data, requiredResponse)) {
           console.trace('MISSING PARAMETERS');
@@ -305,14 +312,15 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
           resize = true;
         } else {
-          // Here goes the real work
-          // We only need to update the select-element and the list
-          // of musicians which should be possible recipients but
-          // do not have an email address.
+          // partial update
           $.fn.cafevTooltip.hide();
+
+          // list of recipients
           recipientsSelect.html(data.recipientsOptions);
           recipientsSelect.bootstrapDualListbox('refresh', true);
           filterHistoryInput.val(data.filterHistory);
+
+          // list of broken email addresses
           missingAddresses.html(data.missingEmailAddresses);
           if (data.missingEmailAddresses.length > 0) {
             missingLabel.removeClass('reallyhidden');
@@ -321,6 +329,13 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             missingLabel.addClass('reallyhidden');
             noMissingLabel.removeClass('reallyhidden');
           }
+
+          // update the instruments filter
+          instrumentsSelect.html(data.instrumentsFilter);
+          selectOptionByValue(instrumentsSelect, '').remove();
+          selectOptionByValue(instrumentsSelect, '*').remove();
+          refreshSelect(instrumentsSelect);
+
           resize = true;
         }
 
@@ -395,7 +410,6 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const controlsContainer = fieldset.find('.filter-controls.' + appPrefix('container'));
 
   // Instruments filter
-  const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   instrumentsFilter.on('dblclick', function(event) {
     readonlyFilterControls(true);
     applyRecipientsFilter.call(this, event, {

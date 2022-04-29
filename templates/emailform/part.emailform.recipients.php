@@ -65,11 +65,11 @@ $filterReadonly = $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LI
 
 $announcementsMailingListTitle = !empty($announcementsMailingList)
  ? $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']
- : $l->t('The global announcements mailing list is not configured. This can be changed by a group-administrator in the email-settings section of the app.');
+ : htmlspecialchars($l->t('The global announcements mailing list is not configured or the mailing-list server is unreachable.'));
 
 $projectMailingListTitle = !empty($projectMailingList)
  ? $toolTips['emailform:recipients:filter:basic-set:project-mailing-list']
- : $l->t('The project mailing list is not configured. This can be changed on the project overview page.');
+ : htmlspecialchars($l->t('The project mailing list is not configured or the mailing-list server is unreachable.'));
 
 function cgiName(string $key, ?string $subKey = null)
 {
@@ -300,7 +300,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                 name="emailRecipients[instrumentsFilter][]"
                 <?php p($filterReadonly); ?>
         >
-          <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
+          <?php echo $this->inc('emailform/part.instruments-filter', []); ?>
         </select>
       </span>
     </span>
