@@ -805,6 +805,7 @@ class EmailFormController extends Controller {
         'projectId' => $projectId,
         'contents' => $contents,
         // remaining parameter are expected by JS code and need to be there
+        'instrumentsFilter' => '',
         'recipientsOptions' => '',
         'missingEmailAddresses' => '',
         'filterHistory' => '',
