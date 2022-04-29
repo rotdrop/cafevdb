@@ -252,9 +252,13 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       cleanup() {},
     };
 
+    $.fn.cafevTooltip.hide();
+
     if (filterUpdateActive) {
       return false;
     }
+
+    console.trace('BLAH');
 
     filterUpdateActive = true;
     busyIndicator.show();
@@ -409,23 +413,25 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   // Controls :..
   const controlsContainer = fieldset.find('.filter-controls.' + appPrefix('container'));
 
-  // Instruments filter
-  instrumentsFilter.on('dblclick', function(event) {
-    readonlyFilterControls(true);
-    applyRecipientsFilter.call(this, event, {
-      cleanup: () => readonlyFilterControls(false),
+  instrumentsFilter
+    .off('change')
+    .on('change', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
     });
-  });
 
   // Member status filter
   const memberStatusFilter = fieldset.find('select.member-status-filter');
-  memberStatusFilter.off('change');
-  memberStatusFilter.on('change', function(event) {
-    readonlyFilterControls(true);
-    applyRecipientsFilter.call(this, event, {
-      cleanup: () => readonlyFilterControls(false),
+  memberStatusFilter
+    .off('change')
+    .on('change', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
     });
-  });
 
   // Basic recipients set (from project, except project, use mailing lists)
   const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
@@ -627,6 +633,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     if (request === undefined) {
       throw Error('Request is undefined');
     }
+
+    $.fn.cafevTooltip.hide();
 
     if (validateLockCB === undefined) {
       validateLockCB = function(lock) {};
