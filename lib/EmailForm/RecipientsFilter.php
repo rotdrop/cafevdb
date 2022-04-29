@@ -534,16 +534,16 @@ class RecipientsFilter
   {
     // add the instruments filter
     if (!empty($this->instrumentsFilter)) {
-      $criteria['instruments.instrument'] = $this->instrumentsFilter;
-      if ($this->projectId > 0 && ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0) {
-        $criteria['projectInstruments.instrument'] = $this->instrumentsFilter;
-        $criteria['projectInstruments.project'] = $this->projectId;
+      $criteria[] = [ 'instruments.instrument' => $this->instrumentsFilter ];
+      if ($this->projectId > 0 && ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) == 0) {
+        $criteria[] = [ 'projectInstruments.instrument' => $this->instrumentsFilter ];
+        $criteria[] = [ 'projectInstruments.project' => $this->projectId ];
       }
     }
     if ($this->frozen && $this->projectId > 0) {
-      $criteria['id'] = $this->emailRecs;
+      $criteria[] = [ 'id' => $this->emailRecs ];
     }
-    $criteria['!memberStatus'] = $this->memberStatusBlackList();
+    $criteria[] = [ '!memberStatus' => $this->memberStatusBlackList() ];
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
