@@ -126,13 +126,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
                          <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY] ? 'checked' : ''; ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-from-project-confirmed"
-                           class="tip"
-                           title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:confirmed']; ?>">
-                      <span class="basic-recipients-set from-project confirmed button"><?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (confirmed)', $projectName); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-from-project-confirmed"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:confirmed']; ?>">
+                    <?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (confirmed)', $projectName); ?>
+                  </label>
                 </span>
               </li>
               <li class="dropdown-item tooltip-auto">
@@ -144,13 +142,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
                          <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY] ? 'checked' : ''; ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-from-project-preliminary"
-                           class="tip"
-                           title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:preliminary']; ?>">
-                      <span class="basic-recipients-set from-project preliminary button"><?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (preliminary)', $projectName); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-from-project-preliminary"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:preliminary']; ?>">
+                    <?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (preliminary)', $projectName); ?>
+                  </label>
                 </span>
               </li>
               <li class="dropdown-item tooltip-auto">
@@ -162,13 +158,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          value="<?php echo basicSetValue(RecipientsFilter::EXCEPT_PROJECT_KEY); ?>"
                          <?php echo $basicRecipientsSet[RecipientsFilter::EXCEPT_PROJECT_KEY] ? 'checked' : ''; ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-except-project"
-                           class="tip"
-                           title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
-                      <span class="basic-recipients-set except-project button"><?php echo $l->t('IS_NON_PARTICIPANT_OF: &notin; %s', $projectName); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-except-project"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
+                    <?php echo $l->t('IS_NON_PARTICIPANT_OF: &notin; %s', $projectName); ?>
+                  </label>
                 </span>
               </li>
               <li class="dropdown-item tooltip-auto">
@@ -181,13 +175,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          <?php $basicRecipientsSet[RecipientsFilter::PROJECT_MAILING_LIST_KEY] && p('checked'); ?>
                          <?php empty($projectMailingList) && p('disabled'); ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-project-mailing-list"
-                           class="tip"
-                           title="<?php echo $projectMailingListTitle; ?>">
-                      <span class="basic-recipients-set mailing-list project-mailing-list button"><?php p($l->t('Project Mailing List')); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-project-mailing-list"
+                         class="tip"
+                         title="<?php echo $projectMailingListTitle; ?>">
+                    <?php p($l->t('Project Mailing List')); ?>
+                  </label>
                 </span>
               </li>
 <?php } else { ?>
@@ -200,13 +192,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          value="<?php echo basicSetValue(''); ?>"
                          <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] || empty($announcementsMailingList) || p('checked'); ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-database"
-                           class="tip"
-                           title="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>">
-                      <span class="basic-recipients-set mailing-list announcements-mailing-list button"><?php p($l->t('Database')); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-database"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>">
+                    <?php p($l->t('Database')); ?>
+                  </label>
                 </span>
               </li>
                 <!-- <span class="fill-word conjunction"><?php p($l->t('CONJUNCTION: or')); ?></span>  -->
@@ -221,13 +211,11 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] && p('checked'); ?>
                          <?php empty($announcementsMailingList) && p('disabled'); ?>
                   />
-                  <span class="label right">
-                    <label for="basic-recipients-set-announcements-mailing-list"
-                           class="tip"
-                           title="<?php echo $announcementsMailingListTitle; ?>">
-                      <span class="basic-recipients-set mailing-list announcements-mailing-list button"><?php p($l->t('Announcements Mailing List')); ?></span>
-                    </label>
-                  </span>
+                  <label for="basic-recipients-set-announcements-mailing-list"
+                         class="tip"
+                         title="<?php echo $announcementsMailingListTitle; ?>">
+                    <?php p($l->t('Announcements Mailing List')); ?>
+                  </label>
                 </span>
               </li>
             </ul>

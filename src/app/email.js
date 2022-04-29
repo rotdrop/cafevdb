@@ -254,20 +254,20 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
     $.fn.cafevTooltip.hide();
 
+    event.preventDefault(); // as our return value is not necessarily passed back to JQ
+
     if (filterUpdateActive) {
       return false;
     }
 
-    console.trace('BLAH');
-
     filterUpdateActive = true;
-    busyIndicator.show();
 
     parameters = $.extend({}, defaultParameters, parameters);
 
-    event.preventDefault(); // ?? really needed
-
     const historySnapshot = parameters.historySnapshot;
+    if (!historySnapshot) {
+      busyIndicator.show();
+    }
 
     let post = fieldset.serialize();
     if (historySnapshot) {
@@ -298,7 +298,6 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             'instrumentsFilter',
           ];
         if (!Ajax.validateResponse(data, requiredResponse)) {
-          console.trace('MISSING PARAMETERS');
           parameters.cleanup();
           busyIndicator.hide();
           filterUpdateActive = false;

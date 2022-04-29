@@ -320,8 +320,8 @@
             }
 
             .basic-recipients-set.#{$cssPrefix}container.inner {
-              margin: 0 0.5em 0 0.5em;
               position:relative;
+              width:100%;
 
               input[type=checkbox], input[type=radio] {
                 position: absolute;
@@ -331,27 +331,23 @@
                 height: 1px;
                 overflow: hidden;
 
-                + .label {
+                + label {
                   width:100%;
-                }
-                + .label span.button {
-                  display:inline-block;
-                  background-color:#F4F4F4 !important;
-                  box-shadow:1px 1px 1px #080808;
                   white-space:nowrap;
                   overflow:hidden;
                   text-overflow:ellipsis;
-                  max-width:100%;
+                  background-repeat:no-repeat;
+                  background-size:16px 16px;
+                  background-position:4px center;
+                  padding-left:24px;
                 }
-                &:checked + .label span.button {
-                  display:inline-block;
-                  background-color:LightSteelBlue !important;
-                  box-shadow:1px 1px 1px #080808 inset;
-                  white-space:nowrap;
-                  text-overflow:ellipsis;
+                &:checked + label {
+                  color:red;
+                  font-style:italic !important;
+                  background-image:url('../../../core/img/actions/checkmark.svg');
                 }
-                &:disabled + .label {
-                  opacity: 0.3;
+                &:disabled + label {
+                  opacity: 0.2;
                 }
               }
             }
