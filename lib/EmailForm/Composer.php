@@ -3954,10 +3954,18 @@ Störung.';
         $file = $this->appStorage->getDraftsFile($fileName);
         if (!empty($file)) {
           $file->delete();
+          $file = null;
         }
-        $this->forgetTemporaryFile($fileName);
-      } catch (\Throwable $t) {
-        $this->logException($t, 'Unable to remove temporary file.');
+      } catch (\OCP\Files\NotFoundException $e) {
+        // this is ok, we just wanted to delete it anyway
+        $file = null;
+      }
+      if (empty($file)) {
+        try {
+          $this->forgetTemporaryFile($fileName);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to remove temporary file.');
+        }
       }
     }
     $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
