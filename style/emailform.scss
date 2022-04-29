@@ -20,19 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.recipients-select {
-  button {
-    min-height: unset;
-  }
-  @import 'bootstrap/scss/bootstrap';
-  @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
-  .bootstrap-duallistbox-container {
-    input, select, button {
-      background-color:#FFF;
-    }
-  }
-}
-
 .ui-dialog.emailform {
   overflow:hidden;
   max-height: 90%; /* !important;*/
@@ -111,6 +98,17 @@
         fieldset.page {
           max-width:65em;
           /* padding-right:1.2em; */
+        }
+
+        &:not(.project-mode) {
+          .only-project-mode {
+            display:none !important;
+          }
+        }
+        &.project-mode {
+          .not-project-mode {
+            display:none !important;
+          }
         }
 
         // two-state checkbox with button-like display
@@ -198,7 +196,9 @@
          *
          */
 
-        #emailformrecipients {
+        div#emailformrecipients {
+          /* has just one child, the fieldset */
+
           overflow-y: auto;
           overflow-x: hidden;
           padding-bottom: 0px !important;
@@ -214,6 +214,24 @@
             clear: both;
           }
 
+          #basic-recipient-set-wrapper {
+            /* contains the "basic recipients set" drop-down */
+            overflow:visible;
+          }
+
+          .recipients-select {
+            button {
+              min-height: unset;
+            }
+            @import 'bootstrap/scss/bootstrap';
+            @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
+            .bootstrap-duallistbox-container {
+              input, select, button {
+                background-color:#FFF;
+              }
+            }
+          }
+
           .busy-indicator {
 	    position: absolute;
 	    width: fit-content;
@@ -223,7 +241,180 @@
 	    transform: translate(-50%, -50%);
 	    opacity: 1;
 	    background: lightgray;
+            padding:3px 7px;
+            z-index:50;
           }
+
+          .missing-email-addresses {
+            &.names.disabled .personal-record {
+              opacity:40%;
+              pointer-events:none;
+            }
+
+            .personal-record {
+              color:red;
+              font-style:italic;
+              text-decoration:underline;
+              font-weight:bold;
+              cursor:pointer;
+              padding:2px;
+            }
+
+            .personal-record:hover {
+              /* box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
+              /* background-color:LightSteelBlue; */
+              color: var(--color-main-text);
+              background-color:rgba(250,250,250,1.0);
+
+            }
+
+            .personal-record:active {
+              /* box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+              color: var(--color-main-text);
+              background-color:LightSteelBlue;
+            }
+          }
+
+          .member-status-filter.#{$cssPrefix}container {
+            min-height:2em;
+            line-height:2em;
+            width:100%;
+          }
+
+          #member_status_filter_chosen {
+            min-width:40% !important;
+            max-width:80% !important;
+            width:auto !important;
+          }
+
+          span.basic-recipients-set.#{$cssPrefix}container.outer {
+            max-width:100%;
+            white-space:nowrap;
+            overflow:hidden;
+
+            .basic-recipients-set.brief-description {
+              display:none;
+              font-style:italic;
+              font-weight:bold;
+              color:red;
+            }
+
+            &.announcementsMailingList {
+              .basic-recipients-set.brief-description.announcementsMailingList {
+                display:initial;
+              }
+            }
+
+            &.projectMailingList {
+              .basic-recipients-set.brief-description.projectMailingList {
+                display:initial;
+              }
+            }
+
+            &:not(.announcementsMailingList, .projectMailingList) {
+
+              @each $selector1 in ".fromProjectConfirmed", ":not(.fromProjectConfirmed)" {
+                @each $selector2 in ".fromProjectPreliminary", ":not(.fromProjectPreliminary)" {
+                  @each $selector3 in ".exceptProject", ":not(.exceptProject)" {
+                    &#{$selector1}#{$selector2}#{$selector3} {
+                      .basic-recipients-set.brief-description {
+                        &#{$selector1}#{$selector2}#{$selector3} {
+                          display:initial;
+                          &.announcementsMailingList, &.projectMailingList {
+                            display:none;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .basic-recipients-set.#{$cssPrefix}container.inner {
+              margin: 0 0.5em 0 0.5em;
+              position:relative;
+
+              input[type=checkbox], input[type=radio] {
+                position: absolute;
+                left:-10000px;
+                top: auto;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+
+                + .label {
+                  width:100%;
+                }
+                + .label span.button {
+                  display:inline-block;
+                  background-color:#F4F4F4 !important;
+                  box-shadow:1px 1px 1px #080808;
+                  white-space:nowrap;
+                  overflow:hidden;
+                  text-overflow:ellipsis;
+                  max-width:100%;
+                }
+                &:checked + .label span.button {
+                  display:inline-block;
+                  background-color:LightSteelBlue !important;
+                  box-shadow:1px 1px 1px #080808 inset;
+                  white-space:nowrap;
+                  text-overflow:ellipsis;
+                }
+                &:disabled + .label {
+                  opacity: 0.3;
+                }
+              }
+            }
+          }
+
+          .recipients-select.#{$cssPrefix}container {
+            width:80%;
+
+            .btn, .btn-outline-secondary {
+              &:focus {
+                box-shadow:0 0;
+              }
+            }
+          }
+
+          .instruments-filter.#{$cssPrefix}container {
+            width:18%;
+            text-align:right;
+            cursor: pointer;
+          }
+
+          .instruments-filter.#{$cssPrefix}container label {
+          }
+
+          span#instruments-filter-wrapper {
+            margin-top:0.3em;
+            display:inline-block;
+            text-align:left;
+            width: 100%;
+          }
+
+          .instruments-filter.#{$cssPrefix}container .chosen-container {
+            width:100% !important;
+          }
+
+          input.instruments-filter-controls {
+            &.apply, &.undo, &.redo, &.reset {
+              background-repeat:no-repeat;
+              background-size: 28px 28px;
+              background-position: center;
+              width:28px;
+              height:28px;
+              font-size:0pt;
+              vertical-align:middle;
+            }
+            &.apply { background-image:url('../img/email-new-yes.svg'); }
+            &.undo { background-image:url('../img/email-new-undo.svg'); }
+            &.redo { background-image:url('../img/email-new-redo.svg'); }
+            &.reset { background-image:url('../img/email-new-x.svg'); }
+          }
+
 
         }
 
@@ -234,11 +425,114 @@
          *
          */
 
-        #emailformdebug {
+        div#emailformdebug {
           height:auto;
           width:65em;
           max-width:65em;
           overflow:auto;
+
+          /*****************************************************************************
+           *
+           * Preview in debug tab
+           *
+           */
+
+          div#cafevdb-email-preview {
+            line-height:initial;
+            font-size:initial;
+
+            .email-header {
+              color:red;
+              font-weight:bold;
+              margin-bottom:0.5em;
+              margin-top:0.5em;
+            }
+
+            .reset-css {
+
+              * {
+                all:revert;
+              }
+
+              @import 'sanitize.css/sanitize';
+              @import '@csstools/normalize.css/normalize';
+              /*@import 'normalize.css/normalize';*/
+
+              blockquote {
+                display: block;
+                margin-top: 1em;
+                margin-bottom: 1em;
+                margin-left: 40px;
+                margin-right: 40px;
+                &[cite^="mid:"] {
+                  border-left:2px solid blue;
+                  margin-left:0;
+                  padding-left:0.5em;
+                  blockquote[cite^="mid:"] {
+                    border-left:2px solid lightgrey;
+                  }
+                }
+              }
+
+              .flex-container {
+                display:flex;
+              }
+
+              .email-body {
+              }
+
+              &.email-attachments {
+                &.empty {
+                  display:none;
+                }
+                h4.centered-in-rule {
+                  font-weight:normal;
+                  display: flex;
+                  flex-direction: row;
+                  &:before, &:after{
+                    content: "";
+                    flex: 1 1;
+                    border-bottom: 1px solid;
+                    margin: auto;
+                  }
+                  &:before {
+                    margin-right: 1em;
+                    margin-left:0.5em;
+                  }
+                  &:after {
+                    margin-left: 1em;
+                    margin-right:0.5em;
+                  }
+                }
+                li .attachment-item {
+                  /* display:inline-block; */
+                  display:inline-flex;
+                  align-items:baseline;
+                  span {
+                    /* margin-right: 0.5em; */
+                    display:inline-block;
+
+                    &.filename {
+                      font-family:monospace;
+                    }
+                    &.mime-type {
+                      font-style:italic;
+                    }
+                    &.size {
+                    }
+                    &.separator {
+                      margin-left:0.5em;
+                      margin-right:0.5em;
+                    }
+                  }
+                }
+              }
+            }
+
+            hr.email-preview-separator  {
+              border:1px solid black;
+            }
+          }
         }
 
         /****************************************************************************
@@ -247,7 +541,7 @@
          *
          */
 
-        #emailformcomposer  {
+        div#emailformcomposer  {
           overflow-y: auto;
           overflow-x: hidden;
           padding-bottom: 0px !important;
@@ -674,50 +968,49 @@
 
       } /* form#cafevdb-email-form */
 
-    } /* div#emailformwrapper */
+      div#sendingprogresswrapper {
+        display:none;
+        width:60em;
+        vertical-align:middle;
 
-  }
-}
+        .messagecount {
+          width:100%;
+          line-height:2em;
+          vertical-align:middle;
+          font-size:120%;
+          font-weight:bold;
+          margin-bottom:0.5em;
+          text-align:center;
+        }
+
+        div.progress.#{$cssPrefix}row {
+          width:100%;
+          height:2em;
+          padding: 0.5em;
+          line-height:2em;
+        }
+
+        span.title {
+          font-weight:bold;
+          float:left;
+          display:inline-block;
+          width:10em;
+          vertical-align:middle;
+        }
+
+        span.progressbar {
+          float:right;
+          display:inline-block;
+          width:40em;
+          margin-right:1em;
+        }
+      } /* div#sendingprogresswrapper */
+
+    } /* div#emailformwrapper */
+  } /* #emailformdialog */
+} /* .ui-dialog.emailform */
 
 /* special elements */
-
-div#sendingprogresswrapper {
-  display:none;
-  width:60em;
-  vertical-align:middle;
-
-  .messagecount {
-    width:100%;
-    line-height:2em;
-    vertical-align:middle;
-    font-size:120%;
-    font-weight:bold;
-    margin-bottom:0.5em;
-    text-align:center;
-  }
-
-  div.progress.#{$cssPrefix}row {
-    width:100%;
-    height:2em;
-    padding: 0.5em;
-    line-height:2em;
-  }
-
-  span.title {
-    font-weight:bold;
-    float:left;
-    display:inline-block;
-    width:10em;
-    vertical-align:middle;
-  }
-
-  span.progressbar {
-    float:right;
-    display:inline-block;
-    width:40em;
-    margin-right:1em;
-  }
-}
 
 .error.emailform span,
 .error.emailform div {
@@ -733,141 +1026,6 @@ span.error.contents.item.substitutions {
   color:red;
   font-family:monospace;
   font-weight:bold;
-}
-
-form#cafevdb-email-form {
-
-  .missing-email-addresses {
-    &.names.disabled .personal-record {
-      opacity:40%;
-      pointer-events:none;
-    }
-
-    .personal-record {
-      color:red;
-      font-style:italic;
-      text-decoration:underline;
-      font-weight:bold;
-      cursor:pointer;
-      padding:2px;
-    }
-
-    .personal-record:hover {
-      /* box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
-      /* background-color:LightSteelBlue; */
-      color: var(--color-main-text);
-      background-color:rgba(250,250,250,1.0);
-
-    }
-
-    .personal-record:active {
-      /* box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
-      color: var(--color-main-text);
-      background-color:LightSteelBlue;
-    }
-  }
-
-  .member-status-filter.#{$cssPrefix}container {
-    min-height:2em;
-    line-height:2em;
-    width:100%;
-  }
-
-  #member_status_filter_chosen {
-    min-width:40% !important;
-    max-width:80% !important;
-    width:auto !important;
-  }
-
-  span.basic-recipients-set.#{$cssPrefix}container.outer {
-    max-width:100%;
-    white-space:nowrap;
-    overflow:hidden;
-
-    .basic-recipients-set.#{$cssPrefix}container.inner {
-      margin: 0 0.5em 0 0.5em;
-      position:relative;
-      max-width:35%;
-
-      input[type=checkbox], input[type=radio] {
-        position: absolute;
-        left:-10000px;
-        top: auto;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-
-        + .label {
-          width:100%;
-        }
-        + .label span.button {
-          display:inline-block;
-          background-color:#F4F4F4 !important;
-          box-shadow:1px 1px 1px #080808;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
-          max-width:100%;
-        }
-        &:checked + .label span.button {
-          display:inline-block;
-          background-color:LightSteelBlue !important;
-          box-shadow:1px 1px 1px #080808 inset;
-          white-space:nowrap;
-          text-overflow:ellipsis;
-        }
-        &:disabled + .label {
-          opacity: 0.3;
-        }
-      }
-    }
-  }
-
-  .recipients-select.#{$cssPrefix}container {
-    width:80%;
-
-    .btn, .btn-outline-secondary {
-      &:focus {
-        box-shadow:0 0;
-      }
-    }
-  }
-
-  .instruments-filter.#{$cssPrefix}container {
-    width:18%;
-    text-align:right;
-    cursor: pointer;
-  }
-
-  .instruments-filter.#{$cssPrefix}container label {
-  }
-
-  span#instruments-filter-wrapper {
-    margin-top:0.3em;
-    display:inline-block;
-    text-align:left;
-    width: 100%;
-  }
-
-  .instruments-filter.#{$cssPrefix}container .chosen-container {
-    width:100% !important;
-  }
-
-  input.instruments-filter-controls {
-    &.apply, &.undo, &.redo, &.reset {
-      background-repeat:no-repeat;
-      background-size: 28px 28px;
-      background-position: center;
-      width:28px;
-      height:28px;
-      font-size:0pt;
-      vertical-align:middle;
-    }
-    &.apply { background-image:url('../img/email-new-yes.svg'); }
-    &.undo { background-image:url('../img/email-new-undo.svg'); }
-    &.redo { background-image:url('../img/email-new-redo.svg'); }
-    &.reset { background-image:url('../img/email-new-x.svg'); }
-  }
 }
 
 /******************************************************************************
@@ -912,109 +1070,6 @@ form#cafevdb-email-form {
 div.emailform.statuspage {
   dl, dt, dd {
     all:revert;
-  }
-}
-
-/*****************************************************************************
- *
- * Preview in debug tab
- *
- */
-
-div#cafevdb-email-preview {
-  line-height:initial;
-  font-size:initial;
-
-  .email-header {
-    color:red;
-    font-weight:bold;
-    margin-bottom:0.5em;
-    margin-top:0.5em;
-  }
-
-  .reset-css {
-
-    * {
-      all:revert;
-    }
-
-    @import 'sanitize.css/sanitize';
-    @import '@csstools/normalize.css/normalize';
-    /*@import 'normalize.css/normalize';*/
-
-    blockquote {
-      display: block;
-      margin-top: 1em;
-      margin-bottom: 1em;
-      margin-left: 40px;
-      margin-right: 40px;
-      &[cite^="mid:"] {
-        border-left:2px solid blue;
-        margin-left:0;
-        padding-left:0.5em;
-        blockquote[cite^="mid:"] {
-          border-left:2px solid lightgrey;
-        }
-      }
-    }
-
-    .flex-container {
-      display:flex;
-    }
-
-    .email-body {
-    }
-
-    &.email-attachments {
-      &.empty {
-        display:none;
-      }
-      h4.centered-in-rule {
-        font-weight:normal;
-        display: flex;
-        flex-direction: row;
-        &:before, &:after{
-          content: "";
-          flex: 1 1;
-          border-bottom: 1px solid;
-          margin: auto;
-        }
-        &:before {
-          margin-right: 1em;
-          margin-left:0.5em;
-        }
-        &:after {
-          margin-left: 1em;
-          margin-right:0.5em;
-        }
-      }
-      li .attachment-item {
-        /* display:inline-block; */
-        display:inline-flex;
-        align-items:baseline;
-        span {
-          /* margin-right: 0.5em; */
-          display:inline-block;
-
-          &.filename {
-            font-family:monospace;
-          }
-          &.mime-type {
-            font-style:italic;
-          }
-          &.size {
-          }
-          &.separator {
-            margin-left:0.5em;
-            margin-right:0.5em;
-          }
-        }
-      }
-    }
-  }
-
-  hr.email-preview-separator  {
-    border:1px solid black;
   }
 }
 

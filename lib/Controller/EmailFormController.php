@@ -765,12 +765,16 @@ class EmailFormController extends Controller {
 
     $this->session->close();
 
+    $filterHistory = $recipientsFilter->filterHistory();
+
+    if ($recipientsFilter->snapshotState()) {
+      // short-circuit
+      return self::dataResponse([ 'filterHistory' => $filterHistory ]);
+    }
+
     if ($recipientsFilter->reloadState()) {
       // Rebuild the entire page
-      $recipientsOptions = [];
-      $missingEmailAddresses = '';
 
-      $filterHistory = $recipientsFilter->filterHistory();
       $templateParameters = [
         'appName' => $this->appName(),
         'projectName' => $projectName,
@@ -791,36 +795,41 @@ class EmailFormController extends Controller {
         'toolTips' => $this->toolTipsService(),
       ];
 
-      $contents = (new TemplateResponse(
+      $content = (new TemplateResponse(
         $this->appName,
         'emailform/part.emailform.recipients',
         $templateParameters,
         'blank'))->render();
-    } else if ($recipientsFilter->snapshotState()) {
-      // short-circuit
-      $filterHistory = $recipientsFilter->filterHistory();
-      return self::dataResponse([ 'filterHistory' => $filterHistory ]);
-    } else {
-      $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
-      $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
 
-      $missingEmailAddresses = (new TemplateResponse(
-        $this->appName,
+      return self::dataResponse([
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'contents' => $contents,
+        // remaining parameter are expected by JS code and need to be there
+        'recipientsOptions' => '',
+        'missingEmailAddresses' => '',
+        'filterHistory' => '',
+      ]);
+    }
+
+    $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
+    $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
+
+    $missingEmailAddresses = (new TemplateResponse(
+      $this->appName,
         'emailform/part.broken-email-addresses', [
           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
         ],
-        'blank'))->render();
-      $filterHistory = $recipientsFilter->filterHistory();
-      $contents = '';
-    }
+      'blank'))->render();
 
     return self::dataResponse([
       'projectName' => $projectName,
       'projectId' => $projectId,
-      'contents' => $contents,
       'recipientsOptions' => $recipientsOptions,
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
+      // remaining parameter is expected by JS code and needs to be there
+      'contents' => '',
     ]);
   }
 

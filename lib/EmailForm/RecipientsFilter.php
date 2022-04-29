@@ -57,13 +57,6 @@ class RecipientsFilter
   public const EXCEPT_PROJECT_KEY = 'exceptProject';
   public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME;
   public const PROJECT_MAILING_LIST_KEY = 'projectMailingList';
-  public const BASIC_RECIPIENTS_SET_KEYS = [
-    self::FROM_PROJECT_PRELIMINARY_KEY,
-    self::FROM_PROJECT_CONFIRMED_KEY,
-    self::EXCEPT_PROJECT_KEY,
-    self::ANNOUNCEMENTS_MAILING_LIST_KEY,
-    self::PROJECT_MAILING_LIST_KEY,
-  ];
 
   private const MUSICIANS_FROM_PROJECT_PRELIMINARY = (1 << 0);
   private const MUSICIANS_FROM_PROJECT_CONFIRMED = (1 << 1);
@@ -71,9 +64,28 @@ class RecipientsFilter
   private const MUSICIANS_EXCEPT_PROJECT = (1 << 2);
   private const ANNOUNCEMENTS_MAILING_LIST = (1 << 3);
   private const PROJECT_MAILING_LIST = (1 << 4);
+  private const MAILING_LIST = self::ANNOUNCEMENTS_MAILING_LIST|self::PROJECT_MAILING_LIST;
   private const NO_MUSICIANS = 0;
   private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
   private const DATABASE_MUSICIANS = self::ALL_MUSICIANS;
+
+  /** @var array recipient set keys by flag value */
+  public const BASIC_RECIPIENTS_SET_KEYS = [
+    self::MUSICIANS_FROM_PROJECT_PRELIMINARY => self::FROM_PROJECT_PRELIMINARY_KEY,
+    self::MUSICIANS_FROM_PROJECT_CONFIRMED => self::FROM_PROJECT_CONFIRMED_KEY,
+    self::MUSICIANS_EXCEPT_PROJECT => self::EXCEPT_PROJECT_KEY,
+    self::ANNOUNCEMENTS_MAILING_LIST => self::ANNOUNCEMENTS_MAILING_LIST_KEY,
+    self::PROJECT_MAILING_LIST => self::PROJECT_MAILING_LIST_KEY,
+  ];
+
+  /** @var array recipient set flag values by key */
+  public const BASIC_RECIPIENT_SET_FLAGS = [
+    self::FROM_PROJECT_PRELIMINARY_KEY => self::MUSICIANS_FROM_PROJECT_PRELIMINARY,
+    self::FROM_PROJECT_CONFIRMED_KEY => self::MUSICIANS_FROM_PROJECT_CONFIRMED,
+    self::EXCEPT_PROJECT_KEY => self::MUSICIANS_EXCEPT_PROJECT,
+    self::ANNOUNCEMENTS_MAILING_LIST_KEY => self::ANNOUNCEMENTS_MAILING_LIST,
+    self::PROJECT_MAILING_LIST_KEY => self::PROJECT_MAILING_LIST,
+  ];
 
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
   private const SESSION_HISTORY_KEY = 'filterHistory';
@@ -798,6 +810,57 @@ class RecipientsFilter
         }
       }
     }
+  }
+
+  static public function getUserBaseDescriptions(\OCP\IL10N $l)
+  {
+    $descriptions = [
+      [
+        'text' => $l->t('project mailing list'),
+        'conditions' => [ 'only-project-mode', self::PROJECT_MAILING_LIST_KEY ],
+      ],
+      [
+        'text' => $l->t('announcements mailing list'),
+        'conditions' => [ self::ANNOUNCEMENTS_MAILING_LIST_KEY, ],
+      ],
+      [
+        'text' => $l->t('musician database'),
+        'conditions' => [ 'not-project-mode', ],
+      ],
+      [
+        'text' => $l->t('all known musicians'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians NOT participating'),
+        'conditions' => [ 'only-project-mode', self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (confirmed)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (preliminary)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (preliminary and confirmed)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::FROM_PROJECT_CONFIRMED_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians except confirmed participants'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians except preliminary participants'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('no one'),
+        'conditions' => [ 'only-project-mode', ],
+      ],
+    ];
+    return $descriptions;
   }
 
   /**

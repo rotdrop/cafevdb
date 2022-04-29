@@ -280,7 +280,12 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       .done(function(data) {
         const requiredResponse = historySnapshot
           ? ['filterHistory']
-          : ['recipientsOptions', 'missingEmailAddresses', 'filterHistory'];
+          : [
+            'contents',
+            'recipientsOptions',
+            'missingEmailAddresses',
+            'filterHistory',
+          ];
         if (!Ajax.validateResponse(data, requiredResponse)) {
           console.trace('MISSING PARAMETERS');
           parameters.cleanup();
@@ -358,12 +363,24 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     return false;
   };
 
-  // Inhibit interaction, e.g. during loading
+  /**
+   * Prevent user interaction to the filter controls during loading or
+   * if one of the mailing lists has been chosen as the sole
+   * recipient.
+   *
+   * @param {bool} state TBD.
+   *
+   * @param {Array} exceptions Array of CSS selectors to exclude from
+   * the read-only attempt.
+   */
   const readonlyFilterControls = function(state, exceptions) {
 
     fieldset.toggleClass('filter-controls-disabled', state);
 
-    const $otherInputs = fieldset.find('input, select, button').not(exceptions || '');
+    exceptions = exceptions || [];
+    exceptions.push('.action-menu-toggle.basic-recipients-set');
+
+    const $otherInputs = fieldset.find('input, select, button').not(exceptions.join(','));
     // Disable all recipient filters as they do not make any
     // sense. Sending to the mailing lists means to just send to
     // that list, further recipient choices are technically not possible.
@@ -410,19 +427,25 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
       if (mailingListRecipients) {
         basicRecipientsSetMailingList.not(this).prop('checked', false);
-        readonlyFilterControls(mailingListRecipients, '.mailing-list, .database');
+        readonlyFilterControls(mailingListRecipients, ['.mailing-list', '.database']);
       } else {
         readonlyFilterControls(true);
         applyRecipientsFilter.call(this, event, {
           cleanup: () => readonlyFilterControls(false),
         });
       }
+      basicRecipientsSet.filter('.mailing-list').each(function() {
+        const $radio = $(this);
+        basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
+      });
       return false;
     });
 
   basicRecipientsSetProject
     .off('change')
     .on('change', function(event) {
+      const $this = $(this);
+      basicRecipientsSetContainer.toggleClass($this.val(), $this.prop('checked'));
       readonlyFilterControls(true);
       applyRecipientsFilter.call(this, event, {
         cleanup: () => readonlyFilterControls(false),
@@ -431,7 +454,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
   // initialization
   if (basicRecipientsSet.filter('.mailing-list').prop('checked')) {
-    readonlyFilterControls(true, '.mailing-list, .database');
+    readonlyFilterControls(true, ['.mailing-list', '.database']);
   }
 
   // "submit" when hitting any of the control buttons
@@ -548,6 +571,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return $projectId.val();
     } else {
       $projectId.val(value);
+      form.toggleClass('project-mode', +value > 0);
       return value;
     }
   };
