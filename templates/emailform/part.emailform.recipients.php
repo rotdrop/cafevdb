@@ -244,11 +244,12 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
     </div>
     <div class="spacer"></div>
   <?php } /* !($projectId > 0 && $frozen) */ ?>
-  <div class="cafevdb-email-form <?php p($rowClass); ?>">
-    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle">
-      <span class="label left">
+  <div class="cafevdb-email-form <?php p($rowClass); ?> flex-container flex-justify-full flex-start">
+    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle tooltip-right"
+          title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
+    >
+      <span class="label top">
         <label for="member-status-filter"
-               title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
                >
           <?php echo $l->t('Member-Status'); ?>
         </label>
@@ -257,13 +258,32 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
               multiple="multiple"
               size="<?php echo count($memberStatusFilter); ?>"
               class="member-status-filter"
-              title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[memberStatusFilter][]"
               <?php p($filterReadonly); ?>
       >
         <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
       </select>
+    </span>
+    <span class="instruments-filter <?php p($containerClass); ?> right vmiddle tooltip-left"
+          title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>">
+      <span class="label top">
+        <label for="instruments-filter">
+          <?php echo $l->t('Instruments Filter'); ?>
+        </label>
+      </span>
+      <span id="instruments-filter-wrapper">
+        <select id="instruments-filter"
+                multiple="multiple"
+                size="18"
+                class="instruments-filter"
+                data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
+                name="emailRecipients[instrumentsFilter][]"
+                <?php p($filterReadonly); ?>
+        >
+          <?php echo $this->inc('emailform/part.instruments-filter', []); ?>
+        </select>
+      </span>
     </span>
   </div>
   <div class="spacer">
@@ -283,26 +303,6 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
       >
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
-    </span>
-    <span class="instruments-filter <?php p($containerClass); ?> right tooltip-auto"
-          title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>">
-      <span class="label top">
-        <label for="instruments-filter">
-          <?php echo $l->t('Instruments Filter'); ?>
-        </label>
-      </span>
-      <span id="instruments-filter-wrapper">
-        <select id="instruments-filter"
-                multiple="multiple"
-                size="18"
-                class="instruments-filter"
-                data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
-                name="emailRecipients[instrumentsFilter][]"
-                <?php p($filterReadonly); ?>
-        >
-          <?php echo $this->inc('emailform/part.instruments-filter', []); ?>
-        </select>
-      </span>
     </span>
   </div>
   <div class="spacer">

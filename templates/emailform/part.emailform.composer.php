@@ -45,6 +45,11 @@ foreach ($eventAttachmentOptions as $option) {
   <!-- <legend id="cafevdb-email-form-legend"><?php echo $l->t('Compose Em@il'); ?></legend> -->
   <?php echo PageNavigation::persistentCGI('emailComposer', $composerFormData); ?>
   <table class="cafevdb-email-composition-form">
+    <tr class="column-layout">
+      <td class="first"></td>
+      <td class="second"></td>
+      <td class="third"></td>
+    </tr>
     <tr class="stored-messages">
       <td colspan="2" class="stored-messages-choose stored-messages">
         <div class="flex-container flex-center flex-justify-full">

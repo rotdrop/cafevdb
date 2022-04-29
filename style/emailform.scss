@@ -22,8 +22,8 @@
 
 .ui-dialog.emailform {
   overflow:hidden;
-  max-height: 90%; /* !important;*/
-  /*max-width: 90%; *//* !important;*/
+  max-height: 90%;
+  padding:0;
 
   /* dialog popup, header */
 
@@ -207,8 +207,8 @@
             width:100%;
           }
 
-          div.#{$cssPrefix}row:after {
-            content:" ";
+          div.#{$cssPrefix}row:not(.flex-container):after {
+            content:"";
             display:block;
             height:0;
             clear: both;
@@ -273,18 +273,6 @@
               color: var(--color-main-text);
               background-color:LightSteelBlue;
             }
-          }
-
-          .member-status-filter.#{$cssPrefix}container {
-            min-height:2em;
-            line-height:2em;
-            width:100%;
-          }
-
-          #member_status_filter_chosen {
-            min-width:40% !important;
-            max-width:80% !important;
-            width:auto !important;
           }
 
           span.basic-recipients-set.#{$cssPrefix}container.outer {
@@ -370,7 +358,7 @@
           }
 
           .recipients-select.#{$cssPrefix}container {
-            width:80%;
+            /* width:80%; */
 
             .btn, .btn-outline-secondary {
               &:focus {
@@ -379,24 +367,33 @@
             }
           }
 
+          .member-status-filter.#{$cssPrefix}container {
+            flex-basis: auto;
+            margin-right: 0.5ex;
+
+            label {
+            }
+            .chosen-container {
+              width:100% !important;
+            }
+          }
+
           .instruments-filter.#{$cssPrefix}container {
-            width:18%;
             text-align:right;
-            cursor: pointer;
-          }
+            flex-basis: auto;
+            margin-left: 0.5ex;
 
-          .instruments-filter.#{$cssPrefix}container label {
-          }
+            label {
+            }
+            .chosen-container {
+              width:100% !important;
+            }
 
-          span#instruments-filter-wrapper {
-            margin-top:0.3em;
-            display:inline-block;
-            text-align:left;
-            width: 100%;
-          }
-
-          .instruments-filter.#{$cssPrefix}container .chosen-container {
-            width:100% !important;
+            span#instruments-filter-wrapper {
+              display:inline-block;
+              text-align:left;
+              width: 100%;
+            }
           }
 
           input.instruments-filter-controls {
@@ -564,11 +561,25 @@
 
           tr {
 
+            &.column-layout td {
+              height:0;
+              &.first {
+                width:0;
+              }
+              &.second {
+                width:100%;
+              }
+              &.third {
+                width:0;
+              }
+            }
+
             td.caption {
               font-weight:bold;
               vertical-align:top;
               padding-right:0.5em;
-              min-width:10em;
+              /* min-width:10em; */
+              width:fit-content;
             }
 
             &.all-attachments {
@@ -826,6 +837,7 @@
                 max-width:45em;
                 overflow:hidden;
                 text-overflow:ellipsis;
+                margin-right:0.3ex;
               }
 
               .checkbox-button.disclosed-recipients {
@@ -938,23 +950,17 @@
 
         .spacer {
           width:100%;
-          height:3px;
-          margin: 0.5em 0 1em 0;
+          height:1px;
+          margin: 0.5em 0;
           text-align:center;
           line-height:3px;
 
-          &.below {
-            td {
-              height:0px;
-              padding-bottom:1em;
-            }
-            &.rule td {
-              height:1px;
-              border-bottom:1px solid #808080;
-              &:nth-of-type(2) {
-                min-width:10em;
-              }
-            }
+          .ruler {
+            display:block;
+            height:100%;
+            width:100%;
+            opacity:50%;
+            background-color:black;
           }
         } /* .spacer */
 
