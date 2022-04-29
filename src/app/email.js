@@ -128,11 +128,18 @@ function emailTabResize(dialogWidget, panelHolder) {
   // }
 }
 
-function updateComposerRecipients($emailForm) {
+function updateComposerElements($emailForm, elements) {
+  elements = elements || ['TO'];
+  if (!Array.isArray(elements)) {
+    elements = [elements];
+  }
   // we better serialize the entire form here
   let post = $emailForm.serialize();
   // place our update request
-  post += '&emailComposer[request]=update&emailComposer[formElement]=TO';
+  post += '&emailComposer[request]=update';
+  for (const element of elements) {
+    post += '&' + 'emailComposer[formElement][]=' + element;
+  }
   const url = generateComposerUrl('update', 'element');
   $.post(url, post)
     .fail(Ajax.handleError)
@@ -142,19 +149,34 @@ function updateComposerRecipients($emailForm) {
       ])) {
         return;
       }
-      // could check whether formElement is indeed 'TO' ...
-      const toSpan = $emailForm.find('span.email-recipients');
-      let rcpts = data.requestData.elementData.TO;
-      const numRcpts = rcpts.length;
 
-      rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
-      const title = toSpan.data('titleIntro') + '<br>' + rcpts;
+      for (const element of data.requestData.formElement) {
+        switch (element.toLowerCase()) {
+        case 'to': {
+          const toSpan = $emailForm.find('span.email-recipients');
+          let rcpts = data.requestData.elementData[element];
+          const numRcpts = rcpts.length;
 
-      toSpan.html(rcpts);
-      toSpan.attr('title', title);
-      toSpan.cafevTooltip();
+          rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
+          const title = toSpan.data('titleIntro') + '<br>' + rcpts;
 
-      $emailForm.find('#check-disclosed-recipients').prop('disabled', numRcpts <= 1);
+          toSpan.html(rcpts);
+          toSpan.attr('title', title);
+          toSpan.cafevTooltip();
+
+          $emailForm.find('#check-disclosed-recipients').prop('disabled', numRcpts <= 1);
+          break;
+        }
+        case 'subjecttag': {
+          const $subjectTag = $emailForm.find('span.subject.tag');
+          const subjectTag = data.requestData.elementData[element];
+          $subjectTag.html(subjectTag);
+          break;
+        }
+        default:
+          break;
+        }
+      }
     });
 }
 
@@ -376,6 +398,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         }
 
         busyIndicator.hide();
+
         filterUpdateActive = false;
       });
     return false;
@@ -457,6 +480,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         const $radio = $(this);
         basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
       });
+      updateComposerElements(form, ['TO', 'subjectTag']);
       return false;
     });
 
@@ -469,6 +493,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       applyRecipientsFilter.call(this, event, {
         cleanup: () => readonlyFilterControls(false),
       });
+      updateComposerElements(form, ['TO', 'subjectTag']);
     });
 
   // initialization
@@ -858,7 +883,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             delete requestData.composerForm;
             delete requestData.recipientsForm;
 
-            updateComposerRecipients(form);
+            updateComposerElements(form);
 
             break;
           }
@@ -2089,7 +2114,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                 return true;
               }
 
-              updateComposerRecipients(emailForm);
+              updateComposerElements(emailForm, ['TO', 'subjectTag']);
 
               return true;
             },

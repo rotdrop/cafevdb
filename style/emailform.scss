@@ -871,29 +871,22 @@
 
           td.subject.input {
             span.subject.tag {
+              flex-basis:auto;
               font-family:monospace;
               font-size:100%;
-              width:auto;
-              max-width:30%;
+              width:fit-content;
               text-align:right;
               font-weight:bold;
               display:inline-block;
-              float:left;
               line-height:2.5em;
-              overflow:hidden;
-              text-overflow:ellipsis;
-
-              &:empty ~ span.subject.input {
-                width:100%;
-              }
             }
 
             span.subject.input {
-              width:67%;
+              flex-basis:auto;
+              width:100%;
               /* padding: 0 1em 0 0; */
               display:inline-block;
               line-height:2.5em;
-              float:right;
             }
 
             input {

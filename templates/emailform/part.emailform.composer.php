@@ -195,7 +195,7 @@ foreach ($eventAttachmentOptions as $option) {
     <tr>
       <td class="subject caption"><?php echo $l->t('Subject'); ?></td>
       <td colspan="2" class="subject input">
-        <div class="subject <?php p($containerClass); ?>">
+        <div class="subject <?php p($containerClass); ?> flex-container flex-justify-full">
           <span class="subject tag"><?php echo htmlspecialchars($mailTag); ?></span>
           <span class="subject input">
             <input value="<?php echo htmlspecialchars($subject); ?>"
