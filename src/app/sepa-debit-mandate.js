@@ -488,7 +488,7 @@ const mandatesInit = function(data, onChangeCallback) {
     //   }
     // }
 
-    mandateForm.find('input[class$="Date"]').datepicker({
+    mandateForm.find('input.mandateDate, input.lastUsedDate').datepicker({
       minDate: '01.01.1990',
       beforeShow(input) {
         const $input = $(input);
