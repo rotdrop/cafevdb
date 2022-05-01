@@ -625,6 +625,11 @@ const mandatesInit = function(data, onChangeCallback) {
             done(data) {
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
+
+              // data possibly updates the sequence numbers when adding new data:
+              const sepaId = makeSepaId(data);
+              $dlg.data('sepaId', sepaId);
+
               dialogReload($dlg, onChangeCallback);
             },
           });
