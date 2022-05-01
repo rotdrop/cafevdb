@@ -646,7 +646,7 @@ class SepaDebitMandatesController extends Controller {
     }
 
     $mandateUsage = $this->debitMandatesRepository->usage($mandate, true);
-    $lastUsedDate = self::convertToDateTime($mandateUsage['lastUsed']);
+    $lastUsedDate = self::convertToDateTime($mandateUsage['lastUsed'] ?? null);
 
     $templateParameters = [
       'projectId' => $projectId,
@@ -956,7 +956,7 @@ class SepaDebitMandatesController extends Controller {
           $this->logException($e);
           return self::grumble($this->l->t('Unable to modify already used debit-mandate.'));
         }
-        $this->entityManager->reopen();
+        $this->entityManager->reopen(); // this cannot work ...
         $debitMandate->setSequence(null);
       }
     } while ($debitMandate->getSequence() === null);

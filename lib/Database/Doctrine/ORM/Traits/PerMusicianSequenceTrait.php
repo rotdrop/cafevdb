@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -64,8 +65,11 @@ trait PerMusicianSequenceTrait
       return $entity;
     }
 
-    // in order not to have "other" exceptions in our try block
-    $entityManager->flush();
+    $filters = $entityManager->getFilters();
+    $softDeleteable = $filters->isEnabled(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    if ($softDeleteable) {
+      $filters->disable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    }
 
     $musician = $entity->getMusician();
     if (!($musician instanceof Entities\Musician)) {
@@ -76,6 +80,11 @@ trait PerMusicianSequenceTrait
     $entity->setSequence($nextSequence);
     $entityManager->persist($entity);
     $entityManager->flush();
+
+    if ($softDeleteable) {
+      $filters->enable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    }
+
     return $entity;
   }
 

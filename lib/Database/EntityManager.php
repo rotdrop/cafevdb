@@ -99,6 +99,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var Hash-transformer key, see $this->getDataTransformer() */
   const TRANSFORM_HASH = 'hash';
 
+  /** @var string The name of the soft-deleteable filter */
+  const SOFT_DELETEABLE_FILTER = 'soft-deleteable';
+
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
   private $entityManager;
 
@@ -456,7 +459,7 @@ class EntityManager extends EntityManagerDecorator
     $entityManager = \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
     if (!$this->showSoftDeleted) {
-      $entityManager->getFilters()->enable('soft-deleteable');
+      $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
     }
 
     return $entityManager;
@@ -563,7 +566,7 @@ class EntityManager extends EntityManagerDecorator
     $softDeletableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($softDeletableListener);
-    $config->addFilter('soft-deleteable', \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
+    $config->addFilter(self::SOFT_DELETEABLE_FILTER, \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // blameable
     $blameableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\BlameableListener();
