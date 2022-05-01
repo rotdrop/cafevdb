@@ -640,7 +640,7 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'delete icon-button',
+        class: 'delete icon-buttonn revocation-control',
         text: t(appName, 'Delete'),
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
@@ -651,7 +651,7 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'reactivate icon-button',
+        class: 'reactivate icon-buttonn revocation-control',
         text: t(appName, 'Reactivate'),
         title: t(appName, 'Reactivate the debit-mandate or bank-account in case it'
                  + ' has been deleted in error.'),
@@ -663,7 +663,7 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'disable icon-button',
+        class: 'disable icon-buttonn revocation-control',
         text: t(appName, 'Disable'),
         title: t(appName, 'Disable the debit-mandate or bank-account in case the bank account has'
                  + ' changed, or on request of the participant. The bank account can only'

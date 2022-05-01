@@ -957,6 +957,10 @@ a.ui-tabs-anchor.compact span.ui-icon {
     padding: 1px;
   }
 
+  .ui-dialog-button-pane .ui-dialog-button-set:last-child {
+    margin-right:0;
+  }
+
   &.transparent,
   &.transparent-titlebar {
     border:0px!important;
