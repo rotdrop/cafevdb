@@ -650,7 +650,9 @@ const mandatesInit = function(data, onChangeCallback) {
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
+            const sepaId = makeSepaId(data);
+            $dlg.data('sepaId', sepaId);
             dialogReload($dlg, onChangeCallback);
           }, 'delete');
         },
@@ -662,7 +664,7 @@ const mandatesInit = function(data, onChangeCallback) {
                  + ' has been deleted in error.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
             dialogReload($dlg, onChangeCallback);
           }, 'reactivate');
         },
@@ -675,7 +677,7 @@ const mandatesInit = function(data, onChangeCallback) {
                  + ' be disabled after disabling all bound debit-mandates.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
             dialogReload($dlg, onChangeCallback);
           }, 'disable');
         },
@@ -853,7 +855,7 @@ const mandateDelete = function(sepaId, callbackOk, action) {
       }
       Notification.messages(data.message);
       if (callbackOk !== undefined) {
-        callbackOk();
+        callbackOk(data);
       }
     });
 };
