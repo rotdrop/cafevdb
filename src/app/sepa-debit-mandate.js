@@ -709,6 +709,8 @@ const mandatesInit = function(data, onChangeCallback) {
         reload: $widget.find('button.reload'),
       };
 
+      // const revocationButtons = $widget.find('button.revoation-control');
+
       $dlg.data('buttons', buttons);
 
       initializeDialogHandlers($dlg);
@@ -845,19 +847,31 @@ const mandateDelete = function(sepaId, callbackOk, action) {
 
   // perhaps we should annoy the user with a confirmation dialog?
 
-  $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
-    .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, function() {});
-    })
-    .done(function(data) {
-      if (!Ajax.validateResponse(data, ['message'])) {
-        return false;
+  const l10nAction = t(appName, action);
+  const l10nEndPoint = t(appName, endPoint.slice(0, -1));
+  Dialogs.confirm(
+    t(appName, 'Do you really want to {action} the current {endPoint}?', { action: l10nAction, endPoint: l10nEndPoint }),
+    t(appName, 'Confirmation Required'),
+    function(confirmed) {
+      if (!confirmed) {
+        Notification.show(t(appName, 'Unconfirmed, doing nothing'));
+        return;
       }
-      Notification.messages(data.message);
-      if (callbackOk !== undefined) {
-        callbackOk(data);
-      }
-    });
+      $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {});
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message'])) {
+            return false;
+          }
+          Notification.messages(data.message);
+          if (callbackOk !== undefined) {
+            callbackOk(data);
+          }
+        });
+    },
+    true);
 };
 
 const makeSuggestions = function(data) {
@@ -1206,8 +1220,8 @@ const mandatePopupInit = function(selector) {
   container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
     .on('click', function(event) {
-      if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
-        container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
+      if ($('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
+        // $('#sepa-debit-mandate-dialog').dialog('close').remove();
       } else {
         // We store the values in the data attribute.
         const values = $(this).data('debitMandate');
