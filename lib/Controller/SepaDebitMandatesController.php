@@ -1215,6 +1215,8 @@ class SepaDebitMandatesController extends Controller {
     /** @var Entities\SepaDebitMandate $mandate */
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
     $reference = $mandate->getMandateReference();
+    $projectId = $mandate->getProject()->getId();
+    $bankAccountSequence = $mandate->getSepaBankAccount()->getSequence();
 
     switch ($operation) {
     case 'delete':
@@ -1238,17 +1240,35 @@ class SepaDebitMandatesController extends Controller {
       return self::grumble($this->l->t('Unknown revocation action: "%s".', $operation));
     }
 
+    $responseData = [
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'bankAccountSequence' => $bankAccountSequence,
+    ];
     if ($this->entityManager->contains($mandate)) {
       if (!empty($mandate->getDeleted())) {
         $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
+        $state = 'invalidated';
       } else {
         $message = $this->l->t('SEPA debit mandate with reference "%s" has been reactivated.', $reference);
+        $state = 'reactivated';
       }
+      $responseData = array_merge($responseData, [
+        'message' => $message,
+        'state' => $state,
+        'mandateSequence' => $mandate->getSequence(),
+        'mandateReference' => $mandate->getMandateReference(),
+      ]);
     } else {
-      $message = $this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference);
+      $responseData = array_merge($responseData, [
+        'state' => 'deleted',
+        'message' => $this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference),
+        'mandateSequence' => 0,
+        'mandateReference' => '',
+      ]);
     }
 
-    return self::response($message);
+    return self::dataResponse($responseData);
   }
 
   /**
