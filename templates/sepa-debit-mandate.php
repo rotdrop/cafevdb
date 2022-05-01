@@ -281,7 +281,7 @@ $formCss = implode(' ', array_filter([
                    id="lastUsedDate"
                    <?php echo $mandateNonRecurring ? 'disabled' : '' ?>
                    name="mandateLastUsedDate"
-                   value="<?php echo $dateTimeFormatter->formatDate($mandateLastUsedDate, 'medium'); ?>"
+                   value="<?php echo (empty($mandateLastUsedDate) ?  '' : $dateTimeFormatter->formatDate($mandateLastUsedDate, 'medium')); ?>"
                    title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
                    placeholder="<?php echo $l->t('last used date'); ?>"/>
           </label>
