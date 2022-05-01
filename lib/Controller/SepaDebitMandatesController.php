@@ -1013,8 +1013,8 @@ class SepaDebitMandatesController extends Controller {
       }
     }
 
-    list($formData, $mimeType, $filename) = $this->financeService->preFilledDebitMandateForm(
-      $bankAccountSequence, $projectId, $musicianId, $bankAccountSequence);
+    list($formData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+      $bankAccountSequence, $projectId, $musicianId);
 
     if (empty($formData)) {
       return self::grumble($this->l->t('Unable to find fillable debit mandate form.'));
