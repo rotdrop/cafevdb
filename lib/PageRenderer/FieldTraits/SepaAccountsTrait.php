@@ -295,8 +295,8 @@ trait SepaAccountsTrait
               $this->logInfo('SEPA IDS 1 '.print_r($sepaIds, true));
               foreach ($sepaIds as $sepaId) {
                 list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $sepaId);
-                $accountInactive = $accountDeleted[$sepaId];
-                $mandateInactive = $mandateDeleted[$sepaId];
+                $accountInactive = $accountDeleted[$sepaId] ?? false;
+                $mandateInactive = $mandateDeleted[$sepaId] ?? false;
                 $sepaData = json_encode([
                   'projectId' => (empty($projectRestrictions) ? 0 : $projectRestrictions[0]),
                   'musicianId' => $musicianId,
@@ -304,7 +304,7 @@ trait SepaAccountsTrait
                   'mandateSequence' => $mandateSequence,
                 ]);
                 $fakeValue = $iban;
-                $reference = $references[$sepaId];
+                $reference = $references[$sepaId] ?? null;
                 if (!empty($reference)) {
                   $fakeValue .= ' -- ' . $reference;
                 }
