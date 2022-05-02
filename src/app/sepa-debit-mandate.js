@@ -822,17 +822,24 @@ const mandateDelete = function(sepaId, callbackOk, action) {
   // const post = $('#sepa-debit-mandate-form').serialize();
 
   let endPoint = 'debit-mandates';
+  let confirmationText = '';
   switch (action) {
   case 'disable':
     // disable account if the mandate is already disabled
     if (!sepaId.mandateSequence || sepaId.mandateDeleted) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to disable the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to disable the current debit-mandate?');
     }
     break;
   case 'reactivate':
     // first reactivate the account, then the mandate
     if (sepaId.bankAccountDeleted) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to reactivate the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to reactiveate the current debit-mandate?');
     }
     break;
   case 'delete':
@@ -841,16 +848,16 @@ const mandateDelete = function(sepaId, callbackOk, action) {
     // always only try delete the mandate if we have one
     if (!sepaId.mandateSequence) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to delete the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to delete the current debit-mandate?');
     }
     break;
   }
 
   // perhaps we should annoy the user with a confirmation dialog?
-
-  const l10nAction = t(appName, action);
-  const l10nEndPoint = t(appName, endPoint.slice(0, -1));
   Dialogs.confirm(
-    t(appName, 'Do you really want to {action} the current {endPoint}?', { action: l10nAction, endPoint: l10nEndPoint }),
+    confirmationText,
     t(appName, 'Confirmation Required'),
     function(confirmed) {
       if (!confirmed) {
