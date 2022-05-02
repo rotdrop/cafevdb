@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-05-02 07:59+0200\n"
-"PO-Revision-Date: 2022-05-02 08:05+0200\n"
+"POT-Creation-Date: 2022-05-02 08:27+0200\n"
+"PO-Revision-Date: 2022-05-02 08:32+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -9865,7 +9865,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:223
 #: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:782
-#: src/app/projects.js:487 src/app/sepa-debit-mandate.js:854
+#: src/app/projects.js:487 src/app/sepa-debit-mandate.js:861
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
@@ -11166,23 +11166,43 @@ msgstr ""
 msgid "Missing Data"
 msgstr "Fehlende Daten"
 
-#: src/app/sepa-debit-mandate.js:853
-msgid "Do you really want to {action} the current {endPoint}?"
-msgstr "Möchten Sie das wirklich {action}: {endPoint}?\n"
+#: src/app/sepa-debit-mandate.js:831
+msgid "Do you really want to disable the current bank-account?"
+msgstr "Möchten Sie wirklich die angezeigte Bankverbindung als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:857
+#: src/app/sepa-debit-mandate.js:833
+msgid "Do you really want to disable the current debit-mandate?"
+msgstr "Möchten Sie das wirklich das angezeigte Lastschrift-Mandate als inaktiv markieren?"
+
+#: src/app/sepa-debit-mandate.js:840
+msgid "Do you really want to reactivate the current bank-account?"
+msgstr "Möchten Sie wirklich die angezeigte Bankverbindung reaktivieren?"
+
+#: src/app/sepa-debit-mandate.js:842
+msgid "Do you really want to reactiveate the current debit-mandate?"
+msgstr "Möchten Sie wirklich das angezeigte Lastschrift-Mandat reaktivieren?"
+
+#: src/app/sepa-debit-mandate.js:851
+msgid "Do you really want to delete the current bank-account?"
+msgstr "Möchten Sie wirklich die angezeigte Bankverbindung löschen?"
+
+#: src/app/sepa-debit-mandate.js:853
+msgid "Do you really want to delete the current debit-mandate?"
+msgstr "Möchten Sie wirklich das angezeigte Lastschriftmandat löschen?"
+
+#: src/app/sepa-debit-mandate.js:864
 msgid "Unconfirmed, doing nothing"
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/sepa-debit-mandate.js:882 src/app/sepa-debit-mandate.js:999
+#: src/app/sepa-debit-mandate.js:889 src/app/sepa-debit-mandate.js:1006
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: src/app/sepa-debit-mandate.js:886 src/app/sepa-debit-mandate.js:1003
+#: src/app/sepa-debit-mandate.js:893 src/app/sepa-debit-mandate.js:1010
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: src/app/sepa-debit-mandate.js:1625
+#: src/app/sepa-debit-mandate.js:1632
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
@@ -11192,11 +11212,11 @@ msgstr ""
 "vom Projektmitglied. Soll der/die/das Kontoinhaber:in durch das "
 "Projektmitglied ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1627
+#: src/app/sepa-debit-mandate.js:1634
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr "Kontoinhaber:in durch Projekt-Mitglied ersetzen?"
 
-#: src/app/sepa-debit-mandate.js:1659
+#: src/app/sepa-debit-mandate.js:1666
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
@@ -11205,7 +11225,7 @@ msgstr ""
 "der/die/das Kontoinhaber:in. Sollt das Projektmitglied durch der/die/das "
 "Kontoinhaber:in ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1661
+#: src/app/sepa-debit-mandate.js:1668
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 

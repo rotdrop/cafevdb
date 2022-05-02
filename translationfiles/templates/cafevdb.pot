@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-05-02 08:05+0200\n"
+"POT-Creation-Date: 2022-05-02 08:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -8594,7 +8594,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:34
 #: src/app/project-participants.js:782
 #: src/app/projects.js:487
-#: src/app/sepa-debit-mandate.js:854
+#: src/app/sepa-debit-mandate.js:861
 msgid "Confirmation Required"
 msgstr ""
 
@@ -9814,42 +9814,62 @@ msgstr ""
 msgid "Missing Data"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:853
-msgid "Do you really want to {action} the current {endPoint}?"
+#: src/app/sepa-debit-mandate.js:831
+msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:857
+#: src/app/sepa-debit-mandate.js:833
+msgid "Do you really want to disable the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:840
+msgid "Do you really want to reactivate the current bank-account?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:842
+msgid "Do you really want to reactiveate the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:851
+msgid "Do you really want to delete the current bank-account?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:853
+msgid "Do you really want to delete the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:864
 msgid "Unconfirmed, doing nothing"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:882
-#: src/app/sepa-debit-mandate.js:999
+#: src/app/sepa-debit-mandate.js:889
+#: src/app/sepa-debit-mandate.js:1006
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:886
-#: src/app/sepa-debit-mandate.js:1003
+#: src/app/sepa-debit-mandate.js:893
+#: src/app/sepa-debit-mandate.js:1010
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1625
+#: src/app/sepa-debit-mandate.js:1632
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
 "participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1627
+#: src/app/sepa-debit-mandate.js:1634
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1659
+#: src/app/sepa-debit-mandate.js:1666
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1661
+#: src/app/sepa-debit-mandate.js:1668
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr ""
 
