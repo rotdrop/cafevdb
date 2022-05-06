@@ -45,6 +45,21 @@ class MusiciansRepository extends EntityRepository
     );
   }
 
+  public function fetchIds(array $criteria)
+  {
+    $queryParts = $this->prepareFindBy($criteria, [
+      'id' => 'ASC',
+    ]);
+
+    /** @var ORM\QueryBuilder */
+    $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.id' ]);
+    $qb = $this->generateFindByWhere($qb, $queryParts);
+
+    $query = $qb->getQuery();
+
+    return $query->getResult('COLUMN_HYDRATOR');
+  }
+
   /**
    * @param string $uuid
    *

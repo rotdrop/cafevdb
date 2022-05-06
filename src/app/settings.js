@@ -136,28 +136,35 @@ const afterLoad = function(container) {
     const adminGeneral = $('#admingeneral');
     const msg = adminGeneral.find('.msg');
 
+    const success = function(element, data, value, msg) {
+      if (value === '') {
+        $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+          $(elm).prop('disabled', true);
+        });
+      } else {
+        $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
+          $(elm).removeAttr('disabled');
+        });
+        if ($('#shareowner #user-saved').val() !== '') {
+          $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+            $(elm).removeAttr('disabled');
+          });
+        } else {
+          $('#shareownerform').find('fieldset').each(function(i, elm) {
+            $(elm).removeAttr('disabled');
+          });
+        }
+      }
+    };
+
     simpleSetValueHandler(
-      adminGeneral.find(':input'), 'blur', msg, {
-        success(element, data, value, msg) {
-          if (value === '') {
-            $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-              $(elm).prop('disabled', true);
-            });
-          } else {
-            $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
-              $(elm).removeAttr('disabled');
-            });
-            if ($('#shareowner #user-saved').val() !== '') {
-              $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-                $(elm).removeAttr('disabled');
-              });
-            } else {
-              $('#shareownerform').find('fieldset').each(function(i, elm) {
-                $(elm).removeAttr('disabled');
-              });
-            }
-          }
-        },
+      adminGeneral.find('input'), 'blur', msg, {
+        success,
+      });
+
+    simpleSetValueHandler(
+      adminGeneral.find('select'), 'change', msg, {
+        success,
       });
   }
 

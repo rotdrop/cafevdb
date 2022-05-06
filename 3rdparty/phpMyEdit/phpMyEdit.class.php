@@ -1084,7 +1084,8 @@ class phpMyEdit
 			$decode = function($value) { return $value; };
 		}
 		while ($row = $this->sql_fetch($res, 'n')) {
-			if (empty($row[0])) {
+			if (empty($row[0])
+				&& !($row[0] === 0 || $row[0] === '0')) {
 				continue;
 			}
 			$colIdx = $idx;
@@ -2371,7 +2372,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['postfix'])) {
 				$postfix = $this->fdd[$k]['display']['postfix'];
 				if (is_callable($postfix)) {
-					echo call_user_func($postfix, 'add', 'postfix', [], $k, $this);
+					echo call_user_func($postfix, 'add', 'postfix', $k, [], $this);
 				} else {
 					echo $this->fdd[$k]['display']['postfix'];
 				}

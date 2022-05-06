@@ -408,9 +408,9 @@ class FinanceService
    */
   public function sepaTranslit($string, $language = null)
   {
-    if (!empty($language)) {
-      $locale = strtolower($language).'_'.strtoupper($language).'UTF-8';
-    }
+    $locale = empty($language)
+      ? null
+      : strtolower($language).'_'.strtoupper($language).'UTF-8';
     return $this->transliterate($string, $locale);
   }
 
@@ -465,7 +465,7 @@ class FinanceService
     $projectName = $this->sepaTranslit($project['name']);
 
     $projectYear = substr($projectName, -4);
-    if (is_numeric($year)) {
+    if (is_numeric($projectYear)) {
       $projectName = substr($projectName, 0, -4);
     } else {
       $projectYear = null;

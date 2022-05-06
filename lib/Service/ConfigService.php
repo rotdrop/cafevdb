@@ -212,8 +212,14 @@ class ConfigService
    */
   private $user;
 
-  /** @var IL10N */
+  /**
+   * @var IL10N
+   * Personal localization settings based on user preferences.
+   */
   protected $l;
+
+  /** @var IL10N */
+  protected $appL10n;
 
   /** @var IL10NFactory */
   private $l10NFactory;
@@ -406,6 +412,16 @@ class ConfigService
   public function getL10n()
   {
     return $this->l;
+  }
+
+  public function getAppL10n()
+  {
+    if (empty($this->appL10n)) {
+      $appLocale = $this->getAppLocale();
+      $appLanguage = locale_get_primary_language($appLocale);
+      $this->appL10n = $this->l10NFactory->get($this->appName, $appLanguage, $appLocale);
+    }
+    return $this->appL10n;
   }
 
   public function getGroupId()
@@ -774,6 +790,15 @@ class ConfigService
   }
 
   /**
+   * Get the configured app locale. Used to implement consistent currency
+   * symbols and some "localized" folder names.
+   */
+  public function getAppLocale():string
+  {
+    return $this->getConfigValue('orchestraLocale', $this->getLocale());
+  }
+
+  /**
    * Return the language part of the current or given locale.
    */
   public function getLanguage(?string $locale = null):string
@@ -833,6 +858,7 @@ class ConfigService
         $result[$language] .= ' (' . $language . ')';
       }
     }
+
     return $result;
   }
 
@@ -860,24 +886,38 @@ class ConfigService
     return $result;
   }
 
-  /** Return the currency symbol for the locale. */
+  /** Return the currency symbol for the given or the app's locale. */
   public function currencySymbol($locale = null)
   {
     if (empty($locale)) {
-      $locale = $this->getLocale();
+      $locale = $this->getAppLocale();
     }
     $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
     return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
   }
 
-  /** Convert $value to a currency value in the given or default locale */
+  /** Return the currency 3-letter ISO code for the given or the app's locale */
+  public function currencyIsoCode($locale = null)
+  {
+    if (empty($locale)) {
+      $locale = $this->getAppLocale();
+    }
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+  }
+
+  /**
+   * Convert $value to a currency value in the given or the user's locale. The
+   * currency symbol, however, always refers to the fixed app locale as we
+   * really do not want to implement stock-exchange things.
+   */
   public function moneyValue($value, $locale = null)
   {
     if (empty($locale)) {
       $locale = $this->getLocale();
     }
     $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-    $result = $fmt->format((float)$value);
+    $result = $fmt->formatCurrency((float)$value, $this->currencyIsoCode());
 
     return $result;
   }

@@ -277,9 +277,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get mandateReference.
    *
-   * @return string
+   * @return null|string
    */
-  public function getMandateReference():string
+  public function getMandateReference():?string
   {
     return $this->mandateReference;
   }

@@ -383,6 +383,13 @@ invited to have a look, but please do not change anything unless you know what y
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
         ],
+        'participants' => [
+          'voice' => $this->l->t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
+          'section-leader' => [
+            'default' => $this->l->t('Check in order to mark the section leader. If this instrument is sub devided into voices the musician first has to be assigned to a voice before it can be marked as section leader for its configured voice.'),
+            'view' => $this->l->t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])
+          ],
+        ],
       ],
 
       'participant-fields' => [
@@ -1033,6 +1040,12 @@ and contact the treasurer for further instructions.',
           'cloud-user-backend-conf' => $this->l->t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
         ],
         'personal' => [
+          'general' => [
+            'orchestra' => [
+              'name' => $this->l->t('Short descriptive name of the orchestra, e.g. use "camerata" instead of "camerata academica freiburg e.V.". The short name is used in various places. It should be lower-case and "handy", without spaces.'),
+              'locale' => $this->l->t('The locale of the orchestral organization. In particular, this determines the currency and the name of some directories in the file-system. Note that the timezone is always the same as the one used by the server the app runs on.'),
+            ],
+          ],
           'sharing' => [
             'user-sql' => [
               'enable' => $this->l->t('Import the orchestra club-members into the ambient cloud as ordinary cloud-users. This requires in particular GRANT privileges for the database. It also requires further configuration of the underlying "%s"-app as admin-user.', 'user_sql'),

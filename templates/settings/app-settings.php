@@ -19,27 +19,47 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 $off = $_['orchestra'] == '' ? 'disabled' : '';
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+
+list($orchestraLocale,) = explode('.', $orchestraLocale, 2);
+$localeOptions = [];
+foreach ($locales as $locale) {
+  $localeOptions[] = [
+    'value' => $locale['code'],
+    'name' => $locale['name'],
+    'flags' => ($locale['code'] === $orchestraLocale) ? PageNavigation::SELECTED : 0,
+  ];
+}
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
-<!-- GENERAL CONFIGURATION STUFF -->
-  <form id="admingeneral"><legend><?php echo $l->t('General settings'); ?></legend>
+  <!-- GENERAL CONFIGURATION STUFF -->
+  <form id="admingeneral">
     <fieldset>
-    <input type="text"
-           id="orchestra"
-           name="orchestra"
-           value="<?php echo $_['orchestra']; ?>"
-           required="required"
-           title="<?php echo $l->t('name of orchestra'); ?>"
-           placeholder="<?php echo $l->t('name of orchestra'); ?>" />
-    <span class="statusmessage msg"></span>
+      <legend><?php echo $l->t('General settings'); ?></legend>
+      <input type="text"
+             id="orchestra"
+             name="orchestra"
+             value="<?php echo $_['orchestra']; ?>"
+             required="required"
+             title="<?php echo $toolTips['settings:personal:general:orchestra:name']; ?>"
+             placeholder="<?php echo $l->t('name of orchestra'); ?>" />
+      <label for="orchestra"><?php p($l->t('name of orchestra')); ?></label>
+      <br/>
+      <select name="orchestraLocale"
+              id="orchestraLocale"
+              title="<?php echo $toolTips['settings:personal:general:orchestra:locale']; ?>"
+      >
+        <?php echo PageNavigation::selectOptions($localeOptions); ?>
+      </select>
+      <label for="orchestraLocale"><?php p($l->t('locale of the orchestra')); ?></label>
     </fieldset>
   </form>
-<!-- ENCRYPTION-KEY -->
+  <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
-    <fieldset class="systemkey" <?php echo $off; ?> ><legend><?php echo $l->t('Encryption settings'); ?></legend>
+    <fieldset class="systemkey" <?php echo $off; ?> >
+      <legend><?php echo $l->t('Encryption settings'); ?></legend>
       <input class="cafevdb-password"
              type="password"
              value="<?php false ? p($encryptionkey) : ''; ?>"
@@ -99,7 +119,7 @@ $off = $_['orchestra'] == '' ? 'disabled' : '';
       <label for="dbuser"><?php echo $l->t('Database User');?></label>
       <div id="msgplaceholder"><div class="statusmessage" id="msg"></div></div>
     </fieldset>
-<!-- DATA-BASE password -->
+    <!-- DATA-BASE password -->
     <fieldset class="cafevdb_dbpassword">
       <input class="cafevdb-password" type="password" id="cafevdb-dbpassword" name="dbpassword" placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb-dbpassword-show" />
       <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />

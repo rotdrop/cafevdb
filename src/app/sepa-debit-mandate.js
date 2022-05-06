@@ -488,7 +488,7 @@ const mandatesInit = function(data, onChangeCallback) {
     //   }
     // }
 
-    mandateForm.find('input[class$="Date"]').datepicker({
+    mandateForm.find('input.mandateDate, input.lastUsedDate').datepicker({
       minDate: '01.01.1990',
       beforeShow(input) {
         const $input = $(input);
@@ -625,6 +625,11 @@ const mandatesInit = function(data, onChangeCallback) {
             done(data) {
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
+
+              // data possibly updates the sequence numbers when adding new data:
+              const sepaId = makeSepaId(data);
+              $dlg.data('sepaId', sepaId);
+
               dialogReload($dlg, onChangeCallback);
             },
           });
@@ -640,37 +645,39 @@ const mandatesInit = function(data, onChangeCallback) {
         },
       },
       {
-        class: 'delete icon-button',
+        class: 'delete icon-buttonn revocation-control',
         text: t(appName, 'Delete'),
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
+            const sepaId = makeSepaId(data);
+            $dlg.data('sepaId', sepaId);
             dialogReload($dlg, onChangeCallback);
           }, 'delete');
         },
       },
       {
-        class: 'reactivate icon-button',
+        class: 'reactivate icon-buttonn revocation-control',
         text: t(appName, 'Reactivate'),
         title: t(appName, 'Reactivate the debit-mandate or bank-account in case it'
                  + ' has been deleted in error.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
             dialogReload($dlg, onChangeCallback);
           }, 'reactivate');
         },
       },
       {
-        class: 'disable icon-button',
+        class: 'disable icon-buttonn revocation-control',
         text: t(appName, 'Disable'),
         title: t(appName, 'Disable the debit-mandate or bank-account in case the bank account has'
                  + ' changed, or on request of the participant. The bank account can only'
                  + ' be disabled after disabling all bound debit-mandates.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), function() {
+          mandateDelete($dlg.data('sepaId'), function(data) {
             dialogReload($dlg, onChangeCallback);
           }, 'disable');
         },
@@ -701,6 +708,8 @@ const mandatesInit = function(data, onChangeCallback) {
         reactivate: $widget.find('button.reactivate'),
         reload: $widget.find('button.reload'),
       };
+
+      // const revocationButtons = $widget.find('button.revoation-control');
 
       $dlg.data('buttons', buttons);
 
@@ -813,17 +822,24 @@ const mandateDelete = function(sepaId, callbackOk, action) {
   // const post = $('#sepa-debit-mandate-form').serialize();
 
   let endPoint = 'debit-mandates';
+  let confirmationText = '';
   switch (action) {
   case 'disable':
     // disable account if the mandate is already disabled
     if (!sepaId.mandateSequence || sepaId.mandateDeleted) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to disable the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to disable the current debit-mandate?');
     }
     break;
   case 'reactivate':
     // first reactivate the account, then the mandate
     if (sepaId.bankAccountDeleted) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to reactivate the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to reactiveate the current debit-mandate?');
     }
     break;
   case 'delete':
@@ -832,25 +848,37 @@ const mandateDelete = function(sepaId, callbackOk, action) {
     // always only try delete the mandate if we have one
     if (!sepaId.mandateSequence) {
       endPoint = 'bank-accounts';
+      confirmationText = t(appName, 'Do you really want to delete the current bank-account?');
+    } else {
+      confirmationText = t(appName, 'Do you really want to delete the current debit-mandate?');
     }
     break;
   }
 
   // perhaps we should annoy the user with a confirmation dialog?
-
-  $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
-    .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, function() {});
-    })
-    .done(function(data) {
-      if (!Ajax.validateResponse(data, ['message'])) {
-        return false;
+  Dialogs.confirm(
+    confirmationText,
+    t(appName, 'Confirmation Required'),
+    function(confirmed) {
+      if (!confirmed) {
+        Notification.show(t(appName, 'Unconfirmed, doing nothing'));
+        return;
       }
-      Notification.messages(data.message);
-      if (callbackOk !== undefined) {
-        callbackOk();
-      }
-    });
+      $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {});
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message'])) {
+            return false;
+          }
+          Notification.messages(data.message);
+          if (callbackOk !== undefined) {
+            callbackOk(data);
+          }
+        });
+    },
+    true);
 };
 
 const makeSuggestions = function(data) {
@@ -1199,8 +1227,8 @@ const mandatePopupInit = function(selector) {
   container.find(':button.sepa-debit-mandate, input.dialog.sepa-debit-mandate')
     .off('click')
     .on('click', function(event) {
-      if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
-        container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
+      if ($('#sepa-debit-mandate-dialog').dialog('isOpen') === true) {
+        // $('#sepa-debit-mandate-dialog').dialog('close').remove();
       } else {
         // We store the values in the data attribute.
         const values = $(this).data('debitMandate');

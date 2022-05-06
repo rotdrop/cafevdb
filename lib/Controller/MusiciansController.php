@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -295,8 +295,8 @@ class MusiciansController extends Controller {
       $duplicateNames = '';
       $duplicates = [];
       foreach ($musicians as $musician) {
-        $duplicateNames .= $musician['firstName'].' '.$musician['name']." (Id = ".$musician['id'].")"."\n";
-        $duplicates[$musician['id']] = $musician['firstName'].' '.$musician['name'];
+        $duplicateNames .= $musician['firstName'].' '.$musician['surName']." (Id = ".$musician['id'].")"."\n";
+        $duplicates[$musician['id']] = $musician['firstName'].' '.$musician['surName'];
       }
 
       $message = [];

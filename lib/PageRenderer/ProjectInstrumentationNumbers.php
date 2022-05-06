@@ -41,6 +41,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   const TEMPLATE = 'project-instrumentation-numbers';
   const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
+  private const EXTRA_VOICES = 4;
+  private const INSERT_VOICES = 8;
+
   // Projects Instruments ProjectInstruments
   protected $joinStructure = [
     self::TABLE => [
@@ -85,6 +88,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   , PageNavigation $pageNavigation
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Voice'));
+    }
   }
 
   public function shortTitle()
@@ -272,6 +279,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
 
     $opts['fdd']['voice'] = [
       'name'     => $this->l->t('Voice'),
+      'css'      => [ 'postfix' => [ 'allow-empty', ], ],
       'select'   => 'D',
       'options'  => 'LACPDVF',
       'maxlen'   => 5,
@@ -288,15 +296,15 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'filters' => $projectMode ? '$table.project_id = ' . $this->projectId : null,
         'join' => false,
       ],
-      'values2|A' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, 8), range(1, 8)),
+      'values2|A' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, self::INSERT_VOICES), range(1, self::INSERT_VOICES)),
     ];
     $opts['fdd']['voice']['values|CP'] = array_merge(
       $opts['fdd']['voice']['values'], [
         'table' => 'SELECT
   t.project_id, t.instrument_id, n.seq AS voice
   FROM ' . self::TABLE . ' t
-  JOIN '.self::SEQUENCE_TABLE.' n
-    ON n.seq <= GREATEST(4, (t.voice + 1)) AND n.seq <= GREATEST(4, 1 + (SELECT MAX(t2.voice) FROM ' . self::TABLE . ' t2))
+  JOIN ' . self::SEQUENCE_TABLE . ' n
+    ON n.seq <= GREATEST(' . self::EXTRA_VOICES . ', (t.voice + 1)) AND n.seq <= GREATEST(' . self::EXTRA_VOICES . ', 1 + (SELECT MAX(t2.voice) FROM ' . self::TABLE . ' t2))
   WHERE t.project_id = $record_id[project_id] AND t.instrument_id = $record_id[instrument_id]
   GROUP BY n.seq',
         'filters' => null,
@@ -356,7 +364,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'sort'   => $sort,
         'select' => 'N',
         'align' => 'right',
-        'sql'    => 'COUNT($join_col_fqn)',
+        'sql'    => 'COUNT(DISTINCT $join_col_fqn)',
         'values' => [
           'join' => '$join_table.project_id = $main_table.project_id
   AND $join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
@@ -375,9 +383,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'   => $sort,
       'select' => 'N',
       'sql'    => "CONCAT(
-  COUNT(".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - \$main_table.quantity,
+  COUNT(DISTINCT ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - \$main_table.quantity,
   ':',
-  COUNT(".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - \$main_table.quantity
+  COUNT(DISTINCT ".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - \$main_table.quantity
 )",
       'php' => function($balance, $op, $field, $row, $recordId, $pme) {
         $values = Util::explode(':', $balance);
@@ -399,9 +407,41 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // trigger
 
     // redirect all updates through Doctrine\ORM.
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = function(PHPMyEdit &$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+      if (array_search('voice', $changed) === false
+          && array_search('instrument_id', $changed) === false
+          && array_search('project_id', $changed) === false) {
+        return true;
+      }
+
+      if ($oldVals['voice'] == 0 || $oldVals['registered'] > 0) {
+        // if this voice is already used or is the catch-all voice, then "just" create a new record
+        if (!$this->beforeInsertDoInsertAll($pme, $op, $step, $oldVals, $changed, $newVals)) {
+          return false;
+        }
+        $pme->rec['project_id'] = $newVals['project_id'];
+        $pme->rec['instrument_id'] = $newVals['instrument_id'];
+        $pme->rec['voice'] = $newVals['voice'];
+      }
+      return true;
+    };
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
+
+    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
+    //   $voiceIndex = $pme->fdn['voice'];
+    //   $instrumentIndex = $pme->fdn['instrument_id'];
+    //   $registeredIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')];
+    //   if ($row['qf' . $voiceIndex] == 0 || !empty($row['qf' . $registeredIndex])) {
+    //     // disallow changes to instrument and voice as the integrity
+    //     // constraints would not allow changing these anyway.
+    //     $pme->fdd[$instrumentIndex]['input'] .= 'R';
+    //     $pme->fdd[$voiceIndex]['input'] .= 'R';
+    //   }
+
+    //   return true;
+    // };
 
     // @todo: here we need still delete triggers etc.
     // go
@@ -414,5 +454,4 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       $this->pme->setOptions($opts);
     }
   }
-
 }

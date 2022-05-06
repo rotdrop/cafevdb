@@ -82,7 +82,7 @@ class BankTransactionsStorage extends Storage
     }
 
     $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
+      '.' => new DirectoryNode('.', new \DateTimeImmutable('@1')),
     ];
 
     $directoryYear = (int)basename($dirName);

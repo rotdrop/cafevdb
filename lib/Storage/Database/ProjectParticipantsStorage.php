@@ -135,7 +135,7 @@ class ProjectParticipantsStorage extends Storage
     }
 
     $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new \DateTimeImmutable('@0')),
+      '.' => new DirectoryNode('.', new \DateTimeImmutable('@1')),
     ];
 
     // the mount provider currently disables soft-deleteable filter ...

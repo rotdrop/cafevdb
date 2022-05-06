@@ -237,14 +237,15 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $cloudAccountDisabled;
 
   /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", orphanRemoval=true)
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
+   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $instruments;
 
   /**
    * Inverse side.
    *
-   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner", orphanRemoval=true)
+   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner", cascade={"remove"}, orphanRemoval=true)
    */
   private $photo;
 
@@ -739,8 +740,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setInstruments(Collection $instruments):Musician
+  public function setInstruments(?Collection $instruments):Musician
   {
+    if ($instruments === null) {
+      $instruments = new ArrayCollection;
+    }
     $this->instruments = $instruments;
 
     return $this;

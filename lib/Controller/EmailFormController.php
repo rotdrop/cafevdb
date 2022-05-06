@@ -151,6 +151,7 @@ class EmailFormController extends Controller {
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
       'storedEmails' => $composer->storedEmails(),
+      'sentEmails' => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
       'TO' => $composer->toString(),
       'BCC' => $composer->blindCarbonCopy(),
@@ -217,6 +218,26 @@ class EmailFormController extends Controller {
   }
 
   /**
+   * Regenerate the sent-email options after e.g. changing the project
+   * context or having sent out an email.
+   */
+  private function sentEmailOptions(Composer $composer)
+  {
+    $templateParameters = [
+      'sentEmails' => $composer->sentEmails(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+      'dateTimeZone' => $this->getDateTimeZone(),
+    ];
+
+    $tmpl = new TemplateResponse(
+      $this->appName,
+      'emailform/part.sent-email-options',
+      $templateParamters,
+      'blank');
+    return $tmpl->render();
+  }
+
+  /**
    * @NoAdminRequired
    * @UseSession
    *
@@ -240,7 +261,7 @@ class EmailFormController extends Controller {
     $projectName = $requestData['projectName'];
     $bulkTransactionId = $requestData['bulkTransactionId'];
 
-    /** @var Composer */
+    /** @var Composer $composer */
     $composer = $this->appContainer->get(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
 
@@ -285,6 +306,7 @@ class EmailFormController extends Controller {
         // Update list of drafts after sending the message (draft has
         // been deleted)
         $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+        $requestData['sendEmailOptions'] = $this->sentEmailOptions($composer);
       }
       break;
     case 'preview':
@@ -338,6 +360,7 @@ class EmailFormController extends Controller {
           'projectId' => $projectId,
           'emailTemplateName' => $composer->currentEmailTemplate(),
           'storedEmails' => $composer->storedEmails(),
+          'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
           'TO' => $composer->toString(),
           'BCC' => $composer->blindCarbonCopy(),
@@ -393,9 +416,91 @@ class EmailFormController extends Controller {
       $requestData['elementData'] = $elementData;
       break;
     case 'load':
-      $value = $requestData['storedMessagesSelector'];
       switch ($topic) {
+      case 'sent':
+        $value = $requestData['sentMessagesSelector'];
+        $this->logInfo('SENT EMAIL ID "' . $value . '"');
+        if (!$composer->loadSentEmail($value)) {
+          return self::grumble($this->l->t('Unable to load sent email with message-id "%s".', $value));
+        }
+        $requestData['message'] = $composer->messageText();
+        $requestData['subject'] = $composer->subject();
+
+        $this->logInfo('TO STRING ' . $composer->toString());
+
+        // Composer template
+        $fileAttachments = $composer->fileAttachments();
+        $eventAttachments = $composer->eventAttachments();
+
+        $emailDraftAutoSave = $this->getEmailDraftAutoSave();
+
+        $templateParameters = [
+          'appName' =>  $this->appName(),
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          'urlGenerator' => $this->urlGenerator,
+          'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
+          'dateTimeZone' => $this->getDateTimeZone(),
+
+          'emailTemplateName' => $composer->currentEmailTemplate(),
+          'storedEmails' => $composer->storedEmails(),
+          'sentEmails' => $composer->sentEmails(),
+          'disclosedRecipients' => $composer->discloseRecipients(),
+          'TO' => $composer->toString(),
+          'BCC' => $composer->blindCarbonCopy(),
+          'CC' => $composer->carbonCopy(),
+          'mailTag' => $composer->subjectTag(),
+          'subject' => $composer->subject(),
+          'message' => $composer->messageText(),
+          'sender' => $composer->fromName(),
+          'catchAllEmail' => $composer->fromAddress(),
+          'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
+          'fileAttachmentData' => json_encode($fileAttachments),
+          'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
+          'composerFormData' => $composer->formData(),
+          'emailDraftAutoSave' => $emailDraftAutoSave,
+
+          'toolTips' => $this->toolTipsService(),
+        ];
+
+        $msgData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.composer',
+          $templateParameters,
+          'blank'))->render();
+
+        $requestData['composerForm'] = $msgData;
+
+        // We need to tweak the recipients template
+        $filterHistory = $recipientsFilter->filterHistory();
+        $templateParameters = [
+          'appName' => $this->appName(),
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+          // Needed for the recipient selection
+          'recipientsFormData' => $recipientsFilter->formData(),
+          'filterHistory' => $filterHistory,
+          'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+          'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
+          'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+          'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
+          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+          'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+
+          'toolTips' => $this->toolTipsService(),
+        ];
+
+        $rcptData = (new TemplateResponse(
+          $this->appName,
+          'emailform/part.emailform.recipients',
+          $templateParameters,
+          'blank'))->render();
+
+        $requestData['recipientsForm'] = $rcptData;
+
+        break;
       case 'template':
+        $value = $requestData['storedMessagesSelector'];
         if (!$composer->loadTemplate($value)) {
           return self::grumble($this->l->t('Unable to load template "%s".', $value));
         }
@@ -404,6 +509,7 @@ class EmailFormController extends Controller {
         $requestData['subject'] = $composer->subject();
         break;
       case 'draft':
+        $value = $requestData['storedMessagesSelector'];
         if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
           return self::grumble($this->l->t('Invalid draft name "%s".', $value));
         }
@@ -452,6 +558,7 @@ class EmailFormController extends Controller {
 
           'emailTemplateName' => $composer->currentEmailTemplate(),
           'storedEmails' => $composer->storedEmails(),
+          'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
           'TO' => $composer->toString(),
           'BCC' => $composer->blindCarbonCopy(),
@@ -475,6 +582,8 @@ class EmailFormController extends Controller {
           'emailform/part.emailform.composer',
           $templateParameters,
           'blank'))->render();
+
+        $requestData['composerForm'] = $msgData;
 
         // Recipients template
         $filterHistory = $recipientsFilter->filterHistory();

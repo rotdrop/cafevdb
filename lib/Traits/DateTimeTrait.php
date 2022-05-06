@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -58,4 +58,11 @@ trait DateTimeTrait
     }
     return null; // not reached
   }
+
+  /** Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone. */
+  static public function convertToTimezoneDate(\DateTimeInterface $date, \DateTimeZone $timeZone):\DateTimeImmutable
+  {
+    return \DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $timeZone);
+  }
+
 }
