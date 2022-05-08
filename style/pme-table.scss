@@ -1107,16 +1107,22 @@ td.pme-filter, th.pme-filter {
   background:#C6DEFF;
 }
 
-table.pme-main div.pme-filter-negate {
-  height:0px;
-  width:0px;
-  overflow:visible;
-}
-
 table.pme-main {
+  div.pme-filter-negate {
+    height:0px;
+    width:0px;
+    overflow:visible;
+    position:relative;
+  }
+
   label.pme-filter-negate-label,
   label.pme-filter-negate {
     vertical-align:top;
+    display:inline-block;
+    position:relative;
+    top:-12px;
+    height:fit-content;
+    width:fit-content;
   }
 
   label.pme-filter-negate span,
@@ -1126,7 +1132,6 @@ table.pme-main {
     width:24px;
     height:24px;
     position:relative;
-    top:-12px;
     background:url(../img/dont.svg);
     cursor:pointer;
     opacity:0.4;
