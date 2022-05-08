@@ -1365,7 +1365,7 @@ __EOT__;
 
     foreach ($optionValues as $field => $fieldData) {
       //  TODO: eliminate empty field-data
-      $newvals[$field] = implode(',', $fieldData);
+      $newvals[$field] = Util::implode(self::VALUES_SEP, $fieldData);
       if ($newvals[$field] != ($oldvals[$field]??null)) {
         $changed[] = $field;
       }
