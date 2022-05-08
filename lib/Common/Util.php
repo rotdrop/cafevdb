@@ -171,7 +171,7 @@ class Util
     }
     $pregFlags = ($flags & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
     $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
-    if ($flags & self::ESCAPED) {
+    if (($flags & self::ESCAPED) && !empty($escape)) {
       return
         str_replace(
           [ $escape.$escape, $escape.$delim ],
@@ -189,7 +189,7 @@ class Util
   static public function implode(string $delim, array $array, int $flags = self::ESCAPED, string $escape = '\\'):string
   {
     if ($flags & self::ESCAPED) {
-      $string = str_replace(
+      $array = str_replace(
         [ $escape, $delim ],
         [ $escape.$escape, $escape.$delim ],
         $array);
@@ -211,9 +211,11 @@ class Util
    *   ...
    * ]
    * ```
-   * Only the first $keyDelimiter is taken into account.
+   *
+   * Only the first $keyDelimiter is taken into account. This means
+   * that it is not necessary to explode the key-delimiter.
    */
-  static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
+  static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':', string $escapeChar = '\\'):array
   {
     if (empty($data)) {
       return [];
@@ -226,7 +228,7 @@ class Util
         }
         return $row;
       },
-      self::explode($delimiter, $data, self::TRIM|self::OMIT_EMPTY_FIELDS));
+      self::explode($delimiter, $data, self::TRIM|self::OMIT_EMPTY_FIELDS|self::ESCAPED, $escapeChar));
     return array_column($matrix, 1, 0);
   }
 
