@@ -45,6 +45,7 @@ return Array(
 		'Sorted By'			=>'Sorted By',
 		'ascending'			=>'ascending',
 		'descending'		=>'descending',
+                'empty'                 =>'empty',
 		'hidden'			=>'hidden',
 		'of'				=>'of',
 		'record added'  	=>'record added',

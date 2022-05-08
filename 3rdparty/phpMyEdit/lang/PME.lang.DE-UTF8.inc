@@ -52,6 +52,7 @@ return Array(
 		'Sorted By'	=>'Sortiert nach',
 		'ascending'	=>'&#8613;'/*'&uarr;'*//*'aufsteigend'*/,
 		'descending'	=>'&#8615;'/*'&darr;'*//*'absteigend'*/,
+                'empty'         => 'leer',
 		'hidden'	=>'versteckt',
 		'of'		=>'von',
 		'record added'	=>'Datensatz hinzugefügt',
