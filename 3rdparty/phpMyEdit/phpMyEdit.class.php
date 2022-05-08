@@ -450,6 +450,11 @@ class phpMyEdit
 		return true;
 	}
 
+	/**
+	 * Implode the given array. If it is flat then use a legacy
+	 * implode with commas as separators. Commas in the array values
+	 * are escaped. Otherwise use json_encode().
+	 */
 	static function implodeValueArray($array, bool $onlyFlat)
 	{
 		if (empty($array)) {
