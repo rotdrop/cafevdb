@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-04-29 17:41+0200\n"
+"POT-Creation-Date: 2022-05-02 08:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -257,126 +257,126 @@ msgid "Unknown form element: `%s'."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:423
-#: lib/Controller/EmailFormController.php:644
-#: lib/Controller/EmailFormController.php:670
-#: lib/Controller/EmailFormController.php:698
+#: lib/Controller/EmailFormController.php:643
+#: lib/Controller/EmailFormController.php:669
+#: lib/Controller/EmailFormController.php:697
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:434
+#: lib/Controller/EmailFormController.php:433
 #, php-format
 msgid "Unable to load sent email with message-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:513
+#: lib/Controller/EmailFormController.php:512
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:522
+#: lib/Controller/EmailFormController.php:521
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:640
+#: lib/Controller/EmailFormController.php:639
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:652
+#: lib/Controller/EmailFormController.php:651
 msgid "Email template name must not be empty"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:674
+#: lib/Controller/EmailFormController.php:673
 #, php-format
 msgid "%s could not be saved"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:690
+#: lib/Controller/EmailFormController.php:689
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:709
+#: lib/Controller/EmailFormController.php:708
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:713
+#: lib/Controller/EmailFormController.php:712
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:867
+#: lib/Controller/EmailFormController.php:862
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:897
+#: lib/Controller/EmailFormController.php:892
 msgid "Form Input"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:972
+#: lib/Controller/EmailFormController.php:967
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:978
+#: lib/Controller/EmailFormController.php:973
 #: lib/Controller/PaymentsController.php:214
 #: lib/Controller/SepaDebitMandatesController.php:1202
 msgid "UNIMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:999
+#: lib/Controller/EmailFormController.php:994
 msgid "Attachment file-names were not submitted"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1008
+#: lib/Controller/EmailFormController.php:1003
 #: lib/Controller/UploadsController.php:162
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1011
+#: lib/Controller/EmailFormController.php:1006
 #: lib/Controller/UploadsController.php:165
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1025
-#: lib/Controller/EmailFormController.php:1083
+#: lib/Controller/EmailFormController.php:1020
+#: lib/Controller/EmailFormController.php:1078
 #: lib/Controller/UploadsController.php:241
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1043
+#: lib/Controller/EmailFormController.php:1038
 #: lib/Controller/FileUploadRowTrait.php:60
 #: lib/Controller/UploadsController.php:197
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1051
+#: lib/Controller/EmailFormController.php:1046
 #: lib/Controller/FileUploadRowTrait.php:68
 #: lib/Controller/UploadsController.php:205
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1053
+#: lib/Controller/EmailFormController.php:1048
 #: lib/Controller/FileUploadRowTrait.php:70
 #: lib/Controller/UploadsController.php:207
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1065
+#: lib/Controller/EmailFormController.php:1060
 #: lib/Controller/FileUploadRowTrait.php:98
 #: lib/Controller/UploadsController.php:219
 msgid "Not enough storage available"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1089
+#: lib/Controller/EmailFormController.php:1084
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
@@ -540,7 +540,7 @@ msgstr ""
 
 #: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Controller/ProjectParticipantsController.php:736
-#: lib/Database/EntityManager.php:232
+#: lib/Database/EntityManager.php:235
 #: lib/Documents/OpenDocumentFiller.php:314
 #: lib/Documents/OpenDocumentFiller.php:331
 #: lib/Documents/OpenDocumentFiller.php:342
@@ -756,7 +756,7 @@ msgstr ""
 
 #: lib/Controller/PaymentsController.php:167
 #: lib/Controller/SepaDebitMandatesController.php:1144
-#: lib/Controller/SepaDebitMandatesController.php:1351
+#: lib/Controller/SepaDebitMandatesController.php:1371
 msgid "Error, caught an exception. No changes were performed."
 msgstr ""
 
@@ -2389,7 +2389,7 @@ msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:764
-#: lib/Controller/SepaDebitMandatesController.php:1283
+#: lib/Controller/SepaDebitMandatesController.php:1303
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
@@ -2510,78 +2510,78 @@ msgid ""
 "please upload a new one!"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1225
+#: lib/Controller/SepaDebitMandatesController.php:1227
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1232
+#: lib/Controller/SepaDebitMandatesController.php:1234
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1238
-#: lib/Controller/SepaDebitMandatesController.php:1342
+#: lib/Controller/SepaDebitMandatesController.php:1240
+#: lib/Controller/SepaDebitMandatesController.php:1362
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1243
+#: lib/Controller/SepaDebitMandatesController.php:1250
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1245
+#: lib/Controller/SepaDebitMandatesController.php:1253
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1248
+#: lib/Controller/SepaDebitMandatesController.php:1265
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1307
+#: lib/Controller/SepaDebitMandatesController.php:1327
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1320
+#: lib/Controller/SepaDebitMandatesController.php:1340
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1329
+#: lib/Controller/SepaDebitMandatesController.php:1349
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1336
+#: lib/Controller/SepaDebitMandatesController.php:1356
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1358
+#: lib/Controller/SepaDebitMandatesController.php:1378
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1360
+#: lib/Controller/SepaDebitMandatesController.php:1380
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1361
+#: lib/Controller/SepaDebitMandatesController.php:1381
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1364
+#: lib/Controller/SepaDebitMandatesController.php:1384
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr ""
@@ -2661,17 +2661,17 @@ msgid ""
 "column."
 msgstr ""
 
-#: lib/Database/EntityManager.php:854
-#: lib/Database/EntityManager.php:899
+#: lib/Database/EntityManager.php:857
+#: lib/Database/EntityManager.php:902
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1036
+#: lib/Database/EntityManager.php:1039
 msgid "EntityManager is not connected to database."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1104
+#: lib/Database/EntityManager.php:1107
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -2736,7 +2736,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:572
-#: src/app/email.js:1340
+#: src/app/email.js:1372
 msgid "Unknown Template"
 msgstr ""
 
@@ -2950,52 +2950,52 @@ msgstr ""
 msgid "No payments for bulk-transaction id %d."
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:739
+#: lib/EmailForm/RecipientsFilter.php:737
 #: lib/PageRenderer/PMETableViewBase.php:359
 msgid "member status "
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:821
+#: lib/EmailForm/RecipientsFilter.php:819
 msgid "project mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:825
+#: lib/EmailForm/RecipientsFilter.php:823
 msgid "announcements mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:829
+#: lib/EmailForm/RecipientsFilter.php:827
 msgid "musician database"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:833
+#: lib/EmailForm/RecipientsFilter.php:831
 msgid "all known musicians"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:837
+#: lib/EmailForm/RecipientsFilter.php:835
 msgid "all musicians NOT participating"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:841
+#: lib/EmailForm/RecipientsFilter.php:839
 msgid "participants (confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:845
+#: lib/EmailForm/RecipientsFilter.php:843
 msgid "participants (preliminary)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:849
+#: lib/EmailForm/RecipientsFilter.php:847
 msgid "participants (preliminary and confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:853
+#: lib/EmailForm/RecipientsFilter.php:851
 msgid "all musicians except confirmed participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:857
+#: lib/EmailForm/RecipientsFilter.php:855
 msgid "all musicians except preliminary participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:861
+#: lib/EmailForm/RecipientsFilter.php:859
 msgid "no one"
 msgstr ""
 
@@ -3367,7 +3367,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:119
-#: src/app/email.js:1820
+#: src/app/email.js:1852
 msgid "Accept"
 msgstr ""
 
@@ -3557,7 +3557,7 @@ msgstr ""
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:167
 #: lib/PageRenderer/ProjectParticipants.php:1030
-#: templates/emailform/part.emailform.recipients.php:188
+#: templates/emailform/part.emailform.recipients.php:181
 msgid "Project Mailing List"
 msgstr ""
 
@@ -3684,7 +3684,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:518
 #: lib/PageRenderer/ProjectPayments.php:539
 #: lib/PageRenderer/SepaBulkTransactions.php:463
-#: templates/emailform/part.emailform.composer.php:191
+#: templates/emailform/part.emailform.composer.php:196
 msgid "Subject"
 msgstr ""
 
@@ -8594,6 +8594,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:34
 #: src/app/project-participants.js:782
 #: src/app/projects.js:487
+#: src/app/sepa-debit-mandate.js:861
 msgid "Confirmation Required"
 msgstr ""
 
@@ -8923,8 +8924,8 @@ msgstr ""
 #: src/app/blog.js:363
 #: src/app/blog.js:386
 #: src/app/email.js:78
-#: src/app/email.js:769
-#: src/app/email.js:895
+#: src/app/email.js:801
+#: src/app/email.js:927
 #: src/app/inlineimage.js:56
 #: src/app/inlineimage.js:63
 #: src/app/inlineimage.js:158
@@ -9094,7 +9095,7 @@ msgstr ""
 #: src/app/chosen-popup.js:45
 #: src/app/inlineimage.js:247
 #: templates/blog/blogedit.php:40
-#: templates/emailform/part.emailform.composer.php:340
+#: templates/emailform/part.emailform.composer.php:345
 msgid "Cancel"
 msgstr ""
 
@@ -9164,96 +9165,96 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
-#: src/app/email.js:187
+#: src/app/email.js:209
 msgid "Move all"
 msgstr ""
 
-#: src/app/email.js:188
+#: src/app/email.js:210
 msgid "Move selected"
 msgstr ""
 
-#: src/app/email.js:189
+#: src/app/email.js:211
 msgid "Remove selected"
 msgstr ""
 
-#: src/app/email.js:190
+#: src/app/email.js:212
 msgid "Remove all"
 msgstr ""
 
-#: src/app/email.js:191
+#: src/app/email.js:213
 msgid "Remaining Recipients"
 msgstr ""
 
-#: src/app/email.js:192
+#: src/app/email.js:214
 msgid "Selected Recipients"
 msgstr ""
 
-#: src/app/email.js:195
+#: src/app/email.js:217
 msgid "Filtered"
 msgstr ""
 
-#: src/app/email.js:197
+#: src/app/email.js:219
 #: templates/legacy/calendar/part.eventform.php:43
 msgid "from"
 msgstr ""
 
-#: src/app/email.js:199
+#: src/app/email.js:221
 msgid "Empty list"
 msgstr ""
 
-#: src/app/email.js:200
+#: src/app/email.js:222
 msgid "Filter"
 msgstr ""
 
-#: src/app/email.js:201
+#: src/app/email.js:223
 msgid "show all"
 msgstr ""
 
-#: src/app/email.js:208
+#: src/app/email.js:230
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.js:768
+#: src/app/email.js:800
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.js:812
-#: src/app/email.js:1985
+#: src/app/email.js:844
+#: src/app/email.js:2017
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.js:814
-#: src/app/email.js:1987
+#: src/app/email.js:846
+#: src/app/email.js:2019
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.js:894
+#: src/app/email.js:926
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.js:954
+#: src/app/email.js:986
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.js:956
+#: src/app/email.js:988
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.js:985
+#: src/app/email.js:1017
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.js:1021
+#: src/app/email.js:1053
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.js:1156
+#: src/app/email.js:1188
 msgid "Dummy Autosave Subject"
 msgstr ""
 
-#: src/app/email.js:1188
+#: src/app/email.js:1220
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -9261,98 +9262,98 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.js:1193
+#: src/app/email.js:1225
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.js:1254
+#: src/app/email.js:1286
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.js:1255
+#: src/app/email.js:1287
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.js:1287
+#: src/app/email.js:1319
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.js:1289
+#: src/app/email.js:1321
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.js:1322
+#: src/app/email.js:1354
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
 msgstr ""
 
-#: src/app/email.js:1324
+#: src/app/email.js:1356
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.js:1338
+#: src/app/email.js:1370
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.js:1355
+#: src/app/email.js:1387
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.js:1358
+#: src/app/email.js:1390
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.js:1400
+#: src/app/email.js:1432
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.js:1401
+#: src/app/email.js:1433
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.js:1465
+#: src/app/email.js:1497
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.js:1467
+#: src/app/email.js:1499
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.js:1618
+#: src/app/email.js:1650
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.js:1619
-#: src/app/email.js:1761
+#: src/app/email.js:1651
+#: src/app/email.js:1793
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.js:1720
+#: src/app/email.js:1752
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1760
+#: src/app/email.js:1792
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1819
-#: templates/emailform/part.emailform.composer.php:167
-#: templates/emailform/part.emailform.composer.php:186
+#: src/app/email.js:1851
+#: templates/emailform/part.emailform.composer.php:172
+#: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
 msgstr ""
 
-#: src/app/email.js:1823
+#: src/app/email.js:1855
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1826
+#: src/app/email.js:1858
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -9750,97 +9751,125 @@ msgstr ""
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:635
+#: src/app/sepa-debit-mandate.js:640
 msgid "Close"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:636
+#: src/app/sepa-debit-mandate.js:641
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the \"Apply\" "
 "button."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:644
+#: src/app/sepa-debit-mandate.js:649
 #: templates/blog/blogthreads.php:92
 msgid "Delete"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:645
+#: src/app/sepa-debit-mandate.js:650
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
 "done in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:655
+#: src/app/sepa-debit-mandate.js:662
 msgid "Reactivate"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:656
+#: src/app/sepa-debit-mandate.js:663
 msgid ""
 "Reactivate the debit-mandate or bank-account in case it has been deleted in "
 "error."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:667
+#: src/app/sepa-debit-mandate.js:674
 msgid "Disable"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:668
+#: src/app/sepa-debit-mandate.js:675
 msgid ""
 "Disable the debit-mandate or bank-account in case the bank account has "
 "changed, or on request of the participant. The bank account can only be "
 "disabled after disabling all bound debit-mandates."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:681
+#: src/app/sepa-debit-mandate.js:688
 #: templates/events.php:81
 #: templates/part.common.header.php:63
 msgid "Reload"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:682
+#: src/app/sepa-debit-mandate.js:689
 msgid "Reload the form and locks it. Unsaved changes are lost."
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:775
+#: src/app/sepa-debit-mandate.js:784
 msgid ""
 "Please either upload a copy of the written and signed debit-mandate or at "
 "least check the \"upload later\" option"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:775
+#: src/app/sepa-debit-mandate.js:784
 msgid "Missing Data"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:861
-#: src/app/sepa-debit-mandate.js:978
+#: src/app/sepa-debit-mandate.js:831
+msgid "Do you really want to disable the current bank-account?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:833
+msgid "Do you really want to disable the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:840
+msgid "Do you really want to reactivate the current bank-account?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:842
+msgid "Do you really want to reactiveate the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:851
+msgid "Do you really want to delete the current bank-account?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:853
+msgid "Do you really want to delete the current debit-mandate?"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:864
+msgid "Unconfirmed, doing nothing"
+msgstr ""
+
+#: src/app/sepa-debit-mandate.js:889
+#: src/app/sepa-debit-mandate.js:1006
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:865
-#: src/app/sepa-debit-mandate.js:982
+#: src/app/sepa-debit-mandate.js:893
+#: src/app/sepa-debit-mandate.js:1010
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1604
+#: src/app/sepa-debit-mandate.js:1632
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
 "participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1606
+#: src/app/sepa-debit-mandate.js:1634
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1638
+#: src/app/sepa-debit-mandate.js:1666
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1640
+#: src/app/sepa-debit-mandate.js:1668
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr ""
 
@@ -9993,7 +10022,7 @@ msgid "Select Em@il Recipients"
 msgstr ""
 
 #: templates/emailform/form.php:35
-#: templates/emailform/part.emailform.composer.php:120
+#: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr ""
 
@@ -10039,117 +10068,117 @@ msgstr ""
 msgid "Compose Em@il"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:56
+#: templates/emailform/part.emailform.composer.php:61
 msgid "Select draft or template"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:64
+#: templates/emailform/part.emailform.composer.php:69
 msgid "Reply To"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:75
+#: templates/emailform/part.emailform.composer.php:80
 msgid "New Template Name"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:98
+#: templates/emailform/part.emailform.composer.php:103
 msgid "Save Message"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:116
+#: templates/emailform/part.emailform.composer.php:121
 msgid "Delete Message"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:125
-#: templates/emailform/part.emailform.composer.php:128
+#: templates/emailform/part.emailform.composer.php:130
+#: templates/emailform/part.emailform.composer.php:133
 msgid "No recipients selected."
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:153
+#: templates/emailform/part.emailform.composer.php:158
 msgid "Carbon Copy"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:172
+#: templates/emailform/part.emailform.composer.php:177
 msgid "Blind CC"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:207
+#: templates/emailform/part.emailform.composer.php:212
 msgid "Message-Body"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:211
+#: templates/emailform/part.emailform.composer.php:216
 msgid "Sender-Name"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:220
+#: templates/emailform/part.emailform.composer.php:225
 msgid "Sender-Email"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:221
+#: templates/emailform/part.emailform.composer.php:226
 #, php-format
 msgid "Tied to \"%s\""
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:224
+#: templates/emailform/part.emailform.composer.php:229
 msgid "Add Attachment"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:230
-#: templates/emailform/part.emailform.composer.php:233
+#: templates/emailform/part.emailform.composer.php:235
+#: templates/emailform/part.emailform.composer.php:238
 msgid "Upload new File"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:238
-#: templates/emailform/part.emailform.composer.php:241
+#: templates/emailform/part.emailform.composer.php:243
+#: templates/emailform/part.emailform.composer.php:246
 msgid "Select from Owncloud"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:246
-#: templates/emailform/part.emailform.composer.php:249
+#: templates/emailform/part.emailform.composer.php:251
+#: templates/emailform/part.emailform.composer.php:254
 msgid "Select from participant file attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:254
+#: templates/emailform/part.emailform.composer.php:259
 msgid "Project Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:257
+#: templates/emailform/part.emailform.composer.php:262
 msgid "Select Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:263
+#: templates/emailform/part.emailform.composer.php:268
 msgid "Toggle Visibily"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:266
+#: templates/emailform/part.emailform.composer.php:271
 msgid "toggle"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:273
+#: templates/emailform/part.emailform.composer.php:278
 msgid "Attached Events"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:288
-#: templates/emailform/part.emailform.composer.php:314
+#: templates/emailform/part.emailform.composer.php:293
+#: templates/emailform/part.emailform.composer.php:319
 msgid "Toggle Visibility"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:293
+#: templates/emailform/part.emailform.composer.php:298
 msgid "Delete Event Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:299
+#: templates/emailform/part.emailform.composer.php:304
 msgid "Attached Files"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:319
+#: templates/emailform/part.emailform.composer.php:324
 msgid "Delete All Attachments"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:330
+#: templates/emailform/part.emailform.composer.php:335
 msgid "Send Em@il"
 msgstr ""
 
-#: templates/emailform/part.emailform.composer.php:334
+#: templates/emailform/part.emailform.composer.php:339
 msgid "Message Preview"
 msgstr ""
 
@@ -10182,71 +10211,71 @@ msgstr ""
 msgid "Basic Recipients Set"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:133
+#: templates/emailform/part.emailform.recipients.php:132
 #, php-format
 msgid "IS_PARTICIPANT_OF: &isin; %s (confirmed)"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:151
+#: templates/emailform/part.emailform.recipients.php:148
 #, php-format
 msgid "IS_PARTICIPANT_OF: &isin; %s (preliminary)"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:169
+#: templates/emailform/part.emailform.recipients.php:164
 #, php-format
 msgid "IS_NON_PARTICIPANT_OF: &notin; %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:207
+#: templates/emailform/part.emailform.recipients.php:198
 msgid "Database"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:212
+#: templates/emailform/part.emailform.recipients.php:202
 msgid "CONJUNCTION: or"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:228
+#: templates/emailform/part.emailform.recipients.php:217
 #: templates/settings/email-settings.php:129
 msgid "Announcements Mailing List"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:253
+#: templates/emailform/part.emailform.recipients.php:242
 msgid "Member-Status"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:261
+#: templates/emailform/part.emailform.recipients.php:249
 msgid "Select Members by Status"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:275
-msgid "Email Recipients"
-msgstr ""
-
-#: templates/emailform/part.emailform.recipients.php:291
+#: templates/emailform/part.emailform.recipients.php:260
 msgid "Instruments Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:299
+#: templates/emailform/part.emailform.recipients.php:268
 msgid "Select Instruments"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:315
+#: templates/emailform/part.emailform.recipients.php:283
+msgid "Email Recipients"
+msgstr ""
+
+#: templates/emailform/part.emailform.recipients.php:303
 msgid "Apply Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:323
+#: templates/emailform/part.emailform.recipients.php:311
 msgid "Undo Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:332
+#: templates/emailform/part.emailform.recipients.php:320
 msgid "Redo Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:341
+#: templates/emailform/part.emailform.recipients.php:329
 msgid "Reset Filter"
 msgstr ""
 
-#: templates/emailform/part.emailform.recipients.php:361
+#: templates/emailform/part.emailform.recipients.php:349
 msgid "Reloading recipients from database, please wait ..."
 msgstr ""
 
