@@ -629,13 +629,7 @@ AS
 SELECT t.*
   FROM " . $table . " t
   WHERE t.id in (
-    SELECT pppfdv.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData') . " pppfdv
-      UNION
-    SELECT cpv.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'CompositePayments'). " cpv
-      UNION
-    (SELECT pppfdv2.option_value AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData') . " pppfdv2
-     INNER JOIN ProjectParticipantFields ppd
-       ON pppfdv2.field_id = ppd.id AND ppd.data_type = 'db-file')
+    SELECT efov.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . "efov
       UNION
     SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
 
