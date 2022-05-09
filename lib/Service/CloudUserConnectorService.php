@@ -138,6 +138,8 @@ WITH CHECK OPTION';
     'ProjectParticipantFieldsData' => 'musician_id',
     'ProjectPayments' => 'musician_id',
     'CompositePayments' => 'musician_id',
+    'MusicianPhoto' => 'owner_id',
+    'EncryptedFileOwners' => 'musician_id',
   ];
   const PROJECT_ID_TABLES = [
     'Projects' => 'id',
@@ -151,6 +153,10 @@ WITH CHECK OPTION';
     'InstrumentFamilies',
     'instrument_instrument_family',
     'TableFieldTranslations',
+    'GeoContinents',
+    'GeoCountries',
+    'GeoPostalCodes',
+    'GeoPostalCodeTranslations',
   ];
 
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
@@ -613,6 +619,36 @@ SELECT t.*
   INNER JOIN " . $table . " t
     ON t." . $column . " = pppfdv.field_id";
     }
+
+    $table = 'Files';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $table . " t
+  WHERE t.id in (
+    SELECT pppfdv.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData') . " pppfdv
+      UNION
+    SELECT cpv.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'CompositePayments'). " cpv
+      UNION
+    (SELECT pppfdv2.option_value AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData') . " pppfdv2
+     INNER JOIN ProjectParticipantFields ppd
+       ON pppfdv2.field_id = ppd.id AND ppd.data_type = 'db-file')
+      UNION
+    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+
+    $table = 'FileData';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->personalizedViewName($dataBaseName, 'Files'). " fv
+  INNER JOIN " . $table . " t
+    ON t.file_id = fv.id";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
