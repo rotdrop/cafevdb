@@ -40,7 +40,7 @@ trait ParticipantTotalFeesTrait
         'name'     => $this->l->t('Total Project Fees'),
         'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
         'sort'    => false,
-        'options' => 'VDLF', // wrong in change mode
+        'options' => 'VDL', // wrong in change mode
         'input' => 'VR',
         'sql' => 'IF($join_col_fqn IS NULL,
   0.0,

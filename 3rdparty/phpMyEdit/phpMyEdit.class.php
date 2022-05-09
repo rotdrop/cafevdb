@@ -450,6 +450,11 @@ class phpMyEdit
 		return true;
 	}
 
+	/**
+	 * Implode the given array. If it is flat then use a legacy
+	 * implode with commas as separators. Commas in the array values
+	 * are escaped. Otherwise use json_encode().
+	 */
 	static function implodeValueArray($array, bool $onlyFlat)
 	{
 		if (empty($array)) {
@@ -1646,7 +1651,7 @@ class phpMyEdit
 							$this_ov_val = sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
 						}
 						if (empty($ov_val)) {
-							$inner_null = true;
+							$inner_null = true; // NULL is handled in the inner query
 							$tmp_ov_val .= sprintf("(%s IS NULL OR %s)", $field, $this_ov_val);
 						} else {
 							$tmp_ov_val .= $this_ov_val;
@@ -1728,15 +1733,21 @@ class phpMyEdit
 						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
 						if ($ov_val == '') {
 							// interprete this as empty or NULL
+							$inner_null = true; // NULL is handled in the inner query
 							$tmp_ov_val .= sprintf("(%s IS NULL OR %s LIKE '')", $field, $field);
 						} else {
+							$inner_null = false;
 							$tmp_ov_val .= sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
 						}
 					}
 					if (isset($ov['oper']) &&
 						(strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!')) {
-						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
-											  $field, $tmp_ov_val);
+						if ($inner_null) {
+							$tmp_ov_val = sprintf('NOT (%s)', $tmp_ov_val);
+						} else {
+							$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
+												  $field, $tmp_ov_val);
+						}
 					}
 					$having[] = "($tmp_ov_val)";
 				} else {
@@ -2182,6 +2193,7 @@ class phpMyEdit
 			echo '<a href="#tab-'.$idx.'" data-tab-id="'.$id.'" data-tab-index="'.$idx.'">'.$name.'</a>'."\n";
 			echo '</li>'."\n";
 		}
+		echo '<li class="table-tabs scrollbar-compensator"></li>'."\n";
 		echo '</ul>'."\n";
 		echo '</div>'."\n";
 		echo '</td>'."\n";
@@ -4169,7 +4181,10 @@ class phpMyEdit
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k][self::FDD_VALUES]['table']);
 				$valgrp		= $this->set_values($k, $from_table);
-				$vals		= array('*' => '*') + $valgrp['values'];
+				$vals		= array_merge([
+					'*' => '*',
+					'' => '[' . ($this->labels['empty'] ?? 'empty') . ']',
+				], $valgrp['values']);
 				$groups     = $valgrp['groups'];
 				$titles     = $valgrp['titles'];
 				$data       = $valgrp['data'];
