@@ -629,9 +629,9 @@ SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*,
-  pmv.id AS musiciand_id,
-  IF(pmv.id = t.instrument_holder_id, 0, 1) AS is_debitor,
-  IF(pmv.id = t.instrument_holder_id, 0, 1) AS is_holder
+  pmv.id AS musician_id,
+  (pmv.id = t.bill_to_party_id) AS is_debitor,
+  (pmv.id = t.instrument_holder_id) AS is_holder
   FROM " . $musicianViewName . " pmv
   INNER JOIN " . $table . " t
     ON t.instrument_holder_id = pmv.id OR  t.bill_to_party_id = pmv.id";
