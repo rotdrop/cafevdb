@@ -366,6 +366,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set debitMandates.
+   *
+   * @param ArrayCollection $debitMandates
+   *
+   * @return Project
+   */
+  public function setDebitMandates($debitMandates):Project
+  {
+    $this->debitMandates = $debitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get debitMandates.
+   *
+   * @return Collection
+   */
+  public function getDebitMandates():Collection
+  {
+    return $this->debitMandates;
+  }
+
+  /**
    * Set instrumentationNumbers.
    *
    * @param ArrayCollection $instrumentationNumbers

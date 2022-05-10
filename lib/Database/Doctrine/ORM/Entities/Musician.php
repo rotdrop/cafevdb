@@ -339,6 +339,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->sepaBankAccounts = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->encryptedFiles = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
   }
