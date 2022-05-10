@@ -157,6 +157,8 @@ WITH CHECK OPTION';
     'GeoCountries',
     'GeoPostalCodes',
     'GeoPostalCodeTranslations',
+    'InsuranceBrokers',
+    'InsuranceRates',
   ];
 
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
@@ -620,6 +622,20 @@ SELECT t.*
     ON t." . $column . " = pppfdv.field_id";
     }
 
+    $table = 'InstrumentInsurances';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*,
+  pmv.id AS musiciand_id,
+  IF(pmv.id = t.instrument_holder_id, 0, 1) AS is_debitor,
+  IF(pmv.id = t.instrument_holder_id, 0, 1) AS is_holder
+  FROM " . $musicianViewName . " pmv
+  INNER JOIN " . $table . " t
+    ON t.instrument_holder_id = pmv.id OR  t.bill_to_party_id = pmv.id";
+
     $table = 'Files';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
@@ -629,7 +645,7 @@ AS
 SELECT t.*
   FROM " . $table . " t
   WHERE t.id in (
-    SELECT efov.supporting_document_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . "efov
+    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
       UNION
     SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
 
