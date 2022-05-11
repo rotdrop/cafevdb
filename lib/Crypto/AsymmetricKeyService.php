@@ -213,7 +213,7 @@ class AsymmetricKeyService
   public function deleteEncryptionKeyPair(string $ownerId)
   {
     $this->keyStorage->wipeKeyPair($ownerId);
-    $this->removeSharedPrivateValues($ownerId);
+    $this->removeSharedPrivateData($ownerId);
     unset(self::$cryptors[$ownerId]);
     unset(self::$keyPairs[$ownerId]);
   }
@@ -344,7 +344,7 @@ class AsymmetricKeyService
    *
    * @return array<string, string> Configs as KEY => DECRYPTED_VALUE
    */
-  public function getSharedPrivateValues(string $ownerId):array
+  public function getSharedPrivateData(string $ownerId):array
   {
     $privateConfigKeys = array_filter(
       $this->cloudConfig->getUserKeys($ownerId, $this->appName),
@@ -364,7 +364,7 @@ class AsymmetricKeyService
    *
    * @param string $ownerId
    */
-  public function removeSharedPrivateValues(string $ownerId)
+  public function removeSharedPrivateData(string $ownerId)
   {
     foreach ($this->cloudConfig->getUserKeys($ownerId, $this->appName) as $configKey) {
       if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
@@ -395,12 +395,12 @@ class AsymmetricKeyService
    * ]
    * ```
    */
-  public function recryptSharedPrivateValue(string $ownerId, array $oldKeyPair, array $newKeyPair)
+  public function recryptSharedPrivateData(string $ownerId, array $oldKeyPair, array $newKeyPair)
   {
     $cryptor = $this->getCryptor($ownerId)
       ->setPrivateKey($oldKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
       ->setPublicKey($oldKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
-    $configValues = $this->getSharedPrivateValues($ownerId);
+    $configValues = $this->getSharedPrivateData($ownerId);
     $cryptor = $this->getCryptor($ownerId)
       ->setPrivateKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
       ->setPublicKey($newKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);

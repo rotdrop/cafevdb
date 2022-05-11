@@ -78,13 +78,13 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
     if (empty($oldKeyPair[AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG])) {
       // this cannot be helped, remove the old values. In the future we may
       // want to enqueue a restore request if this happened
-      $keyService->removeSharedPrivateValues($ownerId);
+      $keyService->removeSharedPrivateData($ownerId);
 
       // enqueue a recryption request
       $keyService->pushRecryptionRequestNotification($ownerId, $newKeyPair);
 
     } else {
-      $keyService->recryptSharedPrivateValue($ownerId, $oldKeyPair, $newKeyPair);
+      $keyService->recryptSharedPrivateData($ownerId, $oldKeyPair, $newKeyPair);
     }
   }
 }
