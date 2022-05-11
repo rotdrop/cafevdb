@@ -565,12 +565,12 @@ WITH CHECK OPTION';
     $statements = [];
 
     // fetch the authorized musician-id from the token table by examining the secret.
-    $functionName = 'ROW_ACCESS_ID';
+    $accessFunction = 'ROW_ACCESS_ID';
     if (!empty($dataBaseName)) {
-      $functionName = $dataBaseName . '.' . $functionName;
+      $accessFunction = $dataBaseName . '.' . $accessFunction;
     }
 
-    $statements[$functionName] = "CREATE OR REPLACE FUNCTION " . $functionName . "() RETURNS INT(11)
+    $statements[$accessFunction] = "CREATE OR REPLACE FUNCTION " . $accessFunction . "() RETURNS INT(11)
     READS SQL DATA
     SQL SECURITY DEFINER
 BEGIN
@@ -580,6 +580,8 @@ BEGIN
   RETURN musician_id;
 END";
 
+    $accessFunction .= '()';
+
     $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
     $statements[$musicianViewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -587,7 +589,7 @@ VIEW " . $musicianViewName . "
 AS
 SELECT *
 FROM Musicians m
-WHERE m.id = " . $dataBaseName . ".ROW_ACCESS_ID()";
+WHERE m.id = " . $accessFunction;
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -595,10 +597,8 @@ WHERE m.id = " . $dataBaseName . ".ROW_ACCESS_ID()";
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
-SELECT t.*
-  FROM " . $musicianViewName . " pmv
-  INNER JOIN " . $table . " t
-    ON t." . $column . " = pmv.id";
+SELECT t.* FROM " . $table . " t
+    WHERE t." . $column . " = " . $accessFunction;
     }
 
     foreach (self::PROJECT_ID_TABLES as $table => $column) {
@@ -632,12 +632,12 @@ SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*,
-  pmv.id AS musician_id,
-  (pmv.id = t.bill_to_party_id) AS is_debitor,
-  (pmv.id = t.instrument_holder_id) AS is_holder
-  FROM " . $musicianViewName . " pmv
+  at.musician_id AS musician_id,
+  (at.musician_id = t.bill_to_party_id) AS is_debitor,
+  (at.musician_id = t.instrument_holder_id) AS is_holder
+  FROM (SELECT " . $accessFunction . " AS musician_id) at
   INNER JOIN " . $table . " t
-    ON t.instrument_holder_id = pmv.id OR  t.bill_to_party_id = pmv.id";
+    ON t.instrument_holder_id = at.musician_id OR t.bill_to_party_id = musician_id";
 
     $table = 'Files';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
