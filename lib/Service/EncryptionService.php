@@ -85,6 +85,7 @@ class EncryptionService
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
     'orchestra', // used in the member's app for the front-page announcement
+    'orchestraLocale', // used in the member's app for consistent currencies etc.
     self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
 
