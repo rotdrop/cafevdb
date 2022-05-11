@@ -132,6 +132,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $userPassphrase;
 
   /**
+   * @var MusicianRowAccessToken
+   *
+   * @ORM\OneToOne(targetEntity="MusicianRowAccessToken", mappedBy="musician", cascade={"all"}, orphanRemoval=true)
+   */
+  private $rowAccessToken;
+
+  /**
    * @var string
    *
    * @ORM\Column(type="string", length=128, nullable=true)
@@ -1194,6 +1201,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getUserIdSlug():?string
   {
     return $this->userIdSlug;
+  }
+
+  /**
+   * Set rowAccessToken.
+   *
+   * @param string|null $rowAccessToken
+   *
+   * @return Musician
+   */
+  public function setRowAccessToken(?MusicianRowAccessToken $rowAccessToken):Musician
+  {
+    $this->rowAccessToken = $rowAccessToken;
+
+    return $this;
+  }
+
+  /**
+   * Get rowAccessToken.
+   *
+   * @return MusicianRowAccessToken
+   */
+  public function getRowAccessToken():?MusicianRowAccessToken
+  {
+    return $this->rowAccessToken;
   }
 
   /**

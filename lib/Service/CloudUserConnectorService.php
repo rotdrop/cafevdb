@@ -564,17 +564,20 @@ WITH CHECK OPTION';
   {
     $statements = [];
 
-    $functionName = 'CLOUD_USER_ID';
+    // fetch the authorized musician-id from the token table by examining the secret.
+    $functionName = 'ROW_ACCESS_ID';
     if (!empty($dataBaseName)) {
       $functionName = $dataBaseName . '.' . $functionName;
     }
 
-    $statements[$functionName] = "CREATE OR REPLACE FUNCTION " . $functionName . "() RETURNS VARCHAR(256) CHARSET ascii
-    NO SQL
-    DETERMINISTIC
-    SQL SECURITY INVOKER
+    $statements[$functionName] = "CREATE OR REPLACE FUNCTION " . $functionName . "() RETURNS INT(11)
+    READS SQL DATA
+    SQL SECURITY DEFINER
 BEGIN
-  RETURN COALESCE(@CLOUD_USER_ID, SUBSTRING_INDEX(USER(), '@', 1));
+  DECLARE musician_id INT;
+  SET musician_id = 0;
+  SELECT t.musician_id INTO musician_id FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
+  RETURN musician_id;
 END";
 
     $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
@@ -584,7 +587,7 @@ VIEW " . $musicianViewName . "
 AS
 SELECT *
 FROM Musicians m
-WHERE m.user_id_slug = " . $functionName . "()";
+WHERE m.id = " . $dataBaseName . ".ROW_ACCESS_ID()";
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
