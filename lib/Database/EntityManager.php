@@ -602,7 +602,11 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
-    $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
+    $localeCode = $this->l->getLocaleCode();
+    if (strpos($localeCode, '_') === false) {
+      $localeCode = $localeCode . '_' . strtoupper($localeCode);
+    }
+    $translatableListener->setTranslatableLocale($localeCode);
     $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
@@ -615,7 +619,7 @@ class EntityManager extends EntityManagerDecorator
     );
     $config->setDefaultQueryHint(
       \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-      $this->l->getLanguageCode()
+      $localeCode
     );
     $config->setDefaultQueryHint(
       \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
