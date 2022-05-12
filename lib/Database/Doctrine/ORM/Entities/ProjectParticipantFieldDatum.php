@@ -380,6 +380,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Set payments.
+   *
+   * @param null|Collection $payments
+   *
+   * @return PaymentsParticipantPaymentssData
+   */
+  public function setPayments(?Collection $payments):ProjectParticipantFieldDatum
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Payments
+   */
+  public function getPayments():?Collection
+  {
+    return $this->payments;
+  }
+
+  /**
    * The amount to pay for this service-fee option.
    *
    * Only meaningful if
