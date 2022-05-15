@@ -141,12 +141,19 @@ WITH CHECK OPTION';
     'MusicianPhoto' => 'owner_id',
     'EncryptedFileOwners' => 'musician_id',
   ];
-  const PROJECT_ID_TABLES = [
-    'Projects' => 'id',
-  ];
   const PARTICIPANT_FIELD_ID_TABLES = [
-    'ProjectParticipantFields' => 'id',
-    'ProjectParticipantFieldsDataOptions' => 'field_id',
+    'ProjectParticipantFields' => [
+      'joinField' => 'id',
+      'groupBy' => [
+        'id',
+      ],
+    ],
+    'ProjectParticipantFieldsDataOptions' => [
+      'joinField' => 'field_id',
+      'groupBy' => [
+        'field_id', 'key',
+      ],
+    ],
   ];
   const UNRESTRICTED_TABLES = [
     'Instruments',
@@ -601,28 +608,36 @@ SELECT t.* FROM " . $table . " t
     WHERE t." . $column . " = " . $accessFunction;
     }
 
-    foreach (self::PROJECT_ID_TABLES as $table => $column) {
-      $viewName = $this->personalizedViewName($dataBaseName, $table);
-      $statements[$viewName] = "CREATE OR REPLACE
+    $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
+    $executiveBoardProjectId = $this->encryptionService->getConfigValue('executiveBoardProjectId', -1);
+
+    $table = 'Projects';
+    $column = 'id';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
-SELECT t.*
+SELECT t.*,
+  (t.id = " . $memberProjectId . ") AS club_members,
+  (t.id = " . $executiveBoardProjectId . ") AS executive_board
   FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipants') . " pppv
   INNER JOIN " . $table . " t
-    ON t." . $column . " = pppv.project_id";
-    }
+    ON t." . $column . " = pppv.project_id
+  GROUP BY t.id";
 
-    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $column) {
+    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
-      $statements[$viewName] = "CREATE OR REPLACE
+      $statement = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*
   FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData'). " pppfdv
   INNER JOIN " . $table . " t
-    ON t." . $column . " = pppfdv.field_id";
+    ON t." . $joinInfo['joinField'] . " = pppfdv.field_id
+  GROUP BY " . implode(', ', array_map(fn($field) => 't.' . $field, $joinInfo['groupBy']));
+      $statements[$viewName] = $statement;
     }
 
     $table = 'InstrumentInsurances';
