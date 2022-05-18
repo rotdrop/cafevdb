@@ -24,26 +24,32 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCA\CAFEVDB\Events\ProjectUpdatedEvent as HandledEvent;
+use OCP\AppFramework\IAppContainer;
+
+use OCA\CAFEVDB\Events\PreProjectUpdatedEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
-class ProjectUpdatedEventListener implements IEventListener
+class PreProjectUpdatedEventListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
 
-  /** @var EventsService */
-  private $eventsService;
+  /** @var IAppContainer */
+  private $appContainer;
 
-  public function __construct(EventsService $eventsService) {
-    $this->eventsService = $eventsService;
+  public function __construct(IAppContainer $appContainer) {
+    $this->appContainer = $appContainer;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf HandledEvent)) {
       return;
     }
-    $this->eventsService->onProjectUpdated($event);
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+
+    $eventsService->onProjectUpdated($event);
   }
 }
 

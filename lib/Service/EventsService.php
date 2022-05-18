@@ -31,10 +31,10 @@ use OCA\DAV\Events\CalendarObjectDeletedEvent;
 use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
-use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
+use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -72,7 +72,7 @@ class EventsService
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
-    $this->setDatabaseRepository(ProjectEvent::class);
+    $this->setDatabaseRepository(Entities\ProjectEvent::class);
     $this->l = $this->l10n();
   }
 
@@ -141,7 +141,7 @@ class EventsService
     }
 
     $this->queryBuilder()
-         ->delete(ProjectEvent::class, 'e')
+         ->delete(Entities\ProjectEvent::class, 'e')
          ->where('e.calendarId = :calendarId')
          ->setParameter('calendarId', $event->getCalendarId())
          ->getQuery()
@@ -201,9 +201,9 @@ class EventsService
     }
   }
 
-  public function onProjectUpdated(ProjectUpdatedEvent $event)
+  public function onProjectUpdated(PreProjectUpdatedEvent $event)
   {
-    $events = $this->projectEvents($event->getProject());
+    $events = $this->projectEvents($event->getProjectId());
     $oldName = $event->getOldData()['name'];
     $newName = $event->getNewData()['name'];
     foreach ($events as $projectEvent) {
@@ -215,7 +215,7 @@ class EventsService
 
       $key = array_search($oldName, $categories);
       $categories[$key] = $newName;
-      VCalendarService::setVCategories($vCalendar, $categories);
+      VCalendarService::setCategories($vCalendar, $categories);
 
       $summary = VCalendarService::getSummary($vCalendar);
       if (!empty($summary)) {
@@ -226,14 +226,14 @@ class EventsService
     }
   }
 
-  /** @return ProjectEvent[] */
-  private function eventProjects($eventURI)
+  /** @return Entities\ProjectEvent[] */
+  private function eventProjects(string $eventURI):array
   {
     return $this->findBy(['eventUri' => $eventURI]);
   }
 
-  /** @return ProjectEvent[] */
-  private function projectEvents($projectOrId)
+  /** @return Entities\ProjectEvent[] */
+  private function projectEvents($projectOrId):array
   {
     return $this->findBy(['project' => $projectOrId, 'type' => 'VEVENT']);
   }
@@ -256,7 +256,7 @@ class EventsService
    * ]
    * ```
    */
-  private function makeEvent($projectEvent)
+  private function makeEvent(Entities\ProjectEvent $projectEvent)
   {
     $event = [];
     $event['projectid'] = $projectEvent->getProject()->getId();
@@ -682,7 +682,7 @@ class EventsService
   }
 
   /**
-   * Parse the respective event and make sure the ProjectEvent
+   * Parse the respective event and make sure the ProjectEvents
    * table is uptodate.
    *
    * @return array
@@ -759,15 +759,16 @@ class EventsService
                             string $calendarURI,
                             string $type)
   {
+    /** @var Entities\ProjectEvent $entity */
     $entity = $this->findOneBy(['project' => $projectOrId, 'eventUri' => $eventURI]);
     if (empty($entity)) {
-      $entity = new ProjectEvent();
-      $entity->setProject($projectOrId)
-             ->setEventUri($eventURI)
-             ->setEventUid($eventUID)
-             ->setCalendarId($calendarId)
-             ->setCalendarUri($calendarURI)
-             ->setType($type);
+      $entity = (new Entities\ProjectEvent())
+        ->setProject($projectOrId)
+        ->setEventUri($eventURI)
+        ->setEventUid($eventUID)
+        ->setCalendarId($calendarId)
+        ->setCalendarUri($calendarURI)
+        ->setType($type);
       $this->persist($entity);
       $added = true;
     } else {
@@ -776,7 +777,7 @@ class EventsService
       $this->merge($entity);
       $added = false;
     }
-    $this->flush($entity);
+    $this->flush();
 
     return $added;
   }
