@@ -25,7 +25,11 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
-class ProjectUpdatedEvent extends Event {
+/**
+ * Dispatched after flushing entities to the data-base, but before the
+ * final commit.
+ */
+class PostProjectUpdatedEvent extends Event {
 
   /** @var int */
   private $projectId;

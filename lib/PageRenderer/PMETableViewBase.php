@@ -424,7 +424,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $this->pme->execute($opts);
       $this->pme->commit();
     } catch (\Throwable $t) {
-      $this->logError('Rolling back SQL transaction ...');
+      $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
       throw new \Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), $t->getCode(), $t);
     }

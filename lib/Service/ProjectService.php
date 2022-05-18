@@ -303,7 +303,7 @@ class ProjectService
   public function persistProject(Entities\Project $project)
   {
     $this->persist($project);
-    $this->flush($project);
+    $this->flush();
   }
 
   /**
@@ -1038,7 +1038,7 @@ Whatever.',
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $oldPage = ' *  '.$this->l->t('%1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
+    $oldPage = '  * ' . $this->l->t('%1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
     $newPage = $wikiRPC->getPage($oldPageName);
 
     $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
@@ -2011,6 +2011,9 @@ Whatever.',
     $oldProject = [ 'id' => $projectId, 'name' => $oldName, 'year' => $oldYear ];
     $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
 
+    /** @var CloudUserConnectorService $cloudService */
+    $cloudService = $this->di(CloudUserConnectorService::class);
+
     $this->entityManager
       ->registerPreFlushAction(new GenericUndoable(
         function() use ($oldProject, $newProject) {
@@ -2038,14 +2041,30 @@ Whatever.',
         }
       ))
       ->register(new GenericUndoable(
-        function() use ($oldProject, $newProject) {
+        function() use ($oldProject, $newProject,) {
           $this->eventDispatcher->dispatchTyped(
-            new Events\ProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
+            new Events\PreProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
           );
         },
         function() use ($oldProject, $newProject) {
           $this->eventDispatcher->dispatchTyped(
-            new Events\ProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
+            new Events\PreProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
+          );
+        }
+      ));
+
+    $this->entityManager
+      ->registerPreCommitAction(new GenericUndoable(
+        function() use ($oldProject, $newProject, $cloudService) {
+          $cloudService->synchronizeCloud();
+          $this->eventDispatcher->dispatchTyped(
+            new Events\PostProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
+          );
+        },
+        function() use ($oldProject, $newProject, $cloudService) {
+          $cloudService->synchronizeCloud();
+          $this->eventDispatcher->dispatchTyped(
+            new Events\PostProjectUpdatedEvent($newProject['id'], $newProject, $oldProject)
           );
         }
       ));

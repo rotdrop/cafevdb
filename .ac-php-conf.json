@@ -12,7 +12,9 @@
       "../dav/lib",
       "../dokuwikiembedded/lib",
       "../redaxo4embedded/lib",
-      "../files_trashbin/lib"
+      "../files_trashbin/lib",
+      "../cafevdbmembers/lib",
+      "../user_sql/lib"
     ],
     "php-path-list-without-subdir": [],
     "ignore-ruleset": [
