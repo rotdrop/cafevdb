@@ -30,6 +30,8 @@ use OCP\ISession;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Exceptions;
+
 class RequestService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -49,18 +51,29 @@ class RequestService
   /** @var IL10N */
   private $l;
 
+  /**
+   * @var bool
+   *
+   * Close the php-session if it is still open, just before actually
+   * posting to a route on the same server. The default is to close
+   * the session automatically if needed.
+   */
+  private $closeSession;
+
   public function __construct(
     IRequest $request
     , IURLGenerator $urlGenerator
     , ISession $session
     , ILogger $logger
     , IL10N $l10n
+    , bool $closeSession = true
   ) {
     $this->request = $request;
     $this->urlGenerator = $urlGenerator;
     $this->session = $session;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->closeSession = $closeSession;
   }
 
   /**
@@ -82,7 +95,14 @@ class RequestService
                               string $type = self::JSON)
   {
     if (!$this->session->isClosed()) {
-      throw new \RuntimeException($this->l->t('Cannot post to internal route while the session is open.'));
+      if ($this->closeSession) {
+        $this->session->close();
+      } else {
+        throw new Exceptions\SessionStillOpenException(
+          $this->l->t('Cannot call internal route while the session is open.'),
+          session: $this->session
+        );
+      }
     }
 
     $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);

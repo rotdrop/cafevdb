@@ -234,7 +234,7 @@ class EmailFormController extends Controller {
     $tmpl = new TemplateResponse(
       $this->appName,
       'emailform/part.sent-email-options',
-      $templateParamters,
+      $templateParameters,
       'blank');
     return $tmpl->render();
   }

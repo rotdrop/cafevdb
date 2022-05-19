@@ -458,24 +458,41 @@ WITH CHECK OPTION';
   /**
    * Clear the backend cache, for use in controllers, back-reportings messages.
    */
-  private function clearUserBackendCache(RequestService $requestService, array &$messages)
+  private function clearUserBackendCache(?RequestService $requestService = null, ?array &$messages = null)
   {
-    $route = implode('.', [
-      self::CLOUD_USER_BACKEND,
-      'settings',
-      'clearCache',
-    ]);
-    try {
-      $result = $requestService->postToRoute($route);
-      $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', self::CLOUD_USER_BACKEND);
-    } catch (\Throwable $t) {
-      // essentially ignore ...
-      $this->logError($t);
-      $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
-        self::CLOUD_USER_BACKEND,
-        $t->getMessage(),
-      ]);
-    }
+    // /** @var RequestService $requestService */
+    // $requestService = $this->appContainer->get(RequestService::class);
+    // $route = implode('.', [
+    //   self::CLOUD_USER_BACKEND,
+    //   'settings',
+    //   'clearCache',
+    // ]);
+    // try {
+    //   $result = $requestService->postToRoute($route);
+    //   $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', self::CLOUD_USER_BACKEND);
+    // } catch (\Throwable $t) {
+    //   // essentially ignore ...
+    //   $this->logError($t);
+    //   $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
+    //     self::CLOUD_USER_BACKEND,
+    //     $t->getMessage(),
+    //   ]);
+    // }
+    $messages = $messages ?? [];
+    /** @var \OCA\UserSQL\Cache $userBackendCache */
+    $userBackendCache = $this->appContainer->get(\OCA\UserSQL\Cache::class);
+    $userBackendCache->clear();
+  }
+
+  /**
+   * In particular flush potential data-caches after changing data of
+   * the orchestra app.
+   *
+   * @return array<int, string> Diagnostic messages.
+   */
+  public function synchronizeCloud()
+  {
+    $this->clearUserBackendCache();
   }
 
   public function setCloudUserSubAdmins(bool $delete = false)

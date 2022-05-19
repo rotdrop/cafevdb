@@ -38,7 +38,8 @@ class Registration
     self::registerListener($context, CalendarUpdatedEventListener::class);
     self::registerListener($context, PasswordUpdatedEventListener::class);
     self::registerListener($context, ProjectDeletedEventListener::class);
-    self::registerListener($context, ProjectUpdatedEventListener::class);
+    self::registerListener($context, PreProjectUpdatedEventListener::class);
+    // self::registerListener($context, PostProjectUpdatedEventListener::class);
     self::registerListener($context, UserLoggedInEventListener::class);
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);

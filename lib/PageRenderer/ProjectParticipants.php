@@ -728,6 +728,7 @@ class ProjectParticipants extends PMETableViewBase
         ],
         'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, self::INSERT_VOICES), range(1, self::INSERT_VOICES)),
         'align|LF' => 'center',
+        'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:voice'],
       ]);
 
     $this->makeJoinTableField(
@@ -793,9 +794,8 @@ class ProjectParticipants extends PMETableViewBase
        ],
        'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
        'align|LF' => 'center',
-       'tooltip|LFVD' => $this->l->t('Set to "%s" in order to mark the section leader.',
-                                     [ "&alpha;" ]),
-       'tooltip|CAP' => $this->l->t('Check in order to mark the section leader.'),
+       'tooltip|LFVD' => $this->toolTipsService['page-renderer:participants:section-leader:view'],
+       'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:section-leader'],
       ]);
 
     // @todo
