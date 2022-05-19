@@ -135,7 +135,7 @@ WITH CHECK OPTION';
     'ProjectParticipants' => 'musician_id',
     'MusicianInstruments' => 'musician_id',
     'ProjectInstruments' => 'musician_id',
-    'ProjectParticipantFieldsData' => 'musician_id',
+    // 'ProjectParticipantFieldsData' => 'musician_id', needs extra access controls
     'ProjectPayments' => 'musician_id',
     'CompositePayments' => 'musician_id',
     'MusicianPhoto' => 'owner_id',
@@ -642,6 +642,18 @@ SELECT t.*,
   INNER JOIN " . $table . " t
     ON t." . $column . " = pppv.project_id
   GROUP BY t.id";
+
+    $table = 'ProjectParticipantFieldsData';
+    $column = 'musician_id';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+    INNER JOIN ProjectParticipantFields ppf
+      ON t.field_id = ppf.id AND ppf.participant_access <> 0
+    WHERE t." . $column . " = " . $accessFunction;
 
     foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
