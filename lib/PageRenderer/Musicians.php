@@ -307,7 +307,7 @@ make sure that the musicians are also automatically added to the
           'tooltip' => $this->toolTipsService['pme-showall-tab'],
           'name' => $this->l->t('Display all columns')
         ],
-        ],
+      ],
     ];
 
     /*
