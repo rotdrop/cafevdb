@@ -981,7 +981,7 @@ received so far'),
     if ($this->expertMode) {
       $tabs[] = [
         'id' => 'miscinfo',
-        'tooltip' => $this->toolTipsService['misc-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
         'name' => $this->l->t('Miscinfo'),
       ];
     }
