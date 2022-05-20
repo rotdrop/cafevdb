@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,11 +38,21 @@ function getUrl(url, urlParams, urlOptions) {
   return generateSettingsUrl('get/' + url, urlParams, urlOptions);
 }
 
+function getAppUrl(url, urlParams, urlOptions) {
+  return generateSettingsUrl('get/app' + url, urlParams, urlOptions);
+}
+
+function getPersonalUrl(url, urlParams, urlOptions) {
+  return generateSettingsUrl('get/personal' + url, urlParams, urlOptions);
+}
+
 export {
   generateSettingsUrl as generateUrl,
   setPersonalUrl,
   setAppUrl,
   getUrl,
+  getAppUrl,
+  getPersonalUrl,
 };
 
 // Local Variables: ***

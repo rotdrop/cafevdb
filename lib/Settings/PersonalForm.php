@@ -178,7 +178,15 @@ class PersonalForm {
         'languages' => $this->findAvailableLanguages(),
         'localeCountryNames' => $this->localeCountryNames(),
         'localeLanguageNames' => $this->localeLanguageNames(),
-        'timezone' => $this->getTimezone(),
+        'currencyCode' => $this->currencyCode(),
+        'currencySymbol' => $this->currencySymbol(),
+        //
+        'appLocale' => $this->appLocale(),
+        'appL' => $this->appL10n(),
+        //
+        'dateTimeFormatter' => $this->dateTimeFormatter(),
+        'dateTimeZone' => $this->getDateTimeZone(),
+        //
         'adminsettings' => $isGroupAdmin,
         'encryptionkey' => $this->getAppEncryptionKey(),
         'showToolTips' => $this->getUserValue('tooltips', 'on'),
@@ -296,7 +304,6 @@ class PersonalForm {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),
-            'orchestraLocale' => $this->getConfigValue('orchestraLocale', $this->getLocale()),
 
             'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
               $this->getConfigValue('cloudUserViewsDatabase')

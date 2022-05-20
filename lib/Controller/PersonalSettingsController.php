@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -290,15 +291,22 @@ class PersonalSettingsController extends Controller {
    */
   public function setApp($parameter, $value) {
     switch ($parameter) {
+    case 'orchestraLocale': // could check for valid locale ...
+      $realValue = trim($value);
+      $this->setConfigValue($parameter, $realValue);
+      return self::dataResponse([
+        'value' => $realValue,
+        'message' => $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
+        'localeInfo' => $this->generateLocaleInfo('app'),
+      ]);
     case 'orchestra':
       $value = strtolower(Util::removeSpaces($value));
-    case 'orchestraLocale': // could check for valid locale ...
     case 'dbserver': // could check for valid hostname
     case 'dbname':
     case 'dbuser':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter,$realValue]));
+      return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter, $realValue]));
     case 'dbpassword':
       try {
         if (!empty($value)) {
@@ -1748,6 +1756,11 @@ class PersonalSettingsController extends Controller {
    */
   public function get($parameter) {
     switch ($parameter) {
+      case 'locale-info':
+        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        return self::dataResponse([
+          'contents' => $localeInfo,
+        ]);
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
@@ -1773,14 +1786,36 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
 
+  private function generateLocaleInfo(?string $scope = null)
+  {
+    $scope = $scope ?? 'personal';
+    $locale = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
+    $templateParameters = [
+      'dateTimeZone' => $this->getDateTimeZone(),
+      'locale' => $locale,
+      'currencyCode' => $this->currencyCode($locale),
+      'currencySymbol' => $this->currencySymbol($locale),
+      'l10n' => $scope == 'personal' ? $this->l : $this->appL10n(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+    ];
+
+    $tmpl = new TemplateResponse($this->appName, 'settings/part.locale-info', $templateParameters, 'blank');
+    return $tmpl->render();
+  }
+
   /**
-   * Store app settings.
+   * Get app settings.
    *
    * @NoAdminRequired
    * @SubAdminRequired
    */
   public function getApp($parameter) {
     switch ($parameter) {
+    case 'locale-info':
+      $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+      return self::dataResponse([
+        'contents' => $localeInfo,
+      ]);
     case 'translation-templates':
       $pot = $this->translationService->generateCatalogueTemplates();
 

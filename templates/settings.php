@@ -47,14 +47,9 @@ if ($pageRows > $maxRows) {
   $pageRows = 0;
 }
 
-date_default_timezone_set($timezone);
-$timestamp = strftime('%Y%m%d-%H%M%S');
-$oldlocale = setlocale(LC_TIME, $locale);
-$time = strftime('%x %X');
-setlocale(LC_TIME, $oldlocale);
-
 $expertClass = $expertMode == 'on' ? '' : ' hidden';
-$toolTipClass = "tooltip-right";
+$toolTipsPos = 'right';
+$toolTipClass = "tooltip-" . $toolTipsPos;
 
 ?>
 <div id="personal-settings-container" class="app-admin-settings hidden">
@@ -79,6 +74,7 @@ $toolTipClass = "tooltip-right";
     $tabNo = 1;
     echo $this->inc("settings/personal-settings", [
       'tabNr' => $tabNo++,
+      'toolTipsPos' => $toolTipsPos,
       'toolTipClass' => $toolTipClass,
       'tooltipstitle' => $tooltipstitle,
       'restorehistorytitle' => $restorehistorytitle,
@@ -92,8 +88,8 @@ $toolTipClass = "tooltip-right";
       'pageRowsOptions' => $pageRowsOptions,
       'pageRows' => $pageRows,
       'expertClass' => $expertClass,
-      'timestamp' => $timestamp,
-      'time' => $time,
+      // 'timestamp' => $timestamp,
+      // 'time' => $time,
     ]);
     if ($adminsettings === true) {
       echo $this->inc("settings/app-settings", [ 'tabNr' => $tabNo++ ]);

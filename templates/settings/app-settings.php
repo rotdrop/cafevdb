@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,13 +22,13 @@
 $off = $_['orchestra'] == '' ? 'disabled' : '';
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-list($orchestraLocale,) = explode('.', $orchestraLocale, 2);
+list($appLocale,) = explode('.', $appLocale, 2);
 $localeOptions = [];
 foreach ($locales as $locale) {
   $localeOptions[] = [
     'value' => $locale['code'],
     'name' => $locale['name'],
-    'flags' => ($locale['code'] === $orchestraLocale) ? PageNavigation::SELECTED : 0,
+    'flags' => ($locale['code'] === $appLocale) ? PageNavigation::SELECTED : 0,
   ];
 }
 
@@ -54,6 +54,10 @@ foreach ($locales as $locale) {
         <?php echo PageNavigation::selectOptions($localeOptions); ?>
       </select>
       <label for="orchestraLocale"><?php p($l->t('locale of the orchestra')); ?></label>
+      <?php echo $this->inc('settings/part.locale-info', [
+        'infoLocale' => $appLocale,
+        'infoL10n' => $appL,
+      ]); ?>
     </fieldset>
   </form>
   <!-- ENCRYPTION-KEY -->

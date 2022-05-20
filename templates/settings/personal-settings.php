@@ -131,29 +131,31 @@ namespace OCA\CAFEVDB;
       </label>
     </div>
     <div class="debugmode-container expertmode-container<?php p($expertClass); ?>">
-      <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipClass ]); ?>
+      <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipsPos ]); ?>
     </div>
     <span class="statusmessage" id="msg"></span><span>&nbsp;</span>
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
   </form>
   <br />
   <form id="userkey">
-    <input class="cafevdb-password"
+    <input class="cafevdb-password tooltip-auto"
            type="password"
            autocomplete="current-password"
            required="required"
            id="password"
            name="password"
+           title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
            placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show"
     />
     <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
     <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
-    <input class="cafevdb-password"
+    <input class="cafevdb-password tooltip-auto"
            type="password"
            id="encryptionkey"
            name="encryptionkey"
            value="<?php echo (true ? '' : $_['encryptionkey']); ?>"
            placeholder="<?php echo $l->t('DB Encryption Key');?>"
+           title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
            data-typetoggle="#userkey-show" />
     <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
     <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
@@ -162,11 +164,5 @@ namespace OCA\CAFEVDB;
     <div class="statusmessage error"><?php echo $l->t('Unable to set the encryption key.');?></div>
     <div class="statusmessage info"></div>
   </form>
-  <div class="locale information">
-    <span class="locale heading"><?php echo $l->t('Locale Information:'); ?></span>
-    <span class="locale timestamp"><?php echo $timestamp; ?></span>
-    <span class="locale time"><?php echo $time; ?></span>
-    <span class="locale timezone"><?php echo $timezone; ?></span>
-    <span class="locale thelocale"><?php echo $locale; ?></span>
-  </div>
+  <?php echo $this->inc('settings/part.locale-info', [ 'l10n' => $l ]); ?>
 </div>
