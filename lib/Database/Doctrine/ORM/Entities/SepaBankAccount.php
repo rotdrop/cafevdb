@@ -413,7 +413,7 @@ class SepaBankAccount implements \ArrayAccess
   public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
   {
     $userIdSlug = $this->musician->getUserIdSlug();
-    if (!in_array($userIdSlug, $this->encryptionContext ?? [])) {
+    if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
       $this->encryptionContext[] = $userIdSlug;
     }
   }

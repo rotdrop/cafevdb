@@ -114,7 +114,7 @@ class EncryptedFileData extends FileData
     /** @var Musician $owner */
     foreach (($this->file->owners??[]) as $owner) {
       $userIdSlug = $owner->getUserIdSlug();
-      if (!in_array($userIdSlug, $this->encryptionContext ?? [])) {
+      if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
         $this->encryptionContext[] = $userIdSlug;
       }
     }
