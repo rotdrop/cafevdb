@@ -282,6 +282,7 @@ const Calendar = {
       const post = {
         calendarid: $('input[name="calendarid"]').val(),
         uri: $('input[name="uri"]').val(),
+        requesttoken: OC.requestToken,
       };
       $('#errorbox').empty();
       Calendar.UI.loading(true);
@@ -305,6 +306,7 @@ const Calendar = {
       const post = {
         calendarid: $('input[name="calendarid"]').val(),
         uri: $('input[name="uri"]').val(),
+        requesttoken: OC.requestToken,
       };
       $('#errorbox').empty();
       Calendar.UI.loading(true);

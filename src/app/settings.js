@@ -62,8 +62,6 @@ const updateLocaleTimeStamps = function($container) {
 
   const $localeInfo = $container.find('.locale.information');
 
-  console.info('LOCALE', $localeInfo, $container);
-
   if ($localeInfo.length > 0) {
     timeStampTimer = setInterval(() => {
       $localeInfo.each(function() {
@@ -200,9 +198,10 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       adminGeneral.find('select[name="orchestraLocale"]'), 'change', msg, {
         success(element, data, value, msg) {
-          console.info('LOCALE RESULT', arguments);
           if (data.localeInfo) {
-            adminGeneral.find('.locale.information').replaceWith(data.localeInfo);
+            const $localeInfo = adminGeneral.find('.locale.information');
+            $localeInfo.children().remove();
+            $localeInfo.append($(data.localeInfo).children());
           }
         },
       });

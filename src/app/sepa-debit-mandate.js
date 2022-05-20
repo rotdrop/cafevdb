@@ -245,6 +245,7 @@ const mandatesInit = function(data, onChangeCallback) {
     formClass: 'file-upload-form',
     accept: '*',
     uploadName: 'files',
+    requestToken: OC.requestToken,
   });
   if ($('#' + uploadWrapperId).length === 0) {
     $('body').append($uploadUi);

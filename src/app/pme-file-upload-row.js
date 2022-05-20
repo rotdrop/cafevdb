@@ -58,6 +58,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     projectId,
     musicianId,
     uploadData: JSON.stringify($thisRow.data()),
+    requestToken: OC.requestToken,
   });
   const $oldUploadForm = $('#' + widgetId);
   if ($oldUploadForm.length === 0) {

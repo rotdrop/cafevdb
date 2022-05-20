@@ -476,6 +476,7 @@ const createImageUploadForm = function(imageInfo) {
   $('#' + imageInfo.formId).remove();
   imageInfo.formId = uploadFormId(imageInfo);
   $('#' + imageInfo.formId).remove();
+  imageInfo.requestToken = OC.requestToken;
   const $imageUploadTemplate = $('#imageUploadTemplate');
   const $imageUploadForm = $imageUploadTemplate.octemplate(imageInfo);
   $('body').append($imageUploadForm);

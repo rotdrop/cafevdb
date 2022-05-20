@@ -58,6 +58,7 @@ if (window.CAFEFDB === undefined) {
 const globalState = window.CAFEVDB;
 let nonce = globalState.nonce;
 
+// this may not be necessary as the actual secret value does not change
 onRequestTokenUpdate(function(token) {
   globalState.nonce = token;
   nonce = globalState.nonce;
