@@ -102,8 +102,8 @@
       <link>http://www.phpmyedit.org</link>
     </item>
     <item>
-      <title>PHPExcel -- Convert SQL Tables to Office Tables</title>
-      <link>https://phpexcel.codeplex.com/</link>
+      <title>PhpSpreadsheet -- Generate Office Tables in PHP</title>
+      <link>https://github.com/PHPOffice/PhpSpreadsheet/</link>
     </item>
     <item>
       <title>Doku Wiki -- Wiki Software</title>

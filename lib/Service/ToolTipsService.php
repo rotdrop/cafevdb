@@ -1053,6 +1053,10 @@ and contact the treasurer for further instructions.',
               'separate-database' => $this->l->t('In order to isolate the SQL-views for the cloud-user-backend from the rest of the database tables it is possible to put them into their own separate database. Please note that it is neccessary that the app\'s database account has all -- and in particular: GRANT -- privileges on that dedicated database.'),
             ],
           ],
+          'encryptionkey' => [
+            'default' => $this->l->t('Optionally parts of the data-base and some configuration settings can be stored encrypted. If you are confronted with error messages about a missing encryption key, then you can re-install the encryption key here (if you know it). In order to authorize the change you have also to enter your login-password in the password-field.'),
+            'own-password' => $this->l->t('Changing the encryption key needs your login-password. Please enter it here before trying to save the changed encryption key.'),
+          ],
         ],
       ],
 

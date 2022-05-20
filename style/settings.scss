@@ -233,7 +233,8 @@ input.randomkey {
   }
 
   span.locale.heading {
-    font-weight:bold;
+    font-weight:normal;
+    font-style:italic;
   }
 
   span.locale.timestamp {
@@ -250,6 +251,10 @@ input.randomkey {
 
   span.locale.thelocale {
     color:blue;
+  }
+
+  span.locale.currency {
+    color:red;
   }
 
   fieldset legend {
