@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -47,9 +47,6 @@ while (!empty($blog)) {
   }
   $deleted  = $msg->getDeleted();
   $reply    = $msg->getInReplyTo();
-  $avatar   = $urlGenerator->linkToRoute('core.avatar.getAvatar',
-                                         ["userId" => $author, "size" => 64]);
-  $avatar  .= "?requesttoken=".$_['requesttoken'];
   $imgtitle = $l->t("Avatar pictures can be uploaded through the personal settings page.");
   $imgtitle = 'title="'.$imgtitle.'" ';
   if ($deleted > 0) {
@@ -70,7 +67,6 @@ while (!empty($blog)) {
 
   $text  = $msg->getMessage();
   echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <!-- <span class="photo"><img class="photo" src="'.$avatar.'" '.$imgtitle.'/></span> -->
     <span class="avatar photo" data-author="'.$author.'" data-size="64"></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-reply'].'">

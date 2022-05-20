@@ -19,7 +19,7 @@
              name="clone"
              title="<?php echo $toolTips['projectevents:event:clone']; ?>"
              value="<?php p($l->t('Clone event'));?>"
-             data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'forms', 'subTopic' => 'clone'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
+             data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'forms', 'subTopic' => 'clone'])); ?>?eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
       >
       <input type="button"
              class="submit no-flex primary"

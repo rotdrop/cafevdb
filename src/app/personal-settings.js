@@ -43,7 +43,6 @@ const documentReady = function() {
   };
 
   const chosenInit = function(container) {
-    console.info('CHOSEN INIT');
     container.find('select.pagerows').each(function(index) {
       const self = $(this);
       // console.log("chosen pagerows", self);
