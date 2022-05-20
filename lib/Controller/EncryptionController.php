@@ -168,6 +168,19 @@ class EncryptionController extends OCSController
           $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
           throw new OCS\OCSBadRequestException($this->l->t('Unable to set row access-token for user "%s".', $userId), $t);
         }
+
+        // next we should try to recrypt all encrypted entities of the user ...
+        $encryptedEntities = [];
+        $encryptedEntities = array_merge($encryptedEntities, $musician->getSepaBankAccounts()->toArray());
+        /** @var Entities\EncryptedFile $encryptedFile */
+        foreach ($musician->getEncryptedFiles() as $encryptedFile) {
+          $encryptedEntities[] = $encryptedFile->getFileData();
+        }
+        try {
+          $this->entityManager->recryptEntityList($encryptedEntities);
+        } catch (\Throwable $t) {
+          throw new OCS\OCSBadRequestException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), $t);
+        }
       }
 
       /** @var AuthorizationService $authorizationService */

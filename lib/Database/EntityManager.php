@@ -1029,6 +1029,67 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Recrypt the given list/array of entities by forcing an update on the unit
+   * of work. The underlying transformable listener will make sure that the
+   * actual update will happen.
+   *
+   * @param iterable $entities
+   *
+   * @param null|callable $beforeLoad Optional callable which is invoked
+   * before re-loading the list of entities. Can be used to tweak the app
+   * encryption-key, e.g.
+   *
+   * @param null|callable $beforeFlush Optional callable which is invoked
+   * before flushed the entities again to the database. Can be used to tweak
+   * the app encryption-key, e.g.
+   */
+  public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush)
+  {
+    $this->beginTransaction();
+    try {
+
+      if (!empty($beforeLoad)) {
+        $beforeLoad();
+      }
+
+      $transformer->setCachable(false);
+
+      // Read all entities into the cache
+      foreach ($entities as $entity) {
+        $this->refresh($entity); // needed ?
+        $unitOfWork->scheduleForUpdate($entity);
+      }
+
+      if (!empty($beforeFlush)) {
+        $beforeFlush();
+      }
+
+      // Flush to disk with new encryption key
+      $this->flush();
+
+      // The next lines should in principle not be necessary
+      // ... refresh($entity) should re-read all entities from the
+      // database.
+      foreach ($entities as $entity) {
+        $this->refresh($entity);
+      }
+
+      $transformer->setCachable(true);
+
+      $this->commit();
+
+    } catch (\Throwable $t) {
+
+      $this->logError('Recrypting encrypted database entries failed, rolling back ...');
+      $this->rollback();
+
+      throw new Exceptions\RecryptionFailedException(
+        $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
+        $t->getCode(), $t);
+    }
+  }
+
+  /**
    * In order to change the encryption key the encrypted data has to
    * be decrypted with the old key and re-encrypted with the new key.
    *
@@ -1051,63 +1112,35 @@ class EntityManager extends EntityManagerDecorator
     $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
 
     $encryptedEntities = [];
-    $this->beginTransaction();
+    foreach ($transformables as $annotationInfo) {
+      foreach ($annotationInfo['properties'] as $field => $transformable) {
+        if ($transformable->name == self::TRANSFORM_ENCRYPT) {
+          $entityClass = $annotationInfo['entity'];
+          $encryptedEntities = array_merge(
+            $encryptedEntities,
+            $this->getRepository($entityClass)->findAll()
+          );
+          break; // one encrypted property is sufficient
+        }
+      }
+    }
+
     try {
-      $transformer->setAppCryptor($oldAppCryptor);
+      $this->recryptEntityList(
+        $encryptedEntities,
+        fn() => $transformer->setAppCryptor($oldAppCryptor),
+        fn() => $transformer->setAppCryptor($newAppCryptor)
+      );
+    } catch (Exceptions\RecryptionFailedException $e) {
 
-      $transformer->setCachable(false);
-
-      foreach ($transformables as $annotationInfo) {
-        $encryptedProperties = false;
-        foreach ($annotationInfo['properties'] as $field => $transformable) {
-          if ($transformable->name == self::TRANSFORM_ENCRYPT) {
-            $encryptedProperties = true;
-            $encryptedEntities[] = $annotationInfo['entity'];
-            break;
-          }
-        }
-      }
-
-      // Read all entities into the cache
-      foreach ($encryptedEntities as $entityClass) {
-        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
-          $this->refresh($entity);
-          $unitOfWork->scheduleForUpdate($entity);
-        }
-      }
-
-      // Set new encryption key
-      $transformer->setAppCryptor($newAppCryptor);
-
-      // Flush to disk with new encryption key
-      $this->flush();
-
-      // The next lines should in principle not be necessary
-      // ... refresh($entity) should re-read all entities from the
-      // database.
-      foreach ($encryptedEntities as $entityClass) {
-        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
-          $this->refresh($entity);
-        }
-      }
-
-      $transformer->setCachable(true);
-
-      // throw new \Exception('ARTIFICIAL EXCEPTION');
-
-      $this->commit();
-    } catch (\Throwable $t) {
-      $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
-      $this->rollback();
       $transformer->setAppCryptor($oldAppCryptor);
       try {
-        $this->reopen();
+        $this->reopen(); // in case the caller catches the exception.
       } catch (\Throwable $t2) {
         $this->logException($t2, 'Reopening entity-manager failed.');
       }
-      throw new \RuntimeException(
-        $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
-        $t->getCode(), $t);
+
+      throw $e;
     }
   }
 }
