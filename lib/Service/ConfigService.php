@@ -41,6 +41,8 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDateTimeFormatter;
 use OCP\ILogger;
 
+use OCA\CAFEVDB\Exceptions;
+
 /**
  * Configuration do-it-all class.
  *
@@ -177,6 +179,9 @@ class ConfigService
 
   /** @var string */
   const USER_GROUP_KEY = 'usergroup';
+
+  /** @var string */
+  const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
 
   /** @var array */
   protected $encryptionCache;
@@ -609,10 +614,21 @@ class ConfigService
     return $this->encryptionService->encryptionKeyValid($encryptionKey);
   }
 
-  public function getConfigValue($key, $default = null)
+  /**
+   * Get a possibly encrypted config value.
+   *
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @param bool $ignoreLock Only to be used while changing the encryption key.
+   *
+   * @throws Exceptions\ConfigLockedException
+   */
+  public function getConfigValue(string $key, $default = null, bool $ignoreLock = false)
   {
     if (!isset($this->encryptionCache[$key])) {
-      $value = $this->encryptionService->getConfigValue($key, $default);
+      $value = $this->encryptionService->getConfigValue($key, $default, $ignoreLock);
       if ($value !== false) {
         $this->encryptionCache[$key] = $value;
       } else {
@@ -622,10 +638,22 @@ class ConfigService
     return $this->encryptionCache[$key];
   }
 
-  public function setConfigValue($key, $value)
+  /**
+   * @param string $key
+   *
+   * @param mixed $value
+   *
+   * @param bool $ignoreLock Default false. Ignore the configuration lock. The
+   * lock is set while changing the encryption key.
+   *
+   * @throws Exceptions\ConfigLockedException
+   *
+   * @return bool Success or not.
+   */
+  public function setConfigValue(string $key, $value, bool $ignoreLock = false)
   {
     //$this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
-    if ($this->encryptionService->setConfigValue($key, $value)) {
+    if ($this->encryptionService->setConfigValue($key, $value, $ignoreLock)) {
       $this->encryptionCache[$key] = $value;
       return true;
     }
@@ -649,21 +677,24 @@ class ConfigService
   }
 
   /**
-   * Fetch all config values and decrypt them.
+   * Fetch all config values and decrypt them. This is only meant for use
+   * during re-cryption of config value when changing the encryption
+   * key. Hence we enforce "ignoreLock: true".
    *
    * @return array Configuration values.
    */
   public function decryptConfigValues()
   {
     foreach ($this->getAppKeys() as $key) {
-      $this->getConfigValue($key);
+      $this->getConfigValue($key, ignoreLock: true);
     }
     return $this->encryptionCache;
   }
 
   /**
-   * Flush all configuration values to the database, possibly
-   * encrypting them.
+   * Flush all configuration values to the database, possibly encrypting
+   * them.T his is only meant for use during re-cryption of config value when
+   * changing the encryption key. Hence we enforce "ignoreLock: true".
    */
   public function encryptConfigValues(array $override = [])
   {
@@ -676,7 +707,7 @@ class ConfigService
         continue;
       }
       $this->logWarn("Found un-cached configuration key $uncached");
-      $this->getConfigValue($uncached);
+      $this->getConfigValue($uncached, ignoreLock: true);
     }
     foreach (array_diff($cacheKeys, $appKeys) as $unstored) {
       $this->logWarn("Found un-persisted configuration key $unstored");
@@ -684,7 +715,7 @@ class ConfigService
     $cacheKeys = array_keys($this->encryptionCache);
     //$this->logInfo('keys: '.print_r($cacheKeys, true));
     foreach ($cacheKeys as $key) {
-      $this->setConfigValue($key, $this->encryptionCache[$key]);
+      $this->setConfigValue($key, $this->encryptionCache[$key], ignoreLock: true);
     }
   }
 

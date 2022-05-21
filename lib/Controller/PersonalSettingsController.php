@@ -350,14 +350,14 @@ class PersonalSettingsController extends Controller {
       $encryptionService->setAppEncryptionKey($oldKey);
 
       // do some rudimentary locking
-      $configLock = $this->getAppValue('configlock');
+      $configLock = $this->getAppValue(ConfigService::CONFIG_LOCK_KEY);
       if (!empty($configLock)) {
         return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
       }
 
       $configLock = $this->generateRandomBytes(32);
-      $this->setAppValue('configlock', $configLock);
-      if ($configLock !== $this->getAppValue('configlock')) {
+      $this->setAppValue(ConfigService::CONFIG_LOCK_KEY, $configLock);
+      if ($configLock !== $this->getAppValue(ConfigService::CONFIG_LOCK_KEY)) {
         return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
       }
 
@@ -368,7 +368,7 @@ class PersonalSettingsController extends Controller {
         $configValues = $this->configService->decryptConfigValues();
       } catch (\Throwable $t) {
         $this->logException($t);
-        $this->deleteAppValue('configlock');
+        $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
         return self::grumble($this->exceptionChainData($t));
       }
 
@@ -392,7 +392,7 @@ class PersonalSettingsController extends Controller {
             //$this->logException($t1);
           }
         }
-        $this->deleteAppValue('configlock');
+        $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
         return self::grumble($this->exceptionChainData($t));
       }
 
@@ -457,7 +457,7 @@ class PersonalSettingsController extends Controller {
             $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(', ', $failed));
           } else {
             $this->logInfo('Deleting config-lock');
-            $this->deleteAppValue('configlock');
+            $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
           }
         }
         $responseData = [
@@ -484,7 +484,7 @@ class PersonalSettingsController extends Controller {
       }
 
       $this->logInfo('Deleting config-lock');
-      $this->deleteAppValue('configlock');
+      $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
 
       // this should be it: the new encryption key is stored in the
       // config space, encrypted with itself.

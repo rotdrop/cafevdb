@@ -76,6 +76,8 @@ class EncryptionService
   const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
   const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
+  const CONFIG_LOCK_KEY = 'configlock';
+
   const NEVER_ENCRYPT = [
     'enabled',
     'installed_version',
@@ -492,8 +494,22 @@ class EncryptionService
     return $this->containerConfig->deleteUserValue($userId, $this->appName, $key);
   }
 
-  public function getConfigValue($key, $default = null)
+  /**
+   * Fetch the value for the given key and possibly decrypt it.
+   *
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @param bool $ignoreLock
+   *
+   * @throws Exceptions\ConfigLockedException
+   */
+  public function getConfigValue($key, $default = null, bool $ignoreLock = false)
   {
+    if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
+      throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
+    }
     $value  = $this->getAppValue($key, $default);
 
     if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
@@ -521,11 +537,19 @@ class EncryptionService
    * Encrypt the given value and store it in the application settings
    * table of the Cloud.
    *
-   * @param $key Configuration key.
-   * @param $value Configuration value.
+   * @param string $key Configuration key.
+   *
+   * @param mixed $value Configuration value.
+   *
+   * @param bool $ignoreLock
+   *
+   * @throws Exceptions\ConfigLockedException
    */
-  public function setConfigValue($key, $value)
+  public function setConfigValue(string $key, $value, bool $ignoreLock = false)
   {
+    if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
+      throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
+    }
     $encryptionKey = $this->appCryptor->getEncryptionKey();
     if (!empty($encryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
       if ($encryptionKey === null) {
