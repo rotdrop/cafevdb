@@ -173,6 +173,13 @@ class EntityManager extends EntityManagerDecorator
   /** @var array */
   protected $lifeCycleEvents;
 
+  /**
+   * @var array
+   *
+   * Cache of the current database connection parameters
+   */
+  protected $databaseAccess = [];
+
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
@@ -399,12 +406,14 @@ class EntityManager extends EntityManagerDecorator
   }
 
   private function connectionParameters($params = null) {
-    $connectionParams = [
-      'dbname' => $this->encryptionService->getConfigValue('dbname'),
-      'user' => $this->encryptionService->getConfigValue('dbuser'),
-      'password' => $this->encryptionService->getConfigValue('dbpassword'),
-      'host' => $this->encryptionService->getConfigValue('dbserver'),
-    ];
+    if (empty($this->databaseAccess)) {
+      $this->databaseAccess = [
+        'dbname' => $this->encryptionService->getConfigValue('dbname'),
+        'user' => $this->encryptionService->getConfigValue('dbuser'),
+        'password' => $this->encryptionService->getConfigValue('dbpassword'),
+        'host' => $this->encryptionService->getConfigValue('dbserver'),
+      ];
+    }
     $driverParams = [
       'driver' => 'pdo_mysql',
       'wrapperClass' => Connection::class,
@@ -415,7 +424,7 @@ class EntityManager extends EntityManagerDecorator
       'row_format' => 'compressed',
     ];
     !is_array($params) && ($params = []);
-    $connectionParams = array_merge($connectionParams, $params, $driverParams, $charSetParams);
+    $connectionParams = array_merge($this->databaseAccess, $params, $driverParams, $charSetParams);
     return $connectionParams;
   }
 
@@ -1045,6 +1054,12 @@ class EntityManager extends EntityManagerDecorator
    */
   public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush)
   {
+    /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
+    $unitOfWork = $this->getUnitOfWork();
+
+    /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
+    $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
+
     $this->beginTransaction();
     try {
 
@@ -1105,9 +1120,6 @@ class EntityManager extends EntityManagerDecorator
     $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
     $transformables = $this->propertiesByAnnotation($annotationClass);
 
-    /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
-    $unitOfWork = $this->getUnitOfWork();
-
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
 
@@ -1116,10 +1128,8 @@ class EntityManager extends EntityManagerDecorator
       foreach ($annotationInfo['properties'] as $field => $transformable) {
         if ($transformable->name == self::TRANSFORM_ENCRYPT) {
           $entityClass = $annotationInfo['entity'];
-          $encryptedEntities = array_merge(
-            $encryptedEntities,
-            $this->getRepository($entityClass)->findAll()
-          );
+          $entities = $this->getRepository($entityClass)->findAll();
+          $encryptedEntities = array_merge($encryptedEntities, $entities);
           break; // one encrypted property is sufficient
         }
       }
