@@ -61,28 +61,28 @@ class File implements \ArrayAccess
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
-  private $id;
+  protected $id;
 
   /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=512, nullable=true)
    */
-  private $fileName;
+  protected $fileName;
 
   /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=128, nullable=false)
    */
-  private $mimeType;
+  protected $mimeType;
 
   /**
    * @var int
    *
    * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
-  private $size = -1;
+  protected $size = -1;
 
   /**
    * @var FileData
@@ -110,7 +110,7 @@ class File implements \ArrayAccess
    *
    * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
    */
-  private $dataHash;
+  protected $dataHash;
 
   /**
    * @var \DateTimeImmutable

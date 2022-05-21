@@ -56,7 +56,7 @@ class FileData implements \ArrayAccess
    * @ORM\Id
    * @ORM\OneToOne(targetEntity="File", cascade={"all"})
    */
-  private $file;
+  protected $file;
 
   /**
    * @var string
@@ -72,14 +72,14 @@ class FileData implements \ArrayAccess
    * })
    *
    */
-  private $dataHash;
+  protected $dataHash;
 
   /**
    * @var string
    *
    * @ORM\Column(type="blob", nullable=false)
    */
-  private $data;
+  protected $data;
 
   public function __construct() {
     $this->arrayCTOR();

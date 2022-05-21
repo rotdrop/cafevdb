@@ -51,12 +51,12 @@ class EncryptedFileData extends FileData
    * @ORM\Id
    * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"all"})
    */
-  private $file;
+  protected $file;
 
   /**
    * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
    */
-  private $data;
+  protected $data;
 
   /**
    * @var array
@@ -103,16 +103,16 @@ class EncryptedFileData extends FileData
   }
 
   /**
-   * _AT_ORM\PostLoad -- this would fetch the entire musician entity on load
+   * @ORM\PostLoad
    * @ORM\PrePersist
-   * @ORM\PreUpdate
+   * _AT_ORM\PreUpdate
    *
    * Ensure that the encryptionContext contains the user-id of the owning musician.
    */
   public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
   {
     /** @var Musician $owner */
-    foreach (($this->file->owners??[]) as $owner) {
+    foreach (($this->file->getOwners()??[]) as $owner) {
       $userIdSlug = $owner->getUserIdSlug();
       if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
         $this->encryptionContext[] = $userIdSlug;

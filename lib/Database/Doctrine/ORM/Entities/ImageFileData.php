@@ -47,5 +47,5 @@ class ImageFileData extends FileData
    * @ORM\Id
    * @ORM\OneToOne(targetEntity="Image", cascade={"all"})
    */
-  private $file;
+  protected $file;
 }
