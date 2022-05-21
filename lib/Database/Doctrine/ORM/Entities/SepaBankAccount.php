@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreFlushEventArgs;
 
 /**
  * SepaBankAccount.
@@ -404,17 +405,23 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * _AT_ORM\PostLoad -- this would fetch the entire musician entity on load
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   *
    * Ensure that the encryptionContext contains the user-id of the owning musician.
    */
-  public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
+  private function sanitizeEncryptionContext()
   {
     $userIdSlug = $this->musician->getUserIdSlug();
     if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
       $this->encryptionContext[] = $userIdSlug;
     }
+  }
+
+  /**
+   * @ORM\PostLoad
+   * @ORM\PrePersist
+   * _AT_ORM\PreUpdate
+   */
+  public function handleLifeCycleEvent(LifecycleEventArgs $eventArgs)
+  {
+    $this->sanitizeEncryptionContext();
   }
 }
