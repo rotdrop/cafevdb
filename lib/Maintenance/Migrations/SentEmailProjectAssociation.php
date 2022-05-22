@@ -39,9 +39,9 @@ class SentEmailProjectAssociation extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE SentEmails ADD project_id INT DEFAULT NULL',
-      'ALTER TABLE SentEmails ADD CONSTRAINT FK_80F49BA0166D1F9C FOREIGN KEY (project_id) REFERENCES Projects (id)',
-      'CREATE INDEX IDX_80F49BA0166D1F9C ON SentEmails (project_id)',
+      'ALTER TABLE SentEmails ADD COLUMN IF NOT EXISTS project_id INT DEFAULT NULL',
+      'ALTER TABLE SentEmails ADD CONSTRAINT FK_80F49BA0166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)',
+      'CREATE INDEX IF NOT EXISTS IDX_80F49BA0166D1F9C ON SentEmails (project_id)',
     ],
   ];
 

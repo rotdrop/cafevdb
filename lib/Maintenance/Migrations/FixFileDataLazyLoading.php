@@ -27,7 +27,7 @@ class FixFileDataLazyLoading extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "ALTER TABLE Files ADD CONSTRAINT FK_C7F46F5DBF396750 FOREIGN KEY (id) REFERENCES FileData (file_id)",
+      "ALTER TABLE Files ADD CONSTRAINT FK_C7F46F5DBF396750 FOREIGN KEY IF NOT EXISTS (id) REFERENCES FileData (file_id)",
     ],
   ];
 

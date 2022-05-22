@@ -27,9 +27,9 @@ class AddEncryptedFileOwners extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "CREATE TABLE EncryptedFileOwners (musician_id INT NOT NULL, encrypted_file_id INT NOT NULL, INDEX IDX_5697DE239523AA8A (musician_id), INDEX IDX_5697DE23EC15E76C (encrypted_file_id), PRIMARY KEY(musician_id, encrypted_file_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB",
-      "ALTER TABLE EncryptedFileOwners ADD CONSTRAINT FK_5697DE239523AA8A FOREIGN KEY (musician_id) REFERENCES Musicians (id) ON DELETE CASCADE",
-      "ALTER TABLE EncryptedFileOwners ADD CONSTRAINT FK_5697DE23EC15E76C FOREIGN KEY (encrypted_file_id) REFERENCES Files (id) ON DELETE CASCADE",
+      "CREATE TABLE IF NOT EXISTS EncryptedFileOwners (musician_id INT NOT NULL, encrypted_file_id INT NOT NULL, INDEX IDX_5697DE239523AA8A (musician_id), INDEX IDX_5697DE23EC15E76C (encrypted_file_id), PRIMARY KEY(musician_id, encrypted_file_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB",
+      "ALTER TABLE EncryptedFileOwners ADD CONSTRAINT FK_5697DE239523AA8A FOREIGN KEY IF NOT EXISTS (musician_id) REFERENCES Musicians (id) ON DELETE CASCADE",
+      "ALTER TABLE EncryptedFileOwners ADD CONSTRAINT FK_5697DE23EC15E76C FOREIGN KEY IF NOT EXISTS (encrypted_file_id) REFERENCES Files (id) ON DELETE CASCADE",
     ],
   ];
 

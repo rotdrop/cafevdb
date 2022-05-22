@@ -27,7 +27,7 @@ class AddParticipantFieldsAccess extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE ProjectParticipantFields ADD participant_access INT DEFAULT 0',
+      'ALTER TABLE ProjectParticipantFields ADD COLUMN IF NOT EXISTS participant_access INT DEFAULT 0',
     ],
   ];
 
