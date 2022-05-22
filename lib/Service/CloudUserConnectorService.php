@@ -56,6 +56,8 @@ class CloudUserConnectorService
   const USER_SQL_PREFIX = 'Nextcloud';
   const PERSONALIZED_PREFIX = 'Personalized';
 
+  const GROUP_ID_PREFIX = '%2$s:';
+
   /**
    * @var string
    *
@@ -68,7 +70,7 @@ class CloudUserConnectorService
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin AS gid,
+SELECT CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
@@ -286,6 +288,19 @@ WITH CHECK OPTION';
       'status' => $status,
       'hints' => $hints,
     ];
+  }
+
+  /**
+   * Return the group-id for the given numeric project-id. Note that the
+   * display-name is just the project-name.
+   *
+   * @param int $projectId
+   *
+   * @return string
+   */
+  public function projectGroupId(int $projectId):string
+  {
+    return sprintf(self::GROUP_ID_PREFIX . '%1$s', $projectId, $this->appName);
   }
 
   /**
