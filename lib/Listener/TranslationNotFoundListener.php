@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -72,7 +72,7 @@ class TranslationNotFoundListener implements IEventListener
 
     $debugMode = ConfigService::DEBUG_NONE;
     try {
-      $debugMode = $encryptionService->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
+      $debugMode = (int)$encryptionService->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
     } catch (\Throwable $t) {
       // just ignore
     }

@@ -767,7 +767,7 @@ trait ConfigTrait {
 
   protected function shouldDebug(int $flag): bool
   {
-    $debugMode = $this->getConfigValue('debugmode', 0);
+    $debugMode = (int)$this->getConfigValue('debugmode', 0);
     return ($debugMode & $flag) != 0;
   }
 }
