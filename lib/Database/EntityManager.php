@@ -1052,7 +1052,7 @@ class EntityManager extends EntityManagerDecorator
    * before flushed the entities again to the database. Can be used to tweak
    * the app encryption-key, e.g.
    */
-  public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush)
+  public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush = null)
   {
     /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
     $unitOfWork = $this->getUnitOfWork();
