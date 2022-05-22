@@ -242,10 +242,14 @@ class ProjectParticipantFields extends PMETableViewBase
           'name' => $this->l->t('Display'),
         ],
         [
-          'id' => 'advanced',
-          'toolttip' => $this->l->t('Advanced settings and information, restricted access, '.
-                                    'encryption, information about internal indexing.'),
-          'name' => $this->l->t('Advanced'),
+          'id' => 'access',
+          'tooltip' => $this->toolTipsService['page-renderer:participant-fields:tabs:access'],
+          'name' => $this->l->t('Access Control'),
+        ],
+        [
+          'id' => 'miscinfo',
+          'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
+          'name' => $this->l->t('Miscellaneous Data'),
         ],
         [
           'id' => 'tab-all',
@@ -273,7 +277,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     // outside the expertmode "if", this is the index!
     $opts['fdd']['id'] = [
-      'tab'      => ['id' => 'advanced' ],
+      'tab'      => ['id' => 'miscinfo' ],
       'name'     => 'id',
       'select'   => 'T',
       'input'    => 'R',
@@ -341,7 +345,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['name']['sql'] = self::ifDefaultLocale('$main_table.$field_name', $opts['fdd']['name']['sql']);
 
     $opts['fdd']['usage'] = [
-      'tab' => [ 'id' => [ 'advanced' ] ],
+      'tab' => [ 'id' => [ 'miscinfo' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
@@ -354,7 +358,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts['fdd']['deleted'] = array_merge(
       $this->defaultFDD['deleted'], [
-        'tab' => [ 'id' => 'advanced' ],
+        'tab' => [ 'id' => 'miscinfo' ],
         'name' => $this->l->t('Deleted'),
         'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
         'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
@@ -895,22 +899,23 @@ __EOT__;
       ],
     ];
 
-    if ($expertMode) {
+    $opts['fdd']['participant_access'] = [
+      'name' => $this->l->t('Participant Access'),
+      'tab' => [ 'id' => 'access' ],
+      'css' => [ 'postfix' => [ 'participant-access', 'access' ], ],
+      'select' => 'O',
+      'values2' => [
+        Entities\ProjectParticipantField::ACCESS_NONE => $this->l->t('no access'),
+        Entities\ProjectParticipantField::ACCESS_READ => $this->l->t('read'),
+        Entities\ProjectParticipantField::ACCESS_WRITE => $this->l->t('read / write'),
+      ],
+      'default' => Entities\ProjectParticipantField::ACCESS_NONE,
+      'sort' => true,
+      'align' => 'center',
+      'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participant-access'],
+    ];
 
-      $opts['fdd']['encrypted'] = [
-        'name' => $this->l->t('Encrypted'),
-        'tab' => [ 'id' => 'advanced' ],
-        'css' => [ 'postfix' => [ 'encrypted', ], ],
-        'sqlw' => 'IF($val_qas = "", 0, 1)',
-        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
-        'values2|LVFD' => [ 1 => $this->l->t('true'),
-                            0 => $this->l->t('false') ],
-        'default' => false,
-        'select' => 'O',
-        'maxlen' => 1,
-        'sort' => true,
-        'tooltip' => $this->toolTipsService['participant-fields-encrypted'],
-      ];
+    if ($expertMode) {
 
       // @todo wildcards?
       $cloudGroups = [];
@@ -921,26 +926,44 @@ __EOT__;
 
       $opts['fdd']['readers'] = [
         'name' => $this->l->t('Readers'),
-        'tab' => [ 'id' => 'advanced' ],
+        'tab' => [ 'id' => 'access' ],
         'css' => [ 'postfix' => [ 'readers', 'user-groups', ], ],
         'select' => 'M',
         'values' => $cloudGroups,
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
-        'tooltip' => $this->toolTipsService['participant-fields-readers'],
+        'align' => 'center',
+        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:readers'],
       ];
 
       $opts['fdd']['writers'] = [
         'name' => $this->l->t('Writers'),
-        'tab' => [ 'id' => 'advanced' ],
+        'tab' => [ 'id' => 'access' ],
         'css' => [ 'postfix' => [ 'writers', 'chosen-dropup', 'user-groups', ], ],
         'select' => 'M',
         'values' => $cloudGroups,
         'maxlen' => 10,
         'sort' => true,
         'display' => [ 'popup' => 'data' ],
-        'tooltip' => $this->toolTipsService['participant-fields-writers'],
+        'align' => 'center',
+        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:writers'],
+      ];
+
+      $opts['fdd']['encrypted'] = [
+        'name' => $this->l->t('Encrypted'),
+        'tab' => [ 'id' => 'access' ],
+        'css' => [ 'postfix' => [ 'encrypted', ], ],
+        'sqlw' => 'IF($val_qas = "", 0, 1)',
+        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|LVFD' => [ 1 => $this->l->t('true'),
+                            0 => $this->l->t('false') ],
+        'default' => false,
+        'select' => 'O',
+        'maxlen' => 1,
+        'sort' => true,
+        'align' => 'center',
+        'tooltip' => $this->toolTipsService['participant-fields-encrypted'],
       ];
     }
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="FileData")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
- * @ORM\DiscriminatorMap({"identity"="FileData","encrypted"="EncryptedFileData"})
+ * @ORM\DiscriminatorMap({"identity"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})
  * @ORM\Entity
  * @Gedmo\Loggable(enabled=false)
  */
@@ -48,11 +48,15 @@ class FileData implements \ArrayAccess
   /**
    * @var File
    *
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="File", inversedBy="fileData", cascade={"all"})
+   * @ORM\OneToOne(targetEntity="File", cascade={"all"})
    */
-  private $file;
-
+  protected $file;
 
   /**
    * @var string
@@ -68,14 +72,14 @@ class FileData implements \ArrayAccess
    * })
    *
    */
-  private $dataHash;
+  protected $dataHash;
 
   /**
-   * @var string|null
+   * @var string
    *
    * @ORM\Column(type="blob", nullable=false)
    */
-  private $data;
+  protected $data;
 
   public function __construct() {
     $this->arrayCTOR();

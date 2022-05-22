@@ -230,7 +230,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         if (!$openingBalance) {
           // store overview letter
           $supportingDocument = new Entities\EncryptedFile(
-            $overviewFilename, $overviewLetter, 'application/pdf');
+            $overviewFilename, $overviewLetter, 'application/pdf', $musician);
           $datum->setSupportingDocument($supportingDocument);
         }
 
@@ -283,19 +283,19 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           if (empty($supportingDocument)) {
             // create overview letter
             $supportingDocument = new Entities\EncryptedFile(
-              $overviewFilename, $overviewLetter, 'application/pdf');
+              fileName: $overviewFilename,
+              data: $overviewLetter,
+              mimeType: 'application/pdf',
+              owner: $musician
+            );
             $datum->setSupportingDocument($supportingDocument);
           } else if (true || $fee != $datum->getOptionValue()) {
             // @todo FIXME: only update letter if fee changes?
-            $fileData = $supportingDocument->setFileName($overviewFilename)
-                                           ->setMimeType('application/pdf')
-                                           ->setSize(strlen($overviewLetter))
-                                           ->getFileData();
-            if (empty($fileData)) {
-              $fileData = (new Entities\EncryptedFileData)->setFile($supportingDocument);
-              $supportingDocument->setFileData($fileData);
-            }
-            $fileData->setData($overviewLetter);
+            $fileData = $supportingDocument
+              ->setFileName($overviewFilename)
+              ->setMimeType('application/pdf')
+              ->setSize(strlen($overviewLetter))
+              ->getFileData()->setData($overviewLetter);
           }
           // just update current data to the computed value
           if ($datum->isDeleted()) {

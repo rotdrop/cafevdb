@@ -41,10 +41,17 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Exceptions;
 
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  // @todo move this definition somewhere else
+  const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -136,6 +143,47 @@ class EncryptionController extends OCSController
       // board and otherwise do nothing. Once we have personally sealed data
       // we need to re-crypt all data records related to the target-user of
       // the recryption request.
+      //
+      // However: do install a new personal access token.
+
+      $this->entityManager = $this->appContainer->get(EntityManager::class);
+      /** @var Entities\Musician $musician */
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUserId($userId);
+      if (!empty($musician)) {
+        $accessToken = \random_bytes(Entities\MusicianRowAccessToken::HASH_LENGTH / 8);
+        $this->entityManager->beginTransaction();
+        try {
+          $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, $accessToken);
+          $tokenEntity = $musician->getRowAccessToken();
+          if (empty($tokenEntity)) {
+            $tokenEntity = new Entities\MusicianRowAccessToken($musician, $accessToken);
+            $this->persist($tokenEntity);
+          } else {
+            $tokenEntity->setAccessToken($accessToken);
+          }
+          $this->flush();
+          $this->entityManager->commit();
+        } catch (\Throwable $t) {
+          $this->entityManager->rollback();
+          $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
+          $this->logException($t,'Unable to set row access-token for user ' . $userId);
+          throw new OCS\OCSBadRequestException($this->l->t('Unable to set row access-token for user "%s".', $userId), $t);
+        }
+
+        // next we should try to recrypt all encrypted entities of the user ...
+        $encryptedEntities = [];
+        $encryptedEntities = array_merge($encryptedEntities, $musician->getSepaBankAccounts()->toArray());
+        /** @var Entities\EncryptedFile $encryptedFile */
+        foreach ($musician->getEncryptedFiles() as $encryptedFile) {
+          $encryptedEntities[] = $encryptedFile->getFileData();
+        }
+        try {
+          $this->entityManager->recryptEntityList($encryptedEntities);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to recrypt encrypted data for user ' . $userId);
+          throw new OCS\OCSBadRequestException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), $t);
+        }
+      }
 
       /** @var AuthorizationService $authorizationService */
       $authorizationService = $this->appContainer->get(AuthorizationService::class);

@@ -379,6 +379,7 @@ invited to have a look, but please do not change anything unless you know what y
       ],
 
       'page-renderer' => [
+        'miscinfo-tab' => $this->l->t('Further "not so important" data of the participant.'),
         'musicians' => [
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
@@ -390,9 +391,21 @@ invited to have a look, but please do not change anything unless you know what y
             'view' => $this->l->t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])
           ],
         ],
-      ],
+        'participant-fields' => [
+          'tabs' => [
+            'access' => $this->l->t('Configure access-restrictions for the field. In particular determine whether this field is visible by the respective participant in the associated members cloud-app.'),
+          ],
 
-      'participant-fields' => [
+          'participant-access' => $this->l->t('Define whether this field is visible or even writable by the respective participant in the associated member\'s cloud-app.'),
+
+          'readers' => $this->l->t('Members of these Cloud user-groups are allowed to view the
+field. If left blank, every logged in user is allowed to view the
+field.'),
+
+          'writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
+field. If left blank, every logged in user is allowed to change this field.'),
+
+        ],
       ],
 
       'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
@@ -501,10 +514,6 @@ needed, then please enter those in the <strong>Tooltip</strong> field in the
 predefined tab in the select box above, then enter the new name. The
 new tab-name will also be available as tab-option for other fields.'),
 
-      'participant-fields-readers' => $this->l->t('Members of these Cloud user-groups are allowed to view the
-field. If left blank, every logged in user is allowed to view the
-field.'),
-
       'participant-fields-show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
 is only useful for surcharge options, where the "data-entry" just is
 the extra-charge amount associated to the option. Still, if you feel a
@@ -523,9 +532,6 @@ input box below.'),
 
       'participant-fields-tooltip' => $this->l->t('Optionally define a tool-tip (context-help) for the field. The tooltip
 may contain HTML formatting.'),
-
-      'participant-fields-writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
-field. If left blank, every logged in user is allowed to change this field.'),
 
       'file-attachments-select' => $this->l->t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
@@ -899,8 +905,6 @@ Regardless of this checkbox any decimal digit will first be stripped from the en
 of the project name before the year is added.'),
 
       'project-personaldata-tab' => $this->l->t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
-
-      'project-personalmisc-tab' => $this->l->t('Further "not so important" data of the participant.'),
 
       'project-remarks' => $this->l->t('Project specific remarks for this musician. Please check first if there is a special field for the things you want to note'),
 

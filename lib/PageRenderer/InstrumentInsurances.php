@@ -204,7 +204,7 @@ class InstrumentInsurances extends PMETableViewBase
         ],
         [
           'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['instrument-insurence:miscinfo-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
           'name' => $this->l->t('Miscellaneous Data'),
         ],
         [

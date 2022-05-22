@@ -768,6 +768,8 @@ class SepaDebitMandatesController extends Controller {
     // Aquire data-base Entities
 
     // First check the bank-account
+    /** @var Entities\Musician $musician */
+    /** @var Entities\SepaBankAccount $bankAccount */
     if (!empty($bankAccountSequence)) {
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $this->bankAccountsRepository->find([
@@ -848,11 +850,14 @@ class SepaDebitMandatesController extends Controller {
       return self::dataResponse($responseData);
     }
 
+    // From here on we should have a real musician entity:
+    $musician = $bankAccount->getMusician();
+
     // Check for the debit-mandate.
     if (!empty($mandateSequence)) {
       /** @var Entities\SepaDebitMandate $debitMandate */
       $debitMandate = $this->debitMandatesRepository->find([
-        'musician' => $musicianId,
+        'musician' => $musician,
         'sequence' => $mandateSequence,
       ]);
 
@@ -899,30 +904,19 @@ class SepaDebitMandatesController extends Controller {
     }
 
     $uploadFile = null;
+    /** @var Entities\EncryptedFile $writtenMandate */
     $writtenMandate = $debitMandate->getWrittenMandate();
     if (!empty($writtenMandateFileUpload)) {
       /** @var AppStorage $appStorage */
       $appStorage = $this->di(AppStorage::class);
 
-      /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-      $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-
       /** @var ISimpleFile $uploadFile */
       $uploadFile = $appStorage->getUploadFile($writtenMandateFileUpload);
-
-      if (empty($writtenMandate)) {
-        $writtenMandate = new Entities\EncryptedFile;
-        $fileData = new Entities\EncryptedFileData;
-        $fileData->setFile($writtenMandate);
-        $writtenMandate->setFileData($fileData);
-      } else {
-        $fileData = $writtenMandate->getFileData();
-      }
-
-
       $fileContents = $uploadFile->getContent();
+
+      /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+      $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
       $mimeType = $mimeTypeDetector->detectString($fileContents);
-      $fileData->setData($fileContents);
 
       $writtenMandateFileName = $mandateReference;
       $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -930,11 +924,21 @@ class SepaDebitMandatesController extends Controller {
         $writtenMandateFileName .= '.' . $extension;
       }
 
-      $writtenMandate
-        ->setMimeType($mimeType)
-        ->setSize($uploadFile->getSize())
-        ->setFileName($writtenMandateFileName);
-
+      if (empty($writtenMandate)) {
+        $fileData = new Entities\EncryptedFileData;
+        $writtenMandate = new Entities\EncryptedFile(
+          fileName: $writtenMandateFileName,
+          data: $fileContents,
+          mimeType: $mimeType,
+          owner: $musician
+        );
+      } else {
+        $writtenMandate
+          ->setFileName($writtenMandateFileName)
+          ->setMimeType($mimeType)
+          ->setSize($uploadFile->getSize())
+          ->getFileData()->setData($fileContents);
+      }
       $this->persist($writtenMandate);
     }
 
@@ -1102,21 +1106,7 @@ class SepaDebitMandatesController extends Controller {
 
         /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
         $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-
-        $conflict = null;
-        $writtenMandate = $debitMandate->getWrittenMandate();
-        if (empty($writtenMandate)) {
-          $writtenMandate = new Entities\EncryptedFile;
-          $fileData = new Entities\EncryptedFileData;
-          $fileData->setFile($writtenMandate);
-          $writtenMandate->setFileData($fileData);
-        } else {
-          $conflict = 'replaced';
-          $fileData = $writtenMandate->getFileData();
-        }
-
         $mimeType = $mimeTypeDetector->detectString($fileContent);
-        $fileData->setData($fileContent);
 
         $writtenMandateFileName = $mandateReference;
         $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -1124,10 +1114,24 @@ class SepaDebitMandatesController extends Controller {
           $writtenMandateFileName .= '.' . $extension;
         }
 
-        $writtenMandate
-          ->setMimeType($mimeType)
-          ->setSize(strlen($fileContent))
-          ->setFileName($writtenMandateFileName);
+        $conflict = null;
+        /** @var Entities\EncryptedFile $writtenMandate */
+        $writtenMandate = $debitMandate->getWrittenMandate();
+        if (empty($writtenMandate)) {
+          $writtenMandate = new Entities\EncryptedFile(
+            fileName: $writtenMandateFileName,
+            data: $fileContent,
+            mimeType: $mimeType,
+            owner: $debitMandate->getMusician()
+          );
+        } else {
+          $conflict = 'replaced';
+          $writtenMandate
+            ->setFileName($writtenMandateFileName)
+            ->setMimeType($mimeType)
+            ->setSize(strlen($fileContent))
+            ->getFileData()->setData($fileContent);
+        }
 
         $this->entityManager->beginTransaction();
         try {

@@ -310,6 +310,7 @@ class PersonalForm {
             ),
             'importClubMembersAsCloudUsers' => $this->getConfigValue('importClubMembersAsCloudUsers', 'off') === 'on',
             'cloudUserViewsDatabase' => $this->getConfigValue('cloudUserViewsDatabase'),
+            'musicianPersonalizedViews' => $this->getConfigValue('musicianPersonalizedViews'),
 
             'dbserver' => $this->getConfigValue('dbserver'),
             'dbname' => $this->getConfigValue('dbname'),

@@ -68,6 +68,11 @@ class SepaBulkTransaction implements \ArrayAccess
    *     @ORM\JoinColumn(unique=true)
    *   }
    * )
+   *
+   * Export sets for submission to the bank. There may be more than one export
+   * set for a given transaction, but each export set can only belong to one
+   * transaction. Export-data is generated on-the-fly by issuing the download
+   * and tagged immutable once the transaction has been submitted to the bank.
    */
   private $sepaTransactionData;
 

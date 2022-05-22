@@ -1,20 +1,6 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
-# Branch feature/crypto-seal #
-
-## Purpose ##
-
-Provide a multi-user encryption for certain database-entries. Idea
-would be to make personal data available for club-members for review
-or even editing.
-
-## Comments ##
-
-This could work like the openssl_seal() function. As usual there are
-questions how to organize re-encryption on password change and the like.
-
-# General README #
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and

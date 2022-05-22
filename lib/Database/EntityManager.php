@@ -173,6 +173,13 @@ class EntityManager extends EntityManagerDecorator
   /** @var array */
   protected $lifeCycleEvents;
 
+  /**
+   * @var array
+   *
+   * Cache of the current database connection parameters
+   */
+  protected $databaseAccess = [];
+
   // initial setup.
   public function __construct(
     EncryptionService $encryptionService
@@ -399,12 +406,14 @@ class EntityManager extends EntityManagerDecorator
   }
 
   private function connectionParameters($params = null) {
-    $connectionParams = [
-      'dbname' => $this->encryptionService->getConfigValue('dbname'),
-      'user' => $this->encryptionService->getConfigValue('dbuser'),
-      'password' => $this->encryptionService->getConfigValue('dbpassword'),
-      'host' => $this->encryptionService->getConfigValue('dbserver'),
-    ];
+    if (empty($this->databaseAccess)) {
+      $this->databaseAccess = [
+        'dbname' => $this->encryptionService->getConfigValue('dbname'),
+        'user' => $this->encryptionService->getConfigValue('dbuser'),
+        'password' => $this->encryptionService->getConfigValue('dbpassword'),
+        'host' => $this->encryptionService->getConfigValue('dbserver'),
+      ];
+    }
     $driverParams = [
       'driver' => 'pdo_mysql',
       'wrapperClass' => Connection::class,
@@ -415,7 +424,7 @@ class EntityManager extends EntityManagerDecorator
       'row_format' => 'compressed',
     ];
     !is_array($params) && ($params = []);
-    $connectionParams = array_merge($connectionParams, $params, $driverParams, $charSetParams);
+    $connectionParams = array_merge($this->databaseAccess, $params, $driverParams, $charSetParams);
     return $connectionParams;
   }
 
@@ -602,7 +611,11 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
-    $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
+    $localeCode = $this->l->getLocaleCode();
+    if (strpos($localeCode, '_') === false) {
+      $localeCode = $localeCode . '_' . strtoupper($localeCode);
+    }
+    $translatableListener->setTranslatableLocale($localeCode);
     $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
@@ -615,7 +628,7 @@ class EntityManager extends EntityManagerDecorator
     );
     $config->setDefaultQueryHint(
       \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-      $this->l->getLanguageCode()
+      $localeCode
     );
     $config->setDefaultQueryHint(
       \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
@@ -1025,6 +1038,73 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Recrypt the given list/array of entities by forcing an update on the unit
+   * of work. The underlying transformable listener will make sure that the
+   * actual update will happen.
+   *
+   * @param iterable $entities
+   *
+   * @param null|callable $beforeLoad Optional callable which is invoked
+   * before re-loading the list of entities. Can be used to tweak the app
+   * encryption-key, e.g.
+   *
+   * @param null|callable $beforeFlush Optional callable which is invoked
+   * before flushed the entities again to the database. Can be used to tweak
+   * the app encryption-key, e.g.
+   */
+  public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush = null)
+  {
+    /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
+    $unitOfWork = $this->getUnitOfWork();
+
+    /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
+    $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
+
+    $this->beginTransaction();
+    try {
+
+      if (!empty($beforeLoad)) {
+        $beforeLoad();
+      }
+
+      $transformer->setCachable(false);
+
+      // Read all entities into the cache
+      foreach ($entities as $entity) {
+        $this->refresh($entity); // needed ?
+        $unitOfWork->scheduleForUpdate($entity);
+      }
+
+      if (!empty($beforeFlush)) {
+        $beforeFlush();
+      }
+
+      // Flush to disk with new encryption key
+      $this->flush();
+
+      // The next lines should in principle not be necessary
+      // ... refresh($entity) should re-read all entities from the
+      // database.
+      foreach ($entities as $entity) {
+        $this->refresh($entity);
+      }
+
+      $transformer->setCachable(true);
+
+      $this->commit();
+
+    } catch (\Throwable $t) {
+
+      $this->logError('Recrypting encrypted database entries failed, rolling back ...');
+      $this->rollback();
+
+      throw new Exceptions\RecryptionFailedException(
+        $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
+        $t->getCode(), $t);
+    }
+  }
+
+  /**
    * In order to change the encryption key the encrypted data has to
    * be decrypted with the old key and re-encrypted with the new key.
    *
@@ -1040,70 +1120,37 @@ class EntityManager extends EntityManagerDecorator
     $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
     $transformables = $this->propertiesByAnnotation($annotationClass);
 
-    /** @var Doctrine\ORM\UnitOfWork $unitOfWork */
-    $unitOfWork = $this->getUnitOfWork();
-
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */
     $transformer = $this->transformerPool[self::TRANSFORM_ENCRYPT];
 
     $encryptedEntities = [];
-    $this->beginTransaction();
+    foreach ($transformables as $annotationInfo) {
+      foreach ($annotationInfo['properties'] as $field => $transformable) {
+        if ($transformable->name == self::TRANSFORM_ENCRYPT) {
+          $entityClass = $annotationInfo['entity'];
+          $entities = $this->getRepository($entityClass)->findAll();
+          $encryptedEntities = array_merge($encryptedEntities, $entities);
+          break; // one encrypted property is sufficient
+        }
+      }
+    }
+
     try {
-      $transformer->setAppCryptor($oldAppCryptor);
+      $this->recryptEntityList(
+        $encryptedEntities,
+        fn() => $transformer->setAppCryptor($oldAppCryptor),
+        fn() => $transformer->setAppCryptor($newAppCryptor)
+      );
+    } catch (Exceptions\RecryptionFailedException $e) {
 
-      $transformer->setCachable(false);
-
-      foreach ($transformables as $annotationInfo) {
-        $encryptedProperties = false;
-        foreach ($annotationInfo['properties'] as $field => $transformable) {
-          if ($transformable->name == self::TRANSFORM_ENCRYPT) {
-            $encryptedProperties = true;
-            $encryptedEntities[] = $annotationInfo['entity'];
-            break;
-          }
-        }
-      }
-
-      // Read all entities into the cache
-      foreach ($encryptedEntities as $entityClass) {
-        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
-          $this->refresh($entity);
-          $unitOfWork->scheduleForUpdate($entity);
-        }
-      }
-
-      // Set new encryption key
-      $transformer->setAppCryptor($newAppCryptor);
-
-      // Flush to disk with new encryption key
-      $this->flush();
-
-      // The next lines should in principle not be necessary
-      // ... refresh($entity) should re-read all entities from the
-      // database.
-      foreach ($encryptedEntities as $entityClass) {
-        foreach ($this->getRepository($entityClass)->findAll() as $entity) {
-          $this->refresh($entity);
-        }
-      }
-
-      $transformer->setCachable(true);
-
-      // throw new \Exception('ARTIFICIAL EXCEPTION');
-
-      $this->commit();
-    } catch (\Throwable $t) {
-      $this->logError('Recrypting encrypted data base entries failed, rolling back ...');
-      $this->rollback();
       $transformer->setAppCryptor($oldAppCryptor);
       try {
-        $this->reopen();
+        $this->reopen(); // in case the caller catches the exception.
       } catch (\Throwable $t2) {
         $this->logException($t2, 'Reopening entity-manager failed.');
       }
-      throw new \RuntimeException(
-        $this->l->t('Recrypting encrypted data base entries failed, transaction has been rolled back.'),
-        $t->getCode(), $t);
+
+      throw $e;
     }
   }
 }

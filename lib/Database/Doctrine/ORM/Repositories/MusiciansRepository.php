@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -68,6 +68,16 @@ class MusiciansRepository extends EntityRepository
   public function findByUUID($uuid)
   {
     return $this->findOneBy([ 'uuid' => $uuid ]);
+  }
+
+  /**
+   * @param string $userId
+   *
+   * @return \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
+   */
+  public function findByUserId($userId)
+  {
+    return $this->findOneBy([ 'userIdSlug' => $userId ]);
   }
 
   /**Fetch the street address of the respected musician. Needed in

@@ -123,6 +123,8 @@ class CompositePayment implements \ArrayAccess
    * Optional. ATM only used for particular auto-generated monetary fields.
    *
    * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
+   *
+   * @todo Support more than one supporting document.
    */
   private $supportingDocument;
 

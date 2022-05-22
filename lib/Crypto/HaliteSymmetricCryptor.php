@@ -28,9 +28,17 @@ use ParagonIE\HiddenString\HiddenString;
 
 use OCA\CAFEVDB\Exceptions;
 
-/** Use the encryption service provided by the ambient cloud software. */
+/**
+ * Use libsodium through Halite.
+ */
 class HaliteSymmetricCryptor implements SymmetricCryptorInterface
 {
+  /**
+   * @var string
+   * The magic bytes at the start of the encrypted data.
+   */
+  private const HALITE_MAGIC = Halite\Halite::VERSION_PREFIX;
+
   /** @var null|string */
   private $encryptionKey;
 
@@ -87,10 +95,14 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
   {
     if (!empty($this->encryptionKey)) {
       try {
+        // $startTime = microtime(true);
+        // \OCP\Util::writeLog('cafevdb', 'Start encrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
         $data = Halite\Symmetric\Crypto::encrypt(
           new HiddenString($data),
           $this->haliteEncryptionKey,
           Halite\Halite::ENCODE_BASE64URLSAFE);
+        // $duration = microtime(true) - $startTime;
+        // \OCP\Util::writeLog('cafevdb', 'End encrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
         throw new Exceptions\EncryptionFailedException('Encrypt failed', $t->getCode(), $t);
       }
@@ -102,17 +114,21 @@ class HaliteSymmetricCryptor implements SymmetricCryptorInterface
   public function decrypt(?string $data):?string
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
-      if (!str_starts_with($data, Halite\Halite::VERSION_PREFIX)) {
+      if (!str_starts_with($data, self::HALITE_MAGIC)) {
         // not encrypted hack
         return $data;
       }
       try {
+        // $startTime = microtime(true);
+        // \OCP\Util::writeLog('cafevdb', 'Start Decrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
         /** @var HiddenString $data */
         $data = Halite\Symmetric\Crypto::decrypt(
           $data,
           $this->haliteEncryptionKey,
           Halite\Halite::ENCODE_BASE64URLSAFE);
         $data = $data->getString();
+        // $duration = microtime(true) - $startTime;
+        // \OCP\Util::writeLog('cafevdb', 'End Decrypt ' . $duration . ' seconds '  . strlen($data) . ' bytes', \OCP\Util::INFO);
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
       }

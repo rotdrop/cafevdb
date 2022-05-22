@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -37,6 +37,27 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class Image extends File
 {
   use CAFEVDB\Traits\FactoryTrait;
+
+  /**
+   * @var FileData
+   *
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
+   * Also: it is not possible to override the targetEntity from a bass-class
+   * annotation, so the OneToOne annotation must got to the
+   * leave-class. Further: in "single table inheritance" only leave-classes
+   * can be loaded lazily. So we need this artificial ImageFileData class
+   * which is just there to provide a lazy-loadable leaf-class.
+   *
+   * @ORM\OneToOne(targetEntity="ImageFileData", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
+   * )
+   */
+  protected $fileData;
 
   /**
    * @var int

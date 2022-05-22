@@ -33,6 +33,8 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**
  * Manage database-views and grants in order to selectively provide only the
  * neccessary information to the ambient cloud system.
@@ -52,6 +54,9 @@ class CloudUserConnectorService
   const VIEW_POSTFIX = 'View';
 
   const USER_SQL_PREFIX = 'Nextcloud';
+  const PERSONALIZED_PREFIX = 'Personalized';
+
+  const GROUP_ID_PREFIX = '%2$s:';
 
   /**
    * @var string
@@ -65,7 +70,7 @@ class CloudUserConnectorService
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin AS gid,
+SELECT CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
@@ -124,6 +129,45 @@ WITH CHECK OPTION';
     'User' => self::USER_SQL_USER_VIEW,
     'Group' => self::USER_SQL_GROUP_VIEW,
     'UserGroup' => self::USER_SQL_USER_GROUP_VIEW,
+  ];
+
+  const MUSICIAN_ID_TABLES = [
+    'SepaBankAccounts' => 'musician_id',
+    'SepaDebitMandates' => 'musician_id',
+    'ProjectParticipants' => 'musician_id',
+    'MusicianInstruments' => 'musician_id',
+    'ProjectInstruments' => 'musician_id',
+    // 'ProjectParticipantFieldsData' => 'musician_id', needs extra access controls
+    'ProjectPayments' => 'musician_id',
+    'CompositePayments' => 'musician_id',
+    'MusicianPhoto' => 'owner_id',
+    'EncryptedFileOwners' => 'musician_id',
+  ];
+  const PARTICIPANT_FIELD_ID_TABLES = [
+    'ProjectParticipantFields' => [
+      'joinField' => 'id',
+      'groupBy' => [
+        'id',
+      ],
+    ],
+    'ProjectParticipantFieldsDataOptions' => [
+      'joinField' => 'field_id',
+      'groupBy' => [
+        'field_id', 'key',
+      ],
+    ],
+  ];
+  const UNRESTRICTED_TABLES = [
+    'Instruments',
+    'InstrumentFamilies',
+    'instrument_instrument_family',
+    'TableFieldTranslations',
+    'GeoContinents',
+    'GeoCountries',
+    'GeoPostalCodes',
+    'GeoPostalCodeTranslations',
+    'InsuranceBrokers',
+    'InsuranceRates',
   ];
 
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
@@ -185,11 +229,16 @@ WITH CHECK OPTION';
 
   private function viewName(?string $dataBaseName, string $prefix, string $baseName):string
   {
-    $viewName = $prefix . $baseName . self::VIEW_POSTFIX;
+    $viewName = $prefix . Util::dashesToCamelCase($baseName, true, '_') . self::VIEW_POSTFIX;
     if (!empty($dataBaseName)) {
       $viewName = $dataBaseName . '.' . $viewName;
     }
     return $viewName;
+  }
+
+  private function personalizedViewName(?string $dataBaseName, string $baseName)
+  {
+    return $this->viewName($dataBaseName, self::PERSONALIZED_PREFIX, $baseName);
   }
 
   private function checkAndGetCloudDbUser():string
@@ -239,6 +288,19 @@ WITH CHECK OPTION';
       'status' => $status,
       'hints' => $hints,
     ];
+  }
+
+  /**
+   * Return the group-id for the given numeric project-id. Note that the
+   * display-name is just the project-name.
+   *
+   * @param int $projectId
+   *
+   * @return string
+   */
+  public function projectGroupId(int $projectId):string
+  {
+    return sprintf(self::GROUP_ID_PREFIX . '%1$s', $projectId, $this->appName);
   }
 
   /**
@@ -524,6 +586,219 @@ WITH CHECK OPTION';
       function($value) {
         return str_starts_with($value, self::CLOUD_USER_BACKEND . ':');
       }));
+  }
+
+  /**
+   * Generate the (My-)SQL statements for defining the personalized single-row
+   * musician views.
+   *
+   * @return array<string, string>
+   * ```
+   * [
+   *   VIEWNAME => SQL_STATEMENT
+   * ]
+   * ```
+   */
+  private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName)
+  {
+    $statements = [];
+
+    // fetch the authorized musician-id from the token table by examining the secret.
+    $accessFunction = 'ROW_ACCESS_ID';
+    if (!empty($dataBaseName)) {
+      $accessFunction = $dataBaseName . '.' . $accessFunction;
+    }
+
+    $statements[$accessFunction] = "CREATE OR REPLACE FUNCTION " . $accessFunction . "() RETURNS INT(11)
+    READS SQL DATA
+    SQL SECURITY DEFINER
+BEGIN
+  DECLARE musician_id INT;
+  SET musician_id = 0;
+  SELECT t.musician_id INTO musician_id FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
+  RETURN musician_id;
+END";
+
+    $accessFunction .= '()';
+
+    $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
+    $statements[$musicianViewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $musicianViewName . "
+AS
+SELECT *
+FROM Musicians m
+WHERE m.id = " . $accessFunction;
+
+    foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
+      $viewName = $this->personalizedViewName($dataBaseName, $table);
+      $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+    WHERE t." . $column . " = " . $accessFunction;
+    }
+
+    $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
+    $executiveBoardProjectId = $this->encryptionService->getConfigValue('executiveBoardProjectId', -1);
+
+    $table = 'Projects';
+    $column = 'id';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*,
+  (t.id = " . $memberProjectId . ") AS club_members,
+  (t.id = " . $executiveBoardProjectId . ") AS executive_board
+  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipants') . " pppv
+  INNER JOIN " . $table . " t
+    ON t." . $column . " = pppv.project_id
+  GROUP BY t.id";
+
+    $table = 'ProjectParticipantFieldsData';
+    $column = 'musician_id';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+    INNER JOIN ProjectParticipantFields ppf
+      ON t.field_id = ppf.id AND ppf.participant_access <> 0
+    WHERE t." . $column . " = " . $accessFunction;
+
+    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
+      $viewName = $this->personalizedViewName($dataBaseName, $table);
+      $statement = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData'). " pppfdv
+  INNER JOIN " . $table . " t
+    ON t." . $joinInfo['joinField'] . " = pppfdv.field_id
+  GROUP BY " . implode(', ', array_map(fn($field) => 't.' . $field, $joinInfo['groupBy']));
+      $statements[$viewName] = $statement;
+    }
+
+    $table = 'InstrumentInsurances';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*,
+  at.musician_id AS musician_id,
+  (at.musician_id = t.bill_to_party_id) AS is_debitor,
+  (at.musician_id = t.instrument_holder_id) AS is_holder
+  FROM (SELECT " . $accessFunction . " AS musician_id) at
+  INNER JOIN " . $table . " t
+    ON t.instrument_holder_id = at.musician_id OR t.bill_to_party_id = musician_id";
+
+    $table = 'Files';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $table . " t
+  WHERE t.id in (
+    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
+      UNION
+    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+
+    $table = 'FileData';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $this->personalizedViewName($dataBaseName, 'Files'). " fv
+  INNER JOIN " . $table . " t
+    ON t.file_id = fv.id";
+
+    foreach (self::UNRESTRICTED_TABLES as $table) {
+      $viewName = $this->personalizedViewName($dataBaseName, $table);
+      $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t";
+    }
+    return $statements;
+  }
+
+  /**
+   * Update the personalized one-row views which give individual orchestra
+   * members access to just their own data.
+   *
+   * @param string|null $dataBaseName The name of the database where the views
+   * will be created. The cafevdb database user must have GRANT rights on the
+   * databse. If null the views are created in the standard databse.
+   */
+  public function updateMusicianPersonalizedViews(?string $dataBaseName)
+  {
+    $statements = $this->generateMusicianPersonalizedViewsStatements($dataBaseName);
+
+    $cloudDbUser = $this->checkAndGetCloudDbUser();
+    $currentStatement = null;
+    try {
+      foreach ($statements as $viewName => $statement) {
+        $currentStatement = $statement;
+        $this->logDebug('SQL ' . $currentStatement);
+        $this->connection->prepare($currentStatement)->execute();
+        if (strpos($statement, 'FUNCTION') !== false) {
+          $currentStatement = "GRANT EXECUTE ON FUNCTION " . $viewName . " TO " . $cloudDbUser . "@'localhost'";
+        } else {
+          $currentStatement = sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser);
+        }
+        $this->logDebug('SQL ' . $currentStatement);
+        $this->connection->prepare($currentStatement)->execute();
+      }
+    } catch (\Throwable $t) {
+      throw new Exceptions\DatabaseCloudConnectorViewException(
+        $this->l->t('Unable to create or update the personalized view: %s.', $currentStatement),
+        $t->getCode(),
+        $t
+      );
+    }
+  }
+
+  /**
+   * Delete the personalized one-row views which give individual orchestra
+   * members access to just their own data.
+   *
+   * @param string|null $dataBaseName The name of the database where the views
+   * will be created. The cafevdb database user must have GRANT rights on the
+   * databse. If null the views are created in the standard databse.
+   */
+  public function removeMusicianPersonalizedViews(?string $dataBaseName)
+  {
+    $statements = $this->generateMusicianPersonalizedViewsStatements($dataBaseName);
+
+    $currentStatement = null;
+    try {
+      foreach ($statements as $viewName => $sql) {
+        if (strpos($sql, 'FUNCTION') !== false) {
+          $currentStatement = sprintf('DROP FUNCTION IF EXISTS %1$s', $viewName);
+        } else {
+          $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
+        }
+        $this->logDebug('SQL ' . $currentStatement);
+        $this->connection->prepare($currentStatement)->execute();
+      }
+    } catch (\Throwable $t) {
+      throw new Exceptions\DatabaseCloudConnectorViewException(
+        $this->l->t('Unable to delete personalized view: %s.', $currentStatement),
+        $t->getCode(),
+        $t
+      );
+    }
   }
 
 };

@@ -29,22 +29,94 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
+
 /**
  * EncryptedFileData
  *
  * @ORM\Entity
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class EncryptedFileData extends FileData
 {
   /**
-   * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
+   * @var EncryptedFile
+   *
+   * As ORM still does not support lazy one-to-one associations from the
+   * inverse side we just use one-directional from both sides here. This
+   * works, as the join column is just the key of both sides. So we have no
+   * "mappedBy" and "inversedBy".
+   *
+   * @ORM\Id
+   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"all"})
    */
-  private $data;
+  protected $file;
 
   /**
-   * @var mixed
+   * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
+   */
+  protected $data;
+
+  /**
+   * @var array
    *
    * In memory encryption context to support multi user encryption.
    */
   private $encryptionContext;
+
+  /**
+   * Add a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return EncryptedFileData
+   */
+  public function addEncryptionIdentity(string $personality):EncryptedFileData
+  {
+    if (empty($this->encryptionContext)) {
+      $this->encryptionContext = [];
+    }
+    if (!in_array($personality, $this->encryptionContext)) {
+      $this->encryptionContext[] = $personality;
+    }
+    return $this;
+  }
+
+  /**
+   * Remove a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return EncryptedFileData
+   */
+  public function removeEncryptionIdentity(string $personality):EncryptedFileData
+  {
+    $pos = array_search($personality, $this->encryptionContext??[]);
+    if ($pos !== false) {
+      unset($this->encryptionContext[pos]);
+      $this->encryptionContext = array_values($this->encryptionContext);
+    }
+    return $this;
+  }
+
+  /**
+   * @ORM\PostLoad
+   * @ORM\PrePersist
+   * _AT_ORM\PreUpdate
+   *
+   * Ensure that the encryptionContext contains the user-id of the owning musician.
+   */
+  public function sanitizeEncryptionContext(LifecycleEventArgs $eventArgs)
+  {
+    /** @var Musician $owner */
+    foreach (($this->file->getOwners()??[]) as $owner) {
+      $userIdSlug = $owner->getUserIdSlug();
+      if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
+        $this->encryptionContext[] = $userIdSlug;
+      }
+    }
+  }
 }

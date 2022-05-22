@@ -67,6 +67,10 @@ class ProjectParticipantField implements \ArrayAccess
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
 
+  const ACCESS_NONE = 0;
+  const ACCESS_READ = 1;
+  const ACCESS_WRITE = 2;
+
   /**
    * @var int
    *
@@ -185,6 +189,16 @@ class ProjectParticipantField implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
   private $encrypted = false;
+
+  /**
+   * @var int
+   *
+   * A bit-field which determines whether this field is exported to the
+   * corresponding participant for use in the cafevdbmembers-app.
+   *
+   * @ORM\Column(type="integer", nullable="false", options={"default"="0"})
+   */
+  private $participantAccess = self::ACCESS_NONE;
 
   /**
    * @var string|null
@@ -668,6 +682,30 @@ class ProjectParticipantField implements \ArrayAccess
   public function getEncrypted()
   {
     return $this->encrypted;
+  }
+
+  /**
+   * Set participantAccess.
+   *
+   * @param int $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE
+   *
+   * @return ProjectParticipantField
+   */
+  public function setParticipantAccess(int $participantAccess):ProjectParticipantField
+  {
+    $this->participantAccess = $participantAccess;
+
+    return $this;
+  }
+
+  /**
+   * Get participantAccess.
+   *
+   * @return int
+   */
+  public function getParticipantAccess():int
+  {
+    return $this->participantAccess;
   }
 
   /**
