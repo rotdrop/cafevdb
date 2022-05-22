@@ -26,6 +26,13 @@
 namespace OCA\CAFEVDB\Notifications;
 
 use OCP\Notification\INotification;
+use OCP\IURLGenerator;
+use OCP\L10N\IFactory as IL10NFactory;
+use OCP\ILogger;
+use OCP\AppFramework\IAppContainer;
+
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 class Notifier implements \OCP\Notification\INotifier
 {
@@ -41,19 +48,24 @@ class Notifier implements \OCP\Notification\INotifier
   /** @var string */
   protected $appName;
 
-  /** @var \OCP\L10N\IFactory */
+  /** @var IAppContainer */
+  protected $appContainer;
+
+  /** @var IL10NFactory */
   protected $l10nFactory;
 
-  /** @var  \OCP\IURLGenerator */
+  /** @var  IURLGenerator */
   protected $urlGenerator;
 
   public function __construct(
     string $appName
-    , \OCP\L10N\IFactory $factory
-    , \OCP\IURLGenerator $urlGenerator
-    , \OCP\ILogger $logger
+    , IAppContainer $appContainer
+    , IL10NFactory $factory
+    , IURLGenerator $urlGenerator
+    , ILogger $logger
   ) {
     $this->appName = $appName;
+    $this->appContainer = $appContainer;
     $this->l10nFactory = $factory;
     $this->urlGenerator = $urlGenerator;
     $this->logger = $logger;
@@ -94,13 +106,12 @@ class Notifier implements \OCP\Notification\INotifier
       ->setIcon($this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath($this->appName, 'app.svg')));
 
     //https://localhost/nextcloud-git/index.php/settings/admin/cafevdb
-    switch ($notification->getSubject())
-    {
+    switch ($notification->getSubject()) {
       case self::RECRYPT_USER_SUBJECT:
 
         $notification->setLink($this->urlGenerator->linkToRouteAbsolute('settings.AdminSettings.index', [ 'section' => $this->appName ]));
 
-        $parameters = $notification->getSubjectParameters();
+        // $parameters = $notification->getSubjectParameters();
         $notification->setRichSubject(
           $l->t('User Recryption Request for {fancy}'), [
             'fancy' => [
@@ -131,19 +142,49 @@ class Notifier implements \OCP\Notification\INotifier
         break;
 
       case self::RECRYPT_USER_HANDLED_SUBJECT:
-        $parameters = $notification->getSubjectParameters();
-        $notification->setRichSubject(
-          $l->t('Recryption Request Handled for {fancy}'), [
-            'fancy' => [
-              'type' => 'highlight',
-              'id' => $notification->getObjectId(),
-              'name' => $notification->getObjectId(),
-            ]
-          ]);
+        // $parameters = $notification->getSubjectParameters();
+
+        $userId = $notification->getObjectId();
+
+        $subjectString = [ $l->t('Recryption Request handled for {userId}.'), ];
+        $subjectParameters = [
+          'userId' => [
+            'type' => 'highlight',
+            'id' => $userId,
+            'name' => $userId,
+          ]
+        ];
+
+        /** @var AuthorizationService $authorizationService */
+        $authorizationService = $this->appContainer->get(AuthorizationService::class);
+        if ($authorizationService->authorized($userId)) {
+          $subjectString[] = $l->t('You may now open the {adminApp}-app and continue with your administrative work.');
+          $subjectParameters['adminApp'] = [
+            'type' => 'highlight',
+            'id' => $this->appName,
+            'name' => $this->appName,
+            'link' => $this->urlGenerator->linkToRoute($this->appName . '.page.index'),
+          ];
+        }
+
+        /** @var OrganizationalRolesService $rolesService */
+        $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
+        if ($rolesService->isClubMember($userId)) {
+          $membersApp = $this->appName . 'members';
+          $subjectString[] = $l->t('You may now open the {memberApp}-app and inspect your personal data, including a list of your instrument-insurances.');
+          $subjectParameters['memberApp'] = [
+            'type' => 'highlight',
+            'id' => $membersApp,
+            'name' => $membersApp,
+            'link' => $this->urlGenerator->linkToRoute($membersApp . '.page.index'),
+          ];
+        }
+
+        $notification->setRichSubject(implode(' ', $subjectString), $subjectParameters);
         break;
 
       case self::RECRYPT_USER_DENIED_SUBJECT:
-        $parameters = $notification->getSubjectParameters();
+        // $parameters = $notification->getSubjectParameters();
 
         $notification->setRichSubject(
           $l->t('User Recryption Request Denied for {fancy}'), [

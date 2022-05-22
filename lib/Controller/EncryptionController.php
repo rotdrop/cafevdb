@@ -166,6 +166,7 @@ class EncryptionController extends OCSController
         } catch (\Throwable $t) {
           $this->entityManager->rollback();
           $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
+          $this->logException($t,'Unable to set row access-token for user ' . $userId);
           throw new OCS\OCSBadRequestException($this->l->t('Unable to set row access-token for user "%s".', $userId), $t);
         }
 
@@ -179,6 +180,7 @@ class EncryptionController extends OCSController
         try {
           $this->entityManager->recryptEntityList($encryptedEntities);
         } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to recrypt encrypted data for user ' . $userId);
           throw new OCS\OCSBadRequestException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), $t);
         }
       }
