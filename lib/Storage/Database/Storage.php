@@ -216,7 +216,7 @@ class Storage extends AbstractStorage
       return false;
     }
     $updated = $file->getUpdated();
-    return empty($updated) ? 0 : $updated->getTimestamp();
+    return empty($updated) ? 1 : $updated->getTimestamp();
   }
 
   /**
