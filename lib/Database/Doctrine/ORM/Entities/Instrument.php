@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -274,8 +274,7 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Get the usage count, i.e. the number of instruments which belong
-   * to this family.
+   * Get the usage count, i.e. the number of entity instances which  use this instrument.
    */
   public function usage():int
   {

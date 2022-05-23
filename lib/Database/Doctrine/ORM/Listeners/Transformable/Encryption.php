@@ -35,6 +35,9 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  /** @var Crypto\AsymmetricKeyService */
+  private $keyService;
+
   /** @var string */
   private $managementGroupId;
 
@@ -51,11 +54,13 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   private $cachable;
 
   public function __construct(
-    $managementGroupId
+    Crypto\AsymmetricKeyService $keyService
+    , string $managementGroupId
     , EncryptionService $encryptionService
     , Crypto\SealCryptor $sealCryptor
     , ILogger $logger
   ) {
+    $this->keyService = $keyService;
     $this->managementGroupId = '@' . $managementGroupId;
     $this->appCryptor = $encryptionService->getAppAsymmetricCryptor();
     // The seal-cryptor carries state, namely the array of key-cryptors, so
@@ -107,7 +112,10 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
     $sealCryptors = [];
     foreach ($context as $encryptionId) {
-      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
+      $cryptor = $this->getSealCryptor($encryptionId);
+      if ($cryptor->canEncrypt()) {
+        $sealCryptors[$encryptionId] = $cryptor;
+      }
     }
     $this->sealCryptor->setSealCryptors($sealCryptors);
 
@@ -131,7 +139,10 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
     $sealCryptors = [];
     foreach ($context as $encryptionId) {
-      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
+      $cryptor = $this->getSealCryptor($encryptionId);
+      if ($cryptor->canDecrypt()) {
+        $sealCryptors[$encryptionId] = $cryptor;
+      }
     }
     $this->sealCryptor->setSealCryptors($sealCryptors);
 
@@ -155,10 +166,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
   private function getSealCryptor(string $encryptionId):Crypto\ICryptor
   {
-    if ($encryptionId != $this->managementGroupId) {
-      throw new \RuntimeException('Not yet implemented, encryption ids are tied to the global orchestra id.');
+    if ($encryptionId == $this->managementGroupId) {
+      return $this->appCryptor;
+    } else {
+      return $this->keyService->getCryptor($encryptionId);
     }
-    return $this->appCryptor;
   }
 
   private function manageEncryptionContext(?string $value, $context)

@@ -635,21 +635,25 @@ class ProjectParticipantsController extends Controller {
             $downloadLink = $userStorage->getDownloadLink($filePath);
             break;
           case FieldDataType::DB_FILE:
-            if (empty($dbFile)) {
-              /** @var Entities\EncryptedFile $dbFilew */
-              $dbFile = (new Entities\EncryptedFile)
-                      ->setFileData(new Entities\EncryptedFileData);
-              $dbFile->getFileData()->setFile($dbFile);
-            }
-
-            $dbFile->getFileData()->setData($fileData);
-
             /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
             $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+            $mimeType = $mimeTypeDetector->detectString($fileData);
 
-            $dbFile->setSize(strlen($fileData))
-                   ->setFileName($filePath)
-                   ->setMimeType($mimeTypeDetector->detectString($fileData));
+            if (empty($dbFile)) {
+              /** @var Entities\EncryptedFile $dbFilew */
+              $dbFile = new Entities\EncryptedFile(
+                fileName: $filePath,
+                data: $fileData,
+                mimeType: $mimeType,
+                owner: $musician
+              );
+            } else {
+              $dbFile
+                ->setFileName($filePath)
+                ->setSize(strlen($fileData))
+                ->setMimeType($mimeType)
+                ->getFileData()->setData($fileData);
+            }
 
             $this->persist($dbFile);
             $this->flush();

@@ -70,6 +70,16 @@ class MusiciansRepository extends EntityRepository
     return $this->findOneBy([ 'uuid' => $uuid ]);
   }
 
+  /**
+   * @param string $userId
+   *
+   * @return \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
+   */
+  public function findByUserId($userId)
+  {
+    return $this->findOneBy([ 'userIdSlug' => $userId ]);
+  }
+
   /**Fetch the street address of the respected musician. Needed in
    * order to generate automated snail-mails.
    *

@@ -34,6 +34,8 @@ import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 
+import { updateCreditsTimer } from './personal-settings.js';
+
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -49,6 +51,37 @@ require('about.scss');
  */
 const containerSelector = 'div.app-admin-settings';
 const tabsSelector = '#personal-settings-container';
+
+let timeStampTimer;
+
+const updateLocaleTimeStamps = function($container) {
+
+  if (timeStampTimer) {
+    clearInterval(timeStampTimer);
+  }
+
+  const $localeInfo = $container.find('.locale.information');
+
+  if ($localeInfo.length > 0) {
+    timeStampTimer = setInterval(() => {
+      $localeInfo.each(function() {
+        const $self = $(this);
+        if (!$localeInfo.filter(':visible').length) {
+          clearInterval(timeStampTimer);
+          return;
+        }
+        if (!$self.is(':visible')) {
+          return;
+        }
+        $.post(getUrl('locale-info'), { scope: $localeInfo.data('scope') })
+        // .fail(function(xhr, status, errorThrown) { ignore }
+          .done(function(data) {
+            $self.find('.locale.time').replaceWith($(data.contents).find('.locale.time'));
+          });
+      });
+    }, 30000);
+  }
+};
 
 /**
  * Initialize handlers etc. Contents of container may be replaced by
@@ -136,7 +169,7 @@ const afterLoad = function(container) {
     const adminGeneral = $('#admingeneral');
     const msg = adminGeneral.find('.msg');
 
-    const success = function(element, data, value, msg) {
+    const afterSetOrchestraName = function(element, data, value, msg) {
       if (value === '') {
         $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
           $(elm).prop('disabled', true);
@@ -158,13 +191,19 @@ const afterLoad = function(container) {
     };
 
     simpleSetValueHandler(
-      adminGeneral.find('input'), 'blur', msg, {
-        success,
+      adminGeneral.find('input[name="orchestra"]'), 'blur', msg, {
+        success: afterSetOrchestraName,
       });
 
     simpleSetValueHandler(
-      adminGeneral.find('select'), 'change', msg, {
-        success,
+      adminGeneral.find('select[name="orchestraLocale"]'), 'change', msg, {
+        success(element, data, value, msg) {
+          if (data.localeInfo) {
+            const $localeInfo = adminGeneral.find('.locale.information');
+            $localeInfo.children().remove();
+            $localeInfo.append($(data.localeInfo).children());
+          }
+        },
       });
   }
 
@@ -552,26 +591,27 @@ const afterLoad = function(container) {
     sharedFolder('outboxfolder');
 
     const $cloudUserForm = container.find('form.cloud-user');
+
     const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
     const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]');
     const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
     const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
-    const $enabledIfImport = $importClubMembersFieldSet.find('.enable-if-user-sql-backend');
+    const $enabledIfImport = $cloudUserForm.find('.enable-if-user-sql-backend');
 
-    /*
-      <div class="cloud-user hints">
-      <?php foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
-        <div class="cloud-user hint"><?php p($hint); ?></div>
-      <?php } ?>
-      </div>
-    */
+    const $personalizedViewsFieldSet = $cloudUserForm.find('fieldset.personalized-views');
+    const $musicianPersonalizedViews = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViews"]');
+    const $recreatePersonalizedViewsButton = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViewsRecreateViews"]');
+    const $enabledIfPersonalizedViews = $cloudUserForm.find('.enable-if-personalized-views');
+
     const $cloudUserHints = $cloudUserForm.find('div.cloud-user.hints');
 
     const updateHints = function(hints) {
       $cloudUserHints.empty();
       if (!Array.isArray(hints) || hints.length === 0) {
+        $cloudUserHints.closest('fieldset').hide();
         return;
       }
+      $cloudUserHints.closest('fieldset').toggleClass('hidden', !$importClubMembersAsCloudUsers.is(':checked'));
       for (const hint of hints) {
         $cloudUserHints.append('<div class="cloud-user hint">' + hint + '</div>');
       }
@@ -579,11 +619,16 @@ const afterLoad = function(container) {
 
     const updateOtherOnImportChange = function($element) {
       const isChecked = $element.prop('checked');
-      $cloudUserHints.toggleClass('hidden', !isChecked);
+      $cloudUserHints.closest('fieldset').toggleClass('hidden', !isChecked);
       $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
       $shownIfImport.toggleClass('hidden', !isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-enabled', isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
+    };
+
+    const updateOtherOnPersonalizedViewsChange = function($element) {
+      const isChecked = $element.prop('checked');
+      $enabledIfPersonalizedViews.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
     };
 
     simpleSetValueHandler(
@@ -632,6 +677,7 @@ const afterLoad = function(container) {
         }
         return false;
       });
+
     simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
       success($element, data) {
         updateHints(data.hints);
@@ -644,6 +690,39 @@ const afterLoad = function(container) {
         updateHints(data.hints);
       },
       cleanup() { $recreateViewsButton.removeClass('busy'); },
+    });
+
+    simpleSetValueHandler(
+      $musicianPersonalizedViews, 'change', undefined, {
+        setup() {
+          const $this = $(this);
+          $this.addClass('busy');
+          // updateOtherOnPersonalizedViewsChange($this);
+        },
+        cleanup() {
+          const $this = $(this);
+          updateOtherOnPersonalizedViewsChange($this);
+          $this.removeClass('busy');
+        },
+        success($element, data) {
+          console.info('DATA', data);
+          updateHints(data.hints);
+        },
+        fail(xhr, textStatus, errorThrown) {
+          const $this = $(this);
+          Ajax.handleError(xhr, textStatus, errorThrown);
+          // revert on failure
+          $this.prop('checked', !$this.is(':checked'));
+          updateOtherOnPersonalizedViewsChange($this);
+        },
+      });
+
+    simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
+      setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
+      success($element, data) {
+        updateHints(data.hints);
+      },
+      cleanup() { $recreatePersonalizedViewsButton.removeClass('busy'); },
     });
 
   } // shared objects
@@ -1418,7 +1497,9 @@ const afterLoad = function(container) {
 
   toolTipsInit(container);
 
-  container.removeClass('hidden');// show(); // fadeIn()...
+  container.removeClass('hidden'); // show(); // fadeIn()...
+
+  updateLocaleTimeStamps(tabsHolder);
 };
 
 const documentReady = function(container) {
@@ -1434,6 +1515,10 @@ const documentReady = function(container) {
   });
 
   container.on('tabsactivate', container.is(tabsSelector) ? null : tabsSelector, function(event, ui) {
+    updateCreditsTimer();
+
+    updateLocaleTimeStamps($(this));
+
     if (ui.newPanel[0].id === 'tabs-5') {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });

@@ -1454,7 +1454,7 @@ class ProjectParticipants extends PMETableViewBase
     $post = [
       [
         'id' => 'miscinfo',
-        'tooltip' => $this->toolTipsService['project-personalmisc-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
         'name' => $this->l->t('Miscinfo'),
       ],
       [
@@ -1475,8 +1475,6 @@ class ProjectParticipants extends PMETableViewBase
    */
   private function tableTabs($participantFields = false, $useFinanceTab = false)
   {
-    $this->logInfo('HELLO');
-
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
     if (!is_iterable($participantFields)) {

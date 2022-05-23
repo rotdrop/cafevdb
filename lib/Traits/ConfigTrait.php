@@ -577,6 +577,11 @@ trait ConfigTrait {
     return $this->configService->getLocale($lang);
   }
 
+  protected function appLocale():string
+  {
+    return $this->configService->getAppLocale();
+  }
+
   protected function getLanguage(?string $locale = null):string
   {
     return $this->configService->getLanguage($locale);
@@ -607,11 +612,7 @@ trait ConfigTrait {
   /** Return the currency code for the locale. */
   public function currencyCode($locale = null)
   {
-    if (empty($locale)) {
-      $locale = $this->getLocale();
-    }
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-    return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+    return $this->configService->currencyIsoCode($locale);
   }
 
   /** Return the currency symbol for the locale. */
@@ -766,7 +767,7 @@ trait ConfigTrait {
 
   protected function shouldDebug(int $flag): bool
   {
-    $debugMode = $this->getConfigValue('debugmode', 0);
+    $debugMode = (int)$this->getConfigValue('debugmode', 0);
     return ($debugMode & $flag) != 0;
   }
 }

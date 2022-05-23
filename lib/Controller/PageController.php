@@ -256,7 +256,7 @@ class PageController extends Controller {
     $expertMode   = $this->getUserValue('expertmode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
 
-    $debugMode    = $this->getConfigValue('debugmode', 0);
+    $debugMode    = (int)$this->getConfigValue('debugmode', 0);
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 

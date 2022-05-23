@@ -27,6 +27,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -447,6 +448,30 @@ class SepaDebitMandate implements \ArrayAccess
   public function getWrittenMandate():?EncryptedFile
   {
     return $this->writtenMandate;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setPayments(Collection $payments):SepaDebitMandate
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
   }
 
   /**

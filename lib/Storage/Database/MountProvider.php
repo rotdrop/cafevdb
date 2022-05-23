@@ -186,10 +186,6 @@ class MountProvider implements IMountProvider
       ) extends MountPoint { public function getMountType() { return 'database'; } };
     }
 
-    $fieldsRepo = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
-    $fields = $fieldsRepo->findBy([ 'dataType' => FieldType::DB_FILE, 'deleted' => null ]);
-    // $this->logInfo(count($fields));
-
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([

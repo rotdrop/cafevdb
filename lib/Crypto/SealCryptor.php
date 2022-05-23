@@ -98,11 +98,12 @@ class SealCryptor implements ICryptor
     }
     $sealData = $this->sealService->parseSeal($data);
     $candidates = array_intersect(array_keys($this->sealCryptors), array_keys($sealData['keys']));
+    $candidates = array_filter($candidates, fn($id) => $this->sealCryptors[$id]->canDecrypt());
     if (empty($candidates)) {
       throw new Exceptions\DecryptionFailedException('Unable to unseal, no valid candidates');
     }
-    $user = array_shift($candidates);
-    return $this->sealService->unseal($data, $user, $this->sealCryptors[$user]);
+    $id = array_shift($candidates);
+    return $this->sealService->unseal($data, $id, $this->sealCryptors[$id]);
   }
 
   /** {@inheritdoc} */
@@ -119,12 +120,13 @@ class SealCryptor implements ICryptor
   /** {@inheritdoc} */
   public function canDecrypt():bool
   {
+    // it is enough to have one cryptor which can decrypt the data
     foreach ($this->sealCryptors as $cryptor) {
-      if (!$cryptor->canDecrypt()) {
-        return false;
+      if ($cryptor->canDecrypt()) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /** Return the used SealService instance. */

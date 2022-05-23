@@ -384,6 +384,21 @@ class OrganizationalRolesService
     return $this->getGroupSubAdmins();
   }
 
+  /**
+   * Check whether the given user is a club-member
+   */
+  public function isClubMember(string $userId):bool
+  {
+    $clubMembersProjectId = $this->getClubMembersProjectId();
+    if (empty($clubMembersProjectId)) {
+      return false;
+    }
+    /** @var CloudUserConnectorService $cloudService */
+    $cloudService = $this->di(CloudUserConnectorService::class);
+    $clubMembersGid = $cloudService->projectGroupId($clubMembersProjectId);
+
+    return $this->inGroup($userId, $clubMembersGid);
+  }
 }
 
 // Local Variables: ***

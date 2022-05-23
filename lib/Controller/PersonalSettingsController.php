@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -290,15 +291,22 @@ class PersonalSettingsController extends Controller {
    */
   public function setApp($parameter, $value) {
     switch ($parameter) {
+    case 'orchestraLocale': // could check for valid locale ...
+      $realValue = trim($value);
+      $this->setConfigValue($parameter, $realValue);
+      return self::dataResponse([
+        'value' => $realValue,
+        'message' => $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
+        'localeInfo' => $this->generateLocaleInfo('app'),
+      ]);
     case 'orchestra':
       $value = strtolower(Util::removeSpaces($value));
-    case 'orchestraLocale': // could check for valid locale ...
     case 'dbserver': // could check for valid hostname
     case 'dbname':
     case 'dbuser':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter,$realValue]));
+      return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter, $realValue]));
     case 'dbpassword':
       try {
         if (!empty($value)) {
@@ -342,14 +350,14 @@ class PersonalSettingsController extends Controller {
       $encryptionService->setAppEncryptionKey($oldKey);
 
       // do some rudimentary locking
-      $configLock = $this->getAppValue('configlock');
+      $configLock = $this->getAppValue(ConfigService::CONFIG_LOCK_KEY);
       if (!empty($configLock)) {
         return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
       }
 
       $configLock = $this->generateRandomBytes(32);
-      $this->setAppValue('configlock', $configLock);
-      if ($configLock !== $this->getAppValue('configlock')) {
+      $this->setAppValue(ConfigService::CONFIG_LOCK_KEY, $configLock);
+      if ($configLock !== $this->getAppValue(ConfigService::CONFIG_LOCK_KEY)) {
         return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
       }
 
@@ -360,7 +368,7 @@ class PersonalSettingsController extends Controller {
         $configValues = $this->configService->decryptConfigValues();
       } catch (\Throwable $t) {
         $this->logException($t);
-        $this->deleteAppValue('configlock');
+        $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
         return self::grumble($this->exceptionChainData($t));
       }
 
@@ -384,7 +392,7 @@ class PersonalSettingsController extends Controller {
             //$this->logException($t1);
           }
         }
-        $this->deleteAppValue('configlock');
+        $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
         return self::grumble($this->exceptionChainData($t));
       }
 
@@ -449,7 +457,7 @@ class PersonalSettingsController extends Controller {
             $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(', ', $failed));
           } else {
             $this->logInfo('Deleting config-lock');
-            $this->deleteAppValue('configlock');
+            $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
           }
         }
         $responseData = [
@@ -476,7 +484,7 @@ class PersonalSettingsController extends Controller {
       }
 
       $this->logInfo('Deleting config-lock');
-      $this->deleteAppValue('configlock');
+      $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
 
       // this should be it: the new encryption key is stored in the
       // config space, encrypted with itself.
@@ -1312,6 +1320,7 @@ class PersonalSettingsController extends Controller {
           $this->l->t('Failure checking address book "%s", caught an exception "%s".',
                       [$real, $e->getMessage()]));
       }
+
     case 'musiciansaddressbook':
       $real = trim($value);
       $this->setConfigValue($parameter, $real);
@@ -1378,6 +1387,7 @@ class PersonalSettingsController extends Controller {
         'message' => $requirements['hints'],
         'hints' => $requirements['hints'],
       ]);
+
     case 'userSqlBackendRecreateViews':
       try {
         $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
@@ -1405,6 +1415,7 @@ class PersonalSettingsController extends Controller {
           $requirements['hints']),
         'hints' => $requirements['hints'],
       ]);
+
     case 'cloudUserViewsDatabase':
       $newValue = Util::normalizeSpaces($value);
       $oldValue = $this->getConfigValue($parameter, null);
@@ -1417,6 +1428,9 @@ class PersonalSettingsController extends Controller {
           $userConnectorService->removeUserSqlViews($oldValue);
           $userConnectorService->updateUserSqlViews($newValue);
           $userConnectorService->writeUserSqlConfig($newValue);
+
+          $userConnectorService->removeMusicianPersonalizedViews($oldValue);
+          $userConnectorService->updateMusicianPersonalizedViews($newValue);
         } catch(\Throwable $t) {
           $this->logException($t);
           return self::grumble($this->exceptionChainData($t));
@@ -1426,6 +1440,50 @@ class PersonalSettingsController extends Controller {
         'message' => $requirements['hints'],
         'hints' => $requirements['hints'],
       ]);
+
+    case 'musicianPersonalizedViews':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
+      }
+      $stringValue = $realValue ? 'on' : 'off';
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        if ($realValue) {
+          $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
+        } else {
+          $userConnectorService->removeMusicianPersonalizedViews($cloudUserViewsDatabase);
+        }
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
+        'message' => $requirements['hints'],
+        'hints' => $requirements['hints'],
+      ]);
+
+    case 'musicianPersonalizedViewsRecreateViews':
+      try {
+        $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
+        /** @var CloudUserConnectorService $userConnectorService */
+        $userConnectorService = $this->di(CloudUserConnectorService::class);
+        $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+        $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
+      } catch(\Throwable $t) {
+         $this->logException($t);
+        return self::grumble($this->exceptionChainData($t));
+      }
+      return self::dataResponse([
+        'message' => array_merge(
+          [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
+          $requirements['hints']),
+        'hints' => $requirements['hints'],
+      ]);
+
     case 'keydistribute':
       list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
       $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));
@@ -1771,6 +1829,11 @@ class PersonalSettingsController extends Controller {
    */
   public function get($parameter) {
     switch ($parameter) {
+      case 'locale-info':
+        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        return self::dataResponse([
+          'contents' => $localeInfo,
+        ]);
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
@@ -1796,14 +1859,36 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
 
+  private function generateLocaleInfo(?string $scope = null)
+  {
+    $scope = $scope ?? 'personal';
+    $locale = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
+    $templateParameters = [
+      'dateTimeZone' => $this->getDateTimeZone(),
+      'locale' => $locale,
+      'currencyCode' => $this->currencyCode($locale),
+      'currencySymbol' => $this->currencySymbol($locale),
+      'l10n' => $scope == 'personal' ? $this->l : $this->appL10n(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+    ];
+
+    $tmpl = new TemplateResponse($this->appName, 'settings/part.locale-info', $templateParameters, 'blank');
+    return $tmpl->render();
+  }
+
   /**
-   * Store app settings.
+   * Get app settings.
    *
    * @NoAdminRequired
    * @SubAdminRequired
    */
   public function getApp($parameter) {
     switch ($parameter) {
+    case 'locale-info':
+      $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+      return self::dataResponse([
+        'contents' => $localeInfo,
+      ]);
     case 'translation-templates':
       $pot = $this->translationService->generateCatalogueTemplates();
 

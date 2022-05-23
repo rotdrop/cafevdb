@@ -233,7 +233,8 @@ input.randomkey {
   }
 
   span.locale.heading {
-    font-weight:bold;
+    font-weight:normal;
+    font-style:italic;
   }
 
   span.locale.timestamp {
@@ -250,6 +251,10 @@ input.randomkey {
 
   span.locale.thelocale {
     color:blue;
+  }
+
+  span.locale.currency {
+    color:red;
   }
 
   fieldset legend {
@@ -324,8 +329,8 @@ input.randomkey {
           max-width:90ex;
         }
       }
-      fieldset.user-sql {
-        input.user-sql.recreate-views {
+      fieldset {
+        input.recreate-views {
           background-image:url('../img/reload-solid.svg');
           background-position:center center;
           background-repeat:no-repeat;
@@ -345,25 +350,27 @@ input.randomkey {
             }
           }
         }
-        input.checkbox.user-sql.separate-database {
-          &:checked ~, &:checked ~ label {
-            .hide-if-user-sql-separate-database {
-              display:none;
+        &.user-sql {
+          input.checkbox.user-sql.separate-database {
+            &:checked ~, &:checked ~ label {
+              .hide-if-user-sql-separate-database {
+                display:none;
+              }
+            }
+            &:not(:checked) ~, &:not(:checked) ~ label {
+              .show-if-user-sql-separate-database {
+                display:none;
+              }
             }
           }
-          &:not(:checked) ~, &:not(:checked) ~ label {
-            .show-if-user-sql-separate-database {
+          input[name="cloudUserViewsDatabase"] {
+            margin-left:1ex;
+            max-width:60ex;
+          }
+          &.club-member-users-disabled {
+            .info {
               display:none;
             }
-          }
-        }
-        input[name="cloudUserViewsDatabase"] {
-          margin-left:1ex;
-          max-width:60ex;
-        }
-        &.club-member-users-disabled {
-          .info {
-            display:none;
           }
         }
       }

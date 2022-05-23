@@ -24,12 +24,16 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
+// annotations
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
+// types
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreFlushEventArgs;
 
 /**
  * SepaBankAccount.
@@ -49,6 +53,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class SepaBankAccount implements \ArrayAccess
 {
@@ -60,6 +66,8 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
@@ -91,7 +99,7 @@ class SepaBankAccount implements \ArrayAccess
    * shared encryption key and the respective orchestra member with its own key.
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $iban;
 
@@ -99,7 +107,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bic;
 
@@ -107,7 +115,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $blz;
 
@@ -115,14 +123,15 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
   private $bankAccountOwner;
 
   /**
    * @var array
    *
-   * In memory encryption context to support multi user encryption.
+   * In memory encryption context to support multi user encryption. This is a
+   * multi-field encryption context indexed by the property name.
    */
   private $encryptionContext = [];
 
@@ -356,5 +365,63 @@ class SepaBankAccount implements \ArrayAccess
   public function usage():int
   {
     return $this->payments->count() + $this->sepaDebitMandates->count();
+  }
+
+  /**
+   * Add a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return SepaBankAccount
+   */
+  public function addEncryptionIdentity(string $personality):SepaBankAccount
+  {
+    if (empty($this->encryptionContext)) {
+      $this->encryptionContext = [];
+    }
+    if (!in_array($personality, $this->encryptionContext)) {
+      $this->encryptionContext[] = $personality;
+    }
+    return $this;
+  }
+
+  /**
+   * Remove a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return SepaBankAccount
+   */
+  public function removeEncryptionIdentity(string $personality):SepaBankAccount
+  {
+    $pos = array_search($personality, $this->encryptionContext??[]);
+    if ($pos !== false) {
+      unset($this->encryptionContext[pos]);
+      $this->encryptionContext = array_values($this->encryptionContext);
+    }
+    return $this;
+  }
+
+  /**
+   * Ensure that the encryptionContext contains the user-id of the owning musician.
+   */
+  private function sanitizeEncryptionContext()
+  {
+    $userIdSlug = $this->musician->getUserIdSlug();
+    if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
+      $this->encryptionContext[] = $userIdSlug;
+    }
+  }
+
+  /**
+   * @ORM\PostLoad
+   * @ORM\PrePersist
+   * _AT_ORM\PreUpdate
+   */
+  public function handleLifeCycleEvent(LifecycleEventArgs $eventArgs)
+  {
+    $this->sanitizeEncryptionContext();
   }
 }

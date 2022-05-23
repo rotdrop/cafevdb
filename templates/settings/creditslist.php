@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,10 +22,10 @@
 
 namespace OCA\CAFEVDB;
 
-$items = array();
-for ($cnt = 0; $cnt < count($credits); ++$cnt) {
+$items = [];
+foreach ($credits as $creditItem) {
     $items[] = [
-        'data' => $credits[$cnt],
+        'data' => $creditItem,
         'visible' => false,
     ];
 }
@@ -48,7 +48,7 @@ for ($cnt = 0; $cnt < $numItems; ++$cnt) {
 
 echo '<ul>
 ';
-foreach($items as $item) {
+foreach ($items as $item) {
 ?>
   <li<?php p($item['visible'] ? '' : ' class=hidden'); ?>>
     <a target="_creditlink" href="<?php echo $item['data']['link']; ?>">

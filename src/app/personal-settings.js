@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -84,6 +84,8 @@ const documentReady = function() {
         width: '100%',
       });
     });
+
+    container.find('.chosen-container').cafevTooltip();
   };
 
   container.on('cafevdb:content-update', function(event) {
@@ -93,11 +95,17 @@ const documentReady = function() {
     }
   });
 
-  // chosenInit(container);
-
+  let firstReadyCallbackInvocation = true;
   CAFEVDB.addReadyCallback(function() {
+    console.info('PERSONAL READY CALLBACK');
+    if (firstReadyCallbackInvocation) {
+      firstReadyCallbackInvocation = false;
+      return;
+    }
     chosenInit(container);
   });
+
+  chosenInit(container);
 
   // help-menu entries
   handleUserManualMenu(container);
@@ -318,27 +326,41 @@ const documentReady = function() {
   });
 
   /****************************************************************************
-   * Credits list
+   *
+   * Tooltips
    *
    ***************************************************************************/
 
-  const updateCredits = function() {
-    const numItems = 5;
-    const items = [];
-    const numTotal = $('div.cafevdb.about div.product.credits.list ul li').length;
-    for (let i = 0; i < numItems; ++i) {
-      items.push(Math.round(Math.random() * (numTotal - 1)));
-    }
-    $('div.cafevdb.about div.product.credits.list ul li').each(function(index) {
-      if (items.includes(index)) {
-        $(this).removeClass('hidden');
-      } else {
-        $(this).addClass('hidden');
-      }
-    });
-  };
+  CAFEVDB.toolTipsInit('#personal-settings-container');
+  console.info('PERSONAL INIT');
+};
 
-  if (globalState.creditsTimer > 0) {
+export default documentReady;
+
+/****************************************************************************
+ * Credits list
+ *
+ ***************************************************************************/
+
+const updateCredits = function() {
+  const numItems = 5;
+  const items = [];
+  const numTotal = $('div.cafevdb.about div.product.credits.list ul li').length;
+  for (let i = 0; i < numItems; ++i) {
+    items.push(Math.round(Math.random() * (numTotal - 1)));
+  }
+  $('div.cafevdb.about div.product.credits.list ul li').each(function(index) {
+    if (items.includes(index)) {
+      $(this).removeClass('hidden');
+    } else {
+      $(this).addClass('hidden');
+    }
+  });
+};
+
+export const updateCreditsTimer = function() {
+
+  if (globalState.creditsTimer) {
     clearInterval(globalState.creditsTimer);
   }
 
@@ -350,19 +372,9 @@ const documentReady = function() {
       console.debug('Clearing credits timer.');
       clearInterval(globalState.creditsTimer);
     }
-  }, 30000);
-
-  /****************************************************************************
-   *
-   * Tooltips
-   *
-   ***************************************************************************/
-
-  CAFEVDB.toolTipsInit('#personal-settings-container');
+  }, 60000);
 
 };
-
-export default documentReady;
 
 // Local Variables: ***
 // js-indent-level: 2 ***

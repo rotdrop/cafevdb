@@ -132,6 +132,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $userPassphrase;
 
   /**
+   * @var MusicianRowAccessToken
+   *
+   * @ORM\OneToOne(targetEntity="MusicianRowAccessToken", mappedBy="musician", cascade={"all"}, orphanRemoval=true)
+   */
+  private $rowAccessToken;
+
+  /**
    * @var string
    *
    * @ORM\Column(type="string", length=128, nullable=true)
@@ -300,6 +307,18 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $payments;
 
   /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="owners", indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(name="EncryptedFileOwners")
+   *
+   * The list of files owned by this musician. This is in particular important for
+   * encrypted files where the list of owners determines the encryption keys
+   * which are used to seal the data.
+   */
+  private $encryptedFiles;
+
+  /**
    * @var \DateTimeImmutable
    *
    * Tracks changes in the payments, in particular to track modification
@@ -327,6 +346,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->sepaBankAccounts = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->encryptedFiles = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
   }
@@ -1047,6 +1067,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set encryptedFiles.
+   *
+   * @param Collection $encryptedFiles
+   *
+   * @return Musician
+   */
+  public function setEncryptedFiles(Collection $encryptedFiles):Musician
+  {
+    $this->encryptedFiles = $encryptedFiles;
+
+    return $this;
+  }
+
+  /**
+   * Get encryptedFiles.
+   *
+   * @return Collection
+   */
+  public function getEncryptedFiles():Collection
+  {
+    return $this->encryptedFiles;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
@@ -1157,6 +1201,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getUserIdSlug():?string
   {
     return $this->userIdSlug;
+  }
+
+  /**
+   * Set rowAccessToken.
+   *
+   * @param string|null $rowAccessToken
+   *
+   * @return Musician
+   */
+  public function setRowAccessToken(?MusicianRowAccessToken $rowAccessToken):Musician
+  {
+    $this->rowAccessToken = $rowAccessToken;
+
+    return $this;
+  }
+
+  /**
+   * Get rowAccessToken.
+   *
+   * @return MusicianRowAccessToken
+   */
+  public function getRowAccessToken():?MusicianRowAccessToken
+  {
+    return $this->rowAccessToken;
   }
 
   /**

@@ -171,6 +171,7 @@ class Application extends App implements IBootstrap
     $context->registerServiceAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
     $context->registerMiddleWare('GroupMemberMiddleware');
     $context->registerMiddleWare(Middleware\CSPViolationReporting::class);
+    $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
 
     // Register listeners
     ListenerRegistration::register($context);

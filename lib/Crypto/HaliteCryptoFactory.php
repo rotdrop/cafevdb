@@ -38,7 +38,7 @@ class HaliteCryptoFactory implements CryptoFactoryInterface
 
   public function getSymmetricCryptor(?string $encryptionKey = null):SymmetricCryptorInterface
   {
-    return new HaliteSymmetricCryptor($encryptionKey);
+    return new HaliteSymmetricStreamCryptor($encryptionKey);
   }
 
   public function getAsymmetricCryptor($privateKey = null):AsymmetricCryptorInterface

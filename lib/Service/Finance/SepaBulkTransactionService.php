@@ -405,13 +405,18 @@ class SepaBulkTransactionService
       $fileData = $exporter->fileData($bulkTransaction);
 
       if (empty($exportFile)) {
-        $exportFile = new Entities\EncryptedFile($fileName, $fileData, $exporter->mimeType($bulkTransaction));
+        $exportFile = new Entities\EncryptedFile(
+          fileName: $fileName,
+          data: $fileData,
+          mimeType: $exporter->mimeType($bulkTransaction)
+        );
         $bulkTransaction->getSepaTransactionData()->add($exportFile);
       } else {
-        $exportFile->setFileName($fileName)
-                   ->setMimeType($exporter->mimeType($bulkTransaction))
-                   ->setSize(strlen($fileData));
-        $exportFile->getFileData()->setData($fileData);
+        $exportFile
+          ->setFileName($fileName)
+          ->setMimeType($exporter->mimeType($bulkTransaction))
+          ->setSize(strlen($fileData))
+          ->getFileData()->setData($fileData);
       }
 
       $this->entityManager->beginTransaction();

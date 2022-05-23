@@ -25,6 +25,8 @@ else
 COMPOSER_TOOL=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
+#
+OCC=$(ABSSRCDIR)/../../occ
 
 ###############################################################################
 #
@@ -117,18 +119,24 @@ composer.lock: composer.json composer.json.in
 
 pre-build:
 #	git submodule update --init
+	$(OCC) maintenance:mode --on
 .PHONY: pre-build
+
+post-build:
+	$(OCC) maintenance:mode --off
+	chmod g+rw $(ABSSRCDIR)/../../config/config.php
+.PHONY: post-build
 
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer namespace-wrapper npm-build
+build: pre-build composer namespace-wrapper npm-build post-build
 .PHONY: build
 
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-dev: pre-build composer namespace-wrapper npm-dev
+dev: pre-build composer namespace-wrapper npm-dev post-build
 .PHONY: dev
 
 .PHONY: comoser-download

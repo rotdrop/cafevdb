@@ -312,11 +312,6 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <h4><?php p($l->t('Members as Cloud-Users')); ?></h4>
     <form id="cloud-user-form"
           class="cloud-user">
-      <div class="cloud-user hints">
-      <?php if (!empty($importClubMembersAsCloudUsers)) foreach ($cloudUserRequirements['hints']??[] as $hint) { ?>
-        <div class="cloud-user hint"><?php p($hint); ?></div>
-      <?php } ?>
-      </div>
       <fieldset id="user-sql-fieldset"
                 class="user-sql"
                 <?php ($cloudUserRequirements['status'] != CloudUserConnectorService::REQUIREMENTS_OK) && p('disabled'); ?>
@@ -370,7 +365,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
                  <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
           />
           <div class="flex-wrapper"></div>
-          <div class="show-if-user-sql-separate-database info">
+          <div class="show-if-user-sql-separate-database show-if-user-sql-backend info<?php empty($importClubMembersAsCloudUsers) && p(' hidden'); ?>">
             <?php p($l->t('Please make sure the data-base user "%1$s@%2$s" has all -- and in particluar: GRANT -- privileges on the dedicated database.', [ $dbuser, $dbserver ])); ?>
           </div>
         </div>
@@ -387,6 +382,46 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
                  title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>">
             <?php p($l->t('Recreate the database-views for the "%1$s"-user-backend.',  $cloudUserBackend)); ?>
           </label>
+        </div>
+      </fieldset>
+      <fieldset class="cloud-user-connector personalized-views">
+        <legend class="cloud-user-connector personalized-views">
+          <?php p($l->t('Give club-members access to their personal data')); ?>
+        </legend>
+        <div class="enable-if-user-sql-backend">
+          <input id="personalized-views-checkbox"
+                 <?php $musicianPersonalizedViews && p('checked'); ?>
+                 name="musicianPersonalizedViews"
+                 type="checkbox"
+                 class="checkbox personalized-views"/>
+          <label for="personalized-views-checkbox"
+                 title="<?php p($toolTips['settings:personal:sharing:personalized-views']); ?>">
+            <?php p($l->t('Generate personalized single-row database-views')); ?>
+          </label>
+        </div>
+        <div class="enable-if-user-sql-backend enable-if-personalized-views flex-container flex-center">
+          <input id="personalized-views-recreate-views-button"
+                 class="personalized-views recreate-views"
+                 <?php empty($musicianPersonalizedViews) && p('disabled'); ?>
+                 type="button"
+                 name="musicianPersonalizedViewsRecreateViews"
+                 value="<?php p($l->t('Recreate')); ?>"
+                 title="<?php p($toolTips['settings:personal:sharing:personalized-views:recreate-views']); ?>"
+          />
+          <label for="personalized-views-recreate-views-button"
+                 title="<?php p($toolTips['settings:personal:sharing:personalized-views:recreate-views']); ?>">
+            <?php p($l->t('Recreate the personalized single-row database-views')); ?>
+          </label>
+        </div>
+      </fieldset>
+      <fieldset class="cloud-user-connector hints<?php !$importClubMembersAsCloudUsers && p(' hidden'); ?>">
+        <legend class="cloud-user-connector hints">
+          <?php p($l->t('Hints')); ?>
+        </legend>
+        <div class="cloud-user hints">
+          <?php if (!empty($importClubMembersAsCloudUsers)) foreach (($cloudUserRequirements['hints']??[]) as $hint) { ?>
+            <div class="cloud-user hint"><?php p($hint); ?></div>
+          <?php } ?>
         </div>
       </fieldset>
     </form>

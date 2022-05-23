@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -30,6 +30,7 @@ use \libphonenumber\PhoneNumberUtil;
 class PhoneNumberService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   /** @var \libphonenumber\PhoneNumberUtil */
   private $backend = false;
@@ -45,20 +46,31 @@ class PhoneNumberService
   ) {
     $this->configService = $configService;
     $this->l = $this->l10n();
+  }
+
+  private function initializeDefaults()
+  {
     $this->backend = PhoneNumberUtil::getInstance();
 
     $orgPhone = $this->getConfigValue('phoneNumber', '');
     if ($orgPhone != '') {
-      $orgObject = $this->backend->parse($orgPhone, null);
-      $this->defaultRegion = $this->backend->getRegionCodeForNumber($orgObject);
-      $nationalSignificantNumber = $this->backend->getNationalSignificantNumber($orgObject);
-      $areaCodeLength = $this->backend->getLengthOfGeographicalAreaCode($orgObject);
-      if ($areaCodeLength > 0) {
-        $this->defaultPrefix = substr($nationalSignificantNumber, 0, $areaCodeLength);
-      } else {
-        $this->defaultPrefix = '';
+      try {
+        $orgObject = $backend->parse($orgPhone, null);
+        $this->defaultRegion = $backend->getRegionCodeForNumber($orgObject);
+        $nationalSignificantNumber = $backend->getNationalSignificantNumber($orgObject);
+        $areaCodeLength = $backend->getLengthOfGeographicalAreaCode($orgObject);
+        if ($areaCodeLength > 0) {
+          $this->defaultPrefix = substr($nationalSignificantNumber, 0, $areaCodeLength);
+        } else {
+          $this->defaultPrefix = '';
+        }
+      } catch (\Throwable $t) {
+        $this->logException($t, 'Unable to parse non-empty orga-phone-number: ' . $orgPhone);
+        $orgPhone = '';
       }
-    } else {
+    }
+
+    if (empty($orgPhone)) {
       $this->defaultPrefix = '';
       $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
@@ -66,31 +78,65 @@ class PhoneNumberService
       $this->logDebug($language.' / '.$country);
       $this->defaultRegion = $country;
     }
+  }
 
-    $r = new \ReflectionClass('\libphonenumber\PhoneNumberType');
-    $this->numberTypes = array_flip($r->getConstants());
-    foreach ($this->numberTypes as $id => $name) {
-      if ($name != 'UAN' && $name != 'VOIP') {
-        $this->numberTypes[$id] = $this->l->t(strtolower(str_replace('_', ' ', $name)));
+  private function getBackend():\libphonenumber\PhoneNumberUtil
+  {
+    if ($this->backend === false) {
+      $this->initializeDefaults();
+    }
+    return $this->backend;
+  }
+
+  private function getDefaultRegion()
+  {
+    if ($this->defaultRegion === false) {
+      $this->initializeDefaults();
+    }
+    return $this->defaultRegion;
+  }
+
+  private function getDefaultPrefix()
+  {
+    if ($this->defaultPrefix === false) {
+      $this->initializeDefaults();
+    }
+    return $this->defaultPrefix;
+  }
+
+  // lazy initializer for the number-type-to-locale conversion
+  private function translateNumberType(int $type)
+  {
+    if ($this->numberTypes === false) {
+      $r = new \ReflectionClass('\libphonenumber\PhoneNumberType');
+      $this->numberTypes = array_flip($r->getConstants());
+      foreach ($this->numberTypes as $id => $name) {
+        if ($name != 'UAN' && $name != 'VOIP') {
+          $this->numberTypes[$id] = $this->l->t(strtolower(str_replace('_', ' ', $name)));
+        }
       }
     }
+    return $this->numberTypes[$type];
+  }
 
-    if (false) {
-      $this->l->t('fixed line');
-      $this->l->t('mobile');
-      $this->l->t('fixed line or mobile');
-      $this->l->t('premium rate');
-      $this->l->t('shared cost');
-      $this->l->t('VOIP');
-      $this->l->t('personal number');
-      $this->l->t('pager');
-      $this->l->t('UAN');
-      $this->l->t('unknown');
-      $this->l->t('emergency');
-      $this->l->t('voicemail');
-      $this->l->t('short code');
-      $this->l->t('standard rate');
-    }
+  // Inject some translations with a never called fake-function. This has to
+  // be kept in sync with the constants of \libphonenumber\PhoneNumberType
+  static private function translationHack()
+  {
+    self::t('fixed line');
+    self::t('mobile');
+    self::t('fixed line or mobile');
+    self::t('premium rate');
+    self::t('shared cost');
+    self::t('VOIP');
+    self::t('personal number');
+    self::t('pager');
+    self::t('UAN');
+    self::t('unknown');
+    self::t('emergency');
+    self::t('voicemail');
+    self::t('short code');
+    self::t('standard rate');
   }
 
   /**
@@ -121,8 +167,8 @@ class PhoneNumberService
 
     if ($number !== '') {
       // add local area code
-      if (!preg_match('!^[0+]!', $number) && $this->defaultPrefix) {
-        $number = '0' . $this->defaultPrefix . $number;
+      if (!preg_match('!^[0+]!', $number) && $this->getDefaultPrefix()) {
+        $number = '0' . $this->getDefaultPrefix() . $number;
       }
     }
 
@@ -139,8 +185,8 @@ class PhoneNumberService
       return false;
     }
 
-    if (!$region && $this->defaultRegion) {
-      $region = $this->defaultRegion;
+    if (!$region && $this->getDefaultRegion()) {
+      $region = $this->getDefaultRegion();
     }
 
     try {
@@ -148,10 +194,10 @@ class PhoneNumberService
       if ($number != $this->currentNumber || $region != $this->currentRegion) {
         $this->currentNumber = $number;
         $this->currentRegion = $region;
-        $this->currentObject = $this->backend->parse($this->currentNumber, $this->currentRegion);
+        $this->currentObject = $this->getBackend()->parse($this->currentNumber, $this->currentRegion);
       }
 
-      $result = $this->backend->isValidNumber($this->currentObject);
+      $result = $this->getBackend()->isValidNumber($this->currentObject);
 
     } catch (\Throwabled $e) {
       $result = false;
@@ -166,7 +212,7 @@ class PhoneNumberService
       return '';
     }
 
-    return $this->backend->format($this->currentObject,
+    return $this->getBackend()->format($this->currentObject,
                                   \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
   }
 
@@ -176,7 +222,7 @@ class PhoneNumberService
       return false;
     }
 
-    return $this->backend->getNumberType($this->currentObject) == \libphonenumber\PhoneNumberType::MOBILE;
+    return $this->getBackend()->getNumberType($this->currentObject) == \libphonenumber\PhoneNumberType::MOBILE;
   }
 
   /**
@@ -216,17 +262,17 @@ class PhoneNumberService
       $zone = $this->l->t('unknown');
     }
 
-    $meta = '';
-    $meta .= $this->l->t('Type    : %s', [ $this->numberTypes[$this->backend->getNumberType($this->currentObject)] ]).$nl;
-    $meta .= $this->l->t('Country : %s', [ $this->backend->getRegionCodeForNumber($this->currentObject)]).$nl;
-    $meta .= $this->l->t('Location: %s', [ $geocoder->getDescriptionForNumber($this->currentObject, $locale) ]).$nl;
-    $meta .= $this->l->t('TimeZone: %s', [ $zone ]).$nl;
+    $meta = [];
+    $meta [] = $this->l->t('Type    : %s', [ $this->translateNumberType($this->getBackend()->getNumberType($this->currentObject)) ]);
+    $meta [] = $this->l->t('Country : %s', [ $this->getBackend()->getRegionCodeForNumber($this->currentObject)]);
+    $meta [] = $this->l->t('Location: %s', [ $geocoder->getDescriptionForNumber($this->currentObject, $locale) ]);
+    $meta [] = $this->l->t('TimeZone: %s', [ $zone ]);
     $provider = $carrierMapper->getNameForNumber($this->currentObject, $locale);
     if ($provider !== '') {
-      $meta .= $this->l->t('Provider: %s', [ $provider ]).$nl;
+      $meta [] = $this->l->t('Provider: %s', [ $provider ]);
     }
 
-    return $meta;
+    return implode($nl, $meta);
   }
 
 };

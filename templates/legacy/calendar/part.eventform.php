@@ -110,7 +110,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
                name="export"
                value="<?php p($l->t('Export event'));?>"
                title="<?php p($l->t('Export this event as ICS file.')); ?>"
-               data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?requesttoken=<?php echo urlencode($requesttoken); ?>&eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
+               data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
         >
         <span class="button no-flex calendar-app tooltip-auto"
               title="<?php p($l->t('Open the cloud\'s calendar app in another tab or window.')); ?>"

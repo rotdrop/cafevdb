@@ -122,21 +122,24 @@ class PaymentsController extends Controller {
 
         /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
         $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+        $mimeType = $mimeTypeDetector->detectString($fileContent);
 
         $conflict = null;
+        /** @var Entities\EncryptedFile $supportingDocument */
         $supportingDocument = $compositePayment->getSupportingDocument();
         if (empty($supportingDocument)) {
-          $supportingDocument = new Entities\EncryptedFile;
-          $fileData = new Entities\EncryptedFileData;
-          $fileData->setFile($supportingDocument);
-          $supportingDocument->setFileData($fileData);
+          $supportingDocument = new Entities\EncryptedFile(
+            data: $fileContent,
+            mimeType: $mimeType,
+            owner: $compositePayment->getMusician()
+          );
         } else {
           $conflict = 'replaced';
-          $fileData = $supportingDocument->getFileData();
+          $supportingDocument
+            ->setMimeType($mimeType)
+            ->setSize(strlen($fileContent))
+            ->getFileData()->setData($fileContent);
         }
-
-        $mimeType = $mimeTypeDetector->detectString($fileContent);
-        $fileData->setData($fileContent);
 
         $supportingDocumentFileName = basename($supportingDocumentFileName);
         $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -147,10 +150,7 @@ class PaymentsController extends Controller {
           $supportingDocumentFileName .= '.' . $extension;
         }
 
-        $supportingDocument
-          ->setMimeType($mimeType)
-          ->setSize(strlen($fileContent))
-          ->setFileName($supportingDocumentFileName);
+        $supportingDocument->setFileName($supportingDocumentFileName);
 
         $this->entityManager->beginTransaction();
         try {
