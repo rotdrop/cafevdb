@@ -75,6 +75,8 @@ class FillEncryptedFileOwners extends AbstractMigration
 
   public function execute():bool
   {
+    $filterState = $this->disableFilter('soft-deleteable');
+
     $this->entityManager->beginTransaction();
     try {
       $musicians = $this->getDatabaseRepository(Entities\Musician::class)->findAll();
