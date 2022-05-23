@@ -35,7 +35,7 @@ class ProjectMailingLists extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE Projects ADD mailing_list_id VARCHAR(128) DEFAULT NULL COLLATE `ascii_general_ci`',
+      'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS mailing_list_id VARCHAR(128) DEFAULT NULL COLLATE `ascii_general_ci`',
     ],
   ];
 
