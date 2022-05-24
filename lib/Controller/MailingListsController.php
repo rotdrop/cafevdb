@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 
 use OCA\CAFEVDB\Common\Util;
 
+/** Handle subscription management callbacks */
 class MailingListsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
