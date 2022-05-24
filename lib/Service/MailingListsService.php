@@ -308,7 +308,7 @@ class MailingListsService
   /**
    * Rename an existing list.
    *
-   * Unfortunately, changing the fqdn (email address) not supported or at
+   * Unfortunately, changing the fqdn (email address) is not supported or at
    * least to exposed to the API by mm3. So we do not actually change the
    * address of the list, but just the display name and add the desired
    * email-address to the list of acceptable aliases and then: how to add an
@@ -345,6 +345,16 @@ class MailingListsService
   private function addEmailAlias(string $fromAddress, string $toAddress)
   {
     throw new \RuntimeException($this->l->t('Adding email alias is not yet supported'));
+  }
+
+  /**
+   * Configure the given list as an announcements-only list.
+   *
+   * That is:
+   * - all postings are moderated
+   */
+  public function configureAnnouncementsList(string $listId, $owners, $moderators)
+  {
   }
 
   /**
