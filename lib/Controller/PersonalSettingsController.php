@@ -1598,6 +1598,23 @@ class PersonalSettingsController extends Controller {
       }
       $stringValue = $realValue ? 'on' : 'off';
       return $this->setSimpleConfigValue($parameter, $stringValue);
+    case 'announcementsMailingListAutoconf':
+      /** @var MailingListsService $listsService */
+      $listsService = $this->di(MailingListsService::class);
+      $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+      if (empty($announcementsMailingList)) {
+        return self::grumble($this->l->t('Please configure the mailing-list address first, otherweise I do not know which list I have to work on.'));
+      }
+      $owners = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']) ]);
+      $moderators = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']) ]);
+      $posters = $moderators;
+      $listsService->configureAnnouncementsList($announcementsMailingList, $owners, $moderators, $posters);
+
+      return self::response(
+        $this->l->t('Autoconfiguration of the mailing list "%1$s" successful, owner set to "%2$s", moderator and allowed poster set to "%3$s".', [
+          $announcementsMailingList, $owners[0] ?? '', $posters[0] ?? '',
+        ])
+      );
     case 'announcementsMailingList':
     case 'emailtestaddress':
     case 'emailfromaddress':

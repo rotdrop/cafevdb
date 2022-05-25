@@ -631,7 +631,14 @@ in the email form.'),
             'default' => $this->l->t('Some settings for generated per-project mailing lists. The detail configuration can be tuned by visiting the list-configuration pages.'),
             'owner' => $this->l->t('An email address which owns all auto-generated mailing lists. This email will receive notifications by the mailing-list software about necessary administrative tasks.'),
             'moderator' => $this->l->t('An email address which handle moderator-tasks for the mailing lists. List moderation is e.g. necessary for rejecting or accepting posts by non-members or to handle subscription requests.'),
-          ]
+          ],
+        ],
+        'announcements' => [
+          'autoconf' => $this->l->t('Attempt to auto-configure the announcements mailing-list as one-way announcements-only list, with the same moderators and owners as specified below for the auto-generated mailing-list. The moderator will also be allowed to post to the list unmoderated.
+
+Further, if any customized auto-response message are found in the confgured templates folder (see "sharing"-tab) then these are used for the announcements mailing-list.
+
+In order to configure the mailing-list the REST_API credentials have to be configured first.'),
         ],
       ],
 

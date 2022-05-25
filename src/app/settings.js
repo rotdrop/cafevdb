@@ -882,6 +882,8 @@ const afterLoad = function(container) {
           });
         return false;
       });
+
+      simpleSetHandler(container.find('#announcements-mailing-list-autoconf'), 'click');
     }
 
     {

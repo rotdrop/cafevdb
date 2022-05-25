@@ -52,6 +52,9 @@ class MailingListsService
   const ROLE_MEMBER = 'member';
   const ROLE_MODERATOR = 'moderator';
   const ROLE_OWNER = 'owner';
+  const ROLES = [
+    self::ROLE_MEMBER, self::ROLE_MODERATOR, self::ROLE_OWNER,
+  ];
 
   const SUBSCRIBER_EMAIL = 'subscriber';
   const MEMBER_DISPLAY_NAME = 'display_name';
@@ -93,6 +96,20 @@ class MailingListsService
     self::MODERATION_ACTION_REJECT,
     self::MODERATOIN_ACTOIN_DEFER,
   ];
+
+  const MEMBER_MODERATION_KEY = 'moderation_action';
+  const MEMBER_MODERATION_ACCEPT = self::MODERATION_ACTION_ACCEPT;
+  const MEMBER_MODERATION_HOLD = 'hold';
+  const MEMBER_MODERATION_REJECT = self::MODERATION_ACTION_REJECT;
+  const MEMBER_MODERATION_DISCARD = self::MODERATION_ACTION_DISCARD;
+
+  const MEMBER_MODERATIONS = [
+    self::MEMBER_MODERATION_ACCEPT,
+    self::MEMBER_MODERATION_HOLD,
+    self::MEMBER_MODERATION_REJECT,
+    self::MEMBER_MODERATION_DISCARD,
+  ];
+
   const REQUEST_OWNER_MODERATOR = 'moderator';
   const REQUEST_OWNER_SUBSCRIBER = 'subscriber';
   const REQUEST_OWNERS = [
@@ -244,13 +261,17 @@ class MailingListsService
   public function setListConfig(string $fqdnName, $config, mixed $value = null)
   {
     if (!is_array($config)) {
+      $config = [ $config => $value ];
+    }
+    // Bloody Python "wisdom"
+    foreach ($config as $key => &$value) {
       if ($value === true) {
         $value = 'True';
       } else if ($value === false) {
         $value = 'False';
       }
-      $config = [ $config => $value ];
     }
+    $this->logInfo('TRY CONFIG ' . print_r($config, true));
     $response = $this->restClient->patch(
       '/3.1/lists/' . $fqdnName . '/config', [
         'json' => $config,
@@ -279,7 +300,7 @@ class MailingListsService
   /** Create a non-existing list */
   public function createList(string $fqdnName, string $style = 'private-default')
   {
-    // replace the first dot by @ if not @ is present
+    // replace the first dot by @ if no @ is present
     if (strpos($fqdnName, '@') === false) {
       $fqdnName[strpos($fqdnName, '.')] = '@';
     }
@@ -352,9 +373,77 @@ class MailingListsService
    *
    * That is:
    * - all postings are moderated
+   * - allow_list_posts set to false (no list-post header)
+   * -
+   * - unsubscription is done without needing further confirmation from the user
+   * - subscription is unmoderated, but after user confirmation
+   * - $posters are added as list-members with the privilege to post to the list
+   * - the archive is public
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string|array $owners Array of owners or the single owner as string.
+   *
+   * @param string|array $moderators Array of moderators or the single moderator as string.
+   *
+   * @param string|array $posters Array of posters or the single posters as
+   * string. "posters" are the email addresses which are allowed to post to
+   * the list without moderation.
    */
-  public function configureAnnouncementsList(string $listId, $owners, $moderators)
+  public function configureAnnouncementsList(string $listId, $owners = [], $moderators = [], $posters = [])
   {
+    $listId = $this->ensureListId($listId);
+    $config = [
+      'allow_list_posts' => false,
+      'subscription_policy' => 'confirm',
+      'unsubscription_policy' => 'open', // check keyword
+      'default_member_action' => self::MEMBER_MODERATION_HOLD,
+      'default_nonmember_action' => self::MEMBER_MODERATION_HOLD,
+      'archive_policy' => 'public',
+      'advertised' => true,
+      'digests_enabled' => false,
+      'preferred_language' => $this->getLanguage($this->appLocale()),
+    ];
+    $this->setListConfig($listId, $config);
+
+    $owners = is_array($owners) ? $owners : [ $owners ];
+    $moderators = is_array($moderators) ? $moderators : [ $moderators ];
+    $posters = is_array($posters) ? $posters : [ $posters ];
+
+    $users = [
+      self::ROLE_MEMBER => $posters,
+      self::ROLE_OWNER => $owners,
+      self::ROLE_MODERATOR => $moderators,
+    ];
+
+    foreach (self::ROLES as $role) {
+      foreach ($users[$role] as $key => $subscriber) {
+        if (strpos($key, '@') !== false) {
+          $displayName = $subscriber;
+          $subscriber = $key;
+          $subscriptionData = [
+            self::SUBSCRIBER_EMAIL => $subscriber,
+            self::MEMBER_DISPLAY_NAME => $displayName,
+          ];
+        } else {
+          $subscriptionData = [
+            self::SUBSCRIBER_EMAIL => $subscriber,
+          ];
+        }
+        $subscriptionData['role'] = $role;
+        if (empty($this->getSubscription($listId, $subscriber, $role))) {
+          $this->subscribe($listId, subscriptionData: $subscriptionData);
+        }
+      }
+    }
+
+    foreach ($posters as $key => $subscriber) {
+      $subscriber = strpos($key, '@') === false ? $subscriber : $key;
+      $this->patchMember($listId, $subscriber, self::ROLE_MEMBER, [
+        self::MEMBER_MODERATION_KEY => self::MEMBER_MODERATION_ACCEPT,
+      ]);
+    }
   }
 
   /**
@@ -727,6 +816,10 @@ class MailingListsService
 
     $response['entries'] = $response['entries'] ?? [];
 
+    foreach ($response['entries'] as $member) {
+      $this->selfLinkBySubscription[$listId][$member['email']][$member['role']] = $entry[self::SUBSCRIPTION_SELF_LINK];
+    }
+
     if ($flat) {
       $members = [];
       foreach ($response['entries'] as $member) {
@@ -738,6 +831,35 @@ class MailingListsService
     return $response;
   }
 
+  /**
+   * Patch the membership config for the given email address. In particular,
+   * it is possible to set the moderation action and the delivery address.
+   *
+   * @param string $listId The mailing list id to get the information for.
+   *
+   * @param string $subscriber The email-address of the subscriber.
+   *
+   * @param string $role The member-ship role.
+   *
+   * @param array $data The to-be-patched-in data.
+   *
+   * @return bool
+   */
+  public function patchMember(string $listId, string $subscriber, string $role, array $data):bool
+  {
+    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+      $this->getSubscription($listId, $subscriber, $role);
+      $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    }
+    if (empty($selfLink)) {
+      return false;
+    }
+    $response = $this->restClient->patch($selfLink, [
+      'json' => $data,
+      'auth' => $this->restAuth,
+    ]);
+    return true;
+  }
 
   /**
    * Generate the full path to the given templates leaf-directory.
