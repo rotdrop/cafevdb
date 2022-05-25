@@ -1695,7 +1695,7 @@ Whatever.',
         'advertised' => 'False',
         'archive_policy' => 'private',
         'subscription_policy' => 'moderate',
-        'preferred_language' => $this->appL10n()->getLanguageCode(),
+        'preferred_language' =>  $this->getLanguage($this->appLocale()),
       ];
       $listsService->setListConfig($listId, $configuration);
       $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
