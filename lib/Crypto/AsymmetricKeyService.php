@@ -511,7 +511,7 @@ class AsymmetricKeyService
    */
   public function pushRecryptionRequestDeniedNotification($ownerId, bool $allowProtest = true)
   {
-    $requestData = 12; //$this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
 
     if (empty($requestData)) {
       throw new Exceptions\RecryptionRequestNotFoundException($this->l->t('No pending recryption-request for user "%s".', $ownerId));

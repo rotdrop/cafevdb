@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -55,6 +55,7 @@ trait InitialStateTrait {
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
     $expertMode = $this->getUserValue('expertmode');
 
+    $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
 
     $admins = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact();
     $adminEmail = [];

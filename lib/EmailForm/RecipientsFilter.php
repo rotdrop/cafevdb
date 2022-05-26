@@ -27,6 +27,7 @@ use OCP\ISession;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -34,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -48,18 +50,51 @@ class RecipientsFilter
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const POST_TAG = 'emailRecipients';
+
+  public const BASIC_RECIPIENTS_SET_KEY = 'basicRecipientsSet';
+  public const FROM_PROJECT_CONFIRMED_KEY = 'fromProjectConfirmed';
+  public const FROM_PROJECT_PRELIMINARY_KEY = 'fromProjectPreliminary';
+  public const EXCEPT_PROJECT_KEY = 'exceptProject';
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME;
+  public const PROJECT_MAILING_LIST_KEY = 'projectMailingList';
+
+  private const MUSICIANS_FROM_PROJECT_PRELIMINARY = (1 << 0);
+  private const MUSICIANS_FROM_PROJECT_CONFIRMED = (1 << 1);
+  private const MUSICIANS_FROM_PROJECT = self::MUSICIANS_FROM_PROJECT_CONFIRMED|self::MUSICIANS_FROM_PROJECT_PRELIMINARY;
+  private const MUSICIANS_EXCEPT_PROJECT = (1 << 2);
+  private const ANNOUNCEMENTS_MAILING_LIST = (1 << 3);
+  private const PROJECT_MAILING_LIST = (1 << 4);
+  private const MAILING_LIST = self::ANNOUNCEMENTS_MAILING_LIST|self::PROJECT_MAILING_LIST;
+  private const NO_MUSICIANS = 0;
+  private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
+  private const DATABASE_MUSICIANS = self::ALL_MUSICIANS;
+
+  /** @var array recipient set keys by flag value */
+  public const BASIC_RECIPIENTS_SET_KEYS = [
+    self::MUSICIANS_FROM_PROJECT_PRELIMINARY => self::FROM_PROJECT_PRELIMINARY_KEY,
+    self::MUSICIANS_FROM_PROJECT_CONFIRMED => self::FROM_PROJECT_CONFIRMED_KEY,
+    self::MUSICIANS_EXCEPT_PROJECT => self::EXCEPT_PROJECT_KEY,
+    self::ANNOUNCEMENTS_MAILING_LIST => self::ANNOUNCEMENTS_MAILING_LIST_KEY,
+    self::PROJECT_MAILING_LIST => self::PROJECT_MAILING_LIST_KEY,
+  ];
+
+  /** @var array recipient set flag values by key */
+  public const BASIC_RECIPIENT_SET_FLAGS = [
+    self::FROM_PROJECT_PRELIMINARY_KEY => self::MUSICIANS_FROM_PROJECT_PRELIMINARY,
+    self::FROM_PROJECT_CONFIRMED_KEY => self::MUSICIANS_FROM_PROJECT_CONFIRMED,
+    self::EXCEPT_PROJECT_KEY => self::MUSICIANS_EXCEPT_PROJECT,
+    self::ANNOUNCEMENTS_MAILING_LIST_KEY => self::ANNOUNCEMENTS_MAILING_LIST,
+    self::PROJECT_MAILING_LIST_KEY => self::PROJECT_MAILING_LIST,
+  ];
+
   private const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
   private const SESSION_HISTORY_KEY = 'filterHistory';
   private const HISTORY_KEYS = [
-    'basicRecipientsSet',
+    self::BASIC_RECIPIENTS_SET_KEY,
     'memberStatusFilter',
     'instrumentsFilter',
     'selectedRecipients'
   ];
-  private const MUSICIANS_FROM_PROJECT = (1 << 0);
-  private const MUSICIANS_EXCEPT_PROJECT = (1 << 1);
-  private const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
-  private const NO_MUSICIANS = 0;
 
   // MUSICIAN_KEY[PME_sys_mtable]
   private const MUSICIAN_KEY = [
@@ -68,16 +103,32 @@ class RecipientsFilter
     'InstrumentInsurances' => 'bill_to_party_id',
   ];
 
-  /** @var null|Entities\Project */
+  /**
+   * @var int
+   * project-id, no project if <= 0
+   */
+  private $projectId;
+
+  /**
+   * @var Entities\Project
+   * project corresponding to $projectId or null.
+   */
   private $project;
-  private $projectId;   // Project id or NULL or -1 or ''
-  private $projectName; // Project name of NULL or ''
+
   private $instrumentsFilter; // Current instrument filter
   private $userBase;    // Select from either project members and/or
   // all musicians w/o project-members
   private $memberFilter;// passive, regular, soloist, conductor, temporary
   private $emailRecs;   // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
+
+  /**
+   * @var array
+   *
+   * The mailing-list information as returned from the lists-server, cached
+   * for the running request.
+   */
+  private array $mailingListInfo = [];
 
   /** @var Entities\SepaBulkTransaction */
   private $bulkTransaction;
@@ -154,17 +205,26 @@ class RecipientsFilter
     // Fetch all data submitted by form
     $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
 
-    // Quirk: the usual checkbox issue
-    $this->cgiData['basicRecipientsSet']['fromProject'] =
-      isset($this->cgiData['basicRecipientsSet']['fromProject']);
-    $this->cgiData['basicRecipientsSet']['exceptProject'] =
-      isset($this->cgiData['basicRecipientsSet']['exceptProject']);
+    // The web-form submits the basic recipient set as array
+    $values = array_flip($this->cgiData[self::BASIC_RECIPIENTS_SET_KEY] ?? []);
+
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::FROM_PROJECT_CONFIRMED_KEY] =
+      isset($values[self::FROM_PROJECT_CONFIRMED_KEY]);
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::FROM_PROJECT_PRELIMINARY_KEY] =
+      isset($values[self::FROM_PROJECT_PRELIMINARY_KEY]);
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::EXCEPT_PROJECT_KEY] =
+      isset($values[self::EXCEPT_PROJECT_KEY]);
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::ANNOUNCEMENTS_MAILING_LIST_KEY] =
+      isset($values[self::ANNOUNCEMENTS_MAILING_LIST_KEY]);
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::PROJECT_MAILING_LIST_KEY] =
+      isset($values[self::PROJECT_MAILING_LIST_KEY]);
 
     $this->projectId = $this->parameterService->getParam('projectId', -1);
     $this->projectName = $this->parameterService->getParam('projectName', '');
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)
-                            ->find($this->projectId);
+        ->find($this->projectId);
+
     }
 
     $this->bulkTransactionId = $this->parameterService->getParam('bulkTransactionId', 0);
@@ -270,7 +330,7 @@ class RecipientsFilter
     $this->historySize = 1;
 
     $filter = [
-      'basicRecipientsSet' => $this->basicRecipientsSet(),
+      self::BASIC_RECIPIENTS_SET_KEY => $this->basicRecipientsSet(),
       'memberStatusFilter' => $this->defaultByStatus(),
       'instrumentsFilter' => [],
       'selectedRecipients' => array_intersect($this->emailRecs,
@@ -474,18 +534,16 @@ class RecipientsFilter
   {
     // add the instruments filter
     if (!empty($this->instrumentsFilter)) {
-      $criteria['instruments.instrument'] = $this->instrumentsFilter;
-      if ($this->projectId > 0 && $this->userBase == self::MUSICIANS_FROM_PROJECT) {
-        $criteria['projectInstruments.instrument'] = $this->instrumentsFilter;
-        $criteria['projectInstruments.project'] = $this->projectId;
+      $criteria[] = [ 'instruments.instrument' => $this->instrumentsFilter ];
+      if ($this->projectId > 0 && ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) == 0) {
+        $criteria[] = [ 'projectInstruments.instrument' => $this->instrumentsFilter ];
+        $criteria[] = [ 'projectInstruments.project' => $this->projectId ];
       }
     }
     if ($this->frozen && $this->projectId > 0) {
-      $criteria['id'] = $this->emailRecs;
+      $criteria[] = [ 'id' => $this->emailRecs ];
     }
-    $criteria['!memberStatus'] = $this->memberStatusBlackList();
-
-    // $this->logInfo('CRITERIA '.print_r($criteria, true));
+    $criteria[] = [ '!memberStatus' => $this->memberStatusBlackList() ];
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -505,23 +563,31 @@ class RecipientsFilter
           if (!$mailer->validateAddress($emailVal)) {
             $bad = htmlspecialchars($displayName.' <'.$emailVal.'>');
             if (isset($this->brokenEMail[$rec])) {
-              $this->brokenEMail[$rec] .= ', '.$bad;
+              $this->brokenEMail[$rec]['label'] .= ', '.$bad;
             } else {
-              $this->brokenEMail[$rec] = $bad;
+              $this->brokenEMail[$rec] = [
+                'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
+                'label' => $bad,
+              ];
+
             }
           } else {
             $this->eMails[$rec] = [
               'email'   => $emailVal,
               'name'    => $displayName,
               'status'  => $musician['memberStatus'],
-              'project' => $this->projectId??-1,
+              'project' => $this->projectId ?? 0,
+              'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
               'dbdata'  => $musician,
             ];
             $this->eMailsDpy[$rec] = htmlspecialchars($displayName.' <'.$emailVal.'>');
           }
         }
       } else {
-        $this->brokenEMail[$rec] = htmlspecialchars($displayName);
+        $this->brokenEMail[$rec] = [
+          'participant' => $this->projectId > 0 && $musician->isMemberOf($this->projectId),
+          'label' => htmlspecialchars($displayName),
+        ];
       }
     }
 
@@ -555,13 +621,57 @@ class RecipientsFilter
     $this->eMails = [];
     $this->eMailsDpy = []; // display records
 
-    if (empty($this->project) || $this->userBase == self::ALL_MUSICIANS) {
-      $this->fetchMusicians([]);
-    } else if ($this->userBase == self::MUSICIANS_FROM_PROJECT) {
-      $this->fetchMusicians([ 'projectParticipation.project' => $this->projectId ]);
-    } else if ($this->userBase == self::MUSICIANS_EXCEPT_PROJECT) {
-      $this->fetchMusicians([ '!projectParticipation.project' => $this->projectId ]);
+    $userBase = $this->userBase & self::DATABASE_MUSICIANS;
+    $criteria = [];
+    if (!empty($this->project) && $userBase != self::ALL_MUSICIANS) {
+
+      // OK, perhaps one should switch to sub-queries ...
+      //
+      // The problem is here that we need HAVING clauses in order to filter by
+      // the project id. WHERE and HAVING are implicitly joined by an AND, so
+      // we cannot first restrict to confirmed participation in the current
+      // project by WHERE and later allow non-project-musicians by HAVING.
+
+      if (($userBase & self::MUSICIANS_EXCEPT_PROJECT) && ($userBase & self::MUSICIANS_FROM_PROJECT)) {
+        $criteria[] = [
+          "(|projectParticipation.project@GROUP_CONCAT(IF(IDENTITY(%s) = {$this->projectId}, 1, NULL))" => null
+          // "(|projectParticipation.project@GROUP_CONCAT(CASE WHEN IDENTITY(%s) = {$this->projectId} THEN 1 ELSE NULL END))" => null
+        ];
+        if ($userBase & self::MUSICIANS_FROM_PROJECT_CONFIRMED) {
+          $criteria[] = [
+            "projectParticipation.project@GROUP_CONCAT(IF(IDENTITY(%s) = {$this->projectId}, projectParticipation.registration, NULL))" => 1
+          ];
+        } else {
+          $criteria[] = [
+            "projectParticipation.project@GROUP_CONCAT(IF(IDENTITY(%s) = {$this->projectId}, NULLIF(projectParticipation.registration, 0), NULL))" => null
+          ];
+        }
+        $criteria[] = [ ')@' => true ];
+      } else if ($userBase & self::MUSICIANS_EXCEPT_PROJECT) {
+        $criteria[] = [
+          "projectParticipation.project@GROUP_CONCAT(IF(IDENTITY(%s) = {$this->projectId}, 1, NULL))" => null
+        ];
+      } else if ($userBase & self::MUSICIANS_FROM_PROJECT) {
+        $criteria[] = [ '(&projectParticipation.project' => $this->projectId ];
+        switch ($userBase & self::MUSICIANS_FROM_PROJECT) {
+          case self::MUSICIANS_FROM_PROJECT:
+            break; // just all participants
+          case self::MUSICIANS_FROM_PROJECT_CONFIRMED:
+            $criteria[] = [ 'projectParticipation.registration' => 1 ];
+            break;
+          case self::MUSICIANS_FROM_PROJECT_PRELIMINARY:
+            $criteria[] = [ '(|projectParticipation.registration' => 0 ];
+            $criteria[] = [ 'projectParticipation.registration' => null ];
+            $criteria[] = [ ')' => true ];
+            break;
+        }
+        $criteria[] = [ ')' => true ];
+      }
+      if (empty($criteria)) {
+        return;
+      }
     }
+    $this->fetchMusicians($criteria);
 
     // Finally sort the display array
     asort($this->eMailsDpy);
@@ -577,7 +687,7 @@ class RecipientsFilter
     $instrumentInfo =
       $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
     // Get the current list of instruments for the filter
-    if ($this->projectId > 0 && $this->userBase == self::MUSICIANS_FROM_PROJECT) {
+    if ($this->projectId > 0 && !($this->userBase & self::MUSICIANS_EXCEPT_PROJECT)) {
       $this->instruments = [];
       // @todo Perhaps write a special repository-method
       foreach ($this->project['participantInstruments'] as $projectInstrument)  {
@@ -656,7 +766,17 @@ class RecipientsFilter
    */
   private function defaultUserBase()
   {
-    return ($this->projectId >= 0) ? self::MUSICIANS_FROM_PROJECT : 0;
+    if ($this->projectId > 0) {
+      return self::MUSICIANS_FROM_PROJECT;
+    } else {
+      if ($this->frozenRecipients()) {
+        return 0;
+      }
+      if (!empty($this->emailRecs)) {
+        return 0;
+      }
+      return self::ANNOUNCEMENTS_MAILING_LIST;
+    }
   }
 
   /**
@@ -668,19 +788,79 @@ class RecipientsFilter
     if (!$this->submitted) {
       $this->userBase = $this->defaultUserBase();
     } else {
-      $userBase = $this->cgiValue('basicRecipientsSet', false);
+      $userBase = $this->cgiValue(self::BASIC_RECIPIENTS_SET_KEY, false);
       if ($userBase === false) {
         $this->userBase = $this->defaultUserBase();
       } else {
         $this->userBase = self::NO_MUSICIANS;
-        if (!empty($userBase['fromProject'])) {
-          $this->userBase |= self::MUSICIANS_FROM_PROJECT;
+        if (!empty($userBase[self::FROM_PROJECT_PRELIMINARY_KEY])) {
+          $this->userBase |= self::MUSICIANS_FROM_PROJECT_PRELIMINARY;
         }
-        if (!empty($userBase['exceptProject'])) {
+        if (!empty($userBase[self::FROM_PROJECT_CONFIRMED_KEY])) {
+          $this->userBase |= self::MUSICIANS_FROM_PROJECT_CONFIRMED;
+        }
+        if (!empty($userBase[self::EXCEPT_PROJECT_KEY])) {
           $this->userBase |= self::MUSICIANS_EXCEPT_PROJECT;
+        }
+        if (!empty($userBase[self::ANNOUNCEMENTS_MAILING_LIST_KEY])) {
+          $this->userBase |= self::ANNOUNCEMENTS_MAILING_LIST;
+        }
+        if (!empty($userBase[self::PROJECT_MAILING_LIST_KEY])) {
+          $this->userBase |= self::PROJECT_MAILING_LIST;
         }
       }
     }
+  }
+
+  static public function getUserBaseDescriptions(\OCP\IL10N $l)
+  {
+    $descriptions = [
+      [
+        'text' => $l->t('project mailing list'),
+        'conditions' => [ 'only-project-mode', self::PROJECT_MAILING_LIST_KEY ],
+      ],
+      [
+        'text' => $l->t('announcements mailing list'),
+        'conditions' => [ self::ANNOUNCEMENTS_MAILING_LIST_KEY, ],
+      ],
+      [
+        'text' => $l->t('musician database'),
+        'conditions' => [ 'not-project-mode', ],
+      ],
+      [
+        'text' => $l->t('all known musicians'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians NOT participating'),
+        'conditions' => [ 'only-project-mode', self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (confirmed)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (preliminary)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, ],
+      ],
+      [
+        'text' => $l->t('participants (preliminary and confirmed)'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::FROM_PROJECT_CONFIRMED_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians except confirmed participants'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('all musicians except preliminary participants'),
+        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::EXCEPT_PROJECT_KEY, ],
+      ],
+      [
+        'text' => $l->t('no one'),
+        'conditions' => [ 'only-project-mode', ],
+      ],
+    ];
+    return $descriptions;
   }
 
   /**
@@ -733,9 +913,47 @@ class RecipientsFilter
   public function basicRecipientsSet()
   {
     return [
-      'fromProject' => ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0,
-      'exceptProject' => ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0,
-      ];
+      self::FROM_PROJECT_PRELIMINARY_KEY => ($this->userBase & self::MUSICIANS_FROM_PROJECT_PRELIMINARY) != 0,
+      self::FROM_PROJECT_CONFIRMED_KEY => ($this->userBase & self::MUSICIANS_FROM_PROJECT_CONFIRMED) != 0,
+      self::EXCEPT_PROJECT_KEY => ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0,
+      self::ANNOUNCEMENTS_MAILING_LIST_KEY => ($this->userBase & self::ANNOUNCEMENTS_MAILING_LIST) != 0,
+      self::PROJECT_MAILING_LIST_KEY => ($this->userBase & self::PROJECT_MAILING_LIST) != 0,
+    ];
+  }
+
+  public function recipientsFromProject():bool
+  {
+    return ($this->userBase & self::MUSICIANS_FROM_PROJECT) != 0;
+  }
+
+  public function recipientsFromProjectAll():bool
+  {
+    return ($this->userBase & self::MUSICIANS_FROM_PROJECT) == self::MUSICIANS_FROM_PROJECT;
+  }
+
+  public function recipientsFromProjectPreliminary():bool
+  {
+    return ($this->userBase & self::MUSICIANS_FROM_PROJECT_PRELIMINARY) != 0;
+  }
+
+  public function recipientsFromProjectConfirmed():bool
+  {
+    return ($this->userBase & self::MUSICIANS_FROM_PROJECT_CONFIRMED) != 0;
+  }
+
+  public function recipientsExceptProject():bool
+  {
+    return ($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) != 0;
+  }
+
+  public function announcementsMailingList():bool
+  {
+    return ($this->userBase & self::ANNOUNCEMENTS_MAILING_LIST) != 0;
+  }
+
+  public function projectMailingList():bool
+  {
+    return ($this->userBase & self::PROJECT_MAILING_LIST) != 0;
   }
 
   /**
@@ -792,13 +1010,10 @@ class RecipientsFilter
   /** Return a list of musicians without email address, if any. */
   public function missingEmailAddresses()
   {
-    $result = [];
-    foreach ($this->brokenEMail as $key => $problem) {
-      if ($this->frozen && array_search($key, $this->emailRecs) === false) {
-        continue;
-      }
-      $result[$key] = $problem;
-    }
+    $result = array_filter($this->brokenEMail, function($key) {
+      return !$this->frozen || array_search($key, $this->emailRecs) !== false;
+    }, ARRAY_FILTER_USE_KEY);
+
     asort($result);
 
     return $result;
@@ -825,13 +1040,36 @@ class RecipientsFilter
    */
   public function selectedRecipients()
   {
+    if ($this->userBase & self::ANNOUNCEMENTS_MAILING_LIST) {
+      $listInfo = $this->getMailingListInfo(self::ANNOUNCEMENTS_MAILING_LIST_KEY);
+      return [
+        [
+          'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
+          'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
+          'status' => DBTypes\EnumMemberStatus::REGULAR,
+          'project' => $this->projectId ?? 0,
+          'dbdata' => null,
+        ],
+      ];
+    } else if ($this->userBase & self::PROJECT_MAILING_LIST) {
+      $listInfo = $this->getMailingListInfo(self::PROJECT_MAILING_LIST_KEY);
+      return [
+        [
+          'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
+          'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
+          'status' => DBTypes\EnumMemberStatus::REGULAR,
+          'project' => $this->projectId ?? 0,
+          'dbdata' => null,
+        ],
+      ];
+    }
+
     if ($this->submitted) {
       $selectedRecipients = $this->cgiValue('selectedRecipients', []);
     } else {
       $selectedRecipients = $this->emailRecs;
     }
     $selectedRecipients = array_unique($selectedRecipients);
-    //$_POST['blah'] = print_r($this->eMails, true);
     $eMails = [];
     foreach ($selectedRecipients as $key) {
       if (isset($this->eMails[$key])) {
@@ -855,5 +1093,111 @@ class RecipientsFilter
   public function frozenRecipients()
   {
     return $this->frozen;
+  }
+
+  /** @return null|Entities\Project Return the associated project entity if in project mode */
+  public function getProject():?Entities\Project
+  {
+    return $this->project;
+  }
+
+  /**
+   * Return the list information by asking the REST-server. The result is
+   * cached for the time of the running request.
+   *
+   * @param string $which One of the known list type, currently
+   * RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY or
+   * RecipientsFilter::PROJECT_MAILING_LIST_KEY.
+   *
+   * @return null|array The list-information as returned by the mailing-lists
+   * server, see MailingListsService::LIST_INFO_KEYS.
+   */
+  public function getMailingListInfo(string $which = self::PROJECT_MAILING_LIST_KEY)
+  {
+    if (empty($this->mailingListInfo[$which])) {
+      $listId = null;
+      /** @var MailingListsService $listsService */
+      $listsService = $this->di(MailingListsService::class);
+      if (!$listsService->isConfigured()) {
+        return null;
+      }
+      switch ($which) {
+        case self::PROJECT_MAILING_LIST_KEY:
+          if (empty($this->project)) {
+            return null;
+          }
+          $listId = $this->project->getMailingListId();
+          break;
+        case self::ANNOUNCEMENTS_MAILING_LIST_KEY:
+          $listId = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME);
+          break;
+      }
+      if (!empty($listId)) {
+        try {
+          $this->mailingListInfo[$which] = $listsService->getListInfo($listId);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to contact REST interface of mailing list service');
+        }
+      }
+    }
+    return $this->mailingListInfo[$which] ?? null;
+  }
+
+  /**
+   * Possibly replace part of the given recipients set by the project-mailing list:
+   * - if the list contains recipients NOT in the given set, then DON'T
+   * - if the given set covers the mailing list, then DO
+   * - in any case keep the recipients not contained in the mailing list
+   * - only recipients with active delivery are considered
+   *
+   * @param array $selectedRecipients Recipients-set in the form returned by
+   * RecipientsFilter::selectedRecipients()
+   *
+   *
+   */
+  public function substituteProjectMailingList(array $selectedRecipients)
+  {
+    if (count($selectedRecipients) == 1) {
+      // never send single-address email to the list
+      return $selectedRecipients;
+    }
+
+    $listInfo = $this->getMailingListInfo();
+    if (empty($listInfo)) {
+      return $selectedRecipients;
+    }
+    $listId = $listInfo['list_id'];
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+    $listMembers = $listsService->findMembers($listId, flat: true, criteria: [
+      MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
+      MailingListsService::MEMBER_DELIVERY_MODE => MailingListsService::DELIVERY_MODE_REGULAR,
+    ]);
+    $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+    Util::unsetValue($listMembers, $bulkEmailFromAddress);
+    $recipientsByEmail = [];
+    foreach ($selectedRecipients as $recipient) {
+      $recipientsByEmail[$recipient['email']] = $recipient;
+    }
+    $remainingRecipients = array_diff_key($recipientsByEmail, array_flip($listMembers));
+    $remainingListMembers = array_diff($listMembers, array_keys($recipientsByEmail));
+
+    if (!empty($remainingListMembers)) {
+      // list contains members not present in the recipients-set: bail out
+      $this->logInfo('Excess members ' . print_r($remainingListMembers, true));
+      return $selectedRecipients;
+    }
+
+    // throw away all recipients which are also reached by posting to the list
+    // and add the list address as additional recipient.
+    $selectedRecipients = array_values($remainingRecipients);
+    $selectedRecipients[] = [
+      'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
+      'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
+      'status' => DBTypes\EnumMemberStatus::REGULAR,
+      'project' => $this->projectId ?? 0,
+      'dbdata' => null,
+    ];
+    return $selectedRecipients;
   }
 }

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -92,9 +92,10 @@
     td.pme-cell {
       &.projects--instrumentation div.cell-wrapper,
       &.projects--participant-fields div.cell-wrapper,
-      &.projects--instrumentation-voices div.cell-wrapper {
-        width:12em;
-        max-width:12em;
+      &.projects--instrumentation-voices div.cell-wrapper,
+      &.projects--mailing-list-id div.cell-wrapper {
+        width:10em;
+        max-width:10em;
         /* max-height:1em; */
         white-space:nowrap;
         overflow:hidden;
@@ -158,9 +159,71 @@
       }
     }
 
+    td {
+      .list-id {
+        position:relative;
+        .list-status {
+          position:absolute;
+          right:0;
+          margin-right: -10px;
+          margin-top: -4px;
+          font-size: 75%;
+          line-height: 12px;
+          height:fit-content;
+          background-color: lightgray;
+          z-index:1;
+          white-space:nowrap;
+        }
+        &.status-unknown.dropdown-container {
+          display:none;
+        }
+        &.status-unset {
+          .list-label {
+            opacity:25%;
+          }
+          .list-status {
+            color:red;
+          }
+          .list-action-manage, .list-action-close, .list-action-delete, .list-action-reopen, .list-action-subscribe {
+            display:none;
+          }
+        }
+        &.status-closed {
+          .list-status {
+            color:red;
+          }
+          .list-action-create, .list-action-close, .list-action-subscribe {
+            display:none;
+          }
+        }
+        &.status-active {
+          .list-status {
+            color:red;
+          }
+          .list-action-create, .list-action-reopen {
+            display:none;
+          }
+        }
+      }
+    }
+
   } /* form.pme-form */
 
 } /* page container */
+
+body:not(.cafevdb-expert-mode) {
+  #pme-table-container.projects {
+    form.pme-form {
+      td {
+        .list-id {
+          .expert-mode-only {
+            display:none !important;
+          }
+        }
+      }
+    }
+  }
+}
 
 /*******************************************************************************
  *

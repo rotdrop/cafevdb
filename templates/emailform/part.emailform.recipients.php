@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,6 +43,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 $noMissingClass = '';
@@ -60,68 +61,183 @@ $frozen = $frozenRecipients;
 $rowClass = $appName.'-'.'row';
 $containerClass = $appName.'-'.'container';
 
+$filterReadonly = $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] ? 'readonly' : '';
+
+$announcementsMailingListTitle = !empty($announcementsMailingList)
+ ? $toolTips['emailform:recipients:filter:basic-set:announcements-mailing-list']
+ : htmlspecialchars($l->t('The global announcements mailing list is not configured or the mailing-list server is unreachable.'));
+
+$projectMailingListTitle = !empty($projectMailingList)
+ ? $toolTips['emailform:recipients:filter:basic-set:project-mailing-list']
+ : htmlspecialchars($l->t('The project mailing list is not configured or the mailing-list server is unreachable.'));
+
+function cgiName(string $key, ?string $subKey = null)
+{
+  return RecipientsFilter::POST_TAG . '[' . $key . ']' . ($subKey ? '[' . $subKey . ']' : '');
+}
+
+function basicSetName(string $key)
+{
+  return cgiName(RecipientsFilter::BASIC_RECIPIENTS_SET_KEY) . '[]';
+}
+
+function basicSetValue(string $key)
+{
+  return $key;
+}
+
+$recipientsSetFlags = array_keys(array_filter($basicRecipientsSet));
+
+$recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
+
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
-  <?php echo PageNavigation::persistentCGI('emailRecipients', $recipientsFormData); ?>
-  <?php if ($projectId >= 0) { ?>
-    <?php if ($frozen) { ?>
-      <input type="hidden"
-             name="emailRecipients[basicRecipientsSet][fromProject]"
-             value="1"/>
-    <?php } else { ?>
-      <div class="cafevdb-email-form <?php p($rowClass); ?>">
-        <span id="basic-recipient-set-wrapper" class="basic-recipients-set <?php p($containerClass); ?> outer left">
-          <span class="label vmiddle">
-            <label class="basic-recipients-set"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set']; ?>">
-              <?php echo $l->t('Basic Recipients Set'); ?>
-            </label>
-          </span>
-          <span class="basic-recipients-set from-project inner vmiddle <?php p($containerClass); ?>">
-            <input type="checkbox"
-                   id="basic-recipients-set-from-project"
-                   class="basic-recipients-set from-project tip"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>"
-                   name="emailRecipients[basicRecipientsSet][fromProject]"
-                   value="1"
-            <?php echo $basicRecipientsSet['fromProject'] ? 'checked="checked"' : ''; ?>
-                   />
-            <span class="label right">
-              <label for="basic-recipients-set-from-project"
-                     class="tip"
-                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project']; ?>">
-                <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
-              </label>
-            </span>
-          </span>
-          <span class="basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
-            <input type="checkbox"
-                   id="basic-recipients-set-except-project"
-                   class="basic-recipients-set except-project tip"
-                   title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>"
-                   name="emailRecipients[basicRecipientsSet][exceptProject]"
-                   value="1"
-            <?php echo $basicRecipientsSet['exceptProject'] ? 'checked="checked"' : ''; ?>
-                   />
-            <span class="label right">
-              <label for="basic-recipients-set-except-project"
-                     class="tip"
-                     title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
-                <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
-              </label>
-            </span>
-          </span>
+  <?php echo PageNavigation::persistentCGI(RecipientsFilter::POST_TAG, $recipientsFormData); ?>
+  <?php if ($projectId > 0 && $frozen) { ?>
+    <input type="hidden"
+           name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+           value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+    />
+    <input type="hidden"
+           name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+           value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+    />
+  <?php } else { ?>
+    <div class="cafevdb-email-form <?php p($rowClass); ?>">
+      <span id="basic-recipient-set-wrapper" class="basic-recipients-set <?php p($containerClass); ?> outer left <?php p(implode(' ', $recipientsSetFlags)); ?>">
+        <span class="label vmiddle">
+          <label class="basic-recipients-set"
+                 title="<?php echo $toolTips['emailform:recipients:filter:basic-set']; ?>">
+            <?php echo $l->t('Basic Recipients Set'); ?>
+          </label>
         </span>
-      </div>
-      <div class="spacer"></div>
-    <?php } /* $projectId > = 0 */ ?>
-  <?php } /* $projectId > = 0 */ ?>
-  <div class="cafevdb-email-form <?php p($rowClass); ?>">
-    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle">
-      <span class="label left">
+        <span class="dropdown-container dropdown-no-hover">
+          <button class="menu-title action-menu-toggle basic-recipients-set">...</button>
+          <nav class="dropdown-content dropdown-align-left">
+            <ul class="dropdown-time-list">
+<?php if ($projectId > 0) { ?>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set from-project confirmed inner vmiddle <?php p($containerClass); ?>">
+                  <input type="checkbox"
+                         id="basic-recipients-set-from-project-confirmed"
+                         class="basic-recipients-set from-project confirmed"
+                         name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+                         value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY); ?>"
+                         <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_CONFIRMED_KEY] ? 'checked' : ''; ?>
+                  />
+                  <label for="basic-recipients-set-from-project-confirmed"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:confirmed']; ?>">
+                    <?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (confirmed)', $projectName); ?>
+                  </label>
+                </span>
+              </li>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set from-project preliminary inner vmiddle <?php p($containerClass); ?>">
+                  <input type="checkbox"
+                         id="basic-recipients-set-from-project-preliminary"
+                         class="basic-recipients-set from-project prelminary"
+                         name="<?php echo basicSetName(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+                         value="<?php echo basicSetValue(RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY); ?>"
+                         <?php echo $basicRecipientsSet[RecipientsFilter::FROM_PROJECT_PRELIMINARY_KEY] ? 'checked' : ''; ?>
+                  />
+                  <label for="basic-recipients-set-from-project-preliminary"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:from-project:preliminary']; ?>">
+                    <?php echo $l->t('IS_PARTICIPANT_OF: &isin; %s (preliminary)', $projectName); ?>
+                  </label>
+                </span>
+              </li>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set except-project inner vmiddle <?php p($containerClass); ?>">
+                  <input type="checkbox"
+                         id="basic-recipients-set-except-project"
+                         class="basic-recipients-set except-project tip"
+                         name="<?php echo basicSetName(RecipientsFilter::EXCEPT_PROJECT_KEY); ?>"
+                         value="<?php echo basicSetValue(RecipientsFilter::EXCEPT_PROJECT_KEY); ?>"
+                         <?php echo $basicRecipientsSet[RecipientsFilter::EXCEPT_PROJECT_KEY] ? 'checked' : ''; ?>
+                  />
+                  <label for="basic-recipients-set-except-project"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:except-project']; ?>">
+                    <?php echo $l->t('IS_NON_PARTICIPANT_OF: &notin; %s', $projectName); ?>
+                  </label>
+                </span>
+              </li>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set mailing-list project-mailing-list inner vmiddle <?php p($containerClass); ?>">
+                  <input type="checkbox"
+                         id="basic-recipients-set-project-mailing-list"
+                         class="basic-recipients-set mailing-list project-mailing-list tip"
+                         name="<?php echo basicSetName(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
+                         value="<?php echo basicSetValue(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
+                         <?php $basicRecipientsSet[RecipientsFilter::PROJECT_MAILING_LIST_KEY] && p('checked'); ?>
+                         <?php empty($projectMailingList) && p('disabled'); ?>
+                  />
+                  <label for="basic-recipients-set-project-mailing-list"
+                         class="tip"
+                         title="<?php echo $projectMailingListTitle; ?>">
+                    <?php p($l->t('Project Mailing List')); ?>
+                  </label>
+                </span>
+              </li>
+<?php } else { ?>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set mailing-list announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
+                  <input type="radio"
+                         id="basic-recipients-set-database"
+                         class="basic-recipients-set database tip"
+                         name="<?php echo basicSetName(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
+                         value="<?php echo basicSetValue(''); ?>"
+                         <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] || empty($announcementsMailingList) || p('checked'); ?>
+                  />
+                  <label for="basic-recipients-set-database"
+                         class="tip"
+                         title="<?php echo $toolTips['emailform:recipients:filter:basic-set:database']; ?>">
+                    <?php p($l->t('Database')); ?>
+                  </label>
+                </span>
+              </li>
+                <!-- <span class="fill-word conjunction"><?php p($l->t('CONJUNCTION: or')); ?></span>  -->
+<?php } ?>
+              <li class="dropdown-item tooltip-auto">
+                <span class="basic-recipients-set mailing-list announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
+                  <input type="<?php p($projectId > 0 ? 'checkbox' : 'radio'); ?>"
+                         id="basic-recipients-set-announcements-mailing-list"
+                         class="basic-recipients-set mailing-list announcements-mailing-list tip"
+                         name="<?php echo basicSetName(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
+                         value="<?php echo basicSetValue(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
+                         <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] && p('checked'); ?>
+                         <?php empty($announcementsMailingList) && p('disabled'); ?>
+                  />
+                  <label for="basic-recipients-set-announcements-mailing-list"
+                         class="tip"
+                         title="<?php echo $announcementsMailingListTitle; ?>">
+                    <?php p($l->t('Announcements Mailing List')); ?>
+                  </label>
+                </span>
+              </li>
+            </ul>
+          </nav>
+        </span> <!-- dropdown container  -->
+        <?php
+        foreach ($recipientSetDescriptions as $description) {
+          $text = $description['text'];
+          $conditions = implode(' ', $description['conditions']);
+        ?>
+          <span class="basic-recipients-set brief-description <?php p($conditions); ?>"><?php p($text); ?></span>
+        <?php } ?>
+      </span>
+    </div>
+    <div class="spacer"></div>
+  <?php } /* !($projectId > 0 && $frozen) */ ?>
+  <div class="cafevdb-email-form <?php p($rowClass); ?> flex-container flex-justify-full flex-start">
+    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle tooltip-right"
+          title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
+    >
+      <span class="label top">
         <label for="member-status-filter"
-               title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
                >
           <?php echo $l->t('Member-Status'); ?>
         </label>
@@ -130,11 +246,32 @@ $containerClass = $appName.'-'.'container';
               multiple="multiple"
               size="<?php echo count($memberStatusFilter); ?>"
               class="member-status-filter"
-              title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
-              name="emailRecipients[memberStatusFilter][]">
+              name="emailRecipients[memberStatusFilter][]"
+              <?php p($filterReadonly); ?>
+      >
         <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
       </select>
+    </span>
+    <span class="instruments-filter <?php p($containerClass); ?> right vmiddle tooltip-left"
+          title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>">
+      <span class="label top">
+        <label for="instruments-filter">
+          <?php echo $l->t('Instruments Filter'); ?>
+        </label>
+      </span>
+      <span id="instruments-filter-wrapper">
+        <select id="instruments-filter"
+                multiple="multiple"
+                size="18"
+                class="instruments-filter"
+                data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
+                name="emailRecipients[instrumentsFilter][]"
+                <?php p($filterReadonly); ?>
+        >
+          <?php echo $this->inc('emailform/part.instruments-filter', []); ?>
+        </select>
+      </span>
     </span>
   </div>
   <div class="spacer">
@@ -149,36 +286,53 @@ $containerClass = $appName.'-'.'container';
               multiple="multiple"
               size="18"
               title="<?php echo $toolTips['emailform:recipients:choices']; ?>"
-              name="emailRecipients[selectedRecipients][]">
+              name="emailRecipients[selectedRecipients][]"
+              <?php p($filterReadonly); ?>
+      >
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
       </select>
-    </span>
-    <span class="instruments-filter <?php p($containerClass); ?> right tooltip-top"
-          title="<?php echo $toolTips['emailform:recipients:filter:instruments:container']; ?>">
-      <span class="label top">
-        <label for="instruments-filter"
-               class="tooltip-off"
-               title="<?php echo $toolTips['emailform:recipients:filter:instruments:label']; ?>">
-          <?php echo $l->t('Instruments Filter'); ?>
-        </label>
-      </span>
-      <span id="instruments-filter-wrapper">
-        <select id="instruments-filter"
-                multiple="multiple"
-                size="18"
-                class="instruments-filter"
-                title="<?php echo $toolTips['emailform:recipients:filter:instruments:filter']; ?>"
-                data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
-                name="emailRecipients[instrumentsFilter][]">
-          <?php echo PageNavigation::selectOptions($instrumentsFilter); ?>
-        </select>
-      </span>
     </span>
   </div>
   <div class="spacer">
     <div class="ruler"></div>
   </div>
   <div class="<?php p($rowClass); ?>">
+    <span class="<?php p($containerClass); ?> right filter-controls">
+      <input type="button"
+             id="instruments-filter-apply"
+             value="<?php echo $l->t('Apply Filter'); ?>"
+             class="instruments-filter-controls apply"
+             title="<?php echo $toolTips['emailform:recipients:filter:apply']; ?>"
+             name="emailRecipients[applyInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
+      <input type="button"
+             id="instruments-filter-undo"
+             value="<?php echo $l->t('Undo Filter'); ?>"
+             class="instruments-filter-controls undo"
+             title="<?php echo $toolTips['emailform:recipients:filter:undo']; ?>"
+             disabled
+             name="emailRecipients[undoInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
+      <input type="button"
+             id="instruments-filter-redo"
+             value="<?php echo $l->t('Redo Filter'); ?>"
+             class="instruments-filter-controls redo"
+             title="<?php echo $toolTips['emailform:recipients:filter:redo']; ?>"
+             disabled
+             name="emailRecipients[redoInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
+      <input type="button"
+             id="instruments-filter-reset"
+             value="<?php echo $l->t('Reset Filter'); ?>"
+             class="instruments-filter-controls reset"
+             title="<?php echo $toolTips['emailform:recipients:filter:reset']; ?>"
+             name="emailRecipients[resetInstrumentsFilter]"
+             <?php p($filterReadonly); ?>
+      />
+    </span>
     <span class="<?php p($containerClass); ?> left missing-email-addresses tooltip-top"
           title="<?php echo $toolTips['emailform:recipients:broken-emails']; ?>">
       <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
@@ -188,43 +342,9 @@ $containerClass = $appName.'-'.'container';
         <?php echo $noMissingText; ?>
       </span>
       <span class="missing-email-addresses names">
-        <?php
-        $separator = '';
-        foreach ($missingEmailAddresses as $id => $name) {
-          echo $separator; $separator = ', ';
-          echo '<span class="missing-email-addresses personal-record" '.
-               '      data-id="'.$id.'">'.$name.'</span>';
-        }
-        ?>
+        <?php echo $this->inc('emailform/part.broken-email-addresses', []); ?>
       </span>
     </span>
-    <span class="<?php p($containerClass); ?> right filter-controls">
-      <input type="button"
-             id="instruments-filter-apply"
-             value="<?php echo $l->t('Apply Filter'); ?>"
-             class="instruments-filter-controls apply"
-             title="<?php echo $toolTips['emailform:recipients:filter:apply']; ?>"
-             name="emailRecipients[applyInstrumentsFilter]" />
-      <input type="button"
-             id="instruments-filter-undo"
-             value="<?php echo $l->t('Undo Filter'); ?>"
-             class="instruments-filter-controls undo"
-             title="<?php echo $toolTips['emailform:recipients:filter:undo']; ?>"
-             disabled
-             name="emailRecipients[undoInstrumentsFilter]" />
-      <input type="button"
-             id="instruments-filter-redo"
-             value="<?php echo $l->t('Redo Filter'); ?>"
-             class="instruments-filter-controls redo"
-             title="<?php echo $toolTips['emailform:recipients:filter:redo']; ?>"
-             disabled
-             name="emailRecipients[redoInstrumentsFilter]" />
-      <input type="button"
-             id="instruments-filter-reset"
-             value="<?php echo $l->t('Reset Filter'); ?>"
-             class="instruments-filter-controls reset"
-             title="<?php echo $toolTips['emailform:recipients:filter:reset']; ?>"
-             name="emailRecipients[resetInstrumentsFilter]" />
-    </span>
   </div>
+  <div class="busy-indicator hidden"><?php echo $l->t('Reloading recipients from database, please wait ...') ?></div>
 </fieldset>

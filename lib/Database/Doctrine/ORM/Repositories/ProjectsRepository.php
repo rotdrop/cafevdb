@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -133,6 +133,25 @@ class ProjectsRepository extends EntityRepository
            ->getQuery()
            ->getResult();
     return $range[0]; // ????
+  }
+
+  /**
+   * Fetch a flat array of mailing list ids associated with the matching projects
+   */
+  public function fetchMailingListIds(array $criteria = [])
+  {
+    $criteria['!mailingListId'] = null;
+    $queryParts = $this->prepareFindBy($criteria, [
+      'mailingListId' => 'ASC',
+    ]);
+
+    /** @var ORM\QueryBuilder */
+    $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.mailingListId' ]);
+    $qb = $this->generateFindByWhere($qb, $queryParts);
+
+    $query = $qb->getQuery();
+
+    return $query->getResult('COLUMN_HYDRATOR');
   }
 }
 

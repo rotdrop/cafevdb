@@ -904,7 +904,7 @@ class PersonalSettingsController extends Controller {
         $project = $this->projectService->findById($projectId);
 
         if (empty($project)) {
-          return self::grumble($this->l->t('Unable to find project with id %d.', $projectId));
+          return self::grumble($this->l->t('Unable to find the project with id %d.', $projectId));
         }
 
         try {
@@ -1058,7 +1058,7 @@ class PersonalSettingsController extends Controller {
         try {
           $this->userStorage->get($templatesFolder . $value);
         } catch (\Throwable $t) {
-          return self::grumble($this->l->t('Unable to find file "%s".', $value));
+          return self::grumble($this->l->t('Unable to find the file "%s".', $value));
         }
         $this->setConfigValue($parameter, $value);
         $messages[] = $this->l->t(
@@ -1598,16 +1598,92 @@ class PersonalSettingsController extends Controller {
       }
       $stringValue = $realValue ? 'on' : 'off';
       return $this->setSimpleConfigValue($parameter, $stringValue);
+    case 'announcementsMailingListAutoconf':
+      /** @var MailingListsService $listsService */
+      $listsService = $this->di(MailingListsService::class);
+      $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+      if (empty($announcementsMailingList)) {
+        return self::grumble($this->l->t('Please configure the mailing-list address first, otherweise I do not know which list I have to work on.'));
+      }
+      $owners = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']) ]);
+      $moderators = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']) ]);
+      $posters = $moderators;
+      $listsService->configureAnnouncementsList($announcementsMailingList, $owners, $moderators, $posters);
+
+      return self::response(
+        $this->l->t('Autoconfiguration of the mailing list "%1$s" successful, owner set to "%2$s", moderator and allowed poster set to "%3$s".', [
+          $announcementsMailingList, $owners[0] ?? '', $posters[0] ?? '',
+        ])
+      );
+    case 'announcementsMailingList':
     case 'emailtestaddress':
     case 'emailfromaddress':
       $realValue = Util::normalizeSpaces($value);
+      $parser = new \Mail_RFC822(null, null, null, false);
+      $parsedEmail = $parser->parseAddressList($realValue);
+      $parseError = $parser->parseError();
+      if ($parseError !== false) {
+        return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $parseError['message'] ]));
+      }
+      if (count($parsedEmail) !== 1) {
+        return self::grumble($this->l->t('"%s" seems to contain multiple email address, only a single address is allowed here.', $value));
+      }
+      $parsedEmail = $parsedEmail[0];
+      if (empty($parsedEmail->host)) {
+        return self::grumble($this->l->t('"%s" does not contain the host-part of the email-address, local addresses are not allowed here.', $value));
+      }
+      $realValue = $parsedEmail->mailbox . '@' . $parsedEmail->host;
       if (!empty($realValue) && filter_var($realValue, FILTER_VALIDATE_EMAIL) === false) {
         return self::grumble($this->l->t('"%s" does not seem to be a valid email address', $value));
       }
+      if (!empty($parsedEmail->personal)) {
+        $displayName = $parsedEmail->personal;
+      } else if (!empty($parsedEmail->comment)) {
+        $displayName = implode(', ', $parsedEmail->comment);
+      }
+      $furtherData = [];
+      if (!empty($displayName)) {
+        switch ($parameter) {
+          case 'announcementsMailingList':
+            $this->setSimpleConfigValue('announcementsMailingListName', $displayName, responseData: $furtherData);
+            $reportValue = $displayName . ' <' . $realValue . '>';
+            break;
+          case 'emailtestaddress':
+            break; // ignore
+          case 'emailfromaddress':
+            $this->setSimpleConfigValue('emailfromname', $displayName, responseData: $furtherData);
+            break;
+        }
+      }
+      if ($parameter === 'announcementsMailingList') {
+        /** @var MailingListsService $listsService */
+        $listsService = $this->di(MailingListsService::class);
+        try {
+          $listInfo = $listsService->getListInfo($realValue);
+          $this->logInfo('LIST INFO ' . print_r($listInfo, true));
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          /** @var MailingListsService $listsService */
+          $listsService = $this->di(MailingListsService::class);
+          $furtherData = Util::arrayMergeRecursive($furtherData, [
+            'message' => [
+              $this->l->t('The Mailing list "%1$s" does not seem to exist on the configured mailing-list service.', [
+                $realValue,
+              ])
+            ],
+          ]);
+        }
+        // try to create the template folder even if the list does not exist
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
+      }
+    case 'announcementsMailingListName':
+    case 'bulkEmailSubjectTag':
     case 'emailuser':
     case 'emailpassword':
     case 'emailfromname':
-      return $this->setSimpleConfigValue($parameter, $value);
+      return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
 
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -1639,38 +1715,52 @@ class PersonalSettingsController extends Controller {
         ? null
         : $this->humanFileSize($realValue);
       return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
-      break;
 
     case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
-      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+      return $this->setSimpleConfigValue($parameter, $value);
+
+    case (in_array($parameter, ConfigService::MAILING_LIST_REST_CONFIG) ? $parameter : null):
+      foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
         ${$listConfig} = $this->getConfigValue($listConfig);
       }
       ${$parameter} = Util::normalizeSpaces($value);
       $all = true;
-      foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+      foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
         if (empty(${$listConfig})) {
           $all = false;
           break;
         }
       }
+      $furtherData = [];
       if ($all) {
         $oldValue = $this->getConfigValue($parameter);
         $this->setConfigValue($parameter, ${$parameter});
         try {
-          $listService = $this->di(MailingListsService::class);
-          if (empty($listService->getServerConfiguration())) {
+          /** @var MailingListsService $listsService */
+          $listsService = $this->di(MailingListsService::class);
+          if (empty($listsService->getServerConfig())) {
             $this->setConfigValue($parameter, $oldValue);
             return self::grumble(
-              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
           }
         } catch (\Throwable $t) {
           $this->setConfigValue($parameter, $oldValue);
           $this->logException($t);
           return self::grumble(
-            $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListURL));
+            $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
         }
+
+        // try to generate the template directories
+        // try to create the template folder even if the list does not exist
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
+
+        $shareUri = $listsService->ensureTemplateFolder($this->l->t('projects'));
+        $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for project mailing lists is "%s".', $shareUri);
+        $this->logInfo('SHARE URI ' . $shareUri);
       }
-      return $this->setSimpleConfigValue($parameter, $value);
+      return $this->setSimpleConfigValue($parameter, $value, furtherData: $furtherData);
 
     case 'translation':
       if (empty($value['key']) || empty($value['language'])) {
@@ -2020,7 +2110,7 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
-  private function setSimpleConfigValue($key, $value, $reportValue = null, array $furtherData = [])
+  private function setSimpleConfigValue($key, $value, $reportValue = null, array $furtherData = [], ?array &$responseData = null)
   {
     $realValue = Util::normalizeSpaces($value);
     if (empty($reportValue)) {
@@ -2030,7 +2120,7 @@ class PersonalSettingsController extends Controller {
     if (empty($realValue)) {
       $this->deleteConfigValue($key);
       return self::dataResponse(
-        Util::arrayMergeRecursive([
+        $responseData = Util::arrayMergeRecursive([
           'message' => [ $this->l->t('Erased config value for parameter "%s".', $key), ],
           $key => $value,
         ], $furtherData)
@@ -2042,8 +2132,8 @@ class PersonalSettingsController extends Controller {
         $realValue = '••••••••';
       }
       return self::dataResponse(
-        Util::arrayMergeRecursive([
-          'message' => [ $this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ]), ],
+        $responseData = Util::arrayMergeRecursive([
+          'message' => [ htmlspecialchars($this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ])), ],
           $key => $reportValue,
           $key.'Raw' => $realValue,
         ], $furtherData));

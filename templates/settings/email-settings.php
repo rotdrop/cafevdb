@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -112,71 +112,237 @@ use OCA\CAFEVDB\Common\Util;
         <!-- span class="statusmessage" id="email-account-distribute-message"></span -->
       </fieldset>
     </form>
-    <h4><?php echo $l->t('Bulk Mail Composition'); ?></h4>
+    <h4><?php echo $l->t('Bulk Email Composition'); ?></h4>
     <form class="bulk-email-settings">
+      <fieldset class="emailtransport">
+        <legend><?php p($l->t('Bulk Email Transport')); ?></legend>
+        <label for="announcements-mailing-list"
+               title="<?php echo $toolTips['emailform:transport:announcements:mailing-list']; ?>"
+        >
+          <input type="text"
+                 name="announcementsMailingList"
+                 id="announcements-mailing-list"
+                 value="<?php p($announcementsMailingList); ?>"
+                 placeholder="<?php p($l->t('Mailing List')); ?>"
+          />
+          <?php p($l->t('Announcements Mailing List')); ?>
+        </label>
+        <br class="input-field-separater"/>
+        <label for ="announcements-mailing-list-autoconf"
+               title="<?php echo $toolTips['mailing-list:announcements:autoconf']; ?>"
+        >
+          <input type="button"
+                 name="announcementsMailingListAutoconf"
+                 id="announcements-mailing-list-autoconf"
+                 value="<?php echo $l->t('configure'); ?>"
+          />
+          <?php p($l->t('auto-configure announcements mailing-list')); ?>
+        </label>
+      </fieldset>
       <fieldset class="emailidentity">
-        <legend><?php p($l->t('Bulk Mail Identity')); ?></legend>
-        <input type="text"
-               name="emailfromname"
-               id="emailfromname"
-               value="<?php echo $_['emailfromname']; ?>"
-               placeholder="<?php echo $l->t('Real Sender Name');?>"
-        />
-        <label for="emailfromname"><?php echo $l->t('From: name');?></label>
-        <input type="text"
-             name="emailfromaddress"
-               id="emailfromaddress"
-               value="<?php echo $_['emailfromaddress']; ?>"
-               placeholder="<?php echo $l->t('Email From Adress');?>"
-        />
-        <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
+        <legend><?php p($l->t('Bulk Email Identity')); ?></legend>
+        <label for="emailfromname"
+               title="<?php echo $toolTips['emailform:sender:address']; ?>"
+        >
+          <input type="text"
+                 name="emailfromname"
+                 id="emailfromname"
+                 value="<?php echo $_['emailfromname']; ?>"
+                 placeholder="<?php echo $l->t('Real Sender Name');?>"
+          />
+          <?php echo $l->t('From: name');?>
+        </label>
+        <label for="emailfromaddress"
+               title="<?php echo $toolTips['emailform:sender:address']; ?>"
+        >
+          <input type="text"
+                 name="emailfromaddress"
+                 id="emailfromaddress"
+                 value="<?php echo $_['emailfromaddress']; ?>"
+                 placeholder="<?php echo $l->t('Email From Adress');?>"
+          />
+          <?php echo $l->t('From: address');?>
+        </label>
+      </fieldset>
+      <fieldset class="bulk-email-subject">
+        <legend><?php p($l->t('Bulk Email Subject')); ?></legend>
+        <div class="bulk-email-subject container">
+          <span class="bulk-email-subject tag">[</span>
+          <input type="text"
+                 name="bulkEmailSubjectTag"
+                 id="bulk-email-subject-tag"
+                 class="tooltip-auto"
+                 value="<?php p($bulkEmailSubjectTag); ?>"
+                 title="<?php echo $toolTips['emailform:composer:subject:tag']; ?>"
+                 size="5"
+          />
+          <span class="bulk-email-subject tag"><?php p('-' . $l->t('ProjectNameYYYY') . ']'); ?></span>
+          <span class="bulk-email-subject"><?php p($l->t('Example Subject')); ?></span>
+        </div>
       </fieldset>
       <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>
-        <input type="text"
-               id="attachmentLinkSizeLimit"
-               name="attachmentLinkSizeLimit"
-               class="attachmentLinkSizeLimit tooltip-auto"
-               value="<?php p($attachmentLinkSizeLimit); ?>"
-               placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
-        />
         <label for="attachmentLinkSizeLimit"
                class="tooltip-auto"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:size-limit']); ?>"
+               title="<?php echo $toolTips['emailform:composer:attachments:link:size-limit']; ?>"
         >
+          <input type="text"
+                 id="attachmentLinkSizeLimit"
+                 name="attachmentLinkSizeLimit"
+                 class="attachmentLinkSizeLimit tooltip-auto"
+                 value="<?php p($attachmentLinkSizeLimit); ?>"
+                 placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
+          />
           <?php p($l->t('Attachment Link Size Limit')); ?>
         </label>
         <br class="input-field-separater"/>
-        <input type="text"
-               id="attachmentLinkExpirationLimit"
-               class="attachmentLinkExpirationLimit tooltip-auto"
-               name="attachmentLinkExpirationLimit"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:expiration-limit']); ?>"
-               value="<?php p($attachmentLinkExpirationLimit); ?>"
-               placeholder="<?php p($l->t('e.g. 7 days')); ?>"
-        />
         <label for="attachmentLinkExpirationLimit"
                class="tooltip-auto"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:expiration-limit']); ?>"
         >
+          <input type="text"
+                 id="attachmentLinkExpirationLimit"
+                 class="attachmentLinkExpirationLimit tooltip-auto"
+                 name="attachmentLinkExpirationLimit"
+                 value="<?php p($attachmentLinkExpirationLimit); ?>"
+                 placeholder="<?php p($l->t('e.g. 7 days')); ?>"
+          />
           <?php p($l->t('Attachment Link Expiration Limit')); ?>
         </label>
         <br class="input-field-separater"/>
-        <input type="checkbox"
-               id="cloudAttachmentAlwaysLink"
-               class="cloudAttachmentAlwaysLink checkbox tooltip-auto hidden"
-               name="cloudAttachmentAlwaysLink"
-               type="checkbox"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
-               disabled
-        />
         <label for="cloudAttachmentAlwaysLink"
                class="tooltip-auto hidden"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
                disabled
         >
+          <input type="checkbox"
+                 id="cloudAttachmentAlwaysLink"
+                 class="cloudAttachmentAlwaysLink checkbox tooltip-auto hidden"
+                 name="cloudAttachmentAlwaysLink"
+                 type="checkbox"
+                 disabled
+          />
           <?php p($l->t('Always Link Cloud Files')); ?>
+        </label>
+      </fieldset>
+    </form>
+    <h4><?php p($l->t('Mailing List Service')); ?></h4>
+    <form class="mailing-list">
+      <fieldset class="web-interface">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailing-list:domain']; ?>">
+          <?php p($l->t('Mailing Lists Domain')); ?>
+        </legend>
+        <label for="mailingListEmailDomain"
+               title="<?php echo $toolTips['mailing-list:domain:config']; ?>"
+        >
+          <input type="text"
+                 name="mailingListEmailDomain"
+                 id="mailingListEmailDomain"
+                 value="<?php echo $mailingListEmailDomain; ?>"
+                 placeholder="<?php p('e.g. lists.tld');?>"
+                 required
+          />
+          <?php echo $l->t('Mailing-List Domain');?>
+        </label>
+        <br/>
+        <label for="mailingListWebPages"
+                 title="<?php echo $toolTips['mailing-list:domain:config']; ?>"
+        >
+          <input type="text"
+                 name="mailingListWebPages"
+                 id="mailingListWebPages"
+                 value="<?php echo $mailingListWebPages; ?>"
+                 placeholder="<?php p('e.g. https://lists.tld/mailman');?>"
+                 required
+          />
+          <?php echo $l->t('Mailing-List Configuration Pages');?>
+        </label>
+      </fieldset>
+      <fieldset class="rest-account">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailing-list:restapi']; ?>"
+        >
+          <?php p($l->t('REST API Account')); ?>
+        </legend>
+        <label for="mailingListRestUrl"
+               title="<?php echo $toolTips['mailing-list:restapi:url']; ?>"
+        >
+          <input type="text"
+                 name="mailingListRestUrl"
+                 id="mailingListRestUrl"
+                 value="<?php echo $mailingListRestUrl; ?>"
+                 placeholder="<?php p('http://localhost:8001');?>"
+                 required
+          />
+          <?php echo $l->t('Mailing-List REST URL');?>
+        </label>
+        <br/>
+        <label for="mailingListRestUser"
+               title="<?php echo $toolTips['mailing-list:restapi:user']; ?>"
+        >
+          <input type="text"
+                 name="mailingListRestUser"
+                 id="mailingListRestUser"
+                 value="<?php echo $mailingListRestUser; ?>"
+                 placeholder="<?php echo $l->t('User');?>"
+                 required
+          />
+          <?php echo $l->t('REST User');?>
+        </label>
+        <br/>
+        <label for="mailingListRestPassword"
+               title="<?php echo $toolTips['mailing-list:restapi:password']; ?>"
+        >
+          <input class="cafevdb-password"
+                 type="password"
+                 value="<?php echo $mailingListRestPassword; ?>"
+                 id="mailingListRestPassword"
+                 name="mailingListRestPassword"
+                 placeholder="<?php echo $l->t('Password');?>"
+                 data-typetoggle="#mailingListRestPassword-show"
+                 required
+          />
+          <input class="cafevdb-password-show"
+                 type="checkbox"
+                 id="mailingListRestPassword-show"
+                 name="mailingListRestPassword-show"
+          />
+          <label class="cafevdb-password-show"
+                 for="mailingListRestPassword-show">
+            <?php echo $l->t('show');?>
+          </label>
+          <?php echo $l->t('REST Password');?>
+        </label>
+      </fieldset>
+      <fieldset class="auto-generated-list">
+        <legend class="tooltip-auto"
+                title="<?php echo $toolTips['mailing-list:generated:defaults']; ?>"
+        >
+          <?php p($l->t('Defaults for Generated Lists')); ?>
+        </legend>
+        <label for="mailingListDefaultOwner"
+               title="<?php echo $toolTips['mailing-list:generated:defaults:owner']; ?>"
+        >
+          <input type="text"
+                 name="mailingListDefaultOwner"
+                 id="mailingListDefaultOwner"
+                 value="<?php p($mailingListDefaultOwner); ?>"
+                 placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
+          />
+          <?php p($l->t('Default List-Owner'));?>
+        </label>
+        <br/>
+        <label for="mailingListDefaultModerator"
+               title="<?php echo $toolTips['mailing-list:generated:defaults:moderator']; ?>"
+        >
+          <input type="text"
+                 name="mailingListDefaultModerator"
+                 id="mailingListDefaultModerator"
+                 value="<?php p($mailingListDefaultModerator); ?>"
+                 placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
+          />
+          <?php p($l->t('Default List-Moderator'));?>
         </label>
       </fieldset>
     </form>
@@ -204,46 +370,6 @@ use OCA\CAFEVDB\Common\Util;
              placeholder="<?php echo $l->t('Test Email Adress');?>"
       />
       <label for="emailtestaddress"><?php echo $l->t('Test address');?></label>
-    </form>
-    <h4>Mailing List Service</h4>
-    <form class="mailing-list">
-      <input type="text"
-             name="mailingListURL"
-             id="mailingListURL"
-             value="<?php echo $mailingListURL; ?>"
-             placeholder="<?php p('http://localhost:8001');?>"
-             required
-      />
-      <label for="mailing-list-server"><?php echo $l->t('Mailing-List REST URL');?></label>
-      <br/>
-      <input type="text"
-             name="mailingListRestUser"
-             id="mailingListRestUser"
-             value="<?php echo $mailingListRestUser; ?>"
-             placeholder="<?php echo $l->t('User');?>"
-             required
-      />
-      <label for="mailingListRestUser"><?php echo $l->t('REST User');?></label>
-      <br/>
-      <input class="cafevdb-password"
-             type="password"
-             value="<?php echo $mailingListRestPassword; ?>"
-             id="mailingListRestPassword"
-             name="mailingListRestPassword"
-             placeholder="<?php echo $l->t('Password');?>"
-             data-typetoggle="#mailingListRestPassword-show"
-             required
-      />
-      <input class="cafevdb-password-show"
-             type="checkbox"
-             id="mailingListRestPassword-show"
-             name="mailingListRestPassword-show"
-      />
-      <label class="cafevdb-password-show"
-             for="mailingListRestPassword-show">
-        <?php echo $l->t('show');?>
-      </label>
-      <label for="mailingListRestPassword"><?php echo $l->t('REST Password');?></label>
     </form>
   </div>
 </div>

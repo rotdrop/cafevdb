@@ -153,7 +153,7 @@ class EmailFormController extends Controller {
       'storedEmails' => $composer->storedEmails(),
       'sentEmails' => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
-      'TO' => $composer->toString(),
+      'TO' => $composer->toStringArray(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
       'mailTag' => $composer->subjectTag(),
@@ -167,18 +167,20 @@ class EmailFormController extends Controller {
       'composerFormData' => $composer->formData(),
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
-      'filterHistory' => $recipientsFilter->filterHistory(),
+      'filterHistory' => $recipientsFilter->filterHistory(), // Session Usage!
       'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
       'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
       'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
       'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+      RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+      RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
       'toolTips' => $this->toolTipsService(),
     ];
 
-    // Close the session
+    // Close the session ONLY AFTER fetching the filter history
     $this->session->close();
 
     $html = (new TemplateResponse(
@@ -256,7 +258,7 @@ class EmailFormController extends Controller {
       'projectName' => $projectName,
       'bulkTransactionId' => -1,
     ];
-    $requestData = array_merge($defaultData, $this->parameterService->getParam('emailComposer', []));
+    $requestData = array_merge($defaultData, $this->parameterService->getParam(Composer::POST_TAG, []));
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
     $bulkTransactionId = $requestData['bulkTransactionId'];
@@ -362,7 +364,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -376,6 +378,8 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -386,47 +390,50 @@ class EmailFormController extends Controller {
           'blank'))->render();
         break;
       case 'element':
-        $formElement = $requestData['formElement'];
-        switch ($formElement) {
-        case 'TO':
-          $elementData = $composer->toString();
-          break;
-        case 'fileAttachments':
-          $fileAttachments = $composer->fileAttachments();
-          $elementData = [
-            'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
-            'attachments' => $fileAttachments,
-          ];
-          break;
-        case 'eventAttachments':
-          $eventAttachments = $composer->eventAttachments();
-          $elementData = [
-            'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
-            'attachments' => $eventAttachments,
-          ];
-          break;
-        default:
-          return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+        $formElements = $requestData['formElement'];
+        $formElements = is_array($formElements) ? $formElements : [ $formElements ];
+        foreach ($formElements as $formElement) {
+          switch (strtolower($formElement)) {
+            case 'to':
+              $elementData[$formElement] = $composer->toStringArray();
+              break;
+            case 'subjecttag':
+              $elementData[$formElement] = $composer->subjectTag();
+              break;
+            case 'fileattachments':
+              $fileAttachments = $composer->fileAttachments();
+              $elementData[$formElement] = [
+                'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
+                'attachments' => $fileAttachments,
+              ];
+              break;
+            case 'eventattachments':
+              $eventAttachments = $composer->eventAttachments();
+              $elementData[$formElement] = [
+                'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
+                'attachments' => $eventAttachments,
+              ];
+              break;
+            default:
+              return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+          }
         }
         break;
       default:
         return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
       }
-      $requestData['formElement'] = $formElement;
+      $requestData['formElement'] = $formElements ?? null;
       $requestData['elementData'] = $elementData;
       break;
     case 'load':
       switch ($topic) {
       case 'sent':
         $value = $requestData['sentMessagesSelector'];
-        $this->logInfo('SENT EMAIL ID "' . $value . '"');
         if (!$composer->loadSentEmail($value)) {
           return self::grumble($this->l->t('Unable to load sent email with message-id "%s".', $value));
         }
         $requestData['message'] = $composer->messageText();
         $requestData['subject'] = $composer->subject();
-
-        $this->logInfo('TO STRING ' . $composer->toString());
 
         // Composer template
         $fileAttachments = $composer->fileAttachments();
@@ -446,7 +453,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -513,6 +520,7 @@ class EmailFormController extends Controller {
         if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
           return self::grumble($this->l->t('Invalid draft name "%s".', $value));
         }
+
         $draftId = $matches[1];
         $draftParameters = $composer->loadDraft($draftId);
         if ($composer->errorStatus()) {
@@ -524,11 +532,21 @@ class EmailFormController extends Controller {
            $requestData['messageDraftId'] = $draftId;
 
         $requestParameters = $this->parameterService->getParams();
+
+        // Loading a draft message means that the project-relation of the
+        // stored draft should be re-established. Unfortunately, it is stored
+        // in two redundant positions ...
+        foreach (['projectId', 'projectName', 'bulkTransactionId'] as $draftPriorityKey) {
+          $requestParameters[$draftPriorityKey] = null;
+          $requestParameters[Composer::POST_TAG][$draftPriorityKey] = null;
+        }
+
         $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
         // Update project name and id
         $projectId = $requestData['projectId'] = $requestParameters['projectId'];
         $projectName = $requestData['projectName'] = $requestParameters['projectName'];
+
         $bulkTransactionId = $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
         // install new request parameters
@@ -560,7 +578,7 @@ class EmailFormController extends Controller {
           'storedEmails' => $composer->storedEmails(),
           'sentEmails' => $composer->sentEmails(),
           'disclosedRecipients' => $composer->discloseRecipients(),
-          'TO' => $composer->toString(),
+          'TO' => $composer->toStringArray(),
           'BCC' => $composer->blindCarbonCopy(),
           'CC' => $composer->carbonCopy(),
           'mailTag' => $composer->subjectTag(),
@@ -573,6 +591,8 @@ class EmailFormController extends Controller {
           'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
           'composerFormData' => $composer->formData(),
           'emailDraftAutoSave' => $emailDraftAutoSave,
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -600,6 +620,8 @@ class EmailFormController extends Controller {
           'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
           'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
           'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+          RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+          RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
           'toolTips' => $this->toolTipsService(),
         ];
@@ -690,8 +712,6 @@ class EmailFormController extends Controller {
       return self::grumble($this->l->t("Unknown request: `%s'.", $request));
     }
 
-    // $this->logInfo('REQUEST DATA POST '.print_r($requestData, true));
-
     if ($requestData['errorStatus']) {
       $caption = $requestData['diagnostics']['caption'];
 
@@ -707,8 +727,6 @@ class EmailFormController extends Controller {
           'dateTimeFormatter' => $this->dateTimeFormatter(),
         ],
         'blank'))->render();
-
-      // $this->logInfo('STATUS TEXT ' . $messageText);
 
       return self::grumble([
         'operation' => $operation,
@@ -746,12 +764,16 @@ class EmailFormController extends Controller {
 
     $this->session->close();
 
+    $filterHistory = $recipientsFilter->filterHistory();
+
+    if ($recipientsFilter->snapshotState()) {
+      // short-circuit
+      return self::dataResponse([ 'filterHistory' => $filterHistory ]);
+    }
+
     if ($recipientsFilter->reloadState()) {
       // Rebuild the entire page
-      $recipientsOptions = [];
-      $missingEmailAddresses = '';
 
-      $filterHistory = $recipientsFilter->filterHistory();
       $templateParameters = [
         'appName' => $this->appName(),
         'projectName' => $projectName,
@@ -766,6 +788,8 @@ class EmailFormController extends Controller {
         'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
         'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
         'frozenRecipients' => $recipientsFilter->frozenRecipients(),
+        RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
+        RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
 
         'toolTips' => $this->toolTipsService(),
       ];
@@ -775,34 +799,45 @@ class EmailFormController extends Controller {
         'emailform/part.emailform.recipients',
         $templateParameters,
         'blank'))->render();
-    } else if ($recipientsFilter->snapshotState()) {
-      // short-circuit
-      $filterHistory = $recipientsFilter->filterHistory();
-      return self::dataResponse([ 'filterHistory' => $filterHistory ]);
-    } else {
-      $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
-      $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
-      $missingEmailAddresses = '';
-      $separator = '';
-      foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
-        $missingEmailAddresses .= $separator;
-        $separator = ', ';
-        $missingEmailAddresses .=
-                               '<span class="missing-email-addresses personal-record" data-id="'.$id.'">'
-                               .$name
-                               .'</span>';
-      }
-      $filterHistory = $recipientsFilter->filterHistory();
-      $contents = '';
+
+      return self::dataResponse([
+        'projectName' => $projectName,
+        'projectId' => $projectId,
+        'contents' => $contents,
+        // remaining parameter are expected by JS code and need to be there
+        'instrumentsFilter' => '',
+        'recipientsOptions' => '',
+        'missingEmailAddresses' => '',
+        'filterHistory' => '',
+      ]);
     }
+
+    $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
+    $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
+
+    $missingEmailAddresses = (new TemplateResponse(
+      $this->appName,
+        'emailform/part.broken-email-addresses', [
+          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+        ],
+      'blank'))->render();
+
+    $instrumentsFilter = (new TemplateResponse(
+      $this->appName,
+        'emailform/part.instruments-filter', [
+          'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+        ],
+      'blank'))->render();
 
     return self::dataResponse([
       'projectName' => $projectName,
       'projectId' => $projectId,
-      'contents' => $contents,
       'recipientsOptions' => $recipientsOptions,
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
+      'instrumentsFilter' => $instrumentsFilter,
+      // remaining parameter is expected by JS code and needs to be there
+      'contents' => '',
     ]);
   }
 

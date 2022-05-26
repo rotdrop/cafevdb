@@ -31,12 +31,13 @@ import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
-import { token as pmeToken } from './pme-selectors.js';
+import { token as pmeToken, data as pmeData } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 require('sepa-bank-accounts.scss');
+require('musicians.scss');
 
 /**
  * Add several musicians.
@@ -79,11 +80,7 @@ const addMusicians = function($form, post) {
           function() {
             Notification.messages(data.message);
             ProjectParticipants.personalRecordDialog(
-              {
-                projectId,
-                musicianId,
-              },
-              {
+              musicianId, {
                 projectId,
                 projectName,
                 initialValue: 'Change',
@@ -192,8 +189,9 @@ const contactValidation = function(container) {
         });
     });
 
-  $form.find('input.email')
-    .not('.pme-filter')
+  const $emailInput = $form.find('input[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+
+  $emailInput
     .off('blur')
     .on('blur', function(event) {
 
@@ -201,12 +199,11 @@ const contactValidation = function(container) {
 
       const submitDefer = PHPMyEdit.deferReload(container);
 
-      const email = $form.find('input.email');
       const post = $form.serialize();
-      email.prop('disabled', true);
+      $emailInput.prop('disabled', true);
 
       const cleanup = function() {
-        email.prop('disabled', false);
+        $emailInput.prop('disabled', false);
         submitDefer.resolve();
       };
 
@@ -221,7 +218,7 @@ const contactValidation = function(container) {
             return;
           }
           // inject the sanitized value into their proper input fields
-          $form.find('input[name$="email"]').val(data.email);
+          $emailInput.val(data.email);
           const message = Array.isArray(data.message)
             ? data.message.join('<br>')
             : data.message;
@@ -235,6 +232,59 @@ const contactValidation = function(container) {
             cleanup();
           }
         });
+    });
+
+  const $mailingListStatus = $form.find('span.mailing-list.announcements.status.status-label');
+  const $mailingListOperationsContainer = $form.find('.mailing-list.announcements.dropdown-container');
+  const $mailingListOperations = $mailingListOperationsContainer.find('.subscription-action');
+
+  const $displayNameInput = $form.find('input[name$="display_name"]').filter('[name^="' + pmeData('') + '"]');
+
+  $mailingListOperations
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+
+      const operation = $this.data('operation');
+      if (!operation) {
+        return;
+      }
+      const email = $emailInput.val();
+      if (email === '') {
+        Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        return false;
+      }
+      const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
+
+      $.fn.cafevTooltip.remove(); // remove pending tooltips ...
+
+      $.post(generateUrl('mailing-lists/' + operation), {
+        list: 'announcements',
+        email,
+        displayName,
+      })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+          });
+        })
+        .done(function(data) {
+          const status = data.status;
+          $mailingListStatus.html(t(appName, status));
+
+          $mailingListOperationsContainer.data('status', status);
+          $mailingListOperationsContainer.attr(
+            'class',
+            $mailingListOperationsContainer.attr('class').replace(/(^|\s)status-\S+/, '$1status-' + status)
+          );
+          $mailingListOperations.each(function(index) {
+            const $this = $(this);
+            $this.prop('disabled', $this.is(':hidden')
+                       || ($this.hasClass('expert-mode-only')
+                           && !$('body').hasClass('cafevdb-expert-mode')));
+            $this.toggleClass('disabled', $this.is(':hidden'));
+          });
+        });
+      return false;
     });
 
   const address = $form.find('input.musician-address');

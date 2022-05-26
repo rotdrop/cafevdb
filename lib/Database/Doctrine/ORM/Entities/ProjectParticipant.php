@@ -22,14 +22,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Events;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -41,6 +45,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\HasLifecycleCallbacks
  */
 class ProjectParticipant implements \ArrayAccess
 {
@@ -157,7 +162,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Project
    */
-  public function getProject()
+  public function getProject():?Project
   {
     return $this->project;
   }
@@ -181,7 +186,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -327,6 +332,46 @@ class ProjectParticipant implements \ArrayAccess
   public function getSepaBankAccount():?SepaBankAccount
   {
     return $this->sepaBankAccount;
+  }
+
+  /**
+   * @var null|array
+   *
+   * The array of changed field values.
+   */
+  private $preUpdateValue = [];
+
+  /**
+   * @ORM\PreUpdate
+   *
+   * @param Event\PreUpdateEventArgs $event
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'registration';
+    if ($event->hasChangedField($field)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $oldValue = $event->getOldValue($field);
+      $entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
+      $this->preUpdateValue[$field] = $oldValue;
+    }
+  }
+
+  /**
+   * @ORM\PostUpdate
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    $field = 'registration';
+    if (array_key_exists($field, $this->preUpdateValue)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostChangeRegistrationConfirmation($this, !empty($this->preUpdateValue[$field])));
+      unset($this->preUpdateValue[$field]);
+    }
   }
 
   /**

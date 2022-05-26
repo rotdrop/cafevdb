@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -405,7 +405,7 @@ class ConfigCheckService
   }
 
   /**
-   * Make sure the "sharing" user exists, create it when necessary.
+   * make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
    *
    * @param $shareOwnerId The account id holding the shared resources.
@@ -504,7 +504,7 @@ class ConfigCheckService
     }
 
     //$id = \OC\Files\Cache\Cache::getId($sharedFolder, $vfsroot);
-    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareGroup, $shareOwner) {
+    $result = $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroup) {
 
       if ($sharedFolder[0] != '/') {
         $sharedFolder = '/'.$sharedFolder;
@@ -557,7 +557,7 @@ class ConfigCheckService
     }
 
     // try to create the folder and share it with the group
-    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareGroup, $groupAdmin, $shareOwner) {
+    $result = $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroup, $groupAdmin) {
       $userId    = $this->userId();
       $user      = $this->user();
 
@@ -608,7 +608,7 @@ class ConfigCheckService
    * Check for the existence of the shared folder and create it when
    * not found.
    *
-   * @param $sharedFolder The name of the folder.
+   * @param string $sharedFolder The name of the folder.
    *
    * @return bool @c true on success.
    */
@@ -632,7 +632,7 @@ class ConfigCheckService
     }
 
     // try to create the folder and share it with the group
-    $result = $this->sudo($shareOwner, function() use ($sharedFolder, $shareOwner) {
+    $result = $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder) {
       $userId    = $this->userId();
       $user      = $this->user();
 
@@ -776,8 +776,8 @@ class ConfigCheckService
       return -1;
     }
 
-    $result = $this->sudo($shareOwnerId, function()
-      use ($uri, $id, $displayName, $shareOwnerId, $userGroupId)
+    $result = $this->sudo($shareOwnerId, function(string $shareOwnerId)
+      use ($uri, $id, $displayName, $userGroupId)
       {
         $this->logDebug("Sudo to " . $this->userId());
 
@@ -899,8 +899,8 @@ class ConfigCheckService
       return -1;
     }
 
-    return $this->sudo($shareOwnerId, function()
-      use ($uri, $displayName, $id, $shareOwnerId, $userGroupId)
+    return $this->sudo($shareOwnerId, function(string $shareOwnerId)
+      use ($uri, $displayName, $id, $userGroupId)
       {
         $this->logDebug("Sudo to " . $this->userId());
 

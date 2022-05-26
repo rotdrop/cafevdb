@@ -45,7 +45,7 @@ class MusiciansRepository extends EntityRepository
     );
   }
 
-  public function fetchIds(array $criteria)
+  public function fetchIds(array $criteria = [])
   {
     $queryParts = $this->prepareFindBy($criteria, [
       'id' => 'ASC',

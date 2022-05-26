@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\MusicianService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
 
@@ -51,6 +53,7 @@ class Musicians extends PMETableViewBase
 {
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\MailingListsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
@@ -68,6 +71,9 @@ class Musicians extends PMETableViewBase
 
   /** @var MusicianService */
   private $musicianService;
+
+  /** @var MailingListsService */
+  private $listsService;
 
   /**
    * @var bool Called with project-id in order to add musicians to an
@@ -144,6 +150,7 @@ class Musicians extends PMETableViewBase
     , PhoneNumberService $phoneNumberService
     , InstrumentInsuranceService $insuranceService
     , MusicianService $musicianService
+    , MailingListsService $listsService
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
@@ -151,6 +158,7 @@ class Musicians extends PMETableViewBase
     $this->phoneNumberService = $phoneNumberService;
     $this->insuranceService = $insuranceService;
     $this->musicianService = $musicianService;
+    $this->listsService = $listsService;
     $this->projectMode = false;
 
     if (empty($this->musicianId)) {
@@ -455,6 +463,7 @@ make sure that the musicians are also automatically added to the
           'default-readonly',
           'tab-contact-readwrite',
           'tab-all-readwrite',
+          'tooltip-auto',
           $addCSS,
         ],
       ],
@@ -699,7 +708,7 @@ make sure that the musicians are also automatically added to the
       ];
 
     $opts['fdd']['fixed_line_phone'] = [
-      'tab'      => ['id' => 'contact'],
+      'tab'      => ['id' => [ 'contact', ], ],
       'name'     => $this->l->t('Fixed Line Phone'),
       'css'      => ['postfix' => [ 'phone-number', ], ],
       'display'  => [
@@ -715,6 +724,8 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
     $opts['fdd']['email']['input'] = ($opts['fdd']['email']['input'] ?? '') . 'M';
+
+    $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
@@ -939,11 +950,34 @@ make sure that the musicians are also automatically added to the
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeInsertDoInsertAll' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][] = function(&$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_AFTER][] = function(PHPMyEdit &$pme, $op, $step, $oldVals, &$changed, &$newVals) {
+
+      /** @var Entities\Musician $musician */
+      $musician = $this->legacyRecordToEntity($pme->rec);
+
       // add the new musician id to the persistent CGI array
       $pme->addPersistentCgi([
-        'musicianId' => $newVals['id'],
+        'musicianId' => $musician->getId(),
       ]);
+
+      // invite, subscribe or do nothing. If the person is already subscribed
+      // then it can unsubscribe by itself, so nothing more is needed here.
+      $list = $this->getConfigValue('announcementsMailingList');
+      if (!empty($list)) {
+        switch ($newVals['mailing_list'] ?? '') {
+          case 'invite':
+            $this->logInfo('SHOULD INVITE TO MAILNG LIST');
+            $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+            break;
+          case 'subscribe':
+            $this->logInfo('SHOULD SUBSCRIBE TO MAILNG LIST');
+            $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+            break;
+          default:
+            $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
+            break;
+        }
+      }
       return true;
     };
 

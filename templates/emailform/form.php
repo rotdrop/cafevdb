@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -65,10 +66,10 @@ $rowClass = $appName.'-'.'row';
     </li>
   </ul>
   <form method="post"
-        name="cafevdb-email-form"
-        id="cafevdb-email-form"
-        class="cafevdb-email-form">
-    <fieldset id="cafevdb-email-form-data" class="form-data">
+        name="<?php p($appName); ?>-email-form"
+        id="<?php p($appName); ?>-email-form"
+        class="<?php p($appName); ?>-email-form<?php ($projectId > 0) && p(' project-mode'); ?>">
+    <fieldset id="<?php p($appName); ?>-email-form-data" class="form-data">
       <?php echo PageNavigation::persistentCGI($formData); ?>
     </fieldset>
     <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>

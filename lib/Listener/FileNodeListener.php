@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright , 20212021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright , 20212021, ,  Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -165,8 +165,8 @@ class FileNodeListener implements IEventListener
         return [ $templateKey, $subFolderName ];
       }
     }
-    $this->logInfo('NOT A SPECIAL FILE '.$sourcePath);
-    return [];
+    $this->logInfo('NOT A SPECIAL FILE ' . $path);
+    return [ null, null ];
   }
 
   /**

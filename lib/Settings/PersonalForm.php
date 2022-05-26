@@ -382,19 +382,26 @@ class PersonalForm {
         // musician ids of the officials
         foreach (['president', 'secretary', 'treasurer'] as $prefix) {
           foreach (['Id', 'UserId', 'GroupId'] as $postfix) {
-            $official = $prefix.$postfix;
-            $templateParameters[$official] = $this->getConfigValue($official, -1);
+            $this->parameterFromConfig($templateParameters, $prefix.$postfix, -1);
           }
         }
 
         foreach (['smtp', 'imap'] as $proto) {
           foreach (['server', 'port', 'security'] as $key) {
-            $templateParameters[$proto.$key] =  $this->getConfigValue($proto.$key);
+            $this->parameterFromConfig($templateParameters, $proto.$key);
           }
         }
         foreach (['user', 'password', 'fromname', 'fromaddress', 'testaddress', 'testmode'] as $key) {
-          $templateParameters['email'.$key] = $this->getConfigValue('email'.$key);
+          $this->parameterFromConfig($templateParameters, 'email'.$key);
         }
+        $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+        $announcementsMailingListName = $this->getConfigValue('announcementsMailingListName');
+        if (!empty($announcementsMailingListName)) {
+          $announcementsMailingList =  $announcementsMailingListName . ' <' . $announcementsMailingList . '>';
+        }
+        $templateParameters['announcementsMailingList'] = $announcementsMailingList;
+        // $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
+        $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
 
         $key = 'attachmentLinkExpirationLimit';
         $templateParameters[$key] = $this->getConfigValue($key);
@@ -408,8 +415,11 @@ class PersonalForm {
           $templateParameters[$key] = $this->humanFileSize($templateParameters[$key]);
         }
 
+        foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
+          $this->parameterFromConfig($templateParameters, $listConfig);
+        }
         foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
-          $templateParameters[$listConfig] = $this->getConfigValue($listConfig);
+          $this->parameterFromConfig($templateParameters, $listConfig);
         }
 
         foreach (['Preview',
@@ -420,7 +430,7 @@ class PersonalForm {
                   'ConcertModule',
                   'RehearsalsModule',
                   'SubPageTemplate'] as $key) {
-          $templateParameters['redaxo'.$key] = $this->getConfigValue('redaxo'.$key);
+          $this->parameterFromConfig($templateParameters, 'redaxo'.$key);
         }
 
         foreach ([
@@ -431,7 +441,7 @@ class PersonalForm {
           'clouddev' => null,
           'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
         ] as $link => $default) {
-          $templateParameters[$link] = $this->getConfigValue($link, $default);
+          $this->parameterFromConfig($templateParameters, $link, $default);
         }
       }
 
@@ -444,6 +454,11 @@ class PersonalForm {
     } catch(\Exception $e) {
       return $this->errorService->exceptionTemplate($e);
     }
+  }
+
+  private function parameterFromConfig(array &$parameters, string $templateKey, $default = null, ?string $configKey = null)
+  {
+    $parameters[$templateKey] = $this->getConfigValue($configKey ?? $templateKey, $default);
   }
 }
 

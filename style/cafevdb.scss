@@ -35,6 +35,7 @@ body#body-settings {
 }
 
 #content.app-cafevdb {
+  @import 'flex.scss';
   width:100%;
   height:100%;
 
@@ -722,12 +723,12 @@ body.cafevdb-modalizer {
         float:none!important;
         label, label.menu-item,
         a, a.menu-item,
-        a:visited, a.menu-item:visited {
+        a:visited, a.menu-item:visited, a:link, a.menu-item:link {
           color: var(--color-main-text);
           padding: 10px 12px;
           font-weight: bold;
-          font-style:normal;
-          text-decoration: none;
+          font-style:normal !important;
+          text-decoration: none !important;
           display: block;
 
           img {
@@ -771,12 +772,43 @@ body.cafevdb-modalizer {
   }
 
   /* Show the dropdown menu on hover */
-  &:hover {
+  &:hover:not(.dropdown-no-hover), &.dropdown-shown {
     overflow:visible!important;
     .dropdown-content {
       display: block;
     }
   }
+
+  // Action menu-toggle, more or less like the current NC-Vue thing
+  .action-menu-toggle {
+    background-image:url('../../../core/img/actions/more.svg');
+    background-repeat:no-repeat;
+    background-size:20px 20px;
+    background-position:center;
+    text-indent: -99999px;
+    width:44px;
+    height:44px;
+    border-radius: var(--border-radius-pill);
+    cursor:pointer;
+    background-color: transparent;
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    &.small {
+      width:22px;
+      height:22px;
+      background-size:16px 16px;
+      min-height:unset;
+    }
+  }
+  &:hover, &.dropdown-shown {
+    .action-menu-toggle {
+      opacity: 1;
+      background-color: rgba(127,127,127,0.25) !important;
+    }
+  }
+
 }
 
 /**************************************************

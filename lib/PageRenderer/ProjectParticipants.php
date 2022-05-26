@@ -59,11 +59,12 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\MailingListsTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
-  private const EXTRA_VOICES = 0;
+  private const EXTRA_VOICES = 2;
   private const INSERT_VOICES = 8;
 
   /**
@@ -797,21 +798,34 @@ class ProjectParticipants extends PMETableViewBase
        'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:section-leader'],
       ]);
 
+    // @todo
+    // Replace by registration status
+    // - preliminary
+    //   just entered in the instrumentation table with or without communication
+    // - application
+    //   written and potentially signed application
+    // - accepted
+    //   participant has been accepted by the organizers and receives an email
     $opts['fdd']['registration'] = [
-      'name|LF' => ' &#10004;',
-      'name|CAPDV' => $this->l->t("Registration"),
+      // 'name|LF' => ' &#10004;',
+      // 'name|CAPDV' => $this->l->t("Participation"),
+      'name' => $this->l->t("Participation"),
       'tab' => [ 'id' => [ 'project', 'instrumentation' ] ],
       'options'  => 'LAVCPDF',
       'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
+      'sql'  => 'IFNULL($join_col_fqn, 0)',
       'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
-      'values2|LVDF' => [
-        0 => '',
-        1 => '&#10004;'
-      ],
+      'values2' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|ACP' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|DV' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      // 'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+      // 'values2|LF' => [
+      // 0 => '',
+      // 1 => '&#10004;'
+      // ],
       'tooltip|LFDV' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                                [ "&#10004;" ]),
       'tooltip|CAP' => $this->l->t("Check in order to mark participants who passed a personally signed registration form to us."),
@@ -1008,6 +1022,20 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'email',
       array_merge($this->defaultFDD['email'], [ 'tab' => [ 'id' => [ 'musician', 'contactdata', ], ], ]));
+
+    $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
+      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'css' => [ 'postfix' => [ 'project-mailing-list', ], ],
+      'name' => $this->l->t('Project Mailing List'),
+    ]);
+
+    $opts['fdd']['announcements_mailing_list'] = $this->announcementsSubscriptionControls(override: [
+      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'css' => [ 'postfix' => [ 'announcements-mailing-list', ], ],
+      'name' => $this->l->t('Announcements List'),
+    ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',

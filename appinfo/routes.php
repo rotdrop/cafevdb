@@ -24,6 +24,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Service\MailingListsService;
 
 /**
  * @file
@@ -406,6 +407,19 @@ $routes = [
       'verb' => 'POST',
     ],
     /**
+     * Project mailing lists and subscriptions
+     */
+    [
+      'name' => 'projects#mailing_lists',
+      'url' => '/projects/mailing-lists/{operation}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'project_participants#mailing_list_subscriptions',
+      'url' => '/projects/participants/mailing-list/{operation}',
+      'verb' => 'POST',
+    ],
+    /**
      * Musicians
      */
     [
@@ -558,6 +572,19 @@ $routes = [
       'name' => 'tool_tips#get',
       'url' => '/tooltips/{key}',
       'verb' => 'GET',
+    ],
+    /**
+     * Manage mailing list subscriptions
+     */
+    [
+      'name' => 'mailing_lists#service_switch',
+      'verb' => 'POST',
+      'url' => '/mailing-lists/{operation}',
+    ],
+    [
+      'name' => 'mailing_lists#getStatus',
+      'verb' => 'GET',
+      'url' => '/mailing-lists/{listId}/{email}',
     ],
     /**
      * Attempt a catch all ...

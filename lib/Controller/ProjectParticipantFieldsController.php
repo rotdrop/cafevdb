@@ -391,7 +391,7 @@ class ProjectParticipantFieldsController extends Controller {
         $projectId = $data['projectId'];
         $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
         if (empty($project)) {
-          return self::grumble($this->l->t('Unable to find a project with id %d.', $projectId));
+          return self::grumble($this->l->t('Unable to find the project with the id %d.', $projectId));
         }
         $generatedFields = $this->participantFieldsService->generatedFields($project);
         if ($generatedFields->isEmpty()) {
@@ -563,7 +563,7 @@ class ProjectParticipantFieldsController extends Controller {
             'musician' => $data['musicianId'],
           ]);
           if (empty($participant)) {
-            return self::grumble($this->l->t('Unable to find musician with id "%d" in project "%s".',
+            return self::grumble($this->l->t('Unable to find the musician with the id "%d" in project "%s".',
                                              [ $data['musicianId'], $field->getProject()->getName(), ]));
           }
         }

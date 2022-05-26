@@ -45,6 +45,11 @@ foreach ($eventAttachmentOptions as $option) {
   <!-- <legend id="cafevdb-email-form-legend"><?php echo $l->t('Compose Em@il'); ?></legend> -->
   <?php echo PageNavigation::persistentCGI('emailComposer', $composerFormData); ?>
   <table class="cafevdb-email-composition-form">
+    <tr class="column-layout">
+      <td class="first"></td>
+      <td class="second"></td>
+      <td class="third"></td>
+    </tr>
     <tr class="stored-messages">
       <td colspan="2" class="stored-messages-choose stored-messages">
         <div class="flex-container flex-center flex-justify-full">
@@ -121,11 +126,11 @@ foreach ($eventAttachmentOptions as $option) {
       <td class="email-address email-recipients display" colspan="2">
         <span class="flex-container">
           <span class="email-address-holder email-recipients inner vmiddle tooltip-bottom tooltip-mostwide"
-                title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars($_['TO']); ?>"
+                title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars(implode(', ', $TO)); ?>"
                 data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
                 data-title-intro="<?php echo $toolTips['emailform:composer:recipients:listing']; ?>"
           >
-            <?php echo $_['TO'] == '' ? $l->t('No recipients selected.') :  $_['TO']; ?>
+            <?php echo empty($TO) ? $l->t('No recipients selected.') : implode(', ', $TO); ?>
           </span>
           <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto"
                 title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"
@@ -190,7 +195,7 @@ foreach ($eventAttachmentOptions as $option) {
     <tr>
       <td class="subject caption"><?php echo $l->t('Subject'); ?></td>
       <td colspan="2" class="subject input">
-        <div class="subject <?php p($containerClass); ?>">
+        <div class="subject <?php p($containerClass); ?> flex-container flex-justify-full">
           <span class="subject tag"><?php echo htmlspecialchars($mailTag); ?></span>
           <span class="subject input">
             <input value="<?php echo htmlspecialchars($subject); ?>"

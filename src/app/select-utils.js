@@ -158,15 +158,23 @@ const selectedValues = function($select, values, trigger) {
  * @param {jQuery} $select TBD.
  */
 const refreshSelectWidget = function($select) {
+  const isDisabled = $select.prop('disabled');
+  const isReadonly = $select.prop('readonly');
   if (chosenActive($select)) {
+    if (isReadonly && !isDisabled) {
+      $select.prop('disabled', true);
+    }
     $select.trigger('chosen:updated');
+    if (!isDisabled) {
+      $select.prop('disabled', false);
+    }
   } else if (selectizeActive($select)) {
     let selectize = $select[0].selectize;
     const setupOptions = selectize.settings_user;
     selectize.destroy();
     $select.selectize(setupOptions);
     selectize = $select[0].selectize;
-    if ($select.is('disabled')) {
+    if (isDisabled || isReadonly) {
       selectize.disable();
     } else {
       selectize.enable();

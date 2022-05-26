@@ -109,7 +109,7 @@ foreach ($locales as $locale) {
              name="dbname"
              id="dbname"
              value="<?php echo $_['dbname']; ?>"
-             placeholder="<?php echo $l->t('Database');?>"
+             placeholder="<?php echo $l->t('Database Name');?>"
       />
       <label for="dbname"><?php echo $l->t('Database Name');?></label>
       <br/>

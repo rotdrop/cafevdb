@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
@@ -187,7 +188,12 @@ class ProjectService
     return $options;
   }
 
-  public function findParticipant($projectId, $musicianId)
+  /**
+   * Find the participant given by $projectId and $musicianId
+   *
+   * @return null|Entities\ProjectParticipant
+   */
+  public function findParticipant($projectId, $musicianId):?Entities\ProjectParticipant
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipant::class)
                 ->find([ 'project' => $projectId, 'musician' => $musicianId]);
@@ -1645,6 +1651,213 @@ Whatever.',
   }
 
   /**
+   * Create a mailing list for the project and add the orchestra email address
+   * as list-member.
+   *
+   * @param string|Entities\Project $projectOrId
+   */
+  public function createProjectMailingList($projectOrId)
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    $listId = $project->getMailingListId();
+    if (empty($listId)) {
+      $listId = strtolower($project->getName());
+      $listId .= '.' . $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['domain']);
+    }
+    $new = false;
+    if (empty($listsService->getListInfo($listId))) {
+      $listsService->createList($listId);
+      $new = true;
+    }
+    try {
+      $listInfo = $listsService->getListInfo($listId);
+      if (empty($listInfo)) {
+        throw new \RuntimeException(
+          $this->l->t('Unable to create project-mailing list "%1$s" for project "%1$s".',
+                      [ $listId, $project->getName() ]));
+      }
+      $displayName = $project->getName();
+      $tag = $this->getConfigValue('bulkEmailSubjectTag');
+      if (!empty($tag)) {
+        $displayName = $tag . '-' . $displayName;
+      }
+      $configuration = [
+        'display_name' => $displayName,
+        'advertised' => 'False',
+        'archive_policy' => 'private',
+        'subscription_policy' => 'moderate',
+        'preferred_language' =>  $this->getLanguage($this->appLocale()),
+      ];
+      $listsService->setListConfig($listId, $configuration);
+      $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
+      if (!empty($defaultOwner)) {
+        if (empty($listsService->getSubscription($listId, $defaultOwner, MailingListsService::ROLE_OWNER))) {
+          $listsService->subscribe($listId, email: $defaultOwner, role: MailingListsService::ROLE_OWNER);
+        }
+      }
+      $defaultModerator = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']);
+      if (!empty($defaultModerator)) {
+        if (empty($listsService->getSubscription($listId, $defaultModerator, MailingListsService::ROLE_MODERATOR))) {
+          $listsService->subscribe($listId, email: $defaultModerator, role: MailingListsService::ROLE_MODERATOR);
+        }
+      }
+
+      // subscribe the bulk-email-sender address
+      $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+      $bulkEmailFromName = $this->getConfigValue('emailfromname');
+
+      $subscriptionData = [
+        MailingListsService::SUBSCRIBER_EMAIL => $bulkEmailFromAddress,
+        MailingListsService::MEMBER_DISPLAY_NAME => $bulkEmailFromName,
+      ];
+      $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+
+      // install the list templates ...
+      $templateFolderPath = $listsService->templateFolderPath($this->l->t(MailingListsService::TYPE_PROJECTS));
+      $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
+
+      /** @var \OCP\Files\Folder $node */
+      foreach ($this->userStorage->getFolder($templateFolderPath)->getDirectoryListing() as $node) {
+        if ($node->getType() != \OCP\Files\FileInfo::TYPE_FILE) {
+          continue;
+        }
+        $mimeType = $node->getMimetype();
+        if ($mimeType != 'text/plain' && $mimeType != 'text/markdown') {
+          continue;
+        }
+        $nodeBase = baseName($node->getPath());
+        if (!str_starts_with($nodeBase, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+          continue;
+        }
+        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
+        $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
+        $listsService->setMessageTemplate($listId, $template, $templateUri);
+      }
+
+    } catch (\Throwable $t) {
+      if ($new) {
+        try {
+          $listsService->deleteList($listId);
+          $project->setMailingListId(null);
+          $this->flush();
+        } catch (\Throwable $t1) {
+          $this->logException($t1, 'Failure to clean-up failed list generation');
+        }
+      }
+      throw new \Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
+    }
+    $project->setMailingListId($listId);
+    $this->flush();
+
+    return $listInfo;
+  }
+
+  public function deleteProjectMailingList($projectOrId)
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+
+    $listId = $project->getMailingListId();
+    if (empty($listId)) {
+      return;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    $listsService->deleteList($listId);
+    $project->setMailingListId(null);
+    $this->flush();
+  }
+
+  /**
+   * Subscribe the participant to the mailing list if it is not already
+   * subscribed.
+   *
+   * @return null|boolean
+   * - null if nothing could be done, no email, no list id, no rest service
+   * - true if the musician has newly been added
+   * - false if the musician was already subscribed to the mailing list
+   */
+  public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
+  {
+    $listId = $participant->getProject()->getMailingListId();
+    $email = $participant->getMusician()->getEmail();
+
+    if (empty($listId) || empty($email)) {
+      return null;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+    if (!$listsService->isConfigured()) {
+      return null;
+    }
+
+    if (!empty($listsService->getSubscription($listId, $email))) {
+      return false;
+    }
+
+    $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+
+    $memberStatus = $participant->getMusician()->getMemberStatus();
+
+    $deliveryStatus = ($memberStatus == MemberStatus::CONDUCTOR
+        || $memberStatus == MemberStatus::SOLOIST
+      || $memberStatus == MemberStatus::TEMPORARY)
+      ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER
+      : MailingListsService::DELIVERY_STATUS_ENABLED;
+
+    $subscriptionData = [
+      MailingListsService::SUBSCRIBER_EMAIL => $email,
+      MailingListsService::MEMBER_DISPLAY_NAME => $displayName,
+      MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus,
+      // MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER,
+    ];
+
+    $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+
+    return true;
+  }
+
+  /**
+   * Unsubscribe the participant from the mailing list if it is subscribed
+   */
+  public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant)
+  {
+    $listId = $participant->getProject()->getMailingListId();
+    $email = $participant->getMusician()->getEmail();
+
+    if (empty($listId) || empty($email)) {
+      return;
+    }
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->di(MailingListsService::class);
+
+    if (!$listsService->isConfigured()) {
+      return;
+    }
+
+    if (!empty($listsService->getSubscription($listId, $email))) {
+      $listsService->unsubscribe($listId, $email);
+    }
+  }
+
+  /**
    * Create the infra-structure to the given project. The function
    * assumes that the infrastructure does not yet exist and will
    * remove any existing parts of the infrastructure on error.
@@ -1692,6 +1905,15 @@ Whatever.',
              $this->deleteProjectWebPage($project->getId(), $page);
            }
         }
+      ))
+      ->register(new GenericUndoable(
+        function() use ($project) {
+          $this->createProjectMailingList($project);
+          return $project->getMailingListId();
+        },
+        function($listId) use ($project) {
+          $this->deleteProjectMailingList($project);
+        },
       ));
 
     try {
@@ -1792,14 +2014,14 @@ Whatever.',
         }))
       ->register(new GenericUndoable(
         function() use ($project) {
-        try {
-          $pageVersion = $this->deleteProjectWikiPage($project);
-        } catch (\Throwable $t) {
-          $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
-          $pageVersion = null;
-        }
-        $this->generateWikiOverview([ $projectId ]);
-        return $pageVersion;
+          try {
+            $pageVersion = $this->deleteProjectWikiPage($project);
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
+            $pageVersion = null;
+          }
+          $this->generateWikiOverview([ $projectId ]);
+          return $pageVersion;
         },
         function($pageVersion) use ($project) {
           $this->restoreProjectWikiPage($project, $pageVersion);
@@ -1824,6 +2046,19 @@ Whatever.',
             }
           }
         }));
+    if ($softDelete && !empty($listId = $project->getMailingListId())) {
+      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+        function() use ($listId) {
+          /** @var MailingListsService $listsService */
+          $listService = $this->di(MailingListsService::class);
+          $listsService->setListConfig($listId, 'emergency', true);
+        },
+        function() use ($listId) {
+          /** @var MailingListsService $listsService */
+          $listService = $this->di(MailingListsService::class);
+          $listsService->setListConfig($listId, 'emergency', false);
+        }));
+    }
 
     $this->entityManager->beginTransaction();
     try {
@@ -1888,6 +2123,14 @@ Whatever.',
                     [ $project['name'], $project['id'] ]),
         $t->getCode(),
         $t);
+    }
+
+    if (!$softDelete) {
+      try {
+        $this->deleteProjectMailingList($project);
+      } catch (\Throwable $t) {
+        $this->logException($t, 'Removing the mailing list of the project failed.');
+      }
     }
 
     try {
@@ -1988,6 +2231,7 @@ Whatever.',
   {
     // This may be inside a transaction where the project-entity
     // already reflects the new state, so rather rely on the data.
+    /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
     $projectId = $project['id'];
 
@@ -2068,6 +2312,29 @@ Whatever.',
           );
         }
       ));
+
+    if (!empty($listId = $project->getMailingListId())) {
+      /** @var MailingListsService $listsService */
+      $listsService = $this->di(MailingListsService::class);
+      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $displayName = $newProject['name'];
+          $tag = $this->getConfigValue('bulkEmailSubjectTag');
+          if (!empty($tag)) {
+            $displayName = $tag . '-' . $displayName;
+          }
+          $listsService->renameList($listId, displayName: $displayName);
+        },
+        function() use ($oldProject, $newProject) {
+          $displayName = $oldProject['name'];
+          $tag = $this->getConfigValue('bulkEmailSubjectTag');
+          if (!empty($tag)) {
+            $displayName = $tag . '-' . $displayName;
+          }
+          $listsService->renameList($listId, displayName: $displayName);
+        }
+      ));
+    }
 
     $this->entityManager->beginTransaction();
     try {
@@ -2210,6 +2477,7 @@ Whatever.',
     }
   }
 
+  /** Delete or disable a project participant. */
   public function deleteProjectParticipant(Entities\ProjectParticipant $participant)
   {
     /** @var Entities\ProjectParticipant $participant */
@@ -2227,6 +2495,8 @@ Whatever.',
       }
       $this->remove($participant, true); // this should be hard-delete
     }
+
+    $this->ensureMailingListUnsubscription($participant);
   }
 
 }

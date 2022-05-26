@@ -186,11 +186,16 @@ class MountProvider implements IMountProvider
       ) extends MountPoint { public function getMountType() { return 'database'; } };
     }
 
-    $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
-    $projects = $projectsRepo->findBy([
-      'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
-      'deleted' => null,
-    ]);
+    try {
+      $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
+      $projects = $projectsRepo->findBy([
+        'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        'deleted' => null,
+      ]);
+    } catch (\Throwable $t) {
+      $this->logException($t, 'Unable to access projects table');
+      return [];
+    }
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);

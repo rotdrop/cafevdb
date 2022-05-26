@@ -24,55 +24,158 @@
 import $ from './jquery.js';
 import { refreshWidget as refreshSelectWidget } from './select-utils.js';
 
+require('jquery-readonly.scss');
+
+const readonlyStateDataKey = 'readonlyState';
+const placeholderDataKey = 'readonlyPlaceholder';
+const restoreDisabledDataKey = 'readonlyRestoreDisabled';
+const placeholderCssClass = '__jquery-readonly-placeholder__';
+const elementReadonlyClass = '__jquery-readonly-active__';
+
+const vanillaProp = $.fn.prop;
+
+$.fn.prop = function(property, value) {
+  const outerArguments = arguments;
+  if (arguments.length === 1) {
+    return vanillaProp.apply(this, outerArguments);
+  }
+  this.each(function() {
+    const $this = $(this); // no-op ?
+    if ($this.hasClass(placeholderCssClass)) {
+      return;
+    }
+    if (property === 'disabled' && $this.data(readonlyStateDataKey) === true) {
+      const $placeholder = $this.data(placeholderDataKey);
+      if ($placeholder) {
+        // enable and disable the placeholder instead of the element
+        vanillaProp.apply($placeholder, outerArguments);
+      }
+      if ($this.is('option')) {
+        // just tweak the to-be-restored value
+        $this.data(restoreDisabledDataKey, value);
+      } else if ($this.is('select')) {
+        // we have to disable/enable the placeholders as needed
+        $this.find('option').each(function() {
+          const $option = $(this);
+          const $optionPlaceholder = $option.data(placeholderDataKey);
+          if ($optionPlaceholder) {
+            vanillaProp.call($optionPlaceholder, property, value || $option.data(restoreDisabledDataKey));
+          }
+        });
+        if (vanillaProp.call($this, 'multiple')) {
+          // just remember the value to be restored for multi selects
+          $this.data(restoreDisabledDataKey, value);
+        } else {
+          // apply the disabled attribute to the surrounding single select
+          vanillaProp.apply($this, outerArguments);
+        }
+      } else if ($this.is(':radio')) {
+        // just tweak the to-be-restored value as the radio butotn is already disabled
+        $this.data(restoreDisabledDataKey, value);
+      } else if ($this.is(':checkbox')) {
+        // just tweak the to-be-restored value as the checkbox is already disabled
+        $this.data(restoreDisabledDataKey, value);
+      } else if ($this.is(':button, :submit')) {
+        $this.data(restoreDisabledDataKey, value);
+      } else {
+        vanillaProp.apply($this, outerArguments);
+      }
+    } else {
+      vanillaProp.apply($this, outerArguments);
+    }
+  });
+  return this;
+};
+
 $.fn.readonly = function(state) {
   if (state === undefined) {
     state = true;
+  } else if (state === 'cleanup') {
+    this.each(function() {
+      $(this).parent().find('.' + placeholderCssClass).remove();
+    });
+    return this;
   } else {
     state = !!state;
   }
   this.each(function() {
     const $this = $(this);
-    $this.prop('readonly', state);
+    if ($this.hasClass(placeholderCssClass)) {
+      // do not allow to recurse into the placeholders
+      return;
+    }
+    if (state === $this.data(readonlyStateDataKey)) {
+      // do not do it twice
+      return;
+    }
+    $this.data(readonlyStateDataKey, state);
+    $this.toggleClass(elementReadonlyClass, state);
+    vanillaProp.call($this, 'readonly', state);
     if ($this.is('select')) {
       // single-select can be handled like radio buttons
-      if (!$this.prop('multiple')) {
+      if (!vanillaProp.call($this, 'multiple')) {
         $this.find('option').each(function() {
           const $option = $(this);
           if (!state) {
-            const restoreDisabled = $option.data('readonlyRestoreDisabled');
+            const restoreDisabled = $option.data(restoreDisabledDataKey);
             if (restoreDisabled !== undefined) {
-              $option.prop('disabled', restoreDisabled);
+              vanillaProp.call($option, 'disabled', restoreDisabled);
             }
           } else {
-            $option.data('readonlyRestoreDisabled', $option.prop('disabled'));
-            $option.prop('disabled', !$option.prop('selected'));
+            $option.data(restoreDisabledDataKey, vanillaProp.call($option, 'disabled'));
+            vanillaProp.call($option, 'disabled', !vanillaProp.call($option, 'selected'));
           }
+          $option.data(readonlyStateDataKey, state);
         });
       } else {
-        const name = $this.attr('name') + '[]';
+        let name = $this.attr('name');
+        if (!name.endsWith('[]')) {
+          name += '[]';
+        }
+        const placeholderInitialized = $this.data(placeholderDataKey);
         $this.find('option').each(function() {
           const $option = $(this);
-          let placeholder = $option.data('readonlyPlaceholder');
+          const optionValue = $option.attr('value') || $option.text();
+          const placeholderDisabled = !state || !vanillaProp.call($option, 'selected');
+          let placeholder = $option.data(placeholderDataKey);
           if (!placeholder) {
-            placeholder = $('<input type="hidden" name="' + name + '"/>');
-            $this.after(placeholder);
-            $option.data('readonlyPlaceholder', placeholder);
+            if (placeholderInitialized) {
+              // can happen when replacing options dynamically
+              $this.parent().find('input[name="' + name + '"][value="' + optionValue + '"]' + '.' + placeholderCssClass).remove();
+            }
+            placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + '"/>');
+            $this.before(placeholder);
+            $option.data(placeholderDataKey, placeholder);
           }
-          placeholder.attr('value', $option.attr('value') || $option.text());
-          placeholder.prop('disabled', !state || !$option.prop('selected'));
+          placeholder.attr('value', optionValue);
+          vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
           if (!state) {
-            const restoreDisabled = $option.data('readonlyRestoreDisabled');
+            const restoreDisabled = $option.data(restoreDisabledDataKey);
             if (restoreDisabled !== undefined) {
-              $option.prop('disabled', restoreDisabled);
+              vanillaProp.call($option, 'disabled', restoreDisabled);
             }
           } else {
-            $option.data('readonlyRestoreDisabled', $option.prop('disabled'));
-            $option.prop('disabled', true);
+            $option.data(restoreDisabledDataKey, vanillaProp.call($option, 'disabled'));
+            vanillaProp.call($option, 'disabled', true);
           }
+          $option.data(readonlyStateDataKey, state);
         });
+        $this.data(placeholderDataKey, true);
+
+        // disable the multi-select as all data is submitted via placeholders
+        if (!state) {
+          const restoreDisabled = $this.data(restoreDisabledDataKey);
+          if (restoreDisabled !== undefined) {
+            vanillaProp.call($this, 'disabled', restoreDisabled);
+          }
+        } else {
+          $this.data(restoreDisabledDataKey, vanillaProp.call($this, 'disabled'));
+          vanillaProp.call($this, 'disabled', true);
+        }
+
       }
       refreshSelectWidget($this);
-    } else if ($this.is('radio')) {
+    } else if ($this.is(':radio')) {
       let $container = $this.closest('fieldset');
       if (!$container) {
         $container = $this.closest('form');
@@ -81,29 +184,57 @@ $.fn.readonly = function(state) {
         $container = $('body');
       }
       const $radioGroup = $container.find('input:radio[name="' + $this.attr('name') + '"]');
-      $radioGroup.prop('readonly', state);
       $radioGroup.each(function() {
         const $radio = $(this);
+
+        // remember the current state in each group member's data-set
+        $radio.data(readonlyStateDataKey, state);
+        $radio.toggleClass(elementReadonlyClass, state);
+        vanillaProp.call($radio, 'readonly', state);
+
         if (!state) {
-          const restoreDisabled = $radio.data('readonlyRestoreDisabled');
+          const restoreDisabled = $radio.data(restoreDisabledDataKey);
           if (restoreDisabled !== undefined) {
-            $radio.prop('disabled', restoreDisabled);
+            vanillaProp.call($radio, 'disabled', restoreDisabled);
           }
         } else {
-          $radio.data('readonlyRestoreDisabled', $radio.prop('disabled'));
-          $radio.prop('disabled', !$radio.prop('checked'));
+          $radio.data(restoreDisabledDataKey, vanillaProp.call($radio, 'disabled'));
+          vanillaProp.call($radio, 'disabled', !vanillaProp.call($radio, 'checked'));
         }
       });
-    } else if ($this.is('checkbox')) {
-      let placeholder = $this.data('readonlyPlaceholder');
+    } else if ($this.is(':checkbox')) {
+      let placeholder = $this.data(placeholderDataKey);
+      const name = $this.attr('name');
+      const checkboxValue = $this.attr('value') || 'on';
+      const placeholderDisabled = !state || !vanillaProp.call($this, 'checked');
       if (!placeholder) {
-        placeholder = $('<input type="hidden" name="' + $this.attr('name') + '"/>');
-        $this.after(placeholder);
-        $this.data('readonlyPlaceholder', placeholder);
+        $this.parent().find('input[name="' + name + '"] [value="' + checkboxValue + '"]' + '.' + placeholderCssClass).remove();
+        placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + '"/>');
+        $this.before(placeholder);
+        $this.data(placeholderDataKey, placeholder);
       }
-      placeholder.attr('value', $this.attr('value') || 'on');
-      placeholder.prop('disabled', !state || !$this.prop('checked'));
-      $this.prop('disabled', state);
+      placeholder.attr('value', checkboxValue);
+      vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
+      if (!state) {
+        const restoreDisabled = $this.data(restoreDisabledDataKey);
+        if (restoreDisabled !== undefined) {
+          vanillaProp.call($this, 'disabled', restoreDisabled);
+        }
+      } else {
+        $this.data(restoreDisabledDataKey, vanillaProp.call($this, 'disabled'));
+        vanillaProp.call($this, 'disabled', true);
+      }
+    } else if ($this.is(':button, :submit')) {
+      // readonly-buttons do not make sense, but it simplifies the code in other places.
+      if (!state) {
+        const restoreDisabled = $this.data(restoreDisabledDataKey);
+        if (restoreDisabled !== undefined) {
+          vanillaProp.call($this, 'disabled', restoreDisabled);
+        }
+      } else {
+        $this.data(restoreDisabledDataKey, vanillaProp.call($this, 'disabled'));
+        vanillaProp.call($this, 'disabled', true);
+      }
     }
   });
   return this;

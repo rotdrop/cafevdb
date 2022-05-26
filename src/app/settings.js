@@ -842,8 +842,10 @@ const afterLoad = function(container) {
       console.log('************', container);
 
       const blurInputs = container.find([
+        'input#announcements-mailing-list',
         'input#emailfromname',
         'input#emailfromaddress',
+        'input#bulk-email-subject-tag',
         'input.attachmentLinkSizeLimit',
         'input.attachmentLinkExpirationLimit',
       ].join(','));
@@ -880,6 +882,8 @@ const afterLoad = function(container) {
           });
         return false;
       });
+
+      simpleSetHandler(container.find('#announcements-mailing-list-autoconf'), 'click');
     }
 
     {
@@ -904,10 +908,22 @@ const afterLoad = function(container) {
       // mailing list REST stuff
       const container = emailContainer.find('form.mailing-list');
 
+      const prefix = 'mailingList';
+      const inputValues = [
+        'EmailDomain',
+        'WebPages',
+        'RestUrl',
+        'RestUser',
+        'RestPassword',
+        'DefaultOwner',
+        'DefaultModerator',
+      ];
+      const $inputs = $(inputValues.map(x => '#' + prefix + x).join(', '));
+
       const password = container.find('#mailingListRestPassword');
       showPassword(password);
 
-      $('#mailingListServer, #mailingListRestUser, #mailingListRestPassword').blur(function(event) {
+      $inputs.blur(function(event) {
         const name = $(this).attr('name');
         const value = $(this).val();
         $.post(

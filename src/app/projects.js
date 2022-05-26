@@ -462,6 +462,55 @@ const pmeFormInit = function(containerSel) {
       });
   }
 
+  form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
+    const $this = $(this);
+    const operation = $this.data('operation');
+    if (!operation) {
+      return;
+    }
+    const projectId = form.find('input[name="projectId"]').val();
+
+    const post = function(force) {
+      $.post(
+        generateUrl('projects/mailing-lists/' + operation), {
+          operation,
+          projectId,
+          force,
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data, textStatus, request) {
+          if (data.status === 'unconfirmed') {
+            Dialogs.confirm(
+              data.feedback,
+              t(appName, 'Confirmation Required'),
+              function(answer) {
+                if (answer) {
+                  post(true);
+                } else {
+                  Notification.showTemporary(t(appName, 'Unconfirmed, doing nothing.'));
+                }
+              },
+              true);
+          } else {
+            Notification.messages(data.message);
+            if (data.status !== 'unchanged') {
+              const $listDisplay = form.find('.list-id.display');
+              const oldStatus = $listDisplay.data('status');
+              $listDisplay.data('status', data.status);
+              $listDisplay.removeClass('status-' + oldStatus).addClass('status-' + data.status);
+              const $listActions = form.find('.list-id.actions');
+              $listDisplay.find('.list-label').html(data.fqdn_listname);
+              $listDisplay.find('.list-status').html(data.l10nStatus);
+              $listActions.data('status', data.status);
+              $listActions.removeClass('status-' + oldStatus).addClass('status-' + data.status);
+            }
+          }
+        });
+    };
+    post(false);
+  });
 };
 
 /**

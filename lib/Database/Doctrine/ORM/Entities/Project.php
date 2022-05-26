@@ -80,6 +80,15 @@ class Project implements \ArrayAccess
   private $type = 'temporary';
 
   /**
+   * @var string
+   *
+   * The list-id of the mailing list for the members
+   *
+   * @ORM\Column(type="string", nullable=true, length="128", options={"collation"="ascii_general_ci"})
+   */
+  private $mailingListId;
+
+  /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $instrumentationNumbers;
@@ -267,6 +276,30 @@ class Project implements \ArrayAccess
   public function getType():Types\EnumProjectTemporalType
   {
     return $this->type;
+  }
+
+  /**
+   * Set mailingListId.
+   *
+   * @param null|string $mailingListId
+   *
+   * @return Project
+   */
+  public function setMailingListId(?string $mailingListId):Project
+  {
+    $this->mailingListId = $mailingListId;
+
+    return $this;
+  }
+
+  /**
+   * Get mailingListId.
+   *
+   * @return EnumProjectTemporalMailingListId
+   */
+  public function getMailingListId():?string
+  {
+    return $this->mailingListId;
   }
 
   /**

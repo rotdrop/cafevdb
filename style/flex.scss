@@ -34,6 +34,9 @@ span.flex-container {
   &.flex-center {
     align-items:center;
   }
+  &.flex-start {
+    align-items:flex-start;
+  }
   &.flex-baseline {
     align-items:baseline;
   }

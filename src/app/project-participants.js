@@ -22,11 +22,13 @@
  */
 
 import $ from './jquery.js';
+import { appName } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
+import * as Dialogs from './dialogs.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Photo from './inlineimage.js';
 import initFileUploadRow from './pme-file-upload-row.js';
@@ -41,14 +43,16 @@ import selectValues from './select-values.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
+require('project-participants.scss');
 
 /**
  * Open a dialog in order to edit the personal reccords of one
  * musician.
  *
- * @param {int} record The record id. This is either the Id from the
- * Musiker table or the Id from the Besetzungen table, depending on
- * what else is passed in the second argument
+ * @param {int|Object} record The record id either as object or
+ * musician id. The format will be converted as appropriate depending
+ * on whether the ProjectParticipants table of the Musicians table is
+ * queried.
  *
  * @param {Object} options Additional option. In particular ProjectId
  * and ProjectName are honored, and the optiones IntialValue and
@@ -63,16 +67,20 @@ const myPersonalRecordDialog = function(record, options) {
       projectId: -1,
     };
   }
+
   if (typeof options.initialValue === 'undefined') {
     options.initialValue = 'View';
   }
   if (typeof options.reloadValue === 'undefined') {
     options.reloadValue = options.initialValue;
   }
-  if (typeof options.Project !== 'undefined') {
-    options.projectName = options.project;
-  } else if (typeof options.projectName !== 'undefined') {
-    options.project = options.projectName;
+
+  // treat integer record id as musician id
+  if (!isNaN(record)) {
+    record = { musicianId: record };
+  }
+  if (record.id) {
+    record.musicianId = record.id;
   }
 
   const pmeOperation = PHPMyEdit.sys('operation');
@@ -93,9 +101,6 @@ const myPersonalRecordDialog = function(record, options) {
     modified: false,
   };
 
-  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + record;
-  tableOptions[pmeRecord] = record;
-
   // Merge remaining options in.
   tableOptions = $.extend(tableOptions, options);
 
@@ -103,17 +108,27 @@ const myPersonalRecordDialog = function(record, options) {
     const projectMode = options.projectId > 0;
     tableOptions.template = projectMode ? 'add-musicians' : 'all-musicians';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+
+    // the proper record id is an object { id: ID }.
+    record = { id: record.musicianId };
   } else if (options.projectId > 0) {
-    tableOptions[pmeOperation] =
-      options.reloadValue + '?' + pmeRecord + '[project_id]=' + record.projectId + '&' + pmeRecord + '[musician_id]=' + record.musicianId;
     tableOptions.table = 'ProjectParticipants';
     tableOptions.template = 'project-participants';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+
+    // the proper record id is an object { project_id, musician_id }.
+    // eslint-disable-next-line camelcase
+    record = { musician_id: record.musicianId, project_id: options.projectId };
   } else {
     tableOptions.table = 'Musicians';
     tableOptions.template = 'all-musicians';
     tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+    // the proper record id is an object { id: ID }.
+    record = { id: record.musicianId };
   }
+
+  tableOptions[pmeRecord] = record; // will be converted by $.param
+  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + encodeURIComponent(JSON.stringify(record));
 
   // alert('options: ' + CAFEVDB.print_r(tableOptions, true));
 
@@ -743,6 +758,62 @@ const myReady = function(selector, resizeCB) {
     return false;
   });
 
+  // mailing list subscritions
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event) {
+    const $this = $(this);
+    const operation = $this.data('operation');
+    if (!operation) {
+      return;
+    }
+    const post = function(force) {
+      $.post(
+        generateUrl('projects/participants/mailing-list/' + operation), {
+          projectId,
+          musicianId,
+          force,
+        })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data, textStatus, request) {
+          if (data.status === 'unconfirmed') {
+            Dialogs.confirm(
+              data.feedback,
+              t(appName, 'Confirmation Required'), {
+                callback(answer) {
+                  if (answer) {
+                    post(true);
+                  } else {
+                    Notification.showTemporary(t(appName, 'Unconfirmed, doing nothing.'));
+                  }
+                },
+                modal: true,
+                default: 'cancel',
+              });
+          } else {
+            Notification.messages(data.message);
+            if (data.status !== 'unchanged') {
+              const $statusDisplay = $this.closest('.pme-value').find('.mailing-list.project.status.status-label');
+              const $statusDropDown = $this.closest('.pme-value').find('.mailing-list.project.status.dropdown-container');
+              const oldStatus = $statusDropDown.data('status');
+              $statusDropDown.data('status', data.statusTags);
+              for (const oldFlag of oldStatus) {
+                $statusDisplay.removeClass(oldFlag);
+                $statusDropDown.removeClass(oldFlag);
+              }
+              for (const newFlag of data.statusTags) {
+                $statusDisplay.addClass(newFlag);
+                $statusDropDown.addClass(newFlag);
+              }
+              $statusDisplay.html(t(appName, data.summary));
+            }
+          }
+        });
+    };
+    post(false);
+  });
+
+  // adding musicians
   container
     .find('form.pme-form input.pme-add')
     .addClass('pme-custom').prop('disabled', false)

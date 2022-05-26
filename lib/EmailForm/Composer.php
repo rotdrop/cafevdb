@@ -579,8 +579,10 @@ Störung.';
 
   /**
    * The email composer never goes without its recipients filter.
+   *
+   * @return RecipientsFilter
    */
-  public function getRecipientsFilter()
+  public function getRecipientsFilter():RecipientsFilter
   {
     return $this->recipientsFilter;
   }
@@ -1426,6 +1428,11 @@ Störung.';
     return str_replace('$$', '$', $message);
   }
 
+  /**
+   * Whether recipients are disclosed (send via Cc:) or undisclosed (send via
+   * Bcc:). If not in project mode recipients are never disclosed, unless
+   * there is only a single recipient, which is then addressed via To.
+   */
   public function discloseRecipients()
   {
     return $this->projectId >= 0
@@ -2909,8 +2916,9 @@ Störung.';
     }
     $realRecipients = $this->recipients;
     $this->recipients = $previewRecipients;
-    if (!$this->preComposeValidation()) {
-      $this->recipients = $realRecipients;
+    $status = $this->preComposeValidation();
+    $this->recipients = $realRecipients;
+    if (!$status) {
       return null;
     }
 
@@ -2956,6 +2964,18 @@ Störung.';
     $templateMessageId = $this->getOutboundService()->generateMessageId();
 
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
+
+      if ($this->recipientsFilter->announcementsMailingList()) {
+        $this->executionStatus = false;
+        $this->diagnostics['TemplateValidation']['PreconditionError'] = [ $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.') ];
+        if ($hasPersonalSubstitutions) {
+          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
+        }
+        if ($hasPersonalAttachments) {
+          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
+        }
+        return null;
+      }
 
       $this->logInfo(
         'Composing separately because of personal substitutions / attachments '
@@ -3028,6 +3048,10 @@ Störung.';
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
+
+      // if in project mode potentially send to the mailing list instead of the individual recipients ...
+      $recipients = $this->recipientsFilter->substituteProjectMailingList($recipients);
+
       $message = $this->composeAndExport($messageTemplate, $recipients);
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
@@ -3115,10 +3139,22 @@ Störung.';
    */
   private function setSubjectTag()
   {
-    if ($this->projectId < 0 || $this->projectName == '') {
-      $this->messageTag = '[CAF-'.ucfirst($this->l->t('musicians')).']';
+    if ($this->recipientsFilter->announcementsMailingList()) {
+      if ($this->projectId <= 0 || $this->projectName == '') {
+        $this->messageTag = ''; // the mailing list has its own tag
+      } else {
+        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag
+      }
     } else {
-      $this->messageTag = '[CAF-'.$this->projectName.']';
+      $tagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+      if (!empty($tagPrefix)) {
+        $tagPrefix = $tagPrefix . '-';
+      }
+      if ($this->projectId <= 0 || $this->projectName == '') {
+        $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('ALL_PERSONS: musicians')) . ']';
+      } else {
+        $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
+      }
     }
   }
 
@@ -3918,10 +3954,18 @@ Störung.';
         $file = $this->appStorage->getDraftsFile($fileName);
         if (!empty($file)) {
           $file->delete();
+          $file = null;
         }
-        $this->forgetTemporaryFile($fileName);
-      } catch (\Throwable $t) {
-        $this->logException($t);
+      } catch (\OCP\Files\NotFoundException $e) {
+        // this is ok, we just wanted to delete it anyway
+        $file = null;
+      }
+      if (empty($file)) {
+        try {
+          $this->forgetTemporaryFile($fileName);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to remove temporary file.');
+        }
       }
     }
     $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
@@ -4144,24 +4188,34 @@ Störung.';
   }
 
   /**
+   * Compose one "readable", flat array of recipients,
+   * meant only for display. The real recipients list is composed
+   * somewhere else.
+   */
+  public function toStringArray()
+  {
+    $toString = [];
+    foreach($this->recipients as $recipient) {
+      $name = trim($recipient['name']);
+      $email = trim($recipient['email']);
+      if (!empty($name)) {
+        $email = $name.' <'.$email.'>';
+      }
+      $toString[] = Util::htmlEscape($email);
+    }
+    return $toString;
+  }
+
+  /**
    * Compose one "readable", comma separated list of recipients,
    * meant only for display. The real recipients list is composed
    * somewhere else.
    */
   public function toString()
   {
-    $toString = [];
-    foreach($this->recipients as $recipient) {
-      $name = trim($recipient['name']);
-      $email = trim($recipient['email']);
-      if ($name == '') {
-        $toString[] = $email;
-      } else {
-        $toString[] = $name.' <'.$email.'>';
-      }
-    }
-    return htmlspecialchars(implode(', ', $toString));
+    return implode(', ', $this->toStringArray());
   }
+
 
   /**
    * Export an option array suitable to load stored email messages,

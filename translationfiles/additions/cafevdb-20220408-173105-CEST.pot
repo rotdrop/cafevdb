@@ -1,0 +1,24 @@
+#: lib/PageRenderer/Musicians.php:646
+#, php-format
+msgid "invited"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "invite"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "accept"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "subscribe"
+msgstr ""
+
+#: lib/PageRenderer/Musicians.php:694
+#, php-format
+msgid "unsubscribe"
+msgstr ""

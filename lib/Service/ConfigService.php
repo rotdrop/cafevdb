@@ -167,15 +167,37 @@ class ConfigService
     ],
   ];
 
+  /**
+   * @var string
+   * Name of a participant field holding a personal signature. This is used by
+   * the OrganizationalRolesService in order to find images of signatures of
+   * the organizing committee.
+   */
   const SIGNATURE_FIELD_NAME = 'signature';
 
-  const DEFAULT_AUTOSAVE_INTERVAL = 300; // seconds
+  /**
+   * @var int
+   * Default auto-save interval in seconds. Used by the email-form
+   */
+  const DEFAULT_AUTOSAVE_INTERVAL = 300;
 
-  const MAILING_LIST_CONFIG = [
-    'url' => 'mailingListURL',
+  /** @var array Config-keys for the mailing-list server REST access */
+  const MAILING_LIST_REST_CONFIG = [
+    'url' => 'mailingListRestUrl',
     'user' => 'mailingListRestUser',
     'password' => 'mailingListRestPassword',
   ];
+  /** @var array Config-keys for some general mailing list settings */
+  const MAILING_LIST_CONFIG = [
+    'domain' => 'mailingListEmailDomain',
+    'web' => 'mailingListWebPages',
+    'owner' => 'mailingListDefaultOwner',
+    'moderator' => 'mailingListDefaultModerator',
+  ];
+  /** @var string Config-key for the announcements mailing list */
+  const ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME = 'announcementsMailingList';
+  /** @var string Config-key for the announcements mailing list */
+  const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME = 'announcementsMailingListName';
 
   /** @var string */
   const USER_GROUP_KEY = 'usergroup';
@@ -758,7 +780,7 @@ class ConfigService
       return false;
     }
     try {
-      $result = $callback();
+      $result = $callback($uid);
     } catch (\Throwable $t) {
       $this->setUser($oldUser);
       throw new \RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
@@ -826,7 +848,7 @@ class ConfigService
    */
   public function getAppLocale():string
   {
-    return $this->getConfigValue('orchestraLocale', $this->getLocale());
+    return $this->getConfigValue('orchestraLocale', $this->getLocale()) ?? self::DEFAULT_LOCALE;
   }
 
   /**
@@ -839,6 +861,14 @@ class ConfigService
     }
     $lang = locale_get_primary_language($locale);
     return $lang;
+  }
+
+  /**
+   * Return the language part of the current or given locale.
+   */
+  public function getAppLanguage():string
+  {
+    return $this->getLanguage($this->getAppLocale());
   }
 
   /**Return an array of supported country-codes and names*/
@@ -871,7 +901,6 @@ class ConfigService
     $result = [];
     if (method_exists($this->l10NFactory, 'getLanguages')) {
       $cloudLanguages = $this->l10NFactory->getLanguages();
-
       $otherLanguages = array_column($cloudLanguages['otherLanguages'], 'name', 'code');
       $commonLanguages = array_column($cloudLanguages['commonLanguages'], 'name', 'code');
       $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
@@ -910,7 +939,7 @@ class ConfigService
   public function transliterate(string $string, $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
-    empty($locale) && $locale = $this->getLocale();
+    empty($locale) && $locale = $this->getAppLocale();
     setlocale(LC_CTYPE, $locale);
     $result = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
     setlocale(LC_CTYPE, $oldlocale);

@@ -489,6 +489,35 @@ input.randomkey {
 }
 
 #email-settings {
+  form.bulk-email-settings {
+    fieldset.emailtransport {
+      input#announcements-mailing-list {
+        width:32ex;
+      }
+    }
+    fieldset.bulk-email-subject {
+      span.bulk-email-subject {
+        font-family:monospace;
+        font-size:1em;
+        font-weight:bold;
+      }
+      input#bulk-email-subject-tag {
+        width:4em;
+        font-family:monospace;
+        font-size:1em;
+        margin: 0;
+        padding: 3px 6px;
+        min-height: 28px;
+        height: 28px;
+      }
+      .bulk-email-subject.container {
+        width: fit-content;
+        margin: 3px 3px 3px 0;
+        padding:3px;
+        background-color: lightgrey;
+      }
+    }
+  }
   form.mailing-list {
     input[type="text"], input[type="password"] {
       width:200px;

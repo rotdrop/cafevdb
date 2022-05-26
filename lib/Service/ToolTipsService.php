@@ -186,6 +186,10 @@ class ToolTipsService implements \ArrayAccess, \Countable
       }
     }
 
+    $tip = preg_replace('/(^\s*[\n])+/m', '<p class="tooltip-paragraph">', $tip);
+
+    // idea: allow markdown?
+
     return empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
   }
 
@@ -267,20 +271,32 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
 
 
       'emailtest' => $this->l->t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
-
       'emailform' => [
+        'sender' => [
+          'name' => $this->l->t('Real name part of the sender address.'),
+          'address' => $this->l->t('Email address part of the sender address.'),
+        ],
+        'transport' => [
+          'announcements' => [
+            'mailing-list' => $this->l->t('Optional email-address of a mailing list which can optionally be used to send "global" announcements to. If set then global @all emails are rather sent by default to this mailing list than sending it to each individual recipient by Bcc: as the latter may have legal implications unless you have obtained permission to do so from each individual musician. Mailing list transport will not be used when restricting the set of musicians by their instrument or member status, or when individual recipients are selected. It can also optionally be disabled in the email-form\'s address selection tab.'),
+          ],
+        ],
         'storage' => [
           'messages' => [
             'select' => $this->l->t('Select either a message draft or template as base for the current message.'),
-            'new-template' => $this->l->t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
+            'new-template' => $this->l->t('Enter a short, no-nonsense name for the new template. The name will be converted to "camel-case", e.g. "hello world" will yield the name "HelloWorld".'),
             'save-as-template' => $this->l->t('Activate this checkbox in order to save the current email message as
 message template. If you leave this check-box unchecked, then messages
-will be saved as draft. The difference between a draft and a template
+will be saved as draft.
+
+The difference between a draft and a template
 is the following: draft messages will be deleted when the message is
 actually sent out (and potentially "inactive" drafts will be purged
 from the data-base after some time). Templates will never be
-purged. Also, draft messages will be saved with all attachment and --
-most important -- inlcuding the set of the currently selected
+purged.
+
+Also, draft messages will be saved with all attachment and --
+most important -- including the set of the currently selected
 recipients. Message templates, in contrast, are saved with an empty recipient list, as should be.'),
             'save-message' => $this->l->t('Save the currently active email message either as draft
 (i.e. including recipients and attachments) or as message template
@@ -296,6 +312,9 @@ of this button.'),
           ],
         ],
         'composer' => [
+          'subject' => [
+            'tag' => $this->l->t('A very short (around 3 characters) tag which is used to construct the subject of a bulk email. More specifically, the subject has the form "[TAG-ProjectNameYYYY] Example Subject" where "TAG" is just the short tag entered here, "ProjectName" is the short project-name, "YYYY" the year of the project, "Example Subject" is just any custom subject string which is supplied through the email editor.'),
+          ],
           'recipients' => [
             'listing' => $this->l->t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
             'freeform-BCC' => $this->l->t('Add arbitrary further hidden recipients.'),
@@ -333,11 +352,14 @@ same effect as clicking the close button on top of the dialog-window. No email w
           'choices' => $this->l->t('Select the recipients for your email!'),
           'filter' => [
             'basic-set' => [
-              'default' => $this->l->t('Choose either among all musicians currently registered for the project
+              'disableddefault' => $this->l->t('Choose either among all musicians currently registered for the project
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
               'from-project' => $this->l->t('Choose among all musicians currently registered for this project.'),
               'except-project' => $this->l->t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+              'project-mailing-list' => $this->l->t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
+              'announcements-mailing-list' => $this->l->t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
+              'database' => $this->l->t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
             'member-status' => $this->l->t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
@@ -353,16 +375,16 @@ list.'),
             'instruments' => [
               'filter' => $this->l->t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
-include the musicians playing either of them.'),
-              'container' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
-              'label' => $this->l->t('A double click inside the boxed filter-region will apply the instruments-filter'),
+include the musicians playing either of them.
+
+A double-click inside the filter-box will apply the filter.'),
               'apply' => $this->l->t('Apply the currently selected instruments as filter. At your option,
 you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
             ],
           ],
           'broken-emails' => $this->l->t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
         ],
-      ],
+      ], // emailform
 
       'executive-board-project' => $this->l->t('Name of the pseudo-project listing the members of the executive board.'),
 
@@ -383,6 +405,27 @@ invited to have a look, but please do not change anything unless you know what y
         'musicians' => [
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
+          'mailing-list' => [
+            'default' => $this->l->t('Musicians are normally invited to the announcements mailing list when they are registered with the orchestra app. The announcements mailing list is a receive-only list for announcing projects, concerts and other things "to the public". It may also be used to forward announcements of other orchestras or off-topic notices if this seems appropriate in a case-to-case manner.'),
+            'actions' => [
+              'invite' => $this->l->t('Invite the musician to join the announcements mailing list. The musician will receive an email with explanations and needs to reply to the invitation. On reply the musician will be subscribed to the list without further action.'),
+              'subscribe' => $this->l->t('Per-force subscribe the musician to the announcements mailing list. This may contradict privacy regulations, so use this option with care.'),
+              'unsubscribe' => $this->l->t('Unsubscribe the musician from the announcements mailing list.'),
+              'accept' => $this->l->t('Accept a pending subscription request of the musician.'),
+              'reject' => $this->l->t('Cancel a pending subscription or invitation request.'),
+            ],
+          ],
+        ],
+        'participants' => [
+          'mailing-list' => [
+            'default' => $this->l->t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
+            'operation' => [
+              'subscribe' => $this->l->t('Subscribe the participant to the project mailing list. Normally a participant is automatically subscribed to the project mailing list when its participation status is changed from "preliminary" to "confirmed". It is not possible to subscribe non-confirmed participants. The participant will receive a welcome message when after subscribing it.'),
+              'unsubscribe' => $this->l->t('Unsubscribe the participant from the mailing list. Normally a participant is automatically unsubscribed when it is deleted from the project or it participation status is change back to "preliminary" after its participation had been confirmed previously.'),
+              'enable-delivery' => $this->l->t('Re-enable delivery of the mailing list traffic to this participant. Normally, list-traffic is disabled for soloist, temporaries and conductors while even these people are still subscribed to the mailing list.'),
+              'disable-delivery' => $this->l->t('Disable delivery of the mailing list traffic to this participant. This can as well be done by the participant itself by tuing its membership settings on the configuration pages of the mailing list software.'),
+            ],
+          ],
         ],
         'participants' => [
           'voice' => $this->l->t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
@@ -573,6 +616,31 @@ default behaviour for mass-emails as follows
 <br/>
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
+
+      'mailing-list' => [
+        'domain' => [
+          'default' => $this->l->t('Externally visible domains and configuration web-pages.'),
+          'config' => $this->l->t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
+          'email' => $this->l->t('The email-domain of the mailing lists.'),
+        ],
+        'restapi' => [
+          'default' => $this->l->t('REST API account for interaction with a Mailman3 server. Should be located on the same server or proxied via SSL.'),
+        ],
+        'generated' => [
+          'defaults' => [
+            'default' => $this->l->t('Some settings for generated per-project mailing lists. The detail configuration can be tuned by visiting the list-configuration pages.'),
+            'owner' => $this->l->t('An email address which owns all auto-generated mailing lists. This email will receive notifications by the mailing-list software about necessary administrative tasks.'),
+            'moderator' => $this->l->t('An email address which handle moderator-tasks for the mailing lists. List moderation is e.g. necessary for rejecting or accepting posts by non-members or to handle subscription requests.'),
+          ],
+        ],
+        'announcements' => [
+          'autoconf' => $this->l->t('Attempt to auto-configure the announcements mailing-list as one-way announcements-only list, with the same moderators and owners as specified below for the auto-generated mailing-list. The moderator will also be allowed to post to the list unmoderated.
+
+Further, if any customized auto-response message are found in the confgured templates folder (see "sharing"-tab) then these are used for the announcements mailing-list.
+
+In order to configure the mailing-list the REST_API credentials have to be configured first.'),
+        ],
+      ],
 
       'musican-contact-tab' => $this->l->t('Display name, pre-name, phone number, email, street-address.'),
 
@@ -845,6 +913,16 @@ particular includes the pseudo-project for the administative board and
 the members of the registered orchestra association. Non-permanents
 always have per-force the project-year attached to their name,
 permanent "pseudo-projects" don\'t, as it does not make any sense.'),
+
+        'mailing-list' => [
+          'default' => $this->l->t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
+          'create' => $this->l->t('Create a mailing-list for the project participants. The list is open for posting from members, participants are auto-subscribed if they are accepted as project-participants, the list archives are accessible to members only.'),
+          'manage' => $this->l->t('External link to the list configuration page.'),
+          'close' => $this->l->t('Close the list, i.e. disallow further postings to the list.'),
+          'reopen' => $this->l->t('Reopen the list, i.e. again allow further postings to the list.'),
+          'delete' => $this->l->t('Delete the list and all of its archived messages.'),
+          'subscribe' => $this->l->t('Subscribe those participants to the project mailing list which have been finally accepted for participation.'),
+        ],
       ],
 
       'project-actions' => $this->l->t('Pull-down menu with entries to move on

@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -61,6 +62,9 @@ class Projects extends PMETableViewBase
 
   /** @var ImagesService */
   private $imagesService;
+
+  /** @var MailingListsService */
+  private $listsService;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -104,6 +108,7 @@ class Projects extends PMETableViewBase
     , ProjectService $projectService
     , EventsService $eventsService
     , ImagesService $imagesService
+    , MailingListsService $listsService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
@@ -113,6 +118,7 @@ class Projects extends PMETableViewBase
     $this->projectService = $projectService;
     $this->eventsService = $eventsService;
     $this->imagesService = $imagesService;
+    $this->listsService = $listsService;
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;
@@ -224,6 +230,19 @@ class Projects extends PMETableViewBase
       'default'  => null, // auto increment
       'sort'     => true,
     ];
+
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      $joinInfo['table'] = $table;
+      switch ($table) {
+      case self::PROJECT_PARTICIPANT_FIELDS_TABLE:
+        $tweakedJoinInfo = $joinInfo;
+        unset($tweakedJoinInfo['identifier']['project_id']);
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($tweakedJoinInfo, 'name');
+        break;
+      default:
+        break;
+      }
+    });
 
     $joinTables = $this->defineJoinStructure($opts);
 
@@ -621,6 +640,7 @@ __EOT__;
       [
         'name' => $this->l->t('Quantity'),
         'input' => 'RH',
+
         'sql' => "GROUP_CONCAT(
   DISTINCT
   CONCAT_WS(
@@ -635,6 +655,131 @@ __EOT__;
     " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
         'default' => 0,
       ]);
+
+    $opts['fdd']['mailing_list_id'] = [
+      'name'    => $this->l->t('Mailing List'),
+      'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-auto', ], ],
+      'tooltip|AP' => $this->toolTipsService['projects:mailing-list:create'],
+      'select|AP' => 'C',
+      'values2|AP' => [ 1 => $this->l->t('create') ],
+      'select'  => 'T',
+      'sort'    => true,
+      'align'   => 'right',
+      'default' => 1,
+      'display|LFD'  => [
+        'popup' => 'data',
+        'prefix' => '<div class="cell-wrapper">',
+        'postfix' => '</div>'
+      ],
+      'php|LFD' => function($value, $op, $field, $row, $recordId, $pme) {
+        $html = $value;
+        if (!empty($value)) {
+          $listAddress = preg_replace('/\./', '@', $value, 1);
+          $configUrl = $this->listsService->getConfigurationUrl($value);
+          $html = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
+        }
+        return $html;
+      },
+      'display|CV' => [ 'popup' => false ],
+      'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
+        $projectId = $recordId['id'];
+        $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
+        $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
+        $l10nStatus = $this->l->t($status = 'unset');
+        $configUrl = '';
+        $archiveUrl = '';
+        if (!empty($value)) {
+          try {
+            // fetch the basic list-info from the lists-server
+            $listInfo = $this->listsService->getListInfo($value);
+            $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+            if (empty($this->listsService->getListConfig($value, 'emergency'))) {
+              $l10nStatus = $this->l->t($status = 'active');
+            } else {
+              $l10nStatus = $this->l->t($status = 'closed');
+            }
+            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+            $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to communicate with mailing list server.');
+            $l10nStatus = $this->l->t($status = 'unknown');
+            $listAddress = preg_replace('/\./', '@', $value, 1);
+            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($value));
+          }
+          $configAnchor = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
+        } else {
+          $configAnchor = $listAddress;
+        }
+        return '<div class="cell-wrapper flex-container flex-center">
+  <span class="list-id display status-' . $status . '" data-status="' . $status . '">
+    <span class="list-label">' . $configAnchor . '</span>
+    <span class="list-status">' . $l10nStatus . '</span>
+  </span>
+  <span class="list-id actions status-' . $status . ' dropdown-container dropdown-no-hover" data-status="' . $status . '">
+    <button class="menu-title action-menu-toggle">...</button>
+    <nav class="mailing-list-dropdown dropdown-content dropdown-align-right">
+      <ul>
+        <li class="list-action list-action-create tooltip-auto"
+            data-operation="create"
+            title="' . $this->toolTipsService['projects:mailing-list:create'] . '"
+        >
+          <a href="#">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/add.svg') . '">
+            ' . $this->l->t('create') . '
+          </a>
+        </li>
+        <li class="list-action list-action-manage tooltip-auto"
+            title="' . $this->toolTipsService['projects:mailing-list:manage'] . '"
+          >
+          <a href="' . $configUrl . '" target="' . md5($listAddress) . '">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/settings-dark.svg') . '">
+            ' . $this->l->t('manage') . '
+          </a>
+        </li>
+        <li class="list-action list-action-subscribe tooltip-auto"
+            data-operation="subscribe"
+            title="' . $this->toolTipsService['projects:mailing-list:subscribe'] . '"
+        >
+          <a href="#">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/confirm.svg') . '">
+            ' . $this->l->t('subscribe') . '
+          </a>
+        </li>
+        <li class="list-action list-action-close tooltip-auto"
+            data-operation="close"
+            title="' . $this->toolTipsService['projects:mailing-list:close'] . '"
+        >
+          <a href="#">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '">
+            ' . $this->l->t('close') . '
+          </a>
+        </li>
+        <li class="list-action list-action-reopen tooltip-auto"
+            data-operation="reopen"
+            title="' . $this->toolTipsService['projects:mailing-list:reopen'] . '"
+        >
+          <a href="#">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/play.svg') . '">
+            ' . $this->l->t('reopen') . '
+          </a>
+        </li>
+        <li class="list-action list-action-delete expert-mode-only tooltip-auto"
+            data-operation="delete"
+            title="' . $this->toolTipsService['projects:mailing-list:delete'] . '"
+        >
+          <a href="#">
+            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/delete.svg') . '">
+            ' . $this->l->t('delete') . '
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </span>
+</div>
+';
+      }
+    ];
+    $this->addSlug('mailing-list', $opts['fdd']['mailing_list_id']);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
@@ -672,10 +817,10 @@ __EOT__;
         'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', 'tooltip-top', ], ],
         'options'  => 'LFCPVD',
         'input'    => 'R',
-        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.name ASC)',
+        'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.l10n_name ASC)',
         'values' => [
           'description' => [
-            'columns' => '$table.name',
+            'columns' => '$table.l10n_name',
           ],
         ],
         'php|VDC'  => function($value, $op, $field, $row, $recordId, $pme) {
@@ -687,6 +832,7 @@ __EOT__;
             'project_id' => $projectId,
             'projectId' => $projectId,
           ];
+          $value = preg_replace('/,(\S)/', ', $1', $value);
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
           $tooltip = Util::htmlEscape($value);
