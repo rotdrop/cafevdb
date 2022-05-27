@@ -1610,9 +1610,13 @@ class PersonalSettingsController extends Controller {
       $posters = $moderators;
       $listsService->configureAnnouncementsList($announcementsMailingList, $owners, $moderators, $posters);
 
+      // install message templates
+      $templates = $listsService->installListTemplates($announcementsMailingList, MailingListsService::TEMPLATE_TYPE_ANNOUNCEMENTS);
+
       return self::response(
-        $this->l->t('Autoconfiguration of the mailing list "%1$s" successful, owner set to "%2$s", moderator and allowed poster set to "%3$s".', [
+        $this->l->t('Autoconfiguration of the mailing list "%1$s" successful, owner set to "%2$s", moderator and allowed poster set to "%3$s", specialized auto-responses: %4$s.', [
           $announcementsMailingList, $owners[0] ?? '', $posters[0] ?? '',
+          empty($templates) ? $this->l->t('none') : implode(', ', $templates),
         ])
       );
     case 'announcementsMailingList':

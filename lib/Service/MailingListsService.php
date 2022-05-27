@@ -29,6 +29,7 @@ use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Handle participant mailing-list services. */
 class MailingListsService
@@ -46,8 +47,9 @@ class MailingListsService
 
   const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
   const TEMPLATE_DIR_AUTO_RESPONSES = 'auto responses';
-  const TYPE_ANNOUNCEMENTS = 'announcements';
-  const TYPE_PROJECTS = 'projects';
+  const TEMPLATE_TYPE_UNSPECIFIC = '';
+  const TEMPLATE_TYPE_ANNOUNCEMENTS = 'announcements';
+  const TEMPLATE_TYPE_PROJECTS = 'projects';
 
   const ROLE_MEMBER = 'member';
   const ROLE_MODERATOR = 'moderator';
@@ -271,7 +273,6 @@ class MailingListsService
         $value = 'False';
       }
     }
-    $this->logInfo('TRY CONFIG ' . print_r($config, true));
     $response = $this->restClient->patch(
       '/3.1/lists/' . $fqdnName . '/config', [
         'json' => $config,
@@ -468,7 +469,7 @@ class MailingListsService
         if ($e->getResponse()->getStatusCode() == 404) {
           // ignore
         } else {
-          $this->logException($e, 'Deleting tempalte ' . $template . ' failed');
+          $this->logException($e, 'Deleting template ' . $template . ' failed');
           return false;
         }
       }
@@ -865,7 +866,7 @@ class MailingListsService
    * Generate the full path to the given templates leaf-directory.
    *
    * @paran string $leafDirectory Leaf-component,
-   * e.g. self::TYPE_ANNOUNCEMENTS or self::TYPE_PROJECTS.
+   * e.g. self::TEMPLATE_TYPE_ANNOUNCEMENTS or self::TEMPLATE_TYPE_PROJECTS.
    */
   public function templateFolderPath(string $leafDirectory)
   {
@@ -873,11 +874,11 @@ class MailingListsService
     $l = $this->appL10n();
     $components = array_map(function($path) {
       return Util::dashesToCamelCase($this->transliterate($path), capitalizeFirstCharacter: true, dashes: '_- ');
-    }, [
+    }, array_filter([
       $l->t('mailing lists'),
       $l->t('auto-responses'),
-      $leafDirectory,
-    ]);
+      $l->t($leafDirectory),
+    ]));
     array_unshift($components, $this->getDocumentTemplatesPath());
     $folderPath = implode('/', $components);
     if ($folderPath[0] != '/') {
@@ -939,7 +940,7 @@ class MailingListsService
       $sharingService = $this->di(SimpleSharingService::class);
 
       if ($node) {
-        $url = $sharingService->linkShare($node, $shareOwnerUid, sharePerms: \OCP\Constants::PERMISSION_READ);
+        $url = $sharingService->linkShare($node, $shareOwnerUid, sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE);
         if (empty($url)) {
           return null;
         }
@@ -952,6 +953,65 @@ class MailingListsService
     });
 
     return $result;
+  }
+
+  /**
+   * Install auto-response templates from the specified cloud-folder for the
+   * given list-id.
+   *
+   * @param string $listId
+   *
+   * @param string $folderName
+   *
+   * @return array An array of the successfully installed templates.
+   */
+  public function installListTemplates(string $listId, string $folderName)
+  {
+    if ($folderName[0] != '/') {
+      $templateFolderPath = $this->templateFolderPath($folderName);
+      $baseTemplatePath = $this->templateFolderPath(MailingListsService::TEMPLATE_TYPE_UNSPECIFIC);
+      $baseFolderShareUri = $this->ensureTemplateFolder($baseTemplatePath);
+      $templateFolderBase = basename($templateFolderPath);
+      $folderShareUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase;
+    } else {
+      $templateFolderPath = $folderName;
+      $baseFolderShareUri = $this->ensureTemplateFolder($templateFolderPath);
+      $folderShareUri = $baseFolderShareUri . '/download?path=/';
+    }
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $templates = [];
+
+    /** @var \OCP\Files\Folder $node */
+    foreach ($userStorage->getFolder($templateFolderPath)->getDirectoryListing() as $node) {
+      if ($node->getType() != \OCP\Files\FileInfo::TYPE_FILE) {
+        continue;
+      }
+      $mimeType = $node->getMimetype();
+      if ($mimeType != 'text/plain' && $mimeType != 'text/markdown') {
+          continue;
+      }
+      $pathInfo = pathinfo($node->getPath());
+      $template = $pathInfo['filename'];
+      if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+          continue;
+      }
+      $nodeBase = $pathInfo['basename'];
+      $templateUri = $folderShareUri . '&files=' . $nodeBase;
+      try {
+        $result = $this->setMessageTemplate($listId, $template, $templateUri);
+      } catch (\Throwable $t) {
+        $this->logException($t, 'Unable to install auto-response ' . $template);
+        $result = false;
+      }
+      if ($result) {
+        $templates[] = $template;
+      }
+    }
+
+    return $templates;
   }
 
   // ensure that the given string is a list-id, if it is a FQDN then try to

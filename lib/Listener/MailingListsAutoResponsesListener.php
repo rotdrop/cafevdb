@@ -55,6 +55,9 @@ class MailingListsAutoResponsesListener implements IEventListener
 
   const EVENT = [ NodeRenamedEvent::class, NodeCopiedEvent::class, NodeWrittenEvent::class, NodeDeletedEvent::class, NodeTouchedEvent::class ];
 
+  const PROJECTS = MailingListsService::TEMPLATE_TYPE_PROJECTS;
+  const ANNOUNCEMENTS = MailingListsService::TEMPLATE_TYPE_ANNOUNCEMENTS;
+
   /** @var IL10N */
   private $l;
 
@@ -131,9 +134,9 @@ class MailingListsAutoResponsesListener implements IEventListener
           unset($nodes[$key]);
         }
       }
-      $baseName = basename($nodePath);
+      $template = pathinfo($nodePath, PATHINFO_FILENAME);
       // first look at the base name, it must start with one of the known prefixes.
-      if (!str_starts_with($baseName, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+      if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
         unset($nodes[$key]);
       }
     }
@@ -158,24 +161,27 @@ class MailingListsAutoResponsesListener implements IEventListener
     /** @var MailingListsService $listsService */
     $listsService = $this->appContainer->get(MailingListsService::class);
 
+    $baseFolderPath = $listsService->templateFolderPath(MailingListsService::TEMPLATE_TYPE_UNSPECIFIC);
+    $baseFolderShareUri = $listsService->ensureTemplateFolder($baseFolderPath);
+    $baseFolderPath = $userFolder . $baseFolderPath;
+
     foreach ($nodes as $key => $node) {
       $nodePath = $node->getPath();
       $nodeBase = basename($nodePath);
 
-      $folderPath = rtrim($userFolder . $listsService->templateFolderPath(''), '/');
-      if (!$this->matchPrefixDirectory($nodePath, $folderPath)) {
+      if (!$this->matchPrefixDirectory($nodePath, $baseFolderPath)) {
         // not an autoresponse file
         return;
       }
 
-      foreach ([MailingListsService::TYPE_ANNOUNCEMENTS, MailingListsService::TYPE_PROJECTS] as $listType) {
+      foreach ([self::ANNOUNCEMENTS, self::PROJECTS] as $listType) {
         $templateFolderPath = $listsService->templateFolderPath($this->l->t($listType));
         $folderPath = $userFolder . $templateFolderPath;
 
         if (!$this->matchPrefixDirectory($nodePath, $folderPath)) {
           continue;
         }
-        if ($listType == MailingListsService::TYPE_PROJECTS) {
+        if ($listType == MailingListsService::TEMPLATE_TYPE_PROJECTS) {
           if (empty($projectsRepository)) {
             /** @var EntityManager $entityManager */
             $entityManager = $this->appContainer->get(EntityManager::class);
@@ -199,8 +205,8 @@ class MailingListsAutoResponsesListener implements IEventListener
               $this->logInfo('Removed ' . $template . ' from list ' . $list);
             }
           } else {
-            $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
-            $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
+            $templateFolderBase = basename($templateFolderPath);
+            $templateUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase . '&files=' . $nodeBase;
             foreach ($lists as $list) {
               $listsService->setMessageTemplate($list, $template, $templateUri);
               $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);

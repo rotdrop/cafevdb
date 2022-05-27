@@ -1722,26 +1722,7 @@ Whatever.',
       $listsService->subscribe($listId, subscriptionData: $subscriptionData);
 
       // install the list templates ...
-      $templateFolderPath = $listsService->templateFolderPath($this->l->t(MailingListsService::TYPE_PROJECTS));
-      $folderShareUri = $listsService->ensureTemplateFolder($templateFolderPath);
-
-      /** @var \OCP\Files\Folder $node */
-      foreach ($this->userStorage->getFolder($templateFolderPath)->getDirectoryListing() as $node) {
-        if ($node->getType() != \OCP\Files\FileInfo::TYPE_FILE) {
-          continue;
-        }
-        $mimeType = $node->getMimetype();
-        if ($mimeType != 'text/plain' && $mimeType != 'text/markdown') {
-          continue;
-        }
-        $nodeBase = baseName($node->getPath());
-        if (!str_starts_with($nodeBase, MailingListsService::TEMPLATE_FILE_PREFIX)) {
-          continue;
-        }
-        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
-        $templateUri = $folderShareUri . '/download?path=/&files=' . $nodeBase;
-        $listsService->setMessageTemplate($listId, $template, $templateUri);
-      }
+      $listsService->installListTemplates($listId, $MailingListsService::TEMPLATE_TYPE_PROJECTS);
 
     } catch (\Throwable $t) {
       if ($new) {
