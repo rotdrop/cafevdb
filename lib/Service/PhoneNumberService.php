@@ -55,10 +55,10 @@ class PhoneNumberService
     $orgPhone = $this->getConfigValue('phoneNumber', '');
     if ($orgPhone != '') {
       try {
-        $orgObject = $backend->parse($orgPhone, null);
-        $this->defaultRegion = $backend->getRegionCodeForNumber($orgObject);
-        $nationalSignificantNumber = $backend->getNationalSignificantNumber($orgObject);
-        $areaCodeLength = $backend->getLengthOfGeographicalAreaCode($orgObject);
+        $orgObject = $this->backend->parse($orgPhone, null);
+        $this->defaultRegion = $this->backend->getRegionCodeForNumber($orgObject);
+        $nationalSignificantNumber = $this->backend->getNationalSignificantNumber($orgObject);
+        $areaCodeLength = $this->backend->getLengthOfGeographicalAreaCode($orgObject);
         if ($areaCodeLength > 0) {
           $this->defaultPrefix = substr($nationalSignificantNumber, 0, $areaCodeLength);
         } else {
