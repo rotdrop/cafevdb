@@ -29,7 +29,12 @@
  * @param \OCA\CAFEVDB\Service\ToolTipsService $toolTips
  * @param bool $isOverview
  * @param array $projectFolders
+ * @param \OCA\CAFEVDB\Service\ProjectService $projectService
  */
+
+$projectFolders = $projectService->ensureProjectFolders($projectId, $projectName, null, true);
+$wikiPage = $projectService->projectWikiLink($projectName);
+$wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
 
 ?>
 <span class="actions dropdown-container dropdown-no-hover"
@@ -50,6 +55,7 @@
            <?php p($l->t('Project Overview')) ?>
          </a>
        </li>
+       <li class="separator"><span class="rule"></span></li>
      <?php } ?>
      <li class="project-action project-participants tooltip-auto"
          data-operation="participants"
@@ -61,17 +67,86 @@
        </a>
      </li>
      <li class="project-action project-instrumentation-numbers tooltip-auto"
-         data-operation="participants"
-         title="<?php echo $toolTips['project-action:project-participants']; ?>"
+         data-operation="instrumentation-numbers"
+         title="<?php echo $toolTips['project-action:project-instrumentation-numbers']; ?>"
      >
-                 'title' => $this->toolTipsService['project-action:project-instrumentation-numbers'],
-                 'value' => 'project-instrumentation-numbers',
-                 'name' => $this->l->t('Instrumentation Numbers') ],
-
-
        <a href="#">
-         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/group.svg'); ?>">
-         <?php p($l->t('Participants')); ?>
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/quota.svg'); ?>">
+         <?php p($l->t('Instrumentation Numbers')); ?>
+       </a>
+     </li>
+     <li class="project-action project-participant-fields tooltip-auto"
+         data-operation="instrumentation-numbers"
+         title="<?php echo $toolTips['project-action:participant-fields']; ?>"
+     >
+       <a href="#">
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/edit.svg'); ?>">
+         <?php p($l->t('Extra Member Data')); ?>
+       </a>
+     </li>
+     <li class="separator"><span class="rule"></span></li>
+     <li class="project-action project-files tooltip-auto"
+         data-operation="files"
+         data-project-files="<?php p($projectFolders['project']); ?>"
+         title="<?php echo $toolTips['project-action:files']; ?>"
+     >
+       <a href="#">
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'categories/files.svg'); ?>">
+         <?php p($l->t('Project Files')); ?>
+       </a>
+     </li>
+     <li class="project-action project-wiki tooltip-auto"
+         data-operation="wiki"
+         title="<?php echo $toolTips['project-action:wiki']; ?>"
+         data-wiki-page="<?php p($wikiPage); ?>"
+         data-wiki-title="<?php p($wikiTitle); ?>"
+     >
+       <a href="#">
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/comment.svg'); ?>">
+         <?php p($l->t('Project Notes')); ?>
+       </a>
+     </li>
+     <li class="project-action project-events tooltip-auto"
+         data-operation="events"
+         title="<?php echo $toolTips['project-action:events']; ?>"
+     >
+       <a href="#">
+         <img alt="" src="<?php echo $urlGenerator->imagePath($appName, 'time.svg'); ?>">
+         <?php p($l->t('Events')); ?>
+       </a>
+     </li>
+     <li class="project-action project-email tooltip-auto"
+         data-operation="email"
+         title="<?php echo $toolTips['project-action:email']; ?>"
+     >
+       <a href="#">
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/mail.svg'); ?>">
+         <?php p($l->t('Em@il')); ?>
+       </a>
+     </li>
+     <li class="separator"><span class="rule"></span></li>
+     <li class="project-action project-sepa-bank-accounts tooltip-auto"
+         data-operation="sepa-bank-accounts"
+         title="<?php echo $toolTips['project-action:sepa-bank-accounts']; ?>"
+     >
+       <a href="#">
+         <?php p($l->t('Debit Mandates')); ?>
+       </a>
+     </li>
+     <li class="project-action project-payments tooltip-auto"
+         data-operation="payments"
+         title="<?php echo $toolTips['project-action:payments']; ?>"
+     >
+       <a href="#">
+         <?php p($l->t('Payments')); ?>
+       </a>
+     </li>
+     <li class="project-action project-financial-balance tooltip-auto"
+         data-operation="email"
+         title="<?php echo $toolTips['project-action:financial-balance']; ?>"
+     >
+       <a href="#">
+         <?php p($l->t('Financial Balance')); ?>
        </a>
      </li>
    </ul>

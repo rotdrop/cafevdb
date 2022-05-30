@@ -1142,12 +1142,13 @@ project without a poster first.");
 ';
 
     $templateParameters = [
+      'appName' => $this->appName(),
       'projectId' => $projectId,
       'projectName' => $projectName,
       'urlGenerator' => $this->urlGenerator(),
       'toolTips' => $this->toolTipsService,
       'isOverview' => $overview,
-      'projectFolders' => $projectPaths
+      'projectService' => $this->projectService,
     ];
     $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
     $control .= $template->render();

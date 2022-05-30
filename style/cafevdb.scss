@@ -721,6 +721,12 @@ body.cafevdb-modalizer {
         margin:0!important;
         padding:0!important;
         float:none!important;
+        &.separator .rule {
+          border-bottom:1px solid black;
+          opacity:0.5;
+          margin:0 0.5ex;
+          display:block;
+        }
         label, label.menu-item,
         a, a.menu-item,
         a:visited, a.menu-item:visited, a:link, a.menu-item:link {
