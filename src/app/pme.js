@@ -1718,7 +1718,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
 
   if (!noSubmitHandlers) {
     // All remaining submit event result in a reload
-    const submitSel = formSel + ' :submit';
+    const submitSel = formSel + ' :submit:not(.action-menu-toggle)';
     container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
