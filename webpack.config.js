@@ -30,6 +30,7 @@ module.exports = {
     'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',
+    'files-hooks': './src/files-hooks.js',
   },
   output: {
     // path: path.resolve(__dirname, 'js'),

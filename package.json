@@ -33,6 +33,7 @@
     "@nextcloud/dialogs": "^3.1.2",
     "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^4.3.0",
+    "@nextcloud/l10n": "*",
     "blueimp-file-upload": "^10.31.0",
     "blueimp-md5": "^2.18.0",
     "bootstrap": "^4.6.1",

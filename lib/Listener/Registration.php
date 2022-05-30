@@ -53,6 +53,7 @@ class Registration
     self::registerListener($context, MailingListsAutoResponsesListener::class);
     self::registerListener($context, MailingListsEmailChangedListener::class);
     self::registerListener($context, MailingListsRegistrationConfirmationListener::class);
+    self::registerListener($context, FilesHooksListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {
