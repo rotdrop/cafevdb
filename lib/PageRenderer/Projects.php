@@ -376,24 +376,23 @@ class Projects extends PMETableViewBase
         ],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
+          // unused, the field is hidden in view mode
           $post = [
-            'projectInstruments' => $value,
             'template' => 'project-instrumentation-numbers',
             'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'project_id' => $recordId['id'],
             'projectId' => $recordId['id'],
           ];
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
-          $title = $this->toolTipsService['project-action:project-instrumentation-numbers'];
-          $link =<<<__EOT__
-                <li class="nav tooltip-top" title="$title">
-                <a class="nav" href="#" data-post="$post" data-json='$json'>
-                $value
-                </a>
-                </li>
-__EOT__;
-          return $link;
+          $tooltip = Util::htmlEscape($value);
+          $html = '<a class="button button-use-icon edit tooltip-top nav"
+   href="#"
+   data-post="' . $post . '" data-json=\'' . $json . '\'
+   title="' . $this->toolTipsService['page-renderer:projects:edit-instrumentation-numbers'] . '"
+>' . $this->l->t('edit') . '</a>
+<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>
+';
+          return $html;
         },
         'filter' => [
           'having' => true,
@@ -575,10 +574,8 @@ __EOT__;
         'valueGroups' => $voicesValueGroups,
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
           $post = [
-            'projectInstruments' => $value,
             'template' => 'project-instrumentation-numbers',
             'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'project_id' => $recordId['id'],
             'projectId' => $recordId['id'],
           ];
           $json = htmlspecialchars(json_encode($post));
