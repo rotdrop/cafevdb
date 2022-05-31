@@ -304,7 +304,7 @@ class Navigation
       foreach ($buttons as &$modButton) {
         $modButton['name'] = 'placeholder';
       }
-    } else if ($misc === false) {
+    } else if ($misc === false && !empty($buttons)) {
       $misc = [ 'placeholder' ];
       foreach ($buttons as &$modButton) {
         $modButton['name'] = 'placeholder';

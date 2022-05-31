@@ -30,9 +30,9 @@ import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
 import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
+import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as Events from './events.js';
 import * as Email from './email.js';
-import { chosenActive } from './select-utils.js';
 import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
@@ -215,136 +215,74 @@ const projectViewPopup = function(containerSel, post) {
 };
 
 /**
- * Parse the user-selection from the project-actions menu.
+ * Handle the project-actions menu
  *
- * Project-id and -name are contained in data-fields of the
- * select, other potentially needed data is contained in
- * data-fields in the options.
+ * @param {jQuery} $menuItem TBD.
  *
- * @param {jQuery} select TBD.
- *
- * @param {String|jQuery} containerSel TBD.
- *
- * @returns {bool}
+ * @param {String} containerSel CSS-selector for the surround page container.
  */
-const actions = function(select, containerSel) {
-
-  // determine the export format
-  const selected = select.find('option:selected');
-  const selectedValue = selected.val();
-
-  const projectId = select.data('projectId');
-  const projectName = select.data('projectName');
-  const post = {
-    projectId,
-    projectName,
+const handleProjectActions = function($menuItem, containerSel) {
+  const operation = $menuItem.data('operation');
+  if (!operation) {
+    return;
+  }
+  const $dropDownContainer = $menuItem.closest('.dropdown-container');
+  const postData = {
+    projectId: $dropDownContainer.data('projectId'),
+    projectName: $dropDownContainer.data('projectName'),
   };
 
-  let error = false;
-
-  switch (selectedValue) {
-  case 'project-infopage': // project overview itself ...
-    projectViewPopup(containerSel, post);
+  switch (operation) {
+  case 'infopage':
+    projectViewPopup(containerSel, postData);
     break;
-
-    // The next 5 actions cannot reasonably loaded in a
-    // popup-box.
   case 'project-participants':
   case 'sepa-bank-accounts':
   case 'project-payments':
-    post.template = selectedValue;
-    CAFEVDB.formSubmit('', $.param(post), 'post');
+    postData.template = operation;
+    CAFEVDB.formSubmit('', $.param(postData), 'post');
     break;
-  case 'profit-and-loss':
-  case 'project-files': {
+  case 'instrumentation-numbers':
+    instrumentationNumbersPopup(containerSel, postData);
+    break;
+  case 'participant-fields':
+    participantFieldsPopup(containerSel, postData);
+    break;
+  case 'files':
+  case 'financial-balance': {
     const url = ncRouter.linkTo('files', 'index.php');
-    const path = selected.data('projectFiles');
+    const path = $menuItem.data('projectFiles');
+    console.info('PATH URL', url, path);
     CAFEVDB.formSubmit(url, $.param({ dir: path }), 'get');
     break;
   }
-  // The following three can easily be opened in popup
-  // dialogs which is more convenient as it does not destroy
-  // the original view.
+  case 'wiki':
+    postData.wikiPage = $menuItem.data('wikiPage');
+    postData.popupTitle = $menuItem.data('wikiTitle');
+    wikiPopup(postData);
+    break;
   case 'events':
-    eventsPopup(post);
+    eventsPopup(postData);
     break;
-  case 'project-email':
-    emailPopup(post, true);
-    break;
-  case 'project-instrumentation-numbers':
-    instrumentationNumbersPopup(containerSel, post);
-    break;
-  case 'project-participant-fields':
-    participantFieldsPopup(containerSel, post);
-    break;
-  case 'project-wiki':
-    post.wikiPage = selected.data('wikiPage');
-    post.popupTitle = selected.data('wikiTitle');
-    wikiPopup(post);
+  case 'email':
+    emailPopup(postData, true);
     break;
   default:
-    OC.dialogs.alert(
-      t(appName, 'Unknown operation:')
-        + ' "' + selectedValue + '"',
-      t(appName, 'Unimplemented'));
-    error = true;
-    break;
-  }
-
-  // Cheating. In principle we mis-use this as a simple pull-down
-  // menu, so let the text remain at its default value. Make sure to
-  // also remove and re-attach the tool-tips, otherwise some of the
-  // tips remain, because chosen() removes the element underneath.
-
-  // console.info('remove selected');
-  select.find('option').prop('selected', false);
-
-  // console.info('update chosen', select.find('option:selected'));
-  select.trigger('chosen:updated');
-
-  $('div.chosen-container').cafevTooltip({ placement: 'auto top' });
-
-  if (!globalState.toolTipsEnabled) {
-    $.fn.cafevTooltip.disable();
+    showError(t(appName, 'Unknown operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
+    return;
   }
   $.fn.cafevTooltip.remove();
-
-  if (!error) {
-    // alert('try to close snapper');
-    CAFEVDB.snapperClose();
-  }
-
-  return false;
+  CAFEVDB.snapperClose();
 };
 
 const actionMenu = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const container = PHPMyEdit.container(containerSel);
-  const projectActions = container.find('select.project-actions');
 
-  const chosenOptions = {
-    placeholder_text_single: t(appName, 'Select an Action'),
-    inherit_select_classes: true,
-    disable_search: true,
-  };
-
-  const maxWidth = projectActions.maxOuterWidth(true);
-  chosenOptions.width = maxWidth + 'px';
-
-  projectActions.chosen(chosenOptions);
-  if (chosenActive(projectActions)) {
-    projectActions.find('option:first').html('');
-    projectActions.trigger('chosen:updated');
-  }
-
-  projectActions
-    .off('change')
-    .on('change', function(event) {
-      event.preventDefault();
-      return actions($(this), containerSel);
-    });
-
-  SelectUtils.makePlaceholder(projectActions);
+  container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
+    handleProjectActions($(this), containerSel);
+    return false;
+  });
 };
 
 const pmeFormInit = function(containerSel) {
@@ -1065,87 +1003,6 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     Photo.popup(this);
     return false;
   });
-
-  const toolbox = container.find('fieldset.projectToolbox');
-  if (toolbox.length > 0) {
-    // If any of the 3 dialogs is already open, move it to top.
-    let popup;
-    if ((popup = $('#events')).dialog('isOpen') === true) {
-      popup.dialog('moveToTop');
-      popup.dialog('option', 'position', {
-        my: 'left top',
-        at: 'left+20px top+60px',
-        of: window,
-      });
-    }
-    if ((popup = $('#event')).dialog('isOpen') === true) {
-      popup.dialog('moveToTop');
-      popup.dialog('option', 'position', {
-        my: 'left top',
-        at: 'left+40px top+40px',
-        of: window,
-      });
-    }
-    if ((popup = $('#emailformdialog')).dialog('isOpen') === true) {
-      popup.dialog('moveToTop');
-      popup.dialog('option', 'position', {
-        my: 'left top',
-        at: 'left+60px top+60px',
-        of: window,
-      });
-    }
-    if ((popup = $('#dokuwiki_popup')).dialog('isOpen') === true) {
-      popup.dialog('moveToTop');
-      popup.dialog('option', 'position', {
-        my: 'center top',
-        at: 'center top+20px',
-        of: window,
-      });
-    }
-    if ((popup = $('#project-instrumentation-numbers-dialog')).dialog('isOpen') === true) {
-      popup.dialog('moveToTop');
-      popup.dialog('option', 'position', {
-        my: 'right top',
-        at: 'right-20px top+30px',
-        of: window,
-      });
-    }
-
-    const projectId = toolbox.data('projectId');
-    const projectName = toolbox.data('projectName');
-    const post = {
-      projectId,
-      projectName,
-    };
-    toolbox.off('click', '**'); // safeguard
-    toolbox.on(
-      'click', 'button.project-wiki',
-      function(event) {
-        const self = $(this);
-        post.wikiPage = self.data('wikiPage');
-        post.popupTitle = self.data('wikiTitle');
-        wikiPopup(post);
-        return false;
-      });
-    toolbox.on(
-      'click', 'button.events',
-      function(event) {
-        eventsPopup(post);
-        return false;
-      });
-    toolbox.on(
-      'click', 'button.project-email',
-      function(event) {
-        emailPopup(post, true);
-        return false;
-      });
-    toolbox.on(
-      'click', 'button.project-instrumentation-numbers',
-      function(event) {
-        instrumentationNumbersPopup(selector, post);
-        return false;
-      });
-  }
 
   const linkPopups = {
     'projects--participant-fields': participantFieldsPopup,

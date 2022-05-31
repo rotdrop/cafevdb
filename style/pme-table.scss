@@ -265,8 +265,20 @@ form.pme-form {
 .ui-dialog .pme-table-container tr.pme-navigation {
   width: 100%;
   position: relative;
-  div.chosen-container, select, input {
-    float:left;
+  td.pme-buttons {
+    & > * {
+      float:left;
+    }
+    .dropdown-container {
+      .action-menu-toggle {
+        min-height:0;
+        width:34px;
+        height:34px;
+      }
+      .dropdown-content.dropdown-dropup {
+        bottom:34px;
+      }
+    }
   }
   input.pme-reload {
     position: absolute;
@@ -678,9 +690,10 @@ td.pme-navigation {
   }
 
   &.pme-custom {
+    padding:0;
     .action-menu-toggle {
-      width:24px;
-      height:24px;
+      width:30px;
+      height:30px;
       min-height:0;
     }
   }
@@ -1235,6 +1248,22 @@ table.pme-main {
     &, &:hover, &:link, &:visited {
       text-decoration:none;
       color:inherit;
+    }
+    display:inline-block;
+    vertical-align:middle;
+    background-color: var(--color-background-dark);
+    min-height:34px;
+    &.button-use-icon {
+      background-size:24px;
+      background-position: center;
+      background-repeat:  no-repeat;
+      text-indent: -99999px;
+      &.edit {
+        background-image: url('../../../core/img/actions/rename.svg');
+      }
+      &.settings {
+        background-image: url('../../../core/img/actions/settings-dark.svg');
+      }
     }
   }
 } /* table.pme-main */

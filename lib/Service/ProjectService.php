@@ -396,6 +396,11 @@ class ProjectService
   public function ensureProjectFolders($projectOrId, $projectName = null, $only = null, $dry= false)
   {
     $project = $this->repository->ensureProject($projectOrId);
+
+    if (empty($project)) {
+      throw new \Exception('CANNOT FIND PROJECT FOR ID ' . $projectOrId);
+    }
+
     if (empty($projectName)) {
       $projectName = $project['name'];
     } else if ($projectName !== $project['name']) {

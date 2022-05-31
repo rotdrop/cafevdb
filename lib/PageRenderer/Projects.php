@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -65,6 +66,9 @@ class Projects extends PMETableViewBase
 
   /** @var MailingListsService */
   private $listsService;
+
+  /** @var OrganizationalRolesService */
+  private $orgaRolesService;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -109,6 +113,7 @@ class Projects extends PMETableViewBase
     , EventsService $eventsService
     , ImagesService $imagesService
     , MailingListsService $listsService
+    , OrganizationalRolesService $orgaRolesService
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ToolTipsService $toolTipsService
@@ -119,6 +124,7 @@ class Projects extends PMETableViewBase
     $this->eventsService = $eventsService;
     $this->imagesService = $imagesService;
     $this->listsService = $listsService;
+    $this->orgaRolesService = $orgaRolesService;
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;
@@ -269,18 +275,10 @@ class Projects extends PMETableViewBase
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['name'] = [
       'name'     => $this->l->t('Project-Name'),
-      'php|LF'  => function($value, $op, $field, $row, $recordId, $pme) {
-        //error_log('project-id: '.$recordId);
-        $projectId = $recordId['id'];
-        $projectName = $value;
-        $placeHolder = false;
-        $overview = true;
-        return $this->projectActions($projectId, $projectName, $placeHolder, $overview);
-      },
       'select'   => 'T',
       'select|LF' => 'D',
       'maxlen'   => self::NAME_LENGTH_MAX + 6,
-      'css'      => ['postfix' => ' projectname control'],
+      'css'      => ['postfix' => ' projectname'],
       'sort'     => true,
       'values|LF'   => [
         'table' => self::TABLE,
@@ -312,42 +310,6 @@ class Projects extends PMETableViewBase
       'align'    => 'center',
     ];
     $this->addSlug('type', $opts['fdd']['type']);
-
-    $opts['fdd']['actions'] = [
-      'name'     => $this->l->t('Actions'),
-      'input'    => 'RV',
-      'sql'      => '$main_table.name',
-      'php|VCLDF'    => function($value, $op, $field, $row, $recordId, $pme) {
-        $projectId = $recordId['id'];
-        $projectName = $value;
-        $overview = false;
-        $placeHolder = $this->l->t("Actions");
-        return $this->projectActions($projectId, $projectName, $placeHolder, $overview);
-      },
-      'select'   => 'T',
-      'options'  => 'VD',
-      'maxlen'   => 11,
-      'default'  => '0',
-      'css'      => ['postfix' => ' control'],
-      'sort'     => false
-    ];
-
-    $opts['fdd']['tools'] = [
-      'name'     => $this->l->t('Toolbox'),
-      'input'    => 'V',
-      'options'  => 'VCD',
-      'select'   => 'T',
-      'maxlen'   => 65535,
-      'css'      => ['postfix' => ' projecttoolbox'],
-      'sql'      => '$main_table.name',
-      'php|CV'   =>  function($value, $op, $field, $row, $recordId, $pme) {
-        $projectName = $value;
-        $projectId = $recordId['id'];
-        return $this->projectToolbox($projectId, $projectName);
-      },
-      'sort'     => true,
-      'escape'   => false
-    ];
 
     $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
       'table' => self::INSTRUMENTS_TABLE,
@@ -467,7 +429,7 @@ __EOT__;
         ],
         'display|VD' => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper">',
+          'prefix' => '<div class="cell-wrapper flex-container-flex-center flex-start">',
           'postfix' => '</div>'
         ],
         'display|CAP' => [ // add, change, paste (copy)
@@ -621,15 +583,15 @@ __EOT__;
           ];
           $json = htmlspecialchars(json_encode($post));
           $post = http_build_query($post, '', '&');
-          $title = Util::htmlEscape($value);
-          $link =<<<__EOT__
-                <li class="nav tooltip-top" title="$title">
-                <a class="nav" href="#" data-post="$post" data-json='$json'>
-                $value
-                </a>
-                </li>
-__EOT__;
-          return $link;
+          $tooltip = Util::htmlEscape($value);
+          $html = '<a class="button button-use-icon edit tooltip-top nav"
+   href="#"
+   data-post="' . $post . '" data-json=\'' . $json . '\'
+   title="' . $this->toolTipsService['page-renderer:projects:edit-instrumentation-numbers'] . '"
+>' . $this->l->t('edit') . '</a>
+<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>
+';
+          return $html;
         },
         'filter' => [
           'having' => true,
@@ -801,7 +763,7 @@ __EOT__;
         ],
         'display|VDC'  => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper">',
+          'prefix' => '<div class="cell-wrapper flex-container-flex-center flex-start">',
           'postfix' => '</div>'
         ],
         'display|P'  => [
@@ -837,14 +799,13 @@ __EOT__;
           $json = json_encode($post);
           $post = http_build_query($post, '', '&');
           $tooltip = Util::htmlEscape($value);
-          $link =<<<__EOT__
-<li class="nav tooltip-top" title="$tooltip">
-  <a class="nav" href="#" data-post="$post" data-json='$json'>
-$value
-  </a>
-</li>
-__EOT__;
-          return $link;
+          $html = '<a class="button button-use-icon edit tooltip-top nav"
+   href="#"
+   data-post="' . $post . '" data-json=\'' . $json . '\'
+   title="' . $this->toolTipsService['page-renderer:projects:edit-participant-fields'] . '"
+>' . $this->l->t('edit') . '</a>
+<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+          return $html;
         },
         'maxlen'   => 30,
         'escape'   => false,
@@ -964,15 +925,27 @@ __EOT__;
       return true;
     };
 
-    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
-      $this->logInfo('Record is ' . print_r($rec, true));
-
+    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) use ($nameIdx) {
       $projectId = $rec['id'];
       $projectName = $row['qf' . $nameIdx];
       return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
     };
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+
+    if ($this->projectId > 0) {
+      $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
+      foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+        foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
+          $actionMenu = $this->projectActionMenu($this->projectId, $this->projectName, direction: 'left', dropDirection: $direction);
+          $button = [
+            'code' => $actionMenu,
+            'name' => 'actions',
+          ];
+          array_unshift($opts['buttons'][$operationMode][$position], $button);
+        }
+      }
+    }
 
     if ($execute) {
       $this->execute($opts);
@@ -1039,7 +1012,7 @@ project without a poster first.");
     }
   }
 
-  public function projectActionMenu($projectId, $projectName, $overview = false, $direction = 'left')
+  public function projectActionMenu($projectId, $projectName, $overview = false, $direction = 'left', $dropDirection = 'down')
   {
     $templateParameters = [
       'appName' => $this->appName(),
@@ -1050,171 +1023,14 @@ project without a poster first.");
       'isOverview' => $overview,
       'projectService' => $this->projectService,
       'direction' => $direction,
+      'dropDirection' => $dropDirection,
+      'rolesService' => $this->orgaRolesService,
+      'currencySymbol' => $this->currencySymbol(),
     ];
     $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
     $html = $template->render();
 
     return $html;
-  }
-
-  public function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
-  {
-    $projectPaths = $this->projectService->ensureProjectFolders($projectId, $projectName, null, true);
-
-    if ($placeHolder === false) {
-      // Strip the 4-digit year from the end, if present
-      // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
-      $placeHolder = $projectName; // or maybe don't strip.
-    }
-
-    $control = ''
-            .'
-<span class="project-actions-block">
-  <select data-placeholder="'.$placeHolder.'"
-          class="project-actions"
-          title="'.$this->toolTipsService['project-actions'].'"
-          data-project-id="'.$projectId.'"
-          data-project-name="'.htmlentities($projectName).'">
-    <option value=""></option>
-'
-             .($overview
-               ? $this->pageNavigation->htmlTagsFromArray([
-                 'pre' => '<optgroup>',
-                 'post' => '</optgroup>',
-                 [
-                   'type' => 'option',
-                   'title' => $this->toolTipsService['project-infopage'],
-                   'value' => 'project-infopage',
-                   'name' => $this->l->t('Project Overview')
-                 ]
-               ])
-               : '')
-             .$this->pageNavigation->htmlTagsFromArray([
-               'pre' => '<optgroup>',
-               'post' => '</optgroup>',
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:project-participants'],
-                 'value' => 'project-participants',
-                 'name' => $this->l->t('Participants') ],
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:project-instrumentation-numbers'],
-                 'value' => 'project-instrumentation-numbers',
-                 'name' => $this->l->t('Instrumentation Numbers') ],
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:participant-fields'],
-                 'value' => 'project-participant-fields',
-                 'name' => $this->l->t('Extra Member Data') ], ])
-             .$this->pageNavigation->htmlTagsFromArray([
-               'pre' => '<optgroup>',
-               'post' => '</optgroup>',
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:files'],
-                 'value' => 'project-files',
-                 'data' => [ 'projectFiles' => $projectPaths['project'] ],
-                 'name' => $this->l->t('Project Files')
-               ],
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:wiki'],
-                 'value' => 'project-wiki',
-                 'data' => [
-                   'wikiPage' => $this->projectService->projectWikiLink($projectName),
-                   'wikiTitle' => $this->l->t('Project Wiki for %s', [ $projectName ])
-                 ],
-                 'name' => $this->l->t('Project Notes')
-               ],
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:events'],
-                 'value' => 'events',
-                 'name' => $this->l->t('Events')
-               ],
-               [
-                 'type' => 'option',
-                 'title' => $this->toolTipsService['project-action:email'],
-                 'value' => 'project-email',
-                 'name' => $this->l->t('Em@il')
-               ], ])
-            .$this->pageNavigation->htmlTagsFromArray([
-              'pre' => '<optgroup>',
-              'post' => '</optgroup>',
-              [
-                'type' => 'option',
-                'title' => $this->toolTipsService['project-action:debit-mandates'],
-                'value' => 'sepa-bank-accounts',
-                'disabled' => false, // @todo !Config::isTreasurer(),
-                'name' => $this->l->t('Debit Mandates')
-              ],
-              [
-                'type' => 'option',
-                'title' => $this->toolTipsService['project-action:payments'],
-                'value' => 'project-payments',
-                'disabled' => false, // @todo !Config::isTreasurer(),
-                'name' => $this->l->t('Payments')
-              ],
-              [
-                'type' => 'option',
-                'title' => $this->toolTipsService['project-action:financial-balance'],
-                'value' => 'profit-and-loss',
-                'data' => [ 'projectFiles' => $projectPaths['balance'] ],
-                'name' => $this->l->t('Profit and Loss Account')
-              ] ])
-            .'
-  </select>
-</span>
-';
-
-    return $control;
-  }
-
-  /**Gather events, instrumentation numbers and the wiki-page in a
-   * form-set for inclusion into some popups etc.
-   */
-  public function projectToolbox($projectId, $projectName, $value = false, $eventSelect = [])
-  {
-    $toolbox = $this->pageNavigation->htmlTagsFromArray(
-      [
-        'pre' => ('<fieldset class="projectToolbox" '.
-                  'data-project-id="'.$projectId.'" '.
-                  'data-project-name="'.htmlentities($projectName).'">'), // @todo: standard way to do this
-        'post' => '</fieldset>',
-        [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action:wiki'],
-          'data' => [
-            'wikiPage' => $this->projectService->projectWikiLink($projectName),
-            'wikiTitle' => $this->l->t('Project Wiki for %s', [ $projectName ])
-          ],
-          'class' => 'project-wiki tooltip-top',
-          'value' => 'project-wiki',
-          'name' => $this->l->t('Project Notes')
-        ],
-        [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action:events'],
-          'class' => 'events tooltip-top',
-          'value' => 'events',
-          'name' => $this->l->t('Events')
-        ],
-        [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action:email'],
-          'class' => 'project-email tooltip-top',
-          'value' => 'project-email',
-          'name' => $this->l->t('Em@il')
-        ],
-        [ 'type' => 'button',
-          'title' => $this->toolTipsService['project-action:project-instrumentation-numbers'],
-          'class' => 'project-instrumentation-numbers tooltip-top',
-          'value' => 'project-instrumentation-numbers',
-          'name' => $this->l->t('Instrumentation Numbers')
-        ],
-      ]);
-    return '<div class="projectToolbox">
-'.$toolbox.'
-</div>
-';
   }
 
   /**

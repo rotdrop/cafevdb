@@ -30,21 +30,64 @@
  * @param bool $isOverview
  * @param array $projectFolders
  * @param \OCA\CAFEVDB\Service\ProjectService $projectService
+ * @param \OCA\CAFEVDB\Service\OrganizationalRolesService $rolesService
  * @param string $direction 'left' or 'right'
+ * @param string $dropDirection 'up' or 'down'
  */
 
 $projectFolders = $projectService->ensureProjectFolders($projectId, $projectName, null, true);
 $wikiPage = $projectService->projectWikiLink($projectName);
 $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
 
+// provide URLs for all cases where the user may want to open this in another tab or window
+$routes = [
+  'project-files' => $urlGenerator->linkToRoute('files.view.index', [
+    'dir' => $projectFolders['project'],
+  ]),
+  'financial-balance' => $urlGenerator->linkToRoute('files.view.index', [
+    'dir' => $projectFolders['balance'],
+  ]),
+  'project-participants' => $urlGenerator->linkToRoute($appName . '.page.index', [
+    'template' => 'project-participants',
+    'projectId' => $projectId,
+    'projectName' => $projectName,
+  ]),
+  'instrumentation-numbers' => $urlGenerator->linkToRoute($appName . '.page.index', [
+    'template' => 'project-instrumentation-numbers',
+    'projectId' => $projectId,
+    'projectName' => $projectName,
+  ]),
+  'participant-fields' => $urlGenerator->linkToRoute($appName . '.page.index', [
+    'template' => 'project-participant-fields',
+    'projectId' => $projectId,
+    'projectName' => $projectName,
+  ]),
+  'wiki' => $urlGenerator->linkToRoute('dokuwikiembedded.page.index', [
+    'wikiPage' => $wikiPage,
+  ]),
+  'sepa-bank-accounts' => $urlGenerator->linkToRoute($appName . '.page.index', [
+    'template' => 'sepa-bank-accounts',
+    'projectId' => $projectId,
+    'projectName' => $projectName,
+  ]),
+  'project-payments' => $urlGenerator->linkToRoute($appName . '.page.index', [
+    'template' => 'project-payments',
+    'projectId' => $projectId,
+    'projectName' => $projectName,
+  ]),
+];
+
+/** @var \OCP\IURLGenerator $urlGenerator */
+/** @var \OCA\CAFEVDB\Service\OrganizationalRolesService $rolesService */
+
 ?>
-<span class="actions dropdown-container dropdown-no-hover"
+<span class="actions project-actions dropdown-container dropdown-no-hover tooltip-auto"
       title="<?php echo $toolTips['project-actions']; ?>"
       data-project-id="<?php p($projectId); ?>"
       data-project-name="<?php p($projectName); ?>"
 >
   <button class="menu-title action-menu-toggle">...</button>
-  <nav class="dropdown-content dropdown-align-<?php p($direction); ?>">
+  <nav class="dropdown-content dropdown-align-<?php p($direction); ?> dropdown-drop<?php p($dropDirection); ?>">
    <ul>
      <?php if ($isOverview) { ?>
        <li class="project-action project-infopage tooltip-auto"
@@ -59,10 +102,10 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
        <li class="separator"><span class="rule"></span></li>
      <?php } ?>
      <li class="project-action project-participants tooltip-auto"
-         data-operation="participants"
+         data-operation="project-participants"
          title="<?php echo $toolTips['project-action:project-participants']; ?>"
      >
-       <a href="#">
+       <a href="<?php p($routes['project-participants']) ?>">
          <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/group.svg'); ?>">
          <?php p($l->t('Participants')); ?>
        </a>
@@ -71,16 +114,16 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
          data-operation="instrumentation-numbers"
          title="<?php echo $toolTips['project-action:project-instrumentation-numbers']; ?>"
      >
-       <a href="#">
+       <a href="<?php p($routes['instrumentation-numbers']) ?>">
          <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/quota.svg'); ?>">
          <?php p($l->t('Instrumentation Numbers')); ?>
        </a>
      </li>
      <li class="project-action project-participant-fields tooltip-auto"
-         data-operation="instrumentation-numbers"
+         data-operation="participant-fields"
          title="<?php echo $toolTips['project-action:participant-fields']; ?>"
      >
-       <a href="#">
+       <a href="<?php p($routes['participant-fields']) ?>">
          <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/edit.svg'); ?>">
          <?php p($l->t('Extra Member Data')); ?>
        </a>
@@ -91,7 +134,7 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
          data-project-files="<?php p($projectFolders['project']); ?>"
          title="<?php echo $toolTips['project-action:files']; ?>"
      >
-       <a href="#">
+       <a href="<?php p($routes['project-files']); ?>">
          <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'categories/files.svg'); ?>">
          <?php p($l->t('Project Files')); ?>
        </a>
@@ -102,7 +145,7 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
          data-wiki-page="<?php p($wikiPage); ?>"
          data-wiki-title="<?php p($wikiTitle); ?>"
      >
-       <a href="#">
+       <a href="<?php p($routes['wiki']); ?>">
          <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/comment.svg'); ?>">
          <?php p($l->t('Project Notes')); ?>
        </a>
@@ -125,31 +168,37 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
          <?php p($l->t('Em@il')); ?>
        </a>
      </li>
-     <li class="separator"><span class="rule"></span></li>
-     <li class="project-action project-sepa-bank-accounts tooltip-auto"
-         data-operation="sepa-bank-accounts"
-         title="<?php echo $toolTips['project-action:sepa-bank-accounts']; ?>"
-     >
-       <a href="#">
-         <?php p($l->t('Debit Mandates')); ?>
-       </a>
-     </li>
-     <li class="project-action project-payments tooltip-auto"
-         data-operation="payments"
-         title="<?php echo $toolTips['project-action:payments']; ?>"
-     >
-       <a href="#">
-         <?php p($l->t('Payments')); ?>
-       </a>
-     </li>
-     <li class="project-action project-financial-balance tooltip-auto"
-         data-operation="email"
-         title="<?php echo $toolTips['project-action:financial-balance']; ?>"
-     >
-       <a href="#">
+     <?php if ($rolesService->inTreasurerGroup()) { ?>
+       <li class="separator"><span class="rule"></span></li>
+       <li class="project-action project-sepa-bank-accounts tooltip-auto"
+           data-operation="sepa-bank-accounts"
+           title="<?php echo $toolTips['project-action:sepa-bank-accounts']; ?>"
+       >
+         <a href="<?php p($routes['sepa-bank-accounts']); ?>">
+           <img alt="" src="<?php echo $urlGenerator->imagePath($appName, 'bank-transfer.svg'); ?>">
+           <?php p($l->t('Debit Mandates')); ?>
+         </a>
+       </li>
+       <li class="project-action project-payments tooltip-auto"
+           data-operation="project-payments"
+           title="<?php echo $toolTips['project-action:payments']; ?>"
+       >
+         <a href="<?php p($routes['project-payments']); ?>">
+           <span class="menu-icon"><?php p($currencySymbol); ?></span>
+           <?php p($l->t('Payments')); ?>
+         </a>
+       </li>
+       <li class="project-action project-financial-balance tooltip-auto"
+         data-operation="financial-balance"
+           data-project-files="<?php p($projectFolders['balance']); ?>"
+           title="<?php echo $toolTips['project-action:financial-balance']; ?>"
+       >
+         <a href="<?php p($routes['financial-balance']); ?>">
+         <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'categories/files.svg'); ?>">
          <?php p($l->t('Financial Balance')); ?>
-       </a>
-     </li>
+         </a>
+       </li>
+     <?php } ?>
    </ul>
   </nav>
 </span>
