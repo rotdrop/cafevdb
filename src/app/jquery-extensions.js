@@ -70,7 +70,6 @@ $.fn.cafevDialog = function(argument) {
     if ($('#appsettings_popup').length === 0) {
       CAFEVDB.snapperClose();
     }
-    console.trace('will open dialog');
     console.debug('will open dialog');
     $.fn.dialog.call(this, argument);
     if (this.dialog('option', 'draggable')) {
