@@ -1182,22 +1182,19 @@ table.pme-main {
     width:auto;
   }
 
-  /*Style links in a more ordinary fashion */
-  a:not(.ui-tabs-anchor, .chosen-single):link {
+  /* Style links in a more ordinary fashion */
+  a:not(.ui-tabs-anchor, .chosen-single) {
     color:CornFlowerBlue;
     text-decoration:underline;
     font-weight:bold;
-  }
-  a:not(.ui-tabs-anchor, .chosen-single):visited {
-    color:CornFlowerBlue;
-    text-decoration:underline;
-    font-weight:bold;
-  }
-  a:not(.ui-tabs-anchor, .chosen-single):hover {
-    color:CornFlowerBlue;
-    text-decoration:underline;
-    font-style:italic;
-    font-weight:bold;
+    &:link {
+    }
+    &:visited {
+    }
+    &:hover {
+      /* background-color: rgba(127, 127, 127, 0.25); */
+      color:#286ce6;
+    }
   }
 
   li.nav {
