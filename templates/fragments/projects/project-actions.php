@@ -30,6 +30,7 @@
  * @param bool $isOverview
  * @param array $projectFolders
  * @param \OCA\CAFEVDB\Service\ProjectService $projectService
+ * @param string $direction 'left' or 'right'
  */
 
 $projectFolders = $projectService->ensureProjectFolders($projectId, $projectName, null, true);
@@ -43,7 +44,7 @@ $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
       data-project-name="<?php p($projectName); ?>"
 >
   <button class="menu-title action-menu-toggle">...</button>
-  <nav class="dropdown-content dropdown-align-right">
+  <nav class="dropdown-content dropdown-align-<?php p($direction); ?>">
    <ul>
      <?php if ($isOverview) { ?>
        <li class="project-action project-infopage tooltip-auto"

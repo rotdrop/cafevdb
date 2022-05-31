@@ -209,6 +209,7 @@ class Projects extends PMETableViewBase
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
+    $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
 
     // Display special page elements
     $opts['display'] = [
@@ -216,7 +217,7 @@ class Projects extends PMETableViewBase
       //'query' => true,
       'sort'  => true,
       'time'  => true,
-      'tabs'  => false
+      'tabs'  => false,
     ];
 
     $idIdx = 0;
@@ -963,6 +964,14 @@ __EOT__;
       return true;
     };
 
+    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
+      $this->logInfo('Record is ' . print_r($rec, true));
+
+      $projectId = $rec['id'];
+      $projectName = $row['qf' . $nameIdx];
+      return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
+    };
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
@@ -1028,6 +1037,24 @@ project without a poster first.");
       default:
         return $this->l->t("Internal error, don't know what to do concerning project-posters in the given context.");
     }
+  }
+
+  public function projectActionMenu($projectId, $projectName, $overview = false, $direction = 'left')
+  {
+    $templateParameters = [
+      'appName' => $this->appName(),
+      'projectId' => $projectId,
+      'projectName' => $projectName,
+      'urlGenerator' => $this->urlGenerator(),
+      'toolTips' => $this->toolTipsService,
+      'isOverview' => $overview,
+      'projectService' => $this->projectService,
+      'direction' => $direction,
+    ];
+    $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
+    $html = $template->render();
+
+    return $html;
   }
 
   public function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
@@ -1140,18 +1167,6 @@ project without a poster first.");
   </select>
 </span>
 ';
-
-    $templateParameters = [
-      'appName' => $this->appName(),
-      'projectId' => $projectId,
-      'projectName' => $projectName,
-      'urlGenerator' => $this->urlGenerator(),
-      'toolTips' => $this->toolTipsService,
-      'isOverview' => $overview,
-      'projectService' => $this->projectService,
-    ];
-    $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
-    $control .= $template->render();
 
     return $control;
   }
