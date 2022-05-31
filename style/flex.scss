@@ -43,6 +43,15 @@ span.flex-container {
   &.flex-justify-full {
     justify-content:space-between;
   }
+  &.flex-justify-start {
+    justify-content:flex-start;
+  }
+  &.flex-justify-end {
+    justify-content:flex-end;
+  }
+  &.flex-justify-center {
+    justify-content:flex-center;
+  }
   .flex-wrapper {
     width:100%;
     height:0;

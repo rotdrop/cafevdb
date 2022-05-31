@@ -46,6 +46,14 @@ body#body-settings {
   .flex-container {
     display:flex;
   }
+
+  .one-liner {
+    white-space:nowrap;
+    &.ellipsis {
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+  }
 }
 
 #controls {

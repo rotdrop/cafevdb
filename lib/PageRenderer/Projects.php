@@ -428,7 +428,7 @@ class Projects extends PMETableViewBase
         ],
         'display|VD' => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper flex-container-flex-center flex-start">',
+          'prefix' => '<div class="cell-wrapper flex-container flex-center flex-justify-start">',
           'postfix' => '</div>'
         ],
         'display|CAP' => [ // add, change, paste (copy)
@@ -586,7 +586,7 @@ class Projects extends PMETableViewBase
    data-post="' . $post . '" data-json=\'' . $json . '\'
    title="' . $this->toolTipsService['page-renderer:projects:edit-instrumentation-numbers'] . '"
 >' . $this->l->t('edit') . '</a>
-<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>
+<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>
 ';
           return $html;
         },
@@ -764,7 +764,7 @@ class Projects extends PMETableViewBase
         ],
         'display|VDC'  => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper flex-container-flex-center flex-start">',
+          'prefix' => '<div class="cell-wrapper flex-container flex-center">',
           'postfix' => '</div>'
         ],
         'display|P'  => [
