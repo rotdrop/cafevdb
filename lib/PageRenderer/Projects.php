@@ -623,6 +623,7 @@ __EOT__;
       'name'    => $this->l->t('Mailing List'),
       'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-auto', ], ],
       'tooltip|AP' => $this->toolTipsService['projects:mailing-list:create'],
+      'input' => 'R',
       'select|AP' => 'C',
       'values2|AP' => [ 1 => $this->l->t('create') ],
       'select'  => 'T',
@@ -673,8 +674,11 @@ __EOT__;
         } else {
           $configAnchor = $listAddress;
         }
+        $css_postfix	= $pme->fdd[$field]['css']['postfix']??[];
+        $css_class_name = $pme->getCSSclass('input', null, false, $css_postfix);
         return '<div class="cell-wrapper flex-container flex-center">
   <span class="list-id display status-' . $status . '" data-status="' . $status . '">
+    ' . $pme->htmlHiddenData('mailing_list_id', $value, $css_class_name) . '
     <span class="list-label">' . $configAnchor . '</span>
     <span class="list-status">' . $l10nStatus . '</span>
   </span>
@@ -1169,6 +1173,8 @@ project without a poster first.");
         }
       }
     }
+
+    Util::unsetValue($changed, 'mailing_list_id');
 
     $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
     $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');

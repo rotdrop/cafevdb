@@ -439,6 +439,7 @@ const pmeFormInit = function(containerSel) {
               $listDisplay.data('status', data.status);
               $listDisplay.removeClass('status-' + oldStatus).addClass('status-' + data.status);
               const $listActions = form.find('.list-id.actions');
+              $listDisplay.find('input.mailing-list').val(data.list_id);
               $listDisplay.find('.list-label').html(data.fqdn_listname);
               $listDisplay.find('.list-status').html(data.l10nStatus);
               $listActions.data('status', data.status);
