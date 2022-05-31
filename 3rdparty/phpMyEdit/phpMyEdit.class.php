@@ -312,6 +312,7 @@ class phpMyEdit
 	function nav_text_links()	 { return !empty($this->navigation) && stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return !empty($this->navigation) && stristr($this->navigation, 'G'); }
 	function nav_custom_multi()	 { return !empty($this->navigation) && stristr($this->navigation, 'M'); }
+	function nav_custom()		 { return !empty($this->navigation) && stristr($this->navigation, 'C'); }
 	function nav_up()			 { return !empty($this->navigation) && stristr($this->navigation, 'U') && (!isset($this->buttons[$this->page_type]['up']) || !($this->buttons[$this->page_type]['up'] === false)); }
 	function nav_down()			 { return !empty($this->navigation) && stristr($this->navigation, 'D') && (!isset($this->buttons[$this->page_type]['down']) || !($this->buttons[$this->page_type]['down'] === false)); }
 
@@ -4504,6 +4505,7 @@ class phpMyEdit
 			$this->sys_cols += intval($this->nav_buttons()
 									  && ($this->nav_text_links() || $this->nav_graphic_links()));
 			$this->sys_cols += intval($this->nav_custom_multi() !== false);
+			$this->sys_cols += intval($this->nav_custom() !== false);
 		}
 		/*
 		 * We need an initial column(s) (sys columns)
@@ -4824,6 +4826,16 @@ class phpMyEdit
 							$first = false;
 						}
 						echo ' /></td>',"\n";
+					}
+					if ($this->nav_custom()) {
+						echo '<td class="' . $css_class_name . ' ' . $this->getCSSclass('custom') . '">';
+						if (is_callable($this->display['custom_navigation'])) {
+							$html = call_user_func($this->display['custom_navigation'], $key_rec, $groupby_rec, $row, $this);
+						} else {
+							$html = $this->display['custom_navigation'] ?? '';
+						}
+						echo $html;
+						echo '</td>';
 					}
 					if ($this->nav_custom_multi()) {
 						$css	  = $this->getCSSclass([ $this->misccss, 'check' ], null, null, $this->misccss2);
@@ -6357,6 +6369,7 @@ class phpMyEdit
 			? $opts['display']['num_pages'] : true;
 		$this->display['navigation'] = isset($opts['display']['navigation'])
 			? $opts['display']['navigation'] : 'VCPD'; // default: all
+		$this->display['custom_navigation'] = $opts['display']['custom_navigation'] ?? null;
 
 		$this->display['readonly'] =
 			isset($opts['display']['readonly'])

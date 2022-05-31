@@ -574,32 +574,6 @@ hr.pme-hr {
 
 /**************************************/
 
-.pme-navigation.graphic-links input {
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
-  min-height:unset;
-  padding:unset;
-}
-
-input.pme-view-navigation {
-  background:url(../img/pme-view.png) no-repeat !important;
-}
-
-input.pme-copy-navigation {
-  background:url(../img/pme-copy.png) no-repeat !important;
-}
-
-input.pme-change-navigation {
-  background:url(../img/pme-change.png) no-repeat !important;
-}
-
-input.pme-delete-navigation {
-  background:url(../img/pme-delete.png) no-repeat !important;
-}
-
 td.pme-cell.register-musician {
   text-align:center;
 }
@@ -673,6 +647,44 @@ td.pme-buttons {
 /* misc check-boxes */
 
 td.pme-navigation {
+
+  .pme-navigation.graphic-links {
+
+    input {
+      width:16px !important;
+      height:15px !important;
+      border:0 !important;
+      font-size:0 !important;
+      vertical-align:middle;
+      min-height:unset;
+      padding:unset;
+
+      &.pme-view-navigation {
+        background:url(../img/pme-view.png) no-repeat !important;
+      }
+
+      &.pme-copy-navigation {
+        background:url(../img/pme-copy.png) no-repeat !important;
+      }
+
+      &.pme-change-navigation {
+        background:url(../img/pme-change.png) no-repeat !important;
+      }
+
+      &.pme-delete-navigation {
+        background:url(../img/pme-delete.png) no-repeat !important;
+      }
+    }
+  }
+
+  &.pme-custom {
+    .action-menu-toggle {
+      width:24px;
+      height:24px;
+      min-height:0;
+    }
+  }
+
   &.pme-misc {
     :not(.lt-ie9) {
       input[type=checkbox] {
