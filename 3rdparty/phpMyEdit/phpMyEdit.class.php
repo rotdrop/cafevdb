@@ -690,7 +690,6 @@ class phpMyEdit
 	 */
 	function sql_connect() /* {{{ */
 	{
-		//echo $this->enc($this->uh.$this->un.$this->pw);
 		$persistent = @ini_get('mysqli.allow_persistent') ? 'p:' : '';
 		$this->dbh = new mysqli($persistent.$this->hn, $this->un, $this->pw, $this->db);
 		if ($this->dbh->connect_errno) {
@@ -702,7 +701,7 @@ class phpMyEdit
 			$this->dbh = null;
 		} else {
 			// Gnah.
-			$this->dbh->set_charset('utf8');
+			$this->dbh->set_charset('utf8mb4');
 		}
 	} /* }}} */
 
@@ -807,9 +806,6 @@ class phpMyEdit
 		// Language might look like this:
 		// de-de,en-us;q=0.8,de;q=0.5,en;q=0.3
 
-		/* echo '<PRE>'; */
-		/* print_r($language); */
-		/* echo '</PRE>'; */
 		$langtmpar = explode(',',$language);
 		$langar = array();
 		$haveprio = false;
@@ -823,9 +819,6 @@ class phpMyEdit
 				unset($langvariants[0]);
 				$lang[0] = implode('-',$langvariants);
 			}
-			/* echo '<PRE>'; */
-			/* print_r($lang); */
-			/* echo '</PRE>'; */
 			if (!isset($langar["$lang[0]"])) {
 				if (isset($lang[1])) {
 					$haveprio = true;
@@ -835,16 +828,10 @@ class phpMyEdit
 					$langar["$lang[0]"] = 1.0;
 				}
 			}
-			/* echo '<PRE>'; */
-			/* print_r($langar); */
-			/* echo '</PRE>'; */
 		}
 		if ($haveprio) {
 			arsort($langar, SORT_NUMERIC);
 		}
-		/* echo '<PRE>'; */
-		/* print_r($langar); */
-		/* echo '</PRE>'; */
 
 		foreach ($langar as $lang => $qual) {
 			// try the full language w/ variant, but prefer UTF8
@@ -3604,23 +3591,9 @@ class phpMyEdit
 
 	function get_sfn_cgi_vars($alternative_sfn = null) /* {{{ */
 	{
-		/* echo '<PRE>'; */
-		/* echo "arg: "."\n"; */
-		/* print_r($alternative_sfn); */
-		/* echo "this. "."\n"; */
-		/* print_r($this->sfn); */
-		/* echo '</PRE>'; */
-
 		if ($alternative_sfn === null) { // FAST! (cached return value)
 			static $ret = null;
 			$ret == null && $ret = $this->get_sfn_cgi_vars($this->sfn);
-			/* echo '<PRE>'; */
-			/* echo "arg: "."\n"; */
-			/* print_r($alternative_sfn); */
-			/* echo "ret: "; */
-			/* print_r($ret); */
-			/* echo "\n"; */
-			/* echo '</PRE>'; */
 			return $ret;
 		}
 		$ret = '';
@@ -5750,7 +5723,6 @@ class phpMyEdit
 		}
 
 		$changed = array_unique($changed);
-		//echo "<PRE>".$this->options."</PRE>";
 
 		return $ret;
 	} /* }}} */
@@ -6030,9 +6002,6 @@ class phpMyEdit
 	 */
 	function execute() /* {{{ */
 	{
-		/* echo '<PRE>'; */
-		/* echo "op: ".$this->operation." view ena: ".$this->view_enabled; */
-		/* echo '</PRE>'; */
 		//	DEBUG -	 uncomment to enable
 		/*
 		//phpinfo();
@@ -6510,9 +6479,6 @@ class phpMyEdit
 		$this->tooltips = array();
 		if (isset($opts['tooltips']) && (is_array($opts['tooltips']) || ($opts['tooltips'] instanceof \ArrayAccess))) {
 			$this->tooltips = $opts['tooltips'];
-			/* echo '<PRE>'; */
-			/* print_r($this->tooltips); */
-			/* echo '</PRE>'; */
 		}
 
 		// CGI variables
@@ -6550,12 +6516,6 @@ class phpMyEdit
 		isset($opts['sort_field'])	  || $opts['sort_field'] = array();
 		is_array($opts['sort_field']) || $opts['sort_field'] = array($opts['sort_field']);
 		$this->dfltsfn = $opts['sort_field'];
-		if (false) {
-			echo '<PRE>';
-			print_r($this->sfn);
-			print_r($sort);
-			echo '</PRE>';
-		}
 
 		list(
 			'operation' => $this->operation,
