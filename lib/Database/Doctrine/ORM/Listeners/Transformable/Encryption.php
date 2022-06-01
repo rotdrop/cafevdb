@@ -102,7 +102,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Encrypted data.
    */
-  public function transform($value, &$context = null)
+  public function transform(?string $value, mixed &$context = null): mixed
   {
     if (!$this->isEncrypted()) {
       return $value;
@@ -129,7 +129,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Decrypted data.
    */
-  public function reverseTransform($value, &$context = null)
+  public function reverseTransform(?string $value, mixed &$context = null): mixed
   {
     if (!$this->isEncrypted()) {
       return $value;

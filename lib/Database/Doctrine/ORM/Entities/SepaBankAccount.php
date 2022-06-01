@@ -27,7 +27,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 // annotations
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
 
 // types
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
