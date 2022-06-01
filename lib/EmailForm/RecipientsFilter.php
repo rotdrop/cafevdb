@@ -775,7 +775,11 @@ class RecipientsFilter
       if (!empty($this->emailRecs)) {
         return 0;
       }
-      return self::ANNOUNCEMENTS_MAILING_LIST;
+      if (empty($this->getMailingListInfo(self::ANNOUNCEMENTS_MAILING_LIST_KEY))) {
+        return 0;
+      } else {
+        return self::ANNOUNCEMENTS_MAILING_LIST;
+      }
     }
   }
 

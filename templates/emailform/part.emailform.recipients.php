@@ -172,7 +172,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          class="basic-recipients-set mailing-list project-mailing-list tip"
                          name="<?php echo basicSetName(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
                          value="<?php echo basicSetValue(RecipientsFilter::PROJECT_MAILING_LIST_KEY); ?>"
-                         <?php $basicRecipientsSet[RecipientsFilter::PROJECT_MAILING_LIST_KEY] && p('checked'); ?>
+                         <?php $basicRecipientsSet[RecipientsFilter::PROJECT_MAILING_LIST_KEY] && !empty($announcementsMailingList) && p('checked'); ?>
                          <?php empty($projectMailingList) && p('disabled'); ?>
                   />
                   <label for="basic-recipients-set-project-mailing-list"
@@ -190,7 +190,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                          class="basic-recipients-set database tip"
                          name="<?php echo basicSetName(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY); ?>"
                          value="<?php echo basicSetValue(''); ?>"
-                         <?php $basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] || empty($announcementsMailingList) || p('checked'); ?>
+                         <?php ($basicRecipientsSet[RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY] || empty($announcementsMailingList)) && p('checked'); ?>
                   />
                   <label for="basic-recipients-set-database"
                          class="tip"
