@@ -448,8 +448,8 @@ field. If left blank, every logged in user is allowed to change this field.'),
 
         ],
         'projects' => [
-          'edit-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
-          'edit-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
+          'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
+          'edit-project-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
         ],
       ],
 
@@ -918,6 +918,7 @@ permanent "pseudo-projects" don\'t, as it does not make any sense.'),
 
         'mailing-list' => [
           'default' => $this->l->t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
+          'dropdown' => $this->l->t('Pull-down menu with interesting mailing-list operations.'),
           'create' => $this->l->t('Create a mailing-list for the project participants. The list is open for posting from members, participants are auto-subscribed if they are accepted as project-participants, the list archives are accessible to members only.'),
           'manage' => $this->l->t('External link to the list configuration page.'),
           'close' => $this->l->t('Close the list, i.e. disallow further postings to the list.'),

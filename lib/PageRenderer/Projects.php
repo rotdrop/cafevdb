@@ -323,15 +323,25 @@ class Projects extends PMETableViewBase
       [
         'name'        => $this->l->t('Instrumentation'),
         'decoration'  => [ 'slug' => 'instrumentation' ],
-        'options'     => 'CAP',
-        'display|LF'  => [
-          'popup' => 'data',
+        'options'     => 'ACP',
+        'display|A'  => [
+          'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
           'postfix' => '</div>'
         ],
-        'display|VDC'  => [
+        'display|C'  => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper">',
+          'prefix' =>  function($op, $pos, $k, $row, \phpMyEdit $pme) {
+
+            $html = $this->templateEditButton(
+              $pme->rec['id'],
+              $row[$this->queryField('name', $pme->fdd)],
+              'project-instrumentation-numbers'
+            );
+
+            return '<div class="cell-wrapper">' . $html;
+          }
+          ,
           'postfix' => '</div>'
         ],
         'display|P' => [
@@ -345,7 +355,7 @@ class Projects extends PMETableViewBase
 />
 </div>',
         ],
-        'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation').'-ACP'],
+        'tooltip' => $this->toolTipsService[$this->tooltipSlug('instrumentation')],
         'css'         => ['postfix' => [ 'tooltip-top', ], ],
         'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
@@ -360,40 +370,7 @@ class Projects extends PMETableViewBase
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
         ],
-        'values|LFVD' => [
-          'table'       => $l10nInstrumentsTable,
-          'column'      => 'id',
-          'description' => [
-            'columns' => [ '$table.l10n_name' ],
-            'ifnull' => [ false ],
-            'cast' => [ false ],
-          ],
-          'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
-          'filters'     => '$table.id IN (SELECT DISTINCT instrument_id
-  FROM '.self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE.' pi
-  WHERE '.$this->projectId.' <= 0 OR '.$this->projectId.' = pi.project_id)',
-        ],
         'valueGroups' => $this->instrumentInfo['idGroups'],
-        'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
-          // unused, the field is hidden in view mode
-          $post = [
-            'template' => 'project-instrumentation-numbers',
-            'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'projectId' => $recordId['id'],
-          ];
-          $json = json_encode($post);
-          $post = http_build_query($post, '', '&');
-          $tooltip = Util::htmlEscape($value);
-          $html = '<a class="button button-use-icon edit tooltip-top nav"
-   href="#"
-   data-post="' . $post . '" data-json=\'' . $json . '\'
-   title="' . $this->toolTipsService['page-renderer:projects:edit-instrumentation-numbers'] . '"
->' . $this->l->t('edit') . '</a>
-<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>
-';
-          return $html;
-        },
         'filter' => [
           'having' => true,
         ],
@@ -573,21 +550,16 @@ class Projects extends PMETableViewBase
         'align|LF' => 'center',
         'valueGroups' => $voicesValueGroups,
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
-          $post = [
-            'template' => 'project-instrumentation-numbers',
-            'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'projectId' => $recordId['id'],
-          ];
-          $json = htmlspecialchars(json_encode($post));
-          $post = http_build_query($post, '', '&');
+          $html = $this->templateEditButton(
+            $recordId['id'],
+            $row[$this->queryField('name', $pme->fdd)],
+            'project-instrumentation-numbers'
+          );
+
+          $value = preg_replace('/,(\S)/', ', $1', $value);
           $tooltip = Util::htmlEscape($value);
-          $html = '<a class="button button-use-icon edit tooltip-top nav"
-   href="#"
-   data-post="' . $post . '" data-json=\'' . $json . '\'
-   title="' . $this->toolTipsService['page-renderer:projects:edit-instrumentation-numbers'] . '"
->' . $this->l->t('edit') . '</a>
-<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>
-';
+          $html .= '<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+
           return $html;
         },
         'filter' => [
@@ -674,13 +646,17 @@ class Projects extends PMETableViewBase
         $css_postfix	= $pme->fdd[$field]['css']['postfix']??[];
         $css_class_name = $pme->getCSSclass('input', null, false, $css_postfix);
         return '<div class="cell-wrapper flex-container flex-center">
-  <span class="list-id display status-' . $status . '" data-status="' . $status . '">
+  <span class="list-id display status-' . $status . ' tooltip-top"
+        data-status="' . $status . '"
+        title="' . $this->toolTipsService['projects:mailing-list'] . '"
+  >
     ' . $pme->htmlHiddenData('mailing_list_id', $value, $css_class_name) . '
     <span class="list-label">' . $configAnchor . '</span>
     <span class="list-status">' . $l10nStatus . '</span>
   </span>
   <span class="list-id actions status-' . $status . ' dropdown-container dropdown-no-hover" data-status="' . $status . '">
-    <button class="menu-title action-menu-toggle">...</button>
+    <button class="menu-title action-menu-toggle"
+            title="' . $this->toolTipsService['projects:mailing-list:dropdown'] . '">...</button>
     <nav class="mailing-list-dropdown dropdown-content dropdown-align-right">
       <ul>
         <li class="list-action list-action-create tooltip-auto"
@@ -764,7 +740,7 @@ class Projects extends PMETableViewBase
         ],
         'display|VDC'  => [
           'popup' => false,
-          'prefix' => '<div class="cell-wrapper flex-container flex-center">',
+          'prefix' => '<div class="cell-wrapper flex-container flex-center flex-justify-start">',
           'postfix' => '</div>'
         ],
         'display|P'  => [
@@ -788,24 +764,17 @@ class Projects extends PMETableViewBase
           ],
         ],
         'php|VDC'  => function($value, $op, $field, $row, $recordId, $pme) {
-          $projectId = $recordId['id'];
-          $post = [
-            'ProjectParticipantFields' => $value,
-            'template' => 'project-participant-fields',
-            'projectName' => $row[$this->queryField('name', $pme->fdd)],
-            'project_id' => $projectId,
-            'projectId' => $projectId,
-          ];
+
+          $html = $this->templateEditButton(
+            $recordId['id'],
+            $row[$this->queryField('name', $pme->fdd)],
+            'project-participant-fields'
+          );
+
           $value = preg_replace('/,(\S)/', ', $1', $value);
-          $json = json_encode($post);
-          $post = http_build_query($post, '', '&');
           $tooltip = Util::htmlEscape($value);
-          $html = '<a class="button button-use-icon edit tooltip-top nav"
-   href="#"
-   data-post="' . $post . '" data-json=\'' . $json . '\'
-   title="' . $this->toolTipsService['page-renderer:projects:edit-participant-fields'] . '"
->' . $this->l->t('edit') . '</a>
-<span class="cell-content tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+          $html .= '<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+
           return $html;
         },
         'maxlen'   => 30,
@@ -1011,6 +980,25 @@ project without a poster first.");
       default:
         return $this->l->t("Internal error, don't know what to do concerning project-posters in the given context.");
     }
+  }
+
+  private function templateEditButton($projectId, $projectName, $template)
+  {
+    $post = [
+      'template' => $template,
+      'projectName' => $projectName,
+      'projectId' => $projectId,
+    ];
+    $json = htmlspecialchars(json_encode($post));
+    $post = http_build_query($post, '', '&');
+    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', compact('template', 'projectId', 'projectName'));
+    $html = '<a class="button button-use-icon edit tooltip-top nav"
+   href="' . $url . '"
+   data-post="' . $post . '" data-json=\'' . $json . '\'
+   title="' . $this->toolTipsService['page-renderer:projects:edit-' . $template] . '"
+>' . $this->l->t('edit') . '</a>';
+
+    return $html;
   }
 
   public function projectActionMenu($projectId, $projectName, $overview = false, $direction = 'left', $dropDirection = 'down')
