@@ -5,20 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { globalState, appName, $ } from './globals.js';
@@ -45,10 +45,10 @@ require('projects.scss');
  * Generate a popup-dialog for the events-listing for the given
  * project.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  *
- * @param {bool} reopen If true, close any already dialog and re-open it
+ * @param {boolean} reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
@@ -81,10 +81,10 @@ const eventsPopup = function(post, reopen) {
 /**
  * Generate a popup-dialog for project related email.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  *
- * @param {bool} reopen If true, close any already dialog and re-open it
+ * @param {boolean} reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
 const emailPopup = function(post, reopen) {
@@ -106,11 +106,11 @@ const emailPopup = function(post, reopen) {
 /**
  * Generate a popup for the instrumentation numbers.
  *
- * @param {String} containerSel The ambient element of the container
+ * @param {string} containerSel The ambient element of the container
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
 const instrumentationNumbersPopup = function(containerSel, post) {
@@ -145,11 +145,11 @@ const instrumentationNumbersPopup = function(containerSel, post) {
 /**
  * Generate a popup for the participant-fields setup
  *
- * @param {String} containerSel The ambient element of the container
+ * @param {string} containerSel The ambient element of the container
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
 const participantFieldsPopup = function(containerSel, post) {
@@ -182,11 +182,11 @@ const participantFieldsPopup = function(containerSel, post) {
 /**
  * Generate a popup for the "project (over-)view.
  *
- * @param {String} containerSel The ambient element of the container
+ * @param {string} containerSel The ambient element of the container
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
 const projectViewPopup = function(containerSel, post) {
@@ -219,7 +219,7 @@ const projectViewPopup = function(containerSel, post) {
  *
  * @param {jQuery} $menuItem TBD.
  *
- * @param {String} containerSel CSS-selector for the surround page container.
+ * @param {string} containerSel CSS-selector for the surround page container.
  */
 const handleProjectActions = function($menuItem, containerSel) {
   const operation = $menuItem.data('operation');
@@ -310,9 +310,9 @@ const pmeFormInit = function(containerSel) {
      * depending on whether the user has activated the name or
      * year control, or has clicked the submit button.
      *
-     * @param {Object} postAddOn TBD.
+     * @param {object} postAddOn TBD.
      *
-     * @param {Object} button TBD.
+     * @param {object} button TBD.
      */
     const verifyYearName = function(postAddOn, button) {
 
@@ -456,7 +456,7 @@ const pmeFormInit = function(containerSel) {
  * Place an ajax call for public web-page management, create,
  * delete, attach articles.
  *
- *  @param {Object} post The data array with action and information.
+ *  @param {object} post The data array with action and information.
  *
  *  Supported post packages:
  *
@@ -512,13 +512,13 @@ const projectWebPageRequest = function(post, container) {
  * Dispatch a UI-event and potentially add or delete a public
  * web-page. This is called as a beforeActive tab-event handler.
  *
- * @param {Object} event The event provided by jQuery tab widget.
+ * @param {object} event The event provided by jQuery tab widget.
  *
- * @param {Object} ui An object with old and new panel und tabs
+ * @param {object} ui An object with old and new panel und tabs
  *
- * @param {Object} container The div which contains the current dialog.
+ * @param {object} container The div which contains the current dialog.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const projectWebPageTabHandler = function(event, ui, container) {
   const tabId = ui.newTab.attr('id');
@@ -1029,7 +1029,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   /**
    * Update the instrument-voices select with data from an Ajax call
    *
-   * @param {Object} additionalVoices Array of additional voices to add
+   * @param {object} additionalVoices Array of additional voices to add
    * in the form { INSTRUMENT: VOICE }.
    */
   const updateInstrumentVoices = function(additionalVoices) {

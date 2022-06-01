@@ -33,11 +33,11 @@ const camelCase = require('camelcase');
 /**
  * Find the record-id for the given column
  *
- * @param {Object} container Selector or jquery object.
+ * @param {object} container Selector or jquery object.
  *
  * @param {string} column Name
  *
- * @returns {mixed} The id value or false if not found.
+ * @returns {number|boolean} The id value or false if not found.
  */
 const pmeRecordValue = function(container, column) {
   // PME_sys_rec[COLUMN]
@@ -64,11 +64,11 @@ const pmeRecordValue = function(container, column) {
 /**
  * Find the record id inside the given selector or jQuery collection.
  *
- * @param {String} selector TBD.
+ * @param {string} selector TBD.
  *
- * @param {Object} options TBD.
+ * @param {object} options TBD.
  *
- * @returns {Object}
+ * @returns {object}
  */
 const pmeRec = function(selector, options) {
   options = options || { pascalCase: false };

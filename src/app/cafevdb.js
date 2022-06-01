@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { globalState, appName, $, jQuery } from './globals.js';
@@ -58,7 +59,7 @@ const addReadyCallback = function(callBack) {
 /**
  * Run artificial document-ready stuff.
  *
- * @returns {bool} TBD.
+ * @returns {boolean} TBD.
  */
 const runReadyCallbacks = function() {
   for (let idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
@@ -83,7 +84,7 @@ const unfocus = function(element) {
 /**
  * Display a transparent modal dialog which blocks the UI.
  *
- * @param {String} message TBD.
+ * @param {string} message TBD.
  *
  * @returns {jQuery}
  */
@@ -120,11 +121,11 @@ const modalWaitNotification = function(message) {
  * Create and submit a form with a POST request and given
  * parameters.
  *
- * @param {String} url Location to post to.
+ * @param {string} url Location to post to.
  *
- * @param {String} values Query string in GET notation.
+ * @param {string} values Query string in GET notation.
  *
- * @param {String} method Either 'get' or 'post', default is 'post'.
+ * @param {string} method Either 'get' or 'post', default is 'post'.
  */
 const formSubmit = function(url, values, method) {
 
@@ -162,9 +163,9 @@ const attachToolTip = function(selector, options) {
  * unset data('tipsy') by setting it to null, then call the
  * tipsy-constructor with the new values.
  *
- * @param {String} selector jQuery element selector
+ * @param {string} selector jQuery element selector
  *
- * @param {Object} options Tool-tip options
+ * @param {object} options Tool-tip options
  *
  * @param {jQuery} container Optional container containing selected
  * elements, i.e. tool-tip stuff will be applied to all elements
@@ -239,6 +240,9 @@ const toolTipsOnOff = function(onOff) {
   }
 };
 
+/**
+ * @returns {boolean}
+ */
 function toolTipsEnabled() {
   return globalState.toolTipsEnabled;
 }
@@ -252,7 +256,7 @@ const snapperClose = function() {
 /**
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
  *
- * @param {String|jQuery} containerSel TBD.
+ * @param {string|jQuery} containerSel TBD.
  *
  * @todo This function performs too much work and is too unstructured.
  */

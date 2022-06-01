@@ -32,10 +32,10 @@ import modalizer from './modalizer.js';
  * related, rather general. Page and page-title are assumed to be
  * attached to the "post"-object
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  *
- * @param {bool} reopen If true, close any already dialog and re-open it
+ * @param {boolean} reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
 const wikiPopup = function(post, reopen) {

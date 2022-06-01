@@ -29,9 +29,9 @@ import generateUrl from './generate-url.js';
  * A variant of the old fashioned appsettings with a callback
  * instead of script loading
  *
- * @param {String} route TBD.
+ * @param {string} route TBD.
  *
- * @param {Object} callbacks TBD.
+ * @param {object} callbacks TBD.
  */
 const appSettings = function(route, callbacks) {
   const defaultCallbacks = {

@@ -59,7 +59,7 @@ function defaultDoneCallback(file, index, container) {
 /**
  * To be called at some other document-ready invocation, as required.
  *
- * @param {Object} options TBD.
+ * @param {object} options TBD.
  */
 function init(options) {
   const defaultOptions = {
@@ -129,7 +129,7 @@ function init(options) {
     /**
      * called after the first add, does NOT have the data param
      *
-     * @param {Object} event TBD.
+     * @param {object} event TBD.
      */
     start(event) {
       // warn user not to leave the page while upload is in progress
@@ -182,9 +182,9 @@ function init(options) {
     /**
      * called for every successful upload
      *
-     * @param {Object} event TBD.
+     * @param {object} event TBD.
      *
-     * @param {Object} data TBD.
+     * @param {object} data TBD.
      */
     done(event, data) {
 
@@ -236,9 +236,9 @@ function init(options) {
     /**
      * called after last upload
      *
-     * @param {Object} event TBD.
+     * @param {object} event TBD.
      *
-     * @param {Object} data TBD.
+     * @param {object} data TBD.
      */
     stop(event, data) {
       uploadProgressWrapper.find('input.stop').hide();

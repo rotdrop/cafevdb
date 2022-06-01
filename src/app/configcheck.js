@@ -32,6 +32,9 @@ import { addReadyCallback } from './cafevdb.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 
+/**
+ * jQuery ready-callback used elsewhere.
+ */
 function documentReady() {
 
   const $container = $('#app-content');

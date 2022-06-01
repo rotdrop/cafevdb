@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { globalState, appName, $, appPrefix } from './globals.js';
@@ -249,7 +250,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
  *
  * @param {jQuery} panelHolder The div enclosing the fieldset
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder) {
 
@@ -409,7 +410,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
    * if one of the mailing lists has been chosen as the sole
    * recipient.
    *
-   * @param {bool} state TBD.
+   * @param {boolean} state TBD.
    *
    * @param {Array} exceptions Array of CSS selectors to exclude from
    * the read-only attempt.
@@ -1511,11 +1512,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   /**
    * Validate Cc: and Bcc: entries.
    *
-   * @param {Object} event TBD.
+   * @param {object} event TBD.
    *
-   * @param {String} header TBD.
+   * @param {string} header TBD.
    *
-   * @returns {bool}
+   * @returns {boolean}
    */
   const carbonCopyBlur = function(event, header) {
     const $self = $(this);
@@ -1943,7 +1944,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 /**
  * Open the mass-email form in a popup window.
  *
- * @param {Object|String} post Necessary post data, either serialized or as
+ * @param {object|string} post Necessary post data, either serialized or as
  * object. In principle post can be empty. For project emails the
  * following two fields are necessary:
  *
@@ -1956,9 +1957,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
  *
  * - eventSelect: array of ids of events to attach.
  *
- * @param {bool} modal TBD, default true.
+ * @param {boolean} modal TBD, default true.
  *
- * @param {bool} single TBD, default false.
+ * @param {boolean} single TBD, default false.
  *
  * @param {Function} afterInit TBD.
  */

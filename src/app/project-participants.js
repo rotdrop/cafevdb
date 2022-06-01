@@ -49,12 +49,12 @@ require('project-participants.scss');
  * Open a dialog in order to edit the personal reccords of one
  * musician.
  *
- * @param {int|Object} record The record id either as object or
+ * @param {number|object} record The record id either as object or
  * musician id. The format will be converted as appropriate depending
  * on whether the ProjectParticipants table of the Musicians table is
  * queried.
  *
- * @param {Object} options Additional option. In particular ProjectId
+ * @param {object} options Additional option. In particular ProjectId
  * and ProjectName are honored, and the optiones IntialValue and
  * reloadValue which should be one of 'View' or 'Change' (though
  * 'Delete' should also work).
@@ -138,7 +138,7 @@ const myPersonalRecordDialog = function(record, options) {
 /**
  * Trigger server-side validation and fetch the result.
  *
- * @param {Object} options
+ * @param {object} options
  *
  * Would perhaps be snappier to only submit the form to the
  * server if something changed. However, the validation is triggered
@@ -175,7 +175,7 @@ const validateInstrumentChoices = function(options) {
  * @param {jQuery} form A form with additional input data which is
  * submitted as well. Submit buttons are omitted.
  *
- * @param {Object} formData Data for hidden input elements which replace the
+ * @param {object} formData Data for hidden input elements which replace the
  * form's "native" data. Example:
  *
  * formData = {
@@ -210,7 +210,7 @@ const loadPMETable = function(form, formData, afterLoadCallback) {
  * @param {jQuery} form A form with additional input data which is
  * submitted as well. Submit buttons are omitted.
  *
- * @param {Object} formData Data for hidden input elements which replace the
+ * @param {object} formData Data for hidden input elements which replace the
  * form's "native" data. Example:
  *
  * formData = {
@@ -264,7 +264,7 @@ const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
  * displayed. If ids is empty or contains an entry -1 then no filtering will
  * take place.
  *
- * @param {bool} projectMode @c true, @c false, @c null or omitted.
+ * @param {boolean} projectMode @c true, @c false, @c null or omitted.
  * If @c null or not present, then @a form will be searched for an input element with
  * name @c ProjectId, if present and its value is positive, the main musisians table is
  * loaded in project mode, allowing for adding new participants to the respective project.

@@ -54,6 +54,15 @@ const webRoot = OC.appswebroots[appName] + '/';
 const cloudWebRoot = getCloudRootUrl();
 const cloudUser = ncAuth.getCurrentUser();
 
+/**
+ * Prefix the given id with the app-name, joined by '-'.
+ *
+ * @param {string} id TBD.
+ *
+ * @param {string} join The join character, defaults to '-'.
+ *
+ * @returns {string}
+ */
 function appPrefix(id, join) { return appName + (join || '-') + id; }
 
 export {

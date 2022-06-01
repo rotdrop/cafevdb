@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * @file
@@ -84,7 +85,7 @@ const pmeOpenDialogs = PMEState.openDialogs;
  * of the ambient container. If the given argument is already a
  * jQuery object, then just return its first div child.
  *
- * @param {Object|String} selector TBD.
+ * @param {object|string} selector TBD.
  *
  * @returns {jQuery}
  */
@@ -149,10 +150,10 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  * @param {string} outerSelector The CSS selector identifying the form
  * to reload.
  *
- * @param {Object} options Further options. Currently:
- * @param {bool} options.keepLocked Do not destroy "locking" modal
+ * @param {object} options Further options. Currently:
+ * @param {boolean} options.keepLocked Do not destroy "locking" modal
  * planes.
- * @param {bool} options.keepBusy Do not reset the busy indicators.
+ * @param {boolean} options.keepBusy Do not reset the busy indicators.
  */
 const pmeSubmitOuterForm = function(outerSelector, options) {
   outerSelector = pmeSelector(outerSelector);
@@ -201,7 +202,7 @@ const cancelDeferredReload = function(container) {
  *
  * @param {jQuery} container TBD.
  *
- * @returns {Deferred}
+ * @returns {object}
  */
 const pmeDeferReload = function(container) {
   const defer = $.Deferred();
@@ -234,15 +235,15 @@ const pmePushCancellable = function(container, promise) {
  * Replace the content of the already opened dialog with the given
  * HTML-data.
  *
- * @param {Object} container TBD.
+ * @param {object} container TBD.
  *
- * @param {String} content TBD.
+ * @param {string} content TBD.
  *
- * @param {Object} options TBD.
+ * @param {object} options TBD.
  *
  * @param {Function} callback TBD.
  *
- * @param {Object} triggerData Additional data passed to the calling
+ * @param {object} triggerData Additional data passed to the calling
  * event handler after being triggered artifically.
  */
 const tableDialogReplace = function(container, content, options, callback, triggerData) {
@@ -341,7 +342,7 @@ const tableDialogLoadIndicator = function(container, state) {
 /**
  * Reload the current PME-dialog.
  *
- * @param {Object} options The current dialog options. In particular
+ * @param {object} options The current dialog options. In particular
  * options.reloadName and options.reloadValue must hold name and
  * value of the curent (pseudo-) submit input
  * element. options.modified must already be up-to-date.
@@ -349,7 +350,7 @@ const tableDialogLoadIndicator = function(container, state) {
  * @param {Function} callback The application provided callback which is used
  * to shape the HTML after loading.
  *
- * @param {Object} triggerData Additional data passed to the calling
+ * @param {object} triggerData Additional data passed to the calling
  * event handler after being triggered artifically.
  */
 const tableDialogReload = function(options, callback, triggerData) {
@@ -402,14 +403,14 @@ const tableDialogReload = function(options, callback, triggerData) {
  * display the single data-set display, edit, add and copy form in a
  * popup.
  *
- * @param {Object} options Object with additional params to the
+ * @param {object} options Object with additional params to the
  * pme-table.php AJAX callback. Must at least contain the
  * templateRenderer component.
  *
  * @param {Function} changeCallback Handler to call after dialog open
  * and tab change.
  *
- * @param {Object} triggerData Optional additonal data passed to an
+ * @param {object} triggerData Optional additonal data passed to an
  * articifically triggered calling event handler. Will be passed on to
  * the changeCallback.
  */
@@ -680,9 +681,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
  * submit". In particular, we assume PME "view operation" if element
  * carries a CSS class "pme-viewXXXXX" with XXXXX being anything.
  *
- * @param {String} containerSel TBD.
+ * @param {string} containerSel TBD.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const tableDialog = function(form, element, containerSel) {
 
@@ -745,13 +746,13 @@ const tableDialog = function(form, element, containerSel) {
  * update the "modified" component of chained dialogs in a reliable
  * way.
  *
- * @param {Object} tableOptions Option array, see above
+ * @param {object} tableOptions Option array, see above
  *
- * @param {String} post Additional query parameters. In principle it
+ * @param {string} post Additional query parameters. In principle it
  * is also possible to store all values in tableOptions, as this is
  * added to the query-string in any case.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const pmeTableDialogOpen = function(tableOptions, post) {
 
@@ -972,7 +973,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
  * @param {jQuery} element The jQuery object corresponding to the element
  * causing the submit.
  *
- * @param {bool} resetFilter Bool, post a sw=Clear string in addition,
+ * @param {boolean} resetFilter Bool, post a sw=Clear string in addition,
  * causing PHPMyEdit to reset the filter.
  *
  * @returns {Promise}
@@ -1006,13 +1007,13 @@ const pseudoSubmitPost = function(form, element, resetFilter) {
  * @param {jQuery} element The jQuery object corresponding to the element
  * causing the submit.
  *
- * @param {String} selector The CSS selector corresponding to the
+ * @param {string} selector The CSS selector corresponding to the
  * surrounding container (div element)
  *
- * @param {bool} resetFilter Bool, post a sw=Clear string in addition,
+ * @param {boolean} resetFilter Bool, post a sw=Clear string in addition,
  * causing PHPMyEdit to reset the filter.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const pseudoSubmit = function(form, element, selector, resetFilter) {
 
@@ -1100,11 +1101,11 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
  * Trigger either one of the upper or the lower button controls (but
  * not both!)
  *
- * @param {String} buttonName TBD.
+ * @param {string} buttonName TBD.
  *
- * @param {String} containerSel TBD.
+ * @param {string} containerSel TBD.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const pmeTriggerSubmit = function(buttonName, containerSel) {
   const container = pmeContainer(containerSel);
@@ -1121,9 +1122,9 @@ const pmeTriggerSubmit = function(buttonName, containerSel) {
 /**
  * Transpose the main tabel if desired.
  *
- * @param {String} selector TBD.
+ * @param {string} selector TBD.
  *
- * @param {String} containerSel TBD.
+ * @param {string} containerSel TBD.
  */
 const transposeMainTable = function(selector, containerSel) {
   const container = pmeContainer(containerSel);
@@ -1198,9 +1199,9 @@ const transposeMainTable = function(selector, containerSel) {
 /**
  * Transpose the main table based on boolean value of transpose.
  *
- * @param {bool} transpose TBD.
+ * @param {boolean} transpose TBD.
  *
- * @param {String} containerSel TBD.
+ * @param {string} containerSel TBD.
  */
 const maybeTranspose = function(transpose, containerSel) {
   const container = pmeContainer(containerSel);
@@ -1238,7 +1239,7 @@ const maybeTranspose = function(transpose, containerSel) {
 /**
  * Ready callback.
  *
- * @param {String} containerSel TBD.
+ * @param {string} containerSel TBD.
  */
 const transposeReady = function(containerSel) {
 
@@ -1317,6 +1318,13 @@ const installFilterChosen = function(containerSel) {
     .attr('title', PHPMyEdit.filterSelectChosenTitle);
 };
 
+/**
+ * Internal helper function.
+ *
+ * @param {string} containerSel TBD.
+ *
+ * @param {boolean} onlyClass TBD.
+ */
 function installInputSelectize(containerSel, onlyClass) {
   const pmeInput = pmeToken('input');
 
@@ -1506,7 +1514,7 @@ const installTabHandler = function(containerSel, changeCallback) {
  *
  * @param {jQuery} element The tr element of the list-view.
  *
- * @param {Object} event The event which triggered the handler.
+ * @param {object} event The event which triggered the handler.
  *
  * @param {jQuery} container The form or div containing the form.
  *
@@ -1590,7 +1598,7 @@ const pmeOpenRowDialog = function(element, event, container) {
 };
 
 /**
- * @param {Object} containerSel Selector of jQuery element of the
+ * @param {object} containerSel Selector of jQuery element of the
  * container around the form.
  *
  * @param {boolean} noSubmitHandlers Do not attach any handlers to the

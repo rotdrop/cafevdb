@@ -31,7 +31,7 @@ import { globalState } from './cafevdb.js';
  *
  * @param {Function} initCallback TBD.
  *
- * @param {int} initialHeight TBD.
+ * @param {number} initialHeight TBD.
  *
  */
 const addEditor = function(selector, initCallback, initialHeight) {
@@ -128,7 +128,7 @@ const addEditor = function(selector, initCallback, initialHeight) {
 /**
  * Remove a WYSIWYG editor from the element specified by @a selector.
  *
- * @param {String} selector TBD.
+ * @param {string} selector TBD.
  */
 const removeEditor = function(selector) {
   const $editorElements = $(selector);
@@ -150,9 +150,9 @@ const removeEditor = function(selector) {
 /**
  * Replace the contents of the given editor by contents.
  *
- * @param {String} selector TBD.
+ * @param {string} selector TBD.
  *
- * @param {String} contents TBD.
+ * @param {string} contents TBD.
  */
 const updateEditor = function(selector, contents) {
   const $editorElements = $(selector);
@@ -188,7 +188,7 @@ const updateEditor = function(selector, contents) {
  * Generate a "snapshot", meaning an undo-level, for instance after
  * replacing all data by loading email templates and stuff.
  *
- * @param {String} selector TBD.
+ * @param {string} selector TBD.
  */
 const snapshotEditor = function(selector) {
   const $editorElements = $(selector);

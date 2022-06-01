@@ -97,7 +97,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
  * Popup a dialog with debug info if data.data.debug is set and non
  * empty.
  *
- * @param {Object} data TBD.
+ * @param {object} data TBD.
  *
  * @param {Function} callback TBD.
  *

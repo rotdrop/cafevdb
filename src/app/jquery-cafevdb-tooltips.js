@@ -39,9 +39,9 @@ console.log('jquery-cafevdb-tooltips');
  * attach user specified tooltip-... classes to the actual tooltip
  * popups.
  *
- * @param {Object} argument TBD.
+ * @param {object} argument TBD.
  *
- * @returns {Object}
+ * @returns {object}
  *
  */
 $.fn.cafevTooltip = function(argument) {

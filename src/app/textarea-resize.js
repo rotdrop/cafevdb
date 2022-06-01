@@ -27,12 +27,12 @@ import $ from './jquery.js';
  * Unfortunately, the textare element does not fire a resize
  * event. This function emulates one.
  *
- * @param {Object} container selector or jQuery of container for event
+ * @param {object} container selector or jQuery of container for event
  * delegation.
  *
- * @param {Object} textarea selector or jQuery
+ * @param {object} textarea selector or jQuery
  *
- * @param {int} delay Optional, defaults to 50. If true, fire the event
+ * @param {number} delay Optional, defaults to 50. If true, fire the event
  * immediately, if set, then this is a delay in ms.
  */
 function textareaResize(container, textarea, delay) {

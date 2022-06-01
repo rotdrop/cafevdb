@@ -46,7 +46,7 @@ const busyIcon = function(on) {
 /**
  * Load a page through the history-aware AJAX page loader.
  *
- * @param {Object} post TBD.
+ * @param {object} post TBD.
  *
  * @param {Function} afterLoadCallback TBD.
  *

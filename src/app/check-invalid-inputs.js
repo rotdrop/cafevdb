@@ -38,11 +38,11 @@ import { token as pmeToken } from './pme-selectors.js';
  * If the container does not contain a form and is not itself a form,
  * then all contained elements are search for ':invalid'.
  *
- * @param {function} cleanup Cleanup function called after displaying a
+ * @param {Function} cleanup Cleanup function called after displaying a
  * warning about invalid elements. It is not executed if no invalid
  * form elements can be found.
  *
- * @param {function} labelCallback A callback receiving the invalid
+ * @param {Function} labelCallback A callback receiving the invalid
  * input element as only argument. The return value may be logical
  * false or a non-zero string which is used as the display label for
  * the error message.

@@ -87,7 +87,7 @@ const photoUpload = function(wrapper, filelist) {
  * Hide or show edit and delete buttons depending on whether there is
  * a real image.
  *
- * @param {Object} wrapper jQuery object for the wrapper-div.
+ * @param {object} wrapper jQuery object for the wrapper-div.
  */
 const photoLoadHandlers = function(wrapper) {
   const imageInfo = wrapper.data('imageInfo');
@@ -164,7 +164,7 @@ const photoLoad = function(wrapper, callback) {
 /**
  * Edit (crop) the current photo.
  *
- * @param {Object} wrapper jQuery object containing image and
+ * @param {object} wrapper jQuery object containing image and
  * controls.
  */
 const photoEditCurrent = function(wrapper) {
@@ -322,7 +322,7 @@ const deletePhoto = function(wrapper) {
  * Install the special upload and crop buttons inside the given
  * container.
  *
- * @param {Object} wrapper jQuery object containing image and
+ * @param {object} wrapper jQuery object containing image and
  * controls.
  */
 const attachHandlers = function(wrapper) {
@@ -405,7 +405,7 @@ const attachHandlers = function(wrapper) {
 /**
  * Upload images with drag'n drop
  *
- * @param {Object} wrapper Wrapping div with data.
+ * @param {object} wrapper Wrapping div with data.
  *
  * @param {Array} files Files to be uploaded.
  */
@@ -487,7 +487,7 @@ const createImageUploadForm = function(imageInfo) {
  * dynamically injecting html that needs the image upload
  * functionality.
  *
- * @param {Object} container jQuery object containing the
+ * @param {object} container jQuery object containing the
  * photo-wrapper div.
  *
  * @param {Function} callback TBD.

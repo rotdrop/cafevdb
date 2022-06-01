@@ -44,7 +44,7 @@ require('musicians.scss');
  *
  * @param {jQuery} $form TBD.
  *
- * @param {Object} post TBD.
+ * @param {object} post TBD.
  */
 const addMusicians = function($form, post) {
   const projectId = $form.find('input[name="projectId"]').val();

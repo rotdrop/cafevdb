@@ -4,20 +4,21 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { globalState, appName, cloudWebRoot, $ } from './globals.js';
@@ -108,13 +109,13 @@ const ajaxHttpStatus = {
  * development. This is intended to be called from the fail()
  * callback.
  *
- * @param {Object} xhr TBD.
+ * @param {object} xhr TBD.
  *
- * @param {String} textStatus TBD.
+ * @param {string} textStatus TBD.
  *
- * @param {int} errorThrown TBD.
+ * @param {number} errorThrown TBD.
  *
- * @param {Object} callbacks An object with hook-functions:
+ * @param {object} callbacks An object with hook-functions:
  *
  * ```
  * {
@@ -126,7 +127,7 @@ const ajaxHttpStatus = {
  * defaults to "do nothing". The argument is the data possibly
  * submitted by the server, as computed by ajaFailData().
  *
- * @returns {Object} TBD.
+ * @returns {object} TBD.
  */
 const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   const defaultCallbacks = {
@@ -269,13 +270,13 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
  * application development. This is intended to be called from the
  * done() callback after a successful AJAX call.
  *
- * @param {Object} data The data passed to the callback to $.post()
+ * @param {object} data The data passed to the callback to $.post()
  *
  * @param {Array} required List of required fields in data.data.
  *
  * @param {Function} errorCB TBD.
  *
- * @returns {bool} TBD.
+ * @returns {boolean} TBD.
  */
 const ajaxValidateResponse = function(data, required, errorCB) {
   if (data.data && data.data.status !== undefined) {
@@ -360,13 +361,13 @@ const ajaxValidateResponse = function(data, required, errorCB) {
 /**
  * Fetch data from an error response.
  *
- * @param {Object} xhr jqXHR, see fail() method of jQuery ajax.
+ * @param {object} xhr jqXHR, see fail() method of jQuery ajax.
  *
- * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
+ * @param {string} textStatus from jQuery, see fail() method of jQuery ajax.
  *
- * @param {String} errorThrown, see fail() method of jQuery ajax.
+ * @param {string} errorThrown see fail() method of jQuery ajax.
  *
- * @returns {Object} TBD.
+ * @returns {object} TBD.
  */
 const ajaxFailData = function(xhr, textStatus, errorThrown) {
   if (xhr.parsed !== undefined && xhr.error !== undefined && xhr.status !== undefined && xhr.message !== undefined) {
@@ -404,13 +405,13 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
  * Generate some diagnostic output, mostly needed during application
  * development.
  *
- * @param {Object} xhr jqXHR, see fail() method of jQuery ajax.
+ * @param {object} xhr jqXHR, see fail() method of jQuery ajax.
  *
- * @param {String} textStatus from jQuery, see fail() method of jQuery ajax.
+ * @param {string} textStatus from jQuery, see fail() method of jQuery ajax.
  *
- * @param {String} errorThrown, see fail() method of jQuery ajax.
+ * @param {string} errorThrown see fail() method of jQuery ajax.
  *
- * @returns {Object} TBD.
+ * @returns {object} TBD.
  */
 const ajaxFailMessage = function(xhr, textStatus, errorThrown) {
   return ajaxFailData(xhr, textStatus, errorThrown).message;

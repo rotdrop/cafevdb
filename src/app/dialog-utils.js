@@ -32,7 +32,7 @@ import { appName } from './app-info.js';
  * purpose is to be able to move the top-dialog to be bottom-most,
  * juse above a potential "modal" window layer.
  *
- * @Param {jQuery} dialogHolder TBD.
+ * @param {jQuery} dialogHolder TBD.
  */
 function dialogToBackButton(dialogHolder) {
   const dialogWidget = dialogHolder.dialog('widget');

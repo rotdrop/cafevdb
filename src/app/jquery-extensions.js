@@ -51,9 +51,9 @@ $.widget('ui.dialog', $.ui.dialog, {
  * Special dialog version which attaches the dialog to the
  * #content-wrapper div.
  *
- * @param {Object} argument TBD.
+ * @param {object} argument TBD.
  *
- * @returns {Object}
+ * @returns {object}
  */
 $.fn.cafevDialog = function(argument) {
   if (arguments.length === 1 && typeof argument === 'object' && argument !== null) {
@@ -89,7 +89,8 @@ $.fn.cafevDialog = function(argument) {
 
 /**
  * Determine whether scrollbars would be needed.
- * @returns {Object}
+ *
+ * @returns {object}
  */
 $.fn.needScrollbars = function() {
   const node = this.get(0);
@@ -110,7 +111,7 @@ $.fn.needScrollbars = function() {
  *
  * Hence the +1 is an ugly tweak which seems to work a little bit.
  *
- * @returns {Object}
+ * @returns {object}
  *
  */
 $.fn.hasScrollbars = function() {
@@ -124,7 +125,7 @@ $.fn.hasScrollbars = function() {
 /**
  * Determine dimensions of scrollbars.
  *
- * @returns {Object}
+ * @returns {object}
  */
 $.fn.scrollbarDimensions = function() {
   const node = this.get(0);
@@ -136,7 +137,8 @@ $.fn.scrollbarDimensions = function() {
 
 /**
  * Determine whether we have a horizontal scrollbar.
- * @returns {bool}
+ *
+ * @returns {boolean}
  */
 $.fn.hasHorizontalScrollbar = function() {
   const node = this.get(0);
@@ -145,7 +147,8 @@ $.fn.hasHorizontalScrollbar = function() {
 
 /**
  * Determine whether we have a vertical scrollbar.
- * @returns {bool}
+ *
+ * @returns {boolean}
  */
 $.fn.hasVerticalScrollbar = function() {
   const node = this.get(0);
@@ -154,7 +157,8 @@ $.fn.hasVerticalScrollbar = function() {
 
 /**
  * Determine vertical scrollbar width.
- * @returns {int}
+ *
+ * @returns {number}
  */
 $.fn.verticalScrollbarWidth = function() {
   const node = this.get(0);
@@ -163,7 +167,8 @@ $.fn.verticalScrollbarWidth = function() {
 
 /**
  * Determine horizontal scrollbar height.
- * @returns {int}
+ *
+ * @returns {number}
  */
 $.fn.horizontalScrollbarHeight = function() {
   const node = this.get(0);
@@ -189,7 +194,8 @@ $.extend({
 
 /**
  * Compute the maximum width of a set of elements
- * @returns {int}
+ *
+ * @returns {number}
  */
 $.fn.maxWidth = function() {
   return Math.max.apply(null, this.map(function() {
@@ -200,9 +206,9 @@ $.fn.maxWidth = function() {
 /**
  * Compute the maximum width of a set of elements
  *
- * @param {Object} extended Blah.
+ * @param {object} extended Blah.
  *
- * @returns {int}
+ * @returns {number}
  */
 $.fn.maxOuterWidth = function(extended) {
   return Math.max.apply(null, this.map(function() {
@@ -213,7 +219,7 @@ $.fn.maxOuterWidth = function(extended) {
 /**
  * Compute the maximum height of a set of elements
  *
- * @returns {int}
+ * @returns {number}
  */
 $.fn.maxHeight = function() {
   return Math.max.apply(null, this.map(function() {
@@ -224,9 +230,9 @@ $.fn.maxHeight = function() {
 /**
  * Compute the maximum height of a set of elements
  *
- * @param {Object} extended Blah.
+ * @param {object} extended Blah.
  *
- * @returns {int}
+ * @returns {number}
  */
 $.fn.maxOuterHeight = function(extended) {
   return Math.max.apply(null, this.map(function() {
@@ -248,9 +254,9 @@ $.fn.maxOuterHeight = function(extended) {
  *   scope: string or jQuery selector for font-size scoping
  * Usage Example: $(myPixelValue).toEm(); or $(myEmValue).toPx();
  *
- * @param {Object} settings TBD.
+ * @param {object} settings TBD.
  *
- * @returns {float}
+ * @returns {number}
  */
 $.fn.toEm = function(settings) {
   settings = $.extend({

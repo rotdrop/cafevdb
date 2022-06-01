@@ -68,12 +68,12 @@ require('./jquery-readonly.js');
  * Initialize the mess with contents. The "mess" is a dialog window
  * with the input form element for the bank account data.
  *
- * @param {Object} data Data returned by the AJAX call.
+ * @param {object} data Data returned by the AJAX call.
  *
  * @param {Function} onChangeCallback function called after
  * submitting data to the database.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const mandatesInit = function(data, onChangeCallback) {
 
@@ -899,7 +899,7 @@ const makeSuggestions = function(data) {
 /**
  * Validate version for our popup-dialog.
  *
- * @param {Object} event TBD.
+ * @param {object} event TBD.
  *
  * @param {Function} validateLockCB TBD.
  */
@@ -1027,11 +1027,11 @@ const mandateValidate = function(event, validateLockCB) {
  * Note: the pme-dialog is disabled, but for the date, for the time
  * being.
  *
- * @param {Object} event TBD.
+ * @param {object} event TBD.
  *
  * @param {Function} validateLockCB TBD.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const mandateValidatePMEWorker = function(event, validateLockCB) {
 
@@ -1197,9 +1197,9 @@ let mandateValidatePMEPromise = {};
  * validation may lead to a modification of input elements, which in
  * turn have to serve as input to the next validation call.
  *
- * @param {Object} event TBD.
+ * @param {object} event TBD.
  *
- * @param {function} validateLockCB TBD.
+ * @param {Function} validateLockCB TBD.
  *
  * @returns {boolean} false
  */

@@ -89,8 +89,7 @@ const updateLocaleTimeStamps = function($container) {
  * elements. Everything attached to the container is initialized in
  * the $(document).ready() callback.
  *
- * @param {jQUery} container Should be a permanent DOM element.
- *
+ * @param {jQuery} container Should be a permanent DOM element.
  */
 const afterLoad = function(container) {
 

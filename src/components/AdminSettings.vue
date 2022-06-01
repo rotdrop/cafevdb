@@ -6,20 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 </script>
 <template>
@@ -33,27 +33,24 @@
         <hr>
       </div>
       <div v-if="config.isAdmin">
-        <SettingsSelectGroup
-          v-model="settings.orchestraUserGroup"
-          :label="t(appName, 'User Group')"
-          :hint="hints['settings:admin:user-group']"
-          :multiple="false"
-          @update="saveSetting('orchestraUserGroup', ...arguments)"
+        <SettingsSelectGroup v-model="settings.orchestraUserGroup"
+                             :label="t(appName, 'User Group')"
+                             :hint="hints['settings:admin:user-group']"
+                             :multiple="false"
+                             @update="saveSetting('orchestraUserGroup', ...arguments)"
         />
-        <SettingsSelectUsers
-          v-model="settings.orchestraUserGroupAdmins"
-          :label="t(appName, 'User Group Admins')"
-          :hint="hints['settings:admin:user-group:admins']"
-          :disabled="groupAdminsDisabled"
-          @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
+        <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
+                             :label="t(appName, 'User Group Admins')"
+                             :hint="hints['settings:admin:user-group:admins']"
+                             :disabled="groupAdminsDisabled"
+                             @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
         />
       </div>
-      <SettingsInputText
-        v-if="config.isAdmin"
-        v-model="settings.wikiNameSpace"
-        :label="t(appName, 'Wiki Name-Space')"
-        :hint="hints['settings:admin:wiki-name-space']"
-        @update="saveSetting('wikiNameSpace', ...arguments)"
+      <SettingsInputText v-if="config.isAdmin"
+                         v-model="settings.wikiNameSpace"
+                         :label="t(appName, 'Wiki Name-Space')"
+                         :hint="hints['settings:admin:wiki-name-space']"
+                         @update="saveSetting('wikiNameSpace', ...arguments)"
       />
       <div>
         <button type="button"

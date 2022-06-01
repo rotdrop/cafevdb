@@ -23,9 +23,9 @@
 /**
  * Decode an url-encoded query string.
  *
- * @param {String} str The query string.
+ * @param {string} str The query string.
  *
- * @returns {String} The decoded query string.
+ * @returns {string} The decoded query string.
  *
  * @see {@link https://locutus.io/php/url/urlencode/}
  */
@@ -42,9 +42,9 @@ const urlDecode = function(str) {
 /**
  * Encode a query string.
  *
- * @param {String} str The query string.
+ * @param {string} str The query string.
  *
- * @returns {String} The encoded query string.
+ * @returns {string} The encoded query string.
  *
  * @see {@link https://locutus.io/php/url/urlencode/}
  */

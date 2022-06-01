@@ -29,11 +29,11 @@ import * as ncRouter from '@nextcloud/router';
  *
  * @param {string} url The locate URL without app-prefix.
  *
- * @param {Object} urlParams Object holding url-parameters if url
+ * @param {object} urlParams Object holding url-parameters if url
  * contains parameters. "Excess" parameters will be appended as query
  * parameters to the URL.
  *
- * @param {Object} urlOptions Object with processing options
+ * @param {object} urlOptions Object with processing options
  * ```
  * {
  *   escape: BOOL,

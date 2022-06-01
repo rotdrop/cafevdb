@@ -33,18 +33,18 @@
  * Creates an object containing data parsed from the specified query string. The
  * parameters are:
  *
- * @param {String} queryString The query string to parse. The query
+ * @param {string} queryString The query string to parse. The query
  *     string may start with a question mark, spaces may be encoded
  *     either as plus signs or the escape sequence '%20', and both
  *     ampersands and semicolons are permitted as separators.  This
  *     optional parameter defaults to query string from the page URL.
  *
- * @param {bool} preserveDuplicates true if duplicate values should be
+ * @param {boolean} preserveDuplicates true if duplicate values should be
  *     preserved by storing an array of values, and false if
  *     duplicates should overwrite earler occurrences. This optional
  *     parameter defaults to false.
  *
- * @returns {Object}
+ * @returns {object}
  */
 const queryData = function(queryString, preserveDuplicates) {
 

@@ -38,9 +38,9 @@ const PMEPrefix = PHPMyEdit.ucPrefix;
 /**
  * Generate a string with PME_sys_.... prefix.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeSys = function(token) {
   return PMEPrefix + '_sys_' + token;
@@ -49,9 +49,9 @@ const pmeSys = function(token) {
 /**
  * Generate a string with PME_data_.... prefix.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeData = function(token) {
   return PMEPrefix + '_data_' + token;
@@ -60,9 +60,9 @@ const pmeData = function(token) {
 /**
  * Generate a string with pme-.... prefix.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeToken = function(token) {
   return pmePrefix + '-' + token;
@@ -71,9 +71,9 @@ const pmeToken = function(token) {
 /**
  * Generate an id selector with pme-.... prefix.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeIdSelector = function(token) {
   return '#' + pmeToken(token);
@@ -82,11 +82,11 @@ const pmeIdSelector = function(token) {
 /**
  * Generate a class selector with pme-.... prefix.
  *
- * @param {String} element TBD.
+ * @param {string} element TBD.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeClassSelector = function(element, token) {
   return element + '.' + pmeToken(token);
@@ -95,11 +95,11 @@ const pmeClassSelector = function(element, token) {
 /**
  * Generate a compound class selector with pme-.... prefix.
  *
- * @param {String} element TBD.
+ * @param {string} element TBD.
  *
- * @param {String} tokens TBD.
+ * @param {string} tokens TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeClassSelectors = function(element, tokens) {
   const elements = tokens.map(function(token) {
@@ -111,13 +111,13 @@ const pmeClassSelectors = function(element, tokens) {
 /**
  * Generate a name selector with PME_sys_.... prefix.
  *
- * @param {String} element TBD.
+ * @param {string} element TBD.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @param {String} modifier TBD.
+ * @param {string} modifier TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeSysNameSelector = function(element, token, modifier) {
   if (modifier === undefined) {
@@ -129,11 +129,11 @@ const pmeSysNameSelector = function(element, token, modifier) {
 /**
  * Generate a compound name selector with PME_sys_.... prefix.
  *
- * @param {String} element TBD.
+ * @param {string} element TBD.
  *
- * @param {String} tokens TBD.
+ * @param {string} tokens TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeSysNameSelectors = function(element, tokens) {
   const elements = tokens.map(function(token) {
@@ -145,9 +145,9 @@ const pmeSysNameSelectors = function(element, tokens) {
 /**
  * Generate a navigation selector with pme-.... prefix.
  *
- * @param {String} token TBD.
+ * @param {string} token TBD.
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeNavigationSelector = function(token) {
   return '.' + pmeToken('navigation') + '  ' + pmeClassSelector('input', token);
@@ -156,7 +156,7 @@ const pmeNavigationSelector = function(token) {
 /**
  * Selector for main form
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeFormSelector = function() {
   return 'form.' + pmeToken('form');
@@ -165,7 +165,7 @@ const pmeFormSelector = function() {
 /**
  * Selector for main table
  *
- * @returns {String}
+ * @returns {string}
  */
 const pmeTableSelector = function() {
   return 'table.' + pmeToken('main');
@@ -174,10 +174,10 @@ const pmeTableSelector = function() {
 /**
  * Genereate the default selector.
  *
- * @param {String} selector The selector to construct the final
+ * @param {string} selector The selector to construct the final
  * selector from. Maybe a jQuery object.
  *
- * @returns {Strring}
+ * @returns {string}
  */
 const pmeSelector = function(selector) {
   if (typeof selector === 'undefined' || $(selector).is(pmeDefaultSelector)) {
@@ -200,7 +200,7 @@ const pmeSelector = function(selector) {
  * element. If the given argument is already a jQuery object, then
  * just return the argument.
  *
- * @param {String} selector The selector to construct the final
+ * @param {string} selector The selector to construct the final
  * selector from. Maybe a jQuery object.
  *
  * @returns {jQuery}
@@ -221,7 +221,7 @@ const pmeContainer = function(selector) {
 //  * of the ambient container. If the given argument is already a
 //  * jQuery object, then just return its first div child.
 //  *
-//  * @param {String} selector The selector to construct the final
+//  * @param {string} selector The selector to construct the final
 //  * selector from. Maybe a jQuery object.
 //  *
 //  * @returns {jQuery}

@@ -32,12 +32,12 @@ import { parse as parseContentDisposition } from 'content-disposition';
 /**
  * Place a download request by posting to the given Ajax URL.
  *
- * @param {String} url Relative download url, will be first fed in to
+ * @param {string} url Relative download url, will be first fed in to
  * generateUrl().
  *
  * @param {Array} post Optional. Additional post-data.
  *
- * @param {Object} options Optional. Success and error callbacks
+ * @param {object} options Optional. Success and error callbacks
  * .done(), .fail(), .errorMessage().
  *
  */

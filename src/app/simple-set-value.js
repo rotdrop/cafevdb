@@ -30,16 +30,16 @@ import * as Notification from './notification.js';
  *
  * @param {jQuery} element TBD.
  *
- * @param {String} eventType Something like 'blue', 'change' etc.
+ * @param {string} eventType Something like 'blue', 'change' etc.
  *
  * @param {jQuery} msgElement TBD.
  *
- * @param {Object} userCallbacks If a function: success callback. If
- * an object: partial object with keys 'setup', 'success', 'fail',
- * 'cleanup', each pointing to a function performing the respective task.
- *
- * @param {Function} getValue If given a callback which computes the
- * value to be communication via Ajax to the server as payload { value: VALUE }.
+ * @param {object} userCallbacks If a function: success callback. If
+ *    an object: partial object with keys 'setup', 'success', 'fail',
+ *    'cleanup', 'getValue', each pointing to a function performing
+ *    the respective task. The callback 'getValue' computes the value
+ *    to be communication via Ajax to the server as payload { value:
+ *    VALUE }.
  */
 const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {
@@ -111,11 +111,11 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
  *
  * @param {jQuery} element TBD.
  *
- * @param {String} eventType Something like 'blue', 'change' etc.
+ * @param {string} eventType Something like 'blue', 'change' etc.
  *
  * @param {jQuery} msgElement TBD.
  *
- * @param {Object} userCallbacks TBD.
+ * @param {object} userCallbacks TBD.
  */
 const simpleSetHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {

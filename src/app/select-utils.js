@@ -34,7 +34,7 @@ const findOptionByValue = function($select, value) {
  *
  * @param {jQuery} $select TBD.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const chosenActive = function($select) {
   return $select.data('chosen') !== undefined;
@@ -73,7 +73,7 @@ const makePlaceholder = function($select) {
  *
  * @param {jQuery} $select TBD.
  *
- * @returns {bool}
+ * @returns {boolean}
  */
 const selectizeActive = function($select) {
   return !!($select.length > 0 && ($select[0].selectize !== undefined));
@@ -104,7 +104,7 @@ const deselectAll = function($select) {
  * values into the select. If the select is not multiple and value is
  * an array then use values[0] as selected value.
  *
- * @param {bool} [trigger=false] If trigger === true then trigger a
+ * @param {boolean} [trigger=false] If trigger === true then trigger a
  * change-event on the select after installing the new values.
  *
  * @returns {(Array|string|null)} Always return an array for multiple

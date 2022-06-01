@@ -30,9 +30,9 @@ import { v4 as uuidv4 } from 'uuid';
 // /**
 //  * Generate some random Id. @TODO replace.
 //  *
-//  * @param {int} length TBD.
+//  * @param {number} length TBD.
 //  *
-//  * @returns {String}
+//  * @returns {string}
 //  */
 // const makeId = function(length) {
 //   if (typeof length === 'undefined') {

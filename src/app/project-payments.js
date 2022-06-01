@@ -52,11 +52,11 @@ const findByName = function($container, name) {
  * ProjectPayment entity which is always subordinate to a
  * CompositePayment entity.
  *
- * @param {String} containerSel The ambient element of the container
+ * @param {string} containerSel The ambient element of the container
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param {Object} post Arguments object:
+ * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
 const projectPaymentPopup = function(containerSel, post) {

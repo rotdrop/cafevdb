@@ -29,12 +29,12 @@ import $ from './jquery.js';
  * @param {jQuery} select The select element. If it is an ordinary input
  * element, then in "set" mode its value is set to optionValues[0].
  *
- * @param {Object} optionValues Single option value or array of option
+ * @param {object} optionValues Single option value or array of option
  * values to set. For single selects or ordinary inputs only
  * optionValues[0] is taken into account. If optionValues is not an
  * array, then implicitly [ optionValues ] is used.
  *
- * @returns {bool|Array}
+ * @returns {boolean|Array}
  */
 const selectValues = function(select, optionValues) {
   const $select = $(select);
