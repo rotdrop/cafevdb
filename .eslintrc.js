@@ -17,10 +17,14 @@ module.exports = {
     APP_NAME: true,
     XULDocument: true,
   },
-  plugins: ['jsdoc'],
-  extends: [
-    'plugin:jsdoc/recommended',
-  ],
+  settings: {
+    jsdoc: {
+      tagNamePreference: {
+        returns: 'returns',
+      },
+    },
+  },
+  // plugins: ['jsdoc'], already contained in @nextcloud/eslint-config
   rules: {
     // @nextcloud: force proper JSDocs
     'jsdoc/require-returns': 0,
@@ -45,10 +49,7 @@ module.exports = {
     // code spacing with attributes
     'vue/max-attributes-per-line': ['error', {
       singleline: 3,
-      multiline: {
-        max: 1,
-        allowFirstLine: true,
-      },
+      multiline: 1,
     }],
     // custom event naming convention
     'vue/custom-event-name-casing': ['error', 'kebab-case', {
