@@ -510,17 +510,13 @@ class PHPMyEdit extends \phpMyEdit
    */
   public function getCGIRecordId()
   {
-    $key = 'rec';
-    $recordId = $this->get_sys_cgi_var($key, []);
-    if (!empty($recordId)) {
-      return $recordId;
-    }
-    $opRecord = $this->get_sys_cgi_var('operation');
-    $operation = parse_url($opRecord, PHP_URL_PATH);
-    $opArgs    = [];
-    parse_str(parse_url($opRecord, PHP_URL_QUERY), $opArgs);
-    $recordKey = $this->cgi['prefix']['sys'].$key;
-    return $opArgs[$recordKey]??[];
+    list(
+      'operation' => $operation,
+      'rec' => $rec,
+      'groupby_rec' => $groupby_rec,
+    ) = $this->recordIdFromRequest();
+
+    return $rec ?? [];
   }
 
   /**
