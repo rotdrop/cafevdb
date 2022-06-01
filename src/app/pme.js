@@ -706,7 +706,6 @@ const tableDialog = function(form, element, containerSel) {
     // start with all tabs open in when adding data
     post += '&' + $.param({ [pmeSys('cur_tab')]: 'all' });
   }
-  console.info('POST', post);
 
   const cssClass = element.attr('class');
   if (cssClass) {
