@@ -18,11 +18,15 @@ module.exports = {
     XULDocument: true,
   },
   plugins: ['jsdoc'],
+  extends: [
+    'plugin:jsdoc/recommended',
+  ],
   rules: {
     // @nextcloud: force proper JSDocs
     'jsdoc/require-returns': 0,
     'jsdoc/require-returns-description': 0,
     'jsdoc/tag-lines': ['off'],
+    'jsdoc/require-jsdoc': ['error', { publicOnly: true }],
     //
     // use 2 SPACES indentation
     'vue/html-indent': ['error', 2],
