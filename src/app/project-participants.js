@@ -138,7 +138,7 @@ const myPersonalRecordDialog = function(record, options) {
 /**
  * Trigger server-side validation and fetch the result.
  *
- * @param {object} options
+ * @param {Object} options
  *
  * Would perhaps be snappier to only submit the form to the
  * server if something changed. However, the validation is triggered

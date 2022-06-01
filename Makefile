@@ -237,7 +237,7 @@ TINYMCE_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/tinymce/*)
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
- Makefile package-lock.json package.json webpack.config.js
+ Makefile package-lock.json package.json webpack.config.js .eslintrc.js
 
 THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 

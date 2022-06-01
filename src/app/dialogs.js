@@ -107,9 +107,10 @@ const debugPopup = function(data, callback) {
     if (typeof callback !== 'function') {
       callback = undefined;
     }
-    info('<div class="debug error contents">' + data.debug + '</div>',
-	 t(appName, 'Debug Information'),
-	 callback, true, true);
+    info(
+      '<div class="debug error contents">' + data.debug + '</div>',
+      t(appName, 'Debug Information'),
+      callback, true, true);
   }
 };
 

@@ -391,11 +391,11 @@ const pmeFormInit = function(containerSel) {
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
         if ($(this).attr('name').indexOf('savedelete') < 0) {
-	  event.preventDefault();
-	  verifyYearName('submit', $(this));
-	  return false;
+          event.preventDefault();
+          verifyYearName('submit', $(this));
+          return false;
         } else {
-	  return true;
+          return true;
         }
       });
   }

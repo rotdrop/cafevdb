@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -224,7 +224,7 @@ const popupMessages = function() {
           click() {
             const action = 'markread';
             $.post(generateUrl('blog/action/' + action), { blogId: thisBlogId })
-	      .fail(function(xhr, status, errorThrown) {
+              .fail(function(xhr, status, errorThrown) {
                 const message = Ajax.failMessage(xhr, status, errorThrown);
                 Dialogs.alert(message, t('cafevdb', 'Error'));
               })
@@ -332,7 +332,7 @@ const documentReady = function() {
             if (decision) {
               const action = 'delete';
               $.post(generateUrl('blog/action/' + action), { blogId })
-	        .fail(function(xhr, status, errorThrown) {
+                .fail(function(xhr, status, errorThrown) {
                   const message = Ajax.failMessage(xhr, status, errorThrown);
                   Dialogs.alert(message, t('cafevdb', 'Error'));
                 })
@@ -358,7 +358,7 @@ const documentReady = function() {
           popup: false,
           inReplyTo: -1,
         })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
             Dialogs.alert(message, t('cafevdb', 'Error'));
           })
@@ -381,7 +381,7 @@ const documentReady = function() {
           popup: false,
           inReplyTo: -1,
         })
-	  .fail(function(xhr, status, errorThrown) {
+          .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
             Dialogs.alert(message, t('cafevdb', 'Error'));
           })

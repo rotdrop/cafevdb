@@ -26,10 +26,11 @@
   <div class="templateroot">
     <SettingsSection class="major" :title="t(appName, 'Camerata DB')">
       <div v-if="config.isAdmin">
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="info" v-html="forword">
           {{ forword }}
         </p>
-        <hr/>
+        <hr>
       </div>
       <div v-if="config.isAdmin">
         <SettingsSelectGroup
@@ -43,8 +44,8 @@
           v-model="settings.orchestraUserGroupAdmins"
           :label="t(appName, 'User Group Admins')"
           :hint="hints['settings:admin:user-group:admins']"
-          @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
           :disabled="groupAdminsDisabled"
+          @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
         />
       </div>
       <SettingsInputText
@@ -58,8 +59,8 @@
         <button type="button"
                 name="cloudUserBackendConfig"
                 value="update"
-                @click="saveSetting('cloudUserBackendConfig')"
                 :disabled="!config.cloudUserBackendConfig"
+                @click="saveSetting('cloudUserBackendConfig')"
         >
           {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
         </button>
@@ -68,18 +69,22 @@
         </p>
       </div>
     </SettingsSection>
-    <SettingsSection class="sub-admin" v-if="config.isSubAdmin" :title="t(appName, 'Recryption Requests')">
-      <div class="recryption-request-container" v-for="(request, userId) in recryption.requests" v-bind:key="request.id">
-        <input v-model="recryption.requests[userId].marked"
-               :id="['mark',userId].join('-')"
+    <SettingsSection v-if="config.isSubAdmin" class="sub-admin" :title="t(appName, 'Recryption Requests')">
+      <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
+        <input :id="['mark',userId].join('-')"
+               v-model="recryption.requests[userId].marked"
                type="checkbox"
                class="checkbox request-mark"
                @change="markRecryptionRequest(userId, ...arguments)"
-        />
-        <label :for="['mark', userId].join('-')"></label>
+        >
+        <label :for="['mark', userId].join('-')" />
         <Actions>
-          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">{{ t(appName, 'recrypt') }}</ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">{{ t(appName, 'reject') }}</ActionButton>
+          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
+            {{ t(appName, 'recrypt') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
+            {{ t(appName, 'reject') }}
+          </ActionButton>
         </Actions>
         <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
           <span class="display-name" :title="userId">{{ request.displayName }}</span>
@@ -88,17 +93,21 @@
         </div>
       </div>
       <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations">
-        <input v-model="recryption.allRequestsMarked"
-               id="mark-all"
+        <input id="mark-all"
+               v-model="recryption.allRequestsMarked"
                type="checkbox"
                class="checkbox request-mark"
                @change="markAllRecryptionRequests(...arguments)"
-        />
+        >
         <label for="mark-all">{{ t(appName, 'Mark/unmark all.') }}</label>
         <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
         <Actions>
-          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">{{ t(appName, 'recrypt') }}</ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">{{ t(appName, 'reject') }}</ActionButton>
+          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
+            {{ t(appName, 'recrypt') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
+            {{ t(appName, 'reject') }}
+          </ActionButton>
         </Actions>
       </div>
       <div v-else>

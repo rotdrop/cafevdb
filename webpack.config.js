@@ -110,6 +110,7 @@ module.exports = {
       },
     }),
     new ESLintPlugin({
+      extensions: ['js', 'vue'],
       exclude: [
         'node_modules',
         '3rdparty',

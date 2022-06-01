@@ -26,8 +26,8 @@
   <form class="settings-select-users" @submit.prevent="">
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
-      <Multiselect v-model="inputValObjects"
-                   :id="id"
+      <Multiselect :id="id"
+                   v-model="inputValObjects"
                    :options="usersArray"
                    :options-limit="100"
                    :placeholder="label"
@@ -40,13 +40,14 @@
                    :tag-width="60"
                    :disabled="disabled"
                    @input="emitInput"
-                   @search-change="asyncFindUser">
-      </Multiselect>
+                   @search-change="asyncFindUser"
+      />
       <input type="submit"
              class="icon-confirm"
              value=""
              :disabled="disabled"
-             @click="emitUpdate">
+             @click="emitUpdate"
+      >
     </div>
     <p v-if="hint !== ''" class="hint">
       {{ hint }}
@@ -55,101 +56,101 @@
 </template>
 
 <script>
- import axios from '@nextcloud/axios'
- import { generateOcsUrl } from '@nextcloud/router'
- import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import axios from '@nextcloud/axios'
+import { generateOcsUrl } from '@nextcloud/router'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
- let uuid = 0
- export default {
-   name: 'SettingsSelectUsers',
-   components: {
-     Multiselect,
-   },
-   props: {
-     label: {
-       type: String,
-       required: true,
-     },
-     hint: {
-       type: String,
-       default: '',
-     },
-     value: {
-       type: Array,
-       default: () => [],
-     },
-     disabled: {
-       type: Boolean,
-       default: false,
-     },
-   },
-   data() {
-     return {
-       inputValObjects: [],
-       users: {},
-     }
-   },
-   computed: {
-     id() {
-       return 'settings-select-user-' + this.uuid
-     },
-     usersArray() {
-       return Object.values(this.users)
-     },
-   },
-   watch: {
-     value(newVal) {
-       this.inputValObjects = this.getValueObject()
-     },
-   },
-   created() {
-     this.uuid = uuid.toString()
-     uuid += 1
-     this.asyncFindUser('').then((result) => {
-       this.inputValObjects = this.getValueObject()
-     })
-   },
-   methods: {
-     getValueObject() {
-       return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map(
-         (id) => {
-           if (typeof this.users[id] === 'undefined') {
-             return {
-               id,
-               displayname: id,
-             }
-           }
-           return this.users[id]
-         }
-       )
-     },
-     emitInput() {
-       if (this.inputValObject) {
-         this.$emit('input', this.inputValObjects.map((element) => element.id))
-       }
-     },
-     emitUpdate() {
-       this.$emit('update', this.inputValObjects.map((element) => element.id))
-     },
-     asyncFindUser(query) {
-       query = typeof query === 'string' ? encodeURI(query) : ''
-       return axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
-                   .then((response) => {
-                     if (Object.keys(response.data.ocs.data.users).length > 0) {
-                       Object.values(response.data.ocs.data.users).forEach((element) => {
-                         if (typeof this.users[element.id] === 'undefined') {
-                           this.$set(this.users, element.id, element)
-                         }
-                       })
-                       return true
-                     }
-                     return false
-                   }).catch((error) => {
-                     this.$emit('error', error)
-                   })
-     },
-   },
- }
+let uuid = 0
+export default {
+  name: 'SettingsSelectUsers',
+  components: {
+    Multiselect,
+  },
+  props: {
+    label: {
+      type: String,
+      required: true,
+    },
+    hint: {
+      type: String,
+      default: '',
+    },
+    value: {
+      type: Array,
+      default: () => [],
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      inputValObjects: [],
+      users: {},
+    }
+  },
+  computed: {
+    id() {
+      return 'settings-select-user-' + this.uuid
+    },
+    usersArray() {
+      return Object.values(this.users)
+    },
+  },
+  watch: {
+    value(newVal) {
+      this.inputValObjects = this.getValueObject()
+    },
+  },
+  created() {
+    this.uuid = uuid.toString()
+    uuid += 1
+    this.asyncFindUser('').then((result) => {
+      this.inputValObjects = this.getValueObject()
+    })
+  },
+  methods: {
+    getValueObject() {
+      return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map(
+        (id) => {
+          if (typeof this.users[id] === 'undefined') {
+            return {
+              id,
+              displayname: id,
+            }
+          }
+          return this.users[id]
+        }
+      )
+    },
+    emitInput() {
+      if (this.inputValObject) {
+        this.$emit('input', this.inputValObjects.map((element) => element.id))
+      }
+    },
+    emitUpdate() {
+      this.$emit('update', this.inputValObjects.map((element) => element.id))
+    },
+    asyncFindUser(query) {
+      query = typeof query === 'string' ? encodeURI(query) : ''
+      return axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
+        .then((response) => {
+          if (Object.keys(response.data.ocs.data.users).length > 0) {
+            Object.values(response.data.ocs.data.users).forEach((element) => {
+              if (typeof this.users[element.id] === 'undefined') {
+                this.$set(this.users, element.id, element)
+              }
+            })
+            return true
+          }
+          return false
+        }).catch((error) => {
+          this.$emit('error', error)
+        })
+    },
+  },
+}
 </script>
 <style lang="scss">
   .settings-select-users {

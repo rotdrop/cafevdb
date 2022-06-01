@@ -23,12 +23,12 @@
   -->
 
 <template>
-  <form @submit.prevent="" class="settings-select-group">
+  <form class="settings-select-group" @submit.prevent="">
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
-      <Multiselect v-model="inputValObject"
+      <Multiselect :id="id"
+                   v-model="inputValObject"
                    :value="inputValObject"
-                   :id="id"
                    :options="groupsArray"
                    :options-limit="100"
                    :placeholder="label"
@@ -44,12 +44,13 @@
                    :allow-empty="false"
                    :deselect-label="t('Cannot deselect')"
                    @input="emitInput"
-                   @search-change="asyncFindGroup">
-      </Multiselect>
+                   @search-change="asyncFindGroup"
+      />
       <input type="submit"
              class="icon-confirm"
              value=""
-             @click="emitUpdate">
+             @click="emitUpdate"
+      >
     </div>
     <p v-if="hint !== ''" class="hint">
       {{ hint }}
@@ -58,101 +59,101 @@
 </template>
 
 <script>
- import axios from '@nextcloud/axios'
- import { generateOcsUrl } from '@nextcloud/router'
- import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import axios from '@nextcloud/axios'
+import { generateOcsUrl } from '@nextcloud/router'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
- let uuid = 0
- export default {
-   name: 'SettingsSelectGroup',
-   components: {
-     Multiselect,
-   },
-   props: {
-     label: {
-       type: String,
-       required: true,
-     },
-     hint: {
-       type: String,
-       default: '',
-     },
-     value: {
-       type: String,
-       default: '',
-     },
-     disabled: {
-       type: Boolean,
-       default: false,
-     },
-   },
-   data() {
-     return {
-       inputValObject: {},
-       currentInputValObject: {},
-       groups: {},
-     }
-   },
-   computed: {
-     id() {
-       return 'settings-select-group-' + this.uuid
-     },
-     groupsArray() {
-       return Object.values(this.groups)
-     },
-   },
-   watch: {
-     value(newVal) {
-       this.inputValObject = this.getValueObject()
-     },
-   },
-   created() {
-     this.uuid = uuid.toString()
-     uuid += 1
-     this.asyncFindGroup('').then((result) => {
-       this.inputValObject = this.getValueObject()
-     })
-   },
-   methods: {
-     getValueObject() {
-       const id = this.value
-       if (typeof this.groups[id] === 'undefined') {
-         return {
-           id,
-           displayname: id,
-         }
-       }
-       return this.groups[id]
-     },
-     emitInput() {
-       console.info('INPUT INPUTVAL', this)
-       if (this.inputValObject) {
-         this.$emit('input', this.inputValObject.id)
-       }
-     },
-     emitUpdate() {
-       console.info('UPDATE INPUTVAL', this.inputValObject)
-       this.$emit('update', this.inputValObject.id)
-     },
-     asyncFindGroup(query) {
-       query = typeof query === 'string' ? encodeURI(query) : ''
-       return axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=10`, 2))
-                   .then((response) => {
-                     if (Object.keys(response.data.ocs.data.groups).length > 0) {
-                       response.data.ocs.data.groups.forEach((element) => {
-                         if (typeof this.groups[element.id] === 'undefined') {
-                           this.$set(this.groups, element.id, element)
-                         }
-                       })
-                       return true
-                     }
-                     return false
-                   }).catch((error) => {
-                     this.$emit('error', error)
-                   })
-     },
-   },
- }
+let uuid = 0
+export default {
+  name: 'SettingsSelectGroup',
+  components: {
+    Multiselect,
+  },
+  props: {
+    label: {
+      type: String,
+      required: true,
+    },
+    hint: {
+      type: String,
+      default: '',
+    },
+    value: {
+      type: String,
+      default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      inputValObject: {},
+      currentInputValObject: {},
+      groups: {},
+    }
+  },
+  computed: {
+    id() {
+      return 'settings-select-group-' + this.uuid
+    },
+    groupsArray() {
+      return Object.values(this.groups)
+    },
+  },
+  watch: {
+    value(newVal) {
+      this.inputValObject = this.getValueObject()
+    },
+  },
+  created() {
+    this.uuid = uuid.toString()
+    uuid += 1
+    this.asyncFindGroup('').then((result) => {
+      this.inputValObject = this.getValueObject()
+    })
+  },
+  methods: {
+    getValueObject() {
+      const id = this.value
+      if (typeof this.groups[id] === 'undefined') {
+        return {
+          id,
+          displayname: id,
+        }
+      }
+      return this.groups[id]
+    },
+    emitInput() {
+      console.info('INPUT INPUTVAL', this)
+      if (this.inputValObject) {
+        this.$emit('input', this.inputValObject.id)
+      }
+    },
+    emitUpdate() {
+      console.info('UPDATE INPUTVAL', this.inputValObject)
+      this.$emit('update', this.inputValObject.id)
+    },
+    asyncFindGroup(query) {
+      query = typeof query === 'string' ? encodeURI(query) : ''
+      return axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=10`, 2))
+        .then((response) => {
+          if (Object.keys(response.data.ocs.data.groups).length > 0) {
+            response.data.ocs.data.groups.forEach((element) => {
+              if (typeof this.groups[element.id] === 'undefined') {
+                this.$set(this.groups, element.id, element)
+              }
+            })
+            return true
+          }
+          return false
+        }).catch((error) => {
+          this.$emit('error', error)
+        })
+    },
+  },
+}
 </script>
 <style lang="scss">
   .settings-select-group {

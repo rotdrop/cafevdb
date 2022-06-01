@@ -89,7 +89,7 @@ $.fn.cafevDialog = function(argument) {
 
 /**
  * Determine whether scrollbars would be needed.
- * @returns {object}
+ * @returns {Object}
  */
 $.fn.needScrollbars = function() {
   const node = this.get(0);

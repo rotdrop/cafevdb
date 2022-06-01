@@ -1506,7 +1506,7 @@ const installTabHandler = function(containerSel, changeCallback) {
  *
  * @param {jQuery} element The tr element of the list-view.
  *
- * @param {object} event The event which triggered the handler.
+ * @param {Object} event The event which triggered the handler.
  *
  * @param {jQuery} container The form or div containing the form.
  *
@@ -1590,7 +1590,7 @@ const pmeOpenRowDialog = function(element, event, container) {
 };
 
 /**
- * @param {object} containerSel Selector of jQuery element of the
+ * @param {Object} containerSel Selector of jQuery element of the
  * container around the form.
  *
  * @param {boolean} noSubmitHandlers Do not attach any handlers to the
