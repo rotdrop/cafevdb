@@ -28,7 +28,7 @@ class FixFixFileDataLazyLoading extends AbstractMigration
   protected static $sql = [
     self::STRUCTURAL => [
       "ALTER TABLE FileData ADD COLUMN IF NOT EXISTS type enum('generic','image','encrypted') NOT NULL COMMENT 'enum(generic,image,encrypted)(DC2Type:EnumFileType)'",
-      "ALTER TABLE FileData DROP transformation",
+      "ALTER TABLE FileData DROP COLUMN IF EXISTS transformation",
     ],
     self::TRANSACTIONAL => [
       "UPDATE FileData fd INNER JOIN Files f ON f.id = fd.file_id
