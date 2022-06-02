@@ -1716,18 +1716,23 @@ Whatever.',
         }
       }
 
-      // subscribe the bulk-email-sender address
+      // subscribe the bulk-email-sender address if it is not already subscribed
       $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
       $bulkEmailFromName = $this->getConfigValue('emailfromname');
 
-      $subscriptionData = [
-        MailingListsService::SUBSCRIBER_EMAIL => $bulkEmailFromAddress,
-        MailingListsService::MEMBER_DISPLAY_NAME => $bulkEmailFromName,
-      ];
-      $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+      if (!empty($bulkEmailFromAddress)) {
+        if (empty($listsService->getSubscription($listId, $bulkEmailFromAddress, MailingListsService::ROLE_MEMBER))) {
+          $subscriptionData = [
+            MailingListsService::SUBSCRIBER_EMAIL => $bulkEmailFromAddress,
+            MailingListsService::MEMBER_DISPLAY_NAME => $bulkEmailFromName,
+          ];
+          $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+        }
+      }
 
-      // install the list templates ...
-      $listsService->installListTemplates($listId, $MailingListsService::TEMPLATE_TYPE_PROJECTS);
+      // install the list templates ... this will silently overwrite, so we do
+      // not need to check if they are already there.
+      $listsService->installListTemplates($listId, MailingListsService::TEMPLATE_TYPE_PROJECTS);
 
     } catch (\Throwable $t) {
       if ($new) {
