@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-01 10:09+0200\n"
-"PO-Revision-Date: 2022-06-01 10:15+0200\n"
+"POT-Creation-Date: 2022-06-02 13:24+0200\n"
+"PO-Revision-Date: 2022-06-02 13:24+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -587,8 +587,8 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Service/Finance/InstrumentInsuranceService.php:921
 #: lib/Service/Finance/InstrumentInsuranceService.php:925
 #: lib/Service/PhoneNumberService.php:135
-#: lib/Service/PhoneNumberService.php:262 src/app/cafevdb.js:41
-#: src/app/cafevdb.js:42
+#: lib/Service/PhoneNumberService.php:262 src/app/cafevdb.js:42
+#: src/app/cafevdb.js:43
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -642,8 +642,8 @@ msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
-"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
-"%s' stimmen nicht überein."
+"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
+"`%s' stimmen nicht überein."
 
 #: lib/Controller/LegacyEventsController.php:321
 #: lib/Controller/LegacyEventsController.php:761
@@ -1123,7 +1123,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:937
-#: lib/Service/ProjectService.php:2108
+#: lib/Service/ProjectService.php:2113
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -1140,7 +1140,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:970
-#: lib/Service/ProjectService.php:2347
+#: lib/Service/ProjectService.php:2352
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -1294,8 +1294,8 @@ msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
-"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
-"\"."
+"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
+"\"gefangen\"."
 
 #: lib/Controller/PersonalSettingsController.php:1310
 #, php-format
@@ -2714,8 +2714,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
-"\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
+"\"%s\"."
 msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
@@ -3045,7 +3045,7 @@ msgstr "Unterschrift"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:572 src/app/email.js:1372
+#: lib/EmailForm/Composer.php:572 src/app/email.js:1373
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -3285,47 +3285,47 @@ msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 msgid "member status "
 msgstr "Mitglieds-Status"
 
-#: lib/EmailForm/RecipientsFilter.php:819
+#: lib/EmailForm/RecipientsFilter.php:823
 msgid "project mailing list"
 msgstr "Projekt-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:823
+#: lib/EmailForm/RecipientsFilter.php:827
 msgid "announcements mailing list"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:827
+#: lib/EmailForm/RecipientsFilter.php:831
 msgid "musician database"
 msgstr "Musiker-Datenbank"
 
-#: lib/EmailForm/RecipientsFilter.php:831
+#: lib/EmailForm/RecipientsFilter.php:835
 msgid "all known musicians"
 msgstr "Alle bekannten Musiker*innen"
 
-#: lib/EmailForm/RecipientsFilter.php:835
+#: lib/EmailForm/RecipientsFilter.php:839
 msgid "all musicians NOT participating"
 msgstr "alle NICHT-Teilnehmenden"
 
-#: lib/EmailForm/RecipientsFilter.php:839
+#: lib/EmailForm/RecipientsFilter.php:843
 msgid "participants (confirmed)"
 msgstr "bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:843
+#: lib/EmailForm/RecipientsFilter.php:847
 msgid "participants (preliminary)"
 msgstr "vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:847
+#: lib/EmailForm/RecipientsFilter.php:851
 msgid "participants (preliminary and confirmed)"
 msgstr "alle Teilnehmenden (bestätigt und vorläufig)"
 
-#: lib/EmailForm/RecipientsFilter.php:851
+#: lib/EmailForm/RecipientsFilter.php:855
 msgid "all musicians except confirmed participants"
 msgstr "alle Personen AUSSER bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:855
+#: lib/EmailForm/RecipientsFilter.php:859
 msgid "all musicians except preliminary participants"
 msgstr "alle Personen AUSSER vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:859
+#: lib/EmailForm/RecipientsFilter.php:863
 msgid "no one"
 msgstr "niemand"
 
@@ -3767,7 +3767,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:130 src/app/email.js:1852
+#: lib/Notifications/Notifier.php:130 src/app/email.js:1853
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -4134,11 +4134,11 @@ msgstr "herunterladen"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
-"\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
+"\"%s\", new: \"%s\""
 msgstr ""
-"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
-"\""
+"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
+"\"%s\""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
 #, php-format
@@ -4601,7 +4601,7 @@ msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #: lib/PageRenderer/Musicians.php:931
-#: lib/PageRenderer/ProjectParticipants.php:1224 src/app/ajax.js:30
+#: lib/PageRenderer/ProjectParticipants.php:1224 src/app/ajax.js:31
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -5509,8 +5509,8 @@ msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
-"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
-"\" nicht finden."
+"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id "
+"\"%2$s\" nicht finden."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1105
 #, php-format
@@ -5850,8 +5850,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: \"%2$s"
-"\"."
+"however, the following app-restriction have been imposed on the app: "
+"\"%2$s\"."
 msgstr ""
 "Das Account-Backend \"%1$s\" scheint installiert und aktiviert zu sein, "
 "jedoch mit den follgenden Einschränkungen: \"%2$s\"."
@@ -6768,48 +6768,48 @@ msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:1742
+#: lib/Service/ProjectService.php:1747
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:1909
+#: lib/Service/ProjectService.php:1914
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:1952
+#: lib/Service/ProjectService.php:1957
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:1982
+#: lib/Service/ProjectService.php:1987
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:2156
+#: lib/Service/ProjectService.php:2161
 #, php-format
 msgid "Unable to find the project to copy (id = %d)"
 msgstr "Konnte das zu kopierende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:2166
+#: lib/Service/ProjectService.php:2171
 #, php-format
 msgid "copy of %s"
 msgstr "Kopie von %s"
 
-#: lib/Service/ProjectService.php:2196
+#: lib/Service/ProjectService.php:2201
 #, php-format
 msgid "Unable to copy project \"%1$s\" to \"%2$s\"."
 msgstr "Konnte das Projekt \"%1$s\" nicht nach \"%2$s\" kopieren.\n"
 
-#: lib/Service/ProjectService.php:2425
+#: lib/Service/ProjectService.php:2430
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:2457
+#: lib/Service/ProjectService.php:2462
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -6819,7 +6819,7 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:2462
+#: lib/Service/ProjectService.php:2467
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
@@ -8988,7 +8988,8 @@ msgstr ""
 
 #: lib/Service/ToolTipsService.php:921
 msgid "Pull-down menu with interesting mailing-list operations."
-msgstr "Aufklapp-Menü mit interessanten Email-Verteiler-Verwaltungs-Operationen."
+msgstr ""
+"Aufklapp-Menü mit interessanten Email-Verteiler-Verwaltungs-Operationen."
 
 #: lib/Service/ToolTipsService.php:922
 msgid ""
@@ -9886,20 +9887,20 @@ msgstr ""
 
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:39
 msgid "FOLDERNAME:Documents"
-msgstr "FOLDERNAME:Dokumente"
+msgstr "Dokumente"
 
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:49
 msgid "FOLDERNAME:PaymentRecords"
-msgstr "FOLDERNAME:ZahlungsBelege"
+msgstr "ZahlungsBelege"
 
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:57
 #, php-format
 msgid "FILENAME:PaymentRecord-%1$s-%2$d"
-msgstr "DATEINAME:ZahlungsBeleg-%1$s-%2$d"
+msgstr "ZahlungsBeleg-%1$s-%2$d"
 
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:81
 msgid "FOLDERNAME:DebitMandates"
-msgstr "ORDNER:LastschriftMandate"
+msgstr "LastschriftMandate"
 
 #: lib/Storage/UserStorage.php:287
 #, php-format
@@ -10004,64 +10005,64 @@ msgstr "Camerata DB"
 msgid "User Group"
 msgstr "Benutzer-Gruppe"
 
-#. TRANSLATORS src/components/AdminSettings.vue:44
+#. TRANSLATORS src/components/AdminSettings.vue:43
 #: specialVueFakeDummyForL10nScript.js:6
 msgid "User Group Admins"
 msgstr "Gruppen-Administratoren"
 
-#. TRANSLATORS src/components/AdminSettings.vue:53
+#. TRANSLATORS src/components/AdminSettings.vue:51
 #: specialVueFakeDummyForL10nScript.js:8
 msgid "Wiki Name-Space"
 msgstr "Wiki Namensraum"
 
-#. TRANSLATORS src/components/AdminSettings.vue:64
+#. TRANSLATORS src/components/AdminSettings.vue:62
 #: specialVueFakeDummyForL10nScript.js:10
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr "Autokonfiguration für die \"{cloudUserBackend}\"-App vornehmen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:71
+#. TRANSLATORS src/components/AdminSettings.vue:69
 #: specialVueFakeDummyForL10nScript.js:12
 msgid "Recryption Requests"
 msgstr "Neuverschlüsselungs-Anfragen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:81
+#. TRANSLATORS src/components/AdminSettings.vue:80
 #: specialVueFakeDummyForL10nScript.js:14
 #: specialVueFakeDummyForL10nScript.js:26
 msgid "recrypt"
 msgstr "neu verschlüsseln"
 
-#. TRANSLATORS src/components/AdminSettings.vue:82
+#. TRANSLATORS src/components/AdminSettings.vue:83
 #: specialVueFakeDummyForL10nScript.js:16
 #: specialVueFakeDummyForL10nScript.js:28
 msgid "reject"
 msgstr "zurückweisen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:86
+#. TRANSLATORS src/components/AdminSettings.vue:88
 #: specialVueFakeDummyForL10nScript.js:18
 msgid "organizer"
 msgstr "Organisator"
 
-#. TRANSLATORS src/components/AdminSettings.vue:87
+#. TRANSLATORS src/components/AdminSettings.vue:89
 #: specialVueFakeDummyForL10nScript.js:20
 msgid "group-admin"
 msgstr "Gruppen-Administrator"
 
-#. TRANSLATORS src/components/AdminSettings.vue:97
+#. TRANSLATORS src/components/AdminSettings.vue:99
 #: specialVueFakeDummyForL10nScript.js:22
 msgid "Mark/unmark all."
 msgstr "Alle aus-/abwählen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:98
+#. TRANSLATORS src/components/AdminSettings.vue:100
 #: specialVueFakeDummyForL10nScript.js:24
 msgid "With the marked requests perform the following action:"
 msgstr "Mit den ausgewählten Anfragen die folgende Aktion ausführen:"
 
-#. TRANSLATORS src/components/AdminSettings.vue:105
+#. TRANSLATORS src/components/AdminSettings.vue:111
 #: specialVueFakeDummyForL10nScript.js:30
 msgid "No recryption requests are pending."
 msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 
-#. TRANSLATORS src/components/AdminSettings.vue:178
+#. TRANSLATORS src/components/AdminSettings.vue:184
 #: specialVueFakeDummyForL10nScript.js:32
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
@@ -10076,356 +10077,356 @@ msgstr ""
 "bei den \"persönlichen\" Einstellungen der App unter\n"
 "{personalSettingsLink} vorgenommen werden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:223
+#. TRANSLATORS src/components/AdminSettings.vue:229
 #: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:782
 #: src/app/projects.js:425 src/app/sepa-debit-mandate.js:862
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
-#. TRANSLATORS src/components/AdminSettings.vue:228
+#. TRANSLATORS src/components/AdminSettings.vue:234
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Unconfirmed, reverting to old value."
 msgstr "Bestätigung nicht erfolgt, setze auf den alten Wert zurück."
 
-#. TRANSLATORS src/components/AdminSettings.vue:241
+#. TRANSLATORS src/components/AdminSettings.vue:247
 #: specialVueFakeDummyForL10nScript.js:38
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
 
-#. TRANSLATORS src/components/AdminSettings.vue:251
+#. TRANSLATORS src/components/AdminSettings.vue:257
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:48
 #: specialVueFakeDummyForL10nScript.js:54
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
-#. TRANSLATORS src/components/AdminSettings.vue:260
+#. TRANSLATORS src/components/AdminSettings.vue:266
 #: specialVueFakeDummyForL10nScript.js:42
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:262
+#. TRANSLATORS src/components/AdminSettings.vue:268
 #: specialVueFakeDummyForL10nScript.js:44
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht einstellen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:298
+#. TRANSLATORS src/components/AdminSettings.vue:304
 #: specialVueFakeDummyForL10nScript.js:46
 msgid "Successfully handled recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:312
+#. TRANSLATORS src/components/AdminSettings.vue:318
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: "
 "{message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:322
+#. TRANSLATORS src/components/AdminSettings.vue:328
 #: specialVueFakeDummyForL10nScript.js:52
 msgid "Successfully deleted recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userid} erfolgreich gelöscht."
 
-#. TRANSLATORS src/components/AdminSettings.vue:336
+#. TRANSLATORS src/components/AdminSettings.vue:342
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
 
-#: src/app/ajax.js:29
+#: src/app/ajax.js:30
 msgid "OK"
 msgstr "Fein"
 
-#: src/app/ajax.js:31
+#: src/app/ajax.js:32
 msgid "Accepted"
 msgstr "Akzeptiert"
 
-#: src/app/ajax.js:32
+#: src/app/ajax.js:33
 msgid "Non-Authoritative Information"
 msgstr "Unverbindliche Information"
 
-#: src/app/ajax.js:33
+#: src/app/ajax.js:34
 msgid "No Content"
 msgstr "Antwort enthält keine Daten"
 
-#: src/app/ajax.js:34
+#: src/app/ajax.js:35
 msgid "Reset Content"
 msgstr "Inhalt zurückgesetzt"
 
-#: src/app/ajax.js:35
+#: src/app/ajax.js:36
 msgid "Partial Content"
 msgstr "Unvollständige Antwort"
 
-#: src/app/ajax.js:36
+#: src/app/ajax.js:37
 msgid "Multi-Status (WebDAV)"
 msgstr "Multi-Status (WebDAV)"
 
-#: src/app/ajax.js:37
+#: src/app/ajax.js:38
 msgid "Already Reported (WebDAV)"
 msgstr "Bereits berichtet (WebDAV)"
 
-#: src/app/ajax.js:38
+#: src/app/ajax.js:39
 msgid "IM Used"
 msgstr "IM verwendet"
 
-#: src/app/ajax.js:39
+#: src/app/ajax.js:40
 msgid "Multiple Choices"
 msgstr "Mehrere Wahlmöglichkeiten"
 
-#: src/app/ajax.js:40
+#: src/app/ajax.js:41
 msgid "Moved Permanently"
 msgstr "Permanent verschoben"
 
-#: src/app/ajax.js:41
+#: src/app/ajax.js:42
 msgid "Found"
 msgstr "Gefunden"
 
-#: src/app/ajax.js:42
+#: src/app/ajax.js:43
 msgid "See Other"
 msgstr "Siehe andere Web-Adresse"
 
-#: src/app/ajax.js:43
+#: src/app/ajax.js:44
 msgid "Not Modified"
 msgstr "Unverändert"
 
-#: src/app/ajax.js:44
+#: src/app/ajax.js:45
 msgid "Use Proxy"
 msgstr "Benutze einen Proxy"
 
-#: src/app/ajax.js:45
+#: src/app/ajax.js:46
 msgid "(Unused)"
 msgstr "(Unbenutzt)"
 
-#: src/app/ajax.js:46
+#: src/app/ajax.js:47
 msgid "Temporary Redirect"
 msgstr "Zeitweilige Umleitung"
 
-#: src/app/ajax.js:47
+#: src/app/ajax.js:48
 msgid "Permanent Redirect (experimental)"
 msgstr "Permanente Umleitung"
 
-#: src/app/ajax.js:48
+#: src/app/ajax.js:49
 msgid "Bad Request"
 msgstr "Ungültige Anfrage"
 
-#: src/app/ajax.js:49
+#: src/app/ajax.js:50
 msgid "Unauthorized"
 msgstr "Nicht autorisiert"
 
-#: src/app/ajax.js:50
+#: src/app/ajax.js:51
 msgid "Payment Required"
 msgstr "Bezahlung erforderlich"
 
-#: src/app/ajax.js:51
+#: src/app/ajax.js:52
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: src/app/ajax.js:52
+#: src/app/ajax.js:53
 msgid "Not Found"
 msgstr "Unauffindbar"
 
-#: src/app/ajax.js:53
+#: src/app/ajax.js:54
 msgid "Method Not Allowed"
 msgstr "Anfragemethode nicht zulässig"
 
-#: src/app/ajax.js:54
+#: src/app/ajax.js:55
 msgid "Not Acceptable"
 msgstr "Nicht akzeptabel"
 
-#: src/app/ajax.js:55
+#: src/app/ajax.js:56
 msgid "Proxy Authentication Required"
 msgstr "Proxy-Authentifizierung erforderlich"
 
-#: src/app/ajax.js:56
+#: src/app/ajax.js:57
 msgid "Request Timeout"
 msgstr "Anfrage-Zeitüberschreitung"
 
-#: src/app/ajax.js:57
+#: src/app/ajax.js:58
 msgid "Conflict"
 msgstr "Konflikt"
 
-#: src/app/ajax.js:58
+#: src/app/ajax.js:59
 msgid "Gone"
 msgstr "Weg"
 
-#: src/app/ajax.js:59
+#: src/app/ajax.js:60
 msgid "Length Required"
 msgstr "Länge benötigt"
 
-#: src/app/ajax.js:60
+#: src/app/ajax.js:61
 msgid "Precondition Failed"
 msgstr "Vorbedingung nicht erfüllt"
 
-#: src/app/ajax.js:61
+#: src/app/ajax.js:62
 msgid "Request Entity Too Large"
 msgstr "Anfrage-Daten zu groß"
 
-#: src/app/ajax.js:62
+#: src/app/ajax.js:63
 msgid "Request-URI Too Long"
 msgstr "Anfrage-URI zu lang"
 
-#: src/app/ajax.js:63
+#: src/app/ajax.js:64
 msgid "Unsupported Media Type"
 msgstr "Nicht unterstützter Medien-Typ"
 
-#: src/app/ajax.js:64
+#: src/app/ajax.js:65
 msgid "Requested Range Not Satisfiable"
 msgstr "Angeforderter Bereich nicht möglich"
 
-#: src/app/ajax.js:65
+#: src/app/ajax.js:66
 msgid "Expectation Failed"
 msgstr "Erwartete Operation Fehlgeschlagen"
 
-#: src/app/ajax.js:66
+#: src/app/ajax.js:67
 msgid "I'm a teapot (RFC 2324)"
 msgstr "Ich bin eine Teekanne (RFC 2324)"
 
-#: src/app/ajax.js:67
+#: src/app/ajax.js:68
 msgid "Enhance Your Calm (Twitter)"
 msgstr "Verstärke Deine Ruhe (Twitter)"
 
-#: src/app/ajax.js:68
+#: src/app/ajax.js:69
 msgid "Unprocessable Entity (WebDAV)"
 msgstr "Nicht-verarbeitbarer Entrag (WebDAV)"
 
-#: src/app/ajax.js:69
+#: src/app/ajax.js:70
 msgid "Locked (WebDAV)"
 msgstr "Gesperrt (WebDAV)"
 
-#: src/app/ajax.js:70
+#: src/app/ajax.js:71
 msgid "Failed Dependency (WebDAV)"
 msgstr "Abhängigkeit fehlgeschlagen (WebDAV)"
 
-#: src/app/ajax.js:71
+#: src/app/ajax.js:72
 msgid "Reserved for WebDAV"
 msgstr "Reserviert für WebDAV"
 
-#: src/app/ajax.js:72
+#: src/app/ajax.js:73
 msgid "Upgrade Required"
 msgstr "Aufwertung benötigt"
 
-#: src/app/ajax.js:73
+#: src/app/ajax.js:74
 msgid "Precondition Required"
 msgstr "Vorbedingung erforderlich"
 
-#: src/app/ajax.js:74
+#: src/app/ajax.js:75
 msgid "Too Many Requests"
 msgstr "Zu viele Anfragen."
 
-#: src/app/ajax.js:75
+#: src/app/ajax.js:76
 msgid "Request Header Fields Too Large"
 msgstr "Anfrage-Kopfzeilen zu lang"
 
-#: src/app/ajax.js:76
+#: src/app/ajax.js:77
 msgid "No Response (Nginx)"
 msgstr "Keine Antwort (Nginx)"
 
-#: src/app/ajax.js:77
+#: src/app/ajax.js:78
 msgid "Retry With (Microsoft)"
 msgstr "Wiederholen mit (Microsoft)"
 
-#: src/app/ajax.js:78
+#: src/app/ajax.js:79
 msgid "Blocked by Windows Parental Controls (Microsoft)"
 msgstr "Blockiert von Windows-Kindersicherung (Microsoft)"
 
-#: src/app/ajax.js:79
+#: src/app/ajax.js:80
 msgid "Unavailable For Legal Reasons"
 msgstr "Nicht verfügbar aus rechtlichen Gründen"
 
-#: src/app/ajax.js:80
+#: src/app/ajax.js:81
 msgid "Client Closed Request (Nginx)"
 msgstr "Anwender-Programm hat die Anfrage beendet (Nginx)"
 
-#: src/app/ajax.js:81
+#: src/app/ajax.js:82
 msgid "Internal Server Error"
 msgstr "Interner Server-Fehler"
 
-#: src/app/ajax.js:82
+#: src/app/ajax.js:83
 msgid "Not Implemented"
 msgstr "Nicht implementiert"
 
-#: src/app/ajax.js:83
+#: src/app/ajax.js:84
 msgid "Bad Gateway"
 msgstr "Schlechte Netzübergangseinheit"
 
-#: src/app/ajax.js:84
+#: src/app/ajax.js:85
 msgid "Service Unavailable"
 msgstr "Dienst nicht verfügbar"
 
-#: src/app/ajax.js:85
+#: src/app/ajax.js:86
 msgid "Gateway Timeout"
 msgstr "Zeitüberschreitung bei der Netzübergangseinheit"
 
-#: src/app/ajax.js:86
+#: src/app/ajax.js:87
 msgid "HTTP Version Not Supported"
 msgstr "HTTP-Version nicht unterstützt"
 
-#: src/app/ajax.js:87
+#: src/app/ajax.js:88
 msgid "Variant Also Negotiates (Experimental)"
 msgstr "Variante handelt außerdem aus (Experimenmtell)"
 
-#: src/app/ajax.js:88
+#: src/app/ajax.js:89
 msgid "Insufficient Storage (WebDAV)"
 msgstr "Zu wenig Speicherplatz (WebDAV)"
 
-#: src/app/ajax.js:89
+#: src/app/ajax.js:90
 msgid "Loop Detected (WebDAV)"
 msgstr "Zirkel entdeckt (WebDAV)"
 
-#: src/app/ajax.js:90
+#: src/app/ajax.js:91
 msgid "Bandwidth Limit Exceeded (Apache)"
 msgstr "Bandbreiten-Beschränkung überschritten (Apache)"
 
-#: src/app/ajax.js:91
+#: src/app/ajax.js:92
 msgid "Not Extended"
 msgstr "Nicht erweitert"
 
-#: src/app/ajax.js:92
+#: src/app/ajax.js:93
 msgid "Network Authentication Required"
 msgstr "Netzwerk-Authentifizierung erforderlich"
 
-#: src/app/ajax.js:93
+#: src/app/ajax.js:94
 msgid "Network read timeout error"
 msgstr "Netzwerk Lese-Zeitüberschreitung"
 
-#: src/app/ajax.js:94
+#: src/app/ajax.js:95
 msgid "Network connect timeout error"
 msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
 
-#: src/app/ajax.js:150
+#: src/app/ajax.js:151
 msgid "Operation cancelled by user."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/ajax.js:153
+#: src/app/ajax.js:154
 msgid "Aborted"
 msgstr "Abgebrochen"
 
-#: src/app/ajax.js:166 src/app/ajax.js:351 src/app/blog.js:181
+#: src/app/ajax.js:167 src/app/ajax.js:352 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
-#: src/app/blog.js:386 src/app/email.js:78 src/app/email.js:801
-#: src/app/email.js:927 src/app/inlineimage.js:56 src/app/inlineimage.js:63
+#: src/app/blog.js:386 src/app/email.js:79 src/app/email.js:802
+#: src/app/email.js:928 src/app/inlineimage.js:56 src/app/inlineimage.js:63
 #: src/app/inlineimage.js:158 src/app/inlineimage.js:429
 #: src/app/pme-file-upload-row.js:152 src/app/pme-file-upload-row.js:168
 #: src/app/sepa-debit-mandate.js:286 src/app/sepa-debit-mandate.js:302
-#: src/app/settings.js:1290 src/app/settings.js:1303
+#: src/app/settings.js:1289 src/app/settings.js:1302
 #: src/legacy/calendar/calendar.js:340
 msgid "Error"
 msgstr "Fehler"
 
-#: src/app/ajax.js:191
+#: src/app/ajax.js:192
 msgid "System Administrator"
 msgstr "System-Administrator"
 
-#: src/app/ajax.js:216
+#: src/app/ajax.js:217
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
 
-#: src/app/ajax.js:244
+#: src/app/ajax.js:245
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: src/app/ajax.js:246
+#: src/app/ajax.js:247
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -10434,7 +10435,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: src/app/ajax.js:251
+#: src/app/ajax.js:252
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -10443,7 +10444,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: src/app/ajax.js:299
+#: src/app/ajax.js:300
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -10451,19 +10452,19 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: src/app/ajax.js:301
+#: src/app/ajax.js:302
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: src/app/ajax.js:308
+#: src/app/ajax.js:309
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: src/app/ajax.js:317
+#: src/app/ajax.js:318
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: src/app/ajax.js:329
+#: src/app/ajax.js:330
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
@@ -10473,11 +10474,11 @@ msgstr ""
 "Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
 "Verfügung stellt."
 
-#: src/app/ajax.js:332
+#: src/app/ajax.js:333
 msgid "Error: plain string received"
 msgstr "Fehler: einfache Zeichenkette empfangen"
 
-#: src/app/ajax.js:337
+#: src/app/ajax.js:338
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
@@ -10485,15 +10486,15 @@ msgstr ""
 "Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
 "die oben aufgeführten benötigten Eigentschaften."
 
-#: src/app/ajax.js:340
+#: src/app/ajax.js:341
 msgid "Error: not a plain object"
 msgstr "Fehler: kein einfaches Objekt"
 
-#: src/app/ajax.js:379
+#: src/app/ajax.js:380
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
-#: src/app/ajax.js:386
+#: src/app/ajax.js:387
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
@@ -10597,30 +10598,30 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: src/app/configcheck.js:63
+#: src/app/configcheck.js:66
 msgid ""
 "Data-migrations need to be performed before proceeding to the orchestra app."
 msgstr ""
 "Daten-Migrationen müssen vorgenommen werden, bevor die Orchester-App "
 "gestartet werden kann."
 
-#: src/app/configcheck.js:67
+#: src/app/configcheck.js:70
 msgid "Click the \"ok\" button to start the migrations."
 msgstr "Den \"ok\"-Button anklicken, um die Daten-Migration zu starten."
 
-#: src/app/configcheck.js:68
+#: src/app/configcheck.js:71
 msgid "Data Migration"
 msgstr "Daten-Migration"
 
-#: src/app/configcheck.js:77
+#: src/app/configcheck.js:80
 msgid "Successfully applied the following migrations:"
 msgstr "Die folgenden Daten-Migrationen wurden erfolgreich ausgeführt:"
 
-#: src/app/configcheck.js:82
+#: src/app/configcheck.js:85
 msgid "Redirecting to the orchestra app in {timeout} seconds."
 msgstr "Leite in {timeout} Sekunden zur Orchester-App weiter."
 
-#: src/app/configcheck.js:105
+#: src/app/configcheck.js:108
 msgid "Unable to download test-letter."
 msgstr "Kann den Test-Brief nicht herunter laden."
 
@@ -10660,93 +10661,93 @@ msgstr "Nein"
 msgid "Yes"
 msgstr "Ja"
 
-#: src/app/dialogs.js:111
+#: src/app/dialogs.js:112
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: src/app/email.js:78
+#: src/app/email.js:79
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: src/app/email.js:209
+#: src/app/email.js:210
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: src/app/email.js:210
+#: src/app/email.js:211
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: src/app/email.js:211
+#: src/app/email.js:212
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: src/app/email.js:212
+#: src/app/email.js:213
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: src/app/email.js:213
+#: src/app/email.js:214
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: src/app/email.js:214
+#: src/app/email.js:215
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: src/app/email.js:217
+#: src/app/email.js:218
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:219 templates/legacy/calendar/part.eventform.php:43
+#: src/app/email.js:220 templates/legacy/calendar/part.eventform.php:43
 msgid "from"
 msgstr "von"
 
-#: src/app/email.js:221
+#: src/app/email.js:222
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: src/app/email.js:222
+#: src/app/email.js:223
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: src/app/email.js:223
+#: src/app/email.js:224
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: src/app/email.js:230
+#: src/app/email.js:231
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:800
+#: src/app/email.js:801
 msgid "Unknown form element: {formElement}"
 msgstr "Unbekanntes Formularfeld: {formElement}"
 
-#: src/app/email.js:844 src/app/email.js:2017
+#: src/app/email.js:845 src/app/email.js:2018
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:846 src/app/email.js:2019
+#: src/app/email.js:847 src/app/email.js:2020
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:926
+#: src/app/email.js:927
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:986
+#: src/app/email.js:987
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht {active} von {total}"
 
-#: src/app/email.js:988
+#: src/app/email.js:989
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:1017
+#: src/app/email.js:1018
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:1053
+#: src/app/email.js:1054
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -10754,11 +10755,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:1188
+#: src/app/email.js:1189
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:1220
+#: src/app/email.js:1221
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -10771,19 +10772,19 @@ msgstr ""
 "gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
 "auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
-#: src/app/email.js:1225
+#: src/app/email.js:1226
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:1286
+#: src/app/email.js:1287
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:1287
+#: src/app/email.js:1288
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1319
+#: src/app/email.js:1320
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -10791,11 +10792,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1321
+#: src/app/email.js:1322
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1354
+#: src/app/email.js:1355
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -10803,17 +10804,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1356
+#: src/app/email.js:1357
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1370
+#: src/app/email.js:1371
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1387
+#: src/app/email.js:1388
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -10821,19 +10822,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1390
+#: src/app/email.js:1391
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1432
+#: src/app/email.js:1433
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1433
+#: src/app/email.js:1434
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1497
+#: src/app/email.js:1498
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -10841,36 +10842,36 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1499
+#: src/app/email.js:1500
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1650
+#: src/app/email.js:1651
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1651 src/app/email.js:1793
+#: src/app/email.js:1652 src/app/email.js:1794
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1752
+#: src/app/email.js:1753
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1792
+#: src/app/email.js:1793
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1851 templates/emailform/part.emailform.composer.php:172
+#: src/app/email.js:1852 templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1855
+#: src/app/email.js:1856
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1858
+#: src/app/email.js:1859
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -11101,7 +11102,7 @@ msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
 #: src/app/pme-file-upload-row.js:152 src/app/sepa-debit-mandate.js:286
-#: src/app/settings.js:1290
+#: src/app/settings.js:1289
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
@@ -11146,7 +11147,7 @@ msgid "Failed copying query to the clipboard: {reason}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {reason}."
 
-#: src/app/pme.js:612
+#: src/app/pme.js:613
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -11155,11 +11156,11 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1219
+#: src/app/pme.js:1220
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1228
+#: src/app/pme.js:1229
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -11436,31 +11437,31 @@ msgstr ""
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
-#: src/app/settings.js:130
+#: src/app/settings.js:129
 msgid "You must type in your login password."
 msgstr "Sie müssen Ihr Anmelde-Passwort eingeben."
 
-#: src/app/settings.js:232
+#: src/app/settings.js:231
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: src/app/settings.js:350
+#: src/app/settings.js:349
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: src/app/settings.js:445 src/app/settings.js:779
+#: src/app/settings.js:444 src/app/settings.js:778
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1228 src/app/settings.js:1249
+#: src/app/settings.js:1227 src/app/settings.js:1248
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1302
+#: src/app/settings.js:1301
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: src/app/settings.js:1446
+#: src/app/settings.js:1445
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
