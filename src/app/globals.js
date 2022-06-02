@@ -49,11 +49,12 @@ require('config-check.scss');
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
-if (window.CAFEFDB === undefined) {
-  window.CAFEVDB = initialState.CAFEVDB;
+if (window.CAFEFDB === undefined || !window.CAFEVDB.initialized) {
+  window.CAFEVDB = jQuery.extend(window.CAFEVDEB || {}, initialState.CAFEVDB);
   // @TODO the nonce in principle could go to the initial-state
   window.CAFEVDB.nonce = btoa(OC.requestToken);
   window.CAFEVDB.initialNonce = window.CAFEVDB.nonce;
+  window.CAFEVDB.initialized = true;
 }
 const globalState = window.CAFEVDB;
 let nonce = globalState.nonce;

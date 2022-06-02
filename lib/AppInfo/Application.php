@@ -1,12 +1,25 @@
 <?php
 /**
- * Nextcloud - cafevdb
+ * Orchestra member, musician and project management application.
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2022
+ * @author Claus-Justus Heine
+ * @copyright 2014-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\AppInfo;
@@ -39,6 +52,7 @@ use OCP\Settings\IManager as ISettingsManager;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Settings\PersonalSection;
 
@@ -143,6 +157,15 @@ class Application extends App implements IBootstrap
 
     $context->injectFn(function(IMountProviderCollection $mountProviderCollection, DatabaseMountProvider $mountProvider) {
       $mountProviderCollection->registerProvider($mountProvider, PHP_INT_MAX);
+    });
+
+    $context->injectFn(function(IEventDispatcher $dispatcher, AssetService $assetService) {
+      list('asset' => $backgroundJobScript) = $assetService->getJSAsset('background-jobs');
+      $dispatcher->addListener(
+        \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
+        function() use ($backgroundJobScript) {
+          \OCP\Util::addScript($this->appName, $backgroundJobScript);
+        });
     });
   }
 

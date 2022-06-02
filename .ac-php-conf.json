@@ -13,6 +13,7 @@
       "../dokuwikiembedded/lib",
       "../redaxo4embedded/lib",
       "../files_trashbin/lib",
+      "../files/lib",
       "../cafevdbmembers/lib",
       "../user_sql/lib"
     ],

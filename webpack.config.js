@@ -29,6 +29,7 @@ module.exports = {
     app: './src/app.js',
     'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
+    'background-jobs': './src/background-jobs.js',
   },
   output: {
     // path: path.resolve(__dirname, 'js'),
