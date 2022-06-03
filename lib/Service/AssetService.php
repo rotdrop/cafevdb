@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -56,7 +56,7 @@ class AssetService
     $assetMeta = json_decode($metaJson, true);
     foreach ([self::JS, self::CSS] as $type) {
       $this->assets[$type] = [];
-      foreach ($assetMeta[$type] as $assetFileName) {
+      foreach (($assetMeta[$type] ?? []) as $assetFileName) {
         $assetFileName = basename($assetFileName, '.' . $type);
         if (preg_match('/^(.*)-([a-f0-9]+)$/', $assetFileName, $matches)) {
           ${self::ASSET} = $matches[0];
