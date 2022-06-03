@@ -64,6 +64,13 @@ class BackgroundJobController extends Controller
   public function trigger()
   {
     try {
+      if (!$this->inGroup()) {
+        return self::grumble(
+          $this->l->t('User "%s" not in orchestra group "%s',
+                      [ $this->userId(), $this->groupId() ]),
+          status: Http::STATUS_UNAUTHORIZED
+        );
+      }
       $now = time();
       $lastRun = (int)$this->getConfigValue(self::BACKGROUND_JOB_LAST_RUN, 0);
       if ($now - $lastRun < self::INTERVAL_SECONDS) {
@@ -74,11 +81,6 @@ class BackgroundJobController extends Controller
           'delta' => $now - $lastRun,
           'interval' => self::INTERVAL_SECONDS,
         ], Http::STATUS_TOO_MANY_REQUESTS);
-      }
-      if (!$this->inGroup()) {
-        return self::grumble(
-          $this->l->t('User "%s" not in orchestra group "%s',
-                      [ $this->userId(), $this->groupId() ]));
       }
       $this->di(LazyUpdateGeoCoding::class)->run();
 

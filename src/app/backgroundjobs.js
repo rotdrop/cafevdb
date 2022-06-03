@@ -45,10 +45,16 @@ const runner = function() {
   const self = globalState.BackgroundJobs;
   if (cloudUser) {
     console.info('Triggered background jobs.');
-    $.get(url).always(function() {
-      self.timer = setTimeout(runner, self.interval * 1000);
-      console.info('Restarted background jobs.');
-    });
+    $.get(url)
+      .always(function() {
+        self.timer = setTimeout(runner, self.interval * 1000);
+      })
+      .fail(function(xhr, status, errorThrown) {
+        console.info('Failed running background jobs', status, errorThrown);
+      })
+      .done(function(data) {
+        console.info('Successful return from background jobs.');
+      });
   } else if (self.timer !== false) {
     clearTimeout(self.timer);
     self.timer = false;
