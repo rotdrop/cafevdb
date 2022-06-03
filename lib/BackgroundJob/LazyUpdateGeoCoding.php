@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\BackgroundJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig as ICloudConfig;
+use OCP\ILogger;
 
 use OCA\CAFEVDB\Service\GeoCodingService;
 
@@ -36,6 +37,8 @@ use OCA\CAFEVDB\Service\GeoCodingService;
  */
 class LazyUpdateGeoCoding extends TimedJob
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   /** @var GeoCodignService */
   private $geoCodingService;
 
@@ -43,9 +46,11 @@ class LazyUpdateGeoCoding extends TimedJob
     $appName
     , ITimeFactory $time
     , ICloudConfig $cloudConfig
+    , ILogger $logger
     , GeoCodingService $geoCodingService
   ) {
     parent::__construct($time);
+    $this->logger = $logger;
     $this->geoCodingService = $geoCodingService;
     $this->setInterval($cloudConfig->getAppValue($appName, 'geocoding.refresh.lazy', 600));
   }
@@ -56,7 +61,11 @@ class LazyUpdateGeoCoding extends TimedJob
   public function run($arguments = []) {
     foreach ($this->geoCodingService->getLanguages() as $lang) {
       $this->geoCodingService->updateCountriesForLanguage($lang);
-      $this->geoCodingService->updatePostalCodes($lang, 1);
+      if (!$this->geoCodingService->updatePostalCodes($lang, 1)) {
+        // do not continue, might be a rate limit.
+        $this->logError('Background update of postal codes failed for language ' . $lang);
+        break;
+      }
     }
   }
 }

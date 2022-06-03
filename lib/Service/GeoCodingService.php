@@ -515,12 +515,15 @@ class GeoCodingService
     $this->debug('Stamped postal code ' . $postalCode . '@' . $country);
   }
 
-  /**Update the list of known zip-code - location relations, but
+  /**
+   * Update the list of known zip-code - location relations, but
    * only for the registerted musicians.
    *
    * TODO: extend to all, but then have a look at the Updated field
    * in order to reduce the amount queries, updating once every 3
    * months should be sufficient.
+   *
+   * @return bool False on error.
    */
   public function updatePostalCodes($language = null, $limit = 100, $forcedZipCodes = [])
   {
@@ -562,6 +565,13 @@ class GeoCodingService
     foreach ($zipCodes as $zipCode) {
       $this->debug(print_r($zipCode, true));
       $zipCodeInfo = $this->request('postalCodeLookup', $zipCode);
+
+      if (($zipCodeInfo['status']['value'] ?? 0) == 19) {
+        $message = $zipCodeInfo['status']['message'] ?? '';
+        $this->logError('Error response form remote: ' . $message);
+        return false;
+      }
+
       $postalCode = $zipCode['postalCode'];
       $country = $zipCode['country'];
 
@@ -569,7 +579,7 @@ class GeoCodingService
           !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
           count($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) == 0) {
         $this->stampPostalCode($postalCode, $country);
-        $this->logError("No remote information for ".$postalCode.'@'.$country. ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY));
+        $this->logError("No remote information for ".$postalCode.'@'.$country. ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY) . ', response ' . print_r($zipCodeInfo, true));
         continue;
       }
 
