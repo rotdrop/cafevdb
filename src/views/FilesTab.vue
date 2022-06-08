@@ -23,10 +23,11 @@
  */
 </script>
 <template>
-  <AppSidebar class="app-sidebar--without-background lb-ls-root" title="cafevdb" :header="false">
-    <AppSidebarTab id="cafevdb-tab"
-	           icon="icon-rename"
-	           :name="t(appName, appName)">
+  <AppSidebar class="app-sidebar--without-background app-sidebar-hidden-root" :title="appName" :header="false">
+    <AppSidebarTab :id="appName + '-tab'"
+                   icon="icon-rename"
+                   :name="t(appName, appName)"
+    >
       <span>Hello World!</span>
     </AppSidebarTab>
   </AppSidebar>
@@ -48,7 +49,7 @@ export default {
     },
   },
   methods: {
-    /**
+     /**
      * Update current fileInfo and fetch new data
      * @param {Object} fileInfo the current file FileInfo
      */
@@ -65,14 +66,23 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.lb-ls-root{
+<style lang="scss" scoped>
+.app-sidebar-hidden-root {
   width: 100% !important;
   height: calc(100vh - 223px) !important;
   min-width: 289px !important;
+  top:unset !important;
 
-  .app-sidebar-header {
-    display: none !important;
+  ::v-deep {
+    .app-sidebar-tabs__content {
+      section {
+        padding:0;
+      }
+    }
+
+    .app-sidebar-header {
+      display: none !important;
+    }
   }
 }
 </style>

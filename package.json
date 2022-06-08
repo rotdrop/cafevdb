@@ -31,6 +31,7 @@
     "@nextcloud/auth": "^1.3.0",
     "@nextcloud/axios": "^1.8.0",
     "@nextcloud/dialogs": "^3.1.2",
+    "@nextcloud/initial-state": "*",
     "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^4.3.0",
     "@nextcloud/l10n": "*",

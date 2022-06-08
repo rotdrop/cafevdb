@@ -23,7 +23,9 @@
 
 import Vue from 'vue';
 import { appName } from './app/app-info.js';
+import $ from './app/jquery.js';
 import { generateFilePath, imagePath } from '@nextcloud/router';
+import { loadState } from '@nextcloud/initial-state';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 
@@ -38,8 +40,47 @@ if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
+const getInitialState = () => {
+  try {
+    return loadState(appName, 'sharing');
+  } catch (err) {
+    return console.error('error in loadState: ', err);
+  }
+};
+
+let initialState;
+
+// @todo: we can of course support much more ...
+const supportedMimeTypes = [
+  'application/vnd.oasis.opendocument.text',
+];
+
+const acceptableMimeType = function(mimeType) {
+  return supportedMimeTypes.indexOf(mimeType) >= 0;
+};
+
+const validTemplatePath = function(path) {
+  return path.startsWith(initialState.files.templates);
+};
+
 const isEnabled = function(fileInfo) {
+
+  console.info('FILEINFO', fileInfo);
+
+  if (!initialState) {
+    initialState = getInitialState();
+  }
+  console.info('STATE', initialState);
+
   if (fileInfo && fileInfo.isDirectory()) {
+    return false;
+  }
+
+  if (!acceptableMimeType(fileInfo.mimetype)) {
+    return false;
+  }
+
+  if (!validTemplatePath(fileInfo.path)) {
     return false;
   }
 
@@ -54,30 +95,67 @@ window.addEventListener('DOMContentLoaded', () => {
   // the type and the mime-type.
   //
   // inline file-actions are probably a relict from earlier days and
-  // can conditionally enabled via the "shouldRender()" hook. The
+  // can conditionally be enabled via the "shouldRender()" hook. The
   // provided context give access to several interesting data like the
   // directory and owner etc.
 
-  const specialName = 'AdressAktualisierung-GeneralLastschrift.odt';
   if (OCA.Files && OCA.Files.fileActions) {
-    console.info('REGISTER FILE ACTION FOR', specialName);
-    OCA.Files.fileActions.registerAction({
+    const fileActions = OCA.Files.fileActions;
+    fileActions.registerAction({
       name: appName,
-      displayName: t(appName, 'Example File Action'),
-      filename: specialName,
+      displayName: false,
+      altText: t(appName, 'Template'),
       mime: 'all',
-      type: 1,
+      type: OCA.Files.FileActions.TYPE_INLINE,
       // mime: 'application/pdf',
       permissions: OC.PERMISSION_READ,
       shouldRender(context) {
         console.info('CONTEXT', context);
-        return true;
+        const $file = $(context.$file);
+
+        console.info('ARGS', arguments);
+        console.info('FILE', $file);
+
+        // 0: <tr class="" data-id="17874" data-type="file" data-size="40187" data-file="AdressAktualisierung-GeneralLastschrift.odt" data-mime="application/vnd.oasis.opendocument.text" data-mtime="1653855228000" data-etag="8c41b9a493acf47033cc070e137a8a88" data-quota="-1" data-permissions="27" data-has-preview="true" data-e2eencrypted="false" data-mounttype="shared" data-path="/camerata/templates/finance" data-share-permissions="19" data-share-owner="cameratashareholder" data-share-owner-id="cameratashareholder">
+
+        // mock a file-info object
+        const fileInfo = {
+          isDirectory() {
+            return $file.data('type') !== 'file';
+          },
+          mimetype: $file.data('mime'),
+          path: $file.data('path'),
+        };
+
+        return isEnabled(fileInfo);
       },
-      icon() {
-        return imagePath(appName, appName);
+      foobar: imagePath(appName, appName),
+      iconClass() {
+        return 'cafevdb-template';
       },
-      actionHandler(fileName) {
+      render(actionSpec, isDefault, context) {
+        const size = 32;
+        const $html = fileActions._defaultRenderAction(actionSpec, isDefault, context);
+        const $icon = $html.find('.icon');
+        $icon.append('<img alt="' + actionSpec.altText + '" width="' + size + '" height="' + size + '" src="' + imagePath(appName, appName) + '">');
+        $icon.css({ width: size + 'px', height: size + 'px' });
+        $icon.attr('title', t(appName, 'Fill the template with substitutions. Opens the "Details" view for further options.'));
+        $icon.tooltip({ placement: 'top' });
+        console.info($html);
+        return $html;
+      },
+      /**
+       * @param {string} fileName TBD.
+       *
+       * @param {object} context TBD.
+       * @param {jQuery} context.$file jQuery row corresponding to selected file.
+       * @param {object} context.fileActions OCA.Files.fileActions instance.
+       * @param {object} context.fileInfoModel Don't know.
+       * @param {object} context.fileList File-list instance we are attached to.
+       */
+      actionHandler(fileName, context) {
         console.info('CAFEDB ACTION', arguments);
+        context.fileList.showDetailsView(fileName, 'cafevdb');
       },
     });
   }
@@ -88,7 +166,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (OCA.Files && OCA.Files.Sidebar) {
     OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
       id: appName,
-      name: t(appName, appName),
+      name: t(appName, 'Template'),
       icon: 'icon-rename',
       enabled: isEnabled,
 
@@ -106,6 +184,13 @@ window.addEventListener('DOMContentLoaded', () => {
         await TabInstance.update(fileInfo);
 
         TabInstance.$mount(el);
+        const $tabHeader = $(context.$el.closest('.app-sidebar-tabs'));
+        console.info('TABS', $tabHeader);
+        $tabHeader.find('#cafevdb .app-sidebar-tabs__tab-icon span').css({
+          'background-image': 'url(' + imagePath(appName, appName) + ')',
+          'background-size': '16px',
+        });
+        console.info(imagePath(appName, appName));
       },
       update(fileInfo) {
         TabInstance.update(fileInfo);

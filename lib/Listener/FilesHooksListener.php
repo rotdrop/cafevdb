@@ -28,14 +28,21 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
+use OCP\AppFramework\Services\IInitialState;
+use OCP\IUserSession;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ConfigService;
 
 class FilesHooksListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
+
+  const BASENAME = 'files-hooks';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -52,12 +59,45 @@ class FilesHooksListener implements IEventListener
     }
     /** @var HandledEvent $event */
 
+    /** @var IUserSession $userSession */
+    $userSession = $this->appContainer->get(IUserSession::class);
+    $user = $userSession->getUser();
+
+    if (empty($user)) {
+      return;
+    }
+
+    $userId = $user->getUID();
+
+    $authorization = $this->appContainer->get(AuthorizationService::class);
+    if (!$authorization->authorized($userId)) {
+      return;
+    }
+
     $appName = $this->appContainer->get('appName');
+
+    /** @var IInitialState $initialState */
+    $initialState = $this->appContainer->get(IInitialState::class);
+
+    /** @var EncryptionService $encryptionService */
+    $encryptionService = $this->appContainer->get(EncryptionService::class);
+
+    $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
+    $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
+
+    $initialState->provideInitialState('sharing', [
+      'files' => [
+        'root' => '/' . $sharedFolder,
+        'templates' => '/' . $sharedFolder . '/' . $templatesFolder,
+      ],
+    ]);
 
     /** @var AssetService $assetService */
     $assetService = $this->appContainer->get(AssetService::class);
-    list('asset' => $asset,) = $assetService->getJSAsset('files-hooks');
-    \OCP\Util::addScript($appName, $asset);
+    list('asset' => $scriptAsset,) = $assetService->getJSAsset(self::BASENAME);
+    list('asset' => $styleAsset,) = $assetService->getCSSAsset(self::BASENAME);
+    \OCP\Util::addScript($appName, $scriptAsset);
+    \OCP\Util::addStyle($appName, $styleAsset);
   }
 }
 

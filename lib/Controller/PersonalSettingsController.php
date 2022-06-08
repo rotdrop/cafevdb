@@ -1875,7 +1875,20 @@ class PersonalSettingsController extends Controller {
           'link' => $this->getConfigValue($key, $testKeys[$key]),
           'target' => $key.':'.$this->appName,
         ]);
+      case 'documenttemplatesfolder':
+        $sharedFolder = $this->getConfigValue('sharedfolder');
+        if (empty($sharedFolder)) {
+          return self::grumble($this->l->t('Shared folder is not configured.'));
+        }
+        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        if (empty($templatesFolder)) {
+          return self::grumble($this->l->t('Document template folder is not configured.'));
+        }
+        $templatesFolder = UserStorage::PATH_SEP
+          . $sharedFolder . UserStorage::PATH_SEP;
+        return self::dataResponse($templatesFolder);
       default:
+        break;
     }
     return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
