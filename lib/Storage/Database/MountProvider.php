@@ -159,6 +159,7 @@ class MountProvider implements IMountProvider
           'readonly' => true,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
         ]
       ) extends MountPoint { public function getMountType() { return 'database'; } };
 
@@ -182,6 +183,7 @@ class MountProvider implements IMountProvider
           'readonly' => true,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
         ]
       ) extends MountPoint { public function getMountType() { return 'database'; } };
     }
@@ -248,6 +250,7 @@ class MountProvider implements IMountProvider
           'readonly' => true,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
         ]
         ) extends MountPoint { public function getMountType() { return 'database'; } };
     }
