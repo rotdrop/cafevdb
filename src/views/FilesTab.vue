@@ -28,7 +28,11 @@
                    icon="icon-rename"
                    :name="t(appName, appName)"
     >
-      <span>Hello World!</span>
+      <!-- <SettingsSelectUsers v-model="sender"
+                           :label="t(appName, 'Sender')"
+                           :hint="hints['templates:cloud:integration:sender']"
+                           :multiple="false"
+      /> -->
     </AppSidebarTab>
   </AppSidebar>
 </template>
@@ -36,12 +40,23 @@
 
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
+import SettingsSelectUsers from '../components/SettingsSelectUsers'
 
 export default {
   name: 'FilesTab',
   components: {
     AppSidebar,
     AppSidebarTab,
+    SettingsSelectUsers,
+  },
+  data() {
+    return {
+      sender: '',
+      recipients: '',
+      hints: {
+        'templates:cloud:integration:sender': '',
+      },
+    };
   },
   computed: {
     activeTab() {

@@ -423,7 +423,7 @@ $routes = [
      * Musicians
      */
     [
-      'name' => 'musicians#validate',
+      'name' => 'musician_validation#validate',
       'url' => '/validate/musicians/{topic}/{subTopic}',
       'verb' => 'POST',
       'defaults' => [ 'subTopic' => '' ],
@@ -585,6 +585,19 @@ $routes = [
       'name' => 'mailing_lists#getStatus',
       'verb' => 'GET',
       'url' => '/mailing-lists/{listId}/{email}',
+    ],
+    /**
+     * Personal data etc. of musicians
+     */
+    [
+      'name' => 'musicians#get',
+      'verb' => 'GET',
+      'url' => '/musicians/{musicianId}',
+    ],
+    [
+      'name' => 'musicians#search',
+      'verb' => 'GET',
+      'url' => '/musicians/search/{pattern}',
     ],
     /**
      * Attempt a catch all ...
