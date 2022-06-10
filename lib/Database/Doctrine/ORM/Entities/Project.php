@@ -399,27 +399,27 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set debitMandates.
+   * Set sepaDebitMandates.
    *
-   * @param ArrayCollection $debitMandates
+   * @param ArrayCollection $sepaDebitMandates
    *
    * @return Project
    */
-  public function setDebitMandates($debitMandates):Project
+  public function setSepaDebitMandates($sepaDebitMandates):Project
   {
-    $this->debitMandates = $debitMandates;
+    $this->sepaDebitMandates = $sepaDebitMandates;
 
     return $this;
   }
 
   /**
-   * Get debitMandates.
+   * Get sepaDebitMandates.
    *
    * @return Collection
    */
-  public function getDebitMandates():Collection
+  public function getSepaDebitMandates():Collection
   {
-    return $this->debitMandates;
+    return $this->sepaDebitMandates;
   }
 
   /**
@@ -516,6 +516,30 @@ class Project implements \ArrayAccess
   public function getParticipantInstruments():Collection
   {
     return $this->participantInstruments;
+  }
+
+  /**
+   * Set calendarEvents.
+   *
+   * @param ArrayCollection $calendarEvents
+   *
+   * @return Project
+   */
+  public function setCalendarEvents(Collection $calendarEvents):Project
+  {
+    $this->calendarEvents = $calendarEvents;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarEvents.
+   *
+   * @return ArrayCollection
+   */
+  public function getCalendarEvents():Collection
+  {
+    return $this->calendarEvents;
   }
 
   /**
