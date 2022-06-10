@@ -125,7 +125,7 @@ export default {
       )
     },
     emitInput() {
-      if (this.inputValObject) {
+      if (this.inputValObjects) {
         this.$emit('input', this.inputValObjects.map((element) => element.id))
       }
     },
