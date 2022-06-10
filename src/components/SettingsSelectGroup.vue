@@ -126,13 +126,11 @@ export default {
       return this.groups[id]
     },
     emitInput() {
-      console.info('INPUT INPUTVAL', this)
       if (this.inputValObject) {
         this.$emit('input', this.inputValObject.id)
       }
     },
     emitUpdate() {
-      console.info('UPDATE INPUTVAL', this.inputValObject)
       this.$emit('update', this.inputValObject.id)
     },
     asyncFindGroup(query) {
