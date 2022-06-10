@@ -37,15 +37,22 @@ use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 class FilesHooksListener implements IEventListener
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const EVENT = HandledEvent::class;
 
   const BASENAME = 'files-hooks';
 
   /** @var IAppContainer */
   private $appContainer;
+
+  private $handled = false;
 
   public function __construct(IAppContainer $appContainer)
   {
@@ -58,6 +65,12 @@ class FilesHooksListener implements IEventListener
       return;
     }
     /** @var HandledEvent $event */
+
+    // this really only needs to be executed once per request.
+    if ($this->handled) {
+      return;
+    }
+    $this->handled = true;
 
     /** @var IUserSession $userSession */
     $userSession = $this->appContainer->get(IUserSession::class);
@@ -85,10 +98,30 @@ class FilesHooksListener implements IEventListener
     $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
     $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
 
-    $initialState->provideInitialState('sharing', [
-      'files' => [
-        'root' => '/' . $sharedFolder,
-        'templates' => '/' . $sharedFolder . '/' . $templatesFolder,
+    $this->logger = $this->appContainer->get(\OCP\ILogger::class);
+
+    /** @var EntityManager $entityManager */
+    $entityManager = $this->appContainer->get(EntityManager::class);
+    try {
+      $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
+      $this->logInfo('MUS ID ' . $musicianId);
+    } catch (\Throwable $t) {
+      // ignore
+      $this->logException($t);
+      $musicianId = 0;
+    }
+
+
+    $initialState->provideInitialState('files', [
+      'sharing' => [
+        'files' => [
+          'root' => '/' . $sharedFolder,
+          'templates' => '/' . $sharedFolder . '/' . $templatesFolder,
+        ],
+      ],
+      'personal' => [
+        'userId' => $userId,
+        'musicianId' => $musicianId,
       ],
     ]);
 

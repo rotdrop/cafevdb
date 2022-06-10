@@ -23,47 +23,86 @@
  */
 </script>
 <template>
-  <AppSidebar class="app-sidebar--without-background app-sidebar-hidden-root" :title="appName" :header="false">
-    <AppSidebarTab :id="appName + '-tab'"
-                   icon="icon-rename"
-                   :name="t(appName, appName)"
-    >
-      <!-- <SettingsSelectUsers v-model="sender"
-                           :label="t(appName, 'Sender')"
-                           :hint="hints['templates:cloud:integration:sender']"
-                           :multiple="false"
-      /> -->
-    </AppSidebarTab>
-  </AppSidebar>
+  <div>
+    <SelectMusicians v-model="sender"
+                     :label="t(appName, 'Sender')"
+                     :hint="hints['templates:cloud:integration:sender']"
+                     :multiple="false"
+                     :submit-button="false"
+                     search-scope="executive-board"
+                     open-direction="bottom"
+                     :searchable="false"
+    />
+    <SelectProjects v-model="project"
+                    :label="t(appName, 'Project')"
+                    :hint="hints['templates:cloud:integration:project']"
+                    :multiple="false"
+                    :submit-button="false"
+                    open-direction="bottom"
+    />
+    <SelectMusicians v-model="recipients"
+                     :label="t(appName, 'Recipients')"
+                     :hint="hints['templates:cloud:integration:recipients']"
+                     :multiple="true"
+                     :submit-button="false"
+                     :project-id="projectId"
+                     open-direction="bottom"
+                     search-scope="musicians"
+    />
+  </div>
 </template>
 <script>
 
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
-import SettingsSelectUsers from '../components/SettingsSelectUsers'
+import SelectMusicians from '../components/SelectMusicians'
+import SelectProjects from '../components/SelectProjects'
+import tooltip from '../mixins/tooltips.js'
 
 export default {
   name: 'FilesTab',
   components: {
     AppSidebar,
     AppSidebarTab,
-    SettingsSelectUsers,
+    SelectMusicians,
+    SelectProjects,
   },
+  mixins: [
+    tooltip,
+  ],
   data() {
     return {
       sender: '',
-      recipients: '',
+      recipients: [],
+      project: '',
       hints: {
         'templates:cloud:integration:sender': '',
+        'templates:cloud:integration:recipients': '',
+        'templates:cloud:integration:project': '',
       },
     };
   },
+  created() {
+    this.getData()
+  },
   computed: {
-    activeTab() {
-      return this.$parent.activeTab
+    projectId() {
+      try {
+        return this.project.id
+      } catch (ignoreMe) {
+        return 0
+      }
     },
   },
+  // watch: {
+  //   project(newVal, oldVal) {
+  //    console.info('NEW PROJECT', newVal, oldVal)
+  //   },
+  // },
   methods: {
+    info() {
+      console.info.apply(null, arguments)
+    },
      /**
      * Update current fileInfo and fetch new data
      * @param {Object} fileInfo the current file FileInfo
@@ -73,10 +112,21 @@ export default {
       this.resetState()
     },
     /**
+     * Fetch some needed data ...
+     */
+    async getData() {
+      // for (const [key, value] of Object.entries(this.hints)) {
+      // this.hints[key] = await this.tooltip(key)
+      // }
+      this.hints = await this.tooltips(Object.keys(this.hints))
+    },
+    /**
      * Reset the current view to its default state
      */
     resetState() {
-      // FILL ME
+      this.sender = ''
+      this.recipients = []
+      this.project = ''
     },
   },
 }

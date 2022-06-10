@@ -28,6 +28,10 @@ import { generateFilePath, imagePath } from '@nextcloud/router';
 import { loadState } from '@nextcloud/initial-state';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
+import { createPinia, PiniaVuePlugin } from 'pinia';
+
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js');
@@ -42,9 +46,9 @@ if (!window.OCA.CAFEVDB) {
 
 const getInitialState = () => {
   try {
-    return loadState(appName, 'sharing');
+    return loadState(appName, 'files');
   } catch (err) {
-    return console.error('error in loadState: ', err);
+    console.error('error in loadState: ', err);
   }
 };
 
@@ -60,17 +64,10 @@ const acceptableMimeType = function(mimeType) {
 };
 
 const validTemplatePath = function(path) {
-  return path.startsWith(initialState.files.templates);
+  return path.startsWith(initialState.sharing.files.templates);
 };
 
 const isEnabled = function(fileInfo) {
-
-  console.info('FILEINFO', fileInfo);
-
-  if (!initialState) {
-    initialState = getInitialState();
-  }
-  console.info('STATE', initialState);
 
   if (fileInfo && fileInfo.isDirectory()) {
     return false;
@@ -91,6 +88,8 @@ const isEnabled = function(fileInfo) {
 
 window.addEventListener('DOMContentLoaded', () => {
 
+  initialState = getInitialState();
+
   // menu file-actions can only depend on the literal local file-name,
   // the type and the mime-type.
   //
@@ -110,11 +109,7 @@ window.addEventListener('DOMContentLoaded', () => {
       // mime: 'application/pdf',
       permissions: OC.PERMISSION_READ,
       shouldRender(context) {
-        console.info('CONTEXT', context);
         const $file = $(context.$file);
-
-        console.info('ARGS', arguments);
-        console.info('FILE', $file);
 
         // 0: <tr class="" data-id="17874" data-type="file" data-size="40187" data-file="AdressAktualisierung-GeneralLastschrift.odt" data-mime="application/vnd.oasis.opendocument.text" data-mtime="1653855228000" data-etag="8c41b9a493acf47033cc070e137a8a88" data-quota="-1" data-permissions="27" data-has-preview="true" data-e2eencrypted="false" data-mounttype="shared" data-path="/camerata/templates/finance" data-share-permissions="19" data-share-owner="cameratashareholder" data-share-owner-id="cameratashareholder">
 
@@ -141,7 +136,6 @@ window.addEventListener('DOMContentLoaded', () => {
         $icon.css({ width: size + 'px', height: size + 'px' });
         $icon.attr('title', t(appName, 'Fill the template with substitutions. Opens the "Details" view for further options.'));
         $icon.tooltip({ placement: 'top' });
-        console.info($html);
         return $html;
       },
       /**
@@ -154,7 +148,6 @@ window.addEventListener('DOMContentLoaded', () => {
        * @param {object} context.fileList File-list instance we are attached to.
        */
       actionHandler(fileName, context) {
-        console.info('CAFEDB ACTION', arguments);
         context.fileList.showDetailsView(fileName, 'cafevdb');
       },
     });
@@ -171,6 +164,7 @@ window.addEventListener('DOMContentLoaded', () => {
       enabled: isEnabled,
 
       async mount(el, fileInfo, context) {
+
         if (TabInstance) {
           TabInstance.$destroy();
         }
@@ -178,6 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
         TabInstance = new View({
           // Better integration with vue parent component
           parent: context,
+          pinia,
         });
 
         // Only mount after we hahve all theh info we need
@@ -185,12 +180,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
         TabInstance.$mount(el);
         const $tabHeader = $(context.$el.closest('.app-sidebar-tabs'));
-        console.info('TABS', $tabHeader);
         $tabHeader.find('#cafevdb .app-sidebar-tabs__tab-icon span').css({
           'background-image': 'url(' + imagePath(appName, appName) + ')',
           'background-size': '16px',
         });
-        console.info(imagePath(appName, appName));
       },
       update(fileInfo) {
         TabInstance.update(fileInfo);

@@ -30,6 +30,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -37,6 +38,9 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 /**
  * Make the stored personal data accessible for the web-interface. This is
@@ -46,8 +50,14 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 class MusiciansController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const SCOPE_MUSICIANS = 'musicians';
+  public const SCOPE_CLUB_MEMBERS = 'club-members';
+  public const SCOPE_EXECUTIVE_BOARD = 'executive-board';
+  public const SCOPE_CLOUD_USERS = 'cloud-users';
+  public const SCOPE_ADDRESSBOOK = 'addressbook';
 
   /** @var Repositories\MusiciansRepository */
   private $musiciansRepository;
@@ -59,11 +69,14 @@ class MusiciansController extends Controller
     , IL10N $l10n
     , ILogger $logger
     , EntityManager $entityManager
+    , ConfigService $configService
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
     $this->logger = $logger;
     $this->entityManager = $entityManager;
+    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+    $this->configService = $configService;
   }
 
   /**
@@ -87,42 +100,94 @@ class MusiciansController extends Controller
   }
 
   /**
+   * @NoAdminRequired
+   *
    * Search by user-id and names. Pattern may contain wildcards (* and %).
    */
-  public function search(string $pattern, ?int $limit = null, ?int $offset = null, ?string $projectName = null, ?int $projectId = null):Response
+  public function search(string $pattern, ?int $limit = null, ?int $offset = null, ?string $projectName = null, ?int $projectId = null, array $ids = [], string $scope = self::SCOPE_MUSICIANS):Response
   {
+
+    switch ($scope) {
+      case self::SCOPE_ADDRESSBOOK:
+      case self::SCOPE_CLOUD_USERS:
+        return self::grumble($this->l->t('Picking users from the cloud or the address-books is not yet supported, sorry.'));
+      case self::SCOPE_EXECUTIVE_BOARD:
+        $projectId = $this->getExecutiveBoardProjectId();
+        break;
+      case self::SCOPE_CLUB_MEMBERS:
+        $projectId = $this->getClubMembersProjectId();
+        break;
+      case self::SCOPE_MUSICIANS:
+        // just go
+        break;
+    }
+
     if ($projectName !== null && $projectId === null) {
       // our findLikeTrait cannot iterate to projectParticipation.project.name
-      $project = $this->getDatabaseRepository(Entities\Project)->findOneBy([ 'name' => $projectName ]);
+      $project = $this->getDatabaseRepository(Entities\Project::class)->findOneBy([ 'name' => $projectName ]);
     } else {
       $project = $projectId;
     }
 
-    $pattern = str_replace('*', '%', $pattern);
-    $criteria = [
-      [ '(|'  =>  true  ],
-      'surName' => $pattern,
-      'firstName' => $pattern,
-      'displayName' => $pattern,
-      'nickName' => $pattern,
-      'userIdSlug' => $pattern,
-      [ ')' => true ],
-    ];
+    if (empty($pattern)) {
+      $criteria = [];
+      if (count($ids) > 0) {
+        $criteria[] = [ 'id' => $ids ];
+      }
+    } else {
+      $pattern = str_replace('*', '%', $pattern);
+
+      if (strpos($pattern, '%') === false) {
+        if ($pattern[0] != '^') {
+          $pattern = '%' . $pattern;
+        }
+        if (substr($pattern, -1) != '$') {
+          $pattern = $pattern . '%';
+        }
+      }
+
+      $criteria = [
+        '(|surName' => $pattern,
+        'firstName' => $pattern,
+        'displayName' => $pattern,
+        'nickName' => $pattern,
+        'userIdSlug' => $pattern,
+      ];
+      if (count($ids) > 0) {
+        $criteria[] = [ 'id' => $ids ];
+      }
+      $criteria[] = [ ')' => true ];
+    }
 
     if ($project !== null) {
       $criteria[] = [ 'projectParticipation.project' => $project ];
     }
+
     $musicians = $this->musiciansRepository->findBy($criteria, [
       'surName' => 'ASC',
       'firstName' => 'ASC'
     ], $limit, $offset);
 
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    $musiciansData = [];
+    /** @var Entities\Musician $musician */
+    foreach ($musicians as $musician) {
+      $musiciansData[] = [
+        'id' => $musician->getId(),
+        'firstName' => $musician->getFirstName(),
+        'surName' => $musician->getSurName(),
+        'displayName' => $musician->getDisplayName(),
+        'nickName' => $musician->getNickName(),
+        'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
+        'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
+        'userId' => $musician->getUserIdSlug(),
+      ];
+    }
+
+    return self::dataResponse($musiciansData);
   }
 
   private function hydrateToArray(Entities\Musician $musician)
   {
-    $this->logInfo('NAME ' . $musician->getPublicName() . ' #Instruments ' . $musician->getInstruments()->count());
     $musicianData = $musician->toArray();
 
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
@@ -306,19 +371,77 @@ class MusiciansController extends Controller
       $musicianData['instrumentInsurances'][] = $flatInsurance;
     }
 
-    $this->logInfo('SIZE OF DATA ' . strlen(json_encode($musicianData)));
-
     return $musicianData;
   }
 
   private function flattenProject(Entities\Project $project)
   {
     $flatProject = $project->toArray();
-    foreach(['participants', 'participantFields', 'participantFieldsData', 'sepaDebitMandates', 'payments'] as $key) {
+    $skippedProperties = [
+      'participants',
+      'participantFields',
+      'participantFieldsData',
+      'sepaDebitMandates',
+      'payments',
+      'calendarEvents',
+      'instrumentationNumbers',
+      'webPages',
+      'participantInstruments',
+      'sentEmail',
+    ];
+    foreach($skippedProperties as $key) {
       unset($flatProject[$key]);
     }
     return $flatProject;
   }
+
+  /**
+   * @NoAdminRequired
+   *
+   * Get a short description of the project with no extra data.
+   */
+  public function getProject(int $projectId):Response
+  {
+    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+
+    return self::dataResponse($this->flattenProject($project));
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * Search by user-id and names. Pattern may contain wildcards (* and %).
+   */
+  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null): Response
+  {
+    $repository = $this->getDatabaseRepository(Entities\Project::class);
+
+    if (empty($pattern)) {
+      $criteria = [];
+    } else {
+      $pattern = str_replace('*', '%', $pattern);
+
+      if (strpos($pattern, '%') === false) {
+        if ($pattern[0] != '^') {
+          $pattern = '%' . $pattern;
+        }
+        if (substr($pattern, -1) != '$') {
+          $pattern = $pattern . '%';
+        }
+      }
+      $criteria = [
+        'name' => $pattern,
+      ];
+    }
+
+    $projects = $repository->findBy($criteria, [
+      'year' => 'DESC',
+      'name' => 'ASC',
+    ], $limit, $offset);
+
+    return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
+  }
+
 }
 
 // Local Variables: ***

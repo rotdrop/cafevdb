@@ -77,6 +77,24 @@ class ToolTipsController extends Controller
     }
   }
 
+  /**
+   * @NoAdminRequired
+   * @NoGroupMemberRequired
+   */
+  public function getMultiple(array $keys, ?bool $debug = null, bool $unescaped = false)
+  {
+    $this->toolTipsService->debug($debug);
+    $tooltips = [];
+    foreach ($keys as $key) {
+      $tooltip = $this->toolTipsService->fetch($key, escape: false);
+      if (!$unescaped) {
+        $tooltip = Util::htmlEscape($tooltip);
+      }
+      $tooltips[$key] = $tooltip;
+    }
+    return new DataResponse($tooltips, Http::STATUS_OK);
+  }
+
 }
 
 // Local Variables: ***

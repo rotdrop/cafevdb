@@ -572,6 +572,17 @@ $routes = [
       'name' => 'tool_tips#get',
       'url' => '/tooltips/{key}',
       'verb' => 'GET',
+      'requirements' => [
+        'key' => '^.+$',
+      ],
+    ],
+    /**
+     * Fetch a tooltip by its key
+     */
+    [
+      'name' => 'tool_tips#get_multiple',
+      'url' => '/tooltips',
+      'verb' => 'GET',
     ],
     /**
      * Manage mailing list subscriptions
@@ -592,12 +603,28 @@ $routes = [
     [
       'name' => 'musicians#get',
       'verb' => 'GET',
-      'url' => '/musicians/{musicianId}',
+      'url' => '/musicians/details/{musicianId}',
     ],
     [
       'name' => 'musicians#search',
       'verb' => 'GET',
       'url' => '/musicians/search/{pattern}',
+      'defaults' => [
+        'pattern' => '%',
+      ],
+    ],
+    [
+      'name' => 'musicians#getProject',
+      'verb' => 'GET',
+      'url' => '/projects/details/{projectId}',
+    ],
+    [
+      'name' => 'musicians#search_projects',
+      'verb' => 'GET',
+      'url' => '/projects/search/{pattern}',
+      'defaults' => [
+        'pattern' => '%',
+      ],
     ],
     /**
      * Attempt a catch all ...

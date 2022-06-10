@@ -45,7 +45,7 @@ class MusiciansRepository extends EntityRepository
     );
   }
 
-  public function fetchIds(array $criteria = [])
+  private function generateIdQuery(array $criteria = [])
   {
     $queryParts = $this->prepareFindBy($criteria, [
       'id' => 'ASC',
@@ -55,9 +55,26 @@ class MusiciansRepository extends EntityRepository
     $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.id' ]);
     $qb = $this->generateFindByWhere($qb, $queryParts);
 
-    $query = $qb->getQuery();
+    return $qb->getQuery();
+  }
+
+  public function fetchIds(array $criteria = [])
+  {
+    $query = $this->geneateIdQuery($criteria);
 
     return $query->getResult('COLUMN_HYDRATOR');
+  }
+
+  public function findIdByUUID($uuid)
+  {
+    $query = $this->generateIdQuery([ 'uuid' => $uuid ]);
+    return $query->getSingleScalarResult();
+  }
+
+  public function findIdByUserId($userId)
+  {
+    $query = $this->generateIdQuery([ 'userIdSlug' => $userId ]);
+    return $query->getSingleScalarResult();
   }
 
   /**
