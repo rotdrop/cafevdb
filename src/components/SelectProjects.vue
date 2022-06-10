@@ -24,6 +24,7 @@
 
 <template>
   <form class="select-projects" @submit.prevent="">
+    <div v-if="loading" class="loading" />
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
@@ -113,6 +114,7 @@ export default {
     return {
       inputValObjects: [],
       projects: {},
+      loading: true,
     }
   },
   computed: {
@@ -145,6 +147,7 @@ export default {
     uuid += 1
     this.asyncFindProjects('').then((result) => {
       this.inputValObjects = this.getValueObjects()
+      this.loading = false
     })
   },
   methods: {

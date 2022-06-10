@@ -24,6 +24,7 @@
 
 <template>
   <form class="select-musicians" @submit.prevent="">
+    <div v-if="loading" class="loading" />
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
@@ -114,6 +115,7 @@ export default {
     return {
       inputValObjects: [],
       musicians: {},
+      loading: true,
     }
   },
   computed: {
@@ -129,9 +131,11 @@ export default {
       this.inputValObjects = this.getValueObject()
     },
     projectId(newVal) {
+      this.loading = true
       this.resetMusicians()
       this.asyncFindMusicians('', this.getValueIds()).then((result) => {
         this.inputValObjects = this.getValueObject(true)
+        this.loading = false
       })
     },
   },
@@ -141,6 +145,7 @@ export default {
     this.resetMusicians()
     this.asyncFindMusicians('').then((result) => {
       this.inputValObjects = this.getValueObject()
+      this.loading = false
     })
   },
   methods: {
