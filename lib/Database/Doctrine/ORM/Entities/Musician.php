@@ -1152,6 +1152,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if (!empty($this->displayName)) {
       return $this->displayName;
     }
+    if (empty($this->surName)) {
+      return $firstName;
+    }
+    if (empty($firstName)) {
+      return $this->surName;
+    }
     return $this->surName.', '.$firstName;
   }
 
@@ -1299,16 +1305,5 @@ class Musician implements \ArrayAccess, \JsonSerializable
       $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
-  }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities. Here we add a "virtual"
-   * array key for the \ArrayAccess implementation.
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
   }
 }
