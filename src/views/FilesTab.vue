@@ -23,7 +23,7 @@
  */
 </script>
 <template>
-  <div>
+  <div class="files-tab">
     <SelectMusicians v-model="sender"
                      :label="t(appName, 'Sender')"
                      :hint="hints['templates:cloud:integration:sender']"
@@ -49,12 +49,31 @@
                      open-direction="bottom"
                      search-scope="musicians"
     />
+    <div class="bulk-operations">
+      <span class="bulk-operations-title">{{ t(appName, 'Mail merge operation:') }}</span>
+      <Actions>
+        <ActionButton icon="icon-download"
+                      :title="t(appName, 'Download Merged Document')"
+        >
+          {{ hints['templates:cloud:integration:download'] }}
+        </ActionButton>
+        <ActionButton :title="t(appName, 'Merge Document into Cloud')">
+          <template #icon>
+            <Cloud />
+          </template>
+          {{ hints['templates:cloud:integration:cloudstore'] }}
+        </ActionButton>
+      </Actions>
+    </div>
   </div>
 </template>
 <script>
 
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
+import Cloud from 'vue-material-design-icons/Cloud'
 import SelectMusicians from '../components/SelectMusicians'
 import SelectProjects from '../components/SelectProjects'
 import tooltip from '../mixins/tooltips.js'
@@ -66,6 +85,9 @@ export default {
     AppSidebarTab,
     SelectMusicians,
     SelectProjects,
+    Actions,
+    ActionButton,
+    Cloud,
   },
   mixins: [
     tooltip,
@@ -79,6 +101,8 @@ export default {
         'templates:cloud:integration:sender': '',
         'templates:cloud:integration:recipients': '',
         'templates:cloud:integration:project': '',
+        'templates:cloud:integration:download': '',
+        'templates:cloud:integration:cloudstore': '',
       },
     };
   },
@@ -132,22 +156,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.app-sidebar-hidden-root {
-  width: 100% !important;
-  height: calc(100vh - 223px) !important;
-  min-width: 289px !important;
-  top:unset !important;
-
-  ::v-deep {
-    .app-sidebar-tabs__content {
-      section {
-        padding:0;
-      }
-    }
-
-    .app-sidebar-header {
-      display: none !important;
-    }
+.files-tab {
+  .bulk-operations {
+    display: flex;
+    align-items: center;
   }
 }
 </style>

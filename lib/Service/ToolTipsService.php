@@ -1192,6 +1192,15 @@ yearly insurance fees to the club-members.'),
           'pdf' => $this->l->t('Test the form-filling features with a test-data-set and convert the generated file to PDF, providing a fillable PDF-form if the original document contains form-elements.'),
           'data' => $this->l->t('Just download the test-data set as JSON data for inspection and for debugging.'),
         ],
+        'cloud' => [
+          'integration' => [
+            'sender' => $this->l->t('Select the sender from the members of the executive board.'),
+            'recipients' => $this->l->t('Select the recipients for the mail-merge.'),
+            'project' => $this->l->t('Optionally select a project to provide more context information for the mail-merge operation.'),
+            'download' => $this->l->t('Preferred for one-time merges or for testing. Just download to your local computer.'),
+            'cloudstore' => $this->l->t('Preferred for mass-mail-merges and when the substituted template does not need to be post-processed.'),
+          ],
+        ],
       ],
 
       'test-cafevdb_dbpassword' => $this->l->t('Test data-base passphrase.'),
