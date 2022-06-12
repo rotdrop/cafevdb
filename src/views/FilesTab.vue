@@ -53,11 +53,16 @@
       <span class="bulk-operations-title">{{ t(appName, 'Mail merge operation:') }}</span>
       <Actions>
         <ActionButton icon="icon-download"
+                      :close-after-click="true"
                       :title="t(appName, 'Download Merged Document')"
+                      @click="handleMailMergeRequest('download', ...arguments)"
         >
           {{ hints['templates:cloud:integration:download'] }}
         </ActionButton>
-        <ActionButton :title="t(appName, 'Merge Document into Cloud')">
+        <ActionButton :close-after-click="true"
+                      :title="t(appName, 'Merge Document into Cloud')"
+                      @click="handleMailMergeRequest('cloud', ...arguments)"
+        >
           <template #icon>
             <Cloud />
           </template>
@@ -69,13 +74,20 @@
 </template>
 <script>
 
+import { appName } from '../app/app-info.js'
+import { getCurrentUser as getCloudUser } from '@nextcloud/auth/dist/user'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import Cloud from 'vue-material-design-icons/Cloud'
+import axios from '@nextcloud/axios'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { generateUrl } from '@nextcloud/router'
+import { getInitialState } from '../services/initial-state-service'
 import SelectMusicians from '../components/SelectMusicians'
 import SelectProjects from '../components/SelectProjects'
+import fileDownload from '../services/axios-file-download.js'
 import tooltip from '../mixins/tooltips.js'
 
 export default {
@@ -104,6 +116,7 @@ export default {
         'templates:cloud:integration:download': '',
         'templates:cloud:integration:cloudstore': '',
       },
+      initialState: {},
     };
   },
   created() {
@@ -115,6 +128,20 @@ export default {
         return this.project.id
       } catch (ignoreMe) {
         return 0
+      }
+    },
+    senderId() {
+      try {
+        return this.sender.id
+      } catch (ignoreMe) {
+        return 0
+      }
+    },
+    recipientIds() {
+      try {
+        return this.recipients.filter((recipient) => !!recipient.id).map((recipient) => recipient.id)
+      } catch (ignoreMe) {
+        return []
       }
     },
   },
@@ -139,10 +166,41 @@ export default {
      * Fetch some needed data ...
      */
     async getData() {
-      // for (const [key, value] of Object.entries(this.hints)) {
-      // this.hints[key] = await this.tooltip(key)
-      // }
+      this.initialState = getInitialState()
+      if (this.initialState.personal.musicianId > 0) {
+        this.sender = { id: this.initialState.personal.musicianId }
+      }
+      console.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
+    },
+    async handleMailMergeRequest(destination) {
+      console.info('MAIL MERGE', arguments)
+      console.info('FILE', this.fileInfo)
+
+      const postData = {
+        fileId: this.fileInfo.id,
+        fileName: this.fileInfo.path + '/' + this.fileInfo.name,
+        senderId: this.sender.id,
+        projectId: this.projectId,
+        recipientIds: this.recipientIds,
+        destination,
+      }
+      const ajaxUrl = generateUrl('/apps/' + appName + '/documents/mail-merge')
+
+      try {
+        if (destination === 'download') {
+          await fileDownload(ajaxUrl, postData)
+        } else {
+          await axios.post(ajaxUrl, postData)
+        }
+      } catch (e) {
+        console.error('ERROR', e);
+        let message = t(appName, 'reason unknown');
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message;
+        }
+        showError(t(appName, 'Could not perform mail-merge: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT });
+      }
     },
     /**
      * Reset the current view to its default state
@@ -151,6 +209,9 @@ export default {
       this.sender = ''
       this.recipients = []
       this.project = ''
+      if (this.initialState.personal.musicianId > 0) {
+        this.sender = { id: this.initialState.personal.musicianId }
+      }
     },
   },
 }

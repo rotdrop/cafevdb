@@ -143,7 +143,7 @@ export default {
     this.uuid = uuid.toString()
     uuid += 1
     this.resetMusicians()
-    this.asyncFindMusicians('').then((result) => {
+    this.asyncFindMusicians('', this.getValueIds()).then((result) => {
       this.inputValObjects = this.getValueObject()
       this.loading = false
     })
@@ -237,6 +237,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .select-musicians {
+  position:relative;
+  .loading {
+    position:absolute;
+    width:0;
+    height:0;
+    top:50%;
+    left:50%;
+  }
   .input-wrapper {
     display: flex;
     flex-wrap: wrap;

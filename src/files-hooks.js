@@ -24,8 +24,8 @@
 import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import $ from './app/jquery.js';
+import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath, imagePath } from '@nextcloud/router';
-import { loadState } from '@nextcloud/initial-state';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
@@ -43,14 +43,6 @@ let TabInstance = null;
 if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
-
-const getInitialState = () => {
-  try {
-    return loadState(appName, 'files');
-  } catch (err) {
-    console.error('error in loadState: ', err);
-  }
-};
 
 let initialState;
 
@@ -89,6 +81,8 @@ const isEnabled = function(fileInfo) {
 window.addEventListener('DOMContentLoaded', () => {
 
   initialState = getInitialState();
+
+  console.info('INITIAL STATE', initialState);
 
   // menu file-actions can only depend on the literal local file-name,
   // the type and the mime-type.

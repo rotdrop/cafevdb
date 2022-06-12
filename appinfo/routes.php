@@ -626,6 +626,11 @@ $routes = [
         'pattern' => '%',
       ],
     ],
+    [
+      'name' => 'mail_merge#merge',
+      'verb' => 'POST',
+      'url' => '/documents/mail-merge',
+    ],
     /**
      * Attempt a catch all ...
      */
