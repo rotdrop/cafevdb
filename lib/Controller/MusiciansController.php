@@ -126,15 +126,13 @@ class MusiciansController extends Controller
     if ($projectName !== null && $projectId === null) {
       // our findLikeTrait cannot iterate to projectParticipation.project.name
       $project = $this->getDatabaseRepository(Entities\Project::class)->findOneBy([ 'name' => $projectName ]);
+      $project = $project->getId();
     } else {
       $project = $projectId;
     }
 
     if (empty($pattern)) {
       $criteria = [];
-      if (count($ids) > 0) {
-        $criteria[] = [ 'id' => $ids ];
-      }
     } else {
       $pattern = str_replace('*', '%', $pattern);
 
@@ -154,9 +152,6 @@ class MusiciansController extends Controller
         'nickName' => $pattern,
         'userIdSlug' => $pattern,
       ];
-      if (count($ids) > 0) {
-        $criteria[] = [ 'id' => $ids ];
-      }
       $criteria[] = [ ')' => true ];
     }
 
@@ -168,6 +163,15 @@ class MusiciansController extends Controller
       'surName' => 'ASC',
       'firstName' => 'ASC'
     ], $limit, $offset);
+
+    if (count($ids) > 0) {
+      $criteria = [ [ 'id' => $ids ] ];
+      if ($project !== null) {
+        $criteria[] = [ 'projectParticipation.project' => $project ];
+      }
+      $byIdMusicians = $this->musiciansRepository->findBy($criteria);
+      $musicians = array_merge($musicians, $byIdMusicians);
+    }
 
     $musiciansData = [];
     /** @var Entities\Musician $musician */
