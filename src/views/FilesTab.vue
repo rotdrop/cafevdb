@@ -51,7 +51,7 @@
     />
     <div class="bulk-operations">
       <span class="bulk-operations-title">{{ t(appName, 'Mail merge operation:') }}</span>
-      <Actions>
+      <Actions :class="[{ merging: merging, loading: merging }]">
         <ActionButton icon="icon-download"
                       :close-after-click="true"
                       :title="t(appName, 'Download Merged Document')"
@@ -117,6 +117,7 @@ export default {
         'templates:cloud:integration:cloudstore': '',
       },
       initialState: {},
+      merging: false,
     };
   },
   created() {
@@ -177,6 +178,8 @@ export default {
       console.info('MAIL MERGE', arguments)
       console.info('FILE', this.fileInfo)
 
+      this.merging = true
+
       const postData = {
         fileId: this.fileInfo.id,
         fileName: this.fileInfo.path + '/' + this.fileInfo.name,
@@ -194,13 +197,32 @@ export default {
           await axios.post(ajaxUrl, postData)
         }
       } catch (e) {
-        console.error('ERROR', e);
-        let message = t(appName, 'reason unknown');
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message;
+        console.error('ERROR', e)
+        let message = t(appName, 'reason unknown')
+        let errorData = {}
+        if (e.response) {
+          errorData = e.response.data || {}
+          if (
+            e.request.responseType === 'blob' &&
+            errorData instanceof Blob &&
+            errorData.type &&
+            errorData.type.toLowerCase().indexOf('json') != -1
+          ) {
+            try {
+              errorData = JSON.parse(await errorData.text())
+            } catch (ignoreMe) {
+              errorData = {}
+            }
+          }
+        } else if (e.request) {
+          message = t(appName, 'no response received from {ajaxUrl}', { ajaxUrl })
         }
+        console.error('ERROR DATA', errorData)
+        message = errorData.message || message;
         showError(t(appName, 'Could not perform mail-merge: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT });
       }
+
+      this.merging = false
     },
     /**
      * Reset the current view to its default state
