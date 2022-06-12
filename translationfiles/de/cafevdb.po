@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-02 13:24+0200\n"
-"PO-Revision-Date: 2022-06-02 13:24+0200\n"
+"POT-Creation-Date: 2022-06-12 21:49+0200\n"
+"PO-Revision-Date: 2022-06-12 21:54+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -20,6 +20,18 @@ msgstr ""
 msgid "%s Musicians"
 msgstr "%s Musizierende"
 
+#: lib/Command/FilesScan.php:87 lib/Command/HelloWorld.php:97
+#: lib/Command/ParticipantFolders.php:94
+#: lib/Command/UpdateGeoCodingCache.php:137 lib/Command/WikiOverview.php:89
+msgid "Login succeeded."
+msgstr "Anmeldung erfolgreich."
+
+#: lib/Command/FilesScan.php:89 lib/Command/HelloWorld.php:99
+#: lib/Command/ParticipantFolders.php:96
+#: lib/Command/UpdateGeoCodingCache.php:139 lib/Command/WikiOverview.php:91
+msgid "Login failed."
+msgstr "Anmelden fehlgeschlagen."
+
 #: lib/Command/HelloWorld.php:82
 msgid "Hello!"
 msgstr "Hallo!"
@@ -27,16 +39,6 @@ msgstr "Hallo!"
 #: lib/Command/HelloWorld.php:84 lib/Controller/ExpertModeController.php:150
 msgid "Hello World!"
 msgstr "Hallo Welt!"
-
-#: lib/Command/HelloWorld.php:97 lib/Command/ParticipantFolders.php:94
-#: lib/Command/UpdateGeoCodingCache.php:137 lib/Command/WikiOverview.php:89
-msgid "Login succeeded."
-msgstr "Anmeldung erfolgreich."
-
-#: lib/Command/HelloWorld.php:99 lib/Command/ParticipantFolders.php:96
-#: lib/Command/UpdateGeoCodingCache.php:139 lib/Command/WikiOverview.php:91
-msgid "Login failed."
-msgstr "Anmelden fehlgeschlagen."
 
 #: lib/Common/DatabaseProgressStatus.php:97
 #: lib/Common/PlainFileProgressStatus.php:136
@@ -183,12 +185,12 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
 
-#: lib/Controller/BackgroundJobController.php:78
+#: lib/Controller/BackgroundJobController.php:69
 #, php-format
 msgid "User \"%s\" not in orchestra group \"%s"
 msgstr "Die Nutzer-Id \"%s\" ist kein Mitglied der Orchestergruppe \"%s\""
 
-#: lib/Controller/BackgroundJobController.php:87
+#: lib/Controller/BackgroundJobController.php:94
 #, php-format
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr "Ausnahme `aufgefangen': \\`%s' bei %s:%s."
@@ -642,8 +644,8 @@ msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
-"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
-"`%s' stimmen nicht überein."
+"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
+"%s' stimmen nicht überein."
 
 #: lib/Controller/LegacyEventsController.php:321
 #: lib/Controller/LegacyEventsController.php:761
@@ -1294,8 +1296,8 @@ msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
-"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
-"\"gefangen\"."
+"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
+"\"."
 
 #: lib/Controller/PersonalSettingsController.php:1310
 #, php-format
@@ -2714,8 +2716,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
-"\"%s\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
+"\"."
 msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
@@ -4070,7 +4072,9 @@ msgstr "Die Ordner \"%s\" konnte nicht auf dem Server gefunden werden."
 msgid "Value"
 msgstr "Wert"
 
+#. TRANSLATORS: folder-name
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
 msgid "Documents"
 msgstr "Dokumente"
 
@@ -4134,11 +4138,11 @@ msgstr "herunterladen"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
-"\"%s\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
+"\", new: \"%s\""
 msgstr ""
-"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
-"\"%s\""
+"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
+"\""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
 #, php-format
@@ -5509,8 +5513,8 @@ msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
-"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id "
-"\"%2$s\" nicht finden."
+"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
+"\" nicht finden."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1105
 #, php-format
@@ -5850,8 +5854,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: "
-"\"%2$s\"."
+"however, the following app-restriction have been imposed on the app: \"%2$s"
+"\"."
 msgstr ""
 "Das Account-Backend \"%1$s\" scheint installiert und aktiviert zu sein, "
 "jedoch mit den follgenden Einschränkungen: \"%2$s\"."
@@ -9885,21 +9889,20 @@ msgstr ""
 "Der Pfad \"%s\" muss aus genau einem Verzeichnis und einem Dateinamen "
 "bestehen."
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:39
-msgid "FOLDERNAME:Documents"
-msgstr "Dokumente"
-
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:49
-msgid "FOLDERNAME:PaymentRecords"
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:51
+msgid "PaymentRecords"
 msgstr "ZahlungsBelege"
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:57
+#. TRANSLATORS: file-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:60
 #, php-format
-msgid "FILENAME:PaymentRecord-%1$s-%2$d"
+msgid "PaymentRecord-%1$s-%2$d"
 msgstr "ZahlungsBeleg-%1$s-%2$d"
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:81
-msgid "FOLDERNAME:DebitMandates"
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:85
+msgid "DebitMandates"
 msgstr "LastschriftMandate"
 
 #: lib/Storage/UserStorage.php:287
@@ -14687,6 +14690,15 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#~ msgid "FOLDERNAME:PaymentRecords"
+#~ msgstr "ZahlungsBelege"
+
+#~ msgid "FOLDERNAME:DebitMandates"
+#~ msgstr "LastschriftMandate"
+
+#~ msgid "FOLDERNAME:Documents"
+#~ msgstr "Dokumente"
+
 #~ msgid "Toolbox"
 #~ msgstr "Werkzeuge"
 
@@ -14891,9 +14903,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "CafevDB"
 #~ msgstr "CafevDB"
-
-#~ msgid "payment-record"
-#~ msgstr "ZahlungsBeleg"
 
 #~ msgid "project-payment"
 #~ msgstr "Projekt-Umsatz"
