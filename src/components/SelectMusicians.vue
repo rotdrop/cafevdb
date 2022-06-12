@@ -169,7 +169,7 @@ export default {
           }
           return this.musicians[id]
         }
-      )
+      ).filter((musician) => musician !== null && musician !== undefined)
       if (this.multiple) {
         if (everybody) {
           result = [this.musicians[0]]
@@ -186,7 +186,7 @@ export default {
       const value = Array.isArray(this.value) ? this.value : [this.value]
       const result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
         (musician) => {
-          return musician.id !== undefined || musician
+          return musician.id !== undefined ? musician.id : musician
         }
       )
       return result
