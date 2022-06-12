@@ -335,6 +335,30 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Set sepaDebitMandate.
+   *
+   * @param SepaDebitMandate|null sepaDebitMandate
+   *
+   * @return ProjectParticipant
+   */
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectParticipant
+  {
+    $this->sepaDebitMandate = $sepaDebitMandate;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandate.
+   *
+   * @return SepaDebitMandate|null
+   */
+  public function getSepaDebitMandate():?SepaDebitMandate
+  {
+    return $this->sepaDebitMandate;
+  }
+
+  /**
    * @var null|array
    *
    * The array of changed field values.
