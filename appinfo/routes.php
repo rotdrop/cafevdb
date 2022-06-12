@@ -610,7 +610,7 @@ $routes = [
       'verb' => 'GET',
       'url' => '/musicians/search/{pattern}',
       'defaults' => [
-        'pattern' => '%',
+        'pattern' => '',
       ],
     ],
     [
@@ -623,7 +623,7 @@ $routes = [
       'verb' => 'GET',
       'url' => '/projects/search/{pattern}',
       'defaults' => [
-        'pattern' => '%',
+        'pattern' => '',
       ],
     ],
     [
