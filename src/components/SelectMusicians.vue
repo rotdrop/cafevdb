@@ -43,7 +43,7 @@
                    :tag-width="60"
                    :disabled="disabled"
                    @input="emitInput"
-                   @search-change="asyncFindMusicians"
+                   @search-change="(query, id) => asyncFindMusicians(query)"
       />
       <input v-if="submitButton"
              type="submit"
@@ -120,7 +120,7 @@ export default {
   },
   computed: {
     id() {
-      return 'settings-select-musician-' + this.uuid
+      return 'settings-musicians-' + this.uuid
     },
     musiciansArray() {
       return Object.values(this.musicians)
@@ -203,7 +203,7 @@ export default {
     emit(event) {
       this.$emit(event, this.inputValObjects)
     },
-    asyncFindMusicians(query, ids) {
+    asyncFindMusicians(query, musicianIds) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
@@ -215,8 +215,8 @@ export default {
       if (this.projectId > 0) {
         params.projectId = this.projectId
       }
-      if (ids !== undefined && ids.length > 0) {
-        params.ids = ids
+      if (musicianIds !== undefined && musicianIds.length > 0) {
+        params.ids = musicianIds
       }
       return axios
         .get(generateUrl(`/apps/${appName}/musicians/search${query}`), { params })
