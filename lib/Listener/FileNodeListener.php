@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright , 20212021, ,  Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +31,7 @@ use OCP\IUser;
 use OCP\ILogger;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -52,14 +53,12 @@ class FileNodeListener implements IEventListener
   /** @var IUser */
   private $user;
 
-  public function __construct(
-    $appName
-    , IUserSession $userSession
-    , ILogger $logger
-  ) {
-    $this->appName = $appName;
-    $this->user = $userSession->getUser();
-    $this->logger = $logger;
+  /** @var IAppContainer */
+  private $appContainer;
+
+  public function __construct(IAppContainer $appContainer)
+  {
+    $this->appContainer = $appContainer;
   }
 
   public function handle(Event $event): void {
@@ -72,22 +71,32 @@ class FileNodeListener implements IEventListener
     if (empty($eventClass)) {
       return;
     }
-    if (empty($this->user)) {
+
+    $appName = $this->appContainer->get('appName');
+
+    /** @var IUserSession $userSession */
+    $userSession = $this->appContainer->get(IUserSession::class);
+
+    $user = $userSession->getUser();
+
+    if (empty($user)) {
       return;
     }
 
     /** @var ConfigService $configService */
-    $configService = \OC::$server->query(ConfigService::class);
+    $configService = $this->appContainer->get(ConfigService::class);
     if (empty($configService)) {
       return;
     }
 
     /** @var IRootFolder $rootFolder */
-    $rootFolder = \OC::$server->query(IRootFolder::class);
+    $rootFolder = $this->appContainer->get(IRootFolder::class);
     if (empty($rootFolder)) {
       return;
     }
-    $userFolder = $rootFolder->getUserFolder($this->user->getUID())->getPath();
+    $userFolder = $rootFolder->getUserFolder($user->getUID())->getPath();
+
+    $this->logger = $this->appContainer->get(ILogger::class);
 
     $sharedFolder = $configService->getConfigValue(ConfigService::SHARED_FOLDER);
     $templatesFolder = $configService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);

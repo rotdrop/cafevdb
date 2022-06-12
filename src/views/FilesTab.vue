@@ -82,13 +82,14 @@ import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import Cloud from 'vue-material-design-icons/Cloud'
 import axios from '@nextcloud/axios'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import { getInitialState } from '../services/initial-state-service'
 import SelectMusicians from '../components/SelectMusicians'
 import SelectProjects from '../components/SelectProjects'
 import fileDownload from '../services/axios-file-download.js'
 import tooltip from '../mixins/tooltips.js'
+import md5 from 'blueimp-md5'
 
 export default {
   name: 'FilesTab',
@@ -194,7 +195,12 @@ export default {
         if (destination === 'download') {
           await fileDownload(ajaxUrl, postData)
         } else {
-          await axios.post(ajaxUrl, postData)
+          const response = await axios.post(ajaxUrl, postData)
+          const cloudFolder = response.data.cloudFolder
+          const message = response.data.message
+          console.info('CLOUD RESPONSE', response)
+          const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
+          showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
         }
       } catch (e) {
         console.error('ERROR', e)

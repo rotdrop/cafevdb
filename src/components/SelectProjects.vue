@@ -119,7 +119,7 @@ export default {
   },
   computed: {
     id() {
-      return 'settings-select-project-' + this.uuid
+      return 'select-projects-' + this.uuid
     },
     projectsArray() {
       const groupedValues = {}
