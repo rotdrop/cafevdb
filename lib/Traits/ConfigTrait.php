@@ -647,7 +647,7 @@ trait ConfigTrait {
   }
 
   /** Return the given time as short time-stamp (textual). */
-  protected function formatTimeStamp($date, $format = null, $timeZone = null)
+  protected function formatTimeStamp($date = null, $format = null, $timeZone = null)
   {
     return $this->configService->formatTimeStamp($date, $format, $timeZone);
   }

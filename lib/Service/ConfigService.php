@@ -996,7 +996,7 @@ class ConfigService
    * human readable time-stamp, providing defaults for $format and
    * using the default time-zone if none is specified.
    *
-   * @param int|\DateTimeInterface $date
+   * @param null|int|\DateTimeInterface $date
    *
    * @param null|string $format
    *
@@ -1004,9 +1004,11 @@ class ConfigService
    *
    * @return string
    */
-  public function formatTimeStamp($date, ?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function formatTimeStamp($date = null, ?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
-    if (!($date instanceof \DateTimeInterface)) {
+    if ($date === null) {
+      $date = new \DateTimeImmutable;
+    } else if (!($date instanceof \DateTimeInterface)) {
       $date = (new \DateTimeImmutable())->setTimestamp($date);
     }
 
