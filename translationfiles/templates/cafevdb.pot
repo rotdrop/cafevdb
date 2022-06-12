@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-02 13:59+0200\n"
+"POT-Creation-Date: 2022-06-12 21:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,15 +23,7 @@ msgstr ""
 msgid "%s Musicians"
 msgstr ""
 
-#: lib/Command/HelloWorld.php:82
-msgid "Hello!"
-msgstr ""
-
-#: lib/Command/HelloWorld.php:84
-#: lib/Controller/ExpertModeController.php:150
-msgid "Hello World!"
-msgstr ""
-
+#: lib/Command/FilesScan.php:87
 #: lib/Command/HelloWorld.php:97
 #: lib/Command/ParticipantFolders.php:94
 #: lib/Command/UpdateGeoCodingCache.php:137
@@ -39,11 +31,21 @@ msgstr ""
 msgid "Login succeeded."
 msgstr ""
 
+#: lib/Command/FilesScan.php:89
 #: lib/Command/HelloWorld.php:99
 #: lib/Command/ParticipantFolders.php:96
 #: lib/Command/UpdateGeoCodingCache.php:139
 #: lib/Command/WikiOverview.php:91
 msgid "Login failed."
+msgstr ""
+
+#: lib/Command/HelloWorld.php:82
+msgid "Hello!"
+msgstr ""
+
+#: lib/Command/HelloWorld.php:84
+#: lib/Controller/ExpertModeController.php:150
+msgid "Hello World!"
 msgstr ""
 
 #: lib/Common/DatabaseProgressStatus.php:97
@@ -173,12 +175,12 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr ""
 
-#: lib/Controller/BackgroundJobController.php:78
+#: lib/Controller/BackgroundJobController.php:69
 #, php-format
 msgid "User \"%s\" not in orchestra group \"%s"
 msgstr ""
 
-#: lib/Controller/BackgroundJobController.php:87
+#: lib/Controller/BackgroundJobController.php:94
 #, php-format
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr ""
@@ -2501,8 +2503,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
-"\"%s\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
+"\"."
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:1015
@@ -3766,7 +3768,9 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
+#. TRANSLATORS: folder-name
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
 msgid "Documents"
 msgstr ""
 
@@ -3830,8 +3834,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
-"\"%s\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
+"\", new: \"%s\""
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
@@ -5455,8 +5459,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: "
-"\"%2$s\"."
+"however, the following app-restriction have been imposed on the app: \"%2$s"
+"\"."
 msgstr ""
 
 #: lib/Service/CloudUserConnectorService.php:282
@@ -8560,21 +8564,20 @@ msgid ""
 "component."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:39
-msgid "FOLDERNAME:Documents"
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:51
+msgid "PaymentRecords"
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:49
-msgid "FOLDERNAME:PaymentRecords"
-msgstr ""
-
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:57
+#. TRANSLATORS: file-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:60
 #, php-format
-msgid "FILENAME:PaymentRecord-%1$s-%2$d"
+msgid "PaymentRecord-%1$s-%2$d"
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:81
-msgid "FOLDERNAME:DebitMandates"
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:85
+msgid "DebitMandates"
 msgstr ""
 
 #: lib/Storage/UserStorage.php:287

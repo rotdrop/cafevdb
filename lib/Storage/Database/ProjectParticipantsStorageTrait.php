@@ -36,7 +36,8 @@ trait ProjectParticipantsStorageTrait
    */
   protected function getDocumentsFolderName():string
   {
-    return $this->l->t('FOLDERNAME:Documents');
+    // TRANSLATORS: folder-name
+    return $this->l->t('Documents');
   }
 
   /**
@@ -46,7 +47,8 @@ trait ProjectParticipantsStorageTrait
    */
   protected function getPaymentRecordsFolderName():string
   {
-    return $this->l->t('FOLDERNAME:PaymentRecords');
+    // TRANSLATORS: folder-name
+    return $this->l->t('PaymentRecords');
   }
 
   /**
@@ -54,7 +56,8 @@ trait ProjectParticipantsStorageTrait
    */
   protected function getLegacyPaymentRecordFileName(int $compositePaymentId, string $userIdSlug):string
   {
-    return $this->l->t('FILENAME:PaymentRecord-%1$s-%2$d', [
+    // TRANSLATORS: file-name
+    return $this->l->t('PaymentRecord-%1$s-%2$d', [
       Util::dashesToCamelCase($userIdSlug, true, '_-.'),
       $compositePaymentId,
     ]);
@@ -78,7 +81,8 @@ trait ProjectParticipantsStorageTrait
    */
   protected function getDebitMandatesFolderName():string
   {
-    return $this->l->t('FOLDERNAME:DebitMandates');
+    // TRANSLATORS: folder-name
+    return $this->l->t('DebitMandates');
   }
 
   /**
