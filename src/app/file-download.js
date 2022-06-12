@@ -40,6 +40,7 @@ import { parse as parseContentDisposition } from 'content-disposition';
  * @param {object} options Optional. Success and error callbacks
  * .done(), .fail(), .errorMessage().
  *
+ * @returns {object} TBD
  */
 const download = function(url, post, options) {
   const defaultOptions = {
@@ -80,7 +81,7 @@ const download = function(url, post, options) {
                        || url.startsWith(ncRouter.generateRemoteUrl('')))
     ? url
     : generateUrl(url);
-  $.ajax({
+  return $.ajax({
     url: downloadUrl,
     method,
     cache: false,
