@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -81,6 +82,9 @@ class MailMergeController extends Controller
   /** @var UserStorage */
   private $userStorage;
 
+  /** @var InstrumentInsuranceService */
+  private $insuranceService;
+
   public function __construct(
     string $appName
     , IRequest $request
@@ -90,6 +94,7 @@ class MailMergeController extends Controller
     , EntityManager $entityManager
     , ConfigService $configService
     , OrganizationalRolesService $rolesService
+    , InstrumentInsuranceService $insuranceService
     , OpenDocumentFiller $documentFiller
     , UserStorage $storage
   ) {
@@ -99,6 +104,7 @@ class MailMergeController extends Controller
     $this->entityManager = $entityManager;
     $this->configService = $configService;
     $this->rolesService = $rolesService;
+    $this->insuranceService = $insuranceService;
     $this->documentFiller = $documentFiller;
     $this->userStorage = $storage;
   }
@@ -149,6 +155,13 @@ class MailMergeController extends Controller
         $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
         $templateData['sender'] = $this->flattenMusician($sender);
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+        $signature = $this->rolesService->dedicatedBoardMemberSignature(
+          OrganizationalRolesService::BOARD_MEMBER_ROLE, $senderId
+        );
+        if (!empty($signature)) {
+          $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+        }
+        $templateData['sender']['signature'] = $signature;
       }
 
       if (empty($recipientIds)) {
@@ -191,7 +204,9 @@ class MailMergeController extends Controller
           $recipientTemplateData = array_merge(
             $templateData, [
               'recipient' => $this->flattenMusician($recipient),
-            ]);
+            ],
+            $this->insuranceService->musicianOverview($recipient),
+          );
 
           list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
           if (count($recipientIds) <= 1) {
@@ -236,6 +251,7 @@ class MailMergeController extends Controller
         }
       }
     } catch (\Throwable $t) {
+      $this->logException($t);
       return self::dataResponse([
         'message' => $this->l->t('Exception: "%s"', $t->getMessage()),
         'exception' => $this->exceptionChainData($t),

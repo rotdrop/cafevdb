@@ -34,6 +34,12 @@ trait FlattenEntityTrait
     $musicianData = $musician->toArray();
 
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
+
+    // duplicate some fields for easier matching in document templates
+    $musicianData['name'] = $musicianData['personalPublicName'];
+    $musicianData['phone'] = $musicianData['fixedLinePhone'];
+    $musicianData['mobile'] = $musicianData['mobilePhone'];
+
     $musicianData['instruments'] = [];
     /** @var Entities\Instrument $instrument */
     /** @var Entities\MusicianInstrument $musicianInstrument */

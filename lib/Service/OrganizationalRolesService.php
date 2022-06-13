@@ -139,9 +139,11 @@ class OrganizationalRolesService
     return $projectService->findById($this->getExecutiveBoardProjectId());
   }
 
-  public function dedicatedBoardMemberParticipant(string $role):?Entities\ProjectParticipant
+  public function dedicatedBoardMemberParticipant(string $role, int $musicianId= 0):?Entities\ProjectParticipant
   {
-    $musicianId = $this->getConfigValue($role.'Id', null);
+    if ($role != self::BOARD_MEMBER_ROLE) {
+      $musicianId = $this->getConfigValue($role.'Id', null);
+    }
     if (empty($musicianId)) {
       return null;
     }
@@ -157,13 +159,13 @@ class OrganizationalRolesService
    *
    * @param in
    */
-  public function dedicatedBoardMemberSignature(string $role)
+  public function dedicatedBoardMemberSignature(string $role, int $musicianId = 0)
   {
     $project = $this->executiveBoardProject();
     if (empty($project)) {
       return null;
     }
-    $participant = $this->dedicatedBoardMemberParticipant($role);
+    $participant = $this->dedicatedBoardMemberParticipant($role, $musicianId);
     if (empty($participant)) {
       return null;
     }
