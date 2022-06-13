@@ -23,12 +23,14 @@
 
 import Vue from 'vue';
 import { appName } from './app/app-info.js';
-import $ from './app/jquery.js';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath, imagePath } from '@nextcloud/router';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
+import { Tooltip } from '@nextcloud/vue';
+
+Vue.directive('tooltip', Tooltip);
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
@@ -97,23 +99,24 @@ window.addEventListener('DOMContentLoaded', () => {
     fileActions.registerAction({
       name: appName,
       displayName: false,
-      altText: t(appName, 'Template'),
+      altText: t(appName, 'MailMerge'),
       mime: 'all',
       type: OCA.Files.FileActions.TYPE_INLINE,
       // mime: 'application/pdf',
       permissions: OC.PERMISSION_READ,
       shouldRender(context) {
-        const $file = $(context.$file);
+        // context.$file is a jQuery object
+        const $file = context.$file[0];
 
         // 0: <tr class="" data-id="17874" data-type="file" data-size="40187" data-file="AdressAktualisierung-GeneralLastschrift.odt" data-mime="application/vnd.oasis.opendocument.text" data-mtime="1653855228000" data-etag="8c41b9a493acf47033cc070e137a8a88" data-quota="-1" data-permissions="27" data-has-preview="true" data-e2eencrypted="false" data-mounttype="shared" data-path="/camerata/templates/finance" data-share-permissions="19" data-share-owner="cameratashareholder" data-share-owner-id="cameratashareholder">
 
         // mock a file-info object
         const fileInfo = {
           isDirectory() {
-            return $file.data('type') !== 'file';
+            return $file.dataset.type !== 'file';
           },
-          mimetype: $file.data('mime'),
-          path: $file.data('path'),
+          mimetype: $file.dataset.mime,
+          path: $file.dataset.path,
         };
 
         return isEnabled(fileInfo);
@@ -153,7 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (OCA.Files && OCA.Files.Sidebar) {
     OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
       id: appName,
-      name: t(appName, 'Template'),
+      name: t(appName, 'MailMerge'),
       icon: 'icon-rename',
       enabled: isEnabled,
 
@@ -173,11 +176,10 @@ window.addEventListener('DOMContentLoaded', () => {
         await TabInstance.update(fileInfo);
 
         TabInstance.$mount(el);
-        const $tabHeader = $(context.$el.closest('.app-sidebar-tabs'));
-        $tabHeader.find('#cafevdb .app-sidebar-tabs__tab-icon span').css({
-          'background-image': 'url(' + imagePath(appName, appName) + ')',
-          'background-size': '16px',
-        });
+        const $tabHeader = context.$el.closest('.app-sidebar-tabs');
+        const $iconSpan = $tabHeader.querySelector('#cafevdb .app-sidebar-tabs__tab-icon span');
+        $iconSpan.style.backgroundImage = 'url(' + imagePath(appName, appName) + ')';
+        $iconSpan.style.backgroundSize = '16px';
       },
       update(fileInfo) {
         TabInstance.update(fileInfo);
