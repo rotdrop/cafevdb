@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-12 21:55+0200\n"
+"POT-Creation-Date: 2022-06-13 23:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,7 +169,7 @@ msgstr ""
 
 #: lib/Controller/AdminSettingsController.php:254
 #: lib/Controller/PersonalSettingsController.php:1843
-#: lib/Controller/PersonalSettingsController.php:1880
+#: lib/Controller/PersonalSettingsController.php:1893
 #: lib/Controller/ProjectParticipantsController.php:722
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -227,7 +227,7 @@ msgstr ""
 #: lib/Controller/DownloadsController.php:149
 #: lib/Controller/ExpertModeController.php:155
 #: lib/Controller/ImagesController.php:331
-#: lib/Controller/MusiciansController.php:315
+#: lib/Controller/MusicianValidationController.php:315
 #: lib/Controller/PersonalSettingsController.php:279
 #: lib/Controller/ProgressStatusController.php:147
 #: lib/Controller/ProjectEventsController.php:145
@@ -665,6 +665,33 @@ msgstr ""
 msgid "Method %s is not yet implemented."
 msgstr ""
 
+#: lib/Controller/MailMergeController.php:179
+#: lib/Controller/MailMergeController.php:230
+#: lib/Controller/MailMergeController.php:253
+msgid "Mail-merge successful, %n file substituted."
+msgid_plural "Mail-merge successful, %n files substituted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/Controller/MailMergeController.php:269
+#, php-format
+msgid "Exception: \"%s\""
+msgstr ""
+
+#. TRANSLATORS: folder-name
+#: lib/Controller/MailMergeController.php:284
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
+msgid "Documents"
+msgstr ""
+
+#: lib/Controller/MailMergeController.php:285
+#: lib/Controller/MailMergeController.php:293
+#: src/files-hooks.js:102
+#: src/files-hooks.js:160
+msgid "MailMerge"
+msgstr ""
+
 #: lib/Controller/MailingListsController.php:106
 #, php-format
 msgid "Unknown mailing list operation \"%s\""
@@ -684,46 +711,52 @@ msgstr ""
 msgid "Unknown Request \"%s\"."
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:143
+#: lib/Controller/MusicianValidationController.php:143
 #: lib/Controller/PersonalSettingsController.php:572
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:154
+#: lib/Controller/MusicianValidationController.php:154
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:161
+#: lib/Controller/MusicianValidationController.php:161
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:169
+#: lib/Controller/MusicianValidationController.php:169
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:201
+#: lib/Controller/MusicianValidationController.php:201
 #, php-format
 msgid "Missing host for email-address: %s. "
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:207
+#: lib/Controller/MusicianValidationController.php:207
 #, php-format
 msgid "Validation failed for: %s. "
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:286
+#: lib/Controller/MusicianValidationController.php:286
 #, php-format
 msgid "Unsupported auto-complete request for \"%s\"."
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:304
+#: lib/Controller/MusicianValidationController.php:304
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
+msgstr ""
+
+#: lib/Controller/MusiciansController.php:114
+msgid ""
+"Picking users from the cloud or the address-books is not yet supported, "
+"sorry."
 msgstr ""
 
 #: lib/Controller/PageController.php:160
@@ -965,7 +998,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:597
 #: lib/Controller/PersonalSettingsController.php:790
-#: lib/Controller/PersonalSettingsController.php:2128
+#: lib/Controller/PersonalSettingsController.php:2141
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr ""
@@ -1488,33 +1521,41 @@ msgstr ""
 msgid "Unknown link target %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1928
-#: lib/Controller/PersonalSettingsController.php:2068
+#: lib/Controller/PersonalSettingsController.php:1881
+msgid "Shared folder is not configured."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1885
+msgid "Document template folder is not configured."
+msgstr ""
+
+#: lib/Controller/PersonalSettingsController.php:1941
+#: lib/Controller/PersonalSettingsController.php:2081
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1950
-#: lib/Controller/PersonalSettingsController.php:1977
-#: lib/Controller/PersonalSettingsController.php:2003
-#: lib/Controller/PersonalSettingsController.php:2034
+#: lib/Controller/PersonalSettingsController.php:1963
+#: lib/Controller/PersonalSettingsController.php:1990
+#: lib/Controller/PersonalSettingsController.php:2016
+#: lib/Controller/PersonalSettingsController.php:2047
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2052
+#: lib/Controller/PersonalSettingsController.php:2065
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2097
+#: lib/Controller/PersonalSettingsController.php:2110
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2114
+#: lib/Controller/PersonalSettingsController.php:2127
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/ProjectsController.php:365
 #: lib/Controller/SepaBulkTransactionsController.php:128
@@ -1522,30 +1563,30 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2140
+#: lib/Controller/PersonalSettingsController.php:2153
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2157
+#: lib/Controller/PersonalSettingsController.php:2170
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2180
+#: lib/Controller/PersonalSettingsController.php:2193
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2182
+#: lib/Controller/PersonalSettingsController.php:2195
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2185
+#: lib/Controller/PersonalSettingsController.php:2198
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2190
+#: lib/Controller/PersonalSettingsController.php:2203
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2727,19 +2768,19 @@ msgid ""
 "column."
 msgstr ""
 
-#: lib/Database/EntityManager.php:870
-#: lib/Database/EntityManager.php:915
+#: lib/Database/EntityManager.php:879
+#: lib/Database/EntityManager.php:924
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1104
+#: lib/Database/EntityManager.php:1113
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1119
+#: lib/Database/EntityManager.php:1128
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -3768,12 +3809,6 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#. TRANSLATORS: folder-name
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
-msgid "Documents"
-msgstr ""
-
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:877
 #, php-format
 msgid "Value [%s]"
@@ -4464,9 +4499,11 @@ msgid ""
 "numbers are the numbers of the musicians already registered for the project."
 msgstr ""
 
+#. TRANSLATORS src/views/FilesTab.vue:64
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:179
 #: lib/PageRenderer/ProjectParticipantFields.php:294
 #: lib/PageRenderer/SepaBulkTransactions.php:348
+#: specialVueFakeDummyForL10nScript.js:68
 msgid "Project"
 msgstr ""
 
@@ -8492,35 +8529,61 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:1197
-msgid "Test data-base passphrase."
+msgid "Select the sender from the members of the executive board."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1198
+msgid "Select the recipients for the mail-merge."
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:1199
+msgid ""
+"Optionally select a project to provide more context information for the mail-"
+"merge operation."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1200
+msgid ""
+"Preferred for one-time merges or for testing. Just download to your local "
+"computer."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1201
+msgid ""
+"Preferred for mass-mail-merges and when the substituted template does not "
+"need to be post-processed."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1206
+msgid "Test data-base passphrase."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1208
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1203
+#: lib/Service/ToolTipsService.php:1212
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1205
+#: lib/Service/ToolTipsService.php:1214
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1207
+#: lib/Service/ToolTipsService.php:1216
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1209
+#: lib/Service/ToolTipsService.php:1218
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -8734,7 +8797,7 @@ msgstr ""
 msgid "No recryption requests are pending."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:184
+#. TRANSLATORS src/components/AdminSettings.vue:189
 #: specialVueFakeDummyForL10nScript.js:32
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
@@ -8743,7 +8806,7 @@ msgid ""
 "settings."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:229
+#. TRANSLATORS src/components/AdminSettings.vue:234
 #: specialVueFakeDummyForL10nScript.js:34
 #: src/app/project-participants.js:782
 #: src/app/projects.js:425
@@ -8751,51 +8814,101 @@ msgstr ""
 msgid "Confirmation Required"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:234
+#. TRANSLATORS src/components/AdminSettings.vue:239
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:247
+#. TRANSLATORS src/components/AdminSettings.vue:252
 #: specialVueFakeDummyForL10nScript.js:38
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:257
+#. TRANSLATORS src/components/AdminSettings.vue:262
+#. TRANSLATORS src/views/FilesTab.vue:224
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:48
 #: specialVueFakeDummyForL10nScript.js:54
+#: specialVueFakeDummyForL10nScript.js:74
+#: src/stores/participantData.js:54
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:266
+#. TRANSLATORS src/components/AdminSettings.vue:271
 #: specialVueFakeDummyForL10nScript.js:42
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:268
+#. TRANSLATORS src/components/AdminSettings.vue:273
 #: specialVueFakeDummyForL10nScript.js:44
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:304
+#. TRANSLATORS src/components/AdminSettings.vue:299
 #: specialVueFakeDummyForL10nScript.js:46
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:318
+#. TRANSLATORS src/components/AdminSettings.vue:313
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:328
+#. TRANSLATORS src/components/AdminSettings.vue:323
 #: specialVueFakeDummyForL10nScript.js:52
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:342
+#. TRANSLATORS src/components/AdminSettings.vue:337
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "Could not delete the recryption request for {userId}: {message}"
+msgstr ""
+
+#. TRANSLATORS src/components/SelectMusicians.vue:159
+#: specialVueFakeDummyForL10nScript.js:58
+msgid "** everybody **"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:28
+#: specialVueFakeDummyForL10nScript.js:60
+msgid "Mail merge operation:"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:34
+#: specialVueFakeDummyForL10nScript.js:62
+msgid "Download Merged Document"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:42
+#: specialVueFakeDummyForL10nScript.js:64
+msgid "Merge Document into Cloud"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:55
+#: specialVueFakeDummyForL10nScript.js:66
+msgid "Sender"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:72
+#: specialVueFakeDummyForL10nScript.js:70
+#: templates/emailform/form.php:35
+#: templates/emailform/part.emailform.composer.php:125
+msgid "Recipients"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:160
+#: specialVueFakeDummyForL10nScript.js:72
+msgid "Required."
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:241
+#: specialVueFakeDummyForL10nScript.js:76
+msgid "no response received from {ajaxUrl}"
+msgstr ""
+
+#. TRANSLATORS src/views/FilesTab.vue:245
+#: specialVueFakeDummyForL10nScript.js:78
+msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #: src/app/ajax.js:30
@@ -9539,7 +9652,7 @@ msgstr ""
 msgid "Result of expert operation \"setupdb\""
 msgstr ""
 
-#: src/app/file-download.js:50
+#: src/app/file-download.js:51
 msgid "Unable to download data from \"{url}\": "
 msgstr ""
 
@@ -10052,6 +10165,12 @@ msgstr ""
 msgid "User Manual: {section}"
 msgstr ""
 
+#: src/files-hooks.js:135
+msgid ""
+"Fill the template with substitutions. Opens the \"Details\" view for further "
+"options."
+msgstr ""
+
 #: src/legacy/calendar/calendar.js:25
 msgid "Missing or invalid fields"
 msgstr ""
@@ -10101,6 +10220,10 @@ msgstr ""
 
 #: src/legacy/calendar/calendar.js:372
 msgid "Calendar event validation caught an error."
+msgstr ""
+
+#: src/stores/participantData.js:58
+msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
 #: templates/blog/blog.php:41
@@ -10164,11 +10287,6 @@ msgstr ""
 
 #: templates/emailform/addressbook.php:32
 msgid "Select Em@il Recipients"
-msgstr ""
-
-#: templates/emailform/form.php:35
-#: templates/emailform/part.emailform.composer.php:125
-msgid "Recipients"
 msgstr ""
 
 #: templates/emailform/form.php:38
