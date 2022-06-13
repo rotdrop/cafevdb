@@ -164,6 +164,10 @@ class MailMergeController extends Controller
         $templateData['sender']['signature'] = $signature;
       }
 
+      if (!empty($project)) {
+        $templateData['project'] = $this->flattenProject($project);
+      }
+
       if (empty($recipientIds)) {
         list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: false);
         $filledFile = pathinfo($filledFileName);
@@ -180,7 +184,18 @@ class MailMergeController extends Controller
           return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
         }
       } else {
-        if (count($recipientIds) > 1) {
+
+        if (count($recipientIds) == 1 && reset($recipientIds) == 0) {
+          $criteria = [];
+          if (!empty($project)) {
+            $criteria[] = [ 'projectParticipation.project' => $project ];
+          }
+          $recipients = $musiciansRepository->findBy($criteria);
+        } else {
+          $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ]);
+        }
+
+        if (count($recipients) > 1) {
           $rootDirectory = implode('-', [
             $timeStamp,
             $senderInitials,
@@ -196,8 +211,6 @@ class MailMergeController extends Controller
           }
         }
 
-        $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ]);
-
         /** @var Entities\Musician $recipient */
         foreach ($recipients as $recipient) {
 
@@ -209,7 +222,7 @@ class MailMergeController extends Controller
           );
 
           list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
-          if (count($recipientIds) <= 1) {
+          if (count($recipients) <= 1) {
             if ($destination == self::DESTINATION_CLOUD) {
               $cloudFolder->newFile($filledFileName, $fileData);
               $mailMergeCount = 1;
