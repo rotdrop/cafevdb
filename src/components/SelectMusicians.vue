@@ -28,6 +28,7 @@
     <div class="input-wrapper">
       <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
+                   ref="multiselect"
                    v-model="inputValObjects"
                    v-bind="$attrs"
                    :options="musiciansArray"
@@ -129,6 +130,9 @@ export default {
   watch: {
     value(newVal, oldVal) {
       this.inputValObjects = this.getValueObject()
+      if (this.multiple && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0) {
+        this.$refs.multiselect.$refs.VueMultiselect.deactivate()
+      }
     },
     projectId(newVal) {
       this.loading = true

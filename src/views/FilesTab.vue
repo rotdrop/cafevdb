@@ -24,9 +24,35 @@
 </script>
 <template>
   <div class="files-tab">
+    <div class="bulk-operations">
+      <span class="bulk-operations-title">{{ t(appName, 'Mail merge operation:') }}</span>
+      <Actions :class="[{ merging: merging, loading: merging }]">
+        <ActionButton v-tooltip="hints['templates:cloud:integration:download']"
+                      icon="icon-download"
+                      :disabled="senderId <= 0"
+                      :close-after-click="true"
+                      :title="t(appName, 'Download Merged Document')"
+                      @click="handleMailMergeRequest('download', ...arguments)"
+        >
+          <!-- {{ hints['templates:cloud:integration:download'] }} -->
+        </ActionButton>
+        <ActionButton v-tooltip="hints['templates:cloud:integration:cloudstore']"
+                      :close-after-click="true"
+                      :disabled="senderId <= 0"
+                      :title="t(appName, 'Merge Document into Cloud')"
+                      @click="handleMailMergeRequest('cloud', ...arguments)"
+        >
+          <template #icon>
+            <Cloud />
+          </template>
+          <!-- {{ hints['templates:cloud:integration:cloudstore'] }} -->
+        </ActionButton>
+      </Actions>
+    </div>
     <SelectMusicians v-model="sender"
+                     v-tooltip="senderTooltip"
+                     :class="[{ empty: senderId <= 0 }]"
                      :label="t(appName, 'Sender')"
-                     :hint="hints['templates:cloud:integration:sender']"
                      :multiple="false"
                      :submit-button="false"
                      search-scope="executive-board"
@@ -34,42 +60,23 @@
                      :searchable="false"
     />
     <SelectProjects v-model="project"
+                    v-tooltip="hints['templates:cloud:integration:project']"
                     :label="t(appName, 'Project')"
-                    :hint="hints['templates:cloud:integration:project']"
                     :multiple="false"
                     :submit-button="false"
+                    :disabled="senderId <= 0"
                     open-direction="bottom"
     />
     <SelectMusicians v-model="recipients"
+                     v-tooltip="hints['templates:cloud:integration:recipients']"
                      :label="t(appName, 'Recipients')"
-                     :hint="hints['templates:cloud:integration:recipients']"
                      :multiple="true"
                      :submit-button="false"
                      :project-id="projectId"
+                     :disabled="senderId <= 0"
                      open-direction="bottom"
                      search-scope="musicians"
     />
-    <div class="bulk-operations">
-      <span class="bulk-operations-title">{{ t(appName, 'Mail merge operation:') }}</span>
-      <Actions :class="[{ merging: merging, loading: merging }]">
-        <ActionButton icon="icon-download"
-                      :close-after-click="true"
-                      :title="t(appName, 'Download Merged Document')"
-                      @click="handleMailMergeRequest('download', ...arguments)"
-        >
-          {{ hints['templates:cloud:integration:download'] }}
-        </ActionButton>
-        <ActionButton :close-after-click="true"
-                      :title="t(appName, 'Merge Document into Cloud')"
-                      @click="handleMailMergeRequest('cloud', ...arguments)"
-        >
-          <template #icon>
-            <Cloud />
-          </template>
-          {{ hints['templates:cloud:integration:cloudstore'] }}
-        </ActionButton>
-      </Actions>
-    </div>
   </div>
 </template>
 <script>
@@ -123,6 +130,7 @@ export default {
   },
   created() {
     this.getData()
+    console.info('SENDER ID', this.senderId)
   },
   computed: {
     projectId() {
@@ -133,18 +141,27 @@ export default {
       }
     },
     senderId() {
-      try {
+      if (this.sender && this.sender.id) {
         return this.sender.id
-      } catch (ignoreMe) {
+      } else {
         return 0
       }
     },
     recipientIds() {
       try {
-        return this.recipients.filter((recipient) => !!recipient.id).map((recipient) => recipient.id)
+        return this.recipients.filter((recipient) => !!recipient.id || recipient.id === 0).map((recipient) => recipient.id)
       } catch (ignoreMe) {
         return []
       }
+    },
+    senderTooltip() {
+      const hint = this.hints['templates:cloud:integration:sender']
+      if (this.senderId <= 0) {
+        return '<span style="font-weight:bold;">' + t(appName, 'Required.') + '</span>'
+             + ' '
+             + hint
+      }
+      return hint
     },
   },
   // watch: {
@@ -249,6 +266,11 @@ export default {
   .bulk-operations {
     display: flex;
     align-items: center;
+  }
+  &::v-deep form.select-musicians {
+    &.empty .multiselect-vue {
+      border:1px solid red;
+    }
   }
 }
 </style>
