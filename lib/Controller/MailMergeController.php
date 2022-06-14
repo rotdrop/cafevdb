@@ -70,8 +70,9 @@ class MailMergeController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
-  const DESTINATION_DOWNLOAD = 'download';
-  const DESTINATION_CLOUD = 'cloud';
+  const OPERATION_DOWNLOAD = 'download';
+  const OPERATION_CLOUD = 'cloud';
+  const OPERATION_DATASET = 'dataset';
 
   /** @var OpenDocumentFiller */
   private $documentFiller;
@@ -115,7 +116,7 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    */
-  public function merge(int $fileId, string $fileName, int $senderId, array $recipientIds = [], int $projectId = 0, string $destination = self::DESTINATION_DOWNLOAD)
+  public function merge(int $fileId, string $fileName, int $senderId, array $recipientIds = [], int $projectId = 0, string $operation = self::OPERATION_DOWNLOAD, ?int $limit = null, ?int $offset = null)
   {
 
     $templateData = [];
@@ -146,14 +147,14 @@ class MailMergeController extends Controller
 
     try {
 
-      if ($destination == self::DESTINATION_CLOUD) {
+      if ($operation == self::OPERATION_CLOUD) {
         /** @var Folder */
         $cloudFolder = $this->ensureCloudDestinationFolder($project, $timeStamp);
       }
 
       if (empty($blocks['sender'])) {
         $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-        $templateData['sender'] = $this->flattenMusician($sender);
+        $templateData['sender'] = $this->flattenMusician($sender, only: []); // just the address data, no fancy things
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
         $signature = $this->rolesService->dedicatedBoardMemberSignature(
           OrganizationalRolesService::BOARD_MEMBER_ROLE, $senderId
@@ -168,20 +169,30 @@ class MailMergeController extends Controller
         $templateData['project'] = $this->flattenProject($project);
       }
 
-      if (empty($recipientIds)) {
-        list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: false);
-        $filledFile = pathinfo($filledFileName);
-        $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . $filledFile['extension'];
-        if ($destination == self::DESTINATION_CLOUD) {
-          $cloudFolder->newFile($filledFileName, $fileData);
-          $mailMergeCount = 1;
-          return self::dataResponse([
-            'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-            'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-            'count' => $mailMergeCount,
-          ]);
-        } else {
-          return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
+      if (empty($recipientIds) || $limit === 0) {
+        switch ($operation) {
+          case self::OPERATION_CLOUD:
+          case self::OPERATION_DOWNLOAD:
+            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: false);
+            $filledFile = pathinfo($filledFileName);
+            $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . $filledFile['extension'];
+            if ($operation == self::OPERATION_DOWNLOAD) {
+              return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
+            } else {
+              $cloudFolder->newFile($filledFileName, $fileData);
+              $mailMergeCount = 1;
+              return self::dataResponse([
+                'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
+                'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                'count' => $mailMergeCount,
+              ]);
+            }
+          case self::OPERATION_DATASET:
+            $fillData = $this->documentFiller->fillData($templateData);
+            $filledFileName = $fileName;
+            $filledFile = pathinfo($filledFileName);
+            $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . 'json';
+            return $this->dataDownloadResponse($fillData, $filledFileName, 'application/json');
         }
       } else {
 
@@ -190,9 +201,9 @@ class MailMergeController extends Controller
           if (!empty($project)) {
             $criteria[] = [ 'projectParticipation.project' => $project ];
           }
-          $recipients = $musiciansRepository->findBy($criteria);
+          $recipients = $musiciansRepository->findBy($criteria, limit: $limit, offset: $offset);
         } else {
-          $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ]);
+          $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ], limit: $limit, offset: $offset);
         }
 
         if (count($recipients) > 1) {
@@ -201,66 +212,93 @@ class MailMergeController extends Controller
             $senderInitials,
             pathinfo($fileName, PATHINFO_FILENAME),
           ]);
-          if ($destination == self::DESTINATION_CLOUD) {
-            $cloudFolder = $cloudFolder->newFolder($rootDirectory);
-          } else {
-            $dataStream = fopen("php://memory", 'w');
-            $zipStreamOptions = new ArchiveOptions;
-            $zipStreamOptions->setOutputStream($dataStream);
-            $zipStream = new ZipStream(opt: $zipStreamOptions);
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+              $cloudFolder = $cloudFolder->newFolder($rootDirectory);
+              break;
+            case self::OPERATION_DOWNLOAD:
+            case self::OPERATION_DATASET:
+              $dataStream = fopen("php://memory", 'w');
+              $zipStreamOptions = new ArchiveOptions;
+              $zipStreamOptions->setOutputStream($dataStream);
+              $zipStream = new ZipStream(opt: $zipStreamOptions);
+              break;
           }
         }
 
         /** @var Entities\Musician $recipient */
         foreach ($recipients as $recipient) {
 
+          $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           $recipientTemplateData = array_merge(
             $templateData, [
               'recipient' => $this->flattenMusician($recipient),
             ],
-            $this->insuranceService->musicianOverview($recipient),
+            [
+              'instins' => $this->insuranceService->musicianOverview($recipient),
+            ],
           );
+          $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
-          list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
-          if (count($recipients) <= 1) {
-            if ($destination == self::DESTINATION_CLOUD) {
-              $cloudFolder->newFile($filledFileName, $fileData);
-              $mailMergeCount = 1;
-              return self::dataResponse([
-                'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-                'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-                'count' => $mailMergeCount,
-              ]);
-            } else {
-              return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
-            }
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+            case self::OPERATION_DOWNLOAD:
+              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
+              break;
+            case self::OPERATION_DATASET:
+              $fileData = json_encode($this->documentFiller->fillData($recipientTemplateData));
+              $filledFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.' . 'json';
+              $mimeType = 'application/json';
+              break;
           }
+
           $filledFile = pathinfo($filledFileName);
           $recipientSlug = Util::dashesToCamelCase($recipient->getUserIdSlug(), true, '_-.');
           $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], $recipientSlug ]) . '.' . $filledFile['extension'];
 
-          if ($destination == self::DESTINATION_CLOUD) {
-            $cloudFolder->newFile($filledFileName, $fileData);
-          } else {
-            $zipStream->addFile($rootDirectory . '/' . $filledFileName, $fileData);
+          if (count($recipients) <= 1) {
+            switch ($operation) {
+              case self::OPERATION_CLOUD:
+                $cloudFolder->newFile($filledFileName, $fileData);
+                $mailMergeCount = 1;
+                return self::dataResponse([
+                  'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
+                  'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                  'count' => $mailMergeCount,
+                ]);
+              case self::OPERATION_DOWNLOAD:
+              case self::OPERATION_DATASET:
+                return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
+            }
+          }
+
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+              $cloudFolder->newFile($filledFileName, $fileData);
+              break;
+            case self::OPERATION_DOWNLOAD:
+            case self::OPERATION_DATASET:
+              $zipStream->addFile($rootDirectory . '/' . $filledFileName, $fileData);
           }
           $mailMergeCount++;
           $recipientSlug = ''; // reset for error message
         }
 
-        if ($destination == self::DESTINATION_CLOUD) {
-          return self::dataResponse([
-            'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-            'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-            'count' => $mailMergeCount,
-          ]);
-        } else {
-          $zipStream->finish();
-          rewind($dataStream);
-          $fileData = stream_get_contents($dataStream);
-          fclose($dataStream);
+        switch ($operation) {
+          case self::OPERATION_CLOUD:
+            return self::dataResponse([
+              'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
+              'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+              'count' => $mailMergeCount,
+            ]);
+          case self::OPERATION_DOWNLOAD:
+          case self::OPERATION_DATASET:
+            $zipStream->finish();
+            rewind($dataStream);
+            $fileData = stream_get_contents($dataStream);
+            fclose($dataStream);
 
-          return $this->dataDownloadResponse($fileData, $rootDirectory . '.zip', 'application/zip');
+            return $this->dataDownloadResponse($fileData, $rootDirectory . '.zip', 'application/zip');
         }
       }
     } catch (\Throwable $t) {

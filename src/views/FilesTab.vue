@@ -47,6 +47,16 @@
           </template>
           <!-- {{ hints['templates:cloud:integration:cloudstore'] }} -->
         </ActionButton>
+        <ActionButton v-tooltip="hints['templates:cloud:integration:dataset']"
+                      :close-after-click="true"
+                      :disabled="senderId <= 0"
+                      :title="t(appName, 'Download Replacement Data')"
+                      @click="handleMailMergeRequest('dataset', ...arguments)"
+        >
+          <template #icon>
+            <CodeJson />
+          </template>
+        </ActionButton>
       </Actions>
     </div>
     <SelectMusicians v-model="sender"
@@ -88,6 +98,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import Cloud from 'vue-material-design-icons/Cloud'
+import CodeJson from 'vue-material-design-icons/CodeJson'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
@@ -108,6 +119,7 @@ export default {
     Actions,
     ActionButton,
     Cloud,
+    CodeJson,
   },
   mixins: [
     tooltip,
@@ -123,6 +135,7 @@ export default {
         'templates:cloud:integration:project': '',
         'templates:cloud:integration:download': '',
         'templates:cloud:integration:cloudstore': '',
+        'templates:cloud:integration:dataset': '',
       },
       initialState: {},
       merging: false,
@@ -192,7 +205,7 @@ export default {
       console.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
     },
-    async handleMailMergeRequest(destination) {
+    async handleMailMergeRequest(operation) {
       console.info('MAIL MERGE', arguments)
       console.info('FILE', this.fileInfo)
 
@@ -204,20 +217,26 @@ export default {
         senderId: this.sender.id,
         projectId: this.projectId,
         recipientIds: this.recipientIds,
-        destination,
+        operation,
       }
       const ajaxUrl = generateUrl('/apps/' + appName + '/documents/mail-merge')
 
       try {
-        if (destination === 'download') {
-          await fileDownload(ajaxUrl, postData)
-        } else {
-          const response = await axios.post(ajaxUrl, postData)
-          const cloudFolder = response.data.cloudFolder
-          const message = response.data.message
-          console.info('CLOUD RESPONSE', response)
-          const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
-          showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
+        switch (operation) {
+          case 'dataset':
+            postData.limit = 1 // maybe ...
+          case 'download':
+            await fileDownload(ajaxUrl, postData)
+            break
+          case 'cloud': {
+            const response = await axios.post(ajaxUrl, postData)
+            const cloudFolder = response.data.cloudFolder
+            const message = response.data.message
+            console.info('CLOUD RESPONSE', response)
+            const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
+            showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
+            break
+          }
         }
       } catch (e) {
         console.error('ERROR', e)
