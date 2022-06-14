@@ -1935,9 +1935,8 @@ class PersonalSettingsController extends Controller {
       return $response;
     case 'auto-fill-test':
       $templateName = $this->parameterService->getParam('documentTemplate');
-      if ($templateName != ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy'
-          && (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
-              || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE )) {
+      if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
+          || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE ) {
         return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
       }
       $format = $this->parameterService->getParam('format');
@@ -2020,17 +2019,6 @@ class PersonalSettingsController extends Controller {
             $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
           );
         }
-        break;
-      }
-      case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy': {
-        /** @var InstrumentInsuranceService $insuranceService */
-        $insuranceService = $this->di(InstrumentInsuranceService::class);
-        $musician = $insuranceService->getDummyMusician();
-        $insuranceOverview = $insuranceService->musicianOverview($musician);
-
-        $fileData = $insuranceService->musicianOverviewLetter($insuranceOverview);
-        $mimeType = 'text/pdf';
-        $fileName = 'legacy-insurance-overview.pdf';
         break;
       }
       case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD: {

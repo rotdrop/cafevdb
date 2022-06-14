@@ -199,7 +199,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       // @todo: use new OpenDocument stuff
       $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
       $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
-      $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview, $overviewFilename);
+      $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
     } else {
       if (0 == count($this->insuranceService->billableInsurances($musician))) {
         // bail out early, DO NOT ADD an opening balance
