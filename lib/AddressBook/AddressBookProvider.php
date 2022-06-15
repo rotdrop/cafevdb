@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -34,6 +34,7 @@ use OCA\DAV\CardDAV\Integration\ExternalAddressBook;
 use OCA\DAV\CardDAV\Integration\IAddressBookProvider;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
 
 class AddressBookProvider implements IAddressBookProvider
 {
@@ -48,11 +49,16 @@ class AddressBookProvider implements IAddressBookProvider
   /** @var MusicianCardBackend */
   private $cardBackend;
 
+  /** @var ContactsService */
+  private $contactsService;
+
   public function __construct(
     ConfigService $configService
+    , ContactsService $contactsService
     , MusicianCardBackend $cardBackend
   ) {
     $this->configService = $configService;
+    $this->contactsService = $contactsService;
     $this->l = $this->l10n();
     $this->cardBackend = $cardBackend;
   }
@@ -136,7 +142,7 @@ class AddressBookProvider implements IAddressBookProvider
     if (empty(self::$contactsAddressBook)) {
       $addressBook = self::$addressBook?:(new AddressBook($this->configService, $this->cardBackend, ''));
       $uri = $addressBook->getName();
-      self::$contactsAddressBook = new ContactsAddressBook($this->configService, $this->cardBackend, $uri);
+      self::$contactsAddressBook = new ContactsAddressBook($this->configService, $this->contactsService, $this->cardBackend, $uri);
     }
     return self::$contactsAddressBook;
   }

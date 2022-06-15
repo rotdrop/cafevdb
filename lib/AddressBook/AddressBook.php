@@ -59,6 +59,7 @@ class AddressBook extends ExternalAddressBook
     $this->principalUri = $principalUri;
     $this->configService = $configService;
     $this->l = $this->l10n();
+    $this->logInfo('PRINCIPAL URI IS ' . $this->principalUri);
   }
 
   /**

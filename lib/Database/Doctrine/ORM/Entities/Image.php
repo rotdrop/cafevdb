@@ -74,6 +74,16 @@ class Image extends File
   private $height;
 
   /**
+   * Allow construction from a cloud image obejct
+   */
+  public function __construct($fileName = null, ?\OCP\Image $image = null)
+  {
+    parent::__construct($fileName, $image->data(), $image->mimeType());
+    $this->setWidth($image->width())
+      ->setHeight($image->height());
+  }
+
+  /**
    * Set $width.
    *
    * @param int $imageData

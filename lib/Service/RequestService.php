@@ -89,11 +89,32 @@ class RequestService
    * @param string $type How $postData is encoded. Can be 'json' or
    * 'urlencoded'. Default is 'json'.
    */
-  public function postToRoute(string $route,
-                              array $routeParams = [],
-                              array $postData = [],
-                              string $type = self::JSON)
-  {
+  public function postToRoute(
+    string $route
+    , array $routeParams = []
+    , array $postData = []
+    , string $type = self::JSON
+  ) {
+    $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);
+
+    return $this->postToInternalUrl($url, $postData, $type);
+  }
+
+  /**
+   * Post to a Cloud url
+   *
+   * @param string $url Just the URL
+   *
+   * @param array $postData Stuff passed by the POST method.
+   *
+   * @param string $type How $postData is encoded. Can be 'json' or
+   * 'urlencoded'. Default is 'json'.
+   */
+  public function postToInternalUrl(
+    string $url
+    , array $postData = []
+    , string $type = self::JSON
+  ) {
     if (!$this->session->isClosed()) {
       if ($this->closeSession) {
         $this->session->close();
@@ -104,8 +125,6 @@ class RequestService
         );
       }
     }
-
-    $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);
 
     $requestToken = \OCP\Util::callRegister();
     $postData['requesttoken'] = $requestToken;
@@ -171,5 +190,61 @@ class RequestService
     } else {
       return $data;
     }
+  }
+
+  /**
+   * Post to a Cloud url
+   *
+   * @param string $url Just the URL
+   *
+   * @param array $requestData Stuff passed by the GET method.
+   *
+   * @param string $type How $postData is encoded. Can be 'json' or
+   * 'urlencoded'. Default is 'json'.
+   */
+  public function getFromInternalUrl(
+    string $url
+    , array $requestData = []
+  ) {
+    if (!$this->session->isClosed()) {
+      if ($this->closeSession) {
+        $this->session->close();
+      } else {
+        throw new Exceptions\SessionStillOpenException(
+          $this->l->t('Cannot call internal route while the session is open.'),
+          session: $this->session
+        );
+      }
+    }
+
+    $appendSep = strrchr($url, '?') === false ? '?' : '&';
+
+    $requestToken = \OCP\Util::callRegister();
+    $postData['requesttoken'] = $requestToken;
+    $url .= $appendSep . 'requesttoken='.urlencode($requestToken);
+
+    $requestData = http_build_query($requestData, '', '&');
+    $url .= '&' . $requestData;
+
+    $cookies = array();
+    foreach($this->request->cookies as $name => $value) {
+      $cookies[] = "$name=" . urlencode($value);
+    }
+
+    $c = curl_init($url);
+    curl_setopt($c, CURLOPT_VERBOSE, 0);
+    curl_setopt($c, CURLOPT_POST, 0);
+    if (count($cookies) > 0) {
+      curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
+    }
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+    // this is internal, so there is no point in verifying certs:
+    curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+
+    $result = curl_exec($c);
+    curl_close($c);
+
+    return $result;
   }
 }

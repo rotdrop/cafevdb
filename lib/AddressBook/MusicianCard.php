@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -63,17 +63,6 @@ class MusicianCard implements ICard {
    */
   public function get() {
     return $this->vCard->serialize();
-  }
-
-  /**
-   * Non-interface method, return the card as plain array.
-   */
-  public function getData(): array {
-    $data = [];
-    foreach ($this->vCard->children() as $child) {
-      $data[$child->name] = $child->getValue();
-    }
-    return $data;
   }
 
   /**
