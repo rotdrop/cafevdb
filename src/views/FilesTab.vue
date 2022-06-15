@@ -114,7 +114,8 @@
           >
             {{ t(appName, 'Addressbooks') }}
           </ActionRadio>
-          <ActionRadio ref="givenContact"
+          <ActionRadio v-if="false"
+                       ref="givenContact"
                        name="recipientsSource"
                        value="input"
                        :checked="recipientsSource === 'input'"
