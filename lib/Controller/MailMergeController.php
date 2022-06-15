@@ -44,12 +44,16 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
 
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\IAddressBook;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
@@ -86,6 +90,9 @@ class MailMergeController extends Controller
   /** @var InstrumentInsuranceService */
   private $insuranceService;
 
+  /** @var IContactsManager */
+  private $contactsManager;
+
   public function __construct(
     string $appName
     , IRequest $request
@@ -98,6 +105,7 @@ class MailMergeController extends Controller
     , InstrumentInsuranceService $insuranceService
     , OpenDocumentFiller $documentFiller
     , UserStorage $storage
+    , IContactsManager $contactsManager
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
@@ -108,6 +116,7 @@ class MailMergeController extends Controller
     $this->insuranceService = $insuranceService;
     $this->documentFiller = $documentFiller;
     $this->userStorage = $storage;
+    $this->contactsManager = $contactsManager;
   }
 
   /**
@@ -116,8 +125,18 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    */
-  public function merge(int $fileId, string $fileName, int $senderId, array $recipientIds = [], int $projectId = 0, string $operation = self::OPERATION_DOWNLOAD, ?int $limit = null, ?int $offset = null)
-  {
+  public function merge(
+    int $fileId
+    , string $fileName
+    , int $senderId
+    , array $recipientIds = []
+    , int $projectId = 0
+    , array $contactKeys = []
+    , array $addressBookUris = []
+    , string $operation = self::OPERATION_DOWNLOAD
+    , ?int $limit = null
+    , ?int $offset = null
+  ) {
 
     $templateData = [];
     $blocks = [];
@@ -169,7 +188,9 @@ class MailMergeController extends Controller
         $templateData['project'] = $this->flattenProject($project);
       }
 
-      if (empty($recipientIds) || $limit === 0) {
+      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys));
+
+      if ($noRecipients) {
         switch ($operation) {
           case self::OPERATION_CLOUD:
           case self::OPERATION_DOWNLOAD:
@@ -205,6 +226,10 @@ class MailMergeController extends Controller
         } else {
           $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ], limit: $limit, offset: $offset);
         }
+
+        $addressBookRecipients = $this->contactsToEntities($contactKeys, $addressBookUris);
+
+        $recipients = array_merge($recipients, $addressBookRecipients);
 
         if (count($recipients) > 1) {
           $rootDirectory = implode('-', [
@@ -334,6 +359,54 @@ class MailMergeController extends Controller
 
     return $this->userStorage->ensureFolderChain($pathChain);
   }
+
+  /**
+   * In order to simplify the program flow we generate fake musician entities
+   * for each provided contact.
+   */
+  private function contactsToEntities(array $contactKeys, array $addressBookUris)
+  {
+    $addressBooks = $this->contactsManager->getUserAddressBooks();
+    $addressBooks = array_combine(
+      array_map(fn($b) => $b->getKey(), $addressBooks),
+      $addressBooks
+    );
+
+    $entities = [];
+
+    foreach ($contactKeys as $contactInfo) {
+      $bookKey = $contactInfo['book'];
+      /** @var IAddressBook $addressBook */
+      if ($addressBook = $addressBooks[$bookKey] ?? null) {
+        $searchProperties = [];
+        if ($contactInfo['uri'] ?? null) {
+          $searchProperties[] = 'URI';
+        }
+        if ($contactInfo['uid'] ?? null) {
+          $searchProperties[] = 'UID';
+        }
+        $key = $contactInfo['key'];
+        $contact = $addressBook->search($key, $searchProperties, [
+          'strict_search' => true,
+          'types' => true,
+        ]);
+        if (empty($contact)) {
+          $this->logInfo('NO CONTACT FOR ' . $key);
+        } else {
+          $contact = array_shift($contact);
+          $this->logInfo('FOUND CONTACT ' . print_r($contact, true));
+
+          /** @var ContactsService $contactsService */
+          $contactsService = $this->di(ContactsService::class);
+
+          $entities[] = $contactsService->importCardData($contact);
+        }
+      }
+    }
+
+    return $entities;
+  }
+
 }
 
 // local Variables: ***

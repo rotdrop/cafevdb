@@ -30,6 +30,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IUserSession;
+use OCP\Contacts\IManager as IContactsManager;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent as HandledEvent;
 
@@ -44,6 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class FilesHooksListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\ContactsTrait;
 
   const EVENT = HandledEvent::class;
 
@@ -111,6 +113,8 @@ class FilesHooksListener implements IEventListener
       $musicianId = 0;
     }
 
+    /** @var IContactsManager $contactsManager */
+    $contactsManager = $this->appContainer->get(IContactsManager::class);
 
     $initialState->provideInitialState('files', [
       'sharing' => [
@@ -122,6 +126,9 @@ class FilesHooksListener implements IEventListener
       'personal' => [
         'userId' => $userId,
         'musicianId' => $musicianId,
+      ],
+      'contacts' => [
+        'addressBooks' => self::flattenAdressBooks($contactsManager->getUserAddressBooks()),
       ],
     ]);
 

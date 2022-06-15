@@ -29,13 +29,14 @@
       <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
                    v-model="inputValObjects"
+                   v-tooltip="active ? false : tooltip"
                    v-bind="$attrs"
                    :options="projectsArray"
                    group-values="projects"
                    group-label="year"
                    :group-select="false"
                    :options-limit="100"
-                   :placeholder="label"
+                   :placeholder="placeholder === undefined ? label : placeholder"
                    :hint="hint"
                    :show-labels="true"
                    :searchable="searchable"
@@ -47,13 +48,15 @@
                    :disabled="disabled"
                    @input="emitInput"
                    @search-change="asyncFindProjects"
+                   @open="active = true"
+                   @close="active = false"
       />
-      <input v-if="submitButton"
+      <input v-if="clearButton"
              type="submit"
-             class="icon-confirm"
+             class="clear-button icon-delete"
              value=""
              :disabled="disabled"
-             @click="emitUpdate"
+             @click="clearSelection"
       >
     </div>
     <p v-if="hint !== ''" class="hint">
@@ -105,9 +108,17 @@ export default {
       type: Boolean,
       default: false,
     },
-    submitButton: {
+    clearButton: {
       type: Boolean,
       default: true,
+    },
+    placeholder: {
+      type: String,
+      default: undefined,
+    },
+    tooltip: {
+      type: [Object, String],
+      default: undefined,
     },
   },
   data() {
@@ -115,6 +126,7 @@ export default {
       inputValObjects: [],
       projects: {},
       loading: true,
+      active: false,
     }
   },
   computed: {
@@ -167,17 +179,19 @@ export default {
       )
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
+    clearSelection() {
+      this.inputValObjects = []
+      this.emitInput() // why is this needed?
+    },
     emitInput() {
       this.emit('input')
-      if (!this.submitButton) {
-        this.emitUpdate()
-      }
+      this.emitUpdate()
     },
     emitUpdate() {
       this.emit('update')
     },
     emit(event) {
-      this.$emit('input', this.inputValObjects)
+      this.$emit(event, this.inputValObjects)
     },
     asyncFindProjects(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''
@@ -228,15 +242,15 @@ export default {
         border-color: var(--color-primary-element);
         outline: none;
       }
-      &:hover + .icon-confirm {
+      &:hover + .clear-button {
         border-color: var(--color-primary-element) !important;
         border-left-color: transparent !important;
         z-index: 2;
       }
-      &.multiselect--active + .icon-confirm {
+      &.multiselect--active + .clear-button {
         display:none;
       }
-      + .icon-confirm {
+      + .clear-button {
         &:disabled {
           background-color: var(--color-background-dark) !important;
         }

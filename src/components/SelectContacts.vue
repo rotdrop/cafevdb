@@ -23,29 +23,29 @@
   -->
 
 <template>
-  <form class="select-musicians" @submit.prevent="">
+  <form class="select-contacts" @submit.prevent="">
     <div v-if="loading" class="loading" />
     <div class="input-wrapper">
-      <label v-if="label !== undefined" :for="id">{{ label }}</label>
+      <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
                    ref="multiselect"
                    v-model="inputValObjects"
                    v-tooltip="active ? false : tooltip"
                    v-bind="$attrs"
-                   :options="musiciansArray"
+                   :options="contactsArray"
                    :options-limit="100"
                    :placeholder="placeholder === undefined ? label : placeholder"
                    :hint="hint"
                    :show-labels="true"
                    :searchable="searchable"
-                   track-by="id"
-                   label="formalDisplayName"
+                   track-by="key"
+                   label="label"
                    class="multiselect-vue"
                    :multiple="multiple"
                    :tag-width="60"
                    :disabled="disabled"
                    @input="emitInput"
-                   @search-change="(query, id) => asyncFindMusicians(query)"
+                   @search-change="(query, id) => asyncFindContacts(query)"
                    @open="active = true"
                    @close="active = false"
       />
@@ -55,13 +55,6 @@
              value=""
              :disabled="disabled"
              @click="clearSelection"
-      >
-      <input v-if="resetButton && !clearButton"
-             type="submit"
-             class="clear-button icon-history"
-             value=""
-             :disabled="disabled"
-             @click="resetSelection"
       >
     </div>
     <p v-if="hint !== ''" class="hint">
@@ -77,10 +70,11 @@ import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import qs from 'qs'
 
 let uuid = 0
 export default {
-  name: 'SelectMusicians',
+  name: 'SelectContacts',
   components: {
     Multiselect,
   },
@@ -89,17 +83,13 @@ export default {
       type: Boolean,
       default: true,
     },
-    searchScope: {
-      type: String,
-      default: 'musicians',
-    },
     multiple: {
       type: Boolean,
       default: true,
     },
     label: {
       type: String,
-      default: undefined,
+      required: true,
     },
     hint: {
       type: String,
@@ -117,16 +107,16 @@ export default {
       type: Boolean,
       default: true,
     },
-    resetButton: {
-      type: Boolean,
-      default: false,
-    },
-    projectId: {
-      type: Number,
-      default: 0,
-    },
     placeholder: {
       type: String,
+      default: undefined,
+    },
+    allAddressBooks: {
+      type: Object,
+      default: undefined,
+    },
+    onlyAddressBooks: {
+      type: Array,
       default: undefined,
     },
     tooltip: {
@@ -141,19 +131,18 @@ export default {
   data() {
     return {
       inputValObjects: [],
-      initialValObjects: [],
-      musicians: {},
+      contacts: {},
       loading: true,
-      loadingPromise: Promise.resolve(),
+      loadingPromise: Promise.resolve(true),
       active: false,
     }
   },
   computed: {
     id() {
-      return 'settings-musicians-' + this.uuid
+      return 'settings-contacts-' + this.uuid
     },
-    musiciansArray() {
-      return Object.values(this.musicians)
+    contactsArray() {
+      return Object.values(this.contacts)
     },
     provideSelectAll() {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
@@ -163,17 +152,18 @@ export default {
     value(newVal, oldVal) {
       this.loadingPromise.finally(() => {
         this.inputValObjects = this.getValueObject()
-        if (this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0) {
+        if (this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].UID === 0) {
           this.$refs.multiselect.$refs.VueMultiselect.deactivate()
         }
       })
     },
-    projectId(newVal) {
+    onlyAddressBooks(newVal, oldVal) {
       this.loadingPromise.finally(() => {
+        console.info('WATCH ONLY ADDRESSBOOKOS', newVal, oldVal)
         this.loadingPromise = new Promise((resolve, reject) => {
           this.loading = true
-          this.resetMusicians()
-          this.asyncFindMusicians('', this.getValueIds()).then((result) => {
+          this.resetContacts()
+          this.asyncFindContacts('', this.getValueKeys()).then((result) => {
             this.inputValObjects = this.getValueObject(true)
             this.loading = false
             resolve(this.loading)
@@ -187,13 +177,11 @@ export default {
     uuid += 1
     this.loadingPromise.finally(() => {
       this.loadingPromise = new Promise((resolve, reject) => {
+        console.info('CREATED CONTACTS')
         this.loading = true
-        this.resetMusicians()
-        this.asyncFindMusicians('', this.getValueIds()).then((result) => {
+        this.resetContacts()
+        this.asyncFindContacts('', this.getValueKeys()).then((result) => {
           this.inputValObjects = this.getValueObject()
-          if (this.resetButton) {
-            this.initialValObjects = this.inputValObjects
-          }
           this.loading = false
           resolve(this.loading)
         })
@@ -201,56 +189,50 @@ export default {
     })
   },
   methods: {
-    resetMusicians() {
-      this.musicians = {}
+    resetContacts() {
+      this.contacts = {}
       if (this.provideSelectAll) {
-        Vue.set(this.musicians, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
+        Vue.set(this.contacts, 0, { key: 0, uid: 0, label: t(appName, '** everybody **') })
       }
     },
     getValueObject(noUndefined) {
-      console.info('VALUE', this.value)
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
-      let result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
-        (musician) => {
-          const id = musician.id !== undefined ? musician.id : musician
-          if (id === 0) {
+      let result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
+        (contact) => {
+          const key = contact.key !== undefined ? contact.key : (contact.UID || contact.URI || contact)
+          if (key === 0) {
             everybody = true
           }
-          if (typeof this.musicians[id] === 'undefined') {
-            return noUndefined ? null : { id, formalDisplayName: id }
+          if (typeof this.contacts[key] === 'undefined') {
+            return noUndefined ? null : { key, uid: key, label: key }
           }
-          return this.musicians[id]
+          return this.contacts[key]
         }
-      ).filter((musician) => musician !== null && musician !== undefined)
+      ).filter((contact) => contact !== null && contact !== undefined)
       if (this.provideSelectAll) {
         if (everybody) {
-          result = [this.musicians[0]]
+          result = [this.contacts[0]]
         }
-        for (const [musicianId, musician] of Object.entries(this.musicians)) {
-          if (musicianId !== 0 && musicianId !== '0') {
-            musician.$isDisabled = everybody
+        for (const [contactKey, contact] of Object.entries(this.contacts)) {
+          if (contactKey !== 0 && contactKey !== '0') {
+            contact.$isDisabled = everybody
           }
         }
       }
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
-    getValueIds() {
+    getValueKeys() {
       const value = Array.isArray(this.value) ? this.value : [this.value]
-      const result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
-        (musician) => {
-          return musician.id !== undefined ? musician.id : musician
+      const result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
+        (contact) => {
+          return contact.key !== undefined ? contact.key : (contact.UID || contact.URI || contact)
         }
       )
-      console.info('GET VALUE IDS', result)
       return result
     },
     clearSelection() {
       this.inputValObjects = []
-      this.emitInput() // why is this needed?
-    },
-    resetSelection() {
-      this.inputValObjects = this.initialValObjects
       this.emitInput() // why is this needed?
     },
     emitInput() {
@@ -263,27 +245,52 @@ export default {
     emit(event) {
       this.$emit(event, this.inputValObjects)
     },
-    asyncFindMusicians(query, musicianIds) {
+    asyncFindContacts(query, contactUids) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
       }
       const params = {
         limit: 10,
-        scope: this.searchScope,
       }
-      if (this.projectId > 0) {
-        params.projectId = this.projectId
+      if (this.onlyAddressBooks.length > 0) {
+        params.onlyAddressBooks = {}
+        for (const book of this.onlyAddressBooks) {
+          params.onlyAddressBooks[book.key] = book.uri
+        }
       }
-      if (musicianIds !== undefined && musicianIds.length > 0) {
-        params.ids = musicianIds
+      if (contactUids !== undefined && contactUids.length > 0) {
+        params.contactUids = contactUids
       }
       return axios
-        .get(generateUrl(`/apps/${appName}/musicians/search${query}`), { params })
+        .get(
+          generateUrl(`/apps/${appName}/contacts/search${query}`), {
+            params,
+            paramsSerializer: params => {
+              return qs.stringify(params, { arrayFormat: 'brackets' })
+            },
+          })
         .then((response) => {
           if (response.data.length > 0) {
-            for (const musician of response.data) {
-              Vue.set(this.musicians, musician.id, musician)
+            for (const contact of response.data) {
+              const key = contact.UID || contact.URI
+              if (key) {
+                contact.key = key
+                if (contact.FN) {
+                  contact.label = contact.FN
+                } else {
+                  if (Array.isArray(contact.EMAIL) && contact.EMAIL.length > 0) {
+                    contact.label = contact.EMAIL[0]
+                  } else {
+                    contact.label = contact.key
+                  }
+                }
+                const addressBookKey = contact['addressbook-key']
+                if (addressBookKey && this.allAddressBooks[addressBookKey]) {
+                  contact.label += ' [' + this.allAddressBooks[addressBookKey].displayName + ']'
+                }
+                Vue.set(this.contacts, key, contact)
+              }
             }
             return true
           }
@@ -296,7 +303,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.select-musicians {
+.select-contacts {
   position:relative;
   .loading {
     position:absolute;

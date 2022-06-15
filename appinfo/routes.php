@@ -626,6 +626,34 @@ $routes = [
         'pattern' => '',
       ],
     ],
+    /**
+     * Forward to the contacts manager. Arguably, we should just use the
+     * CardDAV end-points in the Vue front-end. However, looking at the
+     * JS-code of the contacts-app leaves the impression that this is really
+     * difficult.
+     */
+    [
+      'name' => 'contacts#get',
+      'verb' => 'GET',
+      'url' => '/contacts/details/{contactUid}',
+    ],
+    [
+      'name' => 'contacts#search',
+      'verb' => 'GET',
+      'url' => '/contacts/search/{pattern}',
+      'defaults' => [
+        'pattern' => '',
+      ],
+    ],
+    [
+      'name' => 'contacts#get_address_books',
+      'verb' => 'GET',
+      'url' => '/contacts/address-books',
+    ],
+    /**
+     * Perform mail-merge with musician or contact data, used by the files
+     * side-bar plugin.
+     */
     [
       'name' => 'mail_merge#merge',
       'verb' => 'POST',
