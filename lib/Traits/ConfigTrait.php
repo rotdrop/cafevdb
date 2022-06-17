@@ -29,6 +29,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
 use OCP\IDateTimeFormatter;
@@ -118,7 +119,7 @@ trait ConfigTrait {
     return $this->configService->getAppConfig();
   }
 
-  protected function userSession()
+  protected function userSession():IUserSession
   {
     return $this->configService->getUserSession();
   }
