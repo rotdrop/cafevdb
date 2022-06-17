@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -92,16 +92,27 @@ class MusicianCardBackend implements ICardBackend
    */
   public function searchCards(string $pattern, array $properties): array
   {
+    // $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();
     } else {
       $expr = self::criteriaExpr();
-      $musicians = $this->musiciansRepository->matching(
-        self::criteria()->where($expr->contains('displayName', $pattern))
+      $criteria = self::criteria();
+      if (array_search('FN', $properties) !== false) {
+        $criteria
+          ->orWhere($expr->contains('displayName', $pattern))
           ->orWhere($expr->contains('nickName', $pattern))
           ->orWhere($expr->contains('firstName', $pattern))
-          ->orWhere($expr->contains('surName', $pattern))
-      );
+          ->orWhere($expr->contains('surName', $pattern));
+      }
+      if (array_search('EMAIL', $properties) !== false) {
+        $criteria->orWhere($expr->contains('email', $pattern));
+      }
+      if (array_search('UID', $properties) !== false) {
+        $criteria->orWhere($expr->eq('uuid', $pattern));
+      }
+      $musicians = $this->musiciansRepository->matching($criteria);
     }
     $vCards = [];
     foreach ($musicians as $musician) {
@@ -122,7 +133,7 @@ class MusicianCardBackend implements ICardBackend
     return $vCards;
   }
 
-  protected function getUriFromUuid($uuid)
+  public function getUriFromUuid($uuid)
   {
     return 'musician-'.$uuid.'.vcf';
   }

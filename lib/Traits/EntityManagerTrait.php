@@ -288,9 +288,11 @@ trait EntityManagerTrait {
    *
    * @return \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
    */
-  protected function enableFilter(string $filterName)
+  protected function enableFilter(string $filterName, bool $state = true)
   {
-    return $this->entityManager->getFilters()->enable($filterName);
+    if ($state) {
+      return $this->entityManager->getFilters()->enable($filterName);
+    }
   }
 
   /**

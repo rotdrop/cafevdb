@@ -423,7 +423,7 @@ $routes = [
      * Musicians
      */
     [
-      'name' => 'musicians#validate',
+      'name' => 'musician_validation#validate',
       'url' => '/validate/musicians/{topic}/{subTopic}',
       'verb' => 'POST',
       'defaults' => [ 'subTopic' => '' ],
@@ -572,6 +572,17 @@ $routes = [
       'name' => 'tool_tips#get',
       'url' => '/tooltips/{key}',
       'verb' => 'GET',
+      'requirements' => [
+        'key' => '^.+$',
+      ],
+    ],
+    /**
+     * Fetch a tooltip by its key
+     */
+    [
+      'name' => 'tool_tips#get_multiple',
+      'url' => '/tooltips',
+      'verb' => 'GET',
     ],
     /**
      * Manage mailing list subscriptions
@@ -585,6 +596,68 @@ $routes = [
       'name' => 'mailing_lists#getStatus',
       'verb' => 'GET',
       'url' => '/mailing-lists/{listId}/{email}',
+    ],
+    /**
+     * Personal data etc. of musicians
+     */
+    [
+      'name' => 'musicians#get',
+      'verb' => 'GET',
+      'url' => '/musicians/details/{musicianId}',
+    ],
+    [
+      'name' => 'musicians#search',
+      'verb' => 'GET',
+      'url' => '/musicians/search/{pattern}',
+      'defaults' => [
+        'pattern' => '',
+      ],
+    ],
+    [
+      'name' => 'musicians#getProject',
+      'verb' => 'GET',
+      'url' => '/projects/details/{projectId}',
+    ],
+    [
+      'name' => 'musicians#search_projects',
+      'verb' => 'GET',
+      'url' => '/projects/search/{pattern}',
+      'defaults' => [
+        'pattern' => '',
+      ],
+    ],
+    /**
+     * Forward to the contacts manager. Arguably, we should just use the
+     * CardDAV end-points in the Vue front-end. However, looking at the
+     * JS-code of the contacts-app leaves the impression that this is really
+     * difficult.
+     */
+    [
+      'name' => 'contacts#get',
+      'verb' => 'GET',
+      'url' => '/contacts/details/{contactUid}',
+    ],
+    [
+      'name' => 'contacts#search',
+      'verb' => 'GET',
+      'url' => '/contacts/search/{pattern}',
+      'defaults' => [
+        'pattern' => '',
+      ],
+    ],
+    [
+      'name' => 'contacts#get_address_books',
+      'verb' => 'GET',
+      'url' => '/contacts/address-books',
+    ],
+    /**
+     * Perform mail-merge with musician or contact data, used by the files
+     * side-bar plugin.
+     */
+    [
+      'name' => 'mail_merge#merge',
+      'verb' => 'POST',
+      'url' => '/documents/mail-merge',
     ],
     /**
      * Attempt a catch all ...

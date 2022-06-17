@@ -29,6 +29,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
 use OCP\IDateTimeFormatter;
@@ -118,7 +119,7 @@ trait ConfigTrait {
     return $this->configService->getAppConfig();
   }
 
-  protected function userSession()
+  protected function userSession():IUserSession
   {
     return $this->configService->getUserSession();
   }
@@ -647,7 +648,7 @@ trait ConfigTrait {
   }
 
   /** Return the given time as short time-stamp (textual). */
-  protected function formatTimeStamp($date, $format = null, $timeZone = null)
+  protected function formatTimeStamp($date = null, $format = null, $timeZone = null)
   {
     return $this->configService->formatTimeStamp($date, $format, $timeZone);
   }

@@ -824,7 +824,11 @@ class ConfigService
   public function getLocale(?string $lang = null):string
   {
     if (empty($lang)) {
-      $locale = $this->l10NFactory->findLocale($this->appName);
+      $lang = $this->l10NFactory->findLanguage($this->appName);
+      if (empty($lang) || $lang == 'en') {
+        $lang = null;
+      }
+      $locale = $this->l10NFactory->findLocale($this->appName, $lang);
       $lang = $this->l10NFactory->findLanguageFromLocale($this->appName, $locale);
       $this->logDebug('Locale seems to be ' . $locale);
       $this->logDebug('Language seems to be ' . $lang);
@@ -996,7 +1000,7 @@ class ConfigService
    * human readable time-stamp, providing defaults for $format and
    * using the default time-zone if none is specified.
    *
-   * @param int|\DateTimeInterface $date
+   * @param null|int|\DateTimeInterface $date
    *
    * @param null|string $format
    *
@@ -1004,9 +1008,11 @@ class ConfigService
    *
    * @return string
    */
-  public function formatTimeStamp($date, ?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function formatTimeStamp($date = null, ?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
-    if (!($date instanceof \DateTimeInterface)) {
+    if ($date === null) {
+      $date = new \DateTimeImmutable;
+    } else if (!($date instanceof \DateTimeInterface)) {
       $date = (new \DateTimeImmutable())->setTimestamp($date);
     }
 

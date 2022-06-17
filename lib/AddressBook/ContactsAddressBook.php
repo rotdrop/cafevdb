@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -30,6 +30,9 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\AddressBook;
 
+use Sabre\VObject\Component\VCard;
+use Sabre\VObject\Property;
+
 use OC\Security\CSRF\CsrfTokenManager;
 use OCP\Constants;
 use OCP\IAddressBook;
@@ -37,6 +40,7 @@ use OCP\IConfig;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
 
 class ContactsAddressBook implements IAddressBook
 {
@@ -45,21 +49,24 @@ class ContactsAddressBook implements IAddressBook
   /** @var ICardBackend */
   private $cardBackend;
 
+  /** @var ContactsService */
+  private $contactsService;
+
   /** @var string */
   private $uri;
 
   public const DAV_PROPERTY_SOURCE = 'X-CAFEVDB_CONTACTS_ID';
-  /** @var PhotoService */
-  private $photoService;
 
   public function __construct(
     ConfigService $configService
+    , ContactsService $contactsService
     , ICardBackend $cardBackend
     , ?string $uri = null
   ) {
     $this->cardBackend = $cardBackend;
     $this->uri = $uri ?? $this->cardBackend->getURI();
     $this->configService = $configService;
+    $this->contactsService = $contactsService;
     $this->l = $this->l10n();
   }
 
@@ -101,9 +108,11 @@ class ContactsAddressBook implements IAddressBook
       $vCards = array_slice($vCards, 0, (int)$options['limit']);
     }
 
+    $withTypes = \array_key_exists('types', $options) && $options['types'] === true;
+
     $result = [];
     foreach ($vCards as $card) {
-      $record = $card->getData();
+      $record = $this->vCard2Array($card->getName(), $card->getVCard(), $withTypes);
       if (is_array($record['FN'])) {
         //FN field must be flattened for contacts menu
         $record['FN'] = array_pop($record['FN']);
@@ -112,6 +121,24 @@ class ContactsAddressBook implements IAddressBook
       $record['isLocalSystemBook'] = true;
       $record[self::DAV_PROPERTY_SOURCE] = $this->cardBackend->getURI();
       $result[] = $record;
+    }
+    return $result;
+  }
+
+  private function vCard2Array(string $cardUri, VCard $vCard, bool $withTypes)
+  {
+    $result = $this->contactsService->flattenVCard($cardUri, $vCard, $withTypes);
+
+    if (($photo = $result['PHOTO'] ?? null) && str_starts_with($photo, 'VALUE=uri:data')) {
+        $url = $this->urlGenerator()->getAbsoluteURL(
+          $this->urlGenerator()->linkTo('', 'remote.php') . '/dav/');
+        $url .= implode('/', [
+          'addressbooks',
+          'users/' . $this->userId(),
+          $this->getUri(),
+          $cardUri
+        ]) . '?photo';
+        $result['PHOTO'] = 'VALUE=uri:' . $url;
     }
     return $result;
   }

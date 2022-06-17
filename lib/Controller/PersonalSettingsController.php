@@ -1875,7 +1875,20 @@ class PersonalSettingsController extends Controller {
           'link' => $this->getConfigValue($key, $testKeys[$key]),
           'target' => $key.':'.$this->appName,
         ]);
+      case 'documenttemplatesfolder':
+        $sharedFolder = $this->getConfigValue('sharedfolder');
+        if (empty($sharedFolder)) {
+          return self::grumble($this->l->t('Shared folder is not configured.'));
+        }
+        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        if (empty($templatesFolder)) {
+          return self::grumble($this->l->t('Document template folder is not configured.'));
+        }
+        $templatesFolder = UserStorage::PATH_SEP
+          . $sharedFolder . UserStorage::PATH_SEP;
+        return self::dataResponse($templatesFolder);
       default:
+        break;
     }
     return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
   }
@@ -1922,9 +1935,8 @@ class PersonalSettingsController extends Controller {
       return $response;
     case 'auto-fill-test':
       $templateName = $this->parameterService->getParam('documentTemplate');
-      if ($templateName != ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy'
-          && (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
-              || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE )) {
+      if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
+          || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE ) {
         return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
       }
       $format = $this->parameterService->getParam('format');
@@ -2007,17 +2019,6 @@ class PersonalSettingsController extends Controller {
             $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
           );
         }
-        break;
-      }
-      case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD . 'Legacy': {
-        /** @var InstrumentInsuranceService $insuranceService */
-        $insuranceService = $this->di(InstrumentInsuranceService::class);
-        $musician = $insuranceService->getDummyMusician();
-        $insuranceOverview = $insuranceService->musicianOverview($musician);
-
-        $fileData = $insuranceService->musicianOverviewLetter($insuranceOverview);
-        $mimeType = 'text/pdf';
-        $fileName = 'legacy-insurance-overview.pdf';
         break;
       }
       case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD: {

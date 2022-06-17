@@ -443,6 +443,7 @@ class EntityManager extends EntityManagerDecorator
       ORM\Events::loadClassMetadata,
       ORM\Events::preUpdate,
       ORM\Events::postUpdate,
+      ORM\Events::postLoad,
     ], $this);
 
 
@@ -716,7 +717,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * @todo See that this is not necessary.
    */
-  public function postGenerateSchema(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args)
+  public function postGenerateSchema(ORM\Tools\Event\GenerateSchemaEventArgs $args)
   {
     $schema = $args->getSchema();
     $em = $args->getEntityManager();
@@ -741,6 +742,14 @@ class EntityManager extends EntityManagerDecorator
       foreach ($enumColumns as $column) {
         $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
+    }
+  }
+
+  public function postLoad(ORM\Event\LifecycleEventArgs $args)
+  {
+    $entity = $args->getObject();
+    if (\method_exists($entity, '__wakeup')) {
+      $entity->__wakeup();
     }
   }
 

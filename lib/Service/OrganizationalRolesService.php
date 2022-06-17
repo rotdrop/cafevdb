@@ -139,9 +139,11 @@ class OrganizationalRolesService
     return $projectService->findById($this->getExecutiveBoardProjectId());
   }
 
-  private function dedicatedBoardMemberParticipant(string $role):?Entities\ProjectParticipant
+  public function dedicatedBoardMemberParticipant(string $role, int $musicianId= 0):?Entities\ProjectParticipant
   {
-    $musicianId = $this->getConfigValue($role.'Id', null);
+    if ($role != self::BOARD_MEMBER_ROLE) {
+      $musicianId = $this->getConfigValue($role.'Id', null);
+    }
     if (empty($musicianId)) {
       return null;
     }
@@ -157,13 +159,13 @@ class OrganizationalRolesService
    *
    * @param in
    */
-  private function dedicatedBoardMemberSignature(string $role)
+  public function dedicatedBoardMemberSignature(string $role, int $musicianId = 0)
   {
     $project = $this->executiveBoardProject();
     if (empty($project)) {
       return null;
     }
-    $participant = $this->dedicatedBoardMemberParticipant($role);
+    $participant = $this->dedicatedBoardMemberParticipant($role, $musicianId);
     if (empty($participant)) {
       return null;
     }
@@ -222,7 +224,7 @@ class OrganizationalRolesService
    * Return true if the logged in or given user has a dedicated
    * administrative role for the orchestra.
    */
-  private function isDedicatedBoardMember(string $role, $uid, bool $allowGroupAccess)
+  public function isDedicatedBoardMember(string $role, $uid = null, bool $allowGroupAccess = false)
   {
     empty($uid) && $uid = $this->userId();
     $musicianId = $this->getConfigValue($role.'Id', null);
