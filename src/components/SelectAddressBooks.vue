@@ -161,10 +161,10 @@ export default {
     const initialState = getInitialState()
     if (initialState.contacts && initialState.contacts.addressBooks) {
       this.addressBooks = initialState.contacts.addressBooks
-      console.info('ADDRESSBOOKS FROM STATE', this.addressBooks)
+      // console.info('ADDRESSBOOKS FROM STATE', this.addressBooks)
     } else {
       await this.provideAddressBooks()
-      console.info('ADDRESSBOOKS FROM AJAX', this.addressBooks)
+      // console.info('ADDRESSBOOKS FROM AJAX', this.addressBooks)
     }
     this.$emit('update:address-books', this.addressBooks)
     if (Array.isArray(this.value) && this.value.length === 0) {
@@ -236,7 +236,7 @@ export default {
           for (const [key, book] of Object.entries(response.data)) {
             Vue.set(this.addressBooks, key, book)
           }
-          console.info('ADDRESSBOOKS', this.addressBooks)
+          // console.info('ADDRESSBOOKS', this.addressBooks)
           return true
         }).catch((error) => {
           this.$emit('error', error)
@@ -315,6 +315,32 @@ export default {
           &:not(.multiselect__option--selected):hover::before {
             visibility:hidden;
           }
+        }
+      }
+
+      .multiselect__tag {
+        position: relative;
+        padding-right: 18px;
+        .multiselect__tag-icon {
+          cursor: pointer;
+          margin-left: 7px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          font-weight: 700;
+          font-style: initial;
+          width: 22px;
+          text-align: center;
+          line-height: 22px;
+          transition: all 0.2s ease;
+          border-radius: 5px;
+        }
+
+        .multiselect__tag-icon:after {
+          content: "×";
+          color: #266d4d;
+          font-size: 14px;
         }
       }
     }

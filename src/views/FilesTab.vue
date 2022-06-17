@@ -128,7 +128,7 @@
       </li>
       <li v-show="showDatabaseRecipients" class="files-tab-entry recipients__database">
         <SelectMusicians v-model="recipients"
-                         :tooltip="hints['templates:cloud:integration:recipients:musicians']"
+                         :tooltip="recipients.length ? false : hints['templates:cloud:integration:recipients:musicians']"
                          :label="t(appName, 'Musicians')"
                          :placeholder="t(appName, 'e.g. Jane Doe')"
                          :multiple="true"
@@ -148,7 +148,7 @@
       </li>
       <li v-show="showAddressBookRecipients" class="files-tab-entry recipients__addressbooks">
         <SelectContacts v-model="contacts"
-                        :tooltip="hints['templates:cloud:integration:recipients:contacts']"
+                        :tooltip="contacts.length ? false : hints['templates:cloud:integration:recipients:contacts']"
                         :label="t(appName, 'Contacts')"
                         :placeholder="t(appName, 'e.g. Bilbo Baggins')"
                         :multiple="true"
@@ -301,7 +301,7 @@ export default {
              + ' '
              + hint
       }
-      return hint
+      return false
     },
     showDatabaseRecipients() {
       return this.recipientsSource === 'database'

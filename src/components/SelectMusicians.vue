@@ -48,8 +48,35 @@
                    @search-change="(query, id) => asyncFindMusicians(query)"
                    @open="active = true"
                    @close="active = false"
-      />
+      >
+        <template #option="optionData">
+          <EllipsisedMusicianOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
+                                    :option="optionData.option"
+                                    :search="optionData.search"
+                                    :label="$refs.multiselect.label"
+          />
+        </template>
+        <template #singleLabel="singleLabelData">
+          <span v-tooltip="musicianAddressPopup(singleLabelData.option)">
+            {{ $refs.multiselect.$refs.VueMultiselect.currentOptionLabel }}
+          </span>
+        </template>
+        <template #tag="tagData">
+          <span :key="tagData.option.id"
+                v-tooltip="musicianAddressPopup(tagData.option)"
+                class="multiselect__tag"
+          >
+            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
+            <i tabindex="1"
+               class="multiselect__tag-icon"
+               @keypress.enter.prevent="tagData.remove(tagData.option)"
+               @mousedown.prevent="tagData.remove(tagData.option)"
+            />
+          </span>
+        </template>
+      </Multiselect>
       <input v-if="clearButton"
+             v-tooltip="t(appName, 'Remove all options.')"
              type="submit"
              class="clear-button icon-delete"
              value=""
@@ -57,6 +84,7 @@
              @click="clearSelection"
       >
       <input v-if="resetButton && !clearButton"
+             v-tooltip="t(appName, 'Reset to initial selection.')"
              type="submit"
              class="clear-button icon-history"
              value=""
@@ -77,13 +105,20 @@ import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import EllipsisedMusicianOption from './EllipsisedMusicianOption'
+import addressPopup from '../mixins/address-popup'
+import { usePersistentDataStore } from '../stores/persistentData'
 
 let uuid = 0
 export default {
   name: 'SelectMusicians',
   components: {
     Multiselect,
+    EllipsisedMusicianOption,
   },
+  mixins: [
+    addressPopup,
+  ],
   props: {
     searchable: {
       type: Boolean,
@@ -138,6 +173,10 @@ export default {
       default: undefined,
     },
   },
+  setup() {
+    const persistentData = usePersistentDataStore()
+    return { persistentData }
+  },
   data() {
     return {
       inputValObjects: [],
@@ -168,39 +207,55 @@ export default {
         }
       })
     },
-    projectId(newVal) {
-      this.loadingPromise.finally(() => {
-        this.loadingPromise = new Promise((resolve, reject) => {
-          this.loading = true
-          this.resetMusicians()
-          this.asyncFindMusicians('', this.getValueIds()).then((result) => {
-            this.inputValObjects = this.getValueObject(true)
-            this.loading = false
-            resolve(this.loading)
-          })
-        })
-      })
+    // setting the project id also resets the initial data.
+    projectId(newVal, oldVal) {
+      this.getData()
     },
   },
   created() {
     this.uuid = uuid.toString()
     uuid += 1
-    this.loadingPromise.finally(() => {
-      this.loadingPromise = new Promise((resolve, reject) => {
-        this.loading = true
-        this.resetMusicians()
-        this.asyncFindMusicians('', this.getValueIds()).then((result) => {
-          this.inputValObjects = this.getValueObject()
-          if (this.resetButton) {
-            this.initialValObjects = this.inputValObjects
-          }
-          this.loading = false
-          resolve(this.loading)
-        })
-      })
-    })
+    this.getData()
   },
   methods: {
+    getData() {
+      this.loadingPromise.finally(() => {
+        this.loadingPromise = new Promise((resolve, reject) => {
+          this.loading = true
+          this.resetMusicians()
+          if (!this.searchable) {
+            try {
+              // console.info('PERSISTENT DATA', this.persistentData)
+              this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId]
+              this.inputValObjects = this.getValueObject()
+              if (this.resetButton) {
+                this.initialValObjects = this.inputValObjects
+              }
+              this.loading = false
+              resolve(this.loading)
+              // console.info('INIT FROM STORE', this.searchScope, this.projectId)
+              return
+            } catch (ignoreMe) {}
+          }
+          this.asyncFindMusicians('', this.getValueIds()).then((result) => {
+            this.inputValObjects = this.getValueObject(true)
+            if (this.resetButton) {
+              this.initialValObjects = this.inputValObjects
+            }
+            if (!this.searchable) {
+              this.persistentData.selectMusicians = {
+                [this.searchScope]: {
+                  [this.projectId]: this.musicians,
+                },
+              }
+            }
+            this.loading = false
+            resolve(this.loading)
+            // console.info('INIT FROM AJAX', this.searchScope, this.projectId)
+          })
+        })
+      })
+    },
     resetMusicians() {
       this.musicians = {}
       if (this.provideSelectAll) {
@@ -208,7 +263,7 @@ export default {
       }
     },
     getValueObject(noUndefined) {
-      console.info('VALUE', this.value)
+      // console.info('VALUE', this.value)
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
       let result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
@@ -242,7 +297,7 @@ export default {
           return musician.id !== undefined ? musician.id : musician
         }
       )
-      console.info('GET VALUE IDS', result)
+      // console.info('GET VALUE IDS', result)
       return result
     },
     clearSelection() {
@@ -269,7 +324,7 @@ export default {
         query = '/' + query
       }
       const params = {
-        limit: 10,
+        limit: this.searchable ? 10 : null,
         scope: this.searchScope,
       }
       if (this.projectId > 0) {
@@ -367,6 +422,32 @@ export default {
           }
         }
       }
+
+      .multiselect__tag {
+        position: relative;
+        padding-right: 18px;
+        .multiselect__tag-icon {
+          cursor: pointer;
+          margin-left: 7px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          font-weight: 700;
+          font-style: initial;
+          width: 22px;
+          text-align: center;
+          line-height: 22px;
+          transition: all 0.2s ease;
+          border-radius: 5px;
+        }
+
+        .multiselect__tag-icon:after {
+          content: "×";
+          color: #266d4d;
+          font-size: 14px;
+        }
+      }
     }
 
     label {
@@ -378,5 +459,10 @@ export default {
     color: var(--color-text-lighter);
     font-size:80%;
   }
+}
+</style>
+<style>
+.vue-tooltip-address-popup.vue-tooltip .tooltip-inner {
+  text-align: left !important;
 }
 </style>

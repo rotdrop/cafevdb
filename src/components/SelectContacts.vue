@@ -48,8 +48,30 @@
                    @search-change="(query, id) => asyncFindContacts(query)"
                    @open="active = true"
                    @close="active = false"
-      />
+      >
+        <template #option="optionData">
+          <EllipsisedContactOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
+                                   :option="optionData.option"
+                                   :search="optionData.search"
+                                   :label="$refs.multiselect.label"
+          />
+        </template>
+        <template #tag="tagData">
+          <span :key="tagData.option.id"
+                v-tooltip="contactAddressPopup(tagData.option)"
+                class="multiselect__tag"
+          >
+            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
+            <i tabindex="1"
+               class="multiselect__tag-icon"
+               @keypress.enter.prevent="tagData.remove(tagData.option)"
+               @mousedown.prevent="tagData.remove(tagData.option)"
+            />
+          </span>
+        </template>
+      </Multiselect>
       <input v-if="clearButton"
+             v-tooltip="t(appName, 'Remove all options.')"
              type="submit"
              class="clear-button icon-delete"
              value=""
@@ -70,14 +92,20 @@ import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import EllipsisedContactOption from './EllipsisedContactOption'
 import qs from 'qs'
+import addressPopup from '../mixins/address-popup'
 
 let uuid = 0
 export default {
   name: 'SelectContacts',
   components: {
     Multiselect,
+    EllipsisedContactOption,
   },
+  mixins: [
+    addressPopup,
+  ],
   props: {
     searchable: {
       type: Boolean,
@@ -159,7 +187,7 @@ export default {
     },
     onlyAddressBooks(newVal, oldVal) {
       this.loadingPromise.finally(() => {
-        console.info('WATCH ONLY ADDRESSBOOKOS', newVal, oldVal)
+        // console.info('WATCH ONLY ADDRESSBOOKOS', newVal, oldVal)
         this.loadingPromise = new Promise((resolve, reject) => {
           this.loading = true
           this.resetContacts()
@@ -177,7 +205,7 @@ export default {
     uuid += 1
     this.loadingPromise.finally(() => {
       this.loadingPromise = new Promise((resolve, reject) => {
-        console.info('CREATED CONTACTS')
+        // console.info('CREATED CONTACTS')
         this.loading = true
         this.resetContacts()
         this.asyncFindContacts('', this.getValueKeys()).then((result) => {
@@ -277,17 +305,22 @@ export default {
               if (key) {
                 contact.key = key
                 if (contact.FN) {
-                  contact.label = contact.FN
+                  contact.name = contact.FN
                 } else {
                   if (Array.isArray(contact.EMAIL) && contact.EMAIL.length > 0) {
-                    contact.label = contact.EMAIL[0]
+                    contact.name = contact.EMAIL[0]
+                    if (contact.name.value) {
+                      contact.name = contact.name.value
+                    }
                   } else {
-                    contact.label = contact.key
+                    contact.name = contact.key
                   }
                 }
+                contact.label = contact.name
                 const addressBookKey = contact['addressbook-key']
                 if (addressBookKey && this.allAddressBooks[addressBookKey]) {
-                  contact.label += ' [' + this.allAddressBooks[addressBookKey].displayName + ']'
+                  contact.addressBookName = this.allAddressBooks[addressBookKey].displayName
+                  contact.label += ' [' + contact.addressBookName + ']'
                 }
                 Vue.set(this.contacts, key, contact)
               }
@@ -374,6 +407,33 @@ export default {
           }
         }
       }
+
+      .multiselect__tag {
+        position: relative;
+        padding-right: 18px;
+        .multiselect__tag-icon {
+          cursor: pointer;
+          margin-left: 7px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          font-weight: 700;
+          font-style: initial;
+          width: 22px;
+          text-align: center;
+          line-height: 22px;
+          transition: all 0.2s ease;
+          border-radius: 5px;
+        }
+
+        .multiselect__tag-icon:after {
+          content: "×";
+          color: #266d4d;
+          font-size: 14px;
+        }
+      }
+
     }
 
     label {
@@ -385,5 +445,10 @@ export default {
     color: var(--color-text-lighter);
     font-size:80%;
   }
+}
+</style>
+<style>
+.vue-tooltip-address-popup.vue-tooltip .tooltip-inner {
+  text-align: left !important;
 }
 </style>
