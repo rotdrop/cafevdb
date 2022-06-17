@@ -130,6 +130,7 @@ class OpenDocumentFiller
     $this->backend->VarRef = $fillData;
 
     unset($fillData['now']); // the cache is just for this request, so "now" from the first call is good enough
+    unset($fillData['date']); // the cache is just for this request, so "now" from the first call is good enough
     $templateDataHash = md5(json_encode($fillData));
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
@@ -266,6 +267,8 @@ class OpenDocumentFiller
       $this->getOrchestraSubstitutions(),
       $templateData);
     $fillData['now'] = (new \DateTimeImmutable())->setTimezone($this->getDateTimeZone());
+    $fillData['date'] = $fillData['now'];
+
 
     $fillData['test'] = 'Test Replacement Value';
 
