@@ -113,7 +113,7 @@ SELECT m.id AS id,
        m.email AS email,
        NULL AS quota,
        NULL AS home,
-       m.cloud_account_deactivated AS inactive,
+       COALESCE(m.cloud_account_deactivated, 0) AS inactive,
        IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
        0 AS avatar,
        NULL AS salt
