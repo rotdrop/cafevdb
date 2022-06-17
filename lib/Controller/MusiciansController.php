@@ -63,6 +63,9 @@ class MusiciansController extends Controller
   /** @var Repositories\MusiciansRepository */
   private $musiciansRepository;
 
+  /** @var array */
+  private $countryNames;
+
   public function __construct(
     string $appName
     , IRequest $request
@@ -78,6 +81,7 @@ class MusiciansController extends Controller
     $this->entityManager = $entityManager;
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
     $this->configService = $configService;
+    $this->countryNames = $this->localeCountryNames();
   }
 
   /**
@@ -95,7 +99,7 @@ class MusiciansController extends Controller
   {
     $musician = $this->musiciansRepository->find($musicianId);
 
-    $musicianData = $this->flattenMusician($musician);
+    $musicianData = $this->getFlatMusician($musician);
 
     return self::dataResponse($musicianData);
   }
@@ -164,7 +168,7 @@ class MusiciansController extends Controller
       'firstName' => 'ASC'
     ], $limit, $offset);
 
-    if (count($ids) > 0) {
+    if ($limit !== null && count($ids) > 0) {
       $criteria = [ [ 'id' => $ids ] ];
       if ($project !== null) {
         $criteria[] = [ 'projectParticipation.project' => $project ];
@@ -176,19 +180,26 @@ class MusiciansController extends Controller
     $musiciansData = [];
     /** @var Entities\Musician $musician */
     foreach ($musicians as $musician) {
-      $musiciansData[] = [
-        'id' => $musician->getId(),
-        'firstName' => $musician->getFirstName(),
-        'surName' => $musician->getSurName(),
-        'displayName' => $musician->getDisplayName(),
-        'nickName' => $musician->getNickName(),
-        'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
-        'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
-        'userId' => $musician->getUserIdSlug(),
-      ];
+      $musiciansData[] = $this->getFlatMusician($musician, only: []);
     }
 
     return self::dataResponse($musiciansData);
+  }
+
+  private function getFlatMusician(Entities\Musician $musician, array $only = null)
+  {
+    return array_merge([
+      'id' => $musician->getId(),
+      'firstName' => $musician->getFirstName(),
+      'surName' => $musician->getSurName(),
+      'displayName' => $musician->getDisplayName(),
+      'nickName' => $musician->getNickName(),
+      'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
+      'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
+      'userId' => $musician->getUserIdSlug(),
+      'countryName' => $this->countryNames[$musician->getCountry()] ?? '',
+    ], $this->flattenMusician($musician, only: [])
+    );
   }
 
   /**
