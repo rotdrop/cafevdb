@@ -190,6 +190,30 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
+   * Set instrumentOwner.
+   *
+   * @param int $instrumentOwner
+   *
+   * @return InstrumentInsurance
+   */
+  public function setInstrumentOwner($instrumentOwner):InstrumentInsurance
+  {
+    $this->instrumentOwner = $instrumentOwner;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentOwner.
+   *
+   * @return Musician
+   */
+  public function getInstrumentOwner():Musician
+  {
+    return $this->instrumentOwner;
+  }
+
+  /**
    * Get broker.
    *
    * @return InsuranceBroker
