@@ -1,10 +1,11 @@
+<?php
 /**
- * Orchestra member, musicion and project management application.
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,34 +21,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pme-form.pme-list.instrument-insurance {
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-  .bill-to-party {
-    .not-a-club-member {
-      color:red;
-      font-weight:bold;
-      opacity:1.0;
-    }
-    .is-club-member.is-instrument-holder {
-      opacity:0.4;
-    }
-    .not-the-instrument-holder {
-      opacity:1.0;
-    }
-  }
-  .instrument-holder {
-    .not-the-bill-to-party, .not-the-instrument-owner {
-      color:darkgreen;
-      font-weight:bold;
-    }
-  }
-  .instrument-owner {
-    .is-instrument-holder {
-      opacity:0.4;
-    }
-    .no-the-instrument-holder {
-      opacity:1.0;
-    }
-  }
+class Version20220617180000 extends AddOptionalInstrumentOwner {};
 
-}
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***

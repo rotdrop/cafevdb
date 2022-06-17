@@ -1056,7 +1056,7 @@ table.pme-main {
       max-height:24px;
       line-height:8px;
       font-size:66.67%;
-      position:relative;
+      /* position:relative; why? */
       overflow-x:clip;
       overflow-y:visible;
       text-overflow:ellipsis;

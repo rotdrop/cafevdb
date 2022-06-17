@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -53,14 +53,15 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   ];
 
   protected const INPUT_INDEX_MUSICIAN = 0;
-  protected const INPUT_INDEX_BILL_TO = 1;
-  protected const INPUT_INDEX_BROKER = 2;
-  protected const INPUT_INDEX_SCOPE = 3;
-  protected const INPUT_INDEX_OBJECT = 4;
-  protected const INPUT_INDEX_IS_ACCESSORY = 5;
-  protected const INPUT_INDEX_MANUFACTURER = 6;
-  protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = 7;
-  protected const INPUT_INDEX_INSURED_AMOUNT = 8;
+  protected const INPUT_INDEX_BILL_TO = self::INPUT_INDEX_MUSICIAN + 1;
+  protected const INPUT_INDEX_OWNER = self::INPUT_INDEX_BILL_TO +1;
+  protected const INPUT_INDEX_BROKER = self::INPUT_INDEX_OWNER + 1;
+  protected const INPUT_INDEX_SCOPE = self::INPUT_INDEX_BROKER + 1;
+  protected const INPUT_INDEX_OBJECT = self::INPUT_INDEX_SCOPE + 1;
+  protected const INPUT_INDEX_IS_ACCESSORY = self::INPUT_INDEX_OBJECT + 1;
+  protected const INPUT_INDEX_MANUFACTURER = self::INPUT_INDEX_IS_ACCESSORY + 1;
+  protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = self::INPUT_INDEX_MANUFACTURER + 1;
+  protected const INPUT_INDEX_INSURED_AMOUNT = self::INPUT_INDEX_YEAR_OF_CONSTRUCTION + 1;
 
   /** @var PageRenderer\PMETableViewBase */
   protected $renderer;

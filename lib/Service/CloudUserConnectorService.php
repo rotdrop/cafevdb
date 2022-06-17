@@ -692,11 +692,14 @@ VIEW " . $viewName . "
 AS
 SELECT t.*,
   at.musician_id AS musician_id,
-  (at.musician_id = t.bill_to_party_id) AS is_debitor,
-  (at.musician_id = t.instrument_holder_id) AS is_holder
+  (t.bill_to_party_id IS NULL OR at.musician_id = t.bill_to_party_id) AS is_debitor,
+  (at.musician_id = t.instrument_holder_id) AS is_holder,
+  (t.instrument_owner_id IS NULL OR at.musician_id = t.instrument_owner_id) AS is_owner
   FROM (SELECT " . $accessFunction . " AS musician_id) at
   INNER JOIN " . $table . " t
-    ON t.instrument_holder_id = at.musician_id OR t.bill_to_party_id = musician_id";
+    ON t.instrument_holder_id = at.musician_id
+    OR t.bill_to_party_id = musician_id
+    OR t.instrument_owner_id = musician_id ";
 
     $table = 'Files';
     $viewName = $this->personalizedViewName($dataBaseName, $table);

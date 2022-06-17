@@ -45,7 +45,8 @@ class InstrumentInsurances extends PMETableViewBase
   const BROKER_TABLE = 'InsuranceBrokers';
   const RATES_TABLE = 'InsuranceRates';
   const MEMBERSHIP_TABLE = self::PROJECT_PARTICIPANTS_TABLE . self::VALUES_TABLE_SEP . 'memberShip';
-  const BILL_TO_PARTY_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'BillToParty';
+  const BILL_TO_PARTY_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'billToParty';
+  const INSTRUMENT_OWNER_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'instrumentOwner';
 
   protected $joinStructure = [
     self::TABLE => [
@@ -263,9 +264,15 @@ class InstrumentInsurances extends PMETableViewBase
           if ($op != 'add') {
             $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
             $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
             $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+
+            empty($billToParty) && $billToParty = $instrumentHolder;
+            empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
+
             $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
             $css[] = $instrumentHolder == $billToParty ? 'is-bill-to-party' : 'not-the-bill-to-party';
+            $css[] = $instrumentHolder == $instrumentOwner ? 'is-instrument-owner' : 'not-the-instrument-owner';
           }
           return '<div class="' . implode(' ', $css) . '">';
         },
@@ -296,12 +303,57 @@ class InstrumentInsurances extends PMETableViewBase
           if ($op != 'add') {
             $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
             $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
             $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+
+            empty($billToParty) && $billToParty = $instrumentHolder;
+            empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
+
             $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
-            $css[] = $instrumentHolder == $billToParty ? 'is-instrument-holder' : 'not-the-instrument-holder';
+            $css[] = $billToParty == $instrumentHolder ? 'is-instrument-holder' : 'not-the-instrument-holder';
+            $css[] = $billToParty == $instrumentOwner? 'is-instrument-owner' : 'not-the-instrument-owner';
             $title = $isClubMember
               ? ''
               : ' title="' . $this->toolTipsService['instrument-insurance:not-a-club-member'] . '"';
+          }
+          return '<div class="' . implode(' ', $css) . '"' . $title . '>';
+        },
+        'postfix' => '</div>',
+      ],
+    ];
+
+    $joinTables[self::INSTRUMENT_OWNER_TABLE] = 'PMEjoin'.count($opts['fdd']);
+    $opts['fdd']['instrument_owner_id'] = [
+      'tab'      => [ 'id' => 'tab-all' ],
+      'name'     => $this->l->t('Owner'),
+      'css'      => [ 'postfix' => [ 'instrument-owner', 'allow-empty' ], ],
+      'select'   => 'D',
+      'maxlen'   => 11,
+      'sort'     => true,
+      'default' => 0,
+      'values' => [
+        'table' => self::MUSICIANS_TABLE,
+        'column' => 'id',
+        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'join' => ' $join_col_fqn = $main_table.instrument_owner_id',
+        //'filters' => parent::musicianInProjectSql($this->projectId),
+      ],
+      'display' => [
+        'prefix' => function($op, $pos, $k, $row, $pme) {
+          $css = [ 'cell-wrapper', 'tooltip-auto' ];
+          $title = '';
+          if ($op != 'add') {
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+
+            empty($billToParty) && $billToParty = $instrumentHolder;
+            empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
+
+            $css[] = $instrumentOwner == $billToParty ? 'is-bill-to-party' : 'not-the-bill-to-party';
+            $css[] = $instrumentOwner == $instrumentHolder ? 'is-instrument-holder' : 'not-the-instrument-holder';
+            $css[] = $isClubMember ? 'is-club-member' : 'not-a-club-member';
           }
           return '<div class="' . implode(' ', $css) . '"' . $title . '>';
         },
