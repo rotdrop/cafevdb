@@ -824,7 +824,11 @@ class ConfigService
   public function getLocale(?string $lang = null):string
   {
     if (empty($lang)) {
-      $locale = $this->l10NFactory->findLocale($this->appName);
+      $lang = $this->l10NFactory->findLanguage($this->appName);
+      if (empty($lang) || $lang == 'en') {
+        $lang = null;
+      }
+      $locale = $this->l10NFactory->findLocale($this->appName, $lang);
       $lang = $this->l10NFactory->findLanguageFromLocale($this->appName, $locale);
       $this->logDebug('Locale seems to be ' . $locale);
       $this->logDebug('Language seems to be ' . $lang);
