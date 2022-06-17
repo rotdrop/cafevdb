@@ -290,6 +290,11 @@ class ContactsService
         ->setFirstName($parts[1]);
     }
 
+    // in principle FN would be the displayName
+    if (!empty($value = $cardData['FN'])) {
+      $entity->setDisplayName($value);
+    }
+
     foreach (($cardData['TEL'] ?? []) as $tel) {
       $type = strtolower($tel['type']);
       $number = $tel['value'];
