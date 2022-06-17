@@ -92,7 +92,7 @@ class MusicianCardBackend implements ICardBackend
    */
   public function searchCards(string $pattern, array $properties): array
   {
-    $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+    // $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
 
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();

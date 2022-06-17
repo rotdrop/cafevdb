@@ -390,11 +390,8 @@ class MailMergeController extends Controller
           'strict_search' => true,
           'types' => true,
         ]);
-        if (empty($contact)) {
-          $this->logInfo('NO CONTACT FOR ' . $key);
-        } else {
+        if (!empty($contact)) {
           $contact = array_shift($contact);
-          $this->logInfo('FOUND CONTACT ' . print_r($contact, true));
 
           /** @var ContactsService $contactsService */
           $contactsService = $this->di(ContactsService::class);
