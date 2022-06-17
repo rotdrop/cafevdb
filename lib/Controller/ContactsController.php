@@ -90,15 +90,15 @@ class ContactsController extends Controller
   public function search(string $pattern, ?int $limit = null, ?int $offset = null, array $groupIds = [], array $contactUids = [], array $onlyAddressBooks = []):Response
   {
 
-    $this->logInfo('SEARCH: ' . $pattern . ' / ' . print_r(array_filter(compact('limit', 'offset')), true));
-
+    // $this->logInfo('SEARCH: ' . $pattern . ' / ' . print_r(array_filter(compact('limit', 'offset')), true));
     $searchProperties = [ 'FN', 'EMAIL' ];
     $searchOptions = array_filter(compact('limit', 'offset'));
+    $searchOptions['types'] = true;
 
     $addressBookUris = $onlyAddressBooks;
     if (!empty($addressBookUris)) {
 
-      $this->logInfo('URIS ' . print_r($addressBookUris, true));
+      // $this->logInfo('URIS ' . print_r($addressBookUris, true));
 
       $result = [];
       $addressBooks = $this->contactsManager->getUserAddressBooks();
