@@ -32,7 +32,7 @@ export default {
       const name = option.informalDisplayName || '';
       const email = option.email || this.addressItemUnknownLabel('email');
       const street = option.street || this.addressItemUnknownLabel('street');
-      const postalCode = option.postalCode ? option.postalCode + ' ' : '';
+      const postalCode = option.postalCode && option.postalCode !== '0' ? option.postalCode + ' ' : '';
       const city = option.city || this.addressItemUnknownLabel('city');
       const content = `<h4>${name}</h4>`
             + [email, street, postalCode + city, `${option.countryName} (${option.country})`].join('<br/>');

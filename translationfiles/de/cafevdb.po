@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-13 23:10+0200\n"
-"PO-Revision-Date: 2022-06-13 23:09+0200\n"
+"POT-Creation-Date: 2022-06-17 16:39+0200\n"
+"PO-Revision-Date: 2022-06-17 16:45+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -251,6 +251,13 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
 
+#: lib/Controller/ContactsController.php:82
+#: lib/Controller/EmailFormController.php:973
+#: lib/Controller/PaymentsController.php:214
+#: lib/Controller/SepaDebitMandatesController.php:1206
+msgid "UNIMPLEMENTED"
+msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
+
 #: lib/Controller/DownloadsController.php:109
 #, php-format
 msgid "File width id %d not found in database-storage."
@@ -336,12 +343,6 @@ msgstr "Formular Eingabe"
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr "Die folgenden Kontakte konnten leider nicht gespeichert werden: %s"
-
-#: lib/Controller/EmailFormController.php:973
-#: lib/Controller/PaymentsController.php:214
-#: lib/Controller/SepaDebitMandatesController.php:1206
-msgid "UNIMPLEMENTED"
-msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
 #: lib/Controller/EmailFormController.php:994
 msgid "Attachment file-names were not submitted"
@@ -577,17 +578,17 @@ msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Controller/ProjectParticipantsController.php:740
-#: lib/Database/EntityManager.php:242 lib/Documents/OpenDocumentFiller.php:314
-#: lib/Documents/OpenDocumentFiller.php:331
-#: lib/Documents/OpenDocumentFiller.php:342
-#: lib/Documents/OpenDocumentFiller.php:348
-#: lib/Documents/OpenDocumentFiller.php:349
+#: lib/Database/EntityManager.php:242 lib/Documents/OpenDocumentFiller.php:317
+#: lib/Documents/OpenDocumentFiller.php:334
+#: lib/Documents/OpenDocumentFiller.php:345
+#: lib/Documents/OpenDocumentFiller.php:351
 #: lib/Documents/OpenDocumentFiller.php:352
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:176
+#: lib/Documents/OpenDocumentFiller.php:355
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:177
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376 lib/PageRenderer/Projects.php:638
-#: lib/Service/Finance/InstrumentInsuranceService.php:921
-#: lib/Service/Finance/InstrumentInsuranceService.php:925
+#: lib/Service/Finance/InstrumentInsuranceService.php:586
+#: lib/Service/Finance/InstrumentInsuranceService.php:590
 #: lib/Service/PhoneNumberService.php:135
 #: lib/Service/PhoneNumberService.php:262 src/app/cafevdb.js:42
 #: src/app/cafevdb.js:43
@@ -644,8 +645,8 @@ msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
-"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
-"%s' stimmen nicht überein."
+"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
+"`%s' stimmen nicht überein."
 
 #: lib/Controller/LegacyEventsController.php:321
 #: lib/Controller/LegacyEventsController.php:761
@@ -689,29 +690,29 @@ msgstr "`%s' erfolgreich gelöscht."
 msgid "Method %s is not yet implemented."
 msgstr "Methode %s is noch nicht implementiert."
 
-#: lib/Controller/MailMergeController.php:179
-#: lib/Controller/MailMergeController.php:230
-#: lib/Controller/MailMergeController.php:253
+#: lib/Controller/MailMergeController.php:206
+#: lib/Controller/MailMergeController.php:290
+#: lib/Controller/MailMergeController.php:315
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] "Vorlage erfolgreich ausgefüllt, %n Dokument wurde erstellt."
 msgstr[1] "Vorlage erfolgreich ausgefüllt, %n Dokumente wurden erstellt."
 
-#: lib/Controller/MailMergeController.php:269
+#: lib/Controller/MailMergeController.php:332
 #, php-format
 msgid "Exception: \"%s\""
 msgstr "Ausnahme: \"%s\""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:284
+#: lib/Controller/MailMergeController.php:347
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
 msgid "Documents"
 msgstr "Dokumente"
 
-#: lib/Controller/MailMergeController.php:285
-#: lib/Controller/MailMergeController.php:293 src/files-hooks.js:102
-#: src/files-hooks.js:160
+#: lib/Controller/MailMergeController.php:348
+#: lib/Controller/MailMergeController.php:356 src/files-hooks.js:102
+#: src/files-hooks.js:159
 msgid "MailMerge"
 msgstr "Serienbrief"
 
@@ -778,7 +779,7 @@ msgstr "Vervollständigungsanfrage für \"%s\" wird nicht unterstützt."
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen: %s"
 
-#: lib/Controller/MusiciansController.php:114
+#: lib/Controller/MusiciansController.php:118
 msgid ""
 "Picking users from the cloud or the address-books is not yet supported, "
 "sorry."
@@ -1045,7 +1046,7 @@ msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
 #: lib/Controller/PersonalSettingsController.php:597
 #: lib/Controller/PersonalSettingsController.php:790
-#: lib/Controller/PersonalSettingsController.php:2141
+#: lib/Controller/PersonalSettingsController.php:2129
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
@@ -1330,8 +1331,8 @@ msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
-"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
-"\"."
+"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
+"\"gefangen\"."
 
 #: lib/Controller/PersonalSettingsController.php:1310
 #, php-format
@@ -1618,28 +1619,28 @@ msgstr "Gemeinsamer Ordner ist nicht festgelegt."
 msgid "Document template folder is not configured."
 msgstr "Ort für Vorlagen-Ordner ist nicht konfiguriert."
 
-#: lib/Controller/PersonalSettingsController.php:1941
-#: lib/Controller/PersonalSettingsController.php:2081
+#: lib/Controller/PersonalSettingsController.php:1940
+#: lib/Controller/PersonalSettingsController.php:2069
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: lib/Controller/PersonalSettingsController.php:1963
-#: lib/Controller/PersonalSettingsController.php:1990
-#: lib/Controller/PersonalSettingsController.php:2016
-#: lib/Controller/PersonalSettingsController.php:2047
+#: lib/Controller/PersonalSettingsController.php:1962
+#: lib/Controller/PersonalSettingsController.php:1989
+#: lib/Controller/PersonalSettingsController.php:2015
+#: lib/Controller/PersonalSettingsController.php:2035
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:2065
+#: lib/Controller/PersonalSettingsController.php:2053
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: lib/Controller/PersonalSettingsController.php:2110
+#: lib/Controller/PersonalSettingsController.php:2098
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
@@ -1648,7 +1649,7 @@ msgstr ""
 "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht "
 "implementiert."
 
-#: lib/Controller/PersonalSettingsController.php:2127
+#: lib/Controller/PersonalSettingsController.php:2115
 #: lib/Controller/PmeTableController.php:142
 #: lib/Controller/ProjectsController.php:365
 #: lib/Controller/SepaBulkTransactionsController.php:128
@@ -1656,36 +1657,36 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:2153
+#: lib/Controller/PersonalSettingsController.php:2141
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr "Wert für \"%1$s\" auf \"%2$s\" gesetzt"
 
-#: lib/Controller/PersonalSettingsController.php:2170
+#: lib/Controller/PersonalSettingsController.php:2158
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: lib/Controller/PersonalSettingsController.php:2193
+#: lib/Controller/PersonalSettingsController.php:2181
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:2195
+#: lib/Controller/PersonalSettingsController.php:2183
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:2198
+#: lib/Controller/PersonalSettingsController.php:2186
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 "Kann den App-Verschlüsselungs-Schlüssel nicht an die Person %s weitergeben, "
 "da deren öffentlicher Verschlüsselungs-Schlüssel fehlt."
 
-#: lib/Controller/PersonalSettingsController.php:2203
+#: lib/Controller/PersonalSettingsController.php:2191
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2758,8 +2759,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
-"\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
+"\"%s\"."
 msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
@@ -3048,7 +3049,7 @@ msgstr "Hilfe-Tag \"%1$s\", unauffindbare Tags %2$s"
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 
-#: lib/Documents/OpenDocumentFiller.php:179
+#: lib/Documents/OpenDocumentFiller.php:180
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
@@ -3057,7 +3058,7 @@ msgstr ""
 "Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen "
 "gefunden."
 
-#: lib/Documents/OpenDocumentFiller.php:216
+#: lib/Documents/OpenDocumentFiller.php:217
 msgid "Please install the \"unoconv\" program on the server."
 msgstr "Bitte das \"unoconv\" Programm auf dem Server installieren."
 
@@ -3871,7 +3872,6 @@ msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
 #: lib/PageRenderer/InstrumentInsurances.php:436
-#: lib/Service/Finance/InstrumentInsuranceService.php:777
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -3912,8 +3912,10 @@ msgstr "Datum"
 msgid "Total Insurance Amount"
 msgstr "Gesamtversicherungssumme"
 
+#. TRANSLATORS src/views/FilesTab.vue:132
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:96
 #: lib/Service/CloudUserConnectorService.php:393
+#: specialVueFakeDummyForL10nScript.js:88
 msgid "Musicians"
 msgstr "Personen"
 
@@ -3987,50 +3989,50 @@ msgstr "nein"
 msgid "false"
 msgstr "falsch"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:58
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:59
 #: lib/PageRenderer/Projects.php:592 templates/settings/email-settings.php:126
 msgid "Mailing List"
 msgstr "Mailing-Liste"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:68
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:69
 #: lib/PageRenderer/Musicians.php:694
 #, php-format
 msgid "invite"
 msgstr "einladen"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:70
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:223
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:71
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:224
 #: lib/PageRenderer/Projects.php:685 lib/PageRenderer/Musicians.php:694
 #, php-format
 msgid "subscribe"
 msgstr "eintragen"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:72
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:73
 msgid "no action"
 msgstr "nichts machen"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:80
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:198
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:81
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:199
 msgid "Unable to contact mailing lists service"
 msgstr "Kann keine Verbindung zum Mailing-List-Service aufnehmen."
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:167
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:168
 #: lib/PageRenderer/ProjectParticipants.php:1030
 #: templates/emailform/part.emailform.recipients.php:181
 msgid "Project Mailing List"
 msgstr "Projekt-Email-Verteiler"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:232
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:233
 #: lib/PageRenderer/Musicians.php:694
 #, php-format
 msgid "unsubscribe"
 msgstr "austragen"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:241
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:242
 msgid "enable delivery"
 msgstr "Versenden einschalten"
 
-#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:250
+#: lib/PageRenderer/FieldTraits/MailingListsTrait.php:251
 msgid "disable delivery"
 msgstr "Versenden ausschalten"
 
@@ -4174,11 +4176,11 @@ msgstr "herunterladen"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
-"\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
+"\"%s\", new: \"%s\""
 msgstr ""
-"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
-"\""
+"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
+"\"%s\""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
 #, php-format
@@ -4445,12 +4447,10 @@ msgid "Broker"
 msgstr "Anbieter"
 
 #: lib/PageRenderer/InsuranceRates.php:168
-#: lib/Service/Finance/InstrumentInsuranceService.php:775
 msgid "Scope"
 msgstr "Bereich"
 
 #: lib/PageRenderer/InsuranceRates.php:177
-#: lib/Service/Finance/InstrumentInsuranceService.php:779
 msgid "Rate"
 msgstr "Rate"
 
@@ -4830,11 +4830,11 @@ msgstr ""
 "\"Haben\"-Besetzungszahl ist die Anzahl der bereits registrierten\n"
 "Personen."
 
-#. TRANSLATORS src/views/FilesTab.vue:64
+#. TRANSLATORS src/views/FilesTab.vue:142
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:179
 #: lib/PageRenderer/ProjectParticipantFields.php:294
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:92
 msgid "Project"
 msgstr "Projekt"
 
@@ -5063,7 +5063,6 @@ msgstr "Obergrenze"
 #: lib/PageRenderer/ProjectPayments.php:474
 #: lib/PageRenderer/SepaBankAccounts.php:950
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: lib/Service/Finance/InstrumentInsuranceService.php:778
 msgid "Amount"
 msgstr "Betrag"
 
@@ -5551,8 +5550,8 @@ msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
-"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
-"\" nicht finden."
+"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id "
+"\"%2$s\" nicht finden."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1105
 #, php-format
@@ -5892,8 +5891,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: \"%2$s"
-"\"."
+"however, the following app-restriction have been imposed on the app: "
+"\"%2$s\"."
 msgstr ""
 "Das Account-Backend \"%1$s\" scheint installiert und aktiviert zu sein, "
 "jedoch mit den follgenden Einschränkungen: \"%2$s\"."
@@ -6137,7 +6136,7 @@ msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:541
+#: lib/Service/Finance/InstrumentInsuranceService.php:538
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
@@ -6147,161 +6146,7 @@ msgstr ""
 "Versicherungsübersicht. Bitte ein passendes Dokument bei den\n"
 "App-Einstellungen (Orchester->Dokumentenvorlagen) einstellen."
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:656
-#, php-format
-msgid "Annual Insurance Fees for %s, %d. %s"
-msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:660
-msgid "Overview over insured instruments and insurance fee details and summary"
-msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:675
-#: templates/instrument-insurance.php:55 templates/project-payments.php:61
-#: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
-msgid "treasurer"
-msgstr "Schatzmeister"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:697
-#, php-format
-msgid "Annular insurance fees for %d"
-msgstr "Versicherungs-Jahresbeitrag %d"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:698
-#, php-format
-msgid "Dear %s,"
-msgstr "Liebe/Lieber %s,"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:703
-msgid ""
-"this letter informs you about the details of the instrument-insurances\n"
-"we are maintaining for you on your behalf. This letter is\n"
-"machine-generated; in case of any inconsistencies or other questions\n"
-"please contact us as soon as possible in order to avoid any further\n"
-"misunderstandings. Please keep a copy of this letter in a safe\n"
-"place; further insurance-charts may only be sent automatically to you\n"
-"if something changes."
-msgstr ""
-"dieses Schreiben informiert Dich über die Instrumenten-Versicherungen,\n"
-"die wir für Dich in Deinem Auftrag verwalten. Dieser Brief wird\n"
-"automatisch erzeugt; bitte kontaktiere uns so schnell wie möglich,\n"
-"falls es Unstimmigkeiten oder andere Probleme gibt, damit weitere\n"
-"Missverständnisse vermieden werden können. Bitte bewahre dieses\n"
-"Schreiben auf; weitere Aufstellungen verschicken wir möglicherweise nur\n"
-"dann, wenn sich an der Versicherung etwas ändern\n"
-"sollte."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:711
-#, php-format
-msgid "Total Insurance Fees %s"
-msgstr "Gesamtversicherungsbeitrag %s"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:724
-msgid "Annual amount excluding taxes"
-msgstr "Jahresbeitrag ohne Steuern"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:728
-#: lib/Service/Finance/InstrumentInsuranceService.php:868
-#, php-format
-msgid "%s %% insurance taxes"
-msgstr "%s %% Versicherungssteuer"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:732
-msgid "Total amount to pay"
-msgstr "Rechnungsbetrag"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:742
-msgid ""
-"The insurance fee is always paid in advance for the next insurance period."
-msgstr ""
-"Der Versicherungsbeitrag wird immer im voraus für das nächste "
-"Versicherungsjahr gezahlt."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:743
-msgid ""
-"The amount to pay for newly insured items can be smaller than the regular "
-"annual\n"
-"fee. Partial insurance years are rounded up to full months."
-msgstr ""
-"Der Betrag für neu versicherte Gegenstände kann kleiner sein als der\n"
-"reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
-"Versicherungsjahre auf Monatsbasis berechnet wird."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:745
-msgid "This is detailed in the table on the following page."
-msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:753
-msgid ""
-"The insurance always rolls over to the next year unless explicitly "
-"terminated by you."
-msgstr ""
-"Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
-"nicht gekündigt wird."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:759
-msgid ""
-"You have granted us a debit-mandate. The total amount due will be debited "
-"from your bank-account, no further action from your side is required. We "
-"will inform you by email about the date of the debit in good time in advance "
-"of the bank transaction."
-msgstr ""
-"Du hast uns ein Lastschrift-Mandat erteilt, der oben genannte\n"
-"Gesamtbetrag wird von Deinem Konto eingezogen. Wir informieren Dich\n"
-"rechtzeitig im voraus per Email über das genaue Datum der\n"
-"Kontobelastung."
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:766
-msgid "Best wishes,"
-msgstr "Herzliche Grüße,"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:767
-#: templates/settings/orchestra-settings.php:357
-msgid "Treasurer"
-msgstr "Schatzmeister"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:774
-msgid "Vendor"
-msgstr "Anbieter"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:776
-msgid "Object"
-msgstr "Gegenstand"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:780
-msgid "Start"
-msgstr "Beginn"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:781
-msgid "Valid until"
-msgstr "Laufzeit bis"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:782
-msgid "Months"
-msgstr "Monate"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:783
-msgid "Fee"
-msgstr "Beitrag"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:819
-#, php-format
-msgid "Insured Person: %s"
-msgstr "Versicherte Person: %s"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:852
-msgid "Sub-totals (excluding taxes)"
-msgstr "Zwischensumme (ohne Steuern)"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:862
-msgid "Totals excluding taxes"
-msgstr "Gesamtsumme ohne Steuern"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:875
-msgid "Totals including taxes"
-msgstr "Gesamtsumme mit Steuern"
-
-#: lib/Service/Finance/InstrumentInsuranceService.php:916
+#: lib/Service/Finance/InstrumentInsuranceService.php:581
 msgid "Jane"
 msgstr "Susanne"
 
@@ -6865,23 +6710,23 @@ msgstr ""
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/RequestService.php:102
+#: lib/Service/RequestService.php:123 lib/Service/RequestService.php:214
 msgid "Cannot call internal route while the session is open."
 msgstr ""
 "Kann keine Anfrage an interne Adressen richten, wenn die PHP-Session noch "
 "offen ist."
 
-#: lib/Service/RequestService.php:127
+#: lib/Service/RequestService.php:146
 #, php-format
 msgid "Supported data formats are \"%1$s\" and \"%2$s\"."
 msgstr "Nur die Datenformate \"%1$s\" und \"%2$s\" werden unterstützt"
 
-#: lib/Service/RequestService.php:157
+#: lib/Service/RequestService.php:176
 #, php-format
 msgid "Invalid response from API call: \"%s\""
 msgstr "Ungültige Antwort auf eine API Anfrage: \"%s\""
 
-#: lib/Service/RequestService.php:164
+#: lib/Service/RequestService.php:183
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s"
 msgstr ""
@@ -9846,18 +9691,22 @@ msgstr ""
 msgid "Select the sender from the members of the executive board."
 msgstr "Den Absender aus dem Orga-Team auswählen."
 
-#: lib/Service/ToolTipsService.php:1198
+#: lib/Service/ToolTipsService.php:1199
 msgid "Select the recipients for the mail-merge."
 msgstr "Die Empfänger*innen für den Serienbrief auswählen."
 
-#: lib/Service/ToolTipsService.php:1199
+#: lib/Service/ToolTipsService.php:1200
+msgid "Select recipients from the one of the cloud's address-books."
+msgstr "Empfänger:innen aus einem der Adressbücherauswählen."
+
+#: lib/Service/ToolTipsService.php:1202
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 "Optional ein Projekt auswählen, um mehr Kontext-Informationen zu erzeugen."
 
-#: lib/Service/ToolTipsService.php:1200
+#: lib/Service/ToolTipsService.php:1203
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
@@ -9865,7 +9714,7 @@ msgstr ""
 "Vorzugsweise für einmalige Vorlagen-Ersetzungen oder zu Testzwecken. Einfach "
 "die ausgefüllte Vorlage herunterladen auf den eigenen Computer."
 
-#: lib/Service/ToolTipsService.php:1201
+#: lib/Service/ToolTipsService.php:1204
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
@@ -9873,11 +9722,20 @@ msgstr ""
 "Vorzugsweise bei \"echten\" Massen-Serien-Briefen und wenn die ausgefüllten "
 "Vorlagen nicht mehr weiter bearbeitet werden müssen."
 
-#: lib/Service/ToolTipsService.php:1206
+#: lib/Service/ToolTipsService.php:1205
+msgid ""
+"Download the data-set which would be substituted into the document. This is "
+"primarily meant for debuggin."
+msgstr ""
+"Den Datensatz laden, der für die Serienbrief-Ersetzungen verwendet würde. "
+"Ggf. nützlich beim Entwurf neuer Vorlagen, oder falls das Ergebnis anders "
+"aussieht als erwartet."
+
+#: lib/Service/ToolTipsService.php:1210
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsService.php:1208
+#: lib/Service/ToolTipsService.php:1212
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -9887,7 +9745,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsService.php:1212
+#: lib/Service/ToolTipsService.php:1216
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -9895,7 +9753,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsService.php:1214
+#: lib/Service/ToolTipsService.php:1218
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -9904,7 +9762,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsService.php:1216
+#: lib/Service/ToolTipsService.php:1220
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -9913,7 +9771,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsService.php:1218
+#: lib/Service/ToolTipsService.php:1222
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -10166,11 +10024,11 @@ msgid "Successfully set value for {settingsKey} to {value}"
 msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
 
 #. TRANSLATORS src/components/AdminSettings.vue:262
-#. TRANSLATORS src/views/FilesTab.vue:224
+#. TRANSLATORS src/views/FilesTab.vue:425
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:48
 #: specialVueFakeDummyForL10nScript.js:54
-#: specialVueFakeDummyForL10nScript.js:74 src/stores/participantData.js:54
+#: specialVueFakeDummyForL10nScript.js:104 src/stores/participantData.js:54
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
@@ -10207,51 +10065,114 @@ msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
 
-#. TRANSLATORS src/components/SelectMusicians.vue:159
+#. TRANSLATORS src/components/SelectContacts.vue:74
+#. TRANSLATORS src/components/SelectMusicians.vue:79
 #: specialVueFakeDummyForL10nScript.js:58
+#: specialVueFakeDummyForL10nScript.js:62
+msgid "Remove all options."
+msgstr "Alle ausgewählten Optionen entfernen"
+
+#. TRANSLATORS src/components/SelectContacts.vue:223
+#. TRANSLATORS src/components/SelectMusicians.vue:262
+#: specialVueFakeDummyForL10nScript.js:60
+#: specialVueFakeDummyForL10nScript.js:66
 msgid "** everybody **"
 msgstr "*** alle ***"
 
-#. TRANSLATORS src/views/FilesTab.vue:28
-#: specialVueFakeDummyForL10nScript.js:60
-msgid "Mail merge operation:"
-msgstr "Serienbrief-Operation:"
+#. TRANSLATORS src/components/SelectMusicians.vue:87
+#: specialVueFakeDummyForL10nScript.js:64
+msgid "Reset to initial selection."
+msgstr "Auf die Anfangsauswahl zurücksetzen."
 
-#. TRANSLATORS src/views/FilesTab.vue:34
-#: specialVueFakeDummyForL10nScript.js:62
+#. TRANSLATORS src/views/FilesTab.vue:33
+#: specialVueFakeDummyForL10nScript.js:68
+msgid "Mail merge operations"
+msgstr "Serienbrief-Operation"
+
+#. TRANSLATORS src/views/FilesTab.vue:42
+#: specialVueFakeDummyForL10nScript.js:70
 msgid "Download Merged Document"
 msgstr "Ausgefüllte Vorlage laden"
 
-#. TRANSLATORS src/views/FilesTab.vue:42
-#: specialVueFakeDummyForL10nScript.js:64
+#. TRANSLATORS src/views/FilesTab.vue:50
+#: specialVueFakeDummyForL10nScript.js:72
 msgid "Merge Document into Cloud"
 msgstr "Ergebnis in der Cloud speichern"
 
-#. TRANSLATORS src/views/FilesTab.vue:55
-#: specialVueFakeDummyForL10nScript.js:66
+#. TRANSLATORS src/views/FilesTab.vue:61
+#: specialVueFakeDummyForL10nScript.js:74
+msgid "Download Replacement Data"
+msgstr "Ersetzungs-Datensatz laden"
+
+#. TRANSLATORS src/views/FilesTab.vue:73
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "Sender"
 msgstr "Absender*in"
 
-#. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:70 templates/emailform/form.php:35
+#. TRANSLATORS src/views/FilesTab.vue:80
+#: specialVueFakeDummyForL10nScript.js:78
+msgid "e.g. John Doe"
+msgstr "z.B. Max Mustermann"
+
+#. TRANSLATORS src/views/FilesTab.vue:94
+#: specialVueFakeDummyForL10nScript.js:80 templates/emailform/form.php:35
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr "Empfänger*innen"
 
-#. TRANSLATORS src/views/FilesTab.vue:160
-#: specialVueFakeDummyForL10nScript.js:72
-#, fuzzy
-#| msgid "Required"
-msgid "Required."
-msgstr "Benötigt"
+#. TRANSLATORS src/views/FilesTab.vue:106
+#: specialVueFakeDummyForL10nScript.js:82
+msgid "Musician's Datebase"
+msgstr "Musiker-Datenbank"
 
-#. TRANSLATORS src/views/FilesTab.vue:241
-#: specialVueFakeDummyForL10nScript.js:76
+#. TRANSLATORS src/views/FilesTab.vue:115
+#: specialVueFakeDummyForL10nScript.js:84
+msgid "Addressbooks"
+msgstr "Adressbücher"
+
+#. TRANSLATORS src/views/FilesTab.vue:125
+#: specialVueFakeDummyForL10nScript.js:86
+msgid "Enter Address"
+msgstr "Anschrift eingeben"
+
+#. TRANSLATORS src/views/FilesTab.vue:133
+#: specialVueFakeDummyForL10nScript.js:90
+msgid "e.g. Jane Doe"
+msgstr "z.B. Maximiliane Musterfrau"
+
+#. TRANSLATORS src/views/FilesTab.vue:143
+#: specialVueFakeDummyForL10nScript.js:94
+msgid "e.g. Auvergne2019"
+msgstr "z.B. Auvergne2019"
+
+#. TRANSLATORS src/views/FilesTab.vue:152
+#: specialVueFakeDummyForL10nScript.js:96
+#: templates/settings/share-settings.php:86
+msgid "Contacts"
+msgstr "Kontakte"
+
+#. TRANSLATORS src/views/FilesTab.vue:153
+#: specialVueFakeDummyForL10nScript.js:98
+msgid "e.g. Bilbo Baggins"
+msgstr "z.B. Bilbo Beutlin"
+
+#. TRANSLATORS src/views/FilesTab.vue:164
+#: specialVueFakeDummyForL10nScript.js:100
+msgid "Address-Books"
+msgstr "Adressbücher"
+
+#. TRANSLATORS src/views/FilesTab.vue:300
+#: specialVueFakeDummyForL10nScript.js:102
+msgid "Required."
+msgstr "Benötigt."
+
+#. TRANSLATORS src/views/FilesTab.vue:442
+#: specialVueFakeDummyForL10nScript.js:106
 msgid "no response received from {ajaxUrl}"
 msgstr "keine Antwort von {ajaxUrl} erhalten"
 
-#. TRANSLATORS src/views/FilesTab.vue:245
-#: specialVueFakeDummyForL10nScript.js:78
+#. TRANSLATORS src/views/FilesTab.vue:446
+#: specialVueFakeDummyForL10nScript.js:108
 msgid "Could not perform mail-merge: {message}"
 msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
 
@@ -11591,7 +11512,7 @@ msgstr "Kann die Übersetzungen nicht laden."
 msgid "User Manual: {section}"
 msgstr "Benutzerhandbuch: {section}"
 
-#: src/files-hooks.js:135
+#: src/files-hooks.js:134
 msgid ""
 "Fill the template with substitutions. Opens the \"Details\" view for further "
 "options."
@@ -11649,6 +11570,10 @@ msgstr "Löschen ist fehlgeschlagen"
 #: src/legacy/calendar/calendar.js:372
 msgid "Calendar event validation caught an error."
 msgstr "Termin-Validierung fehlgeschlagen"
+
+#: src/mixins/address-popup.js:29
+msgid "{item}: unknown"
+msgstr "{item}: unbekannt"
 
 #: src/stores/participantData.js:58
 msgid "Could not fetch musician(s): {message}"
@@ -12545,6 +12470,11 @@ msgstr "Zahlungen"
 #: templates/fragments/projects/project-actions.php:198
 msgid "Financial Balance"
 msgstr "Gewinn-/Verlustrechung"
+
+#: templates/instrument-insurance.php:55 templates/project-payments.php:61
+#: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
+msgid "treasurer"
+msgstr "Schatzmeister"
 
 #: templates/instrument-insurance.php:54 templates/project-payments.php:60
 #: templates/sepa-bank-accounts.php:62 templates/sepa-bulk-transactions.php:61
@@ -13675,11 +13605,11 @@ msgstr "Auswählen "
 msgid "drop or click"
 msgstr "Ablegen oder anklicken"
 
-#: templates/settings/orchestra-settings.php:224
+#: templates/settings/orchestra-settings.php:216
 msgid "Executive board and club members"
 msgstr "Vorstands- und Vereinsmitglieder"
 
-#: templates/settings/orchestra-settings.php:232
+#: templates/settings/orchestra-settings.php:224
 msgid ""
 "Ensure that the club-member's project and the necessary infrastructure "
 "exists."
@@ -13687,15 +13617,15 @@ msgstr ""
 "Stelle sicher, dass das Vereinsmitglieder-Projekt existiert und die\n"
 "nötige Infrastruktur besitzt."
 
-#: templates/settings/orchestra-settings.php:239
+#: templates/settings/orchestra-settings.php:231
 msgid "club members project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:244
+#: templates/settings/orchestra-settings.php:236
 msgid "Club Member Project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:252
+#: templates/settings/orchestra-settings.php:244
 msgid ""
 "Ensure that the executive-board project and the necessary infrastructure "
 "exists."
@@ -13703,107 +13633,111 @@ msgstr ""
 "Stelle sicher, dass das Vorstands-Projekt existiert und die nötige\n"
 "Infrastruktur besitzt."
 
-#: templates/settings/orchestra-settings.php:259
+#: templates/settings/orchestra-settings.php:251
 msgid "executive board project"
 msgstr "Vorstands-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:264
+#: templates/settings/orchestra-settings.php:256
 msgid "Executive Board Project"
 msgstr "Vorstands-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:271
+#: templates/settings/orchestra-settings.php:263
 #: templates/settings/orchestra-settings.php:200
 #, php-format
 msgid "President"
 msgstr "Vorsitz"
 
-#: templates/settings/orchestra-settings.php:275
+#: templates/settings/orchestra-settings.php:267
 msgid "Select the President"
 msgstr "Vorsitzende(n) auswählen"
 
-#: templates/settings/orchestra-settings.php:276
+#: templates/settings/orchestra-settings.php:268
 msgid "President of the orchestra"
 msgstr "Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:285
+#: templates/settings/orchestra-settings.php:277
 msgid "Cloud President-User"
 msgstr "Cloud-Benutzer für Vorstandsvorsitz"
 
-#: templates/settings/orchestra-settings.php:286
+#: templates/settings/orchestra-settings.php:278
 msgid "Cloud user-id of the president of the orchestra"
 msgstr "Cloud-Benutzername für den/die Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:295
+#: templates/settings/orchestra-settings.php:287
 msgid "Cloud President-Group"
 msgstr "Cloud Vorstandsvorsitz-Gruppe"
 
-#: templates/settings/orchestra-settings.php:296
+#: templates/settings/orchestra-settings.php:288
 msgid "Cloud group-id of the president of the orchestra"
 msgstr "Cloud-Gruppe für den/die Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:306
+#: templates/settings/orchestra-settings.php:298
 msgid "e.g. president@me.tld"
 msgstr "z.B. praesident@me.tld"
 
-#: templates/settings/orchestra-settings.php:314
+#: templates/settings/orchestra-settings.php:306
 #: templates/settings/orchestra-settings.php:201
 #, php-format
 msgid "Secretary"
 msgstr "Schriftführung"
 
-#: templates/settings/orchestra-settings.php:318
+#: templates/settings/orchestra-settings.php:310
 msgid "Select the Secretary"
 msgstr "Schriftführer(in) auswählen"
 
-#: templates/settings/orchestra-settings.php:319
+#: templates/settings/orchestra-settings.php:311
 msgid "Secretary of the orchestra"
 msgstr "Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:328
+#: templates/settings/orchestra-settings.php:320
 msgid "Cloud Secretary-User"
 msgstr "Cloud-Benutzer für Schriftführer"
 
-#: templates/settings/orchestra-settings.php:329
+#: templates/settings/orchestra-settings.php:321
 msgid "Cloud user-id of the secretary of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:338
+#: templates/settings/orchestra-settings.php:330
 msgid "Cloud Secretary-Group"
 msgstr "Cloud Schriftführer-Gruppe"
 
-#: templates/settings/orchestra-settings.php:339
+#: templates/settings/orchestra-settings.php:331
 msgid "Cloud group-id of the secretary of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:349
+#: templates/settings/orchestra-settings.php:341
 msgid "e.g. secretary@me.tld"
 msgstr "z.B. schriftfuehrer@me.tld"
 
-#: templates/settings/orchestra-settings.php:361
+#: templates/settings/orchestra-settings.php:349
+msgid "Treasurer"
+msgstr "Schatzmeister"
+
+#: templates/settings/orchestra-settings.php:353
 msgid "Select the Treasurer"
 msgstr "Schatzmeister(in) auswählen"
 
-#: templates/settings/orchestra-settings.php:362
+#: templates/settings/orchestra-settings.php:354
 msgid "Treasurer of the orchestra"
 msgstr "Schatzmeister des Orchesters"
 
-#: templates/settings/orchestra-settings.php:371
+#: templates/settings/orchestra-settings.php:363
 msgid "Cloud Treasurer-User"
 msgstr "Cloud-Benutzer für Schatzmeister"
 
-#: templates/settings/orchestra-settings.php:372
+#: templates/settings/orchestra-settings.php:364
 msgid "Cloud user-id of the treasurer of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schatzmeister/in des Orchesters"
 
-#: templates/settings/orchestra-settings.php:381
+#: templates/settings/orchestra-settings.php:373
 msgid "Cloud Treasurer-Group"
 msgstr "Cloud Schatzmeister-Gruppe"
 
-#: templates/settings/orchestra-settings.php:382
+#: templates/settings/orchestra-settings.php:374
 msgid "Cloud group-id of the treasurer of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schatzmeister/in des Orchesters"
 
-#: templates/settings/orchestra-settings.php:392
+#: templates/settings/orchestra-settings.php:384
 msgid "e.g. treasurer@me.tld"
 msgstr "z.B. schatzmeister@me.tld"
 
@@ -14006,10 +13940,6 @@ msgstr "#Minuten"
 #: templates/settings/share-settings.php:82
 msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
-
-#: templates/settings/share-settings.php:86
-msgid "Contacts"
-msgstr "Kontakte"
 
 #: templates/settings/share-settings.php:89
 #: templates/settings/share-settings.php:92
@@ -14815,6 +14745,125 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid "Annual Insurance Fees for %s, %d. %s"
+#~ msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
+
+#~ msgid ""
+#~ "Overview over insured instruments and insurance fee details and summary"
+#~ msgstr ""
+#~ "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
+
+#, php-format
+#~ msgid "Annular insurance fees for %d"
+#~ msgstr "Versicherungs-Jahresbeitrag %d"
+
+#, php-format
+#~ msgid "Dear %s,"
+#~ msgstr "Liebe/Lieber %s,"
+
+#~ msgid ""
+#~ "this letter informs you about the details of the instrument-insurances\n"
+#~ "we are maintaining for you on your behalf. This letter is\n"
+#~ "machine-generated; in case of any inconsistencies or other questions\n"
+#~ "please contact us as soon as possible in order to avoid any further\n"
+#~ "misunderstandings. Please keep a copy of this letter in a safe\n"
+#~ "place; further insurance-charts may only be sent automatically to you\n"
+#~ "if something changes."
+#~ msgstr ""
+#~ "dieses Schreiben informiert Dich über die Instrumenten-Versicherungen,\n"
+#~ "die wir für Dich in Deinem Auftrag verwalten. Dieser Brief wird\n"
+#~ "automatisch erzeugt; bitte kontaktiere uns so schnell wie möglich,\n"
+#~ "falls es Unstimmigkeiten oder andere Probleme gibt, damit weitere\n"
+#~ "Missverständnisse vermieden werden können. Bitte bewahre dieses\n"
+#~ "Schreiben auf; weitere Aufstellungen verschicken wir möglicherweise nur\n"
+#~ "dann, wenn sich an der Versicherung etwas ändern\n"
+#~ "sollte."
+
+#, php-format
+#~ msgid "Total Insurance Fees %s"
+#~ msgstr "Gesamtversicherungsbeitrag %s"
+
+#~ msgid "Annual amount excluding taxes"
+#~ msgstr "Jahresbeitrag ohne Steuern"
+
+#, php-format
+#~ msgid "%s %% insurance taxes"
+#~ msgstr "%s %% Versicherungssteuer"
+
+#~ msgid "Total amount to pay"
+#~ msgstr "Rechnungsbetrag"
+
+#~ msgid ""
+#~ "The insurance fee is always paid in advance for the next insurance period."
+#~ msgstr ""
+#~ "Der Versicherungsbeitrag wird immer im voraus für das nächste "
+#~ "Versicherungsjahr gezahlt."
+
+#~ msgid ""
+#~ "The amount to pay for newly insured items can be smaller than the regular "
+#~ "annual\n"
+#~ "fee. Partial insurance years are rounded up to full months."
+#~ msgstr ""
+#~ "Der Betrag für neu versicherte Gegenstände kann kleiner sein als der\n"
+#~ "reguläre Jahrebeitrag, da der Beitrag für \"unvollständige\"\n"
+#~ "Versicherungsjahre auf Monatsbasis berechnet wird."
+
+#~ msgid "This is detailed in the table on the following page."
+#~ msgstr "Die Details finden sich in der Tabelle auf der nächsten Seite."
+
+#~ msgid ""
+#~ "The insurance always rolls over to the next year unless explicitly "
+#~ "terminated by you."
+#~ msgstr ""
+#~ "Die Versicherung verlängert sich stillschweigend um ein Jahr, falls sie "
+#~ "nicht gekündigt wird."
+
+#~ msgid ""
+#~ "You have granted us a debit-mandate. The total amount due will be debited "
+#~ "from your bank-account, no further action from your side is required. We "
+#~ "will inform you by email about the date of the debit in good time in "
+#~ "advance of the bank transaction."
+#~ msgstr ""
+#~ "Du hast uns ein Lastschrift-Mandat erteilt, der oben genannte\n"
+#~ "Gesamtbetrag wird von Deinem Konto eingezogen. Wir informieren Dich\n"
+#~ "rechtzeitig im voraus per Email über das genaue Datum der\n"
+#~ "Kontobelastung."
+
+#~ msgid "Best wishes,"
+#~ msgstr "Herzliche Grüße,"
+
+#~ msgid "Vendor"
+#~ msgstr "Anbieter"
+
+#~ msgid "Object"
+#~ msgstr "Gegenstand"
+
+#~ msgid "Start"
+#~ msgstr "Beginn"
+
+#~ msgid "Valid until"
+#~ msgstr "Laufzeit bis"
+
+#~ msgid "Months"
+#~ msgstr "Monate"
+
+#~ msgid "Fee"
+#~ msgstr "Beitrag"
+
+#, php-format
+#~ msgid "Insured Person: %s"
+#~ msgstr "Versicherte Person: %s"
+
+#~ msgid "Sub-totals (excluding taxes)"
+#~ msgstr "Zwischensumme (ohne Steuern)"
+
+#~ msgid "Totals excluding taxes"
+#~ msgstr "Gesamtsumme ohne Steuern"
+
+#~ msgid "Totals including taxes"
+#~ msgstr "Gesamtsumme mit Steuern"
 
 #~ msgid "Template"
 #~ msgstr "Vorlage"
