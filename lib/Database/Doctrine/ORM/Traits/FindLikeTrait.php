@@ -184,6 +184,14 @@ trait FindLikeTrait
    *   ```
    * - supports Collections\Criteria, these are applied at the end.
    *
+   * - support group-functions in order to collect grouped data, e.g.
+   *   ```[ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]```
+   *
+   * - support explicit type specification for "complicated" cases where a
+   *   mere string conversion would leads to wrong results, e.g.
+   *   ```[ foo.bar:uuid_binary => Uuid::NIL ]```
+   *   Automatic type-deduction is used only for fields of the main-table.
+   *
    * In order to filter by empty collections a left-join with the
    * main-table is performed.
    *
@@ -256,9 +264,16 @@ trait FindLikeTrait
         $groupFunction = substr($key, $fctPos+1);
         $key = substr($key, 0, $fctPos);
       }
+      $fieldType = null;
+      $typePos = strpos($key, ':');
+      if ($typePos !== false) {
+        $fieldType = substr($key, $typePos + 1);
+        $key = substr($key, 0, $typePos);
+      }
 
       $criterion = [
         'field' => $key,
+        'fieldType' => $fieldType,
         'value' => $value,
         'modifiers' => [],
         'junctors' => [],
@@ -532,7 +547,9 @@ trait FindLikeTrait
 
         $value = $criterion['value'];
         $fieldType = null;
-        if ($tableAlias == 'mainTable') {
+        if ($criterion['fieldType'] !== null) {
+          $fieldType = $criterion['fieldType'];
+        } else if ($tableAlias == 'mainTable') {
           if (!is_array($value)) {
             // try to deduce the type as this is NOT done by ORM here
             $fieldType = $this->getClassMetadata()->getTypeOfField($column);
