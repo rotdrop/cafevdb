@@ -45,7 +45,7 @@ class ImageFileData extends FileData
    * "mappedBy" and "inversedBy".
    *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="Image", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="Image", inversedBy="fileData", cascade={"all"})
    */
   protected $file;
 }

@@ -47,10 +47,7 @@ class EncryptedFile extends File
    * Not that it is not possible to override the targetEntity annotation from
    * the base-class, so it must go here to the leaf-class.
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFileData", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
+   * @ORM\OneToMany(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   protected $fileData;
 
@@ -71,7 +68,9 @@ class EncryptedFile extends File
     $this->owners = new ArrayCollection;
     $data = $data ?? '';
     $fileData = new EncryptedFileData;
-    $fileData->setData($data);
+    $fileData
+      ->setData($data)
+      ->setFile($this);
     $this->setFileData($fileData)
       ->setSize(strlen($data));
     if (!empty($owner)) {
