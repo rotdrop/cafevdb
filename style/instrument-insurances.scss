@@ -20,34 +20,58 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pme-form.pme-list.instrument-insurance {
+.pme-form.instrument-insurance.pme- {
 
-  .bill-to-party {
-    .not-a-club-member {
-      color:red;
-      font-weight:bold;
-      opacity:1.0;
-    }
-    .is-club-member.is-instrument-holder {
-      opacity:0.4;
-    }
-    .not-the-instrument-holder {
-      opacity:1.0;
-    }
-  }
-  .instrument-holder {
-    .not-the-bill-to-party, .not-the-instrument-owner {
-      color:darkgreen;
-      font-weight:bold;
-    }
-  }
-  .instrument-owner {
-    .is-instrument-holder {
-      opacity:0.4;
-    }
-    .no-the-instrument-holder {
-      opacity:1.0;
-    }
-  }
+  &list {
 
+    .bill-to-party {
+      .not-a-club-member {
+        color:red;
+        font-weight:bold;
+        opacity:1.0;
+      }
+      .is-club-member.is-instrument-holder {
+        opacity:0.4;
+      }
+      .not-the-instrument-holder {
+        opacity:1.0;
+      }
+    }
+    .instrument-holder {
+      .not-the-bill-to-party, .not-the-instrument-owner {
+        color:darkgreen;
+        font-weight:bold;
+      }
+    }
+    .instrument-owner {
+      .is-instrument-holder {
+        opacity:0.4;
+      }
+      .no-the-instrument-holder {
+        opacity:1.0;
+      }
+    }
+  }
+  &list, &view, &copy, &change, &delete {
+    td.pme- {
+      &cell, &value {
+        .operation {
+          display:inline-block;
+          background-repeat:no-repeat;
+          background-size: 20px 20px;
+          background-position: center;
+          width:24px;
+          height:24px;
+          min-height:unset;
+          margin:0;
+          vertical-align:middle;
+          padding:4px;
+          margin-right:0.5em;
+          &.open-parent {
+            background-image:url('../../../core/img/filetypes/folder-external.svg');
+          }
+        }
+      }
+    }
+  }
 }

@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -37,11 +38,14 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Common\Uuid;
 
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Common\Util;
 
 /** TBD. */
 class InstrumentInsurances extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+
   const TEMPLATE = 'instrument-insurance';
   const TABLE = self::INSTRUMENT_INSURANCES_TABLE;
   const BROKER_TABLE = 'InsuranceBrokers';
@@ -97,18 +101,28 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var InstrumentInsuranceService */
   private $insuranceService;
 
+  /** @var ProjectService */
+  private $projectService;
+
+  /** @var UserStorage */
+  private $userStorage;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , InstrumentInsuranceService $insuranceService
+    , ProjectService $projectService
+    , UserStorage $userStorage
     , ToolTipsService $toolTipsService
     , PageNavigation $pageNavigation
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
     $this->insuranceService = $insuranceService;
+    $this->projectService = $projectService;
+    $this->userStorage = $userStorage;
 
     $this->projectId = $this->getClubMembersProjectId();
     if ($this->projectId > 0) {
@@ -640,6 +654,10 @@ GROUP BY b.short_name',
       );
     }
 
+    $insuranceBillSubDir =
+      UserStorage::PATH_SEP . $this->getDocumentsFolderName()
+      . UserStorage::PATH_SEP . $this->getSupportingDocumentsFieldName();
+
     $opts['fdd']['bill'] = [
       'tab'   => [ 'id' => 'tab-all' ],
       'name'  => $this->l->t('Bill'),
@@ -647,10 +665,22 @@ GROUP BY b.short_name',
       'input' => 'VR',
       'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
-      'php|LFCDV' => function($musicianId, $op, $field, $row, $recordId, $pme) {
+      'php|LFCDV' => function($musicianId, $op, $field, $row, $recordId, $pme) use ($insuranceBillSubDir) {
 
-        // should only be called once during request life-time
-        $this->getSupportingDocumentsFieldName();
+        $musician = $this->findEntity(Entities\Musician::class, $musicianId);
+        $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+
+        try {
+          $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
+          $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $insuranceBillSubDir, subDir: true);
+          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+       title="'.$this->toolTipsService['page-renderer:instrument-insurances:open-insurance-bills'].'"
+       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+       ></a>';
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $filesAppLink = '';
+        }
 
         $insuranceId = $recordId['id'];
         $requesttoken = \OCP\Util::callRegister();
@@ -663,7 +693,7 @@ GROUP BY b.short_name',
         $downloadLink = $this->urlGenerator()->linkToRoute($route, $routeParameters);
         $downloadLink .= '?' . http_build_query(compact('requesttoken'), '', '&');
 
-        return '<a class="download-link ajax-download tooltip-auto" title="' . $toolTip . '" href="' . $downloadLink . '">' . $label . '</a>';
+        return $filesAppLink . '<a class="download-link ajax-download tooltip-auto" title="' . $toolTip . '" href="' . $downloadLink . '">' . $label . '</a>';
       }
     ];
 
