@@ -30,10 +30,12 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Common\Uuid;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -86,7 +88,7 @@ class InstrumentInsurances extends PMETableViewBase
     ],
   ];
 
-  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
+  /** @var Entities\Project */
   private $project = null;
 
   /** @var array<Types\EnumGeographicalScope> */
@@ -108,8 +110,13 @@ class InstrumentInsurances extends PMETableViewBase
 
     $this->insuranceService = $insuranceService;
 
-    $this->projectName = $this->getClubMembersProjectName();
     $this->projectId = $this->getClubMembersProjectId();
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    } else {
+      $this->projectName = $this->getClubMembersProjectName();
+    }
 
     $scopes = array_values(Types\EnumGeographicalScope::toArray());
 
@@ -641,34 +648,22 @@ GROUP BY b.short_name',
       'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
       'php|LFCDV' => function($musicianId, $op, $field, $row, $recordId, $pme) {
-        $post = [
-          'musicianId' => $musicianId,
-          'insuranceId' => $recordId['id'],
-          'requesttoken' => \OCP\Util::callRegister(),
-        ];
-        $actions = [
-          'bill' => [
-            'label' => $this->l->t('bill'),
-            'post'  => json_encode($post),
-            'title' => $this->toolTipsService['instrument-insurance:bill'],
-          ],
-        ];
-        $html = '';
-        foreach ($actions as $key => $action) {
-          $action['properties'] = $action['properties'] ?? null;
-          $html .=<<<__EOT__
-<div class="nav tooltip-left inline-block ">
-  <a class="button {$key} tooltip-auto inline-block"
-     href="#"
-     data-post='{$action['post']}'
-     {$action['properties']}
-     title="{$action['title']}">
-{$action['label']}
-  </a>
-</div>
-__EOT__;
-        }
-        return $html;
+
+        // should only be called once during request life-time
+        $this->getSupportingDocumentsFieldName();
+
+        $insuranceId = $recordId['id'];
+        $requesttoken = \OCP\Util::callRegister();
+
+        $label = $this->l->t('bill');
+        $toolTip = $this->toolTipsService['instrument-insurance:bill'];
+
+        $route = implode('.', [ $this->appName(), 'instrument_insurance', 'download', 'get' ]);
+        $routeParameters = compact('musicianId', 'insuranceId');
+        $downloadLink = $this->urlGenerator()->linkToRoute($route, $routeParameters);
+        $downloadLink .= '?' . http_build_query(compact('requesttoken'), '', '&');
+
+        return '<a class="download-link ajax-download tooltip-auto" title="' . $toolTip . '" href="' . $downloadLink . '">' . $label . '</a>';
       }
     ];
 
@@ -744,4 +739,29 @@ __EOT__;
     return true;
   }
 
+  /**
+   * Find the insurances field. Its name determines the folder in the participants storage.
+   */
+  private function getSupportingDocumentsFieldName():?string
+  {
+    if (empty($this->projectId)) {
+      return null;
+    }
+
+    /** @var Entities\ProjectParticipantField $insuranceField */
+    $insuranceField = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->findOneBy([
+      'project' => $this->projectId,
+      'multiplicity' => Types\EnumParticipantFieldMultiplicity::RECURRING,
+      'dataType' => Types\EnumParticipantFieldDataType::SERVICE_FEE,
+      'dataOptions.key:uuid_binary' => Uuid::NIL,
+      'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
+    ]);
+
+    if (!empty($insuranceField)) {
+      $this->logInfo('INSURANCE FIELD ' . $insuranceField->getName() . ' / ' . $insuranceField->getUntranslatedName());
+      $this->logInfo('MGMT ' . $insuranceField->getManagementOption()->getLabel() . ' / ' . $insuranceField->getManagementOption()->getUntranslatedLabel());
+    }
+
+    return empty($insuranceField) ? null : $insuranceField->getName();
+  }
 }
