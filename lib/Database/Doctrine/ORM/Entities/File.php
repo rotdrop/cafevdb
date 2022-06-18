@@ -88,22 +88,12 @@ class File implements \ArrayAccess
    * @var FileData
    *
    * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
+   * association in between.
    *
-   * Note that it is not possible to override the targetEntity in a
-   * child class. OTOH, lazy-loading is only possible with leaf-classes. So
-   * the OneToOne annotation must go to the leaf-classes. Hence, the
-   * File-entity can only be used through its base-classes.
-   *
-   * _AT_ORM\OneToOne(targetEntity="FileData", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
-   * _AT_ORM\JoinColumns(
-   *   _AT_ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
-   *
+   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
-  // protected $fileData;
+  protected $fileData;
 
   /**
    * @var string|null
@@ -125,8 +115,11 @@ class File implements \ArrayAccess
     $this->setMimeType($mimeType);
     $data = $data ?? '';
     $fileData = new FileData;
-    $fileData->setData($data);
-    $this->setFileData($fileData)
+    $fileData
+      ->setFile($this)
+      ->setData($data);
+    $this
+      ->setFileData($fileData)
       ->setSize(strlen($data));
   }
 
@@ -279,9 +272,8 @@ class File implements \ArrayAccess
    */
   public function setFileData(FileData $fileData):File
   {
-    $this->fileData = $fileData;
+    $this->fileData = new ArrayCollection([ $fileData ]);
     $fileData->setFile($this);
-
     return $this;
   }
 
@@ -292,6 +284,6 @@ class File implements \ArrayAccess
    */
   public function getFileData():FileData
   {
-    return $this->fileData;
+    return $this->fileData->first();
   }
 }

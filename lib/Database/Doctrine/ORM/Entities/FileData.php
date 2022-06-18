@@ -49,12 +49,11 @@ class FileData implements \ArrayAccess
    * @var File
    *
    * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
+   * association in between.
    *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="File", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="File", inversedBy="fileData", cascade={"all"})
    */
   protected $file;
 

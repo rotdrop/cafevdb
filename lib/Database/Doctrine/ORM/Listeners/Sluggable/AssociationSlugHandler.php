@@ -88,12 +88,16 @@ class AssociationSlugHandler implements SlugHandlerInterface
     list($associationField, $associationSlugField) = explode('.', $options['associationSlug']);
 
     // we must be on a to-one side, otherwise distributing the slug
-    // makes barely any sense.
-    if (!isset($meta->associationMappings[$associationField])
-        || ($meta->associationMappings[$associationField]['type'] == ORMMetaData::MANY_TO_MANY)
-        || ($meta->associationMappings[$associationField]['type'] == ORMMetaData::MANY_TO_ONE)) {
-      throw new InvalidMappingException('We are on the to-many side of '.$associationField);
-    }
+    // makes barely any sense
+    //
+    // We allow this as we use a OneToMany - ManyToOne "trick" to implement
+    // lazy OneToOne associations from the inverse side.
+
+    // if (!isset($meta->associationMappings[$associationField])
+    //     || ($meta->associationMappings[$associationField]['type'] == ORMMetaData::MANY_TO_MANY)
+    //     || ($meta->associationMappings[$associationField]['type'] == ORMMetaData::MANY_TO_ONE)) {
+    //   throw new InvalidMappingException('We are on the to-many side of '.$associationField);
+    // }
 
     $targetEntity = $meta->associationMappings[$associationField]['targetEntity'];
     /** @var ORMMetadata $targetMeta */

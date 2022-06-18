@@ -52,10 +52,7 @@ class Image extends File
    * can be loaded lazily. So we need this artificial ImageFileData class
    * which is just there to provide a lazy-loadable leaf-class.
    *
-   * @ORM\OneToOne(targetEntity="ImageFileData", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
+   * @ORM\OneToMany(targetEntity="ImageFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   protected $fileData;
 

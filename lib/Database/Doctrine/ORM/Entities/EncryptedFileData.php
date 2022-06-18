@@ -49,7 +49,7 @@ class EncryptedFileData extends FileData
    * "mappedBy" and "inversedBy".
    *
    * @ORM\Id
-   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="fileData", cascade={"all"})
    */
   protected $file;
 
