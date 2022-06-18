@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-18 10:33+0200\n"
-"PO-Revision-Date: 2022-06-18 10:36+0200\n"
+"POT-Creation-Date: 2022-06-19 00:54+0200\n"
+"PO-Revision-Date: 2022-06-19 01:01+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -3688,6 +3688,10 @@ msgstr ""
 msgid "Fix the fix for file-data lazy loading."
 msgstr "Verbessere die Verbesserung des Datei-Daten Bei-Bedarf-Ladens."
 
+#: lib/Maintenance/Migrations/FixFixFixFileDataLazyLoading.php:36
+msgid "Revert lazy-file data loading fix."
+msgstr "Den \"Lazy-Load\" fix für Dateien rückgängig machen."
+
 #: lib/Maintenance/Migrations/GeoContinentsFixedWidth.php:47
 msgid "Pin the data-type of the GeoContinents table to 2-char-fixed-width."
 msgstr "Setze Datentyp für Länder-Kürzel auf feste Länge 2 Buchstaben."
@@ -3858,7 +3862,7 @@ msgid "Instrument Insurances"
 msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
-#: lib/PageRenderer/InstrumentInsurances.php:248
+#: lib/PageRenderer/InstrumentInsurances.php:269
 #: lib/PageRenderer/ProjectPayments.php:434
 #: lib/PageRenderer/SepaBankAccounts.php:523
 #: lib/PageRenderer/SepaBulkTransactions.php:377
@@ -3866,29 +3870,29 @@ msgid "Musician"
 msgstr "Person"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
-#: lib/PageRenderer/InstrumentInsurances.php:199
-#: lib/PageRenderer/InstrumentInsurances.php:455
+#: lib/PageRenderer/InstrumentInsurances.php:220
+#: lib/PageRenderer/InstrumentInsurances.php:476
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
-#: lib/PageRenderer/InstrumentInsurances.php:474
+#: lib/PageRenderer/InstrumentInsurances.php:495
 msgid "Accessory"
 msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:153
-#: lib/PageRenderer/InstrumentInsurances.php:491
+#: lib/PageRenderer/InstrumentInsurances.php:512
 msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:154
-#: lib/PageRenderer/InstrumentInsurances.php:518
+#: lib/PageRenderer/InstrumentInsurances.php:539
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:155
-#: lib/PageRenderer/InstrumentInsurances.php:204
-#: lib/PageRenderer/InstrumentInsurances.php:536
+#: lib/PageRenderer/InstrumentInsurances.php:225
+#: lib/PageRenderer/InstrumentInsurances.php:557
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
@@ -3904,7 +3908,7 @@ msgstr "Versicherungsnummer"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:208
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:242
-#: lib/PageRenderer/InstrumentInsurances.php:443
+#: lib/PageRenderer/InstrumentInsurances.php:464
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
@@ -4280,33 +4284,33 @@ msgstr "Familie"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/PageRenderer/InstrumentInsurances.php:124
+#: lib/PageRenderer/InstrumentInsurances.php:145
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:193
+#: lib/PageRenderer/InstrumentInsurances.php:214
 msgid "Insurance brief, item, musician, broker"
 msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
-#: lib/PageRenderer/InstrumentInsurances.php:194
+#: lib/PageRenderer/InstrumentInsurances.php:215
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/PageRenderer/InstrumentInsurances.php:198
+#: lib/PageRenderer/InstrumentInsurances.php:219
 msgid "Details about the insured item"
 msgstr "Details über die versicherten Gegenstände"
 
-#: lib/PageRenderer/InstrumentInsurances.php:203
+#: lib/PageRenderer/InstrumentInsurances.php:224
 msgid "Insurance rate and total sum of insurance police"
 msgstr "Versicherungsraten und Gesamtbeitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:209
+#: lib/PageRenderer/InstrumentInsurances.php:230
 #: lib/PageRenderer/Musicians.php:313
 #: lib/PageRenderer/ProjectParticipantFields.php:252
 msgid "Miscellaneous Data"
 msgstr "Veschiedenes"
 
-#: lib/PageRenderer/InstrumentInsurances.php:214
+#: lib/PageRenderer/InstrumentInsurances.php:235
 #: lib/PageRenderer/Musicians.php:316
 #: lib/PageRenderer/ProjectParticipantFields.php:257
 #: lib/PageRenderer/ProjectParticipants.php:1463
@@ -4317,80 +4321,80 @@ msgstr "Veschiedenes"
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:232
+#: lib/PageRenderer/InstrumentInsurances.php:253
 msgid "Insurance Id"
 msgstr "Versicherungs-Id"
 
-#: lib/PageRenderer/InstrumentInsurances.php:287
+#: lib/PageRenderer/InstrumentInsurances.php:308
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/PageRenderer/InstrumentInsurances.php:330
+#: lib/PageRenderer/InstrumentInsurances.php:351
 msgid "Owner"
 msgstr "Eigentümer"
 
-#: lib/PageRenderer/InstrumentInsurances.php:370
+#: lib/PageRenderer/InstrumentInsurances.php:391
 msgid "Club Member"
 msgstr "Vereinsmitglied"
 
-#: lib/PageRenderer/InstrumentInsurances.php:390
-#: lib/PageRenderer/InstrumentInsurances.php:397
+#: lib/PageRenderer/InstrumentInsurances.php:411
+#: lib/PageRenderer/InstrumentInsurances.php:418
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/PageRenderer/InstrumentInsurances.php:496
+#: lib/PageRenderer/InstrumentInsurances.php:517
 msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
 msgstr "z.B. Bilbo Beutlin, Hobbingen, Auenland"
 
-#: lib/PageRenderer/InstrumentInsurances.php:507
+#: lib/PageRenderer/InstrumentInsurances.php:528
 #, php-format
 msgid "around %1$04d"
 msgstr "um %1$04d"
 
-#: lib/PageRenderer/InstrumentInsurances.php:511
+#: lib/PageRenderer/InstrumentInsurances.php:532
 #, php-format
 msgid "end of %1$02dth century"
 msgstr "Ende des %1$02en Jahrhunderts"
 
-#: lib/PageRenderer/InstrumentInsurances.php:524
+#: lib/PageRenderer/InstrumentInsurances.php:545
 msgid "e.g. \"1921\" or \"around 1900\""
 msgstr "z.B. \"1921\" oder \"um 1900\""
 
-#: lib/PageRenderer/InstrumentInsurances.php:553
+#: lib/PageRenderer/InstrumentInsurances.php:574
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/InstrumentInsurances.php:571
+#: lib/PageRenderer/InstrumentInsurances.php:592
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:571
+#: lib/PageRenderer/InstrumentInsurances.php:592
 msgid "including taxes"
 msgstr "inklusive Steuern"
 
-#: lib/PageRenderer/InstrumentInsurances.php:591
+#: lib/PageRenderer/InstrumentInsurances.php:612
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/PageRenderer/InstrumentInsurances.php:602
+#: lib/PageRenderer/InstrumentInsurances.php:623
 #: lib/PageRenderer/Musicians.php:838
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/PageRenderer/InstrumentInsurances.php:621
+#: lib/PageRenderer/InstrumentInsurances.php:642
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/PageRenderer/InstrumentInsurances.php:629
+#: lib/PageRenderer/InstrumentInsurances.php:650
 msgid "End of Insurance"
 msgstr "Versicherungsende"
 
-#: lib/PageRenderer/InstrumentInsurances.php:638
+#: lib/PageRenderer/InstrumentInsurances.php:663
 msgid "Bill"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/InstrumentInsurances.php:651
+#: lib/PageRenderer/InstrumentInsurances.php:688
 msgid "bill"
 msgstr "Rechnung"
 
@@ -7697,7 +7701,8 @@ msgstr ""
 #: lib/Service/ToolTipsService.php:455
 msgid ""
 "The person who actually uses or \"has\" this instrument or insured object."
-msgstr "Die Person, die das Instrument in Ihrem Besitz hat und tatsächlich verwendet."
+msgstr ""
+"Die Person, die das Instrument in Ihrem Besitz hat und tatsächlich verwendet."
 
 #: lib/Service/ToolTipsService.php:456
 msgid ""

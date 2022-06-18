@@ -646,6 +646,7 @@
     "Generate a row-access-token for everyone with a public key." : "Einen personalisierten Zugriffscode für jeden erzeugen, der einen öffentlichen Schlüssel besitzt.",
     "Fix file-data lazy loading by using one-directional one-to-one from both sides." : "Datei-Daten \"Lazy-Loading\" durch beidseitige uni-direktionale\neins-zu-eins Verknüpfungen ermöglichen.",
     "Fix the fix for file-data lazy loading." : "Verbessere die Verbesserung des Datei-Daten Bei-Bedarf-Ladens.",
+    "Revert lazy-file data loading fix." : "Den \"Lazy-Load\" fix für Dateien rückgängig machen.",
     "Pin the data-type of the GeoContinents table to 2-char-fixed-width." : "Setze Datentyp für Länder-Kürzel auf feste Länge 2 Buchstaben.",
     "Replace the legacy country-continent solution by a simple join-table." : "Ersetze die Land-Kontinent Verknüpfung durch eine simple Pivot-Tabelle.",
     "Add some additional search indexes" : "Einige Such-Indexe hinzufügen.",
