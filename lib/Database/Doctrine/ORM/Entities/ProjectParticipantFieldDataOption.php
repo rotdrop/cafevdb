@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  *    }
  * )
  * @ORM\Entity
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation", idToString={"key"="BIN2UUID(%s)"})
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
