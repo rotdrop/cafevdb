@@ -509,6 +509,12 @@ $routes = [
       'url' => '/insurance/download',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'instrument_insurance#download',
+      'url' => '/insurance/download/{musicianId}/{insuranceId}',
+      'verb' => 'GET',
+      'postfix' => '.get',
+    ],
     /**
      * Email form, mass email sending
      */
