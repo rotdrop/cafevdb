@@ -278,6 +278,7 @@ class InstrumentInsurances extends PMETableViewBase
         },
         'postfix' => '</div>',
       ],
+      'tooltip' => $this->toolTipsService['page-renderer:instrument-insurances:instrument-holder'],
     ];
 
     $joinTables[self::BILL_TO_PARTY_TABLE] = 'PMEjoin'.count($opts['fdd']);
@@ -320,6 +321,7 @@ class InstrumentInsurances extends PMETableViewBase
         },
         'postfix' => '</div>',
       ],
+      'tooltip' => $this->toolTipsService['page-renderer:instrument-insurances:bill-to-party'],
     ];
 
     $joinTables[self::INSTRUMENT_OWNER_TABLE] = 'PMEjoin'.count($opts['fdd']);
@@ -359,6 +361,7 @@ class InstrumentInsurances extends PMETableViewBase
         },
         'postfix' => '</div>',
       ],
+      'tooltip' => $this->toolTipsService['page-renderer:instrument-insurances:instrument-owner'],
     ];
 
     $this->makeJoinTableField(

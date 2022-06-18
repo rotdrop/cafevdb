@@ -451,6 +451,11 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
           'edit-project-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
         ],
+        'instrument-insurances' => [
+          'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),
+          'bill-to-party' => $this->l->t('The person who pays the insurance fees. If left blank then the instrument-holder receives the bills.'),
+          'instrument-owner' => $this->l->t('The person who has the legal possession of this instrument. If left blank then it is assumed that the instrument holder is also the instrument owner.'),
+        ],
       ],
 
       'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
