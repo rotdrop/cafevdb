@@ -40,7 +40,7 @@ use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\PHPMailer;
 
-class MusiciansValidationController extends Controller {
+class MusicianValidationController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
