@@ -1068,6 +1068,17 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'address_supplement',
+      [
+        'name'     => $this->l->t('Address Supplement'),
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'css'      => [ 'postfix' => [ 'musician-address', 'address-supplement', ], ],
+        'maxlen'   => 128,
+        'input|LF' => 'H',
+        'tooltip'  => $this->toolTipsService['page-renderer:musicians:address-supplement'],
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'street',
       [
         'name'     => $this->l->t('Street'),
@@ -1077,12 +1088,28 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'street_number',
+      [
+        'name'     => $this->l->t('Street Number'),
+        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'css'      => [ 'postfix' => [ 'musician-address', 'street-number', ], ],
+        'maxlen'   => 32,
+        'size'     => 11,
+        'input|LF' => 'H',
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
       [
         'name'     => $this->l->t('Postal Code'),
         'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'postal-code', ], ],
         'maxlen'   => 11,
+        'sql|FL'   => 'CONCAT(
+  IF(COALESCE($join_table.address_supplement, "") <> "",
+    CONCAT($join_table.address_supplement, ", "),
+    ""),
+  $join_table.street, " ", $join_table.street_number)',
       ]);
 
     $this->makeJoinTableField(

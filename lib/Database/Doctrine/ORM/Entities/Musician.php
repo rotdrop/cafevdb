@@ -155,6 +155,24 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
+   * The street-number. I may actually be alpha-numeric like "2a" or something, so it is a string.
+   *
+   * @ORM\Column(type="string", length=32, nullable=true)
+   */
+  private $streetNumber;
+
+  /**
+   * @var string
+   *
+   * Additional address information, like "Appartment 200" or c/o.
+   *
+   * @ORM\Column(type="string", length=128, nullable=true)
+   */
+  private $addressSupplement;
+
+  /**
+   * @var string
+   *
    * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
   private $country;
@@ -475,6 +493,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getStreet()
   {
     return $this->street;
+  }
+
+  /**
+   * Set streetNumber.
+   *
+   * @param string $streetNumber
+   *
+   * @return Musician
+   */
+  public function setStreetNumber($streetNumber):Musician
+  {
+    $this->streetNumber = $streetNumber;
+
+    return $this;
+  }
+
+  /**
+   * Get streetNumber.
+   *
+   * @return string
+   */
+  public function getStreetNumber()
+  {
+    return $this->streetNumber;
+  }
+
+  /**
+   * Set addressSupplement.
+   *
+   * @param string $addressSupplement
+   *
+   * @return Musician
+   */
+  public function setAddressSupplement($addressSupplement):Musician
+  {
+    $this->addressSupplement = $addressSupplement;
+
+    return $this;
+  }
+
+  /**
+   * Get addressSupplement.
+   *
+   * @return string
+   */
+  public function getAddressSupplement()
+  {
+    return $this->addressSupplement;
   }
 
   /**

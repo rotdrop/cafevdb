@@ -51,6 +51,8 @@ trait FlattenEntityTrait
     $musicianData['name'] = $musicianData['personalPublicName'];
     $musicianData['phone'] = $musicianData['fixedLinePhone'];
     $musicianData['mobile'] = $musicianData['mobilePhone'];
+    $musicianData['streetAndNumber'] = $musicianData['street'] . ' ' . $musicianData['streetNumber'];
+    $musicianData['numberAndStreet'] = $musicianData['streetNumber'] . ' ' . $musicianData['street'];
 
     if ($only === null) {
       $only = [

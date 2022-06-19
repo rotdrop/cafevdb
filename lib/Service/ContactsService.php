@@ -361,7 +361,22 @@ class ContactsService
         $address = Util::normalizeSpaces($address); // unicode
         $address = explode(';', $address);
 
-        $entity['street'] = $address[2];
+        $entity['addressSupplement'] = $address[1];
+        $street = Util::normalizeSpaces($address[2]);
+        // if the first word or the last word of the street start with a
+        // digit, then we treat it as the street-number. This should hack most
+        // of the cases for _us_ ...
+        $lastWord = substr($street, strrchr($street, ' ') + 1);
+        $firstWord = substr($street, 0, strchr($street, ' '));
+        if (ctype_digit($lastWorkd[0])) {
+          $streetNumber = $lastWord;
+          $street = substr($street, 0, -strlen($lastWord)-1);
+        } else if (ctype_digit($firstWord[0])) {
+          $streetNumber = $firstWord;
+          $street = substr($street, strlen($firstWord) + 1);
+        }
+        $entity['street'] = $street;
+        $entity['streetNumber'] = $streetNumber;
         $entity['city'] = $address[3];
         $entity['postalCode'] = $address[5];
         $entity['country'] = $address[6];
@@ -503,8 +518,8 @@ class ContactsService
 
     $vcard->add('ADR',
                 [ '', // PO box
-                  '', // address extension (appartment nr. and such)
-                  $musician['street'], // street
+                  $musician['addressSupplement'], // address extension (appartment nr. and such)
+                  $musician['street'] . ' ' . $musician['streetNumber'], // street
                   $musician['city'], // city
                   '', // province
                   $musician['postalCode'], //zip code

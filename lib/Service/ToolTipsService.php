@@ -415,6 +415,7 @@ invited to have a look, but please do not change anything unless you know what y
               'reject' => $this->l->t('Cancel a pending subscription or invitation request.'),
             ],
           ],
+          'address-supplement' => $this->l->t('Additional required address parts like "c/o X Y" or "Apt. N"'),
         ],
         'participants' => [
           'mailing-list' => [

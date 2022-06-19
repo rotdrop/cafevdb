@@ -727,14 +727,41 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
+    $opts['fdd']['address_supplement'] = [
+      'tab'      => ['id' => 'contact'],
+      'name'     => $this->l->t('Address Supplement'),
+      'css'      => ['postfix' => [ 'musician-address', 'street', ], ],
+      'input|LF' => 'H',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true,
+      'tooltip'  => $this->toolTipsService['page-renderer:musicians:address-supplement'],
+    ];
+
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street'),
       'css'      => ['postfix' => [ 'musician-address', 'street', ], ],
+      'sql|FL'   => 'CONCAT(
+  IF(COALESCE($table.address_supplement, "") <> "",
+    CONCAT($table.address_supplement, ", "),
+    ""),
+  $table.street, " ", $table.street_number)',
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,
       'tooltip' => $this->toolTipsService['autocomplete:require-three'],
+    ];
+
+    $opts['fdd']['street_number'] = [
+      'tab'      => ['id' => 'contact'],
+      'name'     => $this->l->t('Street Number'),
+      'css'      => ['postfix' => [ 'musician-address', 'street-number', ], ],
+      'input|LF' => 'H',
+      'select'   => 'T',
+      'size'     => 11,
+      'maxlen'   => 32,
+      'sort'     => true,
     ];
 
     $opts['fdd']['postal_code'] = [
