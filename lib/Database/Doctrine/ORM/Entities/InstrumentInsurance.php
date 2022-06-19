@@ -208,7 +208,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getInstrumentOwner():Musician
+  public function getInstrumentOwner():?Musician
   {
     return $this->instrumentOwner;
   }
