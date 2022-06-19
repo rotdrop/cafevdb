@@ -59,7 +59,7 @@ class InstrumentationService
    * Generate a dummy musician entity which can be used during
    * (email-)form validation and similar things.
    *
-   * The musician will be created as disabled or soft deleted.e
+   * The musician will be created as disabled or soft deleted.
    *
    * @param null|Entities\Project $project A project to attach the dummy to.
    *
@@ -83,17 +83,19 @@ class InstrumentationService
       $dummy = Entities\Musician::create();
     }
     $dummy->setSurName($this->l->t('Doe'))
-          ->setFirstName($this->l->t('John'))
-          ->setCountry('AQ')
-          ->setCity($this->l->t('Nowhere'))
-          ->setStreet($this->l->t('42, Undiscoverable'))
-          ->setPostalCode('Z-7')
-          ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
-          ->setBirthday(new \DateTimeImmutable)
-          ->setMobilePhone('0815')
-          ->setFixedLinePhone('4711')
-          ->setDeleted(new \DateTimeImmutable)
-          ->setUuid(Uuid::NIL);
+      ->setFirstName($this->l->t('John'))
+      ->setAddressSupplement('Igloo 13')
+      ->setStreet($this->l->t('Undiscoverable'))
+      ->setStreetNumber(42)
+      ->setPostalCode('Z-7')
+      ->setCity($this->l->t('Nowhere'))
+      ->setCountry('AQ')
+      ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
+      ->setBirthday(new \DateTimeImmutable)
+      ->setMobilePhone('0815')
+      ->setFixedLinePhone('4711')
+      ->setDeleted(new \DateTimeImmutable)
+      ->setUuid(Uuid::NIL);
     if ($persist) {
       $this->persist($dummy);
     }
