@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-19 23:37+0200\n"
-"PO-Revision-Date: 2022-06-19 23:38+0200\n"
+"POT-Creation-Date: 2022-06-20 07:59+0200\n"
+"PO-Revision-Date: 2022-06-20 08:00+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4318,11 +4318,11 @@ msgstr "Veschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:235
 #: lib/PageRenderer/Musicians.php:316
 #: lib/PageRenderer/ProjectParticipantFields.php:257
-#: lib/PageRenderer/ProjectParticipants.php:1489
+#: lib/PageRenderer/ProjectParticipants.php:1490
 #: lib/PageRenderer/ProjectPayments.php:370
 #: lib/PageRenderer/SepaBankAccounts.php:992
 #: lib/PageRenderer/SepaBulkTransactions.php:255
-#: lib/Service/InstrumentationService.php:185
+#: lib/Service/InstrumentationService.php:187
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
@@ -4382,7 +4382,7 @@ msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
 #: lib/PageRenderer/InstrumentInsurances.php:623
-#: lib/PageRenderer/Musicians.php:864
+#: lib/PageRenderer/Musicians.php:865
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
@@ -4523,7 +4523,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:307
-#: lib/PageRenderer/ProjectParticipants.php:1472
+#: lib/PageRenderer/ProjectParticipants.php:1473
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -4629,52 +4629,52 @@ msgstr "Straße"
 msgid "Street Number"
 msgstr "Hausnummer"
 
-#: lib/PageRenderer/Musicians.php:768
-#: lib/PageRenderer/ProjectParticipants.php:1103
+#: lib/PageRenderer/Musicians.php:769
+#: lib/PageRenderer/ProjectParticipants.php:1104
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/PageRenderer/Musicians.php:777
-#: lib/PageRenderer/ProjectParticipants.php:1117
+#: lib/PageRenderer/Musicians.php:778
+#: lib/PageRenderer/ProjectParticipants.php:1118
 msgid "City"
 msgstr "Stadt"
 
-#: lib/PageRenderer/Musicians.php:789
-#: lib/PageRenderer/ProjectParticipants.php:1129
+#: lib/PageRenderer/Musicians.php:790
+#: lib/PageRenderer/ProjectParticipants.php:1130
 msgid "Country"
 msgstr "Land"
 
-#: lib/PageRenderer/Musicians.php:804
-#: lib/PageRenderer/ProjectParticipants.php:1147
+#: lib/PageRenderer/Musicians.php:805
+#: lib/PageRenderer/ProjectParticipants.php:1148
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/PageRenderer/Musicians.php:822
-#: lib/PageRenderer/ProjectParticipants.php:1167
+#: lib/PageRenderer/Musicians.php:823
+#: lib/PageRenderer/ProjectParticipants.php:1168
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/PageRenderer/Musicians.php:852
+#: lib/PageRenderer/Musicians.php:853
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/PageRenderer/Musicians.php:883
-#: lib/PageRenderer/ProjectParticipants.php:1179
+#: lib/PageRenderer/Musicians.php:884
+#: lib/PageRenderer/ProjectParticipants.php:1180
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/PageRenderer/Musicians.php:945
-#: lib/PageRenderer/ProjectParticipants.php:1238
+#: lib/PageRenderer/Musicians.php:946
+#: lib/PageRenderer/ProjectParticipants.php:1239
 #: lib/PageRenderer/Projects.php:858
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/PageRenderer/Musicians.php:957
-#: lib/PageRenderer/ProjectParticipants.php:1250 src/app/ajax.js:31
+#: lib/PageRenderer/Musicians.php:958
+#: lib/PageRenderer/ProjectParticipants.php:1251 src/app/ajax.js:31
 msgid "Created"
 msgstr "Erzeugt"
 
-#: lib/PageRenderer/Musicians.php:970
+#: lib/PageRenderer/Musicians.php:971
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -5180,27 +5180,27 @@ msgstr "Person gelöscht"
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1448
-#: lib/Service/InstrumentationService.php:156
+#: lib/PageRenderer/ProjectParticipants.php:1449
+#: lib/Service/InstrumentationService.php:158
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1453
-#: lib/Service/InstrumentationService.php:161
+#: lib/PageRenderer/ProjectParticipants.php:1454
+#: lib/Service/InstrumentationService.php:163
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1460
-#: lib/Service/InstrumentationService.php:168
+#: lib/PageRenderer/ProjectParticipants.php:1461
+#: lib/Service/InstrumentationService.php:170
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1477
-#: lib/Service/InstrumentationService.php:180
+#: lib/PageRenderer/ProjectParticipants.php:1478
+#: lib/Service/InstrumentationService.php:182
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1484
+#: lib/PageRenderer/ProjectParticipants.php:1485
 #: lib/PageRenderer/SepaBankAccounts.php:985
 msgid "Miscinfo"
 msgstr "Verschiedenes"
@@ -6317,14 +6317,14 @@ msgid "John"
 msgstr "Max"
 
 #: lib/Service/InstrumentationService.php:88
+msgid "Undiscoverable"
+msgstr "Unauffindbarweg"
+
+#: lib/Service/InstrumentationService.php:91
 msgid "Nowhere"
 msgstr "Nirgends"
 
-#: lib/Service/InstrumentationService.php:89
-msgid "42, Undiscoverable"
-msgstr "Unauffindbarweg 42"
-
-#: lib/Service/InstrumentationService.php:175
+#: lib/Service/InstrumentationService.php:177
 msgid "Project file attachments"
 msgstr "Datei-Anhänge"
 
