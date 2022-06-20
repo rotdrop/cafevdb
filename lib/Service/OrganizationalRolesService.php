@@ -86,6 +86,8 @@ class OrganizationalRolesService
       'email' => $musician->getEmail(),
       'name' => $musician->getPublicName(true),
       'street' => $musician->getStreet(),
+      'streetNumber' => $musician->getStreetNumber(),
+      'streetAndNumber' => $musician->getStreet() . ' ' . $musician->getStreetNumber(),
       'postalCode' => $musician->getPostalCode(),
       'city' => $musician->getCity(),
       'phone' => $musician->getFixedLinePhone(),
@@ -115,7 +117,7 @@ class OrganizationalRolesService
           switch ($key) {
           case 'email': $item = $user->getEMailAddress(); break;
           case 'name': $item =  $name = $user->getDisplayName(); break;
-          case 'street': $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS); break;
+          case 'streetAndNumber': $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS); break;
           case 'phone': $item = $account->getProperty(IAccountManager::PROPERTY_PHONE); break;
           case 'postalCode':
           case 'city':
