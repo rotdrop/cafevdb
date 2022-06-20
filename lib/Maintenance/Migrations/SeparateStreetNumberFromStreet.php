@@ -42,10 +42,12 @@ class SeparateStreetNumberFromStreet extends AbstractMigration
       // this somehow assumes that only old German addresses have to be
       // changed. However, it does not play a role for new installations, so
       // ...
-      'UPDATE Musicians SET
+      <<<'EOS'
+UPDATE Musicians SET
   street_number = REGEXP_REPLACE(street, "^\\s*([\\w\\s\\d._:/-]+?)\\s+(\\d+.*)$", "\\2"),
   street = REGEXP_REPLACE(street, "^\\s*([\\w\\s\\d._:/-]+?)\\s+(\\d+.*)$", "\\1")
-WHERE street REGEXP "^\\s*([\\w\\s\\d._:/-]+?)\\s+(\\d+.*)$"',
+WHERE street REGEXP "^\\s*([\\w\\s\\d._:/-]+?)\\s+(\\d+.*)$"
+EOS,
       // supplements cannot be extracted automatically
     ],
   ];
