@@ -213,7 +213,11 @@ class MailMergeController extends Controller
             $filledFileName = $fileName;
             $filledFile = pathinfo($filledFileName);
             $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . 'json';
-            return $this->dataDownloadResponse($fillData, $filledFileName, 'application/json');
+            if (!empty($blocks)) {
+              $fillData['__blocks__'] = $blocks;
+            }
+            $fileData = json_encode($fillData);
+            return $this->dataDownloadResponse($fileData, $filledFileName, 'application/json');
         }
       } else {
 
@@ -271,7 +275,11 @@ class MailMergeController extends Controller
               list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
               break;
             case self::OPERATION_DATASET:
-              $fileData = json_encode($this->documentFiller->fillData($recipientTemplateData));
+              $fillData = $this->documentFiller->fillData($recipientTemplateData);
+              if (!empty($blocks)) {
+                $fillData['__blocks__'] = $blocks;
+              }
+              $fileData = json_encode($fillData);
               $filledFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.' . 'json';
               $mimeType = 'application/json';
               break;
