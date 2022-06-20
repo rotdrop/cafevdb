@@ -40,6 +40,7 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
+import { sys as pmeSys } from './pme-selectors.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
@@ -285,6 +286,9 @@ const myLoadMusicians = function(form, ids, projectMode, afterLoadCallback) {
     template,
     templateRenderer: Page.templateRenderer(template),
   };
+  if (projectMode) {
+    inputTweak[pmeSys('fl')] = 1;
+  }
 
   loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
 };
