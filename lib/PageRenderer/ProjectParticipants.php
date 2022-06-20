@@ -1074,7 +1074,7 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'address-supplement', ], ],
         'maxlen'   => 128,
-        'input|LF' => 'H',
+        'input|LF' => $expertMode ? '' : 'H',
         'tooltip'  => $this->toolTipsService['page-renderer:musicians:address-supplement'],
       ]);
 
@@ -1085,6 +1085,11 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'street', ], ],
         'maxlen'   => 128,
+        'sql|FL'   => 'CONCAT(
+  IF(COALESCE($join_table.address_supplement, "") <> "",
+    CONCAT($join_table.address_supplement, ", "),
+    ""),
+  $join_table.street, COALESCE(CONCAT(" ", $join_table.street_number), ""))',
       ]);
 
     $this->makeJoinTableField(
@@ -1095,7 +1100,7 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => [ 'musician-address', 'street-number', ], ],
         'maxlen'   => 32,
         'size'     => 11,
-        'input|LF' => 'H',
+        'input|LF' => $expertMode ? '' : 'H',
       ]);
 
     $this->makeJoinTableField(
