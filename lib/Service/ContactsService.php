@@ -366,14 +366,18 @@ class ContactsService
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
         // of the cases for _us_ ...
-        $lastWord = substr($street, strrchr($street, ' ') + 1);
-        $firstWord = substr($street, 0, strchr($street, ' '));
-        if (ctype_digit($lastWorkd[0])) {
+        $this->logInfo('STREET IS ' . $street);
+        $lastWord = substr($street, strrpos($street, ' ') + 1);
+        $firstWord = substr($street, 0, strpos($street, ' '));
+        $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
+        if (ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
         } else if (ctype_digit($firstWord[0])) {
           $streetNumber = $firstWord;
           $street = substr($street, strlen($firstWord) + 1);
+        } else {
+          $streetNumber = '';
         }
         $entity['street'] = $street;
         $entity['streetNumber'] = $streetNumber;
