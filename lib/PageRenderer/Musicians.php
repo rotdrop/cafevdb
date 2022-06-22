@@ -393,7 +393,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Surname'),
-      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
       'input|LF' => 'H',
       // 'options'  => 'AVCPD',
       'select'   => 'T',
@@ -404,7 +404,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['first_name'] = [
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Forename'),
-      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
       'input|LF' => 'H',
       'select'   => 'T',
       'maxlen'   => 128,
@@ -414,7 +414,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['nick_name'] = [
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Nickname'),
-      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
+      'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
       'input|LF' => 'H',
       'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
       'select'   => 'T',
@@ -696,7 +696,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['mobile_phone'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Mobile Phone'),
-      'css'      => ['postfix' => [ 'phone-number', ], ],
+      'css'      => ['postfix' => [ 'phone-number', 'duplicates-indicator', ], ],
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -710,7 +710,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['fixed_line_phone'] = [
       'tab'      => ['id' => [ 'contact', ], ],
       'name'     => $this->l->t('Fixed Line Phone'),
-      'css'      => ['postfix' => [ 'phone-number', ], ],
+      'css'      => ['postfix' => [ 'phone-number', 'duplicates-indicator', ], ],
       'display'  => [
         'popup' => function($data) {
           return $this->phoneNumberService->metaData($data, null, '<br/>');
@@ -724,13 +724,16 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['email'] = $this->defaultFDD['email'];
     $opts['fdd']['email']['tab'] = ['id' => 'contact'];
     $opts['fdd']['email']['input'] = ($opts['fdd']['email']['input'] ?? '') . 'M';
+    $opts['fdd']['email']['css|VD'] = [ 'postfix' => [ 'email', ], ];
+    $opts['fdd']['email']['css']['postfix'][] = 'duplicates-indicator';
+    $opts['fdd']['email']['css']['postfix'][] = $addCSS;
 
     $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
     $opts['fdd']['address_supplement'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Address Supplement'),
-      'css'      => ['postfix' => [ 'musician-address', 'street', ], ],
+      'css'      => ['postfix' => [ 'musician-address', 'street', 'duplicates-indicator', $addCSS, ], ],
       'input|LF' => $expertMode ? '' : 'H',
       'select'   => 'T',
       'maxlen'   => 128,
@@ -741,7 +744,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['street'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street'),
-      'css'      => ['postfix' => [ 'musician-address', 'street', ], ],
+      'css'      => ['postfix' => [ 'musician-address', 'street', 'duplicates-indicator', $addCSS, ], ],
       'sql|FL'   => 'CONCAT(
   IF(COALESCE($table.address_supplement, "") <> "",
     CONCAT($table.address_supplement, ", "),
@@ -756,7 +759,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['street_number'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street Number'),
-      'css'      => ['postfix' => [ 'musician-address', 'street-number', ], ],
+      'css'      => ['postfix' => [ 'musician-address', 'street-number', 'duplicates-indicator', $addCSS, ], ],
       'input|LF' => $expertMode ? '' : 'H',
       'select'   => 'T',
       'size'     => 11,
@@ -767,7 +770,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['postal_code'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Postal Code'),
-      'css'      => ['postfix' => [ 'musician-address', 'postal-code', ], ],
+      'css'      => ['postfix' => [ 'musician-address', 'postal-code', 'duplicates-indicator', $addCSS, ], ],
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true,
@@ -776,7 +779,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['city'] = [
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('City'),
-      'css'      => ['postfix' => [ 'musician-address', 'city', ], ],
+      'css'      => ['postfix' => [ 'musician-address', 'city', 'duplicates-indicator', $addCSS, ], ],
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true,

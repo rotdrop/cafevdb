@@ -31,9 +31,10 @@ import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
-import { token as pmeToken, data as pmeData } from './pme-selectors.js';
+import { token as pmeToken, data as pmeData, sys as pmeSys } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 
+require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 require('sepa-bank-accounts.scss');
@@ -575,7 +576,7 @@ const ready = function(container) {
   // avoid duplicate entries in the DB, but only when adding new
   // musicians.
   $form
-    .find('input.musician-name.add-musician')
+    .find('input.add-musician.duplicates-indicator')
     .off('blur')
     .on('blur', function(event) {
 
@@ -603,62 +604,64 @@ const ready = function(container) {
             return;
           }
 
-          if (!$.isEmptyObject(data.duplicates)) {
-            let numDuplicates = 0;
-            const ids = [];
-            for (const id in data.duplicates) {
-              ++numDuplicates;
-              ids.push(id);
+          data.duplicates = data.duplicates || {};
+          const duplicates = Object.entries(data.duplicates);
+          const ids = Object.keys(data.duplicates);
+          const numDuplicates = duplicates.length;
+          if (numDuplicates > 0) {
+            const $musicianViewTemplate = $('#musicianAddressViewTemplate');
+            console.info('TEMPLATE', $musicianViewTemplate);
+            const $musicianViews = $('<div class="duplicate-musicians-view"></div>');
+            for (const [, musician] of duplicates) {
+              console.info('MUSICIAN', musician);
+              const $musicianView = $musicianViewTemplate.octemplate(musician);
+              console.info('MVIEW', $musicianView);
+              $musicianViews.append($musicianView);
             }
-            if (numDuplicates > 0) {
-              Dialogs.confirm(
-                t(appName,
-                  'You definitely do not want to add duplicates to the database.'
-                  + '\n'
-                  + 'Please answer "no" in order to add a new musician,'
-                  + '\n'
-                  + 'otherwise answer "yes". If you react in a positive manner'
-                  + '\n'
-                  + 'you will be redirected to a web form in order to bring'
-                  + '\n'
-                  + 'the personal data of the respective musician up-to-date.')
-                  .replace(/(?:\r\n|\r|\n)/g, '<br/>'),
-                t(appName, 'Avoid Possible Duplicate?'),
-                function(answer) {
-                  nameValidationActive = false;
-                  if (!answer) {
-                    return;
-                  }
-                  const $mainContainer = $($container.data('ambientContainer'));
-                  const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
-                  $container.dialog('close');
-                  if (numDuplicates === 1) {
-                    const projectId = $mainForm.find('input[name="ProjectId"]').val();
-                    const projectName = $mainForm.find('input[name="ProjectName"]').val();
-                    ProjectParticipants.personalRecordDialog(
-                      ids[0],
-                      {
-                        table: 'Musicians',
-                        initialValue: 'View',
-                        projectId: projectId || -1,
-                        projectName,
-                      }
-                    );
-                  } else {
-                    ProjectParticipants.loadMusicians($mainForm, ids, null);
-                  }
-                }, true, true);
-            }
-            return false;
-          }
-          const message = Array.isArray(data.message)
-            ? data.message.join('<br>')
-            : data.message;
-          if (message !== '') {
-            Dialogs.alert(message, t(appName, 'Possible Duplicate!'), cleanup, true, true);
+            console.info('MUSICIAN VIEWS', $musicianViews.children());
+            Dialogs.confirm(
+              t(appName, 'You definitely do not want to add duplicates to the database.')
+                + n(
+                  appName,
+                  'The following musician matches almost exactly your input:',
+                  'The following musicians match almost exactly your input:', numDuplicates)
+                + $musicianViews.html()
+                + t(appName, `Please answer "YES" in order not to add a new musician,
+otherwise answer "no" (but please do not do this). If you react in a positive manner
+you will be redirected to a web form in order to bring
+the personal data of the respective musician up-to-date.`),
+              t(appName, 'Avoid Possible Duplicate?'),
+              function(answer) {
+                nameValidationActive = false;
+                Notification.hide();
+                if (!answer) {
+                  return;
+                }
+                const $mainContainer = $($container.data('ambientContainer'));
+                const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
+                $container.dialog('close');
+                if (numDuplicates === 1) {
+                  const projectId = $mainForm.find('input[name="ProjectId"]').val();
+                  const projectName = $mainForm.find('input[name="ProjectName"]').val();
+                  ProjectParticipants.personalRecordDialog(
+                    ids[0], {
+                      table: 'Musicians',
+                      initialValue: 'View',
+                      projectId: projectId || -1,
+                      projectName,
+                      [pmeSys('cur_tab')]: 1,
+                    });
+                } else {
+                  ProjectParticipants.loadMusicians($mainForm, ids, null);
+                }
+              },
+              true, // modal
+              true, // html
+            );
           } else {
             cleanup();
           }
+          Notification.messages(data.message);
         });
 
       return false;

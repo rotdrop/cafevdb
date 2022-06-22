@@ -44,6 +44,7 @@ class MusicianValidationController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
@@ -296,7 +297,7 @@ class MusicianValidationController extends Controller {
       $duplicates = [];
       foreach ($musicians as $musician) {
         $duplicateNames .= $musician['firstName'].' '.$musician['surName']." (Id = ".$musician['id'].")"."\n";
-        $duplicates[$musician['id']] = $musician['firstName'].' '.$musician['surName'];
+        $duplicates[$musician['id']] = $this->flattenMusician($musician, only: []);
       }
 
       $message = [];

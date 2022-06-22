@@ -67,6 +67,7 @@ const Template = {
 		if (typeof this.options.escapeFunction === 'function') {
 			const keys = Object.keys(this.vars)
 			for (let key = 0; key < keys.length; key++) {
+				this.vars[keys[key]] = this.vars[keys[key]] || ''
 				if (typeof this.vars[keys[key]] === 'string') {
 					this.vars[keys[key]] = self.options.escapeFunction(this.vars[keys[key]])
 				}

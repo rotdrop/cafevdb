@@ -122,3 +122,16 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
    </div>
  </div>
 </script>
+<!-- musician address display, fed by a "flattened musican" object -->
+<script id="musicianAddressViewTemplate" type="text/template">
+  <div class="musician-address-view" data-id="{id}">
+    <table>
+      <tr class="personalPublicName musician-address-header" class="tag"><th><?php p($l->t('Name')); ?>:</th><th class="data">{personalPublicName}</th></tr>
+      <tr class="email"><td class="tag"><?php p($l->t('Email')); ?>:</td><td class="data">{email}</td></tr>
+      <tr class="phone"><td class="tag"><?php p($l->t('Phone')); ?>:</td><td class="data">{mobilePhone} {fixedLinePhone}</td></tr>
+      <tr class="address"><td class="tag"><?php p($l->t('Address')); ?>:</td><td class="data">{addressSupplement}</td></tr>
+      <tr class="address"><td class="tag"></td><td class="data">{streetAndNumber}, {postalCode} {city}, {country}</td></tr>
+    </table>
+  </div>
+</script>
+</div>
