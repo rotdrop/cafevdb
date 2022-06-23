@@ -673,6 +673,7 @@ entry.`),
       } else {
         Dialogs.confirm(
           t(appName, 'You definitely do not want to add duplicates to the database.')
+            + ' '
             + n(
               appName,
               'The following musician matches your input:',
