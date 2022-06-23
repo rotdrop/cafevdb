@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-20 07:59+0200\n"
-"PO-Revision-Date: 2022-06-20 08:00+0200\n"
+"POT-Creation-Date: 2022-06-23 22:45+0200\n"
+"PO-Revision-Date: 2022-06-23 22:46+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -239,7 +239,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/DownloadsController.php:149
 #: lib/Controller/ExpertModeController.php:155
 #: lib/Controller/ImagesController.php:331
-#: lib/Controller/MusicianValidationController.php:315
+#: lib/Controller/MusicianValidationController.php:445
 #: lib/Controller/PersonalSettingsController.php:279
 #: lib/Controller/ProgressStatusController.php:147
 #: lib/Controller/ProjectEventsController.php:145
@@ -645,8 +645,8 @@ msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
-"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
-"%s' stimmen nicht überein."
+"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
+"`%s' stimmen nicht überein."
 
 #: lib/Controller/LegacyEventsController.php:321
 #: lib/Controller/LegacyEventsController.php:761
@@ -691,27 +691,27 @@ msgid "Method %s is not yet implemented."
 msgstr "Methode %s is noch nicht implementiert."
 
 #: lib/Controller/MailMergeController.php:206
-#: lib/Controller/MailMergeController.php:290
-#: lib/Controller/MailMergeController.php:315
+#: lib/Controller/MailMergeController.php:298
+#: lib/Controller/MailMergeController.php:323
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] "Vorlage erfolgreich ausgefüllt, %n Dokument wurde erstellt."
 msgstr[1] "Vorlage erfolgreich ausgefüllt, %n Dokumente wurden erstellt."
 
-#: lib/Controller/MailMergeController.php:332
+#: lib/Controller/MailMergeController.php:340
 #, php-format
 msgid "Exception: \"%s\""
 msgstr "Ausnahme: \"%s\""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:347
+#: lib/Controller/MailMergeController.php:355
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
 msgid "Documents"
 msgstr "Dokumente"
 
-#: lib/Controller/MailMergeController.php:348
-#: lib/Controller/MailMergeController.php:356 src/files-hooks.js:102
+#: lib/Controller/MailMergeController.php:356
+#: lib/Controller/MailMergeController.php:364 src/files-hooks.js:102
 #: src/files-hooks.js:159
 msgid "MailMerge"
 msgstr "Serienbrief"
@@ -735,46 +735,66 @@ msgstr "Die Email-Adresse darf nicht fehlen."
 msgid "Unknown Request \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/MusicianValidationController.php:143
+#: lib/Controller/MusicianValidationController.php:144
 #: lib/Controller/PersonalSettingsController.php:572
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr "Die Rufnummer %s scheint keine gültige Telefonnummer zu sein."
 
-#: lib/Controller/MusicianValidationController.php:154
+#: lib/Controller/MusicianValidationController.php:155
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 "Die Nummer %s ist eine Festnetznummer, schiebe die in die richtige Spalte."
 
-#: lib/Controller/MusicianValidationController.php:161
+#: lib/Controller/MusicianValidationController.php:162
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 "Die Nummer %s ist eine Mobilfunknummer, schiebe die in die richtige Spalte."
 
-#: lib/Controller/MusicianValidationController.php:169
+#: lib/Controller/MusicianValidationController.php:170
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr "Die Rufnummer %s scheint keine Mobilfunknummer zu sein."
 
-#: lib/Controller/MusicianValidationController.php:201
+#: lib/Controller/MusicianValidationController.php:202
 #, php-format
 msgid "Missing host for email-address: %s. "
 msgstr "Fehlender Hostname (`@' fehlt!) in der Email-Adresse: %s. "
 
-#: lib/Controller/MusicianValidationController.php:207
+#: lib/Controller/MusicianValidationController.php:208
 #, php-format
 msgid "Validation failed for: %s. "
 msgstr "Validierung von `%s' fehlgeschlagen."
 
-#: lib/Controller/MusicianValidationController.php:286
+#: lib/Controller/MusicianValidationController.php:287
 #, php-format
 msgid "Unsupported auto-complete request for \"%s\"."
 msgstr "Vervollständigungsanfrage für \"%s\" wird nicht unterstützt."
 
-#: lib/Controller/MusicianValidationController.php:304
+#: lib/Controller/MusicianValidationController.php:418
+msgid "full name"
+msgstr "alle Namen"
+
+#: lib/Controller/MusicianValidationController.php:420
+msgid "first name"
+msgstr "Vorname"
+
+#: lib/Controller/MusicianValidationController.php:421
+msgid "surname"
+msgstr "Nachname"
+
+#: lib/Controller/MusicianValidationController.php:423
+msgid "communication"
+msgstr "Kommunikation"
+
+#: lib/Controller/MusicianValidationController.php:424
+msgid "address"
+msgstr "Adresse"
+
+#: lib/Controller/MusicianValidationController.php:434
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen: %s"
@@ -1331,8 +1351,8 @@ msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
-"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
-"\"."
+"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
+"\"gefangen\"."
 
 #: lib/Controller/PersonalSettingsController.php:1310
 #, php-format
@@ -2759,8 +2779,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
-"\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
+"\"%s\"."
 msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
@@ -3778,11 +3798,6 @@ msgstr "Für gesendete Emails das zugeordnete Projekt mitspeichern."
 msgid "Remember a reference to the message template for mail-merged emails."
 msgstr "Speichere eine Referenz zur Email-Vorlage für Serien-Brief-Emails."
 
-#: lib/Maintenance/Migrations/SeparateStreetNumberFromStreet.php:68
-msgid "Store the street number in a field separate from the street name."
-msgstr ""
-"Die Hausnummer in einem Extra-Feld speichern, getrennt vom Straßennamen."
-
 #: lib/Maintenance/Migrations/TimestampedAssociations.php:50
 msgid ""
 "Add time-stamps for association fields in order to implement dir-mtime "
@@ -4098,7 +4113,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:182
 #: lib/PageRenderer/InstrumentFamilies.php:248
-#: lib/PageRenderer/Instruments.php:300 lib/PageRenderer/Musicians.php:551
+#: lib/PageRenderer/Instruments.php:300 lib/PageRenderer/Musicians.php:553
 #: lib/PageRenderer/ProjectParticipantFields.php:362
 #: lib/PageRenderer/ProjectParticipants.php:564
 #: lib/PageRenderer/Projects.php:296
@@ -4191,11 +4206,11 @@ msgstr "herunterladen"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
-"\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
+"\"%s\", new: \"%s\""
 msgstr ""
-"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
-"\""
+"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
+"\"%s\""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
 #, php-format
@@ -4285,7 +4300,7 @@ msgid "Family"
 msgstr "Familie"
 
 #: lib/PageRenderer/InstrumentFamilies.php:221
-#: lib/PageRenderer/Musicians.php:562
+#: lib/PageRenderer/Musicians.php:564
 msgid "Instruments"
 msgstr "Instrumente"
 
@@ -4318,7 +4333,7 @@ msgstr "Veschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:235
 #: lib/PageRenderer/Musicians.php:316
 #: lib/PageRenderer/ProjectParticipantFields.php:257
-#: lib/PageRenderer/ProjectParticipants.php:1490
+#: lib/PageRenderer/ProjectParticipants.php:1495
 #: lib/PageRenderer/ProjectPayments.php:370
 #: lib/PageRenderer/SepaBankAccounts.php:992
 #: lib/PageRenderer/SepaBulkTransactions.php:255
@@ -4382,7 +4397,7 @@ msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
 #: lib/PageRenderer/InstrumentInsurances.php:623
-#: lib/PageRenderer/Musicians.php:865
+#: lib/PageRenderer/Musicians.php:870
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
@@ -4450,10 +4465,12 @@ msgstr "Kurzbezeichnung"
 
 #: lib/PageRenderer/InsuranceBrokers.php:147
 #: lib/PageRenderer/ProjectParticipants.php:428
+#: templates/part.common.footer.php:132
 msgid "Name"
 msgstr "Name"
 
 #: lib/PageRenderer/InsuranceBrokers.php:155
+#: templates/part.common.footer.php:162
 msgid "Address"
 msgstr "Adresse"
 
@@ -4523,7 +4540,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:307
-#: lib/PageRenderer/ProjectParticipants.php:1473
+#: lib/PageRenderer/ProjectParticipants.php:1478
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -4544,137 +4561,137 @@ msgstr "Musizierende hinzufügen"
 msgid "Surname"
 msgstr "Nachname"
 
-#: lib/PageRenderer/Musicians.php:406
+#: lib/PageRenderer/Musicians.php:407
 msgid "Forename"
 msgstr "Vorname"
 
-#: lib/PageRenderer/Musicians.php:416
+#: lib/PageRenderer/Musicians.php:418
 #: lib/PageRenderer/ProjectParticipants.php:446
 msgid "Nickname"
 msgstr "Rufname"
 
-#: lib/PageRenderer/Musicians.php:425
+#: lib/PageRenderer/Musicians.php:427
 #: lib/PageRenderer/ProjectParticipants.php:455
 msgid "e.g. Cathy"
 msgstr "z.B. Michi"
 
-#: lib/PageRenderer/Musicians.php:459
+#: lib/PageRenderer/Musicians.php:461
 #: lib/PageRenderer/ProjectParticipants.php:485
 msgid "Display-Name"
 msgstr "Anzeigename"
 
-#: lib/PageRenderer/Musicians.php:477
+#: lib/PageRenderer/Musicians.php:479
 #: lib/PageRenderer/ProjectParticipants.php:496
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
-#: lib/PageRenderer/Musicians.php:515
+#: lib/PageRenderer/Musicians.php:517
 #: lib/PageRenderer/ProjectParticipants.php:529
 #: lib/PageRenderer/ProjectPayments.php:454
 msgid "User Id"
 msgstr "Benutzerkennung"
 
-#: lib/PageRenderer/Musicians.php:590
+#: lib/PageRenderer/Musicians.php:592
 #: lib/PageRenderer/ProjectParticipants.php:615
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
-#: lib/PageRenderer/Musicians.php:604
+#: lib/PageRenderer/Musicians.php:606
 #: lib/PageRenderer/ProjectParticipants.php:876
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
-#: lib/PageRenderer/Musicians.php:624
+#: lib/PageRenderer/Musicians.php:626
 #: lib/PageRenderer/ProjectParticipants.php:906
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/PageRenderer/Musicians.php:635
+#: lib/PageRenderer/Musicians.php:637
 #: lib/PageRenderer/ProjectParticipants.php:931
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
-#: lib/PageRenderer/Musicians.php:654
+#: lib/PageRenderer/Musicians.php:656
 #: lib/PageRenderer/ProjectParticipants.php:950
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
-#: lib/PageRenderer/Musicians.php:677
+#: lib/PageRenderer/Musicians.php:679
 #: lib/PageRenderer/ProjectParticipants.php:1004
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/PageRenderer/Musicians.php:698
+#: lib/PageRenderer/Musicians.php:700
 #: lib/PageRenderer/ProjectParticipants.php:1043
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/PageRenderer/Musicians.php:712
+#: lib/PageRenderer/Musicians.php:714
 #: lib/PageRenderer/ProjectParticipants.php:1058
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/PageRenderer/Musicians.php:732
+#: lib/PageRenderer/Musicians.php:737
 #: lib/PageRenderer/ProjectParticipants.php:1073
 msgid "Address Supplement"
 msgstr "Adresszusatz"
 
-#: lib/PageRenderer/Musicians.php:743
+#: lib/PageRenderer/Musicians.php:748
 #: lib/PageRenderer/ProjectParticipants.php:1084
 msgid "Street"
 msgstr "Straße"
 
-#: lib/PageRenderer/Musicians.php:758
-#: lib/PageRenderer/ProjectParticipants.php:1093
+#: lib/PageRenderer/Musicians.php:763
+#: lib/PageRenderer/ProjectParticipants.php:1098
 msgid "Street Number"
 msgstr "Hausnummer"
 
-#: lib/PageRenderer/Musicians.php:769
-#: lib/PageRenderer/ProjectParticipants.php:1104
+#: lib/PageRenderer/Musicians.php:774
+#: lib/PageRenderer/ProjectParticipants.php:1109
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/PageRenderer/Musicians.php:778
-#: lib/PageRenderer/ProjectParticipants.php:1118
+#: lib/PageRenderer/Musicians.php:783
+#: lib/PageRenderer/ProjectParticipants.php:1123
 msgid "City"
 msgstr "Stadt"
 
-#: lib/PageRenderer/Musicians.php:790
-#: lib/PageRenderer/ProjectParticipants.php:1130
+#: lib/PageRenderer/Musicians.php:795
+#: lib/PageRenderer/ProjectParticipants.php:1135
 msgid "Country"
 msgstr "Land"
 
-#: lib/PageRenderer/Musicians.php:805
-#: lib/PageRenderer/ProjectParticipants.php:1148
+#: lib/PageRenderer/Musicians.php:810
+#: lib/PageRenderer/ProjectParticipants.php:1153
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/PageRenderer/Musicians.php:823
-#: lib/PageRenderer/ProjectParticipants.php:1168
+#: lib/PageRenderer/Musicians.php:828
+#: lib/PageRenderer/ProjectParticipants.php:1173
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/PageRenderer/Musicians.php:853
+#: lib/PageRenderer/Musicians.php:858
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/PageRenderer/Musicians.php:884
-#: lib/PageRenderer/ProjectParticipants.php:1180
+#: lib/PageRenderer/Musicians.php:889
+#: lib/PageRenderer/ProjectParticipants.php:1185
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/PageRenderer/Musicians.php:946
-#: lib/PageRenderer/ProjectParticipants.php:1239
+#: lib/PageRenderer/Musicians.php:951
+#: lib/PageRenderer/ProjectParticipants.php:1244
 #: lib/PageRenderer/Projects.php:858
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/PageRenderer/Musicians.php:958
-#: lib/PageRenderer/ProjectParticipants.php:1251 src/app/ajax.js:31
+#: lib/PageRenderer/Musicians.php:963
+#: lib/PageRenderer/ProjectParticipants.php:1256 src/app/ajax.js:31
 msgid "Created"
 msgstr "Erzeugt"
 
-#: lib/PageRenderer/Musicians.php:971
+#: lib/PageRenderer/Musicians.php:976
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -5180,27 +5197,27 @@ msgstr "Person gelöscht"
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1449
+#: lib/PageRenderer/ProjectParticipants.php:1454
 #: lib/Service/InstrumentationService.php:158
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1454
+#: lib/PageRenderer/ProjectParticipants.php:1459
 #: lib/Service/InstrumentationService.php:163
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1461
+#: lib/PageRenderer/ProjectParticipants.php:1466
 #: lib/Service/InstrumentationService.php:170
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1478
+#: lib/PageRenderer/ProjectParticipants.php:1483
 #: lib/Service/InstrumentationService.php:182
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1485
+#: lib/PageRenderer/ProjectParticipants.php:1490
 #: lib/PageRenderer/SepaBankAccounts.php:985
 msgid "Miscinfo"
 msgstr "Verschiedenes"
@@ -5579,8 +5596,8 @@ msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
-"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
-"\" nicht finden."
+"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id "
+"\"%2$s\" nicht finden."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1105
 #, php-format
@@ -5920,8 +5937,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: \"%2$s"
-"\"."
+"however, the following app-restriction have been imposed on the app: "
+"\"%2$s\"."
 msgstr ""
 "Das Account-Backend \"%1$s\" scheint installiert und aktiviert zu sein, "
 "jedoch mit den follgenden Einschränkungen: \"%2$s\"."
@@ -7654,7 +7671,7 @@ msgid ""
 msgstr ""
 "Ankreuzen um die Person als Stimmführer:in zu markieren. Falls das\n"
 "Instrument in verschiedene Stimmen unterteilt ist, muss die Person\n"
-"zunächst einer Stimme zugeordnet werden, bevor sie in Ihrer Stimme als\n"
+"zunächst einer Stimme zugeordnet werden, bevor sie in ihrer Stimme als\n"
 "Stimmerfüher:in markiert werden kann."
 
 #: lib/Service/ToolTipsService.php:433
@@ -10066,7 +10083,7 @@ msgstr ""
 "{personalSettingsLink} vorgenommen werden."
 
 #. TRANSLATORS src/components/AdminSettings.vue:234
-#: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:782
+#: specialVueFakeDummyForL10nScript.js:34 src/app/project-participants.js:786
 #: src/app/projects.js:425 src/app/sepa-debit-mandate.js:862
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -11141,42 +11158,76 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: src/app/musicians.js:178
+#: src/app/musicians.js:181
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: src/app/musicians.js:228
+#: src/app/musicians.js:231
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: src/app/musicians.js:254
+#: src/app/musicians.js:257
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr "die Email-Adresse is leer, kann dehalb nichts machen."
 
-#: src/app/musicians.js:344
+#: src/app/musicians.js:347
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: src/app/musicians.js:616
+#: src/app/musicians.js:638
+msgid "I am refusing to add duplicates to the database."
+msgstr "Ich weigere mich, Duplikate zur Datenbank hinzu zu fügen."
+
+#: src/app/musicians.js:641
+msgid "The following musician matches exactly your input:"
+msgid_plural "The following musicians match exactly your input:"
+msgstr[0] "Die folgende Person stimmmt exakt mit Deiner Eingabe überein:"
+msgstr[1] "Die folgenden Personen stimmen exakt mit Deiner Eingab überein:"
+
+#: src/app/musicians.js:644
 msgid ""
-"You definitely do not want to add duplicates to the database.\n"
-"Please answer \"no\" in order to add a new musician,\n"
-"otherwise answer \"yes\". If you react in a positive manner\n"
+"When you click the 'OK'-button or close this alert-window\n"
+"you will be redirected to the existing musician's data in order to inspect "
+"the sitution\n"
+"and to add the existing musician to the project instead of generating a new "
+"duplicate\n"
+"entry."
+msgstr ""
+"Wenn man 'OK' anklickt oder dieses Warn-Fenster auf andere Weise\n"
+"schließt, öffnet sich ein Fenster mit den Daten der bereits in der\n"
+"Datenbank existierenden Person. Die Daten können dann inspiziert\n"
+"und die Person ggf. zum Projekt hinzugefügt werden."
+
+#: src/app/musicians.js:648
+msgid "Duplicates Detected"
+msgstr "Duplikate entdeckt"
+
+#: src/app/musicians.js:675
+msgid "You definitely do not want to add duplicates to the database."
+msgstr "Du willst keine Duplikate zur Datenbank hinzufügen."
+
+#: src/app/musicians.js:679
+msgid "The following musician matches your input:"
+msgid_plural "The following musicians match also your input:"
+msgstr[0] "Die folgende Person passt auch zu Deinen Eingaben:"
+msgstr[1] "Die folgenden Personen passen auch zu Deinen Eingaben:"
+
+#: src/app/musicians.js:682
+msgid ""
+"Please answer \"YES\" in order not to add a new musician,\n"
+"otherwise answer \"no\" (but please do not do this). If you react in a "
+"positive manner\n"
 "you will be redirected to a web form in order to bring\n"
 "the personal data of the respective musician up-to-date."
 msgstr ""
-"Du willst ganz sicher keine Person doppelt eintragen! Bitte \"nein\"\n"
-"antworten um trotzdem eine neue Person gleichen Namens\n"
-"hinzuzufügen. Im Zweifel aber bitte mit \"ja\" antworten. Im Folgenden\n"
-"wird dann die bereits eingetragene Person angezeigt."
+"Bitte mit \"JA\" antworten, um keine neue Person einzutragen, ansonsten\n"
+"mit \"nein\" antworten. Im Zweifel aber bitte \"JA\" anklicken. Im \"JA\"-"
+"Fall öffnet sich ein neues Fenster mit den Daten der bereits existierenden "
+"Person, mit der Möglichkeit, die Person direkt zum Projekt hinu zu fügen."
 
-#: src/app/musicians.js:626
+#: src/app/musicians.js:686
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
-
-#: src/app/musicians.js:658
-msgid "Possible Duplicate!"
-msgstr "Doppelter Datenbankeintag?"
 
 #: src/app/page.js:215
 msgid "Display the application menu and settings side-bar"
@@ -11309,7 +11360,7 @@ msgstr ""
 msgid "Overwrite Existing Records?"
 msgstr "Existierende Daten überschreiben?"
 
-#: src/app/project-participants.js:744
+#: src/app/project-participants.js:748
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
@@ -11317,7 +11368,7 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:787 src/app/projects.js:430
+#: src/app/project-participants.js:791 src/app/projects.js:430
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
@@ -12974,6 +13025,18 @@ msgstr "fehlt"
 msgid "Hallo"
 msgstr "Hallo"
 
+#: templates/part.common.footer.php:142 templates/settings.php:66
+msgid "Email"
+msgstr "Email"
+
+#: templates/part.common.footer.php:150
+msgid "Phone"
+msgstr "Telefon"
+
+#: templates/part.common.footer.php:178
+msgid "Propability"
+msgstr "Wahrscheinlichkeit"
+
 #: templates/part.common.header.php:54
 msgid "Back"
 msgstr "Zurück"
@@ -14186,10 +14249,6 @@ msgstr "Orchester"
 msgid "Sharing"
 msgstr "Sharing"
 
-#: templates/settings.php:66
-msgid "Email"
-msgstr "Email"
-
 #: templates/settings.php:67
 msgid "CMS"
 msgstr "CMS"
@@ -14803,6 +14862,16 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#~ msgid "Confidence"
+#~ msgstr "Wahrscheinlickkeit"
+
+#~ msgid "Store the street number in a field separate from the street name."
+#~ msgstr ""
+#~ "Die Hausnummer in einem Extra-Feld speichern, getrennt vom Straßennamen."
+
+#~ msgid "Possible Duplicate!"
+#~ msgstr "Doppelter Datenbankeintag?"
 
 #, php-format
 #~ msgid "Annual Insurance Fees for %s, %d. %s"

@@ -175,7 +175,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
         </tr>
         <tr>
           <td class="tag">
-            <span class="tag-label"><?php p($l->t('Confidence')); ?>:</span>
+            <span class="tag-label"><?php p($l->t('Propability')); ?>:</span>
           </td>
           <td class="data">
             <span class="value">{duplicatesPropability} ({reasons})</span>
