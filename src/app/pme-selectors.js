@@ -97,7 +97,7 @@ const pmeClassSelector = function(element, token) {
  *
  * @param {string} element TBD.
  *
- * @param {string} tokens TBD.
+ * @param {Array} tokens TBD.
  *
  * @returns {string}
  */
