@@ -852,7 +852,11 @@ class ConfigService
    */
   public function getAppLocale():string
   {
-    return $this->getConfigValue('orchestraLocale', $this->getLocale()) ?? self::DEFAULT_LOCALE;
+    $appLocale = $this->getConfigValue('orchestraLocale', $this->getLocale()) ?? self::DEFAULT_LOCALE;
+    if (strpos($appLocale, '.') === false) {
+      $appLocale .= '.UTF-8';
+    }
+    return $appLocale;
   }
 
   /**
