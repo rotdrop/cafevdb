@@ -288,16 +288,145 @@ class MusicianValidationController extends Controller {
       }
       break;
     case 'duplicates':
-      $surName = $this->requestParameter('sur_name');
-      $firstName = $this->requestParameter('first_name');
+      $nameCriteria = [];
+      if (!empty($surName = $this->requestParameter('sur_name'))) {
+        $nameCriteria[] = [ 'surName' => $surName ];
+      }
+      if (!empty($firstName = $this->requestParameter('first_name'))) {
+        $nameCriteria[] = [ 'firstName' => $firstName ];
+      }
+      if (!empty($nameCriteria)) {
+        array_unshift($nameCriteria, [ '(&' => true ]);
+        $nameCriteria[] = [ ')' => true ];
+      }
+      $commCriteria = [];
+      if (!empty($email = $this->requestParameter('email'))) {
+        $commCriteria[] = [ 'email' => $email ];
+      }
+      if (!empty($fixedLinePhone = $this->requestParameter('fixed_line_phone'))) {
+        $commCriteria[] = [ 'fixedLinePhone' => $fixedLinePhone ];
+      }
+      if (!empty($mobilePhone = $this->requestParameter('mobile_phone'))) {
+        $commCriteria[] = [ 'mobilePhone' => $mobilePhone ];
+      }
+      if (!empty($commCriteria)) {
+        array_unshift($commCriteria, [ '(|' => true ]);
+        $commCriteria[] = [ ')' => true ];
+      }
+      $usableAddress = 0;
+      $addressCriteria = [];
+      if (!empty($street = $this->requestParameter('street'))) {
+        self::matchOrNull('street', $street, $addressCriteria);
+        $usableAddress ++;
+      }
+      if (!empty($streetNumber = $this->requestParameter('street_number'))) {
+        self::matchOrNull('streetNumber', $streetNumber, $addressCriteria);
+      }
+      if (!empty($postalCode = $this->requestParameter('postal_code'))) {
+        self::matchOrNull('postalCode', $postalCode, $addressCriteria);
+      }
+      if (!empty($city = $this->requestParameter('city'))) {
+        self::matchOrNull('city', $city, $addressCriteria);
+        $usableAddress ++;
+      }
+      if (!empty($country = $this->requestParameter('country'))) {
+        self::matchOrNull('country', $country, $addressCriteria);
+      }
+      if ($usableAddress == 2) { // have street and city at least
+        array_unshift($addressCriteria, [ '(&' => true ]);
+        $addressCriteria[] = [ ')' => true ];
+      } else {
+        $addressCriteria = [];
+      }
 
-      $musicians = $this->musiciansRepository->findByName($firstName, $surName);
+      $criteria = array_merge($nameCriteria, $commCriteria, $addressCriteria);
+      if (empty($criteria)) {
+        return self::dataResponse([
+          'messages' => [],
+          'duplicates' => [],
+        ]);
+      }
+      array_unshift($criteria, [ '(|' => true ]);
+      $criteria[] = [ ')' => true ];
+
+      $this->logInfo('CRITERIA ' . print_r($criteria, true));
+
+      $musicians = $this->musiciansRepository->findBy($criteria, [
+        'surName' => 'ASC', 'firstName' => 'ASC' ]);
 
       $duplicateNames = '';
       $duplicates = [];
+      /** @var Entities\Musician $musician */
       foreach ($musicians as $musician) {
+        $musicianId = $musician->getId();
         $duplicateNames .= $musician['firstName'].' '.$musician['surName']." (Id = ".$musician['id'].")"."\n";
-        $duplicates[$musician['id']] = $this->flattenMusician($musician, only: []);
+
+        // Compute the "severity" of the match, kind of hacky.
+
+        // email address or any of the two phone numbers and first name matches
+        // -> treat as exact match, 100 %
+
+        // first-name and city and street and street-number match
+        // -> 100 %
+
+        // names match
+        // -> 50 %
+
+        // any of the email address or phone numbers match
+        // -> 50 % (we have different participants which share their comms)
+
+        $duplicatesPropability = 0.0;
+
+        $commsMatch = (
+          (!empty($email) && $email == $musician->getEmail())
+          || (!empty($fixedLinePhone) && $fixedLinePhone == $musician->getFixedLinePhone())
+          || (!empty($mobilePhone) && $mobilePhone == $musician->getMobilePhone()));
+
+        $addressMatch = (
+          (!empty($street) && !empty($streetNumber) && !empty($city))
+          && $street == $musician->getStreet()
+          && $streetNumber == $musician->getStreetNumber()
+          && $city == $musician->getCity());
+
+        $firstNameMatch = !empty($firstName) && $firstName == $musician->getFirstName();
+
+        $surNameMatch = !empty($surName) && $surName == $musician->getSurName();
+
+        $namesMatch = $firstNameMatch && $surNameMatch;
+
+        if ($firstNameMatch)  {
+          if ($commsMatch) {
+            $duplicatesPropability = 1.0; // treat as exact match
+          }
+          if ($addressMatch) {
+            $duplicatesPropability = 1.0; // treat as exact match
+          }
+        }
+
+        if ($duplicatesPropability < 1) {
+          if ($namesMatch) {
+            $duplicatesPropability = max($duplicatesPropability, 0.5);
+          }
+          if ($commsMatch) {
+            $duplicatesPropability = max($duplicatesPropability, 0.5);
+          }
+        }
+
+        if ($duplicatesPropability > 0) {
+          $reasons = [];
+          if ($namesMatch) {
+            $reasons[] = $this->l->t('full name');
+          } else {
+            $firstNameMatch && $reasons[] = $this->l->t('first name');
+            $surNameMatch && $reasons[] = $this->l->t('surname');
+          }
+          $commsMatch && $reasons[] = $this->l->t('communication');
+          $addressMatch && $reasons[] = $this->l->t('address');
+
+          $duplicates[$musicianId] = $this->flattenMusician($musician, only: []);
+          $duplicates[$musicianId]['duplicatesPropability'] = $duplicatesPropability;
+          $duplicates[$musicianId]['reasons'] = implode(', ', $reasons);
+        }
       }
 
       $message = [];
@@ -314,6 +443,13 @@ class MusicianValidationController extends Controller {
       break;
     }
     return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  static private function matchOrNull($field, $value, array &$criteria)
+  {
+    $criteria[] = [ '(|' . $field => $value ];
+    $criteria[] = [ $field => null ];
+    $criteria[] = [ ')' => true ];
   }
 
 }

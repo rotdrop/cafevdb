@@ -126,11 +126,62 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
 <script id="musicianAddressViewTemplate" type="text/template">
   <div class="musician-address-view" data-id="{id}">
     <table>
-      <tr class="personalPublicName musician-address-header" class="tag"><th><?php p($l->t('Name')); ?>:</th><th class="data">{personalPublicName}</th></tr>
-      <tr class="email"><td class="tag"><?php p($l->t('Email')); ?>:</td><td class="data">{email}</td></tr>
-      <tr class="phone"><td class="tag"><?php p($l->t('Phone')); ?>:</td><td class="data">{mobilePhone} {fixedLinePhone}</td></tr>
-      <tr class="address"><td class="tag"><?php p($l->t('Address')); ?>:</td><td class="data">{addressSupplement}</td></tr>
-      <tr class="address"><td class="tag"></td><td class="data">{streetAndNumber}, {postalCode} {city}, {country}</td></tr>
+      <thead>
+        <tr class="personalPublicName musician-address-header">
+          <th class="tag">
+            <span class="tag-label"><?php p($l->t('Name')); ?>:</span>
+          </th>
+          <th class="data">
+            <span class="value">{personalPublicName}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="email">
+          <td class="tag">
+            <span class="tag-label"><?php p($l->t('Email')); ?>:</span>
+          </td>
+          <td class="data">
+            <span class="value">{email}</span>
+          </td>
+        </tr>
+        <tr class="phone">
+          <td class="tag">
+            <span class="tag-label"><?php p($l->t('Phone')); ?>:</span>
+          </td>
+          <td class="data">
+            <span class="flex-container flex-justify-start">
+              <span class="value">{mobilePhone}</span>
+              <span class="separator">, </span>
+              <span class="value">{fixedLinePhone}</span>
+            </span>
+          </td>
+        </tr>
+        <tr class="address">
+          <td class="tag">
+            <span class="tag-label"><?php p($l->t('Address')); ?>:</span>
+          </td>
+          <td class="data">
+            <span class="flex-container flex-justify-start flex-baseline">
+              <span class="value">{addressSupplement}</span>
+              <span class="separator">, </span>
+              <span class="value">{streetAndNumber}</span>
+              <span class="separator">, </span>
+              <span class="value">{postalCode} {city}</span>
+              <span class="separator">, </span>
+              <span class="value">{country}</span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="tag">
+            <span class="tag-label"><?php p($l->t('Confidence')); ?>:</span>
+          </td>
+          <td class="data">
+            <span class="value">{duplicatesPropability} ({reasons})</span>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </script>

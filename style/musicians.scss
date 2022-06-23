@@ -26,7 +26,29 @@
   form.pme-form {
 
     @import 'mailing-lists.scss';
-
   } /* form.pme-form */
 
 } /* page container */
+
+body {
+  .musician-address-view {
+    @import 'flex.scss';
+    margin: 0.5em 1em;
+    thead {
+      &, * {
+        font-weight: bold;
+      }
+    }
+    tbody {
+      &, * {
+        font-style: italic;
+      }
+    }
+    .value:empty + .separator {
+      display:none;
+    }
+    .tag-label, .separator {
+      margin-right:0.5em;
+    }
+  }
+}
