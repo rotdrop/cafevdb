@@ -207,7 +207,18 @@ class MusicianService
   {
     // Unsubscribe the musician from the mailing-list
     $list = $this->getConfigValue('announcementsMailingList');
-    $this->listsService->unsubscribe($list, $musician->getEmail());
+    try {
+      $this->listsService->unsubscribe($list, $musician->getEmail());
+    } catch (\Throwable $t) {
+      // for now we ignore any mailing list related errors in order not to
+      // annoy the persons who are desperately trying to add persons to
+      // the data-base. We should, however, find a notification channel
+      // for end-user messages.
+      $this->logException(
+        $t,
+        'Failed to unsubscribe' . $musician->getPublicName(firstNameFirst: true)
+        . ' from the mailing-list ' . $list);
+    }
 
     if (empty($musician->getDeleted())) {
       // $this->remove($musician, true); // this should be soft-delete

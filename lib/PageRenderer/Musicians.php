@@ -516,7 +516,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => [ 'orchestra', 'contact', ], ],
       'name'     => $this->l->t('User Id'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
-      'input|LF' => 'H',
+      'input'    => ($this->expertMode ? 'R' : 'HR'),
       // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 256,
@@ -996,18 +996,29 @@ make sure that the musicians are also automatically added to the
       // then it can unsubscribe by itself, so nothing more is needed here.
       $list = $this->getConfigValue('announcementsMailingList');
       if (!empty($list)) {
-        switch ($newVals['mailing_list'] ?? '') {
-          case 'invite':
-            $this->logInfo('SHOULD INVITE TO MAILNG LIST');
-            $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
-            break;
-          case 'subscribe':
-            $this->logInfo('SHOULD SUBSCRIBE TO MAILNG LIST');
-            $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
-            break;
-          default:
-            $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
-            break;
+        try {
+          switch ($newVals['mailing_list'] ?? '') {
+            case 'invite':
+              $this->logInfo('SHOULD INVITE TO MAILING LIST');
+              $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              break;
+            case 'subscribe':
+              $this->logInfo('SHOULD SUBSCRIBE TO MAILING LIST');
+              $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              break;
+            default:
+              $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
+              break;
+          }
+        } catch (\Throwable $t) {
+          // for now we ignore any mailing list related errors in order not to
+          // annoy the persons who are desperately trying to add persons to
+          // the data-base. We should, however, find a notification channel
+          // for end-user messages.
+          $this->logException(
+            $t,
+            'Failed to add or invite ' . $musician->getPublicName(firstNameFirst: true)
+            . ' to the mailing-list ' . $list);
         }
       }
       return true;
