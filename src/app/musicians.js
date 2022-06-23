@@ -653,8 +653,8 @@ entry.`),
             const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
             $container.dialog('close');
             if (maxIds.length === 1) {
-              const projectId = $mainForm.find('input[name="ProjectId"]').val();
-              const projectName = $mainForm.find('input[name="ProjectName"]').val();
+              const projectId = $mainForm.find('input[name="projectId"]').val();
+              const projectName = $mainForm.find('input[name="projectName"]').val();
               ProjectParticipants.personalRecordDialog(
                 ids[0], {
                   table: 'Musicians',
