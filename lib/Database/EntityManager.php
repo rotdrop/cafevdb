@@ -587,7 +587,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($blameableListener);
 
     // sluggable
-    $sluggableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener();
+    $sluggableListener =  $this->appContainer->get(Listeners\GedmoSluggableListener::class);
     $sluggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($sluggableListener);
 

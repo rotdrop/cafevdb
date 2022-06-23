@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Util\Urlizer as Transliterator;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener;
 
 /**
  * Gedmo slug-handler which converts.
@@ -43,7 +44,7 @@ class LoginNameSlugHandler implements SlugHandlerInterface
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /**
-   * @var SluggableListener
+   * @var GedmoSluggableListener
    */
   protected $sluggable;
 
@@ -52,9 +53,12 @@ class LoginNameSlugHandler implements SlugHandlerInterface
    */
   public function __construct(SluggableListener $sluggable)
   {
+    if (!($sluggable instanceof GedmoSluggableListener)) {
+      throw new \InvalidArgumentException('Listener has to be ' . GedmoSluggableListener::class . ', but got a ' . get_class($sluggable));
+    }
     $this->sluggable = $sluggable;
 
-    $this->configService = \OC::$server->query(ConfigService::class);
+    $this->configService = $this->sluggable->getAppContainer()->get(ConfigService::class);
 
     // disable transliteration, done in postSlugBuild()
     $this->sluggable->setTransliterator(function($slug) { return $slug; });
