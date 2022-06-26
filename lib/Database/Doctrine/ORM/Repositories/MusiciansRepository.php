@@ -60,7 +60,7 @@ class MusiciansRepository extends EntityRepository
 
   public function fetchIds(array $criteria = [])
   {
-    $query = $this->geneateIdQuery($criteria);
+    $query = $this->generateIdQuery($criteria);
 
     return $query->getResult('COLUMN_HYDRATOR');
   }
