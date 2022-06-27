@@ -774,9 +774,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               }
               case 'fileAttachments': {
                 const options = elementData.options;
-                // alert('options: '+JSON.stringify(options));
-                const fileAttachments = requestData.elementData.attachments;
-                fieldset.find('input.file-attachments').val(JSON.stringify(fileAttachments));
+                const fileAttachments = elementData.attachments;
+                const fileAttachmentsHolder = fieldset.find('input.file-attachments');
+                fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
                 fileAttachmentsSelector.html(options);
                 fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
                 fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);

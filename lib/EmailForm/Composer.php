@@ -4530,7 +4530,7 @@ Störung.';
 
     $localFileAttach = [];
     $cloudFileAttach = [];
-    foreach($fileAttach as $origin => $attachment) {
+    foreach(($fileAttach ?? []) as $origin => $attachment) {
       $attachment['value'] = 'tmp_name';
       $origin = $attachment['origin'];
       if ($attachment['status'] == 'new') {
