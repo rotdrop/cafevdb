@@ -1749,13 +1749,28 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .find('.attachment.cloud')
     .off('click')
     .on('click', function() {
-      Dialogs.filePicker(
-        t(appName, 'Select Attachment'),
-        function(paths) {
-          cloudAttachment(paths, updateFileAttachments);
-          return false;
-        },
-        true, '', true);
+      let folderPromise;
+      if (projectId() > 0) {
+        folderPromise = $.get(generateAppUrl('projects/' + projectId() + '/folder/project'));
+      } else {
+        const deferred = $.Deferred();
+        folderPromise = deferred.promise();
+        deferred.resolve({ folder: CAFEVDB.globalState.sharedFolder });
+      }
+
+      folderPromise
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data) {
+          Dialogs.filePicker(
+            t(appName, 'Select Attachment'),
+            function(paths) {
+              cloudAttachment(paths, updateFileAttachments);
+              return false;
+            },
+            true, '', true, undefined, data.folder);
+        });
     });
 
   fieldset

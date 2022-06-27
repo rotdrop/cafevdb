@@ -87,6 +87,8 @@ trait InitialStateTrait {
           'historySize' => $this->historyService->size(),
           'historyPosition' => $this->historyService->position(),
         ],
+        'sharedFolder' => $this->getSharedFolderPath(),
+        'projectsFolder' => $this->getProjectsFolderPath(),
       ]);
 
     $this->initialStateService->provideInitialState(

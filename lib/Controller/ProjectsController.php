@@ -45,6 +45,7 @@ class ProjectsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const LIST_OPERATION_CREATE = 'create';
   const LIST_OPERATION_SUBSCRIBE = 'subscribe';
@@ -365,6 +366,54 @@ class ProjectsController extends Controller {
     return self::grumble($this->l->t('Unknown Request: "%s".', $operation));
   }
 
+  const GET_PROJECT_FOLDER = 'folder';
+  const FOLDER_TYPES = [
+    ProjectService::FOLDER_TYPE_PROJECT => ConfigService::PROJECTS_FOLDER,
+    ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigService::PROJECT_PARTICIPANTS_FOLDER,
+    ProjectService::FOLDER_TYPE_POSTERS => ConfigService::PROJECT_POSTERS_FOLDER,
+    ProjectService::FOLDER_TYPE_BALANCE => ConfigService::BALANCES_FOLDER,
+  ];
+
+  /**
+   * @NoAdminRequired
+   *
+   * $param int $projectId
+   *
+   * $param string $topic
+   *
+   * $param string $subTopic
+   */
+  public function get(int $projectId, string $topic = '', string $subTopic = '')
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case '':
+        return self::dataResponse($this->flattenProject($project));
+      case self::GET_PROJECT_FOLDER:
+        switch ($subTopic) {
+          case '':
+          case 'all':
+            return self::dataResponse($projectService->getProjectFolder($project));
+          case ProjectService::FOLDER_TYPE_PROJECT:
+          case ProjectService::FOLDER_TYPE_BALANCE:
+          case ProjectService::FOLDER_TYPE_PARTICIPANTS:
+          case ProjectService::FOLDER_TYPE_POSTERS:
+            $configKey = self::FOLDER_TYPES[$subTopic];
+            return self::dataResponse([
+              'folder' => $projectService->getProjectFolder($project, only: $configKey),
+            ]);
+          default:
+            return self::grumble($this->l->t('Unknown folder type "%s".', $subTopic));
+        }
+      default:
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
 }
 
 // Local Variables: ***

@@ -632,6 +632,18 @@ $routes = [
         'pattern' => '',
       ],
     ],
+    [
+      'name' => 'projects#get',
+      'verb' => 'GET',
+      'url' => '/projects/{projectId}/{topic}/{subTopic}',
+      'defaults' => [
+        'topic' => '',
+        'subTopic' => ''
+      ],
+      'requirements' => [
+        'projectId' => '^\d+$',
+      ],
+    ],
     /**
      * Forward to the contacts manager. Arguably, we should just use the
      * CardDAV end-points in the Vue front-end. However, looking at the
