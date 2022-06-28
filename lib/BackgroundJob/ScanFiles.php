@@ -29,21 +29,23 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IDBConnection;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ScanFiles is a background job used to run the file scanner over the user
- * accounts to ensure integrity of the file cache.
+ * accounts to ensure integrity of the file cache. This is a copy of
  *
- * @package OCA\Files\BackgroundJob
+ * OCA\Files\BackgroundJob\ScanFiles
+ *
+ * which is triggered by a JS timer via Ajax from the front-end in order to
+ * get authenticated background jobs.
  */
 class ScanFiles extends \OC\BackgroundJob\TimedJob {
   /** @var IConfig */
   private $config;
   /** @var IEventDispatcher */
   private $dispatcher;
-  /** @var ILogger */
-  private $logger;
+  private LoggerInterface $logger;
   private $connection;
 
   /** Amount of users that should get scanned per execution */
@@ -58,7 +60,7 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
   public function __construct(
     IConfig $config,
     IEventDispatcher $dispatcher,
-    ILogger $logger,
+    LoggerInterface $logger,
     IDBConnection $connection
   ) {
     // Run once per 10 minutes
@@ -83,7 +85,7 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
       );
       $scanner->backgroundScan('');
     } catch (\Exception $e) {
-      $this->logger->logException($e, ['app' => 'files']);
+      $this->logger->error($e->getMessage(), ['exception' => $e, 'app' => 'files']);
     }
     \OC_Util::tearDownFS();
   }
