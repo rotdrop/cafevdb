@@ -3751,7 +3751,13 @@ Störung.';
       $this->diagnostics['SubjectValidation'] = true;
     }
 
-    $autoSave = filter_var($this->parameterService[self::POST_TAG]['draftAutoSave'],  FILTER_VALIDATE_BOOLEAN);
+    // autoSave is the flag programmatically submitted by the ajax-call,
+    // draftAutoSave is that state of the auto-save enable button.
+    $autoSave = $this->parameterService[self::POST_TAG]['autoSave'] ?? null;
+    if ($autoSave === null) {
+      $autoSave = $this->parameterService[self::POST_TAG]['draftAutoSave'] ?? false;
+    }
+    $autoSave = filter_var($autoSave,  FILTER_VALIDATE_BOOLEAN);
 
     $draftData = [
       'projectId' => $this->parameterService['projectId'],

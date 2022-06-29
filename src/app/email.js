@@ -1334,6 +1334,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           operation: 'save',
           topic: 'draft',
           submitAll: true,
+          noDebug: true,
+          projectId: projectId(),
+          projectName: projectName(),
+          autoSave: false,
         });
       }
       return false;
