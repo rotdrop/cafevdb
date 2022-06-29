@@ -23,8 +23,8 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\AbstractQuery;
 
 class MusiciansRepository extends EntityRepository
 {
@@ -74,7 +74,7 @@ class MusiciansRepository extends EntityRepository
   public function findIdByUserId($userId)
   {
     $query = $this->generateIdQuery([ 'userIdSlug' => $userId ]);
-    return $query->getSingleScalarResult();
+    return $query->getOneOrNullResult(AbstractQuery::HYDRATE_SCALAR);
   }
 
   /**
