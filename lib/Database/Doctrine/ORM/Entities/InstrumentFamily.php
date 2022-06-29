@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -61,10 +61,15 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedFamily")
    * @ORM\Column(type="string", length=255, nullable=false, unique=true)
    */
   private string $family;
+
+  /**
+   * @var string
+   */
+  private string $untranslatedFamily;
 
   /**
    * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -108,6 +113,16 @@ class InstrumentFamily implements \ArrayAccess
   public function getFamily():string
   {
     return $this->family;
+  }
+
+  /**
+   * Get the untranslated family name.
+   *
+   * @return string
+   */
+  public function getUntranslatedFamily():string
+  {
+    return $this->untranslatedFamily;
   }
 
   /**

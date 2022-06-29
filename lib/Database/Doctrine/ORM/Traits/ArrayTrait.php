@@ -45,6 +45,10 @@ trait ArrayTrait
       if (preg_match('/@ORM\\\\(Column|(Many|One)To(Many|One))/i', $doc)) {
         return $name;
       }
+      // also include the untranslated variants of fields
+      if (str_starts_with($name, 'untranslated')) {
+        return $name;
+      }
       return false;
     }, $this->keys);
 
