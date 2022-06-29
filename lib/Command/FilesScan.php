@@ -87,6 +87,7 @@ class FilesScan extends \OCA\Files\Command\Scan
       $output->writeln($this->l->t('Login succeeded.'));
     } else {
       $output->writeln($this->l->t('Login failed.'));
+      return Command::FAILURE;
     }
 
     return parent::execute($input, $output);
