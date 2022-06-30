@@ -214,9 +214,11 @@ trait FindLikeTrait
 
     $qb = $this->generateFindBySelect($queryParts);
 
-    // joining may produce excessive extra columns, try to group by the primary keys.
-    foreach ($this->getClassMetadata()->identifier as $field) {
-      $qb->addGroupBy('mainTable.'.$field);
+    if (count($queryParts['joinEntities']) > 0) {
+      // joining may produce excessive extra columns, try to group by the primary keys.
+      foreach ($this->getClassMetadata()->identifier as $field) {
+        $qb->addGroupBy('mainTable.'.$field);
+      }
     }
 
     $this->generateFindByWhere($qb, $queryParts, $limit, $offset);
@@ -227,6 +229,31 @@ trait FindLikeTrait
     return $qb->getQuery()->getResult();
   }
 
+  /**
+   * Count the number of rows which would be returned.
+   */
+  public function count(array $criteria)
+  {
+    $queryParts = $this->prepareFindBy($criteria);
+
+    // The stock findBy() / findOneBy() functions do not use query-hints, see
+    // https://github.com/doctrine/orm/issues/6751
+    if (empty($this->getEntityManager()->getConfiguration()->getDefaultQueryHints())
+        && empty($queryParts['joinEntities'])
+        && empty($queryParts['indexBy'])
+        && empty($queryParts['modifiers'])
+        && empty($queryParts['collectionCriteria'])) {
+      // vanilla
+      return parent::count($criteria);
+    }
+
+    // using COUNT(DISTINCT) avoids the use of group-by.
+    $qb = $this->generateFindBySelect($queryParts, [ 'COUNT(DISTINCT mainTable)', ]);
+
+    $this->generateFindByWhere($qb, $queryParts);
+
+    return $qb->getQuery()->getSingleScalarResult();
+  }
 
   public function findOneBy(array $criteria, ?array $orderBy = null)
   {
