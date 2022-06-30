@@ -30,12 +30,14 @@ export default {
     },
     musicianAddressPopup(option) {
       const name = option.informalDisplayName || '';
+      const userId = option.userIdSlug ? ` (${option.userIdSlug})` : '';
       const email = option.email || this.addressItemUnknownLabel('email');
       const street = option.street || this.addressItemUnknownLabel('street');
+      const streetNumber = option.streetNumber ? ' ' + option.streetNumber : '';
       const postalCode = option.postalCode && option.postalCode !== '0' ? option.postalCode + ' ' : '';
       const city = option.city || this.addressItemUnknownLabel('city');
-      const content = `<h4>${name}</h4>`
-            + [email, street, postalCode + city, `${option.countryName} (${option.country})`].join('<br/>');
+      const content = `<h4>${name}${userId}</h4>`
+            + [email, street + streetNumber, postalCode + city, `${option.countryName} (${option.country})`].join('<br/>');
       return this.addressPopup(content);
     },
     contactAddressPopup(option) {
