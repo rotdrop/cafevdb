@@ -768,7 +768,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setCloudAccountDisabled(?bool $cloudAccountDisabled):Musician
   {
-    $this->CloudAccountDisabled = $cloudAccountDisabled;
+    $this->cloudAccountDisabled = $cloudAccountDisabled;
 
     return $this;
   }
@@ -792,7 +792,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setCloudAccountDeactivated(?bool $cloudAccountDeactivated):Musician
   {
-    $this->CloudAccountDeactivated = $cloudAccountDeactivated;
+    $this->cloudAccountDeactivated = $cloudAccountDeactivated;
 
     return $this;
   }
