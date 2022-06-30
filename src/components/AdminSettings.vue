@@ -66,6 +66,71 @@
         </p>
       </div>
     </SettingsSection>
+    <SettingsSection v-if="config.isSubAdmin" class="sub-admin" :title="t(appName, 'Access Control')">
+      <SelectMusicians v-model="access.musicians"
+                       :tooltip="access.musicians.length ? false : hints['settings:admin:access-control:musicians']"
+                       :label="t(appName, 'Musicians')"
+                       :placeholder="t(appName, 'e.g. Jane Doe')"
+                       :multiple="true"
+                       :clear-button="true"
+                       :project-id="projectId"
+                       search-scope="musicians"
+      />
+      <SelectProjects v-model="access.project"
+                      :tooltip="hints['settings:admin:access-control:project-restriction']"
+                      :label="t(appName, 'Restrict to Project')"
+                      :placeholder="t(appName, 'e.g. Auvergne2019')"
+                      :multiple="false"
+                      :clear-button="true"
+      />
+      <input id="include-disabled"
+             v-model="access.includeDeactivated"
+             type="checkbox"
+             class="checkbox access-flags"
+             :disabled="!applyAccessToAll"
+      >
+      <label for="include-disabled" class="access-flags checkbox-label">
+        {{ t(appName, 'include disabled accounts') }}
+      </label>
+      <input id="include-deactivated"
+             v-model="access.includeDisabled"
+             type="checkbox"
+             class="checkbox access-flags"
+             :disabled="!applyAccessToAll"
+      >
+      <label for="include-disabled" class="access-flags checkbox-label">
+        {{ t(appName, 'include deactivated accounts') }}
+      </label>
+      <span v-if="showAccessActionProgress">
+        <div class="access-action-status">
+          <span class="access-action-text">{{ accessActionLabel }}</span>
+          <button v-if="accessActionFinished"
+                  class="button primary access-action-clear"
+                  :title="t(appName, 'Remove the status feedback from the last action.')"
+                  @click="hideAccessActionFeedback()"
+          >
+            {{ t(appName, 'Ok') }}
+          </button>
+          <span class="flex-spacer" />
+          <span class="access-action-counter">{{ accessActionCounter }}</span>
+        </div>
+        <ProgressBar :value="accessActionPercentage"
+                     :error="accessActionError"
+                     size="medium"
+        />
+      </span>
+      <span v-else class="flex-container flex-align-center flex-justify-start">
+        <span class="bulk-operation-title">{{ t(appName, 'With the selected musicians perform the following action:') }}</span>
+        <Actions>
+          <ActionButton icon="icon-disabled-user" @click="handleAccessAction('deny')">
+            {{ t(appName, 'deny access') }}
+          </ActionButton>
+          <ActionButton icon="icon-confirm" @click="handleAccessAction('grant')">
+            {{ t(appName, 'grant access') }}
+          </ActionButton>
+        </Actions>
+      </span>
+    </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin" class="sub-admin" :title="t(appName, 'Recryption Requests')">
       <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
         <input :id="['mark',userId].join('-')"
@@ -119,6 +184,9 @@ import { appName } from '../app/app-info.js'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
+import SelectMusicians from './SelectMusicians'
+import SelectProjects from './SelectProjects'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SettingsInputText from './SettingsInputText'
 import SettingsSelectGroup from './SettingsSelectGroup'
@@ -131,13 +199,16 @@ import tooltip from '../mixins/tooltips.js'
 export default {
   name: 'AdminSettings',
   components: {
-    SettingsSection,
-    SettingsInputText,
-    SettingsSelectGroup,
-    SettingsSelectUsers,
     Actions,
     ActionButton,
     ActionCheckbox,
+    ProgressBar,
+    SelectMusicians,
+    SelectProjects,
+    SettingsInputText,
+    SettingsSection,
+    SettingsSelectGroup,
+    SettingsSelectUsers,
   },
   props: {
     config: {
@@ -160,11 +231,25 @@ export default {
         'settings:admin:cloud-user-backend-conf': '',
         'settings:admin:wiki-name-space': '',
         'settings:admin:user-group': '',
+        'settings:admin:access-control:musicians': '',
       },
       forword: '',
       recryption: {
         requests: {},
         allRequestsMarked: ''
+      },
+      access: {
+        musicians: [],
+        project: '',
+        includeDeactivated: false,
+        includeDisabled: false,
+        action: {
+          failure: false,
+          totals: 0,
+          done: 0,
+          active: false,
+          label: '',
+        },
       },
     }
   },
@@ -174,6 +259,41 @@ export default {
   computed: {
     groupAdminsDisabled() {
       return this.settings.orchestraUserGroup == ''
+    },
+    projectId() {
+      try { return this.access.project.id } catch (ignoreMe) { return 0 }
+    },
+    applyAccessToAll() {
+      console.info('ACCESS TO ALL', this.access)
+      return this.access.musicians.length === 1 && this.access.musicians[0].id <= 0
+    },
+    showAccessActionProgress() {
+      return this.access.action.active
+    },
+    accessActionPercentage() {
+      const totals = this.access.action.totals
+      const done = this.access.action.done
+      return totals > 0 ? done * 100.0 / totals : 0
+    },
+    accessActionTest() {
+      return this.access.action.label
+    },
+    accessActionFinished() {
+      const totals = this.access.action.totals
+      const done = this.access.action.done
+      console.info('ACTION', this.access.action)
+      return (done > 0 && done >= totals) || this.access.action.failure
+    },
+    accessActionLabel() {
+      return this.access.action.label
+    },
+    accessActionCounter() {
+      const totals = this.access.action.totals
+      const current = this.access.action.done
+      return t(appName, '{current} of {totals}', { current, totals })
+    },
+    accessActionError() {
+      return this.access.action.failure
     },
   },
   methods: {
@@ -195,6 +315,7 @@ export default {
       // fetch recryption requests
       {
         const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'))
+        console.info('DATA SETUP', response)
         Vue.set(this.recryption, 'requests', {})
         Vue.set(this.recryption, 'allRequestsMarked', '')
         if (Object.keys(response.data.ocs.data.requests).length > 0) {
@@ -290,12 +411,18 @@ export default {
         this.recryption.allRequestsMarked = false
       }
     },
-    async handleRecryptionRequest(userId) {
+    async doHandleRecryptionRequest(userId, silent, allowFailure) {
+      return await axios.post(
+        generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+          userId
+        }), {
+          notifyUser: silent !== true,
+          allowFailure,
+      })
+    },
+    async handleRecryptionRequest(userId, silent) {
       try {
-        const response = await axios.post(
-          generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-            userId
-        }))
+        const response = this.doHandleRecryptionRequest(userId, silent)
         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
         Vue.delete(this.recryption.requests, userId)
       } catch (e) {
@@ -338,6 +465,14 @@ export default {
         this.getData()
       }
     },
+    async doRevokeCloudAccess(userId, allowFailure) {
+      return await axios.post(
+        generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/revoke/{userId}', {
+          userId
+        }, {
+          allowFailure,
+      }))
+    },
     async handleMarkedRecrytpionRequests() {
       const allRequests = Object.values(this.recryption.requests)
       const marked = allRequests.filter(request => request.marked)
@@ -352,11 +487,177 @@ export default {
         this.deleteRecryptionRequest(request.id)
       }
     },
+    async handleAccessAction(action) {
+      if (this.access.musicians.length === 0) {
+        showError(t(appName, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
+      }
+      if (this.access.musicians.length === 1 && this.access.musicians[0].id <= 0) {
+        this.handleBulkAccessAction(action)
+        return
+      }
+      this.access.action.active = true
+      this.access.action.totals = this.access.musicians.length
+      let failedUsers = 0
+      try {
+        for (const musician of this.access.musicians) {
+          const response = action === 'grant'
+            ? await this.doHandleRecryptionRequest(musician.userIdSlug, true, true)
+            : await this.doRevokeCloudAccess(musician.userIdSlug, true)
+          console.info('RESPONSE', response)
+          const ocsData = response.data.ocs.data
+          const lastUser = ocsData.userId
+          failedUsers += ocsData.status == 'failure'
+          console.info('LAST USER', lastUser)
+          this.access.action.done ++
+          this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
+          if (failedUsers > 0) {
+            this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
+          }
+        }
+      } catch (e) {
+        console.info('ERROR', e)
+        let message = t(appName, 'reason unknown')
+        if (e.response && e.response.data) {
+          const data = e.response.data
+          if (data.message) {
+            message = data.message
+          } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+            message = data.ocs.meta.message
+          }
+        }
+        showError(t(appName, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        this.access.action.failure = true
+      }
+      const numUsers = this.access.action.done - failedUsers
+      const remainingUsers = this.access.action.totals - this.access.action.done
+
+      if (this.access.action.failure) {
+        this.access.action.label = t(appName, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+        if (failedUsers > 0) {
+          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+        }
+        this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
+      } else {
+        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers})
+        if (failedUsers > 0) {
+          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+        }
+      }
+    },
+    async handleBulkAccessAction(action) {
+      console.info('ACCESS TO ALL', this.applyAccessToAll)
+      this.access.action.active = true
+      let failedUsers = 0
+      try {
+        const response = await axios.post(
+          generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json'), {
+            grantAccess: action === 'grant' ? true : false,
+            includeDisabled: this.access.includeDisabled,
+            includeDeactivated: this.access.includeDeactivated,
+            projectId: this.projectId,
+            offset: 0,
+            limit: 0,
+        })
+        console.info('RESPONSE', response)
+        this.access.action.totals = response.data.ocs.data.count
+        const limit = this.access.action.totals > 100 ? this.access.action.totals / 100 : 1
+        let count = 0
+        let lastUser
+        do {
+          const response = await axios.post(
+            generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json'), {
+              grantAccess: action === 'grant' ? true : false,
+              includeDisabled: this.access.includeDisabled,
+              includeDeactivated: this.access.includeDeactivated,
+              projectId: this.projectId,
+              offset: this.access.action.done,
+              limit,
+          })
+          console.info('RESPONSE', response)
+          const musicians = response.data.ocs.data
+          failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure'), failedUsers)
+          lastUser = musicians.slice(-1).userId
+          console.info('LAST USER', lastUser)
+          count = musicians.length
+          this.access.action.done += count
+          this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
+          if (failedUsers > 0) {
+            this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
+          }
+          this.access.action.label += '.'
+        } while(count > 0 && this.access.action.done < this.access.action.totals)
+      } catch (e) {
+        console.info('ERROR', e)
+        let message = t(appName, 'reason unknown')
+        if (e.response && e.response.data) {
+          const data = e.response.data
+          if (data.message) {
+            message = data.message
+          } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+            message = data.ocs.meta.message
+          }
+        }
+        showError(t(appName, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        this.access.action.failure = true
+      }
+      const numUsers = this.access.action.done - failedUsers
+      const remainingUsers = this.access.action.totals - this.access.action.done
+
+      if (this.access.action.failure) {
+        this.access.action.label = t(appName, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+        if (failedUsers > 0) {
+          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+        }
+        this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
+      } else {
+        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers})
+        if (failedUsers > 0) {
+          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+        }
+      }
+    },
+    hideAccessActionFeedback() {
+      this.access.action.active = false
+      this.access.action.failure = false
+      this.access.action.done = 0
+      this.access.action.totals = 0
+    },
   },
 }
 </script>
 <style lang="scss" scoped>
 .settings-section {
+  .access-action-status {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    width:100%;
+    .flex-spacer {
+      flex-grow:4;
+      height:34px
+    }
+    button.sync-clear {
+      margin-left:1ex;
+    }
+    button.access-action-clear {
+      margin-left:1ex;
+    }
+  }
+  .flex-container {
+    display: flex;
+    &.flex- {
+      &align- {
+        &center {
+          align-items: center;
+        }
+      }
+      &justify- {
+        &center {
+          justify-content: center;
+        }
+      }
+    }
+  }
   ::v-deep hr {
     opacity: 0.2;
   }

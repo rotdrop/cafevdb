@@ -26,6 +26,13 @@ import { generateFilePath } from '@nextcloud/router';
 
 import Vue from 'vue';
 import AdminSettings from './components/AdminSettings';
+import { createPinia, PiniaVuePlugin } from 'pinia';
+import { Tooltip } from '@nextcloud/vue';
+
+Vue.directive('tooltip', Tooltip);
+
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js');
@@ -38,4 +45,5 @@ const vueAnchor = document.getElementById(vueAnchorId);
 export default new Vue({
   el: '#' + vueAnchorId,
   render: h => h(AdminSettings, { props: { config: JSON.parse(vueAnchor.dataset.config) } }),
+  pinia,
 });

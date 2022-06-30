@@ -165,7 +165,7 @@ export default {
       default: undefined,
     },
     tooltip: {
-      type: [Object, String],
+      type: [Object, String, Boolean],
       default: undefined,
     },
     selectAllOption: {

@@ -113,6 +113,22 @@ $routes = [
         'apiVersion' => 'v1',
       ],
     ],
+    [
+      'name' => 'encryption#bulkRecryptionRequest',
+      'url' => '/api/{apiVersion}/maintenance/encryption/bulk-recryption',
+      'verb' => 'POST',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
+    ],
+    [
+      'name' => 'encryption#revokeCloudAccess',
+      'url' => '/api/{apiVersion}/maintenance/encryption/revoke/{userId}',
+      'verb' => 'POST',
+      'requirements' => [
+        'apiVersion' => 'v1',
+      ],
+    ],
   ],
   'routes' => [
     [
