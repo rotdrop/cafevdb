@@ -93,13 +93,22 @@ class EntityManager extends EntityManagerDecorator
   const PROXY_DIR = __DIR__ . "/Doctrine/ORM/Proxies";
   const DEV_MODE = true;
 
-  /** @var Encryption-transformer key, see $this->getDataTransformer() */
+  /**
+   * @var string
+   * Encryption-transformer key, see $this->getDataTransformer()
+   */
   const TRANSFORM_ENCRYPT = 'encrypt';
 
-  /** @var Hash-transformer key, see $this->getDataTransformer() */
+  /**
+   * @var string
+   * Hash-transformer key, see $this->getDataTransformer()
+   */
   const TRANSFORM_HASH = 'hash';
 
-  /** @var string The name of the soft-deleteable filter */
+  /**
+   * @var string
+   * The name of the soft-deleteable filter
+   */
   const SOFT_DELETEABLE_FILTER = 'soft-deleteable';
 
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
@@ -111,10 +120,16 @@ class EntityManager extends EntityManagerDecorator
   /** @var CloudLogger */
   private $sqlLogger;
 
-  /** @var array Cache of entity names indexed by table names. */
+  /**
+   * @var array
+   * Cache of entity names indexed by table names.
+   */
   private $entityNames = null;
 
-  /** @var array Cache of entity names indexed by class annotation */
+  /**
+   * @var array
+   * Cache of entity names indexed by class annotation
+   */
   private $annotationEntites = [];
 
   /**
