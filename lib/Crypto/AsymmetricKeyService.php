@@ -136,8 +136,6 @@ class AsymmetricKeyService
    * @param bool $forceNewKeyPair Generate a new key pair even if an
    * old one is found.
    *
-   * @throws Exceptions\EncryptionKeyException
-   *
    * @return array<string, string>
    * ```
    * [
@@ -145,6 +143,8 @@ class AsymmetricKeyService
    *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
    * ]
    * ```
+   *
+   * @throws Exceptions\EncryptionKeyException
    */
   public function initEncryptionKeyPair(?string $ownerId = null, ?string $keyPassphrase = null, bool $forceNewKeyPair = false)
   {
@@ -245,6 +245,8 @@ class AsymmetricKeyService
    * @param string $ownerId
    *
    * @return null|string
+   *
+   * @throws Exceptions\EncryptionKeyException
    */
   private function getLoginPassword(string $ownerId):?string
   {
@@ -296,6 +298,8 @@ class AsymmetricKeyService
    * @param string $key
    *
    * @param mixed $value Must be convertible to string.
+   *
+   * @throws Exceptions\CannotEncryptException
    */
   public function setSharedPrivateValue(string $ownerId, string $key, mixed $value)
   {
@@ -322,6 +326,8 @@ class AsymmetricKeyService
    * @param mixed $default
    *
    * @return string|null
+   *
+   * @throws Exceptions\CannotDecryptException
    */
   public function getSharedPrivateValue(string $ownerId, string $key, mixed $default = null):?string
   {
@@ -434,16 +440,8 @@ class AsymmetricKeyService
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
-   *
-   * @param array<string, string> $keyPair
-   * ```
-   * [
-   *   self::PRIVATE_ENCRYPTION_KEY_CONFIG => PRIV_KEY,
-   *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
-   * ]
-   * ```
    */
-  public function pushRecryptionRequestNotification(string $ownerId, array $keyPair):INotification
+  public function pushRecryptionRequestNotification(string $ownerId):INotification
   {
     $requestData = $this->appContainer->get(ITimeFactory::class)->getTime();
     $this->cloudConfig->setUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY, $requestData);
@@ -508,6 +506,8 @@ class AsymmetricKeyService
    * be prefixed by '@'. If null then the currently logged in user is used.
    *
    * @param bool $allowProtest Add a button for re-requesting recryption.
+   *
+   * @throws Exceptions\RecryptionRequestNotFoundException
    */
   public function pushRecryptionRequestDeniedNotification($ownerId, bool $allowProtest = true)
   {
@@ -563,6 +563,8 @@ class AsymmetricKeyService
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @throws Exceptions\RecryptionRequestNotFoundException
    */
   public function pushRecryptionRequestHandledNotification($ownerId)
   {

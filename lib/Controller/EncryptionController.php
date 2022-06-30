@@ -34,6 +34,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
+use OCP\IUserSession;
 use OCP\ILogger;
 use OCP\IL10N;
 
@@ -81,10 +82,14 @@ class EncryptionController extends OCSController
   }
 
   /**
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
+   * @NoAdminRequired
+   * @NoGroupMemberRequired
    */
   public function getRecryptRequests(?string $userId = null):Response
   {
+    if (!$this->isMatchingUserOrAdmin($userId)) {
+      throw new OCS\OCSForbiddenException($this->l->t('Access denied for mis-matching user id "%s".', $userId));
+    }
     $recryptRequests = $this->keyService->getRecryptionRequests();
     // Testing
     // $testUser = 'bilbo.baggins';
@@ -127,11 +132,11 @@ class EncryptionController extends OCSController
    */
   public function putRecryptRequest(string $userId):Response
   {
-    try {
-      $this->keyService->pushRecryptionRequestNotification($userId, []);
-    } catch (Exceptions\RecryptionRequestNotFoundException $e) {
-      throw new OCS\OCSBadRequestException($this->l->t('Unable to issue encryption request'), $e);
+    if (!$this->isMatchingUserOrAdmin($userId)) {
+      throw new OCS\OCSForbiddenException($this->l->t('Access denied for mis-matching user id "%s".', $userId));
     }
+    $this->keyService->removeRecryptionRequestNotification($userId);
+    $this->keyService->pushRecryptionRequestNotification($userId);
     return new DataResponse([
       'ownerId' => $userId,
     ]);
@@ -324,6 +329,25 @@ class EncryptionController extends OCSController
 
     return $appEncryptionKey;
   }
+
+  private function isMatchingUserOrAdmin(string $userId)
+  {
+    /** @var IUserSession $userSession */
+    $userSession = $this->appContainer->get(IUserSession::class);
+
+    $currentUserId = $userSession->getUser()
+      ? $userSession->getUser()->getUID()
+      : null;
+
+    if ($currentUserId === $userId) {
+      return true;
+    }
+
+    /** @var AuthorizationService $authorizationService */
+    $authorizationService = $this->appContainer->get(AuthorizationService::class);
+    return $authorizationService->isAdmin($currentUserId);
+  }
+
 }
 
 // Local Variables: ***

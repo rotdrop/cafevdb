@@ -82,8 +82,7 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
     }
 
     // enqueue a recryption request to the admins
-    $keyService->pushRecryptionRequestNotification($ownerId, $newKeyPair);
-
+    $keyService->pushRecryptionRequestNotification($ownerId);
   }
 }
 
