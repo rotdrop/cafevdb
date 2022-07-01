@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-23 22:46+0200\n"
+"POT-Creation-Date: 2022-07-01 21:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -233,8 +233,8 @@ msgstr ""
 #: lib/Controller/ProjectEventsController.php:145
 #: lib/Controller/ProjectParticipantsController.php:178
 #: lib/Controller/ProjectWebPagesController.php:160
-#: lib/Controller/ProjectsController.php:164
-#: lib/Controller/ProjectsController.php:181
+#: lib/Controller/ProjectsController.php:165
+#: lib/Controller/ProjectsController.php:182
 #: lib/Controller/ValidationController.php:77
 msgid "Unknown Request"
 msgstr ""
@@ -384,32 +384,34 @@ msgstr ""
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:95
-#: lib/Controller/EncryptionController.php:112
-#: lib/Controller/EncryptionController.php:214
+#: lib/Controller/EncryptionController.php:91
+#: lib/Controller/EncryptionController.php:140
+#, php-format
+msgid "Access denied for mis-matching user id \"%s\"."
+msgstr ""
+
+#: lib/Controller/EncryptionController.php:103
+#: lib/Controller/EncryptionController.php:126
+#: lib/Controller/EncryptionController.php:220
 #, php-format
 msgid "Recryption-request for user \"%s\" not found."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:128
-msgid "Unable to issue encryption request"
-msgstr ""
-
-#: lib/Controller/EncryptionController.php:170
+#: lib/Controller/EncryptionController.php:303
 #, php-format
 msgid "Unable to set row access-token for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:184
+#: lib/Controller/EncryptionController.php:317
 #, php-format
 msgid "Unable to recrypt encrypted data for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:195
+#: lib/Controller/EncryptionController.php:330
 msgid "Encryption key is invalid"
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:201
+#: lib/Controller/EncryptionController.php:336
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
@@ -553,7 +555,7 @@ msgstr ""
 
 #: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Controller/ProjectParticipantsController.php:740
-#: lib/Database/EntityManager.php:242
+#: lib/Database/EntityManager.php:257
 #: lib/Documents/OpenDocumentFiller.php:317
 #: lib/Documents/OpenDocumentFiller.php:334
 #: lib/Documents/OpenDocumentFiller.php:345
@@ -774,7 +776,7 @@ msgstr ""
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:118
+#: lib/Controller/MusiciansController.php:120
 msgid ""
 "Picking users from the cloud or the address-books is not yet supported, "
 "sorry."
@@ -1578,7 +1580,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:2115
 #: lib/Controller/PmeTableController.php:142
-#: lib/Controller/ProjectsController.php:365
+#: lib/Controller/ProjectsController.php:366
 #: lib/Controller/SepaBulkTransactionsController.php:128
 #, php-format
 msgid "Unknown Request: \"%s\"."
@@ -2103,111 +2105,111 @@ msgstr ""
 msgid "Removed public web page %s (id %d) from the project with id %d."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:91
+#: lib/Controller/ProjectsController.php:92
 msgid "project-year"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:92
+#: lib/Controller/ProjectsController.php:93
 msgid "project-name"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:93
+#: lib/Controller/ProjectsController.php:94
 msgid "project-kind"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:97
+#: lib/Controller/ProjectsController.php:98
 #, php-format
 msgid "The %s must not be empty."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:120
+#: lib/Controller/ProjectsController.php:121
 #, php-format
 msgid "The project name has been simplified from \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:132
+#: lib/Controller/ProjectsController.php:133
 msgid "The project-name must not only consist of the year-number."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:135
+#: lib/Controller/ProjectsController.php:136
 msgid "No project-name given."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:138
+#: lib/Controller/ProjectsController.php:139
 #, php-format
 msgid ""
 "The project-name is too long, please use something less than %d characters "
 "(excluding the attached year). Thanks"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:146
+#: lib/Controller/ProjectsController.php:147
 msgid "No project-year given."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:149
+#: lib/Controller/ProjectsController.php:150
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:158
+#: lib/Controller/ProjectsController.php:159
 #, php-format
 msgid "The year %s has been appended to the project-slug %s."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:171
+#: lib/Controller/ProjectsController.php:172
 #, php-format
 msgid ""
 "A project with the name \"%1$s\" already exists in the year %2$s with the id "
 "%3$d (new: %4$d). Please choose a different name or year."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:247
-#: lib/Controller/ProjectsController.php:268
+#: lib/Controller/ProjectsController.php:248
+#: lib/Controller/ProjectsController.php:269
 #: lib/PageRenderer/Projects.php:632
 msgid "closed"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:249
-#: lib/Controller/ProjectsController.php:271
+#: lib/Controller/ProjectsController.php:250
+#: lib/Controller/ProjectsController.php:272
 #: lib/PageRenderer/Projects.php:630
 msgid "active"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:251
+#: lib/Controller/ProjectsController.php:252
 #, php-format
 msgid "Mailing-list \"%s\" successfully created."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:269
+#: lib/Controller/ProjectsController.php:270
 #, php-format
 msgid "Successfully closed \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:272
+#: lib/Controller/ProjectsController.php:273
 #, php-format
 msgid "Successfully re-opened \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:287
+#: lib/Controller/ProjectsController.php:288
 #, php-format
 msgid "Really delete the mailing list \"%1$s\" for the project \"%2$s\"?"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:292
+#: lib/Controller/ProjectsController.php:293
 #, php-format
 msgid "Successfully deleted \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:296
+#: lib/Controller/ProjectsController.php:297
 #: lib/PageRenderer/Projects.php:621
 msgid "unset"
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:339
+#: lib/Controller/ProjectsController.php:340
 #, php-format
 msgid "%1$d new subscriptions, %2$d existing subscriptions have been kept."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:343
+#: lib/Controller/ProjectsController.php:344
 msgid "%n person has not been subscribed because of unconfirmed participation."
 msgid_plural ""
 "%n persons have not been subscribed because their participation is not "
@@ -2215,21 +2217,36 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/Controller/ProjectsController.php:349
+#: lib/Controller/ProjectsController.php:350
 #, php-format
 msgid ""
 "%d persons have not been subscribed because we do not have their email-"
 "address."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:352
+#: lib/Controller/ProjectsController.php:353
 #, php-format
 msgid "%d subscription requests have failed."
 msgstr ""
 
-#: lib/Controller/ProjectsController.php:355
+#: lib/Controller/ProjectsController.php:356
 #, php-format
 msgid "Error for \"%1$s <%2$s>\": %3$s"
+msgstr ""
+
+#: lib/Controller/ProjectsController.php:392
+#, php-format
+msgid "Unable to find project with id \"%d\"."
+msgstr ""
+
+#: lib/Controller/ProjectsController.php:411
+#, php-format
+msgid "Unknown folder type \"%s\"."
+msgstr ""
+
+#: lib/Controller/ProjectsController.php:415
+#, php-format
+msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr ""
 
 #: lib/Controller/SepaBulkTransactionsController.php:151
@@ -2565,8 +2582,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:981
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
-"\"%s\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
+"\"."
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:1015
@@ -2711,24 +2728,24 @@ msgstr ""
 msgid "Unable to retrieve old key-pair for \"%s\"."
 msgstr ""
 
-#: lib/Crypto/AsymmetricKeyService.php:259
+#: lib/Crypto/AsymmetricKeyService.php:261
 #, php-format
 msgid ""
 "Given user id \"%1$s\" and user-id \"%2$s\" from login-credentials differ."
 msgstr ""
 
-#: lib/Crypto/AsymmetricKeyService.php:310
+#: lib/Crypto/AsymmetricKeyService.php:314
 #, php-format
 msgid "Cannot encrypt personal value \"%1$s\" for \"%2$s\"."
 msgstr ""
 
-#: lib/Crypto/AsymmetricKeyService.php:335
+#: lib/Crypto/AsymmetricKeyService.php:341
 #, php-format
 msgid "Cannot decrypt personal value \"%1$s\" for \"%2$s\"."
 msgstr ""
 
-#: lib/Crypto/AsymmetricKeyService.php:517
-#: lib/Crypto/AsymmetricKeyService.php:572
+#: lib/Crypto/AsymmetricKeyService.php:530
+#: lib/Crypto/AsymmetricKeyService.php:587
 #, php-format
 msgid "No pending recryption-request for user \"%s\"."
 msgstr ""
@@ -2789,19 +2806,19 @@ msgid ""
 "column."
 msgstr ""
 
-#: lib/Database/EntityManager.php:879
-#: lib/Database/EntityManager.php:924
+#: lib/Database/EntityManager.php:894
+#: lib/Database/EntityManager.php:939
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1113
+#: lib/Database/EntityManager.php:1128
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1128
+#: lib/Database/EntityManager.php:1143
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -2864,7 +2881,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:572
-#: src/app/email.js:1373
+#: src/app/email.js:1377
 msgid "Unknown Template"
 msgstr ""
 
@@ -3009,61 +3026,61 @@ msgstr ""
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3810
+#: lib/EmailForm/Composer.php:3816
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3822
+#: lib/EmailForm/Composer.php:3828
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3846
+#: lib/EmailForm/Composer.php:3852
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3877
+#: lib/EmailForm/Composer.php:3883
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3935
-#: lib/EmailForm/Composer.php:4054
+#: lib/EmailForm/Composer.php:3941
+#: lib/EmailForm/Composer.php:4060
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3971
+#: lib/EmailForm/Composer.php:3977
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3996
+#: lib/EmailForm/Composer.php:4002
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4579
+#: lib/EmailForm/Composer.php:4585
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4579
+#: lib/EmailForm/Composer.php:4585
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4580
+#: lib/EmailForm/Composer.php:4586
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4581
+#: lib/EmailForm/Composer.php:4587
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4582
+#: lib/EmailForm/Composer.php:4588
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4698
+#: lib/EmailForm/Composer.php:4704
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -3543,7 +3560,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:130
-#: src/app/email.js:1853
+#: src/app/email.js:1872
 msgid "Accept"
 msgstr ""
 
@@ -3640,10 +3657,12 @@ msgstr ""
 msgid "Total Insurance Amount"
 msgstr ""
 
+#. TRANSLATORS src/components/AdminSettings.vue:127
 #. TRANSLATORS src/views/FilesTab.vue:132
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:96
 #: lib/Service/CloudUserConnectorService.php:393
-#: specialVueFakeDummyForL10nScript.js:88
+#: specialVueFakeDummyForL10nScript.js:34
+#: specialVueFakeDummyForL10nScript.js:158
 msgid "Musicians"
 msgstr ""
 
@@ -3901,8 +3920,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1529
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
-"\"%s\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
+"\", new: \"%s\""
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1651
@@ -4549,7 +4568,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:179
 #: lib/PageRenderer/ProjectParticipantFields.php:294
 #: lib/PageRenderer/SepaBulkTransactions.php:348
-#: specialVueFakeDummyForL10nScript.js:92
+#: specialVueFakeDummyForL10nScript.js:162
 msgid "Project"
 msgstr ""
 
@@ -4621,7 +4640,9 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
+#. TRANSLATORS src/components/AdminSettings.vue:123
 #: lib/PageRenderer/ProjectParticipantFields.php:247
+#: specialVueFakeDummyForL10nScript.js:32
 msgid "Access Control"
 msgstr ""
 
@@ -5541,8 +5562,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: "
-"\"%2$s\"."
+"however, the following app-restriction have been imposed on the app: \"%2$s"
+"\"."
 msgstr ""
 
 #: lib/Service/CloudUserConnectorService.php:282
@@ -5562,17 +5583,17 @@ msgstr ""
 msgid "Unable to delete the user-sql cloud-connector views: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:512
+#: lib/Service/CloudUserConnectorService.php:511
 #, php-format
 msgid "\"%s\" configuration may have succeeded."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:768
+#: lib/Service/CloudUserConnectorService.php:767
 #, php-format
 msgid "Unable to create or update the personalized view: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:800
+#: lib/Service/CloudUserConnectorService.php:799
 #, php-format
 msgid "Unable to delete personalized view: %s."
 msgstr ""
@@ -8262,20 +8283,26 @@ msgid ""
 "finished."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1129
+#: lib/Service/ToolTipsService.php:1130
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1130
+#: lib/Service/ToolTipsService.php:1131
+msgid ""
+"The list of group-admins for the dedicated user-group. You should at least "
+"add one group-admin."
+msgstr ""
+
+#: lib/Service/ToolTipsService.php:1133
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
 "spaces or fancy characters."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1131
+#: lib/Service/ToolTipsService.php:1134
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -8285,14 +8312,14 @@ msgid ""
 "the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1136
+#: lib/Service/ToolTipsService.php:1139
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
 "places. It should be lower-case and \"handy\", without spaces."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1137
+#: lib/Service/ToolTipsService.php:1140
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -8300,7 +8327,7 @@ msgid ""
 "on."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1142
+#: lib/Service/ToolTipsService.php:1145
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -8309,14 +8336,14 @@ msgid ""
 "user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1143
+#: lib/Service/ToolTipsService.php:1146
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
 "dastabase-user."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1144
+#: lib/Service/ToolTipsService.php:1147
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -8324,7 +8351,7 @@ msgid ""
 "has all -- and in particular: GRANT -- privileges on that dedicated database."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1148
+#: lib/Service/ToolTipsService.php:1151
 msgid ""
 "Optionally parts of the data-base and some configuration settings can be "
 "stored encrypted. If you are confronted with error messages about a missing "
@@ -8333,25 +8360,25 @@ msgid ""
 "password in the password-field."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1149
+#: lib/Service/ToolTipsService.php:1152
 msgid ""
 "Changing the encryption key needs your login-password. Please enter it here "
 "before trying to save the changed encryption key."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1154
+#: lib/Service/ToolTipsService.php:1157
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1156
+#: lib/Service/ToolTipsService.php:1159
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1158
+#: lib/Service/ToolTipsService.php:1161
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1160
+#: lib/Service/ToolTipsService.php:1163
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -8360,34 +8387,34 @@ msgid ""
 "these data-items."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1166
+#: lib/Service/ToolTipsService.php:1169
 #: templates/part.common.header.php:104
 #: templates/part.common.header.php:110
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1168
+#: lib/Service/ToolTipsService.php:1171
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1170
+#: lib/Service/ToolTipsService.php:1173
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1172
+#: lib/Service/ToolTipsService.php:1175
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1174
+#: lib/Service/ToolTipsService.php:1177
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1179
+#: lib/Service/ToolTipsService.php:1182
 #: lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
@@ -8395,7 +8422,7 @@ msgid ""
 "is substituted into document templates using the \"[LOGO]\" placeholder."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1180
+#: lib/Service/ToolTipsService.php:1183
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -8405,7 +8432,7 @@ msgid ""
 "project-participant views."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1182
+#: lib/Service/ToolTipsService.php:1185
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -8414,116 +8441,116 @@ msgid ""
 "mandates can be downloaed from the musician and member's project view."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1184
+#: lib/Service/ToolTipsService.php:1187
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1186
+#: lib/Service/ToolTipsService.php:1189
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1189
+#: lib/Service/ToolTipsService.php:1192
 msgid "Delete this document template from the server"
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1192
+#: lib/Service/ToolTipsService.php:1195
 msgid "Choose a template file from the cloud storage."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1193
+#: lib/Service/ToolTipsService.php:1196
 msgid "Upload a document template from your computer or mobile."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1197
+#: lib/Service/ToolTipsService.php:1200
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1198
+#: lib/Service/ToolTipsService.php:1201
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
 "document contains form-elements."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1199
+#: lib/Service/ToolTipsService.php:1202
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1203
+#: lib/Service/ToolTipsService.php:1206
 msgid "Select the sender from the members of the executive board."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1205
+#: lib/Service/ToolTipsService.php:1208
 msgid "Select the recipients for the mail-merge."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1206
+#: lib/Service/ToolTipsService.php:1209
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1208
+#: lib/Service/ToolTipsService.php:1211
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1209
+#: lib/Service/ToolTipsService.php:1212
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1210
+#: lib/Service/ToolTipsService.php:1213
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1211
+#: lib/Service/ToolTipsService.php:1214
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1216
+#: lib/Service/ToolTipsService.php:1219
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1218
+#: lib/Service/ToolTipsService.php:1221
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1222
+#: lib/Service/ToolTipsService.php:1225
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1224
+#: lib/Service/ToolTipsService.php:1227
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1226
+#: lib/Service/ToolTipsService.php:1229
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsService.php:1228
+#: lib/Service/ToolTipsService.php:1231
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -8625,26 +8652,26 @@ msgstr ""
 msgid "Unknown file type \"%s\" for download file \"%s\"."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:98
+#: lib/Traits/InitialStateTrait.php:100
 msgid "Select a filter option."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:99
-#: lib/Traits/InitialStateTrait.php:105
+#: lib/Traits/InitialStateTrait.php:101
+#: lib/Traits/InitialStateTrait.php:107
 msgid "No values match."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:100
+#: lib/Traits/InitialStateTrait.php:102
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:104
+#: lib/Traits/InitialStateTrait.php:106
 msgid "Select an option."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:106
+#: lib/Traits/InitialStateTrait.php:108
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -8680,65 +8707,125 @@ msgstr ""
 msgid "User Group"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:43
+#. TRANSLATORS src/components/AdminSettings.vue:45
 #: specialVueFakeDummyForL10nScript.js:6
 msgid "User Group Admins"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:51
+#. TRANSLATORS src/components/AdminSettings.vue:54
 #: specialVueFakeDummyForL10nScript.js:8
 msgid "Wiki Name-Space"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:62
+#. TRANSLATORS src/components/AdminSettings.vue:66
 #: specialVueFakeDummyForL10nScript.js:10
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:69
+#. TRANSLATORS src/components/AdminSettings.vue:75
 #: specialVueFakeDummyForL10nScript.js:12
 msgid "Recryption Requests"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:80
+#. TRANSLATORS src/components/AdminSettings.vue:87
 #: specialVueFakeDummyForL10nScript.js:14
 #: specialVueFakeDummyForL10nScript.js:26
 msgid "recrypt"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:83
+#. TRANSLATORS src/components/AdminSettings.vue:90
 #: specialVueFakeDummyForL10nScript.js:16
 #: specialVueFakeDummyForL10nScript.js:28
 msgid "reject"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:88
+#. TRANSLATORS src/components/AdminSettings.vue:95
 #: specialVueFakeDummyForL10nScript.js:18
 msgid "organizer"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:89
+#. TRANSLATORS src/components/AdminSettings.vue:96
 #: specialVueFakeDummyForL10nScript.js:20
 msgid "group-admin"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:99
+#. TRANSLATORS src/components/AdminSettings.vue:106
 #: specialVueFakeDummyForL10nScript.js:22
 msgid "Mark/unmark all."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:100
+#. TRANSLATORS src/components/AdminSettings.vue:107
 #: specialVueFakeDummyForL10nScript.js:24
 msgid "With the marked requests perform the following action:"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:111
+#. TRANSLATORS src/components/AdminSettings.vue:118
 #: specialVueFakeDummyForL10nScript.js:30
 msgid "No recryption requests are pending."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:189
-#: specialVueFakeDummyForL10nScript.js:32
+#. TRANSLATORS src/components/AdminSettings.vue:128
+#. TRANSLATORS src/views/FilesTab.vue:133
+#: specialVueFakeDummyForL10nScript.js:36
+#: specialVueFakeDummyForL10nScript.js:160
+msgid "e.g. Jane Doe"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:136
+#: specialVueFakeDummyForL10nScript.js:38
+msgid "Restrict User Selection to Project"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:137
+#. TRANSLATORS src/views/FilesTab.vue:143
+#: specialVueFakeDummyForL10nScript.js:40
+#: specialVueFakeDummyForL10nScript.js:164
+msgid "e.g. Auvergne2019"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:148
+#: specialVueFakeDummyForL10nScript.js:42
+msgid "include disabled accounts"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:157
+#: specialVueFakeDummyForL10nScript.js:44
+msgid "include deactivated accounts"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:164
+#: specialVueFakeDummyForL10nScript.js:46
+msgid "Remove the status feedback from the last action."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:167
+#: specialVueFakeDummyForL10nScript.js:48
+#: src/app/inlineimage.js:240
+msgid "Ok"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:178
+#: specialVueFakeDummyForL10nScript.js:50
+msgid "With the selected musicians perform the following action:"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:181
+#: specialVueFakeDummyForL10nScript.js:52
+msgid "deny access"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:184
+#: specialVueFakeDummyForL10nScript.js:54
+msgid "grant access"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:307
+#: specialVueFakeDummyForL10nScript.js:56
+msgid "{current} of {totals}"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:334
+#: specialVueFakeDummyForL10nScript.js:58
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
 "group. Please configure a dedicated group-admin for the user-group and then "
@@ -8746,173 +8833,226 @@ msgid ""
 "settings."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:234
-#: specialVueFakeDummyForL10nScript.js:34
+#. TRANSLATORS src/components/AdminSettings.vue:398
+#: specialVueFakeDummyForL10nScript.js:60
 #: src/app/project-participants.js:786
 #: src/app/projects.js:425
 #: src/app/sepa-debit-mandate.js:862
 msgid "Confirmation Required"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:239
-#: specialVueFakeDummyForL10nScript.js:36
+#. TRANSLATORS src/components/AdminSettings.vue:403
+#: specialVueFakeDummyForL10nScript.js:62
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:252
-#: specialVueFakeDummyForL10nScript.js:38
+#. TRANSLATORS src/components/AdminSettings.vue:416
+#: specialVueFakeDummyForL10nScript.js:64
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:262
+#. TRANSLATORS src/components/AdminSettings.vue:426
 #. TRANSLATORS src/views/FilesTab.vue:425
-#: specialVueFakeDummyForL10nScript.js:40
-#: specialVueFakeDummyForL10nScript.js:48
-#: specialVueFakeDummyForL10nScript.js:54
-#: specialVueFakeDummyForL10nScript.js:104
+#: specialVueFakeDummyForL10nScript.js:66
+#: specialVueFakeDummyForL10nScript.js:74
+#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:90
+#: specialVueFakeDummyForL10nScript.js:108
+#: specialVueFakeDummyForL10nScript.js:174
 #: src/stores/participantData.js:54
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:271
-#: specialVueFakeDummyForL10nScript.js:42
+#. TRANSLATORS src/components/AdminSettings.vue:435
+#: specialVueFakeDummyForL10nScript.js:68
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:273
-#: specialVueFakeDummyForL10nScript.js:44
+#. TRANSLATORS src/components/AdminSettings.vue:437
+#: specialVueFakeDummyForL10nScript.js:70
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:299
-#: specialVueFakeDummyForL10nScript.js:46
+#. TRANSLATORS src/components/AdminSettings.vue:469
+#: specialVueFakeDummyForL10nScript.js:72
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:313
-#: specialVueFakeDummyForL10nScript.js:50
+#. TRANSLATORS src/components/AdminSettings.vue:483
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:323
-#: specialVueFakeDummyForL10nScript.js:52
+#. TRANSLATORS src/components/AdminSettings.vue:493
+#: specialVueFakeDummyForL10nScript.js:78
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:337
-#: specialVueFakeDummyForL10nScript.js:56
+#. TRANSLATORS src/components/AdminSettings.vue:507
+#: specialVueFakeDummyForL10nScript.js:82
 msgid "Could not delete the recryption request for {userId}: {message}"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:535
+#: specialVueFakeDummyForL10nScript.js:84
+msgid "No musicians selected, doing nothing."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:553
+#: specialVueFakeDummyForL10nScript.js:86
+#: specialVueFakeDummyForL10nScript.js:104
+msgid "Processed user-id {userId}."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:555
+#: specialVueFakeDummyForL10nScript.js:88
+#: specialVueFakeDummyForL10nScript.js:106
+msgid "{failedUsers} users have failed."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:569
+#: specialVueFakeDummyForL10nScript.js:92
+#: specialVueFakeDummyForL10nScript.js:110
+msgid "Unable to handle access action: {message}"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:576
+#: specialVueFakeDummyForL10nScript.js:94
+#: specialVueFakeDummyForL10nScript.js:112
+msgid "Failed after {numUsers} users have been processed successfully."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:578
+#: specialVueFakeDummyForL10nScript.js:96
+#: specialVueFakeDummyForL10nScript.js:102
+#: specialVueFakeDummyForL10nScript.js:114
+#: specialVueFakeDummyForL10nScript.js:120
+msgid "{failedUsers} were processed unsuccessfully."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:580
+#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:116
+msgid "{remainingUsers} remain unprocessed."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:582
+#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:118
+msgid "{numUsers} users have been processed successfully."
 msgstr ""
 
 #. TRANSLATORS src/components/SelectContacts.vue:74
 #. TRANSLATORS src/components/SelectMusicians.vue:79
-#: specialVueFakeDummyForL10nScript.js:58
-#: specialVueFakeDummyForL10nScript.js:62
+#: specialVueFakeDummyForL10nScript.js:122
+#: specialVueFakeDummyForL10nScript.js:126
 msgid "Remove all options."
 msgstr ""
 
 #. TRANSLATORS src/components/SelectContacts.vue:223
-#. TRANSLATORS src/components/SelectMusicians.vue:262
-#: specialVueFakeDummyForL10nScript.js:60
-#: specialVueFakeDummyForL10nScript.js:66
+#. TRANSLATORS src/components/SelectMusicians.vue:269
+#: specialVueFakeDummyForL10nScript.js:124
+#: specialVueFakeDummyForL10nScript.js:130
 msgid "** everybody **"
 msgstr ""
 
 #. TRANSLATORS src/components/SelectMusicians.vue:87
-#: specialVueFakeDummyForL10nScript.js:64
+#: specialVueFakeDummyForL10nScript.js:128
 msgid "Reset to initial selection."
 msgstr ""
 
+#. TRANSLATORS src/components/SettingsSelectGroup.vue:166
+#: specialVueFakeDummyForL10nScript.js:132
+msgid "Please select a group!"
+msgstr ""
+
+#. TRANSLATORS src/components/SettingsSelectGroup.vue:213
+#. TRANSLATORS src/components/SettingsSelectUsers.vue:201
+#: specialVueFakeDummyForL10nScript.js:134
+#: specialVueFakeDummyForL10nScript.js:136
+msgid "An empty value is not allowed, please make your choice!"
+msgstr ""
+
 #. TRANSLATORS src/views/FilesTab.vue:33
-#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:138
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:42
-#: specialVueFakeDummyForL10nScript.js:70
+#: specialVueFakeDummyForL10nScript.js:140
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:50
-#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:142
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:61
-#: specialVueFakeDummyForL10nScript.js:74
+#: specialVueFakeDummyForL10nScript.js:144
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:73
-#: specialVueFakeDummyForL10nScript.js:76
+#: specialVueFakeDummyForL10nScript.js:146
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:78
+#: specialVueFakeDummyForL10nScript.js:148
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
-#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:150
 #: templates/emailform/form.php:35
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:82
+#: specialVueFakeDummyForL10nScript.js:152
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:84
+#: specialVueFakeDummyForL10nScript.js:154
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:86
+#: specialVueFakeDummyForL10nScript.js:156
 msgid "Enter Address"
 msgstr ""
 
-#. TRANSLATORS src/views/FilesTab.vue:133
-#: specialVueFakeDummyForL10nScript.js:90
-msgid "e.g. Jane Doe"
-msgstr ""
-
-#. TRANSLATORS src/views/FilesTab.vue:143
-#: specialVueFakeDummyForL10nScript.js:94
-msgid "e.g. Auvergne2019"
-msgstr ""
-
 #. TRANSLATORS src/views/FilesTab.vue:152
-#: specialVueFakeDummyForL10nScript.js:96
+#: specialVueFakeDummyForL10nScript.js:166
 #: templates/settings/share-settings.php:86
 msgid "Contacts"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:153
-#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:168
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:164
-#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "Address-Books"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:300
-#: specialVueFakeDummyForL10nScript.js:102
+#: specialVueFakeDummyForL10nScript.js:172
 msgid "Required."
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:442
-#: specialVueFakeDummyForL10nScript.js:106
+#: specialVueFakeDummyForL10nScript.js:176
 msgid "no response received from {ajaxUrl}"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:446
-#: specialVueFakeDummyForL10nScript.js:108
+#: specialVueFakeDummyForL10nScript.js:178
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
@@ -9490,12 +9630,12 @@ msgid "Unknown form element: {formElement}"
 msgstr ""
 
 #: src/app/email.js:845
-#: src/app/email.js:2018
+#: src/app/email.js:2037
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
 #: src/app/email.js:847
-#: src/app/email.js:2020
+#: src/app/email.js:2039
 msgid "Em@il Form"
 msgstr ""
 
@@ -9555,76 +9695,76 @@ msgstr ""
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.js:1355
+#: src/app/email.js:1359
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
 msgstr ""
 
-#: src/app/email.js:1357
+#: src/app/email.js:1361
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.js:1371
+#: src/app/email.js:1375
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.js:1388
+#: src/app/email.js:1392
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.js:1391
+#: src/app/email.js:1395
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.js:1433
+#: src/app/email.js:1437
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.js:1434
+#: src/app/email.js:1438
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.js:1498
+#: src/app/email.js:1502
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.js:1500
+#: src/app/email.js:1504
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.js:1651
+#: src/app/email.js:1655
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.js:1652
-#: src/app/email.js:1794
+#: src/app/email.js:1656
+#: src/app/email.js:1813
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.js:1753
+#: src/app/email.js:1771
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1793
+#: src/app/email.js:1812
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1852
+#: src/app/email.js:1871
 #: templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
 msgstr ""
 
-#: src/app/email.js:1856
+#: src/app/email.js:1875
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1859
+#: src/app/email.js:1878
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -9702,10 +9842,6 @@ msgstr ""
 
 #: src/app/inlineimage.js:234
 msgid "Edit inline image"
-msgstr ""
-
-#: src/app/inlineimage.js:240
-msgid "Ok"
 msgstr ""
 
 #: src/app/inlineimage.js:262
@@ -10260,6 +10396,24 @@ msgstr ""
 #: src/mixins/address-popup.js:29
 msgid "{item}: unknown"
 msgstr ""
+
+#: src/mixins/address-popup.js:33
+msgid "selects all musicians"
+msgstr ""
+
+#: src/mixins/user-info-popup.js:38
+msgid "Provider: {backend}"
+msgstr ""
+
+#: src/mixins/user-info-popup.js:57
+msgid "#Users: {usercount}"
+msgstr ""
+
+#: src/mixins/user-info-popup.js:64
+msgid "Provider: {providers}"
+msgid_plural "Providers: {providers}"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/stores/participantData.js:58
 msgid "Could not fetch musician(s): {message}"
