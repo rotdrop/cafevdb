@@ -1126,7 +1126,10 @@ and contact the treasurer for further instructions.',
 
       'settings' => [
         'admin' => [
-          'user-group' => $this->l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'),
+          'user-group' => [
+            'default' => $this->l->t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'),
+            'admins' => $this->l->t('The list of group-admins for the dedicated user-group. You should at least add one group-admin.'),
+          ],
           'wiki-name-space' => $this->l->t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.'),
           'cloud-user-backend-conf' => $this->l->t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
         ],

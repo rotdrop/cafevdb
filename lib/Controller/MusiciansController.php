@@ -42,6 +42,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
+use OCA\CAFEVDB\Common\Uuid;
+
 /**
  * Make the stored personal data accessible for the web-interface. This is
  * meant for newer parts of the web-interface in contrast to the legacy PME
@@ -180,6 +182,9 @@ class MusiciansController extends Controller
     $musiciansData = [];
     /** @var Entities\Musician $musician */
     foreach ($musicians as $musician) {
+      if (Uuid::asUuid($musician->getSurName()) !== null) {
+        continue; // skip dummy musicians
+      }
       $musiciansData[] = $this->getFlatMusician($musician, only: []);
     }
 

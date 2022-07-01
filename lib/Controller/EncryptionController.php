@@ -98,10 +98,14 @@ class EncryptionController extends OCSController
     // $recryptRequests[$testUser] = time(); $this->keyService->getCryptor($testUser)->getPublicKey();
     //
     if (!empty($userId)) {
-      $recryptRequests = $recryptRequests[$userId] || [];
-      if (empty($recryptRequests)) {
+      $recryptRequest = $recryptRequests[$userId] ?? null;
+      if (empty($recryptRequest)) {
         throw new OCS\OCSNotFoundException($this->l->t('Recryption-request for user "%s" not found.', $userId));
       }
+      return new DataResponse([
+        'request' => $recryptRequest,
+        'userId' => $userId,
+      ]);
     }
     return new DataResponse([
       'requests' => $recryptRequests,
@@ -136,14 +140,16 @@ class EncryptionController extends OCSController
       throw new OCS\OCSForbiddenException($this->l->t('Access denied for mis-matching user id "%s".', $userId));
     }
     $this->keyService->removeRecryptionRequestNotification($userId);
-    $this->keyService->pushRecryptionRequestNotification($userId);
+    $notification = $this->keyService->pushRecryptionRequestNotification($userId);
     return new DataResponse([
       'ownerId' => $userId,
+      'request' => $notification->getSubjectParameters(),
     ]);
   }
 
   /**
-   * Remove the row access token.
+   * Remove the row access token from the database table and the cloud's user
+   * settings.
    *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
@@ -153,12 +159,16 @@ class EncryptionController extends OCSController
       $this->entityManager = $this->appContainer->get(EntityManager::class);
       /** @var Entities\Musician $musician */
       $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUserId($userId);
-      $this->remove($musician->getRowAccessToken());
-      $musician->setRowAccessToken(null);
-      $this->flush();
+      $rowAccessToken = $musician->getRowAccessToken();
+      if (!empty($rowAccessToken)) {
+        $this->remove($musician->getRowAccessToken());
+        $musician->setRowAccessToken(null);
+        $this->flush();
+      }
       $musician->setCloudAccountDeactivated(true);
       $musician->setCloudAccountDisabled(true);
       $this->flush();
+      $this->keyService->deleteSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY);
       return new DataResponse([
         'userId' => $userId,
         'access' => 'revoked',
@@ -330,7 +340,7 @@ class EncryptionController extends OCSController
     return $appEncryptionKey;
   }
 
-  private function isMatchingUserOrAdmin(string $userId)
+  private function isMatchingUserOrAdmin(?string $userId)
   {
     /** @var IUserSession $userSession */
     $userSession = $this->appContainer->get(IUserSession::class);
@@ -339,7 +349,7 @@ class EncryptionController extends OCSController
       ? $userSession->getUser()->getUID()
       : null;
 
-    if ($currentUserId === $userId) {
+    if (!empty($userId) && $currentUserId === $userId) {
       return true;
     }
 

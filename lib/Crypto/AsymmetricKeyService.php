@@ -344,6 +344,19 @@ class AsymmetricKeyService
   }
 
   /**
+   * Delete one private value. This can also be achieved by passing an empty
+   * value to setSharedPrivateValue()
+   *
+   * @param string $ownerId
+   *
+   * @param string $key
+   */
+  public function deleteSharedPrivateValue(string $ownerId, string $key)
+  {
+    $this->setSharedPrivateValue($ownerId, $key, null);
+  }
+
+  /**
    * Return the entire encrypted config-space.
    *
    * @param string $ownerId

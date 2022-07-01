@@ -24,7 +24,7 @@
 </script>
 <template>
   <div class="templateroot">
-    <SettingsSection class="major" :title="t(appName, 'Camerata DB')">
+    <SettingsSection :class="['major', { 'icon-loading': loading.general }]" :title="t(appName, 'Camerata DB')">
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="info" v-html="forword">
@@ -37,13 +37,16 @@
                              :label="t(appName, 'User Group')"
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
+                             :required="true"
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
+                             @error="showErrorToast"
         />
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
                              :disabled="groupAdminsDisabled"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
+                             @error="showErrorToast"
         />
       </div>
       <SettingsInputText v-if="config.isAdmin"
@@ -51,6 +54,7 @@
                          :label="t(appName, 'Wiki Name-Space')"
                          :hint="hints['settings:admin:wiki-name-space']"
                          @update="saveSetting('wikiNameSpace', ...arguments)"
+                         @error="showErrorToast"
       />
       <div>
         <button type="button"
@@ -66,7 +70,58 @@
         </p>
       </div>
     </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin" class="sub-admin" :title="t(appName, 'Access Control')">
+    <SettingsSection v-if="config.isSubAdmin"
+                     :class="['sub-admin', { 'icon-loading': loading.recryption }]"
+                     :title="t(appName, 'Recryption Requests')"
+    >
+      <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
+        <input :id="['mark',userId].join('-')"
+               v-model="recryption.requests[userId].marked"
+               type="checkbox"
+               class="checkbox request-mark"
+               @change="markRecryptionRequest(userId, ...arguments)"
+        >
+        <label :for="['mark', userId].join('-')" />
+        <Actions>
+          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
+            {{ t(appName, 'recrypt') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
+            {{ t(appName, 'reject') }}
+          </ActionButton>
+        </Actions>
+        <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
+          <span class="display-name" :title="userId">{{ request.displayName }}</span>
+          <span :class="'user-tag' + ' ' + 'organizer' + ' ' + (request.isOrganizer ? 'set' : 'unset')">{{ t(appName, 'organizer') }}</span>
+          <span :class="'user-tag' + ' ' + 'group-admin' + ' ' + (request.isGroupAdmin ? 'set' : 'unset')">{{ t(appName, 'group-admin') }}</span>
+        </div>
+      </div>
+      <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations flex-container flex-align-center">
+        <input id="mark-all"
+               v-model="recryption.allRequestsMarked"
+               type="checkbox"
+               class="checkbox request-mark"
+               @change="markAllRecryptionRequests(...arguments)"
+        >
+        <label for="mark-all">{{ t(appName, 'Mark/unmark all.') }}</label>
+        <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
+        <Actions>
+          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
+            {{ t(appName, 'recrypt') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
+            {{ t(appName, 'reject') }}
+          </ActionButton>
+        </Actions>
+      </div>
+      <div v-else>
+        <span class="hint">{{ t(appName, 'No recryption requests are pending.') }}</span>
+      </div>
+    </SettingsSection>
+    <SettingsSection v-if="config.isSubAdmin"
+                     class="sub-admin"
+                     :title="t(appName, 'Access Control')"
+    >
       <SelectMusicians v-model="access.musicians"
                        :tooltip="access.musicians.length ? false : hints['settings:admin:access-control:musicians']"
                        :label="t(appName, 'Musicians')"
@@ -78,7 +133,7 @@
       />
       <SelectProjects v-model="access.project"
                       :tooltip="hints['settings:admin:access-control:project-restriction']"
-                      :label="t(appName, 'Restrict to Project')"
+                      :label="t(appName, 'Restrict User Selection to Project')"
                       :placeholder="t(appName, 'e.g. Auvergne2019')"
                       :multiple="false"
                       :clear-button="true"
@@ -131,51 +186,6 @@
         </Actions>
       </span>
     </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin" class="sub-admin" :title="t(appName, 'Recryption Requests')">
-      <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
-        <input :id="['mark',userId].join('-')"
-               v-model="recryption.requests[userId].marked"
-               type="checkbox"
-               class="checkbox request-mark"
-               @change="markRecryptionRequest(userId, ...arguments)"
-        >
-        <label :for="['mark', userId].join('-')" />
-        <Actions>
-          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
-            {{ t(appName, 'recrypt') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
-            {{ t(appName, 'reject') }}
-          </ActionButton>
-        </Actions>
-        <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
-          <span class="display-name" :title="userId">{{ request.displayName }}</span>
-          <span :class="'user-tag' + ' ' + 'organizer' + ' ' + (request.isOrganizer ? 'set' : 'unset')">{{ t(appName, 'organizer') }}</span>
-          <span :class="'user-tag' + ' ' + 'group-admin' + ' ' + (request.isGroupAdmin ? 'set' : 'unset')">{{ t(appName, 'group-admin') }}</span>
-        </div>
-      </div>
-      <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations">
-        <input id="mark-all"
-               v-model="recryption.allRequestsMarked"
-               type="checkbox"
-               class="checkbox request-mark"
-               @change="markAllRecryptionRequests(...arguments)"
-        >
-        <label for="mark-all">{{ t(appName, 'Mark/unmark all.') }}</label>
-        <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
-        <Actions>
-          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
-            {{ t(appName, 'recrypt') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
-            {{ t(appName, 'reject') }}
-          </ActionButton>
-        </Actions>
-      </div>
-      <div v-else>
-        <span class="hint">{{ t(appName, 'No recryption requests are pending.') }}</span>
-      </div>
-    </SettingsSection>
   </div>
 </template>
 <script>
@@ -221,6 +231,11 @@ export default {
   ],
   data() {
     return {
+      loading: {
+        general: true,
+        recryption: true,
+        tooltips: true,
+      },
       settings: {
         orchestraUserGroup: '',
         orchestraUserGroupAdmins: [],
@@ -231,6 +246,7 @@ export default {
         'settings:admin:cloud-user-backend-conf': '',
         'settings:admin:wiki-name-space': '',
         'settings:admin:user-group': '',
+        'settings:admin:user-group:admins': '',
         'settings:admin:access-control:musicians': '',
       },
       forword: '',
@@ -264,7 +280,6 @@ export default {
       try { return this.access.project.id } catch (ignoreMe) { return 0 }
     },
     applyAccessToAll() {
-      console.info('ACCESS TO ALL', this.access)
       return this.access.musicians.length === 1 && this.access.musicians[0].id <= 0
     },
     showAccessActionProgress() {
@@ -281,7 +296,6 @@ export default {
     accessActionFinished() {
       const totals = this.access.action.totals
       const done = this.access.action.done
-      console.info('ACTION', this.access.action)
       return (done > 0 && done >= totals) || this.access.action.failure
     },
     accessActionLabel() {
@@ -295,34 +309,60 @@ export default {
     accessActionError() {
       return this.access.action.failure
     },
+    isLoading() {
+      return this.loading.general || this.loading.tooltips || this.loading.recryption
+    },
   },
   methods: {
+    info() {
+      console.info('INFO', arguments)
+    },
+    showErrorToast(message) {
+      showError(message, { timeout: TOAST_DEFAULT_TIMEOUT })
+    },
     async getData() {
-      for (const [key, value] of Object.entries(this.settings)) {
-        const response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/{key}', { key }));
-        this.settings[key] = response.data.value;
-      }
-      for (const [key, value] of Object.entries(this.hints)) {
-        this.hints[key] = await this.tooltip(key);
-      }
+      this.loading.general = true
+      this.loading.recryption = true
+      this.loadTooltips()
+      this.getSettingsData()
+      // fetch recryption requests
+      this.getRecryptionRequests()
+    },
+    async loadTooltips() {
+      this.loading.tooltips = true
       const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appName + '</a>'
       this.forword = t(
         appName,
         'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
           personalSettingsLink
         }, undefined, { escape: false });
-      // curl -u $(cat ./APITEST-TOKEN) -X GET 'https://anaxagoras.home.claus-justus-heine.de/nextcloud-git/ocs/v2.php/apps/cafevdb/api/v1/maintenance/encryption/recrypt' -H "OCS-APIRequest: true"
-      // fetch recryption requests
-      {
-        const response = await axios.get(generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt'))
-        console.info('DATA SETUP', response)
-        Vue.set(this.recryption, 'requests', {})
-        Vue.set(this.recryption, 'allRequestsMarked', '')
+      this.hints = await this.tooltips(Object.keys(this.hints))
+      this.loading.tooltips = false
+    },
+    async getSettingsData() {
+      this.loading.general = true
+      const requests = {}
+      for (const key of Object.keys(this.settings)) {
+        requests[key] = axios.get(generateUrl('apps/' + appName + '/settings/admin/{key}', { key }))
+      }
+      for (const [key, request] of Object.entries(requests)) {
+        const response = await request
+        this.settings[key] = response.data.value;
+      }
+      this.loading.general = false
+    },
+    async getRecryptionRequests() {
+      this.loading.recryption = true
+      Vue.set(this.recryption, 'requests', {})
+      Vue.set(this.recryption, 'allRequestsMarked', '')
+      try {
+        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt')
+        const response = await axios.get(url + '?format=json')
         if (Object.keys(response.data.ocs.data.requests).length > 0) {
           const recryptionRequests = response.data.ocs.data.requests
           for (const [userId, publicKey] of Object.entries(recryptionRequests)) {
             try {
-              const response = await axios.get(generateOcsUrl('cloud/users/{userId}', { userId }))
+                const response = await axios.get(generateOcsUrl('cloud/users/{userId}', { userId }))
               const user = response.data.ocs.data
               const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
               const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
@@ -331,7 +371,7 @@ export default {
                 publicKey,
                 displayName: user.displayname,
                 groups: user.groups,
-                enabled: user.enabled,
+                  enabled: user.enabled,
                 isOrganizer,
                 isGroupAdmin,
                 marked: '',
@@ -341,8 +381,11 @@ export default {
             }
           }
         }
+      } catch (e) {
+        // admin is maybe not authorized
+        console.info('Unable to fetch recryption entries')
       }
-      console.info('RECRYPTION', this.recryption)
+      this.loading.recryption = false
     },
     async saveSetting(settingsKey, value, force) {
       const self = this
@@ -358,7 +401,7 @@ export default {
                 self.saveSetting(settingsKey, value, true)
               } else {
                 showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
-                self.getData()
+                self.getSettingsData()
               }
             },
             true)
@@ -393,7 +436,7 @@ export default {
         } else {
           showError(t(appName, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         }
-        self.getData()
+        self.getSettingsData()
       }
     },
     markAllRecryptionRequests(event) {
@@ -412,12 +455,12 @@ export default {
       }
     },
     async doHandleRecryptionRequest(userId, silent, allowFailure) {
-      return await axios.post(
-        generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-          userId
-        }), {
-          notifyUser: silent !== true,
-          allowFailure,
+      const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+        userId,
+      })
+      return await axios.post(url + '?format=json', {
+        notifyUser: silent !== true,
+        allowFailure,
       })
     },
     async handleRecryptionRequest(userId, silent) {
@@ -438,15 +481,15 @@ export default {
                   + ')'
         }
         showError(t(appName, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.getData()
+        this.getRecryptionRequests()
       }
     },
     async deleteRecryptionRequest(userId) {
       try {
-        const response = await axios.delete(
-          generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-            userId
-        }))
+        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+            userId,
+        })
+        const response = await axios.delete(url + '?format=json')
         showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
         Vue.delete(this.recryption.requests, userId)
       } catch (e) {
@@ -462,16 +505,16 @@ export default {
                   + ')'
         }
         showError(t(appName, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.getData()
+        this.getRecryptionRequests()
       }
     },
     async doRevokeCloudAccess(userId, allowFailure) {
-      return await axios.post(
-        generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/revoke/{userId}', {
-          userId
-        }, {
-          allowFailure,
-      }))
+      const url = generateOcsUrl(
+        'apps/cafevdb/api/v1/maintenance/encryption/revoke/{userId}', {
+          userId,
+        }
+      );
+      return await axios.post(url + '?format=json')
     },
     async handleMarkedRecrytpionRequests() {
       const allRequests = Object.values(this.recryption.requests)
@@ -503,11 +546,9 @@ export default {
           const response = action === 'grant'
             ? await this.doHandleRecryptionRequest(musician.userIdSlug, true, true)
             : await this.doRevokeCloudAccess(musician.userIdSlug, true)
-          console.info('RESPONSE', response)
           const ocsData = response.data.ocs.data
           const lastUser = ocsData.userId
           failedUsers += ocsData.status == 'failure'
-          console.info('LAST USER', lastUser)
           this.access.action.done ++
           this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
           if (failedUsers > 0) {
@@ -545,39 +586,35 @@ export default {
       }
     },
     async handleBulkAccessAction(action) {
-      console.info('ACCESS TO ALL', this.applyAccessToAll)
       this.access.action.active = true
       let failedUsers = 0
       try {
-        const response = await axios.post(
-          generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json'), {
-            grantAccess: action === 'grant' ? true : false,
-            includeDisabled: this.access.includeDisabled,
-            includeDeactivated: this.access.includeDeactivated,
-            projectId: this.projectId,
-            offset: 0,
-            limit: 0,
+        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json')
+        const response = await axios.post(url + '?format=json', {
+          grantAccess: action === 'grant' ? true : false,
+          includeDisabled: this.access.includeDisabled,
+          includeDeactivated: this.access.includeDeactivated,
+          projectId: this.projectId,
+          offset: 0,
+          limit: 0,
         })
-        console.info('RESPONSE', response)
         this.access.action.totals = response.data.ocs.data.count
         const limit = this.access.action.totals > 100 ? this.access.action.totals / 100 : 1
         let count = 0
         let lastUser
         do {
-          const response = await axios.post(
-            generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json'), {
-              grantAccess: action === 'grant' ? true : false,
-              includeDisabled: this.access.includeDisabled,
-              includeDeactivated: this.access.includeDeactivated,
-              projectId: this.projectId,
-              offset: this.access.action.done,
-              limit,
+          url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption')
+          const response = await axios.post(url + '?format=json', {
+            grantAccess: action === 'grant' ? true : false,
+            includeDisabled: this.access.includeDisabled,
+            includeDeactivated: this.access.includeDeactivated,
+            projectId: this.projectId,
+            offset: this.access.action.done,
+            limit,
           })
-          console.info('RESPONSE', response)
           const musicians = response.data.ocs.data
           failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure'), failedUsers)
           lastUser = musicians.slice(-1).userId
-          console.info('LAST USER', lastUser)
           count = musicians.length
           this.access.action.done += count
           this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
