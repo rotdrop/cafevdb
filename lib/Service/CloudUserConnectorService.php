@@ -428,7 +428,6 @@ WITH CHECK OPTION';
       'opt.crypto_param_0' => $cryptoMemoryCost,
       'opt.crypto_param_1' => $cryptoTimeCost,
       'opt.crypto_param_2' => $cryptoThreads,
-      'opt.default_group' => null,
       'opt.email_login' => true,
       'opt.email_sync' => 'force_sql',
       'opt.home_location' => null,
