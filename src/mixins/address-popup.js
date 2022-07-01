@@ -29,6 +29,9 @@ export default {
       return t(appName, '{item}: unknown', { item: t(appName, item) });
     },
     musicianAddressPopup(option) {
+      if (!option.id === 0) {
+        return this.addressPopup(t(appName, 'selects all musicians'));
+      }
       const name = option.informalDisplayName || '';
       const userId = option.userIdSlug ? ` (${option.userIdSlug})` : '';
       const email = option.email || this.addressItemUnknownLabel('email');
@@ -36,8 +39,15 @@ export default {
       const streetNumber = option.streetNumber ? ' ' + option.streetNumber : '';
       const postalCode = option.postalCode && option.postalCode !== '0' ? option.postalCode + ' ' : '';
       const city = option.city || this.addressItemUnknownLabel('city');
-      const content = `<h4>${name}${userId}</h4>`
-            + [email, street + streetNumber, postalCode + city, `${option.countryName} (${option.country})`].join('<br/>');
+      const additionalInfo = [email, street + streetNumber, postalCode + city];
+      if (option.countryName) {
+        let country = option.countryName;
+        if (option.country) {
+          country += ` (${option.country})`;
+        }
+        additionalInfo.push(country);
+      }
+      const content = `<h4>${name}${userId}</h4>` + additionalInfo.join('<br/>');
       return this.addressPopup(content);
     },
     contactAddressPopup(option) {

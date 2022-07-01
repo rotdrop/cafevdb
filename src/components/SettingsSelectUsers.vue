@@ -24,10 +24,13 @@
 
 <template>
   <form class="settings-select-users" @submit.prevent="">
-    <div class="input-wrapper">
+    <div :class="['input-wrapper', { empty, required }]">
+      <div v-if="showLoadingIndicator" class="loading" />
       <label :for="id">{{ label }}</label>
       <Multiselect :id="id"
+                   ref="multiselect"
                    v-model="inputValObjects"
+                   v-tooltip="active ? false : tooltip"
                    :options="usersArray"
                    :options-limit="100"
                    :placeholder="label"
@@ -41,7 +44,30 @@
                    :disabled="disabled"
                    @input="emitInput"
                    @search-change="asyncFindUser"
-      />
+                   @open="active = true"
+                   @close="active = false"
+      >
+        <template #option="optionData">
+          <EllipsisedCloudUserOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
+                                     :option="optionData.option"
+                                     :search="optionData.search"
+                                     :label="$refs.multiselect.label"
+          />
+        </template>
+        <template #tag="tagData">
+          <span :key="tagData.option.id"
+                v-tooltip="userInfoPopup(tagData.option)"
+                class="multiselect__tag"
+          >
+            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
+            <i tabindex="1"
+               class="multiselect__tag-icon"
+               @keypress.enter.prevent="tagData.remove(tagData.option)"
+               @mousedown.prevent="tagData.remove(tagData.option)"
+            />
+          </span>
+        </template>
+      </Multiselect>
       <input type="submit"
              class="icon-confirm"
              value=""
@@ -56,16 +82,23 @@
 </template>
 
 <script>
+import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import userInfoPopup from '../mixins/user-info-popup'
+import EllipsisedCloudUserOption from './EllipsisedCloudUserOption'
 
 let uuid = 0
 export default {
   name: 'SettingsSelectUsers',
   components: {
     Multiselect,
+    EllipsisedCloudUserOption,
   },
+  mixins: [
+    userInfoPopup,
+  ],
   props: {
     label: {
       type: String,
@@ -83,11 +116,30 @@ export default {
       type: Boolean,
       default: false,
     },
+    allowEmpty: {
+      type: Boolean,
+      default: true,
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    tooltip: {
+      type: [Object, String, Boolean],
+      default: undefined,
+    },
+    loadingIndicator: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       inputValObjects: [],
       users: {},
+      loading: true,
+      loadingPromise: Promise.resolve(),
+      active: false,
     }
   },
   computed: {
@@ -97,17 +149,32 @@ export default {
     usersArray() {
       return Object.values(this.users)
     },
+    empty() {
+      return !this.inputValObjects || (Array.isArray(this.inputValObjects) && this.inputValObjects.length === 0)
+    },
+    showLoadingIndicator() {
+      return this.loadingIndicator && this.loading
+    },
   },
   watch: {
     value(newVal) {
-      this.inputValObjects = this.getValueObject()
+      this.loadingPromise.finally(() => {
+        this.inputValObjects = this.getValueObject()
+      })
     },
   },
   created() {
     this.uuid = uuid.toString()
     uuid += 1
-    this.asyncFindUser('').then((result) => {
-      this.inputValObjects = this.getValueObject()
+    this.loadingPromise.finally(() => {
+      this.loadingPromise = new Promise((resolve, reject) => {
+        this.loading = true
+        this.asyncFindUser('').then((result) => {
+          this.inputValObjects = this.getValueObject()
+          this.loading = false
+          resolve(this.loading)
+        })
+      })
     })
   },
   methods: {
@@ -125,12 +192,16 @@ export default {
       )
     },
     emitInput() {
-      if (this.inputValObjects) {
+      if (Array.isArray(this.inputValObjects) && (this.allowEmpty || !this.empty)) {
         this.$emit('input', this.inputValObjects.map((element) => element.id))
       }
     },
     emitUpdate() {
-      this.$emit('update', this.inputValObjects.map((element) => element.id))
+      if (this.required && this.empty) {
+        this.$emit('error', t(appName, 'An empty value is not allowed, please make your choice!'))
+      } else {
+        this.$emit('update', this.inputValObjects.map((element) => element.id))
+      }
     },
     asyncFindUser(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''
@@ -152,61 +223,125 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-  .settings-select-users {
-    .input-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      max-width: 400px;
-      align-items: center;
-      div.multiselect.multiselect-vue.multiselect--multiple {
-        &:not(.multiselect--active) {
-          height:35.2px;
+<style lang="scss" scoped>
+.settings-select-users {
+  .input-wrapper {
+    position:relative;
+    .loading {
+      position:absolute;
+      width:0;
+      height:0;
+      top:50%;
+      left:50%;
+    }
+    &.empty.required {
+      div.multiselect.multiselect-vue::v-deep .multiselect__tags {
+        border-left: 1px solid red;
+        border-top: 1px solid red;
+        border-bottom: 1px solid red;
+      }
+      .icon-confirm {
+        border-right: 1px solid red;
+        border-top: 1px solid red;
+        border-bottom: 1px solid red;
+      }
+    }
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 400px;
+    align-items: center;
+    div.multiselect.multiselect-vue.multiselect--multiple::v-deep {
+      &:not(.multiselect--active) {
+        height:35.2px;
+      }
+      flex-grow:1;
+      &:hover .multiselect__tags {
+        border-color: var(--color-primary-element);
+        outline: none;
+      }
+      &:hover + .icon-confirm {
+        border-color: var(--color-primary-element) !important;
+        border-left-color: transparent !important;
+        z-index: 2;
+      }
+      &.multiselect--active + .icon-confirm {
+        display:none;
+      }
+      + .icon-confirm {
+        &:disabled {
+          background-color: var(--color-background-dark) !important;
         }
-        flex-grow:1;
-        &:hover .multiselect__tags {
-          border-color: var(--color-primary-element);
-          outline: none;
-        }
-        &:hover + .icon-confirm {
+        margin-left: -8px !important;
+        border-left-color: transparent !important;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
+        background-clip: padding-box;
+        background-color: var(--color-main-background) !important;
+        opacity: 1;
+        padding: 7px 6px;
+        height:35.2px;
+        width:35.2px;
+        margin-right:0;
+        z-index:2;
+        &:hover, &:focus {
           border-color: var(--color-primary-element) !important;
-          border-left-color: transparent !important;
-          z-index: 2;
-        }
-        &.multiselect--active + .icon-confirm {
-          display:none;
-        }
-        + .icon-confirm {
-          &:disabled {
-            background-color: var(--color-background-dark) !important;
-          }
-          margin-left: -8px !important;
-          border-left-color: transparent !important;
-          border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-          background-clip: padding-box;
-          background-color: var(--color-main-background) !important;
-          opacity: 1;
-          padding: 7px 6px;
-          height:35.2px;
-          width:35.2px;
-          margin-right:0;
-          z-index:2;
-          &:hover, &:focus {
-            border-color: var(--color-primary-element) !important;
-            border-radius: var(--border-radius) !important;
-          }
+          border-radius: var(--border-radius) !important;
         }
       }
 
-      label {
-        width: 100%;
+      .multiselect__content-wrapper li > span {
+        &:not(.multiselect__option--selected):hover::before {
+          visibility:hidden;
+        }
+      }
+
+      .multiselect__tag {
+        position: relative;
+        padding-right: 18px;
+        .multiselect__tag-icon {
+          cursor: pointer;
+          margin-left: 7px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          font-weight: 700;
+          font-style: initial;
+          width: 22px;
+          text-align: center;
+          line-height: 22px;
+          transition: all 0.2s ease;
+          border-radius: 5px;
+        }
+
+        .multiselect__tag-icon:after {
+          content: "×";
+          color: #266d4d;
+          font-size: 14px;
+        }
       }
     }
 
-    .hint {
-      color: var(--color-text-lighter);
-      font-size:80%;
+    label {
+      width: 100%;
     }
   }
+
+  .hint {
+    color: var(--color-text-lighter);
+    font-size:80%;
+  }
+}
+</style>
+<style>
+.vue-tooltip-user-info-popup.vue-tooltip .tooltip-inner {
+  text-align: left !important;
+  *:not(h4) {
+    color: var(--color-text-lighter);
+    font-size:80%;
+  }
+  h4 {
+    font-weight: bold;
+  }
+}
 </style>

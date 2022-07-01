@@ -1,58 +1,60 @@
 <!--
-  - @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
-  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
-  -
-  - @author John Molakvoæ <skjnldsv@protonmail.com>
-  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
-  -
-  - @license GNU AGPL version 3 or any later version
-  -
-  - This program is free software: you can redistribute it and/or modify
-  - it under the terms of the GNU Affero General Public License as
-  - published by the Free Software Foundation, either version 3 of the
-  - License, or (at your option) any later version.
-  -
-  - This program is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  - GNU Affero General Public License for more details.
-  -
-  - You should have received a copy of the GNU Affero General Public License
-  - along with this program. If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
+   - @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
+   - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+   -
+   - @author John Molakvoæ <skjnldsv@protonmail.com>
+   - @author Claus-Justus Heine <himself@claus-justus-heine.de>
+   -
+   - @license GNU AGPL version 3 or any later version
+   -
+   - This program is free software: you can redistribute it and/or modify
+   - it under the terms of the GNU Affero General Public License as
+   - published by the Free Software Foundation, either version 3 of the
+   - License, or (at your option) any later version.
+   -
+   - This program is distributed in the hope that it will be useful,
+   - but WITHOUT ANY WARRANTY; without even the implied warranty of
+   - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   - GNU Affero General Public License for more details.
+   -
+   - You should have received a copy of the GNU Affero General Public License
+   - along with this program. If not, see <http://www.gnu.org/licenses/>.
+   -
+-->
 
 <template>
-  <div v-tooltip.bottom="tooltip"
+  <div v-tooltip.bootom="tooltip"
        class="name-parts"
   >
-    <Highlight class="name-parts__first"
-               :text="part1"
-               :search="search"
-               :highlight="highlight1"
+    <Highlight
+      class="name-parts__first"
+      :text="part1"
+      :search="search"
+      :highlight="highlight1"
     />
-    <Highlight v-if="part2"
-               class="name-parts__last"
-               :text="part2"
-               :search="search"
-               :highlight="highlight2"
+    <Highlight
+      v-if="part2"
+      class="name-parts__last"
+      :text="part2"
+      :search="search"
+      :highlight="highlight2"
     />
   </div>
 </template>
 <script>
 import Highlight from '@nextcloud/vue/dist/Components/Highlight'
 import FindRanges from '../utils/FindRanges'
-import addressPopup from '../mixins/address-popup'
+import userInfoPopup from '../mixins/user-info-popup'
 
 export default {
-  name: 'EllipsisedMusicianOption',
+  name: 'EllipsisedCloudUserOption',
 
   components: {
     Highlight,
   },
 
   mixins: [
-    addressPopup,
+    userInfoPopup,
   ],
 
   props: {
@@ -127,8 +129,13 @@ export default {
         }
       })
     },
+    /**
+     * As the display-name may not be unique we also show the user-id
+     *
+     * @returns {string}
+     */
     tooltip() {
-      return this.musicianAddressPopup(this.option)
+      return this.userInfoPopup(this.option)
     },
   },
 }

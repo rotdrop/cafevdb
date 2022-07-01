@@ -24,7 +24,7 @@
 
 <template>
   <form class="select-musicians" @submit.prevent="">
-    <div v-if="loading" class="loading" />
+    <div v-if="showLoadingIndicator" class="loading" />
     <div class="input-wrapper">
       <label v-if="label !== undefined" :for="id">{{ label }}</label>
       <Multiselect :id="id"
@@ -172,6 +172,10 @@ export default {
       type: Boolean,
       default: undefined,
     },
+    loadingIndicator: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup() {
     const persistentData = usePersistentDataStore()
@@ -196,6 +200,9 @@ export default {
     },
     provideSelectAll() {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
+    },
+    showLoadingIndicator() {
+      return this.loadingIndicator && this.loading
     },
   },
   watch: {
