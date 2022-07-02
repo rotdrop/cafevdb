@@ -103,7 +103,7 @@
                class="checkbox request-mark"
                @change="markAllRecryptionRequests(...arguments)"
         >
-        <label for="mark-all">{{ t(appName, 'Mark/unmark all.') }}</label>
+        <label class="bulk-operation-mark" for="mark-all">{{ t(appName, 'mark/unmark all.') }}</label>
         <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
         <Actions>
           <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
@@ -664,22 +664,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .settings-section {
-  .access-action-status {
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    width:100%;
-    .flex-spacer {
-      flex-grow:4;
-      height:34px
-    }
-    button.sync-clear {
-      margin-left:1ex;
-    }
-    button.access-action-clear {
-      margin-left:1ex;
-    }
-  }
   .flex-container {
     display: flex;
     &.flex- {
@@ -697,6 +681,29 @@ export default {
   }
   ::v-deep hr {
     opacity: 0.2;
+  }
+  label.bulk-operation-mark {
+    &::after {
+      content: "|";
+      margin-left: 1ex;
+      margin-right: 1ex;
+    }
+  }
+  .access-action-status {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    width:100%;
+    .flex-spacer {
+      flex-grow:4;
+      height:34px
+    }
+    button.sync-clear {
+      margin-left:1ex;
+    }
+    button.access-action-clear {
+      margin-left:1ex;
+    }
   }
   ::v-deep a.external.settings {
     background-image:url('../../../../core/img/actions/settings.svg');
