@@ -255,8 +255,10 @@ export default {
       forword: '',
       recryption: {
         requests: {},
-        allRequestsMarked: ''
+        allRequestsMarked: '',
       },
+      recryptionPollTimer: null,
+      recryptionPollTimeout: 10*1000,
       access: {
         musicians: [],
         project: '',
@@ -274,6 +276,10 @@ export default {
   },
   created() {
     this.getData()
+  },
+  beforeDestroy() {
+    this.clearTimeout(this.recryptionPollTimer)
+    this.recryptionPollTimer = null
   },
   computed: {
     groupAdminsDisabled() {
@@ -358,36 +364,67 @@ export default {
       this.loading.recryption = true
       Vue.set(this.recryption, 'requests', {})
       Vue.set(this.recryption, 'allRequestsMarked', '')
+      await this.updateRecryptionRequests()
+      this.recryptionPollTimer = setTimeout(() => this.pollRecryptionRequests(), this.recryptionPollTimeout)
+    },
+    async pollRecryptionRequests() {
+      await this.updateRecryptionRequests()
+      this.recryptionPollTimer = setTimeout(() => this.pollRecryptionRequests(), this.recryptionPollTimeout)
+    },
+    /**
+     * Update the recryption requests if needed. It is assumed that
+     * the time-stamp is a unique key, so if there is already a
+     * recryption request for a user with the same time-stamp then it
+     * is not replaced.
+     */
+    async updateRecryptionRequests() {
       try {
         const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt')
         const response = await axios.get(url + '?format=json')
-        if (Object.keys(response.data.ocs.data.requests).length > 0) {
-          const recryptionRequests = response.data.ocs.data.requests
-          console.info('RECRYPTION REQUESTS', recryptionRequests)
-          for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
-            try {
-                const response = await axios.get(generateOcsUrl('cloud/users/{userId}', { userId }))
-              const user = response.data.ocs.data
-              const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
-              const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
-              Vue.set(this.recryption.requests, userId, {
-                id: userId,
-                timeStamp,
-                displayName: user.displayname,
-                groups: user.groups,
-                enabled: user.enabled,
-                isOrganizer,
-                isGroupAdmin,
-                marked: '',
-              })
-            } catch (e) {
-              console.error('Unable to fetch data for user ' + userId, e)
-            }
+        const recryptionRequests = response.data.ocs.data.requests
+        // remove requests which are no longer there
+        for (const userId of Object.keys(this.recryption.requests)) {
+          if (!recryptionRequests[userId]) {
+            Vue.delete(this.recryption.requests, userId)
+          }
+        }
+        // update existing requests (time-stamp changed) and add new
+        // ones. Initiate the AJAX calls in parallel, then serialize
+          // later
+        const cloudUserPromises = [];
+        for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
+          if (!this.recryption.requests[userId] || this.recryption.requests[userId].timeStamp !== timeStamp) {
+            cloudUserPromises.push({
+              userId,
+              timeStamp,
+                promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
+            })
+          }
+        }
+        for (const cloudUserPromise of cloudUserPromises) {
+          const { userId, timeStamp, promise } = cloudUserPromise
+          try {
+            const response = await promise
+            const user = response.data.ocs.data
+            const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
+            const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
+            Vue.set(this.recryption.requests, userId, {
+              id: userId,
+              timeStamp,
+              displayName: user.displayname,
+              groups: user.groups,
+              enabled: user.enabled,
+              isOrganizer,
+              isGroupAdmin,
+              marked: '',
+            })
+          } catch (e) {
+            console.error('Unable to fetch data for user ' + userId, e)
           }
         }
       } catch (e) {
         // admin is maybe not authorized
-        console.info('Unable to fetch recryption entries')
+        console.error('Unable to fetch recryption entries', e)
       }
       this.loading.recryption = false
     },
@@ -458,18 +495,24 @@ export default {
         this.recryption.allRequestsMarked = false
       }
     },
+    /**
+     * @returns {Promise}
+     */
     async doHandleRecryptionRequest(userId, silent, allowFailure) {
       const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
         userId,
       })
-      return await axios.post(url + '?format=json', {
+      return axios.post(url + '?format=json', {
         notifyUser: silent !== true,
         allowFailure,
       })
     },
     async handleRecryptionRequest(userId, silent) {
+      this.awaitRecryptionRequestPromise(userId, this.doHandleRecryptionRequest(userId, silent))
+    },
+    async awaitRecryptionRequestPromise(userId, promise) {
       try {
-        const response = this.doHandleRecryptionRequest(userId, silent)
+        const response = await promise
         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
         Vue.delete(this.recryption.requests, userId)
       } catch (e) {
@@ -523,8 +566,13 @@ export default {
     async handleMarkedRecrytpionRequests() {
       const allRequests = Object.values(this.recryption.requests)
       const marked = allRequests.filter(request => request.marked)
+      const recryptionPromises = {}
       for (const request of marked) {
-        this.handleRecryptionRequest(request.id)
+        const userId = request.id
+        recryptionPromises[userId] = this.doHandleRecryptionRequest(userId)
+      }
+      for (const [userId, promise] of Object.entries(recryptionPromises)) {
+        this.awaitRecryptionRequestPromise(userId, promise)
       }
     },
     async deleteMarkedRecryptionRequests() {
