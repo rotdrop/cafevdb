@@ -1664,7 +1664,7 @@ OC.L10N.register(
     "Could not set \"{settingsKey}\": {message}" : "Konnte \"{settingsKey}\" nicht einstellen: {message}",
     "Successfully handled recryption request for {userId}." : "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet.",
     "Could not resolve the recryption request for {userId}: {message}" : "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: {message}",
-    "Successfully deleted recryption request for {userId}." : "Neu-Verschlüsselungs-Anfrage für {userid} erfolgreich gelöscht.",
+    "Successfully deleted recryption request for {userId}." : "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich gelöscht.",
     "Could not delete the recryption request for {userId}: {message}" : "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}",
     "No musicians selected, doing nothing." : "Keine Personen ausgewählt, mache nichts.",
     "Processed user-id {userId}." : "Benutzerkennung {userId} erledigt.",

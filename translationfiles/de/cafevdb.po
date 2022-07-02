@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-02 10:41+0200\n"
-"PO-Revision-Date: 2022-07-02 10:42+0200\n"
+"POT-Creation-Date: 2022-07-02 17:01+0200\n"
+"PO-Revision-Date: 2022-07-02 16:33+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2984,8 +2984,8 @@ msgstr "Kann den persönlichen Wert \"%1$s\" für \"%2$s\" nicht verschlüsseln.
 msgid "Cannot decrypt personal value \"%1$s\" for \"%2$s\"."
 msgstr "Kann den persönlichen Wert \"%1$s\" für \"%2$s\" nicht entschlüsseln."
 
-#: lib/Crypto/AsymmetricKeyService.php:530
-#: lib/Crypto/AsymmetricKeyService.php:587
+#: lib/Crypto/AsymmetricKeyService.php:532
+#: lib/Crypto/AsymmetricKeyService.php:589
 #, php-format
 msgid "No pending recryption-request for user \"%s\"."
 msgstr ""
@@ -3959,7 +3959,7 @@ msgstr "Datum"
 msgid "Total Insurance Amount"
 msgstr "Gesamtversicherungssumme"
 
-#. TRANSLATORS src/components/AdminSettings.vue:127
+#. TRANSLATORS src/components/AdminSettings.vue:128
 #. TRANSLATORS src/views/FilesTab.vue:132
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:96
 #: lib/Service/CloudUserConnectorService.php:393
@@ -4973,7 +4973,7 @@ msgstr ""
 msgid "Display"
 msgstr "Anzeige"
 
-#. TRANSLATORS src/components/AdminSettings.vue:123
+#. TRANSLATORS src/components/AdminSettings.vue:124
 #: lib/PageRenderer/ProjectParticipantFields.php:247
 #: specialVueFakeDummyForL10nScript.js:32
 msgid "Access Control"
@@ -10071,91 +10071,91 @@ msgstr "neu verschlüsseln"
 msgid "reject"
 msgstr "zurückweisen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:95
+#. TRANSLATORS src/components/AdminSettings.vue:96
 #: specialVueFakeDummyForL10nScript.js:18
 msgid "organizer"
 msgstr "Organisator"
 
-#. TRANSLATORS src/components/AdminSettings.vue:96
+#. TRANSLATORS src/components/AdminSettings.vue:97
 #: specialVueFakeDummyForL10nScript.js:20
 msgid "group-admin"
 msgstr "Gruppen-Administrator"
 
-#. TRANSLATORS src/components/AdminSettings.vue:106
+#. TRANSLATORS src/components/AdminSettings.vue:107
 #: specialVueFakeDummyForL10nScript.js:22
 msgid "mark/unmark all."
 msgstr "alle aus-/abwählen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:107
+#. TRANSLATORS src/components/AdminSettings.vue:108
 #: specialVueFakeDummyForL10nScript.js:24
 msgid "With the marked requests perform the following action:"
 msgstr "Mit den ausgewählten Anfragen die folgende Aktion ausführen:"
 
-#. TRANSLATORS src/components/AdminSettings.vue:118
+#. TRANSLATORS src/components/AdminSettings.vue:119
 #: specialVueFakeDummyForL10nScript.js:30
 msgid "No recryption requests are pending."
 msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 
-#. TRANSLATORS src/components/AdminSettings.vue:128
+#. TRANSLATORS src/components/AdminSettings.vue:129
 #. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:36
 #: specialVueFakeDummyForL10nScript.js:160
 msgid "e.g. Jane Doe"
 msgstr "z.B. Maximiliane Musterfrau"
 
-#. TRANSLATORS src/components/AdminSettings.vue:136
+#. TRANSLATORS src/components/AdminSettings.vue:137
 #: specialVueFakeDummyForL10nScript.js:38
 msgid "Restrict User Selection to Project"
 msgstr "Benutzerauswahl auf ein Projekt einschränken"
 
-#. TRANSLATORS src/components/AdminSettings.vue:137
+#. TRANSLATORS src/components/AdminSettings.vue:138
 #. TRANSLATORS src/views/FilesTab.vue:143
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:164
 msgid "e.g. Auvergne2019"
 msgstr "z.B. Auvergne2019"
 
-#. TRANSLATORS src/components/AdminSettings.vue:148
+#. TRANSLATORS src/components/AdminSettings.vue:149
 #: specialVueFakeDummyForL10nScript.js:42
 msgid "include disabled accounts"
 msgstr "gesperrte Benutzerkonten einschließen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:157
+#. TRANSLATORS src/components/AdminSettings.vue:158
 #: specialVueFakeDummyForL10nScript.js:44
 msgid "include deactivated accounts"
 msgstr "deaktivierte Benutzerkonten einschließen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:164
+#. TRANSLATORS src/components/AdminSettings.vue:165
 #: specialVueFakeDummyForL10nScript.js:46
 msgid "Remove the status feedback from the last action."
 msgstr "Die Status-Rückmeldung der letzten Aktion entfernden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:167
+#. TRANSLATORS src/components/AdminSettings.vue:168
 #: specialVueFakeDummyForL10nScript.js:48 src/app/inlineimage.js:240
 msgid "Ok"
 msgstr "Fertig"
 
-#. TRANSLATORS src/components/AdminSettings.vue:178
+#. TRANSLATORS src/components/AdminSettings.vue:179
 #: specialVueFakeDummyForL10nScript.js:50
 msgid "With the selected musicians perform the following action:"
 msgstr "Mit den ausgewählten Personen die folgende Aktion ausführen:"
 
-#. TRANSLATORS src/components/AdminSettings.vue:181
+#. TRANSLATORS src/components/AdminSettings.vue:182
 #: specialVueFakeDummyForL10nScript.js:52
 msgid "deny access"
 msgstr "Zugriff entziehen"
 
-#. TRANSLATORS src/components/AdminSettings.vue:184
+#. TRANSLATORS src/components/AdminSettings.vue:185
 #: specialVueFakeDummyForL10nScript.js:54
 msgid "grant access"
 msgstr "Zugriff gewähren"
 
-#. TRANSLATORS src/components/AdminSettings.vue:307
+#. TRANSLATORS src/components/AdminSettings.vue:316
 #: specialVueFakeDummyForL10nScript.js:56
 msgid "{current} of {totals}"
 msgstr "{current} von {totals}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:334
+#. TRANSLATORS src/components/AdminSettings.vue:343
 #: specialVueFakeDummyForL10nScript.js:58
 msgid ""
 "Further detailed configurations are necessary after configuring the user-"
@@ -10170,23 +10170,23 @@ msgstr ""
 "bei den \"persönlichen\" Einstellungen der App unter\n"
 "{personalSettingsLink} vorgenommen werden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:398
+#. TRANSLATORS src/components/AdminSettings.vue:439
 #: specialVueFakeDummyForL10nScript.js:60 src/app/project-participants.js:786
 #: src/app/projects.js:425 src/app/sepa-debit-mandate.js:862
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
-#. TRANSLATORS src/components/AdminSettings.vue:403
+#. TRANSLATORS src/components/AdminSettings.vue:444
 #: specialVueFakeDummyForL10nScript.js:62
 msgid "Unconfirmed, reverting to old value."
 msgstr "Bestätigung nicht erfolgt, setze auf den alten Wert zurück."
 
-#. TRANSLATORS src/components/AdminSettings.vue:416
+#. TRANSLATORS src/components/AdminSettings.vue:457
 #: specialVueFakeDummyForL10nScript.js:64
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
 
-#. TRANSLATORS src/components/AdminSettings.vue:426
+#. TRANSLATORS src/components/AdminSettings.vue:467
 #. TRANSLATORS src/views/FilesTab.vue:425
 #: specialVueFakeDummyForL10nScript.js:66
 #: specialVueFakeDummyForL10nScript.js:74
@@ -10197,70 +10197,70 @@ msgstr "Wert für {settingsKey} auf {value} gesetzt.\n"
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
-#. TRANSLATORS src/components/AdminSettings.vue:435
+#. TRANSLATORS src/components/AdminSettings.vue:476
 #: specialVueFakeDummyForL10nScript.js:68
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:437
+#. TRANSLATORS src/components/AdminSettings.vue:478
 #: specialVueFakeDummyForL10nScript.js:70
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht einstellen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:469
+#. TRANSLATORS src/components/AdminSettings.vue:516
 #: specialVueFakeDummyForL10nScript.js:72
 msgid "Successfully handled recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:483
+#. TRANSLATORS src/components/AdminSettings.vue:530
 #: specialVueFakeDummyForL10nScript.js:76
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: "
 "{message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:493
+#. TRANSLATORS src/components/AdminSettings.vue:540
 #: specialVueFakeDummyForL10nScript.js:78
 msgid "Successfully deleted recryption request for {userId}."
-msgstr "Neu-Verschlüsselungs-Anfrage für {userid} erfolgreich gelöscht."
+msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich gelöscht."
 
-#. TRANSLATORS src/components/AdminSettings.vue:507
+#. TRANSLATORS src/components/AdminSettings.vue:554
 #: specialVueFakeDummyForL10nScript.js:82
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:535
+#. TRANSLATORS src/components/AdminSettings.vue:587
 #: specialVueFakeDummyForL10nScript.js:84
 msgid "No musicians selected, doing nothing."
 msgstr "Keine Personen ausgewählt, mache nichts."
 
-#. TRANSLATORS src/components/AdminSettings.vue:553
+#. TRANSLATORS src/components/AdminSettings.vue:605
 #: specialVueFakeDummyForL10nScript.js:86
 #: specialVueFakeDummyForL10nScript.js:104
 msgid "Processed user-id {userId}."
 msgstr "Benutzerkennung {userId} erledigt."
 
-#. TRANSLATORS src/components/AdminSettings.vue:555
+#. TRANSLATORS src/components/AdminSettings.vue:607
 #: specialVueFakeDummyForL10nScript.js:88
 #: specialVueFakeDummyForL10nScript.js:106
 msgid "{failedUsers} users have failed."
 msgstr "{failedUsers} Benutzerkennungen sind fehlgeschlagen."
 
-#. TRANSLATORS src/components/AdminSettings.vue:569
+#. TRANSLATORS src/components/AdminSettings.vue:621
 #: specialVueFakeDummyForL10nScript.js:92
 #: specialVueFakeDummyForL10nScript.js:110
 msgid "Unable to handle access action: {message}"
 msgstr "Kann die Zugriffs-Kontroll-Aktion nicht ausführen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:576
+#. TRANSLATORS src/components/AdminSettings.vue:628
 #: specialVueFakeDummyForL10nScript.js:94
 #: specialVueFakeDummyForL10nScript.js:112
 msgid "Failed after {numUsers} users have been processed successfully."
 msgstr ""
 "Abbruch nachdem {numUsers} Benutzerkennungen erfolgreich bearbeitet wurden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:578
+#. TRANSLATORS src/components/AdminSettings.vue:630
 #: specialVueFakeDummyForL10nScript.js:96
 #: specialVueFakeDummyForL10nScript.js:102
 #: specialVueFakeDummyForL10nScript.js:114
@@ -10269,13 +10269,13 @@ msgid "{failedUsers} were processed unsuccessfully."
 msgstr ""
 "Die Bearbeitung von {failedUsers} Benutzerkennungen ist fehlgeschlagen."
 
-#. TRANSLATORS src/components/AdminSettings.vue:580
+#. TRANSLATORS src/components/AdminSettings.vue:632
 #: specialVueFakeDummyForL10nScript.js:98
 #: specialVueFakeDummyForL10nScript.js:116
 msgid "{remainingUsers} remain unprocessed."
 msgstr "{remainingUsers} Benutzerkennungen wurden noch nicht bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:582
+#. TRANSLATORS src/components/AdminSettings.vue:634
 #: specialVueFakeDummyForL10nScript.js:100
 #: specialVueFakeDummyForL10nScript.js:118
 msgid "{numUsers} users have been processed successfully."
