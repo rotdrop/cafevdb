@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-01 20:52+0200\n"
-"PO-Revision-Date: 2022-07-01 21:17+0200\n"
+"POT-Creation-Date: 2022-07-02 10:41+0200\n"
+"PO-Revision-Date: 2022-07-02 10:42+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -9520,7 +9520,9 @@ msgstr ""
 msgid ""
 "The list of group-admins for the dedicated user-group. You should at least "
 "add one group-admin."
-msgstr "Die Gruppen-Administratoren für die Orchester-Benutzer-Gruppe. Wenigstens einer muss angegeben werden."
+msgstr ""
+"Die Gruppen-Administratoren für die Orchester-Benutzer-Gruppe. Wenigstens "
+"einer muss angegeben werden."
 
 #: lib/Service/ToolTipsService.php:1133
 msgid ""
@@ -10081,8 +10083,8 @@ msgstr "Gruppen-Administrator"
 
 #. TRANSLATORS src/components/AdminSettings.vue:106
 #: specialVueFakeDummyForL10nScript.js:22
-msgid "Mark/unmark all."
-msgstr "Alle aus-/abwählen"
+msgid "mark/unmark all."
+msgstr "alle aus-/abwählen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:107
 #: specialVueFakeDummyForL10nScript.js:24
@@ -10255,7 +10257,8 @@ msgstr "Kann die Zugriffs-Kontroll-Aktion nicht ausführen: {message}"
 #: specialVueFakeDummyForL10nScript.js:94
 #: specialVueFakeDummyForL10nScript.js:112
 msgid "Failed after {numUsers} users have been processed successfully."
-msgstr "Abbruch nachdem {numUsers} Benutzerkennungen erfolgreich bearbeitet wurden."
+msgstr ""
+"Abbruch nachdem {numUsers} Benutzerkennungen erfolgreich bearbeitet wurden."
 
 #. TRANSLATORS src/components/AdminSettings.vue:578
 #: specialVueFakeDummyForL10nScript.js:96
@@ -10263,7 +10266,8 @@ msgstr "Abbruch nachdem {numUsers} Benutzerkennungen erfolgreich bearbeitet wurd
 #: specialVueFakeDummyForL10nScript.js:114
 #: specialVueFakeDummyForL10nScript.js:120
 msgid "{failedUsers} were processed unsuccessfully."
-msgstr "Die Bearbeitung von {failedUsers} Benutzerkennungen ist fehlgeschlagen."
+msgstr ""
+"Die Bearbeitung von {failedUsers} Benutzerkennungen ist fehlgeschlagen."
 
 #. TRANSLATORS src/components/AdminSettings.vue:580
 #: specialVueFakeDummyForL10nScript.js:98

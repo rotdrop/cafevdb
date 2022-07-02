@@ -1641,7 +1641,7 @@ OC.L10N.register(
     "reject" : "zurückweisen",
     "organizer" : "Organisator",
     "group-admin" : "Gruppen-Administrator",
-    "Mark/unmark all." : "Alle aus-/abwählen",
+    "mark/unmark all." : "alle aus-/abwählen",
     "With the marked requests perform the following action:" : "Mit den ausgewählten Anfragen die folgende Aktion ausführen:",
     "No recryption requests are pending." : "Keine Neuverschlüsselungs-Anfragen anhängig.",
     "e.g. Jane Doe" : "z.B. Maximiliane Musterfrau",
