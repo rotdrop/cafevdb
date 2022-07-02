@@ -444,6 +444,8 @@ class AsymmetricKeyService
     } else  {
       $recryptionUsers = $this->cloudConfig->getUsersForUserValue($this->appName, self::RECRYPTION_REQUEST_KEY);
       $requests = $this->cloudConfig->getUserValueForUsers($this->appName, self::RECRYPTION_REQUEST_KEY, $recryptionUsers);
+      // sort by value, value is a timestamp
+      arsort($requests, SORT_NUMERIC);
     }
     return $requests;
   }

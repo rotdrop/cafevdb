@@ -90,10 +90,11 @@
             {{ t(appName, 'reject') }}
           </ActionButton>
         </Actions>
-        <div :class="'recryption-request-data' + (request.marked ? ' marked' : '')">
-          <span class="display-name" :title="userId">{{ request.displayName }}</span>
-          <span :class="'user-tag' + ' ' + 'organizer' + ' ' + (request.isOrganizer ? 'set' : 'unset')">{{ t(appName, 'organizer') }}</span>
-          <span :class="'user-tag' + ' ' + 'group-admin' + ' ' + (request.isGroupAdmin ? 'set' : 'unset')">{{ t(appName, 'group-admin') }}</span>
+        <div :class="['recryption-request-data', { marked: request.marked }, 'flex-container', 'flex-justify-left', 'flex-align-center']">
+          <span class="first visible display-name" :title="userId">{{ request.displayName }}</span>
+          <span class="following visible time-stamp">{{ formatDate(request.timeStamp, 'LLL') }}</span>
+          <span :class="['following', 'user-tag', 'organizer', { visible: request.isOrganizer, invisible: !request.isOrganizer }]">{{ t(appName, 'organizer') }}</span>
+          <span :class="['following', 'user-tag', 'group-admin', { visible: request.isGroupAdmin, invisible: !request.isGroupadmin }]">{{ t(appName, 'group-admin') }}</span>
         </div>
       </div>
       <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations flex-container flex-align-center">
@@ -205,6 +206,7 @@ import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANEN
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import tooltip from '../mixins/tooltips.js'
+import formatDate from '../mixins/formatDate.js'
 
 export default {
   name: 'AdminSettings',
@@ -228,6 +230,7 @@ export default {
   },
   mixins: [
     tooltip,
+    formatDate,
   ],
   data() {
     return {
@@ -360,7 +363,8 @@ export default {
         const response = await axios.get(url + '?format=json')
         if (Object.keys(response.data.ocs.data.requests).length > 0) {
           const recryptionRequests = response.data.ocs.data.requests
-          for (const [userId, publicKey] of Object.entries(recryptionRequests)) {
+          console.info('RECRYPTION REQUESTS', recryptionRequests)
+          for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
             try {
                 const response = await axios.get(generateOcsUrl('cloud/users/{userId}', { userId }))
               const user = response.data.ocs.data
@@ -368,10 +372,10 @@ export default {
               const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
               Vue.set(this.recryption.requests, userId, {
                 id: userId,
-                publicKey,
+                timeStamp,
                 displayName: user.displayname,
                 groups: user.groups,
-                  enabled: user.enabled,
+                enabled: user.enabled,
                 isOrganizer,
                 isGroupAdmin,
                 marked: '',
@@ -664,7 +668,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .settings-section {
-  .flex-container {
+  &::v-deep .flex-container {
     display: flex;
     &.flex- {
       &align- {
@@ -675,6 +679,12 @@ export default {
       &justify- {
         &center {
           justify-content: center;
+        }
+        &start {
+          justify-content: flex-start;
+        }
+        &left {
+          justify-content: left;
         }
       }
     }
@@ -724,17 +734,28 @@ export default {
     align-items: center;
     width:100%;
     .recryption-request-data {
-      display:inline-block;
-      .user-tag {
-        &.unset {
-          display:none;
+      &:not(.flex-container) {
+        display:inline-block;
+      }
+      .visible {
+        &.following {
+          &::before {
+            content: "|";
+            margin-left: 1ex;
+            margin-right: 1ex;
+          }
         }
-        &.group-admin {
-          color: red;
+        &.user-tag {
+          &.group-admin {
+            color: red;
+          }
+          &.organizer {
+            color: green;
+          }
         }
-        &.organizer {
-          color: green;
-        }
+      }
+      .invisible {
+        display:none;
       }
     }
     .checkbox.request-mark + label {
