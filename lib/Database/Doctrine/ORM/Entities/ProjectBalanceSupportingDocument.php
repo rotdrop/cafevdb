@@ -67,4 +67,18 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerProjectSequenceGenerator")
    */
   private $sequence;
+
+  /**
+   * @var EncryptedFile
+   *
+   * @ORM\ManyToMany(targetEntity="EncryptedFile")
+   * @ORM\JoinTable(
+   *   joinColumns={
+   *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *     @ORM\JoinColumn(name="sequence", referencedColumnName="sequence")
+   *   },
+   *   inverseJoinColumns={@ORM\JoinColumn(unique=true)}
+   * )
+   */
+  private $documents;
 }
