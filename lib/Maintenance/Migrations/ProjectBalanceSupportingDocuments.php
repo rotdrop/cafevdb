@@ -40,6 +40,8 @@ class ProjectBalanceSupportingDocuments extends AbstractMigration
       "ALTER TABLE ProjectBalanceSupportingDocuments ADD CONSTRAINT FK_41CACE26166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)",
       "ALTER TABLE project_balance_supporting_document_encrypted_file ADD CONSTRAINT FK_C2B8C544166D1F9C5286D72B FOREIGN KEY IF NOT EXISTS (project_id, sequence) REFERENCES ProjectBalanceSupportingDocuments (project_id, sequence)",
       "ALTER TABLE project_balance_supporting_document_encrypted_file ADD CONSTRAINT FK_C2B8C544EC15E76C FOREIGN KEY IF NOT EXISTS (encrypted_file_id) REFERENCES Files (id)",
+      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_supporting_documents_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE ProjectBalanceSupportingDocuments ADD COLUMN IF NOT EXISTS documents_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
     ],
   ];
 

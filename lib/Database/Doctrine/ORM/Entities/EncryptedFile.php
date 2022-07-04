@@ -63,6 +63,14 @@ class EncryptedFile extends File
    */
   private $owners;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="documents")
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="documentsChanged")
+   */
+  private $projectBalanceSupportingDocument;
+
   public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
@@ -76,6 +84,7 @@ class EncryptedFile extends File
     if (!empty($owner)) {
       $this->addOwner($owner);
     }
+    $this->projectBalanceSupportingDocument = new ArrayCollection;
   }
 
   /**
@@ -129,4 +138,31 @@ class EncryptedFile extends File
   {
     $this->owners->remove($musician->getId());
   }
+
+  /**
+   * Set projectBalanceSupportingDocument.
+   *
+   * @param ProjectBalanceSupportingDocument
+   *
+   * @return EncryptedFile
+   */
+  public function setProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
+  {
+    $this->projectBalanceSupportingDocument->clear();
+    $this->projectBalanceSupportingDocument->add($entity);
+    return $this;
+  }
+
+  /**
+   * Get projectBalanceSupportingDocument.
+   *
+   * @return null|ProjectBalanceSupportingDocument
+   */
+  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  {
+    return empty($this->projectBalanceSupportingDocument)
+      ? null
+      : $this->projectBalanceSupportingDocument->first();
+  }
+
 }

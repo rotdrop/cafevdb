@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Exceptions\MissingProjectsFolderException;
@@ -175,7 +176,7 @@ class MountProvider implements IMountProvider
         $storage,
         '/' . $userId
         . '/files'
-        . '/' . $this->getBankTransactionsPath(),
+        . $this->getBankTransactionsPath(),
         null,
         $loader,
         [
@@ -191,12 +192,49 @@ class MountProvider implements IMountProvider
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([
-        'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '>financialBalanceSupportingDocuments.sequence' => 0,
+        // [ ')' => true ],
+        'type' => [ ProjectType::PERMANENT, ProjectType::TEMPORARY ],
         'deleted' => null,
       ]);
     } catch (\Throwable $t) {
       $this->logException($t, 'Unable to access projects table');
       return [];
+    }
+
+    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
+      // block for non-treasurers
+
+      /** @var Entities\Project $project */
+      foreach ($projects as $project) {
+
+        $storage = new ProjectBalanceSupportingDocumentsStorage(['project' => $project]);
+        $bulkLoadStorageIds[] = $storage->getId();
+
+        $mountPathChain = [ $this->getProjectBalancesPath() ];
+        if ($project->getType() == ProjectType::TEMPORARY) {
+          $mountPathChain[] = $project->getYear();
+        };
+        $mountPathChain[] = $project->getName();
+        $mountPathChain[] = $this->getSupportingDocumentsFolderName();
+
+        $mountPath = '/' . $userId . '/' . 'files' . implode('/', $mountPathChain);
+
+        $mounts[] = new class(
+          $storage,
+          $mountPath,
+          null,
+          $loader,
+          [
+            'filesystem_check_changes' => 1,
+            'readonly' => false,
+            'previews' => true,
+            'enable_sharing' => false, // cannot work, mount needs DB access
+            'authenticated' => true,
+          ]
+        ) extends MountPoint { public function getMountType() { return 'database'; } };
+      }
     }
 
     /** @var ProjectService $projectService */

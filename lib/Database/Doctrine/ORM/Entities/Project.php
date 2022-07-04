@@ -136,11 +136,28 @@ class Project implements \ArrayAccess
   private $calendarEvents;
 
   /**
-   * @var SentEmail
+   * @var Collection
    *
    * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="project")
    */
   private $sentEmail;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="project")
+   */
+  private $financialBalanceSupportingDocuments;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Tracks changes in the supporting documents collection, in particular
+   * deletions.
+   *
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $financialBalanceSupportingDocumentsChanged;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -153,6 +170,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
+    $this->financialBalanceSupportingDocuments = new ArrayCollection();
   }
 
   public function __clone()
@@ -492,6 +510,40 @@ class Project implements \ArrayAccess
   public function getSentEmail():Collection
   {
     return $this->sentEmail;
+  }
+
+  /**
+   * Set financialBalanceSupportingDocuments.
+   *
+   * @param Collection $financialBalanceSupportingDocuments
+   *
+   * @return Project
+   */
+  public function setFinancialBalanceSupportingDocuments(Collection $financialBalanceSupportingDocuments):Project
+  {
+    $this->financialBalanceSupportingDocuments = $financialBalanceSupportingDocuments;
+
+    return $this;
+  }
+
+  /**
+   * Get financialBalanceSupportingDocuments.
+   *
+   * @return ArrayCollection
+   */
+  public function getFinancialBalanceSupportingDocuments():Collection
+  {
+    return $this->financialBalanceSupportingDocuments;
+  }
+
+  /**
+   * Get financialBalanceSupportingDocumentsChanged time-stamp.
+   *
+   * @return \DateTimeInterface
+   */
+  public function getFinancialBalanceSupportingDocumentsChanged():?\DateTimeInterface
+  {
+    return $this->financialBalanceSupportingDocumentsChanged;
   }
 
   /**

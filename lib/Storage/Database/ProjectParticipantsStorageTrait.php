@@ -85,6 +85,12 @@ trait ProjectParticipantsStorageTrait
     return $this->l->t('DebitMandates');
   }
 
+  protected function getSupportingDocumentsFolderName():string
+  {
+    // TRANSLATORS: folder-name
+    return $this->l->t('SupportingDocuments');
+  }
+
   /**
    * PME-legacy.
    */

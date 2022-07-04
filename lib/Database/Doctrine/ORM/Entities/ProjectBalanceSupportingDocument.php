@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
@@ -48,8 +50,13 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantInstruments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="financialBalanceSupportingDocuments", fetch="EXTRA_LAZY")
    * @ORM\Id
+   * @Gedmo\Timestampable(
+   *   on={"update","change","create","delete"},
+   *   field="documents",
+   *   timestampField="financialBalanceSupportingDocumentsChanged"
+   * )
    */
   private $project;
 
@@ -71,7 +78,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   /**
    * @var EncryptedFile
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="projectBalanceSupportingDocument")
    * @ORM\JoinTable(
    *   joinColumns={
    *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
@@ -81,4 +88,101 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    * )
    */
   private $documents;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Tracks changes in the supporting documents collection, in particular
+   * deletions.
+   *
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $documentsChanged;
+
+  public function __construct() {
+    $this->arrayCTOR();
+    $this->documents = new ArrayCollection();
+  }
+
+  /**
+   * Set project.
+   *
+   * @param Project|null $project
+   *
+   * @return SepaBankAccount
+   */
+  public function setProject($project = null):SepaBankAccount
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project|null|int
+   */
+  public function getProject()
+  {
+    return $this->project;
+  }
+
+  /**
+   * Set sequence.
+   *
+   * @param int $sequence
+   *
+   * @return SepaBankAccount
+   */
+  public function setSequence(?int $sequence = null):SepaBankAccount
+  {
+    $this->sequence = $sequence;
+
+    return $this;
+  }
+
+  /**
+   * Get sequence.
+   *
+   * @return int|null
+   */
+  public function getSequence():?int
+  {
+    return $this->sequence;
+  }
+
+  /**
+   * Set documents.
+   *
+   * @param Collection $documents
+   *
+   * @return SepaDebitMandate
+   */
+  public function setDocuments(Collection $documents):SepaDebitMandate
+  {
+    $this->documents = $documents;
+
+    return $this;
+  }
+
+  /**
+   * Get documents.
+   *
+   * @return Collection
+   */
+  public function getDocuments():Collection
+  {
+    return $this->documents;
+  }
+
+  /**
+   * Get documentsChanged time-stamp.
+   *
+   * @return \DateTimeInterface
+   */
+  public function getDocumentsChanged():?\DateTimeInterface
+  {
+    return $this->documentsChanged;
+  }
 }
