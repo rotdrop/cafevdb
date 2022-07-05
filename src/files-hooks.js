@@ -49,8 +49,6 @@ if (!window.OCA.CAFEVDB) {
 
 let initialState = getInitialState();
 
-console.info('INITIAL INIIALSTATE', initialState);
-
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
   'application/vnd.oasis.opendocument.text',
@@ -75,20 +73,13 @@ const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
   const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
   return projectName;
 };
+
 const isProjectBalanceSupportingDocumentsFolder = function(dirInfo, projectName) {
   projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
   const dirName = dirInfo.path;
   const baseName = dirInfo.name;
   return dirName.startsWith(initialState.sharing.files.folders.projectBalances)
     && baseName === initialState.sharing.files.subFolders.supportingDocuments;
-};
-const isProjectBalanceSupportingDocumentsSubFolder = function(dirInfo, projectName) {
-  projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
-  const dirName = dirInfo.path;
-  const baseName = dirInfo.name;
-  return dirName.startsWith(initialState.sharing.files.folders.projectBalances)
-    && dirName.endsWith(initialState.sharing.files.subFolders.supportingDocuments)
-    && baseName.startsWith(projectName);
 };
 
 const enableTemplateActions = function(fileInfo) {
@@ -112,7 +103,7 @@ const enableTemplateActions = function(fileInfo) {
 
 window.addEventListener('DOMContentLoaded', () => {
 
-  initialState = getInitialState();
+  initialState = initialState || getInitialState();
 
   // menu file-actions can only depend on the literal local file-name,
   // the type and the mime-type.
@@ -241,7 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
             for (const file of this.fileList.files) {
               sequences.push(+file.name.substr(file.name.length - 3));
             }
-            sequences.sort();
+            sequences.sort((a, b) => a - b);
             let previous = 0;
             for (const current of sequences) {
               if (current - previous !== 1) {
@@ -262,14 +253,19 @@ window.addEventListener('DOMContentLoaded', () => {
         },
       },
       savedMenuItems: null,
-      installMenuNew(menu, dirInfo) {
+      installMenuNew(menu) {
+        const fileList = menu.fileList;
+        const dirInfo = fileList.dirInfo;
         const projectName = getProjectNameFromProjectBalancesFolders(dirInfo);
-
-        console.info('SUBFOLDER', isProjectBalanceSupportingDocumentsSubFolder(dirInfo));
 
         if (!isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName)) {
           if (this.savedMenuItems) {
-            menu._menuItems = this.savedMenuItems;
+            // the WOPI requests send to the richdocuments do not
+            // contain enough authentication to access our data-base.
+            const menuItems = dirInfo.mountType === 'cafevdb-database'
+              ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && item.id !== 'folder')
+              : this.savedMenuItems;
+            menu._menuItems = menuItems;
           }
           return;
         }
@@ -283,31 +279,24 @@ window.addEventListener('DOMContentLoaded', () => {
         menu.addMenuEntry(this.menuData);
       },
       attach(menu) {
-        const fileList = menu.fileList;
-
         if (!this.savedMenuItems) {
 
           this.savedMenuItems = menu._menuItems;
 
-          console.info('MENU ITEMS', this.savedMenuItems);
-
-          const menuRender = menu.render.bind(menu);
+          const menuRender = menu.render;
           menu.render = function() {
-            menuRender();
-            if (isProjectBalanceSupportingDocumentsFolder(fileList.dirInfo)) {
-              menu.$el.find('ul li:first').remove();
+            menuRender.apply(this);
+            if (isProjectBalanceSupportingDocumentsFolder(this.fileList.dirInfo)) {
+              this.$el.find('ul li:first').remove();
             }
-          };
+          }.bind(menu);
 
-          fileList.$el.on('changeDirectory', (params) => {
-            const lastSlashPos = params.dir.lastIndexOf('/');
-            const path = params.dir.substr(0, lastSlashPos);
-            const name = params.dir.substr(lastSlashPos + 1);
-            this.installMenuNew(menu, { path, name });
+          menu.fileList.$el.on('afterChangeDirectory', (params) => {
+            this.installMenuNew(menu);
           });
         }
 
-        this.installMenuNew(menu, fileList.dirInfo);
+        this.installMenuNew(menu);
       },
     });
   }

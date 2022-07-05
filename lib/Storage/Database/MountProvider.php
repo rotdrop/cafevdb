@@ -54,6 +54,8 @@ class MountProvider implements IMountProvider
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use ProjectParticipantsStorageTrait;
 
+  const MOUNT_TYPE = 'cafevdb-database';
+
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
 
@@ -162,7 +164,7 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-      ) extends MountPoint { public function getMountType() { return 'database'; } };
+      ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
 
     }
 
@@ -186,7 +188,7 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-      ) extends MountPoint { public function getMountType() { return 'database'; } };
+      ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
     }
 
     try {
@@ -233,7 +235,7 @@ class MountProvider implements IMountProvider
             'enable_sharing' => false, // cannot work, mount needs DB access
             'authenticated' => true,
           ]
-        ) extends MountPoint { public function getMountType() { return 'database'; } };
+        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
       }
     }
 
@@ -290,7 +292,7 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-        ) extends MountPoint { public function getMountType() { return 'database'; } };
+        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
     }
 
     \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds($bulkLoadStorageIds);
