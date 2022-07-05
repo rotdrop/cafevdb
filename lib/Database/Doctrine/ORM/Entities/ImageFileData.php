@@ -39,10 +39,7 @@ class ImageFileData extends FileData
   /**
    * @var Image
    *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * {@inheritdoc}
    *
    * @ORM\Id
    * @ORM\ManyToOne(targetEntity="Image", inversedBy="fileData", cascade={"all"})
