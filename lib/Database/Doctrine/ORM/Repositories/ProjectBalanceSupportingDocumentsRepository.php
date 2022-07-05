@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
@@ -36,15 +38,21 @@ class ProjectBalanceSupportingDocumentsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerEntitySequenceTrait;
 
+  public function __construct(EntityManagerInterface $em, ClassMetadata $class)
+  {
+    parent::__construct($em, $class);
+    $this->getSequenceField();
+  }
+
   /**
    * Try to persist the given bank-account by first fetching the
    * current sequence for its musician and then increasing it.
    *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
-  public function persist(Entities\ProjectBalanceSupportingDocument $account):Entities\ProjectBalanceSupportingDocument
+  public function persist(Entities\ProjectBalanceSupportingDocument $document):Entities\ProjectBalanceSupportingDocument
   {
-    return $this->persistEntity($account);
+    return $this->persistEntity($document);
   }
 }
 
