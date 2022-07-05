@@ -39,13 +39,7 @@ class EncryptedFile extends File
   /**
    * @var Collection
    *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
-   *
-   * Not that it is not possible to override the targetEntity annotation from
-   * the base-class, so it must go here to the leaf-class.
+   * {@inheritdoc}
    *
    * @ORM\OneToMany(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
@@ -146,10 +140,12 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function setProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
+  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $entity):EncryptedFile
   {
     $this->projectBalanceSupportingDocument->clear();
-    $this->projectBalanceSupportingDocument->add($entity);
+    if (!empty($entity)) {
+      $this->projectBalanceSupportingDocument->add($entity);
+    }
     return $this;
   }
 
@@ -160,7 +156,7 @@ class EncryptedFile extends File
    */
   public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
   {
-    return empty($this->projectBalanceSupportingDocument)
+    return $this->projectBalanceSupportingDocument->isEmpty()
       ? null
       : $this->projectBalanceSupportingDocument->first();
   }
