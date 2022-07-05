@@ -23,12 +23,20 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
 trait ProjectParticipantsStorageTrait
 {
+  /**
+   * @var IL10N
+   * Personal localization settings based on user preferences.
+   */
+  protected $l;
+
   /**
    * Get the name of the per-participant document folder
    *

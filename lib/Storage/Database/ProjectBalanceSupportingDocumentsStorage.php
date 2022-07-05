@@ -97,6 +97,26 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
                 ?? null));
   }
 
+  private function setFileNameCache(string $name, $node)
+  {
+    $name = $this->buildPath($name);
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+
+    $this->files[$dirName][$baseName] = $node;
+  }
+
+  private function unsetFileNameCache(string $name)
+  {
+    $name = $this->buildPath($name);
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+
+    if (isset($this->files[$dirName][$baseName])) {
+      unset($this->files[$dirName][$baseName]);
+    } else if (isset($this->files[$dirName][$baseName . self::PATH_SEPARATOR ])) {
+      unset($this->files[$dirName][$baseName . self::PATH_SEPARATOR]);
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -110,11 +130,16 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $this->files[$dirName] = [
       '.' => new DirectoryNode('.', new \DateTimeImmutable('@1')),
     ];
+    if (empty($dirName)) {
+      $modificationTime = $this->project->getFinancialBalanceSupportingDocumentsChanged();
+      $this->files[$dirName]['.']->updateModificationTime($modificationTime);
+    }
 
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter('soft-deleteable');
 
     $documents = $this->project->getFinancialBalanceSupportingDocuments();
+
 
     /** @var Entities\ProjectBalanceSupportingDocument $document */
     foreach ($documents as $document) {
@@ -122,20 +147,18 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $documentFiles = $document->getDocuments();
 
       $documentFileName = sprintf('%s-%03d', $this->project->getName(), $document->getSequence());
-      $fileDirName = self::pathInfo($this->buildPath($documentFileName));
+
+      // $this->logInfo('DOCUMENT ' . $documentFileName);
+
+      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($documentFileName) . self::PATH_SEPARATOR . '_');
+      // $this->logInfo('FILE DIR NAME ' . $fileDirName);
+
       if (empty($dirName) || str_starts_with($fileDirName, $dirName)) {
         if ($fileDirName != $dirName) {
-          // parent directory, just add the subdirectory with proper mtime
-          // if there ever has been an entry
-          $modificationTime = $this->project->getFinancialBalanceSupportingDocumentsChanged();
-          if (!empty($modificationTime) && $documentFiles->count() == 0) {
-            // just update the time-stamp of the parent
-            $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-            } else if (!empty($modificationTime || $documentFiles->count() > 0)) {
-            // add a directory entry
-            list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-            $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-          }
+          // add a directory entry, $dirName is actually just the root ''
+          $modificationTime = $document->getDocumentsChanged();
+          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+          $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
         } else {
           // add entries for all files in the directory
           /** @var Entities\EncryptedFile $file */
@@ -144,10 +167,11 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
             $baseName = pathinfo($file->getFileName(), PATHINFO_BASENAME);
             $fileName = $this->buildPath($documentFileName . self::PATH_SEPARATOR . $baseName);
             list('basename' => $baseName) = self::pathInfo($fileName);
+            // $this->logInfo('ADD ' . $dirName . ' || ' . $baseName);
             $this->files[$dirName][$baseName] = $file;
           }
+          break; // stop after first matching directory
         }
-        break; // stop after first matching directory
       }
     }
 
@@ -171,9 +195,245 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   public function isUpdatable($path) {
-    return $path != '' && $this->file_exists($path);
+    $result = $this->file_exists($path);
+    return $result;
   }
 
+  /**
+   * Return the sequence number if the given path refers to a document
+   * container directory, otherwise return null.
+   */
+  private function isContainerDirectory($path):?int
+  {
+    if (preg_match('|^/?' . $this->project->getName() . '-' . '(\d{3})/?$|', $path, $matches)) {
+      return $matches[1];
+    }
+    return null;
+  }
+
+  public function mkdir($path)
+  {
+    $sequence = $this->isContainerDirectory($path);
+    if ($sequence === null) {
+      return false;
+    }
+    try {
+      /** @var Entities\ProjectBalanceSupportingDocument $documentContainer */
+      $documentContainer = (new Entities\ProjectBalanceSupportingDocument)
+        ->setProject($this->project)
+        ->setSequence($sequence);
+      $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class)->persist($documentContainer);
+      $this->flush();
+
+      // update the local cache
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+      $this->setFileNameCache($path, new DirectoryNode($baseName, $documentContainer->getDocumentsChanged()));
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+
+    return true;
+  }
+
+  public function rmdir($path)
+  {
+    $sequence = $this->isContainerDirectory($path);
+    if ($sequence === null) {
+      return false;
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      $entityReference = $this->entityManager->getReference(
+        Entities\ProjectBalanceSupportingDocument::class, [
+          'project' => $this->project,
+          'sequence' => $sequence,
+        ]);
+      $this->entityManager->remove($entityReference);
+      $this->flush();
+
+      $this->entityManager->commit();
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return false;
+    }
+
+    // update the local cache
+    $this->unsetFileNameCache($path);
+
+    return true;
+  }
+
+  private function findContainer(int $sequence):?Entities\ProjectBalanceSupportingDocument
+  {
+    return $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class)
+      ->find([ 'project' => $this->project, 'sequence' => $sequence ]);
+  }
+
+  /**
+   * Rename nodes inside the same storage, we have two "legal" cases:
+   *
+   * a) both paths are a top-level directory, then just change the sequence
+   * number of the supporting document, if both paths obey the allowed naming
+   * scheme.
+   *
+   * b) both paths refer to files inside top-level directories, then either
+   * just rename the file or move it to the other document container.
+   */
+  public function rename($path1, $path2)
+  {
+    $path1 = $this->buildPath($path1);
+    $path2 = $this->buildPath($path2);
+    list('dirname' => $dirName1, 'basename' => $baseName1) = self::pathinfo($path1);
+    list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
+
+    $sequence1 = $this->isContainerDirectory($path1);
+    $sequence2 = $this->isContainerDirectory($path2);
+
+    if (($sequence1 === null) !== ($sequence2 === null)) {
+      // illegal, regular files can only reside inside the top-level directories.
+      return false;
+    }
+
+    try {
+      if ($sequence1 !== null && $sequence2 !== null) {
+        /** @var DirectoryNode $directory */
+        $directory = $this->fileFromFileName($path1);
+        $containerEntity = $this->findContainer($sequence1);
+        if (empty($directory) || empty($containerEntity)) {
+          return false;
+        }
+
+        // a little tricky as sequence belongs to the identifiers, hence we
+        // have to create a new entity and delete the old one.
+
+        $this->entityManager->beginTransaction();
+
+        $renamedContainer = new Entities\ProjectBalanceSupportingDocument($this->project, $sequence2);
+
+        $oldDocuments = $containerEntity->getDocuments();
+        $newDocuments = $renamedContainer->getDocuments();
+        foreach ($oldDocuments as $document) {
+          $newDocuments->add($document);
+          $oldDocuments->removeElement($document);
+        }
+        $this->flush();
+
+        $this->persist($renamedContainer);
+        $this->entityManager->remove($containerEntity);
+        $this->flush();
+
+        $this->entityManager->commit();
+
+        // update our local files cache
+        $directory->name = $baseName2;
+        $this->setFileNameCache($path2, $directory);
+      } else if ($sequence1 === null && $sequence2 === null) {
+        /** @var Entities\EncryptedFile $file */
+        $file = $this->fileFromFileName($path1);
+        if (empty($file)) {
+          return false;
+        }
+        if ($sequence1 === $sequence2) {
+          // rename inside same directory just changes the name
+          $file->setFileName($baseName2); // actually rename
+          $this->flush();
+        } else {
+          // move document to other container
+        }
+        $this->flush(); // commit the changes
+
+        // update our local files cache
+        $this->setFileNameCache($path2, $file);
+      }
+
+      // update our local files cache
+      $this->unsetFileNameCache($path1);
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+  public function touch($path, $mtime = null)
+  {
+    if ($this->is_dir($path)) {
+      return false;
+    }
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+    $sequence = $this->isContainerDirectory($dirName);
+    if ($sequence === false) {
+      return false;
+    }
+    $file = $this->fileFromFileName($path);
+    try {
+      if (empty($file)) {
+        $containerEntity = $this->findContainer($sequence);
+        if (empty($containerEntity)) {
+          return false;
+        }
+        $file = new Entities\EncryptedFile($baseName, '', '');
+        if ($mtime !== null) {
+          $file->setCreated($mtime);
+        }
+        $containerEntity->addDocument($file);
+      }
+      if ($mtime !== false) {
+        $file->setUpdated($mtime);
+      }
+      $this->persist($file);
+      $this->flush();
+
+      $this->setFileNameCache($path, $file);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+
+    return true;
+  }
+
+  public function unlink($path)
+  {
+    if ($this->is_dir($path)) {
+      return false;
+    }
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+    /** @var Entities\EncryptedFile $file */
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    $documentContainer = $file->getProjectBalanceSupportingDocument();
+    if (empty($documentContainer)) {
+      return false;
+    }
+
+    try {
+      $documentContainer->removeDocument($file); // depends on orphanRemoval=true
+      $file->setProjectBalanceSupportingDocument(null);
+      $this->entityManager->remove($file);
+      $this->flush();
+
+      $this->unsetFileNameCache($path);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+
+    return true;
+  }
 }
 
 // Local Variables: ***

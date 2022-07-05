@@ -206,6 +206,12 @@ class Storage extends AbstractStorage
     return false; // readonly for now
   }
 
+  public function isSharable($path) {
+    // sharing cannot work in general as the database access need additional
+    // credentials
+    return false;
+  }
+
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
@@ -372,9 +378,13 @@ class Storage extends AbstractStorage
         if (!$this->isCreatable(dirname($path))) {
           return false;
         }
+        if (!$this->touch($path)) {
+          return false;
+        }
         $tmpFile = \OC::$server->getTempManager()->getTemporaryFile();
       }
       $source = fopen($tmpFile, $mode);
+
       return CallbackWrapper::wrap($source, null, null, function () use ($tmpFile, $path) {
         $this->writeStream($path, fopen($tmpFile, 'r'));
         unlink($tmpFile);
@@ -383,8 +393,32 @@ class Storage extends AbstractStorage
     return false;
   }
 
+  public function writeStream(string $path, $stream, int $size = null): int
+  {
+    if (!$this->touch($path)) {
+      return false;
+    }
+    /** @var Entities\EncryptedFile $file */
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    if ($size === null) {
+      $stream = CountWrapper::wrap($stream, function ($writtenSize) use (&$size) {
+        $size = $writtenSize;
+      });
+    }
+
+    $file->getFileData()->setData(stream_get_contents($stream));
+    $this->flush();
+    fclose($stream);
+
+    return $size;
+  }
+
   public function readStream(string $path)
   {
+    /** @var Entities\EncryptedFile $file */
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;
