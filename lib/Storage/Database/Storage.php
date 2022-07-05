@@ -23,6 +23,9 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use OCP\Files\IMimeTypeDetector;
+use OCP\ITempManager;
+
 // FIXME: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
@@ -58,7 +61,7 @@ class Storage extends AbstractStorage
   {
     parent::__construct($params);
 
-    $this->configService = \OC::$server->query(ConfigService::class);
+    $this->configService = $params['configService'];
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
 
@@ -381,7 +384,7 @@ class Storage extends AbstractStorage
         if (!$this->touch($path)) {
           return false;
         }
-        $tmpFile = \OC::$server->getTempManager()->getTemporaryFile();
+        $tmpFile = $this->di(ITempManager::class)->getTemporaryFile();
       }
       $source = fopen($tmpFile, $mode);
 
@@ -409,7 +412,12 @@ class Storage extends AbstractStorage
       });
     }
 
-    $file->getFileData()->setData(stream_get_contents($stream));
+    $fileData = stream_get_contents($stream);
+    $file->getFileData()->setData($fileData);
+    /** @var IMimeTypeDetector $mimeTypeDetector */
+    $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
+    $file->setMimeType($mimeTypeDetector->detectString($fileData));
+
     $this->flush();
     fclose($stream);
 

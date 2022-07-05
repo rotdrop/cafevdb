@@ -144,34 +144,12 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
-    if ($userId === $this->shareOwnerId()) {
-
-      $storage = new Storage([]);
-      $bulkLoadStorageIds[] = $storage->getId();
-
-      $mounts[] = new class(
-        $storage,
-        '/' . $userId
-        . '/files'
-        . '/' . $this->getSharedFolderPath()
-        . '/' . $this->appName() . '-database',
-        null,
-        $loader,
-        [
-          'filesystem_check_changes' => 1,
-          'readonly' => true,
-          'previews' => true,
-          'enable_sharing' => false, // cannot work, mount needs DB access
-          'authenticated' => true,
-        ]
-      ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
-
-    }
-
     if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
       // block for non-treasurers
 
-      $storage = new BankTransactionsStorage([]);
+      $storage = new BankTransactionsStorage([
+        'configService' => $this->configService
+      ]);
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
@@ -211,7 +189,10 @@ class MountProvider implements IMountProvider
       /** @var Entities\Project $project */
       foreach ($projects as $project) {
 
-        $storage = new ProjectBalanceSupportingDocumentsStorage(['project' => $project]);
+        $storage = new ProjectBalanceSupportingDocumentsStorage([
+          'configService' => $this->configService,
+          'project' => $project,
+        ]);
         $bulkLoadStorageIds[] = $storage->getId();
 
         $mountPathChain = [ $this->getProjectBalancesPath() ];
@@ -264,6 +245,7 @@ class MountProvider implements IMountProvider
         try {
           $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
           $storage = new ProjectParticipantsStorage([
+            'configService' => $this->configService,
             'participant' => $participant,
           ]);
           $bulkLoadStorageIds[] = $storage->getId();
