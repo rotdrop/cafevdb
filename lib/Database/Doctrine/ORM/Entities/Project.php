@@ -145,7 +145,8 @@ class Project implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\OneToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="project")
+   * @ORM\OneToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="project", indexBy="sequence", fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"sequence" = "ASC"})
    */
   private $financialBalanceSupportingDocuments;
 
