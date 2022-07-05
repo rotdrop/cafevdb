@@ -76,9 +76,10 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   private $sequence;
 
   /**
-   * @var EncryptedFile
+   * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="projectBalanceSupportingDocument")
+   * orphan removal would be nice, but make it more difficult to change the sequence number.
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="projectBalanceSupportingDocument", cascade={"all"}, indexBy="id", fetch="EXTRA_LAZY")
    * @ORM\JoinTable(
    *   joinColumns={
    *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
@@ -99,9 +100,11 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   private $documentsChanged;
 
-  public function __construct() {
+  public function __construct(?Project $project = null, ?int $sequence = null) {
     $this->arrayCTOR();
     $this->documents = new ArrayCollection();
+    $this->setProject($project);
+    $this->setSequence($sequence);
   }
 
   /**
@@ -111,7 +114,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function setProject($project = null):SepaBankAccount
+  public function setProject($project = null):ProjectBalanceSupportingDocument
   {
     $this->project = $project;
 
@@ -135,7 +138,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function setSequence(?int $sequence = null):SepaBankAccount
+  public function setSequence(?int $sequence = null):ProjectBalanceSupportingDocument
   {
     $this->sequence = $sequence;
 
@@ -159,8 +162,11 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setDocuments(Collection $documents):SepaDebitMandate
+  public function setDocuments(?Collection $documents):ProjectBalanceSupportingDocument
   {
+    if (empty($documents)) {
+      $documents = new ArrayCollection;
+    }
     $this->documents = $documents;
 
     return $this;
@@ -176,6 +182,18 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
     return $this->documents;
   }
 
+  public function addDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
+  {
+    $this->documents->add($file);
+    return $this;
+  }
+
+  public function removeDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
+  {
+    $this->documents->removeElement($file);
+    return $this;
+  }
+
   /**
    * Get documentsChanged time-stamp.
    *
@@ -183,6 +201,6 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   public function getDocumentsChanged():?\DateTimeInterface
   {
-    return $this->documentsChanged;
+    return $this->documentsChanged ?? $this->updated;
   }
 }
