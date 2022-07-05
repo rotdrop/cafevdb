@@ -58,7 +58,7 @@ trait PerEntitySequenceTrait
     /** @var ORM\ClassMetadata $meta */
     $meta = $this->getClassMetaData();
     $identifiers = $meta->getIdentifierFieldNames();
-    foreach ($identifers as $identifierField) {
+    foreach ($identifiers as $identifierField) {
       if (isset($meta->fieldMappings[$identifierField])) {
         if ($meta->fieldMappings[$identifierField]['type'] != Types::INTEGER) {
           throw new Exceptions\DatabaseInvalidFieldException('The single sequence field must have integral type');
@@ -108,7 +108,7 @@ trait PerEntitySequenceTrait
 
     /** @var ORM\ClassMetadata $meta */
     $meta = $this->getClassMetaData();
-    $seqenceValue = $meta->getFieldValue($entity, $this->sequenceFieldName);
+    $sequenceValue = $meta->getFieldValue($entity, $this->sequenceFieldName);
 
     if ($sequenceValue !== null) {
       $entityManager->persist($entity);
