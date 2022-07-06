@@ -41,8 +41,13 @@ class AnyToPdf
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  /**
+   * @var string Array of available converters per mime-type. These form a
+   * chain. If part of the chain is again an error then the first succeeding
+   * sub-converter wins.
+   */
   const CONVERTERS = [
-    'message/rfc822' => [ 'mhonarc', 'unoconv', ],
+    'message/rfc822' => [ 'mhonarc', [ 'wkhtmltopdf', 'unoconv', ], ],
     'application/postscript' => [ 'ps2pdf', ],
     'image/tiff' => [ 'tiff2pdf' ],
     'application/pdf' => [ 'passthrough' ],
@@ -83,11 +88,28 @@ class AnyToPdf
       $mimeType = $this->mimeTypeDetector->detectString($data);
     }
 
-    $converters = self::CONVERTERS[$mimeType] ?? self::CONVERTERS['default'];
+    $mimeType = $mimeType ?? 'default';
+    $converters = self::CONVERTERS[$mimeType];
 
     foreach ($converters as $converter) {
-      $method = $converter . 'Convert';
-      $data = $this->$method($data);
+      if (!is_array($converter)) {
+        $converter = [ $converter ];
+      }
+      $convertedData = null;
+      foreach  ($converter as $tryConverter) {
+        try {
+          $method = $tryConverter . 'Convert';
+          $convertedData = $this->$method($data);
+          break;
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Ignoring failed converter ' . $tryConverter);
+        }
+      }
+      if (empty($convertedData)) {
+        throw new \RuntimeException($this->l->t('Converter "%1$s" has failed trying to convert mime-type "%2$s"', [ print_r($converter, true), $mimeType ]));
+      }
+      $data = $convertedData;
+      $convertedData = null;
     }
 
     return $data;
@@ -145,6 +167,21 @@ class AnyToPdf
   protected function ps2pdfConvert(string $data):string
   {
     $converterName = 'ps2pdf';
+    $converter = (new ExecutableFinder)->find($converterName);
+    if (empty($converter)) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
+    }
+    $process = new Process([
+      $converter,
+      '-', '-',
+    ]);
+    $converter->setInput($data);
+    return $converter->getOutput();
+  }
+
+  protected function wkhtmltopdfConvert(string $data):string
+  {
+    $converterName = 'wkhtmltopdf';
     $converter = (new ExecutableFinder)->find($converterName);
     if (empty($converter)) {
       throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
