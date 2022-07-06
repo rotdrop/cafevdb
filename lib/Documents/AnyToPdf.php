@@ -30,6 +30,7 @@ use Symfony\Component\Process\ExecutableFinder;
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\Files\IMimeTypeDetector;
+use OCP\ITempManager;
 
 /**
  * A class which can convert "any" (read: some) file-data to PDF format.
@@ -42,21 +43,36 @@ class AnyToPdf
 
   const CONVERTERS = [
     'message/rfc822' => [ 'mhonarc', 'unoconv', ],
+    'application/postscript' => [ 'ps2pdf', ],
+    'image/tiff' => [ 'tiff2pdf' ],
+    'application/pdf' => [ 'passthrough' ],
     'default' => [ 'unoconv', ],
   ];
 
   /** @var IMimeTypeDetector */
   protected $mimeTypeDetector;
 
+  /** @var ITempManager */
+  protected $tempManager;
+
   /** @var IL10N */
   protected $l;
 
+  /**
+   * @var string
+   * @todo Make it configurable
+   * Paper size for converters which need it.
+   */
+  protected $paperSize = 'a4';
+
   public function __construct(
     IMimeTypeDetector $mimeTypeDetector
+    , ITempManager $tempManager
     , ILogger $logger
     , IL10N $l
   ) {
     $this->mimeTypeDetector = $mimeTypeDetector;
+    $this->tempManager = $tempManager;
     $this->logger = $logger;
     $this->l = $l;
   }
@@ -74,6 +90,11 @@ class AnyToPdf
       $data = $this->$method($data);
     }
 
+    return $data;
+  }
+
+  protected function passthroughConvert(string $date):string
+  {
     return $data;
   }
 
@@ -119,5 +140,41 @@ class AnyToPdf
     ]);
     $converter->setInput($data);
     return $converter->getOutput();
+  }
+
+  protected function ps2pdfConvert(string $data):string
+  {
+    $converterName = 'ps2pdf';
+    $converter = (new ExecutableFinder)->find($converterName);
+    if (empty($converter)) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
+    }
+    $process = new Process([
+      $converter,
+      '-', '-',
+    ]);
+    $converter->setInput($data);
+    return $converter->getOutput();
+  }
+
+  protected function tiff2pdfConvert(string $data):string
+  {
+    $converterName = 'tiff2pdf';
+    $converter = (new ExecutableFinder)->find($converterName);
+    if (empty($converter)) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
+    }
+    $inputFile = $this->tempManager->getTemporaryFile();
+    file_put_contents($inputFile, $data);
+
+    $process = new Process([
+      $converter,
+      '-p', $this->papersize,
+      $inputFile,
+    ]);
+    $converter->setInput($data);
+    $data = $converter->getOutput();
+    unlink($inputFile);
+    return $data;
   }
 }
