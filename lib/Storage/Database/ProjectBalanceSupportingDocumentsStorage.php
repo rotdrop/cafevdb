@@ -144,8 +144,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     /** @var Entities\ProjectBalanceSupportingDocument $document */
     foreach ($documents as $document) {
 
-      $documentFiles = $document->getDocuments();
-
       $documentFileName = sprintf('%s-%03d', $this->project->getName(), $document->getSequence());
 
       // $this->logInfo('DOCUMENT ' . $documentFileName);
@@ -161,6 +159,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
           $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
         } else {
           // add entries for all files in the directory
+          $documentFiles = $document->getDocuments();
           /** @var Entities\EncryptedFile $file */
           foreach ($documentFiles as $file) {
             // enforce the "correct" file-name
