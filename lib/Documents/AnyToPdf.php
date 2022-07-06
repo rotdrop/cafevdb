@@ -88,8 +88,7 @@ class AnyToPdf
       $mimeType = $this->mimeTypeDetector->detectString($data);
     }
 
-    $mimeType = $mimeType ?? 'default';
-    $converters = self::CONVERTERS[$mimeType];
+    $converters = self::CONVERTERS[$mimeType] ?? self::CONVERTERS['default'];
 
     foreach ($converters as $converter) {
       if (!is_array($converter)) {
@@ -115,7 +114,7 @@ class AnyToPdf
     return $data;
   }
 
-  protected function passthroughConvert(string $date):string
+  protected function passthroughConvert(string $data):string
   {
     return $data;
   }
