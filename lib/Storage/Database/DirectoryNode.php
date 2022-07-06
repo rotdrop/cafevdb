@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Storage\Database;
 
 /**
- * Simplisty directory node holding the basename of the directory and
+ * Simplistik directory node holding the basename of the directory and
  * an optional minimal directory modification time in order to track
  * deletions. Normally the directory modification time is just the
  * maximum of the entries. This, however, fails to invalidate the
