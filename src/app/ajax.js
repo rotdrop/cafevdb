@@ -21,10 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, cloudWebRoot, $ } from './globals.js';
+import $ from './jquery.js';
+import { appName } from './app-info.js';
+import globalState from './globalstate.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
+import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { loadState } from '@nextcloud/initial-state';
+
+const cloudWebRoot = getCloudRootUrl() || '/';
 
 const ajaxHttpStatus = {
   200: t(appName, 'OK'),
@@ -130,6 +136,11 @@ const ajaxHttpStatus = {
  * @returns {object} TBD.
  */
 const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
+
+  if (!globalState.initialized) {
+    $.extend(globalState, loadState(appName, 'CAFEVDB'));
+  }
+
   const defaultCallbacks = {
     cleanup(data) {},
     preProcess(data) {},
@@ -180,7 +191,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
           + '\n'
           + 'PHP User Agent:'
           + '\n'
-          + globalState.phpUserAgent
+          + (globalState.phpUserAgent || 'unknown')
           + '\n'
           + '\n'
           + 'Error Code: ' + decodedStatus
@@ -235,11 +246,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     callbacks.cleanup = function() {
-      if (cloudWebRoot !== '') {
-        window.location.replace(cloudWebRoot);
-      } else {
-        window.location.replace('/');
-      }
+      window.location.replace(cloudWebRoot);
     };
 
     let generalHint = t(appName, 'Something went wrong.');
@@ -416,6 +423,10 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
 const ajaxFailMessage = function(xhr, textStatus, errorThrown) {
   return ajaxFailData(xhr, textStatus, errorThrown).message;
 };
+
+$(function() {
+  Dialogs.attachDialogHandlers();
+});
 
 export {
   ajaxHttpStatus as httpStatus,

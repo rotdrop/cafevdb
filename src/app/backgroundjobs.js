@@ -24,15 +24,11 @@
 import $ from './jquery.js';
 import { getCurrentUser } from '@nextcloud/auth';
 import generateUrl from './generate-url.js';
+import globalState from './globalstate.js';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 
 const cloudUser = getCurrentUser();
-
-if (window.CAFEVDB === undefined) {
-  window.CAFEVDB = {};
-}
-const globalState = window.CAFEVDB;
 
 globalState.BackgroundJobs = {
   timer: false,

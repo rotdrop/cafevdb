@@ -21,7 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import globalState from './globalstate.js';
+import $ from './jquery.js';
 
 const Notification = globalState.Notification;
 if (Notification === undefined) {
