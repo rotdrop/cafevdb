@@ -313,10 +313,21 @@ $routes = [
       'name' => 'downloads#fetch',
       'url' => '/download/{section}/{object}',
       'verb' => 'POST',
+      'requirements' => [
+        'section' => '^(?!pdf)$',
+      ],
     ],
     [
       'name' => 'downloads#get',
       'url' => '/download/{section}/{object}',
+      'verb' => 'GET',
+      'requirements' => [
+        'section' => '^(?!pdf)$',
+      ],
+    ],
+    [
+      'name' => 'multi_pdf_download#get',
+      'url' => '/download/pdf/{folder}',
       'verb' => 'GET',
     ],
     /**
