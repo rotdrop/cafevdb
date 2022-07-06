@@ -40,35 +40,60 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
 
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Documents\AnyToPdf;
+use OCA\CAFEVDB\Documents\PdfCombiner;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
- * Make the stored personal data accessible for the web-interface. This is
- * meant for newer parts of the web-interface in contrast to the legacy PME
- * stuff.
+ * Walk throught a directory tree, convert all files to PDF and combine the
+ * resulting PDFs into a single PDF. Present this as download response.
  */
 class MultiPdfDownloadController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   /** @var UserStorage */
   private $userStorage;
 
-  /** @var IL10N */
-  protected $l;
+  /** @var PdfCombiner */
+  private $pdfCombiner;
+
+  /** @var AnyToPdf */
+  private $anyToPdf;
 
   public function __construct(
     string $appName
     , IRequest $request
-    , IL10N $l10n
-    , ILogger $logger
+    , ConfigService $configService
     , UserStorage $userStorage
+    , PdfCombiner $pdfCombiner
+    , AnyToPdf $anyToPdf
   ) {
     parent::__construct($appName, $request);
-    $this->l = $l10n;
-    $this->logger = $logger;
+    $this->configService = $configService;
+    $this->l = $this->l10n();
     $this->userStorage = $userStorage;
+    $this->pdfCombiner = $pdfCombiner;
+    $this->anyToPdf = $anyToPdf;
+  }
+
+  private function addFilesRecursively(Folder $folder, string $parentName = '')
+  {
+    $parentName = $parentName . '::' . $folder->getName();
+    /** @var FileSystemNode $node */
+    foreach ($folder->getDirectoryListing() as $node) {
+      if ($node->getType() != FileInfo::TYPE_FILE) {
+        $this->addFilesRecursively($node, $parentName);
+      } else {
+        /** @var File $node */
+        $this->pdfCombiner->addDocument(
+          $this->anyToPdf->convertData($node->getContent(), $node->getMimeType()),
+          $parentName . '::' . $node->getName()
+        );
+      }
+    }
   }
 
   /**
@@ -80,20 +105,14 @@ class MultiPdfDownloadController extends Controller
    */
   public function get(string $folder):Response
   {
-    $folder = urldecode($folder);
-    $this->logInfo('FOLDER ' . urldecode($folder));
+    $folderPath = urldecode($folder);
 
-    $dirNode = $this->userStorage->getFolder($folder);
+    $folder = $this->userStorage->getFolder($folderPath);
+    $this->addFilesRecursively($folder);
 
-    /** @var FileSystemNode $node */
-    foreach ($dirNode->getDirectoryListing() as $node) {
-      $this->logInfo('NODE ' . $node->getInternalPath());
-      if ($node->getType() != FileInfo::TYPE_FILE) {
-        continue; // we do not convert recursively
-      }
-    }
+    $fileName = basename($folderPath) . '.pdf';
 
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    return self::dataDownloadResponse($this->pdfCombiner->combine(), $fileName, 'application/pdf');
   }
 
 }
