@@ -47,6 +47,7 @@ class FilesHooksListener implements IEventListener
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Traits\CloudAdminTrait;
 
   const EVENT = HandledEvent::class;
 
@@ -151,6 +152,14 @@ class FilesHooksListener implements IEventListener
       'contacts' => [
         'addressBooks' => self::flattenAdressBooks($contactsManager->getUserAddressBooks()),
       ],
+    ]);
+
+    // just admin contact and stuff to make the ajax error handlers work.
+    // @todo Replace by more lightweight stuff
+    $groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
+    $initialState->provideInitialState('CAFEVDB', [
+      'adminContact' => $this->getCloudAdminContacts($groupManager),
+      'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
     ]);
 
     /** @var AssetService $assetService */
