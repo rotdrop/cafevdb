@@ -24,9 +24,13 @@
 
 namespace OCA\CAFEVDB\Documents;
 
+use mikehaertl\pdftk\Pdf as PdfTk;
+
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
+
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * A class which combines several PDFs into one.
@@ -42,11 +46,10 @@ class PdfCombiner
   protected $l;
 
   /**
-   * @var string
-   * @todo Make it configurable
-   * Paper size for converters which need it.
+   * @var array
+   * The documents-data to be combined into one document.
    */
-  protected $paperSize = 'a4';
+  private $documents = [];
 
   public function __construct(
     ITempManager $tempManager
@@ -56,5 +59,32 @@ class PdfCombiner
     $this->tempManager = $tempManager;
     $this->logger = $logger;
     $this->l = $l;
+  }
+
+  public function addDocument(string $data, ?string $name = null)
+  {
+    $file = $this->tempManager->getTemporaryFile();
+    file_put_contents($file, $data);
+    $this->logInfo('ADDING ' . $file . '@' . $name . ': ' . strlen($data));
+    if (empty($name)) {
+      $name = Uuid::create();
+    }
+    $this->documents[$name] = $file;
+  }
+
+  public function combine():string
+  {
+    $result = (new PdfTk(array_values($this->documents)))
+      ->cat()
+      ->toString();
+
+    if ($result === false) {
+      throw new \RuntimeException($this->l->t('Combining PDFs failed'));
+    }
+
+    foreach ($this->documents as $name => $file) {
+      unlink($file);
+    }
+    return $result;
   }
 }
