@@ -81,7 +81,7 @@ class MultiPdfDownloadController extends Controller
 
   private function addFilesRecursively(Folder $folder, string $parentName = '')
   {
-    $parentName = $parentName . '::' . $folder->getName();
+    $parentName .= (!empty($parentName) ? '/' : '') . $folder->getName();
     /** @var FileSystemNode $node */
     foreach ($folder->getDirectoryListing() as $node) {
       if ($node->getType() != FileInfo::TYPE_FILE) {
@@ -90,7 +90,7 @@ class MultiPdfDownloadController extends Controller
         /** @var File $node */
         $this->pdfCombiner->addDocument(
           $this->anyToPdf->convertData($node->getContent(), $node->getMimeType()),
-          $parentName . '::' . $node->getName()
+          $parentName . '/' . $node->getName()
         );
       }
     }
