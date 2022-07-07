@@ -417,6 +417,7 @@ class Storage extends AbstractStorage
     /** @var IMimeTypeDetector $mimeTypeDetector */
     $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
     $file->setMimeType($mimeTypeDetector->detectString($fileData));
+    $file->setSize(strlen($fileData));
 
     $this->flush();
     fclose($stream);
