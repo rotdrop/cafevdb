@@ -51,6 +51,8 @@ class PdfCombiner
    */
   private $documents = [];
 
+  private $documentTree = [];
+
   public function __construct(
     ITempManager $tempManager
     , ILogger $logger
@@ -61,39 +63,94 @@ class PdfCombiner
     $this->l = $l;
   }
 
+  /**
+   * Build as file-system like tree structure for the added documents and add
+   * bookmarks. The book-mark level needs to be adjusted later as higher
+   * bookmark-level can only follow lower bookmark level. So we store the
+   * level of the bookmarks in their title and make an additional fix-up run
+   * afterwards.
+   */
+  private function addToDocumentTree(string $data, array $pathChain, array &$tree, int $level = 0, array $bookmarks = [])
+  {
+    // [ NODE1 NODE2 ... ]
+
+
+    $nodeName = array_shift($pathChain);
+    $nodeBookmark = [
+      'Title' => ($level + 1). '|' . $nodeName,
+      'Level' => 1,
+      'PageNumber' => 1,
+    ];
+    if (empty($pathChain)) {
+      // leaf element
+      $file = $this->tempManager->getTemporaryFile();
+      $pdfTk = new PdfTk('-');
+      $command = $pdfTk->getCommand();
+      $command->setStdIn($data);
+      $pdfData = (array)$pdfTk->getData();
+
+      $pdfData['Bookmark'] = $pdfData['Bookmark'] ?? [];
+      foreach ($pdfData['Bookmark'] as &$bookmark) {
+        $bookmark['Title'] = ($bookmark['Level'] + $level +1) . '|'. $bookmark['Title'];
+      }
+      if (empty($tree)) {
+        $bookmarks[] = $nodeBookmark;
+      } else {
+        $bookmarks = [ $nodeBookmark ];
+      }
+      $pdfData['Bookmark'] = array_merge($bookmarks, $pdfData['Bookmark']);
+      $pdfTk = new PdfTk('-');
+      $command = $pdfTk->getCommand();
+      $command->setStdIn($data);
+      $pdfTk->updateInfo($pdfData)->saveAs($file);
+
+      $tree[$nodeName] = [
+        'type' => 'file',
+        'name' => $nodeName,
+        'data' => $file,
+        'level' => $level,
+      ];
+    } else {
+      if (!isset($tree[$nodeName])) {
+        $tree[$nodeName] = [
+          'type' => 'folder',
+          'name' => $nodeName,
+          'level' => $level,
+          'nodes' => [],
+        ];
+        $bookmarks[] = $nodeBookmark;
+      }
+      $this->addToDocumentTree($data, $pathChain, $tree[$nodeName]['nodes'], $level + 1, $bookmarks);
+    }
+  }
+
   public function addDocument(string $data, ?string $name = null)
   {
     if (empty($name)) {
       $name = Uuid::create();
     }
 
-    $file = $this->tempManager->getTemporaryFile();
+    $name = trim(preg_replace('|//+|', '/', $name), '/');
+    $pathChain = explode('/', $name);
 
-    $pdfTk = new PdfTk('-');
-    $command = $pdfTk->getCommand();
-    $command->setStdIn($data);
-    $pdfData = (array)$pdfTk->getData();
-    $this->logInfo('PDF DATA FOR ' . $name . ': ' . print_r($pdfData, true));
+    $this->addToDocumentTree($data, $pathChain, $this->documentTree);
+  }
 
-    $pdfData['Bookmark'] = $pdfData['Bookmark'] ?? [];
-    foreach ($pdfData['Bookmark'] as &$bookmark) {
-      $bookmark['Level'] = $bookmark['Level'] + 1;
+  private function addFromDocumentTree(PdfTk $pdfTk, array $tree)
+  {
+    foreach ($tree as $node) {
+      if ($node['type'] == 'file') {
+        $pdfTk->addFile($node['data']);
+      } else {
+        $this->addFromDocumentTree($pdfTk, $node['nodes']);
+      }
     }
-    $pdfData['Bookmark'][] = [
-      'Title' => basename($name),
-      'Level' => 1,
-      'PageNumber' => 1,
-    ];
-    $pdfTk = new PdfTk('-');
-    $command = $pdfTk->getCommand();
-    $command->setStdIn($data);
-    $pdfTk->updateInfo($pdfData)->saveAs($file);
-    $this->documents[$name] = $file;
   }
 
   public function combine():string
   {
-    $pdfTk = new PdfTk(array_values($this->documents));
+    $pdfTk = new PdfTk;
+    $this->addFromDocumentTree($pdfTk, $this->documentTree);
     $result = $pdfTk->cat()->toString();
 
     if ($result === false) {
@@ -103,9 +160,31 @@ class PdfCombiner
       );
     }
 
-    foreach ($this->documents as $name => $file) {
-      unlink($file);
+    $pdfTk = new PdfTk('-');
+    $command = $pdfTk->getCommand();
+    $command->setStdIn($result);
+    $pdfData = (array)$pdfTk->getData();
+
+    foreach ($pdfData['Bookmark'] as &$bookmark) {
+      list($level, $title) = explode('|', $bookmark['Title'], 2);
+      $bookmark['Title'] = $title;
+      $bookmark['Level'] = $level;
     }
+
+    $pdfTk = new PdfTk('-');
+    $command = $pdfTk->getCommand();
+    $command->setStdIn($result);
+    $result = $pdfTk->updateInfo($pdfData)->toString();
+
+    if ($result === false) {
+      throw new \RuntimeException(
+        $this->l->t('Combining PDFs failed')
+        . $pdfTk->getCommand()->getStdErr()
+      );
+    }
+
+    $this->documentTree = [];
+
     return $result;
   }
 }
