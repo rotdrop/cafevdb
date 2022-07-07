@@ -84,14 +84,10 @@ class PdfCombiner
       'Level' => 1,
       'PageNumber' => 1,
     ];
-
-    file_put_contents($file, $data);
-
-    // Does not work.
-    // $pdfTk = new PdfTk($file);
-    // $pdfTk->updateInfo($pdfData);
-
-    $this->logInfo('ADDING ' . $file . '@' . $name . ': ' . strlen($data));
+    $pdfTk = new PdfTk('-');
+    $command = $pdfTk->getCommand();
+    $command->setStdIn($data);
+    $pdfTk->updateInfo($pdfData)->saveAs($file);
     $this->documents[$name] = $file;
   }
 

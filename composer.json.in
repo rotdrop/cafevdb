@@ -21,7 +21,7 @@
     "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
     "maennchen/zipstream-php": "*",
-    "mikehaertl/php-pdftk": "^0.10.0",
+    "mikehaertl/php-pdftk": "dev-master",
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^5",
     "pear/auth_sasl": "dev-master",
@@ -44,6 +44,10 @@
     "classmap": ["3rdparty/phpMyEdit/."]
   },
   "repositories": [
+    {
+      "type": "path",
+      "url": "3rdparty/php-pdftk"
+    },
     {
       "type": "path",
       "url": "3rdparty/bav"

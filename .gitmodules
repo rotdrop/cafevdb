@@ -52,3 +52,6 @@
 [submodule "3rdparty/bootstrap-duallistbox"]
 	path = 3rdparty/bootstrap-duallistbox
 	url = git@github.com:rotdrop/bootstrap-duallistbox.git
+[submodule "3rdparty/php-pdftk"]
+	path = 3rdparty/php-pdftk
+	url = https://github.com/mikehaertl/php-pdftk.git
