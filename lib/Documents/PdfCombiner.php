@@ -63,19 +63,35 @@ class PdfCombiner
 
   public function addDocument(string $data, ?string $name = null)
   {
-    $file = $this->tempManager->getTemporaryFile();
-
-    // $pdfTk = new PdfTk('-');
-    // $command = $pdfTk->getCommand();
-    // $command->setStdIn($data);
-    // $pdfData = (array)$pdfTk->getData();
-    // $this->logInfo('PDF DATA FOR ' . $name . ': ' . print_r($pdfData, true));
-
-    file_put_contents($file, $data);
-    $this->logInfo('ADDING ' . $file . '@' . $name . ': ' . strlen($data));
     if (empty($name)) {
       $name = Uuid::create();
     }
+
+    $file = $this->tempManager->getTemporaryFile();
+
+    $pdfTk = new PdfTk('-');
+    $command = $pdfTk->getCommand();
+    $command->setStdIn($data);
+    $pdfData = (array)$pdfTk->getData();
+    $this->logInfo('PDF DATA FOR ' . $name . ': ' . print_r($pdfData, true));
+
+    $pdfData['Bookmark'] = $pdfData['Bookmark'] ?? [];
+    foreach ($pdfData['Bookmark'] as &$bookmark) {
+      $bookmark['Level'] = $bookmark['Level'] + 1;
+    }
+    $pdfData['Bookmark'][] = [
+      'Title' => basename($name),
+      'Level' => 1,
+      'PageNumber' => 1,
+    ];
+
+    file_put_contents($file, $data);
+
+    // Does not work.
+    // $pdfTk = new PdfTk($file);
+    // $pdfTk->updateInfo($pdfData);
+
+    $this->logInfo('ADDING ' . $file . '@' . $name . ': ' . strlen($data));
     $this->documents[$name] = $file;
   }
 
