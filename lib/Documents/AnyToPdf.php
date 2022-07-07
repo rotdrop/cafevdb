@@ -32,6 +32,8 @@ use OCP\IL10N;
 use OCP\Files\IMimeTypeDetector;
 use OCP\ITempManager;
 
+use OCA\CAFEVDB\Exceptions;
+
 /**
  * A class which can convert "any" (read: some) file-data to PDF format.
  * Currently anything supported by LibreOffice via unoconv and .eml via
@@ -84,7 +86,7 @@ class AnyToPdf
 
   public function convertData(string $data, ?string $mimeType = null):string
   {
-    if (empty($mimeType)) {
+    if (empty($mimeType) || $mimeType == 'application/octet-stream') {
       $mimeType = $this->mimeTypeDetector->detectString($data);
     }
 
@@ -94,8 +96,10 @@ class AnyToPdf
       if (!is_array($converter)) {
         $converter = [ $converter ];
       }
+
       $convertedData = null;
       foreach  ($converter as $tryConverter) {
+        $this->logInfo('Trying converter ' . $tryConverter);
         try {
           $method = $tryConverter . 'Convert';
           $convertedData = $this->$method($data);
