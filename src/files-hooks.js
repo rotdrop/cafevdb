@@ -139,13 +139,13 @@ window.addEventListener('DOMContentLoaded', () => {
        */
       actionHandler(dirName, context) {
         console.info('DOWNLOAD PDF ACTION INVOKED', dirName, context);
-        dirName = encodeURIComponent([
+        const fullPath = encodeURIComponent([
           context.fileList.dirInfo.path,
           context.fileList.dirInfo.name,
           dirName,
         ].join('/'));
 
-        const url = generateUrl('/apps/' + appName + '/download/pdf/{dirName}', { dirName });
+        const url = generateUrl('/apps/' + appName + '/download/pdf/{fullPath}', { fullPath });
 
         // $file is a jQuery object, change that if the files-app gets overhauled
         const downloadFileaction = context.$file.find('.fileactions .action-download-pdf');
