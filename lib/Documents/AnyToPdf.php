@@ -159,8 +159,8 @@ class AnyToPdf
       $converter,
       '-single',
     ]);
-    $converter->setInput($data);
-    return $converter->getOutput();
+    $process->setInput($data)->run();
+    return $process->getOutput();
   }
 
   protected function ps2pdfConvert(string $data):string
@@ -174,8 +174,8 @@ class AnyToPdf
       $converter,
       '-', '-',
     ]);
-    $converter->setInput($data);
-    return $converter->getOutput();
+    $process->setInput($data)->run();
+    return $process->getOutput();
   }
 
   protected function wkhtmltopdfConvert(string $data):string
@@ -189,8 +189,8 @@ class AnyToPdf
       $converter,
       '-', '-',
     ]);
-    $converter->setInput($data);
-    return $converter->getOutput();
+    $process->setInput($data)->run();
+    return $process->getOutput();
   }
 
   protected function tiff2pdfConvert(string $data):string
@@ -201,16 +201,21 @@ class AnyToPdf
       throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
     }
     $inputFile = $this->tempManager->getTemporaryFile();
+    $outputFile = $this->tempManager->getTemporaryFile();
     file_put_contents($inputFile, $data);
 
+    // As of mow tiff2pdf cannot write to stdout.
     $process = new Process([
       $converter,
-      '-p', $this->papersize,
+      '-p', $this->paperSize,
+      '-o', $outputFile,
       $inputFile,
     ]);
-    $converter->setInput($data);
-    $data = $converter->getOutput();
+    $process->run();
+    $data = file_get_contents($outputFile);
+
     unlink($inputFile);
+    unlink($outputFile);
     return $data;
   }
 }
