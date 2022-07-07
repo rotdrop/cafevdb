@@ -64,6 +64,13 @@ class PdfCombiner
   public function addDocument(string $data, ?string $name = null)
   {
     $file = $this->tempManager->getTemporaryFile();
+
+    // $pdfTk = new PdfTk('-');
+    // $command = $pdfTk->getCommand();
+    // $command->setStdIn($data);
+    // $pdfData = (array)$pdfTk->getData();
+    // $this->logInfo('PDF DATA FOR ' . $name . ': ' . print_r($pdfData, true));
+
     file_put_contents($file, $data);
     $this->logInfo('ADDING ' . $file . '@' . $name . ': ' . strlen($data));
     if (empty($name)) {
@@ -74,12 +81,14 @@ class PdfCombiner
 
   public function combine():string
   {
-    $result = (new PdfTk(array_values($this->documents)))
-      ->cat()
-      ->toString();
+    $pdfTk = new PdfTk(array_values($this->documents));
+    $result = $pdfTk->cat()->toString();
 
     if ($result === false) {
-      throw new \RuntimeException($this->l->t('Combining PDFs failed'));
+      throw new \RuntimeException(
+        $this->l->t('Combining PDFs failed')
+        . $pdfTk->getCommand()->getStdErr()
+      );
     }
 
     foreach ($this->documents as $name => $file) {
