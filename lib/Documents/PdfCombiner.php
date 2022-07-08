@@ -38,11 +38,20 @@ class PdfCombiner
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const OVERLAY_FONT = 'dejavusans';
+  const OVERLAY_FONTSIZE = 16;
+
+  const FILES_KEY = 'files';
+  const FOLDERS_KEY = 'folders';
+
   /** @var ITempManager */
   protected $tempManager;
 
   /** @var IL10N */
   protected $l;
+
+  /** @var \TCPDF */
+  protected $pdfGenerator;
 
   /**
    * @var array
@@ -60,6 +69,40 @@ class PdfCombiner
     $this->tempManager = $tempManager;
     $this->logger = $logger;
     $this->l = $l;
+    $this->initializePdfGenerator();
+    $this->initializeDocumentTree();
+  }
+
+  private function initializePdfGenerator()
+  {
+    $pdf = new \TCPDF();
+    $pdf->setPageUnit('pt');
+    $pdf->setFont(self::OVERLAY_FONT);
+    $pdf->setFontSize(self::OVERLAY_FONTSIZE);
+    $pdf->setMargins(0, 0);
+    $pdf->setCellPaddings(0, 0);
+    $pdf->setAutoPageBreak(false);
+    $pdf->setPrintHeader(false);
+    $pdf->setPrintFooter(false);
+    $pdf->SetAlpha(0);
+    $this->pdfGenerator = $pdf;
+  }
+
+  private function makePageLabel(string $path, int $pageNumber, int $pageMax)
+  {
+    $pdf = $this->pdfGenerator;
+    $text = sprintf('%s %d / %d', $path, $pageNumber, $pageMax);
+    $stringWidth = $pdf->GetStringWidth($text);
+    $orientation = self::OVERLAY_FONTSIZE > $stringWidth ? 'P' : 'L';
+    $pdf->startPage($orientation, [ self::OVERLAY_FONTSIZE, $stringWidth ]);
+    $pdf->Text(0, self::OVERLAY_FONTSIZE, calign: 'D', valign: 'T', align: 'L');
+    return $pdf->Output($text, 'S');
+  }
+
+  /** Reset the directory tree to an empty nodes array */
+  private function initializeDocumentTree()
+  {
+    $this->documentTree = [ self::FILES_KEY => [], self::FOLDERS_KEY => [], ];
   }
 
   /**
@@ -68,58 +111,41 @@ class PdfCombiner
    * bookmark-level can only follow lower bookmark level. So we store the
    * level of the bookmarks in their title and make an additional fix-up run
    * afterwards.
+   *
+   * @param string $data The PDF file data to add
+   *
+   * @param array $pathChain The exploded files-system path leading to $data
+   *
+   * @param array $tree The current nodes-array [ 'files' => FILE_NODE_ARRAY, 'folders' => FOLDER_NODE_ARRAY ]
+   *
+   * @param int $level Recursion level.
+   *
+   * @param array $bookmarks Bookmark array corresponding to $pathChain
    */
-  private function addToDocumentTree(string $data, array $pathChain, array &$tree, int $level = 0, array $bookmarks = [])
+  private function addToDocumentTree(string $data, array $pathChain, array &$tree, int $level = 0)
   {
-    // [ NODE1 NODE2 ... ]
-
-
     $nodeName = array_shift($pathChain);
-    $nodeBookmark = [
-      'Title' => ($level + 1). '|' . $nodeName,
-      'Level' => 1,
-      'PageNumber' => 1,
-    ];
     if (empty($pathChain)) {
-      // leaf element
-      $file = $this->tempManager->getTemporaryFile();
-      $pdfTk = new PdfTk('-');
-      $command = $pdfTk->getCommand();
-      $command->setStdIn($data);
-      $pdfData = (array)$pdfTk->getData();
-
-      $pdfData['Bookmark'] = $pdfData['Bookmark'] ?? [];
-      foreach ($pdfData['Bookmark'] as &$bookmark) {
-        $bookmark['Title'] = ($bookmark['Level'] + $level +1) . '|'. $bookmark['Title'];
-      }
-      if (empty($tree)) {
-        $bookmarks[] = $nodeBookmark;
-      } else {
-        $bookmarks = [ $nodeBookmark ];
-      }
-      $pdfData['Bookmark'] = array_merge($bookmarks, $pdfData['Bookmark']);
-      $pdfTk = new PdfTk('-');
-      $command = $pdfTk->getCommand();
-      $command->setStdIn($data);
-      $pdfTk->updateInfo($pdfData)->saveAs($file);
-
-      $tree[$nodeName] = [
-        'type' => 'file',
+      // leaf element -- always a plain file
+      $fileName = $this->tempManager->getTemporaryFile();
+      file_put_contents($fileName,  $data);
+      $tree[self::FILES_KEY][$nodeName] = [
         'name' => $nodeName,
-        'data' => $file,
+        'file' => $fileName,
         'level' => $level,
       ];
     } else {
-      if (!isset($tree[$nodeName])) {
-        $tree[$nodeName] = [
-          'type' => 'folder',
+      if (!isset($tree[self::FOLDERS_KEY][$nodeName])) {
+        $tree[self::FOLDERS_KEY][$nodeName] = [
           'name' => $nodeName,
           'level' => $level,
-          'nodes' => [],
+          'nodes' => [
+            self::FILES_KEY => [],
+            self::FOLDERS_KEY => [],
+          ],
         ];
-        $bookmarks[] = $nodeBookmark;
       }
-      $this->addToDocumentTree($data, $pathChain, $tree[$nodeName]['nodes'], $level + 1, $bookmarks);
+      $this->addToDocumentTree($data, $pathChain, $tree[self::FOLDERS_KEY][$nodeName]['nodes'], $level + 1);
     }
   }
 
@@ -135,14 +161,62 @@ class PdfCombiner
     $this->addToDocumentTree($data, $pathChain, $this->documentTree);
   }
 
-  private function addFromDocumentTree(PdfTk $pdfTk, array $tree)
+  /**
+   * Add the file-nodes of the document-tree to the PdfTk instance. The tree
+   * is traversed with folders first. Nodes of the same level or traversed in
+   * alphabetical order.
+   */
+  private function addFromDocumentTree(PdfTk $pdfTk, array $tree, int $level = 0, array $bookmarks = [])
   {
-    foreach ($tree as $node) {
-      if ($node['type'] == 'file') {
-        $pdfTk->addFile($node['data']);
-      } else {
-        $this->addFromDocumentTree($pdfTk, $node['nodes']);
+    // first walk down the directories
+    usort($tree[self::FOLDERS_KEY], fn($a, $b) => strcmp($a['name'], $b['name']));
+    $first = true;
+    foreach ($tree[self::FOLDERS_KEY] as $folderNode) {
+      $nodeName = $folderNode['name'];
+      $folderBookmarks = [
+        [
+          'Title' => ($level + 1). '|' . $nodeName,
+          'Level' => 1,
+          'PageNumber' => 1,
+        ],
+      ];
+      if ($first) {
+        $folderBookmarks = array_merge($bookmarks, $folderBookmarks);
       }
+      $this->addFromDocumentTree($pdfTk, $folderNode['nodes'], $level + 1, $folderBookmarks);
+      $first = false;
+    }
+    // then add the files from this level
+    usort($tree[self::FILES_KEY], fn($a, $b) => strcmp($a['name'], $b['name']));
+    foreach ($tree[self::FILES_KEY] as $fileNode) {
+      $nodeName = $fileNode['name'];
+      $fileName = $fileNode['file'];
+      $fileData = file_get_contents($fileName);
+      $nodeBookmark = [
+        'Title' => ($level + 1). '|' . $nodeName,
+        'Level' => 1,
+        'PageNumber' => 1,
+      ];
+      $bookmarks[] = $nodeBookmark;
+
+      // merge the file-start bookmarks with any existing bookmarks
+      $pdfTk2 = new PdfTk('-');
+      $command = $pdfTk2->getCommand();
+      $command->setStdIn($fileData);
+      $pdfData = (array)$pdfTk2->getData();
+      $pdfData['Bookmark'] = $pdfData['Bookmark'] ?? [];
+      foreach ($pdfData['Bookmark'] as &$bookmark) {
+        $bookmark['Title'] = ($bookmark['Level'] + $level + 1) . '|'. $bookmark['Title'];
+      }
+      $pdfData['Bookmark'] = array_merge($bookmarks, $pdfData['Bookmark']);
+      $pdfTk2 = new PdfTk('-'); // restart
+      $command = $pdfTk2->getCommand();
+      $command->setStdIn($fileData);
+      $pdfTk2->updateInfo($pdfData)->saveAs($fileName);
+      $bookmarks = []; // only the first file gets the directory bookmarks
+
+      // then add the bookmared file to the outer pdftk instance
+      $pdfTk->addFile($fileName);
     }
   }
 
@@ -182,7 +256,7 @@ class PdfCombiner
       );
     }
 
-    $this->documentTree = [];
+    $this->initializeDocumentTree();
 
     return $result;
   }
