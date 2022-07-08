@@ -24,12 +24,11 @@
 
 namespace OCA\CAFEVDB\Documents;
 
-use mikehaertl\pdftk\Pdf as PdfTk;
-
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
 
+use OCA\CAFEVDB\Documents\Util\PdfTk;
 use OCA\CAFEVDB\Common\Uuid;
 
 /**
