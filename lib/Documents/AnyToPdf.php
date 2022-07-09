@@ -72,18 +72,39 @@ class AnyToPdf
    */
   protected $paperSize = 'a4';
 
+  /** @var ExecutableFinder */
+  protected $executableFinder;
+
+  /**
+   * @var array
+   * Cache of found executables for the current request.
+   */
+  protected $executables = [];
+
   public function __construct(
     IMimeTypeDetector $mimeTypeDetector
     , ITempManager $tempManager
+    , ExecutableFinder $executableFinder
     , ILogger $logger
     , IL10N $l
   ) {
     $this->mimeTypeDetector = $mimeTypeDetector;
     $this->tempManager = $tempManager;
+    $this->executableFinder = $executableFinder;
     $this->logger = $logger;
     $this->l = $l;
   }
 
+  /**
+   * Try to convert the given data-block $data to PDF using any of the known
+   * converters. If no converter can do the job provide an error-page with
+   * information in PDF format.
+   *
+   * @param string $data Data-block to be converted.
+   *
+   * @param string|null $mimeType If null or 'application/octet-stream' the
+   * cloud's mime-type detector is used to detect the mime-type.
+   */
   public function convertData(string $data, ?string $mimeType = null):string
   {
     if (empty($mimeType) || $mimeType == 'application/octet-stream') {
@@ -99,7 +120,6 @@ class AnyToPdf
 
       $convertedData = null;
       foreach  ($converter as $tryConverter) {
-        $this->logInfo('Trying converter ' . $tryConverter);
         try {
           $method = $tryConverter . 'Convert';
           $convertedData = $this->$method($data);
@@ -126,10 +146,7 @@ class AnyToPdf
   protected function unoconvConvert(string $data):string
   {
     $converterName = 'unoconv';
-    $converter = (new ExecutableFinder)->find($converterName);
-    if (empty($converter)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
-    }
+    $converter = $this->findExecutable($converterName);
     $retry = false;
     do {
       $process = new Process([
@@ -155,10 +172,7 @@ class AnyToPdf
   protected function mhonarcConvert(string $data):string
   {
     $converterName = 'mhonarc';
-    $converter = (new ExecutableFinder)->find($converterName);
-    if (empty($converter)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
-    }
+    $converter = $this->findExecutable($converterName);
     $process = new Process([
       $converter,
       '-single',
@@ -170,10 +184,7 @@ class AnyToPdf
   protected function ps2pdfConvert(string $data):string
   {
     $converterName = 'ps2pdf';
-    $converter = (new ExecutableFinder)->find($converterName);
-    if (empty($converter)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
-    }
+    $converter = $this->findExecutable($converterName);
     $process = new Process([
       $converter,
       '-', '-',
@@ -185,10 +196,7 @@ class AnyToPdf
   protected function wkhtmltopdfConvert(string $data):string
   {
     $converterName = 'wkhtmltopdf';
-    $converter = (new ExecutableFinder)->find($converterName);
-    if (empty($converter)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
-    }
+    $converter = $this->findExecutable($converterName);
     $process = new Process([
       $converter,
       '-', '-',
@@ -200,10 +208,7 @@ class AnyToPdf
   protected function tiff2pdfConvert(string $data):string
   {
     $converterName = 'tiff2pdf';
-    $converter = (new ExecutableFinder)->find($converterName);
-    if (empty($converter)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName));
-    }
+    $converter = $this->findExecutable($converterName);
     $inputFile = $this->tempManager->getTemporaryFile();
     $outputFile = $this->tempManager->getTemporaryFile();
     file_put_contents($inputFile, $data);
@@ -221,5 +226,37 @@ class AnyToPdf
     unlink($inputFile);
     unlink($outputFile);
     return $data;
+  }
+
+  /**
+   * Try to find the given executable.
+   *
+   * @param string $program The program to search for. This must be the
+   * basename of a Un*x program.
+   *
+   * @return string The full path to $program.
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  protected function findExecutable(string $program)
+  {
+    if (empty($this->executables[$program])) {
+      $executable = $this->executableFinder->find($program);
+      if (empty($executable)) {
+        $this->executables[$program] = [
+          'exception' => throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName)),
+          'path' => null,
+        ];
+      } else {
+        $this->executables[$program] = [
+          'exception' => null,
+          'path' => $executable,
+        ];
+      }
+    }
+    if (empty($this->executables[$program]['path'])) {
+      throw $this->executables[$program]['exception'];
+    }
+    return $this->executables[$program]['path'];
   }
 }
