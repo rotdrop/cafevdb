@@ -39,6 +39,7 @@ use OCP\Files\Node as FileSystemNode;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\FileInfo;
+use OCP\Files\IMimeTypeDetector;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Documents\AnyToPdf;
@@ -53,6 +54,9 @@ class MultiPdfDownloadController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+
+  const ERROR_PAGE_FONTSIZE = '12';
+  const ERROR_PAGE_PAPER = 'A4';
 
   /** @var UserStorage */
   private $userStorage;
@@ -79,6 +83,31 @@ class MultiPdfDownloadController extends Controller
     $this->anyToPdf = $anyToPdf;
   }
 
+  private function generateErrorPage(string $fileData, string $path, \Throwable $throwable)
+  {
+    $pdf = new \TCPDF('P', 'mm', self::ERROR_PAGE_PAPER);
+    $pdf->setFontSize(self::ERROR_PAGE_FONTSIZE);
+
+    /** @var IMimeTypeDetector $mimeTypeDetector */
+    $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
+    $mimeType = $mimeTypeDetector->detectString($fileData);
+
+    $message = $throwable->getMessage();
+    $trace = $throwable->getTraceAsString();
+    $html =<<<__EOF__
+<h1>Error converting $path to PDF</h1>
+<h2>Error Message</h2>
+<span>$message</span>
+<h2>Trace</h2>
+<pre>$trace</pre>
+__EOF__;
+
+    $pdf->addPage();
+    $pdf->writeHTML($html);
+
+    return $pdf->Output($path, 'S');
+  }
+
   private function addFilesRecursively(Folder $folder, string $parentName = '')
   {
     $parentName .= (!empty($parentName) ? '/' : '') . $folder->getName();
@@ -88,10 +117,16 @@ class MultiPdfDownloadController extends Controller
         $this->addFilesRecursively($node, $parentName);
       } else {
         /** @var File $node */
-        $this->pdfCombiner->addDocument(
-          $this->anyToPdf->convertData($node->getContent(), $node->getMimeType()),
-          $parentName . '/' . $node->getName()
-        );
+        $path = $parentName . '/' . $node->getName();
+        $fileData = $node->getContent();
+        try {
+          $pdfData = $this->anyToPdf->convertData($fileData, $node->getMimeType());
+        } catch (\Throwable $t) {
+          // @todo add an error page to the output
+          $this->logException($t);
+          $pdfData = $this->generateErrorPage($fileData, $path, $t);
+        }
+        $this->pdfCombiner->addDocument($pdfData, $path);
       }
     }
   }
