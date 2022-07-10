@@ -325,11 +325,6 @@ $routes = [
         'section' => '^(?!pdf)$',
       ],
     ],
-    [
-      'name' => 'multi_pdf_download#get',
-      'url' => '/download/pdf/{folder}',
-      'verb' => 'GET',
-    ],
     /**
      * Image service out of database or OC file-space
      *

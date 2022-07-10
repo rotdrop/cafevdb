@@ -24,13 +24,12 @@
 import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
-import { generateFilePath, imagePath, generateUrl } from '@nextcloud/router';
+import { generateFilePath, imagePath } from '@nextcloud/router';
 import { showError, showInfo } from '@nextcloud/dialogs';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
-import fileDownload from './app/file-download.js';
 
 Vue.directive('tooltip', Tooltip);
 
@@ -116,56 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (OCA.Files && OCA.Files.fileActions) {
     const fileActions = OCA.Files.fileActions;
-
-    // a menu entry in order to download a folder as multi-page pdf
-    fileActions.registerAction({
-      name: 'download-pdf',
-      displayName: t(appName, 'Download PDF'),
-      altText: t(appName, 'Download PDF'),
-      mime: 'httpd/unix-directory',
-      type: OCA.Files.FileActions.TYPE_DROPDOWN,
-      permissions: OC.PERMISSION_READ,
-      // shouldRender(context) {}, is not invoked for TYPE_DROPDOWN
-      icon() {
-        return imagePath('core', 'filetypes/application-pdf');
-      },
-      // render(actionSpec, isDefault, context) {}, is not invoked for TYPE_DROPDOWN
-      /**
-       * Handle multi-page PDF download request. Stolen from the
-       * files-app download action handler.
-       *
-       * @param {string} dirName TBD.
-       * @param {object} context TBD.
-       */
-      actionHandler(dirName, context) {
-        console.info('DOWNLOAD PDF ACTION INVOKED', dirName, context);
-        const fullPath = encodeURIComponent([
-          context.fileList.dirInfo.path,
-          context.fileList.dirInfo.name,
-          dirName,
-        ].join('/'));
-
-        const url = generateUrl('/apps/' + appName + '/download/pdf/{fullPath}', { fullPath });
-
-        // $file is a jQuery object, change that if the files-app gets overhauled
-        const downloadFileaction = context.$file.find('.fileactions .action-download-pdf');
-
-        // don't allow a second click on the download action
-        if (downloadFileaction.hasClass('disabled')) {
-          return;
-        }
-
-        if (url) {
-          const disableLoadingState = function() {
-            context.fileList.showFileBusyState(dirName, false);
-          };
-
-          context.fileList.showFileBusyState(dirName, true);
-          // OCA.Files.Files.handleDownload(url, disableLoadingState);
-          fileDownload(url, false, { always: disableLoadingState });
-        }
-      },
-    });
 
     // an extra button which just will open the side-bar
     fileActions.registerAction({
