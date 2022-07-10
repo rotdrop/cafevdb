@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-02 17:01+0200\n"
+"POT-Creation-Date: 2022-07-10 14:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -556,12 +556,12 @@ msgstr ""
 #: lib/Controller/InstrumentInsuranceController.php:271
 #: lib/Controller/ProjectParticipantsController.php:740
 #: lib/Database/EntityManager.php:257
-#: lib/Documents/OpenDocumentFiller.php:317
+#: lib/Documents/OpenDocumentFiller.php:299
+#: lib/Documents/OpenDocumentFiller.php:316
+#: lib/Documents/OpenDocumentFiller.php:327
+#: lib/Documents/OpenDocumentFiller.php:333
 #: lib/Documents/OpenDocumentFiller.php:334
-#: lib/Documents/OpenDocumentFiller.php:345
-#: lib/Documents/OpenDocumentFiller.php:351
-#: lib/Documents/OpenDocumentFiller.php:352
-#: lib/Documents/OpenDocumentFiller.php:355
+#: lib/Documents/OpenDocumentFiller.php:337
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:177
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1633
 #: lib/PageRenderer/Instruments.php:376
@@ -668,30 +668,30 @@ msgstr ""
 msgid "Method %s is not yet implemented."
 msgstr ""
 
-#: lib/Controller/MailMergeController.php:206
-#: lib/Controller/MailMergeController.php:298
-#: lib/Controller/MailMergeController.php:323
+#: lib/Controller/MailMergeController.php:208
+#: lib/Controller/MailMergeController.php:300
+#: lib/Controller/MailMergeController.php:325
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/Controller/MailMergeController.php:340
+#: lib/Controller/MailMergeController.php:342
 #, php-format
 msgid "Exception: \"%s\""
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:355
+#: lib/Controller/MailMergeController.php:357
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:874
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:40
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:48
 msgid "Documents"
 msgstr ""
 
-#: lib/Controller/MailMergeController.php:356
-#: lib/Controller/MailMergeController.php:364
-#: src/files-hooks.js:102
-#: src/files-hooks.js:159
+#: lib/Controller/MailMergeController.php:358
+#: lib/Controller/MailMergeController.php:366
+#: src/files-hooks.js:123
+#: src/files-hooks.js:179
 msgid "MailMerge"
 msgstr ""
 
@@ -2834,20 +2834,26 @@ msgstr ""
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:118
+#: lib/Documents/AnyToPdf.php:132
+#, php-format
+msgid "Converter \"%1$s\" has failed trying to convert mime-type \"%2$s\""
+msgstr ""
+
+#: lib/Documents/AnyToPdf.php:247
+#, php-format
+msgid "Please install the \"%s\" program on the server."
+msgstr ""
+
+#: lib/Documents/OpenDocumentFiller.php:123
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:180
+#: lib/Documents/OpenDocumentFiller.php:185
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
 "substitution data."
-msgstr ""
-
-#: lib/Documents/OpenDocumentFiller.php:217
-msgid "Please install the \"unoconv\" program on the server."
 msgstr ""
 
 #: lib/Documents/PDFLetter.php:153
@@ -3499,6 +3505,10 @@ msgstr ""
 
 #: lib/Maintenance/Migrations/ParticipantFieldsTypeCloudFolder.php:48
 msgid "Add cloud-folder type to catalog of participant fields."
+msgstr ""
+
+#: lib/Maintenance/Migrations/ProjectBalanceSupportingDocuments.php:50
+msgid "Manage enumerated support documents for the financial project balance"
 msgstr ""
 
 #: lib/Maintenance/Migrations/ProjectMailingLists.php:44
@@ -4392,7 +4402,7 @@ msgstr ""
 
 #: lib/PageRenderer/Musicians.php:963
 #: lib/PageRenderer/ProjectParticipants.php:1256
-#: src/app/ajax.js:31
+#: src/app/ajax.js:37
 msgid "Created"
 msgstr ""
 
@@ -8595,19 +8605,24 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:51
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:59
 msgid "PaymentRecords"
 msgstr ""
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:60
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:68
 #, php-format
 msgid "PaymentRecord-%1$s-%2$d"
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:85
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:93
 msgid "DebitMandates"
+msgstr ""
+
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/ProjectParticipantsStorageTrait.php:99
+msgid "SupportingDocuments"
 msgstr ""
 
 #: lib/Storage/UserStorage.php:287
@@ -8652,26 +8667,26 @@ msgstr ""
 msgid "Unknown file type \"%s\" for download file \"%s\"."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:100
+#: lib/Traits/InitialStateTrait.php:95
 msgid "Select a filter option."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:101
-#: lib/Traits/InitialStateTrait.php:107
+#: lib/Traits/InitialStateTrait.php:96
+#: lib/Traits/InitialStateTrait.php:102
 msgid "No values match."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:102
+#: lib/Traits/InitialStateTrait.php:97
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:106
+#: lib/Traits/InitialStateTrait.php:101
 msgid "Select an option."
 msgstr ""
 
-#: lib/Traits/InitialStateTrait.php:108
+#: lib/Traits/InitialStateTrait.php:103
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -9056,276 +9071,276 @@ msgstr ""
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
-#: src/app/ajax.js:30
+#: src/app/ajax.js:36
 msgid "OK"
 msgstr ""
 
-#: src/app/ajax.js:32
+#: src/app/ajax.js:38
 msgid "Accepted"
 msgstr ""
 
-#: src/app/ajax.js:33
+#: src/app/ajax.js:39
 msgid "Non-Authoritative Information"
 msgstr ""
 
-#: src/app/ajax.js:34
+#: src/app/ajax.js:40
 msgid "No Content"
 msgstr ""
 
-#: src/app/ajax.js:35
+#: src/app/ajax.js:41
 msgid "Reset Content"
 msgstr ""
 
-#: src/app/ajax.js:36
+#: src/app/ajax.js:42
 msgid "Partial Content"
 msgstr ""
 
-#: src/app/ajax.js:37
+#: src/app/ajax.js:43
 msgid "Multi-Status (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:38
+#: src/app/ajax.js:44
 msgid "Already Reported (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:39
+#: src/app/ajax.js:45
 msgid "IM Used"
 msgstr ""
 
-#: src/app/ajax.js:40
+#: src/app/ajax.js:46
 msgid "Multiple Choices"
 msgstr ""
 
-#: src/app/ajax.js:41
+#: src/app/ajax.js:47
 msgid "Moved Permanently"
 msgstr ""
 
-#: src/app/ajax.js:42
+#: src/app/ajax.js:48
 msgid "Found"
 msgstr ""
 
-#: src/app/ajax.js:43
+#: src/app/ajax.js:49
 msgid "See Other"
 msgstr ""
 
-#: src/app/ajax.js:44
+#: src/app/ajax.js:50
 msgid "Not Modified"
 msgstr ""
 
-#: src/app/ajax.js:45
+#: src/app/ajax.js:51
 msgid "Use Proxy"
 msgstr ""
 
-#: src/app/ajax.js:46
+#: src/app/ajax.js:52
 msgid "(Unused)"
 msgstr ""
 
-#: src/app/ajax.js:47
+#: src/app/ajax.js:53
 msgid "Temporary Redirect"
 msgstr ""
 
-#: src/app/ajax.js:48
+#: src/app/ajax.js:54
 msgid "Permanent Redirect (experimental)"
 msgstr ""
 
-#: src/app/ajax.js:49
+#: src/app/ajax.js:55
 msgid "Bad Request"
 msgstr ""
 
-#: src/app/ajax.js:50
+#: src/app/ajax.js:56
 msgid "Unauthorized"
 msgstr ""
 
-#: src/app/ajax.js:51
+#: src/app/ajax.js:57
 msgid "Payment Required"
 msgstr ""
 
-#: src/app/ajax.js:52
+#: src/app/ajax.js:58
 msgid "Forbidden"
 msgstr ""
 
-#: src/app/ajax.js:53
+#: src/app/ajax.js:59
 msgid "Not Found"
 msgstr ""
 
-#: src/app/ajax.js:54
+#: src/app/ajax.js:60
 msgid "Method Not Allowed"
 msgstr ""
 
-#: src/app/ajax.js:55
+#: src/app/ajax.js:61
 msgid "Not Acceptable"
 msgstr ""
 
-#: src/app/ajax.js:56
+#: src/app/ajax.js:62
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: src/app/ajax.js:57
+#: src/app/ajax.js:63
 msgid "Request Timeout"
 msgstr ""
 
-#: src/app/ajax.js:58
+#: src/app/ajax.js:64
 msgid "Conflict"
 msgstr ""
 
-#: src/app/ajax.js:59
+#: src/app/ajax.js:65
 msgid "Gone"
 msgstr ""
 
-#: src/app/ajax.js:60
+#: src/app/ajax.js:66
 msgid "Length Required"
 msgstr ""
 
-#: src/app/ajax.js:61
+#: src/app/ajax.js:67
 msgid "Precondition Failed"
 msgstr ""
 
-#: src/app/ajax.js:62
+#: src/app/ajax.js:68
 msgid "Request Entity Too Large"
 msgstr ""
 
-#: src/app/ajax.js:63
+#: src/app/ajax.js:69
 msgid "Request-URI Too Long"
 msgstr ""
 
-#: src/app/ajax.js:64
+#: src/app/ajax.js:70
 msgid "Unsupported Media Type"
 msgstr ""
 
-#: src/app/ajax.js:65
+#: src/app/ajax.js:71
 msgid "Requested Range Not Satisfiable"
 msgstr ""
 
-#: src/app/ajax.js:66
+#: src/app/ajax.js:72
 msgid "Expectation Failed"
 msgstr ""
 
-#: src/app/ajax.js:67
+#: src/app/ajax.js:73
 msgid "I'm a teapot (RFC 2324)"
 msgstr ""
 
-#: src/app/ajax.js:68
+#: src/app/ajax.js:74
 msgid "Enhance Your Calm (Twitter)"
 msgstr ""
 
-#: src/app/ajax.js:69
+#: src/app/ajax.js:75
 msgid "Unprocessable Entity (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:70
+#: src/app/ajax.js:76
 msgid "Locked (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:71
+#: src/app/ajax.js:77
 msgid "Failed Dependency (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:72
+#: src/app/ajax.js:78
 msgid "Reserved for WebDAV"
 msgstr ""
 
-#: src/app/ajax.js:73
+#: src/app/ajax.js:79
 msgid "Upgrade Required"
 msgstr ""
 
-#: src/app/ajax.js:74
+#: src/app/ajax.js:80
 msgid "Precondition Required"
 msgstr ""
 
-#: src/app/ajax.js:75
+#: src/app/ajax.js:81
 msgid "Too Many Requests"
 msgstr ""
 
-#: src/app/ajax.js:76
+#: src/app/ajax.js:82
 msgid "Request Header Fields Too Large"
 msgstr ""
 
-#: src/app/ajax.js:77
+#: src/app/ajax.js:83
 msgid "No Response (Nginx)"
 msgstr ""
 
-#: src/app/ajax.js:78
+#: src/app/ajax.js:84
 msgid "Retry With (Microsoft)"
 msgstr ""
 
-#: src/app/ajax.js:79
+#: src/app/ajax.js:85
 msgid "Blocked by Windows Parental Controls (Microsoft)"
 msgstr ""
 
-#: src/app/ajax.js:80
+#: src/app/ajax.js:86
 msgid "Unavailable For Legal Reasons"
 msgstr ""
 
-#: src/app/ajax.js:81
+#: src/app/ajax.js:87
 msgid "Client Closed Request (Nginx)"
 msgstr ""
 
-#: src/app/ajax.js:82
+#: src/app/ajax.js:88
 msgid "Internal Server Error"
 msgstr ""
 
-#: src/app/ajax.js:83
+#: src/app/ajax.js:89
 msgid "Not Implemented"
 msgstr ""
 
-#: src/app/ajax.js:84
+#: src/app/ajax.js:90
 msgid "Bad Gateway"
 msgstr ""
 
-#: src/app/ajax.js:85
+#: src/app/ajax.js:91
 msgid "Service Unavailable"
 msgstr ""
 
-#: src/app/ajax.js:86
+#: src/app/ajax.js:92
 msgid "Gateway Timeout"
 msgstr ""
 
-#: src/app/ajax.js:87
+#: src/app/ajax.js:93
 msgid "HTTP Version Not Supported"
 msgstr ""
 
-#: src/app/ajax.js:88
+#: src/app/ajax.js:94
 msgid "Variant Also Negotiates (Experimental)"
 msgstr ""
 
-#: src/app/ajax.js:89
+#: src/app/ajax.js:95
 msgid "Insufficient Storage (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:90
+#: src/app/ajax.js:96
 msgid "Loop Detected (WebDAV)"
 msgstr ""
 
-#: src/app/ajax.js:91
+#: src/app/ajax.js:97
 msgid "Bandwidth Limit Exceeded (Apache)"
 msgstr ""
 
-#: src/app/ajax.js:92
+#: src/app/ajax.js:98
 msgid "Not Extended"
 msgstr ""
 
-#: src/app/ajax.js:93
+#: src/app/ajax.js:99
 msgid "Network Authentication Required"
 msgstr ""
 
-#: src/app/ajax.js:94
+#: src/app/ajax.js:100
 msgid "Network read timeout error"
 msgstr ""
 
-#: src/app/ajax.js:95
+#: src/app/ajax.js:101
 msgid "Network connect timeout error"
 msgstr ""
 
-#: src/app/ajax.js:151
+#: src/app/ajax.js:162
 msgid "Operation cancelled by user."
 msgstr ""
 
-#: src/app/ajax.js:154
+#: src/app/ajax.js:165
 msgid "Aborted"
 msgstr ""
 
-#: src/app/ajax.js:167
-#: src/app/ajax.js:352
+#: src/app/ajax.js:178
+#: src/app/ajax.js:359
 #: src/app/blog.js:181
 #: src/app/blog.js:229
 #: src/app/blog.js:279
@@ -9351,74 +9366,74 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/app/ajax.js:192
+#: src/app/ajax.js:203
 msgid "System Administrator"
 msgstr ""
 
-#: src/app/ajax.js:217
+#: src/app/ajax.js:228
 msgid "Feedback email: {AutoReport}"
 msgstr ""
 
-#: src/app/ajax.js:245
+#: src/app/ajax.js:252
 msgid "Something went wrong."
 msgstr ""
 
-#: src/app/ajax.js:247
+#: src/app/ajax.js:254
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: src/app/ajax.js:252
+#: src/app/ajax.js:259
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: src/app/ajax.js:300
+#: src/app/ajax.js:307
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: src/app/ajax.js:302
+#: src/app/ajax.js:309
 msgid "Internal Error"
 msgstr ""
 
-#: src/app/ajax.js:309
+#: src/app/ajax.js:316
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: src/app/ajax.js:318
+#: src/app/ajax.js:325
 msgid "Missing data"
 msgstr ""
 
-#: src/app/ajax.js:330
+#: src/app/ajax.js:337
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
 msgstr ""
 
-#: src/app/ajax.js:333
+#: src/app/ajax.js:340
 msgid "Error: plain string received"
 msgstr ""
 
-#: src/app/ajax.js:338
+#: src/app/ajax.js:345
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
 msgstr ""
 
-#: src/app/ajax.js:341
+#: src/app/ajax.js:348
 msgid "Error: not a plain object"
 msgstr ""
 
-#: src/app/ajax.js:380
+#: src/app/ajax.js:387
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr ""
 
-#: src/app/ajax.js:387
+#: src/app/ajax.js:394
 msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr ""
 
@@ -9797,8 +9812,12 @@ msgstr ""
 msgid "Result of expert operation \"setupdb\""
 msgstr ""
 
-#: src/app/file-download.js:51
-msgid "Unable to download data from \"{url}\": "
+#: src/app/file-download.js:54
+msgid "unknown error"
+msgstr ""
+
+#: src/app/file-download.js:57
+msgid "Unable to download data from \"{url}\": {message}"
 msgstr ""
 
 #: src/app/file-upload.js:96
@@ -10336,10 +10355,30 @@ msgstr ""
 msgid "User Manual: {section}"
 msgstr ""
 
-#: src/files-hooks.js:134
+#: src/files-hooks.js:154
 msgid ""
 "Fill the template with substitutions. Opens the \"Details\" view for further "
 "options."
+msgstr ""
+
+#: src/files-hooks.js:218
+msgid "New Supporting Document"
+msgstr ""
+
+#: src/files-hooks.js:219
+msgid "PROJECTNAME-XXX"
+msgstr ""
+
+#: src/files-hooks.js:228
+msgid ""
+"The name of the new document in support must match the format "
+"\"{projectName}-XXX\" where \"XXX\" is a placeholder for 3 decimal digits or "
+"a literatl \"XXX\" in which case the next available sequence number is "
+"chosen automatically."
+msgstr ""
+
+#: src/files-hooks.js:247
+msgid "Document sequence determined as {sequence}."
 msgstr ""
 
 #: src/legacy/calendar/calendar.js:25
