@@ -27,11 +27,7 @@ import './legacy/calendar/on-event.js';
 import './legacy/calendar/jquery.multi-autocomplete.js';
 import 'legacy/calendar/jquery.ui.timepicker.js';
 
-// jQuery = require('jquery');
 require('jquery-ui');
-
-// window.$ = jQuery;
-// window.jQuery = jQuery;
 
 console.info('JQUERY', jQuery.widget, window.jQuery.widget);
 
