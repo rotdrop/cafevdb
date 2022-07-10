@@ -23,10 +23,16 @@
 
 // jQuery stuff
 
-const jQuery = require('jquery');
+import { appName } from './app-info.js';
+let jQuery = require('jquery');
 
-window.$ = jQuery;
-window.jQuery = jQuery;
+if (window.jQuery && window.jQuery !== jQuery) {
+  console.info(appName + ': JQUERY VERSIONS W / A', window.jQuery.fn.jquery, jQuery.fn.jquery);
+  if (window.jQuery.fn.jquery === jQuery.fn.jquery) {
+    console.info(appName + ': using matching window.jQuery version');
+    jQuery = window.jQuery;
+  }
+}
 
 export default jQuery;
 
