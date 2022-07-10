@@ -158,7 +158,7 @@ class FilesHooksListener implements IEventListener
     // @todo Replace by more lightweight stuff
     $groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
     $initialState->provideInitialState('CAFEVDB', [
-      'adminContact' => $this->getCloudAdminContacts($groupManager),
+      'adminContact' => $this->getCloudAdminContacts($groupManager, implode: true),
       'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
     ]);
 

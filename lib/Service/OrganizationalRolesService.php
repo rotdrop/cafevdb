@@ -336,14 +336,14 @@ class OrganizationalRolesService
   /**
    * Contact information for the overall admins.
    */
-  public function cloudAdminContact()
+  public function cloudAdminContact(bool $implode = false)
   {
-    return $this->getCloudAdminContacts($this->groupManager());
+    return $this->getCloudAdminContacts($this->groupManager(), $implode);
   }
 
-  public function adminContact()
+  public function adminContact(bool $implode = false)
   {
-    return $this->cloudAdminContact();
+    return $this->cloudAdminContact($implode);
   }
 
   /**

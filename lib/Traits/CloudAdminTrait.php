@@ -31,7 +31,7 @@ trait CloudAdminTrait
   /**
    * Contact information for the overall admins.
    */
-  protected function getCloudAdminContacts(IGroupManager $groupManager)
+  protected function getCloudAdminContacts(IGroupManager $groupManager, bool $implode = false)
   {
     $adminGroup = $groupManager->get('admin');
     $adminUsers = $adminGroup->getUsers();
@@ -42,6 +42,15 @@ trait CloudAdminTrait
         'email' => $adminUser->getEmailAddress(),
       ];
     }
+
+    if ($implode) {
+      $adminEmail = [];
+      foreach ($contacts as $admin) {
+        $adminEmail[] = empty($admin['name']) ? $admin['email'] : $admin['name'].' <'.$admin['email'].'>';
+      }
+      $contacts = implode(',', $adminEmail);
+    }
+
     return $contacts;
   }
 }
