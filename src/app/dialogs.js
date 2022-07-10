@@ -130,29 +130,33 @@ const attachDialogHandlers = function(container) {
 
   $container
     .off('dblclick', '.oc-dialog')
-    .on('dblclick', '.oc-dialog', function() {
+    .on('dblclick', '.oc-dialog', function(event) {
       $('.oc-dialog').toggleClass('maximize-width');
+      event.stopImmediatePropagation();
     });
 
   $container
     .off('click', '.oc-dialog .exception.error.name')
-    .on('click', '.oc-dialog .exception.error.name', function() {
+    .on('click', '.oc-dialog .exception.error.name', function(event) {
       $(this).next().toggleClass('visible');
+      event.stopImmediatePropagation();
     });
 
   $container
     .off('click', '.oc-dialog .error.exception ul.technical')
-    .on('click', '.oc-dialog .error.exception ul.technical', function() {
+    .on('click', '.oc-dialog .error.exception ul.technical', function(event) {
       $(this).nextAll('.trace').toggleClass('visible');
+      event.stopImmediatePropagation();
     });
 
   $container
     .off('click', '.oc-dialog .error.exception .trace.visible')
-    .on('click', '.oc-dialog .error.exception .trace.visible', function() {
+    .on('click', '.oc-dialog .error.exception .trace.visible', function(event) {
       const $this = $(this);
       $this.removeClass('visible');
       $this.next('.trace').removeClass('visible');
       $this.prev('.trace').removeClass('visible');
+      event.stopImmediatePropagation();
     });
 };
 
