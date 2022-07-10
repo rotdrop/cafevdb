@@ -84,6 +84,13 @@ module.exports = {
     new Visualizer({
       filename: './statistics/visualizer-stats.html',
     }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      jquery: 'jquery',
+      'window.$': 'jquery',
+      'window.jQuery': 'jquery',
+    }),
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
     }),
