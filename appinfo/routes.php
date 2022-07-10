@@ -313,11 +313,17 @@ $routes = [
       'name' => 'downloads#fetch',
       'url' => '/download/{section}/{object}',
       'verb' => 'POST',
+      'requirements' => [
+        'section' => '^(?!pdf)$',
+      ],
     ],
     [
       'name' => 'downloads#get',
       'url' => '/download/{section}/{object}',
       'verb' => 'GET',
+      'requirements' => [
+        'section' => '^(?!pdf)$',
+      ],
     ],
     /**
      * Image service out of database or OC file-space

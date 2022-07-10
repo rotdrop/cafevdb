@@ -39,13 +39,7 @@ class EncryptedFile extends File
   /**
    * @var Collection
    *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
-   *
-   * Not that it is not possible to override the targetEntity annotation from
-   * the base-class, so it must go here to the leaf-class.
+   * {@inheritdoc}
    *
    * @ORM\OneToMany(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
@@ -63,6 +57,14 @@ class EncryptedFile extends File
    */
   private $owners;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="documents")
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="documentsChanged")
+   */
+  private $projectBalanceSupportingDocument;
+
   public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
@@ -76,6 +78,7 @@ class EncryptedFile extends File
     if (!empty($owner)) {
       $this->addOwner($owner);
     }
+    $this->projectBalanceSupportingDocument = new ArrayCollection;
   }
 
   /**
@@ -129,4 +132,33 @@ class EncryptedFile extends File
   {
     $this->owners->remove($musician->getId());
   }
+
+  /**
+   * Set projectBalanceSupportingDocument.
+   *
+   * @param ProjectBalanceSupportingDocument
+   *
+   * @return EncryptedFile
+   */
+  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $entity):EncryptedFile
+  {
+    $this->projectBalanceSupportingDocument->clear();
+    if (!empty($entity)) {
+      $this->projectBalanceSupportingDocument->add($entity);
+    }
+    return $this;
+  }
+
+  /**
+   * Get projectBalanceSupportingDocument.
+   *
+   * @return null|ProjectBalanceSupportingDocument
+   */
+  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  {
+    return $this->projectBalanceSupportingDocument->isEmpty()
+      ? null
+      : $this->projectBalanceSupportingDocument->first();
+  }
+
 }

@@ -25,6 +25,7 @@ import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath, imagePath } from '@nextcloud/router';
+import { showError, showInfo } from '@nextcloud/dialogs';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
@@ -46,7 +47,7 @@ if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
-let initialState;
+let initialState = getInitialState();
 
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
@@ -58,10 +59,30 @@ const acceptableMimeType = function(mimeType) {
 };
 
 const validTemplatePath = function(path) {
-  return path.startsWith(initialState.sharing.files.templates);
+  return path.startsWith(initialState.sharing.files.folders.templates);
 };
 
-const isEnabled = function(fileInfo) {
+const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
+  let dirName = dirInfo.path;
+  if (!dirName.startsWith(initialState.sharing.files.folders.projectBalances)) {
+    return false;
+  }
+  dirName = dirName.substring(initialState.sharing.files.folders.projectBalances.length);
+  dirName = dirName.replace(/^\/?\d{4}\/?/, '');
+  const slashPos = dirName.indexOf('/');
+  const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
+  return projectName;
+};
+
+const isProjectBalanceSupportingDocumentsFolder = function(dirInfo, projectName) {
+  projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
+  const dirName = dirInfo.path;
+  const baseName = dirInfo.name;
+  return dirName.startsWith(initialState.sharing.files.folders.projectBalances)
+    && baseName === initialState.sharing.files.subFolders.supportingDocuments;
+};
+
+const enableTemplateActions = function(fileInfo) {
 
   if (fileInfo && fileInfo.isDirectory()) {
     return false;
@@ -82,9 +103,7 @@ const isEnabled = function(fileInfo) {
 
 window.addEventListener('DOMContentLoaded', () => {
 
-  initialState = getInitialState();
-
-  console.info('INITIAL STATE', initialState);
+  initialState = initialState || getInitialState();
 
   // menu file-actions can only depend on the literal local file-name,
   // the type and the mime-type.
@@ -96,6 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (OCA.Files && OCA.Files.fileActions) {
     const fileActions = OCA.Files.fileActions;
+
+    // an extra button which just will open the side-bar
     fileActions.registerAction({
       name: appName,
       displayName: false,
@@ -119,9 +140,8 @@ window.addEventListener('DOMContentLoaded', () => {
           path: $file.dataset.path,
         };
 
-        return isEnabled(fileInfo);
+        return enableTemplateActions(fileInfo);
       },
-      foobar: imagePath(appName, appName),
       iconClass() {
         return 'cafevdb-template';
       },
@@ -158,7 +178,7 @@ window.addEventListener('DOMContentLoaded', () => {
       id: appName,
       name: t(appName, 'MailMerge'),
       icon: 'icon-rename',
-      enabled: isEnabled,
+      enabled: enableTemplateActions,
 
       async mount(el, fileInfo, context) {
 
@@ -189,5 +209,96 @@ window.addEventListener('DOMContentLoaded', () => {
         TabInstance = null;
       },
     }));
+  }
+
+  if (OC.Plugins) {
+    OC.Plugins.register('OCA.Files.NewFileMenu', {
+      menuData: {
+        id: 'project-supporting-document',
+        displayName: t(appName, 'New Supporting Document'),
+        templateName: t(appName, 'PROJECTNAME-XXX'),
+        projectName: 'PROJECTNAME',
+        fileList: null,
+        iconClass: 'icon-folder',
+        fileType: 'httpd/unix-directory',
+        async actionHandler(name) {
+          const nameRegExp = new RegExp('^(?:' + this.projectName + '-?)?' + '(\\d{3}|XXX)$');
+          const sequenceMatch = name.match(nameRegExp);
+          if (!sequenceMatch) {
+            showError(t(appName, 'The name of the new document in support must match the format "{projectName}-XXX" where "XXX" is a placeholder for 3 decimal digits or a literatl "XXX" in which case the next available sequence number is chosen automatically.', this));
+          }
+          let sequence = sequenceMatch[1];
+          if (sequence === 'XXX') {
+            const sequences = [];
+            for (const file of this.fileList.files) {
+              sequences.push(+file.name.substr(file.name.length - 3));
+            }
+            sequences.sort((a, b) => a - b);
+            let previous = 0;
+            for (const current of sequences) {
+              if (current - previous !== 1) {
+                break;
+              }
+              previous = current;
+            }
+            sequence = previous + 1;
+          }
+          sequence = String(sequence).padStart(3, '0');
+          showInfo(t(appName, 'Document sequence determined as {sequence}.', { sequence }));
+          const dirName = this.projectName + '-' + sequence;
+          await this.fileList.createDirectory(dirName);
+        },
+        checkFilename() {
+          // this seems to be unused
+          console.trace('CHECK FILENAME', arguments);
+        },
+      },
+      savedMenuItems: null,
+      installMenuNew(menu) {
+        const fileList = menu.fileList;
+        const dirInfo = fileList.dirInfo;
+        const projectName = getProjectNameFromProjectBalancesFolders(dirInfo);
+
+        if (!isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName)) {
+          if (this.savedMenuItems) {
+            // the WOPI requests send to the richdocuments do not
+            // contain enough authentication to access our data-base.
+            const menuItems = dirInfo.mountType === 'cafevdb-database'
+              ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && item.id !== 'folder')
+              : this.savedMenuItems;
+            menu._menuItems = menuItems;
+          }
+          return;
+        }
+
+        this.menuData.projectName = projectName;
+        this.menuData.templateName = projectName + '-XXX';
+        this.menuData.actionHandler = this.menuData.actionHandler.bind(this.menuData);
+        this.menuData.fileList = menu.fileList;
+
+        menu._menuItems = [];
+        menu.addMenuEntry(this.menuData);
+      },
+      attach(menu) {
+        if (!this.savedMenuItems) {
+
+          this.savedMenuItems = menu._menuItems;
+
+          const menuRender = menu.render;
+          menu.render = function() {
+            menuRender.apply(this);
+            if (isProjectBalanceSupportingDocumentsFolder(this.fileList.dirInfo)) {
+              this.$el.find('ul li:first').remove();
+            }
+          }.bind(menu);
+
+          menu.fileList.$el.on('afterChangeDirectory', (params) => {
+            this.installMenuNew(menu);
+          });
+        }
+
+        this.installMenuNew(menu);
+      },
+    });
   }
 });

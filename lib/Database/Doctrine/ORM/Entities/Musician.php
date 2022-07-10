@@ -1067,7 +1067,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get paymentsChanged.
    *
-   * @return Collection
+   * @return \DateTimeInterface
    */
   public function getPaymentsChanged():?\DateTimeInterface
   {

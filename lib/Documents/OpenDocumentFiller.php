@@ -49,6 +49,9 @@ class OpenDocumentFiller
   /** @var TemplateService */
   private $templateService;
 
+  /** @var AnyToPdf */
+  private $anyToPdf;
+
   /**
    * @var array
    *
@@ -61,11 +64,13 @@ class OpenDocumentFiller
     , UserStorage $userStorage
     , TemplateService $templateService
     , OpenDocumentFillerBackend $backend
+    , AnyToPdf $anyToPdf
   ) {
     $this->configService = $configService;
     $this->userStorage = $userStorage;
     $this->templateService = $templateService;
     $this->backend = $backend;
+    $this->anyToPdf = $anyToPdf;
     $this->di(\clsOpenTBS::class);
     ob_start();
     $this->backend->NoErr = true;
@@ -211,30 +216,7 @@ class OpenDocumentFiller
     if ($asPdf) {
 
       if (empty($this->cache[$fileHash][$templateDataHash]['pdfData'])) {
-
-        $unoconv = (new ExecutableFinder)->find('unoconv');
-        if (empty($unoconv)) {
-          throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "unoconv" program on the server.'));
-        }
-        $retry = false;
-        do {
-          $pdfConvert = new Process([
-            $unoconv,
-            '-f', 'pdf',
-            '--stdin', '--stdout',
-            '-e', 'ExportNotes=False'
-          ]);
-          $pdfConvert->setInput($fileData);
-          try  {
-            $pdfConvert->run();
-            $retry = false;
-          } catch (\Throwable $t) {
-            $this->logException($t);
-            $this->logError('RETRY');
-            $retry = true;
-          }
-        } while ($retry);
-        $fileData = $pdfConvert->getOutput();
+        $fileData = $this->anyToPdf->convertData($fileData);
         $this->cache[$fileHash][$templateDataHash]['pdfData'] = $fileData;
       } else {
         $fileData = $this->cache[$fileHash][$templateDataHash]['pdfData'];

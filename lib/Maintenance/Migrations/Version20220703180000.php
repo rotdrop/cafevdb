@@ -5,9 +5,9 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
+ * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or any later version.
@@ -21,28 +21,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+class Version20220703180000 extends ProjectBalanceSupportingDocuments {};
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
-
-/**
- * ImageFileData
- *
- * @ORM\Entity
- */
-class ImageFileData extends FileData
-{
-  /**
-   * @var Image
-   *
-   * {@inheritdoc}
-   *
-   * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="Image", inversedBy="fileData", cascade={"all"})
-   */
-  protected $file;
-}
+// Local Variables: ***
+// c-basic-offset: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***

@@ -126,18 +126,24 @@ class MailingListsAutoResponsesListener implements IEventListener
 
     /** @var \OCP\Files\Node $node */
     foreach ($nodes as $key => $node) {
+      if ($node instanceof \OC\Files\Node\NonExistingFile) {
+        unset($nodes[$key]);
+        continue;
+      }
       $nodePath = $node->getPath();
       if ($key == 'add')  {
         // Can ony use plain text files for the autoresponses.
         $eventMimeType = $node->getMimetype();
         if ($eventMimeType != 'text/plain' && $eventMimeType != 'text/markdown') {
           unset($nodes[$key]);
+          continue;
         }
       }
       $template = pathinfo($nodePath, PATHINFO_FILENAME);
       // first look at the base name, it must start with one of the known prefixes.
       if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
         unset($nodes[$key]);
+        continue;
       }
     }
 

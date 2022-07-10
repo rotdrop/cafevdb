@@ -122,24 +122,42 @@ const attachDialogHandlers = function(container) {
 
   const $container = $(container || 'body');
 
-  $container.on('dblclick', '.oc-dialog', function() {
-    $('.oc-dialog').toggleClass('maximize-width');
-  });
+  if ($container.data(appName + 'DialogHandlersAttached')) {
+    return;
+  }
 
-  $container.on('click', '.oc-dialog .exception.error.name', function() {
-    $(this).next().toggleClass('visible');
-  });
+  $container.data(appName + 'DialogHandlersAttached', true);
 
-  $container.on('click', '.oc-dialog .error.exception ul.technical', function() {
-    $(this).nextAll('.trace').toggleClass('visible');
-  });
+  $container
+    .off('dblclick', '.oc-dialog')
+    .on('dblclick', '.oc-dialog', function(event) {
+      $('.oc-dialog').toggleClass('maximize-width');
+      event.stopImmediatePropagation();
+    });
 
-  $container.on('click', '.oc-dialog .error.exception .trace.visible', function() {
-    const $this = $(this);
-    $this.removeClass('visible');
-    $this.next('.trace').removeClass('visible');
-    $this.prev('.trace').removeClass('visible');
-  });
+  $container
+    .off('click', '.oc-dialog .exception.error.name')
+    .on('click', '.oc-dialog .exception.error.name', function(event) {
+      $(this).next().toggleClass('visible');
+      event.stopImmediatePropagation();
+    });
+
+  $container
+    .off('click', '.oc-dialog .error.exception ul.technical')
+    .on('click', '.oc-dialog .error.exception ul.technical', function(event) {
+      $(this).nextAll('.trace').toggleClass('visible');
+      event.stopImmediatePropagation();
+    });
+
+  $container
+    .off('click', '.oc-dialog .error.exception .trace.visible')
+    .on('click', '.oc-dialog .error.exception .trace.visible', function(event) {
+      const $this = $(this);
+      $this.removeClass('visible');
+      $this.next('.trace').removeClass('visible');
+      $this.prev('.trace').removeClass('visible');
+      event.stopImmediatePropagation();
+    });
 };
 
 export {

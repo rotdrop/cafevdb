@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class OrganizationalRolesService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\CloudAdminTrait;
 
   const CLOUD_ADMIN_ROLE = 'cloudAdmin';
   const GROUP_ADMIN_ROLE = 'groupAdmin';
@@ -335,23 +336,14 @@ class OrganizationalRolesService
   /**
    * Contact information for the overall admins.
    */
-  public function cloudAdminContact()
+  public function cloudAdminContact(bool $implode = false)
   {
-    $adminGroup = $this->groupManager()->get('admin');
-    $adminUsers = $adminGroup->getUsers();
-    $contacts = [];
-    foreach ($adminUsers as $adminUser) {
-      $contacts[] = [
-        'name' => $adminUser->getDisplayName(),
-        'email' => $adminUser->getEmailAddress(),
-      ];
-    }
-    return $contacts;
+    return $this->getCloudAdminContacts($this->groupManager(), $implode);
   }
 
-  public function adminContact()
+  public function adminContact(bool $implode = false)
   {
-    return $this->cloudAdminContact();
+    return $this->cloudAdminContact($implode);
   }
 
   /**
