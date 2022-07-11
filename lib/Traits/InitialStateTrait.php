@@ -57,12 +57,7 @@ trait InitialStateTrait {
 
     $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
 
-    $admins = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact();
-    $adminEmail = [];
-    foreach ($admins as $admin) {
-      $adminEmail[] = empty($admin['name']) ? $admin['email'] : $admin['name'].' <'.$admin['email'].'>';
-    }
-    $adminContact = implode(',', $adminEmail);
+    $adminContact = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 
     $languageComplete = $l->getLanguageCode();
     list($languageShort,) = explode('_', $languageComplete);

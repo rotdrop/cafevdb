@@ -129,6 +129,8 @@ $full-screen-zindex: 9000;
 
 .oc-dialog {
 
+  @import 'error-dialogs.scss';
+
   &.maximize-width {
     .oc-dialog-content {
       max-width:calc(100vw - 20px);

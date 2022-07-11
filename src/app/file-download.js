@@ -29,6 +29,9 @@ import * as Notification from './notification.js';
 import * as ncRouter from '@nextcloud/router';
 import { parse as parseContentDisposition } from 'content-disposition';
 
+// still needed for jquery
+require('../legacy/nextcloud/jquery/requesttoken.js');
+
 /**
  * Place a download request by posting to the given Ajax URL.
  *
@@ -48,7 +51,10 @@ const download = function(url, post, options) {
     fail(data) {},
     always() {},
     errorMessage(url, data) {
-      return t(appName, 'Unable to download data from "{url}": ', { url });
+      let message = data.message || [t(appName, 'unknown error')];
+      message = message.join(' | ');
+      console.info('ERROR', url, data, message);
+      return t(appName, 'Unable to download data from "{url}": {message}', { url, message });
     },
   };
   options = options || {};
@@ -81,6 +87,7 @@ const download = function(url, post, options) {
                        || url.startsWith(ncRouter.generateRemoteUrl('')))
     ? url
     : generateUrl(url);
+
   return $.ajax({
     url: downloadUrl,
     method,

@@ -46,6 +46,8 @@ class FilesHooksListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Traits\CloudAdminTrait;
 
   const EVENT = HandledEvent::class;
 
@@ -96,17 +98,21 @@ class FilesHooksListener implements IEventListener
 
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
+    $this->logger = $this->appContainer->get(\OCP\ILogger::class);
+    $this->l = $this->appContainer->get(\OCP\IL10N::class);
 
     $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
     $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
-
-    $this->logger = $this->appContainer->get(\OCP\ILogger::class);
+    $financeFolder = $encryptionService->getConfigValue(ConfigService::FINANCE_FOLDER);
+    $balancesFolder = $encryptionService->getConfigValue(ConfigService::BALANCES_FOLDER);
+    $projectsFolder = $encryptionService->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
 
     /** @var EntityManager $entityManager */
     $entityManager = $this->appContainer->get(EntityManager::class);
     try {
       $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
-      $this->logInfo('MUS ID ' . $musicianId);
+      // $this->logInfo('MUS ID ' . $musicianId);
     } catch (\Throwable $t) {
       // ignore
       $this->logException($t);
@@ -116,11 +122,27 @@ class FilesHooksListener implements IEventListener
     /** @var IContactsManager $contactsManager */
     $contactsManager = $this->appContainer->get(IContactsManager::class);
 
+    $sharedFolder = '/' . $sharedFolder;
+    $templatesFolder = $sharedFolder . '/' . $templatesFolder;
+    $financeFolder = $sharedFolder . '/' . $financeFolder;
+    $balancesFolder = $financeFolder . '/' . $balancesFolder;
+    $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
+
     $initialState->provideInitialState('files', [
       'sharing' => [
         'files' => [
-          'root' => '/' . $sharedFolder,
-          'templates' => '/' . $sharedFolder . '/' . $templatesFolder,
+          'folders' => [
+            // absolute paths
+            'root' => $sharedFolder,
+            'templates' => $templatesFolder,
+            'finance' => $financeFolder,
+            'balances' => $balancesFolder,
+            'projectBalances' => $projectBalancesFolder,
+          ],
+          'subFolders' => [
+            // relative paths
+            'supportingDocuments' => $supportingDocumentsFolder,
+          ],
         ],
       ],
       'personal' => [
@@ -130,6 +152,14 @@ class FilesHooksListener implements IEventListener
       'contacts' => [
         'addressBooks' => self::flattenAdressBooks($contactsManager->getUserAddressBooks()),
       ],
+    ]);
+
+    // just admin contact and stuff to make the ajax error handlers work.
+    // @todo Replace by more lightweight stuff
+    $groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
+    $initialState->provideInitialState('CAFEVDB', [
+      'adminContact' => $this->getCloudAdminContacts($groupManager, implode: true),
+      'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
     ]);
 
     /** @var AssetService $assetService */

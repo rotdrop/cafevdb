@@ -23,6 +23,9 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use OCP\Files\IMimeTypeDetector;
+use OCP\ITempManager;
+
 // FIXME: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
@@ -58,7 +61,7 @@ class Storage extends AbstractStorage
   {
     parent::__construct($params);
 
-    $this->configService = \OC::$server->query(ConfigService::class);
+    $this->configService = $params['configService'];
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
 
@@ -204,6 +207,12 @@ class Storage extends AbstractStorage
   public function isUpdatable($path) {
     // return $this->file_exists($path);
     return false; // readonly for now
+  }
+
+  public function isSharable($path) {
+    // sharing cannot work in general as the database access need additional
+    // credentials
+    return false;
   }
 
   public function filemtime($path)
@@ -372,9 +381,13 @@ class Storage extends AbstractStorage
         if (!$this->isCreatable(dirname($path))) {
           return false;
         }
-        $tmpFile = \OC::$server->getTempManager()->getTemporaryFile();
+        if (!$this->touch($path)) {
+          return false;
+        }
+        $tmpFile = $this->di(ITempManager::class)->getTemporaryFile();
       }
       $source = fopen($tmpFile, $mode);
+
       return CallbackWrapper::wrap($source, null, null, function () use ($tmpFile, $path) {
         $this->writeStream($path, fopen($tmpFile, 'r'));
         unlink($tmpFile);
@@ -383,8 +396,38 @@ class Storage extends AbstractStorage
     return false;
   }
 
+  public function writeStream(string $path, $stream, int $size = null): int
+  {
+    if (!$this->touch($path)) {
+      return false;
+    }
+    /** @var Entities\EncryptedFile $file */
+    $file = $this->fileFromFileName($path);
+    if (empty($file)) {
+      return false;
+    }
+    if ($size === null) {
+      $stream = CountWrapper::wrap($stream, function ($writtenSize) use (&$size) {
+        $size = $writtenSize;
+      });
+    }
+
+    $fileData = stream_get_contents($stream);
+    $file->getFileData()->setData($fileData);
+    /** @var IMimeTypeDetector $mimeTypeDetector */
+    $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
+    $file->setMimeType($mimeTypeDetector->detectString($fileData));
+    $file->setSize(strlen($fileData));
+
+    $this->flush();
+    fclose($stream);
+
+    return $size;
+  }
+
   public function readStream(string $path)
   {
+    /** @var Entities\EncryptedFile $file */
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
       return false;

@@ -22,34 +22,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Storage\Database;
+namespace OCA\CAFEVDB\Traits;
 
-/**
- * Simplistik directory node holding the basename of the directory and
- * an optional minimal directory modification time in order to track
- * deletions. Normally the directory modification time is just the
- * maximum of the entries. This, however, fails to invalidate the
- * file-cache of the cloud in case of deletions.
- */
-class DirectoryNode
+use OCP\IGroupManager;
+
+trait CloudAdminTrait
 {
-  /** @var string */
-  public string $name;
-
-  /** @var null|\DateTimeInterface */
-  public ?\DateTimeInterface $minimalModificationTime;
-
-  public function __construct(string $name, ?\DateTimeInterface $minimalModificationTime = null)
+  /**
+   * Contact information for the overall admins.
+   */
+  protected function getCloudAdminContacts(IGroupManager $groupManager, bool $implode = false)
   {
-    $this->name = $name;
-    $this->minimalModificationTime = $minimalModificationTime;
-  }
-
-  public function updateModificationTime(?\DateTimeInterface $mtime = null):DirectoryNode
-  {
-    if (!empty($mtime)) {
-      $this->minimalModificationTime = max($mtime, $this->minimalModificationTime);
+    $adminGroup = $groupManager->get('admin');
+    $adminUsers = $adminGroup->getUsers();
+    $contacts = [];
+    foreach ($adminUsers as $adminUser) {
+      $contacts[] = [
+        'name' => $adminUser->getDisplayName(),
+        'email' => $adminUser->getEmailAddress(),
+      ];
     }
-    return $this;
+
+    if ($implode) {
+      $adminEmail = [];
+      foreach ($contacts as $admin) {
+        $adminEmail[] = empty($admin['name']) ? $admin['email'] : $admin['name'].' <'.$admin['email'].'>';
+      }
+      $contacts = implode(',', $adminEmail);
+    }
+
+    return $contacts;
   }
 }

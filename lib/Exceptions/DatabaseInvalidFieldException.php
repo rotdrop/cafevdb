@@ -1,10 +1,11 @@
+<?php
 /**
- * Orchestra member, musicion and project management application.
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,24 +22,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from './app/jquery.js';
-import Calendar from './legacy/calendar/calendar.js';
-import './legacy/calendar/on-event.js';
-import './legacy/calendar/jquery.multi-autocomplete.js';
-import 'legacy/calendar/jquery.ui.timepicker.js';
+namespace OCA\CAFEVDB\Exceptions;
 
-require('jquery-ui');
-
-console.info('JQUERY', jQuery.widget, window.jQuery.widget);
-
-require('legacy/calendar/jquery.ui.timepicker.css');
-
-require('jquery-ui-multiselect-widget');
-require('jquery-ui-multiselect-widget/css/jquery.multiselect.css');
-
-export { Calendar };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+class DatabaseInvalidFieldException extends DatabaseException
+{
+}

@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file Handle various requests associated with asymmetric encryption
+ * @file Access the data-base records of musicians. Return flattened DB entities.
  */
 
 namespace OCA\CAFEVDB\Controller;

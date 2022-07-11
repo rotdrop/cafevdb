@@ -41,24 +41,7 @@ const documentReady = function() {
 
   document.onkeypress = stopEnterSubmit;
 
-  $('body').on('dblclick', '.oc-dialog', function() {
-    $('.oc-dialog').toggleClass('maximize-width');
-  });
-
-  $('body').on('click', '.oc-dialog .exception.error.name', function() {
-    $(this).next().toggleClass('visible');
-  });
-
-  $('body').on('click', '.oc-dialog .error.exception ul.technical', function() {
-    $(this).nextAll('.trace').toggleClass('visible');
-  });
-
-  $('body').on('click', '.oc-dialog .error.exception .trace.visible', function() {
-    const $this = $(this);
-    $this.removeClass('visible');
-    $this.next('.trace').removeClass('visible');
-    $this.prev('.trace').removeClass('visible');
-  });
+  Dialogs.attachDialogHandlers();
 
   // @TODO move to global state context
   window.oldWidth = -1;

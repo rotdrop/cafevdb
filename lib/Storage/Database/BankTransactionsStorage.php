@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Storage\Database;
 // FIXME: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
+use OCP\EventDispatcher\IEventDispatcher;
 
 use Icewind\Streams\CallbackWrapper;
 use Icewind\Streams\CountWrapper;
@@ -52,6 +53,13 @@ class BankTransactionsStorage extends Storage
   {
     parent::__construct($params);
     $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
+    /** @var IEventDispatcher $eventDispatcher */
+    $eventDispatcher = $this->di(IEventDispatcher::class);
+    $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
+      $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
+      $this->clearDatabaseRepository();
+      $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
+    });
   }
 
   /**

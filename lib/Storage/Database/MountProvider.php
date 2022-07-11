@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Exceptions\MissingProjectsFolderException;
@@ -52,6 +53,8 @@ class MountProvider implements IMountProvider
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use ProjectParticipantsStorageTrait;
+
+  const MOUNT_TYPE = 'cafevdb-database';
 
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
@@ -141,41 +144,19 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
-    if ($userId === $this->shareOwnerId()) {
-
-      $storage = new Storage([]);
-      $bulkLoadStorageIds[] = $storage->getId();
-
-      $mounts[] = new class(
-        $storage,
-        '/' . $userId
-        . '/files'
-        . '/' . $this->getSharedFolderPath()
-        . '/' . $this->appName() . '-database',
-        null,
-        $loader,
-        [
-          'filesystem_check_changes' => 1,
-          'readonly' => true,
-          'previews' => true,
-          'enable_sharing' => false, // cannot work, mount needs DB access
-          'authenticated' => true,
-        ]
-      ) extends MountPoint { public function getMountType() { return 'database'; } };
-
-    }
-
     if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
       // block for non-treasurers
 
-      $storage = new BankTransactionsStorage([]);
+      $storage = new BankTransactionsStorage([
+        'configService' => $this->configService
+      ]);
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
         $storage,
         '/' . $userId
         . '/files'
-        . '/' . $this->getBankTransactionsPath(),
+        . $this->getBankTransactionsPath(),
         null,
         $loader,
         [
@@ -185,18 +166,58 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-      ) extends MountPoint { public function getMountType() { return 'database'; } };
+      ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
     }
 
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([
-        'participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '>financialBalanceSupportingDocuments.sequence' => 0,
+        // [ ')' => true ],
+        'type' => [ ProjectType::PERMANENT, ProjectType::TEMPORARY ],
         'deleted' => null,
       ]);
     } catch (\Throwable $t) {
       $this->logException($t, 'Unable to access projects table');
       return [];
+    }
+
+    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
+      // block for non-treasurers
+
+      /** @var Entities\Project $project */
+      foreach ($projects as $project) {
+
+        $storage = new ProjectBalanceSupportingDocumentsStorage([
+          'configService' => $this->configService,
+          'project' => $project,
+        ]);
+        $bulkLoadStorageIds[] = $storage->getId();
+
+        $mountPathChain = [ $this->getProjectBalancesPath() ];
+        if ($project->getType() == ProjectType::TEMPORARY) {
+          $mountPathChain[] = $project->getYear();
+        };
+        $mountPathChain[] = $project->getName();
+        $mountPathChain[] = $this->getSupportingDocumentsFolderName();
+
+        $mountPath = '/' . $userId . '/' . 'files' . implode('/', $mountPathChain);
+
+        $mounts[] = new class(
+          $storage,
+          $mountPath,
+          null,
+          $loader,
+          [
+            'filesystem_check_changes' => 1,
+            'readonly' => false,
+            'previews' => true,
+            'enable_sharing' => false, // cannot work, mount needs DB access
+            'authenticated' => true,
+          ]
+        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
+      }
     }
 
     /** @var ProjectService $projectService */
@@ -224,6 +245,7 @@ class MountProvider implements IMountProvider
         try {
           $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
           $storage = new ProjectParticipantsStorage([
+            'configService' => $this->configService,
             'participant' => $participant,
           ]);
           $bulkLoadStorageIds[] = $storage->getId();
@@ -252,7 +274,7 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-        ) extends MountPoint { public function getMountType() { return 'database'; } };
+        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
     }
 
     \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds($bulkLoadStorageIds);

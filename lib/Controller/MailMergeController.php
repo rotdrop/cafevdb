@@ -74,6 +74,8 @@ class MailMergeController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
+  const AS_PDF = false; // @todo maybe add another download-option to the mail-merge menu
+
   const OPERATION_DOWNLOAD = 'download';
   const OPERATION_CLOUD = 'cloud';
   const OPERATION_DATASET = 'dataset';
@@ -194,7 +196,7 @@ class MailMergeController extends Controller
         switch ($operation) {
           case self::OPERATION_CLOUD:
           case self::OPERATION_DOWNLOAD:
-            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: false);
+            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: self::AS_PDF);
             $filledFile = pathinfo($filledFileName);
             $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . $filledFile['extension'];
             if ($operation == self::OPERATION_DOWNLOAD) {
@@ -272,7 +274,7 @@ class MailMergeController extends Controller
           switch ($operation) {
             case self::OPERATION_CLOUD:
             case self::OPERATION_DOWNLOAD:
-              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: false);
+              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: self::AS_PDF);
               break;
             case self::OPERATION_DATASET:
               $fillData = $this->documentFiller->fillData($recipientTemplateData);

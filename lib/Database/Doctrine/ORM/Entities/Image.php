@@ -41,16 +41,7 @@ class Image extends File
   /**
    * @var FileData
    *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
-   *
-   * Also: it is not possible to override the targetEntity from a bass-class
-   * annotation, so the OneToOne annotation must got to the
-   * leave-class. Further: in "single table inheritance" only leave-classes
-   * can be loaded lazily. So we need this artificial ImageFileData class
-   * which is just there to provide a lazy-loadable leaf-class.
+   * {@inheritdoc}
    *
    * @ORM\OneToMany(targetEntity="ImageFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */

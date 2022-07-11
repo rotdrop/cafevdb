@@ -20,25 +20,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @file just provide the globalState obejct */
 
-import jQuery from './app/jquery.js';
-import Calendar from './legacy/calendar/calendar.js';
-import './legacy/calendar/on-event.js';
-import './legacy/calendar/jquery.multi-autocomplete.js';
-import 'legacy/calendar/jquery.ui.timepicker.js';
+window.CAFEVDB = window.CAFEVDB || {};
 
-require('jquery-ui');
-
-console.info('JQUERY', jQuery.widget, window.jQuery.widget);
-
-require('legacy/calendar/jquery.ui.timepicker.css');
-
-require('jquery-ui-multiselect-widget');
-require('jquery-ui-multiselect-widget/css/jquery.multiselect.css');
-
-export { Calendar };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+export default window.CAFEVDB;

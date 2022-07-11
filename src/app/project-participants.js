@@ -338,7 +338,7 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
   loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
 };
 
-const myReady = function(selector, resizeCB) {
+const myReady = function(selector, dialogParameters, resizeCB) {
   selector = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(selector);
 
@@ -835,7 +835,7 @@ const myReady = function(selector, resizeCB) {
     });
   }
 
-  participantFieldsHandlers(container, musicianId);
+  participantFieldsHandlers(container, musicianId, projectId, dialogParameters);
 
   container
     .find('form.pme-form')
@@ -873,7 +873,7 @@ const myDocumentReady = function() {
         }
       });
 
-      myReady(selector, resizeCB);
+      myReady(selector, parameters, resizeCB);
 
       container.find('div.photo, .cafevdb_inline_image_wrapper')
         .off('click', 'img.zoomable')

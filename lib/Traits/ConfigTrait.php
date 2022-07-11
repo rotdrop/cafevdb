@@ -467,7 +467,39 @@ trait ConfigTrait {
     if (empty($transactionsFolder)) {
       return null;
     }
-    return '/' . $financeFolder . '/' . $transactionsFolder;
+    return $financeFolder . '/' . $transactionsFolder;
+  }
+
+  /**
+   * Return the full path to the financial balances folder
+   */
+  protected function getFinancialBalancesPath()
+  {
+    $financeFolder = $this->getFinanceFolderPath();
+    if (empty($financeFolder)) {
+      return null;
+    }
+    $balancesFolder = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+    if (empty($balancesFolder)) {
+      return null;
+    }
+    return $financeFolder . '/' . $balancesFolder;
+  }
+
+  /**
+   * Return the full path to the financial balances folder
+   */
+  protected function getProjectBalancesPath()
+  {
+    $balancesFolder = $this->getFinancialBalancesPath();
+    if (empty($balancesFolder)) {
+      return null;
+    }
+    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    if (empty($projectsFolder)) {
+      return null;
+    }
+    return $balancesFolder . '/' . $projectsFolder;
   }
 
   /**

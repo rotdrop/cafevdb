@@ -27,20 +27,21 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
+import { submitOuterForm } from './pme.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 
-const participantOptionHandlers = function(container, musicianId) {
+const participantOptionHandlers = function(container, musicianId, projectId, dialogParameters) {
 
   if (!musicianId) {
     return;
   }
 
-  container = $(container);
+  const $container = $(container);
 
   // AJAX download support
-  container
+  $container
     .find('a.download-link.ajax-download')
     .off('click')
     .on('click', function(event) {
@@ -52,8 +53,10 @@ const participantOptionHandlers = function(container, musicianId) {
   // Handle buttons to revert to default value. Field id must be given
   // as data-value.
 
-  container
-    .find('form.pme-form tr.participant-field input.revert-to-default')
+  const $pmeForm = $container.find('form.pme-form');
+
+  $pmeForm
+    .find('tr.participant-field input.revert-to-default')
     .off('click')
     .on('click', function(event) {
       console.info('REVERT', $(this));
@@ -104,8 +107,8 @@ const participantOptionHandlers = function(container, musicianId) {
     });
 
   // handle buttons to update or delete recurrent receivables
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate')
+  $pmeForm
+    .find('tr.participant-field.recurring td.operations input.regenerate')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -150,8 +153,8 @@ const participantOptionHandlers = function(container, musicianId) {
       return false;
     });
 
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.delete-undelete')
+  $pmeForm
+    .find('tr.participant-field.recurring td.operations input.delete-undelete')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -160,7 +163,7 @@ const participantOptionHandlers = function(container, musicianId) {
       const optionKey = row.data('optionKey');
 
       // could also search for name with field-id
-      const inputs = container
+      const inputs = $container
         .find('input[value="' + optionKey + '"]')
         .add(row.find('.pme-input, .operation.regenerate'));
 
@@ -175,8 +178,8 @@ const participantOptionHandlers = function(container, musicianId) {
       return false;
     });
 
-  container
-    .find('form.pme-form tr.participant-field.recurring td.operations input.regenerate-all')
+  $pmeForm
+    .find('tr.participant-field.recurring td.operations input.regenerate-all')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -207,7 +210,7 @@ const participantOptionHandlers = function(container, musicianId) {
               return;
             }
             // just trigger reload
-            container.find('form.pme-form input.pme-reload').first().trigger('click');
+            $container.find('form.pme-form input.pme-reload').first().trigger('click');
             cleanup();
             Notification.messages(data.message);
           });
@@ -215,6 +218,21 @@ const participantOptionHandlers = function(container, musicianId) {
       confirmedReceivablesUpdate(updateStrategy, requestHandler);
       return false;
     });
+
+  if (dialogParameters) {
+    const tableOptions = dialogParameters.tableOptions || {};
+    const ambientContainerSelector = tableOptions.ambientContainerSelector;
+    if (ambientContainerSelector) {
+      $pmeForm
+        .find('tr.participant-field.cloud-file, tr.participant-field.db-file, tr.participant-field.cloud-folder')
+        .find('td.pme-value')
+        .on('pme:upload-done pme:upload-deleted', '.file-upload-row', function(event) {
+          $container.trigger('pmedialog:changed');
+          console.info('CONTAINER', $container);
+          submitOuterForm(ambientContainerSelector);
+        });
+    }
+  }
 };
 
 export default participantOptionHandlers;
