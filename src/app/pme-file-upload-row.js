@@ -98,7 +98,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         $newRow.attr('data-file-name', file.meta.baseName);
         $newRow.data('fileName', file.meta.baseName);
         $newRow.insertBefore($thisRow);
-        initFileUploadRow.apply($newRow);
+        initFileUploadRow.call($newRow, projectId, musicianId, resizeCB, uploadUrls);
         resizeCB();
       }
     } else {
