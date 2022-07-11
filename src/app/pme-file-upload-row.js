@@ -138,7 +138,6 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      console.info('upload from cloud');
       const filePickerObject = $thisRow.data('fileBase') || $thisRow.data('subDir');
       const filePickerCaption = filePickerObject
         ? t(appName, 'Select cloud-files for {object}', { object: filePickerObject })
@@ -146,7 +145,6 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       Dialogs.filePicker(
         filePickerCaption,
         function(paths) {
-          console.info('GOT PATH', paths);
           $this.addClass('busy');
           if (!paths) {
             Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
@@ -173,14 +171,12 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
               }
               const formData = $uploadUi.find('form').serializeArray();
               formData.push({ name: 'files', value: JSON.stringify(files) });
-              console.info('FORMDATA', formData);
               $.post(generateUrl(uploadUrls.upload), formData)
                 .fail(function(xhr, status, errorThrown) {
                   Ajax.handleError(xhr, status, errorThrown);
                   $this.removeClass('busy');
                 })
                 .done(function(data) {
-                  console.info('DONE DATA', data);
                   $.each(data, function(index, file) {
                     doneCallback(file, index, $uploadUi);
                   });
