@@ -37,7 +37,7 @@ import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import * as SelectUtils from './select-utils.js';
 import modalizer from './modalizer.js';
-import { recordValue as pmeRecordValue } from './pme-record-id.js';
+// import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import './lock-input.js';
@@ -1475,9 +1475,6 @@ const mandateReady = function(selector, parameters, resizeCB) {
       return false;
     });
 
-  participantFieldsHandlers(
-    container, pmeRecordValue(container, 'musicianId'));
-
   pmeExportMenu(containerSel);
 
   // from here
@@ -1486,6 +1483,18 @@ const mandateReady = function(selector, parameters, resizeCB) {
   if ($pmeTable.length === 0) {
     return;
   }
+
+  const $musicianIdInput = $pmeTable.find('input.pme-input.musician-id');
+  const $projectParticipantSelect = $pmeTable.find('select.pme-input.project-participant');
+  const $bankAccountOwnerInput = $pmeTable.find('input.pme-input.bank-account-owner');
+  const $bankAccountIbanInput = $pmeTable.find('input.pme-input.bank-account-iban');
+  const $bankAccountSequenceInput = $pmeTable.find('input.pme-input.bank-account-sequence');
+  const $mandateProjectSelect = $pmeTable.find('select.mandate-project');
+
+  const musicianId = $musicianIdInput.val();
+  const projectId = $mandateProjectSelect.val();
+
+  participantFieldsHandlers(container, musicianId, projectId, parameters);
 
   container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
@@ -1507,13 +1516,6 @@ const mandateReady = function(selector, parameters, resizeCB) {
 
   $pmeTable.find('input[type="text"].pme-input').off('blur');
   $pmeTable.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
-
-  const $musicianIdInput = $pmeTable.find('input.pme-input.musician-id');
-  const $projectParticipantSelect = $pmeTable.find('select.pme-input.project-participant');
-  const $bankAccountOwnerInput = $pmeTable.find('input.pme-input.bank-account-owner');
-  const $bankAccountIbanInput = $pmeTable.find('input.pme-input.bank-account-iban');
-  const $bankAccountSequenceInput = $pmeTable.find('input.pme-input.bank-account-sequence');
-  const $mandateProjectSelect = $pmeTable.find('select.mandate-project');
 
   $mandateProjectSelect
     .closest('tr.pme-row')
@@ -1765,8 +1767,6 @@ const mandateReady = function(selector, parameters, resizeCB) {
     },
   });
 
-  const musicianId = $musicianIdInput.val();
-  const projectId = $mandateProjectSelect.val();
   console.info(
     'MUS PROJ',
     musicianId,
@@ -1775,6 +1775,15 @@ const mandateReady = function(selector, parameters, resizeCB) {
   );
   if (+musicianId > 0 && +projectId > 0) {
     // upload handlers
+    const tableOptions = parameters.tableOptions || {};
+    const ambientContainerSelector = tableOptions.ambientContainerSelector;
+    const notifyUpload = ambientContainerSelector
+      ? function(event) {
+        event.stopImmediatePropagation();
+        $(ambientContainerSelector).trigger('pmedialog:changed');
+        PHPMyEdit.submitOuterForm(ambientContainerSelector);
+      }
+      : function() {};
     $pmeTable
       .find('tr.written-mandate td.pme-value .file-upload-row')
       .each(function() {
@@ -1787,13 +1796,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
             upload: 'finance/sepa/debit-mandates/hardcopy/upload',
             delete: 'finance/sepa/debit-mandates/hardcopy/delete',
           });
-        $(this).on('pme:upload-done pme:upload-deleted', function(event) {
-          if (parameters.tableOptions && parameters.tableOptions.ambientContainerSelector) {
-            const ambientContainerSelector = parameters.tableOptions.ambientContainerSelector;
-            $(ambientContainerSelector).trigger('pmedialog:changed');
-            PHPMyEdit.submitOuterForm(ambientContainerSelector);
-          }
-        });
+        $(this).on('pme:upload-done pme:upload-deleted', notifyUpload);
       });
   }
 };
