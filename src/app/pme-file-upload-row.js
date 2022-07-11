@@ -260,6 +260,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       if (!Ajax.validateResponse(data, ['message'], cleanup)) {
         return;
       }
+      $thisRow.trigger('pme:upload-deleted');
       if (isCloudFolder) {
         const widgetId = $thisRow.data('uploadFormId');
         $('#' + widgetId).remove();
@@ -274,12 +275,9 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       }
       Notification.messages(data.message);
       cleanup();
-      $thisRow.trigger('pme:upload-deleted');
     };
 
-    $.post(
-      generateUrl(uploadUrls.delete),
-      postData)
+    $.post(generateUrl(uploadUrls.delete), postData)
       .fail(failHandler)
       .done(doneHandler);
   });
