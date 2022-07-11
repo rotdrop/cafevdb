@@ -4,20 +4,21 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // @todo remove this file.
@@ -25,6 +26,7 @@
 import { globalState, appName, $ } from './globals.js';
 import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
+import { formatFileSize } from '@nextcloud/files';
 
 require('jquery-ui/ui/widgets/progressbar');
 require('blueimp-file-upload');
@@ -169,9 +171,9 @@ function init(options) {
       const title = t(appName, options.progressTemplate, {
         n: data.files.length,
         percentage: ((data.loaded / data.total) * 100).toFixed(1),
-        loaded: data.loaded,
-        total: data.total,
-        rate: data.bitrate.toFixed(4),
+        loaded: formatFileSize(data.loaded),
+        total: formatFileSize(data.total),
+        rate: formatFileSize(data.bitrate),
       });
       uploadProgressWrapper.cafevDialog('option', 'title', title);
     },
