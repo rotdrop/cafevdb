@@ -820,7 +820,8 @@ class ProjectParticipantFieldsService
    * @return bool true if the field was really deleted, false if it
    * was kept.
    *
-   * @todo We might want to remove "side-effects", i.e. data-base files and cloud files.
+   * @todo We might want to remove "side-effects", i.e. data-base files and
+   * cloud files and cloud folders.
    */
   public function deleteField($fieldOrId)
   {
@@ -864,6 +865,14 @@ class ProjectParticipantFieldsService
     }
 
     return !$used;
+  }
+
+  /**
+   * Called via ORM events as pre-persist hook.
+   */
+  public function handlePersistField(Entities\ProjectParticipantField $field)
+  {
+    $this->logInfo('HELLO WORLD!');
   }
 
   /**

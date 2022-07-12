@@ -1,0 +1,68 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Listener;
+
+use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\ILogger;
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Events\PrePersistProjectParticipantField as HandledEvent;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+
+class PrePersistProjectParticipantFieldListener implements IEventListener
+{
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  const EVENT = HandledEvent::class;
+
+  /** @var IAppContainer */
+  private $appContainer;
+
+  public function __construct(
+    IAppContainer $appContainer
+  ) {
+    $this->appContainer = $appContainer;
+  }
+
+  public function handle(Event $event): void {
+    /** @var HandledEvent $event */
+    if (!($event instanceOf HandledEvent)) {
+      return;
+    }
+
+    // only lookup when this is "our" event
+    $this->logger = $this->appContainer->get(ILogger::class);
+    $this->l = $this->appContainer->get(IL10N::class);
+
+    $this->logInfo('GOT PRE PERSIST EVENT');
+
+    /** @var ProjectParticipantFieldsService $participantFieldsService */
+    $participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
+
+    $participantFieldsService->handlePersistField($event->getField());
+  }
+}

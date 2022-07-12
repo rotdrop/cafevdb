@@ -458,6 +458,10 @@ class EntityManager extends EntityManagerDecorator
       ORM\Events::loadClassMetadata,
       ORM\Events::preUpdate,
       ORM\Events::postUpdate,
+      ORM\Events::prePersist,
+      ORM\Events::postPersist,
+      ORM\Events::preRemove,
+      ORM\Events::postRemove,
       ORM\Events::postLoad,
     ], $this);
 
@@ -662,7 +666,12 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Manipulate class-metadata
+   * Manipulate class-metadata and replace life-cycle event handlers. The
+   * problem is here that otherwise the handlers do not get our decoryted
+   * entity-manager instance, but the vanilla entity manager.
+   *
+   * @todo Switch to entity-listeners, override the resolver and be done. This
+   * hack can then be removed.
    */
   public function loadClassMetadata(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
   {
@@ -673,6 +682,11 @@ class EntityManager extends EntityManagerDecorator
       switch ($event) {
       case ORM\Events::preUpdate:
       case ORM\Events::postUpdate:
+      case ORM\Events::prePersist:
+      case ORM\Events::postPersist:
+      case ORM\Events::preRemove:
+      case ORM\Events::postRemove:
+      case ORM\Events::postLoad:
         $this->lifeCycleEvents[$event][$className] = $eventHandlers;
         break;
       default:
@@ -695,15 +709,29 @@ class EntityManager extends EntityManagerDecorator
     foreach ($this->lifeCycleEvents[ORM\Events::preUpdate] as $className => $eventHandlers) {
       if ($entity instanceof $className) {
         foreach ($eventHandlers as $handler) {
-          call_user_func([ $entity, $handler ], $tmpEventArgs);
+          $entitiy->{$handler}($tmpEventArgs);
           ++$handled;
         }
       }
     }
     if ($handled > 0) {
+      // need to merge back the changes
       $newChangeSet = array_merge($eventArgs->getEntityChangeSet(), $tmpEventArgs->getEntityChangeSet());
       foreach ($newChangeSet as $field => $value) {
         $eventArgs->setNewValue($field, $value[1]);
+      }
+    }
+  }
+
+  private function lifecycleEventWrapper(string $event, ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getEntity();
+    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
+    foreach (($this->lifeCycleEvents[$event] ?? []) as $className => $eventHandlers) {
+      if ($entity instanceof $className) {
+        foreach ($eventHandlers as $handler) {
+          $entity->{$handler}($eventArgs);
+        }
       }
     }
   }
@@ -714,15 +742,59 @@ class EntityManager extends EntityManagerDecorator
    */
   public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs)
   {
-    $entity = $eventArgs->getEntity();
-    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
-    foreach ($this->lifeCycleEvents[ORM\Events::postUpdate] as $className => $eventHandlers) {
-      if ($entity instanceof $className) {
-        foreach ($eventHandlers as $handler) {
-          call_user_func([ $entity, $handler ], $eventArgs);
-        }
-      }
+    $this->lifecycleEventWrapper(ORM\Events::postUpdate, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->logInfo('HELLO WORLD');
+    $this->lifecycleEventWrapper(ORM\Events::prePersist, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::postPersist, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function preRemove(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::preRemove, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postRemove(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::postRemove, $eventArgs);
+  }
+
+  /**
+   * Call ENTITY::__wakeup() if it exists.
+   *
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postLoad(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getObject();
+    if (\method_exists($entity, '__wakeup')) {
+      $entity->__wakeup();
     }
+    $this->lifecycleEventWrapper(ORM\Events::postLoad, $eventArgs);
   }
 
   /**
@@ -757,14 +829,6 @@ class EntityManager extends EntityManagerDecorator
       foreach ($enumColumns as $column) {
         $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
-    }
-  }
-
-  public function postLoad(ORM\Event\LifecycleEventArgs $args)
-  {
-    $entity = $args->getObject();
-    if (\method_exists($entity, '__wakeup')) {
-      $entity->__wakeup();
     }
   }
 

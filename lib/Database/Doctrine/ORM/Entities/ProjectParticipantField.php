@@ -756,6 +756,19 @@ class ProjectParticipantField implements \ArrayAccess
     return $this->writers;
   }
 
+
+  /**
+   * @ORM\PrePersist
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function prePersist(Event\LifecycleEventArgs $event)
+  {
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
+  }
+
   /** @var bool */
   private $preUpdatePosted = false;
 
@@ -788,7 +801,7 @@ class ProjectParticipantField implements \ArrayAccess
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this)); //
+    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
     $this->preUpdatePosted = false;
   }
 
