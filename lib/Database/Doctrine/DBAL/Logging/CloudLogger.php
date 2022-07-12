@@ -65,14 +65,14 @@ class CloudLogger implements SQLLogger
     $this->enabled = false;
     if ($this->encryptionService->bound()) {
       $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
-      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+      $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
       $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
     } else {
       $this->eventDispatcher->addListener(
         Events\EntityManagerBoundEvent::class,
         function(Events\EntityManagerBoundEvent $event) {
           $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
-          $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+          $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
           $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
         }
       );
