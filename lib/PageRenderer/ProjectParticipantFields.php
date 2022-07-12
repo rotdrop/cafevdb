@@ -1128,7 +1128,7 @@ __EOT__;
       $newvals[$tag] = null;
     }
 
-    if ($oldvals[$tag] !== $newvals[$tag]) {
+    if (($oldvals[$tag] ?? null) !== ($newvals[$tag] ?? null)) {
       $changed[] = $tag;
     }
 
@@ -1287,7 +1287,7 @@ __EOT__;
     if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
       $first = array_key_first($newvals['data_options_simple']);
       $newvals[$tag][$first]['label'] = $newvals['name'];
-      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
+      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'] ?? '';
       $newvals['data_options'] = $newvals[$tag];
 
       $newvals['default_value'] = $first;
