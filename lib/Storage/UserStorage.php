@@ -347,7 +347,7 @@ class UserStorage
       $newPath = $this->userFolder->getFullPath($newPath);
       $this->userFolder->get($oldPath)->copy($newPath);
     } catch (\Throwable $t) {
-      throw new \Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
+      throw new \Exception($this->l->t('Copy of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
   }
 
