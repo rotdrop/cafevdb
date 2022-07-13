@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -210,6 +211,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ProjectService $projectService
+    , ProjectParticipantFieldsService $participantFieldsService
     , FinanceService $financeService
     , UserStorage $userStorage
     , DatabaseStorageUtil $databaseStorageUtil
@@ -218,6 +220,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
+    $this->participantFieldsService = $participantFieldsService;
     $this->financeService = $financeService;
     $this->userStorage = $userStorage;
     $this->databaseStorageUtil = $databaseStorageUtil;
@@ -596,21 +599,21 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ON ppfo.field_id = pp.field_id
       AND ppfo.key = pp.receivable_key
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppf.id = pp.field_id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
           'column' => 'id',
           'description' => [
 	    'columns' => [
-              'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->l10n()->getLanguageCode()) . '"))',
+              'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->l10n()->getLocaleCode()) . '"))',
               '$table.receivable_display_label',
             ],
 	    'divs' => [ ' - ' ],
@@ -673,14 +676,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ppf.multiplicity AS multiplicity
   FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',

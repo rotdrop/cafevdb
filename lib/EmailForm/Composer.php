@@ -650,7 +650,7 @@ Störung.';
       if (empty($country)) {
         return '';
       }
-      $language = substr($this->l->getLanguageCode(), 0, 2);
+      $language = substr($this->l->getLocaleCode(), 0, 2);
       $locale = $language.'_'.$country;
       return locale_get_display_region($locale, $language);
     };

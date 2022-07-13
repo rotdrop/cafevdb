@@ -195,7 +195,7 @@ class InstrumentFamilies extends PMETableViewBase
       $joinInfo['table'] = $table;
       switch ($table) {
       case self::FIELD_TRANSLATIONS_TABLE:
-        $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLanguageCode();
+        $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
         break;
       case self::INSTRUMENTS_TABLE:
         $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
