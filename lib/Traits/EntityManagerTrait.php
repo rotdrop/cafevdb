@@ -281,6 +281,12 @@ trait EntityManagerTrait {
     return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
 
+  /** Forward to EntityManager::contains() */
+  protected function containsEntity($entity)
+  {
+    return $this->entityManager->contains($entity);
+  }
+
   /**
    * Enable the given filter.
    *
