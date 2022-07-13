@@ -793,6 +793,21 @@ class ProjectParticipantField implements \ArrayAccess
     $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
   }
 
+  /**
+   * @ORM\PreRemove
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function preRemove(Event\LifecycleEventArgs $event)
+  {
+    if (!$this->isExpired()) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PreRemoveProjectParticipantField($this));
+  }
+
   /** @var bool */
   private $preUpdatePosted = false;
 
