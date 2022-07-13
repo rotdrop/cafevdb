@@ -363,7 +363,7 @@ trait ParticipantFieldsTrait
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
-              $fileBase = $this->participantFieldsService->getFileSytemFieldName($field);
+              $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">

@@ -820,7 +820,7 @@ class ProjectService
           $project = $field->getProject();
           $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
 
-          $fileSystemFieldName = $this->participantFieldsService->getFileSytemFieldName($field);
+          $fileSystemFieldName = $this->participantFieldsService->getFileSystemFieldName($field);
 
           // @todo: this should be moved to the ProjectParticipantFieldsService
           if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {

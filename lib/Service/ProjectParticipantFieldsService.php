@@ -430,7 +430,7 @@ class ProjectParticipantFieldsService
   /**
    * Return the field's name translated to the app's locale.
    */
-  public function getFileSytemFieldName(Entities\ProjectParticipantField $field)
+  public function getFileSystemFieldName(Entities\ProjectParticipantField $field)
   {
     assert($field->isFileSystemContext());
     return $field->getName();
@@ -465,7 +465,7 @@ class ProjectParticipantFieldsService
    */
   public function doGetFieldFolderPath(Entities\ProjectParticipantField $field, Entities\Musician $musician):?string
   {
-    $fieldName = $this->getFileSytemFieldName($field);
+    $fieldName = $this->getFileSystemFieldName($field);
 
     switch ($field->getDataType()) {
     case DataType::CLOUD_FOLDER: {
