@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
+
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -43,6 +45,7 @@ use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\UndoableFolderCreate;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Common\IUndoable;
@@ -507,10 +510,6 @@ class ProjectService
 
     foreach($projectPaths as $key => $path) {
       $this->userStorage->delete($path);
-      // throttle deletion in order to have distinct file-names in the
-      // trash-bin. Currently a file's MTIME in NextCloud has only
-      // second resolution, so ...
-      sleep(1);
     }
 
     return true;
@@ -1624,6 +1623,36 @@ Whatever.',
 
       $this->flush();
 
+      $this->entityManager->registerPreCommitAction(
+        new UndoableFolderCreate(
+          fn() => $this->ensureParticipantFolder($project, $musician, dry: true),
+          gracefully: true,
+        ));
+
+      /** @var Entities\ProjectParticipantField $field */
+      foreach ($project->getParticipantFields() as $field) {
+        if ($field->getDataType() != FieldDataType::CLOUD_FOLDER) {
+          continue;
+        }
+
+        $readMe = $field->getTooltip();
+        if (!empty($readMe)) {
+          $readMe = (new HtmlToMarkDown)->convert($readMe);
+        } else {
+          $readMe = null;
+        }
+        $this->entityManager->registerPreCommitAction(
+          new UndoableFolderCreate(
+            fn() => $this->participantFieldsService->doGetFieldFolderPath($field, $musician),
+            gracefully: true,
+            readMe: empty($readMe) ? null : $readMe,
+          )
+        );
+      }
+      // $this->entityManager->registerPreCommitAction(
+      //   new GenericUndoable(fn() => throw new \Exception('SHOW STOPPER'))
+      // );
+
       $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->logException($t);
@@ -1641,9 +1670,6 @@ Whatever.',
       ];
       return false;
     }
-
-    // make sure the participant sub-folder exists also
-    $this->ensureParticipantFolder($project, $musician);
 
     $status[] = [
       'id' => $id,
@@ -1842,8 +1868,19 @@ Whatever.',
       return;
     }
 
-    if (!empty($listsService->getSubscription($listId, $email))) {
-      $listsService->unsubscribe($listId, $email);
+    try {
+      if (!empty($listsService->getSubscription($listId, $email))) {
+        $listsService->unsubscribe($listId, $email);
+      }
+    } catch (\Throwable $t) {
+      if ($participant->getRegistration()) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',
+                      $participant->getMusician()->getPublicName(true)),
+          0, $t);
+      } else {
+        $this->logException($t, 'Mailing list service not reachable');
+      }
     }
   }
 
@@ -1996,6 +2033,10 @@ Whatever.',
         function() use ($project) {
           $startTime = $this->getTimeStamp();
           $this->removeProjectFolders($project);
+          // throttle deletion in order to have distinct file-names in the
+          // trash-bin. Currently a file's MTIME in NextCloud has only
+          // second resolution, so ...
+          @time_sleep_until($startTime + 1);
           $endTime = $this->getTimeStamp();
           return [ $startTime, $endTime ];
         },
@@ -2484,7 +2525,11 @@ Whatever.',
         }
       }
       $this->remove($participant, true); // this should be hard-delete
-    }
+
+      // @todo Also remove the respective folders
+      $participantFolder = $this->ensureParticipantFolder($participant->getProject(), $participant->getMusician(), dry: true);
+      $this->userStorage->delete($participantFolder);
+   }
 
     $this->ensureMailingListUnsubscription($participant);
   }
