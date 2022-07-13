@@ -530,9 +530,6 @@ class ProjectService
    */
   public function restoreProjectFolders($project, ?array $timeInterval = null):bool
   {
-    /** @var OCA\Files_Trashbin\Trash\TrashManager $trashManager */
-    $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
-
     $pathSep = UserStorage::PATH_SEP;
     $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
 
@@ -823,15 +820,17 @@ class ProjectService
           $project = $field->getProject();
           $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
 
+          $fileSystemFieldName = $this->participantFieldsService->getFileSytemFieldName($field);
+
           // @todo: this should be moved to the ProjectParticipantFieldsService
           if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
             // name based on field name
-            $nameBase = $field->getUntranslatedName();
+            $nameBase = $fileSystemFieldName;
             $subDir = '';
           } else {
             // name based on option label
-            $nameBase = $fieldDatum->getDataOption()->getUntranslatedLabel();
-            $subDir = $field->getUntranslatedName() . UserStorage::PATH_SEP;
+            $nameBase = $this->participantFieldsService->getFileSystemOptionLabel($fieldDatum->getDataOption());
+            $subDir = $fileSystemFieldName . UserStorage::PATH_SEP;
           }
           $oldFilePath =
             $oldFolderPath . UserStorage::PATH_SEP

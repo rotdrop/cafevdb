@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -342,7 +343,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
     );
 
-    $opts['fdd']['name']['sql'] = self::ifDefaultLocale('$main_table.$field_name', $opts['fdd']['name']['sql']);
+    $opts['fdd']['name']['sql'] = self::ifFileSystemEntry('$main_table.$field_name', $opts['fdd']['name']['sql']);
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => [ 'miscinfo' ] ],
@@ -498,13 +499,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
   JSON_OBJECT(
     "key", BIN2UUID($join_table.key)
-    , "label", ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . '
+    , "label", ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . '
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
-) ORDER BY ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
+) ORDER BY ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
       'values' => [
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
@@ -2228,7 +2229,7 @@ __EOT__;
 </span>';
   }
 
-  static private function ifDefaultLocale($ifTrue, $ifFalse)
+  static private function ifFileSystemEntry($ifTrue, $ifFalse)
   {
     return 'IF($main_table.data_type IN ("'
       . DataType::CLOUD_FILE . '", "'

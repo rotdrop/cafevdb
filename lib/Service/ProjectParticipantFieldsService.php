@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -40,10 +41,12 @@ use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
+use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Common\UndoableFileRename;
+use OCA\CAFEVDB\Common\UndoableFolderCreate;
 use OCA\CAFEVDB\Common\IUndoable;
 
 /**
@@ -425,12 +428,44 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Return the field's name translated to the app's locale.
+   */
+  public function getFileSytemFieldName(Entities\ProjectParticipantField $field)
+  {
+    assert($field->isFileSystemContext());
+    return $field->getName();
+    // return $this->entityManager->getLocalizedFieldValue($field, 'name', [
+    //   $this->appL10n()->getLocaleCode(),
+    //   ConfigService::DEFAULT_LOCALE,
+    // ]);
+  }
+
+  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option)
+  {
+    assert($option->isFileSystemContext());
+    return $option->getLabel();
+    // return $this->entityManager->getLocalizedFieldValue($option, 'label', [
+    //   $this->appL10n()->getLocaleCode(),
+    //   ConfigService::DEFAULT_LOCALE,
+    // ]);
+  }
+
+  /**
    * Return the cloud-folder name for the given $field which must be of
    * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
    */
   public function getFieldFolderPath(Entities\ProjectParticipantFieldDatum $datum):?string
   {
-    $field = $datum->getField();
+    return $this->doGetFieldFolderPath($datum->getField(), $datum->getMusician());
+  }
+
+  /**
+   * Return the cloud-folder name for the given $field which must be of
+   * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   */
+  public function doGetFieldFolderPath(Entities\ProjectParticipantField $field, Entities\Musician $musician):?string
+  {
+    $fieldName = $this->getFileSytemFieldName($field);
 
     switch ($field->getDataType()) {
     case DataType::CLOUD_FOLDER: {
@@ -440,9 +475,9 @@ class ProjectParticipantFieldsService
       /** @var ProjectService $projectService */
       $projectService = $this->di(ProjectService::class);
 
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician);
 
-      return $participantFolder . UserStorage::PATH_SEP . $field->getUntranslatedName();
+      return $participantFolder . UserStorage::PATH_SEP . $fieldName;
     }
     case DataType::CLOUD_FILE: {
      /** @var UserStorage $userStorage */
@@ -451,11 +486,11 @@ class ProjectParticipantFieldsService
       /** @var ProjectService $projectService */
       $projectService = $this->di(ProjectService::class);
 
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $datum->getMusician());
+      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician);
 
       $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
                     ? ''
-                    : UserStorage::PATH_SEP . $field->getUntranslatedName();
+                    : UserStorage::PATH_SEP . $fieldName;
 
       return $participantFolder . $subDirPrefix;
     }
@@ -872,7 +907,23 @@ class ProjectParticipantFieldsService
    */
   public function handlePersistField(Entities\ProjectParticipantField $field)
   {
-    $this->logInfo('HELLO WORLD!');
+    // check if we have to do something
+    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+      return;
+    }
+
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($field->getProject()->getParticipants() as $participant) {
+      $musician = $participant->getMusician();
+
+      // // we now have an unpersisted field here
+      // $project = $field->getProject();
+
+      $this->entityManager
+        ->registerPreCommitAction(
+          new UndoableFolderCreate(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true)
+        );
+    }
   }
 
   /**
@@ -969,23 +1020,18 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($option->getFieldData() as $fieldDatum) {
       $musician = $fieldDatum->getMusician();
-      $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
       $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
       $oldBaseName = $projectService->participantFilename($oldLabel, $project, $musician) . '.' . $extension;
       $newBaseName = $projectService->participantFilename($newLabel, $project, $musician) . '.' . $extension;
-      $oldPath = $participantsFolder . UserStorage::PATH_SEP
-        . '%s' . UserStorage::PATH_SEP
-        . $oldBaseName;
-      $newPath = $participantsFolder . UserStorage::PATH_SEP
-        . '%s' . UserStorage::PATH_SEP
-        . $newBaseName;
 
       $this->entityManager->registerPreCommitAction(
         new UndoableFileRename(
-          generator: function() use ($oldPath, $newPath, $field) {
+          generator: function() use ($oldBaseName, $newBaseName, $field, $musician) {
+            // invoke only here s.t. any changes to $field are already there
+            $folderPath = $this->doGetFieldFolderPath($field, $musician);
             return [
-              sprintf($oldPath, $field->getUntranslatedName()),
-              sprintf($newPath, $field->getUntranslatedName()),
+              $folderPath . UserStorage::PATH_SEP . $oldBaseName,
+              $folderPath . UserStorage::PATH_SEP . $newBaseName,
             ];
           },
           gracefully: true)

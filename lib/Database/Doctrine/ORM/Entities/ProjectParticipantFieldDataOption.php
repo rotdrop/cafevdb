@@ -30,11 +30,12 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -103,7 +104,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $untranslatedLabel;
 
   /**
-   * Multi-purpose field. For Multiplicity::RECURRING the PHP class
+   * Multi-purpose field. For FieldMultiplicity::RECURRING the PHP class
    * name of the generator class.
    *
    * @var string
@@ -122,7 +123,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
 
   /**
    * @var int Limit on number of group members for
-   * Multiplicity::GROUPSOFPEOPLE, Multiplicity::GROUPOFPEOPLE
+   * FieldMultiplicity::GROUPSOFPEOPLE, FieldMultiplicity::GROUPOFPEOPLE
    * fields. Misused as starting date for recurring receivables
    * generators.
    *
@@ -442,8 +443,31 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->fieldData->count()
-      + $this->payments->count();
+    return $this->fieldData->count() + $this->payments->count();
+  }
+
+  public function isFileSystemContext()
+  {
+    return $this->field->getDataType() == FieldType::CLOUD_FILE
+      && $this->field->getMultiplicity() != FieldMultiplicity::SIMPLE;
+  }
+
+  /**
+   * Remove 'label' from the set of translatable fields if it is the base of
+   * file- or folder-names and thus should not change on a per-user basis.
+   *
+   * @param array $fields The array of annotated translatable fields
+   *
+   * @return array The array of translatable fields based on the state of the
+   * entity. This must be a sub-set of the input array.
+   */
+  public function filterTranslatableFields(array $fields):array
+  {
+    if (($this->field instanceof ProjectParticipantField) && $this->isFileSystemContext()) {
+      // Field name is used as file-system name, so keep it "constant", do not translate
+      return array_filter($fields, fn($field) => $field !== 'label');
+    }
+    return $fields;
   }
 
   /** @var bool */

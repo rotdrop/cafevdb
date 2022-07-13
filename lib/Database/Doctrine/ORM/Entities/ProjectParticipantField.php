@@ -31,7 +31,10 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -756,6 +759,27 @@ class ProjectParticipantField implements \ArrayAccess
     return $this->writers;
   }
 
+  public function isFileSystemContext()
+  {
+    return $this->dataType == FieldType::CLOUD_FOLDER || $this->dataType == FieldType::CLOUD_FILE;
+  }
+
+  /**
+   * Remove 'name' from the set of translatable fields if it is the base of
+   * file- or folder-names and thus should not change on a per-user basis.
+   *
+   * @param array $fields The array of annotated translatable fields
+   *
+   * @return array The array of translatable fields based on the state of the
+   * entity. This must be a sub-set of the input array.
+   */
+  public function filterTranslatableFields(array $fields):array
+  {
+    if ($this->isFileSystemContext()) {
+      return array_filter($fields, fn($field) => $field !== 'name');
+    }
+    return $fields;
+  }
 
   /**
    * @ORM\PrePersist

@@ -363,7 +363,7 @@ trait ParticipantFieldsTrait
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
-              $fileBase = $field->getUntranslatedName();
+              $fileBase = $this->participantFieldsService->getFileSytemFieldName($field);
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
@@ -376,7 +376,7 @@ trait ParticipantFieldsTrait
               if (!empty($value)) {
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $fileBase = $field->getUntranslatedName();
+                $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
                 $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
                 $extension = pathinfo($value, PATHINFO_EXTENSION);
                 $fileName .= '.' . $extension;
@@ -403,14 +403,12 @@ trait ParticipantFieldsTrait
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               $policy = $dataOptions->first()->getData()?:'rename';
-              $fileBase = '';
-              $subDir = $field->getUntranslatedName();
+
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+              $subDir = basename($folderPath);
 
-              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-              $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
               // read the configured directory in
-
               /** @var OCP\Files\Folder $folder */
               $folder = $this->userStorage->getFolder($folderPath);
               $folderContents = empty($folder) ? [] : $folder->getDirectoryListing();
@@ -432,19 +430,19 @@ trait ParticipantFieldsTrait
               return $html;
             };
             $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              if (!empty($value)) {
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $subDir = $field->getUntranslatedName();
-                $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
-                $folder = $this->userStorage->getFolder($folderPath);
-                if (!empty($folder)) {
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
-                  $listing = json_decode($value, true);
-                  if (!is_array($listing)) {
-                    $listing = [];
-                  }
+              $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+              $folder = $this->userStorage->getFolder($folderPath);
+              if (!empty($folder)) {
+
+                $listing = json_decode($value, true);
+                if (!is_array($listing)) {
+                  $listing = [];
+                }
+                if (!empty($listing)) {
                   $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
+                  $subDir = basename($folderPath);
                   $linkText = $subDir . '.'  . 'zip';
                   try {
                     $downloadLink = $this->userStorage->getDownloadLink($folderPath);
@@ -457,11 +455,13 @@ trait ParticipantFieldsTrait
                     $this->logException($e);
                     $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                   }
-
-                  $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-
-                  return $filesAppAnchor . $html;
+                } else {
+                  $html = '<span class="empty tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder is empty.') . '</span>';
                 }
+
+                $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
+
+                return $filesAppAnchor . $html;
               }
               return null;
             };
@@ -572,14 +572,15 @@ trait ParticipantFieldsTrait
               $values = array_combine($optionKeys, $optionValues);
               $this->debug('VALUES '.print_r($values, true));
               $fieldId = $field->getId();
-              $subDir = $field->getUntranslatedName();
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
+
               /** @var Entities\ProjectParticipantFieldDataOption $option */
               $html = '<div class="file-upload-wrapper">
   <table class="file-upload">';
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
-                $fileBase = $option->getUntranslatedLabel();
+                $fileBase = $this->participantFieldsService->getFileSystemOptionLabel($option);
                 $policy = $option->getData()?:'rename';
                 $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
               }
@@ -594,15 +595,14 @@ trait ParticipantFieldsTrait
                 $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
                 $values = array_combine($optionKeys, $optionValues);
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $subDir = $field->getUntranslatedName();
-                $folderPath = $participantFolder.UserStorage::PATH_SEP.$subDir;
+                $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+                $subDir = basename($folderPath);
 
                 // restore the extensions ... $value is a concatenation of the option names
                 $listing = [];
                 foreach ($values as $optionKey => $fileName) {
                   $option = $field->getDataOption($optionKey);
-                  $fileBase = $option->getUntranslatedLabel();
+                  $fileBase = $this->participantFieldsService->getFileSystemOptionLabel($option);
                   $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                   $listing[] = $fileBase . '.' . $extension;
                 }

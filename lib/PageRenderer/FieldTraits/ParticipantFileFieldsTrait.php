@@ -27,6 +27,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -46,6 +47,9 @@ trait ParticipantFileFieldsTrait
 
   /** @var ProjectService */
   protected $projectService;
+
+  /** @var ProjectParticipantFieldsService */
+  protected $participantFieldsService;
 
   /** @var UserStorage */
   protected $userStorage;
@@ -222,11 +226,11 @@ trait ParticipantFileFieldsTrait
           break;
         case FieldType::CLOUD_FILE:
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
-            $pathChain[] = $field->getUntranslatedName();
+            $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           }
           break;
         case FieldType::CLOUD_FOLDER:
-          $pathChain[] = $field->getUntranslatedName();
+          $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           break;
         default:
           return null;
