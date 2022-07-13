@@ -24,19 +24,18 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Create the given path as folder, remove the directory when undo is requested.
  */
-class UndoableFolderCreate implements IUndoable
+class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
-  /** @var UserStorage */
-  protected $userStorage;
-
   /** @var callable */
   protected $name;
 
@@ -54,14 +53,12 @@ class UndoableFolderCreate implements IUndoable
    *
    * @param string|Callable $folderName
    *
-   * @param bool $gracefully Do not throw if the source-folder given
-   * as $oldName does not exist.
+   * @param bool $gracefully Do not throw if folder already exists
    */
   public function __construct($name, bool $gracefully = false)
   {
     $this->name = $name;
     $this->gracefully = $gracefully;
-    $this->userStorage = \OC::$server->get(UserStorage::class);
     $this->reset();
   }
 
@@ -104,7 +101,11 @@ class UndoableFolderCreate implements IUndoable
 
     /** @var FileSystemNode $existing */
     $existing = $this->userStorage->get($this->name);
-    if (!empty($existing) && $this->gracefully) {
+    if (!empty($existing)) {
+      if (!$this->gracefully) {
+        $l = $this->appContainer->get(IL10N::class);
+        throw new \OCP\Files\AlreadyExistsException($l->t('The folder "%s" exists already.', $this->name));
+      }
       // keep the folder or rename any existing file
       if ($existing->getType() != FileInfo::TYPE_FOLDER) {
         $this->renamedName = self::renamedName($this->name);
@@ -131,7 +132,6 @@ class UndoableFolderCreate implements IUndoable
       $this->userStorage->rename($this->renamedName, $this->name);
     }
   }
-
 
   /** {@inheritdoc} */
   public function reset()

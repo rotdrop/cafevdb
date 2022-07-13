@@ -5,20 +5,21 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Common;
@@ -27,7 +28,7 @@ namespace OCA\CAFEVDB\Common;
  * Simplistic do-undo interface in order to be stacked into a
  * do-undo-list.
  */
-class GenericUndoable implements IUndoable
+class GenericUndoable extends AbstractUndoable
 {
   /** @var Callable */
   protected $doCallback;
@@ -35,31 +36,37 @@ class GenericUndoable implements IUndoable
   /** @var Callable|null */
   protected $undoCallback = null;
 
-  /** @var mixed */
-  protected $done;
+  /**
+   * @var mixed
+   *
+   * The return value of the doCallback(), which is passed to the
+   * undoCallback() if necessary.
+   */
+  protected $doResult;
 
   public function __construct(Callable $do, ?Callable $undo = null)
   {
+    parent::__construct();
     $this->doCallback = $do;
     $this->undoCallback = $undo;
   }
 
   /** {@inheritdoc} */
   public function do() {
-    $this->done = call_user_func($this->doCallback);
+    $this->doResult = call_user_func($this->doCallback);
   }
 
   /** {@inheritdoc} */
   public function undo() {
     if (!empty($this->undoCallback)) {
-      call_user_func($this->undoCallback, $this->done);
+      call_user_func($this->undoCallback, $this->doResult);
     }
     $this->reset();
   }
 
   /** {@inheritdoc} */
   public function reset() {
-    $this->done = null;
+    $this->doResult = null;
   }
 }
 
