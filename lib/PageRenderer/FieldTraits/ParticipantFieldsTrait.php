@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
+use OCA\CAFEVDB\Constants;
+
 /** Participant-fields. */
 trait ParticipantFieldsTrait
 {
@@ -408,10 +410,17 @@ trait ParticipantFieldsTrait
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
               $subDir = basename($folderPath);
 
+              // synchronize the folder contents s.t. entries can also safely be deleted.
+              $this->participantFieldsService->populateCloudFolderField($field, $musician);
+              $this->flush();
+
               // read the configured directory in
               /** @var OCP\Files\Folder $folder */
               $folder = $this->userStorage->getFolder($folderPath);
-              $folderContents = empty($folder) ? [] : $folder->getDirectoryListing();
+              $folderContents = array_filter(
+                empty($folder) ? [] : $folder->getDirectoryListing(),
+                fn(CloudFiles\Node $node) => $node->getName() != Constants::README_NAME
+              );
 
               $html = '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">';

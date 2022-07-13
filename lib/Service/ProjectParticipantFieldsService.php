@@ -23,6 +23,10 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCP\Files as CloudFiles;
+
+use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -47,7 +51,10 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Common\UndoableFolderCreate;
+use OCA\CAFEVDB\Common\UndoableFolderRemove;
 use OCA\CAFEVDB\Common\IUndoable;
+
+use OCA\CAFEVDB\Constants;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -912,16 +919,90 @@ class ProjectParticipantFieldsService
       return;
     }
 
+    $readMe = $field->getTooltip();
+    if (!empty($readMe)) {
+      $readMe = (new HtmlToMarkDown)->convert($readMe);
+    } else {
+      $readMe = null;
+    }
+
     /** @var Entities\ProjectParticipant $participant */
     foreach ($field->getProject()->getParticipants() as $participant) {
       $musician = $participant->getMusician();
 
-      // // we now have an unpersisted field here
-      // $project = $field->getProject();
+      $this->entityManager
+        ->registerPreCommitAction(
+          new UndoableFolderCreate(
+            fn() => $this->doGetFieldFolderPath($field, $musician),
+            gracefully: true,
+            readMe: empty($readMe) ? null : $readMe,
+          )
+        );
+    }
+  }
+
+  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician)
+  {
+    if (!$this->containsEntity($musician)) {
+      $musician = $this->getReference(Entities\Musician::class, $musician->getId());
+    }
+
+    $folderName = $this->doGetFieldFolderPath($field, $musician);
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $folderNode = $userStorage->getFolder($folderName);
+    $folderContents = array_filter(
+      array_map(
+        fn(CloudFiles\Node $node) => $node->getName(),
+        empty($folderNode) ? [] : $folderNode->getDirectoryListing(),
+      ),
+      fn(string $nodeName) => $nodeName != Constants::README_NAME
+    );
+    /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+    $fieldOption = $field->getSelectableOptions()->first();
+    $fieldData = $fieldOption->getMusicianFieldData($musician);
+    if (empty($folderContents)) {
+      $fieldData->clear();
+    } else {
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      if ($fieldData->count() !== 1) {
+        $fieldData->clear();
+        $project = $field->getProject();
+        $fieldDatum = new Entities\ProjectParticipantFieldDatum;
+        $fieldDatum->setField($field)
+          ->setDataOption($fieldOption)
+          ->setMusician($musician)
+          ->setProject($project);
+        $fieldData->add($fieldDatum);
+        $field->getFieldData()->add($fieldDatum);
+        $project->getParticipantFieldsData()->add($fieldDatum);
+        $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+      } else {
+        $fieldDatum = $fieldData->first();
+      }
+      $fieldDatum->setOptionValue(json_encode($folderContents));
+      $this->persist($fieldDatum);
+    }
+  }
+
+  /**
+   * Called via ORM events as pre-remove hook.
+   */
+  public function handleRemoveField(Entities\ProjectParticipantField $field)
+  {
+    // check if we have to do something
+    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+      return;
+    }
+
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($field->getProject()->getParticipants() as $participant) {
+      $musician = $participant->getMusician();
 
       $this->entityManager
         ->registerPreCommitAction(
-          new UndoableFolderCreate(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true)
+          new UndoableFolderRemove(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true, recursively: false)
         );
     }
   }
