@@ -39,6 +39,7 @@ use OCP\Files\FileInfo;
 use OCA\Files_Trashbin\Trash\ITrashManager;
 use OCA\Files_Trashbin\Trash\ITrashItem;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -48,7 +49,7 @@ class UserStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const PATH_SEP = '/';
+  const PATH_SEP = Constants::PATH_SEP;
   const CACHE_DIRECTORY = self::PATH_SEP.'cache';
 
   /** @var IUser */
