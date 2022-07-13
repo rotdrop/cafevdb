@@ -212,8 +212,8 @@ class EntityManager extends EntityManagerDecorator
     $this->logger = $logger;
     $this->l = $l10n;
 
-    $this->preFlushActions = new UndoableRunQueue($this->logger, $this->l);
-    $this->preCommitActions = new UndoableRunQueue($this->logger, $this->l);
+    $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
+    $this->preCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
 
     $this->bind();
     if (!$this->bound()) {
