@@ -46,7 +46,6 @@ class GenericUndoable extends AbstractUndoable
 
   public function __construct(Callable $do, ?Callable $undo = null)
   {
-    parent::__construct();
     $this->doCallback = $do;
     $this->undoCallback = $undo;
   }

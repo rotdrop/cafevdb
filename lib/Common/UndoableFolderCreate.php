@@ -28,7 +28,9 @@ use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IL10N;
+use OCP\ILogger;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
@@ -36,14 +38,27 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  const README_NAME = Constants::README_NAME;
+
   /** @var callable */
   protected $name;
+
+  /** @var string */
+  protected $ignoredFiles;
+
+  /** @var string */
+  protected $readMe;
 
   /** @var bool */
   protected $reusedExisting;
 
   /** @var string */
   protected $renamedName;
+
+  /** @var string */
+  protected $renamedReadMe;
 
   /** @var bool */
   protected $gracefully;
@@ -55,27 +70,18 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
    *
    * @param bool $gracefully Do not throw if folder already exists
    */
-  public function __construct($name, bool $gracefully = false)
+  public function __construct($name, bool $gracefully = false, string $readMe = null, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
   {
     $this->name = $name;
     $this->gracefully = $gracefully;
+    $this->readMe = $readMe;
+    $this->ignoredFiles = $ignoredFiles;
     $this->reset();
   }
 
-  static private function normalizePath($path)
-  {
-    return rtrim(
-      preg_replace('|'.UserStorage::PATH_SEP.'+|', UserStorage::PATH_SEP, $path),
-      UserStorage::PATH_SEP);
-  }
-
-  static private function renamedName($path, $time)
-  {
-    $pathInfo = pathinfo($path);
-    $renamed = $pathInfo['dirname']
-      . UserStorage::PATH_SEP
-      . $pathInfo['filename'] . '-renamed-' . $time . '.' . $pathInfo['extension'];
-    return $renamed;
+  /** {@inheritdoc} */
+  public function initialize(IAppContainer $appContainer) {
+    parent::initialize($appContainer);
   }
 
   /** {@inheritdoc} */
@@ -102,17 +108,29 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
     /** @var FileSystemNode $existing */
     $existing = $this->userStorage->get($this->name);
     if (!empty($existing)) {
-      if (!$this->gracefully) {
-        $l = $this->appContainer->get(IL10N::class);
-        throw new \OCP\Files\AlreadyExistsException($l->t('The folder "%s" exists already.', $this->name));
-      }
-      // keep the folder or rename any existing file
-      if ($existing->getType() != FileInfo::TYPE_FOLDER) {
-        $this->renamedName = self::renamedName($this->name);
+      if ($existing->getType() == FileInfo::TYPE_FOLDER) {
+        if (!$this->gracefully) {
+          // ignore essentially empty folders and reuse even without "gracefully"
+          $listing = $existing->getDirectoryListing();
+          if (!empty($this->ignoredFiles)) {
+            $listing = array_filter(
+              $listing,
+              fn($node) => !preg_match($this->ignoredFiles, $node->getName())
+            );
+          }
+          if (!empty($listing)) {
+            throw new \OCP\Files\AlreadyExistsException($this->l->t('The folder "%s" exists already and is not empty.', $this->name));
+          }
+        }
+        // empty or "gracefully", just reuse
+        $this->reusedExisting = true;
+      } else {
+        if (!$this->gracefully) {
+          throw new \OCP\Files\AlreadyExistsException($this->l->t('The folder or file "%s" exists already.', $this->name));
+        }
+        $this->renamedName = $this->renamedName($this->name);
         $this->userStorage->rename($this->name, $this->renamedName);
         $existing = null;
-      } else {
-        $this->reusedExisting = true;
       }
     }
 
@@ -120,14 +138,44 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
       // just create the folder
       $this->userStorage->ensureFolder($this->name);
     }
+
+    if (!empty($this->readMe)) {
+      /** @var FileSystemNode $existingReadMeNode */
+      $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
+      $existingReadMeNode = $this->userStorage->get($readMePath);
+      if (!empty($existingReadMeNode)) {
+        if ($existingReadMeNode->getType() == FileInfo::TYPE_FILE) {
+          $existingReadMe = $existingReadMeNode->getContent();
+        }
+        if (($existingReadMe ?? null) != $this->readMe) {
+          if (!$this->gracefully) {
+            throw new \OCP\Files\AlreadyExistsException($this->l->t('The file "%s" exists already.', $readMePath));
+          }
+          $this->renamedReadMe = $this->renamedName($readMePath);
+          $this->userStorage->rename($readMePath, $this->renamedReadMe);
+        }
+      }
+      try {
+        $this->userStorage->putContent($readMePath, $this->readMe);
+      } catch (\Throwable $t) {
+        if (!$this->gracefully) {
+          throw $t;
+        }
+        $this->logException($t, 'Unable to store contents of readme-file');
+      }
+    }
   }
 
   /** {@inheritdoc} */
   public function undo() {
     if ($this->reusedExisting) {
+      if (!empty($this->renamedReadMe)) {
+        $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
+        $this->userStorage->rename($this->renamedReadMe, $readMePath);
+      }
       return;
     }
-    $this->userStorage->delete($this->name);
+    $this->userStorage->delete($this->name); // recursively, README.md will also be remove again.
     if (!empty($this->renamedName)) {
       $this->userStorage->rename($this->renamedName, $this->name);
     }
@@ -138,6 +186,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   {
     $this->reusedExisting = false;
     $this->renamedName = null;
+    $this->renamedReadMe = null;
   }
 }
 

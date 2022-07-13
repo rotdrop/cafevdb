@@ -66,13 +66,6 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
     $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
   }
 
-  static private function normalizePath($path)
-  {
-    return rtrim(
-      preg_replace('|'.UserStorage::PATH_SEP.'+|', UserStorage::PATH_SEP, $path),
-      UserStorage::PATH_SEP);
-  }
-
   /**
    * Rename $from to $to with the following conventions:
    *

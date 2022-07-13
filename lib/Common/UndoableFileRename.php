@@ -85,12 +85,6 @@ class UndoableFileRename extends AbstractFileSystemUndoable
     $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
   }
 
-  /** @todo Use the Nextcloud file-system utility for this */
-  static private function normalizePath($path)
-  {
-    return preg_replace('|'.UserStorage::PATH_SEP.'+|', UserStorage::PATH_SEP, $path);
-  }
-
   /**
    * Rename $from to $to.
    */

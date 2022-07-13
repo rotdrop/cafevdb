@@ -87,7 +87,10 @@ class UndoableRunQueue
       throw new UndoableRunQueueException(
         $this,
         $this->l->t(
-          'Exception during execution of run-queue; number of successful actions: %d.', count($this->undoStack)),
+          'Exception during execution of run-queue: %1$s. Number of successful actions: %2$d.', [
+            $t->getMessage(),
+            count($this->undoStack),
+          ]),
         $t->getCode(),
         $t);
     }

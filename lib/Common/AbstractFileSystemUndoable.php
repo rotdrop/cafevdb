@@ -25,11 +25,19 @@
 namespace OCA\CAFEVDB\Common;
 
 use OCP\AppFramework\IAppContainer;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IL10N;
+use OCP\ILogger;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
 abstract class AbstractFileSystemUndoable extends AbstractUndoable
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
+  /** @var ITimeFactory */
+  protected $timeFactory;
+
   /** @var UserStorage */
   protected $userStorage;
 
@@ -37,7 +45,31 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
   {
     parent::initialize($appContainer);
     $this->userStorage = $this->appContainer->get(UserStorage::class);
+    $this->timeFactory = $this->appContainer->get(ITimeFactory::class);
+    $this->l = $this->appContainer->get(IL10N::class);
+    $this->logger = $this->appContainer->get(ILogger::class);
   }
+
+  /** Remove multipled slashes */
+  static protected function normalizePath($path)
+  {
+    return rtrim(
+      preg_replace('|'.UserStorage::PATH_SEP.'+|', UserStorage::PATH_SEP, $path),
+      UserStorage::PATH_SEP);
+  }
+
+  /** Create a new unique name for renaming */
+  protected function renamedName($path)
+  {
+    $time = $this->timeFactory->getTime();
+    $pathInfo = pathinfo($path);
+    $renamed = $pathInfo['dirname']
+      . UserStorage::PATH_SEP
+      . $pathInfo['filename'] . '-renamed-' . $time . '.' . $pathInfo['extension'];
+    return $renamed;
+  }
+
+
 }
 
 // Local Variables: ***
