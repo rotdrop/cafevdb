@@ -40,6 +40,9 @@ class UndoableFolderCreate implements IUndoable
   /** @var callable */
   protected $name;
 
+  /** @var bool */
+  protected $reusedExisting;
+
   /** @var string */
   protected $renamedName;
 
@@ -59,6 +62,7 @@ class UndoableFolderCreate implements IUndoable
     $this->name = $name;
     $this->gracefully = $gracefully;
     $this->userStorage = \OC::$server->get(UserStorage::class);
+    $this->reset();
   }
 
   static private function normalizePath($path)
@@ -106,6 +110,8 @@ class UndoableFolderCreate implements IUndoable
         $this->renamedName = self::renamedName($this->name);
         $this->userStorage->rename($this->name, $this->renamedName);
         $existing = null;
+      } else {
+        $this->reusedExisting = true;
       }
     }
 
@@ -117,6 +123,9 @@ class UndoableFolderCreate implements IUndoable
 
   /** {@inheritdoc} */
   public function undo() {
+    if ($this->reusedExisting) {
+      return;
+    }
     $this->userStorage->delete($this->name);
     if (!empty($this->renamedName)) {
       $this->userStorage->rename($this->renamedName, $this->name);
@@ -127,6 +136,7 @@ class UndoableFolderCreate implements IUndoable
   /** {@inheritdoc} */
   public function reset()
   {
+    $this->reusedExisting = false;
     $this->renamedName = null;
   }
 }
