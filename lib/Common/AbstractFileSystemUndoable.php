@@ -35,6 +35,9 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  /** @var IL10N */
+  protected $l;
+
   /** @var ITimeFactory */
   protected $timeFactory;
 
