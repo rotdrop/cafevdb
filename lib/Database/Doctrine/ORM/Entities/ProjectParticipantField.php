@@ -358,14 +358,24 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get one specific option
    *
-   * @param mixed $key Everything which can be converted to an UUID by
-   * Uuid::asUuid().
+   * @param null|mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid() or null which will return just the first option if it
+   * exists. The latter for convience for non-multiple options which just
+   * contain a single option.
    *
    * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDataOption($key):?ProjectParticipantFieldDataOption
+  public function getDataOption($key = null):?ProjectParticipantFieldDataOption
   {
-    return $this->getByUuid($this->dataOptions, $key, 'key');
+    if ($key === null) {
+      if (!empty($this->dataOptions) && $this->dataOptions->count() > 0) {
+        return $this->dataOptions->first();
+      } else {
+        return null;
+      }
+    } else {
+      return $this->getByUuid($this->dataOptions, $key, 'key');
+    }
   }
 
   /**
