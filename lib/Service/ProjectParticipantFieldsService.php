@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Common\UndoableFolderCreate;
+use OCA\CAFEVDB\Common\UndoableTextFileUpdate;
 use OCA\CAFEVDB\Common\UndoableFolderRemove;
 use OCA\CAFEVDB\Common\IUndoable;
 
@@ -910,7 +911,8 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Called via ORM events as pre-persist hook.
+   * Generate all use-folders with an optional README.md if the field has type
+   * CLOUD_FOLDER.
    */
   public function handlePersistField(Entities\ProjectParticipantField $field)
   {
@@ -926,6 +928,8 @@ class ProjectParticipantFieldsService
       $readMe = null;
     }
 
+    $needsFlush = false;
+
     /** @var Entities\ProjectParticipant $participant */
     foreach ($field->getProject()->getParticipants() as $participant) {
       $musician = $participant->getMusician();
@@ -935,14 +939,69 @@ class ProjectParticipantFieldsService
           new UndoableFolderCreate(
             fn() => $this->doGetFieldFolderPath($field, $musician),
             gracefully: true,
-            readMe: empty($readMe) ? null : $readMe,
+          )
+        )->register(
+          new UndoableTextFileUpdate(
+            fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+            gracefully: true,
+            content: $readMe,
+          )
+        )
+        ->register(new GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+          $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
+        }));
+    }
+    $this->entityManager->registerPreCommitAction(
+      new GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
+    );
+  }
+
+  /**
+   * Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER
+   */
+  public function handleChangeFieldTooltip(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip)
+  {
+    // check if we have to do something
+    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+      return;
+    }
+
+    $oldReadMe = !empty($oldTooltip) ? (new HtmlToMarkDown)->convert($oldTooltip) : null;
+    $newReadMe = !empty($newTooltip) ? (new HtmlToMarkDown)->convert($newTooltip) : null;
+
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($field->getProject()->getParticipants() as $participant) {
+      $musician = $participant->getMusician();
+
+      $this->entityManager
+        ->registerPreCommitAction(
+          new UndoableTextFileUpdate(
+            name: fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+            content: $newReadMe,
+            replacableContent: $oldReadMe,
+            gracefully: true,
           )
         );
     }
   }
 
-  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician)
+  /**
+   * Populate the field-datum for the given field and musician with the actual
+   * folder contents.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param bool $flush If true call flush as needed, otherwise just report
+   * back the need for flush with the return value.
+   *
+   * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
+   */
+  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true)
   {
+    $needsFlush = false;
+
     if (!$this->containsEntity($musician)) {
       $musician = $this->getReference(Entities\Musician::class, $musician->getId());
     }
@@ -960,21 +1019,30 @@ class ProjectParticipantFieldsService
       fn(string $nodeName) => $nodeName != Constants::README_NAME
     );
     /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
-    $fieldOption = $field->getSelectableOptions()->first();
+    $fieldOption = $field->getDataOption();
+    if (empty($fieldOption)) {
+      $this->logError('There should be a single field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
+      return $needsFlush;
+    }
     $fieldData = $fieldOption->getMusicianFieldData($musician);
     if (empty($folderContents)) {
-      $fieldData->clear();
+      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+      foreach ($fieldData as $fieldDatum) {
+        $this->remove($fieldDatum);
+        $needsFlush = true;
+      }
     } else {
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       if ($fieldData->count() !== 1) {
-        $fieldData->clear();
+        foreach ($fieldData as $fieldDatum) {
+          $this->remove($fieldDatum);
+        }
         $project = $field->getProject();
         $fieldDatum = new Entities\ProjectParticipantFieldDatum;
         $fieldDatum->setField($field)
           ->setDataOption($fieldOption)
           ->setMusician($musician)
           ->setProject($project);
-        $fieldData->add($fieldDatum);
         $field->getFieldData()->add($fieldDatum);
         $project->getParticipantFieldsData()->add($fieldDatum);
         $musician->getProjectParticipantFieldsData()->add($fieldDatum);
@@ -983,7 +1051,12 @@ class ProjectParticipantFieldsService
       }
       $fieldDatum->setOptionValue(json_encode($folderContents));
       $this->persist($fieldDatum);
+      $needsFlush = true;
     }
+    if ($needsFlush && $flush) {
+      $this->flush();
+    }
+    return $needsFlush;
   }
 
   /**
@@ -1019,6 +1092,10 @@ class ProjectParticipantFieldsService
    */
   public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName)
   {
+    if ($oldName == $newName) {
+      return;
+    }
+
     switch ($field->getDataType()) {
       case DataType::CLOUD_FOLDER:
         // We have to rename the folder which is just named after the
@@ -1083,6 +1160,10 @@ class ProjectParticipantFieldsService
 
   public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel)
   {
+    if ($oldLabel == $newLabel) {
+      return;
+    }
+
     $field = $option->getField();
     if ($field->getDataType() != DataType::CLOUD_FILE) {
       return;
