@@ -36,6 +36,15 @@ trait TranslatableTrait
   private $locale;
 
   /**
+   * Gedmo\Translatable (has to?) clean the changeset of the actual
+   * entity. Unfortunately this also spoils the update listeners. We work
+   * around by remembering any old value.
+   *
+   * @Gedmo\TranslationChangeSet
+   */
+  private $translationChangeSet;
+
+  /**
    * Set the "local" per-entity override locale for table field translations.
    */
   public function setLocale(?string $locale):self

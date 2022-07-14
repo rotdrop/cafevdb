@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -819,7 +820,13 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /** @var bool */
-  private $preUpdatePosted = false;
+  private $preUpdatePosted = [];
+
+  private function getTranslationChangeSet(Event\PreUpdateEventArgs $event, string $field):?array
+  {
+    return ($this->translationChangeSet[$field]
+            ?? ($event->hasChangedField($field) ? [ $event->getOldValue($field), $event->getNewValue($field) ] : null));
+  }
 
   /**
    * @ORM\PreUpdate
@@ -828,14 +835,24 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
+    \OCP\Util::writeLog('cafevdb', 'ORIGINAL VALUES ' . print_r($this->translationChangeSet, true), \OCP\Util::INFO);
+
     $field = 'name';
-    if (!$event->hasChangedField($field)) {
-      return;
+    $changeSet = $this->getTranslationChangeSet($event, $field);
+    if ($changeSet) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $changeSet[0], $changeSet[1]));
+      $this->preUpdatePosted[$field] = $changeSet[0];
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $event->getOldValue($field), $event->getNewValue($field)));
-    $this->preUpdatePosted = true;
+    $field = 'tooltip';
+    $changeSet = $this->getTranslationChangeSet($event, $field);
+    if ($changeSet) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldTooltip($this, $changeSet[0], $changeSet[1]));
+      $this->preUpdatePosted[$field] = $changeSet[0];
+    }
   }
 
   /**
@@ -845,13 +862,17 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
-    if (!$this->preUpdatePosted) {
-      return;
+    $field = 'name';
+    if (isset($this->preUpdatePosted[$field])) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
+      unset($this->preUpdatePosted[$field]);
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
-    $this->preUpdatePosted = false;
+    $field = 'tooltip';
+    if (isset($this->preUpdatePosted[$field])) {
+      // 'post' event is not needed ATM.
+      unset($this->preUpdatePosted[$field]);
+    }
   }
-
 }
