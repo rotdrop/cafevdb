@@ -58,6 +58,9 @@ class MailingListsAutoResponsesListener implements IEventListener
   const PROJECTS = MailingListsService::TEMPLATE_TYPE_PROJECTS;
   const ANNOUNCEMENTS = MailingListsService::TEMPLATE_TYPE_ANNOUNCEMENTS;
 
+  private const ADD_KEY = 'add';
+  private const DEL_KEY = 'remove';
+
   /** @var IL10N */
   private $l;
 
@@ -76,14 +79,34 @@ class MailingListsAutoResponsesListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    $eventClass = null;
-    foreach (self::EVENT as $handledEvent) {
-      if (is_a($event, $handledEvent)) {
-        $eventClass = $handledEvent;
-      }
-    }
-    if (empty($eventClass)) {
-      return;
+    $nodes = [];
+    $eventClass = get_class($event);
+    switch ($eventClass) {
+      case NodeDeletedEvent::class:
+        /** @var NodeDeletedEvent $event */
+        $nodes[self::DEL_KEY] = $event->getNode();
+        break;
+      case NodeRenamedEvent::class:
+        /** @var NodeRenamedEvent $event */
+        $nodes[self::DEL_KEY] = $event->getSource();
+        $nodes[self::ADD_KEY] = $event->getTarget();
+        $remove = true;
+        // rename gets another NodeWrittenEvent
+        break;
+      case NodeWrittenEvent::class:
+        /** @var NodeWrittenEvent $event */
+        $nodes[self::ADD_KEY] = $event->getNode();
+        break;
+      case NodeCopiedEvent::class:
+        /** @var NodeCopiedEvent $event */
+        $nodes[self::ADD_KEY] = $event->getTarget();
+        break;
+      case NodeTouchedEvent::class:
+        /** @var NodeTouchedEvent $event */
+        $nodes[self::ADD_KEY] = $event->getNode();
+        break;
+      default:
+        return;
     }
 
     // initialize only now in order to keep the overhead for unhandled events small
@@ -91,50 +114,27 @@ class MailingListsAutoResponsesListener implements IEventListener
     if (empty($this->user)) {
       return;
     }
+
     $this->appName = $this->appContainer->get('appName');
     $this->logger = $this->appContainer->get(ILogger::class);
     $this->l = $this->appContainer->get(IL10N::class);
 
-    $nodes = [];
-    switch ($eventClass) {
-      case NodeDeletedEvent::class:
-        /** @var NodeDeletedEvent $event */
-        $nodes['remove'] = $event->getNode();
-        break;
-      case NodeRenamedEvent::class:
-        /** @var NodeRenamedEvent $event */
-        $nodes['remove'] = $event->getSource();
-        $nodes['add'] = $event->getTarget();
-        $remove = true;
-        // rename gets another NodeWrittenEvent
-        break;
-      case NodeWrittenEvent::class:
-        /** @var NodeWrittenEvent $event */
-        $nodes['add'] = $event->getNode();
-        break;
-      case NodeCopiedEvent::class:
-        /** @var NodeCopiedEvent $event */
-        $nodes['add'] = $event->getTarget();
-        break;
-      case NodeTouchedEvent::class:
-        /** @var NodeTouchedEvent $event */
-        $nodes['add'] = $event->getNode();
-        break;
-      default:
-        return;
-    }
-
     /** @var \OCP\Files\Node $node */
     foreach ($nodes as $key => $node) {
-      if ($node instanceof \OC\Files\Node\NonExistingFile) {
+      if (false && $node instanceof \OC\Files\Node\NonExistingFile) {
         unset($nodes[$key]);
         continue;
       }
       $nodePath = $node->getPath();
-      if ($key == 'add')  {
+      if ($key == self::ADD_KEY)  {
         // Can ony use plain text files for the autoresponses.
-        $eventMimeType = $node->getMimetype();
-        if ($eventMimeType != 'text/plain' && $eventMimeType != 'text/markdown') {
+        try {
+          $eventMimeType = $node->getMimetype();
+        } catch (\Throwable $t) {
+          // ignore
+          $eventMimeType = null;
+        }
+        if (!empty($eventMimeType) && $eventMimeType != 'text/plain' && $eventMimeType != 'text/markdown') {
           unset($nodes[$key]);
           continue;
         }
@@ -205,7 +205,7 @@ class MailingListsAutoResponsesListener implements IEventListener
         $template = pathinfo($nodeBase, PATHINFO_FILENAME);
 
         try {
-          if ($key == 'remove') {
+          if ($key == self::DEL_KEY) {
             foreach ($lists as $list) {
               $listsService->setMessageTemplate($list, $template, null);
               $this->logInfo('Removed ' . $template . ' from list ' . $list);
