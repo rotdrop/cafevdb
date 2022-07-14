@@ -1352,6 +1352,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
+    // As this is not timing critical we should perhaps reload the master entity
+    // from the database in order to sanitize all associations.
+    // $this->refreshEntity($masterEntity);
+
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
     if (!empty($changed)) {
@@ -1772,6 +1776,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
+
+    // As this is not time critical we should perhaps reload the master entity
+    // from the database in order to sanitize all associations.
+    // $this->refreshEntity($masterEntity);
 
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
