@@ -1026,6 +1026,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * @todo Get rid of this function, the meta-data class is rather an
    * internal data structure of Doctrine\ORM.
+   *
+   * @return ClassMetadata|ClassMetadataDecorator
    */
   public function getClassMetadata($className)
   {
