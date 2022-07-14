@@ -41,10 +41,6 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const README_SEPARATOR = "\n\n----------------------\n\n";
-
-  const README_NAME = Constants::README_NAME;
-
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;
 
@@ -54,20 +50,11 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /** @var string */
   protected $ignoredFiles;
 
-  /** @var string */
-  protected $readMe;
-
   /** @var bool */
   protected $reusedExisting;
 
   /** @var string */
   protected $renamedName;
-
-  /** @var string */
-  protected $renamedReadMe;
-
-  /** @var string */
-  protected $oldReadMeContent;
 
   /** @var bool */
   protected $gracefully;
@@ -79,11 +66,10 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
    *
    * @param bool $gracefully Do not throw if folder already exists
    */
-  public function __construct($name, bool $gracefully = false, string $readMe = null, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
+  public function __construct($name, bool $gracefully = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
   {
     $this->name = $name;
     $this->gracefully = $gracefully;
-    $this->readMe = $readMe;
     $this->ignoredFiles = $ignoredFiles;
     $this->reset();
   }
@@ -148,70 +134,14 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
       // just create the folder
       $this->userStorage->ensureFolder($this->name);
     }
-
-    $readMeContent = trim($this->readMe);
-
-    /** @var FileSystemNode $existingReadMeNode */
-    $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
-    $existingReadMeNode = $this->userStorage->get($readMePath);
-    if (!empty($existingReadMeNode)) {
-      if (!$existingReadMeNode->getType() == FileInfo::TYPE_FILE) {
-        // garbled, rename the beast
-        $this->renamedReadMe = $this->renamedName($readMePath);
-        $this->userStorage->rename($readMePath, $this->renamedReadMe);
-      } else {
-        // Plain file. In order not to generate excessivly many README.md
-        // files we just add to the content of the old README.md
-        $this->oldReadMeContent = $existingReadMeNode->getContent();
-
-        $oldReadMeHead = trim(substr($this->oldReadMeContent, 0, strpos($this->oldReadMeContent, self::README_SEPARATOR)));
-
-        $this->logInfo('OLD HEAD ' . strpos($this->oldReadMeContent, self::README_SEPARATOR) . ' || ' . $oldReadMeHead);
-
-        if ($readMeContent == $oldReadMeHead) {
-          $readMeContent = null;
-          $this->oldReadMeContent = null; // disable restore, is kept unchanged
-        } else if (!empty($this->oldReadMeContent) && $readMeContent !== $oldReadMeHead) {
-          // annotate the old content
-          if (empty($readMeContent)) {
-            $readMeContent = '';
-          } else {
-            $readMeContent .= self::README_SEPARATOR;
-          }
-          $now = new \DateTime;
-          $readMeContent .= $this->l->t('The old ``README.md`` content on %1$s at %2$s was:', [
-            $this->dateTimeFormatter->formatDate($now),
-            $this->dateTimeFormatter->formatTime($now),
-          ]);
-          $readMeContent .= "\n\n" . $this->oldReadMeContent;
-        }
-      }
-    }
-
-    if (!empty($readMeContent)) {
-      try {
-        $this->userStorage->putContent($readMePath, $readMeContent);
-      } catch (\Throwable $t) {
-        if (!$this->gracefully) {
-          throw $t;
-        }
-        $this->logException($t, 'Unable to store contents of readme-file');
-      }
-    }
   }
 
   /** {@inheritdoc} */
   public function undo() {
     if ($this->reusedExisting) {
-      if (!empty($this->renamedReadMe)) {
-        $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
-        $this->userStorage->rename($this->renamedReadMe, $readMePath);
-      } else if (!empty($this->oldReadMeContent)) {
-        $this->userStorage->putContent($readMePath, $this->oldReadMeContent);
-      }
       return;
     }
-    $this->userStorage->delete($this->name); // recursively, README.md will also be remove again.
+    $this->userStorage->delete($this->name);
     if (!empty($this->renamedName)) {
       $this->userStorage->rename($this->renamedName, $this->name);
     }

@@ -27,5 +27,6 @@ namespace OCA\CAFEVDB;
 class Constants
 {
   const README_NAME = 'README.md';
+  const OLD_CONTENT_SEPARATOR = "\n\n----------------------\n\n";
   const PATH_SEP = '/';
 }
