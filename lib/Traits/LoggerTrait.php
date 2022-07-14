@@ -51,7 +51,7 @@ trait LoggerTrait
 
       $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
     } while ($showTrace && --$shift > 0);
-    return $this->logger->log($level, $prefix.$message, $context);
+    return $this->logger()->log($level, $prefix.$message, $context);
   }
 
   public function logException($exception, $message = null, $shift = 0, bool $showTrace = false) {
@@ -73,7 +73,7 @@ trait LoggerTrait
     }
     $message = $message ?? ($context['message'] ?? 'Caught an Exception');
     $context['message'] = $prefix.$message;
-    $this->logger->logException($exception, $context);
+    $this->logger()->logException($exception, $context);
   }
 
   public function logError(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
