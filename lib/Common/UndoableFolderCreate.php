@@ -29,6 +29,7 @@ use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -40,7 +41,12 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
+  const README_SEPARATOR = "\n\n----------------------\n\n";
+
   const README_NAME = Constants::README_NAME;
+
+  /** @var IDateTimeFormatter */
+  protected $dateTimeFormatter;
 
   /** @var callable */
   protected $name;
@@ -59,6 +65,9 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
 
   /** @var string */
   protected $renamedReadMe;
+
+  /** @var string */
+  protected $oldReadMeContent;
 
   /** @var bool */
   protected $gracefully;
@@ -82,6 +91,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /** {@inheritdoc} */
   public function initialize(IAppContainer $appContainer) {
     parent::initialize($appContainer);
+    $this->dateTimeFormatter = $appContainer->get(IDateTimeFormatter::class);
   }
 
   /** {@inheritdoc} */
@@ -139,24 +149,48 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
       $this->userStorage->ensureFolder($this->name);
     }
 
-    if (!empty($this->readMe)) {
-      /** @var FileSystemNode $existingReadMeNode */
-      $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
-      $existingReadMeNode = $this->userStorage->get($readMePath);
-      if (!empty($existingReadMeNode)) {
-        if ($existingReadMeNode->getType() == FileInfo::TYPE_FILE) {
-          $existingReadMe = $existingReadMeNode->getContent();
-        }
-        if (($existingReadMe ?? null) != $this->readMe) {
-          if (!$this->gracefully) {
-            throw new \OCP\Files\AlreadyExistsException($this->l->t('The file "%s" exists already.', $readMePath));
+    $readMeContent = trim($this->readMe);
+
+    /** @var FileSystemNode $existingReadMeNode */
+    $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
+    $existingReadMeNode = $this->userStorage->get($readMePath);
+    if (!empty($existingReadMeNode)) {
+      if (!$existingReadMeNode->getType() == FileInfo::TYPE_FILE) {
+        // garbled, rename the beast
+        $this->renamedReadMe = $this->renamedName($readMePath);
+        $this->userStorage->rename($readMePath, $this->renamedReadMe);
+      } else {
+        // Plain file. In order not to generate excessivly many README.md
+        // files we just add to the content of the old README.md
+        $this->oldReadMeContent = $existingReadMeNode->getContent();
+
+        $oldReadMeHead = trim(substr($this->oldReadMeContent, 0, strpos($this->oldReadMeContent, self::README_SEPARATOR)));
+
+        $this->logInfo('OLD HEAD ' . strpos($this->oldReadMeContent, self::README_SEPARATOR) . ' || ' . $oldReadMeHead);
+
+        if ($readMeContent == $oldReadMeHead) {
+          $readMeContent = null;
+          $this->oldReadMeContent = null; // disable restore, is kept unchanged
+        } else if (!empty($this->oldReadMeContent) && $readMeContent !== $oldReadMeHead) {
+          // annotate the old content
+          if (empty($readMeContent)) {
+            $readMeContent = '';
+          } else {
+            $readMeContent .= self::README_SEPARATOR;
           }
-          $this->renamedReadMe = $this->renamedName($readMePath);
-          $this->userStorage->rename($readMePath, $this->renamedReadMe);
+          $now = new \DateTime;
+          $readMeContent .= $this->l->t('The old ``README.md`` content on %1$s at %2$s was:', [
+            $this->dateTimeFormatter->formatDate($now),
+            $this->dateTimeFormatter->formatTime($now),
+          ]);
+          $readMeContent .= "\n\n" . $this->oldReadMeContent;
         }
       }
+    }
+
+    if (!empty($readMeContent)) {
       try {
-        $this->userStorage->putContent($readMePath, $this->readMe);
+        $this->userStorage->putContent($readMePath, $readMeContent);
       } catch (\Throwable $t) {
         if (!$this->gracefully) {
           throw $t;
@@ -172,6 +206,8 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
       if (!empty($this->renamedReadMe)) {
         $readMePath = $this->name . UserStorage::PATH_SEP . self::README_NAME;
         $this->userStorage->rename($this->renamedReadMe, $readMePath);
+      } else if (!empty($this->oldReadMeContent)) {
+        $this->userStorage->putContent($readMePath, $this->oldReadMeContent);
       }
       return;
     }
@@ -187,6 +223,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
     $this->reusedExisting = false;
     $this->renamedName = null;
     $this->renamedReadMe = null;
+    $this->oldReadMeContent = null;
   }
 }
 
