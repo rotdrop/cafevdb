@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -43,7 +45,10 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
+use OCA\CAFEVDB\Common\UndoableFileReplace;
+use OCA\CAFEVDB\Common\UndoableTextFileUpdate;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 
 class ProjectParticipantsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -436,6 +441,7 @@ class ProjectParticipantsController extends Controller {
 
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
       $dataType = $field->getDataType();
+      $multiplicity = $field->getMultiplicity();
 
       $folderPath = $filePath = '';
 
@@ -485,6 +491,10 @@ class ProjectParticipantsController extends Controller {
         // error generated
         return $files;
       }
+
+      // ensure the per-participant folder exists, even for data-base
+      // uploads as it contains a mount-point in this case.
+      $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
 
       $uploads = [];
       foreach ($files as $index => $file) {
@@ -587,17 +597,21 @@ class ProjectParticipantsController extends Controller {
             }
             $fieldData->setOptionValue($optionValue);
             $this->persist($fieldData);
-            if ($oldPath && $oldPath != $filePath) {
-              // try to rename first (extension can be different) in order to
-              // have a file history inside the cloud.
-              try {
-                $userStorage->rename($oldPath, $filePath);
-              } catch (\Throwable $t) {
-                $messages[] = $this->l->t('Unable to rename the old file "%1$s" to the new name "%2$s".
- There will be no undo-history in the cloud file-space for this file.', [ $oldPath, $filePath ]);
-              }
+            $this->entityManager->registerPreCommitAction(
+              new UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
+            );
+            if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
+              $readMe = $field->getTooltip();
+              $readMe = empty($readMe) ? null : (new HtmlToMarkDown)->convert($readMe);
+              // also place the tooltip as README.md
+              $this->entityManager->registerPreCommitAction(
+                new UndoableTextFileUpdate(
+                  basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
+                  content: readme,
+                  gracefully: true,
+                )
+              );
             }
-            $userStorage->putContent($filePath, $fileData);
             $downloadLink = $userStorage->getDownloadLink($filePath);
             break;
           case FieldDataType::DB_FILE:
@@ -644,14 +658,9 @@ class ProjectParticipantsController extends Controller {
                                          [ $file['name'], $filePath ]);
           $file['name'] = $filePath;
 
-          // ensure the per-participant folder exists, even for data-base
-          // uploads as it contains a mount-point in this case.
-          $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
-
           $file['meta'] = [
             'musicianId' => $musicianId,
             'projectId' => $projectId,
-            // 'pathChain' => $pathChain, ?? needed ??
             'dirName' => $pathInfo['dirname'],
             'baseName' => $pathInfo['basename'],
             'extension' => $pathInfo['extension']?:'',
@@ -662,6 +671,7 @@ class ProjectParticipantsController extends Controller {
           ];
 
           $this->flush();
+
           $this->entityManager->commit();
         } catch (\Throwable $t) {
           $this->entityManager->rollback();
