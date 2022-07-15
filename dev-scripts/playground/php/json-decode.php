@@ -10,3 +10,5 @@ echo PHP_EOL . 'string' . PHP_EOL;
 print_r(json_decode('"blah"', true));
 echo PHP_EOL . 'string in braces' . PHP_EOL;
 print_r(json_decode('["blah"]', true));
+echo PHP_EOL . 'empty string' . PHP_EOL;
+print_r(json_decode('', true));
