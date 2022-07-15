@@ -32,6 +32,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -72,6 +73,9 @@ class ProjectParticipantsController extends Controller {
   /** @var ProjectService */
   private $projectService;
 
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -83,6 +87,7 @@ class ProjectParticipantsController extends Controller {
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ProjectService $projectService
+    , ProjectParticipantFieldsService $participantFieldsService
   ) {
 
     parent::__construct($appName, $request);
@@ -92,6 +97,7 @@ class ProjectParticipantsController extends Controller {
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->projectService = $projectService;
+    $this->participantFieldsService = $participantFieldsServicer;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -359,7 +365,7 @@ class ProjectParticipantsController extends Controller {
       $dataType = $field->getDataType();
       switch ($dataType) {
       case FieldDataType::CLOUD_FILE:
-        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
         $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fieldDatum->getOptionValue();
         break;
 
@@ -374,7 +380,7 @@ class ProjectParticipantsController extends Controller {
         break;
 
       case FieldDataType::CLOUD_FOLDER:
-        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
         $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
         break;
 
@@ -383,7 +389,7 @@ class ProjectParticipantsController extends Controller {
       }
 
       $fileRemoved = false;
-      $doDelete = true;
+      $doDeleteFieldDatum = true;
       $this->entityManager->beginTransaction();
       try {
         switch ($dataType) {
@@ -395,7 +401,7 @@ class ProjectParticipantsController extends Controller {
           }
           Util::unsetValue($optionValue, $fileName);
           if (!empty($optionValue)) {
-            $doDelete = false;
+            $doDeleteFieldDatum = false;
           }
           $fieldDatum->setOptionValue(json_encode(array_values($optionValue)));
           break;
@@ -407,7 +413,7 @@ class ProjectParticipantsController extends Controller {
           $this->remove($dbFile);
           break;
         }
-        if ($doDelete) {
+        if ($doDeleteFieldDatum) {
           $this->remove($fieldDatum);
           $this->flush();
           $this->remove($fieldDatum);
@@ -436,7 +442,7 @@ class ProjectParticipantsController extends Controller {
       switch ($dataType) {
       case FieldDataType::CLOUD_FOLDER:
       case FieldDataType::CLOUD_FILE:
-        $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, true), ];
+        $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, dry: true), ];
         if ($subDir) {
           $pathChain[] = $subDir;
           $subDir .= UserStorage::PATH_SEP;
