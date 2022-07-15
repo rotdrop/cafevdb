@@ -83,7 +83,7 @@ class ProjectParticipantsStorage extends Storage
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
       // the mount provider currently disables soft-deleteable filter ...
-      $filterState = $this->disableFilter('soft-deleteable');
+      $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       try {
         $projectId = $this->participant->getProject()->getId();
         $musicianId = $this->participant->getMusician()->getId();
@@ -98,7 +98,7 @@ class ProjectParticipantsStorage extends Storage
       } catch (\Throwable $t) {
         $this->logException($t);
       }
-      $filterState && $this->enableFilter('soft-deleteable');
+      $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
   }
 
@@ -139,7 +139,7 @@ class ProjectParticipantsStorage extends Storage
     ];
 
     // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $dirMatch = false;
 
@@ -273,7 +273,7 @@ class ProjectParticipantsStorage extends Storage
       }
     }
 
-    $filterState && $this->enableFilter('soft-deleteable');
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $this->files[$dirName];
   }
@@ -296,7 +296,7 @@ class ProjectParticipantsStorage extends Storage
   public function getId()
   {
     // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     $result = $this->appName()
       . '::'
       . 'database-storage/'
@@ -304,7 +304,7 @@ class ProjectParticipantsStorage extends Storage
       . 'participants/'
       . $this->participant->getMusician()->getUserIdSlug()
       . self::PATH_SEPARATOR;
-    $filterState && $this->enableFilter('soft-deleteable');
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     return $result;
   }
 }

@@ -98,7 +98,7 @@ class ParticipantFolders extends Command
     }
 
     $this->entityManager = \OC::$server->query(EntityManager::class);
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var ProjectService $projectService */
     $projectService = \OC::$server->query(ProjectService::class);

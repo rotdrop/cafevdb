@@ -1081,6 +1081,9 @@ class ProjectParticipantFieldsService
     foreach ($field->getProject()->getParticipants() as $participant) {
       $musician = $participant->getMusician();
 
+      // currently we only remove empty (READMEs are ignored) folders, also in
+      // order to mitigate user-errors: if deleting the field in error it can
+      // be added again and the files are still there.
       $this->entityManager
         ->registerPreCommitAction(
           new UndoableFolderRemove(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true, recursively: false)
@@ -1128,7 +1131,7 @@ class ProjectParticipantFieldsService
         return;
     }
 
-    $softDeleteableState = $this->disableFilter('soft-deleteable');
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
@@ -1163,7 +1166,7 @@ class ProjectParticipantFieldsService
       }
     }
 
-    $softDeleteableState && $this->enableFilter('soft-deleteable');
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
   public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel)
@@ -1181,7 +1184,7 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    $softDeleteableState = $this->disableFilter('soft-deleteable');
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
@@ -1209,7 +1212,7 @@ class ProjectParticipantFieldsService
 
     }
 
-    $softDeleteableState && $this->enableFilter('soft-deleteable');
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
 }

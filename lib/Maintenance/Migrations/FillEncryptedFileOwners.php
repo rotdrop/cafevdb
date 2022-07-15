@@ -75,7 +75,7 @@ class FillEncryptedFileOwners extends AbstractMigration
 
   public function execute():bool
   {
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $this->entityManager->beginTransaction();
     try {

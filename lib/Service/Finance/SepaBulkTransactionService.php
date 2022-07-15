@@ -110,7 +110,7 @@ class SepaBulkTransactionService
     }
     $slugParts = [ 'debitnote' => true ];
 
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
@@ -130,7 +130,7 @@ class SepaBulkTransactionService
       }
     }
 
-    $filterState && $this->enableFilter('soft-deleteable');
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $slugParts = array_keys($slugParts);
     if (count($slugParts) > 2) {

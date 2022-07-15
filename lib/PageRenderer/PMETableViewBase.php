@@ -255,7 +255,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->membersProjectId = $this->getClubMembersProjectId();
 
     // this is done by the legacy code itself.
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $this->defaultFDD = $this->createDefaultFDD();
 

@@ -791,7 +791,7 @@ class ProjectService
    */
   public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug)
   {
-    $softDeleteableState = $this->disableFilter('soft-deleteable');
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\ProjectParticipant $projectParticipant */
     foreach ($musician->getProjectParticipation() as $projectParticipant) {
@@ -862,7 +862,7 @@ class ProjectService
       );
     }
 
-    $softDeleteableState && $this->enableFilter('soft-deleteable');
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
   public function projectWikiLink($pageName)

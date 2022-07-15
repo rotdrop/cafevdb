@@ -72,7 +72,7 @@ class InstrumentationService
   public function getDummyMusician(?Entities\Project $project = null, bool $persist = true):Entities\Musician
   {
     // disable "deleted" filter
-    $this->disableFilter('soft-deleteable');
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
     if ($persist) {
@@ -124,6 +124,8 @@ class InstrumentationService
                    ->setProject($project);
       $dummy->getProjectParticipation()->set($project->getId(), $participant);
     }
+
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $dummy;
   }
