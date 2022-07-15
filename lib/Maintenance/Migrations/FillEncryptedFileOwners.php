@@ -119,6 +119,8 @@ class FillEncryptedFileOwners extends AbstractMigration
       throw new Exceptions\DatabaseMigrationException($this->l->t('Transactional part of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
     }
 
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
     return true;
   }
 };
