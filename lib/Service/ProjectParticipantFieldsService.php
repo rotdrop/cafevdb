@@ -470,38 +470,45 @@ class ProjectParticipantFieldsService
   /**
    * Return the cloud-folder name for the given $field which must be of
    * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param bool $dry Default \true. If \false actually create the folder if
+   * it does not exist.
+   *
+   * @return null|string The path name of the folder or null if the field-type
+   * does not refer to a cloud file-system node.
    */
-  public function doGetFieldFolderPath(Entities\ProjectParticipantField $field, Entities\Musician $musician):?string
+  public function doGetFieldFolderPath(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $dry = true):?string
   {
+    $fieldType = $field->getDataType();
+    if ($fieldType != DataType::CLOUD_FILE && $fieldType != DataType::CLOUD_FOLDER) {
+      return null;
+    }
+
     $fieldName = $this->getFileSystemFieldName($field);
 
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+
+    $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician, dry: $dry);
+
     switch ($field->getDataType()) {
-    case DataType::CLOUD_FOLDER: {
-      /** @var UserStorage $userStorage */
-      $userStorage = $this->di(UserStorage::class);
+      case DataType::CLOUD_FOLDER: {
+        return $participantFolder . UserStorage::PATH_SEP . $fieldName;
+      }
+      case DataType::CLOUD_FILE: {
+        $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
+          ? ''
+          : UserStorage::PATH_SEP . $fieldName;
 
-      /** @var ProjectService $projectService */
-      $projectService = $this->di(ProjectService::class);
-
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician);
-
-      return $participantFolder . UserStorage::PATH_SEP . $fieldName;
-    }
-    case DataType::CLOUD_FILE: {
-     /** @var UserStorage $userStorage */
-      $userStorage = $this->di(UserStorage::class);
-
-      /** @var ProjectService $projectService */
-      $projectService = $this->di(ProjectService::class);
-
-      $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician);
-
-      $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
-                    ? ''
-                    : UserStorage::PATH_SEP . $fieldName;
-
-      return $participantFolder . $subDirPrefix;
-    }
+        return $participantFolder . $subDirPrefix;
+      }
     }
     return null;
   }
@@ -998,7 +1005,7 @@ class ProjectParticipantFieldsService
    *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
-  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true)
+  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null)
   {
     $needsFlush = false;
 
@@ -1029,6 +1036,7 @@ class ProjectParticipantFieldsService
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       foreach ($fieldData as $fieldDatum) {
         $this->remove($fieldDatum);
+        $fieldDatum = null;
         $needsFlush = true;
       }
     } else {

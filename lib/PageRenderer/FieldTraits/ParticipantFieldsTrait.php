@@ -438,41 +438,50 @@ trait ParticipantFieldsTrait
 </div>';
               return $html;
             };
-            $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $phpFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
-              $folder = $this->userStorage->getFolder($folderPath);
-              if (!empty($folder)) {
+              $subDir = basename($folderPath);
 
-                $listing = json_decode($value, true);
-                if (!is_array($listing)) {
-                  $listing = [];
-                }
-                if (!empty($listing)) {
-                  $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
-                  $subDir = basename($folderPath);
-                  $linkText = $subDir . '.'  . 'zip';
-                  try {
-                    $downloadLink = $this->userStorage->getDownloadLink($folderPath);
-                    $html = '<a href="'.$downloadLink.'"
+              if ($op == 'view') {
+                // synchronize the folder contents s.t. entries can also safely be deleted.
+                $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum);
+                $this->flush();
+                $value = !empty($fieldDatum) ? $fieldDatum->getOptionValue() : '';
+              }
+
+              $listing = json_decode($value, true);
+              if (!is_array($listing)) {
+                $listing = [];
+              }
+              if (!empty($listing)) {
+                $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
+                $subDir = basename($folderPath);
+                $linkText = $subDir . '.'  . 'zip';
+                try {
+                  $downloadLink = $this->userStorage->getDownloadLink($folderPath);
+                  $html = '<a href="'.$downloadLink.'"
                              title="'.$toolTip.'"
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                  } catch (\OCP\Files\NotFoundException $e) {
-                    $this->logException($e);
-                    $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
-                  }
-                } else {
-                  $html = '<span class="empty tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder is empty.') . '</span>';
+                } catch (\OCP\Files\NotFoundException $e) {
+                  $this->logException($e);
+                  $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                 }
-
-                $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-
-                return $filesAppAnchor . $html;
+              } else {
+                $html = '<span class="empty tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder is empty.') . '</span>';
               }
-              return null;
+
+              $filesAppAnchor = $this->getFilesAppAnchor($field, $musician, toolTip: implode(', ', $listing));
+
+              return $filesAppAnchor . $html;
+            };
+            $valueFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
+              return $phpFunction($value, 'view', $k, $row, $recordId, $pme);
+            };
+            $valueFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
+              return $phpFunction($value, 'list', $k, $row, $recordId, $pme);
             };
             break;
           case FieldType::DATE:

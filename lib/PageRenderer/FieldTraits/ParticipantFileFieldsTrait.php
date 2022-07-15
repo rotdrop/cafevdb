@@ -252,11 +252,16 @@ trait ParticipantFileFieldsTrait
     return [ $filesAppLink, $filesAppTarget ];
   }
 
-  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
+  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null, ?string $toolTip = null)
   {
+    if (!empty($toolTip)) {
+      $toolTip = $this->toolTipsService['participant-attachment-open-parent'] . '<br/>' . $toolTip;
+    } else {
+      $toolTip = $this->toolTipsService['participant-attachment-open-parent'];
+    }
     list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
     $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-       title="'.$this->toolTipsService['participant-attachment-open-parent'].'"
+       title="' . $toolTip . '"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
     return $html;
