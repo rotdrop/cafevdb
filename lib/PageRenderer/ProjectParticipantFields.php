@@ -794,34 +794,6 @@ __EOT__;
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
     ];
 
-    $opts['fdd']['default_file_upload_policy'] = [
-      'name' => $this->l->t('Upload Policy'),
-      // 'input' => 'V', // not virtual, update handled by trigger
-      'options' => 'ACPVD',
-      'css' => [
-        'postfix' => [
-          'default-cloud-file-value',
-          'default-hidden',
-          'not-data-type-cloud-file-hidden',
-        ],
-      ],
-      'select' => 'D',
-      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
-      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
-      'values' => [
-        'table' => $this->optionsTable,
-        'column' => 'data',
-        'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
-        'join' => '$join_table.field_id = $main_table.id',
-        'group' => true,
-      ],
-      //'default' => 'rename',
-      'maxlen' => 29,
-      'size' => 30,
-      'sort' => false,
-      'tooltip' => $this->toolTipsService['participant-fields-default-cloud-file-value'],
-    ];
-
     $opts['fdd']['tooltip'] = array_merge(
       [
         'tab'      => [ 'id' => 'display' ],
@@ -1178,43 +1150,6 @@ __EOT__;
     if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
       $value = $newvals[$tag];
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
-    }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
-
-    /************************************************************************
-     *
-     * Move the data from default_file_upload_policy to default_value
-     *
-     */
-
-    $tag = 'default_file_upload_policy';
-    if ($newvals['data_type'] == DataType::CLOUD_FILE
-        || $newvals['data_type'] == DataType::DB_FILE
-        || $newvals['data_type'] == DataType::CLOUD_FOLDER) {
-      if ($newvals['data_type'] == DataType::DB_FILE) {
-        $newvals['encrypted'] = true;
-        if (empty($oldvals['encrypted'])) {
-          $changed[] = 'encrypted';
-        }
-        $value = 'replace';
-      } else if ($newvals['data_type'] === DataType::CLOUD_FOLDER) {
-        // cloud FS has its own versioning system
-        $value = 'replace';
-      } else {
-        $value = $newvals[$tag];
-      }
-      if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
-        $first = array_key_first($newvals['data_options_simple']);
-        $newvals['data_options_simple'][$first]['data'] = $value;
-      } else if ($newvals['multiplicity'] == Multiplicity::PARALLEL) {
-        foreach ($newvals['data_options'] as &$option) {
-          if (empty($option['deleted']) && $option['key'] != Uuid::NIL) {
-            $option['data'] = $value;
-          }
-        }
-      }
-      // files do not have a default value
-      $newvals['default'] = null;
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 

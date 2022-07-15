@@ -364,13 +364,12 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
-              $policy = $dataOptions->first()->getData()?:'rename';
               $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">'
-              .$this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician).'
+                . $this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $subDir, $fileBase, $musician) . '
   </table>
 </div>';
             };
@@ -404,7 +403,6 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
-              $policy = $dataOptions->first()->getData()?:'rename';
 
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
@@ -428,10 +426,10 @@ trait ParticipantFieldsTrait
               /** @var CloudFiles\Node $node */
               foreach ($folderContents as $node) {
                 $fileName = $node->getName() . ($node->getType() == CloudFiles\FileInfo::TYPE_FOLDER ? UserStorage::PATH_SEP : '');
-                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $subDir, '', $musician);
               }
 
-              $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+              $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $subDir, '', $musician);
 
               $html .= '
   </table>
@@ -599,8 +597,7 @@ trait ParticipantFieldsTrait
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
                 $fileBase = $this->participantFieldsService->getFileSystemOptionLabel($option);
-                $policy = $option->getData()?:'rename';
-                $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
+                $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $subDir, $fileBase, $musician);
               }
               $html .= '
   </table>
@@ -930,17 +927,19 @@ trait ParticipantFieldsTrait
   </thead>
   <tbody>';
 
-            if ($dataType == FieldType::DB_FILE) {
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-              $subDir = $field->getName();
-              foreach ($options as $optionKey => $option) {
-                $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
-              }
-            } else {
-              $idx = 0;
-              foreach ($options as $optionKey => $option) {
-                $html .= $this->recurringChangeRowHtml($values[$optionKey], $fieldId, $optionKey, $dataType, $labelled ? ($option->getLabel()??'') : null, $invoices, $idx++);
-              }
+            switch ($dataType)  {
+              case FieldType::DB_FILE:
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $subDir = $field->getName();
+                foreach ($options as $optionKey => $option) {
+                  $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
+                }
+                break;
+              default:
+                $idx = 0;
+                foreach ($options as $optionKey => $option) {
+                  $html .= $this->recurringChangeRowHtml($values[$optionKey], $fieldId, $optionKey, $dataType, $labelled ? ($option->getLabel()??'') : null, $invoices, $idx++);
+                }
             }
 
             foreach ($generatorClass::updateStrategyChoices() as $tag) {

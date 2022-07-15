@@ -425,7 +425,6 @@ class ProjectParticipantsController extends Controller {
       $uploadData = json_decode($data, true);
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
-      $uploadPolicy = $uploadData['uploadPolicy'];
       $subDir = $uploadData['subDir']??null;
       $fileName = $uploadData['fileName']??null;
 
@@ -454,10 +453,6 @@ class ProjectParticipantsController extends Controller {
       case FieldDataType::DB_FILE:
         if (!empty($subDir)) {
           return self::grumble($this->l->t('Sub-directory "%s" requested, but not supported by db-storage.', $subDir));
-        }
-        if ($uploadPolicy != 'replace') {
-          return self::grumble($this->l->t('Upload-policy "%s" requested, but not supported by storage type "%s".',
-                                           [ $uploadPolicy, $dataType ]));
         }
         if (!empty($uploadData['fileBase'])) {
           $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
@@ -534,40 +529,7 @@ class ProjectParticipantsController extends Controller {
                        ->setOptionKey($optionKey);
             $participant->getParticipantFieldsData()->add($fieldData);
           } else if (!empty($fieldData->getOptionValue())) {
-            switch ($uploadPolicy) {
-            case 'rename':
-              switch ($dataType) {
-              case FieldDataType::DB_FILE:
-              case FieldDataType::CLOUD_FOLDER:
-                throw new \InvalidArgumentException($this->l->t('Invalid upload-policy "%s" for data type "%s".', [ $uploadPolicy, $dataType ]));
-                break;
-              case FieldDataType::CLOUD_FILE:
-                // Ok, we have to move the old file.
-                $oldName = $fieldData->getOptionValue();
-                $timeStamp = $this->timeStamp();
-                $oldExtension = pathInfo($oldName, PATHINFO_EXTENSION);
-                $backupName = $pathInfo['filename'].'-'.$timeStamp;
-                if (!empty($oldExtension)) {
-                  $backupName .= '.'.$oldExtension;
-                }
-                $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
-                $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
-                if (!empty($subDir)) {
-                  $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
-                }
-                $oldPath .= $oldName;
-                try {
-                  $userStorage->copy($oldPath, $backupPath);
-                } catch (\Throwable $t) {
-                  $messages[] = $this->l->t('Unable to create a backup-copy of "%1$s" to "%2$s: %3$s".', [ $oldPath, $backupPath, $t->getMessage() ]);
-                  $this->logException($t);
-                }
-                $conflict = 'renamed';
-                break;
-              }
-              break;
-            case 'replace':
-              switch ($dataType) {
+            switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
                 // we still need to populate $oldPath in order to trigger the
                 // restore functionality of the cloud.
@@ -596,8 +558,6 @@ class ProjectParticipantsController extends Controller {
                   $conflict = 'replaced';
                 }
                 break;
-              }
-              break;
             }
           }
 

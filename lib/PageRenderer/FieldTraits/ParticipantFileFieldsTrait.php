@@ -61,7 +61,7 @@ trait ParticipantFileFieldsTrait
   protected $pme;
 
   /** Generate one HTML input row for a cloud-file field. */
-  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician)
+  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     // make sure $subDir exists
@@ -109,7 +109,6 @@ trait ParticipantFileFieldsTrait
         'subDir' => $subDir,
         'fileBase' => $fileBase,
         'fileName' => $fileName,
-        'uploadPolicy' => $policy,
         'participantFolder' => $participantFolder,
         'filesAppLink' => $filesAppLink,
         'downloadLink' => $downloadLink,
