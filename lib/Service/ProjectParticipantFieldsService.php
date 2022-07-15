@@ -642,7 +642,7 @@ class ProjectParticipantFieldsService
       // perhaps double encoded, try ...
       $options = json_decode($options, true);
     }
-    if (is_string($values) && !empty($values) && empty($options)) {
+    if (is_string($values) && $values != '[]' && !empty($values) && empty($options)) {
       $options = [
         array_merge(
           $this->dataOptionPrototype(),
