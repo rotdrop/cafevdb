@@ -48,6 +48,7 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -58,6 +59,15 @@ use OCA\CAFEVDB\Constants;
 /**
  * Listen to changes to the configured participant-field cloud-folder
  * directories and update the DB contents accordingly.
+ *
+ * Difficult to distinguish plain file an directory creation.
+ *
+ * mkdir() emits create, write
+ *
+ * touch() emits touch, create, write
+ *
+ * The file-type of the node of the Event is also false in this case. Even
+ * mkdir will present us a NonExistingFile
  *
  */
 class ParticipantFieldCloudFolderListener implements IEventListener
@@ -108,6 +118,23 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    * Per request cache for the Before... and ... events
    */
   private $fieldData = [];
+
+  /**
+   * @var array<int, string>
+   *
+   * To distinguish mkdir from file creation we listen on touched and create
+   * events.
+   *
+   * - touch with non-existing file-node
+   *   attempt to create a file
+   *
+   * - touch with existing node
+   *   ignore
+   *
+   * - create without preceding touch
+   *   attempt to create a directory
+   */
+  private $touchEvents = [];
 
   public function __construct(IAppContainer $appContainer)
   {
@@ -257,7 +284,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             }
             if (!empty($field)) {
               /** @var Entities\ProjectParticipantField $field */
-              if ($field->getDataType() != FieldType::CLOUD_FOLDER) {
+              if (!self::isHandledField($field)) {
                 $this->fields[$flatCriterion] = null;
               }
             }
@@ -287,26 +314,29 @@ class ParticipantFieldCloudFolderListener implements IEventListener
           }
 
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
-            /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-            $fieldDatum = $this->fieldData[$flatCriterion];
-            if (empty($fieldDatum)) {
-              $criterion = $criteria[$key];
-              $musician = $this->getDatabaseRepository(Entities\Musician::class)->findOneBy([
-                'userIdSlug' => $criterion['musician.userIdSlug']
-              ]);
-              $project = $field->getProject();
-              $dataOption = $field->getDataOption();
-              $fieldDatum = (new Entities\ProjectParticipantFieldDatum)
-                ->setProject($project)
-                ->setMusician($musician)
-                ->setField($field)
-                ->setDataOption($dataOption);
+            if ($field->getDataType() == FieldType::CLOUD_FOLDER) {
+              /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+              $fieldDatum = $this->fieldData[$flatCriterion];
+              if (empty($fieldDatum)) {
+                $criterion = $criteria[$key];
+                $musician = $this->getDatabaseRepository(Entities\Musician::class)->findOneBy([
+                  'userIdSlug' => $criterion['musician.userIdSlug']
+                ]);
+                $project = $field->getProject();
+                $dataOption = $field->getDataOption();
+                $fieldDatum = (new Entities\ProjectParticipantFieldDatum)
+                  ->setProject($project)
+                  ->setMusician($musician)
+                  ->setField($field)
+                  ->setDataOption($dataOption);
+              }
+              $files = json_decode($fieldDatum->getOptionValue(), true);
+              $files[] = $baseName;
+              sort($files);
+              $fieldDatum->setOptionValue(json_encode($files));
+              $this->persist($fieldDatum);
+            } else { // CLOUD_FILE
             }
-            $files = json_decode($fieldDatum->getOptionValue(), true);
-            $files[] = $baseName;
-            sort($files);
-            $fieldDatum->setOptionValue(json_encode($files));
-            $this->persist($fieldDatum);
           }
         }
       }
@@ -338,16 +368,19 @@ class ParticipantFieldCloudFolderListener implements IEventListener
           }
 
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
-            /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-            $fieldDatum = $this->fieldData[$flatCriterion] ?? null;
-            if (!empty($fieldDatum)) {
-              $files = json_decode($fieldDatum->getOptionValue(), true);
-              Util::unsetValue($files, $baseName);
-              if (empty($files)) {
-                $this->remove($fieldDatum);
-              } else {
-                $fieldDatum->setOptionValue(json_encode($files));
+            if ($field->getDataType() == FieldType::CLOUD_FOLDER) {
+              /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+              $fieldDatum = $this->fieldData[$flatCriterion] ?? null;
+              if (!empty($fieldDatum)) {
+                $files = json_decode($fieldDatum->getOptionValue(), true);
+                Util::unsetValue($files, $baseName);
+                if (empty($files)) {
+                  $this->remove($fieldDatum);
+                } else {
+                  $fieldDatum->setOptionValue(json_encode($files));
+                }
               }
+            } else { // CLOUD_FILE
             }
           }
         }
@@ -377,6 +410,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return null;
     }
     return substr($path, strlen($folderPrefix));
+  }
+
+  private static function isHandledField(Entities\ProjectParticipantField $field)
+  {
+    return $field->getDataType() == FieldType::CLOUD_FOLDER
+      || ($field->getDataType() == FieldType::CLOUD_FILE && $field->getMultiplicity() !== FieldMultiplicity::SIMPLE);
   }
 
   public function logger()
