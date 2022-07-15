@@ -757,9 +757,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function debugPrintValues($oldValues, $changed, $newValues, $onlyKeys = null, $prefix = null)
   {
     $prefix = $prefix ? strtoupper($prefix) . ' ' : '';
-    $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 3);
-    $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 3);
-    $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 3);
+    $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 1);
+    $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 1);
+    $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 1);
   }
 
   /**
@@ -2413,11 +2413,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * Be noisy if debugging is enabled. Debug can be switched on and
    * off in the user interface if export-mode is enabled.
    */
-  protected function debug(string $message, array $context = [], $shift = 2) {
+  protected function debug(string $message, array $context = [], $shift = 0) {
+    ++$shift;
     if ($this->debugRequests) {
-      $this->logInfo($message, $context, $shift + 1);
+      $this->logInfo($message, $context, $shift);
     } else {
-      $this->logDebug($message, $context, $shift + 1);
+      $this->logDebug($message, $context, $shift);
     }
   }
 
