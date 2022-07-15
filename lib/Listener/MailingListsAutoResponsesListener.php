@@ -30,6 +30,7 @@ use OCP\Files\Events\Node\NodeCopiedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\Files\Events\Node\NodeDeletedEvent;
 use OCP\Files\Events\Node\NodeTouchedEvent;
+use OCP\Files\Events\Node\NodeCreatedEvent;
 use OCP\IUser;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -53,7 +54,14 @@ class MailingListsAutoResponsesListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const EVENT = [ NodeRenamedEvent::class, NodeCopiedEvent::class, NodeWrittenEvent::class, NodeDeletedEvent::class, NodeTouchedEvent::class ];
+  const EVENT = [
+    NodeRenamedEvent::class,
+    NodeCopiedEvent::class,
+    NodeWrittenEvent::class,
+    NodeDeletedEvent::class,
+    NodeTouchedEvent::class,
+    NodeCreatedEvent::class,
+  ];
 
   const PROJECTS = MailingListsService::TEMPLATE_TYPE_PROJECTS;
   const ANNOUNCEMENTS = MailingListsService::TEMPLATE_TYPE_ANNOUNCEMENTS;
@@ -101,6 +109,7 @@ class MailingListsAutoResponsesListener implements IEventListener
         /** @var NodeCopiedEvent $event */
         $nodes[self::ADD_KEY] = $event->getTarget();
         break;
+      case NodeCreatedEvent::class:
       case NodeTouchedEvent::class:
         /** @var NodeTouchedEvent $event */
         $nodes[self::ADD_KEY] = $event->getNode();
