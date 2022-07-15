@@ -67,7 +67,13 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   protected $oldContent;
 
   /** @var bool */
+  protected $nothingToUndo;
+
+  /** @var bool */
   protected $gracefully;
+
+  /** @var bool */
+  protected $mkdir;
 
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
@@ -78,13 +84,18 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    * run which is then simply replaced.
    *
    * @param bool $gracefully Do not throw if folder already exists
+   *
+   * @param bool $mkdir Whether or not to create missing parent
+   * directories. However, even if set to \false a regular which is in the way
+   * will be removed.
    */
-  public function __construct($name, string $content, ?string $replacableContent = null, bool $gracefully = false)
+  public function __construct($name, string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
   {
     $this->name = $name;
     $this->content = $content;
     $this->replacableContent = $replacableContent;
     $this->gracefully = $gracefully;
+    $this->mkdir = $mkdir;
     $this->reset();
   }
 
@@ -113,8 +124,13 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
       throw new \Exception('Cannot create the root-node.');
     }
 
+    if (!$this->mkdir && empty($this->userStorage->get(dirname($this->name)))) {
+      $this->nothingToUndo = true;
+      return;
+    }
+
     // Make sure the dirname($name) exists. This will also NOT be undone.
-    $prefix = array_slice($components, 0, count($components)-1);
+    $prefix = array_slice($components, 0, count($components) - 1);
     $this->userStorage->ensureFolderChain($prefix);
 
     $content = trim($this->content);
@@ -177,6 +193,9 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 
   /** {@inheritdoc} */
   public function undo() {
+    if ($this->nothingToUndo) {
+      return;
+    }
     if (empty($this->oldContent)) {
       $this->userStorage->delete($this->name);
       if (!empty($this->renamedName)) {
@@ -192,6 +211,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   {
     $this->renamedName = null;
     $this->oldContent = null;
+    $this->nothingToUndo = false;
   }
 }
 
