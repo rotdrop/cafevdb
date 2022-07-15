@@ -79,7 +79,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    *
    * @param bool $gracefully Do not throw if folder already exists
    */
-  public function __construct($name, string $content, ?string $replacableContent, bool $gracefully = false)
+  public function __construct($name, string $content, ?string $replacableContent = null, bool $gracefully = false)
   {
     $this->name = $name;
     $this->content = $content;
