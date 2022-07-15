@@ -100,11 +100,11 @@ abstract class AbstractMigration implements IMigration
           }
           $statement->execute();
         }
-        if ($connection->getTransactionNestingLevel() > 0) {
+        if ($connection->isTransactionActive()) {
           $connection->commit();
         }
       } catch (\Throwable $t) {
-        if ($connection->getTransactionNestingLevel() > 0) {
+        if ($connection->isTransactionActive()) {
           try {
             $connection->rollBack();
           } catch (\Throwable $t2) {

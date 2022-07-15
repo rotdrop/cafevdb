@@ -105,11 +105,11 @@ class FillEncryptedFileOwners extends AbstractMigration
         }
 
       }
-      if ($this->entityManager->getTransactionNestingLevel() > 0) {
+      if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->commit();
       }
     } catch (\Throwable $t) {
-      if ($this->entityManager->getTransactionNestingLevel() > 0) {
+      if ($this->entityManager->isTransactionActive()) {
         try {
           $this->entityManager->rollback();
         } catch (\Throwable $t2) {
