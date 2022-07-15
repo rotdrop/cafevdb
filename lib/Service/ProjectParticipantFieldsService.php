@@ -969,9 +969,14 @@ class ProjectParticipantFieldsService
   public function handleChangeFieldTooltip(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip)
   {
     // check if we have to do something
-    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+    $isHandledField = $field->getDataType() == DataType::CLOUD_FOLDER
+      || ($field->getDataType() == DataType::CLOUD_FILE && $field->getMultiplicity() != Multiplicity::SIMPLE);
+
+    if (!$isHandledField) {
       return;
     }
+
+    $mkdir = $field->getDataType() != DataType::CLOUD_FILE;
 
     $oldReadMe = !empty($oldTooltip) ? (new HtmlToMarkDown)->convert($oldTooltip) : null;
     $newReadMe = !empty($newTooltip) ? (new HtmlToMarkDown)->convert($newTooltip) : null;
@@ -987,6 +992,7 @@ class ProjectParticipantFieldsService
             content: $newReadMe,
             replacableContent: $oldReadMe,
             gracefully: true,
+            mkdir: $mkdir,
           )
         );
     }
