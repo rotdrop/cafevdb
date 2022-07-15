@@ -61,6 +61,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private const ADD_KEY = 'add';
   private const DEL_KEY = 'remove';
 
+  private const PROJECT_YEAR_PART = 0;
+  private const PROJECT_NAME_PART = 1;
+  private const USER_ID_PART = 3;
+  private const FIELD_NAME_PART = 4;
+  private const BASE_NAME_PART = 5;
+
   /** @var IUser */
   private $user;
 
@@ -159,22 +165,31 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return;
     }
 
+    $this->logInfo('NODES SO FAR ' . print_r($nodes, true));
+
     // ok now something remains, get project-name and musician user-id
     $criteria = [];
     foreach ($nodes as $key => $nodePath) {
       $parts = explode(Constants::PATH_SEP, trim($nodePath, Constants::PATH_SEP));
-      $projectYear = $parts[0];
-      $projectName = $parts[1];
-      $userIdSlug = $parts[3];
-      $fieldName = $parts[4];
-      $nodes[$key] = $parts[5];
+      $baseName = $part[self::BASE_NAME_PART] ?? null;
+      if (empty($baseName)) {
+        // only parts inside the considered folder are relevant. This also
+        // helps to get out-of-the-way of renamed fields actions
+        unset($nodes[$key]);
+        continue;
+      }
+      $nodes[$key] = $baseName;
+
       $criteria[$key] = [
-        'field.name' => $fieldName,
-        'project.year' => $projectYear,
-        'project.name' => $projectName,
-        'musician.userIdSlug' => $userIdSlug,
+        'field.name' => $parts[self::FIELD_NAME_PART],
+        'project.year' => $parts[self::PROJECT_YEAR_PART],
+        'project.name' => $parts[self::PROJECT_NAME_PART],
+        'musician.userIdSlug' => $parts[self::USER_ID_PART],
       ];
       $flatCriteria[$key] = implode(':', $criteria[$key]);
+    }
+    if (empty($nodes)) {
+      return;
     }
 
     $this->entityManager = $this->appContainer->get(EntityManager::class);
