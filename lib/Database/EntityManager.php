@@ -183,6 +183,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var UndoableRunQueue */
   protected $preCommitActions;
 
+  /** @var UndoableRunQueue */
+  protected $postCommitActions;
+
   /** @var IEventDispatcher */
   protected $eventDispatcher;
 
@@ -214,6 +217,7 @@ class EntityManager extends EntityManagerDecorator
 
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
+    $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
 
     $this->bind();
     if (!$this->bound()) {
@@ -327,6 +331,7 @@ class EntityManager extends EntityManagerDecorator
   {
     $this->preFlushActions->clearActionQueue();
     $this->preCommitActions->clearActionQueue();
+    $this->postCommitActions->clearActionQueue();
     $this->bind();
   }
 
@@ -832,16 +837,6 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  public function isTransactionActive()
-  {
-    return $this->entityManager->getConnection()->isTransactionActive();
-  }
-
-  public function getTransactionNestingLevel()
-  {
-    return $this->entityManager->getConnection()->getTransactionNestingLevel();
-  }
-
   public function columnName($propertyName)
   {
     //return $this->getConfiguration()->getNamingStrategy()->propertyToColumnName($propertyName);
@@ -927,10 +922,11 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * Register a pre-commit action and optionally an associated
-   * undo-action. The actions are run after all data-base operation
-   * have completed just before the final commit step. If the action
-   * succeeds, then its $undoAction will be registered for the case
-   * that the final commit throws an exception. In this case all
+   * undo-action. The actions are run after the currently active --
+   * potentially nested -- transaction is committed.
+   *
+   * If the action succeeds, then its $undoAction will be registered for the
+   * case that the commit throws an exception. In this case all
    * undo-actions will be executed in reverse order.
    *
    * In case of an error $action must throw an \Exception, its return
@@ -963,24 +959,131 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Explicitly execute the registered actions in case that the order
    * of execution matters.
+   *
+   * @throws Exceptions\UndoableRunQueueException
    */
   public function executePreCommitActions()
   {
     $this->preCommitActions->executeActions();
   }
 
-  public function commit()
+  /**
+   * Register a post-commit action to be executed after the final data-base
+   * commit succeeded, that is, the execution is post-poned until after
+   * successful commit of the outermost transaction.
+   *
+   * Note that undo-actions are not taken into account, even
+   * if the registered "Undoables" have an undo-facility, this will never get
+   * executed.
+   *
+   * The execution of the corresponding run-queue is wrapped into a catch-all
+   * block, any failing action may be logged but will not hinder the execution
+   * of the other actions.
+   *
+   * @return UndoableRunQueue  Return the run-queue for  easy chaining
+   * via UndoableRunQueue::register().
+   */
+  public function registerPostCommitAction($action):UndoableRunQueue
+  {
+    if (is_callable($action)) {
+      $this->postCommitActions->register(new GenericUndoable($action, $undo));
+    } else if ($action instanceof IUndoable) {
+      $this->postCommitActions->register($action);
+    } else  {
+      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
+    return $this->postCommitActions;
+  }
+
+  /**
+   * Explicitly execute the registered post-commit actions. These cannot be undone.
+   *
+   * @return bool The execution status of the post-commit run-queue. \false on
+   * error, \true otherwise.
+   */
+  public function executePostCommitActions():bool
+  {
+    return $this->postCommitActions->executeActions(gracefully: true);
+  }
+
+  /**
+   * @see UndoableRunQueue::getRunQueueExceptions()
+   */
+  public function getPostCommitExceptions():array
+  {
+    return $this->postCommitActions->getRunQueueException();
+  }
+
+  /**
+   * Return the transaction status of the underlying DBAL connection.
+   *
+   * @see \Doctrine\DBAL\Connection::isTransactionActive()
+   *
+   * @return bool
+   */
+  public function isTransactionActive():bool
+  {
+    return $this->entityManager->getConnection()->isTransactionActive();
+  }
+
+  /**
+   * Return the transaction nesting level of the underlying DBAL connection.
+   *
+   * @see \Doctrine\DBAL\Connection::getTransactionNestingLevel()
+   *
+   * @return int
+   */
+  public function getTransactionNestingLevel():int
+  {
+    return $this->entityManager->getConnection()->getTransactionNestingLevel();
+  }
+
+  /**
+   * Commit the currently pending transaction in the following order:
+   *
+   * - any left-over pre-flush actions are executed
+   * - the pending pre-commit actions are executed
+   * - the transaction is committed
+   * - if this was the outer-most transaction, then the post-commit actions
+   *   are executed
+   *
+   * @return bool The execution status of the post-commit run-queue if
+   * that has been executed, otherwise \true.
+   *
+   * @see EntityManager::getTransactionNestingLevel()
+   * @see EntityManager::registerPreFlushAction()
+   * @see EntityManager::registerPreCommintAction()
+   * @see EntityManager::registerPostCommitAction()
+   *
+   * @throws Exceptions\UndoableRunQueueException
+   */
+  public function commit():bool
   {
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
+    // execute all pre-commit actions
     $this->executePreCommitActions();
     parent::commit();
+    if (!$this->isTransactionActive()) {
+      // execute non-undoable actions after the final commit succeeded.
+      return $this->executePostCommitActions();
+    }
+    return true;
   }
 
+  /**
+   * Rollback the currently failed transactions, afterwards executed the
+   * undo-queues of the callback-queues:
+   *
+   * 1. rollback
+   * 2. run undo-actions of the pre-commit queue
+   * 3. run undo-actions of the pre-flush queue
+   */
   public function rollback()
   {
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+    // the post-commit actions cannot be undone
     // undo does not throw, it just logs exceptions
     $this->preCommitActions->executeUndo();
     // undo does not throw, it just logs exceptions
@@ -1008,6 +1111,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Explicitly execute the registered actions in case that the order
    * of execution matters.
+   *
+   * @throws Exceptions\UndoableRunQueueException
    */
   public function executePreFlushActions()
   {
