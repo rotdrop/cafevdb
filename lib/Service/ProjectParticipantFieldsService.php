@@ -669,7 +669,7 @@ class ProjectParticipantFieldsService
       if ($trimInactive && !empty($option['deleted'])) {
         continue;
       }
-      $result[$option['key']] = $option;
+      $result[(string)$option['key']] = $option;
     }
     if ($addProto) {
       $result[$protoType['key']] = $protoType;
