@@ -86,7 +86,7 @@ trait ConfigTrait
 
   public function logger():ILogger
   {
-    return $this->configService->logger() ?? $this->logger;
+    return $this->configService ? $this->configService->logger() : $this->logger;
   }
 
   protected function appContainer():IAppContainer
