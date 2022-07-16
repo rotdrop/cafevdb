@@ -56,8 +56,14 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+
 use OCA\CAFEVDB\Storage\UserStorage;
 
+use OCA\CAFEVDB\Common\UndoableFileReplace;
+use OCA\CAFEVDB\Common\UndoableFileRemove;
+use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
 
@@ -139,6 +145,15 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var ProjectService */
+  private $projectService;
+
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
+
+  /** @var UserStorage */
+  private $userStorage;
+
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
 
@@ -149,16 +164,22 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $musiciansRepository;
 
   /**
-   * @var array<int, Entities\ProjectParticipantField>
+   * @var array<string, Entities\ProjectParticipantField>
    * Per request cache for the Before... and ... events
    */
   private $fields = [];
 
   /**
-   * @var array<int, Entities\ProjectParticipantFieldDatum>
+   * @var array<string, Entities\ProjectParticipantFieldDatum>
    * Per request cache for the Before... and ... events
    */
   private $fieldData = [];
+
+  /**
+   * @var array<int, array<string, Entities\ProjectParticipantFieldDataOption> >
+   * Per request cache for field-options by file-name.
+   */
+  private $fieldOptionsByFileName = [];
 
   /**
    * @var array<string, Entities\Musician>
@@ -313,29 +334,49 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     $this->initializeDatabaseAccess();
 
+    $throw = null;
+    $rollBack = false;
+    $this->entityManager->beginTransaction();
     try {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
       $key = self::ADD_KEY;
       if (isset($nodes[$key])) {
         $node = $nodes[$key];
-        $this->logInfo('NODE ' . print_r($node, true));
         $baseName = $node[self::NODE_BASE_NAME];
         $criterion = $criteria[$key];
         /** @var Entities\ProjectParticipantField $field */
         $field = $this->getField($criterion);
         if (!empty($field)) { // can only do something if the field exists
-
-          if ($checkOnly && empty($baseName) && $node[self::NODE_TYPE] == Files\FileInfo::TYPE_FILE) {
-            // disallow creating files with conflicting name
-            $message = $this->l->t('"%1$s" belongs to the participant-field "%2$s" and must be a folder, your are trying to create a file (%3$s).', [
-              $node[self::NODE_FULL_PATH],
-              $field->getName(),
-              $eventClass,
-            ]);
-            $hint = $message; // perhaps we want to change this ...
-            // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
-            throw new \OCP\HintException($message, $hint);
+          $fieldType = $field->getDataType();
+          if ($checkOnly) {
+            if (empty($baseName)) {
+              if ($node[self::NODE_TYPE] == Files\FileInfo::TYPE_FILE) {
+                // disallow creating files with conflicting name
+                $message = $this->l->t('"%1$s" belongs to the participant-field "%2$s" and must be a folder, your are trying to create a file (%3$s).', [
+                  $node[self::NODE_FULL_PATH],
+                  $field->getName(),
+                  $eventClass,
+                ]);
+                $hint = $message; // perhaps we want to change this ...
+                // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
+                throw new \OCP\HintException($message, $hint);
+              }
+            } else { // baseName given
+              if ($fieldType == FieldType::CLOUD_FILE) {
+                // check if the name matches one of the registered options
+                $musician = $this->getMusician($criterion);
+                if (null == $this->getOptionFromFileName($baseName, $field, $musician)) {
+                  $message = $this->l->t('The current folder "%1$s" belongs to the participant-field "%2$s", but "%3$s" is not one of the registered allowed file-names.', [
+                    dirname($node[self::NODE_FULL_PATH]),
+                    $field->getName(),
+                    $node[self::NODE_FULL_PATH],
+                  ]);
+                  $hint = $message;
+                  throw new \OCP\HintException($message, $hint);
+                }
+              }
+            }
           }
 
           if (!$checkOnly && empty($baseName)) {
@@ -343,13 +384,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             $readMe = Common\Util::htmlToMarkDown($field->getTooltip());
             $path = $node[self::NODE_FULL_PATH] . Constants::PATH_SEP . Constants::README_NAME;
             $readMeGenerator = new Common\UndoableTextFileUpdate($path, $readMe, gracefully: true, mkdir: false);
-            $this->logInfo('PUT README AT ' . $path . ' ' . $readMe);
             $readMeGenerator->initialize($this->appContainer);
             $readMeGenerator->do();
           }
 
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
-            if ($field->getDataType() == FieldType::CLOUD_FOLDER) {
+            if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
               if (empty($fieldDatum)) {
@@ -368,6 +408,52 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               $fieldDatum->setOptionValue(json_encode($files));
               $this->persist($fieldDatum);
             } else { // CLOUD_FILE
+              $musician = $this->getMusician($criterion);
+              $fieldOption = $this->getOptionFromFileName($baseName, $field, $musician);
+              $fieldData = $fieldOption->getMusicianFieldData($musician);
+              $folderName = dirname($node[self::NODE_FULL_PATH]);
+              $userStorage = $this->getUserStorage();
+
+              $projectService = $this->getProjectService();
+              $finalFileName = $projectService->participantFilename($fieldOption->getLabel(), $field->getProject(), $musician);
+              $finalBaseName = $finalFileName . '.' . pathinfo($baseName, PATHINFO_EXTENSION);
+
+              /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+              foreach ($fieldData as $fieldDatum) {
+                $oldBaseName = $fieldDatum->getOptionValue();
+                if ($oldBaseName !== $baseName) {
+                  $this->entityManager->registerPreCommitAction(
+                    new UndoableFileRemove($folderName . Constants::PATH_SEP . $oldBaseName, gracefully: true)
+                  );
+                }
+              }
+              if ($fieldData->count() !== 1) {
+                foreach ($fieldData as $fieldDatum) {
+                  $this->remove($fieldDatum);
+                }
+                $project = $field->getProject();
+                $fieldDatum = new Entities\ProjectParticipantFieldDatum;
+                $fieldDatum->setField($field)
+                  ->setDataOption($fieldOption)
+                  ->setMusician($musician)
+                  ->setProject($project);
+                $field->getFieldData()->add($fieldDatum);
+                $project->getParticipantFieldsData()->add($fieldDatum);
+                $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+              } else {
+                $fieldDatum = $fieldData->first();
+              }
+              $fieldDatum->setOptionValue($finalBaseName);
+              $this->persist($fieldDatum);
+              if ($finalBaseName != $baseName) {
+                $this->entityManager->registerPreCommitAction(
+                  new UndoableFileRename(
+                    $folderName . Constants::PATH_SEP . $baseName,
+                    $folderName . Constants::PATH_SEP . $finalBaseName,
+                    gracefully: true
+                  )
+                );
+              }
             }
           }
         }
@@ -425,17 +511,35 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 }
               }
             } else { // CLOUD_FILE
+              $musician = $this->getMusician($criterion);
+              $fieldOption = $this->getOptionFromFileName($baseName, $field, $musician);
+              $fieldData = $fieldOption->getMusicianFieldData($musician);
+              // just delete all field-data pointing to this option ...
+              foreach ($fieldData as $fieldDatum) {
+                $this->remove($fieldDatum, flush: true);
+                $fieldOption->getFieldData()->removeElement($fieldDatum);
+                $field->getFieldData()->removeElement($fieldDatum);
+                // $field->getProject()->getParticipantFieldsData()->removeElement($fieldDatum);
+                // $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
+              }
             }
           }
         }
       }
       $this->flush();
-      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+      $this->entityManager->commit();
     } catch (\OCP\HintException $e) {
-      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
-      throw $e;
+      $throw = $e;
+      $rollBack = true;
     } catch (\Throwable $t) {
       $this->logException($t, 'Unable to update field-data for ' . print_r($flatCriteria, true) . '.');
+      $rollBack = true;
+    } finally {
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+      if ($rollBack) {
+        $this->entityManager->rollback();
+      }
+      !empty($throw) && throw $throw;
     }
   }
 
@@ -555,6 +659,49 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     $this->fieldsRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
     $this->fieldDataRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class);
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+  }
+
+  private function getProjectService():ProjectService
+  {
+    if (empty($this->projectService)) {
+      $this->projectService = $this->appContainer->get(ProjectService::class);
+    }
+    return $this->projectService;
+  }
+
+  private function getParticipantFieldsService():ProjectParticipantFieldsService
+  {
+    if (empty($this->participantFieldsService)) {
+      $this->participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
+    }
+    return $this->participantFieldsService;
+  }
+
+  private function getUserStorage():UserStorage
+  {
+    if (empty($this->userStorage)) {
+      $this->userStorage = $this->appContainer->get(UserStorage::class);
+    }
+    return $this->userStorage;
+  }
+
+  private function getOptionFromFileName(
+    string $path
+    , Entities\ProjectParticipantField $field
+    , Entities\Musician $musician
+  ):?Entities\ProjectParticipantFieldDataOption {
+    $pathInfo = pathinfo($path);
+    $extension = $pathInfo['extension'];
+    $fileName = $pathInfo['filename'];
+    if (empty($this->fieldOptionsByFileName[$field->getId()][$fileName])) {
+      // try first the literal file-name
+      $projectService = $this->getProjectService();
+      $musicianPostfix = $projectService->participantFilename('', $field->getProject(), $musician);
+      $labelPrefix = substr($fileName, 0, strpos($fileName, $musicianPostfix));
+      $option = $field->getOptionByLabel($labelPrefix);
+      $this->fieldOptionsByFileName[$field->getId()][$fileName] = $option;
+    }
+    return $this->fieldOptionsByFileName[$field->getId()][$fileName];
   }
 }
 
