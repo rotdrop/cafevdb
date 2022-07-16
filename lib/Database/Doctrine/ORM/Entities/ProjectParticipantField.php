@@ -404,6 +404,18 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
+   * Filter field-data by musician.
+   *
+   * @param Musician $musician
+   */
+  public function getMusicianFieldData(Musician $musician):Collection
+  {
+    return $this->fieldData->matching(
+      DBUtil::criteriaWhere([ 'musician' => $musician ])
+    );
+  }
+
+  /**
    * Return the number of data items associated with this field.
    *
    * @return int
