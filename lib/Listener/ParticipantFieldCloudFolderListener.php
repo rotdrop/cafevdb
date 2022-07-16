@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright , 2021, 2022,  Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Listener;
@@ -26,18 +27,22 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files;
+use OCP\Files\Node as FileSystemNode;
 use OCP\Files\Folder as CloudFolder;
 use OCP\Files\File as CloudFile;
+use OCP\Files\FileInfo;
 use OCP\Files\Events\Node\NodeCopiedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\Files\Events\Node\NodeDeletedEvent;
 use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\Files\Events\Node\NodeCreatedEvent;
+use OCP\Files\Events\Node\FolderCreatedEvent;
 use OCP\Files\Events\Node\BeforeNodeCopiedEvent;
 use OCP\Files\Events\Node\BeforeNodeRenamedEvent;
 use OCP\Files\Events\Node\BeforeNodeDeletedEvent;
 use OCP\Files\Events\Node\BeforeNodeTouchedEvent;
 use OCP\Files\Events\Node\BeforeNodeCreatedEvent;
+use OCP\Files\Events\Node\BeforeFolderCreatedEvent;
 use OCP\IUser;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -53,44 +58,71 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
 
 /**
  * Listen to changes to the configured participant-field cloud-folder
  * directories and update the DB contents accordingly.
  *
- * Difficult to distinguish plain file an directory creation.
+ * Difficult to distinguish plain file an directory creation in the Before... events.
  *
- * mkdir() emits create, write
+ * The original Nextcloud state was
  *
- * touch() emits touch, create, write
+ * - mkdir
+ *   Events: Create, Write
+ * - touch
+ *   Events: Touched, if target did not exist also Create, Write, but then
+ *   the target is known to be a file
+ * - put_contents
+ *   Events: Create/Update, Write, target is known to be a file
+ * - copy
+ *   Events: Copied, Create for target, Write for target
  *
- * The file-type of the node of the Event is also false in this case. Even
- * mkdir will present us a NonExistingFile
+ * Even worse: if the target does not exists, we get a NonExistingFileNode in
+ * any case (also for operations like mkdir which clearly only can generate
+ * directories)
  *
+ * In our hacked version this is now changed to
+ *
+ * - mkdir
+ *   Events: CreateFolder, Create, Write
+ * - touch
+ *   Events: Touched, (if new also Create, Write)
+ * - put_contents
+ *   Events: Create/Update, Write
+ * - copy
+ *   Events: Copied, CreateFolder if target is folder, Create for target, Write for target
+ *
+ * The strategy is then to listen on CreateFolder and ignore the subsequent
+ * Create event. All other Create events refer to files.
  */
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  // use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [
     NodeRenamedEvent::class,
     NodeCopiedEvent::class,
     NodeDeletedEvent::class,
-    NodeTouchedEvent::class,
     NodeCreatedEvent::class,
+    FolderCreatedEvent::class,
     BeforeNodeRenamedEvent::class,
     BeforeNodeCopiedEvent::class,
     BeforeNodeDeletedEvent::class,
-    BeforeNodeTouchedEvent::class,
     BeforeNodeCreatedEvent::class,
+    BeforeFolderCreatedEvent::class,
   ];
 
   private const ADD_KEY = 'add';
   private const DEL_KEY = 'remove';
+
+  private const NODE_FULL_PATH = 'fullPath';
+  private const NODE_PARTIAL_PATH = 'path';
+  private const NODE_TYPE = 'type';
+  private const NODE_BASE_NAME = 'baseName';
 
   private const PROJECT_YEAR_PART = 0;
   private const PROJECT_NAME_PART = 1;
@@ -107,6 +139,15 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var Repositories\ProjectParticipantFieldsRepository */
+  private $fieldsRepository;
+
+  /** @var Repositories\ProjectParticipantFieldDataRepository */
+  private $fieldDataRepository;
+
+  /** @var Repositories\MusiciansRepository */
+  private $musiciansRepository;
+
   /**
    * @var array<int, Entities\ProjectParticipantField>
    * Per request cache for the Before... and ... events
@@ -120,21 +161,21 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $fieldData = [];
 
   /**
-   * @var array<int, string>
-   *
-   * To distinguish mkdir from file creation we listen on touched and create
-   * events.
-   *
-   * - touch with non-existing file-node
-   *   attempt to create a file
-   *
-   * - touch with existing node
-   *   ignore
-   *
-   * - create without preceding touch
-   *   attempt to create a directory
+   * @var array<string, Entities\Musician>
+   * Cache of musicians by userid
    */
-  private $touchEvents = [];
+  private $musicians = [];
+
+  /** @var IRootFolder */
+  private $rootFolder;
+
+  /**
+   * @var string
+   *
+   * To distinguish mkdir from file creation we listen on FolderCreated
+   * events, remember the path and ignore the subsequent Created event.
+   */
+  private $ignoreCreatedPaths = [];
 
   public function __construct(IAppContainer $appContainer)
   {
@@ -150,87 +191,100 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         $checkOnly = true;
       case NodeDeletedEvent::class:
         /** @var NodeDeletedEvent $event */
-        $nodes[self::DEL_KEY] = $event->getNode();
+        /** @var FileSystemNode $node */
+        $node = $event->getNode();
+        $nodes[self::DEL_KEY] = [
+          self::NODE_FULL_PATH => $node->getPath(),
+          self::NODE_TYPE => $node->getType(),
+        ];
         break;
       case BeforeNodeRenamedEvent::class:
         $checkOnly = true;
       case NodeRenamedEvent::class:
         /** @var NodeRenamedEvent $event */
-        $nodes[self::DEL_KEY] = $event->getSource();
-        $nodes[self::ADD_KEY] = $event->getTarget();
-        $remove = true;
-        // rename gets another NodeWrittenEvent
+        /** @var FileSystemNode $source */
+        $source = $event->getSource();
+        $nodes[self::DEL_KEY] = [
+          self::NODE_FULL_PATH => $source->getPath(),
+          self::NODE_TYPE => $source->getType(),
+        ];
+        /** @var FileSystemNode $target */
+        $target = $event->getTarget();
+        $nodes[self::ADD_KEY] = [
+          self::NODE_FULL_PATH => $target->getPath(),
+          self::NODE_TYPE => $source->getType(), // "source" to avoid NonExistingFile isssues
+        ];
+        $this->ignoreCreatedPaths[$target->getPath()] = true; // ignore the following Created Event
         break;
       case BeforeNodeCopiedEvent::class:
         $checkOnly = true;
       case NodeCopiedEvent::class:
         /** @var NodeCopiedEvent $event */
-        $nodes[self::ADD_KEY] = $event->getTarget();
+        /** @var FileSystemNode $source */
+        $source = $event->getSource();
+        /** @var FileSystemNode $target */
+        $target = $event->getTarget();
+        $nodes[self::ADD_KEY] = [
+          self::NODE_FULL_PATH => $target->getPath(),
+          self::NODE_TYPE => $source->getType(), // "source" to avoid NonExistingFile isssues
+        ];
+        $this->ignoreCreatedPaths[$target->getPath()] = true; // ignore the following Created Event
         break;
-      case BeforeNodeTouchedEvent::class:
+      case BeforeFolderCreatedEvent::class:
         $checkOnly = true;
-      case NodeTouchedEvent::class:
+      case FolderCreatedEvent::class:
         /** @var NodeTouchedEvent $event */
-        $nodes[self::ADD_KEY] = $event->getNode();
+        $path = $event->getNode()->getPath();
+        $nodes[self::ADD_KEY] = [
+          self::NODE_FULL_PATH => $path,
+          self::NODE_TYPE => FileInfo::TYPE_FOLDER,
+        ];
+        $this->ignoreCreatedPaths[$path] = true; // ignore the following Created Event
         break;
       case BeforeNodeCreatedEvent::class:
         $checkOnly = true;
       case NodeCreatedEvent::class:
-        /** @var NodeTouchedEvent $event */
-        $nodes[self::ADD_KEY] = $event->getNode();
+        /** @var NodeCreatedEvent $event */
+        $path = $event->getNode()->getPath();
+        $ignoredPath = $this->ignoreCreatedPaths[$path] ?? false;
+        unset($this->ignoreCreatedPaths[$path]);
+        if ($ignoredPath) {
+          return;
+        }
+        $nodes[self::ADD_KEY] = [
+          self::NODE_FULL_PATH => $path,
+          self::NODE_TYPE => FileInfo::TYPE_FILE,
+        ];
         break;
       default:
         return;
     }
 
-    // initialize only now in order to keep the overhead for unhandled events small
-    $this->user = $this->appContainer->get(IUserSession::class)->getUser();
-    if (empty($this->user)) {
-      return;
+    if (!$this->initialize()) {
+      return; // something went wrong
     }
 
-    $this->appName = $this->appContainer->get('appName');
-    $this->logger = $this->appContainer->get(ILogger::class);
-    $this->l = $this->appContainer->get(IL10N::class);
+    $userFolder = $this->rootFolder->getUserFolder($this->user->getUID())->getPath();
+    $projectsPath = $this->getProjectsFolderPath();
 
-    $this->configService = $this->appContainer->get(ConfigService::class);
-    if (empty($this->configService)) {
-      return;
-    }
-
-    /** @var IRootFolder $rootFolder */
-    $rootFolder = $this->appContainer->get(IRootFolder::class);
-    if (empty($rootFolder)) {
-      return;
-    }
-    $userFolder = $rootFolder->getUserFolder($this->user->getUID())->getPath();
-    $projectsPath = $userFolder . $this->getProjectsFolderPath();
-
-    foreach ($nodes as $key => $node) {
-      $nodePath = $node->getPath();
+    // strip the user-folder and match with the projects path
+    foreach ($nodes as $key => &$nodeInfo) {
+      $nodePath = self::matchPrefixDirectory($nodeInfo[self::NODE_FULL_PATH], $userFolder);
       $postFixPath = self::matchPrefixDirectory($nodePath, $projectsPath);
       if ($postFixPath === null) {
         unset($nodes[$key]);
       }
-      try {
-        $nodeType = $node->getType();
-      } catch (\OCP\Files\NotFoundException) {
-        $nodeType = ($node instanceof CloudFile) ? Files\FileInfo::TYPE_FILE : Files\FileInfo::TYPE_FOLDER;
-      }
-
-      $nodes[$key] = [
-        'fullPath' => $nodePath,
-        'path' => $postFixPath,
-        'type' => $nodeType,
-      ];
+      $nodeInfo[self::NODE_FULL_PATH] = $nodePath;
+      $nodeInfo[self::NODE_PARTIAL_PATH] = $postFixPath;
     }
     if (empty($nodes)) {
       return;
     }
+    unset($nodeInfo); // break reference
 
     $participantsFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER) . Constants::PATH_SEP;
     foreach ($nodes as $key => $nodeInfo) {
-      $nodePath = $nodeInfo['path'];
+      $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
       if (strpos($nodePath, $participantsFolder) === false) {
         unset($nodes[$key]);
       }
@@ -242,10 +296,10 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     // ok now something remains, get project-name and musician user-id
     $criteria = [];
     foreach ($nodes as $key => &$nodeInfo) {
-      $nodePath = $nodeInfo['path'];
+      $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
       $parts = explode(Constants::PATH_SEP, trim($nodePath, Constants::PATH_SEP));
-      $baseName = $part[self::BASE_NAME_PART] ?? null;
-      $nodeInfo['baseName'] = $baseName;
+      $baseName = $parts[self::BASE_NAME_PART] ?? null;
+      $nodeInfo[self::NODE_BASE_NAME] = $baseName;
 
       $criteria[$key] = [
         'field.name' => $parts[self::FIELD_NAME_PART] ?? null,
@@ -257,54 +311,25 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     }
     unset($nodeInfo); // break reference
 
-    $this->entityManager = $this->appContainer->get(EntityManager::class);
-    $fieldsRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
-    $fieldDataRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class);
+    $this->initializeDatabaseAccess();
+
     try {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-      $fields = [];
-      $fieldData = [];
-      foreach (array_keys($nodes) as $key) {
-        $flatCriterion = $flatCriteria[$key];
-        if (!isset($fieldData[$flatCriterion])) {
-          $criterion = $criteria[$key];
-          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-          if (empty($this->fieldData[$flatCriterion])) {
-            $fieldDatum = $this->fieldData[$flatCriterion] = $fieldDataRepository->findOneBy($criterion);
-          }
-          if (empty($this->fields[$flatCriterion])) {
-            if (empty($fieldDatum)) {
-              $field = $this->fields[$flatCriterion] = $fieldsRepository->findOneBy([
-                'name' => $criterion['field.name'],
-                'project.year' => $criterion['project.year'],
-                'project.name' => $criterion['project.name'],
-              ]);
-            } else {
-              $field = $this->fields[$flatCriterion] = $fieldDatum->getField();
-            }
-            if (!empty($field)) {
-              /** @var Entities\ProjectParticipantField $field */
-              if (!self::isHandledField($field)) {
-                $this->fields[$flatCriterion] = null;
-              }
-            }
-          }
-        }
-      }
 
       $key = self::ADD_KEY;
       if (isset($nodes[$key])) {
         $node = $nodes[$key];
-        $baseName = $node['baseName'];
-        $flatCriterion = $flatCriteria[$key];
+        $this->logInfo('NODE ' . print_r($node, true));
+        $baseName = $node[self::NODE_BASE_NAME];
+        $criterion = $criteria[$key];
         /** @var Entities\ProjectParticipantField $field */
-        $field = $this->fields[$flatCriterion];
+        $field = $this->getField($criterion);
         if (!empty($field)) { // can only do something if the field exists
 
-          if (empty($baseName) && $node['type'] == Files\FileInfo::TYPE_FILE) {
+          if ($checkOnly && empty($baseName) && $node[self::NODE_TYPE] == Files\FileInfo::TYPE_FILE) {
             // disallow creating files with conflicting name
             $message = $this->l->t('"%1$s" belongs to the participant-field "%2$s" and must be a folder, your are trying to create a file (%3$s).', [
-              $node['path'],
+              $node[self::NODE_FULL_PATH],
               $field->getName(),
               $eventClass,
             ]);
@@ -313,15 +338,22 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             throw new \OCP\HintException($message, $hint);
           }
 
+          if (!$checkOnly && empty($baseName)) {
+            // created the README if the field has a tooltip
+            $readMe = Common\Util::htmlToMarkDown($field->getTooltip());
+            $path = $node[self::NODE_FULL_PATH] . Constants::PATH_SEP . Constants::README_NAME;
+            $readMeGenerator = new Common\UndoableTextFileUpdate($path, $readMe, gracefully: true, mkdir: false);
+            $this->logInfo('PUT README AT ' . $path . ' ' . $readMe);
+            $readMeGenerator->initialize($this->appContainer);
+            $readMeGenerator->do();
+          }
+
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
             if ($field->getDataType() == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-              $fieldDatum = $this->fieldData[$flatCriterion];
+              $fieldDatum = $this->getFieldDatum($criterion);
               if (empty($fieldDatum)) {
-                $criterion = $criteria[$key];
-                $musician = $this->getDatabaseRepository(Entities\Musician::class)->findOneBy([
-                  'userIdSlug' => $criterion['musician.userIdSlug']
-                ]);
+                $musician = $this->getMusician($criterion);
                 $project = $field->getProject();
                 $dataOption = $field->getDataOption();
                 $fieldDatum = (new Entities\ProjectParticipantFieldDatum)
@@ -344,36 +376,48 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       $key = self::DEL_KEY;
       if (isset($nodes[$key])) {
         $node = $nodes[$key];
-        $baseName = $node['baseName'];
-        $flatCriterion = $flatCriteria[$key];
+        $baseName = $node[self::NODE_BASE_NAME];
+        $criterion = $criteria[$key];
         /** @var Entities\ProjectParticipantField $field */
-        $field = $this->fields[$flatCriterion];
-
+        $field = $this->getField($criterion);
         if (!empty($field)) { // can only do something if the field exists
-
-          if (empty($baseName) && $node['type'] == Files\FileInfo::TYPE_FOLDER) {
+          $fieldType = $field->getDataType();
+          if (empty($baseName) && $node[self::NODE_TYPE] == Files\FileInfo::TYPE_FOLDER) {
             // the folder itself must not be deleted except if the field is
             // deleted. But then the folder is deleted from the pre-commit
             // hook and thus we are inside the current commit which already
             // has deleted the field. So: if the field still exists at this
             // point the folder must not be deleted (safe it is a file)
-            $message = $this->l->t('The folder "%1$s" belongs to the participant-field "%2$s" and must not be deleted (%3$s).', [
-              $node['path'],
-              $field->getName(),
-              $eventClass,
-            ]);
-            $hint = $message;
-            // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
-            throw new \OCP\HintException($message, $hint);
+            //
+            // However, if the folder belongs to a multi-value CLOUD_FILE
+            // field then it may be deleted if there is no related field-data.
+            $preventDeletion = true;
+            if ($fieldType == FieldType::CLOUD_FILE) {
+              $musician = $this->getMusician($criterion);
+              $fieldData = $field->getMusicianFieldData($musician);
+              if ($fieldData->count() == 0) {
+                $preventDeletion = false;
+              }
+            }
+            if ($preventDeletion) {
+              $message = $this->l->t('The folder "%1$s" belongs to the participant-field "%2$s" and must not be deleted (%3$s).', [
+                $node[self::NODE_PARTIAL_PATH],
+                $field->getName(),
+                $eventClass,
+              ]);
+              $hint = $message;
+              // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
+              throw new \OCP\HintException($message, $hint);
+            }
           }
 
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
-            if ($field->getDataType() == FieldType::CLOUD_FOLDER) {
+            if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->fieldData[$flatCriterion] ?? null;
               if (!empty($fieldDatum)) {
                 $files = json_decode($fieldDatum->getOptionValue(), true);
-                Util::unsetValue($files, $baseName);
+                Common\Util::unsetValue($files, $baseName);
                 if (empty($files)) {
                   $this->remove($fieldDatum);
                 } else {
@@ -406,10 +450,11 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private static function matchPrefixDirectory($path, $folderPrefix)
   {
-    if (strpos($path, $folderPrefix) !== 0) {
-      return null;
+    $prefixLen = strlen($folderPrefix);
+    if (substr($path, 0, $prefixLen) == $folderPrefix) {
+      return substr($path, $prefixLen);
     }
-    return substr($path, strlen($folderPrefix));
+    return null;
   }
 
   private static function isHandledField(Entities\ProjectParticipantField $field)
@@ -418,9 +463,98 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       || ($field->getDataType() == FieldType::CLOUD_FILE && $field->getMultiplicity() !== FieldMultiplicity::SIMPLE);
   }
 
-  public function logger()
+  private function getMusician(array $criterion):?Entities\Musician
   {
-    return $this->logger;
+    $userIdSlug = $criterion['musician.userIdSlug'];
+    if (empty($this->musicians[$userIdSlug])) {
+      $this->musicians[$userIdSlug] = $this->musiciansRepository->findOneBy([
+        'userIdSlug' => $userIdSlug,
+      ]);
+    }
+    return $this->musicians[$userIdSlug];
+  }
+
+  static private function flattenCriterion(array $criterion)
+  {
+    return implode(':', $criterion);
+  }
+
+  private function getFieldDatum(array $criterion):?Entities\ProjectParticipantFieldDatum
+  {
+    $flatCriterion = self::flattenCriterion($criterion);
+    /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+    if (empty($this->fieldData[$flatCriterion])) {
+      $fieldDatum = $this->fieldData[$flatCriterion] = $this->fieldDataRepository->findOneBy($criterion);
+    }
+    return $fieldDatum;
+  }
+
+  private function getField(array $criterion):?Entities\ProjectParticipantField
+  {
+    $fieldCriterion = [
+      'name' => $criterion['field.name'],
+      'project.year' => $criterion['project.year'],
+      'project.name' => $criterion['project.name'],
+    ];
+    $flatFieldCriterion = self::flattenCriterion($fieldCriterion);
+    if (!isset($this->fields[$flatFieldCriterion])) { // isset() as the actual value may be null
+      $fieldDatum = $this->getFieldDatum($criterion);
+      /** @var Entities\ProjectParticipantField $field */
+      if (empty($fieldDatum)) {
+        $field = $this->fields[$flatFieldCriterion] = $this->fieldsRepository->findOneBy($fieldCriterion);
+      } else {
+        $field = $this->fields[$flatFieldCriterion] = $fieldDatum->getField();
+      }
+      if (!empty($field)) {
+        if (!self::isHandledField($field)) {
+          $this->fields[$flatFieldCriterion] = null;
+        }
+      }
+    }
+    return $this->fields[$flatFieldCriterion];
+  }
+
+  /**
+   * Do some lazy initialization in order to have a leight-weight constructor.
+   *
+   * @return bool Success status. The parent should just terminate execution
+   * if \false is returned.
+   */
+  private function initialize():bool
+  {
+    // initialize only now in order to keep the overhead for unhandled events small
+    $this->user = $this->appContainer->get(IUserSession::class)->getUser();
+    if (empty($this->user)) {
+      return false;
+    }
+
+    $this->appName = $this->appContainer->get('appName');
+    $this->logger = $this->appContainer->get(ILogger::class);
+    $this->l = $this->appContainer->get(IL10N::class);
+
+    $this->configService = $this->appContainer->get(ConfigService::class);
+    if (empty($this->configService)) {
+      return false;
+    }
+
+    /** @var IRootFolder $rootFolder */
+    $this->rootFolder = $this->appContainer->get(IRootFolder::class);
+    if (empty($this->rootFolder)) {
+      return false;
+    }
+    return true;
+  }
+
+  /** @see ParticipantFieldCloudFolderListener::initialize() */
+  private function initializeDatabaseAccess()
+  {
+    if (!empty($this->entityManager)) {
+      return;
+    }
+    $this->entityManager = $this->appContainer->get(EntityManager::class);
+    $this->fieldsRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
+    $this->fieldDataRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class);
+    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
   }
 }
 
