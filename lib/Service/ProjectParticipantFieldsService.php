@@ -25,8 +25,6 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\Files as CloudFiles;
 
-use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -928,12 +926,7 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    $readMe = $field->getTooltip();
-    if (!empty($readMe)) {
-      $readMe = (new HtmlToMarkDown)->convert($readMe);
-    } else {
-      $readMe = null;
-    }
+    $readMe = Util::htmlToMarkDown($field->getTooltip());
 
     $needsFlush = false;
 
@@ -978,8 +971,8 @@ class ProjectParticipantFieldsService
 
     $mkdir = $field->getDataType() != DataType::CLOUD_FILE;
 
-    $oldReadMe = !empty($oldTooltip) ? (new HtmlToMarkDown)->convert($oldTooltip) : null;
-    $newReadMe = !empty($newTooltip) ? (new HtmlToMarkDown)->convert($newTooltip) : null;
+    $oldReadMe = Util::htmlToMarkDown($oldTooltip);
+    $newReadMe = Util::htmlToMarkDown($newTooltip);
 
     /** @var Entities\ProjectParticipant $participant */
     foreach ($field->getProject()->getParticipants() as $participant) {
@@ -1118,6 +1111,7 @@ class ProjectParticipantFieldsService
         // We have to rename the folder which is just named after the
         // field-name.
         $type = 'folder';
+        $mkdir = true;
         break;
       case DataType::CLOUD_FILE:
         switch ($field->getMultiplicity()) {
@@ -1130,6 +1124,7 @@ class ProjectParticipantFieldsService
             // named after the option and stored in a sub-folder which is just
             // the field-name, so we have to rename to folder
             $type = 'folder';
+            $mkdir = false;
             break;
         }
         break;
@@ -1151,7 +1146,7 @@ class ProjectParticipantFieldsService
         $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
         $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
         $this->entityManager->registerPreCommitAction(
-          new UndoableFolderRename($oldPath, $newPath, true /* gracefully */)
+          new UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
         );
       } else { // 'file'
         /** @var Entities\ProjectParticipantFieldDataOption $option */
