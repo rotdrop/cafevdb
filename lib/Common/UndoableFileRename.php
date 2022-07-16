@@ -71,7 +71,6 @@ class UndoableFileRename extends AbstractFileSystemUndoable
    */
   public function __construct(?string $oldName = null, ?string $newName = null, bool $gracefully = false, ?Callable $generator = null)
   {
-    parent::__construct();
     if ((empty($oldName) || empty($newName)) && empty($generator)) {
       throw new \InvalidArgumentException('Paramteter $oldName and $newName must be non-null when the file-name generator is null.');
     }
