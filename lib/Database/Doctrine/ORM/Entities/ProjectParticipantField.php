@@ -346,6 +346,16 @@ class ProjectParticipantField implements \ArrayAccess
     });
   }
 
+  public function getOptionByLabel(string $optionLabel, bool $includeDeleted = false):?ProjectParticipantFieldDataOption
+  {
+    $criteria = [ 'label' => $optionLabel ];
+    if (!$includeDeleted) {
+      $criteria['deleted'] = null;
+    }
+    $matchingOptions = $this->dataOptions->matching(DBUtil::criteriaWhere($criteria));
+    return $matchingOptions->count() == 0 ? null : $matchingOptions->first();
+  }
+
   /**
    * Get the special option holding management data if present.
    *
