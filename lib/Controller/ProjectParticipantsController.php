@@ -101,7 +101,7 @@ class ProjectParticipantsController extends Controller {
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->projectService = $projectService;
-    $this->participantFieldsService = $participantFieldsServicer;
+    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -605,12 +605,15 @@ class ProjectParticipantsController extends Controller {
               $this->entityManager->registerPreCommitAction(
                 new UndoableTextFileUpdate(
                   basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
-                  content: readme,
+                  content: $readMe,
                   gracefully: true,
                 )
               );
             }
-            $downloadLink = $userStorage->getDownloadLink($filePath);
+            $this->entityManager->registerPreCommitAction(function() use (&$file, $filePath, $userStorage) {
+              $downloadLink = $userStorage->getDownloadLink($filePath);
+              $file['meta']['download'] = $downloadLink;
+            });
             break;
           case FieldDataType::DB_FILE:
             /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -663,7 +666,7 @@ class ProjectParticipantsController extends Controller {
             'baseName' => $pathInfo['basename'],
             'extension' => $pathInfo['extension']?:'',
             'fileName' => $pathInfo['filename'],
-            'download' => $downloadLink,
+            'download' => $downloadLink ?? null,
             'conflict' => $conflict,
             'messages' => $messages,
           ];
