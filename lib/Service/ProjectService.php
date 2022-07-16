@@ -689,7 +689,7 @@ class ProjectService
     } else {
       $userIdSlug = $musicianOrSlug;
     }
-    return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
+    return $base . '-' . Util::dashesToCamelCase($userIdSlug, true, '_-.');
   }
 
   /**
