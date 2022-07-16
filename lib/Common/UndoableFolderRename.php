@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Common;
 
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCP\Files\Folder as CloudFolder;
 
 /**
  * Rename the given paths. The target path will be created if it does
@@ -36,18 +37,28 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFolderRename extends AbstractFileSystemUndoable
 {
-  /** @var string */
+  private const UNDO_DELETE = 'delete';
+  private const UNDO_RENAME = 'rename';
+  private const UNDO_RESTORE = 'restore';
+  private const UNDO_NOTHING = 'nothing';
+
+  /** @var string|callable */
   protected $oldName;
 
-  /** @var string */
+  /** @var string|callable */
   protected $newName;
-
-  protected const GRACELESS = 0;
-  protected const GRACEFULLY_REQUESTED = 1;
-  protected const GRACEFULLY_PERFORMED = 2;
 
   /** @var int */
   protected $gracefully;
+
+  /** @var bool */
+  protected $mkdir;
+
+  /** @var string */
+  protected $undoAction;
+
+  /** @var array<int, int> */
+  protected $doneInterval;
 
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
@@ -59,11 +70,12 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    * @param bool $gracefully Do not throw if the source-folder given
    * as $oldName does not exist.
    */
-  public function __construct(string $oldName, string $newName, bool $gracefully = false)
+  public function __construct(string $oldName, string $newName, bool $gracefully = false, bool $mkdir = true)
   {
-    $this->oldName = self::normalizePath($oldName);
-    $this->newName = self::normalizePath($newName);
-    $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
+    $this->oldName = $oldName;
+    $this->newName = $newName;
+    $this->gracefully = $gracefully;
+    $this->mkdir = $mkdir;
   }
 
   /**
@@ -73,63 +85,84 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    * - if empty($to) then just delete $from
    * - if both are non empty, then rename
    */
-  protected function rename($from, $to)
-  {
-    $toComponents = explode(UserStorage::PATH_SEP, $to);
-    if (empty($toComponents)) {
-      throw new \Exception('Cannot rename to the root-node.');
-    }
-    $toPrefix = array_slice($toComponents, 0, count($toComponents)-1);
-    $this->userStorage->ensureFolderChain($toPrefix);
-
-    $fromDir = null;
-    if (!empty($from)) {
-      $fromDir = $this->userStorage->get($from);
-      if (empty($fromDir)) {
-        throw new \OCP\Files\NotFoundException(sprintf('Cannot find old directory at location "%s".', $from));
-      }
-    }
-
-    if (empty($to)) {
-      // remove the $from folder
-      if (!empty($fromDir)) {
-        $fromDir->delete();
-      }
-    } else if (!empty($fromDir)) {
-      $this->userStorage->rename($from, $to);
-    } else {
-      // otherwise just create the new folder.
-      $this->userStorage->ensureFolder($to);
-    }
-  }
-
-
-  /** {@inheritdoc} */
   public function do() {
-    try {
-      $this->rename($this->oldName, $this->newName);
-    } catch (\OCP\Files\NotFoundException $e) {
-      if ($this->gracefully === self::GRACEFULLY_REQUESTED) {
-        $this->rename(null, $this->newName);
-        $this->gracefully = self::GRACEFULLY_PERFORMED;
-      } else {
-        throw $e;
+    $startTime = $this->timeFactory->getTime();
+    if (is_callable($this->oldName)) {
+      $this->oldName = call_user_func($this->oldName);
+    }
+    $this->oldName = self::normalizePath($this->oldName);
+    if (is_callable($this->newName)) {
+      $this->newName = call_user_func($this->newName);
+    }
+    $this->newName = self::normalizePath($this->newName);
+
+    /** @var CloudFolder $oldDir */
+    $oldDir = null;
+    if (!empty($this->oldName)) {
+      $oldDir = $this->userStorage->getFolder($this->oldName);
+      if (empty($oldDir) && !$this->gracefully) {
+        throw new \OCP\Files\NotFoundException(sprintf('Cannot find old directory at location "%s".', $this->oldName));
       }
     }
+
+    if (empty($this->newName)) {
+      // delete if it exists
+      if (!empty($oldDir)) {
+        $fromDir->delete();
+        $this->undoAction = self::UNDO_RESTORE;
+      }
+    } else if (!empty($oldDir)) {
+      // rename it
+      if ($this->mkdir) {
+        $toComponents = explode(UserStorage::PATH_SEP, $this->newName);
+        if (empty($toComponents)) {
+          throw new \Exception('Cannot rename to the root-node.');
+        }
+        $toPrefix = array_slice($toComponents, 0, count($toComponents) - 1);
+        $this->userStorage->ensureFolderChain($toPrefix);
+      }
+      try {
+        $this->logInfo('RENAME');
+        $this->userStorage->rename($this->oldName, $this->newName);
+        $this->undoAction = self::UNDO_RENAME;
+      } catch (\Throwable $t) {
+        if ($this->gracefully) {
+          $this->logException($t);
+        } else {
+          throw $t;
+        }
+      }
+    } else if ($this->mkdir) {
+      // otherwise just create the new folder.
+      $this->userStorage->ensureFolder($this->newName);
+      $this->undoAction = self::UNDO_DELETE;
+    }
+
+
+    @time_sleep_until($startTime+1);
+    $endTime = $this->timeFactory->getTime();
+    $this->doneInterval = [ $startTime, $endTime ];
   }
 
   /** {@inheritdoc} */
   public function undo() {
-    if ($this->gracefully === self::GRACEFULLY_PERFORMED) {
-      $this->rename($this->newName, null);
-    } else {
-      $this->rename($this->newName, $this->oldName);
+    switch ($this->undoAction) {
+      case self::UNDO_DELETE:
+        $this->userStorage->delete($this->newName);
+        break;
+      case self::UNDO_RENAME:
+        $this->userStorage->renamew($this->newName, $this->oldName);
+        break;
+      case self::UNDO_RESTORE:
+        $this->userStorage->restore($this->oldName, $this->doneInterval);
+        break;
     }
   }
 
   /** {@inheritdoc} */
   public function reset() {
-    $this->gracefully = $this->gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
+    $this->undoAction = self::UNDO_NOTHING;
+    $this->doneInterval = null;
   }
 
 }

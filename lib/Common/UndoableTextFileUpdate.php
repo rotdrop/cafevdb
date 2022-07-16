@@ -139,7 +139,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
     /** @var FileSystemNode $existingReadMeNode */
     $existingNode = $this->userStorage->get($this->name);
     if (!empty($existingNode)) {
-      if (!$existingNode->getType() == FileInfo::TYPE_FILE) {
+      if ($existingNode->getType() != FileInfo::TYPE_FILE) {
         // garbled, rename the beast
         $this->renamedName = $this->renamedName($this->name);
         $this->userStorage->rename($this->name, $this->renamedName);
@@ -154,7 +154,8 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 
         if ($content == $oldContentHead) {
           $content = null;
-          $this->oldContent = null; // disable restore, is kept unchanged
+          $this->nothingToUndo = true;
+          return;
         } else if (!empty($replacableContent) && $oldContentHead == $replacableContent) {
           if ($separatorPos !== null) {
             $content .= substr($oldContent, $separatorPos);
@@ -201,7 +202,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
       if (!empty($this->renamedName)) {
         $this->userStorage->rename($this->renamedName, $this->name);
       }
-    } else if (!empty($this->oldContent)) {
+    } else {
       $this->userStorage->putContent($this->name, $this->oldContent);
     }
   }
