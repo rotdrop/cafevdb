@@ -32,26 +32,20 @@ use OCP\Files;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
- * Remove the given node, which must be a folder.
+ * Remove the given node, which must be a regular file.
  */
-class UndoableFolderRemove extends UndoableFileSystemNodeRemove
+class UndoableFileRemove extends UndoableFileSystemNodeRemove
 {
   /**
-   * Undoable folder remove.
+   * Undoable file remove.
    *
    * @param string|Callable $folderName
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
-   *
-   * @param bool $recursively Recursively remove folders. If not set only
-   * non-empty folders will be removed.
-   *
-   * @param string $ignoredFiles A regular expression masking out ignored
-   * files by their name in the decision whether a directory is empty or not. It defaults to ignoring all variants of README
    */
-  public function __construct($name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
+  public function __construct($name, bool $gracefully = false)
   {
-    parent::__construct($name, $gracefully, $recursively, $ignoredFiles, FileInfo::TYPE_FOLDER);
+    parent::__construct($name, $gracefully, nodeType: FileInfo::TYPE_FILE);
   }
 }
 
