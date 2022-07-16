@@ -152,8 +152,7 @@ composer: stamp.composer-core-versions
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 WRAPPER_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/wrapper-build-hash 2> /dev/null || echo)
-WRAPPER_GIT_BUILD_HASH = $(shell git rev-parse $(WRAPPER_GIT_DEPENDENCIES:%=HEAD:%)\
- | git hash-object --stdin)
+WRAPPER_GIT_BUILD_HASH = $(shell { $(WRAPPER_GIT_DEPENDENCIES:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
 
 ifneq ($(WRAPPER_PREV_BUILD_HASH), $(WRAPPER_GIT_BUILD_HASH))
 .PHONY: wrapper-build-hash
