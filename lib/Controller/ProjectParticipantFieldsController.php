@@ -269,10 +269,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -353,10 +349,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -441,10 +433,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -624,10 +612,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 

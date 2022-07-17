@@ -1238,10 +1238,6 @@ Whatever.',
     } catch (\Throwable $t)  {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to attach article "%s".', [ $pageName ]),
         $t->getCode(),
@@ -1280,10 +1276,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1319,10 +1311,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1652,11 +1640,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
-
       $status[] = [
         'id' => $id,
         'notice' => $this->l->t(
@@ -1980,10 +1963,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to create new project with name "%s".', $name),
         $t->getCode(),
@@ -2140,10 +2119,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Failed to remove project "%s", id "%d".',
                     [ $project['name'], $project['id'] ]),
@@ -2228,10 +2203,6 @@ Whatever.',
     } catch (\Throwable $t)  {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
         $t->getCode(),
@@ -2378,10 +2349,6 @@ Whatever.',
       $project->setName($oldName); // needed ?
       $project->setYear($oldYear); // needed ?
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
 
       throw new \Exception(
         $this->l->t('Failed to rename project "%s", id "%d" to new name "%s".',

@@ -34,6 +34,7 @@ use OCP\EventDispatcher\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
@@ -162,6 +163,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $showSoftDeleted;
 
+  /** @var bool */
+  private $reopenAfterRollback;
+
   /** @var IL10N */
   private $l;
 
@@ -180,7 +184,10 @@ class EntityManager extends EntityManagerDecorator
   /** @var UndoableRunQueue */
   protected $preFlushActions;
 
-  /** @var UndoableRunQueue */
+  /**
+   * @var array<int, UndoableRunQueue>
+   * Pre-commit actions by translation level.
+   */
   protected $preCommitActions;
 
   /** @var UndoableRunQueue */
@@ -216,8 +223,10 @@ class EntityManager extends EntityManagerDecorator
     $this->l = $l10n;
 
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
-    $this->preCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
+    $this->preCommitActions = [];
     $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
+
+    $this->reopenAterRollback = true;
 
     $this->bind();
     if (!$this->bound()) {
@@ -330,7 +339,7 @@ class EntityManager extends EntityManagerDecorator
   public function reopen()
   {
     $this->preFlushActions->clearActionQueue();
-    $this->preCommitActions->clearActionQueue();
+    $this->preCommitActions = [];
     $this->postCommitActions->clearActionQueue();
     $this->bind();
   }
@@ -923,7 +932,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Register a pre-commit action and optionally an associated
    * undo-action. The actions are run after the currently active --
-   * potentially nested -- transaction is committed.
+   * potentially nested -- transaction is committed. A commit will only
+   * execute the actions registered at the current transaction nesting level.
    *
    * If the action succeeds, then its $undoAction will be registered for the
    * case that the commit throws an exception. In this case all
@@ -946,25 +956,41 @@ class EntityManager extends EntityManagerDecorator
    */
   public function registerPreCommitAction($action, ?Callable $undo = null):UndoableRunQueue
   {
+    if (!$this->isTransactionActive()) {
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+    }
+    $level = $this->getTransactionNestingLevel() - 1;
+    if (empty($this->preCommitActions[$level])) {
+      $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
+    }
+    $actions = $this->preCommitActions[$level];
     if (is_callable($action)) {
-      $this->preCommitActions->register(new GenericUndoable($action, $undo));
+      $actions->register(new GenericUndoable($action, $undo));
     } else if ($action instanceof IUndoable) {
-      $this->preCommitActions->register($action);
+      $actions->register($action);
     } else  {
       throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
-    return $this->preCommitActions;
+    return $actions;
   }
 
   /**
-   * Explicitly execute the registered actions in case that the order
-   * of execution matters.
+   * Explicitly execute the registered actions in case that the order of
+   * execution matters. Only the pre-commit actions which were registered at
+   * the current or a higher level will be executed.
    *
    * @throws Exceptions\UndoableRunQueueException
    */
   public function executePreCommitActions()
   {
-    $this->preCommitActions->executeActions();
+    if (!$this->isTransactionActive()) {
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+    }
+    $level = $this->getTransactionNestingLevel() - 1;
+    $actions = $this->preCommitActions[$level] ?? null;
+    if (!empty($actions) && !$actions->active()) {
+      $actions->executeActions();
+    }
   }
 
   /**
@@ -1039,6 +1065,20 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Start a new transaction.
+   */
+  public function beginTransaction()
+  {
+    $level = $this->getTransactionNestingLevel();
+    parent::beginTransaction();
+    if (empty($this->preCommitActions[$level])) {
+      $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
+    } else {
+      $this->preCommitActions[$level]->clearActionQueue();
+    }
+  }
+
+  /**
    * Commit the currently pending transaction in the following order:
    *
    * - any left-over pre-flush actions are executed
@@ -1056,12 +1096,13 @@ class EntityManager extends EntityManagerDecorator
    * @see EntityManager::registerPostCommitAction()
    *
    * @throws Exceptions\UndoableRunQueueException
+   * @throws ConnectionException
    */
   public function commit():bool
   {
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
-    // execute all pre-commit actions
+    // execute all pre-commit action of the current level
     $this->executePreCommitActions();
     parent::commit();
     if (!$this->isTransactionActive()) {
@@ -1076,18 +1117,30 @@ class EntityManager extends EntityManagerDecorator
    * undo-queues of the callback-queues:
    *
    * 1. rollback
-   * 2. run undo-actions of the pre-commit queue
+   * 2. run undo-actions of the pre-commit queue of the current level
    * 3. run undo-actions of the pre-flush queue
+   *
+   * @throws ConnectionException
    */
   public function rollback()
   {
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+
     // the post-commit actions cannot be undone
     // undo does not throw, it just logs exceptions
-    $this->preCommitActions->executeUndo();
-    // undo does not throw, it just logs exceptions
+    $level = $this->getTransactionNestingLevel();
+    $this->preCommitActions[$level]->executeUndo();
     $this->preFlushActions->executeUndo();
+
+    if (!$this->isTransactionActive() && $this->reopenAfterRollback) {
+      try {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      } catch (\Throable $t) {
+        $this->logException($t, 'Unable to reopen after rollback');
+      }
+    }
   }
 
   /**

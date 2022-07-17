@@ -334,10 +334,6 @@ class SepaBulkTransactionService
       $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new Exceptions\DatabaseException(
         $this->l->t('Failed to remove bulk-transaction with id %d', $bulkTransaction->getId()),
         $t->getCode(),
