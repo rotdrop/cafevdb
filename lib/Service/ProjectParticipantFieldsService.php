@@ -1155,8 +1155,8 @@ class ProjectParticipantFieldsService
           $datum = $participant->getParticipantFieldsDatum($option->getKey());
           if (!empty($datum)) {
             $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
-            $oldBaseName = $projectService->participantFilename($oldName, $project, $musician) . '.' . $extension;
-            $newBaseName = $projectService->participantFilename($newName, $project, $musician) . '.' . $extension;
+            $oldBaseName = $projectService->participantFilename($oldName, $musician) . '.' . $extension;
+            $newBaseName = $projectService->participantFilename($newName, $musician) . '.' . $extension;
             $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
             $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
             $this->entityManager->registerPreCommitAction(
@@ -1195,8 +1195,8 @@ class ProjectParticipantFieldsService
     foreach ($option->getFieldData() as $fieldDatum) {
       $musician = $fieldDatum->getMusician();
       $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
-      $oldBaseName = $projectService->participantFilename($oldLabel, $project, $musician) . '.' . $extension;
-      $newBaseName = $projectService->participantFilename($newLabel, $project, $musician) . '.' . $extension;
+      $oldBaseName = $projectService->participantFilename($oldLabel, $musician) . '.' . $extension;
+      $newBaseName = $projectService->participantFilename($newLabel, $musician) . '.' . $extension;
 
       $this->entityManager->registerPreCommitAction(
         new UndoableFileRename(

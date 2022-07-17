@@ -75,6 +75,46 @@ class MusicianService
   }
 
   /**
+   * Convert a user-id to a file-name-part avoiding "duplicate" extensions,
+   * i.e. use ClausJustusHeine.pdf instead of claus-justus.heine.pdf
+   */
+  public static function userIdSlugToFileName(string $userIdSlug):string
+  {
+    return Util::dashesToCamelCase($userIdSlug, true, '_-.');
+  }
+
+  public static function getSlugPostfix(string $userIdSlug):string
+  {
+    return '-' . self::userIdSlugToFileName($userIdSlug);
+  }
+
+  public static function slugifyFileName(string $base, string $userIdSlug):string
+  {
+    $pathInfo = pathinfo($base);
+    $fileName = $pathInfo['filename'];
+    $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
+    return $fileName . self::getSlugPostfix($userIdSlug) . '.' . $extension;
+  }
+
+  public static function isSlugifiedFileName(string $path, string $userIdSlug):bool
+  {
+    $fileName = pathinfo($path, PATHINFO_FILENAME);
+    return str_ends_with($fileName, self::getSlugPostfix($userIdSlug));
+  }
+
+  public static function unSlugifyFileName(string $path, string $userIdSlug):string
+  {
+    $pathInfo = pathinfo($base);
+    $fileName = $pathInfo['filename'];
+    $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
+    $postfix = $this->getSlugPostfix($userIdSlug);
+    if (str_ends_with($fileName, $postfix)) {
+      return substr($fileName, 0, -strlen($postfix)) . $extension;
+    }
+    return $path;
+  }
+
+  /**
    * Remove all personal data from the record in order to keep
    * project-structures intact but still honour privacy regulations.
    * This function then would have to cleanup data-base storage and

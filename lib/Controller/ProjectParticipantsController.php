@@ -455,7 +455,7 @@ class ProjectParticipantsController extends Controller {
         $userStorage->ensureFolderChain($pathChain);
         $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
         if ($dataType === FieldDataType::CLOUD_FILE) {
-          $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+          $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
         } else if (!empty($fileName)) {
           $pathChain[] = pathinfo($fileName, PATHINFO_FILENAME);
         }
@@ -466,7 +466,7 @@ class ProjectParticipantsController extends Controller {
           return self::grumble($this->l->t('Sub-directory "%s" requested, but not supported by db-storage.', $subDir));
         }
         if (!empty($uploadData['fileBase'])) {
-          $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+          $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
         } else if (!empty($fileName)) {
           $filePath = pathinfo($fileName, PATHINFO_FILENAME);
         }

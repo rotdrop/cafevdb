@@ -675,17 +675,17 @@ class ProjectService
   }
 
   /**
-   * e.g. passport-clausjustusheine.pdf
-   * e.g. passport-claus-justus-heine.pdf
+   * Avoid duplicated "extensions" in file-names, i.e. use
+   * passport-ClausJustusHeine.pdf instead of passport-claus-justus.heine.pdf
    */
-  public function participantFilename(string $base, $project, $musicianOrSlug)
+  public function participantFilename(string $base, $musicianOrSlug)
   {
     if ($musicianOrSlug instanceof Entities\Musician) {
       $userIdSlug = $this->musicianService->ensureUserIdSlug($musicianOrSlug);
     } else {
       $userIdSlug = $musicianOrSlug;
     }
-    return $base . '-' . Util::dashesToCamelCase($userIdSlug, true, '_-.');
+    return MusicianService::slugifyFileName($base, $userIdSlug);
   }
 
   /**
@@ -744,13 +744,13 @@ class ProjectService
 
     if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
       // construct the file-name from the field-name
-      $fileName = $this->participantFilename($fieldName, $fieldDatum->getProject(), $fieldDatum->getMusician());
+      $fileName = $this->participantFilename($fieldName, $fieldDatum->getMusician());
       $dirName = null;
     } else {
       // construct the file-name from the option label if non-empty or the file-name of the DB-file
       $optionLabel = $fieldOption->getLabel();
       if (!empty($optionLabel)) {
-        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getProject(), $fieldDatum->getMusician());
+        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getMusician());
       } else {
         $fileName = basename($dbFileName, '.' . $extension);
       }
@@ -829,13 +829,13 @@ class ProjectService
           $oldFilePath =
             $oldFolderPath . UserStorage::PATH_SEP
             . $subDir
-            . $this->participantFilename($nameBase, $project, $oldUserIdSlug)
+            . $this->participantFilename($nameBase, $oldUserIdSlug)
             . '.' . $extension;
 
           $newFilePath =
             $oldFolderPath . UserStorage::PATH_SEP
             . $subDir
-            . $this->participantFilename($nameBase, $project, $newUserIdSlug)
+            . $this->participantFilename($nameBase, $newUserIdSlug)
             . '.' . $extension;
 
           $this->logInfo('Try rename files ' . $oldFilePath . ' -> ' . $newFilePath);

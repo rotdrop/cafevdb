@@ -350,7 +350,7 @@ trait ParticipantFieldsTrait
               $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               $fileBase = $field->getName();
-              $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+              $fileName = $this->projectService->participantFilename($fileBase, $musician);
               $fileName .= '.' . $extension;
               $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                 $value, $fileName);
@@ -378,7 +378,7 @@ trait ParticipantFieldsTrait
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
                 $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
-                $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+                $fileName = $this->projectService->participantFilename($fileBase, $musician);
                 $extension = pathinfo($value, PATHINFO_EXTENSION);
                 $fileName .= '.' . $extension;
                 $filePath = $participantFolder . UserStorage::PATH_SEP . $fileName;
@@ -680,7 +680,7 @@ trait ParticipantFieldsTrait
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                   $fileBase = $field->getName();
                   $extension = 'zip';
-                  $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.' . $extension;
+                  $fileName = $this->projectService->participantFilename($fileBase, $musician) . '.' . $extension;
 
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                     array_values($values), $fileName);
@@ -801,7 +801,7 @@ trait ParticipantFieldsTrait
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                   $fileBase = $field->getName();
                   $extension = 'zip';
-                  $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.' . $extension;
+                  $fileName = $this->projectService->participantFilename($fileBase, $musician) . '.' . $extension;
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                     array_values($values), $fileName);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);

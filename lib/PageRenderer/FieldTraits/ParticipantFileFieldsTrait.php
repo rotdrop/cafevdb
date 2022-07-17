@@ -72,7 +72,7 @@ trait ParticipantFileFieldsTrait
       $subDirPrefix = '';
     }
     if (!empty($fileBase)) {
-      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+      $fileName = $this->projectService->participantFilename($fileBase, $musician);
       if (!empty($optionValue)) {
         $fileName .= '.' . pathinfo($optionValue, PATHINFO_EXTENSION);
       }
@@ -158,7 +158,7 @@ trait ParticipantFileFieldsTrait
       if (empty($project)) {
         throw new \RuntimeException($this->l->t('No project given, unable generate a file-name.'));
       }
-      $fileName = $this->projectService->participantFilename($fileBase, $project, $musician);
+      $fileName = $this->projectService->participantFilename($fileBase, $musician);
       if (!empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
       }
