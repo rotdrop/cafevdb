@@ -67,7 +67,7 @@ trait ParticipantFileFieldsTrait
     // make sure $subDir exists
     if (!empty($subDir)) {
       $subDirPrefix = UserStorage::PATH_SEP . $subDir;
-      $this->userStorage->ensureFolder($participantFolder . $subDirPrefix);
+      // $this->userStorage->ensureFolder($participantFolder . $subDirPrefix);
     } else {
       $subDirPrefix = '';
     }
@@ -88,12 +88,16 @@ trait ParticipantFileFieldsTrait
         $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
-        $filesAppLink = '#';
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
         $optionValue = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
     } else {
       $downloadLink = '';
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+      try {
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+      } catch (\OCP\Files\NotFoundException $e) {
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
+      }
     }
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
