@@ -336,7 +336,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     $throw = null;
     $rollBack = false;
-    $this->entityManager->beginTransaction();
+    if (!$checkOnly) {
+      $this->entityManager->beginTransaction();
+    }
     try {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
@@ -500,7 +502,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
           if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
             if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-              $fieldDatum = $this->fieldData[$flatCriterion] ?? null;
+              $fieldDatum = $this->getFieldDatum($criterion);
               if (!empty($fieldDatum)) {
                 $files = json_decode($fieldDatum->getOptionValue(), true);
                 Common\Util::unsetValue($files, $baseName);
@@ -526,14 +528,16 @@ class ParticipantFieldCloudFolderListener implements IEventListener
           }
         }
       }
-      $this->flush();
-      $this->entityManager->commit();
+      if (!$checkOnly) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
     } catch (\OCP\HintException $e) {
       $throw = $e;
-      $rollBack = true;
+      $rollBack = !$checkOnly;
     } catch (\Throwable $t) {
       $this->logException($t, 'Unable to update field-data for ' . print_r($flatCriteria, true) . '.');
-      $rollBack = true;
+      $rollBack = !$checkOnly;
     } finally {
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       if ($rollBack) {
@@ -590,7 +594,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     if (empty($this->fieldData[$flatCriterion])) {
       $fieldDatum = $this->fieldData[$flatCriterion] = $this->fieldDataRepository->findOneBy($criterion);
     }
-    return $fieldDatum;
+    return $this->fieldData[$flatCriterion];
   }
 
   private function getField(array $criterion):?Entities\ProjectParticipantField
