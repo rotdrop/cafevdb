@@ -364,7 +364,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
                 throw new \OCP\HintException($message, $hint);
               }
-            } else { // baseName given
+            } else if ($baseName !== Constants::README_NAME) { // baseName given
               if ($fieldType == FieldType::CLOUD_FILE) {
                 // check if the name matches one of the registered options
                 $musician = $this->getMusician($criterion);
@@ -390,7 +390,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             $readMeGenerator->do();
           }
 
-          if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
+          if (!$checkOnly && !empty($baseName) && $baseName !== Constants::README_NAME) { // work only on the folder-contents, not the folder itself
             if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
