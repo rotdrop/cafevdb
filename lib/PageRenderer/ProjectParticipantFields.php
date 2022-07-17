@@ -46,6 +46,9 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Dat
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Exceptions;
+
+use OCA\CAFEVDB\Constants;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -1044,6 +1047,10 @@ __EOT__;
     }
 
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
+
+    if ($newvals['name'] === Constants::README_NAME) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('The name "%1$s" is reserved by the app in order to provide general help texts in the file-system and may not be used as a field-name.', Constants::README_NAME));
+    }
 
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
