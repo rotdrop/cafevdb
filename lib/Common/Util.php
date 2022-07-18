@@ -6,26 +6,31 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Common;
 
+use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
+
 class Util
 {
   use \OCA\CAFEVDB\Traits\DateTimeTrait { convertToDateTime as public; }
+
+  private static $markDownConverter;
 
   public const OMIT_EMPTY_FIELDS = 1;
   public const TRIM = 2;
@@ -130,6 +135,25 @@ class Util
       }
     }
     return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
+  }
+
+  /**
+   * Convert the given HTML string to markdown. Return null if it is empty.
+   *
+   * @param null|string $html Input HTML or null.
+   *
+   * @return null|string Output markdown or null.
+   */
+  public static function htmlToMarkDown(?string $html):?string
+  {
+    if (!empty($html)) {
+      if (empty(self::$markDownConverter)) {
+        self::$markDownConverter = new HtmlToMarkDown;
+      }
+      return self::$markDownConverter->convert($html);
+    } else {
+      return null;
+    }
   }
 
   public static function arraySliceKeys($array, $keys = null)

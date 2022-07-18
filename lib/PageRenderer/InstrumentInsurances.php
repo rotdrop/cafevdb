@@ -787,11 +787,6 @@ GROUP BY b.short_name',
       'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
     ]);
 
-    if (!empty($insuranceField)) {
-      $this->logInfo('INSURANCE FIELD ' . $insuranceField->getName() . ' / ' . $insuranceField->getUntranslatedName());
-      $this->logInfo('MGMT ' . $insuranceField->getManagementOption()->getLabel() . ' / ' . $insuranceField->getManagementOption()->getUntranslatedLabel());
-    }
-
     return empty($insuranceField) ? null : $insuranceField->getName();
   }
 }

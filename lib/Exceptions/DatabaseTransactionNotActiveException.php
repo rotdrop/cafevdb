@@ -1,5 +1,6 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -21,38 +22,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+namespace OCA\CAFEVDB\Exceptions;
 
-/**
- * Simple trait that adds two convenience methods provided the
- * underlying class has a "usage()" method where a return value > 0
- * indicates the number of items using the class.
- */
-trait UnusedTrait
+class DatabaseTransactionNotActiveException extends DatabaseException
 {
-  /**
-   * Return the number of other items still depending on this entity
-   *
-   * @return int
-   */
-  public function usage()
-  {
-    return 0;
-  }
-
-  /**
-   * Return a boolean to indicate that this entity is no longer used.
-   */
-  public function unused():bool
-  {
-    return $this->usage() == 0;
-  }
-
-  /**
-   * Return a boolean to indicate that this field is used.
-   */
-  public function inUse():bool
-  {
-    return !$this->unused();
-  }
 }

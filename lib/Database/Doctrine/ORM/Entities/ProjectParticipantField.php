@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -31,7 +32,10 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -342,6 +346,16 @@ class ProjectParticipantField implements \ArrayAccess
     });
   }
 
+  public function getOptionByLabel(string $optionLabel, bool $includeDeleted = false):?ProjectParticipantFieldDataOption
+  {
+    $criteria = [ 'label' => $optionLabel ];
+    if (!$includeDeleted) {
+      $criteria['deleted'] = null;
+    }
+    $matchingOptions = $this->dataOptions->matching(DBUtil::criteriaWhere($criteria));
+    return $matchingOptions->count() == 0 ? null : $matchingOptions->first();
+  }
+
   /**
    * Get the special option holding management data if present.
    *
@@ -355,14 +369,24 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get one specific option
    *
-   * @param mixed $key Everything which can be converted to an UUID by
-   * Uuid::asUuid().
+   * @param null|mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid() or null which will return just the first option if it
+   * exists. The latter for convience for non-multiple options which just
+   * contain a single option.
    *
    * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDataOption($key):?ProjectParticipantFieldDataOption
+  public function getDataOption($key = null):?ProjectParticipantFieldDataOption
   {
-    return $this->getByUuid($this->dataOptions, $key, 'key');
+    if ($key === null) {
+      if (!empty($this->dataOptions) && $this->dataOptions->count() > 0) {
+        return $this->dataOptions->first();
+      } else {
+        return null;
+      }
+    } else {
+      return $this->getByUuid($this->dataOptions, $key, 'key');
+    }
   }
 
   /**
@@ -387,6 +411,18 @@ class ProjectParticipantField implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
+  }
+
+  /**
+   * Filter field-data by musician.
+   *
+   * @param Musician $musician
+   */
+  public function getMusicianFieldData(Musician $musician):Collection
+  {
+    return $this->fieldData->matching(
+      DBUtil::criteriaWhere([ 'musician' => $musician ])
+    );
   }
 
   /**
@@ -756,8 +792,63 @@ class ProjectParticipantField implements \ArrayAccess
     return $this->writers;
   }
 
+  public function isFileSystemContext()
+  {
+    return $this->dataType == FieldType::CLOUD_FOLDER || $this->dataType == FieldType::CLOUD_FILE;
+  }
+
+  /**
+   * Remove 'name' from the set of translatable fields if it is the base of
+   * file- or folder-names and thus should not change on a per-user basis.
+   *
+   * @param array $fields The array of annotated translatable fields
+   *
+   * @return array The array of translatable fields based on the state of the
+   * entity. This must be a sub-set of the input array.
+   */
+  public function filterTranslatableFields(array $fields):array
+  {
+    if ($this->isFileSystemContext()) {
+      return array_filter($fields, fn($field) => $field !== 'name');
+    }
+    return $fields;
+  }
+
+  /**
+   * @ORM\PrePersist
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function prePersist(Event\LifecycleEventArgs $event)
+  {
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
+  }
+
+  /**
+   * @ORM\PreRemove
+   *
+   * @param Event\LifecycleEventArgs $event
+   */
+  public function preRemove(Event\LifecycleEventArgs $event)
+  {
+    if (!$this->isExpired()) {
+      return;
+    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PreRemoveProjectParticipantField($this));
+  }
+
   /** @var bool */
-  private $preUpdatePosted = false;
+  private $preUpdatePosted = [];
+
+  private function getTranslationChangeSet(Event\PreUpdateEventArgs $event, string $field):?array
+  {
+    return ($this->translationChangeSet[$field]
+            ?? ($event->hasChangedField($field) ? [ $event->getOldValue($field), $event->getNewValue($field) ] : null));
+  }
 
   /**
    * @ORM\PreUpdate
@@ -766,14 +857,24 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
+    \OCP\Util::writeLog('cafevdb', 'ORIGINAL VALUES ' . print_r($this->translationChangeSet, true), \OCP\Util::INFO);
+
     $field = 'name';
-    if (!$event->hasChangedField($field)) {
-      return;
+    $changeSet = $this->getTranslationChangeSet($event, $field);
+    if ($changeSet) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $changeSet[0], $changeSet[1]));
+      $this->preUpdatePosted[$field] = $changeSet[0];
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $event->getOldValue($field), $event->getNewValue($field)));
-    $this->preUpdatePosted = true;
+    $field = 'tooltip';
+    $changeSet = $this->getTranslationChangeSet($event, $field);
+    if ($changeSet) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldTooltip($this, $changeSet[0], $changeSet[1]));
+      $this->preUpdatePosted[$field] = $changeSet[0];
+    }
   }
 
   /**
@@ -783,13 +884,17 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
-    if (!$this->preUpdatePosted) {
-      return;
+    $field = 'name';
+    if (isset($this->preUpdatePosted[$field])) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
+      unset($this->preUpdatePosted[$field]);
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this)); //
-    $this->preUpdatePosted = false;
+    $field = 'tooltip';
+    if (isset($this->preUpdatePosted[$field])) {
+      // 'post' event is not needed ATM.
+      unset($this->preUpdatePosted[$field]);
+    }
   }
-
 }

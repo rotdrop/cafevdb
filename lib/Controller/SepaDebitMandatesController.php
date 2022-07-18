@@ -525,7 +525,7 @@ class SepaDebitMandatesController extends Controller {
     }
 
     // disable soft-deletion filter as we are fetching specific data.
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\Musician $musician */
     $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
@@ -1215,7 +1215,7 @@ class SepaDebitMandatesController extends Controller {
       }
     }
 
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     /** @var Entities\SepaDebitMandate $mandate */
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
     $reference = $mandate->getMandateReference();
@@ -1308,7 +1308,7 @@ class SepaDebitMandatesController extends Controller {
       }
     }
 
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\SepaBankAccount $account */
     $account = $this->bankAccountsRepository->find([ 'musician' => $musicianId, 'sequence' => $bankAccountSequence ]);

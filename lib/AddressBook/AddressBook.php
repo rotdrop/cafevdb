@@ -7,11 +7,7 @@ declare(strict_types=1);
  *
  * @author Claus-Justus Heine
  * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
- * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
- * <blizzz@arthur-schiwon.de>
- *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,8 +20,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\AddressBook;
@@ -133,7 +128,7 @@ class AddressBook extends ExternalAddressBook
       '{http://calendarserver.org/ns/}getctag' => $eTag,
       '{DAV:}getetag' => $eTag,
     ];
-    $this->logDebug('PROPERTIES '.print_r($props, true), [], 2);
+    $this->logDebug('PROPERTIES '.print_r($props, true), [], 1);
     return $props;
   }
 }

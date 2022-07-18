@@ -37,6 +37,7 @@ trait LoggerTrait
   }
 
   public function log(int $level, string $message, array $context = [], $shift = 0, bool $showTrace = false) {
+    ++$shift; // relative to the caller of this function
     $trace = debug_backtrace();
     $prefix = '';
     $shift = min($shift, count($trace));
@@ -51,7 +52,7 @@ trait LoggerTrait
 
       $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
     } while ($showTrace && --$shift > 0);
-    return $this->logger->log($level, $prefix.$message, $context);
+    return $this->logger()->log($level, $prefix.$message, $context);
   }
 
   public function logException($exception, $message = null, $shift = 0, bool $showTrace = false) {
@@ -73,26 +74,26 @@ trait LoggerTrait
     }
     $message = $message ?? ($context['message'] ?? 'Caught an Exception');
     $context['message'] = $prefix.$message;
-    $this->logger->logException($exception, $context);
+    $this->logger()->logException($exception, $context);
   }
 
-  public function logError(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+  public function logError(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     return $this->log(ILogger::ERROR, $message, $context, $shift, $showTrace);
   }
 
-  public function logDebug(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+  public function logDebug(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     return $this->log(ILogger::DEBUG, $message, $context, $shift, $showTrace);
   }
 
-  public function logInfo(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+  public function logInfo(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     return $this->log(ILogger::INFO, $message, $context, $shift, $showTrace);
   }
 
-  public function logWarn(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+  public function logWarn(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     return $this->log(ILogger::WARN, $message, $context, $shift, $showTrace);
   }
 
-  public function logFatal(string $message, array $context = [], $shift = 1, bool $showTrace = false) {
+  public function logFatal(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
     return $this->log(ILogger::FATAL, $message, $context, $shift, $showTrace);
   }
 

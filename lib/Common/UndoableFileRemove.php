@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,48 +24,28 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use OCP\AppFramework\IAppContainer;
+use OCP\Files\Node as FileSystemNode;
+use OCP\Files\FileInfo;
+use OCP\Files;
+
+use OCA\CAFEVDB\Storage\UserStorage;
+
 /**
- * Simplistic do-undo interface in order to be stacked into a
- * do-undo-list.
+ * Remove the given node, which must be a regular file.
  */
-class GenericUndoable extends AbstractUndoable
+class UndoableFileRemove extends UndoableFileSystemNodeRemove
 {
-  /** @var Callable */
-  protected $doCallback;
-
-  /** @var Callable|null */
-  protected $undoCallback = null;
-
   /**
-   * @var mixed
+   * Undoable file remove.
    *
-   * The return value of the doCallback(), which is passed to the
-   * undoCallback() if necessary.
+   * @param string|Callable $folderName
+   *
+   * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    */
-  protected $doResult;
-
-  public function __construct(Callable $do, ?Callable $undo = null)
+  public function __construct($name, bool $gracefully = false)
   {
-    $this->doCallback = $do;
-    $this->undoCallback = $undo;
-  }
-
-  /** {@inheritdoc} */
-  public function do() {
-    $this->doResult = call_user_func($this->doCallback);
-  }
-
-  /** {@inheritdoc} */
-  public function undo() {
-    if (!empty($this->undoCallback)) {
-      call_user_func($this->undoCallback, $this->doResult);
-    }
-    $this->reset();
-  }
-
-  /** {@inheritdoc} */
-  public function reset() {
-    $this->doResult = null;
+    parent::__construct($name, $gracefully, nodeType: FileInfo::TYPE_FILE);
   }
 }
 

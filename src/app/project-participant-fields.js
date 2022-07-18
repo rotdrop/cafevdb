@@ -230,7 +230,7 @@ const ready = function(selector, resizeCB) {
       .find(
         'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
           + ', '
-          + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator)')
+          + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator, .placeholder)')
       .find('input.field-data')
       .not(nonTextInputSelector);
 

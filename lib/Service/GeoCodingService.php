@@ -69,11 +69,12 @@ class GeoCodingService
     $this->debug = $this->shouldDebug(ConfigService::DEBUG_GEOCODING);
   }
 
-  protected function debug(string $message, array $context = [], $shift = 2) {
+  protected function debug(string $message, array $context = [], $shift = 0) {
+    ++$shift;
     if ($this->debug) {
-      $this->logInfo($message, $context, $shift + 1);
+      $this->logInfo($message, $context, $shift);
     } else {
-      $this->logDebug($message, $context, $shift + 1);
+      $this->logDebug($message, $context, $shift);
     }
   }
 

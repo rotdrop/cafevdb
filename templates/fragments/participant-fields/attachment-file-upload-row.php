@@ -31,7 +31,6 @@
  * @param string $subDir
  * @param string $fileBase
  * @param string $fileName
- * @param string $uploadPolicy
  * @param string $dataStorage
  * @param string $participantFolder
  * @param string $filesAppLink
@@ -46,11 +45,6 @@ use OCA\CAFEVDB\Common\Util;
 
 $filesAppTarget = md5($filesAppLink);
 
-$policyTooltip = $toolTips[$toolTipsPrefix . ':attachment:upload:' . $uploadPolicy];
-if (!empty($policyTooltip)) {
-  $policyTooltip = '<br/>' . $policyTooltip;
-}
-
 ?>
 <tr class="file-upload-row field-datum"
     data-field-id="<?php p($fieldId); ?>"
@@ -58,36 +52,35 @@ if (!empty($policyTooltip)) {
     data-sub-dir="<?php p($subDir); ?>"
     data-file-base="<?php p($fileBase); ?>"
     data-file-name="<?php p($fileName); ?>"
-    data-upload-policy="<?php p($uploadPolicy); ?>"
     data-storage="<?php p($dataStorage); ?>"
     data-participant-folder="<?php echo Util::htmlEscape($participantFolder); ?>"
 >
   <td class="operations">
     <input type="button"
            <?php empty($optionValue) && p('disabled'); ?>
-           title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':attachment:delete']); ?>"
+           title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:delete']; ?>"
            class="operation delete-undelete tooltip-auto"
     />
     <input type="button"
-           title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':attachment:upload:from-client'] . $policyTooltip); ?>"
+           title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:upload:from-client']; ?>"
            class="operation upload-replace tooltip-auto"
     />
     <input type="button"
-           title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':attachment:upload:from-cloud'] . $policyTooltip); ?>"
+           title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:upload:from-cloud']; ?>"
            class="operation upload-from-cloud tooltip-auto"
     />
     <a href="<?php echo $filesAppLink; ?>" target="<?php echo $filesAppTarget; ?>"
-       title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':attachment:open-parent']); ?>"
+       title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:open-parent']; ?>"
        class="button operation open-parent tooltip-auto<?php empty($filesAppLink) && p(' disabled'); ?>"
     ></a>
   </td>
   <td class="<?php p($dataStorage); ?>-file input">
     <a class="download-link ajax-download tooltip-auto"
-       title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':attachment:download']); ?>"
+       title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
        href="<?php echo $downloadLink; ?>"
     ><?php p($fileName); ?></a>
     <input class="upload-placeholder tooltip-auto"
-           title="<?php echo Util::htmlEscape($toolTips[$toolTipsPrefix . ':upload:placeholder'] . $policyTooltip); ?>"
+           title="<?php echo $toolTips[$toolTipsPrefix . ':upload:placeholder']; ?>"
            placeholder="<?php p($uploadPlaceHolder); ?>"
            type="text"
            name="<?php echo $optionValueName; ?>"

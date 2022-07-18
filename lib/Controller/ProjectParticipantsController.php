@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -32,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -42,7 +44,10 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
+use OCA\CAFEVDB\Common\UndoableFileReplace;
+use OCA\CAFEVDB\Common\UndoableTextFileUpdate;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 
 class ProjectParticipantsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -72,6 +77,9 @@ class ProjectParticipantsController extends Controller {
   /** @var ProjectService */
   private $projectService;
 
+  /** @var ProjectParticipantFieldsService */
+  private $participantFieldsService;
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -83,6 +91,7 @@ class ProjectParticipantsController extends Controller {
     , EntityManager $entityManager
     , PHPMyEdit $phpMyEdit
     , ProjectService $projectService
+    , ProjectParticipantFieldsService $participantFieldsService
   ) {
 
     parent::__construct($appName, $request);
@@ -92,6 +101,7 @@ class ProjectParticipantsController extends Controller {
     $this->entityManager = $entityManager;
     $this->pme = $phpMyEdit;
     $this->projectService = $projectService;
+    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -359,7 +369,7 @@ class ProjectParticipantsController extends Controller {
       $dataType = $field->getDataType();
       switch ($dataType) {
       case FieldDataType::CLOUD_FILE:
-        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
         $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fieldDatum->getOptionValue();
         break;
 
@@ -374,7 +384,7 @@ class ProjectParticipantsController extends Controller {
         break;
 
       case FieldDataType::CLOUD_FOLDER:
-        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, true);
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
         $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
         break;
 
@@ -383,7 +393,7 @@ class ProjectParticipantsController extends Controller {
       }
 
       $fileRemoved = false;
-      $doDelete = true;
+      $doDeleteFieldDatum = true;
       $this->entityManager->beginTransaction();
       try {
         switch ($dataType) {
@@ -395,7 +405,7 @@ class ProjectParticipantsController extends Controller {
           }
           Util::unsetValue($optionValue, $fileName);
           if (!empty($optionValue)) {
-            $doDelete = false;
+            $doDeleteFieldDatum = false;
           }
           $fieldDatum->setOptionValue(json_encode(array_values($optionValue)));
           break;
@@ -407,7 +417,7 @@ class ProjectParticipantsController extends Controller {
           $this->remove($dbFile);
           break;
         }
-        if ($doDelete) {
+        if ($doDeleteFieldDatum) {
           $this->remove($fieldDatum);
           $this->flush();
           $this->remove($fieldDatum);
@@ -425,19 +435,19 @@ class ProjectParticipantsController extends Controller {
       $uploadData = json_decode($data, true);
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
-      $uploadPolicy = $uploadData['uploadPolicy'];
       $subDir = $uploadData['subDir']??null;
       $fileName = $uploadData['fileName']??null;
 
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
       $dataType = $field->getDataType();
+      $multiplicity = $field->getMultiplicity();
 
       $folderPath = $filePath = '';
 
       switch ($dataType) {
       case FieldDataType::CLOUD_FOLDER:
       case FieldDataType::CLOUD_FILE:
-        $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, true), ];
+        $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, dry: true), ];
         if ($subDir) {
           $pathChain[] = $subDir;
           $subDir .= UserStorage::PATH_SEP;
@@ -445,7 +455,7 @@ class ProjectParticipantsController extends Controller {
         $userStorage->ensureFolderChain($pathChain);
         $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
         if ($dataType === FieldDataType::CLOUD_FILE) {
-          $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+          $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
         } else if (!empty($fileName)) {
           $pathChain[] = pathinfo($fileName, PATHINFO_FILENAME);
         }
@@ -455,12 +465,8 @@ class ProjectParticipantsController extends Controller {
         if (!empty($subDir)) {
           return self::grumble($this->l->t('Sub-directory "%s" requested, but not supported by db-storage.', $subDir));
         }
-        if ($uploadPolicy != 'replace') {
-          return self::grumble($this->l->t('Upload-policy "%s" requested, but not supported by storage type "%s".',
-                                           [ $uploadPolicy, $dataType ]));
-        }
         if (!empty($uploadData['fileBase'])) {
-          $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $project, $musician);
+          $filePath = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
         } else if (!empty($fileName)) {
           $filePath = pathinfo($fileName, PATHINFO_FILENAME);
         }
@@ -484,6 +490,10 @@ class ProjectParticipantsController extends Controller {
         // error generated
         return $files;
       }
+
+      // ensure the per-participant folder exists, even for data-base
+      // uploads as it contains a mount-point in this case.
+      $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
 
       $uploads = [];
       foreach ($files as $index => $file) {
@@ -534,40 +544,7 @@ class ProjectParticipantsController extends Controller {
                        ->setOptionKey($optionKey);
             $participant->getParticipantFieldsData()->add($fieldData);
           } else if (!empty($fieldData->getOptionValue())) {
-            switch ($uploadPolicy) {
-            case 'rename':
-              switch ($dataType) {
-              case FieldDataType::DB_FILE:
-              case FieldDataType::CLOUD_FOLDER:
-                throw new \InvalidArgumentException($this->l->t('Invalid upload-policy "%s" for data type "%s".', [ $uploadPolicy, $dataType ]));
-                break;
-              case FieldDataType::CLOUD_FILE:
-                // Ok, we have to move the old file.
-                $oldName = $fieldData->getOptionValue();
-                $timeStamp = $this->timeStamp();
-                $oldExtension = pathInfo($oldName, PATHINFO_EXTENSION);
-                $backupName = $pathInfo['filename'].'-'.$timeStamp;
-                if (!empty($oldExtension)) {
-                  $backupName .= '.'.$oldExtension;
-                }
-                $backupPath = $pathInfo['dirname'].UserStorage::PATH_SEP.$backupName;
-                $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
-                if (!empty($subDir)) {
-                  $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
-                }
-                $oldPath .= $oldName;
-                try {
-                  $userStorage->copy($oldPath, $backupPath);
-                } catch (\Throwable $t) {
-                  $messages[] = $this->l->t('Unable to create a backup-copy of "%1$s" to "%2$s: %3$s".', [ $oldPath, $backupPath, $t->getMessage() ]);
-                  $this->logException($t);
-                }
-                $conflict = 'renamed';
-                break;
-              }
-              break;
-            case 'replace':
-              switch ($dataType) {
+            switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
                 // we still need to populate $oldPath in order to trigger the
                 // restore functionality of the cloud.
@@ -596,8 +573,6 @@ class ProjectParticipantsController extends Controller {
                   $conflict = 'replaced';
                 }
                 break;
-              }
-              break;
             }
           }
 
@@ -621,18 +596,24 @@ class ProjectParticipantsController extends Controller {
             }
             $fieldData->setOptionValue($optionValue);
             $this->persist($fieldData);
-            if ($oldPath && $oldPath != $filePath) {
-              // try to rename first (extension can be different) in order to
-              // have a file history inside the cloud.
-              try {
-                $userStorage->rename($oldPath, $filePath);
-              } catch (\Throwable $t) {
-                $messages[] = $this->l->t('Unable to rename the old file "%1$s" to the new name "%2$s".
- There will be no undo-history in the cloud file-space for this file.', [ $oldPath, $filePath ]);
-              }
+            $this->entityManager->registerPreCommitAction(
+              new UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
+            );
+            if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
+              $readMe = Util::htmlToMarkDown($field->getTooltip());
+              // also place the tooltip as README.md
+              $this->entityManager->registerPreCommitAction(
+                new UndoableTextFileUpdate(
+                  basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
+                  content: $readMe,
+                  gracefully: true,
+                )
+              );
             }
-            $userStorage->putContent($filePath, $fileData);
-            $downloadLink = $userStorage->getDownloadLink($filePath);
+            $this->entityManager->registerPreCommitAction(function() use (&$file, $filePath, $userStorage) {
+              $downloadLink = $userStorage->getDownloadLink($filePath);
+              $file['meta']['download'] = $downloadLink;
+            });
             break;
           case FieldDataType::DB_FILE:
             /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -678,24 +659,20 @@ class ProjectParticipantsController extends Controller {
                                          [ $file['name'], $filePath ]);
           $file['name'] = $filePath;
 
-          // ensure the per-participant folder exists, even for data-base
-          // uploads as it contains a mount-point in this case.
-          $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
-
           $file['meta'] = [
             'musicianId' => $musicianId,
             'projectId' => $projectId,
-            // 'pathChain' => $pathChain, ?? needed ??
             'dirName' => $pathInfo['dirname'],
             'baseName' => $pathInfo['basename'],
             'extension' => $pathInfo['extension']?:'',
             'fileName' => $pathInfo['filename'],
-            'download' => $downloadLink,
+            'download' => $downloadLink ?? null,
             'conflict' => $conflict,
             'messages' => $messages,
           ];
 
           $this->flush();
+
           $this->entityManager->commit();
         } catch (\Throwable $t) {
           $this->entityManager->rollback();

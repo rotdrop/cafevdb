@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,48 +24,15 @@
 
 namespace OCA\CAFEVDB\Common;
 
-/**
- * Simplistic do-undo interface in order to be stacked into a
- * do-undo-list.
- */
-class GenericUndoable extends AbstractUndoable
+use OCP\AppFramework\IAppContainer;
+
+abstract class AbstractUndoable implements IUndoable
 {
-  /** @var Callable */
-  protected $doCallback;
+  protected $appContainer;
 
-  /** @var Callable|null */
-  protected $undoCallback = null;
-
-  /**
-   * @var mixed
-   *
-   * The return value of the doCallback(), which is passed to the
-   * undoCallback() if necessary.
-   */
-  protected $doResult;
-
-  public function __construct(Callable $do, ?Callable $undo = null)
+  public function initialize(IAppContainer $appContainer)
   {
-    $this->doCallback = $do;
-    $this->undoCallback = $undo;
-  }
-
-  /** {@inheritdoc} */
-  public function do() {
-    $this->doResult = call_user_func($this->doCallback);
-  }
-
-  /** {@inheritdoc} */
-  public function undo() {
-    if (!empty($this->undoCallback)) {
-      call_user_func($this->undoCallback, $this->doResult);
-    }
-    $this->reset();
-  }
-
-  /** {@inheritdoc} */
-  public function reset() {
-    $this->doResult = null;
+    $this->appContainer = $appContainer;
   }
 }
 

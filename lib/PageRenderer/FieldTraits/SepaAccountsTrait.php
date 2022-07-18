@@ -178,9 +178,9 @@ trait SepaAccountsTrait
       "'.self::COMP_KEY_SEP.'",
       $join_table.musician_id,
       $join_table.sequence,
-      '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
+      COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
     $join_col_fqn)
-  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'filter' => [
             'having' => true,
           ],
@@ -218,9 +218,9 @@ trait SepaAccountsTrait
       "'.self::COMP_KEY_SEP.'",
       $join_table.musician_id,
       $join_table.sequence,
-     '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence),
+      COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
     $join_col_fqn)
-  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'filter' => [
             'having' => true,
           ],
@@ -247,8 +247,8 @@ trait SepaAccountsTrait
     "'.self::COMP_KEY_SEP.'",
     $join_table.musician_id,
     $join_table.sequence,
-    '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence)
-  ORDER BY $order_by, '.$this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE].'.sequence ASC)',
+    COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0))
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[self::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'values' => [
             'column' => 'sequence',
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
@@ -284,15 +284,13 @@ trait SepaAccountsTrait
             foreach ($ibans as $mandateSepaId => $iban) {
               list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $mandateSepaId);
               $accountInactive = $accountDeleted[$mandateSepaId];
-              $mandateInactive = $mandateDeleted[$mandateSepaId];
+              $mandateInactive = $mandateDeleted[$mandateSepaId] ?? null;
               $sepaIds = [];
               if (!$accountInactive && $mandateInactive) {
                 // build a second row without the deactivated mandate
                 $sepaIds[] = implode(self::COMP_KEY_SEP, [ $musicianId, $bankAccountSequence, 0 ]);
-                $this->logInfo('SEPA IDS 0 '.print_r($sepaIds, true));
               }
               $sepaIds[] = $mandateSepaId;
-              $this->logInfo('SEPA IDS 1 '.print_r($sepaIds, true));
               foreach ($sepaIds as $sepaId) {
                 list($musicianId, $bankAccountSequence, $mandateSequence) = Util::explode(self::COMP_KEY_SEP, $sepaId);
                 $accountInactive = $accountDeleted[$sepaId] ?? false;

@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -45,6 +46,9 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Dat
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Exceptions;
+
+use OCA\CAFEVDB\Constants;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -342,7 +346,7 @@ class ProjectParticipantFields extends PMETableViewBase
       $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
     );
 
-    $opts['fdd']['name']['sql'] = self::ifDefaultLocale('$main_table.$field_name', $opts['fdd']['name']['sql']);
+    $opts['fdd']['name']['sql'] = self::ifFileSystemEntry('$main_table.$field_name', $opts['fdd']['name']['sql']);
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => [ 'miscinfo' ] ],
@@ -498,13 +502,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'sql'=> 'CONCAT("[",GROUP_CONCAT(DISTINCT
   JSON_OBJECT(
     "key", BIN2UUID($join_table.key)
-    , "label", ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . '
+    , "label", ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . '
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
-) ORDER BY ' . self::ifDefaultLocale('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
+) ORDER BY ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
       'values' => [
         'column' => 'key',
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
@@ -793,34 +797,6 @@ __EOT__;
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
     ];
 
-    $opts['fdd']['default_file_upload_policy'] = [
-      'name' => $this->l->t('Upload Policy'),
-      // 'input' => 'V', // not virtual, update handled by trigger
-      'options' => 'ACPVD',
-      'css' => [
-        'postfix' => [
-          'default-cloud-file-value',
-          'default-hidden',
-          'not-data-type-cloud-file-hidden',
-        ],
-      ],
-      'select' => 'D',
-      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
-      'values2' => [ 'rename' => $this->l->t('rename'), 'replace' => $this->l->t('replace'), ],
-      'values' => [
-        'table' => $this->optionsTable,
-        'column' => 'data',
-        'filters' => '$table.field_id = $record_id[id] AND $table.deleted IS NULL',
-        'join' => '$join_table.field_id = $main_table.id',
-        'group' => true,
-      ],
-      //'default' => 'rename',
-      'maxlen' => 29,
-      'size' => 30,
-      'sort' => false,
-      'tooltip' => $this->toolTipsService['participant-fields-default-cloud-file-value'],
-    ];
-
     $opts['fdd']['tooltip'] = array_merge(
       [
         'tab'      => [ 'id' => 'display' ],
@@ -1072,6 +1048,10 @@ __EOT__;
 
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
+    if ($newvals['name'] === Constants::README_NAME) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('The name "%1$s" is reserved by the app in order to provide general help texts in the file-system and may not be used as a field-name.', Constants::README_NAME));
+    }
+
     // make sure writer-acls are a subset of reader-acls
     $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
     $readers = preg_split('/\s*,\s*/', $newvals['readers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -1177,43 +1157,6 @@ __EOT__;
     if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
       $value = $newvals[$tag];
       $newvals['default_value'] = strlen($value) < 36 ? null : $value;
-    }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
-
-    /************************************************************************
-     *
-     * Move the data from default_file_upload_policy to default_value
-     *
-     */
-
-    $tag = 'default_file_upload_policy';
-    if ($newvals['data_type'] == DataType::CLOUD_FILE
-        || $newvals['data_type'] == DataType::DB_FILE
-        || $newvals['data_type'] == DataType::CLOUD_FOLDER) {
-      if ($newvals['data_type'] == DataType::DB_FILE) {
-        $newvals['encrypted'] = true;
-        if (empty($oldvals['encrypted'])) {
-          $changed[] = 'encrypted';
-        }
-        $value = 'replace';
-      } else if ($newvals['data_type'] === DataType::CLOUD_FOLDER) {
-        // cloud FS has its own versioning system
-        $value = 'replace';
-      } else {
-        $value = $newvals[$tag];
-      }
-      if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
-        $first = array_key_first($newvals['data_options_simple']);
-        $newvals['data_options_simple'][$first]['data'] = $value;
-      } else if ($newvals['multiplicity'] == Multiplicity::PARALLEL) {
-        foreach ($newvals['data_options'] as &$option) {
-          if (empty($option['deleted']) && $option['key'] != Uuid::NIL) {
-            $option['data'] = $value;
-          }
-        }
-      }
-      // files do not have a default value
-      $newvals['default'] = null;
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
@@ -2228,7 +2171,7 @@ __EOT__;
 </span>';
   }
 
-  static private function ifDefaultLocale($ifTrue, $ifFalse)
+  static private function ifFileSystemEntry($ifTrue, $ifFalse)
   {
     return 'IF($main_table.data_type IN ("'
       . DataType::CLOUD_FILE . '", "'
