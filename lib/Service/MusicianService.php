@@ -33,6 +33,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
+use OCA\CAFEVDB\Common\Util;
+
 /**
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
@@ -93,7 +95,7 @@ class MusicianService
     $pathInfo = pathinfo($base);
     $fileName = $pathInfo['filename'];
     $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
-    return $fileName . self::getSlugPostfix($userIdSlug) . '.' . $extension;
+    return $fileName . self::getSlugPostfix($userIdSlug) . $extension;
   }
 
   public static function isSlugifiedFileName(string $path, string $userIdSlug):bool
@@ -102,16 +104,16 @@ class MusicianService
     return str_ends_with($fileName, self::getSlugPostfix($userIdSlug));
   }
 
-  public static function unSlugifyFileName(string $path, string $userIdSlug):string
+  public static function unSlugifyFileName(string $path, string $userIdSlug, bool $keepExtension = true):string
   {
-    $pathInfo = pathinfo($base);
+    $pathInfo = pathinfo($path);
     $fileName = $pathInfo['filename'];
-    $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
-    $postfix = $this->getSlugPostfix($userIdSlug);
+    $postfix = self::getSlugPostfix($userIdSlug);
+    $extension = empty($pathInfo['extension']) || !$keepExtension ? '' : '.' . $pathInfo['extension'];
     if (str_ends_with($fileName, $postfix)) {
       return substr($fileName, 0, -strlen($postfix)) . $extension;
     }
-    return $path;
+    return $fileName . $extension;
   }
 
   /**
