@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -71,37 +71,15 @@ use OCA\CAFEVDB\Constants;
  * Listen to changes to the configured participant-field cloud-folder
  * directories and update the DB contents accordingly.
  *
- * Difficult to distinguish plain file an directory creation in the Before... events.
+ * Currently performed tasks:
+ * - disallow removal of sub-directories tied to CLOUD_FOLDER fields
+ * - disallow removal of sub-directories tied to CLOUD_FILE fields if a
+ *   field-value (file) is set for the respective musician
+ * - update of fiels-values when a file with the correct name is added or removed
+ * - disallow tweaking the README.md which is taken from the field's tooltip
  *
- * The original Nextcloud state was
- *
- * - mkdir
- *   Events: Create, Write
- * - touch
- *   Events: Touched, if target did not exist also Create, Write, but then
- *   the target is known to be a file
- * - put_contents
- *   Events: Create/Update, Write, target is known to be a file
- * - copy
- *   Events: Copied, Create for target, Write for target
- *
- * Even worse: if the target does not exists, we get a NonExistingFileNode in
- * any case (also for operations like mkdir which clearly only can generate
- * directories)
- *
- * In our hacked version this is now changed to
- *
- * - mkdir
- *   Events: CreateFolder, Create, Write
- * - touch
- *   Events: Touched, (if new also Create, Write)
- * - put_contents
- *   Events: Create/Update, Write
- * - copy
- *   Events: Copied, CreateFolder if target is folder, Create for target, Write for target
- *
- * The strategy is then to listen on CreateFolder and ignore the subsequent
- * Create event. All other Create events refer to files.
+ * @todo To make this work BeforeFolderCreatedEvents are needed, and the
+ * trashbin restore must emit a BeforeNodeRenamedEvent.
  */
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
@@ -144,12 +122,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
   /** @var IAppContainer */
   private $appContainer;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
 
   /** @var UserStorage */
   private $userStorage;
@@ -204,6 +176,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   }
 
   public function handle(Event $event): void {
+
     $nodes = [];
     $eventClass = get_class($event);
     $checkOnly = false;
@@ -320,13 +293,21 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
       $parts = explode(Constants::PATH_SEP, trim($nodePath, Constants::PATH_SEP));
       $baseName = $parts[self::BASE_NAME_PART] ?? null;
+
+      $userIdSlug = $parts[self::USER_ID_PART];
+      $fieldName = $parts[self::FIELD_NAME_PART] ?? null;
+      if (empty($baseName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
+        $baseName = $fieldName;
+        $fieldName = MusicianService::unSlugifyFileName($fieldName, $userIdSlug, keepExtension: false);
+      }
+
       $nodeInfo[self::NODE_BASE_NAME] = $baseName;
 
       $criteria[$key] = [
-        'field.name' => $parts[self::FIELD_NAME_PART] ?? null,
+        'field.name' => $fieldName,
         'project.year' => $parts[self::PROJECT_YEAR_PART],
         'project.name' => $parts[self::PROJECT_NAME_PART],
-        'musician.userIdSlug' => $parts[self::USER_ID_PART],
+        'musician.userIdSlug' => $userIdSlug,
       ];
       $flatCriteria[$key] = implode(':', $criteria[$key]);
     }
@@ -347,14 +328,17 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         $node = $nodes[$key];
         $baseName = $node[self::NODE_BASE_NAME];
         $criterion = $criteria[$key];
+        $userIdSlug = $criterion['musician.userIdSlug'];
         /** @var Entities\ProjectParticipantField $field */
         $field = $this->getField($criterion);
+
         if (!empty($field)) { // can only do something if the field exists
           $fieldType = $field->getDataType();
+          $fieldMultiplicity = $field->getMultiplicity();
           if ($checkOnly) {
             if (empty($baseName)) {
               if ($node[self::NODE_TYPE] == Files\FileInfo::TYPE_FILE) {
-                // disallow creating files with conflicting name
+                // disallow creating files with a conflicting name
                 $message = $this->l->t('"%1$s" belongs to the participant-field "%2$s" and must be a folder, your are trying to create a file (%3$s).', [
                   $node[self::NODE_FULL_PATH],
                   $field->getName(),
@@ -365,10 +349,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 throw new \OCP\HintException($message, $hint);
               }
             } else if ($baseName !== Constants::README_NAME) { // baseName given
-              if ($fieldType == FieldType::CLOUD_FILE) {
+              if ($fieldType == FieldType::CLOUD_FILE && $fieldMultiplicity != FieldMultiplicity::SIMPLE) {
                 // check if the name matches one of the registered options
-                $musician = $this->getMusician($criterion);
-                if (null == $this->getOptionFromFileName($baseName, $field, $musician)) {
+                if (null == $this->getOptionFromFileName($baseName, $userIdSlug, $field)) {
                   $message = $this->l->t('The current folder "%1$s" belongs to the participant-field "%2$s", but "%3$s" is not one of the registered allowed file-names.', [
                     dirname($node[self::NODE_FULL_PATH]),
                     $field->getName(),
@@ -411,17 +394,24 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               $this->persist($fieldDatum);
             } else { // CLOUD_FILE
               $musician = $this->getMusician($criterion);
-              $fieldOption = $this->getOptionFromFileName($baseName, $field, $musician);
-              $fieldData = $fieldOption->getMusicianFieldData($musician);
               $folderName = dirname($node[self::NODE_FULL_PATH]);
-              $userStorage = $this->getUserStorage();
+              if ($fieldMultiplicity == FieldMultiplicity::SIMPLE) {
+                $fieldData = $field->getMusicianFieldData($musician);
+                $fieldOption = $field->getDataOption(); // only one
 
-              $projectService = $this->getProjectService();
-              $finalFileName = $projectService->participantFilename($fieldOption->getLabel(), $field->getProject(), $musician);
-              $finalBaseName = $finalFileName . '.' . pathinfo($baseName, PATHINFO_EXTENSION);
+                $finalFileName = MusicianService::slugifyFileName($field->getName(), $userIdSlug);
+                $finalBaseName = $finalFileName . '.' . pathinfo($baseName, PATHINFO_EXTENSION);
+              } else {
+                $fieldOption = $this->getOptionFromFileName($baseName, $userIdSlug, $field);
+                $fieldData = $fieldOption->getMusicianFieldData($musician);
+
+                $finalFileName = MusicianService::slugifyFileName($fieldOption->getLabel(), $userIdSlug);
+                $finalBaseName = $finalFileName . '.' . pathinfo($baseName, PATHINFO_EXTENSION);
+              }
 
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               foreach ($fieldData as $fieldDatum) {
+                // handle the case where just the extension changes
                 $oldBaseName = $fieldDatum->getOptionValue();
                 if ($oldBaseName !== $baseName) {
                   $this->entityManager->registerPreCommitAction(
@@ -440,6 +430,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                   ->setMusician($musician)
                   ->setProject($project);
                 $field->getFieldData()->add($fieldDatum);
+                $fieldOption->getFieldData()->add($fieldDatum);
                 $project->getParticipantFieldsData()->add($fieldDatum);
                 $musician->getProjectParticipantFieldsData()->add($fieldDatum);
               } else {
@@ -447,7 +438,8 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               }
               $fieldDatum->setOptionValue($finalBaseName);
               $this->persist($fieldDatum);
-              if ($finalBaseName != $baseName) {
+              if ($finalBaseName != $baseName) { // THIS CANNOT HAPPEN?
+                $this->logInfo('WHY SHOULD EVER BE "' . $finalBaseName . '" BE DIFFERENT FROM "' . $baseName . '"?');
                 $this->entityManager->registerPreCommitAction(
                   new UndoableFileRename(
                     $folderName . Constants::PATH_SEP . $baseName,
@@ -470,32 +462,35 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         $field = $this->getField($criterion);
         if (!empty($field)) { // can only do something if the field exists
           $fieldType = $field->getDataType();
-          if (empty($baseName) && $node[self::NODE_TYPE] == Files\FileInfo::TYPE_FOLDER) {
-            // the folder itself must not be deleted except if the field is
-            // deleted. But then the folder is deleted from the pre-commit
-            // hook and thus we are inside the current commit which already
-            // has deleted the field. So: if the field still exists at this
-            // point the folder must not be deleted (safe it is a file)
-            //
-            // However, if the folder belongs to a multi-value CLOUD_FILE
-            // field then it may be deleted if there is no related field-data.
-            $preventDeletion = true;
-            if ($fieldType == FieldType::CLOUD_FILE) {
-              $musician = $this->getMusician($criterion);
-              $fieldData = $field->getMusicianFieldData($musician);
-              if ($fieldData->count() == 0) {
-                $preventDeletion = false;
+          $fieldMultiplicity = $field->getMultiplicity();
+          if ($checkOnly) {
+            if (empty($baseName) && $node[self::NODE_TYPE] == Files\FileInfo::TYPE_FOLDER) {
+              // the folder itself must not be deleted except if the field is
+              // deleted. But then the folder is deleted from the pre-commit
+              // hook and thus we are inside the current commit which already
+              // has deleted the field. So: if the field still exists at this
+              // point the folder must not be deleted (safe it is a file)
+              //
+              // However, if the folder belongs to a multi-value CLOUD_FILE
+              // field then it may be deleted if there is no related field-data.
+              $preventDeletion = true;
+              if ($fieldType == FieldType::CLOUD_FILE) {
+                $musician = $this->getMusician($criterion);
+                $fieldData = $field->getMusicianFieldData($musician);
+                if ($fieldData->count() == 0) {
+                  $preventDeletion = false;
+                }
               }
-            }
-            if ($preventDeletion) {
-              $message = $this->l->t('The folder "%1$s" belongs to the participant-field "%2$s" and must not be deleted (%3$s).', [
-                $node[self::NODE_PARTIAL_PATH],
-                $field->getName(),
-                $eventClass,
-              ]);
-              $hint = $message;
-              // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
-              throw new \OCP\HintException($message, $hint);
+              if ($preventDeletion) {
+                $message = $this->l->t('The folder "%1$s" belongs to the participant-field "%2$s" and must not be deleted (%3$s).', [
+                  $node[self::NODE_PARTIAL_PATH],
+                  $field->getName(),
+                  $eventClass,
+                ]);
+                $hint = $message;
+                // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
+                throw new \OCP\HintException($message, $hint);
+              }
             }
           }
 
@@ -514,15 +509,18 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               }
             } else { // CLOUD_FILE
               $musician = $this->getMusician($criterion);
-              $fieldOption = $this->getOptionFromFileName($baseName, $field, $musician);
-              $fieldData = $fieldOption->getMusicianFieldData($musician);
+              if ($fieldMultiplicity == FieldMultiplicity::SIMPLE) {
+                $fieldData = $field->getMusicianFieldData($musician);
+                $fieldOption = $field->getDataOption();
+              } else {
+                $fieldOption = $this->getOptionFromFileName($baseName, $userIdSlug, $field);
+                $fieldData = $fieldOption->getMusicianFieldData($musician);
+              }
               // just delete all field-data pointing to this option ...
               foreach ($fieldData as $fieldDatum) {
                 $this->remove($fieldDatum, flush: true);
                 $fieldOption->getFieldData()->removeElement($fieldDatum);
                 $field->getFieldData()->removeElement($fieldDatum);
-                // $field->getProject()->getParticipantFieldsData()->removeElement($fieldDatum);
-                // $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
               }
             }
           }
@@ -565,12 +563,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return null;
   }
 
-  private static function isHandledField(Entities\ProjectParticipantField $field)
-  {
-    return $field->getDataType() == FieldType::CLOUD_FOLDER
-      || ($field->getDataType() == FieldType::CLOUD_FILE && $field->getMultiplicity() !== FieldMultiplicity::SIMPLE);
-  }
-
   private function getMusician(array $criterion):?Entities\Musician
   {
     $userIdSlug = $criterion['musician.userIdSlug'];
@@ -597,6 +589,11 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return $this->fieldData[$flatCriterion];
   }
 
+  private static function isCloudFileField(Entities\ProjectParticipantField $field)
+  {
+    return $field->getDataType() == FieldType::CLOUD_FOLDER || $field->getDataType() == FieldType::CLOUD_FILE;
+  }
+
   private function getField(array $criterion):?Entities\ProjectParticipantField
   {
     $fieldCriterion = [
@@ -614,7 +611,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         $field = $this->fields[$flatFieldCriterion] = $fieldDatum->getField();
       }
       if (!empty($field)) {
-        if (!self::isHandledField($field)) {
+        if (!self::isCloudFileField($field)) {
           $this->fields[$flatFieldCriterion] = null;
         }
       }
@@ -665,22 +662,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
   }
 
-  private function getProjectService():ProjectService
-  {
-    if (empty($this->projectService)) {
-      $this->projectService = $this->appContainer->get(ProjectService::class);
-    }
-    return $this->projectService;
-  }
-
-  private function getParticipantFieldsService():ProjectParticipantFieldsService
-  {
-    if (empty($this->participantFieldsService)) {
-      $this->participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
-    }
-    return $this->participantFieldsService;
-  }
-
   private function getUserStorage():UserStorage
   {
     if (empty($this->userStorage)) {
@@ -689,18 +670,21 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return $this->userStorage;
   }
 
+  /**
+   * Reconstruct the field from the label, assuming the file-name has the
+   * forma LABEL-JohnDoe.EXT
+   *
+   */
   private function getOptionFromFileName(
     string $path
+    , string $userIdSlug
     , Entities\ProjectParticipantField $field
-    , Entities\Musician $musician
   ):?Entities\ProjectParticipantFieldDataOption {
     $pathInfo = pathinfo($path);
     $extension = $pathInfo['extension'];
     $fileName = $pathInfo['filename'];
     if (empty($this->fieldOptionsByFileName[$field->getId()][$fileName])) {
-      // try first the literal file-name
-      $projectService = $this->getProjectService();
-      $musicianPostfix = $projectService->participantFilename('', $field->getProject(), $musician);
+      $musicianPostfix = MusicianService::slugifyFileName('', $userIdSlug);
       $labelPrefix = substr($fileName, 0, strpos($fileName, $musicianPostfix));
       $option = $field->getOptionByLabel($labelPrefix);
       $this->fieldOptionsByFileName[$field->getId()][$fileName] = $option;
