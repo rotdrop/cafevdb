@@ -1228,7 +1228,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ENTITIY ID '.print_r($entityId, true));
               $entity = $entityClass::create();
               foreach ($entityId as $key => $value) {
-                if ($value <= 0) {
+                if (is_numeric($value) && $value <= 0) {
                   // treat this as autoincrement or otherwise auto-generated ids
                   continue;
                 }
