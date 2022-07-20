@@ -1087,6 +1087,8 @@ class ProjectParticipantFieldsService
       return $needsFlush;
     }
 
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     if (!$this->containsEntity($musician)) {
       $musician = $this->getReference(Entities\Musician::class, $musician->getId());
     }
@@ -1107,13 +1109,14 @@ class ProjectParticipantFieldsService
     $fieldOption = $field->getDataOption();
     if (empty($fieldOption)) {
       $this->logError('There should be a single field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
       return $needsFlush;
     }
     $fieldData = $fieldOption->getMusicianFieldData($musician);
     if (empty($folderContents)) {
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       foreach ($fieldData as $fieldDatum) {
-        $this->remove($fieldDatum);
+        $this->remove($fieldDatum, hard: true);
         $fieldDatum = null;
         $needsFlush = true;
       }
@@ -1121,7 +1124,7 @@ class ProjectParticipantFieldsService
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       if ($fieldData->count() !== 1) {
         foreach ($fieldData as $fieldDatum) {
-          $this->remove($fieldDatum);
+          $this->remove($fieldDatum, hard: true);
         }
         $project = $field->getProject();
         $fieldDatum = new Entities\ProjectParticipantFieldDatum;
@@ -1134,6 +1137,7 @@ class ProjectParticipantFieldsService
         $musician->getProjectParticipantFieldsData()->add($fieldDatum);
       } else {
         $fieldDatum = $fieldData->first();
+        $fieldDatum->setDeleted(null);
       }
       $fieldDatum->setOptionValue(json_encode($folderContents));
       $this->persist($fieldDatum);
@@ -1142,6 +1146,9 @@ class ProjectParticipantFieldsService
     if ($needsFlush && $flush) {
       $this->flush();
     }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
     return $needsFlush;
   }
 
@@ -1211,7 +1218,7 @@ class ProjectParticipantFieldsService
       $fieldData = $fieldOption->getMusicianFieldData($musician);
       if ($baseName === false) {
         foreach ($fieldData as $fieldDatum) {
-          $this->remove($fieldDatum);
+          $this->remove($fieldDatum, hard: true);
           // $fieldOption->getFieldData()->removeElement($fieldDatum);
           // $field->getFieldData()->removeElement($fieldDatum);
           // $project->getParticipantFieldsData()->removeElement($fieldDatum);
@@ -1222,7 +1229,7 @@ class ProjectParticipantFieldsService
       } else {
         if ($fieldData->count() !== 1) {
           foreach ($fieldData as $fieldDatum) {
-            $this->remove($fieldDatum);
+            $this->remove($fieldDatum, hard: true);
           }
           $project = $field->getProject();
           $fieldDatum = new Entities\ProjectParticipantFieldDatum;
@@ -1235,6 +1242,7 @@ class ProjectParticipantFieldsService
           $musician->getProjectParticipantFieldsData()->add($fieldDatum);
         } else {
           $fieldDatum = $fieldData->first();
+          $fieldDatum->setDeleted(null);
         }
         $fieldDatum->setOptionValue($baseName);
         $this->persist($fieldDatum);
