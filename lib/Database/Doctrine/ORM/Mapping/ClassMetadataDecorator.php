@@ -339,7 +339,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
             break;
           }
           $targetAssociation = $targetMeta->associationMappings[$inversedBy];
-          $indexBy = $targetAssociation['indexBy'];
+          $indexBy = $targetAssociation['indexBy'] ?? null;
           // $orderBy = $targetAssociation['orderBy']; complicated
           if (!empty($indexBy)) {
             $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
