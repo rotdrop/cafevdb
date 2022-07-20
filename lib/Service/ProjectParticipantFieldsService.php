@@ -45,14 +45,7 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
-use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
-use OCA\CAFEVDB\Common\UndoableFileRename;
-use OCA\CAFEVDB\Common\UndoableFolderCreate;
-use OCA\CAFEVDB\Common\UndoableTextFileUpdate;
-use OCA\CAFEVDB\Common\UndoableFolderRemove;
-use OCA\CAFEVDB\Common\IUndoable;
-
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
 
 /**
@@ -459,10 +452,14 @@ class ProjectParticipantFieldsService
   /**
    * Return the cloud-folder name for the given $field which must be of
    * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $datum
+   *
+   * @param bool $dry If \false actually also created the folder.
    */
-  public function getFieldFolderPath(Entities\ProjectParticipantFieldDatum $datum):?string
+  public function getFieldFolderPath(Entities\ProjectParticipantFieldDatum $datum, bool $dry = true):?string
   {
-    return $this->doGetFieldFolderPath($datum->getField(), $datum->getMusician());
+    return $this->doGetFieldFolderPath($datum->getField(), $datum->getMusician(), $dry);
   }
 
   /**
@@ -538,12 +535,12 @@ class ProjectParticipantFieldsService
     case DataType::INTEGER:
       return intval($value);
     case DataType::CLOUD_FILE:
-      $folderPath = $this->getFieldFolderPath($datum);
+      $folderPath = $this->getFieldFolderPath($datum, dry: false);
       $filePath = $folderPath . UserStorage::PATH_SEP . $value;
       $file = $this->di(UserStorage::class)->getFile($filePath);
       return $file;
     case DataType::CLOUD_FOLDER:
-      $folderPath = $this->getFieldFolderPath($datum);
+      $folderPath = $this->getFieldFolderPath($datum, dry: false);
       return $this->di(UserStorage::class)->getFolder($folderPath);
     case DataType::DB_FILE:
       if (empty($value)) {
@@ -936,23 +933,23 @@ class ProjectParticipantFieldsService
 
       $this->entityManager
         ->registerPreCommitAction(
-          new UndoableFolderCreate(
+          new Common\UndoableFolderCreate(
             fn() => $this->doGetFieldFolderPath($field, $musician),
             gracefully: true,
           )
         )->register(
-          new UndoableTextFileUpdate(
+          new Common\UndoableTextFileUpdate(
             fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
             gracefully: true,
             content: $readMe,
           )
         )
-        ->register(new GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+        ->register(new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
           $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
         }));
     }
     $this->entityManager->registerPreCommitAction(
-      new GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
+      new Common\GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
     );
   }
 
@@ -980,7 +977,7 @@ class ProjectParticipantFieldsService
 
       $this->entityManager
         ->registerPreCommitAction(
-          new UndoableTextFileUpdate(
+          new Common\UndoableTextFileUpdate(
             name: fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
             content: $newReadMe,
             replacableContent: $oldReadMe,
@@ -989,6 +986,84 @@ class ProjectParticipantFieldsService
           )
         );
     }
+  }
+
+  /**
+   * Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER
+   */
+  public function handleChangeFieldType(Entities\ProjectParticipantField $field, ?DataType $oldType, ?DataType $newType)
+  {
+    if ($newType == $oldType) {
+      return;
+    }
+    if ($newType != DataType::CLOUD_FOLDER && $oldType != DataType::CLOUD_FOLDER && $newType != DataType::CLOUD_FILE) {
+      return;
+    }
+
+    $readMe = Util::htmlToMarkDown($field->getTooltip());
+
+    $needsFlush = false;
+
+    switch ($newType) {
+    case DataType::CLOUD_FOLDER:
+      // try to create any missing folder
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($field->getProject()->getParticipants() as $participant) {
+        $musician = $participant->getMusician();
+
+        $this->entityManager->registerPreCommitAction(
+          new Common\UndoableFolderCreate(
+            fn() => $this->doGetFieldFolderPath($field, $musician),
+            gracefully: true,
+          )
+        )->register(
+          new Common\UndoableTextFileUpdate(
+            fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+            gracefully: true,
+            content: $readMe,
+          )
+        )->register(
+          new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+            $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
+          }));
+      }
+      break;
+    case DataType::CLOUD_FILE:
+      foreach ($field->getProject()->getParticipants() as $participant) {
+        $musician = $participant->getMusician();
+        $this->entityManager->registerPreCommitAction(
+          new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+            $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
+          })
+        );
+      }
+      break;
+    }
+    switch ($oldType) {
+    case DataType::CLOUD_FOLDER:
+      // try to remove essentially empty folders
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($field->getProject()->getParticipants() as $participant) {
+        $musician = $participant->getMusician();
+
+        // currently we only remove empty (READMEs are ignored) folders, also in
+        // order to mitigate user-errors: if deleting the field in error it can
+        // be added again and the files are still there.
+
+        // this has to be precomputed, as this belongs to the old field type.
+        $field->setDataType($oldType);
+        $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
+        $field->setDataType($newType);
+
+        $this->entityManager->registerPreCommitAction(
+          new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
+        );
+      }
+      break;
+    }
+    $this->entityManager->registerPreCommitAction(
+      new Common\GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
+    );
   }
 
   /**
@@ -1004,9 +1079,13 @@ class ProjectParticipantFieldsService
    *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
-  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null)
+  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null):bool
   {
     $needsFlush = false;
+
+    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+      return $needsFlush;
+    }
 
     if (!$this->containsEntity($musician)) {
       $musician = $this->getReference(Entities\Musician::class, $musician->getId());
@@ -1067,6 +1146,109 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Populate the field-data for the given field and musician with the
+   * actual file-system content. This can be used to sanitize the
+   * field-data after changing the field type, or after adding fields.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param bool $flush If true call flush as needed, otherwise just report
+   * back the need for flush with the return value.
+   *
+   * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
+   */
+  public function populateCloudFileField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null):bool
+  {
+    $needsFlush = false;
+
+    if ($field->getDataType() != DataType::CLOUD_FILE) {
+      return $needsFlush;
+    }
+
+    $multiplicity = $field->getMultiplicity();
+
+    if (!$this->containsEntity($musician)) {
+      $musician = $this->getReference(Entities\Musician::class, $musician->getId());
+    }
+
+    $folderName = $this->doGetFieldFolderPath($field, $musician);
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $folderNode = $userStorage->getFolder($folderName);
+    $folderContents = array_filter(
+      array_map(
+        fn(CloudFiles\Node $node) => $node->getName(),
+        empty($folderNode) ? [] : $folderNode->getDirectoryListing(),
+      ),
+      fn(string $nodeName) => $nodeName != Constants::README_NAME
+    );
+    $folderContents = array_combine(
+      $folderContents,
+      array_map(fn($baseName) => pathinfo($baseName, PATHINFO_FILENAME), $folderContents)
+    );
+
+    /** @var Collections\Collection $fieldOptions */
+    $fieldOptions = $field->getSelectableOptions();
+    if ($fieldOptions->count() == 0 && $multiplicity == Multiplicity::SIMPLE) {
+      $this->logError('There should be a one field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
+      return $needsFlush;
+    }
+
+    /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+    foreach ($fieldOptions as $fieldOption) {
+      if ($multiplicity == Multiplicity::SIMPLE) {
+        $fileSystemName = $this->getFileSystemFieldName($field);
+      } else {
+        $fileSystemName = $this->getFileSystemOptionLabel($fieldOption);
+      }
+      $fileName = MusicianService::slugifyFileName($fileSystemName, $musician->getUserIdSlug());
+
+      $baseName = array_search($fileName, $folderContents);
+
+      $fieldData = $fieldOption->getMusicianFieldData($musician);
+      if ($baseName === false) {
+        foreach ($fieldData as $fieldDatum) {
+          $this->remove($fieldDatum);
+          // $fieldOption->getFieldData()->removeElement($fieldDatum);
+          // $field->getFieldData()->removeElement($fieldDatum);
+          // $project->getParticipantFieldsData()->removeElement($fieldDatum);
+          // $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
+          $fieldDatum = null;
+          $needsFlush = true;
+        }
+      } else {
+        if ($fieldData->count() !== 1) {
+          foreach ($fieldData as $fieldDatum) {
+            $this->remove($fieldDatum);
+          }
+          $project = $field->getProject();
+          $fieldDatum = new Entities\ProjectParticipantFieldDatum;
+          $fieldDatum->setField($field)
+                     ->setDataOption($fieldOption)
+                     ->setMusician($musician)
+                     ->setProject($project);
+          $field->getFieldData()->add($fieldDatum);
+          $project->getParticipantFieldsData()->add($fieldDatum);
+          $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+        } else {
+          $fieldDatum = $fieldData->first();
+        }
+        $fieldDatum->setOptionValue($baseName);
+        $this->persist($fieldDatum);
+        $needsFlush = true;
+      }
+    }
+
+    if ($needsFlush && $flush) {
+      $this->flush();
+    }
+    return $needsFlush;
+  }
+
+  /**
    * Called via ORM events as pre-remove hook.
    */
   public function handleRemoveField(Entities\ProjectParticipantField $field)
@@ -1085,14 +1267,14 @@ class ProjectParticipantFieldsService
       // be added again and the files are still there.
       $this->entityManager
         ->registerPreCommitAction(
-          new UndoableFolderRemove(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true, recursively: false)
+          new Common\UndoableFolderRemove(fn() => $this->doGetFieldFolderPath($field, $musician), gracefully: true, recursively: false)
         );
     }
   }
 
   /**
    * Rename all linked cloud-folders as necessary. This is done by registering
-   * suitable IUndoable instances for the entity-manager's pre-commit
+   * suitable Common\IUndoable instances for the entity-manager's pre-commit
    * run-queue. In case of an error the change is undone, i.e. the files are
    * renamed back.
    *
@@ -1146,7 +1328,7 @@ class ProjectParticipantFieldsService
         $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
         $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
         $this->entityManager->registerPreCommitAction(
-          new UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
+          new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
         );
       } else { // 'file'
         /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -1160,7 +1342,7 @@ class ProjectParticipantFieldsService
             $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
             $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
             $this->entityManager->registerPreCommitAction(
-              new UndoableFileRename($oldPath, $newPath, gracefully: true)
+              new Common\UndoableFileRename($oldPath, $newPath, gracefully: true)
             );
           }
         }
@@ -1199,7 +1381,7 @@ class ProjectParticipantFieldsService
       $newBaseName = $projectService->participantFilename($newLabel, $musician) . '.' . $extension;
 
       $this->entityManager->registerPreCommitAction(
-        new UndoableFileRename(
+        new Common\UndoableFileRename(
           generator: function() use ($oldBaseName, $newBaseName, $field, $musician) {
             // invoke only here s.t. any changes to $field are already there
             $folderPath = $this->doGetFieldFolderPath($field, $musician);

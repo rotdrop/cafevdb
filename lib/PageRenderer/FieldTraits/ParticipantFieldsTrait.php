@@ -408,6 +408,10 @@ trait ParticipantFieldsTrait
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
               $subDir = basename($folderPath);
 
+              // this path is not timing critical, so we make sure
+              // here that the cloud-folder exists:
+              $this->userStorage->ensureFolder($folderPath);
+
               // synchronize the folder contents s.t. entries can also safely be deleted.
               $this->participantFieldsService->populateCloudFolderField($field, $musician);
               $this->flush();
@@ -442,6 +446,10 @@ trait ParticipantFieldsTrait
               $subDir = basename($folderPath);
 
               if ($op == 'view') {
+                // this path is not timing critical, so we make sure
+                // here that the cloud-folder exists:
+                $this->userStorage->ensureFolder($folderPath);
+
                 // synchronize the folder contents s.t. entries can also safely be deleted.
                 $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum);
                 $this->flush();
