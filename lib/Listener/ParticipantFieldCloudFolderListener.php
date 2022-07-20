@@ -296,7 +296,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
       $userIdSlug = $parts[self::USER_ID_PART];
       $fieldName = $parts[self::FIELD_NAME_PART] ?? null;
-      if (empty($baseName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
+      if (empty($baseName) && !empty($fieldName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
         $baseName = $fieldName;
         $fieldName = MusicianService::unSlugifyFileName($fieldName, $userIdSlug, keepExtension: false);
       }
