@@ -125,12 +125,20 @@ trait EntityManagerTrait {
    *
    * @param bool $flush Initiate a flush if true.
    *
+   * @param bool $hard Issue a double remove: if $entity is managed by
+   * Gedmo\SoftDeleteable then this will "hard" (read: finally) delete
+   * the entity unless it is tagged as "in use" by other means.
+   *
+   * @param bool $soft For entities managed by Gedmo\SoftDeleteable
+   * first check if this entity is already tagged as "soft deleted"
+   * and if so do nothing.
+   *
    * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function remove($entity, bool $flush = false)
+  protected function remove($entity, bool $flush = false, bool $hard = false, bool $soft = false)
   {
     if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
       $entity = [ 'id' => $entity ];
@@ -140,7 +148,13 @@ trait EntityManagerTrait {
       $entity = $this->entityManager->getReference($this->entityClassName, $key);
       $this->logDebug("Create reference from ".print_r($key, true).' for '.$this->entityClassName);
     }
+    if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
+      return;
+    }
     $this->entityManager->remove($entity);
+    if ($hard) {
+      $this->entityManager->remove($entity);
+    }
 
     if ($flush) {
       $this->flush();
