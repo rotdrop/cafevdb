@@ -488,7 +488,7 @@ class Projects extends PMETableViewBase
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
@@ -525,7 +525,7 @@ class Projects extends PMETableViewBase
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLanguageCode())."'
+    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id

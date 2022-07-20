@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database;
@@ -33,6 +34,7 @@ use OCP\EventDispatcher\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
@@ -161,6 +163,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $showSoftDeleted;
 
+  /** @var bool */
+  private $reopenAfterRollback;
+
   /** @var IL10N */
   private $l;
 
@@ -179,8 +184,14 @@ class EntityManager extends EntityManagerDecorator
   /** @var UndoableRunQueue */
   protected $preFlushActions;
 
-  /** @var UndoableRunQueue */
+  /**
+   * @var array<int, UndoableRunQueue>
+   * Pre-commit actions by translation level.
+   */
   protected $preCommitActions;
+
+  /** @var UndoableRunQueue */
+  protected $postCommitActions;
 
   /** @var IEventDispatcher */
   protected $eventDispatcher;
@@ -211,8 +222,11 @@ class EntityManager extends EntityManagerDecorator
     $this->logger = $logger;
     $this->l = $l10n;
 
-    $this->preFlushActions = new UndoableRunQueue($this->logger, $this->l);
-    $this->preCommitActions = new UndoableRunQueue($this->logger, $this->l);
+    $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
+    $this->preCommitActions = [];
+    $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
+
+    $this->reopenAterRollback = true;
 
     $this->bind();
     if (!$this->bound()) {
@@ -325,7 +339,8 @@ class EntityManager extends EntityManagerDecorator
   public function reopen()
   {
     $this->preFlushActions->clearActionQueue();
-    $this->preCommitActions->clearActionQueue();
+    $this->preCommitActions = [];
+    $this->postCommitActions->clearActionQueue();
     $this->bind();
   }
 
@@ -458,6 +473,10 @@ class EntityManager extends EntityManagerDecorator
       ORM\Events::loadClassMetadata,
       ORM\Events::preUpdate,
       ORM\Events::postUpdate,
+      ORM\Events::prePersist,
+      ORM\Events::postPersist,
+      ORM\Events::preRemove,
+      ORM\Events::postRemove,
       ORM\Events::postLoad,
     ], $this);
 
@@ -662,7 +681,12 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Manipulate class-metadata
+   * Manipulate class-metadata and replace life-cycle event handlers. The
+   * problem is here that otherwise the handlers do not get our decoryted
+   * entity-manager instance, but the vanilla entity manager.
+   *
+   * @todo Switch to entity-listeners, override the resolver and be done. This
+   * hack can then be removed.
    */
   public function loadClassMetadata(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
   {
@@ -673,6 +697,11 @@ class EntityManager extends EntityManagerDecorator
       switch ($event) {
       case ORM\Events::preUpdate:
       case ORM\Events::postUpdate:
+      case ORM\Events::prePersist:
+      case ORM\Events::postPersist:
+      case ORM\Events::preRemove:
+      case ORM\Events::postRemove:
+      case ORM\Events::postLoad:
         $this->lifeCycleEvents[$event][$className] = $eventHandlers;
         break;
       default:
@@ -695,15 +724,29 @@ class EntityManager extends EntityManagerDecorator
     foreach ($this->lifeCycleEvents[ORM\Events::preUpdate] as $className => $eventHandlers) {
       if ($entity instanceof $className) {
         foreach ($eventHandlers as $handler) {
-          call_user_func([ $entity, $handler ], $tmpEventArgs);
+          $entity->{$handler}($tmpEventArgs);
           ++$handled;
         }
       }
     }
     if ($handled > 0) {
+      // need to merge back the changes
       $newChangeSet = array_merge($eventArgs->getEntityChangeSet(), $tmpEventArgs->getEntityChangeSet());
       foreach ($newChangeSet as $field => $value) {
         $eventArgs->setNewValue($field, $value[1]);
+      }
+    }
+  }
+
+  private function lifecycleEventWrapper(string $event, ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getEntity();
+    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
+    foreach (($this->lifeCycleEvents[$event] ?? []) as $className => $eventHandlers) {
+      if ($entity instanceof $className) {
+        foreach ($eventHandlers as $handler) {
+          $entity->{$handler}($eventArgs);
+        }
       }
     }
   }
@@ -714,15 +757,58 @@ class EntityManager extends EntityManagerDecorator
    */
   public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs)
   {
-    $entity = $eventArgs->getEntity();
-    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
-    foreach ($this->lifeCycleEvents[ORM\Events::postUpdate] as $className => $eventHandlers) {
-      if ($entity instanceof $className) {
-        foreach ($eventHandlers as $handler) {
-          call_user_func([ $entity, $handler ], $eventArgs);
-        }
-      }
+    $this->lifecycleEventWrapper(ORM\Events::postUpdate, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::prePersist, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::postPersist, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function preRemove(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::preRemove, $eventArgs);
+  }
+
+  /**
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postRemove(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $this->lifecycleEventWrapper(ORM\Events::postRemove, $eventArgs);
+  }
+
+  /**
+   * Call ENTITY::__wakeup() if it exists.
+   *
+   * Forward some life-cycle callbacks, replacing the entity-manager
+   * instance with ourselves, the decorated EntityManager.
+   */
+  public function postLoad(ORM\Event\LifecycleEventArgs $eventArgs)
+  {
+    $entity = $eventArgs->getObject();
+    if (\method_exists($entity, '__wakeup')) {
+      $entity->__wakeup();
     }
+    $this->lifecycleEventWrapper(ORM\Events::postLoad, $eventArgs);
   }
 
   /**
@@ -758,24 +844,6 @@ class EntityManager extends EntityManagerDecorator
         $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
       }
     }
-  }
-
-  public function postLoad(ORM\Event\LifecycleEventArgs $args)
-  {
-    $entity = $args->getObject();
-    if (\method_exists($entity, '__wakeup')) {
-      $entity->__wakeup();
-    }
-  }
-
-  public function isTransactionActive()
-  {
-    return $this->entityManager->getConnection()->isTransactionActive();
-  }
-
-  public function getTransactionNestingLevel()
-  {
-    return $this->entityManager->getConnection()->getTransactionNestingLevel();
   }
 
   public function columnName($propertyName)
@@ -863,10 +931,12 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * Register a pre-commit action and optionally an associated
-   * undo-action. The actions are run after all data-base operation
-   * have completed just before the final commit step. If the action
-   * succeeds, then its $undoAction will be registered for the case
-   * that the final commit throws an exception. In this case all
+   * undo-action. The actions are run after the currently active --
+   * potentially nested -- transaction is committed. A commit will only
+   * execute the actions registered at the current transaction nesting level.
+   *
+   * If the action succeeds, then its $undoAction will be registered for the
+   * case that the commit throws an exception. In this case all
    * undo-actions will be executed in reverse order.
    *
    * In case of an error $action must throw an \Exception, its return
@@ -886,41 +956,191 @@ class EntityManager extends EntityManagerDecorator
    */
   public function registerPreCommitAction($action, ?Callable $undo = null):UndoableRunQueue
   {
+    if (!$this->isTransactionActive()) {
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+    }
+    $level = $this->getTransactionNestingLevel() - 1;
+    if (empty($this->preCommitActions[$level])) {
+      $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
+    }
+    $actions = $this->preCommitActions[$level];
     if (is_callable($action)) {
-      $this->preCommitActions->register(new GenericUndoable($action, $undo));
+      $actions->register(new GenericUndoable($action, $undo));
     } else if ($action instanceof IUndoable) {
-      $this->preCommitActions->register($action);
+      $actions->register($action);
     } else  {
       throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
-    return $this->preCommitActions;
+    return $actions;
   }
 
   /**
-   * Explicitly execute the registered actions in case that the order
-   * of execution matters.
+   * Explicitly execute the registered actions in case that the order of
+   * execution matters. Only the pre-commit actions which were registered at
+   * the current or a higher level will be executed.
+   *
+   * @throws Exceptions\UndoableRunQueueException
    */
   public function executePreCommitActions()
   {
-    $this->preCommitActions->executeActions();
+    if (!$this->isTransactionActive()) {
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+    }
+    $level = $this->getTransactionNestingLevel() - 1;
+    $actions = $this->preCommitActions[$level] ?? null;
+    if (!empty($actions) && !$actions->active()) {
+      $actions->executeActions();
+    }
   }
 
-  public function commit()
+  /**
+   * Register a post-commit action to be executed after the final data-base
+   * commit succeeded, that is, the execution is post-poned until after
+   * successful commit of the outermost transaction.
+   *
+   * Note that undo-actions are not taken into account, even
+   * if the registered "Undoables" have an undo-facility, this will never get
+   * executed.
+   *
+   * The execution of the corresponding run-queue is wrapped into a catch-all
+   * block, any failing action may be logged but will not hinder the execution
+   * of the other actions.
+   *
+   * @return UndoableRunQueue  Return the run-queue for  easy chaining
+   * via UndoableRunQueue::register().
+   */
+  public function registerPostCommitAction($action):UndoableRunQueue
+  {
+    if (is_callable($action)) {
+      $this->postCommitActions->register(new GenericUndoable($action, $undo));
+    } else if ($action instanceof IUndoable) {
+      $this->postCommitActions->register($action);
+    } else  {
+      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
+    return $this->postCommitActions;
+  }
+
+  /**
+   * Explicitly execute the registered post-commit actions. These cannot be undone.
+   *
+   * @return bool The execution status of the post-commit run-queue. \false on
+   * error, \true otherwise.
+   */
+  public function executePostCommitActions():bool
+  {
+    return $this->postCommitActions->executeActions(gracefully: true);
+  }
+
+  /**
+   * @see UndoableRunQueue::getRunQueueExceptions()
+   */
+  public function getPostCommitExceptions():array
+  {
+    return $this->postCommitActions->getRunQueueException();
+  }
+
+  /**
+   * Return the transaction status of the underlying DBAL connection.
+   *
+   * @see \Doctrine\DBAL\Connection::isTransactionActive()
+   *
+   * @return bool
+   */
+  public function isTransactionActive():bool
+  {
+    return $this->entityManager->getConnection()->isTransactionActive();
+  }
+
+  /**
+   * Return the transaction nesting level of the underlying DBAL connection.
+   *
+   * @see \Doctrine\DBAL\Connection::getTransactionNestingLevel()
+   *
+   * @return int
+   */
+  public function getTransactionNestingLevel():int
+  {
+    return $this->entityManager->getConnection()->getTransactionNestingLevel();
+  }
+
+  /**
+   * Start a new transaction.
+   */
+  public function beginTransaction()
+  {
+    $level = $this->getTransactionNestingLevel();
+    parent::beginTransaction();
+    if (empty($this->preCommitActions[$level])) {
+      $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
+    } else {
+      $this->preCommitActions[$level]->clearActionQueue();
+    }
+  }
+
+  /**
+   * Commit the currently pending transaction in the following order:
+   *
+   * - any left-over pre-flush actions are executed
+   * - the pending pre-commit actions are executed
+   * - the transaction is committed
+   * - if this was the outer-most transaction, then the post-commit actions
+   *   are executed
+   *
+   * @return bool The execution status of the post-commit run-queue if
+   * that has been executed, otherwise \true.
+   *
+   * @see EntityManager::getTransactionNestingLevel()
+   * @see EntityManager::registerPreFlushAction()
+   * @see EntityManager::registerPreCommintAction()
+   * @see EntityManager::registerPostCommitAction()
+   *
+   * @throws Exceptions\UndoableRunQueueException
+   * @throws ConnectionException
+   */
+  public function commit():bool
   {
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
+    // execute all pre-commit action of the current level
     $this->executePreCommitActions();
     parent::commit();
+    if (!$this->isTransactionActive()) {
+      // execute non-undoable actions after the final commit succeeded.
+      return $this->executePostCommitActions();
+    }
+    return true;
   }
 
+  /**
+   * Rollback the currently failed transactions, afterwards executed the
+   * undo-queues of the callback-queues:
+   *
+   * 1. rollback
+   * 2. run undo-actions of the pre-commit queue of the current level
+   * 3. run undo-actions of the pre-flush queue
+   *
+   * @throws ConnectionException
+   */
   public function rollback()
   {
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+
+    // the post-commit actions cannot be undone
     // undo does not throw, it just logs exceptions
-    $this->preCommitActions->executeUndo();
-    // undo does not throw, it just logs exceptions
+    $level = $this->getTransactionNestingLevel();
+    $this->preCommitActions[$level]->executeUndo();
     $this->preFlushActions->executeUndo();
+
+    if (!$this->isTransactionActive() && $this->reopenAfterRollback) {
+      try {
+        $this->entityManager->close();
+        $this->entityManager->reopen();
+      } catch (\Throable $t) {
+        $this->logException($t, 'Unable to reopen after rollback');
+      }
+    }
   }
 
   /**
@@ -944,6 +1164,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Explicitly execute the registered actions in case that the order
    * of execution matters.
+   *
+   * @throws Exceptions\UndoableRunQueueException
    */
   public function executePreFlushActions()
   {
@@ -962,6 +1184,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * @todo Get rid of this function, the meta-data class is rather an
    * internal data structure of Doctrine\ORM.
+   *
+   * @return ClassMetadata|ClassMetadataDecorator
    */
   public function getClassMetadata($className)
   {

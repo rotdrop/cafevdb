@@ -281,6 +281,26 @@ trait EntityManagerTrait {
     return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
 
+  /** Forward to EntityManager::contains() */
+  protected function containsEntity($entity)
+  {
+    return $this->entityManager->contains($entity);
+  }
+
+  /**
+   * Forward to EntityManager::refresh(), return the refreshed entity in order
+   * to allow for "->" chaining.
+   *
+   * @param object $entity
+   *
+   * @return object $entity
+   */
+  protected function refreshEntity($entity)
+  {
+    $this->entityManager->refresh($entity);
+    return $entity;
+  }
+
   /**
    * Enable the given filter.
    *

@@ -27,6 +27,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -47,6 +48,9 @@ trait ParticipantFileFieldsTrait
   /** @var ProjectService */
   protected $projectService;
 
+  /** @var ProjectParticipantFieldsService */
+  protected $participantFieldsService;
+
   /** @var UserStorage */
   protected $userStorage;
 
@@ -57,18 +61,18 @@ trait ParticipantFileFieldsTrait
   protected $pme;
 
   /** Generate one HTML input row for a cloud-file field. */
-  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician)
+  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $subDir, $fileBase, $musician)
   {
     $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
     // make sure $subDir exists
     if (!empty($subDir)) {
       $subDirPrefix = UserStorage::PATH_SEP . $subDir;
-      $this->userStorage->ensureFolder($participantFolder . $subDirPrefix);
+      // $this->userStorage->ensureFolder($participantFolder . $subDirPrefix);
     } else {
       $subDirPrefix = '';
     }
     if (!empty($fileBase)) {
-      $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+      $fileName = $this->projectService->participantFilename($fileBase, $musician);
       if (!empty($optionValue)) {
         $fileName .= '.' . pathinfo($optionValue, PATHINFO_EXTENSION);
       }
@@ -84,12 +88,16 @@ trait ParticipantFileFieldsTrait
         $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
-        $filesAppLink = '#';
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
         $optionValue = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
     } else {
       $downloadLink = '';
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+      try {
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+      } catch (\OCP\Files\NotFoundException $e) {
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
+      }
     }
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
@@ -105,7 +113,6 @@ trait ParticipantFileFieldsTrait
         'subDir' => $subDir,
         'fileBase' => $fileBase,
         'fileName' => $fileName,
-        'uploadPolicy' => $policy,
         'participantFolder' => $participantFolder,
         'filesAppLink' => $filesAppLink,
         'downloadLink' => $downloadLink,
@@ -151,7 +158,7 @@ trait ParticipantFileFieldsTrait
       if (empty($project)) {
         throw new \RuntimeException($this->l->t('No project given, unable generate a file-name.'));
       }
-      $fileName = $this->projectService->participantFilename($fileBase, $project, $musician);
+      $fileName = $this->projectService->participantFilename($fileBase, $musician);
       if (!empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
       }
@@ -222,11 +229,11 @@ trait ParticipantFileFieldsTrait
           break;
         case FieldType::CLOUD_FILE:
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
-            $pathChain[] = $field->getUntranslatedName();
+            $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           }
           break;
         case FieldType::CLOUD_FOLDER:
-          $pathChain[] = $field->getUntranslatedName();
+          $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           break;
         default:
           return null;
@@ -248,11 +255,16 @@ trait ParticipantFileFieldsTrait
     return [ $filesAppLink, $filesAppTarget ];
   }
 
-  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
+  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null, ?string $toolTip = null)
   {
+    if (!empty($toolTip)) {
+      $toolTip = $this->toolTipsService['participant-attachment-open-parent'] . '<br/>' . $toolTip;
+    } else {
+      $toolTip = $this->toolTipsService['participant-attachment-open-parent'];
+    }
     list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
     $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-       title="'.$this->toolTipsService['participant-attachment-open-parent'].'"
+       title="' . $toolTip . '"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
     return $html;

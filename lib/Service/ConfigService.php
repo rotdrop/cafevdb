@@ -446,6 +446,8 @@ class ConfigService
     if (empty($this->appL10n)) {
       $appLocale = $this->getAppLocale();
       $appLanguage = locale_get_primary_language($appLocale);
+      // The following is a hack because get() below does not underst .UTF-8 etc
+      $appLocale = $appLanguage . '_' . locale_get_region($appLocale);
       $this->appL10n = $this->l10NFactory->get($this->appName, $appLanguage, $appLocale);
     }
     return $this->appL10n;

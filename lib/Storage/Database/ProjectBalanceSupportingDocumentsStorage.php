@@ -67,7 +67,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
       // the mount provider currently disables soft-deleteable filter ...
-      $filterState = $this->disableFilter('soft-deleteable');
+      $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       try {
         $projectId = $this->project->getId();
         $this->clearDatabaseRepository();
@@ -76,7 +76,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       } catch (\Throwable $t) {
         $this->logException($t);
       }
-      $filterState && $this->enableFilter('soft-deleteable');
+      $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
   }
 
@@ -136,7 +136,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     }
 
     // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $documents = $this->project->getFinancialBalanceSupportingDocuments();
 
@@ -174,7 +174,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
     }
 
-    $filterState && $this->enableFilter('soft-deleteable');
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $this->files[$dirName];
   }

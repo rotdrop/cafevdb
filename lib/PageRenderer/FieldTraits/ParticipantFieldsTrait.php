@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
+use OCA\CAFEVDB\Constants;
+
 /** Participant-fields. */
 trait ParticipantFieldsTrait
 {
@@ -348,7 +350,7 @@ trait ParticipantFieldsTrait
               $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               $fileBase = $field->getName();
-              $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+              $fileName = $this->projectService->participantFilename($fileBase, $musician);
               $fileName .= '.' . $extension;
               $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                 $value, $fileName);
@@ -362,13 +364,12 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
-              $policy = $dataOptions->first()->getData()?:'rename';
-              $fileBase = $field->getUntranslatedName();
+              $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
               $subDir = null;
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">'
-              .$this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician).'
+                . $this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $subDir, $fileBase, $musician) . '
   </table>
 </div>';
             };
@@ -376,8 +377,8 @@ trait ParticipantFieldsTrait
               if (!empty($value)) {
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $fileBase = $field->getUntranslatedName();
-                $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician);
+                $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
+                $fileName = $this->projectService->participantFilename($fileBase, $musician);
                 $extension = pathinfo($value, PATHINFO_EXTENSION);
                 $fileName .= '.' . $extension;
                 $filePath = $participantFolder . UserStorage::PATH_SEP . $fileName;
@@ -402,18 +403,22 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
-              $policy = $dataOptions->first()->getData()?:'rename';
-              $fileBase = '';
-              $subDir = $field->getUntranslatedName();
+
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+              $subDir = basename($folderPath);
 
-              $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-              $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
+              // synchronize the folder contents s.t. entries can also safely be deleted.
+              $this->participantFieldsService->populateCloudFolderField($field, $musician);
+              $this->flush();
+
               // read the configured directory in
-
               /** @var OCP\Files\Folder $folder */
               $folder = $this->userStorage->getFolder($folderPath);
-              $folderContents = empty($folder) ? [] : $folder->getDirectoryListing();
+              $folderContents = array_filter(
+                empty($folder) ? [] : $folder->getDirectoryListing(),
+                fn(CloudFiles\Node $node) => $node->getName() != Constants::README_NAME
+              );
 
               $html = '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">';
@@ -421,49 +426,60 @@ trait ParticipantFieldsTrait
               /** @var CloudFiles\Node $node */
               foreach ($folderContents as $node) {
                 $fileName = $node->getName() . ($node->getType() == CloudFiles\FileInfo::TYPE_FOLDER ? UserStorage::PATH_SEP : '');
-                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $subDir, '', $musician);
               }
 
-              $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $policy, $subDir, '', $musician);
+              $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $subDir, '', $musician);
 
               $html .= '
   </table>
 </div>';
               return $html;
             };
-            $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              if (!empty($value)) {
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $subDir = $field->getUntranslatedName();
-                $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $folderPath = $participantFolder . UserStorage::PATH_SEP . $subDir;
-                $folder = $this->userStorage->getFolder($folderPath);
-                if (!empty($folder)) {
+            $phpFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+              $subDir = basename($folderPath);
 
-                  $listing = json_decode($value, true);
-                  if (!is_array($listing)) {
-                    $listing = [];
-                  }
-                  $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
-                  $linkText = $subDir . '.'  . 'zip';
-                  try {
-                    $downloadLink = $this->userStorage->getDownloadLink($folderPath);
-                    $html = '<a href="'.$downloadLink.'"
+              if ($op == 'view') {
+                // synchronize the folder contents s.t. entries can also safely be deleted.
+                $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum);
+                $this->flush();
+                $value = !empty($fieldDatum) ? $fieldDatum->getOptionValue() : '';
+              }
+
+              $listing = json_decode($value, true);
+              if (!is_array($listing)) {
+                $listing = [];
+              }
+              if (!empty($listing)) {
+                $toolTip = $this->toolTipsService['participant-attachment-open-parent'].'<br>'.implode(', ', $listing);
+                $subDir = basename($folderPath);
+                $linkText = $subDir . '.'  . 'zip';
+                try {
+                  $downloadLink = $this->userStorage->getDownloadLink($folderPath);
+                  $html = '<a href="'.$downloadLink.'"
                              title="'.$toolTip.'"
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                  } catch (\OCP\Files\NotFoundException $e) {
-                    $this->logException($e);
-                    $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
-                  }
-
-                  $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-
-                  return $filesAppAnchor . $html;
+                } catch (\OCP\Files\NotFoundException $e) {
+                  $this->logException($e);
+                  $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                 }
+              } else {
+                $html = '<span class="empty tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder is empty.') . '</span>';
               }
-              return null;
+
+              $filesAppAnchor = $this->getFilesAppAnchor($field, $musician, toolTip: implode(', ', $listing));
+
+              return $filesAppAnchor . $html;
+            };
+            $valueFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
+              return $phpFunction($value, 'view', $k, $row, $recordId, $pme);
+            };
+            $valueFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
+              return $phpFunction($value, 'list', $k, $row, $recordId, $pme);
             };
             break;
           case FieldType::DATE:
@@ -572,16 +588,16 @@ trait ParticipantFieldsTrait
               $values = array_combine($optionKeys, $optionValues);
               $this->debug('VALUES '.print_r($values, true));
               $fieldId = $field->getId();
-              $subDir = $field->getUntranslatedName();
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
+
               /** @var Entities\ProjectParticipantFieldDataOption $option */
               $html = '<div class="file-upload-wrapper">
   <table class="file-upload">';
               foreach ($field->getSelectableOptions() as $option) {
                 $optionKey = (string)$option->getKey();
-                $fileBase = $option->getUntranslatedLabel();
-                $policy = $option->getData()?:'rename';
-                $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $policy, $subDir, $fileBase, $musician);
+                $fileBase = $this->participantFieldsService->getFileSystemOptionLabel($option);
+                $html .= $this->cloudFileUploadRowHtml($values[$optionKey] ?? null, $fieldId, $optionKey, $subDir, $fileBase, $musician);
               }
               $html .= '
   </table>
@@ -594,15 +610,14 @@ trait ParticipantFieldsTrait
                 $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
                 $values = array_combine($optionKeys, $optionValues);
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
-                $subDir = $field->getUntranslatedName();
-                $folderPath = $participantFolder.UserStorage::PATH_SEP.$subDir;
+                $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
+                $subDir = basename($folderPath);
 
                 // restore the extensions ... $value is a concatenation of the option names
                 $listing = [];
                 foreach ($values as $optionKey => $fileName) {
                   $option = $field->getDataOption($optionKey);
-                  $fileBase = $option->getUntranslatedLabel();
+                  $fileBase = $this->participantFieldsService->getFileSystemOptionLabel($option);
                   $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                   $listing[] = $fileBase . '.' . $extension;
                 }
@@ -665,7 +680,7 @@ trait ParticipantFieldsTrait
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                   $fileBase = $field->getName();
                   $extension = 'zip';
-                  $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.' . $extension;
+                  $fileName = $this->projectService->participantFilename($fileBase, $musician) . '.' . $extension;
 
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                     array_values($values), $fileName);
@@ -786,7 +801,7 @@ trait ParticipantFieldsTrait
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                   $fileBase = $field->getName();
                   $extension = 'zip';
-                  $fileName = $this->projectService->participantFilename($fileBase, $this->project, $musician) . '.' . $extension;
+                  $fileName = $this->projectService->participantFilename($fileBase, $musician) . '.' . $extension;
                   $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
                     array_values($values), $fileName);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
@@ -912,17 +927,19 @@ trait ParticipantFieldsTrait
   </thead>
   <tbody>';
 
-            if ($dataType == FieldType::DB_FILE) {
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-              $subDir = $field->getName();
-              foreach ($options as $optionKey => $option) {
-                $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
-              }
-            } else {
-              $idx = 0;
-              foreach ($options as $optionKey => $option) {
-                $html .= $this->recurringChangeRowHtml($values[$optionKey], $fieldId, $optionKey, $dataType, $labelled ? ($option->getLabel()??'') : null, $invoices, $idx++);
-              }
+            switch ($dataType)  {
+              case FieldType::DB_FILE:
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $subDir = $field->getName();
+                foreach ($options as $optionKey => $option) {
+                  $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
+                }
+                break;
+              default:
+                $idx = 0;
+                foreach ($options as $optionKey => $option) {
+                  $html .= $this->recurringChangeRowHtml($values[$optionKey], $fieldId, $optionKey, $dataType, $labelled ? ($option->getLabel()??'') : null, $invoices, $idx++);
+                }
             }
 
             foreach ($generatorClass::updateStrategyChoices() as $tag) {

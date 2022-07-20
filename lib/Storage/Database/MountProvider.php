@@ -110,7 +110,7 @@ class MountProvider implements IMountProvider
     // disable soft-deleteable here in order to cope with the case that the
     // musician underlying the project-participation is alreay soft-deleted.
     // Do this early as proxies seemingly (correctly) remember the filter state.
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $sharedFolder = $this->getSharedFolderPath();
 
@@ -279,7 +279,7 @@ class MountProvider implements IMountProvider
 
     \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds($bulkLoadStorageIds);
 
-    $filterState && $this->enableFilter('soft-deleteable');
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     --self::$recursionLevel;
     return $mounts;

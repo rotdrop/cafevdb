@@ -26,13 +26,17 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
 
-class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata
+class ClassMetadataDecorator implements ClassMetadataInterface
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
@@ -291,6 +295,64 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
   ////////////////////////////////////
 
   /**
+   * Update the inverse side of an association after auto-installing
+   * $targetEntity into $entity (the owning side). This is only done if it
+   * does not produce reloads from the data-base, so only "real" entities,
+   * initialized proxies and initialized lazy collections are updated.
+   *
+   * @param object $entity The current $entity which must be the owning side
+   * of the association.
+   *
+   * @param array $assocation The association mapping of the current field
+   * (the field itself is not needed here).
+   *
+   * @param object $targetEntity The target-entity which must be the inverse
+   * side of the association.
+   *
+   * @param ClassMetadata|ClassMetadataDecorator $targetMeta The class meta-data of the target-entity
+   *
+   */
+  private function updateInverseSide(
+    $entity
+    , array $association
+    , $targetEntity
+    , ClassMetadataInterface $targetMeta
+  ) {
+    if (!empty($association['mappedBy'])) {
+      $this->logInfo('WE ARE THE INVERSE SIDE ' . print_r($association, true));
+    }
+    // try to maintain connectivity if it does not cause additional direct database access
+    if (!empty($association['inversedBy'])
+        && (!($targetEntity instanceof Proxy) || $targetEntity->__isInitialized())) {
+      $inversedBy = $association['inversedBy'];
+      $associationType = $association['type'];
+      switch ($associationType) {
+        case ClassMetadata::ONE_TO_ONE:
+          $targetMeta->setFieldValue($targetEntity, $inversedBy, $entity);
+          break;
+        case ClassMetadata::MANY_TO_ONE:
+          $inversedByValue = $targetMeta->getFieldValue($targetEntity, $inversedBy);
+          if (!($inversedByValue instanceof Collection)
+              || ($inversedByValue instanceof PersistentCollection) && !$inversedByValue->isInitialized()) {
+            // skip if the collection would have to be fetches or if
+            // it is not there already (the latter should not happen).
+            break;
+          }
+          $targetAssociation = $targetMeta->associationMappings[$inversedBy];
+          $indexBy = $targetAssociation['indexBy'];
+          // $orderBy = $targetAssociation['orderBy']; complicated
+          if (!empty($indexBy)) {
+            $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
+            $inversedByValue->set($indexByValue, $entity);
+          } else if (!$inversedByValue->contains($entity)) {
+            $inversedByValue->add($entity);
+          }
+          break;
+      }
+    }
+  }
+
+  /**
    * The related MetaData::getIdentifierValues() function does not
    * handle recursion into associations. Extract the column values of
    * primary foreign keys by recursing into the meta-data.
@@ -317,6 +379,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
       if (isset($this->metaData->associationMappings[$field])) {
         $association = $this->metaData->associationMappings[$field];
         $targetEntity = $association['targetEntity'];
+        /** @var ClassMetadata $targetMeta */
         $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
         if (count($association['joinColumns']) != 1) {
           throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
@@ -335,6 +398,9 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
           } else {
             // replace the value by a reference
             $reference = $this->entityManager->getReference($targetEntity, [ $targetField => $value ]);
+
+            // try to maintain connectivity if it does not cause additional direct database access
+            $this->updateInverseSide($entity, $association, $reference, $targetMeta);
           }
           $this->doSetFieldValue($this->metaData, $entity, $field, $reference);
           // assume this is the column value, not the entity of the foreign key
@@ -406,7 +472,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
   /**
    * Compute a mapping which includes also hidden columns which are
    * introduced through associations. The mapped field is then the
-   * first found association field which refereces the column.
+   * first found association field which references the column.
    *
    * @return array A flat mapping column-name => entity-property
    */
@@ -494,6 +560,7 @@ class ClassMetadataDecorator implements \OCA\CAFEVDB\Wrapped\Doctrine\Persistenc
       $referencedId = $targetMeta->extractKeyValues($referencedColumnId);
       $fieldValue = $this->entityManager->getReference($targetEntity, $referencedId);
       $this->doSetFieldValue($meta, $entity, $field, $fieldValue);
+      $this->updateInverseSide($entity, $associationMapping, $fieldValue, $targetMeta);
       ++$numSetters;
     }
     if ($numSetters == 0) {

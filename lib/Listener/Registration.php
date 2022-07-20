@@ -46,7 +46,11 @@ class Registration
     self::registerListener($context, FileNodeListener::class);
     self::registerListener($context, PreChangeUserIdSlugListener::class);
     self::registerListener($context, PreRenameProjectParticipantFieldListener::class);
+    self::registerListener($context, PreChangeProjectParticipantFieldTooltipListener::class);
     self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
+    self::registerListener($context, PrePersistProjectParticipantFieldListener::class);
+    self::registerListener($context, PreRemoveProjectParticipantFieldListener::class);
+    self::registerListener($context, ParticipantFieldCloudFolderListener::class);
     self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
     self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
     self::registerListener($context, SubAdminEventListener::class);

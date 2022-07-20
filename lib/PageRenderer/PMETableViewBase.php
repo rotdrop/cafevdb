@@ -255,7 +255,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->membersProjectId = $this->getClubMembersProjectId();
 
     // this is done by the legacy code itself.
-    $this->disableFilter('soft-deleteable');
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $this->defaultFDD = $this->createDefaultFDD();
 
@@ -757,9 +757,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function debugPrintValues($oldValues, $changed, $newValues, $onlyKeys = null, $prefix = null)
   {
     $prefix = $prefix ? strtoupper($prefix) . ' ' : '';
-    $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 3);
-    $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 3);
-    $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 3);
+    $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 1);
+    $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 1);
+    $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 1);
   }
 
   /**
@@ -1352,6 +1352,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     }
     $this->flush(); // flush everything to the data-base
 
+    // As this is not timing critical we should perhaps reload the master entity
+    // from the database in order to sanitize all associations.
+    // $this->refreshEntity($masterEntity);
+
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
     if (!empty($changed)) {
@@ -1772,6 +1776,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
+
+    // As this is not time critical we should perhaps reload the master entity
+    // from the database in order to sanitize all associations.
+    // $this->refreshEntity($masterEntity);
 
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
 
@@ -2405,11 +2413,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * Be noisy if debugging is enabled. Debug can be switched on and
    * off in the user interface if export-mode is enabled.
    */
-  protected function debug(string $message, array $context = [], $shift = 2) {
+  protected function debug(string $message, array $context = [], $shift = 0) {
+    ++$shift;
     if ($this->debugRequests) {
-      $this->logInfo($message, $context, $shift + 1);
+      $this->logInfo($message, $context, $shift);
     } else {
-      $this->logDebug($message, $context, $shift + 1);
+      $this->logDebug($message, $context, $shift);
     }
   }
 

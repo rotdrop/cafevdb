@@ -314,7 +314,7 @@ $routes = [
       'url' => '/download/{section}/{object}',
       'verb' => 'POST',
       'requirements' => [
-        'section' => '^(?!pdf)$',
+        'section' => '^(?!pdf).*$',
       ],
     ],
     [
@@ -322,7 +322,7 @@ $routes = [
       'url' => '/download/{section}/{object}',
       'verb' => 'GET',
       'requirements' => [
-        'section' => '^(?!pdf)$',
+        'section' => '^(?!pdf).*$',
       ],
     ],
     /**

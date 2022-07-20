@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
 
+use OCA\CAFEVDB\Constants;
+
 class ProjectParticipantFieldsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -269,10 +271,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -353,10 +351,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -441,10 +435,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 
@@ -481,10 +471,14 @@ class ProjectParticipantFieldsController extends Controller {
 
         $item = array_shift($dataOptions);
 
+        if ($item['label'] === Constants::README_NAME) {
+          return self::grumble($this->l->t('Using "%1$s" as option-label is not allowed. The "%2$s"-file is reserved by the app to hold the contents of the tooltip for this field.', [ $item['label'], Constants::README_NAME ]));
+        }
+
         // remove dangerous html
         $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
-        switch ($data['data-type']??null) {
+        switch ($data['dataType']??null) {
           case FieldDataType::SERVICE_FEE:
             // see that it is a valid decimal number ...
             if (!empty($item['data'])) {
@@ -500,6 +494,11 @@ class ProjectParticipantFieldsController extends Controller {
                 return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
               }
               $item['deposit'] = $parsed;
+            }
+            break;
+          case FieldDataType::CLOUD_FILE:
+            if ($item['label'] === Constants::README_NAME) {
+              return self::grumble($this->l->t('Using "%1$s" as option-label is not allowed. The "%2$s"-file is used by the app to hold the contents of the help-text for this field.', [ $item['label'], Constants::README_NAME ]));
             }
             break;
           default:
@@ -624,10 +623,6 @@ class ProjectParticipantFieldsController extends Controller {
         } catch (\Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          if (!$this->entityManager->isTransactionActive()) {
-            $this->entityManager->close();
-            $this->entityManager->reopen();
-          }
           return self::grumble($this->exceptionChainData($t));
         }
 

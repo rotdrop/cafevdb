@@ -75,7 +75,7 @@ class FillEncryptedFileOwners extends AbstractMigration
 
   public function execute():bool
   {
-    $filterState = $this->disableFilter('soft-deleteable');
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $this->entityManager->beginTransaction();
     try {
@@ -105,11 +105,11 @@ class FillEncryptedFileOwners extends AbstractMigration
         }
 
       }
-      if ($this->entityManager->getTransactionNestingLevel() > 0) {
+      if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->commit();
       }
     } catch (\Throwable $t) {
-      if ($this->entityManager->getTransactionNestingLevel() > 0) {
+      if ($this->entityManager->isTransactionActive()) {
         try {
           $this->entityManager->rollback();
         } catch (\Throwable $t2) {
@@ -118,6 +118,8 @@ class FillEncryptedFileOwners extends AbstractMigration
       }
       throw new Exceptions\DatabaseMigrationException($this->l->t('Transactional part of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
     }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
     return true;
   }

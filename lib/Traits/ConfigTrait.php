@@ -42,7 +42,9 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Common\Util;
 
-trait ConfigTrait {
+trait ConfigTrait
+{
+  use LoggerTrait;
 
   /** @var ConfigService */
   protected $configService;
@@ -82,9 +84,9 @@ trait ConfigTrait {
     return $this->configService->getAppL10n();
   }
 
-  protected function logger():ILogger
+  public function logger():ILogger
   {
-    return $this->configService->logger();
+    return $this->configService ? $this->configService->logger() : $this->logger;
   }
 
   protected function appContainer():IAppContainer
@@ -742,36 +744,6 @@ trait ConfigTrait {
              || empty($this->getConfigValue('dbuser'))
              || empty($this->getConfigValue('dbpassword'))
              || empty($this->getConfigValue('dbserver')));
-  }
-
-  protected function log(int $level, string $message, array $context = [], $shift = 2)
-  {
-    return $this->configService->log($level, $message, $context, $shift);
-  }
-
-  protected function logException($exception, $message = null, $shift = 2)
-  {
-    return $this->configService->logException($exception, $message, $shift);
-  }
-
-  protected function logError(string $message, array $context = [], $shift = 2) {
-    $this->configService->logError($message, $context, $shift);
-  }
-
-  protected function logDebug(string $message, array $context = [], $shift = 2) {
-    $this->configService->logDebug($message, $context, $shift);
-  }
-
-  protected function logInfo(string $message, array $context = [], $shift = 2) {
-    $this->configService->logInfo($message, $context, $shift);
-  }
-
-  protected function logWarn(string $message, array $context = [], $shift = 2) {
-    $this->configService->logWarn($message, $context, $shift);
-  }
-
-  protected function logFatal(string $message, array $context = [], $shift = 2) {
-    $this->configService->logFatal($message, $context, $shift);
   }
 
   /** Forward to OCP\IConfig::getSystemValue() */

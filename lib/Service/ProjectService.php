@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -41,12 +42,9 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
-use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
-use OCA\CAFEVDB\Common\UndoableFileRename;
-use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Constants;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -507,10 +505,6 @@ class ProjectService
 
     foreach($projectPaths as $key => $path) {
       $this->userStorage->delete($path);
-      // throttle deletion in order to have distinct file-names in the
-      // trash-bin. Currently a file's MTIME in NextCloud has only
-      // second resolution, so ...
-      sleep(1);
     }
 
     return true;
@@ -530,9 +524,6 @@ class ProjectService
    */
   public function restoreProjectFolders($project, ?array $timeInterval = null):bool
   {
-    /** @var OCA\Files_Trashbin\Trash\TrashManager $trashManager */
-    $trashManager = $this->di(\OCA\Files_Trashbin\Trash\TrashManager::class);
-
     $pathSep = UserStorage::PATH_SEP;
     $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
 
@@ -684,17 +675,17 @@ class ProjectService
   }
 
   /**
-   * e.g. passport-clausjustusheine.pdf
-   * e.g. passport-claus-justus-heine.pdf
+   * Avoid duplicated "extensions" in file-names, i.e. use
+   * passport-ClausJustusHeine.pdf instead of passport-claus-justus.heine.pdf
    */
-  public function participantFilename(string $base, $project, $musicianOrSlug)
+  public function participantFilename(string $base, $musicianOrSlug)
   {
     if ($musicianOrSlug instanceof Entities\Musician) {
       $userIdSlug = $this->musicianService->ensureUserIdSlug($musicianOrSlug);
     } else {
       $userIdSlug = $musicianOrSlug;
     }
-    return $base.'-'.Util::dashesToCamelCase($userIdSlug, true, '_-.');
+    return MusicianService::slugifyFileName($base, $userIdSlug);
   }
 
   /**
@@ -753,13 +744,13 @@ class ProjectService
 
     if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
       // construct the file-name from the field-name
-      $fileName = $this->participantFilename($fieldName, $fieldDatum->getProject(), $fieldDatum->getMusician());
+      $fileName = $this->participantFilename($fieldName, $fieldDatum->getMusician());
       $dirName = null;
     } else {
       // construct the file-name from the option label if non-empty or the file-name of the DB-file
       $optionLabel = $fieldOption->getLabel();
       if (!empty($optionLabel)) {
-        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getProject(), $fieldDatum->getMusician());
+        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getMusician());
       } else {
         $fileName = basename($dbFileName, '.' . $extension);
       }
@@ -781,7 +772,7 @@ class ProjectService
   /**
    * Rename all project-participants folders in order to reflect changes in
    * the user-id-slug (== user-name). This functions registers suitable
-   * IUndoable actions with the EntityManager which are executed pre-commit.
+   * Common\IUndoable actions with the EntityManager which are executed pre-commit.
    *
    * @param Entities\Musician $musician
    *
@@ -795,7 +786,7 @@ class ProjectService
    */
   public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug)
   {
-    $softDeleteableState = $this->disableFilter('soft-deleteable');
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\ProjectParticipant $projectParticipant */
     foreach ($musician->getProjectParticipation() as $projectParticipant) {
@@ -823,32 +814,34 @@ class ProjectService
           $project = $field->getProject();
           $extension = pathinfo($fieldDatum->getOptionValue(), PATHINFO_EXTENSION);
 
+          $fileSystemFieldName = $this->participantFieldsService->getFileSystemFieldName($field);
+
           // @todo: this should be moved to the ProjectParticipantFieldsService
           if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
             // name based on field name
-            $nameBase = $field->getUntranslatedName();
+            $nameBase = $fileSystemFieldName;
             $subDir = '';
           } else {
             // name based on option label
-            $nameBase = $fieldDatum->getDataOption()->getUntranslatedLabel();
-            $subDir = $field->getUntranslatedName() . UserStorage::PATH_SEP;
+            $nameBase = $this->participantFieldsService->getFileSystemOptionLabel($fieldDatum->getDataOption());
+            $subDir = $fileSystemFieldName . UserStorage::PATH_SEP;
           }
           $oldFilePath =
             $oldFolderPath . UserStorage::PATH_SEP
             . $subDir
-            . $this->participantFilename($nameBase, $project, $oldUserIdSlug)
+            . $this->participantFilename($nameBase, $oldUserIdSlug)
             . '.' . $extension;
 
           $newFilePath =
             $oldFolderPath . UserStorage::PATH_SEP
             . $subDir
-            . $this->participantFilename($nameBase, $project, $newUserIdSlug)
+            . $this->participantFilename($nameBase, $newUserIdSlug)
             . '.' . $extension;
 
           $this->logInfo('Try rename files ' . $oldFilePath . ' -> ' . $newFilePath);
 
           $this->entityManager->registerPreFlushAction(
-            new UndoableFileRename($oldFilePath, $newFilePath, true /* gracefully */)
+            new Common\UndoableFileRename($oldFilePath, $newFilePath, true /* gracefully */)
           );
         }
 
@@ -860,11 +853,11 @@ class ProjectService
 
       // rename the project folder, this is the "easy" part
       $this->entityManager->registerPreFlushAction(
-        new UndoableFolderRename($oldFolderPath, $newFolderPath, true /* gracefully */)
+        new Common\UndoableFolderRename($oldFolderPath, $newFolderPath, true /* gracefully */)
       );
     }
 
-    $softDeleteableState && $this->enableFilter('soft-deleteable');
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
   public function projectWikiLink($pageName)
@@ -1241,10 +1234,6 @@ Whatever.',
     } catch (\Throwable $t)  {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to attach article "%s".', [ $pageName ]),
         $t->getCode(),
@@ -1283,10 +1272,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1322,10 +1307,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1625,15 +1606,40 @@ Whatever.',
 
       $this->flush();
 
+      $this->entityManager->registerPreCommitAction(
+        new Common\UndoableFolderCreate(
+          fn() => $this->ensureParticipantFolder($project, $musician, dry: true),
+          gracefully: true,
+        ));
+
+      /** @var Entities\ProjectParticipantField $field */
+      foreach ($project->getParticipantFields() as $field) {
+        if ($field->getDataType() != FieldDataType::CLOUD_FOLDER) {
+          continue;
+        }
+
+        $readMe = Util::htmlToMarkDown($field->getTooltip());
+
+        $this->entityManager->registerPreCommitAction(
+          new Common\UndoableFolderCreate(
+            fn() => $this->participantFieldsService->doGetFieldFolderPath($field, $musician),
+            gracefully: true,
+          )
+        )->register(
+          new Common\UndoableTextFileUpdate(
+            fn() => $this->participantFieldsService->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+            $readMe,
+            gracefully: true)
+        );
+      }
+      // $this->entityManager->registerPreCommitAction(
+      //   new Common\GenericUndoable(fn() => throw new \Exception('SHOW STOPPER'))
+      // );
+
       $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
-
       $status[] = [
         'id' => $id,
         'notice' => $this->l->t(
@@ -1642,9 +1648,6 @@ Whatever.',
       ];
       return false;
     }
-
-    // make sure the participant sub-folder exists also
-    $this->ensureParticipantFolder($project, $musician);
 
     $status[] = [
       'id' => $id,
@@ -1843,8 +1846,19 @@ Whatever.',
       return;
     }
 
-    if (!empty($listsService->getSubscription($listId, $email))) {
-      $listsService->unsubscribe($listId, $email);
+    try {
+      if (!empty($listsService->getSubscription($listId, $email))) {
+        $listsService->unsubscribe($listId, $email);
+      }
+    } catch (\Throwable $t) {
+      if ($participant->getRegistration()) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',
+                      $participant->getMusician()->getPublicName(true)),
+          0, $t);
+      } else {
+        $this->logException($t, 'Mailing list service not reachable');
+      }
     }
   }
 
@@ -1863,8 +1877,8 @@ Whatever.',
     $project = $this->repository->ensureProject($projectOrId);
 
     // not an entity-manager run-queue
-    $runQueue = (new UndoableRunQueue($this->Logger(), $this->l10n()))
-      ->register(new GenericUndoable(
+    $runQueue = (new Common\UndoableRunQueue($this->Logger(), $this->l10n()))
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           $projectPaths = $this->ensureProjectFolders($project->getId(), $project->getName());
         },
@@ -1872,7 +1886,7 @@ Whatever.',
           $this->logInfo('TRY REMOVE FOLDERS FOR ' . $project->getId());
           $this->removeProjectFolders($project->getId());
         }))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           $this->generateProjectWikiPage($project->getId(), $project->getName());
           $this->generateWikiOverview();
@@ -1883,7 +1897,7 @@ Whatever.',
           $this->generateWikiOverview([ $project->getId(), ]);
         }
       ))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           // Generate an empty offline page template in the public web-space
           $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_CONCERT);
@@ -1897,7 +1911,7 @@ Whatever.',
            }
         }
       ))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           $this->createProjectMailingList($project);
           return $project->getMailingListId();
@@ -1949,10 +1963,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to create new project with name "%s".', $name),
         $t->getCode(),
@@ -1993,17 +2003,21 @@ Whatever.',
     $softDelete  = count($project['payments']??[]) > 0;
 
     $this->entityManager
-      ->registerPreFlushAction(new GenericUndoable(
+      ->registerPreFlushAction(new Common\GenericUndoable(
         function() use ($project) {
           $startTime = $this->getTimeStamp();
           $this->removeProjectFolders($project);
+          // throttle deletion in order to have distinct file-names in the
+          // trash-bin. Currently a file's MTIME in NextCloud has only
+          // second resolution, so ...
+          @time_sleep_until($startTime + 1);
           $endTime = $this->getTimeStamp();
           return [ $startTime, $endTime ];
         },
         function($timeInterval) use ($project) {
           $this->restoreProjectFolders($project, $timeInterval);
         }))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           try {
             $pageVersion = $this->deleteProjectWikiPage($project);
@@ -2018,7 +2032,7 @@ Whatever.',
           $this->restoreProjectWikiPage($project, $pageVersion);
           $this->generateWikiOverview();
         }))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($project) {
           $projectId = $project->getId();
           $webPages = $project->getWebPages();
@@ -2038,7 +2052,7 @@ Whatever.',
           }
         }));
     if ($softDelete && !empty($listId = $project->getMailingListId())) {
-      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+      $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
         function() use ($listId) {
           /** @var MailingListsService $listsService */
           $listService = $this->di(MailingListsService::class);
@@ -2105,10 +2119,6 @@ Whatever.',
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Failed to remove project "%s", id "%d".',
                     [ $project['name'], $project['id'] ]),
@@ -2193,10 +2203,6 @@ Whatever.',
     } catch (\Throwable $t)  {
       $this->logException($t);
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
       throw new \Exception(
         $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
         $t->getCode(),
@@ -2250,7 +2256,7 @@ Whatever.',
     $cloudService = $this->di(CloudUserConnectorService::class);
 
     $this->entityManager
-      ->registerPreFlushAction(new GenericUndoable(
+      ->registerPreFlushAction(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
           $this->logInfo('OLD ' . print_r($oldProject, true) . ' NEW ' . print_r($newProject, true));
           $this->renameProjectFolder($newProject, $oldProject);
@@ -2259,7 +2265,7 @@ Whatever.',
           $this->renameProjectFolder($oldProject, $newProject);
         }
       ))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
           $this->renameProjectWikiPage($newProject, $oldProject);
         },
@@ -2267,7 +2273,7 @@ Whatever.',
           $this->renameProjectWikiPage($oldProject, $newProject);
         }
       ))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
           $this->nameProjectWebPages($newProject['id'], $newProject['name']);
         },
@@ -2275,7 +2281,7 @@ Whatever.',
           $this->nameProjectWebPages($oldProject['id'], $oldProject['name']);
         }
       ))
-      ->register(new GenericUndoable(
+      ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject,) {
           $this->eventDispatcher->dispatchTyped(
             new Events\PreProjectUpdatedEvent($oldProject['id'], $oldProject, $newProject)
@@ -2289,7 +2295,7 @@ Whatever.',
       ));
 
     $this->entityManager
-      ->registerPreCommitAction(new GenericUndoable(
+      ->registerPreCommitAction(new Common\GenericUndoable(
         function() use ($oldProject, $newProject, $cloudService) {
           $cloudService->synchronizeCloud();
           $this->eventDispatcher->dispatchTyped(
@@ -2307,7 +2313,7 @@ Whatever.',
     if (!empty($listId = $project->getMailingListId())) {
       /** @var MailingListsService $listsService */
       $listsService = $this->di(MailingListsService::class);
-      $this->entityManager->registerPreFlushAction(new GenericUndoable(
+      $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
           $displayName = $newProject['name'];
           $tag = $this->getConfigValue('bulkEmailSubjectTag');
@@ -2343,10 +2349,6 @@ Whatever.',
       $project->setName($oldName); // needed ?
       $project->setYear($oldYear); // needed ?
       $this->entityManager->rollback();
-      if (!$this->entityManager->isTransactionActive()) {
-        $this->entityManager->close();
-        $this->entityManager->reopen();
-      }
 
       throw new \Exception(
         $this->l->t('Failed to rename project "%s", id "%d" to new name "%s".',
@@ -2471,23 +2473,41 @@ Whatever.',
   /** Delete or disable a project participant. */
   public function deleteProjectParticipant(Entities\ProjectParticipant $participant)
   {
-    /** @var Entities\ProjectParticipant $participant */
-    $this->remove($participant, true); // this should be soft-delete
-    if ($participant->unused()) {
-      $this->logInfo('Project participant ' . $participant->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
+    $publicName = $participant->getMusician()->getPublicName();
+    $this->entityManager->beginTransaction();
+    try {
+      /** @var Entities\ProjectParticipant $participant */
+      $this->remove($participant, true); // this should be soft-delete
+      if ($participant->unused()) {
+        $this->logInfo('Project participant ' . $participant->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
 
-      // For now rather cascade manually. Could also use ORM, of course ...
-      /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      foreach ($participant->getParticipantFieldsData() as $fieldDatum) {
-        $this->remove($fieldDatum, true);
-        if ($fieldDatum->unused()) {
+        // For now rather cascade manually. Could also use ORM, of course ...
+        /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+        foreach ($participant->getParticipantFieldsData() as $fieldDatum) {
           $this->remove($fieldDatum, true);
+          if ($fieldDatum->unused()) {
+            $this->remove($fieldDatum, true);
+          }
         }
-      }
-      $this->remove($participant, true); // this should be hard-delete
-    }
+        $this->remove($participant, true); // this should be hard-delete
 
-    $this->ensureMailingListUnsubscription($participant);
+        $this->entityManager->registerPreCommitAction(
+          new Common\UndoableFolderRemove(
+            $this->ensureParticipantFolder($participant->getProject(), $participant->getMusician(), dry: true),
+            gracefully: true,
+            recursively: true,
+          )
+        );
+      }
+      $this->entityManager->registerPostCommitAction(
+        new Common\GenericUndoable(fn() => $this->ensureMailingListUnsubscription($participant))
+      );
+      $this->entityManager->commit();
+    } catch (\Throwable $t)  {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      throw new \Exception($this->l->t('Unable to remove participant "%1$s".', $publicName), 0 , $t);
+    }
   }
 
 }
