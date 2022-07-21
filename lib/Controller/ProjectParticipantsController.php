@@ -44,8 +44,7 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
-use OCA\CAFEVDB\Common\UndoableFileReplace;
-use OCA\CAFEVDB\Common\UndoableTextFileUpdate;
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 
@@ -365,14 +364,10 @@ class ProjectParticipantsController extends Controller {
       }
 
       $subDirPrefix = empty($subDir) ? '' : UserStorage::PATH_SEP . $subDir;
+      $fieldFolderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
 
       $dataType = $field->getDataType();
       switch ($dataType) {
-      case FieldDataType::CLOUD_FILE:
-        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
-        $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fieldDatum->getOptionValue();
-        break;
-
       case FieldDataType::DB_FILE:
         /** @var Entities\EncryptedFile $dbFile */
         $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
@@ -381,6 +376,11 @@ class ProjectParticipantsController extends Controller {
           return self::grumble($this->l->t('Unable to find the associated file with the id "%s" in data-base.',
                                            $fieldDatum->getOptionValue()));
         }
+        break;
+
+      case FieldDataType::CLOUD_FILE:
+        $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
+        $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fieldDatum->getOptionValue();
         break;
 
       case FieldDataType::CLOUD_FOLDER:
@@ -398,7 +398,9 @@ class ProjectParticipantsController extends Controller {
       try {
         switch ($dataType) {
         case FieldDataType::CLOUD_FOLDER:
-          $userStorage->delete($filePath);
+          $this->entityManager->registerPreCommitAction(
+            Common\UndoableFileRemove($filePath, gracefully: true)
+          );
           $optionValue = json_decode($fieldDatum->getOptionValue(), true);
           if (!is_array($optionValue)) {
             $optionValue = [];
@@ -410,7 +412,15 @@ class ProjectParticipantsController extends Controller {
           $fieldDatum->setOptionValue(json_encode(array_values($optionValue)));
           break;
         case FieldDataType::CLOUD_FILE:
-          $userStorage->delete($filePath);
+          $this->entityManager->registerPreCommitAction(
+            new Common\UndoableFileRemove($filePath, gracefully: true)
+          );
+          if ($field->getMultiplicity() != FieldMultiplicity::SINGLE) {
+            // gracefully try to remove the folder if it is empty
+            $this->entityManager->registerPreCommitAction(
+              new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
+            );
+          }
           break;
         case FieldDataType::DB_FILE:
           $filePath = $dbFile->getFileName();
@@ -418,11 +428,9 @@ class ProjectParticipantsController extends Controller {
           break;
         }
         if ($doDeleteFieldDatum) {
-          $this->remove($fieldDatum);
-          $this->flush();
-          $this->remove($fieldDatum);
+          $this->remove($fieldDatum, hard: true, flush: true);
+          $field->getFieldData()->removeElement($fieldDatum);
         }
-        $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
         $this->entityManager->rollback();
@@ -597,13 +605,13 @@ class ProjectParticipantsController extends Controller {
             $fieldData->setOptionValue($optionValue);
             $this->persist($fieldData);
             $this->entityManager->registerPreCommitAction(
-              new UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
+              new Common\UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
             );
             if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
               $readMe = Util::htmlToMarkDown($field->getTooltip());
               // also place the tooltip as README.md
               $this->entityManager->registerPreCommitAction(
-                new UndoableTextFileUpdate(
+                new Common\UndoableTextFileUpdate(
                   basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
                   content: $readMe,
                   gracefully: true,

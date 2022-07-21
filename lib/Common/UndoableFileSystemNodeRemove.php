@@ -120,7 +120,9 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
       }
       if (!empty($listing)) {
         if ($this->gracefully) {
-          $this->logInfo('Folder "' . $this->name . '" not empty, not removing');
+          $this->logInfo(
+            'Folder "' . $this->name . '" not empty, not removing'
+            . print_r(array_map(fn($x) => $x->getName(), $listing), true));
           $this->nothingToUndo = true;
         } else {
           throw new Files\InvalidContentException($this->l->t('Directory "%s" not empty.', $this->name));

@@ -202,6 +202,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var bool Debug web requests */
   protected $debugRequests = false;
 
+  /** @var bool Request reload of ambient form/table */
+  protected $reloadOuterForm = false;
+
   /**
    * @var array
    * ```
@@ -315,10 +318,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     };
 
     $this->pmeOptions['display']['postfix'] = function($pme) {
+      $html = '';
+      $html .= $this->pme->htmlHiddenSys('reloadOuterForm', $this->reloadOuterForm);
       if (!$this->expertMode) {
-        return '';
+        return $html;
       }
-      $html = '<span class="query-log"><select class="chosen chosen-dropup" name="query-log" data-placeholder="' . $this->l->t('Query Log'). '">';
+      $html .= '<span class="query-log"><select class="chosen chosen-dropup" name="query-log" data-placeholder="' . $this->l->t('Query Log'). '">';
       //$html .= '<option value="" hidden>' . $this->l->t('Query Log') . '</option>';
       $html .= '<option value="" hidden></option>';
       $cnt = 0;
@@ -1228,7 +1233,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ENTITIY ID '.print_r($entityId, true));
               $entity = $entityClass::create();
               foreach ($entityId as $key => $value) {
-                if ($value <= 0) {
+                if (is_numeric($value) && $value <= 0) {
                   // treat this as autoincrement or otherwise auto-generated ids
                   continue;
                 }

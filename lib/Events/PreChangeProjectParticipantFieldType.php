@@ -27,22 +27,24 @@ namespace OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCP\EventDispatcher\Event;
 
-class PreChangeProjectParticipantFieldTooltip extends Event
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+
+class PreChangeProjectParticipantFieldType extends Event
 {
   /** @var Entities\ProjectParticipantField */
   private $field;
 
-  /** @var null|string */
-  private $oldTooltip;
+  /** @var null|FieldType */
+  private $oldType;
 
-  /** @var null|string */
-  private $newTooltip;
+  /** @var null|FieldType */
+  private $newType;
 
-  public function __construct(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip) {
+  public function __construct(Entities\ProjectParticipantField $field, ?FieldType $oldType, ?FieldType $newType) {
     parent::__construct();
     $this->field = $field;
-    $this->oldTooltip = $oldTooltip;
-    $this->newTooltip = $newTooltip;
+    $this->oldType = $oldType;
+    $this->newType = $newType;
   }
 
   public function getField():Entities\ProjectParticipantField
@@ -50,14 +52,14 @@ class PreChangeProjectParticipantFieldTooltip extends Event
     return $this->field;
   }
 
-  public function getOldTooltip():?string
+  public function getOldType():FieldType
   {
-    return $this->oldTooltip;
+    return $this->oldType;
   }
 
-  public function getNewTooltip():?string
+  public function getNewType():FieldType
   {
-    return $this->newTooltip;
+    return $this->newType;
   }
 }
 

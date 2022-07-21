@@ -844,6 +844,17 @@ class ProjectParticipantField implements \ArrayAccess
   /** @var bool */
   private $preUpdatePosted = [];
 
+  /**
+   * Gedmo\Translatable hack-around: the actual change set sometimes
+   * has to be cleared. The work around is to provide the translated
+   * changeset in an extra field which is populated on request by
+   * Gedmo\Translatable\TranslatableListener.
+   *
+   * If the field is not present in the translation changeset, then
+   * fallback to the changes provided by the ORM event, so
+   * this function can also be used for non-translatable fields at the
+   * cost of a failing array lookup.
+   */
   private function getTranslationChangeSet(Event\PreUpdateEventArgs $event, string $field):?array
   {
     return ($this->translationChangeSet[$field]
@@ -857,8 +868,6 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
-    \OCP\Util::writeLog('cafevdb', 'ORIGINAL VALUES ' . print_r($this->translationChangeSet, true), \OCP\Util::INFO);
-
     $field = 'name';
     $changeSet = $this->getTranslationChangeSet($event, $field);
     if ($changeSet) {
@@ -873,6 +882,14 @@ class ProjectParticipantField implements \ArrayAccess
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = $event->getEntityManager();
       $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldTooltip($this, $changeSet[0], $changeSet[1]));
+      $this->preUpdatePosted[$field] = $changeSet[0];
+    }
+    $field = 'dataType';
+    $changeSet = $this->getTranslationChangeSet($event, $field);
+    if ($changeSet) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldType($this, $changeSet[0], $changeSet[1]));
       $this->preUpdatePosted[$field] = $changeSet[0];
     }
   }
@@ -892,6 +909,11 @@ class ProjectParticipantField implements \ArrayAccess
       unset($this->preUpdatePosted[$field]);
     }
     $field = 'tooltip';
+    if (isset($this->preUpdatePosted[$field])) {
+      // 'post' event is not needed ATM.
+      unset($this->preUpdatePosted[$field]);
+    }
+    $field = 'dataType';
     if (isset($this->preUpdatePosted[$field])) {
       // 'post' event is not needed ATM.
       unset($this->preUpdatePosted[$field]);

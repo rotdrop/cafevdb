@@ -33,6 +33,7 @@ use OCP\EventDispatcher\Event;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
@@ -190,6 +191,14 @@ class EntityManager extends EntityManagerDecorator
    */
   protected $preCommitActions;
 
+  /**
+   * @var int
+   * We keep our own transaction nesting level in order to run the
+   * pre-commit-hooks. As an alternative we could also override the
+   * Connection and run the hooks there.
+   */
+  protected $transactionNestingLevel;
+
   /** @var UndoableRunQueue */
   protected $postCommitActions;
 
@@ -226,6 +235,7 @@ class EntityManager extends EntityManagerDecorator
     $this->preCommitActions = [];
     $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
 
+    $this->transactionNestingLevel = 0;
     $this->reopenAterRollback = true;
 
     $this->bind();
@@ -341,6 +351,7 @@ class EntityManager extends EntityManagerDecorator
     $this->preFlushActions->clearActionQueue();
     $this->preCommitActions = [];
     $this->postCommitActions->clearActionQueue();
+    $this->transactionNestingLevel = 0;
     $this->bind();
   }
 
@@ -500,7 +511,7 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    $entityManager = ORMEntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
     if (!$this->showSoftDeleted) {
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
@@ -956,13 +967,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function registerPreCommitAction($action, ?Callable $undo = null):UndoableRunQueue
   {
-    if (!$this->isTransactionActive()) {
+    if (!$this->isOwnTransactionActive()) {
       throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
     }
-    $level = $this->getTransactionNestingLevel() - 1;
-    if (empty($this->preCommitActions[$level])) {
-      $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
-    }
+    $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level];
     if (is_callable($action)) {
       $actions->register(new GenericUndoable($action, $undo));
@@ -983,10 +991,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function executePreCommitActions()
   {
-    if (!$this->isTransactionActive()) {
+    if (!$this->isOwnTransactionActive()) {
       throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
     }
-    $level = $this->getTransactionNestingLevel() - 1;
+    $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level] ?? null;
     if (!empty($actions) && !$actions->active()) {
       $actions->executeActions();
@@ -1065,12 +1073,32 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Return the transaction status of this decorator.
+   *
+   * @return bool
+   */
+  public function isOwnTransactionActive():bool
+  {
+    return $this->transactionNestingLevel > 0;
+  }
+
+  /**
+   * Return the transaction nesting level of transactions starting from this decorator.
+   *
+   * @return int
+   */
+  public function getOwnTransactionNestingLevel():int
+  {
+    return $this->transactionNestingLevel;
+  }
+
+  /**
    * Start a new transaction.
    */
   public function beginTransaction()
   {
-    $level = $this->getTransactionNestingLevel();
     parent::beginTransaction();
+    $level = $this->transactionNestingLevel++;
     if (empty($this->preCommitActions[$level])) {
       $this->preCommitActions[$level] = clone $this->appContainer->get(UndoableRunQueue::class);
     } else {
@@ -1105,6 +1133,7 @@ class EntityManager extends EntityManagerDecorator
     // execute all pre-commit action of the current level
     $this->executePreCommitActions();
     parent::commit();
+    --$this->transactionNestingLevel;
     if (!$this->isTransactionActive()) {
       // execute non-undoable actions after the final commit succeeded.
       return $this->executePostCommitActions();
@@ -1126,10 +1155,10 @@ class EntityManager extends EntityManagerDecorator
   {
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
+    $level = --$this->transactionNestingLevel;
 
     // the post-commit actions cannot be undone
     // undo does not throw, it just logs exceptions
-    $level = $this->getTransactionNestingLevel();
     $this->preCommitActions[$level]->executeUndo();
     $this->preFlushActions->executeUndo();
 

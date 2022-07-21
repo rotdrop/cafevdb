@@ -89,10 +89,10 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    * directories. However, even if set to \false a regular which is in the way
    * will be removed.
    */
-  public function __construct($name, string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
+  public function __construct($name, ?string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
   {
     $this->name = $name;
-    $this->content = $content;
+    $this->content = $content ?? '';
     $this->replacableContent = $replacableContent;
     $this->gracefully = $gracefully;
     $this->mkdir = $mkdir;

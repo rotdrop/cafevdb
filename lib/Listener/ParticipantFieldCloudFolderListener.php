@@ -296,7 +296,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
       $userIdSlug = $parts[self::USER_ID_PART];
       $fieldName = $parts[self::FIELD_NAME_PART] ?? null;
-      if (empty($baseName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
+      if (empty($baseName) && !empty($fieldName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
         $baseName = $fieldName;
         $fieldName = MusicianService::unSlugifyFileName($fieldName, $userIdSlug, keepExtension: false);
       }
@@ -391,6 +391,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               $files[] = $baseName;
               sort($files);
               $fieldDatum->setOptionValue(json_encode($files));
+              $fieldDatum->setDeleted(null);
               $this->persist($fieldDatum);
             } else { // CLOUD_FILE
               $musician = $this->getMusician($criterion);
@@ -421,7 +422,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               }
               if ($fieldData->count() !== 1) {
                 foreach ($fieldData as $fieldDatum) {
-                  $this->remove($fieldDatum);
+                  $this->remove($fieldDatum, hard: true);
                 }
                 $project = $field->getProject();
                 $fieldDatum = new Entities\ProjectParticipantFieldDatum;
@@ -437,6 +438,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 $fieldDatum = $fieldData->first();
               }
               $fieldDatum->setOptionValue($finalBaseName);
+              $fieldDatum->setDeleted(null);
               $this->persist($fieldDatum);
               if ($finalBaseName != $baseName) { // THIS CANNOT HAPPEN?
                 $this->logInfo('WHY SHOULD EVER BE "' . $finalBaseName . '" BE DIFFERENT FROM "' . $baseName . '"?');
@@ -494,7 +496,8 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             }
           }
 
-          if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
+          if (!$checkOnly && !empty($baseName) && $baseName !== Constants::README_NAME) {
+            // work only on the relevant folder-contents, not the folder itself
             if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
@@ -502,9 +505,10 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 $files = json_decode($fieldDatum->getOptionValue(), true);
                 Common\Util::unsetValue($files, $baseName);
                 if (empty($files)) {
-                  $this->remove($fieldDatum);
+                  $this->remove($fieldDatum, hard: true);
                 } else {
                   $fieldDatum->setOptionValue(json_encode($files));
+                  $fieldDatum->setDeleted(null);
                 }
               }
             } else { // CLOUD_FILE
@@ -518,7 +522,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               }
               // just delete all field-data pointing to this option ...
               foreach ($fieldData as $fieldDatum) {
-                $this->remove($fieldDatum, flush: true);
+                $this->remove($fieldDatum, hard: true);
                 $fieldOption->getFieldData()->removeElement($fieldDatum);
                 $field->getFieldData()->removeElement($fieldDatum);
               }

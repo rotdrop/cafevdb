@@ -4,23 +4,33 @@
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
 # @copyright Claus-Justus Heine 2020,2021,2022
 #
-app_name=$(notdir $(CURDIR))
-SRCDIR=.
-ABSSRCDIR=$(CURDIR)
-BUILDDIR=./build
-ABSBUILDDIR=$(CURDIR)/build
-build_tools_directory=$(BUILDDIR)/tools
-DOC_BUILD_DIR=$(ABSBUILDDIR)/artifacts/doc
-source_build_directory=$(BUILDDIR)/artifacts/source
-source_package_name=$(source_build_directory)/$(app_name)
-appstore_build_directory=$(BUILDDIR)/artifacts/appstore
-appstore_package_name=$(appstore_build_directory)/$(app_name)
+SRCDIR = .
+ABSSRCDIR = $(CURDIR)
+#
+# try to parse the info.xml if we can, only then fall-back to the directory name
+#
+APP_INFO = $(SRCDIR)/appinfo/info.xml
+XPATH = $(shell which xpath 2> /dev/null)
+ifneq ($(XPATH),)
+APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
+else
+APP_NAME = $(notdir $(CURDIR))
+endif
+APP_NAME = $(notdir $(CURDIR))
+BUILDDIR = ./build
+ABSBUILDDIR = $(CURDIR)/build
+BUILD_TOOLS_DIR = $(BUILDDIR)/tools
+DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
+SOURCE_BUILD_DIR = $(BUILDDIR)/artifacts/source
+SOURCE_PACKAGE_NAME = $(SOURCE_BUILD_DIR)/$(APP_NAME)
+APPSTORE_BUILD_DIR = $(BUILDDIR)/artifacts/appstore
+APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
 BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
-npm=$(shell which npm 2> /dev/null)
-COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
+PHP = $(shell which php 2> /dev/null) # allow override
+COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
-COMPOSER_TOOL=php $(build_tools_directory)/composer.phar
+COMPOSER_TOOL = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
 else
 COMPOSER_TOOL=$(COMPOSER_SYSTEM)
 endif
@@ -90,14 +100,14 @@ WRAPPED_NAMESPACES =\
 #
 ###############################################################################
 
-PHPDOC=/opt/phpDocumentor/bin/phpdoc
-PHPDOC_TEMPLATE=
+PHPDOC = /opt/phpDocumentor/bin/phpdoc
+PHPDOC_TEMPLATE =
 #--template=clean
 #--template=clean --template=xml
 
 #--template=responsive-twig
 
-MAKE_HELP_DIR=$(SRCDIR)/dev-scripts/MakeHelp
+MAKE_HELP_DIR = $(SRCDIR)/dev-scripts/MakeHelp
 include $(MAKE_HELP_DIR)/MakeHelp.mk
 
 all: help
@@ -141,9 +151,9 @@ dev: pre-build composer namespace-wrapper npm-dev post-build
 
 .PHONY: comoser-download
 composer-download:
-	mkdir -p $(build_tools_directory)
-	curl -sS https://getcomposer.org/installer | php
-	mv composer.phar $(build_tools_directory)
+	mkdir -p $(BUILD_TOOLS_DIR)
+	curl -sS https://getcomposer.org/installer | $(PHP)
+	mv composer.phar $(BUILD_TOOLS_DIR)
 
 # Installs and updates the composer dependencies. If composer is not installed
 # a copy is fetched from the web
@@ -321,7 +331,7 @@ dist:
 
 $(BUILDDIR)/core-exclude:
 	@mkdir -p $(BUILDDIR)
-	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(app_name)/vendor/|g' -e 's|$$|/*|g' > $@
+	( cd ../../3rdparty ; find . -mindepth 2 -maxdepth 2  -type d )|sed -e 's|^[.]/|../$(APP_NAME)/vendor/|g' -e 's|$$|/*|g' > $@
 
 .PHONY: cleanup
 cleanup: $(BUILDDIR)/core-exclude
@@ -340,7 +350,7 @@ phpdoc: $(PHPDOC)
  --parseprivate \
  --visibility api,public,protected,private,internal \
  --sourcecode \
- --defaultpackagename $(app_name) \
+ --defaultpackagename $(APP_NAME) \
  -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
@@ -364,48 +374,48 @@ jsdoc: doc/jsdoc/jsdoc.json
 # Builds the source package
 .PHONY: source
 source:
-	rm -rf $(source_build_directory)
-	mkdir -p $(source_build_directory)
-	tar cvzf $(source_package_name).tar.gz \
+	rm -rf $(SOURCE_BUILD_DIR)
+	mkdir -p $(SOURCE_BUILD_DIR)
+	tar cvzf $(SOURCE_PACKAGE_NAME).tar.gz \
 	--exclude-vcs \
-	--exclude="../$(app_name)/build" \
-	--exclude="../$(app_name)/js/node_modules" \
-	--exclude="../$(app_name)/node_modules" \
-	--exclude="../$(app_name)/*.log" \
-	--exclude="../$(app_name)/js/*.log" \
-        ../$(app_name)
+	--exclude="../$(APP_NAME)/build" \
+	--exclude="../$(APP_NAME)/js/node_modules" \
+	--exclude="../$(APP_NAME)/node_modules" \
+	--exclude="../$(APP_NAME)/*.log" \
+	--exclude="../$(APP_NAME)/js/*.log" \
+        ../$(APP_NAME)
 
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
 appstore: $(BUILDDIR)/core-exclude
 	$(COMPOSER_TOOL) update --no-dev $(COMPOSER_OPTIONS)
 	ls -l vendor
-	rm -rf $(appstore_build_directory)
-	mkdir -p $(appstore_build_directory)
-	tar cvzf $(appstore_package_name).tar.gz \
+	rm -rf $(APPSTORE_BUILD_DIR)
+	mkdir -p $(APPSTORE_BUILD_DIR)
+	tar cvzf $(APPSTORE_PACKAGE_NAME).tar.gz \
  --exclude-vcs \
- --exclude="../$(app_name)/dev-scripts" \
- --exclude="../$(app_name)/build" \
- --exclude="../$(app_name)/tests" \
- --exclude="../$(app_name)/Makefile" \
- --exclude="../$(app_name)/*.log" \
- --exclude="../$(app_name)/phpunit*xml" \
- --exclude="../$(app_name)/composer.*" \
- --exclude="../$(app_name)/js/node_modules" \
- --exclude="../$(app_name)/js/tests" \
- --exclude="../$(app_name)/js/test" \
- --exclude="../$(app_name)/js/package.json" \
- --exclude="../$(app_name)/js/bower.json" \
- --exclude="../$(app_name)/js/karma.*" \
- --exclude="../$(app_name)/js/protractor.*" \
- --exclude="../$(app_name)/package.json" \
- --exclude="../$(app_name)/bower.json" \
- --exclude="../$(app_name)/karma.*" \
- --exclude="../$(app_name)/protractor\.*" \
- --exclude="../$(app_name)/.*" \
- --exclude="../$(app_name)/js/.*" \
+ --exclude="../$(APP_NAME)/dev-scripts" \
+ --exclude="../$(APP_NAME)/build" \
+ --exclude="../$(APP_NAME)/tests" \
+ --exclude="../$(APP_NAME)/Makefile" \
+ --exclude="../$(APP_NAME)/*.log" \
+ --exclude="../$(APP_NAME)/phpunit*xml" \
+ --exclude="../$(APP_NAME)/composer.*" \
+ --exclude="../$(APP_NAME)/js/node_modules" \
+ --exclude="../$(APP_NAME)/js/tests" \
+ --exclude="../$(APP_NAME)/js/test" \
+ --exclude="../$(APP_NAME)/js/package.json" \
+ --exclude="../$(APP_NAME)/js/bower.json" \
+ --exclude="../$(APP_NAME)/js/karma.*" \
+ --exclude="../$(APP_NAME)/js/protractor.*" \
+ --exclude="../$(APP_NAME)/package.json" \
+ --exclude="../$(APP_NAME)/bower.json" \
+ --exclude="../$(APP_NAME)/karma.*" \
+ --exclude="../$(APP_NAME)/protractor\.*" \
+ --exclude="../$(APP_NAME)/.*" \
+ --exclude="../$(APP_NAME)/js/.*" \
  --exclude-from="$(BUILDDIR)/core-exclude" \
- ../$(app_name)
+ ../$(APP_NAME)
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb

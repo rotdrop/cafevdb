@@ -47,6 +47,7 @@ class Registration
     self::registerListener($context, PreChangeUserIdSlugListener::class);
     self::registerListener($context, PreRenameProjectParticipantFieldListener::class);
     self::registerListener($context, PreChangeProjectParticipantFieldTooltipListener::class);
+    self::registerListener($context, PreChangeProjectParticipantFieldTypeListener::class);
     self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
     self::registerListener($context, PrePersistProjectParticipantFieldListener::class);
     self::registerListener($context, PreRemoveProjectParticipantFieldListener::class);
