@@ -121,6 +121,46 @@ const ready = function(selector, pmeParameters, resizeCB) {
       });
 
     $container
+      .on('change', 'select.instrumentation-id', function(event) {
+        const $this = $(this);
+        const musicianId = $this.val();
+        const $receivables = $container.find('select.receivable');
+        const $receivableOptions = $receivables.find('option');
+        if (musicianId !== '') {
+          const $musicianOption = SelectUtils.optionByValue($this, musicianId);
+          const allowedOptionKeys = $musicianOption.data('data').split(',');
+          $receivableOptions.each(function(index) {
+            const $option = $(this);
+            if ($option.val() !== '') {
+              $option.prop('disabled', allowedOptionKeys.indexOf($option.val()) < 0);
+            }
+          });
+        } else {
+          $receivableOptions.prop('disabled', false);
+        }
+        SelectUtils.refreshWidget($receivables);
+      });
+
+    $container
+      .on('change', 'select.receivable', function(event) {
+        const $this = $(this);
+        const receivableKey = $this.val();
+        const $musicians = $container.find('select.instrumentation-id');
+        const $musiciansOptions = $musicians.find('option');
+        if (receivableKey !== '') {
+          $musiciansOptions.each(function(index) {
+            const $option = $(this);
+            if ($option.val() !== '') {
+              $option.prop('disabled', $option.data('data').split(',').indexOf(receivableKey) < 0);
+            }
+          });
+        } else {
+          $musiciansOptions.prop('disabled', false);
+        }
+        SelectUtils.refreshWidget($musicians);
+      });
+
+    $container
       .on('change', 'select.payment-id', function(event) {
         const $this = $(this);
 
@@ -164,6 +204,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
           projectPaymentPopup(selector, {
             projectId,
             musicianId,
+            [pmeData('Musicians:id')]: musicianId,
             [pmeSys('rec')]: $actionOption.data('data').recordId,
             [pmeSys('groupby_rec')]: { id: $actionOption.data('data').recordId.id, ProjectPayments_key: 0 },
           });

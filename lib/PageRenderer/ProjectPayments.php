@@ -84,7 +84,12 @@ class ProjectPayments extends PMETableViewBase
     self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'sql' => 'SELECT
-  __t1.*, GROUP_CONCAT(DISTINCT BIN2UUID(__t2.option_key)) AS receivable_keys
+  __t1.*,
+  GROUP_CONCAT(
+    DISTINCT
+    CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t2.field_id, BIN2UUID(__t2.option_key))
+    ORDER BY __t2.project_id ASC, __t2.field_id ASC
+  ) AS receivable_keys
 FROM ' . self::MUSICIANS_TABLE . ' __t1
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
 ON __t2.musician_id = __t1.id
@@ -619,13 +624,13 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       AND ppftr.foreign_key = ppf.id',
           'column' => 'id',
           'description' => [
-	    'columns' => [
+            'columns' => [
               'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->l10n()->getLocaleCode()) . '"))',
               '$table.receivable_display_label',
             ],
-	    'divs' => [ ' - ' ],
-	    'ifnull' => [ false, false ],
-	    'cast' => [ false, false ],
+            'divs' => [ ' - ' ],
+            'ifnull' => [ false, false ],
+            'cast' => [ false, false ],
           ],
           'join' => '$main_table.id = $join_table.composite_payment_id',
           'filters' => '$table.composite_payment_id = $record_id[id]',
@@ -662,7 +667,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'select' => 'M',
         'select|ACP' => 'D',
         'input' => 'M',
-        'css'  => [ 'postfix' => [ 'receivable', 'squeeze-subsequent-lines', 'chosen-dropup', ], ],
+        'css'  => [ 'postfix' => [ 'receivable', 'allow-empty', 'squeeze-subsequent-lines', 'chosen-dropup', ], ],
         // Pre-computed key for composite-payment row
         'sql' => $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.receivable_composite_key',
         'values' => [
