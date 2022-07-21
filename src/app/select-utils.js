@@ -152,7 +152,7 @@ const selectedValues = function($select, values, trigger) {
 
 /**
  * Update the underlying select widget to reflect changes in the
- * original select element. This currently support jQuery chosen and
+ * original select element. This currently supports jQuery chosen and
  * selectize.
  *
  * @param {jQuery} $select TBD.
