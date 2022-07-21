@@ -76,7 +76,7 @@ class UserLoggedInEventListener implements IEventListener
       $keyService = $this->appContainer->get(AsymmetricKeyService::class);
       $keyService->initEncryptionKeyPair($userId, $event->getPassword());
     } catch (\Throwable $t) {
-      $this->logException($t, $this->l->t('Unable to initialize asymmetric key-pari for user "%s".', $userId ));
+      $this->logException($t, $this->l->t('Unable to initialize asymmetric key-pair for user "%s".', $userId ));
     }
 
     // the listener should not throw ...
