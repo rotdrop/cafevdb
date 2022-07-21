@@ -83,6 +83,12 @@ class ProjectPayments extends PMETableViewBase
     ],
     self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
+      'sql' => 'SELECT
+  __t1.*, GROUP_CONCAT(DISTINCT BIN2UUID(__t2.option_key)) AS receivable_keys
+FROM ' . self::MUSICIANS_TABLE . ' __t1
+LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
+ON __t2.musician_id = __t1.id
+GROUP BY __t1.id',
       'identifier' => [
         'id' => 'musician_id',
       ],
@@ -435,17 +441,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
       [
         'name' => $this->l->t('Musician'),
-        'css' => [ 'postfix' => [ 'instrumentation-id', ], ],
+        'css' => [ 'postfix' => [ 'instrumentation-id', 'allow-empty' ], ],
         'select' => 'D',
         'input' => 'M',
         'input|C' => 'R',
         'values' => [
-	  'description' => [
-	    'columns' => [ self::musicianPublicNameSql() ],
-	    'divs' => [],
-	    'ifnull' => [ false, false ],
-	    'cast' => [ false ],
-	  ],
+          'description' => [
+            'columns' => [ self::musicianPublicNameSql() ],
+            'divs' => [],
+            'ifnull' => [ false, false ],
+            'cast' => [ false ],
+          ],
+          'data' => 'receivable_keys',
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),
