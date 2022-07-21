@@ -496,7 +496,8 @@ class ParticipantFieldCloudFolderListener implements IEventListener
             }
           }
 
-          if (!$checkOnly && !empty($baseName)) { // work only on the folder-contents, not the folder itself
+          if (!$checkOnly && !empty($baseName) && $baseName !== Constants::README_NAME) {
+            // work only on the relevant folder-contents, not the folder itself
             if ($fieldType == FieldType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
