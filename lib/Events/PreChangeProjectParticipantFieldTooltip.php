@@ -50,12 +50,12 @@ class PreChangeProjectParticipantFieldTooltip extends Event
     return $this->field;
   }
 
-  public function getOldTooltip():string
+  public function getOldTooltip():?string
   {
     return $this->oldTooltip;
   }
 
-  public function getNewTooltip():string
+  public function getNewTooltip():?string
   {
     return $this->newTooltip;
   }
