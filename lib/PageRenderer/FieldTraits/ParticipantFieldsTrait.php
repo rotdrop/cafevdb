@@ -364,18 +364,40 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+              // this code path is not timing critical, so just sync with the file-system
+              $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
+              $this->reloadOuterForm = $dirty;
+
+              // after "populate" the field-data just reflects the folder contents
+              $value = !empty($fieldData) ? $fieldData[0]->getOptionValue() : '';
+
               $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
               $subDir = null;
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               return '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">'
                 . $this->cloudFileUploadRowHtml($value, $fieldId, $optionKey, $subDir, $fileBase, $musician) . '
   </table>
 </div>';
             };
-            $valueFdd['php|LFDV'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              if (!empty($value)) {
+            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              if ($op == 'view') {
+                // not timing critical, sync with the FS
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+                // this code path is not timing critical, so just sync with the file-system
+                $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
+                $this->reloadOuterForm = $dirty;
+
+                // after "populate" the field-data just reflects the folder contents
+                $value = !empty($fieldData) ? $fieldData[0]->getOptionValue() : '';
+              }
+
+              if (!empty($value)) {
+                if (empty($musician)) {
+                  list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                }
                 $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
                 $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
                 $fileName = $this->projectService->participantFilename($fileBase, $musician);
@@ -394,6 +416,12 @@ trait ParticipantFieldsTrait
               }
               return null;
             };
+            $valueFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'view', $k, $row, $recordId, $pme);
+            };
+            $valueFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'list', $k, $row, $recordId, $pme);
+            };
             break;
           case FieldType::CLOUD_FOLDER:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_SINGLE_VALUED;
@@ -403,8 +431,8 @@ trait ParticipantFieldsTrait
             $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
-
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
               $subDir = basename($folderPath);
 
@@ -413,24 +441,21 @@ trait ParticipantFieldsTrait
               $this->userStorage->ensureFolder($folderPath);
 
               // synchronize the folder contents s.t. entries can also safely be deleted.
-              $this->participantFieldsService->populateCloudFolderField($field, $musician);
-              $this->flush();
+              $dirty = $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum, flush: true);
+              $this->reloadOuterForm = $dirty;
 
-              // read the configured directory in
-              /** @var OCP\Files\Folder $folder */
-              $folder = $this->userStorage->getFolder($folderPath);
-              $folderContents = array_filter(
-                empty($folder) ? [] : $folder->getDirectoryListing(),
-                fn(CloudFiles\Node $node) => $node->getName() != Constants::README_NAME
-              );
+              // after "populate" the field-data just reflects the folder contents
+              $value = $value = !empty($fieldDatum) ? $fieldDatum->getOptionValue() : '';
+              $folderContents = json_decode($value, true);
+              if (!is_array($folderContents)) {
+                $folderContents = [];
+              }
 
               $html = '<div class="file-upload-wrapper" data-option-key="'.$optionKey.'">
   <table class="file-upload">';
 
-              /** @var CloudFiles\Node $node */
-              foreach ($folderContents as $node) {
-                $fileName = $node->getName() . ($node->getType() == CloudFiles\FileInfo::TYPE_FOLDER ? UserStorage::PATH_SEP : '');
-                $html .= $this->cloudFileUploadRowHtml($fileName, $fieldId, $optionKey, $subDir, '', $musician);
+              foreach ($folderContents as $nodeName) {
+                $html .= $this->cloudFileUploadRowHtml($nodeName, $fieldId, $optionKey, $subDir, '', $musician);
               }
 
               $html .= $this->cloudFileUploadRowHtml(null, $fieldId, $optionKey, $subDir, '', $musician);
@@ -440,7 +465,7 @@ trait ParticipantFieldsTrait
 </div>';
               return $html;
             };
-            $phpFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
               $subDir = basename($folderPath);
@@ -451,8 +476,8 @@ trait ParticipantFieldsTrait
                 $this->userStorage->ensureFolder($folderPath);
 
                 // synchronize the folder contents s.t. entries can also safely be deleted.
-                $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum);
-                $this->flush();
+                $dirty = $this->participantFieldsService->populateCloudFolderField($field, $musician, fieldDatum: $fieldDatum, flush: true);
+                $this->reloadOuterForm = $dirty;
                 $value = !empty($fieldDatum) ? $fieldDatum->getOptionValue() : '';
               }
 
@@ -483,11 +508,11 @@ trait ParticipantFieldsTrait
 
               return $filesAppAnchor . $html;
             };
-            $valueFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
-              return $phpFunction($value, 'view', $k, $row, $recordId, $pme);
+            $valueFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'view', $k, $row, $recordId, $pme);
             };
-            $valueFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpFunction) {
-              return $phpFunction($value, 'list', $k, $row, $recordId, $pme);
+            $valueFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'list', $k, $row, $recordId, $pme);
             };
             break;
           case FieldType::DATE:
@@ -591,12 +616,27 @@ trait ParticipantFieldsTrait
           case FieldType::CLOUD_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
             $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-              $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
-              $values = array_combine($optionKeys, $optionValues);
+
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              // this code path is not timing critical, so just sync with the file-system
+              $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
+              $this->reloadOuterForm = $dirty;
+
+              if (true || $dirty) {
+                $values = [];
+                /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+                foreach ($fieldData as $fieldDatum) {
+                  $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
+                }
+              } else {
+                $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
+                $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                $values = array_combine($optionKeys, $optionValues);
+              }
+
               $this->debug('VALUES '.print_r($values, true));
               $fieldId = $field->getId();
-              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
               $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
 
               /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -612,12 +652,27 @@ trait ParticipantFieldsTrait
 </div>';
               return $html;
             };
-            $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-              if (!empty($value)) {
+            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+              if ($op === 'view') {
+                // this code path is not timing critical, so just sync with the file-system
+                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
+                $this->reloadOuterForm = $dirty;
+
+                /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+                foreach ($fielData as $fieldDatum) {
+                  $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
+                }
+              } else if (!empty($value)) {
                 $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
                 $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
                 $values = array_combine($optionKeys, $optionValues);
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              }
+
+              if (!empty($values)) {
+                if (empty($musician)) {
+                  list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                }
                 $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
                 $subDir = basename($folderPath);
 
@@ -648,6 +703,12 @@ trait ParticipantFieldsTrait
                 return $filesAppAnchor . $html;
               }
               return null;
+            };
+            $keyFdd['php|DV'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'view', $k, $row, $recordId, $pme);
+            };
+            $keyFdd['php|LF'] = function($value, $op, $k, $row, $recordId, $pme) use ($phpViewFunction) {
+              return $phpViewFunction($value, 'list', $k, $row, $recordId, $pme);
             };
             $keyFdd['values2'] = $values2;
             $keyFdd['valueTitles'] = $valueTitles;

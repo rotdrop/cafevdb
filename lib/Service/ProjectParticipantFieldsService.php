@@ -1074,8 +1074,8 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\Musician $musician
    *
-   * @param bool $flush If true call flush as needed, otherwise just report
-   * back the need for flush with the return value.
+   * @param bool $flush If \true call flush as needed, otherwise just report
+   * back the need for flush with the return value. Defaults to \true.
    *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
@@ -1117,6 +1117,7 @@ class ProjectParticipantFieldsService
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       foreach ($fieldData as $fieldDatum) {
         $this->remove($fieldDatum, hard: true);
+        $fieldOption->getFieldData()->removeElement($fieldDatum);
         $fieldDatum = null;
         $needsFlush = true;
       }
@@ -1125,6 +1126,10 @@ class ProjectParticipantFieldsService
       if ($fieldData->count() !== 1) {
         foreach ($fieldData as $fieldDatum) {
           $this->remove($fieldDatum, hard: true);
+          $field->getFieldData()->removeField($fieldDatum);
+          $fieldOption->getFieldData()->removeElement($fieldDatum);
+          $project->getParticipantFieldsData()->removeField($fieldDatum);
+          $musician->getProjectParticipantFieldsData()->removeField($fieldDatum);
         }
         $project = $field->getProject();
         $fieldDatum = new Entities\ProjectParticipantFieldDatum;
@@ -1135,13 +1140,20 @@ class ProjectParticipantFieldsService
         $field->getFieldData()->add($fieldDatum);
         $project->getParticipantFieldsData()->add($fieldDatum);
         $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+        $this->persist($fieldDatum);
+        $needsFlush = true;
       } else {
         $fieldDatum = $fieldData->first();
-        $fieldDatum->setDeleted(null);
+        if ($fieldDatum->isDeleted()) {
+          $fieldDatum->setDeleted(null);
+          $needsFlush = true;
+        }
       }
-      $fieldDatum->setOptionValue(json_encode($folderContents));
-      $this->persist($fieldDatum);
-      $needsFlush = true;
+      $newValue = json_encode($folderContents);
+      if ($fieldDatum->getOptionValue() != $newValue) {
+        $fieldDatum->setOptionValue($newValue);
+        $needsFlush = true;
+      }
     }
     if ($needsFlush && $flush) {
       $this->flush();
@@ -1164,12 +1176,14 @@ class ProjectParticipantFieldsService
    * @param bool $flush If true call flush as needed, otherwise just report
    * back the need for flush with the return value.
    *
+   * @param array $fieldData The field-data for the field and musician
+   *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
-  public function populateCloudFileField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null):bool
+  public function populateCloudFileField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?array &$fieldData = null):bool
   {
     $needsFlush = false;
-
+    $fieldData = [];
     if ($field->getDataType() != DataType::CLOUD_FILE) {
       return $needsFlush;
     }
@@ -1200,7 +1214,7 @@ class ProjectParticipantFieldsService
     /** @var Collections\Collection $fieldOptions */
     $fieldOptions = $field->getSelectableOptions();
     if ($fieldOptions->count() == 0 && $multiplicity == Multiplicity::SIMPLE) {
-      $this->logError('There should be a one field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
+      $this->logError('There should be one field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
       return $needsFlush;
     }
 
@@ -1215,21 +1229,21 @@ class ProjectParticipantFieldsService
 
       $baseName = array_search($fileName, $folderContents);
 
-      $fieldData = $fieldOption->getMusicianFieldData($musician);
+      $musicianFieldData = $fieldOption->getMusicianFieldData($musician);
       if ($baseName === false) {
-        foreach ($fieldData as $fieldDatum) {
+        foreach ($musicianFieldData as $fieldDatum) {
           $this->remove($fieldDatum, hard: true);
-          // $fieldOption->getFieldData()->removeElement($fieldDatum);
-          // $field->getFieldData()->removeElement($fieldDatum);
-          // $project->getParticipantFieldsData()->removeElement($fieldDatum);
-          // $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
-          $fieldDatum = null;
+          $fieldOption->getFieldData()->removeElement($fieldDatum);
           $needsFlush = true;
         }
       } else {
-        if ($fieldData->count() !== 1) {
-          foreach ($fieldData as $fieldDatum) {
+        if ($musicianFieldData->count() !== 1) {
+          foreach ($musicianFieldData as $fieldDatum) {
             $this->remove($fieldDatum, hard: true);
+            $field->getFieldData()->removeElement($fieldDatum);
+            $fieldOption->getFieldData()->removeElement($fieldDatum);
+            $project->getParticipantFieldsData()->removeElement($fieldDatum);
+            $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
           }
           $project = $field->getProject();
           $fieldDatum = new Entities\ProjectParticipantFieldDatum;
@@ -1238,15 +1252,23 @@ class ProjectParticipantFieldsService
                      ->setMusician($musician)
                      ->setProject($project);
           $field->getFieldData()->add($fieldDatum);
+          $fieldOption->getFieldData()->add($fieldDatum);
           $project->getParticipantFieldsData()->add($fieldDatum);
           $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+          $this->persist($fieldDatum);
+          $needsFlush = true;
         } else {
-          $fieldDatum = $fieldData->first();
-          $fieldDatum->setDeleted(null);
+          $fieldDatum = $musicianFieldData->first();
+          if ($fieldDatum->isDeleted()) {
+            $fieldDatum->setDeleted(null);
+            $needsFlush = true;
+          }
         }
-        $fieldDatum->setOptionValue($baseName);
-        $this->persist($fieldDatum);
-        $needsFlush = true;
+        if ($fieldDatum->getOptionValue() != $baseName) {
+          $fieldDatum->setOptionValue($baseName);
+          $needsFlush = true;
+        }
+        $fieldData[] = $fieldDatum;
       }
     }
 

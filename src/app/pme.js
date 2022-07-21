@@ -843,6 +843,15 @@ const pmeTableDialogOpen = function(tableOptions, post) {
 
           blockTableDialog(dialogHolder);
 
+          const $staticReloadRequest = dialogHolder.find('input[name="' + pmeSys('reloadOuterForm') + '"]');
+          console.info('STATIC RELOAD REQUEST', $staticReloadRequest);
+          if ($staticReloadRequest.val()) {
+            // reload outer form
+            $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
+            pmeSubmitOuterForm(tableOptions.ambientContainerSelector);
+            $staticReloadRequest.val('');
+          }
+
           // general styling, avoid :submit handlers in dialog mode
           pmeInit(containerSel, true);
 
@@ -926,7 +935,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
           $.fn.cafevTooltip.remove();
           const dialogHolder = $(this);
 
-          // remote data/time widgets and other stuff
+          // remove data/time widgets and other stuff
           pmeUnTweak(dialogHolder);
           // remove the WYSIWYG editor, if any is attached
           WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
