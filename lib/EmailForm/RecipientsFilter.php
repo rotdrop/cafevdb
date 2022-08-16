@@ -692,7 +692,9 @@ class RecipientsFilter
     if ($this->projectId > 0 && !($this->userBase & self::MUSICIANS_EXCEPT_PROJECT)) {
       $this->instruments = [];
       // @todo Perhaps write a special repository-method
-      foreach ($this->project['participantInstruments'] as $projectInstrument)  {
+      $projectInstruments = $this->project->getParticipantInstruments()->toArray();
+      usort($projectInstruments, fn(Entities\ProjectInstrument $a, Entities\ProjectInstrument $b) => $a->getInstrument()->getSortOrder() - $b->getInstrument()->getSortOrder());
+      foreach ($projectInstruments as $projectInstrument)  {
         $instrument = $projectInstrument['instrument'];
         $this->instruments[$instrument['id']] = $instrument['name'];
       }
