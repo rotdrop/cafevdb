@@ -79,7 +79,11 @@ class PHPMailer extends PHPMailerUpstream
    */
   public function getMailHeaders()
   {
-    return static::stripTrailingWSP($this->MIMEHeader . $this->mailHeader);
+    $headers = $this->MIMEHeader . $this->mailHeader;
+    if (count($this->bcc) > 0) {
+      $headers .= $this->addrAppend('Bcc', $this->bcc);
+    }
+    return static::stripTrailingWSP($headers);
   }
 
   public function __construct(?bool $exceptions = null)
@@ -199,6 +203,17 @@ class PHPMailer extends PHPMailerUpstream
       $header .= $this->headerLine('References', implode(self::$LE . ' ', $this->references));
     }
     return $header;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Add also the Bcc headers in order to get a useful preview and
+   * more useful sent messages.
+   */
+  public function getSentMIMEMessage()
+  {
+    return $this->getMailHeaders() . static::$LE . static::$LE . $this->MIMEBody;
   }
 
   /**

@@ -51,6 +51,8 @@ class RecipientsFilter
 
   public const POST_TAG = 'emailRecipients';
 
+  public const MEMBER_STATUS_OPEN = 'open';
+
   public const BASIC_RECIPIENTS_SET_KEY = 'basicRecipientsSet';
   public const FROM_PROJECT_CONFIRMED_KEY = 'fromProjectConfirmed';
   public const FROM_PROJECT_PRELIMINARY_KEY = 'fromProjectPreliminary';
@@ -723,8 +725,8 @@ class RecipientsFilter
     }
     $byStatusDefault = [ 'regular' ];
     if ($this->projectId > 0) {
-      $byStatusDefault[] = 'passive';
-      $byStatusDefault[] = 'temporary';
+      $byStatusDefault[] = DBTypes\EnumMemberStatus::PASSIVE;
+      $byStatusDefault[] = DBTypes\EnumMemberStatus::TEMPORARY;
     }
     return $byStatusDefault;
   }
@@ -1050,7 +1052,7 @@ class RecipientsFilter
         [
           'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
           'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
-          'status' => DBTypes\EnumMemberStatus::REGULAR,
+          'status' => self::MEMBER_STATUS_OPEN,
           'project' => $this->projectId ?? 0,
           'dbdata' => null,
         ],
@@ -1061,7 +1063,7 @@ class RecipientsFilter
         [
           'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
           'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
-          'status' => DBTypes\EnumMemberStatus::REGULAR,
+          'status' => self::MEMBER_STATUS_OPEN,
           'project' => $this->projectId ?? 0,
           'dbdata' => null,
         ],
@@ -1195,13 +1197,13 @@ class RecipientsFilter
     // throw away all recipients which are also reached by posting to the list
     // and add the list address as additional recipient.
     $selectedRecipients = array_values($remainingRecipients);
-    $selectedRecipients[] = [
+    array_unshift($selectedRecipients, [
       'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
       'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
-      'status' => DBTypes\EnumMemberStatus::REGULAR,
+      'status' => self::MEMBER_STATUS_OPEN,
       'project' => $this->projectId ?? 0,
       'dbdata' => null,
-    ];
+    ]);
     return $selectedRecipients;
   }
 }
