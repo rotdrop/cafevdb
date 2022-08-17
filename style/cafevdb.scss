@@ -974,8 +974,8 @@ textarea[readonly], input[readonly] {
 textarea, input {
   &[readonly]:hover, &[disabled]:hover {
     background-image:url('../img/lock.svg') !important;
-    background-repeat:no-repeat;
-    background-position:center center;
+    background-repeat:no-repeat !important;
+    background-position:center center !important;
   }
 }
 
