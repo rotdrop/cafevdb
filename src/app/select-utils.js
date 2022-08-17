@@ -169,16 +169,31 @@ const refreshSelectWidget = function($select) {
       $select.prop('disabled', false);
     }
   } else if (selectizeActive($select)) {
-    let selectize = $select[0].selectize;
-    const setupOptions = selectize.settings_user;
-    selectize.destroy();
-    $select.selectize(setupOptions);
-    selectize = $select[0].selectize;
-    if (isDisabled || isReadonly) {
-      selectize.disable();
-    } else {
-      selectize.enable();
-    }
+    // selective restores its original select-options on destroy, so
+    // we need to remember the actual options and restore them after
+    // calling destroy.
+    const htmlContent = $select.html();
+    // delay destruction until after any potential pending events have completed
+    setTimeout(() => {
+      let selectize = $select[0].selectize;
+      const setupOptions = selectize.settings_user;
+      selectize.destroy();
+      $select.html(htmlContent);
+      if (isReadonly) {
+        $select.prop('readonly', false);
+      }
+      if (isDisabled) {
+        $select.prop('disabled', false);
+      }
+      $select.selectize(setupOptions);
+      selectize = $select[0].selectize;
+      if (isDisabled || isReadonly) {
+        selectize.disable();
+      } else {
+        selectize.enable();
+      }
+      $select.prop('disabled', isDisabled);
+    }, 0);
   }
 };
 

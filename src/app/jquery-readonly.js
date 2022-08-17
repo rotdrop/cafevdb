@@ -34,7 +34,7 @@ const elementReadonlyClass = '__jquery-readonly-active__';
 
 const vanillaProp = $.fn.prop;
 
-$.fn.prop = function(property, value) {
+const overrideProp = function(property, value) {
   const outerArguments = arguments;
   if (arguments.length === 1) {
     return vanillaProp.apply(this, outerArguments);
@@ -86,6 +86,8 @@ $.fn.prop = function(property, value) {
   });
   return this;
 };
+
+$.fn.prop = overrideProp;
 
 $.fn.readonly = function(state) {
   if (state === undefined) {
@@ -162,19 +164,25 @@ $.fn.readonly = function(state) {
         });
         $this.data(placeholderDataKey, true);
 
-        // disable the multi-select as all data is submitted via placeholders
         if (!state) {
           const restoreDisabled = $this.data(restoreDisabledDataKey);
           if (restoreDisabled !== undefined) {
             vanillaProp.call($this, 'disabled', restoreDisabled);
           }
         } else {
+          // disable the multi-select as all data is submitted via placeholders
           $this.data(restoreDisabledDataKey, vanillaProp.call($this, 'disabled'));
           vanillaProp.call($this, 'disabled', true);
         }
-
       }
+      // refreshSelectWidget may spoil the remembered disabled state
+      // by calling disable, and schedules the widget destroy async
+      // with setTimeout().
+      const restoreDisabled = $this.data(restoreDisabledDataKey);
       refreshSelectWidget($this);
+      setTimeout(() => {
+        $this.data(restoreDisabledDataKey, restoreDisabled);
+      }, 0);
     } else if ($this.is(':radio')) {
       let $container = $this.closest('fieldset');
       if (!$container) {
