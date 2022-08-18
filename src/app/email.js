@@ -34,11 +34,7 @@ import * as Legacy from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Notification from './notification.js';
-import {
-  refreshWidget as refreshSelect,
-  deselectAll as selectDeselectAll,
-  optionByValue as selectOptionByValue,
-} from './select-utils.js';
+import * as SelectUtils from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
@@ -48,6 +44,20 @@ import queryData from './query-data.js';
 import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
+
+import 'selectize';
+import 'selectize/dist/css/selectize.bootstrap4.css';
+// import 'selectize/dist/css/selectize.css';
+require('cafevdb-selectize.scss');
+
+const selectizeOptions = {
+  plugins: ['remove_button'],
+  delimiter: ',',
+  persist: false,
+  openOnFocus: false,
+  closeAfterSelect: true,
+  hideSelected: false,
+};
 
 require('./jquery-readonly.js');
 require('bootstrap4-duallistbox');
@@ -199,10 +209,14 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     return;
   }
 
-  fieldset.find('#member-status-filter').chosen();
-  fieldset.find('#instruments-filter option[value="*"]').remove();
-  fieldset.find('#instruments-filter option[value=""]').remove();
-  fieldset.find('#instruments-filter').chosen();
+  const $memberStatusFilter = fieldset.find('#member-status-filter');
+  $memberStatusFilter.selectize(selectizeOptions);
+  // $memberStatusFilter.chosen();
+
+  const $instrumentsFilter = fieldset.find('#instruments-filter');
+  $instrumentsFilter.selectize(selectizeOptions);
+  // $instrumentsFilter.chosen();
+
   const $recipientsSelect = fieldset.find('#recipients-select');
   $recipientsSelect.bootstrapDualListbox({
     // moveOnSelect: false,
@@ -357,10 +371,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           }
 
           // update the instruments filter
-          instrumentsSelect.html(data.instrumentsFilter);
-          selectOptionByValue(instrumentsSelect, '').remove();
-          selectOptionByValue(instrumentsSelect, '*').remove();
-          refreshSelect(instrumentsSelect);
+          SelectUtils.replaceOptions(instrumentsSelect, data.instrumentsFilter);
 
           resize = true;
         }
@@ -732,9 +743,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         switch (operation) {
         case 'send':
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          selectDeselectAll(storedEmailsSelector);
+          SelectUtils.deselectAll(storedEmailsSelector);
           sentEmailsSelector.html(requestData.sentEmailOptions);
-          selectDeselectAll(sentEmailsSelector);
+          SelectUtils.deselectAll(sentEmailsSelector);
           if (data.message !== undefined && data.caption !== undefined) {
             Dialogs.alert(data.message, data.caption, undefined, true, true);
           }
@@ -890,7 +901,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           // deselect menu item
-          selectDeselectAll(storedEmailsSelector);
+          SelectUtils.deselectAll(storedEmailsSelector);
           break; // load
         case 'save':
           switch (topic) {
@@ -904,7 +915,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          selectDeselectAll(storedEmailsSelector);
+          SelectUtils.deselectAll(storedEmailsSelector);
           break; // save
         case 'delete':
           switch (topic) {
@@ -919,7 +930,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           }
           }
           storedEmailsSelector.html(requestData.storedEmailOptions);
-          selectDeselectAll(storedEmailsSelector);
+          SelectUtils.deselectAll(storedEmailsSelector);
           break; // delete
         default:
           postponeEnable = true;
@@ -1381,7 +1392,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
         if (draftId > 0) {
           // find the draft data in the select which we mis-use as data-storage here
-          const $draftOption = selectOptionByValue(storedEmailsSelector, '__draft-' + draftId);
+          const $draftOption = SelectUtils.optionByValue(storedEmailsSelector, '__draft-' + draftId);
           let draftMeta = '';
           if ($draftOption.length === 1) {
             const title = $draftOption.attr('title') || $draftOption.attr('data-original-title') || $draftOption.html();
@@ -1437,7 +1448,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           t(appName, 'There are currently no stored draft messages available.'),
           t(appName, 'No Drafts Available'),
           function() {
-            selectDeselectAll(storedEmailsSelector);
+            SelectUtils.deselectAll(storedEmailsSelector);
           });
       } else {
         applyComposerControls.call(this, event, {
@@ -1465,7 +1476,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           if (lock) {
             dialogWidget.addClass('pme-table-dialog-blocked');
           } else {
-            selectDeselectAll(sentEmailsSelector);
+            SelectUtils.deselectAll(sentEmailsSelector);
             dialogWidget.removeClass('pme-table-dialog-blocked');
             dialogHolder.tabs('option', 'disabled', []);
           }
@@ -1882,7 +1893,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                   // We are interested in all selected options
                   // inside the first options group
                   const selectedFreeForm = [];
-                  selectElement.find('optgroup.free-form option:selected').each(function(idx) {
+                  SelectUtils.children(selectElement).filter('optgroup.free-form option:selected').each(function(idx) {
                     const self = $(this);
                     selectedFreeForm[idx] = {
                       value: self.val(),
@@ -1901,8 +1912,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                             return;
                           }
                           const newOptions = $(data.contents).html();
-                          selectElement.html(newOptions);
-                          selectElement.trigger('chosen:updated');
+                          SelectUtils.replaceOptions(selectElement, newOptions);
                           if (selectElement.find('optgroup.free-form').length === 0) {
                             dialogHolder.dialog('widget')
                               .find('button.save-contacts').prop('disabled', true);
