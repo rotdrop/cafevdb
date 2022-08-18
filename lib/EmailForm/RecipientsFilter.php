@@ -702,8 +702,6 @@ class RecipientsFilter
       $this->instruments = $instrumentInfo['byId'];
     }
     $this->instrumentGroups = $instrumentInfo['idGroups']??[];
-
-    $this->instruments[0] = '*';
   }
 
   private function fetchInstrumentsFilter()
