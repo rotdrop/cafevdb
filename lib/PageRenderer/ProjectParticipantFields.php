@@ -1181,9 +1181,9 @@ __EOT__;
 
     $tag = 'maximum_group_size';
     if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
-      $first = array_key_first($newvals['data_options_single']);
-      $newvals['data_options_single'][$first]['key'] = Uuid::NIL;
-      $newvals['data_options_single'][$first]['limit'] = $newvals[$tag];
+      $first = array_key_first($newvals['data_options_groupofpeople']);
+      $newvals['data_options_groupofpeople'][$first]['key'] = Uuid::NIL;
+      $newvals['data_options_groupofpeople'][$first]['limit'] = $newvals[$tag];
     }
     self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
 
@@ -1196,7 +1196,7 @@ __EOT__;
 
     $tag = 'data_options_single';
     if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
-      $first = array_key_first($newvals['data_options_single']);
+      $first = array_key_first($newvals[$tag]);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
       $newvals['data_options'] = $newvals[$tag];
@@ -1212,7 +1212,7 @@ __EOT__;
 
     $tag = 'data_options_groupofpeople';
     if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
-      $first = array_key_first($newvals['data_options_single']);
+      $first = array_key_first($newvals[$tag]);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
       $newvals['data_options'] = $newvals[$tag];
@@ -1228,7 +1228,7 @@ __EOT__;
 
     $tag = 'data_options_simple';
     if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
-      $first = array_key_first($newvals['data_options_simple']);
+      $first = array_key_first($newvals[$tag]);
       $newvals[$tag][$first]['label'] = $newvals['name'];
       $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'] ?? '';
       $newvals['data_options'] = $newvals[$tag];
@@ -1977,7 +1977,7 @@ __EOT__;
           if (empty($key)) {
             continue;
           }
-          if ($key == Uuid::NIL) {
+          if ($key == Uuid::NIL && $multiplicity != Multiplicity::GROUPOFPEOPLE) {
             $generatorItem = $value;
             continue;
           }
