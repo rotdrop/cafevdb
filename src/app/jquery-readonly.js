@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { refreshWidget as refreshSelectWidget } from './select-utils.js';
+import { refreshWidgetProperties, widget as selectWidget } from './select-utils.js';
 
 require('jquery-readonly.scss');
 
@@ -37,6 +37,13 @@ const vanillaProp = $.fn.prop;
 const overrideProp = function(property, value) {
   const outerArguments = arguments;
   if (arguments.length === 1) {
+    const $this = this.first();
+    if (property === 'disabled' && $this.data(readonlyStateDataKey) === true) {
+      const rememberedState = $this.data(restoreDisabledDataKey);
+      if (rememberedState !== undefined) {
+        return rememberedState;
+      }
+    }
     return vanillaProp.apply(this, outerArguments);
   }
   this.each(function() {
@@ -53,13 +60,19 @@ const overrideProp = function(property, value) {
       if ($this.is('option')) {
         // just tweak the to-be-restored value
         $this.data(restoreDisabledDataKey, value);
+        const $optionPlaceholder = $this.data(placeholderDataKey);
+        if ($optionPlaceholder) {
+          const optionDisabled = value || $this.data(restoreDisabledDataKey) || !vanillaProp.call($this, 'selected');
+          vanillaProp.call($optionPlaceholder, property, optionDisabled);
+        }
       } else if ($this.is('select')) {
         // we have to disable/enable the placeholders as needed
         $this.find('option').each(function() {
           const $option = $(this);
           const $optionPlaceholder = $option.data(placeholderDataKey);
           if ($optionPlaceholder) {
-            vanillaProp.call($optionPlaceholder, property, value || $option.data(restoreDisabledDataKey));
+            const optionDisabled = value || $option.data(restoreDisabledDataKey) || !vanillaProp.call($option, 'selected');
+            vanillaProp.call($optionPlaceholder, property, optionDisabled);
           }
         });
         if (vanillaProp.call($this, 'multiple')) {
@@ -175,14 +188,8 @@ $.fn.readonly = function(state) {
           vanillaProp.call($this, 'disabled', true);
         }
       }
-      // refreshSelectWidget may spoil the remembered disabled state
-      // by calling disable, and schedules the widget destroy async
-      // with setTimeout().
-      const restoreDisabled = $this.data(restoreDisabledDataKey);
-      refreshSelectWidget($this);
-      setTimeout(() => {
-        $this.data(restoreDisabledDataKey, restoreDisabled);
-      }, 0);
+      refreshWidgetProperties($this);
+      selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);
     } else if ($this.is(':radio')) {
       let $container = $this.closest('fieldset');
       if (!$container) {
@@ -243,6 +250,9 @@ $.fn.readonly = function(state) {
         $this.data(restoreDisabledDataKey, vanillaProp.call($this, 'disabled'));
         vanillaProp.call($this, 'disabled', true);
       }
+    }
+    if (!state) {
+      $this.removeData(restoreDisabledDataKey);
     }
   });
   return this;
