@@ -16,6 +16,8 @@ module.exports = {
     firstDay: true,
     APP_NAME: true,
     XULDocument: true,
+    name: 'off',
+    self: 'off',
   },
   plugins: ['jsdoc'],
   extends: [
