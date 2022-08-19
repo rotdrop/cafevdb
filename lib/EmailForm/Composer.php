@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -1453,7 +1454,7 @@ Störung.';
    */
   public function sendMessages()
   {
-    if (!$this->preComposeValidation()) {
+    if (!$this->preComposeValidation($this->recipients)) {
       return;
     }
 
@@ -1591,7 +1592,11 @@ Störung.';
     } else {
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
-      $mimeMsg = $this->composeAndSend($messageTemplate, $this->recipients);
+
+      // if in project mode potentially send to the mailing list instead of the individual recipients ...
+      $recipients = $this->recipientsFilter->substituteProjectMailingList($this->recipients);
+
+      $mimeMsg = $this->composeAndSend($messageTemplate, $recipients);
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -2325,15 +2330,15 @@ Störung.';
       if (!$this->constructionMode) {
         // Loop over all data-base records and add each recipient in turn
         foreach ($EMails as $recipient) {
-          if ($singleAddress) {
+          if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
             $phpMailer->AddAddress($recipient['email'], $recipient['name']);
           } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
             // blind copy, don't expose the victim to the others.
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);
           } else {
             // open recipients list is requested, still some recipients are hidden.
-            if ($recipient['status'] == 'conductor' ||
-                $recipient['status'] == 'soloist') {
+            if ($recipient['status'] == MemberStatus::CONDUCTOR ||
+                $recipient['status'] == MemberStatus::SOLOIST) {
               $phpMailer->AddBCC($recipient['email'], $recipient['name']);
             } else {
               $phpMailer->AddAddress($recipient['email'], $recipient['name']);
@@ -2733,15 +2738,15 @@ Störung.';
 
       // Loop over all data-base records and add each recipient in turn
       foreach ($eMails as $recipient) {
-        if ($singleAddress) {
+        if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
         } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
           // blind copy, don't expose the victim to the others.
           $phpMailer->AddBCC($recipient['email'], $recipient['name']);
         } else {
           // open recipients list is requested, still some recipients are hidden.
-          if ($recipient['status'] == 'conductor' ||
-              $recipient['status'] == 'soloist') {
+          if ($recipient['status'] == MemberStatus::CONDUCTOR ||
+              $recipient['status'] == MemberStatus::SOLOIST) {
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);
           } else {
             $phpMailer->AddAddress($recipient['email'], $recipient['name']);
@@ -2914,10 +2919,7 @@ Störung.';
         ],
       ];
     }
-    $realRecipients = $this->recipients;
-    $this->recipients = $previewRecipients;
-    $status = $this->preComposeValidation();
-    $this->recipients = $realRecipients;
+    $status = $this->preComposeValidation($previewRecipients);
     if (!$status) {
       return null;
     }
@@ -3067,6 +3069,10 @@ Störung.';
    * Pre-message construction validation. Collect all data and perform
    * some checks on it.
    *
+   * @param null|array $recipients The set of recipients to
+   * check. Currently it is only checked whether the set of recipients
+   * is empty which is treated as error.
+   *
    * - Cc, valid email addresses
    * - Bcc, valid email addresses
    * - subject, must not be empty
@@ -3075,7 +3081,7 @@ Störung.';
    * - file attachments, temporary local copy must exist
    * - events, must exist
    */
-  private function preComposeValidation()
+  private function preComposeValidation($recipients)
   {
     // Basic boolean stuff
     if ($this->subject() == '') {
@@ -3090,7 +3096,7 @@ Störung.';
     } else {
       $this->diagnostics['FromValidation'] = true;
     }
-    if (empty($this->recipients)) {
+    if (empty($recipients)) {
       $this->diagnostics['AddressValidation']['Empty'] = true;
       $this->executionStatus = false;
     }

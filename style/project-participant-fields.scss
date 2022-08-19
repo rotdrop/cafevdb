@@ -323,7 +323,7 @@
         @each $dataType in service-fee, cloud-file, db-file {
           @include rowShownIfDataType($dataType);
         }
-        @each $multiplicity in groupofpeople, single, simple, multiple, parallel, recurring {
+        @each $multiplicity in groupofpeople, groupsofpeople, single, simple, multiple, parallel, recurring {
           @include rowShownIfMultiplicity($multiplicity);
         }
         @each $multiplicity in recurring {

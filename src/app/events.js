@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,7 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
-import { makePlaceholder as selectPlaceholder } from './select-utils.js';
+import * as SelectUtils from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
 import { busyIcon as pageBusyIcon } from './page.js';
@@ -128,7 +128,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         width: '10em',
       });
 
-      selectPlaceholder(eventMenu);
+      SelectUtils.makePlaceholder(eventMenu);
 
       DialogUtils.toBackButton($(this));
 
@@ -147,7 +147,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         $('#events #debug').empty();
 
         const post = eventForm.serializeArray();
-        const eventType = eventMenu.find('option:selected').val();
+        const eventType = SelectUtils.selected(eventMenu);
         post.push({ name: 'eventKind', value: eventType });
 
         $('#dialog_holder').load(
@@ -161,10 +161,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
             handleError(xhr, textStatus, xhr.status);
           });
 
-        eventMenu.find('option').prop('selected', false);
+        SelectUtils.deselectAll(eventMenu);
         $.fn.cafevTooltip.remove();
-
-        eventMenu.trigger('chosen:updated');
 
         return false;
       });

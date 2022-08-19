@@ -372,6 +372,9 @@
             .chosen-container {
               width:100% !important;
             }
+            .selectize-control {
+              min-width:100%;
+            }
           }
 
           .instruments-filter.#{$cssPrefix}container {
@@ -389,6 +392,9 @@
               display:inline-block;
               text-align:left;
               width: 100%;
+              .selectize-control {
+                min-width:100%;
+              }
             }
           }
 

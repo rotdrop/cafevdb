@@ -818,7 +818,7 @@ class MailingListsService
     $response['entries'] = $response['entries'] ?? [];
 
     foreach ($response['entries'] as $member) {
-      $this->selfLinkBySubscription[$listId][$member['email']][$member['role']] = $entry[self::SUBSCRIPTION_SELF_LINK];
+      $this->selfLinkBySubscription[$listId][$member['email']][$member['role']] = $member[self::SUBSCRIPTION_SELF_LINK];
     }
 
     if ($flat) {

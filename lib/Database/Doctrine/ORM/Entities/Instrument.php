@@ -74,7 +74,7 @@ class Instrument implements \ArrayAccess
   /**
    * @var int
    *
-   * @ORM\Column(type="smallint", nullable=false, options={"comment"="Orchestral Ordering"})
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Orchestral Ordering"})
    */
   private int $sortOrder;
 

@@ -192,11 +192,11 @@ const validateInstrumentChoices = function(options) {
 const loadPMETable = function(form, formData, afterLoadCallback) {
   const pmeSys = PHPMyEdit.sys('');
   form.find('input').not('[name^="' + pmeSys + '"]').each(function(idx) {
-    const self = $(this);
-    const name = self.attr('name');
+    const $self = $(this);
+    const name = $self.attr('name');
     if (name) {
       if (typeof formData[name] === 'undefined') {
-        formData[name] = self.val();
+        formData[name] = $self.val();
       }
     }
   });
@@ -617,8 +617,8 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   // enable or disable ungrouped items
-  const maskUngrouped = function(select, disable) {
-    select.find('option').each(function(index) {
+  const maskUngrouped = function($select, disable) {
+    SelectUtils.options($select).each(function(index) {
       const option = $(this);
       const data = option.data('data');
       // console.log('option', option);
@@ -675,10 +675,10 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   selectGroupOfPeople.off('change').on('change', function(event) {
-    const self = $(this); // just the current one
+    const $self = $(this); // just the current one
 
-    let curSelected = self.val() || [];
-    const prevSelected = self.data('selected');
+    let curSelected = $self.val() || [];
+    const prevSelected = $self.data('selected');
 
     const added = curSelected.filter(x => prevSelected.indexOf(x) < 0);
     // const removed = prevSelected.filter(x => curSelected.indexOf(x) < 0);
@@ -695,41 +695,41 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     if (musicianSelectedPrev && !musicianSelectedCur) {
       // just removed the current key from the group, undefine group
       // and empty select-box
-      self.find('option:selected').prop('selected', false);
-      self.data('groupField').val('');
-      self.nextAll('span.allowed-option').removeClass('selected');
-      if (self.hasClass('predefined')) {
-        maskUngrouped(self, true);
+      SelectUtils.deselectAll($self);
+      $self.data('groupField').val('');
+      $self.nextAll('span.allowed-option').removeClass('selected');
+      if ($self.hasClass('predefined')) {
+        maskUngrouped($self, true);
       }
       changed = true;
     } else {
       if (!musicianSelectedPrev && !musicianSelectedCur && curSelected.length > 0) {
         // add current record
         console.log('add record', musicianId);
-        SelectUtils.optionByValue(self, musicianId).prop('selected', true);
+        SelectUtils.optionByValue($self, musicianId).prop('selected', true);
         changed = true;
       }
       if (added.length === 1) {
-        const singleNewOption = SelectUtils.optionByValue(self, added[0]);
+        const singleNewOption = SelectUtils.optionByValue($self, added[0]);
         console.log('other people group option', singleNewOption);
         console.log('key', musicianId);
         const data = singleNewOption.data('data');
         console.log('option data', data);
         if (parseInt(data.groupId) !== -1) {
           console.log('group: ', data.groupId);
-          selectGroup(self, data.groupId);
-          self.data('groupField').val(data.groupId);
-          self.nextAll('span.allowed-option').removeClass('selected');
+          selectGroup($self, data.groupId);
+          $self.data('groupField').val(data.groupId);
+          $self.nextAll('span.allowed-option').removeClass('selected');
           // @todo optimize
-          self.nextAll('span.allowed-option[data-key="' + data.groupId + '"]').addClass('selected');
-          maskUngrouped(self, false);
+          $self.nextAll('span.allowed-option[data-key="' + data.groupId + '"]').addClass('selected');
+          maskUngrouped($self, false);
           changed = true;
         }
       }
     }
 
     // deselect "add to group" options
-    self.find('option:selected').each(function(index) {
+    SelectUtils.selectedOptions($self).each(function(index) {
       const option = $(this);
       if (option.val() < 0) {
         option.prop('selected', false);
@@ -737,11 +737,13 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       }
     });
 
-    curSelected = self.val() || [];
-    self.data('selected', curSelected);
+    curSelected = $self.val() || [];
+    $self.data('selected', curSelected);
 
-    const groupId = self.data('groupField').val();
-    const limit = groupId ? self.data('groups')[groupId].limit : -1;
+    console.info('DATA', $self.data());
+
+    const groupId = $self.data('groupField').val();
+    const limit = groupId ? $self.data('groups')[groupId].limit : -1;
     if (limit > 0 && curSelected.length > limit) {
       Notification.showTemporary(
         t('cafevdb',
@@ -751,13 +753,13 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         { isHTML: true, timeout: 30 }
       );
       console.log('exceeding limit');
-      selectValues(self, prevSelected);
+      selectValues($self, prevSelected);
     } else {
       Notification.hide();
     }
 
     if (changed) {
-      self.trigger('chosen:updated');
+      SelectUtils.refreshWidget($self);
     }
     return false;
   });

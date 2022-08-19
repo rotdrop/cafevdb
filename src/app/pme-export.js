@@ -29,15 +29,15 @@
 import $ from './jquery.js';
 import { appName } from './app-info.js';
 import fileDownload from './file-download.js';
-import { deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
+import * as SelectUtils from './select-utils.js';
 
 /**
  * Handle the export menu actions.
  *
- * @param {jQuery} select TBD.
+ * @param {jQuery} $select TBD.
  */
-const handleTableExportMenu = function(select) {
-  const exportFormat = select.find('option:selected').val();
+const handleTableExportMenu = function($select) {
+  const exportFormat = SelectUtils.selected($select);
 
   // this is the form; we need its values
   const form = $('form.pme-form');
@@ -60,7 +60,7 @@ const handleTableExportMenu = function(select) {
   // menu, so let the text remain at its default value. Make sure to
   // also remove and re-attach the tool-tips, otherwise some of the
   // tips remain, because chosen() removes the element underneath.
-  selectDeselectAll(select);
+  SelectUtils.deselectAll($select);
   $.fn.cafevTooltip.remove();
 
   $('div.chosen-container').cafevTooltip({ placement: 'auto' });
@@ -74,16 +74,16 @@ const pmeExportMenu = function(containerSel) {
 
   // Emulate a pull-down menu with export options via the chosen
   // plugin.
-  const exportSelect = container.find('select.pme-export-choice');
-  exportSelect.chosen({
+  const $exportSelect = container.find('select.pme-export-choice');
+  $exportSelect.chosen({
     disable_search: true,
     inherit_select_classes: true,
   });
 
   // install placeholder as first item if chosen is not active
-  selectPlaceholder(exportSelect);
+  SelectUtils.makePlaceholder($exportSelect);
 
-  exportSelect
+  $exportSelect
     .off('change')
     .on('change', function(event) {
       handleTableExportMenu($(this));

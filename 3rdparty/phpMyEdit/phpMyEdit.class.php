@@ -4156,10 +4156,11 @@ class phpMyEdit
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k][self::FDD_VALUES]['table']);
 				$valgrp		= $this->set_values($k, $from_table);
-				$vals		= array_merge([
+				$vals		= [
 					'*' => '*',
 					'' => '[' . ($this->labels['empty'] ?? 'empty') . ']',
-				], $valgrp['values']);
+				] + $valgrp['values'];
+				$this->logInfo('FILTER VALUES ' . print_r($vals, true));
 				$groups     = $valgrp['groups'];
 				$titles     = $valgrp['titles'];
 				$data       = $valgrp['data'];
