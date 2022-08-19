@@ -234,6 +234,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->userStorage = $userStorage;
 
     $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+    $this->projectName = $this->project->getName();
 
     $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
   }
@@ -273,7 +274,7 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     if (empty($projectName) || empty($this->projectId)) {
-      throw new \InvalidArgumentException('Project-id and/or -name must be given ('.$projectName.' / '.$this->projectId.').');
+      throw new \InvalidArgumentException($this->l->t('Project-id and/or -name must be given (%1$s / %2$s)', [ $projectName, $this->projectId ]));
     }
 
     $opts['filters']['AND'] = [
