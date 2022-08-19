@@ -1114,7 +1114,7 @@ trait ParticipantFieldsTrait
             $dataOptionsData,
             [ 'key' => (string)$generatorOption['key'], 'data' => [ 'limit' => $max, ], ]
           );
-          $dataOptionsData = json_encode($dataOptionsData);
+          $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
 
           // new field, member selection
           $groupMemberFdd = &$fieldDescData[$fddGroupMemberName];
@@ -1726,7 +1726,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           $newDataOption = $participantField->getDataOption($newGroupId);
           $max = $newDataOption['limit'];
           $label = $newDataOption['label'];
-          //$this->logInfo('OPTION: '.$newGroupId.' '.Functions\dump($newDataOption));
+          // $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
         }
 
         $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
