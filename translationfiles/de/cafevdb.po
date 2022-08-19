@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-18 20:00+0200\n"
-"PO-Revision-Date: 2022-07-18 22:46+0200\n"
+"POT-Creation-Date: 2022-08-19 10:07+0200\n"
+"PO-Revision-Date: 2022-08-19 10:13+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -56,7 +56,8 @@ msgstr ""
 #: lib/Common/UndoableFileSystemNodeRemove.php:103
 #, php-format
 msgid "Cannot remove \"%s\", file-node not found."
-msgstr "Kann \"%s\" nicht entfernen, der Order bzw. die Datei wurde nicht gefunden."
+msgstr ""
+"Kann \"%s\" nicht entfernen, der Order bzw. die Datei wurde nicht gefunden."
 
 #: lib/Common/UndoableFileSystemNodeRemove.php:108
 msgid "file"
@@ -70,9 +71,11 @@ msgstr "Ordner"
 #, php-format
 msgid ""
 "Cannot remove \"%1$s\", node exists, but has not the request type \"%2$s\"."
-msgstr "Kann \"%1$s\" nicht entfernen, das Objekt existiert zwar, hat aber den falschen Typ \"%2$s\"."
+msgstr ""
+"Kann \"%1$s\" nicht entfernen, das Objekt existiert zwar, hat aber den "
+"falschen Typ \"%2$s\"."
 
-#: lib/Common/UndoableFileSystemNodeRemove.php:126
+#: lib/Common/UndoableFileSystemNodeRemove.php:128
 #, php-format
 msgid "Directory \"%s\" not empty."
 msgstr "Der Ordner \"%s\" darf nicht leer sein."
@@ -92,7 +95,9 @@ msgstr "Der Ordner oder die Datei \"%s\" existiert bereits."
 msgid ""
 "Exception during execution of run-queue: %1$s. Number of successful actions: "
 "%2$d."
-msgstr "Fehler während beim Ausführen der geplanten Aufgaben: %1$s. Anzahl der ausgeführten Aktionen: %2$d."
+msgstr ""
+"Fehler während beim Ausführen der geplanten Aufgaben: %1$s. Anzahl der "
+"ausgeführten Aktionen: %2$d."
 
 #: lib/Common/UndoableTextFileUpdate.php:171
 #, php-format
@@ -218,7 +223,7 @@ msgstr ""
 #: lib/Controller/AdminSettingsController.php:254
 #: lib/Controller/PersonalSettingsController.php:1843
 #: lib/Controller/PersonalSettingsController.php:1893
-#: lib/Controller/ProjectParticipantsController.php:699
+#: lib/Controller/ProjectParticipantsController.php:707
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
@@ -281,7 +286,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/PersonalSettingsController.php:279
 #: lib/Controller/ProgressStatusController.php:147
 #: lib/Controller/ProjectEventsController.php:145
-#: lib/Controller/ProjectParticipantsController.php:188
+#: lib/Controller/ProjectParticipantsController.php:187
 #: lib/Controller/ProjectWebPagesController.php:160
 #: lib/Controller/ProjectsController.php:165
 #: lib/Controller/ProjectsController.php:182
@@ -617,15 +622,15 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:271
-#: lib/Controller/ProjectParticipantsController.php:717
-#: lib/Database/EntityManager.php:271 lib/Documents/OpenDocumentFiller.php:299
+#: lib/Controller/ProjectParticipantsController.php:725
+#: lib/Database/EntityManager.php:281 lib/Documents/OpenDocumentFiller.php:299
 #: lib/Documents/OpenDocumentFiller.php:316
 #: lib/Documents/OpenDocumentFiller.php:327
 #: lib/Documents/OpenDocumentFiller.php:333
 #: lib/Documents/OpenDocumentFiller.php:334
 #: lib/Documents/OpenDocumentFiller.php:337
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:177
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1650
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1719
 #: lib/PageRenderer/Instruments.php:390 lib/PageRenderer/Projects.php:638
 #: lib/Service/Finance/InstrumentInsuranceService.php:586
 #: lib/Service/Finance/InstrumentInsuranceService.php:590
@@ -745,7 +750,7 @@ msgstr "Ausnahme: \"%s\""
 
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:357
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:889
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:958
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:48
 msgid "Documents"
 msgstr "Dokumente"
@@ -896,7 +901,7 @@ msgid "Error, caught an exception. No changes were performed."
 msgstr "Interner Fehler. Es wurden deshalb keine Änderungen gespeichert."
 
 #: lib/Controller/PaymentsController.php:181
-#: lib/Controller/ProjectParticipantsController.php:658
+#: lib/Controller/ProjectParticipantsController.php:666
 #: lib/Controller/SepaDebitMandatesController.php:1162
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
@@ -1937,7 +1942,10 @@ msgstr "Keine oder zu viele Einträge vorhanden: %s"
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is reserved "
 "by the app to hold the contents of the tooltip for this field."
-msgstr "Es ist nicht gestattet, den Begriff \"%1$s\" als Options-Bezeichnung zur verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe für dieses Feld zu präsentieren."
+msgstr ""
+"Es ist nicht gestattet, den Begriff \"%1$s\" als Options-Bezeichnung zur "
+"verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe "
+"für dieses Feld zu präsentieren."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:487
 #: lib/Controller/ProjectParticipantFieldsController.php:494
@@ -1951,7 +1959,10 @@ msgstr "Kann die Zahlangabe \"%s\" nicht interpretieren."
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is used by "
 "the app to hold the contents of the help-text for this field."
-msgstr "Es ist nicht gestattet, den Begriff \"%1$s\" als Options-Bezeichnung zur verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe für dieses Feld zu präsentieren."
+msgstr ""
+"Es ist nicht gestattet, den Begriff \"%1$s\" als Options-Bezeichnung zur "
+"verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe "
+"für dieses Feld zu präsentieren."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:554
 #, php-format
@@ -1973,32 +1984,32 @@ msgstr "Kann die Forderung mit der Id \"%s\" nicht laden."
 msgid "Unknown Request \"%s/%s\""
 msgstr "Unbekannte Anfrage \"%s/%s\""
 
-#: lib/Controller/ProjectParticipantsController.php:142
+#: lib/Controller/ProjectParticipantsController.php:141
 msgid "Missing Musician Ids"
 msgstr "Fehlende Musizierende-Ids"
 
-#: lib/Controller/ProjectParticipantsController.php:146
+#: lib/Controller/ProjectParticipantsController.php:145
 msgid "Missing Project Id"
 msgstr "Fehlende Projekt-Id"
 
-#: lib/Controller/ProjectParticipantsController.php:158
+#: lib/Controller/ProjectParticipantsController.php:157
 #, php-format
 msgid "No musician could be added to the project, #failures: %d."
 msgstr ""
 "Keine Person konnte zum Projekt hinzugefügt werden, Anzahl der Fehlschäge: "
 "%d."
 
-#: lib/Controller/ProjectParticipantsController.php:209
+#: lib/Controller/ProjectParticipantsController.php:208
 #, php-format
 msgid "Project- or musician-id is missing (%s/%s)"
 msgstr "Projekt- oder Musizierende-Id fehlt (%s/%s)"
 
-#: lib/Controller/ProjectParticipantsController.php:215
+#: lib/Controller/ProjectParticipantsController.php:214
 #, php-format
 msgid "Unable to fetch project-participant with given key %s"
 msgstr "Kann Projekt-Teilnehmer:in mit der Id %s nicht laden"
 
-#: lib/Controller/ProjectParticipantsController.php:254
+#: lib/Controller/ProjectParticipantsController.php:253
 #, php-format
 msgid ""
 "Denying the attempt to remove the instrument %s because it is used in the "
@@ -2007,7 +2018,7 @@ msgstr ""
 "Erfolgloser Versuch, der Person das Instrument %s zu entziehen, dass er bei "
 "diesem Projekt spielt. "
 
-#: lib/Controller/ProjectParticipantsController.php:262
+#: lib/Controller/ProjectParticipantsController.php:261
 #, php-format
 msgid ""
 "Just marking the instrument \"%1$s\" as disabled because it is still used in "
@@ -2016,7 +2027,7 @@ msgstr ""
 "Das Instrument \"%1$s\" wird nur als gesperrt markiert und nicht gelöscht,\n"
 "weil es immer nur an %2$d anderen Stellen verwendet wird."
 
-#: lib/Controller/ProjectParticipantsController.php:267
+#: lib/Controller/ProjectParticipantsController.php:266
 #, php-format
 msgid ""
 "Removing instrument \"%1$s\" from the list of instruments played by %2$s."
@@ -2024,90 +2035,90 @@ msgstr ""
 "Entferne das Instrument \"%1$s\" aus der Liste der Instrumente, die %2$s "
 "spielen kann"
 
-#: lib/Controller/ProjectParticipantsController.php:275
+#: lib/Controller/ProjectParticipantsController.php:274
 #, php-format
 msgid "Denying the attempt to add an unknown instrument (id = %s)"
 msgstr "Weigere mich, ein unbekanntes Instrument hinzuzufügen (id = %s)"
 
-#: lib/Controller/ProjectParticipantsController.php:279
+#: lib/Controller/ProjectParticipantsController.php:278
 #, php-format
 msgid "Adding instrument \"%s\" to the list of instruments played by \"%s\""
 msgstr ""
 "Füge das Instrument \"%s\" zu den Instrumenten hinzu, die %s spielen kann"
 
-#: lib/Controller/ProjectParticipantsController.php:288
+#: lib/Controller/ProjectParticipantsController.php:287
 #, php-format
 msgid "Setting \"%1$s\" as the primary instrument of %2$s."
 msgstr "Verwende \"%1$s\" als bevorzugtes Instrument von %2$s."
 
-#: lib/Controller/ProjectParticipantsController.php:304
+#: lib/Controller/ProjectParticipantsController.php:303
 #, php-format
 msgid "Denying the attempt to add an unknown instrument (id = %s)."
 msgstr "Weigere mich, ein unbekanntes Instrument hinzuzufügen (id = %s)."
 
-#: lib/Controller/ProjectParticipantsController.php:312
+#: lib/Controller/ProjectParticipantsController.php:311
 #, php-format
 msgid "Denying the attempt to add the instrument %s because %s cannot play it."
 msgstr ""
 "Weigere mich das Instrument %s hinzuzufügen, weil %s das nicht spielen kann."
 
-#: lib/Controller/ProjectParticipantsController.php:318
+#: lib/Controller/ProjectParticipantsController.php:317
 #, php-format
 msgid "Adding instrument \"%1$s\" to the list of project-instruments of %s."
 msgstr ""
 "Füge das Instrument \"%1$s\" zu den Projekt-Instrumenten von %2$s hinzu."
 
-#: lib/Controller/ProjectParticipantsController.php:327
+#: lib/Controller/ProjectParticipantsController.php:326
 msgid "Validation not yet implemented"
 msgstr "Validierung ist noch nicht implementiert."
 
-#: lib/Controller/ProjectParticipantsController.php:330
+#: lib/Controller/ProjectParticipantsController.php:329
 #, php-format
 msgid "Unknown Request %s"
 msgstr "Unbekannte Anfrage %s"
 
-#: lib/Controller/ProjectParticipantsController.php:364
+#: lib/Controller/ProjectParticipantsController.php:363
 #, php-format
 msgid "Unable to find any data for the option key \"%s\"."
 msgstr "Kann die Daten zur Option mit dem Schlüssel \"%s\" nicht finden."
 
-#: lib/Controller/ProjectParticipantsController.php:381
-#: lib/Controller/ProjectParticipantsController.php:562
+#: lib/Controller/ProjectParticipantsController.php:376
+#: lib/Controller/ProjectParticipantsController.php:570
 #, php-format
 msgid "Unable to find the associated file with the id \"%s\" in data-base."
 msgstr "Kann die zugehörige Datei mit id \"%s\" nicht in der Datenbank finden."
 
 #: lib/Controller/ProjectParticipantsController.php:392
-#: lib/Controller/ProjectParticipantsController.php:475
+#: lib/Controller/ProjectParticipantsController.php:483
 #, php-format
 msgid "Unsupported field type \"%s\"."
 msgstr "Nicht unterstützter Feld-Typ: \"%s\"."
 
-#: lib/Controller/ProjectParticipantsController.php:429
+#: lib/Controller/ProjectParticipantsController.php:437
 msgid "Unable to delete file \"%S\"."
 msgstr "Kann die Datei \"%s\" nicht löschen."
 
-#: lib/Controller/ProjectParticipantsController.php:431
+#: lib/Controller/ProjectParticipantsController.php:439
 #, php-format
 msgid "Successfully removed file \"%s\"."
 msgstr "Datei \"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/ProjectParticipantsController.php:466
+#: lib/Controller/ProjectParticipantsController.php:474
 #, php-format
 msgid "Sub-directory \"%s\" requested, but not supported by db-storage."
 msgstr ""
 "Unterverzeichnis \"%s\" gewünscht, das wird aber vom DB-Dateispeicher nicht "
 "unterstützt."
 
-#: lib/Controller/ProjectParticipantsController.php:691
+#: lib/Controller/ProjectParticipantsController.php:699
 msgid "Unable to store uploaded data"
 msgstr "Kann die hochgeladenen Daten nicht speichern."
 
-#: lib/Controller/ProjectParticipantsController.php:721
+#: lib/Controller/ProjectParticipantsController.php:729
 msgid "Mailing-lists REST API is not configured."
 msgstr "Der REST-API-Zugang zum Mailing-Listen-Server ist nicht konfiguriert."
 
-#: lib/Controller/ProjectParticipantsController.php:726
+#: lib/Controller/ProjectParticipantsController.php:734
 #, php-format
 msgid ""
 "Unable to find the participant by project- and musician-id \"%1$d / %2$d\"."
@@ -2115,17 +2126,17 @@ msgstr ""
 "Kann das Projekt-Mitglied mit Projekt- und Personen-Id \"%1$d / %2$d\" nicht "
 "finden."
 
-#: lib/Controller/ProjectParticipantsController.php:733
+#: lib/Controller/ProjectParticipantsController.php:741
 #, php-format
 msgid "The project \"%s\" does not yet have a mailing-list."
 msgstr "Das Projekt \"%s\" hat keine Diskussions-Mailing-Lists."
 
-#: lib/Controller/ProjectParticipantsController.php:740
+#: lib/Controller/ProjectParticipantsController.php:748
 #, php-format
 msgid "The musician \"%s\" does not have an email-address."
 msgstr "Zur Person \"%s\" ist keine Email-Adresse hinterlegt."
 
-#: lib/Controller/ProjectParticipantsController.php:760
+#: lib/Controller/ProjectParticipantsController.php:768
 #, php-format
 msgid ""
 "%1$s participation has not been confirmed yet. Please consider to set the "
@@ -2141,18 +2152,18 @@ msgstr ""
 "trotz unbestätigter Teilnahme %$1s zur Projekt-Mailing-Liste\n"
 "hinzufügen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:766
+#: lib/Controller/ProjectParticipantsController.php:774
 #, php-format
 msgid "%1$s <%2$s> has been subscribed to %3$s."
 msgstr "%1$s <%2$s> wurde in den Verteiler %3$s eingetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:769
-#: lib/Controller/ProjectParticipantsController.php:789
+#: lib/Controller/ProjectParticipantsController.php:777
+#: lib/Controller/ProjectParticipantsController.php:797
 #, php-format
 msgid "A notification has been sent to %1$s <%2$s>."
 msgstr "%1$s <%2$s> wurde Benachrichtigt."
 
-#: lib/Controller/ProjectParticipantsController.php:780
+#: lib/Controller/ProjectParticipantsController.php:788
 #, php-format
 msgid ""
 "The participation of %1$s has already been been confirmed. Are you really "
@@ -2162,12 +2173,12 @@ msgstr ""
 "hunderprozentig sicher, dass Sie %1$s aus der Projekt-Mailing-Liste "
 "austragen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:786
+#: lib/Controller/ProjectParticipantsController.php:794
 #, php-format
 msgid "%1$s <%2$s> has been unsubscribed from %3$s."
 msgstr "%1$s <%2$s> wurde aus dem Verteiler %3$s ausgetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:800
+#: lib/Controller/ProjectParticipantsController.php:808
 #, php-format
 msgid ""
 "%1$s can enable message delivery by itself. Are you really sure that you "
@@ -2177,12 +2188,12 @@ msgstr ""
 "einschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s einschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:808
+#: lib/Controller/ProjectParticipantsController.php:816
 #, php-format
 msgid "Re-enabled message delivery for %1$s <%2$s>."
 msgstr "Die Nachrichtenauslieferung an %1$s <%2$s> wurde wieder eingeschaltet"
 
-#: lib/Controller/ProjectParticipantsController.php:819
+#: lib/Controller/ProjectParticipantsController.php:827
 #, php-format
 msgid ""
 "%1$s can disable message delivery by itself. Are you really sure that you "
@@ -2192,24 +2203,24 @@ msgstr ""
 "ausschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s ausschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:828
+#: lib/Controller/ProjectParticipantsController.php:836
 #, php-format
 msgid "Disabled message delivery for %1$s <%2$s>."
 msgstr "Nachrichtenauslieferung an %1$s <%2$s> ausgeschaltet."
 
-#: lib/Controller/ProjectParticipantsController.php:866
+#: lib/Controller/ProjectParticipantsController.php:874
 msgid "digest"
 msgstr "Sammlung"
 
-#: lib/Controller/ProjectParticipantsController.php:874
+#: lib/Controller/ProjectParticipantsController.php:882
 msgid "disabled by user"
 msgstr "ausgeschaltet vom Mitglied"
 
-#: lib/Controller/ProjectParticipantsController.php:879
+#: lib/Controller/ProjectParticipantsController.php:887
 msgid "disabled because of bounces"
 msgstr "ausgeschaltet wegen Rückläufern"
 
-#: lib/Controller/ProjectParticipantsController.php:884
+#: lib/Controller/ProjectParticipantsController.php:892
 msgid "disabled by moderator"
 msgstr "ausgeschaltet vom Moderator"
 
@@ -3073,19 +3084,21 @@ msgstr ""
 "Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
 "der einzigen Verknüpfungs-Spalte."
 
-#: lib/Database/EntityManager.php:960 lib/Database/EntityManager.php:987
+#: lib/Database/EntityManager.php:971 lib/Database/EntityManager.php:995
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
-msgstr "Es ist keine Datenbank-Transaktion ativ, Prä-Commit-Aktionen können nicht registriert werden."
+msgstr ""
+"Es ist keine Datenbank-Transaktion ativ, Prä-Commit-Aktionen können nicht "
+"registriert werden."
 
-#: lib/Database/EntityManager.php:972 lib/Database/EntityManager.php:1019
-#: lib/Database/EntityManager.php:1159
+#: lib/Database/EntityManager.php:980 lib/Database/EntityManager.php:1027
+#: lib/Database/EntityManager.php:1188
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Database/EntityManager.php:1352
+#: lib/Database/EntityManager.php:1381
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -3093,7 +3106,7 @@ msgstr ""
 "Die Neuverschlüsselung der Datenbankeinträge ist fehlgeschlagen, mache\n"
 "die Datenbanktransaktion rückgängig."
 
-#: lib/Database/EntityManager.php:1367
+#: lib/Database/EntityManager.php:1396
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
@@ -3161,25 +3174,25 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: lib/EmailForm/Composer.php:566
+#: lib/EmailForm/Composer.php:567
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:572 src/app/email.js:1377
+#: lib/EmailForm/Composer.php:573 src/app/email.js:1388
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:893
+#: lib/EmailForm/Composer.php:894
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:894 lib/EmailForm/Composer.php:916
-#: lib/EmailForm/Composer.php:1240 lib/EmailForm/Composer.php:1247
-#: lib/PageRenderer/ProjectPayments.php:463
+#: lib/EmailForm/Composer.php:895 lib/EmailForm/Composer.php:917
+#: lib/EmailForm/Composer.php:1241 lib/EmailForm/Composer.php:1248
+#: lib/PageRenderer/ProjectPayments.php:475
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:894
+#: lib/EmailForm/Composer.php:895
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:314
 #: lib/PageRenderer/ProjectParticipantFields.php:554
 #: lib/PageRenderer/ProjectParticipantFields.php:1879
@@ -3187,40 +3200,40 @@ msgstr "Gesamtbetrag"
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:895 lib/EmailForm/Composer.php:1248
+#: lib/EmailForm/Composer.php:896 lib/EmailForm/Composer.php:1249
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:896 lib/EmailForm/Composer.php:1249
+#: lib/EmailForm/Composer.php:897 lib/EmailForm/Composer.php:1250
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:897 lib/PageRenderer/PMETableViewBase.php:627
+#: lib/EmailForm/Composer.php:898 lib/PageRenderer/PMETableViewBase.php:632
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1059
+#: lib/EmailForm/Composer.php:1060
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1245
+#: lib/EmailForm/Composer.php:1246
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1246
+#: lib/EmailForm/Composer.php:1247
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1387
+#: lib/EmailForm/Composer.php:1388
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1465
+#: lib/EmailForm/Composer.php:1466
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2130
+#: lib/EmailForm/Composer.php:2135
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3268,11 +3281,11 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2930
+#: lib/EmailForm/Composer.php:2932
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:2970
+#: lib/EmailForm/Composer.php:2972
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -3281,39 +3294,39 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:2972
+#: lib/EmailForm/Composer.php:2974
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:2975
+#: lib/EmailForm/Composer.php:2977
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3130
+#: lib/EmailForm/Composer.php:3136
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3154
+#: lib/EmailForm/Composer.php:3160
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3247 lib/EmailForm/Composer.php:3262
+#: lib/EmailForm/Composer.php:3253 lib/EmailForm/Composer.php:3268
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3346 lib/EmailForm/Composer.php:3422
-#: lib/EmailForm/Composer.php:3432
+#: lib/EmailForm/Composer.php:3352 lib/EmailForm/Composer.php:3428
+#: lib/EmailForm/Composer.php:3438
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3365
+#: lib/EmailForm/Composer.php:3371
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3371
+#: lib/EmailForm/Composer.php:3377
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -3321,131 +3334,131 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:3397
+#: lib/EmailForm/Composer.php:3403
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3522
+#: lib/EmailForm/Composer.php:3528
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:3816
+#: lib/EmailForm/Composer.php:3822
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3828
+#: lib/EmailForm/Composer.php:3834
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3852
+#: lib/EmailForm/Composer.php:3858
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3883
+#: lib/EmailForm/Composer.php:3889
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3941 lib/EmailForm/Composer.php:4060
+#: lib/EmailForm/Composer.php:3947 lib/EmailForm/Composer.php:4066
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:3977
+#: lib/EmailForm/Composer.php:3983
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4002
+#: lib/EmailForm/Composer.php:4008
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4585
+#: lib/EmailForm/Composer.php:4591
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:4585
+#: lib/EmailForm/Composer.php:4591
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:4586
+#: lib/EmailForm/Composer.php:4592
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4587
+#: lib/EmailForm/Composer.php:4593
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4588
+#: lib/EmailForm/Composer.php:4594
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4704
+#: lib/EmailForm/Composer.php:4710
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:472
+#: lib/EmailForm/RecipientsFilter.php:474
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:498
+#: lib/EmailForm/RecipientsFilter.php:500
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:737
-#: lib/PageRenderer/PMETableViewBase.php:359
+#: lib/EmailForm/RecipientsFilter.php:739
+#: lib/PageRenderer/PMETableViewBase.php:364
 msgid "member status "
 msgstr "Mitglieds-Status"
 
-#: lib/EmailForm/RecipientsFilter.php:823
+#: lib/EmailForm/RecipientsFilter.php:825
 msgid "project mailing list"
 msgstr "Projekt-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:827
+#: lib/EmailForm/RecipientsFilter.php:829
 msgid "announcements mailing list"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:831
+#: lib/EmailForm/RecipientsFilter.php:833
 msgid "musician database"
 msgstr "Musiker-Datenbank"
 
-#: lib/EmailForm/RecipientsFilter.php:835
+#: lib/EmailForm/RecipientsFilter.php:837
 msgid "all known musicians"
 msgstr "Alle bekannten Musiker*innen"
 
-#: lib/EmailForm/RecipientsFilter.php:839
+#: lib/EmailForm/RecipientsFilter.php:841
 msgid "all musicians NOT participating"
 msgstr "alle NICHT-Teilnehmenden"
 
-#: lib/EmailForm/RecipientsFilter.php:843
+#: lib/EmailForm/RecipientsFilter.php:845
 msgid "participants (confirmed)"
 msgstr "bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:847
+#: lib/EmailForm/RecipientsFilter.php:849
 msgid "participants (preliminary)"
 msgstr "vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:851
+#: lib/EmailForm/RecipientsFilter.php:853
 msgid "participants (preliminary and confirmed)"
 msgstr "alle Teilnehmenden (bestätigt und vorläufig)"
 
-#: lib/EmailForm/RecipientsFilter.php:855
+#: lib/EmailForm/RecipientsFilter.php:857
 msgid "all musicians except confirmed participants"
 msgstr "alle Personen AUSSER bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:859
+#: lib/EmailForm/RecipientsFilter.php:861
 msgid "all musicians except preliminary participants"
 msgstr "alle Personen AUSSER vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:863
+#: lib/EmailForm/RecipientsFilter.php:865
 msgid "no one"
 msgstr "niemand"
 
@@ -3638,30 +3651,32 @@ msgstr "nach Tag im Monat"
 msgid ""
 "\"%1$s\" belongs to the participant-field \"%2$s\" and must be a folder, "
 "your are trying to create a file (%3$s)."
-msgstr "Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\" und sollte eine Dateiordner sein, Sie aber versuchen, eine DAte zu erzeugen (%3$s)."
+msgstr ""
+"Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\" und sollte eine "
+"Dateiordner sein, Sie aber versuchen, eine DAte zu erzeugen (%3$s)."
 
 #: lib/Listener/ParticipantFieldCloudFolderListener.php:355
 #, php-format
 msgid ""
 "The current folder \"%1$s\" belongs to the participant-field \"%2$s\", but "
 "\"%3$s\" is not one of the registered allowed file-names."
-msgstr "Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\", aber \"%3$s\" ist keiner der registrierten zulässigen Dateinamen."
+msgstr ""
+"Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\", aber \"%3$s\" ist "
+"keiner der registrierten zulässigen Dateinamen."
 
-#: lib/Listener/ParticipantFieldCloudFolderListener.php:485
+#: lib/Listener/ParticipantFieldCloudFolderListener.php:487
 #, php-format
 msgid ""
 "The folder \"%1$s\" belongs to the participant-field \"%2$s\" and must not "
 "be deleted (%3$s)."
-msgstr "Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\" und darf nicht gelöscht werden (%3$s)."
+msgstr ""
+"Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\" und darf nicht "
+"gelöscht werden (%3$s)."
 
 #: lib/Listener/PasswordUpdatedEventListener.php:82
-#, php-format
-msgid "Unable to initialize asymmetric key-pair for user \"%s\"."
-msgstr "Kann kein Schlüsselpaar für die Person \"%s\" erzeugen."
-
 #: lib/Listener/UserLoggedInEventListener.php:79
 #, php-format
-msgid "Unable to initialize asymmetric key-pari for user \"%s\"."
+msgid "Unable to initialize asymmetric key-pair for user \"%s\"."
 msgstr "Kann kein Schlüsselpaar für die Person \"%s\" erzeugen."
 
 #: lib/Listener/UserLoggedInEventListener.php:96
@@ -3754,6 +3769,10 @@ msgid ""
 msgstr ""
 "Verschlüsselte VARCHAR-Spalten vergrößern um Platz für Multi-Benutzer-"
 "Verschlüsselung zu schaffen."
+
+#: lib/Maintenance/Migrations/EnlargeSortOrderField.php:44
+msgid "Enlarge the range of the instrument sort order field."
+msgstr "Wertebereich des Instrumenten-Sortiwer-Felds vergrößern."
 
 #: lib/Maintenance/Migrations/EnlargeTranslationKeyPhrase.php:48
 msgid ""
@@ -3922,7 +3941,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:130 src/app/email.js:1872
+#: lib/Notifications/Notifier.php:130 src/app/email.js:1883
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -3963,7 +3982,7 @@ msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
 #: lib/PageRenderer/InstrumentInsurances.php:269
-#: lib/PageRenderer/ProjectPayments.php:437
+#: lib/PageRenderer/ProjectPayments.php:448
 #: lib/PageRenderer/SepaBankAccounts.php:523
 #: lib/PageRenderer/SepaBulkTransactions.php:377
 msgid "Musician"
@@ -4014,7 +4033,7 @@ msgstr "Geltungsbereich"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:209
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:243
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:896
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:965
 msgid "Date"
 msgstr "Datum"
 
@@ -4078,11 +4097,11 @@ msgid "yes"
 msgstr "ja"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:120
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:515
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:548
 #: lib/PageRenderer/ProjectParticipantFields.php:693
 #: lib/PageRenderer/ProjectParticipantFields.php:935
 #: lib/PageRenderer/ProjectParticipantFields.php:1762
-#: lib/Service/ProjectParticipantFieldsService.php:579
+#: lib/Service/ProjectParticipantFieldsService.php:576
 msgid "true"
 msgstr "wahr"
 
@@ -4092,11 +4111,11 @@ msgid "no"
 msgstr "nein"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:124
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:514
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:547
 #: lib/PageRenderer/ProjectParticipantFields.php:693
 #: lib/PageRenderer/ProjectParticipantFields.php:936
 #: lib/PageRenderer/ProjectParticipantFields.php:1762
-#: lib/Service/ProjectParticipantFieldsService.php:579
+#: lib/Service/ProjectParticipantFieldsService.php:576
 #: templates/pme-table.php:73
 msgid "false"
 msgstr "falsch"
@@ -4129,7 +4148,7 @@ msgid "Unable to contact mailing lists service"
 msgstr "Kann keine Verbindung zum Mailing-List-Service aufnehmen."
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:168
-#: lib/PageRenderer/ProjectParticipants.php:1030
+#: lib/PageRenderer/ProjectParticipants.php:1031
 #: templates/emailform/part.emailform.recipients.php:181
 msgid "Project Mailing List"
 msgstr "Projekt-Email-Verteiler"
@@ -4197,13 +4216,13 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: lib/PageRenderer/InstrumentFamilies.php:248
 #: lib/PageRenderer/Instruments.php:314 lib/PageRenderer/Musicians.php:553
 #: lib/PageRenderer/ProjectParticipantFields.php:366
-#: lib/PageRenderer/ProjectParticipants.php:564
+#: lib/PageRenderer/ProjectParticipants.php:565
 #: lib/PageRenderer/Projects.php:296
 msgid "Deleted"
 msgstr "Gelöscht"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:249
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:489
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:522
 #, php-format
 msgid "Not default style for \"%s\" available."
 msgstr "Kein Voreinstellungs-Stil für \"%s\" vorhanden."
@@ -4212,84 +4231,84 @@ msgstr "Kein Voreinstellungs-Stil für \"%s\" vorhanden."
 msgid "Revert to default"
 msgstr "Auf Voreinstellung zurücksetzen."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:391
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:413
 #: lib/PageRenderer/FieldTraits/ParticipantFileFieldsTrait.php:92
 #, php-format
 msgid "The file \"%s\" could not be found on the server."
 msgstr "Die Datei \"%s\" konnte nicht auf dem Server gefunden werden."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:468
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:635
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:501
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:698
 #, php-format
 msgid "The folder \"%s\" could not be found on the server."
 msgstr "Die Ordner \"%s\" konnte nicht auf dem Server gefunden werden."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:471
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:504
 msgid "The folder is empty."
 msgstr "Der Dateiordner ist leer."
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:888
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:957
 msgid "Value"
 msgstr "Wert"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:892
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:961
 #, php-format
 msgid "Value [%s]"
 msgstr "Wert [%s]"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:893
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:962
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:899
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:968
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:903
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:972
 msgid "File"
 msgstr "Datei"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:922
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:991
 #: lib/PageRenderer/SepaBulkTransactions.php:523
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:923
-#: lib/PageRenderer/ProjectPayments.php:521
-#: lib/PageRenderer/ProjectPayments.php:542
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:992
+#: lib/PageRenderer/ProjectPayments.php:533
+#: lib/PageRenderer/ProjectPayments.php:554
 #: lib/PageRenderer/SepaBulkTransactions.php:463
 #: templates/emailform/part.emailform.composer.php:196
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:971
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1040
 #: lib/PageRenderer/ProjectParticipantFields.php:1672
 #: lib/PageRenderer/SepaBankAccounts.php:352
 msgid "In case of Conflict"
 msgstr "Bei Konflikt"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1003
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1099
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1165
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1072
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1168
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1234
 msgid "without group"
 msgstr "Ohne Gruppe"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1066
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1242
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1326
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1135
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1311
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1395
 msgid "deleted"
 msgstr "gelöscht"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1176
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1245
 msgid "add to this group"
 msgstr "zu dieser Gruppe hinzufügen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1500
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1569
 #: lib/PageRenderer/SepaBulkTransactions.php:540
 msgid "download"
 msgstr "herunterladen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1546
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1615
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
@@ -4298,7 +4317,7 @@ msgstr ""
 "Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
 "\""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1668
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1737
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -4419,8 +4438,8 @@ msgstr "Veschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:235
 #: lib/PageRenderer/Musicians.php:316
 #: lib/PageRenderer/ProjectParticipantFields.php:261
-#: lib/PageRenderer/ProjectParticipants.php:1495
-#: lib/PageRenderer/ProjectPayments.php:373
+#: lib/PageRenderer/ProjectParticipants.php:1496
+#: lib/PageRenderer/ProjectPayments.php:384
 #: lib/PageRenderer/SepaBankAccounts.php:992
 #: lib/PageRenderer/SepaBulkTransactions.php:255
 #: lib/Service/InstrumentationService.php:189
@@ -4550,7 +4569,7 @@ msgid "Short Name"
 msgstr "Kurzbezeichnung"
 
 #: lib/PageRenderer/InsuranceBrokers.php:147
-#: lib/PageRenderer/ProjectParticipants.php:428
+#: lib/PageRenderer/ProjectParticipants.php:429
 #: templates/part.common.footer.php:132
 msgid "Name"
 msgstr "Name"
@@ -4626,7 +4645,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:307
-#: lib/PageRenderer/ProjectParticipants.php:1478
+#: lib/PageRenderer/ProjectParticipants.php:1479
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -4652,108 +4671,108 @@ msgid "Forename"
 msgstr "Vorname"
 
 #: lib/PageRenderer/Musicians.php:418
-#: lib/PageRenderer/ProjectParticipants.php:446
+#: lib/PageRenderer/ProjectParticipants.php:447
 msgid "Nickname"
 msgstr "Rufname"
 
 #: lib/PageRenderer/Musicians.php:427
-#: lib/PageRenderer/ProjectParticipants.php:455
+#: lib/PageRenderer/ProjectParticipants.php:456
 msgid "e.g. Cathy"
 msgstr "z.B. Michi"
 
 #: lib/PageRenderer/Musicians.php:461
-#: lib/PageRenderer/ProjectParticipants.php:485
+#: lib/PageRenderer/ProjectParticipants.php:486
 msgid "Display-Name"
 msgstr "Anzeigename"
 
 #: lib/PageRenderer/Musicians.php:479
-#: lib/PageRenderer/ProjectParticipants.php:496
+#: lib/PageRenderer/ProjectParticipants.php:497
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
 #: lib/PageRenderer/Musicians.php:517
-#: lib/PageRenderer/ProjectParticipants.php:529
-#: lib/PageRenderer/ProjectPayments.php:457
+#: lib/PageRenderer/ProjectParticipants.php:530
+#: lib/PageRenderer/ProjectPayments.php:469
 msgid "User Id"
 msgstr "Benutzerkennung"
 
 #: lib/PageRenderer/Musicians.php:592
-#: lib/PageRenderer/ProjectParticipants.php:615
+#: lib/PageRenderer/ProjectParticipants.php:616
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
 #: lib/PageRenderer/Musicians.php:606
-#: lib/PageRenderer/ProjectParticipants.php:876
+#: lib/PageRenderer/ProjectParticipants.php:877
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
 #: lib/PageRenderer/Musicians.php:626
-#: lib/PageRenderer/ProjectParticipants.php:906
+#: lib/PageRenderer/ProjectParticipants.php:907
 msgid "Member Status"
 msgstr "Status"
 
 #: lib/PageRenderer/Musicians.php:637
-#: lib/PageRenderer/ProjectParticipants.php:931
+#: lib/PageRenderer/ProjectParticipants.php:932
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
 #: lib/PageRenderer/Musicians.php:656
-#: lib/PageRenderer/ProjectParticipants.php:950
+#: lib/PageRenderer/ProjectParticipants.php:951
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
 #: lib/PageRenderer/Musicians.php:679
-#: lib/PageRenderer/ProjectParticipants.php:1004
+#: lib/PageRenderer/ProjectParticipants.php:1005
 msgid "Projects"
 msgstr "Projekte"
 
 #: lib/PageRenderer/Musicians.php:700
-#: lib/PageRenderer/ProjectParticipants.php:1043
+#: lib/PageRenderer/ProjectParticipants.php:1044
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
 #: lib/PageRenderer/Musicians.php:714
-#: lib/PageRenderer/ProjectParticipants.php:1058
+#: lib/PageRenderer/ProjectParticipants.php:1059
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
 #: lib/PageRenderer/Musicians.php:737
-#: lib/PageRenderer/ProjectParticipants.php:1073
+#: lib/PageRenderer/ProjectParticipants.php:1074
 msgid "Address Supplement"
 msgstr "Adresszusatz"
 
 #: lib/PageRenderer/Musicians.php:748
-#: lib/PageRenderer/ProjectParticipants.php:1084
+#: lib/PageRenderer/ProjectParticipants.php:1085
 msgid "Street"
 msgstr "Straße"
 
 #: lib/PageRenderer/Musicians.php:763
-#: lib/PageRenderer/ProjectParticipants.php:1098
+#: lib/PageRenderer/ProjectParticipants.php:1099
 msgid "Street Number"
 msgstr "Hausnummer"
 
 #: lib/PageRenderer/Musicians.php:774
-#: lib/PageRenderer/ProjectParticipants.php:1109
+#: lib/PageRenderer/ProjectParticipants.php:1110
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
 #: lib/PageRenderer/Musicians.php:783
-#: lib/PageRenderer/ProjectParticipants.php:1123
+#: lib/PageRenderer/ProjectParticipants.php:1124
 msgid "City"
 msgstr "Stadt"
 
 #: lib/PageRenderer/Musicians.php:795
-#: lib/PageRenderer/ProjectParticipants.php:1135
+#: lib/PageRenderer/ProjectParticipants.php:1136
 msgid "Country"
 msgstr "Land"
 
 #: lib/PageRenderer/Musicians.php:810
-#: lib/PageRenderer/ProjectParticipants.php:1153
+#: lib/PageRenderer/ProjectParticipants.php:1154
 msgid "Remarks"
 msgstr "Bemerkungen"
 
 #: lib/PageRenderer/Musicians.php:828
-#: lib/PageRenderer/ProjectParticipants.php:1173
+#: lib/PageRenderer/ProjectParticipants.php:1174
 msgid "Language"
 msgstr "Sprache"
 
@@ -4762,18 +4781,18 @@ msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
 #: lib/PageRenderer/Musicians.php:889
-#: lib/PageRenderer/ProjectParticipants.php:1185
+#: lib/PageRenderer/ProjectParticipants.php:1186
 msgid "Photo"
 msgstr "Foto"
 
 #: lib/PageRenderer/Musicians.php:951
-#: lib/PageRenderer/ProjectParticipants.php:1244
+#: lib/PageRenderer/ProjectParticipants.php:1245
 #: lib/PageRenderer/Projects.php:858
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #: lib/PageRenderer/Musicians.php:963
-#: lib/PageRenderer/ProjectParticipants.php:1256 src/app/ajax.js:37
+#: lib/PageRenderer/ProjectParticipants.php:1257 src/app/ajax.js:37
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -4782,43 +4801,43 @@ msgstr "Erzeugt"
 msgid "Add all to %s"
 msgstr "Alle zu %s"
 
-#: lib/PageRenderer/PME/Config.php:58 lib/PageRenderer/PMETableViewBase.php:582
+#: lib/PageRenderer/PME/Config.php:58 lib/PageRenderer/PMETableViewBase.php:587
 #: templates/fragments/projects/project-actions.php:168
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/PageRenderer/PMETableViewBase.php:311
+#: lib/PageRenderer/PMETableViewBase.php:314
 msgid "%n data field affected"
 msgid_plural "%n data fields affected"
 msgstr[0] "%n Daten-Feld betroffen"
 msgstr[1] "%n Daten-Felder betroffen"
 
-#: lib/PageRenderer/PMETableViewBase.php:321
+#: lib/PageRenderer/PMETableViewBase.php:326
 msgid "Query Log"
 msgstr "Abfrage-Protokoll"
 
-#: lib/PageRenderer/PMETableViewBase.php:426
+#: lib/PageRenderer/PMETableViewBase.php:431
 #, php-format
 msgid "SQL Transaction failed: %s"
 msgstr "SQL Transaktion fehlgeschlagen: %s"
 
-#: lib/PageRenderer/PMETableViewBase.php:594
+#: lib/PageRenderer/PMETableViewBase.php:599
 msgid "Fees"
 msgstr "Beiträge"
 
-#: lib/PageRenderer/PMETableViewBase.php:594
+#: lib/PageRenderer/PMETableViewBase.php:599
 msgid "expenses negative"
 msgstr "Ausgaben negativ"
 
-#: lib/PageRenderer/PMETableViewBase.php:635
+#: lib/PageRenderer/PMETableViewBase.php:640
 msgid "Revoked"
 msgstr "Entwertung"
 
-#: lib/PageRenderer/PMETableViewBase.php:645
+#: lib/PageRenderer/PMETableViewBase.php:650
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/PageRenderer/PMETableViewBase.php:889
+#: lib/PageRenderer/PMETableViewBase.php:894
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
@@ -4827,8 +4846,8 @@ msgstr ""
 "Tabelle \"%s\": fehlender Id-Wert für Datenbank-Feld \"%s\" und das "
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:922
-#: lib/PageRenderer/PMETableViewBase.php:1489
+#: lib/PageRenderer/PMETableViewBase.php:927
+#: lib/PageRenderer/PMETableViewBase.php:1494
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
@@ -4838,10 +4857,10 @@ msgstr ""
 "mehr als einen Schlüssel: \"%s\" / \"%s\".\n"
 "\n"
 
-#: lib/PageRenderer/PMETableViewBase.php:939
-#: lib/PageRenderer/PMETableViewBase.php:1280
-#: lib/PageRenderer/PMETableViewBase.php:1513
-#: lib/PageRenderer/PMETableViewBase.php:1714
+#: lib/PageRenderer/PMETableViewBase.php:944
+#: lib/PageRenderer/PMETableViewBase.php:1285
+#: lib/PageRenderer/PMETableViewBase.php:1518
+#: lib/PageRenderer/PMETableViewBase.php:1719
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -4850,39 +4869,39 @@ msgstr ""
 "Feld \"%s.%s\": geschachtelte Multi-Key Verknüpfungstabelle mit unerwarteter "
 "Pivot-Spalte: %s."
 
-#: lib/PageRenderer/PMETableViewBase.php:1016
+#: lib/PageRenderer/PMETableViewBase.php:1021
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister Löschversuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1043
+#: lib/PageRenderer/PMETableViewBase.php:1048
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister Einfüge-Versuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1070
+#: lib/PageRenderer/PMETableViewBase.php:1075
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsister verbleibende Daten für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1095
-#: lib/PageRenderer/PMETableViewBase.php:1587
+#: lib/PageRenderer/PMETableViewBase.php:1100
+#: lib/PageRenderer/PMETableViewBase.php:1592
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1122
+#: lib/PageRenderer/PMETableViewBase.php:1127
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: lib/PageRenderer/PMETableViewBase.php:1273
-#: lib/PageRenderer/PMETableViewBase.php:1707
+#: lib/PageRenderer/PMETableViewBase.php:1278
+#: lib/PageRenderer/PMETableViewBase.php:1712
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
@@ -4892,17 +4911,17 @@ msgstr ""
 "inkonsistenten Daten für die Spalte \"%2$s\",\n"
 "der fest eingestellte Wert war \"%3$s\", der neue Wert ist \"%4$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1294
+#: lib/PageRenderer/PMETableViewBase.php:1299
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: lib/PageRenderer/PMETableViewBase.php:1362
+#: lib/PageRenderer/PMETableViewBase.php:1367
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: lib/PageRenderer/PMETableViewBase.php:1474
+#: lib/PageRenderer/PMETableViewBase.php:1479
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -4910,30 +4929,30 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1563
+#: lib/PageRenderer/PMETableViewBase.php:1568
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr "Inkonsister Einfüge-Versuch für \"%1$s\", Haupt-Id \"%2$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1606
+#: lib/PageRenderer/PMETableViewBase.php:1611
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: lib/PageRenderer/PMETableViewBase.php:1788
+#: lib/PageRenderer/PMETableViewBase.php:1793
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: lib/PageRenderer/PMETableViewBase.php:1996
+#: lib/PageRenderer/PMETableViewBase.php:2001
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:2132
+#: lib/PageRenderer/PMETableViewBase.php:2137
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: lib/PageRenderer/PMETableViewBase.php:2194
+#: lib/PageRenderer/PMETableViewBase.php:2199
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
@@ -4983,7 +5002,7 @@ msgid "Orchestral Sorting"
 msgstr "Orchestersortierung"
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:281
-#: lib/PageRenderer/ProjectParticipants.php:631
+#: lib/PageRenderer/ProjectParticipants.php:632
 msgid "Voice"
 msgstr "Stimme"
 
@@ -4991,7 +5010,7 @@ msgstr "Stimme"
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:299
 #: lib/PageRenderer/ProjectParticipantFields.php:681
 #: lib/PageRenderer/ProjectParticipantFields.php:690
-#: lib/PageRenderer/ProjectParticipants.php:729
+#: lib/PageRenderer/ProjectParticipants.php:730
 msgid "n/a"
 msgstr "n/a"
 
@@ -5190,69 +5209,74 @@ msgid "Limit"
 msgstr "Obergrenze"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:2170
-#: lib/PageRenderer/ProjectPayments.php:477
+#: lib/PageRenderer/ProjectPayments.php:489
 #: lib/PageRenderer/SepaBankAccounts.php:950
 #: lib/PageRenderer/SepaBulkTransactions.php:369
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/PageRenderer/ProjectParticipants.php:238
+#: lib/PageRenderer/ProjectParticipants.php:239
 msgid "Add Musician"
 msgstr "Person hinzufügen"
 
-#: lib/PageRenderer/ProjectParticipants.php:244
+#: lib/PageRenderer/ProjectParticipants.php:245
 #, php-format
 msgid "Remove the musician from %s?"
 msgstr "Person vom Projekt %s austragen?"
 
-#: lib/PageRenderer/ProjectParticipants.php:246
+#: lib/PageRenderer/ProjectParticipants.php:247
 msgid "Display of all stored data for the shown musician."
 msgstr "Ansicht aller zur angezeigten Person gespeicherten Daten."
 
-#: lib/PageRenderer/ProjectParticipants.php:248
+#: lib/PageRenderer/ProjectParticipants.php:249
 msgid "Edit the data of the displayed musician."
 msgstr "Bearbeiten der Daten der angezeigten Person."
 
-#: lib/PageRenderer/ProjectParticipants.php:250
+#: lib/PageRenderer/ProjectParticipants.php:251
 #, php-format
 msgid "Instrumentation for Project \"%s\""
 msgstr "Besetzung für das Projekt \"%s\""
 
-#: lib/PageRenderer/ProjectParticipants.php:387
+#: lib/PageRenderer/ProjectParticipants.php:277
+#, php-format
+msgid "Project-id and/or -name must be given (%1$s / %2$s)"
+msgstr "Projekt-Id und/oder -Name müssen angegeben werden (%1$s / %2$s)"
+
+#: lib/PageRenderer/ProjectParticipants.php:388
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
-#: lib/PageRenderer/ProjectParticipants.php:399
-#: lib/PageRenderer/ProjectPayments.php:404
+#: lib/PageRenderer/ProjectParticipants.php:400
+#: lib/PageRenderer/ProjectPayments.php:415
 #: lib/PageRenderer/SepaBankAccounts.php:448
 msgid "Musician-Id"
 msgstr "Musizierenden-Id"
 
-#: lib/PageRenderer/ProjectParticipants.php:437
+#: lib/PageRenderer/ProjectParticipants.php:438
 msgid "First Name"
 msgstr "Vorname"
 
-#: lib/PageRenderer/ProjectParticipants.php:576
+#: lib/PageRenderer/ProjectParticipants.php:577
 msgid "Project Instrument"
 msgstr "Instrument"
 
-#: lib/PageRenderer/ProjectParticipants.php:738
+#: lib/PageRenderer/ProjectParticipants.php:739
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/PageRenderer/ProjectParticipants.php:812
+#: lib/PageRenderer/ProjectParticipants.php:813
 msgid "Participation"
 msgstr "Teilnahme"
 
-#: lib/PageRenderer/ProjectParticipants.php:821
+#: lib/PageRenderer/ProjectParticipants.php:822
 msgid "tentatively"
 msgstr "vorläufig"
 
-#: lib/PageRenderer/ProjectParticipants.php:821
+#: lib/PageRenderer/ProjectParticipants.php:822
 msgid "confirmed"
 msgstr "bestätigt"
 
-#: lib/PageRenderer/ProjectParticipants.php:829
+#: lib/PageRenderer/ProjectParticipants.php:830
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -5261,7 +5285,7 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Personen zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: lib/PageRenderer/ProjectParticipants.php:831
+#: lib/PageRenderer/ProjectParticipants.php:832
 msgid ""
 "Check in order to mark participants who passed a personally signed "
 "registration form to us."
@@ -5269,123 +5293,123 @@ msgstr ""
 "Anklicken um offiziell angemeldete Personen zu markieren (unterschriebene "
 "Anmeldung liegt vor)."
 
-#: lib/PageRenderer/ProjectParticipants.php:841
+#: lib/PageRenderer/ProjectParticipants.php:842
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/PageRenderer/ProjectParticipants.php:919
+#: lib/PageRenderer/ProjectParticipants.php:920
 msgid "Musician Deleted"
 msgstr "Person gelöscht"
 
-#: lib/PageRenderer/ProjectParticipants.php:1037
+#: lib/PageRenderer/ProjectParticipants.php:1038
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1454
+#: lib/PageRenderer/ProjectParticipants.php:1455
 #: lib/Service/InstrumentationService.php:160
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1459
+#: lib/PageRenderer/ProjectParticipants.php:1460
 #: lib/Service/InstrumentationService.php:165
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1466
+#: lib/PageRenderer/ProjectParticipants.php:1467
 #: lib/Service/InstrumentationService.php:172
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1483
+#: lib/PageRenderer/ProjectParticipants.php:1484
 #: lib/Service/InstrumentationService.php:184
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1490
+#: lib/PageRenderer/ProjectParticipants.php:1491
 #: lib/PageRenderer/SepaBankAccounts.php:985
 msgid "Miscinfo"
 msgstr "Verschiedenes"
 
-#: lib/PageRenderer/ProjectPayments.php:237
+#: lib/PageRenderer/ProjectPayments.php:248
 #, php-format
 msgid "Payments for project \"%s\""
 msgstr "Zahlungen für das Projekt \"%s\""
 
-#: lib/PageRenderer/ProjectPayments.php:364
+#: lib/PageRenderer/ProjectPayments.php:375
 msgid "General accounting data"
 msgstr "Allgemeine Buchungsdaten"
 
-#: lib/PageRenderer/ProjectPayments.php:365
+#: lib/PageRenderer/ProjectPayments.php:376
 msgid "Booking Entry"
 msgstr "Buchungsdaten"
 
-#: lib/PageRenderer/ProjectPayments.php:368
+#: lib/PageRenderer/ProjectPayments.php:379
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/ProjectPayments.php:369
+#: lib/PageRenderer/ProjectPayments.php:380
 msgid "Bank Transaction"
 msgstr "Bankauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:415
+#: lib/PageRenderer/ProjectPayments.php:426
 msgid "Bulk-Transaction Id"
 msgstr "Sammelauftrags-Id"
 
-#: lib/PageRenderer/ProjectPayments.php:490
+#: lib/PageRenderer/ProjectPayments.php:502
 msgid "Imbalance"
 msgstr "Fehlbetrag"
 
-#: lib/PageRenderer/ProjectPayments.php:516
+#: lib/PageRenderer/ProjectPayments.php:528
 msgid "Date of Receipt"
 msgstr "Eingangsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:568
-#: lib/PageRenderer/ProjectPayments.php:654
+#: lib/PageRenderer/ProjectPayments.php:580
+#: lib/PageRenderer/ProjectPayments.php:666
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/ProjectPayments.php:638
-#: lib/PageRenderer/ProjectPayments.php:702
+#: lib/PageRenderer/ProjectPayments.php:650
+#: lib/PageRenderer/ProjectPayments.php:714
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/ProjectPayments.php:641
+#: lib/PageRenderer/ProjectPayments.php:653
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/ProjectPayments.php:642
+#: lib/PageRenderer/ProjectPayments.php:654
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/ProjectPayments.php:744
+#: lib/PageRenderer/ProjectPayments.php:756
 msgid "Supporting Document"
 msgstr "Beleg"
 
-#: lib/PageRenderer/ProjectPayments.php:816
+#: lib/PageRenderer/ProjectPayments.php:828
 #: lib/PageRenderer/SepaBulkTransactions.php:246
 msgid "Bulk Transaction"
 msgstr "Sammelauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:834
+#: lib/PageRenderer/ProjectPayments.php:846
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:845
+#: lib/PageRenderer/ProjectPayments.php:857
 #: lib/PageRenderer/SepaBulkTransactions.php:407
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/ProjectPayments.php:872
+#: lib/PageRenderer/ProjectPayments.php:884
 #: lib/PageRenderer/SepaBankAccounts.php:731
 #: lib/PageRenderer/SepaBulkTransactions.php:437
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/ProjectPayments.php:880
+#: lib/PageRenderer/ProjectPayments.php:892
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/ProjectPayments.php:899
+#: lib/PageRenderer/ProjectPayments.php:911
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
@@ -6573,47 +6597,47 @@ msgstr "Zeitzone: %s"
 msgid "Provider: %s"
 msgstr "Anbieter: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:151
+#: lib/Service/ProjectParticipantFieldsService.php:144
 #, php-format
 msgid "Generator \"%s\" does not appear to be valid PHP class name."
 msgstr ""
 "Beim Generator \"%s\" handelt es sich nicht um eine gültige PHP-Klasse."
 
-#: lib/Service/ProjectParticipantFieldsService.php:214
+#: lib/Service/ProjectParticipantFieldsService.php:207
 msgid "One-time Receivables"
 msgstr "Einmalige Forderungen"
 
-#: lib/Service/ProjectParticipantFieldsService.php:258
+#: lib/Service/ProjectParticipantFieldsService.php:251
 #, php-format
 msgid "Recurring \"%s\""
 msgstr "Fortlaufend \"%s\""
 
-#: lib/Service/ProjectParticipantFieldsService.php:652
-#: lib/Service/ProjectParticipantFieldsService.php:697
+#: lib/Service/ProjectParticipantFieldsService.php:649
+#: lib/Service/ProjectParticipantFieldsService.php:694
 #, php-format
 msgid "Option index -1 should not be present here, options: %s"
 msgstr "Options-Index -1 sollte hier nicht auftauchen, Optionen: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:663
+#: lib/Service/ProjectParticipantFieldsService.php:660
 #, php-format
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
 "Die Prototyp-Schlüssel \"%s\" und Option-Schlüssel \"%s\" sind verschieden"
 
-#: lib/Service/ProjectParticipantFieldsService.php:749
-#: lib/Service/ProjectParticipantFieldsService.php:768
+#: lib/Service/ProjectParticipantFieldsService.php:746
+#: lib/Service/ProjectParticipantFieldsService.php:765
 #, php-format
 msgid "Field \"%s\" is not a group of participants field."
 msgstr "Das Datenfeld \"%s\" ist kein Definitionsfeld für Personengruppen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:828
+#: lib/Service/ProjectParticipantFieldsService.php:825
 #, php-format
 msgid "Only \"field\" collections can be filtered, not instances of \"%s\"."
 msgstr ""
 "Nur Sammlungen von Personen-Daten können gefiltert werden, nicht aber \"%s\"-"
 "Instanzen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:879
+#: lib/Service/ProjectParticipantFieldsService.php:876
 #, php-format
 msgid "Unable to find participant field for id \"%s\""
 msgstr "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden."
@@ -10256,7 +10280,7 @@ msgstr ""
 "{personalSettingsLink} vorgenommen werden."
 
 #. TRANSLATORS src/components/AdminSettings.vue:439
-#: specialVueFakeDummyForL10nScript.js:60 src/app/project-participants.js:786
+#: specialVueFakeDummyForL10nScript.js:60 src/app/project-participants.js:788
 #: src/app/projects.js:425 src/app/sepa-debit-mandate.js:862
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -10750,12 +10774,12 @@ msgstr "Abgebrochen"
 #: src/app/ajax.js:178 src/app/ajax.js:359 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
-#: src/app/blog.js:386 src/app/email.js:79 src/app/email.js:802
-#: src/app/email.js:928 src/app/inlineimage.js:56 src/app/inlineimage.js:63
+#: src/app/blog.js:386 src/app/email.js:89 src/app/email.js:813
+#: src/app/email.js:939 src/app/inlineimage.js:56 src/app/inlineimage.js:63
 #: src/app/inlineimage.js:158 src/app/inlineimage.js:429
 #: src/app/pme-file-upload-row.js:150 src/app/pme-file-upload-row.js:166
 #: src/app/sepa-debit-mandate.js:286 src/app/sepa-debit-mandate.js:302
-#: src/app/settings.js:1289 src/app/settings.js:1302
+#: src/app/settings.js:1290 src/app/settings.js:1303
 #: src/legacy/calendar/calendar.js:340
 msgid "Error"
 msgstr "Fehler"
@@ -11011,89 +11035,89 @@ msgstr "Ja"
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: src/app/email.js:79
+#: src/app/email.js:89
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: src/app/email.js:210
+#: src/app/email.js:224
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: src/app/email.js:211
+#: src/app/email.js:225
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: src/app/email.js:212
+#: src/app/email.js:226
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: src/app/email.js:213
+#: src/app/email.js:227
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: src/app/email.js:214
+#: src/app/email.js:228
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: src/app/email.js:215
+#: src/app/email.js:229
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: src/app/email.js:218
+#: src/app/email.js:232
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:220 templates/legacy/calendar/part.eventform.php:43
+#: src/app/email.js:234 templates/legacy/calendar/part.eventform.php:43
 msgid "from"
 msgstr "von"
 
-#: src/app/email.js:222
+#: src/app/email.js:236
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: src/app/email.js:223
+#: src/app/email.js:237
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: src/app/email.js:224
+#: src/app/email.js:238
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: src/app/email.js:231
+#: src/app/email.js:245
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:801
+#: src/app/email.js:812
 msgid "Unknown form element: {formElement}"
 msgstr "Unbekanntes Formularfeld: {formElement}"
 
-#: src/app/email.js:845 src/app/email.js:2037
+#: src/app/email.js:856 src/app/email.js:2047
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:847 src/app/email.js:2039
+#: src/app/email.js:858 src/app/email.js:2049
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:927
+#: src/app/email.js:938
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:987
+#: src/app/email.js:998
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht {active} von {total}"
 
-#: src/app/email.js:989
+#: src/app/email.js:1000
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:1018
+#: src/app/email.js:1029
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:1054
+#: src/app/email.js:1065
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -11101,11 +11125,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:1189
+#: src/app/email.js:1200
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:1221
+#: src/app/email.js:1232
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -11118,19 +11142,19 @@ msgstr ""
 "gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
 "auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
-#: src/app/email.js:1226
+#: src/app/email.js:1237
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:1287
+#: src/app/email.js:1298
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:1288
+#: src/app/email.js:1299
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1320
+#: src/app/email.js:1331
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -11138,11 +11162,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1322
+#: src/app/email.js:1333
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1359
+#: src/app/email.js:1370
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -11150,17 +11174,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1361
+#: src/app/email.js:1372
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1375
+#: src/app/email.js:1386
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1392
+#: src/app/email.js:1403
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -11168,19 +11192,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1395
+#: src/app/email.js:1406
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1437
+#: src/app/email.js:1448
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1438
+#: src/app/email.js:1449
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1502
+#: src/app/email.js:1513
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -11188,36 +11212,36 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1504
+#: src/app/email.js:1515
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1655
+#: src/app/email.js:1666
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1656 src/app/email.js:1813
+#: src/app/email.js:1667 src/app/email.js:1824
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1771
+#: src/app/email.js:1782
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1812
+#: src/app/email.js:1823
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1871 templates/emailform/part.emailform.composer.php:172
+#: src/app/email.js:1882 templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1875
+#: src/app/email.js:1886
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1878
+#: src/app/email.js:1889
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -11232,11 +11256,11 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: src/app/events.js:387
+#: src/app/events.js:385
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
-#: src/app/events.js:429
+#: src/app/events.js:427
 msgid "Unable to download calendar events."
 msgstr "Kann die Kalender-Einträge nicht laden."
 
@@ -11482,7 +11506,7 @@ msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
 #: src/app/pme-file-upload-row.js:150 src/app/sepa-debit-mandate.js:286
-#: src/app/settings.js:1289
+#: src/app/settings.js:1290
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
@@ -11536,11 +11560,11 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1220
+#: src/app/pme.js:1229
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1229
+#: src/app/pme.js:1238
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -11588,7 +11612,7 @@ msgstr ""
 msgid "Overwrite Existing Records?"
 msgstr "Existierende Daten überschreiben?"
 
-#: src/app/project-participants.js:748
+#: src/app/project-participants.js:750
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
@@ -11596,15 +11620,15 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:791 src/app/projects.js:430
+#: src/app/project-participants.js:793 src/app/projects.js:430
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/project-payments.js:149
+#: src/app/project-payments.js:189
 msgid "Too many Projects"
 msgstr "Zu viele Projekte"
 
-#: src/app/project-payments.js:150
+#: src/app/project-payments.js:190
 msgid ""
 "Currently merging composite-payments for different projects ({projects}) is "
 "not supported, sorry."
@@ -11612,11 +11636,11 @@ msgstr ""
 "Zur Zeit können Sammelbuchungen nicht mehrere Projekte ({projects}) "
 "zusammenfassen, tut uns leid."
 
-#: src/app/project-payments.js:156
+#: src/app/project-payments.js:196
 msgid "Too many Musicians"
 msgstr "Zu viele Personen"
 
-#: src/app/project-payments.js:157
+#: src/app/project-payments.js:197
 msgid ""
 "Internal error: splits of composite-payments cannot belong to different "
 "musicians ({musicians})."
@@ -11817,27 +11841,27 @@ msgstr ""
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
-#: src/app/settings.js:129
+#: src/app/settings.js:130
 msgid "You must type in your login password."
 msgstr "Sie müssen Ihr Anmelde-Passwort eingeben."
 
-#: src/app/settings.js:231
+#: src/app/settings.js:232
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: src/app/settings.js:349
+#: src/app/settings.js:350
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: src/app/settings.js:444 src/app/settings.js:778
+#: src/app/settings.js:445 src/app/settings.js:779
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1227 src/app/settings.js:1248
+#: src/app/settings.js:1228 src/app/settings.js:1249
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1301
+#: src/app/settings.js:1302
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
@@ -15132,6 +15156,10 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid "Unable to initialize asymmetric key-pari for user \"%s\"."
+#~ msgstr "Kann kein Schlüsselpaar für die Person \"%s\" erzeugen."
 
 #, php-format
 #~ msgid ""
