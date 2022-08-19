@@ -91,16 +91,16 @@ const updateInsuranceFee = function(elements) {
   const $insuranceRate = elements.$insuranceRate;
   const $insuranceFee = elements.$insuranceFee;
 
-  const $scope = $scopeSelect.find('option:selected');
-  if ($scope.length === 0) {
+  const scope = SelectUtils.selected($scopeSelect);
+  if (!scope) {
     return false;
   }
-  const $broker = $brokerSelect.find('option:selected');
+  const $broker = SelectUtils.selectedOptions($brokerSelect);
   if ($broker.length === 0) {
     return false;
   }
   const rates = $broker.data('data');
-  const rateMeta = rates.find(rate => rate.geographicalScope === $scope.val());
+  const rateMeta = rates.find(rate => rate.geographicalScope === scope);
   if (!rateMeta) {
     return false;
   }
@@ -300,10 +300,10 @@ const pmeFormInit = function(containerSel) {
         return false;
       });
 
-    enableScopeOptions($scopeSelect, $brokerSelect.find('option:selected'));
+    enableScopeOptions($scopeSelect, SelectUtils.selectedOptions($brokerSelect));
 
     $brokerSelect.on('change', function(event) {
-      enableScopeOptions($scopeSelect, $(this).find('option:selected'));
+      enableScopeOptions($scopeSelect, SelectUtils.selectedOptions($brokerSelect));
       return false;
     });
 

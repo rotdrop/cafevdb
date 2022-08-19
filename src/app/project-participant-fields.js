@@ -157,13 +157,13 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
 };
 
 const ready = function(selector, resizeCB) {
-  const container = $(selector);
+  const $container = $(selector);
 
-  const tableTab = container.find('select.tab');
-  const newTab = container.find('input.new-tab');
-  newTab.prop('readonly', !!tableTab.find(':selected').val());
-  container.on('change', 'select.tab', function(event) {
-    newTab.prop('readonly', !!tableTab.find(':selected').val());
+  const $tableTab = $container.find('select.tab');
+  const $newTab = $container.find('input.new-tab');
+  $newTab.prop('readonly', !!SelectUtils.selected($tableTab));
+  $container.on('change', 'select.tab', function(event) {
+    $newTab.prop('readonly', !!SelectUtils.selected($tableTab));
     return false;
   });
 
@@ -177,18 +177,18 @@ const ready = function(selector, resizeCB) {
     const multiplicityClass = 'multiplicity-' + multiplicity;
     const dataTypeClass = 'data-type-' + dataType;
     const depositDueDateClass = 'deposit-due-date-' + dueDate;
-    container.find('tr.multiplicity')
+    $container.find('tr.multiplicity')
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
       })
       .addClass([multiplicityClass, dataTypeClass, depositDueDateClass]);
-    container.find('tr.data-options table.data-options')
+    $container.find('tr.data-options table.data-options')
       .removeClass(function(index, className) {
         return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
       })
       .addClass([multiplicityClass, dataTypeClass]);
 
-    container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function(index) {
+    $container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function(index) {
       const $this = $(this);
       let required = false;
       for (const className of $this.attr('class').split(/\s+/)) {
@@ -214,10 +214,10 @@ const ready = function(selector, resizeCB) {
       }
       $this.prop('required', required);
     });
-    container.find('.data-type-html-disabled, .data-type-html-disabled *').prop('disabled', dataType === 'html');
-    container.find('.not-data-type-html-disabled, .not-data-type-html-disabled *').prop('disabled', dataType !== 'html');
+    $container.find('.data-type-html-disabled, .data-type-html-disabled *').prop('disabled', dataType === 'html');
+    $container.find('.not-data-type-html-disabled, .not-data-type-html-disabled *').prop('disabled', dataType !== 'html');
 
-    container.find('.data-type-html-wysiwyg-editor').each(function() {
+    $container.find('.data-type-html-wysiwyg-editor').each(function() {
       const $this = $(this);
       WysiwygEditor.removeEditor($this);
       if (dataType === 'html') {
@@ -225,8 +225,8 @@ const ready = function(selector, resizeCB) {
       }
     });
 
-    const inputData = container.find('table.data-options').data('size');
-    const $dataInputs = container
+    const inputData = $container.find('table.data-options').data('size');
+    const $dataInputs = $container
       .find(
         'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
           + ', '
@@ -288,9 +288,9 @@ const ready = function(selector, resizeCB) {
   };
 
   const fieldTypeData = function() {
-    const multiplicity = container.find('select.multiplicity');
-    const dataType = container.find('select.data-type');
-    const depositDueDate = container.find('input.deposit-due-date');
+    const multiplicity = $container.find('select.multiplicity');
+    const dataType = $container.find('select.data-type');
+    const depositDueDate = $container.find('input.deposit-due-date');
     if (multiplicity.length > 0 && dataType.length > 0) {
       const data = {
         multiplicity: multiplicity.val(),
@@ -299,7 +299,7 @@ const ready = function(selector, resizeCB) {
       };
       return data;
     }
-    const elem = container.find('td.pme-value.field-type .data');
+    const elem = $container.find('td.pme-value.field-type .data');
     if (elem.length <= 0) {
       return null;
     }
@@ -311,7 +311,7 @@ const ready = function(selector, resizeCB) {
    * Delete mode the mult-value table is used as well.
    */
   const allowedHeaderVisibility = function() {
-    const allowedValuesTable = container.find('table.data-options');
+    const allowedValuesTable = $container.find('table.data-options');
     if (allowedValuesTable.hasClass('multiplicity-multiple')
         || allowedValuesTable.hasClass('multiplicity-parallel')
         || allowedValuesTable.hasClass('multiplicity-recurring')
@@ -324,15 +324,15 @@ const ready = function(selector, resizeCB) {
   };
 
   // Field-Type Selectors
-  container.on(
+  $container.on(
     'change', [
       'select.multiplicity',
       'select.data-type',
       'input.deposit-due-date',
     ].join(), function(event) {
-      const depositDueDateInput = container.find('input.deposit-due-date');
-      const multiplicitySelect = container.find('select.multiplicity');
-      const dataTypeSelect = container.find('select.data-type');
+      const depositDueDateInput = $container.find('input.deposit-due-date');
+      const multiplicitySelect = $container.find('select.multiplicity');
+      const dataTypeSelect = $container.find('select.data-type');
       const multiplicity = multiplicitySelect.val();
       const dataTypeMask = SelectUtils.optionByValue(multiplicitySelect, multiplicity).data('data');
       let dataType = dataTypeSelect.val();
@@ -369,9 +369,9 @@ const ready = function(selector, resizeCB) {
 
       return false;
     });
-  container.find('select.multiplicity:not(.pme-filter)').trigger('change');
+  $container.find('select.multiplicity:not(.pme-filter)').trigger('change');
 
-  container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {
+  $container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {
     let pressedKey;
     if (event.which) {
       pressedKey = event.which;
@@ -386,8 +386,8 @@ const ready = function(selector, resizeCB) {
     return true; // other key pressed
   });
 
-  const $dataOptionsTable = container.find('table.data-options');
-  container.on('change', '#data-options-show-deleted', function(event) {
+  const $dataOptionsTable = $container.find('table.data-options');
+  $container.on('change', '#data-options-show-deleted', function(event) {
     if ($(this).prop('checked')) {
       $dataOptionsTable.addClass('show-deleted');
     } else {
@@ -399,7 +399,7 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('change', '#data-options-show-data', function(event) {
+  $container.on('change', '#data-options-show-data', function(event) {
     if ($(this).prop('checked')) {
       $dataOptionsTable.addClass('show-data');
     } else {
@@ -411,24 +411,24 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('change', 'select.default-multi-value', function(event) {
-    const self = $(this);
-    container.find('input.pme-input.default-single-value').val(self.find(':selected').val());
+  $container.on('change', 'select.default-multi-value', function(event) {
+    const $self = $(this);
+    $container.find('input.pme-input.default-single-value').val(SelectUtils.selected($self));
     return false;
   });
 
-  container.on('blur', 'input.pme-input.default-single-value', function(event) {
+  $container.on('blur', 'input.pme-input.default-single-value', function(event) {
     const self = $(this);
-    const dfltSelect = container.find('select.default-multi-value');
+    const dfltSelect = $container.find('select.default-multi-value');
     dfltSelect.children('option[value="' + self.val() + '"]').prop('selected', true);
     dfltSelect.trigger('chosen:updated');
     return false;
   });
 
-  container.on('click', 'tr.data-options input.regenerate', function(event) {
+  $container.on('click', 'tr.data-options input.regenerate', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
-    const fieldId = pmeRec(container);
+    const fieldId = pmeRec($container);
     const key = $row.find('input.field-key').val();
     const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
     const requestHandler = function(progressToken, progressCleanup) {
@@ -462,7 +462,7 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.data-options input.regenerate-all', function(event) {
+  $container.on('click', 'tr.data-options input.regenerate-all', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
@@ -497,12 +497,12 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.data-options input.generator-run', function(event) {
+  $container.on('click', 'tr.data-options input.generator-run', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
     // defer submit until after validation.
-    const submitDefer = PHPMyEdit.deferReload(container);
+    const submitDefer = PHPMyEdit.deferReload($container);
     const cleanup = function() {
       $self.removeClass('busy');
       setFieldTypeCssClass(fieldTypeData());
@@ -532,7 +532,7 @@ const ready = function(selector, resizeCB) {
         for (const input of data.dataOptionFormInputs) {
           tail.before(input);
         }
-        lockGeneratedValues(container);
+        lockGeneratedValues($container);
         startDate.val(data.startDate);
         resizeCB();
         cleanup();
@@ -541,10 +541,10 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  container.on('click', 'tr.data-options input.delete-undelete', function(event) {
+  $container.on('click', 'tr.data-options input.delete-undelete', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
-    const dfltSelect = container.find('select.default-multi-value');
+    const dfltSelect = $container.find('select.default-multi-value');
     let used = $row.data('used');
     used = !(!used || used === 'unused');
     if ($row.data('deleted') !== '') {
@@ -583,7 +583,7 @@ const ready = function(selector, resizeCB) {
   });
 
   // validate monetary inputs
-  container.on(
+  $container.on(
     'blur',
     [
       'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input' + textInputSelector,
@@ -601,7 +601,7 @@ const ready = function(selector, resizeCB) {
       }
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload($container);
       self.prop('readonly', true);
 
       const cleanup = function() {
@@ -636,17 +636,17 @@ const ready = function(selector, resizeCB) {
     });
   };
 
-  const lockGeneratedValues = function(container) {
+  const lockGeneratedValues = function($container) {
     // generated options
     const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
-    lockGeneratedValuesRow(container.find(generatedSelector));
+    lockGeneratedValuesRow($container.find(generatedSelector));
   };
 
-  lockGeneratedValues(container);
+  lockGeneratedValues($container);
 
   // generator input
   const generatorSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.generator input' + textInputSelector;
-  const generator = container.find(generatorSelector);
+  const generator = $container.find(generatorSelector);
   generator.each(function(index) {
     const $this = $(this);
     $this.lockUnlock({
@@ -660,14 +660,14 @@ const ready = function(selector, resizeCB) {
   });
 
   // generated due date
-  const dueDate = container.find('tr.multiplicity-recurring ~ tr.due-date td.pme-value input').not(nonTextInputSelector);
+  const dueDate = $container.find('tr.multiplicity-recurring ~ tr.due-date td.pme-value input').not(nonTextInputSelector);
   if (dueDate.length > 0) {
     dueDate.lockUnlock({
       locked: dueDate.val().trim() !== '',
     });
   }
 
-  container.on(
+  $container.on(
     'blur',
     generatorSelector + '.field-data',
     function(event) {
@@ -684,7 +684,7 @@ const ready = function(selector, resizeCB) {
             + '&' + allowed.serialize();
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload($container);
       allowed.each(function(index) {
         const $this = $(this);
         $this.data('readonly-saved', $this.prop('readonly'));
@@ -776,7 +776,7 @@ const ready = function(selector, resizeCB) {
     });
 
   // multi-field input matrix
-  container.on(
+  $container.on(
     'blur', [
       'tr.data-options tr.data-line:not(.generator) input' + textInputSelector,
       'tr.data-options tr.data-line textarea',
@@ -796,7 +796,7 @@ const ready = function(selector, resizeCB) {
       }
 
       // default data selector, if applicable
-      const dflt = container.find('select.default-multi-value');
+      const dflt = $container.find('select.default-multi-value');
 
       const request = 'option/define';
       const data = $.extend({ default: dflt.val() }, fieldTypeData(), $row.data());
@@ -805,7 +805,7 @@ const ready = function(selector, resizeCB) {
             + '&' + allowed.serialize();
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload(container);
+      const submitDefer = PHPMyEdit.deferReload($container);
       allowed.prop('readonly', true);
       const cleanup = function() {
         if (!allowed.hasClass('readonly')) {
@@ -870,42 +870,41 @@ const ready = function(selector, resizeCB) {
   // When a reader-group is removed, we also deselect it from the
   // writers. This -- of course -- only works if initially
   // the readers and writers list is in a sane state ;)
-  container.on('change', 'select.readers', function(event) {
+  $container.on('change', 'select.readers', function(event) {
     console.log('readers change');
-    const self = $(this);
+    const $self = $(this);
 
     let changed = false;
-    const writers = container.find('select.writers');
-    self.find('option').not(':selected').each(function() {
-      const writer = writers.find('option[value="' + this.value + '"]');
-      if (writer.prop('selected')) {
-        writer.prop('selected', false);
+    const $writers = $container.find('select.writers');
+    SelectUtils.options($self).not(':selected').each(function() {
+      const $writer = SelectUtils.optionByValue($writers, this.value);
+      if ($writer.prop('selected')) {
+        $writer.prop('selected', false);
         changed = true;
       }
     });
     if (changed) {
-      writers.trigger('chosen:updated');
+      SelectUtils.refreshWidget($writers);
     }
     return false;
   });
 
   // When a writer-group is added, then add it to the
   // readers as well ;)
-  container.on('change', 'select.writers', function(event) {
-    console.log('writers change');
-    const self = $(this);
+  $container.on('change', 'select.writers', function(event) {
+    const $self = $(this);
 
     let changed = false;
-    const readers = container.find('select.readers');
-    self.find('option:selected').each(function() {
-      const reader = readers.find('option[value="' + this.value + '"]');
-      if (!reader.prop('selected')) {
-        reader.prop('selected', true);
+    const $readers = $container.find('select.readers');
+    SelectUtils.selectedOptions($self).each(function() {
+      const $reader = SelectUtils.optionByValue($readers, this.value);
+      if (!$reader.prop('selected')) {
+        $reader.prop('selected', true);
         changed = true;
       }
     });
     if (changed) {
-      readers.trigger('chosen:updated');
+      SelectUtils.refreshWidget($readers);
     }
     return false;
   });
@@ -913,28 +912,28 @@ const ready = function(selector, resizeCB) {
   const tableContainerId = PHPMyEdit.idSelector('table-container');
 
   // TODO: check whether these are still necessary
-  container.on('chosen:showing_dropdown', tableContainerId + ' select', function(event) {
+  $container.on('chosen:showing_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:showing_dropdown');
-    // const widget = container.cafevDialog('widget');
-    // const tableContainer = container.find(tableContainerId);
+    // const widget = $container.cafevDialog('widget');
+    // const tableContainer = $container.find(tableContainerId);
     // widget.css('overflow', 'visible');
-    // container.css('overflow', 'visible');
+    // $container.css('overflow', 'visible');
     // tableContainer.css('overflow', 'visible');
     return true;
   });
 
   // TODO: check whether these are still necessary
-  container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
+  $container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
     console.log('chosen:hiding_dropdown');
-    // const widget = container.cafevDialog('widget');
-    // const tableContainer = container.find(tableContainerId);
+    // const widget = $container.cafevDialog('widget');
+    // const tableContainer = $container.find(tableContainerId);
     // tableContainer.css('overflow', '');
-    // container.css('overflow', '');
+    // $container.css('overflow', '');
     // widget.css('overflow', '');
     return true;
   });
 
-  container.on('chosen:update', 'select.writers, select.readers', function(event) {
+  $container.on('chosen:update', 'select.writers, select.readers', function(event) {
     resizeCB();
     return false;
   });
@@ -944,7 +943,7 @@ const ready = function(selector, resizeCB) {
   allowedHeaderVisibility();
 
   // set autocomplete for generator selection
-  const generatorRow = container.find('tr.data-options.generator');
+  const generatorRow = $container.find('tr.data-options.generator');
   const generators = generatorRow.data('generators');
   generatorRow.find('input.field-data')
     .autocomplete({
@@ -967,15 +966,15 @@ const ready = function(selector, resizeCB) {
     });
 
   // synthesize resize events for textareas.
-  textareaResize(container, 'textarea.field-tooltip, textarea.participant-field-tooltip, textarea.pme-input');
+  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, textarea.pme-input');
   resizeCB();
 };
 
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
-    // const container = PHPMyEdit.container();
-    // if (!container.hasClass('project-participant-fields')) {
+    // const $container = PHPMyEdit.container();
+    // if (!$container.hasClass('project-participant-fields')) {
     //   return; // not for us
     // }
     // ready(); // ????

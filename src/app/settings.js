@@ -27,6 +27,7 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
+import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
@@ -1322,38 +1323,38 @@ const afterLoad = function(container) {
      *
      *************************************************************************/
 
-    const translationKeys = $('select.translation-phrases');
-    const locales = $('select.translation-locales');
-    const translationKey = $('.translation-key');
-    const translationText = $('textarea.translation-translation');
-    const hideTranslated = $('#cafevdb-hide-translated');
-    const downloadPoTemplates = $('#' + appName + '-translations-download-pot');
-    const deleteRecorded = $('#' + appName + '-translations-erase-all');
-    const msg = $('.translation.msg');
+    const $translationKeys = $('select.translation-phrases');
+    const $locales = $('select.translation-locales');
+    const $translationKey = $('.translation-key');
+    const $translationText = $('textarea.translation-translation');
+    const $hideTranslated = $('#cafevdb-hide-translated');
+    const $downloadPoTemplates = $('#' + appName + '-translations-download-pot');
+    const $deleteRecorded = $('#' + appName + '-translations-erase-all');
+    const $msg = $('.translation.msg');
 
-    let key;
+    let $key;
     let language;
     let translations;
     let translation;
 
     const updateControls = function() {
-      key = translationKeys.find('option:selected');
-      language = locales.val();
+      $key = SelectUtils.selectedOptions($translationKeys);
+      language = $locales.val();
       translation = '';
       translations = {};
 
-      translationKey.html(key.text());
+      $translationKey.html($key.text());
 
-      if (language && key.length === 1) {
-        translations = key.data('translations');
+      if (language && $key.length === 1) {
+        translations = $key.data('translations');
         translation = translations[language] || '';
       }
-      translationText.val(translation);
+      $translationText.val(translation);
     };
 
     const showHideTranslated = function() {
-      const hide = hideTranslated.prop('checked');
-      translationKeys.find('option').each(function(idx, option) {
+      const hide = $hideTranslated.prop('checked');
+      $translationKeys.find('option').each(function(idx, option) {
         const $option = $(this);
         if (!hide || !language) {
           $option.show();
@@ -1369,58 +1370,58 @@ const afterLoad = function(container) {
           }
         }
       });
-      translationKeys.trigger('chosen:updated');
-      translationKeys.trigger('change');
+      SelectUtils.refreshWidget($translationKeys);
+      $translationKeys.trigger('change');
     };
 
-    translationKeys.chosen({
+    $translationKeys.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '30%',
     });
 
-    locales.chosen({
+    $locales.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '10%',
     });
 
-    translationKeys.on('change', function(event) {
+    $translationKeys.on('change', function(event) {
       updateControls();
       return false;
     });
 
-    locales.on('change', function(event) {
+    $locales.on('change', function(event) {
       updateControls();
       showHideTranslated();
       return false;
     });
 
-    hideTranslated.on('change', function(event) {
+    $hideTranslated.on('change', function(event) {
       showHideTranslated();
       return false;
     });
 
     simpleSetValueHandler(
-      translationText, 'blur', msg, {
-        success(element, data, value, msg) { // done
+      $translationText, 'blur', $msg, {
+        success(element, data, value, $msg) { // done
           // no need to do any extra stuff?
         },
         getValue(element, msg) {
           let val;
-          if (language && key.length === 1) {
+          if (language && $key.length === 1) {
             // save it in order to restore, maybe we want to have an
             // "OK" button in order not to accidentally damage
             // existing translations.
-            translation = translationText.val();
+            translation = $translationText.val();
             translations[language] = translation;
-            key.data('translations', translations);
+            $key.data('translations', translations);
             val = {
               name: 'translation',
               value: {
-                key: key.text(),
+                key: $key.text(),
                 language,
-                translation: translationText.val(),
+                translation: $translationText.val(),
               },
             };
           }
@@ -1428,15 +1429,14 @@ const afterLoad = function(container) {
         },
       });
 
-    simpleSetHandler(deleteRecorded, 'click', msg, {
+    simpleSetHandler($deleteRecorded, 'click', $msg, {
       success($self, data, msgElement) {
-        translationKeys.html('');
-        translationKeys.trigger('chosen:updated');
-        translationKeys.trigger('change');
+        SelectUtils.replaceOptions($translationKeys, '');
+        $translationKeys.trigger('change');
       },
     });
 
-    downloadPoTemplates.on('click', function(event) {
+    $downloadPoTemplates.on('click', function(event) {
 
       fileDownload(
         'settings/app/get/translation-templates',

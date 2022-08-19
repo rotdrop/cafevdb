@@ -28,7 +28,7 @@
 
 import $ from './jquery.js';
 import { appName } from './app-info.js';
-import { deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
+import { selectedOptions, deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 
@@ -38,7 +38,7 @@ import * as Dialogs from './dialogs.js';
  * @param {jQuery} $select TBD.
  */
 const handleQueryLogMenu = function($select) {
-  const $logOption = $select.find('option:selected');
+  const $logOption = selectedOptions($select);
 
   const queryData = $logOption.data('query');
   Dialogs.info(

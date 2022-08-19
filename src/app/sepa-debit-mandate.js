@@ -1612,7 +1612,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
     $musicianIdInput.val(musicianId);
     ibanAutoComplete[musicianId] = [...new Set(ibanAutoComplete[musicianId])];
     $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[musicianId]);
-    let autoOwner = $this.find('option:selected').html();
+    let autoOwner = SelectUtils.selectedOptions($this).html();
     let clearAutofill = true;
     if (ibanAutoComplete[musicianId].length === 1) {
       const iban = ibanAutoComplete[musicianId][0];

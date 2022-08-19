@@ -287,23 +287,23 @@ const actionMenu = function(containerSel) {
 
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
-  const container = PHPMyEdit.container(containerSel);
-  const form = container.find('form[class^="pme-form"]');
+  const $container = PHPMyEdit.container(containerSel);
+  const $form = $container.find('form[class^="pme-form"]');
   const submitSel = PHPMyEdit.classSelectors(
     'input',
     ['save', 'apply', 'more']);
 
-  if (form.find(submitSel).length > 0) {
+  if ($form.find(submitSel).length > 0) {
     const nameSelector = 'input.projectname';
     const yearSelector = 'select[name="' + pmeData('year') + '"]';
     const typeSelector = 'select[name="' + pmeData('temporal_type') + '"]';
 
-    const name = container.find(nameSelector);
-    const year = container.find(yearSelector);
-    const projectType = container.find(typeSelector);
+    const $name = $container.find(nameSelector);
+    const $year = $container.find(yearSelector);
+    const $projectType = $container.find(typeSelector);
 
-    let oldProjectYear = $(form).find(yearSelector + ' :selected').text();
-    let oldprojectName = name.val();
+    let oldProjectYear = SelectUtils.selectedOptions($year).text();
+    let oldprojectName = $name.val();
 
     /**
      * Verify the user submitted name and year settings,
@@ -316,26 +316,26 @@ const pmeFormInit = function(containerSel) {
      */
     const verifyYearName = function(postAddOn, button) {
 
-      if (container.data('project-validating')) {
+      if ($container.data('project-validating')) {
         return;
       }
-      container.data('project-validating', true);
+      $container.data('project-validating', true);
 
       /* Forward the request to the server via Ajax
        * technologies.
        */
-      let post = form.serialize();
+      let post = $form.serialize();
       post += '&control=' + postAddOn;
 
       const cleanup = function() {
-        if (name.val() === '') {
-          name.val(oldprojectName);
+        if ($name.val() === '') {
+          $name.val(oldprojectName);
         }
-        if (year.val() === '') {
-          year.val(oldProjectYear);
-          year.trigger('chosen:updated');
+        if ($year.val() === '') {
+          $year.val(oldProjectYear);
+          $year.trigger('chosen:updated');
         }
-        container.data('project-validating', false);
+        $container.data('project-validating', false);
       };
       Notification.hide();
       $.post(generateUrl('validate/projects/name'), post)
@@ -350,36 +350,36 @@ const pmeFormInit = function(containerSel) {
             cleanup();
           }
           Notification.messages(rqData.message);
-          name.val(rqData.projectName);
-          year.val(rqData.projectYear);
-          year.trigger('chosen:updated');
+          $name.val(rqData.projectName);
+          $year.val(rqData.projectYear);
+          $year.trigger('chosen:updated');
           oldProjectYear = rqData.projectYear;
           oldprojectName = rqData.projectName;
           if (postAddOn === 'submit') {
             if (typeof button !== 'undefined') {
-              $(form).off('click', submitSel);
+              $form.off('click', submitSel);
               button.trigger('click');
             } else {
-              form.submit();
+              $form.submit();
             }
           }
-          container.data('project-validating', false);
+          $container.data('project-validating', false);
         });
     };
 
-    projectType.off('change').on('change', function(event) {
-      if (name.val() !== '') {
-        name.trigger('blur');
+    $projectType.off('change').on('change', function(event) {
+      if ($name.val() !== '') {
+        $name.trigger('blur');
       }
       return false;
     });
 
-    year.off('change').on('change', function(event) {
+    $year.off('change').on('change', function(event) {
       verifyYearName('year');
       return false;
     });
 
-    name.off('blur').on('blur', function(event) {
+    $name.off('blur').on('blur', function(event) {
       verifyYearName('name');
       return false;
     });
@@ -387,7 +387,7 @@ const pmeFormInit = function(containerSel) {
     // Attach a delegate handler to the form; this gives the
     // possibility to attach another delegate handler to the
     // container element.
-    form
+    $form
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
         if ($(this).attr('name').indexOf('savedelete') < 0) {
@@ -400,13 +400,13 @@ const pmeFormInit = function(containerSel) {
       });
   }
 
-  form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
+  $form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
     const $this = $(this);
     const operation = $this.data('operation');
     if (!operation) {
       return;
     }
-    const projectId = form.find('input[name="projectId"]').val();
+    const projectId = $form.find('input[name="projectId"]').val();
 
     const post = function(force) {
       $.post(
@@ -434,11 +434,11 @@ const pmeFormInit = function(containerSel) {
           } else {
             Notification.messages(data.message);
             if (data.status !== 'unchanged') {
-              const $listDisplay = form.find('.list-id.display');
+              const $listDisplay = $form.find('.list-id.display');
               const oldStatus = $listDisplay.data('status');
               $listDisplay.data('status', data.status);
               $listDisplay.removeClass('status-' + oldStatus).addClass('status-' + data.status);
-              const $listActions = form.find('.list-id.actions');
+              const $listActions = $form.find('.list-id.actions');
               $listDisplay.find('input.mailing-list').val(data.list_id);
               $listDisplay.find('.list-label').html(data.fqdn_listname);
               $listDisplay.find('.list-status').html(data.l10nStatus);
@@ -497,9 +497,9 @@ const projectWebPageRequest = function(post, container) {
       if (post.action === 'ping') {
         return;
       }
-      const form = container.find('table.pme-navigation');
-      const submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
-      submit.first().trigger('click', {
+      const $form = container.find('table.pme-navigation');
+      const $submit = $form.find('input.pme-more, input.pme-reload, input.pme-apply');
+      $submit.first().trigger('click', {
         postOpen(dialogHolder) {
           Notification.messages(data.message);
           dialogHolder.dialog('moveToTop');
@@ -598,7 +598,7 @@ const articleSelectOnChange = function(event, container) {
   const $this = $(this);
 
   const projectId = $this.data('projectId');
-  const selected = $this.find('option:selected');
+  const selected = SelectUtils.selectedOptions($this);
   const articleId = selected.val();
   const articleData = selected.data('article');
   // just do it ...
