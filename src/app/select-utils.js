@@ -91,7 +91,8 @@ const getChildren = function($select) {
  * @returns {jQuery} The set of options.
  */
 const getOptions = function($select) {
-  return getChildren($select).filter('option');
+  const $children = getChildren($select);
+  return $children.filter('option').add($children.find('option'));
 };
 
 /**
