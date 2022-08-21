@@ -216,7 +216,12 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'project_id', '-display_order', 'name' ];
+    $opts['sort_field'] = [
+      '-' . $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      'project_id',
+      '-display_order',
+      'name' ,
+    ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -292,6 +297,16 @@ class ProjectParticipantFields extends PMETableViewBase
       'default'  => '0', // auto increment
       'sort'     => true,
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'year', [
+        'tab'       => [ 'id' => 'tab-all' ],
+        'name'      => $this->l->t('Year'),
+        'input'     => 'VHRS',
+        'input|FL'  => ($projectMode ? 'HR' : 'R'),
+        'align'     => 'right',
+      ],
+    );
 
     $opts['fdd']['project_id'] = [
       'tab'       => [ 'id' => 'tab-all' ],
@@ -1939,7 +1954,7 @@ __EOT__;
                       } catch (\Throwable $t) {
                       // ignore
                     }
-                    }
+                  }
                   break;
                 case DataType::DATETIME:
                   if (!empty($fieldValue)) {
