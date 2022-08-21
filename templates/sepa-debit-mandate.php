@@ -267,7 +267,7 @@ $formCss = implode(' ', array_filter([
           </span>
           <br/>
           <label class="mandateDate" for="mandateDate"><?php echo $l->t("Date issued:"); ?>
-            <input class="mandateDate" type="text"
+            <input class="mandateDate tooltip-top" type="text"
                    id="mandateDate"
                    name="mandateDate"
                    required="required"
