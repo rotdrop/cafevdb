@@ -45,8 +45,8 @@ if (isset($_['css-class'])) {
     $css_class .= ' '.$_['css-class'];
 }
 
-$redoDisabled = $_['historyPosition'] == 0;
-$undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
+$redoDisabled = true;
+$undoDisabled = true;
 
 $navigationControls = $pageNavigation->buttonsFromArray(
   [
