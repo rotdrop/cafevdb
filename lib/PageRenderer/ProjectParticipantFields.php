@@ -1951,7 +1951,7 @@ __EOT__;
                     try {
                       $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
                       $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
-                      } catch (\Throwable $t) {
+                    } catch (\Throwable $t) {
                       // ignore
                     }
                   }
