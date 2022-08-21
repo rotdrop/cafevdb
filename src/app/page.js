@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -71,8 +71,20 @@ const generatePageTitle = function(post) {
   return title;
 };
 
+const provideHistoryState = function(post) {
+  if (!post) {
+    post = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+  }
+  const state = history.state || {};
+  Object.assign(state, { post: {}, prevState: null, nextState: null }, state);
+  Object.assign(state.post, post);
+  history.replaceState(state, generatePageTitle(state.post), generateQueryString(state.post));
+
+  return history.state;
+};
+
 const pushHistory = function(post) {
-  const oldState = history.state;
+  const oldState = history.state || provideHistoryState();
   const newState = {
     post,
     nextState: null, // pushState deletes all following entries.
@@ -84,7 +96,7 @@ const pushHistory = function(post) {
 };
 
 const replaceHistory = function(post) {
-  const state = history.state;
+  const state = history.state || provideHistoryState();
   state.post = post;
   history.replaceState(state, generatePageTitle(post), generateQueryString(post));
 };
@@ -184,10 +196,7 @@ addEventListener('popstate', (event) => {
 });
 
 addEventListener('load', (event) => {
-  const state = history.state || {};
-  Object.assign(state, { post: {}, prevState: null, nextState: null }, state);
-  Object.assign(state.post, qs.parse(window.location.search, { ignoreQueryPrefix: true }));
-  history.replaceState(state, generatePageTitle(state.post), generateQueryString(state.post));
+  provideHistoryState();
 });
 
 /**
