@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2014-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2014-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or1
  * modify it under th52 terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,7 +32,7 @@ class HistoryService
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const MAX_HISTORY_SIZE = 100;
+  const MAX_HISTORY_SIZE = 1;
   const SESSION_HISTORY_KEY = 'PageHistory';
   const PME_ERROR_READONLY = 1;
 

@@ -41,6 +41,7 @@ import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
 import { deselectAll as selectDeselectAll } from './select-utils.js';
+import * as qs from 'qs';
 import {
   sys as pmeSys,
   data as pmeData,
@@ -304,7 +305,7 @@ const pmePost = function(post) {
       function(htmlContent, textStatus, request) {
         const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
         const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
-        return $.Deferred().resolve(htmlContent, historySize, historyPosition).promise();
+        return $.Deferred().resolve(htmlContent, historySize, historyPosition, post).promise();
       },
       function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
@@ -391,7 +392,7 @@ const tableDialogReload = function(options, callback, triggerData) {
         tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
       })
-      .done(function(htmlContent, historySize, historyPosition) {
+      .done(function(htmlContent, historySize, historyPosition, post) {
         tableDialogReplace(container, htmlContent, options, callback, triggerData);
         container.data(pmeToken('reloading'), false);
       });
@@ -605,7 +606,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             Page.busyIcon(false);
             container.data(pmeToken('saving'), false);
           })
-          .done(function(htmlContent, historySize, historyPosition) {
+          .done(function(htmlContent, historySize, historyPosition, post) {
             const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
             if (op.length > 0 && (op.val() === 'add' || op.val() === 'delete')) {
               // Some error occured. Stay in the given mode.
@@ -785,7 +786,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       Page.busyIcon(false);
       pmeOpenDialogs[containerCSSId] = false;
     })
-    .done(function(htmlContent, historySize, historyPosition) {
+    .done(function(htmlContent, historySize, historyPosition, post) {
       const containerSel = '#' + containerCSSId;
       const dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
       dialogHolder.html(htmlContent);
@@ -1065,11 +1066,13 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       Page.busyIcon(false);
       modalizer(false);
     })
-    .done(function(htmlContent, historySize, historyPosition) {
+    .done(function(htmlContent, historySize, historyPosition, post) {
 
       if (historySize > 0) {
-        Page.updateHistoryControls(historyPosition, historySize);
+        Page.pushHistory(qs.parse(post, { allowSparse: true }));
+        Page.updateHistoryControls();
       }
+
       $.fn.cafevTooltip.remove();
 
       pmeUnTweak(container);

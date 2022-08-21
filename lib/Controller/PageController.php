@@ -138,12 +138,35 @@ class PageController extends Controller {
       $this->session->close();
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
-    if ($this->getUserValue('restorehistory') === 'on'
-        && empty($this->parameterService->getParam('template'))) {
+    if ($this->shouldLoadHistory()) {
       return $this->history(0, 'user');
     } else {
       return $this->remember('user');
     }
+  }
+
+  private function shouldLoadHistory($level = 0)
+  {
+    if ($this->getUserValue('restorehistory') !== 'on') {
+      return false;
+    }
+    if ($this->request->getMethod() !== 'GET') {
+      return false;
+    }
+    if (empty($template = $this->parameterService->getParam('template'))) {
+      return true;
+    }
+    $get = $this->request->get;
+    $historyData = $this->historyService->fetch($level);
+    foreach ($get as $key => $value) {
+      if ($key == '_route') {
+        continue;
+      }
+      if (($historyData[$key] ?? null) !== $value) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -338,8 +361,6 @@ class PageController extends Controller {
     // renderAs = admin, user, blank
     // $renderAs = 'user';
     $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, $renderAs);
-    $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
-    $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
     // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
