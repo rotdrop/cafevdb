@@ -27,6 +27,7 @@ import * as Notification from './notification.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import modalizer from './modalizer.js';
+import * as qs from 'qs';
 
 globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
 
@@ -43,6 +44,51 @@ const busyIcon = function(on) {
   }
 };
 
+const generateQueryObject = function(post) {
+  const searchObject = {};
+  const searchFields = ['template', 'projectId'];
+  for (const field of searchFields) {
+    if (post[field]) {
+      searchObject[field] = post[field];
+    }
+  }
+  return searchObject;
+};
+
+const generateQueryString = function(post) {
+  const searchObject = generateQueryObject(post);
+  const queryString = qs.stringify(searchObject);
+  return queryString === '' ? '' : '?' + queryString;
+};
+
+const generatePageTitle = function(post) {
+  const searchObject = generateQueryObject(post);
+  const searchTitle = Object.values(searchObject).join('@');
+  let title = document.title;
+  if (searchTitle !== '') {
+    title += ' -- ' + searchTitle;
+  }
+  return title;
+};
+
+const pushHistory = function(post) {
+  const oldState = history.state;
+  const newState = {
+    post,
+    nextState: null, // pushState deletes all following entries.
+    prevState: oldState,
+  };
+  oldState.nextState = newState;
+  history.replaceState(oldState, generatePageTitle(oldState.post), generateQueryString(oldState.post));
+  history.pushState(newState, generatePageTitle(post), generateQueryString(post));
+};
+
+const replaceHistory = function(post) {
+  const state = history.state;
+  state.post = post;
+  history.replaceState(state, generatePageTitle(post), generateQueryString(post));
+};
+
 /**
  * Load a page through the history-aware AJAX page loader.
  *
@@ -56,39 +102,36 @@ const loadPage = function(post, afterLoadCallback) {
   modalizer(true);
   busyIcon(true);
   let action;
-  let parameter;
-  if (post.historyOffset !== undefined) {
-    action = 'recall';
-    parameter = post.historyOffset;
+  let postObject;
+  if (typeof post === 'string') {
+    postObject = qs.parse(post, { allowSparse: true });
+  } else {
+    postObject = post;
+    post = qs.stringify(postObject);
+  }
+  if (postObject.historyOffset !== undefined) {
+    action = 'loader';
   } else {
     action = 'remember';
-    parameter = 'blank';
   }
-  $.post(generateUrl('page/' + action + '/' + parameter), post)
+  $.post(generateUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
-      const errorData = Ajax.handleError(xhr, status, errorThrown);
+      Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
       // reset the history
-      if (action === 'recall') {
-        if (errorData.history !== undefined) {
-          updateHistoryControls(errorData.history.position, errorData.history.size);
-        } else {
-          updateHistoryControls(0, 0);
-        }
-      }
+      updateHistoryControls();
       modalizer(false);
       busyIcon(false);
     })
     .done(function(htmlContent, textStatus, request) {
-      // console.log(data);
-      const historySize = parseInt(request.getResponseHeader('X-' + appName + '-history-size'));
-      const historyPosition = parseInt(request.getResponseHeader('X-' + appName + '-history-position'));
 
       // Remove pending dialog when moving away from the page
       $('.ui-dialog-content').dialog('destroy').remove();
 
-      globalState.Page.historyPosition = historyPosition;
-      globalState.Page.historySize = historySize;
+      if (action === 'remember') {
+        pushHistory(postObject);
+      }
+      updateHistoryControls();
 
       // remove left-over notifications
       Notification.hide();
@@ -123,23 +166,29 @@ const loadPage = function(post, afterLoadCallback) {
     });
 };
 
-const updateHistoryControls = function(historyPosition, historySize) {
+const updateHistoryControls = function(state) {
   const redo = $('#personalsettings .navigation.redo');
   const undo = $('#personalsettings .navigation.undo');
 
-  if (historyPosition !== undefined && historySize !== undefined) {
-    globalState.Page.historyPosition = historyPosition;
-    globalState.Page.historySize = historySize;
-  } else {
-    historyPosition = globalState.Page.historyPosition;
-    historySize = globalState.Page.historySize;
-  }
+  state = state || history.state;
 
-  console.debug('UPDATE HISTORY CONTROLS', globalState.Page);
-
-  redo.prop('disabled', historyPosition === 0);
-  undo.prop('disabled', historySize - historyPosition <= 1);
+  undo.prop('disabled', !state || !state.prevState);
+  redo.prop('disabled', !state || !state.nextState);
 };
+
+addEventListener('popstate', (event) => {
+  const state = event.state;
+  if (state && state.post) {
+    loadPage(Object.assign({}, history.state.post, { historyOffset: 0 }));
+  }
+});
+
+addEventListener('load', (event) => {
+  const state = history.state || {};
+  Object.assign(state, { post: {}, prevState: null, nextState: null }, state);
+  Object.assign(state.post, qs.parse(window.location.search, { ignoreQueryPrefix: true }));
+  history.replaceState(state, generatePageTitle(state.post), generateQueryString(state.post));
+});
 
 /**
  * Optain the service-key for querying the app-container for the
@@ -180,9 +229,7 @@ const documentReady = function() {
         pmeReload.trigger('click');
         $('body').removeClass('dialog-titlebar-clicked');
       } else {
-        loadPage({
-          historyOffset: 0,
-        });
+        loadPage(Object.assign({}, history.state.post, { historyOffset: 0 }));
       }
       return false;
     });
@@ -191,10 +238,7 @@ const documentReady = function() {
     'click keydown',
     '#personalsettings .navigation.undo',
     function(event) {
-      event.stopImmediatePropagation();
-      loadPage({
-        historyOffset: 1,
-      });
+      history.back();
       return false;
     });
 
@@ -202,10 +246,7 @@ const documentReady = function() {
     'click keydown',
     '#personalsettings .navigation.redo',
     function(event) {
-      event.stopImmediatePropagation();
-      loadPage({
-        historyOffset: -1,
-      });
+      history.forward();
       return false;
     });
 
@@ -225,6 +266,8 @@ const documentReady = function() {
 export {
   busyIcon,
   loadPage,
+  pushHistory,
+  replaceHistory,
   updateHistoryControls,
   templateRenderer,
   templateFromRenderer,

@@ -46,6 +46,9 @@ class PageController extends Controller {
   const DEFAULT_TEMPLATE = 'projects';
   const HOME_TEMPLATE = 'home';
 
+  public const HISTORY_ACTION_LOAD = 'load';
+  public const HISTORY_ACTION_PUSH = 'push';
+
   /** @var ISession */
   private $session;
 
@@ -138,12 +141,35 @@ class PageController extends Controller {
       $this->session->close();
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
-    if ($this->getUserValue('restorehistory') === 'on'
-        && empty($this->parameterService->getParam('template'))) {
+    if ($this->shouldLoadHistory()) {
       return $this->history(0, 'user');
     } else {
       return $this->remember('user');
     }
+  }
+
+  private function shouldLoadHistory($level = 0)
+  {
+    if ($this->getUserValue('restorehistory') !== 'on') {
+      return false;
+    }
+    if ($this->request->getMethod() !== 'GET') {
+      return false;
+    }
+    if (empty($template = $this->parameterService->getParam('template'))) {
+      return true;
+    }
+    $get = $this->request->get;
+    $historyData = $this->historyService->fetch($level);
+    foreach ($get as $key => $value) {
+      if ($key == '_route') {
+        continue;
+      }
+      if (($historyData[$key] ?? null) !== $value) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -189,7 +215,8 @@ class PageController extends Controller {
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_LOAD,
     );
   }
 
@@ -207,7 +234,8 @@ class PageController extends Controller {
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
 
@@ -222,7 +250,8 @@ class PageController extends Controller {
       'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
 
@@ -233,11 +262,13 @@ class PageController extends Controller {
    * @UseSession
    */
   public function loader(
-    $renderAs,
-    $template,
-    $projectName = '',
-    $projectId = null,
-    $musicianId = null) {
+    $renderAs
+    , $template
+    , $projectName = ''
+    , $projectId = null
+    , $musicianId = null
+    , $historyAction = self::HISTORY_ACTION_PUSH
+  ) {
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());
@@ -285,9 +316,6 @@ class PageController extends Controller {
       return $this->exceptionResponse($t, $renderAs, __METHOD__);
     }
 
-    $historySize = $this->historyService->size();
-    $historyPosition = $this->historyService->position();
-
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
@@ -325,8 +353,6 @@ class PageController extends Controller {
       'musicianId' => $musicianId,
       'locale' => $this->getLocale(),
       'timezone' => $this->getTimezone(),
-      'historySize' => $historySize,
-      'historyPosition' => $historyPosition,
       'requesttoken' => \OCP\Util::callRegister(),
       'restorehistory' => $restoreHist,
       'filtervisibility' => $usrFiltVis,
@@ -338,14 +364,14 @@ class PageController extends Controller {
     // renderAs = admin, user, blank
     // $renderAs = 'user';
     $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, $renderAs);
-    $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
-    $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
 
     // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
     $policy->addAllowedChildSrcDomain('*');
     $policy->addAllowedFrameDomain('*');
     $response->setContentSecurityPolicy($policy);
+
+    $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
     if ($renderer->needPhpSession() && $renderAs !== 'user') {
       $response->preRender();
