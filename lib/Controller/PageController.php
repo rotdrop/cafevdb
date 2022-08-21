@@ -46,6 +46,9 @@ class PageController extends Controller {
   const DEFAULT_TEMPLATE = 'projects';
   const HOME_TEMPLATE = 'home';
 
+  public const HISTORY_ACTION_LOAD = 'load';
+  public const HISTORY_ACTION_PUSH = 'push';
+
   /** @var ISession */
   private $session;
 
@@ -212,7 +215,8 @@ class PageController extends Controller {
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_LOAD,
     );
   }
 
@@ -230,7 +234,8 @@ class PageController extends Controller {
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
 
@@ -245,7 +250,8 @@ class PageController extends Controller {
       'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
-      $this->parameterService['musicianId']
+      $this->parameterService['musicianId'],
+      historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
 
@@ -256,11 +262,13 @@ class PageController extends Controller {
    * @UseSession
    */
   public function loader(
-    $renderAs,
-    $template,
-    $projectName = '',
-    $projectId = null,
-    $musicianId = null) {
+    $renderAs
+    , $template
+    , $projectName = ''
+    , $projectId = null
+    , $musicianId = null
+    , $historyAction = self::HISTORY_ACTION_PUSH
+  ) {
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());
@@ -308,9 +316,6 @@ class PageController extends Controller {
       return $this->exceptionResponse($t, $renderAs, __METHOD__);
     }
 
-    $historySize = $this->historyService->size();
-    $historyPosition = $this->historyService->position();
-
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
@@ -348,8 +353,6 @@ class PageController extends Controller {
       'musicianId' => $musicianId,
       'locale' => $this->getLocale(),
       'timezone' => $this->getTimezone(),
-      'historySize' => $historySize,
-      'historyPosition' => $historyPosition,
       'requesttoken' => \OCP\Util::callRegister(),
       'restorehistory' => $restoreHist,
       'filtervisibility' => $usrFiltVis,
@@ -367,6 +370,8 @@ class PageController extends Controller {
     $policy->addAllowedChildSrcDomain('*');
     $policy->addAllowedFrameDomain('*');
     $response->setContentSecurityPolicy($policy);
+
+    $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
     if ($renderer->needPhpSession() && $renderAs !== 'user') {
       $response->preRender();

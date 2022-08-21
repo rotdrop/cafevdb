@@ -44,7 +44,7 @@ const busyIcon = function(on) {
   }
 };
 
-const generateQueryString = function(post) {
+const generateQueryObject = function(post) {
   const searchObject = {};
   const searchFields = ['template', 'projectId'];
   for (const field of searchFields) {
@@ -52,26 +52,41 @@ const generateQueryString = function(post) {
       searchObject[field] = post[field];
     }
   }
+  return searchObject;
+};
+
+const generateQueryString = function(post) {
+  const searchObject = generateQueryObject(post);
   const queryString = qs.stringify(searchObject);
   return queryString === '' ? '' : '?' + queryString;
+};
+
+const generatePageTitle = function(post) {
+  const searchObject = generateQueryObject(post);
+  const searchTitle = Object.values(searchObject).join('@');
+  let title = document.title;
+  if (searchTitle !== '') {
+    title += ' -- ' + searchTitle;
+  }
+  return title;
 };
 
 const pushHistory = function(post) {
   const oldState = history.state;
   const newState = {
     post,
-    nextState: oldState.nextState,
+    nextState: null, // pushState deletes all following entries.
     prevState: oldState,
   };
   oldState.nextState = newState;
-  const searchObject = {};
-  const searchFields = ['template', 'projectId'];
-  for (const field of searchFields) {
-    if (post[field]) {
-      searchObject[field] = post[field];
-    }
-  }
-  history.pushState(newState, undefined, generateQueryString(post));
+  history.replaceState(oldState, generatePageTitle(oldState.post), generateQueryString(oldState.post));
+  history.pushState(newState, generatePageTitle(post), generateQueryString(post));
+};
+
+const replaceHistory = function(post) {
+  const state = history.state;
+  state.post = post;
+  history.replaceState(state, generatePageTitle(post), generateQueryString(post));
 };
 
 /**
@@ -101,16 +116,10 @@ const loadPage = function(post, afterLoadCallback) {
   }
   $.post(generateUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
-      const errorData = Ajax.handleError(xhr, status, errorThrown);
+      Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
       // reset the history
-      if (action === 'recall') {
-        if (errorData.history !== undefined) {
-          updateHistoryControls(errorData.history.position, errorData.history.size);
-        } else {
-          updateHistoryControls(0, 0);
-        }
-      }
+      updateHistoryControls();
       modalizer(false);
       busyIcon(false);
     })
@@ -122,7 +131,7 @@ const loadPage = function(post, afterLoadCallback) {
       if (action === 'remember') {
         pushHistory(postObject);
       }
-      console.info('LOAD HISTORY STATE', Object.assign({}, history.state));
+      updateHistoryControls();
 
       // remove left-over notifications
       Notification.hide();
@@ -175,11 +184,10 @@ addEventListener('popstate', (event) => {
 });
 
 addEventListener('load', (event) => {
-  console.info('HISTORY STATE ON LOAD', history.state);
-  const state = Object.assign({ post: {}, prevState: null, nextState: null }, history.state || {});
+  const state = history.state || {};
+  Object.assign(state, { post: {}, prevState: null, nextState: null }, state);
   Object.assign(state.post, qs.parse(window.location.search, { ignoreQueryPrefix: true }));
-  history.replaceState(state, undefined, generateQueryString(state.post));
-  console.info('PROVIDING STATE', Object.assign({}, history.state));
+  history.replaceState(state, generatePageTitle(state.post), generateQueryString(state.post));
 });
 
 /**
@@ -259,6 +267,7 @@ export {
   busyIcon,
   loadPage,
   pushHistory,
+  replaceHistory,
   updateHistoryControls,
   templateRenderer,
   templateFromRenderer,

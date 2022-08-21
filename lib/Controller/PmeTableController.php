@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -172,19 +172,16 @@ class PmeTableController extends Controller {
       }
       // $renderer->navigation(false); NOPE, navigation is needed, number of query records may change.
 
-      $historySize = -1;
-      $historyPosition = -1;
       if ($dialogMode || $reloadAction) {
         if (!$renderer->needPhpSession()) {
           $this->logInfo('Closing session');
           $this->session->close();
         }
+        $historyAction = PageController::HISTORY_ACTION_LOAD;
       } else {
         $this->historyService->push($this->parameterService->getParams());
-        $historySize = $this->historyService->size();
-        $historyPosition = $this->historyService->position();
+        $historyAction = PageController::HISTORY_ACTION_PUSH;
       }
-
 
       $template = 'pme-table';
       $templateParameters = [
@@ -196,8 +193,7 @@ class PmeTableController extends Controller {
 
       $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, 'blank');
 
-      $response->addHeader('X-'.$this->appName.'-history-size', $historySize);
-      $response->addHeader('X-'.$this->appName.'-history-position', $historyPosition);
+      $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
       if ($renderer->needPhpSession()) {
         $response->preRender();
