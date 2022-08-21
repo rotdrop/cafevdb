@@ -258,7 +258,16 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return; // something went wrong
     }
 
-    $userFolder = $this->rootFolder->getUserFolder($this->user->getUID())->getPath();
+    $userFolder = $this->rootFolder->getUserFolderPath($this->user->getUID());
+
+    // Bail out if the folder being worked on is actually the
+    // top-level user-folder
+    foreach ($nodes as $key => $nodeInfo) {
+      if ($nodeInfo[self::NODE_FULL_PATH] == $userFolder) {
+        return;
+      }
+    }
+
     $projectsPath = $this->getProjectsFolderPath();
 
     // strip the user-folder and match with the projects path
