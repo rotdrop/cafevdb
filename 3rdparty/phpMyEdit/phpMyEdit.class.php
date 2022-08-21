@@ -4160,7 +4160,7 @@ class phpMyEdit
 					'*' => '*',
 					'' => '[' . ($this->labels['empty'] ?? 'empty') . ']',
 				] + $valgrp['values'];
-				$this->logInfo('FILTER VALUES ' . print_r($vals, true));
+				// $this->logInfo('FILTER VALUES ' . print_r($vals, true));
 				$groups     = $valgrp['groups'];
 				$titles     = $valgrp['titles'];
 				$data       = $valgrp['data'];
@@ -4457,7 +4457,7 @@ class phpMyEdit
 			echo $this->htmlHiddenSys('qfn', $this->qfn);
 			echo $this->htmlHiddenSys('fm', $this->fm);
 			echo $this->htmlHiddenSys('np', $this->inc);
-			echo $this->htmlHiddenSys('translations', $this->translations);
+			// echo $this->htmlHiddenSys('translations', $this->translations);
 			echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		}
 		echo '</div>'."\n";
@@ -5014,7 +5014,7 @@ class phpMyEdit
 		}
 		echo $this->htmlHiddenSys('fm', $this->fm);
 		echo $this->htmlHiddenSys('np', $this->inc);
-		echo $this->htmlHiddenSys('translations', $this->translations);
+		// echo $this->htmlHiddenSys('translations', $this->translations);
 		echo $this->htmlHiddenSys('fl', $this->fl);
 		echo $this->htmlHiddenSys('op_name', $this->operationName());
 		$this->display_record_buttons('up');

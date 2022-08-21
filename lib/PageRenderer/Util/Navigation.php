@@ -698,7 +698,7 @@ to and from the registered bank accounts.');
     $json = htmlspecialchars(json_encode($json));
     $html =<<<__EOT__
 <li class="nav-{$controlid} {$controlclass} tooltip-right" title="$title">
-<a href="#"
+<a href="?{$post}"
 data-id="{$controlid}"
 data-post="{$post}"
 data-json='{$json}'>
