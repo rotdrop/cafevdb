@@ -77,7 +77,7 @@ class Project implements \ArrayAccess
    *
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
-  private $type = 'temporary';
+  private $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
    * @var string
@@ -307,14 +307,13 @@ class Project implements \ArrayAccess
   public function setMailingListId(?string $mailingListId):Project
   {
     $this->mailingListId = $mailingListId;
-
     return $this;
   }
 
   /**
    * Get mailingListId.
    *
-   * @return EnumProjectTemporalMailingListId
+   * @return null|string
    */
   public function getMailingListId():?string
   {
