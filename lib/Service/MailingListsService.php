@@ -405,6 +405,7 @@ class MailingListsService
       'advertised' => true,
       'digests_enabled' => false,
       'preferred_language' => $this->getLanguage($this->appLocale()),
+      'max_message_size' => 0,
     ];
     $this->setListConfig($listId, $config);
 
