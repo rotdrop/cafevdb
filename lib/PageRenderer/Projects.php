@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -199,7 +200,11 @@ class Projects extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = ['-year', 'name'];
+    $opts['sort_field'] = [
+      'type',
+      '-year',
+      'name',
+    ];
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
@@ -305,7 +310,7 @@ class Projects extends PMETableViewBase
       'maxlen'   => 11,
       'css'      => ['postfix' => [ 'tooltip-right', ], ],
       'values2'  => $this->projectTypeNames,
-      'default'  => 'temporary',
+      'default'  => ProjectType::TEMPORARY,
       'sort'     => true,
       'align'    => 'center',
     ];
@@ -593,6 +598,7 @@ class Projects extends PMETableViewBase
       'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-auto', ], ],
       'tooltip|AP' => $this->toolTipsService['projects:mailing-list:create'],
       'input' => 'R',
+      'input|AP' => '',
       'select|AP' => 'C',
       'values2|AP' => [ 1 => $this->l->t('create') ],
       'select'  => 'T',
@@ -866,7 +872,8 @@ class Projects extends PMETableViewBase
       // unset the year filter, as it does not make sense
       unset($this->parameterService[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $opts['filters']['OR'][] = "\$table.type = 'permanent'";
+      $opts['filters']['OR'][] = '$table.type = "' . ProjectType::PERMANENT . '"';
+      $opts['filters']['OR'][] = '$table.type = "' . ProjectType::TEMPLATE . '"';
     }
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
@@ -1117,6 +1124,9 @@ project without a poster first.");
         $changed[] = $column;
       }
     }
+
+    // handle mailing-list generation
+    $newVals['mailing_list_id'] = $newVals['mailing_list_id'] ? 'create' : 'keep-empty';
 
     // unset 'copy_participants'
     Util::unsetValue($changed, 'copy_participants');
