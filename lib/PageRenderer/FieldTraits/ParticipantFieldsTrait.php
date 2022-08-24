@@ -42,6 +42,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -1648,10 +1649,12 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         // tweak the option_key value
         $newValues[$keyName] = $key;
         $changed[] = $keyName;
-        // tweak the option value to have the desired form
-        $newValues[$valueName] = $key.self::JOIN_KEY_SEP.$newValues[$valueName];
+
+        // Tweak the option value to have the desired form. Make sure to
+        // escape commas as these count as multi-value separators.
+        $newValues[$valueName] = $key . self::JOIN_KEY_SEP .  Util::escapeDelimiter($newValues[$valueName], PMETableViewBase::VALUES_SEP);
         if (isset($newValues[$depositName])) {
-          $newValues[$depositName] = $key.self::JOIN_KEY_SEP.$newValues[$depositName];
+          $newValues[$depositName] = $key . self::JOIN_KEY_SEP . Util::escapeDelimiter($newValues[$depositName], PMETableViewBase::VALUES_SEP);
         }
         break;
       case FieldMultiplicity::RECURRING:

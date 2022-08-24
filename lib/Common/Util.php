@@ -197,11 +197,10 @@ class Util
     $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
     if (($flags & self::ESCAPED) && !empty($escape)) {
       return
-        str_replace(
-          [ $escape.$escape, $escape.$delim ],
-          [ $escape, $delim ],
-          preg_split('/'.$trimExpr.preg_quote($escape, '/').'.'.'(*SKIP)(*FAIL)|'.preg_quote($delim, '/').$trimExpr.'/s', $string, -1, $pregFlags)
-        );
+        self::unescapeDelimiter(
+          preg_split('/'.$trimExpr.preg_quote($escape, '/').'.'.'(*SKIP)(*FAIL)|'.preg_quote($delim, '/').$trimExpr.'/s', $string, -1, $pregFlags),
+          $delim,
+          $escape);
     } else {
       return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
     }
@@ -213,12 +212,47 @@ class Util
   static public function implode(string $delim, array $array, int $flags = self::ESCAPED, string $escape = '\\'):string
   {
     if ($flags & self::ESCAPED) {
-      $array = str_replace(
-        [ $escape, $delim ],
-        [ $escape.$escape, $escape.$delim ],
-        $array);
+      $array = self::escapeDelimiter($array, $delim, $escape);
     }
     return implode($delim, $array);
+  }
+
+  /*
+   * Escape delimiters in the given value.
+   *
+   * @param string|array $value
+   *
+   * @param string $delim
+   *
+   * @param string $escape
+   *
+   * @return string|array
+   */
+  static public function escapeDelimiter($value, string $delim, string $escape = '\\')
+  {
+    return str_replace(
+        [ $escape, $delim ],
+        [ $escape . $escape, $escape . $delim ],
+        $value);
+  }
+
+  /*
+   * Un-escape delimiters in the given value.
+   *
+   * @param string|array $value
+   *
+   * @param string $delim
+   *
+   * @param string $escape
+   *
+   * @return string|array
+   */
+  static public function unescapeDelimiter($value, string $delim, string $escape = '\\')
+  {
+    return str_replace(
+      [ $escape . $escape, $escape . $delim ],
+      [ $escape, $delim ],
+      $value);
   }
 
   /**
