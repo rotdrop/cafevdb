@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Events\PostChangeMusicianEmail as HandledEvent;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Listen to renamed and deleted events in order to keep the
@@ -75,7 +76,7 @@ class MailingListsEmailChangedListener implements IEventListener
 
     $this->entityManager = $this->appContainer->get(EntityManager::class);
     /** @var Repositories\ProjectsRepository $projectsRepository */
-    $projectsRepository = $this->getDatabaseRepository(Repositories\ProjectsRepository::class);
+    $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
     $listIds = $projectsRepository->fetchMailingListIds();
 
     $listIds[] = $configService->getConfigValue('announcementsMailingList');
