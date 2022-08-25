@@ -1427,8 +1427,6 @@ Whatever.',
 
     $articles = array_merge($preview, $archive, $rehearsals);
 
-    //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OCP\Util::DEBUG);
-
     foreach ($articles as $article) {
       // ignore any error
       $this->attachProjectWebPage($projectId, $article);
@@ -1669,6 +1667,16 @@ Whatever.',
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
 
+    $listId = $project->getMailingListId();
+
+    if ($listId === 'keep-empty') {
+      $project->setMailingListId(null);
+      return;
+    } else if ($listId === 'create') {
+      $listId = null;
+      $project->setMailingListId(null);
+    }
+
     /** @var MailingListsService $listsService */
     $listsService = $this->di(MailingListsService::class);
 
@@ -1676,11 +1684,11 @@ Whatever.',
       return;
     }
 
-    $listId = $project->getMailingListId();
     if (empty($listId)) {
       $listId = strtolower($project->getName());
       $listId .= '.' . $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['domain']);
     }
+    $this->logInfo('MAILING LIST ID ' . $listId);
     $new = false;
     if (empty($listsService->getListInfo($listId))) {
       $listsService->createList($listId);
@@ -1704,6 +1712,8 @@ Whatever.',
         'archive_policy' => 'private',
         'subscription_policy' => 'moderate',
         'preferred_language' =>  $this->getLanguage($this->appLocale()),
+        'max_message_size' => 0,
+        'max_num_recipients' => 0,
       ];
       $listsService->setListConfig($listId, $configuration);
       $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
@@ -1877,7 +1887,7 @@ Whatever.',
     $project = $this->repository->ensureProject($projectOrId);
 
     // not an entity-manager run-queue
-    $runQueue = (new Common\UndoableRunQueue($this->Logger(), $this->l10n()))
+    $runQueue = (clone $this->appContainer()->get(Common\UndoableRunQueue::class))
       ->register(new Common\GenericUndoable(
         function() use ($project) {
           $projectPaths = $this->ensureProjectFolders($project->getId(), $project->getName());
@@ -2144,73 +2154,76 @@ Whatever.',
     return $softDelete ? $project : null;
   }
 
-  /**
-   * Copy the given project, including:
-   *
-   * - participant fields structure
-   * - instrumentation numbers
-   *
-   * Everything else is not copied, in particular no project members
-   * are copied over.
-   *
-   * @param int|Entities\Project $project
-   *
-   * @param null|string $newName The name of the copied project. If it
-   * does not contain a year then the current year is used.
-   *
-   * @return null|Entities\Project Returns null if project was
-   * actually deleted, else the updated "soft-deleted" project instance.
-   *
-   * @todo Check for proper cascading.
-   */
-  public function copyProject($projectOrId, ?string $newName = null):? Entities\Project
-  {
-    /** @var Entities\Project $project */
-    $project = $this->repository->ensureProject($projectOrId);
-    if (empty($project)) {
-      throw new \RuntimeException($this->l->t('Unable to find the project to copy (id = %d)', $projectOrId));
-    }
+  // /**
+  //  * Copy the given project, including:
+  //  *
+  //  * - participant fields structure
+  //  * - instrumentation numbers
+  //  *
+  //  * Everything else is not copied, in particular no project members
+  //  * are copied over.
+  //  *
+  //  * @param int|Entities\Project $project
+  //  *
+  //  * @param null|string $newName The name of the copied project. If it
+  //  * does not contain a year then the current year is used.
+  //  *
+  //  * @return null|Entities\Project Returns null if project was
+  //  * actually deleted, else the updated "soft-deleted" project instance.
+  //  *
+  //  * @todo Check for proper cascading.
+  //  */
 
-    // Road-map:
-    // - sanitize name
-    // - copy project and generate folders etc.
-    // - copy instrumentation numbers
-    // - copy participant fields
+  // UNUSED ATM
 
-    if (empty($newName)) {
-      $newName = $this->l->t('copy of %s', $project->getName());
-      if ($project->getType() == ProjectType::TEMPORARY) {
-        $newName = substr($newName, 0, -4) . date('Y');
-      }
-      $this->sanitizeName($projectName, $project->getType() == ProjectType::TEMPORARY);
-    }
-    list(, $newYear) = $this->yearFromName($newName);
+  // public function copyProject($projectOrId, ?string $newName = null):? Entities\Project
+  // {
+  //   /** @var Entities\Project $project */
+  //   $project = $this->repository->ensureProject($projectOrId);
+  //   if (empty($project)) {
+  //     throw new \RuntimeException($this->l->t('Unable to find the project to copy (id = %d)', $projectOrId));
+  //   }
 
-    $this->entityManager->beginTransaction();
-    try {
+  //   // Road-map:
+  //   // - sanitize name
+  //   // - copy project and generate folders etc.
+  //   // - copy instrumentation numbers
+  //   // - copy participant fields
 
-      /** @var Entities\Project $newProject */
-      $newProject = clone $project;
-      $newProject->setName($newName);
-      $newProject->setYear($newYear);
+  //   if (empty($newName)) {
+  //     $newName = $this->l->t('copy of %s', $project->getName());
+  //     if ($project->getType() == ProjectType::TEMPORARY) {
+  //       $newName = substr($newName, 0, -4) . date('Y');
+  //     }
+  //     $this->sanitizeName($projectName, $project->getType() == ProjectType::TEMPORARY);
+  //   }
+  //   list(, $newYear) = $this->yearFromName($newName);
 
-      $this->persist($newProject);
-      $this->flush();
+  //   $this->entityManager->beginTransaction();
+  //   try {
 
-      $this->createProjectInfraStructure($newProject);
+  //     /** @var Entities\Project $newProject */
+  //     $newProject = clone $project;
+  //     $newProject->setName($newName);
+  //     $newProject->setYear($newYear);
 
-      $this->entityManager->commit();
-    } catch (\Throwable $t)  {
-      $this->logException($t);
-      $this->entityManager->rollback();
-      throw new \Exception(
-        $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
-        $t->getCode(),
-        $t);
-    }
+  //     $this->persist($newProject);
+  //     $this->flush();
 
-    return null;
-  }
+  //     $this->createProjectInfraStructure($newProject);
+
+  //     $this->entityManager->commit();
+  //   } catch (\Throwable $t)  {
+  //     $this->logException($t);
+  //     $this->entityManager->rollback();
+  //     throw new \Exception(
+  //       $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
+  //       $t->getCode(),
+  //       $t);
+  //   }
+
+  //   return null;
+  // }
 
   /**
    * Rename the given project or id.

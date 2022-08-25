@@ -26,9 +26,12 @@ namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 use PHPUnit\Framework\TestCase;
 
 use OCP\Security\ICrypto;
+use OCP\ILogger;
 
 use OCA\CAFEVDB\Crypto\ICryptor;
+use OCA\CAFEVDB\Crypto\CryptoFactoryInterface;
 use OCA\CAFEVDB\Crypto\SealService;
+use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
 class SealServiceTest extends TestCase
 {
@@ -39,18 +42,35 @@ class SealServiceTest extends TestCase
   private const DATA_BYTES = 'This is a unicode ääöüß string';
 
   /** @var string */
+  private const CLOUD_ENCRYPTED_BYTES = 'abcd|Z';
+
+  /** @var string */
   private const ENCRYPTED_BYTES = 'abcd';
 
   private const USER_A = 'user.a';
 
   private const USER_B = 'user.b';
 
+  /** @var \PHPUnit\Framework\MockObject\MockObject|ILogger */
+  private $cloudLogger;
+
   /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
   private $cloudCryptor;
+
+  /** @var \PHPUnit\Framework\MockObject\MockObject|CryptoFactoryInterface */
+  private $cryptoFactory;
 
   public function setup():void
   {
     parent::setup();
+    $this->cryptoFactory = $this->getMockBuilder(CryptoFactoryInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->cloudLogger = $this->getMockBuilder(ILogger::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $this->cloudCryptor = $this->getMockBuilder(ICrypto::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -58,7 +78,7 @@ class SealServiceTest extends TestCase
 
   public function testConstruction()
   {
-    $sealService = new SealService($this->cloudCryptor);
+    $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $this->assertInstanceOf(SealService::class, $sealService);
   }
 
@@ -66,12 +86,19 @@ class SealServiceTest extends TestCase
   {
     $this->cloudCryptor
       ->expects($this->any())
-      ->method('encrypt')
-      ->willReturn(self::ENCRYPTED_BYTES);
-    $this->cloudCryptor
-      ->expects($this->any())
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
+    $this->cloudCryptor
+      ->expects($this->any())
+      ->method('encrypt')
+      ->willReturn(self::CLOUD_ENCRYPTED_BYTES);
+
+    $cloudSymmetricCryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
+
+    $this->cryptoFactory
+      ->expects($this->any())
+      ->method('getSymmetricCryptor')
+      ->willReturn($cloudSymmetricCryptor);
 
     $keyCryptor = $this->getMockBuilder(ICryptor::class)
       ->disableOriginalConstructor()
@@ -85,8 +112,14 @@ class SealServiceTest extends TestCase
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
 
-    $sealService = new SealService($this->cloudCryptor);
+    $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $sealedData = $sealService->seal(self::DATA_BYTES, [ self::USER_A => $keyCryptor, self::USER_B => $keyCryptor ]);
+
+    $expectedSealedData = sprintf('%08x', strlen(self::CLOUD_ENCRYPTED_BYTES))
+      . '|'. self::CLOUD_ENCRYPTED_BYTES
+      . '|' . self::USER_A .':' . self::ENCRYPTED_BYTES
+      . ';' . self::USER_B .':' . self::ENCRYPTED_BYTES;
+    $this->assertEquals($sealedData, $expectedSealedData);
 
     $unsealed = $sealService->unseal($sealedData, self::USER_A, $keyCryptor);
     $this->assertEquals($unsealed, self::DATA_BYTES);
@@ -114,7 +147,7 @@ class SealServiceTest extends TestCase
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
 
-    $sealService = new SealService($this->cloudCryptor);
+    $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $sealedData = $sealService->seal(self::DATA_BYTES, [ self::USER_A => $keyCryptor, self::USER_B => $keyCryptor ]);
 
     $this->assertEquals(true, $sealService->isSealedData($sealedData));

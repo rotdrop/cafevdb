@@ -1111,11 +1111,6 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'postal-code', ], ],
         'maxlen'   => 11,
-        'sql|FL'   => 'CONCAT(
-  IF(COALESCE($join_table.address_supplement, "") <> "",
-    CONCAT($join_table.address_supplement, ", "),
-    ""),
-  $join_table.street, " ", $join_table.street_number)',
       ]);
 
     $this->makeJoinTableField(

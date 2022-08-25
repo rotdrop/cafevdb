@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -103,7 +104,7 @@ class ProjectsController extends Controller {
         $projectId = $record['id']??null;
         $projectName = $projectValues['name'];
         $projectYear = $projectValues['year'];
-        $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == 'temporary';
+        $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == ProjectType::TEMPORARY;
 
         $infoMessage = "";
         switch ($control) {
