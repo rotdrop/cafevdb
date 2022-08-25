@@ -55,6 +55,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\EntityManager;
+
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -635,6 +637,8 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /**
    * Do some lazy initialization in order to have a leight-weight constructor.
    *
+   * Bail out if the user does not belong to the orchestra group.
+   *
    * @return bool Success status. The parent should just terminate execution
    * if \false is returned.
    */
@@ -643,6 +647,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     // initialize only now in order to keep the overhead for unhandled events small
     $this->user = $this->appContainer->get(IUserSession::class)->getUser();
     if (empty($this->user)) {
+      return false;
+    }
+
+    /** @var AuthorizationService $authorizationService */
+    $authorizationService = $this->appContainer->get(AuthorizationService::class);
+    if (!$authorizationService->authorized($this->user->getUID())) {
       return false;
     }
 
