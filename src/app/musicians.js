@@ -717,6 +717,12 @@ the personal data of the respective musician up-to-date.`),
 
 };
 
+const novalidateSubmits = [
+  'savedelete',
+  'morechange',
+  'savechange',
+];
+
 const ready = function(container) {
 
   // sanitize
@@ -733,7 +739,7 @@ const ready = function(container) {
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
         const $this = $(this);
-        if ($this.attr('name').indexOf('savedelete') < 0) {
+        if (novalidateSubmits.findIndex(submit => $this.attr('name').indexOf(submit) >= 0) < 0) {
           checkForDuplicateMusicians($container, function() {
             $form.off('click', submitSel);
             $this.trigger('click');
