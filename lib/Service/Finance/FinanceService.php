@@ -246,7 +246,11 @@ class FinanceService
         'projectParticipant' => $musician->getPublicName(),
         'memberName' => $musician->getPublicName(),
         'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
-        'memberAddress' => implode(', ', [ $musician->getStreet(), $musician->getPostalCode(), $musician->getCity(), ]),
+        'memberAddress' => implode(', ', array_filter([
+          $musician->getAddressSupplement(),
+          $musician->getStreet() . ' ' . $musician->getStreetNumber(),
+          $musician->getPostalCode() . ' ' . $musician->getCity(),
+        ])),
         'memberEmail' => $musician->getEmail(),
         'memberFixedLinePhone' => $musician->getFixedLinePhone(),
         'memberMobilePhone' => $musician->getMobilePhone(),
@@ -297,7 +301,7 @@ class FinanceService
   {
     $eventKind = 'finance';
     $categories = '';
-    if ($projectName) {
+    if ($project) {
       // This triggers adding the event to the respective project when added
       $categories .= $project->getName().',';
     }
@@ -341,7 +345,7 @@ class FinanceService
   {
     $taskKind = 'finance';
     $categories = '';
-    if ($projectName) {
+    if ($project) {
       // This triggers adding the task to the respective project when added
       $categories .= $project->getName().',';
     }
