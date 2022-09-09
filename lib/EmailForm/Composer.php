@@ -121,8 +121,10 @@ Störung.';
     'MISSING_AMOUNT',
     'PROJECT_DATA',
     'SEPA_MANDATE_REFERENCE',
+    'SEPA_MANDATE_DATE',
     'BANK_ACCOUNT_IBAN',
     'BANK_ACCOUNT_BIC',
+    'BANK_ACCOUNT_BANK',
     'BANK_ACCOUNT_OWNER',
     'BANK_TRANSACTION_AMOUNT',
     'BANK_TRANSACTION_PURPOSE',
@@ -1185,6 +1187,24 @@ Störung.';
         return $keyArg[0];
       };
 
+      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_DATE'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          $debitMandate = $compositePayment->getSepaDebitMandate();
+          if (!empty($debitMandate)) {
+            return $this->formatDate($debitMandate->getMandateDate(), $keyArg[1]??'full');
+          }
+        }
+
+        return $keyArg[0];
+      };
+
       $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_IBAN'] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
@@ -1215,6 +1235,35 @@ Störung.';
           $bankAccount = $compositePayment->getSepaBankAccount();
           if (!empty($bankAccount)) {
             return $bankAccount->getBic();
+          }
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BANK'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaBankAccount $bankAccount */
+          $bankAccount = $compositePayment->getSepaBankAccount();
+          if (!empty($bankAccount)) {
+            $iban = $bankAccount->getIban();
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            $info = $financeService->getIbanInfo($iban);
+            $bank = $info['bank'];
+            $city = $info['city'];
+            if (!empty($bank)) {
+              if (!empty($city)) {
+                $bank .= ', ' . $info['city'];
+              }
+              return $bank;
+            }
           }
         }
 
