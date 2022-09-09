@@ -1198,7 +1198,7 @@ Störung.';
           /** @var Entities\SepaDebitMandate $debitMandate */
           $debitMandate = $compositePayment->getSepaDebitMandate();
           if (!empty($debitMandate)) {
-            return $this->formatDate($debitMandate->getMandateDate(), $keyArg[1]??'full');
+            return $this->formatDate($debitMandate->getMandateDate(), $keyArg[1]??'medium');
           }
         }
 
