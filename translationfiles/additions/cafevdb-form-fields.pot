@@ -95,6 +95,11 @@ msgstr ""
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
+msgid "BANK_ACCOUNT_BANK"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
 msgid "BANK_ACCOUNT_BIC"
 msgstr ""
 
@@ -106,6 +111,11 @@ msgstr ""
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "SEPA_MANDATE_REFERENCE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "SEPA_MANDATE_DATE"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
