@@ -144,7 +144,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @ORM\Column(type="integer", options={"default"="14"})
    */
-  private $preNotificationCalendarDays = 14;
+  private $preNotificationCalendarDays = 7;
 
   /**
    * @var int
@@ -153,7 +153,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=true)
    */
-  private $preNotificationBusinessDays = null;
+  private $preNotificationBusinessDays = 5;
 
   /**
    * @var \DateTimeImmutable|null
