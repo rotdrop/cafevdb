@@ -453,6 +453,25 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
+   * Get the payment for the specified musician
+   *
+   * @param int|Muscian $musician Musician-id or entity.
+   */
+  public function getPayment($musician):?CompositePayment
+  {
+    $musicianId = ($musician instanceof Musician) ? $musician->getId() : $musician;
+    if ($this->payments->containsKey($musicianId)) {
+      return $this->payments->get($musicianId);
+    }
+    // need to search ...
+    $payments = $this->payments->filter(fn(CompositePayment $payment) => $payment->getMusician()->getId() == $musicianId);
+    if ($payments->count() === 1) {
+      return $payments->first();
+    }
+    return null;
+  }
+
+  /**
    * Return the number of related ProjectPayment entities.
    */
   public function usage():int

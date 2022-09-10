@@ -1628,7 +1628,8 @@ Störung.';
         );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
-          $references[] = $msg['messageId'];
+          $messageId =  $msg['messageId'];
+          $references[] = $messageId;
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
@@ -1639,7 +1640,18 @@ Störung.';
           //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
           //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
           // }
-
+          if (!empty($this->bulkTransaction)) {
+            $payment = $this->bulkTransaction->getPayment($musician);
+            if (empty($payment)) {
+              // this must not happen
+              throw new Exceptions\DatabaseEntityNotFoundException(
+                $this->l->t('Unable to find a payment for the addresse musician "%s" (transaction %d)', [
+                  $musician->getPublicName(), $this->bulkTransactionId
+                ])
+              );
+            }
+            $payment->setNotificationMessageId($messageId);
+          }
         } else {
           ++$this->diagnostics['FailedCount'];
         }
