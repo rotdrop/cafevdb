@@ -939,6 +939,14 @@ trait ParticipantFieldsTrait
             ]);
           $invoiceFdd = &$fieldDescData[$invoiceFddName];
 
+          // @todo $keyFdd has probably to be voided here as otherwise hidden
+          // input fields are emitted which conflict with the $valueFdd
+          // $keyFdd['sql|ACP'] = 'NULL';
+          // $keyFdd['select|ACP'] = '';
+          $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
+            return '';
+          };
+          $keyFdd['input|ACP'] = 'HR';
           $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
             // $this->logInfo('VALUE '.$k.': '.$value);
             // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
@@ -989,10 +997,10 @@ trait ParticipantFieldsTrait
             $html = '<table class="'.implode(' ', $cssClass).'">
   <thead>
     <tr>
-      <th class="operations">'.$this->l->t('Actions').'</th>
-      <th class="label'.($labelled ? '' : ' unlabelled').'">'.$this->l->t('Subject').'</th>
-      <th class="input">'.$valueLabel.'</th>
-      <th class="documents document-count-'.count($invoices).'">'.$invoiceLabel.'</th>
+      <th class="operations"><span class="column-heading">' . $this->l->t('Actions') . '</span></th>
+      <th class="label'.($labelled ? '' : ' unlabelled').'"><span class="column-heading">'.$this->l->t('Subject').'</span></th>
+      <th class="input"><span class="column-heading">'.$valueLabel.'</span></th>
+      <th class="documents document-count-'.count($invoices).'"><span class="column-heading">'.$invoiceLabel.'</</th>
     </tr>
   </thead>
   <tbody>';
@@ -1506,10 +1514,11 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       'lock-unlock',
       'left-of-input',
     ];
-    if ($dataType != FieldType::SERVICE_FEE) {
-      $lockCssClass[] = 'position-right';
-    }
     $lockCssClass = implode(' ', $lockCssClass);
+    $lockRightCssClass = $lockCssClass . ' position-right';
+    if ($dataType != FieldType::SERVICE_FEE) {
+      $lockCssClass = $lockRightCssClass;
+    }
 
     if (!empty($value)) {
       switch ($dataType) {
@@ -1556,12 +1565,14 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       type="button"/>
   </td>
   <td class="label'.($labelled ? '' : ' unlabelled').'">
-    '.$label.'
+    <input id="receivable-option-label-lock-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
+    <label class="'.$lockRightCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-option-label-lock-'.$optionKey.'"></label>
+    <input type="text" value="'.$label.'" readonly/>
   </td>
   <td class="input">
-    <input id="receivable-input-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
-    <label class="'.$lockCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-input-'.$optionKey.'"></label>
-    <input class="pme-input '.$dataType.'" ' . $valueInputType . ($locked ? ' readonly' : '').' name="'.$optionValueName.'['.$idx.']" value="'.$value.'"/>
+    <input id="receivable-option-value-lock-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
+    <label class="'.$lockCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-option-value-lock-'.$optionKey.'"></label>
+    <input class="pme-input '.$dataType.'" type="text" ' . $valueInputType . ($locked ? ' readonly' : '').' name="'.$optionValueName.'['.$idx.']" value="'.$value.'"/>
     <input class="pme-input '.$dataType.'" type="hidden" name="'.$optionKeyName.'['.$idx.']" value="'.$optionKey.'"/>
   </td>
   <td class="documents document-count-'.count($invoices).'">
@@ -1681,6 +1692,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           $keys = Util::explode(',', $dataSet[$keyName]);
           $amounts = Util::explode(',', $dataSet[$valueName], flags: Util::ESCAPED);
           $values = [];
+          if (count($keys) != count($amounts)) {
+            $this->logInfo('BUG ' . print_r($keys, true) . ' || ' . print_r($amounts, true));
+          }
           foreach (array_combine($keys, $amounts) as $key => $amount) {
             switch ($dataType) {
               case FieldType::DATE:
