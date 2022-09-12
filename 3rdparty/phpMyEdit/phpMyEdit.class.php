@@ -2404,7 +2404,7 @@ class phpMyEdit
 				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
-				if ($this->hidden($k)) {
+				if ($this->hidden($k) && !$this->col_has_php($k)) {
 					if (!in_array($k, $this->key_num) || $this->change_operation()) {
 						$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
@@ -5307,7 +5307,8 @@ class phpMyEdit
 					if ($tmpval1 != $tmpval2) {
 						$changed[] = $fd;
 					} else {
-						$newvals[$fd] = $oldvals[$fd]; // fake
+						// $newvals[$fd] = $oldvals[$fd]; // fake
+						$oldvals[$fd] = $newvals[$fd];
 					}
 				} else {
 					$changed[] = $fd;
