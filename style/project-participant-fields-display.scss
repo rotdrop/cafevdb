@@ -140,7 +140,7 @@ form.pme-form.project-participant-fields-display {
   }
 
   tr.recurring td.pme-value td.label {
-    padding-left:0.5em;
+    // padding-left:0.5em;
     padding-right:0.5em;
   }
 
@@ -290,6 +290,11 @@ form.pme-form.project-participant-fields-display {
             }
           }
         }
+        th {
+          .column-heading {
+            padding-right: 0.5em;
+          }
+        }
         td.operations {
           padding-right:0.5em;
           input.operation.regenerate-all {
@@ -341,15 +346,22 @@ form.pme-form.project-participant-fields-display {
         &.row-count-0 thead  {
           display:none;
         }
-        tr.field-datum td.input {
-          position:relative;
-          width:100%;
-          label.lock-unlock.left-of-input.position-right {
-            right:0;
-            margin-right:4px;
+        tr.field-datum {
+          td.label, td.input {
+            position:relative;
+            label.lock-unlock.left-of-input.position-right {
+              right:0;
+              margin-right:4px;
+            }
+            input:not([type=checkbox]) {
+              width:100%;
+            }
           }
-          input:not([type=checkbox]) {
+          td.input {
             width:100%;
+          }
+          td.label {
+            min-width: 10em;
           }
         }
         tr.generator {
