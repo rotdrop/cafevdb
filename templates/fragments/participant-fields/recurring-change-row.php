@@ -50,7 +50,7 @@ $optionLabel = $fieldOption->getLabel();
 
 $locked = !empty($optionValue) || $dataType == FieldType::SERVICE_FEE;
 $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'type="number" step="0.01"' : 'type="text"';
-$filesAppTarget = md5($filesAppLink);
+$filesAppTarget = md5($filesAppPath ?? '');
 
 $labelled = $optionLabel !== null;
 $lockCssClass = [
@@ -65,8 +65,6 @@ $lockRightCssClass = $lockCssClass . ' position-right';
 if ($dataType != FieldType::SERVICE_FEE) {
   $lockCssClass = $lockRightCssClass;
 }
-
-$filesAppTarget = md5($filesAppLink ?? '');
 
 ?>
 
@@ -125,74 +123,10 @@ $filesAppTarget = md5($filesAppLink ?? '');
            name="<?php p($optionKeyName); ?>'[<?php p($optionIdx); ?>]"
            value="<?php p($optionKey); ?>"/>
   </td>
-  <td class="documents"
-      data-field-id="<?php p($fieldId); ?>"
-      data-option-key="<?php p($optionKey); ?>"
-      data-file-base=""
-      data-file-name=""
-      data-storage="db"
-      data-entity-field="supporting-document"
-      data-files-app-path="<?php p($filesAppPath); ?>"
-      data-participant-folder="<?php p($participantFolder); ?>"
-  >
-     <span class="dropdown-container dropdown-no-hover">
-       <button class="supporting-document menu-title action-menu-toggle"
-               title="<?php echo $toolTips['participant-fields-recurring-data:supporting-document']; ?>"
-       >...</button>
-       <nav class="dropdown-content dropdown-align-right">
-         <ul class="menu-list">
-           <li class="menu-item tooltip-auto"
-               title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:delete']; ?>"
-           >
-             <a class="operation delete-undelete<?php empty($downloadLink) && p(' disabled'); ?>" href="#">
-               <span class="menu-icon"></span>
-               <?php p($l->t('delete attachment')); ?>
-             </a>
-           </li>
-           <li class="menu-item tooltip-auto"
-               title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:upload:from-client']; ?>"
-           >
-             <a class="operation upload-replace" href="#">
-               <span class="menu-icon"></span>
-               <?php p($l->t('upload from client')); ?>
-             </a>
-           </li>
-           <li class="menu-item tooltip-auto"
-               title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:upload:from-cloud']; ?>"
-           >
-             <a class="operation upload-from-cloud" href="#">
-               <span class="menu-icon"></span>
-               <?php p($l->t('select from cloud')); ?>
-             </a>
-           </li>
-           <li class="menu-item tooltip-auto"
-               title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
-           >
-             <a class="operation open-parent<?php empty($filesAppLink) && p(' disabled'); ?>"
-                href="<?php p($filesAppLink); ?>"
-                target="<?php p($filesAppTarget); ?>"
-             >
-               <span class="menu-icon"></span>
-               <?php p($l->t('open parent folder')); ?>
-             </a>
-           </li>
-           <li class="menu-item tooltip-auto"
-               title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
-           >
-             <a class="download-link static-content ajax-download<?php empty($downloadLink) && p(' disabled'); ?>"
-                href="<?php p($downloadLink ?? ''); ?>">
-               <span class="menu-icon"></span>
-               <?php p($l->t('download')); ?>
-             </a>
-           </li>
-         </ul>
-       </nav>
-     </span>
-     <a class="download-link static-content ajax-download tooltip-auto button<?php empty($downloadLink) && p(' disabled'); ?>"
-        href="<?php p($downloadLink ?? ''); ?>"
-        title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
-     >
-       <?php p($l->t('download')); ?>
-     </a>
- </td>
+  <?php $this->inc('fragments/participant-fields/attachment-file-upload-menu.php', [
+    'containerTag' => 'td',
+    'containerAttributes' => [
+      'class' => 'documents'
+    ],
+  ]); ?>
 </tr>
