@@ -118,6 +118,12 @@ class phpMyEdit
 	const OPERATION_FILTER = 'filter';
 	const OPERATION_LIST = 'list';
 
+	const OPERATION_CHANGE = 'change';
+	const OPERATION_COPY = 'copy';
+	const OPERATION_DISPLAY = 'display';
+	const OPERATION_VIEW = 'view';
+	const OPERATION_ADD = 'add';
+
 	const TRIVIAL_ENCODE = '%s';
 	const TRIVIAL_DESCRIPION = '$table.$column';
 
@@ -225,55 +231,55 @@ class phpMyEdit
 	public $page_types = array(
 		'L' => 'list',
 		'F' => 'filter',
-		'A' => 'add',
-		'V' => 'view',
-		'C' => 'change',
-		'P' => 'copy',
+		'A' => self::OPERATION_ADD,
+		'V' => self::OPERATION_VIEW,
+		'C' => self::OPERATION_CHANGE,
+		'P' => self::OPERATION_COPY,
 		'D' => 'delete'
 		);
 	public $default_buttons = array(
-		'L' => array('<<','<','add','view','change','copy','delete','>','>>',
+		'L' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<','add','view','change','copy','delete','>','>>',
+		'F' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array('change','copy','delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
 		);
 	public $default_multi_buttons = array(
-		'L' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
+		'L' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
+		'F' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array('change','copy','delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
 		);
 	public $default_buttons_no_B = array(
-		'L' => array('<<','<','add','>','>>',
+		'L' => array('<<','<',self::OPERATION_ADD,'>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<','add','>','>>',
+		'F' => array('<<','<',self::OPERATION_ADD,'>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array('change','copy','delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
 		);
 	public $default_multi_buttons_no_B = array(
-		'L' => array('<<','<','misc','add','>','>>',
+		'L' => array('<<','<','misc',self::OPERATION_ADD,'>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<','misc','add','>','>>',
+		'F' => array('<<','<','misc',self::OPERATION_ADD,'>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array('change','copy','delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
 		);
 
 	// }}}
@@ -568,7 +574,7 @@ class phpMyEdit
 	/**Return a normalized english name ... */
 	public function operationName()
 	{
-		foreach(['add', 'change', 'copy', 'delete', 'misc', 'view', 'list'] as $op) {
+		foreach([self::OPERATION_ADD, self::OPERATION_CHANGE, self::OPERATION_COPY, 'delete', 'misc', self::OPERATION_VIEW, 'list'] as $op) {
 			$method = $op.'_operation';
 			if ($this->$method()) {
 				return $op;
@@ -2235,6 +2241,19 @@ class phpMyEdit
 	 * Display functions
 	 */
 
+	function call_display_closure($k, $value, $operation, $row, $key_rec)
+	{
+		$php = $this->fdd[$k]['php'];
+		if (is_callable($php)) {
+			return call_user_func($php, $value, $operation, $k, $row, $key_rec, $this);
+		} else if (is_array($php)) {
+			$opts = isset($php['parameters']) ? $php['parameters'] : '';
+			return call_user_func($php['function'], $value, $opts, $operation, $k, $row, $key_rec, $this);
+		} else if (file_exists($php)) {
+			return include($php);
+		}
+	}
+
 	function display_add_record() /* {{{ */
 	{
 		for ($k = 0; $k < $this->num_fds; $k++) {
@@ -2265,7 +2284,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['prefix'])) {
 				$prefix = $this->fdd[$k]['display']['prefix'];
 				if (is_callable($prefix)) {
-					echo call_user_func($prefix, 'add', 'prefix', $k, [], $this);
+					echo call_user_func($prefix, self::OPERATION_ADD, 'prefix', $k, [], $this);
 				} else {
 					echo $this->fdd[$k]['display']['prefix'];
 				}
@@ -2298,15 +2317,7 @@ class phpMyEdit
 			}
 
 			if ($this->col_has_php($k)) {
-				$php = $this->fdd[$k]['php'];
-				if (is_callable($php)) {
-					echo call_user_func($php, false, 'add', $k, false, $this->rec, $this);
-				} else if (is_array($php)) {
-					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], false, $opts, 'add', $k, false, $this->rec, $this);
-				} else if (file_exists($php)) {
-					echo include($php);
-				}
+				echo $this->call_display_closure($k, false, self::OPERATION_ADD, false, $this->rec);
 			} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
@@ -2316,7 +2327,7 @@ class phpMyEdit
 
 				$strip_tags = true;
 
-				$attributes = $this->htmlAttributes('add', $k, []);
+				$attributes = $this->htmlAttributes(self::OPERATION_ADD, $k, []);
 
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
@@ -2332,7 +2343,7 @@ class phpMyEdit
 										   $helptip, $attributes);
 				}
 			} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
-				$attributes = $this->htmlAttributes('add', $k, []);
+				$attributes = $this->htmlAttributes(self::OPERATION_ADD, $k, []);
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
 										 $k, $value, $escape, $helptip, $attributes);
@@ -2362,7 +2373,7 @@ class phpMyEdit
 					echo " data-pme-values='".json_encode($valgrp)."'";
 				}
 
-				echo $this->htmlAttributes('add', $k, [], $readonly);
+				echo $this->htmlAttributes(self::OPERATION_ADD, $k, [], $readonly);
 
 				echo ($readonly !== false ? ' '.$readonly : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
@@ -2373,7 +2384,7 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['display']['postfix'])) {
 				$postfix = $this->fdd[$k]['display']['postfix'];
 				if (is_callable($postfix)) {
-					echo call_user_func($postfix, 'add', 'postfix', $k, [], $this);
+					echo call_user_func($postfix, self::OPERATION_ADD, 'postfix', $k, [], $this);
 				} else {
 					echo $this->fdd[$k]['display']['postfix'];
 				}
@@ -2404,18 +2415,23 @@ class phpMyEdit
 				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
-				if ($this->hidden($k) && !$this->col_has_php($k)) {
+				if ($this->hidden($k)) {
 					if (!in_array($k, $this->key_num) || $this->change_operation()) {
-						$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
-						$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
-						if ($this->col_has_multiple($k)) {
-							$hiddenValues = self::explodeValueArray($row["qf$k"]);
-							$idx = 0;
-							foreach ($hiddenValues as $value) {
-								echo $this->htmlHiddenData($this->fds[$k].'['.($idx++).']', $value, $css_class_name);
+						if (!$this->col_has_php($k)) {
+							$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
+							$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
+							if ($this->col_has_multiple($k)) {
+								$hiddenValues = self::explodeValueArray($row["qf$k"]);
+								$idx = 0;
+								foreach ($hiddenValues as $value) {
+									echo $this->htmlHiddenData($this->fds[$k].'['.($idx++).']', $value, $css_class_name);
+								}
+							} else {
+								echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
 							}
 						} else {
-							echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
+							$operation = $this->change_operation() ? self::OPERATION_CHANGE : self::OPERATION_COPY;
+							echo $this->call_display_closure($k, $row["qf$k"], $operation, $row, $this->rec);
 						}
 					}
 					continue;
@@ -2473,7 +2489,7 @@ class phpMyEdit
 		$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
 		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
-		$operation      = $this->copy_operation() ? 'copy' : 'change';
+		$operation      = $this->copy_operation() ? self::OPERATION_COPY : self::OPERATION_CHANGE;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
@@ -2545,15 +2561,7 @@ class phpMyEdit
 			} else {
 				$value = $row["qf$k"];
 			}
-			$php = $this->fdd[$k]['php'];
-			if (is_callable($php)) {
-				echo call_user_func($php, $value, 'change',  $k, $row, $this->rec, $this);
-			} else if (is_array($php)) {
-				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				echo call_user_func($php['function'], $value, $opts, $operation, $k, $row, $this->rec, $this);
-			} else if (file_exists($php)) {
-				echo include($php);
-			}
+			echo $this->call_display_closure($k, $value, $operation, $row, $this->rec);
 		} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k) || count($vals) == 0;
@@ -3047,19 +3055,8 @@ class phpMyEdit
 			$value = preg_replace("/[\r\n\t ]+/",' ',$value);
 			$value = substr($value, 0, $this->fdd[$k]['trimlen'] - 3).'...';
 		}
-		if (!empty($this->fdd[$k]['phpview'])) {
-			$value = include($this->fdd[$k]['phpview']);
-		}
 		if ($this->col_has_php($k)) {
-			$php = $this->fdd[$k]['php'];
-			if (is_callable($php)) {
-				return call_user_func($php, $value, 'display', $k, $row, $key_rec, $this);
-			} else if (is_array($php)) {
-				$opts = isset($php['parameters']) ? $php['parameters'] : '';
-				return call_user_func($php['function'], $value, $opts, 'display', $k, $row, $key_rec, $this);
-			} else if (file_exists($php)) {
-				return include($php);
-			}
+			return $this->call_display_closure($k, $value, self::OPERATION_DISPLAY, $row, $key_rec);
 		}
 		if (strlen($value) <= 0) {
 			return $escape ? '&nbsp;' : ''; // ??? why
@@ -3908,10 +3905,10 @@ class phpMyEdit
 			return $this->htmlSubmit('cancel'.$this->page_types[$this->page_type], 'Cancel',
 									 $this->getCSSclass('cancel', $position));
 		}
-		if (in_array($name, array('add','view','change','copy','delete'))) {
+		if (in_array($name, array(self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete'))) {
 			$enabled_fnc = $name.'_enabled';
 			$enabled	 = $this->$enabled_fnc();
-			if ($name != 'add' && ! $this->total_recs && strstr('LF', $this->page_type))
+			if ($name != self::OPERATION_ADD && ! $this->total_recs && strstr('LF', $this->page_type))
 				$enabled = false;
 			return $this->htmlSubmit('operation', ucfirst($name),
 									 $this->getCSSclass($name, $position), $enabled ? 0 : $disabled);
@@ -4675,13 +4672,13 @@ class phpMyEdit
 
 			$operationCss = [];
 			if ($this->view_enabled()) {
-				$operationCss[] = 'view';
+				$operationCss[] = self::OPERATION_VIEW;
 			}
 			if ($this->change_enabled()) {
-				$operationCss[] = 'change';
+				$operationCss[] = self::OPERATION_CHANGE;
 			}
 			if ($this->copy_enabled()) {
-				$operationCss[] = 'copy';
+				$operationCss[] = self::OPERATION_COPY;
 			}
 			if ($this->delete_enabled()) {
 				$operationCss[] = 'delete';
@@ -4924,7 +4921,7 @@ class phpMyEdit
 		$trigger = '';
 		if ($this->change_operation()) {
 			$trigger = self::SQL_QUERY_UPDATE;
-			$formCssClass = $this->getCSSclass('change', null, null, $postfix);
+			$formCssClass = $this->getCSSclass(self::OPERATION_CHANGE, null, null, $postfix);
 			if (!$this->exec_triggers_simple($trigger, self::TRIGGER_PRE)) {
 				// if PRE update fails, then back to view operation
 				// @TODO: why? Just emit an error?
@@ -4939,7 +4936,7 @@ class phpMyEdit
 				$trigger = self::SQL_QUERY_INSERT;
 			}
 			if ($this->view_operation()) {
-				$formCssClass = $this->getCSSclass('view', null, null, $postfix);
+				$formCssClass = $this->getCSSclass(self::OPERATION_VIEW, null, null, $postfix);
 				$trigger = self::SQL_QUERY_SELECT;
 			}
 			if ($this->delete_operation()) {
