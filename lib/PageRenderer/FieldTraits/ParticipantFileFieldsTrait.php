@@ -63,7 +63,8 @@ trait ParticipantFileFieldsTrait
   /** Generate one HTML input row for a cloud-file field. */
   protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $subDir, $fileBase, $musician)
   {
-    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician);
+    $project = ($project ?? $this->project) ?? null;
+    $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician);
     // make sure $subDir exists
     if (!empty($subDir)) {
       $subDirPrefix = UserStorage::PATH_SEP . $subDir;
@@ -85,19 +86,19 @@ trait ParticipantFileFieldsTrait
       $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
-        $filesAppLink = $this->userStorage->getFilesAppLink($filePath);
       } catch (\OCP\Files\NotFoundException $e) {
         $downloadLink = '#';
-        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
         $optionValue = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
     } else {
       $downloadLink = '';
-      try {
-        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
-      } catch (\OCP\Files\NotFoundException $e) {
-        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
-      }
+    }
+
+    $filesAppPath = $participantFolder . $subDirPrefix;
+    try {
+      $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+    } catch (\OCP\Files\NotFoundException $e) {
+      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
     }
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
@@ -114,6 +115,7 @@ trait ParticipantFileFieldsTrait
         'fileBase' => $fileBase,
         'fileName' => $fileName,
         'participantFolder' => $participantFolder,
+        'filesAppPath' => $filesAppPath,
         'filesAppLink' => $filesAppLink,
         'downloadLink' => $downloadLink,
         'optionValueName' => $optionValueName,
@@ -127,7 +129,7 @@ trait ParticipantFileFieldsTrait
 
   protected function dbFileUploadRowHtml($optionValue, int $fieldId, string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician, ?Entities\Project $project = null, bool $overrideFileName = false)
   {
-    $project = ($project??$this->project)??null;
+    $project = ($project ?? $this->project) ?? null;
     $participantFolder = empty($project)
       ? ''
       : $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
@@ -174,17 +176,19 @@ trait ParticipantFileFieldsTrait
       $downloadLink = $dbFileName = $dbExtension = '';
     }
     if (!empty($participantFolder)) {
+      $filesAppPath = $participantFolder . $subDirPrefix;
       try {
-        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+        $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
-        $filesAppLink = '';
+        $this->logInfo('No file found for ' . $filesAppPath);
+        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
       }
     } else {
+      $filesAppPath = '';
       $filesAppLink = '';
     }
-    $placeHolder = empty($fileName)
-      ? $this->l->t('Drop files here or click to upload fileds.')
+    $placeHolder = empty($fileBase)
+      ? $this->l->t('Drop files here or click to upload files.')
       : $this->l->t('Load %s', $fileName);
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
 
@@ -199,6 +203,7 @@ trait ParticipantFileFieldsTrait
         'fileBase' => $fileBase,
         'fileName' => $fileName,
         'participantFolder' => $participantFolder,
+        'filesAppPath' => $filesAppPath,
         'filesAppLink' => $filesAppLink,
         'downloadLink' => $downloadLink,
         'optionValueName' => $optionValueName,
@@ -216,9 +221,9 @@ trait ParticipantFileFieldsTrait
   private function getFilesAppLink(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
   {
     $pathChain = [];
-    $project = $project??$this->project;
+    $project = $project ?? $this->project;
     if (!empty($field)) {
-      $project = $project??field->getProject();
+      $project = $project ?? $field->getProject();
       switch ($field->getDataType()) {
         case FieldType::SERVICE_FEE:
         case FieldType::DB_FILE:

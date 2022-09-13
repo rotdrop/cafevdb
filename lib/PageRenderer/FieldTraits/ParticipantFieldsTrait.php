@@ -62,7 +62,7 @@ trait ParticipantFieldsTrait
   /** @var ProjectParticipantFieldsService */
   protected $participantFieldsService;
 
-  /** @var ProjectzService */
+  /** @var ProjectService */
   protected $projectService;
 
   /** @var ToolTipsService */
@@ -89,7 +89,7 @@ trait ParticipantFieldsTrait
     foreach ($participantFields as $field) {
       $fieldId = $field['id'];
 
-      $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+      $tableName = self::participantFieldTableName($fieldId);
       $joinStructure[$tableName] = [
         'entity' => Entities\ProjectParticipantFieldDatum::class,
         'flags' => self::JOIN_REMOVE_EMPTY,
@@ -103,10 +103,21 @@ trait ParticipantFieldsTrait
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
+
+      $optionsTableName = self::participantFieldOptionsTableName($fieldId);
+      $joinStructure[$optionsTableName] = [
+        'entity' => Entities\ProjectParticipantFieldDataOption::class,
+        'flags' => 0, //self::JOIN_READONLY,
+        'identifier' => [
+          'field_id' => [ 'value' => $fieldId, ],
+          'key' => false,
+        ],
+        'reference' => self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE,
+        'column' => 'key',
+        'encode' => 'BIN2UUID(%s)',
+      ];
     }
 
-    // @todo needs also the join-structure of the "target". Perhaps
-    // move to a common base-class or trait.
     $generator = function(&$fieldDescData) use ($participantFields, $financeTab) {
 
       /** @var Entities\ProjectParticipantField $field */
@@ -135,7 +146,8 @@ trait ParticipantFieldsTrait
           $tab = [ 'id' => $tabId ];
         }
 
-        $tableName = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+        $tableName = self::participantFieldTableName($fieldId);
+        $optionsTableName = self::participantFieldOptionsTableName($fieldId);
 
         $deletedSqlFilter = $this->showDisabled ? '' : ' AND $join_table.deleted IS NULL';
         $deletedValueFilter = $this->showDisabled ? '' : ' AND $table.deleted IS NULL';
@@ -916,6 +928,45 @@ trait ParticipantFieldsTrait
   ORDER BY $order_by)
 )';
 
+          // Allow update of the label for recurring receivables.
+          list($labelFddIndex, $labelFddName) = $this->makeJoinTableField(
+            $fieldDescData, $optionsTableName, 'label', [
+              'name' => $this->l->t('Label for %s', $fieldName),
+              'tab'  => $tab,
+              'css'  => [ 'postfix' => [ 'participant-field-label', 'field-id-'.$fieldId, ] ],
+              'select' => 'M',
+              'input' => ' HR',
+              'php' => fn() => '',
+              'filter' => [
+                'having' => true,
+              ],
+              'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
+  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL)
+  ORDER BY $order_by))',
+              'values' => [
+                'grouped' => true,
+                'filters' => ('$table.field_id = '.$fieldId
+                              .$deletedValueFilter),
+                'orderby' => '$table.key ASC',
+              ],
+            ],
+          );
+          $labelFdd = &$fieldDescData[$labelFddName];
+
+          $labelFdd['sql'] = 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
+  DISTINCT
+  IF(
+    $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.key),
+      COALESCE($join_table.l10n_label, "")
+    ),
+    NULL
+  )
+  ORDER BY $order_by)
+)';
+
           // yet another field for the supporting documents
           list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
             $fieldDescData, $tableName, 'supporting_document_id', [
@@ -947,7 +998,9 @@ trait ParticipantFieldsTrait
             return '';
           };
           $keyFdd['input|ACP'] = 'HR';
-          $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
+          $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use (
+            $field, $dataType, $invoiceFddIndex
+          ) {
             // $this->logInfo('VALUE '.$k.': '.$value);
             // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
             // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
@@ -962,7 +1015,8 @@ trait ParticipantFieldsTrait
             $labelled = false;
             $options = self::fetchValueOptions($field, $values, $labelled);
 
-            $invoices = Util::explodeIndexed($row['qf'.($k+2)]);
+            $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+
             $valueLabel = $this->l->t('Value');
             $invoiceLabel = $this->l->t('Documents');
             switch ($dataType) {
@@ -998,16 +1052,16 @@ trait ParticipantFieldsTrait
   <thead>
     <tr>
       <th class="operations"><span class="column-heading">' . $this->l->t('Actions') . '</span></th>
-      <th class="label'.($labelled ? '' : ' unlabelled').'"><span class="column-heading">'.$this->l->t('Subject').'</span></th>
+      <th class="label"><span class="column-heading">'.$this->l->t('Subject').'</span></th>
       <th class="input"><span class="column-heading">'.$valueLabel.'</span></th>
-      <th class="documents document-count-'.count($invoices).'"><span class="column-heading">'.$invoiceLabel.'</</th>
+      <th class="documents"><span class="column-heading">'.$invoiceLabel.'</</th>
     </tr>
   </thead>
   <tbody>';
 
+            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
             switch ($dataType)  {
               case FieldType::DB_FILE:
-                list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
                 $subDir = $field->getName();
                 foreach ($options as $optionKey => $option) {
                   $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
@@ -1016,7 +1070,7 @@ trait ParticipantFieldsTrait
               default:
                 $idx = 0;
                 foreach ($options as $optionKey => $option) {
-                  $html .= $this->recurringChangeRowHtml($values[$optionKey], $fieldId, $optionKey, $dataType, $labelled ? ($option->getLabel()??'') : null, $invoices, $idx++);
+                  $html .= $this->recurringChangeRowHtml($values[$optionKey], $field, $option, $invoices, $idx++, musician: $musician);
                 }
             }
 
@@ -1490,24 +1544,28 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
   /**
    * Generate one row for Multiplicity::RECURRING in Change/Add/Paste mode.
    *
-   * @param mixed $value Value of the option.
+   * @param string $optionValue Value of the option.
    *
-   * @param int $fieldId Id of the respective field.
+   * @param Entities\ProjectParticipantField $field The respective field.
    *
-   * @param string $optionKey Key (UUID) of the option.
-   *
-   * @param string $dataType Data type of the field.
-   *
-   * @param null|string $label Label for the option. If null the label is
-   * omitted. If a string (even an empty string) the label column is rendered.
+   * @param Entities\ProjectParticipantFieldDataOption $fieldOption The associated field-option.
    *
    * @param array $invoices Potential supporting documents.
    *
-   * @param int $idx Consecutive index of the active options.
+   * @param int $optionIdx Consecutive index of the active options.
    */
-  protected function recurringChangeRowHtml($value, int $fieldId, string $optionKey, string $dataType, ?string $label, array $invoices, int $idx)
-  {
-    $labelled = $label !== null;
+  protected function recurringChangeRowHtml(
+    ?string $optionValue,
+    Entities\ProjectParticipantField $field,
+    Entities\ProjectParticipantFieldDataOption $fieldOption,
+    array $invoices,
+    int $optionIdx,
+    Entities\Musician $musician,
+  ) {
+    $fieldId = $field->getId();
+    $dataType = $field->getDataType();
+    $optionKey = (string)$fieldOption->getKey();
+
     $lockCssClass = [
       'pme-input',
       'pme-input-lock',
@@ -1515,6 +1573,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       'left-of-input',
     ];
     $lockCssClass = implode(' ', $lockCssClass);
+
     $lockRightCssClass = $lockCssClass . ' position-right';
     if ($dataType != FieldType::SERVICE_FEE) {
       $lockCssClass = $lockRightCssClass;
@@ -1537,7 +1596,6 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           break;
       }
     }
-    $locked = !empty($value) || $dataType == FieldType::SERVICE_FEE;
     if (!empty($invoices[$optionKey])) {
       $downloadLink = $this->urlGenerator()
         ->linkToRoute($this->appName().'.downloads.get', [
@@ -1546,44 +1604,47 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         ])
         . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
     }
-    $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'type="number" step="0.01"' : 'type="text"';
+
+    $optionLabelName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'label'));
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
-    $html = '
-<tr class="field-datum"
-    data-field-id="'.$fieldId.'"
-    data-option-key="'.$optionKey.'"
-  >
-  <td class="operations">
-    <input
-      class="operation delete-undelete"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:delete-undelete'].'"
-      type="button"/>
-    <input
-      class="operation regenerate"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
-      type="button"/>
-  </td>
-  <td class="label'.($labelled ? '' : ' unlabelled').'">
-    <input id="receivable-option-label-lock-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
-    <label class="'.$lockRightCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-option-label-lock-'.$optionKey.'"></label>
-    <input type="text" value="'.$label.'" readonly/>
-  </td>
-  <td class="input">
-    <input id="receivable-option-value-lock-'.$optionKey.'" type=checkbox'.($locked ? ' checked' : '').' class="'.$lockCssClass.'"/>
-    <label class="'.$lockCssClass.'" title="'.$this->toolTipsService['pme:input:lock-unlock'].'" for="receivable-option-value-lock-'.$optionKey.'"></label>
-    <input class="pme-input '.$dataType.'" type="text" ' . $valueInputType . ($locked ? ' readonly' : '').' name="'.$optionValueName.'['.$idx.']" value="'.$value.'"/>
-    <input class="pme-input '.$dataType.'" type="hidden" name="'.$optionKeyName.'['.$idx.']" value="'.$optionKey.'"/>
-  </td>
-  <td class="documents document-count-'.count($invoices).'">
-     <a class="download-link ajax-download tooltip-auto'.(empty($downloadLink) ? ' hidden' : '').'"
-        href="'.($downloadLink??'').'">
-       '.$this->l->t('download').'
-     </a>
- </td>
-</tr>';
 
-    return $html;
+    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+    $subDirPrefix = $this->getDocumentsFolderName();
+    $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
+
+    $filesAppPath = implode(UserStorage::PATH_SEP, [
+      $participantFolder,
+      $subDirPrefix,
+      $subDir,
+    ]);
+    try {
+      $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+    } catch (\OCP\Files\NotFoundException $e) {
+      $this->logInfo('No file found for ' . $filesAppPath);
+      $filesAppLink = null;
+    }
+    $toolTipsPrefix = 'participant-fields';
+
+    return (new TemplateResponse(
+      $this->appName(),
+      'fragments/participant-fields/recurring-change-row', [
+        'field' => $field,
+        'fieldOption' => $fieldOption,
+        'optionValue' => $optionValue,
+        'optionLabelName' => $optionLabelName,
+        'optionKeyName' => $optionKeyName,
+        'optionValueName' => $optionValueName,
+        'optionIdx' => $optionIdx,
+        'filesAppPath' => $filesAppPath,
+        'filesAppLink' => $filesAppLink,
+        'downloadLink' => $downloadLink ?? null,
+        'participantFolder' => $participantFolder,
+        'toolTips' => $this->toolTipsService,
+        'toolTipsPrefix' => $toolTipsPrefix,
+      ],
+      'blank'
+    ))->render();
   }
 
   /**
@@ -1608,6 +1669,19 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $valueName = $this->joinTableFieldName($tableName, 'option_value');
       $depositName = $this->joinTableFieldName($tableName, 'deposit');
       $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
+
+      $optionTableName = self::participantFieldOptionsTableName($fieldId);
+      $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
+      $optionLabelKeyName = self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'key');
+
+      // label may only be tweaked for recurring multiplicity
+      if ($multiplicity != FieldMultiplicity::RECURRING) {
+        foreach ([$optionLabelName, $optionLabelKeyName] as $key) {
+          unset($newValues[$key]);
+          unset($oldValues[$key]);
+          Util::unsetValue($changed, $key);
+        }
+      }
 
       $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
       $this->debug("MULTIPLICITY / DATATYPE ".$multiplicity.' / '.$dataType);
@@ -1675,14 +1749,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         }
 
         if ($dataType == FieldType::DB_FILE) {
-          // this here handled immediately during upload and have to be
+          // these are handled immediately during upload and have to be
           // removed from the change-sets.
-          unset($newValues[$keyName]);
-          unset($oldValues[$keyName]);
-          unset($newValues[$valueName]);
-          unset($oldValues[$valueName]);
-          Util::unsetValue($changed, $keyName);
-          Util::unsetValue($changed, $valueName);
+          foreach ([$keyName, $valueName, $optionLabelName, $optionLabelKeyName] as $key) {
+            unset($newValues[$key]);
+            unset($oldValues[$key]);
+            Util::unsetValue($changed, $key);
+          }
           break;
         }
 
@@ -1690,33 +1763,41 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         // $oldValues ATM already has this format
         foreach ([&$newValues] as &$dataSet) {
           $keys = Util::explode(',', $dataSet[$keyName]);
-          $amounts = Util::explode(',', $dataSet[$valueName], flags: Util::ESCAPED);
-          $values = [];
-          if (count($keys) != count($amounts)) {
-            $this->logInfo('BUG ' . print_r($keys, true) . ' || ' . print_r($amounts, true));
-          }
-          foreach (array_combine($keys, $amounts) as $key => $amount) {
+          $values = Util::explode(',', $dataSet[$valueName], flags: Util::ESCAPED);
+          $keyedValues = [];
+          foreach (array_combine($keys, $values) as $key => $value) {
             switch ($dataType) {
               case FieldType::DATE:
-                $date = DateTime::parseFromLocale($amount, $this->getLocale(), 'UTC');
-                $amount = $date->format('Y-m-d');
+                $date = DateTime::parseFromLocale($value, $this->getLocale(), 'UTC');
+                $value = $date->format('Y-m-d');
                 break;
               case FieldType::DATETIME:
-                $date = DateTime::parseFromLocale($amount, $this->getLocale(), $this->getDateTimeZone());
-                $amount = $date->setTimezone('UTC')->toIso8601String();
+                $date = DateTime::parseFromLocale($value, $this->getLocale(), $this->getDateTimeZone());
+                $value = $date->setTimezone('UTC')->toIso8601String();
                 break;
             }
-            $values[] = $key.self::JOIN_KEY_SEP.$amount;
+            $keyedValues[] = $key . self::JOIN_KEY_SEP . $value;
           }
-          $dataSet[$valueName] = implode(',', $values);
+          $dataSet[$valueName] = implode(',', $keyedValues);
+
+          $labels = Util::explode(',', $dataSet[$optionLabelName], flags: Util::ESCAPED);
+          $keyedLabels = [];
+          foreach (array_combine($keys, $labels) as $key => $label) {
+            $keyedLabels[] = $key . self::JOIN_KEY_SEP . $label;
+          }
+          $dataSet[$optionLabelName] = implode(',', $keyedLabels);
         }
 
         // mark both as changed
-        foreach ([$keyName, $valueName] as $fieldName) {
+        foreach ([$keyName, $valueName, $optionLabelName] as $fieldName) {
           Util::unsetValue($changed, $fieldName);
           if ($oldValues[$fieldName] != $newValues[$fieldName]) {
             $changed[] = $fieldName;
           }
+        }
+        if (array_search($optionLabelName, $changed)) {
+          // make sure the key value is also there
+          $oldValues[$optionLabelKeyName] = $newValues[$optionLabelKeyName] = $newValues[$keyName];
         }
         break;
       case FieldMultiplicity::GROUPOFPEOPLE:

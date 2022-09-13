@@ -40,6 +40,11 @@ trait ParticipantFieldsCgiNameTrait
   {
     return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_key');
   }
+
+  static protected function participantFieldOptionsTableName($fieldId)
+  {
+    return self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+  }
 }
 
 // Local Variables: ***

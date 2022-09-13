@@ -60,6 +60,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     uploadData: JSON.stringify($thisRow.data()),
     requestToken: OC.requestToken,
   });
+  console.info('DATA', $.extend({}, $thisRow.data()));
   const $oldUploadForm = $('#' + widgetId);
   if ($oldUploadForm.length === 0) {
     $('body').append($uploadUi);
@@ -69,14 +70,28 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   $thisRow.data('uploadFormId', widgetId);
   uploadUrls = $.extend({}, defaultUploadUrls, uploadUrls);
 
-  // const $parentFolder = $thisRow.find('.operation.open-parent');
+  const $parentFolder = $thisRow.find('.operation.open-parent');
   const $deleteUndelete = $thisRow.find('.operation.delete-undelete');
   const $downloadLink = $thisRow.find('a.download-link');
   const $placeholder = $thisRow.find('input.upload-placeholder');
 
-  const noFile = $downloadLink.attr('href') === '';
+  console.info('CONTROLS AND DATA', $placeholder, $thisRow.data());
 
-  $deleteUndelete.prop('disabled', noFile);
+  const noDownloadFile = () => $downloadLink.attr('href') === '';
+  const noFilesAppLink = () => $parentFolder.attr('href') === '';
+
+  const unmaskInputs = () => {
+    $downloadLink.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
+    $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
+    $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
+  };
+  const maskInputs = () => {
+    $downloadLink.prop('disabled', true).toggleClass('disabled', true);
+    $deleteUndelete.prop('disabled', true).toggleClass('disabled', true);
+    $parentFolder.prop('disabled', true).toggleClass('disabled', true);
+  };
+
+  unmaskInputs();
 
   const doneCallback = function(file, index, container) {
     if (!file.meta) {
@@ -85,6 +100,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     }
 
     Notification.messages(file.meta.messages);
+    console.info('FILE', file);
 
     if (isCloudFolder) {
       if (!file.meta.conflict) {
@@ -103,12 +119,13 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       }
     } else {
       $downloadLink.attr('href', file.meta.download);
-      $downloadLink.html(file.meta.baseName);
+      if (!$downloadLink.hasClass('static-content')) {
+        $downloadLink.html(file.meta.baseName);
+      }
       $placeholder.val(file.meta.baseName);
+      $parentFolder.attr('href', file.meta.filesApp);
 
-      const noFile = $downloadLink.attr('href') === '';
-
-      $deleteUndelete.prop('disabled', noFile);
+      unmaskInputs();
     }
     $.fn.cafevTooltip.remove();
     $thisRow.trigger('pme:upload-done');
@@ -124,8 +141,9 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     multiple: uploadMultiple,
   });
 
-  $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
-  $thisRow.find('input.upload-placeholder, input.upload-replace')
+  unmaskInputs();
+
+  $thisRow.find('input.upload-placeholder, .operation.upload-replace')
     .off('click')
     .on('click', function(event) {
       const $fileUpload = $('#' + widgetId + ' input[type="file"]');
@@ -134,7 +152,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       return false;
     });
 
-  $thisRow.find('input.upload-from-cloud')
+  $thisRow.find('.operation.upload-from-cloud')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -201,14 +219,14 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     const cleanup = function(thisRemoved) {
       Page.busyIcon(false);
       modalizer(false);
-      $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+      unmaskInputs();
       $thisInput.removeClass('busy');
     };
 
     modalizer(true);
     Page.busyIcon(true);
     $thisInput.addClass('busy');
-    $deleteUndelete.prop('disabled', true);
+    maskInputs();
 
     const postData = {
       musicianId,
@@ -265,9 +283,13 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         resizeCB();
       } else {
         $downloadLink.attr('href', '');
-        $downloadLink.html('');
+        $parentFolder.attr('href', '');
+        if (!$downloadLink.hasClass('static-content')) {
+          $downloadLink.html('');
+        }
         $placeholder.val('');
-        $deleteUndelete.prop('disabled', $downloadLink.attr('href') === '');
+        $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
+        $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
       }
       Notification.messages(data.message);
       cleanup();

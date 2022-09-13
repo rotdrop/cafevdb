@@ -67,6 +67,9 @@ class ProjectParticipantsController extends Controller {
   const LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR = 'disabled-by-moderator';
   const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest';
 
+  const FILE_ACTION_DELETE = 'delete';
+  const FILE_ACTION_UPLOAD = 'upload';
+
   /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
   protected $pme;
 
@@ -353,7 +356,7 @@ class ProjectParticipantsController extends Controller {
     $userStorage = $this->di(UserStorage::class);
 
     switch ($operation) {
-    case 'delete':
+    case self::FILE_ACTION_DELETE:
       /** @var Entities\ProjectParticipantField $field */
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
 
@@ -386,6 +389,16 @@ class ProjectParticipantsController extends Controller {
       case FieldDataType::CLOUD_FOLDER:
         $prefixPath = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
         $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
+        break;
+
+      case FieldDataType::SERVICE_FEE:
+        /** @var Entities\EncryptedFile $dbFile */
+        $dbFile = $fieldDatum->getSupportingDocument();
+        if (empty($dbFile)) {
+          return self::grumble($this->l->t('Unable to find any supporting document for the field "%1$s", musician "%2$s".', [
+            $field->getName(), $fieldDatum->getMusician()->getPublicName(),
+          ]));
+        }
         break;
 
       default:
@@ -421,16 +434,25 @@ class ProjectParticipantsController extends Controller {
               new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
             );
           }
+          $fieldDatum->setOptionValue(null);
           break;
         case FieldDataType::DB_FILE:
           $filePath = $dbFile->getFileName();
           $this->remove($dbFile);
+          $fieldDatum->setOptionValue(null);
+          break;
+        case FieldDataType::SERVICE_FEE:
+          $filePath = $dbFile->getFileName();
+          $this->remove($dbFile);
+          $fieldDatum->setSupportingDocument(null);
+          $doDeleteFieldDatum = false;
           break;
         }
         if ($doDeleteFieldDatum) {
           $this->remove($fieldDatum, hard: true, flush: true);
           $field->getFieldData()->removeElement($fieldDatum);
         }
+        $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
         $this->entityManager->rollback();
@@ -438,13 +460,15 @@ class ProjectParticipantsController extends Controller {
       }
       return self::response($this->l->t('Successfully removed file "%s".', $filePath));
       break;
-    case 'upload':
+    case self::FILE_ACTION_UPLOAD:
 
       $uploadData = json_decode($data, true);
+      $this->logInfo('UPLOAD DATA ' . print_r($uploadData, true));
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
       $subDir = $uploadData['subDir']??null;
       $fileName = $uploadData['fileName']??null;
+      $filesAppPath = $uploadData['filesAppPath']??null;
 
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
       $dataType = $field->getDataType();
@@ -470,6 +494,7 @@ class ProjectParticipantsController extends Controller {
         $filePath = implode(UserStorage::PATH_SEP, $pathChain);
         break;
       case FieldDataType::DB_FILE:
+      case FieldDataType::SERVICE_FEE:
         if (!empty($subDir)) {
           return self::grumble($this->l->t('Sub-directory "%s" requested, but not supported by db-storage.', $subDir));
         }
@@ -513,11 +538,21 @@ class ProjectParticipantsController extends Controller {
           continue;
         }
 
-        if ($dataType == FieldDataType::CLOUD_FOLDER && empty($fileName)) {
-          // use original name as storage name in the cloud
-          $filePath = $folderPath . UserStorage::PATH_SEP . pathinfo($file['name'], PATHINFO_FILENAME);
-        } else if ($dataType == FieldDataType::DB_FILE && empty($filePath)) {
-          $filePath = pathinfo($file['name'], PATHINFO_FILENAME);
+        switch ($dataType) {
+          case FieldDataType::CLOUD_FOLDER:
+            if (empty($fileName)) {
+              // use original name as storage name in the cloud
+              $filePath = $folderPath . UserStorage::PATH_SEP . pathinfo($file['name'], PATHINFO_FILENAME);
+            }
+            break;
+          case FieldDataType::DB_FILE:
+          case FieldDataType::SERVICE_FEE:
+            if (empty($filePath)) {
+              $filePath = pathinfo($file['name'], PATHINFO_FILENAME);
+            }
+            break;
+          default:
+            break; // ok, resp. cannot happen
         }
 
         /*
@@ -551,37 +586,53 @@ class ProjectParticipantsController extends Controller {
                        ->setMusician($musician)
                        ->setOptionKey($optionKey);
             $participant->getParticipantFieldsData()->add($fieldData);
-          } else if (!empty($fieldData->getOptionValue())) {
-            switch ($dataType) {
-              case FieldDataType::CLOUD_FILE:
-                // we still need to populate $oldPath in order to trigger the
-                // restore functionality of the cloud.
-                $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
-                if (!empty($subDir)) {
-                  $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
-                }
-                $oldPath .= $fieldData->getOptionValue();
+          }
+
+          $optionValue = $fieldData->getOptionValue();
+          switch ($dataType) {
+            case FieldDataType::CLOUD_FILE:
+              if (empty($optionValue)) {
+                break;
+              }
+              // we still need to populate $oldPath in order to trigger the
+              // restore functionality of the cloud.
+              $oldPath = $pathChain[0] . UserStorage::PATH_SEP;
+              if (!empty($subDir)) {
+                $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
+              }
+              $oldPath .= $fieldData->getOptionValue();
+              $conflict = 'replaced';
+              break;
+            case FieldDataType::DB_FILE:
+              if (empty($optionValue)) {
+                break;
+              }
+              $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
+                ->find($fieldData->getOptionValue());
+              if (empty($dbFile)) {
+                return self::grumble($this->l->t('Unable to find the associated file with the id "%s" in data-base.',
+                                                 $fieldData->getOptionValue()));
+              }
+              $conflict = 'replaced';
+              break;
+            case FieldDataType::SERVICE_FEE:
+              $dbFile = $fieldData->getSupportingDocument();
+              if (!empty($dbFile)) {
                 $conflict = 'replaced';
+              }
+              break;
+            case FieldDataType::CLOUD_FOLDER:
+              if (empty($optionValue)) {
                 break;
-              case FieldDataType::DB_FILE:
-                $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
-                               ->find($fieldData->getOptionValue());
-                if (empty($dbFile)) {
-                  return self::grumble($this->l->t('Unable to find the associated file with the id "%s" in data-base.',
-                                                   $fieldData->getOptionValue()));
-                }
+              }
+              $optionValue = json_decode($fieldData->getOptionValue(), true);
+              if (!is_array($optionValue)) {
+                $optionValue = [];
+              }
+              if (array_search($pathInfo['basename'], $optionValue) !== false) {
                 $conflict = 'replaced';
-                break;
-              case FieldDataType::CLOUD_FOLDER:
-                $optionValue = json_decode($fieldData->getOptionValue(), true);
-                if (!is_array($optionValue)) {
-                  $optionValue = [];
-                }
-                if (array_search($pathInfo['basename'], $optionValue) !== false) {
-                  $conflict = 'replaced';
-                }
-                break;
-            }
+              }
+              break;
           }
 
           $fileData = $this->getUploadContent($file);
@@ -623,6 +674,7 @@ class ProjectParticipantsController extends Controller {
               $file['meta']['download'] = $downloadLink;
             });
             break;
+          case FieldDataType::SERVICE_FEE:
           case FieldDataType::DB_FILE:
             /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
             $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
@@ -646,7 +698,11 @@ class ProjectParticipantsController extends Controller {
 
             $this->persist($dbFile);
             $this->flush();
-            $fieldData->setOptionValue($dbFile->getId());
+            if ($dataType == FieldDataType::DB_FILE) {
+              $fieldData->setOptionValue($dbFile->getId());
+            } else {
+              $fieldData->setSupportingDocument($dbFile);
+            }
             $this->persist($fieldData);
 
             $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
@@ -657,6 +713,15 @@ class ProjectParticipantsController extends Controller {
               . '&fileName=' . urlencode($filePath);
 
             break;
+          }
+
+          $filesAppLink = '';
+          try {
+            if (!empty($filesAppPath)) {
+              $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
+            }
+          } catch (\Throwable $t) {
+            $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
           }
 
           $fileCopied = true;
@@ -675,6 +740,7 @@ class ProjectParticipantsController extends Controller {
             'extension' => $pathInfo['extension']?:'',
             'fileName' => $pathInfo['filename'],
             'download' => $downloadLink ?? null,
+            'filesApp' => $filesAppLink,
             'conflict' => $conflict,
             'messages' => $messages,
           ];
@@ -692,6 +758,7 @@ class ProjectParticipantsController extends Controller {
               $userStorage->delete($filePath);
               break;
             case FieldDataType::DB_FILE:
+            case FieldDataType::SERVICE_FEE:
               // should be handled by roll-back automatically
               break;
             }

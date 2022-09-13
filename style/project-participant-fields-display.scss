@@ -374,11 +374,40 @@ form.pme-form.project-participant-fields-display {
           }
         }
         th, td {
-          &.document-count-0 {
-            display:none;
-          }
           &.label.unlabelled {
-            display:none;
+            // display:none;
+          }
+          &.documents {
+            .action-menu-toggle {
+              min-height:0;
+              width:34px;
+              height:34px;
+            }
+            .dropdown-content {
+              .menu-item {
+                .delete-undelete .menu-icon {
+                  background-image:url('../img/cafevdb-delete.svg');
+                }
+                .upload-replace .menu-icon {
+                  background-image:url('../../../core/img/actions/upload.svg');
+                }
+                .upload-from-cloud .menu-icon {
+                  background-image:url('../img/cloud-icon.svg');
+                }
+                .open-parent .menu-icon {
+                  background-image:url('../../../core/img/filetypes/folder-external.svg');
+                }
+                .download-link .menu-icon {
+                  background-image:url('../../../core/img/actions/download.svg');
+                }
+              }
+            }
+            .download-link.button {
+              background-image:url('../../../core/img/actions/download.svg');
+              background-repeat: no-repeat;
+              background-position: center;
+              font-size: 0;
+            }
           }
         }
       }

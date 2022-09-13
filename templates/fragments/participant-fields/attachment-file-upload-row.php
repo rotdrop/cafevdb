@@ -6,20 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public
- * License alogng with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -31,7 +31,9 @@
  * @param string $subDir
  * @param string $fileBase
  * @param string $fileName
+ * @param string $filesAppPath
  * @param string $dataStorage
+ * @param string $entityfield Either "option-value" or "supporting-document".
  * @param string $participantFolder
  * @param string $filesAppLink
  * @param string $downloadLink
@@ -51,8 +53,10 @@ $filesAppTarget = md5($filesAppLink);
     data-option-key="<?php p($optionKey); ?>"
     data-sub-dir="<?php p($subDir); ?>"
     data-file-base="<?php p($fileBase); ?>"
-    data-file-name="<?php p($fileName); ?>"
+    data-file-name="<?php !empty($fileBase) && p($fileName); ?>"
     data-storage="<?php p($dataStorage); ?>"
+    data-entity-field="<?php p($entityField ?? 'option-value'); ?>"
+    data-files-app-path="<?php p($filesAppPath); ?>"
     data-participant-folder="<?php echo Util::htmlEscape($participantFolder); ?>"
 >
   <td class="operations">

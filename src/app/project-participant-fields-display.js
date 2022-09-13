@@ -27,8 +27,9 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
-import { submitOuterForm } from './pme.js';
+import { submitOuterForm, tableDialogLoadIndicator } from './pme.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 
@@ -46,7 +47,16 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      fileDownload($this.attr('href'));
+      fileDownload($this.attr('href'), undefined, {
+        setup() {
+          tableDialogLoadIndicator($container, true);
+          pageBusyIcon(true);
+        },
+        always() {
+          pageBusyIcon(false);
+          tableDialogLoadIndicator($container, false);
+        },
+      });
       return false;
     });
 

@@ -40,7 +40,12 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
-import { sys as pmeSys } from './pme-selectors.js';
+import {
+  sys as pmeSys,
+  formSelector as pmeFormSelector,
+  classSelector as pmeClassSelector,
+  token as pmeToken,
+} from './pme-selectors.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
@@ -819,10 +824,13 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     post(false);
   });
 
+  const pmeForm = container.find(pmeFormSelector);
+  console.info('PME FORM', pmeForm, pmeFormSelector);
+
   // adding musicians
-  container
-    .find('form.pme-form input.pme-add')
-    .addClass('pme-custom').prop('disabled', false)
+  pmeForm
+    .find(pmeClassSelector('input', 'add'))
+    .addClass(pmeToken('custom')).prop('disabled', false)
     .off('click').on('click', function(event) {
 
       myLoadAddMusicians($(this.form));
@@ -839,11 +847,17 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
   participantFieldsHandlers(container, musicianId, projectId, dialogParameters);
 
-  container
-    .find('form.pme-form')
+  pmeForm
     .find('tr.participant-field.cloud-file, tr.participant-field.db-file, tr.participant-field.cloud-folder')
     .find('td.pme-value .file-upload-row')
     .each(function() { // don't () => ..., no this binding!!!
+      initFileUploadRow.call(this, projectId, musicianId, resizeCB);
+    });
+
+  pmeForm
+    .find('tr.participant-field tr.field-datum td.documents')
+    .each(function() {
+      console.info('INIT FILE UPLOAD', this);
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
 };
