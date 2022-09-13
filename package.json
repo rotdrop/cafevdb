@@ -34,7 +34,7 @@
     "@nextcloud/auth": "^1.3.0",
     "@nextcloud/axios": "^1.8.0",
     "@nextcloud/dialogs": "^3.1.2",
-    "@nextcloud/files": "*",
+    "@nextcloud/files": "file:3rdparty/nextcloud-files",
     "@nextcloud/initial-state": "*",
     "@nextcloud/l10n": "*",
     "@nextcloud/moment": "*",
