@@ -45,7 +45,7 @@
 
 use OCA\CAFEVDB\Common\Util;
 
-$filesAppTarget = md5($filesAppLink);
+$filesAppTarget = md5($filesAppPath);
 
 ?>
 <tr class="file-upload-row field-datum"
