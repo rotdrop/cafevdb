@@ -158,18 +158,14 @@ const pmeNavigationSelector = function(token) {
  *
  * @returns {string}
  */
-const pmeFormSelector = function() {
-  return 'form.' + pmeToken('form');
-};
+const pmeFormSelector = 'form.' + pmeToken('form');
 
 /**
  * Selector for main table
  *
  * @returns {string}
  */
-const pmeTableSelector = function() {
-  return 'table.' + pmeToken('main');
-};
+const pmeTableSelector = 'table.' + pmeToken('main');
 
 /**
  * Genereate the default selector.
