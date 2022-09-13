@@ -15,11 +15,7 @@
     <exclude name="StaticAccess"/>
     <!-- What is this shit? I mean ... -->
     <exclude name="BooleanArgumentFlag" />
-  </rule>
-  <rule ref="rulesets/cleancode.xml/StaticAccess">
-    <properties>
-      <property name="exceptions" value="\OCA\CAFEVDB\Common\Util,\OCA\CAFEVDB\PageRenderer\Util\Navigation,\OCP\Util,\OCA\CAFEVDB\Wrapped\Carbon\Carbon,\OCA\CAFEVDB\PageRenderer\FieldTraits\Util"/>
-    </properties>
+    <exclude name="StaticAcces" />
   </rule>
 
   <rule ref="rulesets/controversial.xml"/>
