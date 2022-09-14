@@ -1342,6 +1342,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
       // $receivables must contain at least one element.
       $supportingDocument = $row['qf'.$pme->fdn['supporting_document_id']];
+      $supportingDocuments = [];
       if (!empty($supportingDocument) || count($receivables) > 1) {
         $userIdSlug = $row['qf'.$pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'user_id_slug')]];
         if (!empty($supportingDocument)) {
@@ -1370,12 +1371,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
 
-        if (!empty($supportingDocument)) {
+        if (!empty($supportingDocuments)) {
           $value = $fileName . '<br/>' . $value;
         }
 
         // there should be at least one project ...
-        $subFolder = empty($supportingDocument) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+        $subFolder = empty($supportingDocuments) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
         return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';

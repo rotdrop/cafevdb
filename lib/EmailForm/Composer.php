@@ -121,8 +121,10 @@ Störung.';
     'MISSING_AMOUNT',
     'PROJECT_DATA',
     'SEPA_MANDATE_REFERENCE',
+    'SEPA_MANDATE_DATE',
     'BANK_ACCOUNT_IBAN',
     'BANK_ACCOUNT_BIC',
+    'BANK_ACCOUNT_BANK',
     'BANK_ACCOUNT_OWNER',
     'BANK_TRANSACTION_AMOUNT',
     'BANK_TRANSACTION_PURPOSE',
@@ -194,7 +196,8 @@ Störung.';
 </tbody></table>',
     ],
   ];
-  const EMAIL_PREVIEW_SELECTOR = 'div#cafevdb-email-preview .email-body';
+  // @todo Fix the prefix, make it more automatic
+  const EMAIL_PREVIEW_SELECTOR = '.ui-dialog.emailform #emailformdialog div#emailformwrapper form#cafevdb-email-form div#emailformdebug div#cafevdb-email-preview .email-body.reset-css';
   const DEFAULT_HTML_STYLES = [
     'transaction-parts' => '<style>
 [CSSPREFIX]table.transaction-parts,
@@ -486,6 +489,7 @@ Störung.';
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)
                             ->find($this->projectId);
+      $this->projectName = $this->project->getName();
     }
 
     $this->bulkTransactionId = $this->cgiValue(
@@ -496,7 +500,7 @@ Störung.';
       if (!empty($this->bulkTransaction) && empty($template)) {
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
         $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $template . '-' . 'announcement';
+        $template = $template . '-' . $this->l->t('announcement');
         list($template,) = $this->normalizeTemplateName($template);
       }
     }
@@ -719,7 +723,7 @@ Störung.';
 
         if (empty($musician) || count($keyArg) > 2) {
           return implode(':', $keyArg);
-	}
+        }
 
         /** @var Entities\ProjectParticipant $projectParticipant */
         $projectParticipant = $musician->getProjectParticipantOf($this->project);
@@ -919,8 +923,12 @@ Störung.';
 
             $totalNumberOfOptions = 0;
             foreach ($fieldsByMultiplicity as $multiplicity => $fields) {
+
               /** @var Entities\ProjectParticipantField $field */
               foreach ($fields as $field) {
+
+                $fieldHasNonZeroData = false;
+                $fieldHtml = '';
 
                 if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
                   /** @var IRecurringReceivablesGenerator $receivablesGenerator  */
@@ -930,46 +938,13 @@ Störung.';
                   $dueDate = $type == 'monetary' ? $field->getDueDate() : $field->getDepositDueDate();
                 }
                 if (!empty($dueDate)) {
-                  if (empty($totalSum['dueDate'])) {
-                    $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
-                  } else {
-                    $totalSum['dueDate']['min'] = min($totalSum['dueDate']['min'], $dueDate);
-                    $totalSum['dueDate']['max'] = max($totalSum['dueDate']['max'], $dueDate);
-                  }
-
-                  $dueDate = $dueDate
+                  $formattedDueDate = $dueDate
                            ? $formatter->formatDate($dueDate, 'medium')
                            : '';
                 }
 
                 $numberOfOptions = $field->getSelectableOptions()->count();
                 $totalNumberOfOptions += $numberOfOptions;
-
-                // generate a field-header for multiple options
-                $replacements = [
-                  'field-name' => $field->getName(),
-                  'dueDate' => $dueDate,
-                ];
-
-                $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
-                foreach ($replacements as $key => $replacement) {
-                  $keyVariants = array_map(
-                    function($key) { return '['.$key.']'; },
-                    $this->translationVariants($key)
-                  );
-                  $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
-                }
-                $cssClass = implode(' ', [
-                  self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['fieldHeader'],
-                  'number-of-options-' . $numberOfOptions,
-                ]);
-                $cssRowClass = implode(' ', [
-                  self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['row'],
-                  'number-of-options-'.$numberOfOptions,
-                ]);
-                $fieldHeader = str_replace(
-                  [ '[CSSCLASS]', '[CSSROWCLASS]' ], [ $cssClass, $cssRowClass ], $fieldHeader);
-                $html .= $fieldHeader;
 
                 /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
                 foreach ($field->getSelectableOptions() as $fieldOption) {
@@ -1022,18 +997,22 @@ Störung.';
 
                   // compute substitution values
                   $replacements = [];
-		  $nonZeroData = false;
+                  $nonZeroData = false;
                   foreach ($replacementKeys as $key) {
                     if ($key == 'option') {
                       $replacements[$key] = ${$key};
                       continue;
                     }
                     if ($key == 'dueDate' ) {
-                      $replacements[$key] = $receivableDueDate ?? '';
+                      $replacements[$key] = $receivableDueDate
+                        ? $receivableDueDate
+                        : ($numberOfOptions === 1
+                           ? $formattedDueDate
+                           : '');
                       continue;
                     }
                     if (${$key} != '--') {
-		      $nonZeroData = $nonZeroData || !empty(${$key});
+                      $nonZeroData = $nonZeroData || !empty(${$key});
                       $totalSum[$key] += ${$key};
                       $replacements[$key] = $this->moneyValue(${$key});
                     } else {
@@ -1041,9 +1020,11 @@ Störung.';
                     }
                   }
 
-		  if (!$nonZeroData) {
-		    continue;
-		  }
+                  if (!$nonZeroData) {
+                    continue;
+                  }
+
+                  $fieldHasNonZeroData = true;
 
                   // inject into template
                   $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
@@ -1063,8 +1044,53 @@ Störung.';
                   }
                   $rowKeys = [ '[CSSROWCLASS]', '[ROWDATALABEL]', '[ROWDATACONTENTS]',  ];
                   $row = str_replace($rowKeys, $rowData, $row);
-                  $html .= $row;
+                  $fieldHtml .= $row;
                 }
+
+                if ($fieldHasNonZeroData) {
+                  if (!empty($dueDate)) {
+                    if (empty($totalSum['dueDate'])) {
+                      $totalSum['dueDate']['min'] = $totalSum['dueDate']['max'] = $dueDate;
+                    } else {
+                      $totalSum['dueDate']['min'] = min($totalSum['dueDate']['min'], $dueDate);
+                      $totalSum['dueDate']['max'] = max($totalSum['dueDate']['max'], $dueDate);
+                    }
+                  }
+
+                  // @todo: make this rather dependent on the multiplicity.
+                  if ($numberOfOptions > 1) {
+
+                    // generate a field-header for multiple options
+                    $replacements = [
+                      'field-name' => $field->getName(),
+                      'dueDate' => $formattedDueDate,
+                    ];
+
+                    $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
+                    foreach ($replacements as $key => $replacement) {
+                      $keyVariants = array_map(
+                        function($key) { return '['.$key.']'; },
+                        $this->translationVariants($key)
+                      );
+                      $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
+                    }
+                    $cssClass = implode(' ', [
+                      self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['fieldHeader'],
+                      'number-of-options-' . $numberOfOptions,
+                    ]);
+                    $cssRowClass = implode(' ', [
+                      self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['row'],
+                      'number-of-options-'.$numberOfOptions,
+                    ]);
+                    $fieldHeader = str_replace(
+                      [ '[CSSCLASS]', '[CSSROWCLASS]' ], [ $cssClass, $cssRowClass ], $fieldHeader);
+
+                    $fieldHtml = $fieldHeader  . $fieldHtml;
+                  }
+
+                  $html .= $fieldHtml;
+                }
+
               }
             }
 
@@ -1161,6 +1187,24 @@ Störung.';
         return $keyArg[0];
       };
 
+      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_DATE'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          $debitMandate = $compositePayment->getSepaDebitMandate();
+          if (!empty($debitMandate)) {
+            return $this->formatDate($debitMandate->getMandateDate(), $keyArg[1]??'medium');
+          }
+        }
+
+        return $keyArg[0];
+      };
+
       $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_IBAN'] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
@@ -1191,6 +1235,35 @@ Störung.';
           $bankAccount = $compositePayment->getSepaBankAccount();
           if (!empty($bankAccount)) {
             return $bankAccount->getBic();
+          }
+        }
+
+        return $keyArg[0];
+      };
+
+      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BANK'] = function(array $keyArg, ?Entities\Musician $musician) {
+        if (empty($musician)) {
+          return $keyArg[0];
+        }
+
+        /** @var Entities\CompositePayment $compositePayment */
+        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        if (!empty($compositePayment)) {
+          /** @var Entities\SepaBankAccount $bankAccount */
+          $bankAccount = $compositePayment->getSepaBankAccount();
+          if (!empty($bankAccount)) {
+            $iban = $bankAccount->getIban();
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            $info = $financeService->getIbanInfo($iban);
+            $bank = $info['bank'];
+            $city = $info['city'];
+            if (!empty($bank)) {
+              if (!empty($city)) {
+                $bank .= ', ' . $info['city'];
+              }
+              return $bank;
+            }
           }
         }
 
@@ -1555,7 +1628,8 @@ Störung.';
         );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
-          $references[] = $msg['messageId'];
+          $messageId =  $msg['messageId'];
+          $references[] = $messageId;
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
@@ -1566,7 +1640,18 @@ Störung.';
           //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
           //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
           // }
-
+          if (!empty($this->bulkTransaction)) {
+            $payment = $this->bulkTransaction->getPayment($musician);
+            if (empty($payment)) {
+              // this must not happen
+              throw new Exceptions\DatabaseEntityNotFoundException(
+                $this->l->t('Unable to find a payment for the addresse musician "%s" (transaction %d)', [
+                  $musician->getPublicName(), $this->bulkTransactionId
+                ])
+              );
+            }
+            $payment->setNotificationMessageId($messageId);
+          }
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -2008,7 +2093,7 @@ Störung.';
             /** @var Entities\File $file */
             $items[] = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
           }
- 	  $items = array_values(array_filter($items)); // fields maybe empty ...
+          $items = array_values(array_filter($items)); // fields maybe empty ...
           if (count($items) == 1) {
             /** @var Entities\File $file */
             $file = array_shift($items);

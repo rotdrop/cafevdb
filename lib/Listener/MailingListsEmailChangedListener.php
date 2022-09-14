@@ -98,6 +98,7 @@ class MailingListsEmailChangedListener implements IEventListener
     $subscribeNewEmail = false;
 
     foreach ($listIds as $listId) {
+      $subscribeNewEmail = false;
       if (!empty($oldEmail)) {
         try {
           $subscription = $listsService->getSubscription($listId, $oldEmail);

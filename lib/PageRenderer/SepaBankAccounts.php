@@ -735,7 +735,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen' => 35,
         'sort'   => true,
         'php|LFDV' => function($value, $op, $k, $row, $recordId, $pme) {
-          $writtenMandateId = $row['qf'.($k+3)];
+          $writtenMandateId = $row['qf'.($k + 5)];
           if (empty($writtenMandateId)) {
             return $value;
           }
@@ -743,6 +743,9 @@ class SepaBankAccounts extends PMETableViewBase
 
           /** @var Entities\File $file */
           $file = $this->getDatabaseRepository(Entities\File::class)->find($writtenMandateId);
+          if (empty($file)) {
+            return $value;
+          }
 
           $fileName = $mandateReference;
           $extension = Util::fileExtensionFromMimeType($file->getMimeType());
@@ -796,6 +799,30 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_business_days',
+      [
+        'tab' => [ 'id' => 'mandate' ],
+        'name'     => $this->l->t('Notification Target Days'),
+        'css'      => [ 'postfix' => [ 'pre-notification-days', 'empty-mandate-project-hidden', ], ],
+        'select'   => 'N',
+        'maxlen'   => 10,
+        'align'    => 'right',
+        'sort'     => true,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_calendar_days',
+      [
+        'tab' => [ 'id' => 'mandate' ],
+        'name'     => $this->l->t('Notification Calendar Days'),
+        'css'      => [ 'postfix' => [ 'pre-notification-days', 'empty-mandate-project-hidden', ], ],
+        'select'   => 'N',
+        'maxlen'   => 10,
+        'align'    => 'right',
+        'sort'     => true,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id',
       [
         'tab' => [ 'id' => 'mandate' ],
@@ -806,7 +833,7 @@ class SepaBankAccounts extends PMETableViewBase
         'sort'     => true,
         'css'      => [ 'postfix' => [ 'written-mandate', 'empty-mandate-project-hidden', ], ],
         'php|ACP' => function($writtenMandateId, $op, $k, $row, $recordId, $pme) {
-          $mandateReference = $row['qf'.($k - 3)] ?? null;
+          $mandateReference = $row['qf'.($k - 5)] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }

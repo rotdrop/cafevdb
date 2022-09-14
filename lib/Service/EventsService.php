@@ -883,7 +883,7 @@ class EventsService
     }
     $taskUri = $this->calDavService->createCalendarObject($taskData['calendar'], null, $vCalendar);
     if (!empty($taskUri)) {
-      $taskObject = $this->calDavService->getCalendarObject($eventData['calendar'], $taskUri);
+      $taskObject = $this->calDavService->getCalendarObject($taskData['calendar'], $taskUri);
       if (!empty($taskObject)) {
         $vCalendar  = VCalendarService::getVCalendar($taskObject);
         $taskUid   = VCalendarService::getUid($vCalendar);
