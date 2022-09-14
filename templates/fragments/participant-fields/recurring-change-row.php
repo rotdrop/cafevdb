@@ -120,13 +120,19 @@ if ($dataType != FieldType::SERVICE_FEE) {
     />
     <input class="pme-input <?php p($dataType); ?>"
            type="hidden"
-           name="<?php p($optionKeyName); ?>'[<?php p($optionIdx); ?>]"
+           name="<?php p($optionKeyName); ?>[<?php p($optionIdx); ?>]"
            value="<?php p($optionKey); ?>"/>
   </td>
-  <?php $this->inc('fragments/participant-fields/attachment-file-upload-menu.php', [
+  <?php echo $this->inc('fragments/participant-fields/attachment-file-upload-menu', [
     'containerTag' => 'td',
     'containerAttributes' => [
       'class' => 'documents'
     ],
+    'fieldId' => $fieldId,
+    'optionKey' => $optionKey,
+    'entityField' => 'supportingDocument',
+    'storage' => 'db',
+    'fileBase' => '',
+    'fileName' => '',
   ]); ?>
 </tr>
