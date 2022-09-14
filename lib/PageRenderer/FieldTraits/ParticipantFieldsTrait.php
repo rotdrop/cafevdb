@@ -308,9 +308,6 @@ trait ParticipantFieldsTrait
           switch ($dataType) {
           case FieldType::SERVICE_FEE:
             unset($valueFdd['mask']);
-            $valueFdd['php|VDLF'] = function($value) {
-              return $this->moneyValue($value);
-            };
 
             // yet another field for the supporting documents
             list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
@@ -324,6 +321,50 @@ trait ParticipantFieldsTrait
                 ],
               ]);
             $invoiceFdd = &$fieldDescData[$invoiceFddName];
+
+            $valueFdd['php|VDLF'] = function($optionValue, $op, $k, $row, $recordId, $pme) use (
+              $field,
+              $keyFddIndex,
+              $invoiceFddIndex,
+            ) {
+              $html = $this->moneyValue($optionValue);
+
+              $optionKey = $row['qf' . $keyFddIndex];
+              $invoice = $row['qf' . $invoiceFddIndex];
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+              if (empty($optionKey)) {
+                $fieldOption = $field->getSelectableOptions()->first();
+                $optionKey = $fieldOption->getKey();
+              } else {
+                $fieldOption = $field->getDataOption($optionKey);
+              }
+
+              if (empty($invoice)) {
+                return $html;
+              }
+
+              $fieldDatum = $this->makeFieldDatum($field, $musician, $fieldOption, $optionValue, $invoice);
+              $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+              $fileName = $fileInfo['fileName'];
+              $downloadLink = $this->urlGenerator()
+                ->linkToRoute($this->appName().'.downloads.get', [
+                  'section' => 'database',
+                  'object' => $invoice,
+                ])
+                . '?'
+                . http_build_query([
+                  'fileName' => $fileName,
+                  'requesttoken' => \OCP\Util::callRegister(),
+                ], '', '&');
+
+              $html = '<a class="download-link ajax-download flex-grow tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $html . '</a>';
+
+              $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
+              $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
+
+              return $html;
+            };
 
             $valueFdd['display|ACP']['postfix'] = function($op, $pos, $k, $row, $pme) use (
               $field,
@@ -357,7 +398,7 @@ trait ParticipantFieldsTrait
               $pathChain = [
                 'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                 'documentsFolders' => $this->getDocumentsFolderName(),
-                  'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
+                'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
               ];
               $participantFolder = $pathChain['participantFolder'];
 
@@ -395,8 +436,6 @@ trait ParticipantFieldsTrait
                 $musician,
                 ignoreExtension: true,
               );
-
-
 
               $html .=  '<span class="invoice-label">' . $this->l->t('Invoice') . ':</span>';
               $html .= (new TemplateResponse(
@@ -1137,11 +1176,11 @@ trait ParticipantFieldsTrait
                   $html[] = $rowHtml;
                 }
 
-                $html = '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
+                $html = '<div class="allowed-option-wrapper flex-grow">'.implode('<br/>', $html).'</div>';
 
                 if ($hasSupportingDocuments) {
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-                  $html = '<div class="pme-cell-wrapper flex-container flex-center">' . $filesAppAnchor . $html . '</div>';
+                  $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
                 }
 
                 return $html;
@@ -1848,6 +1887,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
       $optionLabelKeyName = self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'key');
 
+      $supportingDocumentName = $this->joinTableFieldName($tableName, 'supporting_document_id');
+
       // label may only be tweaked for recurring multiplicity
       if ($multiplicity != FieldMultiplicity::RECURRING) {
         foreach ([$optionLabelName, $optionLabelKeyName] as $key) {
@@ -1856,6 +1897,12 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           Util::unsetValue($changed, $key);
         }
       }
+
+      // supporting documents are always handled immediately after upload
+      $key = $supportingDocumentName;
+      unset($newValues[$key]);
+      unset($oldValues[$key]);
+      Util::unsetValue($changed, $key);
 
       $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
       $this->debug("MULTIPLICITY / DATATYPE ".$multiplicity.' / '.$dataType);

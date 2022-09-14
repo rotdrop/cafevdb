@@ -81,12 +81,13 @@ form.pme-form.project-participant-fields-display {
       width:100%;
     }
 
-    td.money.single-valued,
     td.money.simple-valued {
-      font-family:monospace;
-    }
-    td.money.single-valued.groupofpeople {
-      font-family:inherit;
+      &.pme-cell, &.pme-value {
+        font-family:monospace;
+      }
+      &.groupofpeople {
+        font-family:inherit;
+      }
     }
   }
 
@@ -221,26 +222,23 @@ form.pme-form.project-participant-fields-display {
    * Style first and subsequence lines in list-view
    */
   &.pme-list {
-    td.pme-value div.allowed-option-wrapper,
-    td.pme-cell div.allowed-option-wrapper {
-      max-height:24px; /* hard restriction on table row height */
-      /* line-height:12px; */
-      line-height:7px;
-      font-size:66.67%;
-      overflow:hidden;
-      position:relative;
-    }
-
-    td.pme-value div.allowed-option-wrapper::first-line,
-    td.pme-cell div.allowed-option-wrapper::first-line {
-      line-height:12px;
-      font-size:150%; /* this is relative to the 2/3 above */
-    }
-
-    td.pme-value div.allowed-option-wrapper > *,
-    td.pme-cell div.allowed-option-wrapper > *{
-      /* -moz-transform: scale(0.5);
-         zoom: 0.5; */
+    td.pme-value, td.pme-cell {
+      div.allowed-option-wrapper {
+        max-height:24px; /* hard restriction on table row height */
+        /* line-height:12px; */
+        line-height:7px;
+        font-size:66.67%;
+        overflow:hidden;
+        position:relative;
+        & > *:first-child {
+          line-height:12px;
+          font-size:150%; /* this is relative to the 2/3 above */
+        }
+        & > * {
+          /* -moz-transform: scale(0.5);
+             zoom: 0.5; */
+        }
+      }
     }
   }
 
