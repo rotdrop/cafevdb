@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -837,7 +838,7 @@ class Projects extends PMETableViewBase
         $projectId = $recordId['id'];
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
         $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
-        if (empty($imageIds) || ($action != 'display')) {
+        if (empty($imageIds) || ($action != PME::OPERATION_DISPLAY)) {
           $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
         }
         $numImages = count($imageIds);

@@ -28,6 +28,7 @@
  * @param string $optionValue
  * @param string $fileBase
  * @param string $fileName
+ * @param string $filesAppPath
  * @param string $participantFolder
  * @param string $filesAppLink
  * @param string $downloadLink
@@ -40,5 +41,6 @@
 echo $this->inc('fragments/participant-fields/attachment-file-upload-row', [
   'subDir' => '',
   'dataStorage' => 'db',
+  'entityField' => 'option-value',
   'uploadPolicy' => 'replace',
 ]);

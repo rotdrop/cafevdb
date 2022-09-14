@@ -163,7 +163,7 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
   // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
   // on. Be careful not to trigger top and bottom buttons.
-  const $outerForm = $(outerSelector + ' ' + pmeFormSelector());
+  const $outerForm = $(outerSelector + ' ' + pmeFormSelector);
   $outerForm.data('submitOptions', options);
 
   const submitNamesApply = [
@@ -376,7 +376,7 @@ const tableDialogReload = function(options, callback, triggerData) {
 
     pmeCancelBeforeSubmit(container);
 
-    let post = container.find(pmeFormSelector()).serialize();
+    let post = container.find(pmeFormSelector).serialize();
 
     // add the option values
     post += '&' + $.param(options);
@@ -581,7 +581,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
         pmeCancelBeforeSubmit(container);
 
-        let post = container.find(pmeFormSelector()).serialize();
+        let post = container.find(pmeFormSelector).serialize();
         post += '&' + $.param(options);
 
         const deleteButton = container.find(deleteSelector);
@@ -1229,7 +1229,7 @@ const maybeTranspose = function(transpose, containerSel) {
 
   if (transpose) {
     tooltip.remove();
-    transposeMainTable(pmeTableSelector(), container);
+    transposeMainTable(pmeTableSelector, container);
     pageitems = t('cafevdb', '#columns');
 
     container.find('input[name="Transpose"]').val('transposed');
@@ -1238,7 +1238,7 @@ const maybeTranspose = function(transpose, containerSel) {
     container.find(tr).removeClass(unTrClass).addClass(trClass);
   } else {
     tooltip.remove();
-    transposeMainTable(pmeTableSelector(), container);
+    transposeMainTable(pmeTableSelector, container);
     pageitems = t('cafevdb', '#rows');
 
     container.find('input[name="Transpose"]').val('untransposed');
@@ -1447,8 +1447,8 @@ const installTabHandler = function(containerSel, changeCallback) {
   }
 
   const tabsSelector = pmeClassSelector('li', 'navigation') + '.table-tabs';
-  const form = container.find(pmeFormSelector());
-  const table = form.find(pmeTableSelector());
+  const form = container.find(pmeFormSelector);
+  const table = form.find(pmeTableSelector);
 
   const $tabAnchor = form.find('li.table-tabs.selected a');
   const tabClasses = ['tab-' + $tabAnchor.data('tabIndex'), 'tab-' + $tabAnchor.data('tabId')];

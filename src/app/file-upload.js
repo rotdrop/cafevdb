@@ -66,6 +66,7 @@ function defaultDoneCallback(file, index, container) {
 function init(options) {
   const defaultOptions = {
     doneCallback: defaultDoneCallback,
+    startCallback: null,
     stopCallback: null,
     failCallback: null,
     dropZone: $(document),
@@ -152,6 +153,10 @@ function init(options) {
       progressBar.progressbar({ value: 0 });
       progressBar.fadeIn();
       uploadProgressWrapper.find('input.stop').show();
+
+      if (typeof options.startCallback === 'function') {
+        options.startCallback(event);
+      }
     },
     fail(event, data) {
       if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success') {

@@ -1645,7 +1645,7 @@ Störung.';
             if (empty($payment)) {
               // this must not happen
               throw new Exceptions\DatabaseEntityNotFoundException(
-                $this->l->t('Unable to find a payment for the addresse musician "%s" (transaction %d)', [
+                $this->l->t('Unable to find a payment for the musician "%s" (transaction %d)', [
                   $musician->getPublicName(), $this->bulkTransactionId
                 ])
               );

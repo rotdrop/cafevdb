@@ -171,14 +171,14 @@ const documentReady = function() {
   // here intercepted and redirected to the page-loader in order to
   // reduce load-time and to record usable history information.
   content.on('submit', 'form', function(event) {
-    console.info('Catchall form submit', event);
-    const form = $(this);
-    const action = form.attr('action');
+    const $form = $(this);
+    const action = $form.attr('action');
     if (action !== '') {
       // not for us, external target.
       return true;
     }
-    const post = form.serialize();
+    console.info('Catchall form submit', event);
+    const post = $form.serialize();
     // alert('post: '+post);
     Page.loadPage(post);
     return false;
@@ -188,16 +188,16 @@ const documentReady = function() {
   // here intercepted and redirected to the page-loader in order to
   // reduce load-time and to record usable history information.
   content.on('click', ':submit', function(event) {
-    console.info('Catchall form submit input', event);
-    const self = $(this);
-    const form = $(this.form);
-    const action = self.attr('formaction');
+    const $self = $(this);
+    const $form = $(this.form);
+    const action = $self.attr('formaction');
     if (action !== '') {
       return true; // not for us
     }
-    let post = form.serialize();
-    if (self.attr('name')) {
-      post += '&' + $.param(self);
+    console.info('Catchall form submit input', event);
+    let post = $form.serialize();
+    if ($self.attr('name')) {
+      post += '&' + $.param($self);
     }
     // alert('post: '+post);
     Page.loadPage(post);

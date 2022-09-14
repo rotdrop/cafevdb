@@ -28,6 +28,7 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as ncRouter from '@nextcloud/router';
 import { parse as parseContentDisposition } from 'content-disposition';
+import { busyIcon as pageBusyIcon } from './page.js';
 
 // still needed for jquery
 require('../legacy/nextcloud/jquery/requesttoken.js');
@@ -49,7 +50,12 @@ const download = function(url, post, options) {
   const defaultOptions = {
     done(url) { console.info('DONE downloading', url); },
     fail(data) {},
-    always() {},
+    always() {
+      pageBusyIcon(false);
+    },
+    setup() {
+      pageBusyIcon(true);
+    },
     errorMessage(url, data) {
       let message = data.message || [t(appName, 'unknown error')];
       message = message.join(' | ');
@@ -72,6 +78,13 @@ const download = function(url, post, options) {
     Notification.showTemporary(options.errorMessage(url, data));
     fail(data);
   };
+  if (options.setup === defaultOptions.setup && options.always !== defaultOptions.always) {
+    const always = options.always;
+    options.always = function() {
+      defaultOptions.always();
+      always();
+    };
+  }
 
   const method = post ? 'POST' : 'GET';
   post = post || [];
@@ -87,6 +100,8 @@ const download = function(url, post, options) {
                        || url.startsWith(ncRouter.generateRemoteUrl('')))
     ? url
     : generateUrl(url);
+
+  options.setup();
 
   return $.ajax({
     url: downloadUrl,

@@ -63,6 +63,10 @@ class ProjectParticipantFieldsController extends Controller {
   const REQUEST_TOPIC_PROPERTY = 'property';
   const REQUEST_SUB_TOPIC_GET = 'get';
 
+  const OPTION_PATCH_FIELDS = [
+    'label',
+  ];
+
   /** @var PHPMyEdit */
   protected $pme;
 
@@ -660,6 +664,56 @@ class ProjectParticipantFieldsController extends Controller {
       break;
     }
     return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * @param int $fieldId The field to work on.
+   *
+   * @param string $topic The kind of object to patch. Currently only
+   * self::REQUEST_SUB_TOPIC_OPTION is supported
+   *
+   * @param string $string $objectId The identifier of the object to patch
+   */
+  public function patch(string $topic, int $fieldId, string $objectId)
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+    if (empty($field)) {
+      return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+    }
+    switch ($topic) {
+      case self::REQUEST_SUB_TOPIC_OPTION:
+        $option = $field->getDataOption($objectId);
+        if (empty($option)) {
+          return self::grumble($this->l->t('Unable to find the option with id "%1$s" for field "%2$s".', [
+            $objectId, $field->getName(),
+          ]));
+        }
+        $patchedFields = [];
+        foreach (self::OPTION_PATCH_FIELDS as $field) {
+          if (isset($this->parameterService[$field])) {
+            $value = $this->parameterService[$field];
+            $option[$field] = empty($value) ? null : $value;
+            $patchedFields[$field] = $value;
+          }
+        }
+        try {
+          $this->flush();
+        } catch (\Throwable $t) {
+          return self::grumble($this->exceptionChainData($t));
+        }
+        return self::dataResponse([
+          'fieldId' => $fieldId,
+          'optionKey' => $objectId,
+          'patchSet' => $patchedFields,
+        ]);
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $objectId ]));
   }
 
 }

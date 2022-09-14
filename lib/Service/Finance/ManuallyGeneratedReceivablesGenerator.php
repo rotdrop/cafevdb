@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -93,7 +93,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
    */
   public function generateReceivables():Collection
   {
-    // Strategy: For all participants subscribe exactly one empty
+    // Strategy: For all participants provide exactly one empty
     // option. I.e. there is always a list of subscribed used options + one
     // more empty option which then can be edited in the per-musician input masks.
 
@@ -117,12 +117,17 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   {
     $fieldDataOptions = $this->serviceFeeField->getDataOptions();
     $participantFieldsData = $participant->getParticipantFieldsData();
+    /** @var Collection $emptyFieldData */
     $emptyFieldData = $participantFieldsData->matching(self::criteriaWhere([
       'field' => $this->serviceFeeField,
       '&(|optionValue' => null,
       'optionValue' => '',
       ')' => null,
     ]));
+
+    // keep options with non-empty label.
+    $emptyFieldData = $emptyFieldData->filter(
+      fn(Entities\ProjectParticipantFieldDatum $datum) => empty($datum->getDataOption()->getLabel()));
 
     $added = false;
     $removed = 0;
@@ -137,7 +142,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
           $this->remove($fieldDatum);
           $participantFieldsData->removeElement($fieldDatum);
           $participant->getMusician()->getProjectParticipantFieldsData()->removeElement($fieldDatum);
-          $fieldDatum->getDataOption()->getParticipnatFieldsData()->removeElement($fieldDatum);
+          $fieldDatum->getDataOption()->getFieldData()->removeElement($fieldDatum);
           $emptyFieldData->removeElement($fieldDatum);
           ++$removed;
         }
@@ -155,12 +160,12 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
     // then remove all but one empty option
     while ($emptyFieldData->count() > 1) {
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      $fieldDatum = $emptyFieldData->first;
+      $fieldDatum = $emptyFieldData->first();
       $this->remove($fieldDatum);
       $this->remove($fieldDatum);
       $participantFieldsData->removeElement($fieldDatum);
       $participant->getMusician()->getProjectParticipantFieldsData()->removeElement($fieldDatum);
-      $fieldDatum->getDataOption()->getParticipnatFieldsData()->removeElement($fieldDatum);
+      $fieldDatum->getDataOption()->getFieldData()->removeElement($fieldDatum);
       $emptyFieldData->removeElement($fieldDatum);
       ++$removed;
     }

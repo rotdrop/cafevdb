@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -1762,7 +1763,7 @@ __EOT__;
   {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
     $allowed = $this->participantFieldsService->explodeDataOptions($value);
-    if ($op === 'display') {
+    if ($op === PME::OPERATION_DISPLAY) {
       if (count($allowed) == 1) {
         // "1" means empty (headerline)
         return '';
@@ -1807,7 +1808,7 @@ __EOT__;
       $displayOptions = '
 <div class="field-display-options dropdown-container">
   <div class="field-display-options dropdown-button icon-menu"
-       title="'.Util::htmlEscape($this->toolTipsService['participant-fields:show-display-options']).'">
+       title="'.Util::htmlEscape($this->toolTipsService['page-renderer:participant-fields:show-display-options']).'">
   </div>
   <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
     <ul class="menu-list">
@@ -2048,7 +2049,7 @@ __EOT__;
   {
     list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
     $value = $entry['data'];
-    if ($op === 'display') {
+    if ($op === PME::OPERATION_DISPLAY) {
       return $this->currencyValue($value);
     }
     $key = $entry['key'];

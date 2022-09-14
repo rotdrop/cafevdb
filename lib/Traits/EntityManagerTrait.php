@@ -153,6 +153,7 @@ trait EntityManagerTrait {
     }
     $this->entityManager->remove($entity);
     if ($hard) {
+      $this->flush();
       $this->entityManager->remove($entity);
     }
 

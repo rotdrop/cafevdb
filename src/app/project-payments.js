@@ -235,8 +235,8 @@ const ready = function(selector, pmeParameters, resizeCB) {
   if (tableOptions.ambientContainerSelector) {
 
     const $pmeForm = (pmeParameters.reason === 'dialogClose')
-      ? $(pmeParameters.htmlResponse).find(pmeFormSelector())
-      : $container.find(pmeFormSelector());
+      ? $(pmeParameters.htmlResponse).find(pmeFormSelector)
+      : $container.find(pmeFormSelector);
 
     const paymentsRowTagName = pmeData('ProjectPayments:row_tag');
     const rowTag = findByName($pmeForm, paymentsRowTagName).val();
@@ -246,7 +246,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
     // again.
     if (rowTag && !isCompositeRow(rowTag)) {
       const $ambientContainer = $(tableOptions.ambientContainerSelector);
-      const $ambientForm = $ambientContainer.find(pmeFormSelector());
+      const $ambientForm = $ambientContainer.find(pmeFormSelector);
       const paymentsIdName = pmeData('ProjectPayments:id[]');
       const $paymentOption = findByName($ambientContainer, paymentsIdName).find('option[value="' + rowTag + '"]');
       if ($paymentOption.length === 0) {

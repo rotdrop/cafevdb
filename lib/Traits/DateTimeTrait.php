@@ -23,9 +23,27 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use \DateTime;
+use \DateTimeImmutable;
+use \DateTimeInterface;
+use \DateTimeZone;
+use \InvalidArgumentException;
+
 /** Support traits for date-time stuff */
 trait DateTimeTrait
 {
+  /**
+   * Ensure a valid date.
+   *
+   * @param null|DateTimeInterface $dateTime
+   *
+   * @return DateTimeInterface
+   */
+  public static function ensureDate(?DateTimeInterface $dateTime):DateTimeInterface
+  {
+    return $dateTime ?? (new DateTimeImmutable)->setTimestamp(1);
+  }
+
   /**
    * Set
    *
@@ -33,34 +51,34 @@ trait DateTimeTrait
    *
    * @return null|\DateTimeImmutable
    */
-  static public function convertToDateTime($dateTime):?\DateTimeImmutable
+  public static function convertToDateTime($dateTime):?DateTimeImmutable
   {
     if ($dateTime === null || $dateTime === '') {
       return null;
-    } else if (!($dateTime instanceof \DateTimeInterface)) {
+    } elseif (!($dateTime instanceof DateTimeInterface)) {
       $timeStamp = filter_var($dateTime, FILTER_VALIDATE_INT, [ 'min_range' => 0 ]);
       if ($timeStamp === false) {
         $timeStamp = filter_var($dateTime, FILTER_VALIDATE_FLOAT, [ 'min_range' => 0 ]);
       }
       if ($timeStamp !== false) {
-        return (new \DateTimeImmutable())->setTimestamp($timeStamp);
-      } else if (is_string($dateTime)) {
-        return new \DateTimeImmutable($dateTime);
+        return (new DateTimeImmutable())->setTimestamp($timeStamp);
+      } elseif (is_string($dateTime)) {
+        return new DateTimeImmutable($dateTime);
       } else {
-        throw new \InvalidArgumentException('Cannot convert input to DateTime.');
+        throw new InvalidArgumentException('Cannot convert input to DateTime.');
       }
-    } else if ($dateTime instanceof \DateTime) {
-      return \DateTimeImmutable::createFromMutable($dateTime);
-    } else if ($dateTime instanceof \DateTimeImmutable) {
+    } elseif ($dateTime instanceof DateTime) {
+      return DateTimeImmutable::createFromMutable($dateTime);
+    } elseif ($dateTime instanceof DateTimeImmutable) {
       return $dateTime;
     } else {
-      throw new \InvalidArgumentException('Unsupported date-time class: '.get_class($dateTime));
+      throw new InvalidArgumentException('Unsupported date-time class: '.get_class($dateTime));
     }
     return null; // not reached
   }
 
   /** Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone. */
-  static public function convertToTimezoneDate(\DateTimeInterface $date, \DateTimeZone $timeZone):\DateTimeImmutable
+  public static function convertToTimezoneDate(DateTimeInterface $date, DateTimeZone $timeZone):DateTimeImmutable
   {
     return \DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $timeZone);
   }

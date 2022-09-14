@@ -90,11 +90,17 @@ class MusicianService
     return '-' . self::userIdSlugToFileName($userIdSlug);
   }
 
-  public static function slugifyFileName(string $base, string $userIdSlug):string
+  public static function slugifyFileName(string $base, string $userIdSlug, bool $ignoreExtension = false):string
   {
-    $pathInfo = pathinfo($base);
-    $fileName = $pathInfo['filename'];
-    $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
+    if ($ignoreExtension) {
+      $fileName = $base;
+      $extension = '';
+    } else {
+      $pathInfo = pathinfo($base);
+      $fileName = $pathInfo['filename'];
+      $extension = empty($pathInfo['extension']) ? '' : '.' . $pathInfo['extension'];
+    }
+    $fileName = str_replace('.', '-', $fileName);
     return $fileName . self::getSlugPostfix($userIdSlug) . $extension;
   }
 

@@ -447,6 +447,23 @@ field.'),
           'writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
+          'display' => [
+            'revert-to-default' => $this->l->t('Revert this setting to its default value.'),
+            'attachment' => [
+              'default' => $this->l->t('Attach a supporting document to this monetary field.'),
+              'delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
+
+              'upload' => [
+                'default' => $this->l->t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
+                'from-client' => $this->l->t('Upload a new attachment from your device.'),
+                'from-cloud' => $this->l->t('Select a new attachment from the cloud storage. The selected file will be copied.'),
+              ],
+
+              'download' => $this->l->t('Click to download this file.'),
+
+              'open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
+            ],
+          ],
         ],
         'projects' => [
           'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
@@ -458,18 +475,6 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'instrument-owner' => $this->l->t('The person who has the legal possession of this instrument. If left blank then it is assumed that the instrument holder is also the instrument owner.'),
         ],
       ],
-
-      'participant-attachment-delete' => $this->l->t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
-
-      'participant-attachment-upload-replace' => $this->l->t('Upload a new attachment. The old file will be overwritten but possibly may be restored using hte file-app of the cloud-software.'),
-
-      'participant-attachment-upload-rename' => $this->l->t('Upload a new attachment. The old file will be renamed by attaching the current time to its name.'),
-
-      'participant-attachment-upload' => $this->l->t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
-
-      'participant-attachment-download' => $this->l->t('Click to download this file.'),
-
-      'participant-attachment-open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
 
       'participant-field-multiplicity' => [
         'default' => $this->l->t('Multiplicity of the field, e.g. free-text, single choice, multiple choice etc.'),

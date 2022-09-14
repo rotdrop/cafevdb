@@ -52,3 +52,6 @@
 [submodule "3rdparty/bootstrap-duallistbox"]
 	path = 3rdparty/bootstrap-duallistbox
 	url = git@github.com:rotdrop/bootstrap-duallistbox.git
+[submodule "3rdparty/nextcloud-files"]
+	path = 3rdparty/nextcloud-files
+	url = git@github.com:rotdrop/nextcloud-files.git

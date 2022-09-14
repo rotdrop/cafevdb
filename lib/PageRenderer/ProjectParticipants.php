@@ -181,6 +181,23 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'option_key',
       'encode' => 'BIN2UUID(%s)',
     ],
+    // the data for the extra input fields
+    self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
+      'entity' => Entities\ProjectParticipantFieldDataOption::class,
+      'flags' => 0,
+      'identifier' => [
+        'field_id' => [
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'column' => 'id',
+        ],
+        'key' => [
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+          'column' => 'option_key',
+        ],
+      ],
+      'column' => 'key',
+      'encode' => 'BIN2UUID(%s)',
+    ],
   ];
 
   /** @var GeoCodingService */
@@ -416,6 +433,8 @@ class ProjectParticipants extends PMETableViewBase
       case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
         $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
         break;
+      case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
       default:
         break;
       }
