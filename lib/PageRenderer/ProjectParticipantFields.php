@@ -1808,7 +1808,7 @@ __EOT__;
       $displayOptions = '
 <div class="field-display-options dropdown-container">
   <div class="field-display-options dropdown-button icon-menu"
-       title="'.Util::htmlEscape($this->toolTipsService['participant-fields:show-display-options']).'">
+       title="'.Util::htmlEscape($this->toolTipsService['page-renderer:participant-fields:show-display-options']).'">
   </div>
   <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
     <ul class="menu-list">

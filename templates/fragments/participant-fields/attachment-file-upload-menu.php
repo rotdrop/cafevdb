@@ -50,7 +50,7 @@ $filesAppTarget = md5($filesAppPath ?? '');
 <?php }?>
     data-field-id="<?php p($fieldId); ?>"
     data-option-key="<?php p($optionKey); ?>"
-    data-file-base=<?php p($fileBase); ?>"
+    data-file-base="<?php p($fileBase); ?>"
     data-file-name="<?php p($fileName); ?>"
     data-storage="<?php p($storage); ?>"
     data-entity-field="<?php p($entityField); ?>"
@@ -59,7 +59,7 @@ $filesAppTarget = md5($filesAppPath ?? '');
 >
   <span class="dropdown-container dropdown-no-hover">
     <button class="supporting-document menu-title action-menu-toggle"
-            title="<?php echo $toolTips['participant-fields-recurring-data:supporting-document']; ?>"
+            title="<?php echo $toolTips[$toolTipsPrefix . ':attachment']; ?>"
     >...</button>
     <nav class="dropdown-content dropdown-align-right">
       <ul class="menu-list">
