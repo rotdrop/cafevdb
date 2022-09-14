@@ -117,12 +117,12 @@ class phpMyEdit
 
 	const OPERATION_FILTER = 'filter';
 	const OPERATION_LIST = 'list';
-
 	const OPERATION_CHANGE = 'change';
 	const OPERATION_COPY = 'copy';
 	const OPERATION_DISPLAY = 'display';
 	const OPERATION_VIEW = 'view';
 	const OPERATION_ADD = 'add';
+	const OPERATION_DELETE = 'delete';
 
 	const TRIVIAL_ENCODE = '%s';
 	const TRIVIAL_DESCRIPION = '$table.$column';
@@ -229,35 +229,35 @@ class phpMyEdit
 	// 	'max'	=> 'Maximum',
 	// 	'count' => 'Count');
 	public $page_types = array(
-		'L' => 'list',
-		'F' => 'filter',
+		'L' => self::OPERATION_LIST,
+		'F' => self::OPERATION_FILTER,
 		'A' => self::OPERATION_ADD,
 		'V' => self::OPERATION_VIEW,
 		'C' => self::OPERATION_CHANGE,
 		'P' => self::OPERATION_COPY,
-		'D' => 'delete'
+		'D' => self::OPERATION_DELETE
 		);
 	public $default_buttons = array(
-		'L' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
+		'L' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
+		'F' => array('<<','<',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'cancel','reload')
 		);
 	public $default_multi_buttons = array(
-		'L' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
+		'L' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'>','>>',
 					 'goto','rows_per_page','reload'),
-		'F' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','>','>>',
+		'F' => array('<<','<','misc',self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'cancel','reload')
 		);
 	public $default_buttons_no_B = array(
 		'L' => array('<<','<',self::OPERATION_ADD,'>','>>',
@@ -268,7 +268,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'cancel','reload')
 		);
 	public $default_multi_buttons_no_B = array(
 		'L' => array('<<','<','misc',self::OPERATION_ADD,'>','>>',
@@ -279,7 +279,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel','reload'),
 		'D' => array('save','cancel','reload'),
-		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,'delete','cancel','reload')
+		'V' => array(self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE,'cancel','reload')
 		);
 
 	// }}}
@@ -290,7 +290,7 @@ class phpMyEdit
 
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
-	function col_needs_having($k) { return !empty($this->fdd[$k]['filter']['having']); }
+	function col_needs_having($k) { return !empty($this->fdd[$k][self::OPERATION_FILTER]['having']); }
 	function col_has_join($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['join']); }
 	function col_has_description($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['description']); }
 	function col_has_values($k) {
@@ -574,7 +574,7 @@ class phpMyEdit
 	/**Return a normalized english name ... */
 	public function operationName()
 	{
-		foreach([self::OPERATION_ADD, self::OPERATION_CHANGE, self::OPERATION_COPY, 'delete', 'misc', self::OPERATION_VIEW, 'list'] as $op) {
+		foreach([self::OPERATION_ADD, self::OPERATION_CHANGE, self::OPERATION_COPY, self::OPERATION_DELETE, 'misc', self::OPERATION_VIEW, self::OPERATION_LIST] as $op) {
 			$method = $op.'_operation';
 			if ($this->$method()) {
 				return $op;
@@ -1811,7 +1811,7 @@ class phpMyEdit
 			} else {
 				$qo = &$this->query_opts;
 			}
-			$fqn_flags = $this->fdd[$k]['filter']['flags'] ?? null;
+			$fqn_flags = $this->fdd[$k][self::OPERATION_FILTER]['flags'] ?? null;
 
 			if (is_array($m) || is_array($mi)) {
 				if (is_array($mi)) {
@@ -3905,7 +3905,7 @@ class phpMyEdit
 			return $this->htmlSubmit('cancel'.$this->page_types[$this->page_type], 'Cancel',
 									 $this->getCSSclass('cancel', $position));
 		}
-		if (in_array($name, array(self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,'delete'))) {
+		if (in_array($name, array(self::OPERATION_ADD,self::OPERATION_VIEW,self::OPERATION_CHANGE,self::OPERATION_COPY,self::OPERATION_DELETE))) {
 			$enabled_fnc = $name.'_enabled';
 			$enabled	 = $this->$enabled_fnc();
 			if ($name != self::OPERATION_ADD && ! $this->total_recs && strstr('LF', $this->page_type))
@@ -4079,7 +4079,7 @@ class phpMyEdit
 		/* FILTER {{{
 		 *
 		 * Draw the filter and fill it with any data typed in last pass and stored
-		 * in the array parameter keyword 'filter'. Prepare the SQL WHERE clause.
+		 * in the array parameter keyword self::OPERATION_FILTER. Prepare the SQL WHERE clause.
 		 */
 
 		// Filter row retrieval
@@ -4103,19 +4103,19 @@ class phpMyEdit
 		// 	$fields = array_flip(array_keys($filter_row));
 		// }
 		//if ($fields != false) {
-		$css_class_name = $this->getCSSclass('filter');
+		$css_class_name = $this->getCSSclass(self::OPERATION_FILTER);
 		$css_sys = $this->getCSSclass('sys');
 		$hidden = $this->filter_operation() ? '' : ' '.$this->getCSSclass('hidden');
 		echo '<tr class="',$css_class_name,$hidden,'">',"\n";
 		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-		echo $this->htmlSubmit('filter', 'Query', $this->getCSSclass('query'));
+		echo $this->htmlSubmit(self::OPERATION_FILTER, 'Query', $this->getCSSclass('query'));
 		echo '</td>', "\n";
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (! $this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
 			$css_postfix	  = $this->fdd[$k]['css']['postfix'] ?? null;
-			$css_class_name	  = $this->getCSSclass('filter', null, null, $css_postfix);
+			$css_class_name	  = $this->getCSSclass(self::OPERATION_FILTER, null, null, $css_postfix);
 			$fd				  = $this->fds[$k];
 			$this->field	  = $this->fdd[$fd];
 			$l	= 'qf'.$k;
@@ -4431,7 +4431,7 @@ class phpMyEdit
 		/*
 		 * Display the SQL table in an HTML table
 		 */
-		$formCssClass = $this->getCSSclass('list', null, null, $this->css['postfix']);
+		$formCssClass = $this->getCSSclass(self::OPERATION_LIST, null, null, $this->css['postfix']);
 		$this->form_begin($formCssClass);
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
 		if ($this->display['form']) {
@@ -4681,7 +4681,7 @@ class phpMyEdit
 				$operationCss[] = self::OPERATION_COPY;
 			}
 			if ($this->delete_enabled()) {
-				$operationCss[] = 'delete';
+				$operationCss[] = self::OPERATION_DELETE;
 			}
 			$operationCss = implode(
 				' ',
@@ -4915,7 +4915,7 @@ class phpMyEdit
 	function display_record() /* {{{ */
 	{
 		$postfix = $this->css['postfix'];
-		$formCssClass = $this->getCSSclass('list', null, null, $postfix);
+		$formCssClass = $this->getCSSclass(self::OPERATION_LIST, null, null, $postfix);
 
 		// PRE Triggers
 		$trigger = '';
@@ -4940,7 +4940,7 @@ class phpMyEdit
 				$trigger = self::SQL_QUERY_SELECT;
 			}
 			if ($this->delete_operation()) {
-				$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
+				$formCssClass = $this->getCSSclass(self::OPERATION_DELETE, null, null, $postfix);
 				$trigger = self::SQL_QUERY_DELETE;
 			}
 			$ret = $this->exec_triggers_simple($trigger, self::TRIGGER_PRE);
