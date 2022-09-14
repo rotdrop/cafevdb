@@ -28,6 +28,9 @@ import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
 import * as Page from './page.js';
 import * as Notification from './notification.js';
+import { tableDialogLoadIndicator } from './pme.js';
+import { formSelector as pmeFormSelector } from './pme-selectors.js';
+import { close as closeActionMenus } from './action-menu.js';
 import generateUrl from './generate-url.js';
 import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
@@ -42,6 +45,7 @@ const defaultUploadUrls = {
 
 const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) {
   const $thisRow = $(this);
+  const $pmeContainer = $thisRow.closest(pmeFormSelector);
   const fieldId = $thisRow.data('fieldId');
   const optionKey = $thisRow.data('optionKey');
   const subDir = $thisRow.data('subDir');
@@ -75,8 +79,6 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   const $downloadLink = $thisRow.find('a.download-link');
   const $placeholder = $thisRow.find('input.upload-placeholder');
 
-  console.info('CONTROLS AND DATA', $placeholder, $thisRow.data());
-
   const noDownloadFile = () => $downloadLink.attr('href') === '';
   const noFilesAppLink = () => $parentFolder.attr('href') === '';
 
@@ -93,6 +95,23 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
 
   unmaskInputs();
 
+  const setBusyIndicators = function(state) {
+    if (state) {
+      tableDialogLoadIndicator($pmeContainer, true);
+      Page.busyIcon(true);
+      $thisRow.addClass('busy');
+      modalizer(true);
+    } else {
+      Page.busyIcon(false);
+      tableDialogLoadIndicator($pmeContainer, false);
+      $thisRow.removeClass('busy');
+      modalizer(false);
+      unmaskInputs();
+      closeActionMenus();
+      unmaskInputs();
+    }
+  };
+
   const doneCallback = function(file, index, container) {
     if (!file.meta) {
       Notification.show(t(appName, 'File-upload feedback does not contain the required meta-information, the upload has probably failed.'));
@@ -100,7 +119,6 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     }
 
     Notification.messages(file.meta.messages);
-    console.info('FILE', file);
 
     if (isCloudFolder) {
       if (!file.meta.conflict) {
@@ -129,12 +147,18 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     }
     $.fn.cafevTooltip.remove();
     $thisRow.trigger('pme:upload-done');
+    setBusyIndicators(false);
   };
 
   FileUpload.init({
     url: generateUrl(uploadUrls.upload),
     doneCallback,
-    stopCallback: null,
+    stopCallback() {
+      setBusyIndicators(false);
+    },
+    startCallback() {
+      setBusyIndicators(true);
+    },
     dropZone: $thisRow,
     containerSelector: '#' + widgetId,
     inputSelector: 'input[type="file"]',
@@ -143,7 +167,8 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
 
   unmaskInputs();
 
-  $thisRow.find('input.upload-placeholder, .operation.upload-replace')
+  $thisRow
+    .find('input.upload-placeholder, .operation.upload-replace')
     .off('click')
     .on('click', function(event) {
       const $fileUpload = $('#' + widgetId + ' input[type="file"]');
@@ -152,10 +177,10 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       return false;
     });
 
-  $thisRow.find('.operation.upload-from-cloud')
+  $thisRow
+    .find('.operation.upload-from-cloud')
     .off('click')
     .on('click', function(event) {
-      const $this = $(this);
       const filePickerObject = $thisRow.data('fileBase') || $thisRow.data('subDir');
       const filePickerCaption = filePickerObject
         ? t(appName, 'Select cloud-files for {object}', { object: filePickerObject })
@@ -163,10 +188,10 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       Dialogs.filePicker(
         filePickerCaption,
         function(paths) {
-          $this.addClass('busy');
+          setBusyIndicators(true);
           if (!paths) {
             Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-            $this.removeClass('busy');
+            setBusyIndicators(false);
             return;
           }
           if (!Array.isArray(paths)) {
@@ -174,8 +199,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
           }
           $.post(generateUrl(uploadUrls.stash), { cloudPaths: paths })
             .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-              $this.removeClass('busy');
+              Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
             })
             .done(function(files) {
               if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
@@ -183,7 +207,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
                   t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
                   t(appName, 'Error'),
                   function() {
-                    $this.removeClass('busy');
+                    setBusyIndicators(false);
                   });
                 return;
               }
@@ -191,14 +215,13 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
               formData.push({ name: 'files', value: JSON.stringify(files) });
               $.post(generateUrl(uploadUrls.upload), formData)
                 .fail(function(xhr, status, errorThrown) {
-                  Ajax.handleError(xhr, status, errorThrown);
-                  $this.removeClass('busy');
+                  Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
                 })
                 .done(function(data) {
                   $.each(data, function(index, file) {
                     doneCallback(file, index, $uploadUi);
                   });
-                  $this.removeClass('busy');
+                  setBusyIndicators(false);
                   $thisRow.trigger('pme:upload-done');
                 });
             });
@@ -214,18 +237,12 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     });
 
   $deleteUndelete.off('click').on('click', function(event) {
-    const $thisInput = $(this);
 
     const cleanup = function(thisRemoved) {
-      Page.busyIcon(false);
-      modalizer(false);
-      unmaskInputs();
-      $thisInput.removeClass('busy');
+      setBusyIndicators(false);
     };
 
-    modalizer(true);
-    Page.busyIcon(true);
-    $thisInput.addClass('busy');
+    setBusyIndicators(true);
     maskInputs();
 
     const postData = {

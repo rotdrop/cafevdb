@@ -29,6 +29,7 @@ use OCP\Files as CloudFiles;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Storage\UserStorage;
+use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
@@ -53,6 +54,8 @@ use OCA\CAFEVDB\Constants;
 trait ParticipantFieldsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
 
@@ -67,6 +70,9 @@ trait ParticipantFieldsTrait
 
   /** @var ToolTipsService */
   protected $toolTipsService;
+
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';
 
   /**
    * For each extra field add one dedicated join table entry
@@ -294,7 +300,7 @@ trait ParticipantFieldsTrait
           $defaultButton = '<input type="button"
        value="'.$this->l->t('Revert to default').'"
        class="display-postfix revert-to-default [BUTTON_STYLE]"
-       title="'.$this->toolTipsService['participant-fields:revert-to-default'].'"
+       title="'.$this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
        data-field-id="'.$fieldId.'"
        data-field-property="[FIELD_PROPERTY]"
 />';
@@ -305,11 +311,117 @@ trait ParticipantFieldsTrait
             $valueFdd['php|VDLF'] = function($value) {
               return $this->moneyValue($value);
             };
-            $valueFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
-            if ($defaultValue !== '' && $defaultValue !== null) {
-              $valueFdd['display|ACP']['postfix'] .=
-                str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultValue' ], $defaultButton);
-            }
+
+            // yet another field for the supporting documents
+            list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+              $fieldDescData, $tableName, 'supporting_document_id', [
+                'input' => 'SRH',
+                'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
+  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL)
+  ORDER BY $order_by))',
+                'values' => [
+                  'orderby' => '$table.option_key ASC',
+                ],
+              ]);
+            $invoiceFdd = &$fieldDescData[$invoiceFddName];
+
+            $valueFdd['display|ACP']['postfix'] = function($op, $pos, $k, $row, $pme) use (
+              $field,
+              $defaultValue,
+              $defaultButton,
+              $keyFddIndex,
+              $valueFddIndex,
+              $invoiceFddIndex,
+            ) {
+              $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
+              if ($defaultValue !== '' && $defaultValue !== null) {
+                $html .=
+                  str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ] , [ 'hidden-text', 'defaultValue' ], $defaultButton);
+              }
+              if ($op != PME::OPERATION_CHANGE) {
+                return $html;
+              }
+
+              $optionValue = $row['qf' . $valueFddIndex];
+              $optionKey = $row['qf' . $keyFddIndex];
+              $invoice = $row['qf' . $invoiceFddIndex];
+              list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+              if (empty($optionKey)) {
+                $fieldOption = $field->getSelectableOptions()->first();
+                $optionKey = $fieldOption->getKey();
+              } else {
+                $fieldOption = $field->getDataOption($optionKey);
+              }
+
+              $pathChain = [
+                'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
+                'documentsFolders' => $this->getDocumentsFolderName(),
+                  'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
+              ];
+              $participantFolder = $pathChain['participantFolder'];
+
+              $filesAppPath = implode(UserStorage::PATH_SEP, $pathChain);
+              while (!empty($pathChain)) {
+                $path = implode(UserStorage::PATH_SEP, $pathChain);
+                try {
+                  $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
+                  break;
+                } catch (\OCP\Files\NotFoundException $e) {
+                  $this->logInfo('No file found for ' . $filesAppPath);
+                  array_pop($pathChain);
+                }
+              }
+
+              $fileName = null;
+              if (!empty($invoice)) {
+                $fieldDatum = $this->makeFieldDatum($field, $musician, $fieldOption, $optionValue, $invoice);
+                $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+                $fileName = $fileInfo['fileName'];
+                $downloadLink = $this->urlGenerator()
+                  ->linkToRoute($this->appName().'.downloads.get', [
+                    'section' => 'database',
+                    'object' => $invoice,
+                  ])
+                  . '?'
+                  . http_build_query([
+                    'fileName' => $fileName,
+                    'requesttoken' => \OCP\Util::callRegister(),
+                  ], '', '&');
+              }
+
+              $fileBase = $this->projectService->participantFilename(
+                $this->participantFieldsService->getFileSystemFieldName($field),
+                $musician,
+                ignoreExtension: true,
+              );
+
+
+
+              $html .=  '<span class="invoice-label">' . $this->l->t('Invoice') . ':</span>';
+              $html .= (new TemplateResponse(
+                $this->appName(),
+                'fragments/participant-fields/attachment-file-upload-menu', [
+                  'containerTag' => 'span',
+                  'containerAttributes' => [ 'class' => 'documents', ],
+                  'fieldId' => $field->getId(),
+                  'optionKey' => $optionKey,
+                  'entityField' => 'supportingDocument',
+                  'storage' => 'db',
+                  'fileBase' => $fileBase,
+                  'fileName' => $fileName,
+                  'participantFolder' => $participantFolder,
+                  'filesAppPath' => $filesAppPath,
+                  'filesAppLink' => $filesAppLink ?? null,
+                  'downloadLink' => $downloadLink ?? null,
+                  'toolTips' => $this->toolTipsService,
+                  'toolTipsPrefix' => self::$toolTipsPrefix,
+                ],
+                'blank',
+              ))->render();
+
+              return $html;
+            };
 
             // We need one additional input field for the
             // service-fee-deposit. This is only needed for
@@ -369,7 +481,7 @@ trait ParticipantFieldsTrait
                 $value, $fileName);
               $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
-              return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+              return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
             };
             break;
           case FieldType::CLOUD_FILE:
@@ -420,7 +532,7 @@ trait ParticipantFieldsTrait
                 $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
                 try {
                   $downloadLink = $this->userStorage->getDownloadLink($filePath);
-                  $html = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+                  $html = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
                 } catch (\OCP\Files\NotFoundException $e) {
                   $this->logException($e);
                   $html = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
@@ -647,7 +759,7 @@ trait ParticipantFieldsTrait
                 $values = array_combine($optionKeys, $optionValues);
               }
 
-              $this->debug('VALUES '.print_r($values, true));
+              $this->debug('VALUES ' . print_r($values, true));
               $fieldId = $field->getId();
 
               $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
@@ -768,7 +880,7 @@ trait ParticipantFieldsTrait
                     array_values($values), $fileName);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
-                  return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+                  return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
                 }
               }
               return null;
@@ -888,7 +1000,7 @@ trait ParticipantFieldsTrait
                     array_values($values), $fileName);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
                   return $filesAppAnchor
-                    . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['participant-attachment-download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+                    . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
                 }
                 return '';
               default:
@@ -1579,13 +1691,13 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $lockCssClass = $lockRightCssClass;
     }
 
-    if (!empty($value)) {
+    if (!empty($optionValue)) {
       switch ($dataType) {
         case FieldType::DATE:
         case FieldType::DATETIME:
           try {
-            $date = DateTime::parse($value, $this->getDateTimeZone());
-            $value = ($dataType == FieldType::DATE)
+            $date = DateTime::parse($optionValue, $this->getDateTimeZone());
+            $optionValue = ($dataType == FieldType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
           } catch (\Throwable $t) {
@@ -1596,35 +1708,47 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           break;
       }
     }
+
+    $fileName = null;
     if (!empty($invoices[$optionKey])) {
+      $fieldDatum = $this->makeFieldDatum($field, $musician, $fieldOption, $optionValue, $invoices[$optionKey]);
+      $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+      $fileName = $fileInfo['fileName'];
       $downloadLink = $this->urlGenerator()
         ->linkToRoute($this->appName().'.downloads.get', [
           'section' => 'database',
           'object' => $invoices[$optionKey],
         ])
-        . '?requesttoken=' . urlencode(\OCP\Util::callRegister());
+        . '?'
+        . http_build_query([
+          'fileName' => $fileName,
+          'requesttoken' => \OCP\Util::callRegister(),
+        ], '', '&');
     }
 
     $optionLabelName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'label'));
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
 
-    $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
-    $subDirPrefix = $this->getDocumentsFolderName();
-    $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
+    $pathChain = [
+      'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
+      'documentsFolders' => $this->getDocumentsFolderName(),
+      'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
+      'fieldFolder' => $this->participantFieldsService->getFileSystemFieldName($field),
+    ];
+    $participantFolder = $pathChain['participantFolder'];
 
-    $filesAppPath = implode(UserStorage::PATH_SEP, [
-      $participantFolder,
-      $subDirPrefix,
-      $subDir,
-    ]);
-    try {
-      $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
-    } catch (\OCP\Files\NotFoundException $e) {
-      $this->logInfo('No file found for ' . $filesAppPath);
-      $filesAppLink = null;
+    $filesAppPath = implode(UserStorage::PATH_SEP, $pathChain);
+    while (!empty($pathChain)) {
+      $path = implode(UserStorage::PATH_SEP, $pathChain);
+      try {
+        $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
+        break;
+      } catch (\OCP\Files\NotFoundException $e) {
+        $this->logInfo('No file found for ' . $filesAppPath);
+        array_pop($pathChain);
+      }
     }
-    $toolTipsPrefix = 'participant-fields';
 
     return (new TemplateResponse(
       $this->appName(),
@@ -1636,12 +1760,14 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         'optionKeyName' => $optionKeyName,
         'optionValueName' => $optionValueName,
         'optionIdx' => $optionIdx,
+        'fileName' => null,
+        'fileBase' => null,
         'filesAppPath' => $filesAppPath,
-        'filesAppLink' => $filesAppLink,
+        'filesAppLink' => $filesAppLink ?? null,
         'downloadLink' => $downloadLink ?? null,
         'participantFolder' => $participantFolder,
         'toolTips' => $this->toolTipsService,
-        'toolTipsPrefix' => $toolTipsPrefix,
+        'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
       'blank'
     ))->render();
@@ -1765,6 +1891,10 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           $keys = Util::explode(',', $dataSet[$keyName]);
           $values = Util::explode(',', $dataSet[$valueName], flags: Util::ESCAPED);
           $keyedValues = [];
+          if (count($keys) != count($values)) {
+            $this->logError('MISMATCH ' . $keyName . ': ' . print_r($keys, true) . ' vs ' . print_r($values, true));
+          }
+
           foreach (array_combine($keys, $values) as $key => $value) {
             switch ($dataType) {
               case FieldType::DATE:
@@ -1956,6 +2086,36 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       return $cmp;
     });
     return $options;
+  }
+
+  /**
+   * Make a "fake" field-datum from the legacy provided data
+   */
+  private function makeFieldDatum(Entities\ProjectParticipantField $field, Entities\Musician $musician, $fieldOption, $optionValue, $supportingDocument = null):Entities\ProjectParticipantFieldDatum
+  {
+    /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+    if (!($fieldOption instanceof Entities\ProjectParticipantFieldDataOption)) {
+      $optionKey = $fieldOption;
+      $fieldOption = $field->getDataOption($optionKey);
+    } else {
+      $optionKey = $fieldOption->getKey();
+    }
+    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\EncryptedFile)) {
+      try {
+        $supportingDocument = $this->findEntity(Entities\EncryptedFile::class, $supportingDocument);
+      } catch (\Throwable $t) {
+        $supportingDocument = null;
+      }
+    }
+    $fieldDatum = (new Entities\ProjectParticipantFieldDatum)
+      ->setField($field)
+      ->setMusician($musician)
+      ->setDataOption($fieldOption)
+      ->setOptionKey($optionKey)
+      ->setOptionValue($optionValue)
+      ->setSupportingDocument($supportingDocument);
+
+    return $fieldDatum;
   }
 }
 

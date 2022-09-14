@@ -60,6 +60,9 @@ trait ParticipantFileFieldsTrait
   /** @var PHPMyEdit */
   protected $pme;
 
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';
+
   /** Generate one HTML input row for a cloud-file field. */
   protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $subDir, $fileBase, $musician)
   {
@@ -121,7 +124,7 @@ trait ParticipantFileFieldsTrait
         'optionValueName' => $optionValueName,
         'uploadPlaceHolder' => $placeHolder,
         'toolTips' => $this->toolTipsService,
-        'toolTipsPrefix' => 'participant-fields',
+        'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
       'blank'
     ))->render();
@@ -209,7 +212,7 @@ trait ParticipantFileFieldsTrait
         'optionValueName' => $optionValueName,
         'uploadPlaceHolder' => $placeHolder,
         'toolTips' => $this->toolTipsService,
-        'toolTipsPrefix' => 'participant-fields',
+        'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
       'blank'
     ))->render();

@@ -438,32 +438,34 @@ class ProjectParticipantsController extends Controller {
           break;
         case FieldDataType::DB_FILE:
           $filePath = $dbFile->getFileName();
-          $this->remove($dbFile);
+          $this->remove($dbFile, hard: true);
           $fieldDatum->setOptionValue(null);
           break;
         case FieldDataType::SERVICE_FEE:
-          $filePath = $dbFile->getFileName();
-          $this->remove($dbFile);
           $fieldDatum->setSupportingDocument(null);
+          $this->flush();
+          $filePath = $dbFile->getFileName();
+          $this->remove($dbFile, hard: true);
           $doDeleteFieldDatum = false;
           break;
         }
+        $this->flush(); // cope with soft-delete
         if ($doDeleteFieldDatum) {
-          $this->remove($fieldDatum, hard: true, flush: true);
           $field->getFieldData()->removeElement($fieldDatum);
+          $this->remove($fieldDatum, hard: true, flush: true);
         }
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
         $this->entityManager->rollback();
-        throw new \RuntimeException($this->l->t('Unable to delete file "%S".', $filePath), $t->getCode(), $t);
+        throw new \RuntimeException($this->l->t('Unable to delete file "%s".', $filePath), $t->getCode(), $t);
       }
       return self::response($this->l->t('Successfully removed file "%s".', $filePath));
       break;
+
     case self::FILE_ACTION_UPLOAD:
 
       $uploadData = json_decode($data, true);
-      $this->logInfo('UPLOAD DATA ' . print_r($uploadData, true));
       $fieldId = $uploadData['fieldId'];
       $optionKey = $uploadData['optionKey'];
       $subDir = $uploadData['subDir']??null;
@@ -586,6 +588,8 @@ class ProjectParticipantsController extends Controller {
                        ->setMusician($musician)
                        ->setOptionKey($optionKey);
             $participant->getParticipantFieldsData()->add($fieldData);
+          } else {
+            $fieldData->setDeleted(null);
           }
 
           $optionValue = $fieldData->getOptionValue();

@@ -860,6 +860,13 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       console.info('INIT FILE UPLOAD', this);
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
+
+  pmeForm
+    .find('tr.participant-field.simple-valued.service-fee .documents')
+    .each(function() {
+      console.info('INIT FILE UPLOAD', this);
+      initFileUploadRow.call(this, projectId, musicianId, resizeCB);
+    });
 };
 
 const myDocumentReady = function() {

@@ -54,6 +54,7 @@ class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
 
   const DBTABLE = 'Projects';
 
@@ -678,14 +679,14 @@ class ProjectService
    * Avoid duplicated "extensions" in file-names, i.e. use
    * passport-ClausJustusHeine.pdf instead of passport-claus-justus.heine.pdf
    */
-  public function participantFilename(string $base, $musicianOrSlug)
+  public function participantFilename(string $base, $musicianOrSlug, bool $ignoreExtension = false)
   {
     if ($musicianOrSlug instanceof Entities\Musician) {
       $userIdSlug = $this->musicianService->ensureUserIdSlug($musicianOrSlug);
     } else {
       $userIdSlug = $musicianOrSlug;
     }
-    return MusicianService::slugifyFileName($base, $userIdSlug);
+    return MusicianService::slugifyFileName($base, $userIdSlug, $ignoreExtension);
   }
 
   /**
@@ -740,22 +741,28 @@ class ProjectService
     /** @var Entities\File $file */
     $dbFileName = $file->getFileName();
     $extension = pathinfo($dbFileName, PATHINFO_EXTENSION);
-    $fieldName = $field->getName();
+    $fieldName = $this->participantFieldsService->getFileSystemFieldName($field);
 
     if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
       // construct the file-name from the field-name
-      $fileName = $this->participantFilename($fieldName, $fieldDatum->getMusician());
+      $fileName = $this->participantFilename($fieldName, $fieldDatum->getMusician(), ignoreExtension: true);
       $dirName = null;
     } else {
       // construct the file-name from the option label if non-empty or the file-name of the DB-file
-      $optionLabel = $fieldOption->getLabel();
+      $optionLabel = $this->participantFieldsService->getFileSystemOptionLabel($fieldOption);
       if (!empty($optionLabel)) {
-        $fileName = $this->participantFilename($fieldOption->getLabel(), $fieldDatum->getMusician());
+        $fileName = $this->participantFilename($optionLabel, $fieldDatum->getMusician(), ignoreExtension: true);
       } else {
         $fileName = basename($dbFileName, '.' . $extension);
       }
       $dirName = $fieldName;
     }
+
+    if ($dataType == FieldDataType::SERVICE_FEE) {
+      $subDirPrefix = $this->getSupportingDocumentsFolderName();
+      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . UserStorage::PATH_SEP . $dirName;
+    }
+
     $baseName = $fileName . '.' . $extension;
     $pathName = empty($dirName) ? $baseName : $dirName . UserStorage::PATH_SEP . $baseName;
     return [
