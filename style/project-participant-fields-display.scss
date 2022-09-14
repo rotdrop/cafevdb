@@ -234,6 +234,10 @@ form.pme-form.project-participant-fields-display {
           line-height:12px;
           font-size:150%; /* this is relative to the 2/3 above */
         }
+        &::first-line:not(*:first-child) {
+          line-height:12px;
+          font-size:150%; /* this is relative to the 2/3 above */
+        }
         & > * {
           /* -moz-transform: scale(0.5);
              zoom: 0.5; */
