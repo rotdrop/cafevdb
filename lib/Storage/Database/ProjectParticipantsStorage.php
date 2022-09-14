@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Events;
  */
 class ProjectParticipantsStorage extends Storage
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use ProjectParticipantsStorageTrait;
 
   /** @var Entities\Musician */
@@ -248,17 +249,67 @@ class ProjectParticipantsStorage extends Storage
     }
 
     if (empty($dirName) || !$dirMatch) {
+      $supportingDocumentsDirectory = $this->getSupportingDocumentsFolderName();
+
+      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($supportingDocumentsDirectory . self::PATH_SEPARATOR . '_'));
+
+      if (empty($dirName) || strpos($dirName, $fileDirName) === 0) {
+        $dirMatch = true;
+
+        $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
+          fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
+        );
+
+        $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+        if (empty($dirName)) {
+          // root directory, just add the subdirectory with proper mtime if there ever has been an entry
+
+          if (!empty($modificationTime) && $activeFieldData->count() == 0) {
+            // just update the time-stamp of the parent
+            $this->files[$dirName]['.']->updateModificationTime($modificationTime);
+          } elseif (!empty($modificationTime) || $activeFieldData->count() > 0) {
+            // add a directory entry
+            list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+            $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+          }
+        } else {
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($activeFieldData as $fieldDatum) {
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            if (empty($fileInfo)) {
+              continue; // should not happen here because of ->filter().
+            }
+            $fileName = $this->buildPath($fileInfo['pathName']);
+
+            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+            if ($fileDirName == $dirName) {
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
+            } elseif (strpos($fileDirName, $dirName) === 0) {
+              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+            }
+          }
+        }
+      }
+    }
+
+    if (empty($dirName) || !$dirMatch) {
       $modificationTime = $this->participant->getParticipantFieldsDataChanged();
 
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
       foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
 
-        $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+        if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
+          continue;
+        }
+
+        $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
         if (empty($fileInfo)) {
           continue;
         }
 
         $fileName = $this->buildPath($fileInfo['pathName']);
+
         list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
         if ($fileDirName == $dirName) {
           $this->files[$dirName][$baseName] = $fileInfo['file'];
@@ -285,10 +336,11 @@ class ProjectParticipantsStorage extends Storage
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
     $mtime = max(
-      $this->participant->getParticipantFieldsDataChanged(),
-      $this->musician->getSepaDebitMandatesChanged(),
-      $this->musician->getPaymentsChanged()
+      self::ensureDate($this->participant->getParticipantFieldsDataChanged()),
+      self::ensureDate($this->musician->getSepaDebitMandatesChanged()),
+      self::ensureDate($this->musician->getPaymentsChanged()),
     );
+
     return $mtime;
   }
 

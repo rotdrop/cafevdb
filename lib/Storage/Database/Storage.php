@@ -128,7 +128,6 @@ class Storage extends AbstractStorage
 
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    // return $this->filesRepository->fetchLatestModifiedTime()->getTimestamp();
     return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
   }
 
@@ -218,7 +217,11 @@ class Storage extends AbstractStorage
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
-      return $this->getDirectoryModificationTime($path)->getTimestamp();
+      $mtime = $this->getDirectoryModificationTime($path)->getTimestamp();
+      if ($path === self::PATH_SEPARATOR || empty($path)) {
+        $mtime = max($mtime, $this->getStorageModificationTime());
+      }
+      return $mtime;
     }
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
