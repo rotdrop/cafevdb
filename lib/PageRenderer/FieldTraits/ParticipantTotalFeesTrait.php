@@ -31,6 +31,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 trait ParticipantTotalFeesTrait
 {
+  use ParticipantFieldsCgiNameTrait;
+
   protected function makeTotalFeesField(&$fdd, $monetaryFields, $financeTab)
   {
     $this->makeJoinTableField(
@@ -56,7 +58,7 @@ trait ParticipantTotalFeesTrait
           foreach ($monetaryFields as $participantField) {
             $fieldId = $participantField->getId();
 
-            $table = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
+            $table = self::participantFieldTableName($fieldId);
             $fieldValues = [ 'key' => null, 'value' => null ];
             foreach ($fieldValues as $fieldName => &$fieldValue) {
               $label = $this->joinTableFieldName($table, 'option_'.$fieldName);

@@ -38,12 +38,29 @@ const installActionMenuHandlers = function($container) {
     }
   });
 
+  // close all action menus when clicking outside
   $container.on('click', function(event) {
-    const $container = $(event.target).closest('.dropdown-container.dropdown-no-hover');
-    if ($container.length === 0) {
+    const $menuContainer = $(event.target).closest('.dropdown-container.dropdown-no-hover');
+    if ($menuContainer.length === 0) {
       $('.dropdown-container.dropdown-no-hover').removeClass('dropdown-shown');
     }
   });
 };
 
+/**
+ * @param {(object|string)} element Element or selector. If omitted
+ * all action menus are closed.
+ */
+function closeActionMenu(element) {
+  const $element = $(element);
+  const $menuContainer = $element.length > 0
+    ? $element.closest('.dropdown-container.dropdown-no-hover')
+    : $('.dropdown-container.dropdown-no-hover');
+  $menuContainer.removeClass('dropdown-shown');
+}
+
 export default installActionMenuHandlers;
+
+export {
+  closeActionMenu as close,
+};

@@ -131,7 +131,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
    * )
-   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="supportingDocument", timestampField="participantFieldsDataChanged")
+   * @Gedmo\Timestampable(
+   *   on={"update","change","create","delete"},
+   *   field={"supportingDocument","optionValue"},
+   *   timestampField="participantFieldsDataChanged",
+   * )
    */
   private $projectParticipant;
 
@@ -151,7 +155,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   private $supportingDocument;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
   }
@@ -313,7 +318,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   public function setOptionKey($optionKey):ProjectParticipantFieldDatum
   {
-    if (empty($uuid = Uuid::asUuid($optionKey))) {
+    $uuid = Uuid::asUuid($optionKey);
+    if (empty($uuid)) {
       throw new \RuntimeException('Empty option key data.');
     }
     $this->optionKey = $uuid;

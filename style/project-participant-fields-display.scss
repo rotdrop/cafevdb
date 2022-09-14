@@ -61,7 +61,7 @@ form.pme-form.project-participant-fields-display {
 
     span.allowed-option-name {
       max-width:5em;
-      /*float:left;*/
+      float:left; // Mmmh.
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -81,12 +81,13 @@ form.pme-form.project-participant-fields-display {
       width:100%;
     }
 
-    td.money.single-valued,
     td.money.simple-valued {
-      font-family:monospace;
-    }
-    td.money.single-valued.groupofpeople {
-      font-family:inherit;
+      &.pme-cell, &.pme-value {
+        font-family:monospace;
+      }
+      &.groupofpeople {
+        font-family:inherit;
+      }
     }
   }
 
@@ -140,7 +141,7 @@ form.pme-form.project-participant-fields-display {
   }
 
   tr.recurring td.pme-value td.label {
-    padding-left:0.5em;
+    // padding-left:0.5em;
     padding-right:0.5em;
   }
 
@@ -221,26 +222,23 @@ form.pme-form.project-participant-fields-display {
    * Style first and subsequence lines in list-view
    */
   &.pme-list {
-    td.pme-value div.allowed-option-wrapper,
-    td.pme-cell div.allowed-option-wrapper {
-      max-height:24px; /* hard restriction on table row height */
-      /* line-height:12px; */
-      line-height:7px;
-      font-size:66.67%;
-      overflow:hidden;
-      position:relative;
-    }
-
-    td.pme-value div.allowed-option-wrapper::first-line,
-    td.pme-cell div.allowed-option-wrapper::first-line {
-      line-height:12px;
-      font-size:150%; /* this is relative to the 2/3 above */
-    }
-
-    td.pme-value div.allowed-option-wrapper > *,
-    td.pme-cell div.allowed-option-wrapper > *{
-      /* -moz-transform: scale(0.5);
-         zoom: 0.5; */
+    td.pme-value, td.pme-cell {
+      div.allowed-option-wrapper {
+        max-height:24px; /* hard restriction on table row height */
+        /* line-height:12px; */
+        line-height:7px;
+        font-size:66.67%;
+        overflow:hidden;
+        position:relative;
+        & > *:first-child {
+          line-height:12px;
+          font-size:150%; /* this is relative to the 2/3 above */
+        }
+        & > * {
+          /* -moz-transform: scale(0.5);
+             zoom: 0.5; */
+        }
+      }
     }
   }
 
@@ -249,7 +247,7 @@ form.pme-form.project-participant-fields-display {
    */
   &.pme-list, &.pme-view, &.pme-delete {
     td.pme-value, td.pme-cell {
-      &.data-type-db-file, &.data-type-cloud-file, &.data-type-cloud-folder {
+      &.data-type-db-file, &.data-type-cloud-file, &.data-type-cloud-folder, &.data-type-service-fee {
         padding:1px 3px;
         .operation {
           display:inline-block;
@@ -266,6 +264,46 @@ form.pme-form.project-participant-fields-display {
           &.open-parent {
             background-image:url('../../../core/img/filetypes/folder-external.svg');
           }
+          & ~ .allowed-option-wrapper {
+            display:inline-block;
+          }
+        }
+      }
+    }
+  }
+
+  tr.participant-field.data-type-service-fee {
+    td.pme-value {
+      .documents {
+        .action-menu-toggle {
+          min-height:0;
+          width:34px;
+          height:34px;
+        }
+        .dropdown-content {
+          .menu-item {
+            .delete-undelete .menu-icon {
+              background-image:url('../img/cafevdb-delete.svg');
+            }
+            .upload-replace .menu-icon {
+              background-image:url('../../../core/img/actions/upload.svg');
+            }
+            .upload-from-cloud .menu-icon {
+              background-image:url('../img/cloud-icon.svg');
+            }
+            .open-parent .menu-icon {
+              background-image:url('../../../core/img/filetypes/folder-external.svg');
+            }
+            .download-link .menu-icon {
+              background-image:url('../../../core/img/actions/download.svg');
+            }
+          }
+        }
+        .download-link.button {
+          background-image:url('../../../core/img/actions/download.svg');
+          background-repeat: no-repeat;
+          background-position: center;
+          font-size: 0;
         }
       }
     }
@@ -288,6 +326,11 @@ form.pme-form.project-participant-fields-display {
             input.operation.regenerate-all {
               background-image:url('../../../core/img/actions/add.svg');
             }
+          }
+        }
+        th {
+          .column-heading {
+            padding-right: 0.5em;
           }
         }
         td.operations {
@@ -341,15 +384,28 @@ form.pme-form.project-participant-fields-display {
         &.row-count-0 thead  {
           display:none;
         }
-        tr.field-datum td.input {
-          position:relative;
-          width:100%;
-          label.lock-unlock.left-of-input.position-right {
-            right:0;
-            margin-right:4px;
+        tr.field-datum {
+          td.label {
+            width:80%;
           }
-          input:not([type=checkbox]) {
+          td.input {
+            width:80%;
+          }
+          td.label, td.input {
+            position:relative;
+            label.lock-unlock.left-of-input.position-right {
+              right:0;
+              margin-right:4px;
+            }
+            input:not([type=checkbox]) {
+              width:100%;
+            }
+          }
+          td.input {
             width:100%;
+          }
+          td.label {
+            min-width: 10em;
           }
         }
         tr.generator {
@@ -362,11 +418,8 @@ form.pme-form.project-participant-fields-display {
           }
         }
         th, td {
-          &.document-count-0 {
-            display:none;
-          }
           &.label.unlabelled {
-            display:none;
+            // display:none;
           }
         }
       }
@@ -443,5 +496,8 @@ form.pme-form.project-participant-fields-display {
   span.allowed-option-value.money {
     font-family:monospace;
     float:right;
+  }
+  .operation {
+    display:none;
   }
 }

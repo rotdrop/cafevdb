@@ -29,6 +29,7 @@
  * @param string $subDir
  * @param string $fileBase
  * @param string $fileName
+ * @param string $filesAppPath
  * @param string $uploadPolicy
  * @param string $participantFolder
  * @param string $filesAppLink
@@ -41,4 +42,5 @@
 
 echo $this->inc('fragments/participant-fields/attachment-file-upload-row', [
   'dataStorage' => 'cloud',
+  'entityField' => 'option-value',
 ]);

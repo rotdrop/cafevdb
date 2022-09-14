@@ -1238,7 +1238,7 @@ const mandatePopupInit = function(selector) {
           sepaId: values,
           done(data) {
             mandatesInit(data, function() {
-              const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
+              const pmeReload = container.find(pmeFormSelector + ' input.' + pmeToken('reload')).first();
               if (pmeReload.length > 0) {
                 pmeReload.trigger('click', {
                   postOpen(pmeDialog) {
@@ -1364,10 +1364,10 @@ const mandateReady = function(selector, parameters, resizeCB) {
 
   const containerSel = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(containerSel);
-  const pmeReload = container.find(pmeFormSelector() + ' input.' + pmeToken('reload')).first();
+  const pmeReload = container.find(pmeFormSelector + ' input.' + pmeToken('reload')).first();
 
   // bail out if not for us.
-  const form = container.find(pmeFormSelector());
+  const form = container.find(pmeFormSelector);
   let $pmeTable = form.find('table[summary="InstrumentInsurance"]');
   if ($pmeTable.length > 0) {
     mandateInsuranceReady(selector);
