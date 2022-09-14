@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use \InvalidArgumentException;
+
 use OCA\CAFEVDB\Events;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -213,11 +215,24 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $birthday;
 
   /**
-   * @var string
+   * @var MusicianEmailAddress
    *
-   * @ORM\Column(type="string", length=256, nullable=false)
+   * The primary email address.
+   *
+   * @ORM\OneToOne(targetEntity="MusicianEmailAddress")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="id", referencedColumnName="musician_id"),
+   *   @ORM\JoinColumn(name="email", referencedColumnName="address", nullable=false)
+   * )
    */
   private $email;
+
+  /**
+   * @var Collection All email addresses.
+   *
+   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", cascade={"remove"}, orphanRemoval=true, indexBy="address")
+   */
+  private $emailAddresses;
 
   /**
    * @var Types\EnumMemberStatus|null
@@ -355,6 +370,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   public function __construct() {
     $this->__wakeup();
+    $this->emailAddresses = new ArrayCollection();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -688,15 +704,52 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * @param MusicianEmailAddress $email
+   *
+   * @return Musician
+   */
+  public function setEmail(MusicianEmailAddress $email):Musician
+  {
+    $this->email = $email;
+
+    return $this;
+  }
+
+  /**
+   * @return MusicianEmailAddress
+   */
+  public function getEmail():MusicianEmailAddress
+  {
+    return $this->email;
+  }
+
+  /**
    * Set email.
    *
    * @param string $email
    *
    * @return Musician
    */
-  public function setEmail($email):Musician
+  public function setEmailAddress($email):Musician
   {
-    $this->email = $email;
+    if ($email instanceof MusicianEmailAddress) {
+      $this->email = $email;
+      return $this;
+    }
+    if (!is_string($email)) {
+      throw new InvalidArgumentException('Argument must be either an email address or an email address entitiy');
+    }
+    if ($this->emailAddresses->containsKey($email)) {
+      $this->email = $this->emailAddresses->get($email);
+      return $this;
+    }
+    $emails = $this->emailAddresses->filter(fn(MusicianEmailAddress $addressEntity) => $addressEntity->getAddress() == $email);
+    if (count($emails) === 1) {
+      $this->email = $emails->first();
+      return $this;
+    }
+    $addressEntity = new MusicianEmailAddress($email, $this);
+    $this->emailAddresses->set($email, $addressEntity);
 
     return $this;
   }
@@ -706,9 +759,33 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return string
    */
-  public function getEmail()
+  public function getEmailAddress():string
   {
-    return $this->email;
+    return $this->email->getAddress();
+  }
+
+  /**
+   * Set emailAddresses.
+   *
+   * @param Collection $emailAddresses
+   *
+   * @return Musician
+   */
+  public function setEmailAddresses(Collection $emailAddresses):Musician
+  {
+    $this->emailAddresses = $emailAddresses;
+
+    return $this;
+  }
+
+  /**
+   * Get emailAddresses.
+   *
+   * @return Collection
+   */
+  public function getEmailAddresses():Collection
+  {
+    return $this->emailAddresses;
   }
 
   /**

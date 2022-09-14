@@ -90,6 +90,22 @@ class Musicians extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\Musician::class,
     ],
+    self::MUSICIAN_EMAILS_TABLE => [
+      'entity' => Entities\MusicianEmailAddress::class,
+      'identifier' => [
+        'musician_id' => 'id',
+        'address' => 'email',
+      ],
+      'column' => 'address',
+    ],
+    self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all' => [
+      'entity' => Entities\MusicianEmailAddress::class,
+      'identifier' => [
+        'musician_id' => 'id',
+        'address' => false,
+      ],
+      'column' => 'address',
+    ],
     self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
@@ -730,6 +746,15 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['email']['css']['postfix'][] = 'duplicates-indicator';
     $opts['fdd']['email']['css']['postfix'][] = $addCSS;
 
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_EMAILS_TABLE, 'address', Util::arrayMergeRecursive(
+        $this->defaultFDD['email'], [
+          'tab'  => ['id' => [ 'contact', ], ],
+          'name' => $this->l->t('Principal Email'),
+          'css' => [ 'postfix' => [ 'email', 'principal', ], ],
+        ])
+    );
+
     $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
     $opts['fdd']['address_supplement'] = [
@@ -861,7 +886,7 @@ make sure that the musicians are also automatically added to the
        'sql' => 'SUM($join_col_fqn)',
        'escape' => false,
        'nowrap' => true,
-       'sort' =>false,
+       'sort' => false,
        'css' => [ 'postfix' => [ 'restrict-height', ], ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
          $musicianId = $recordId['id'];
@@ -1000,11 +1025,11 @@ make sure that the musicians are also automatically added to the
           switch ($newVals['mailing_list'] ?? '') {
             case 'invite':
               $this->logInfo('SHOULD INVITE TO MAILING LIST');
-              $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->invite($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
               break;
             case 'subscribe':
               $this->logInfo('SHOULD SUBSCRIBE TO MAILING LIST');
-              $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->subscribe($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
               break;
             default:
               $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');

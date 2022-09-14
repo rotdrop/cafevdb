@@ -558,9 +558,9 @@ class RecipientsFilter
     foreach ($musicians as $rec => $musician) {
 
       $displayName = $musician->getPublicName(true);
-      if (!empty($musician->getEmail())) {
+      if (!empty($musician->getEmailAddress())) {
         // We allow comma separated multiple addresses
-        $musMail = explode(',', $musician->getEmail());
+        $musMail = explode(',', $musician->getEmailAddress());
         foreach ($musMail as $emailVal) {
           if (!$mailer->validateAddress($emailVal)) {
             $bad = htmlspecialchars($displayName.' <'.$emailVal.'>');

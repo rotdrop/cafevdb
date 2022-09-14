@@ -378,7 +378,7 @@ class MusicianValidationController extends Controller {
         $duplicatesPropability = 0.0;
 
         $commsMatch = (
-          (!empty($email) && $email == $musician->getEmail())
+          (!empty($email) && $email == $musician->getEmailAddress())
           || (!empty($fixedLinePhone) && $fixedLinePhone == $musician->getFixedLinePhone())
           || (!empty($mobilePhone) && $mobilePhone == $musician->getMobilePhone()));
 

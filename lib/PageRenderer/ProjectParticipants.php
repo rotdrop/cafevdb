@@ -108,6 +108,25 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'id',
     ],
+    self::MUSICIAN_EMAILS_TABLE => [
+      'entity' => Entities\MusicianEmailAddress::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'address' => [
+          'table' => self::MUSICIANS_TABLE,
+          'column' => 'email',
+        ],
+      ],
+      'column' => 'address',
+    ],
+    self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all' => [
+      'entity' => Entities\MusicianEmailAddress::class,
+      'identifier' => [
+        'musician_id' => 'musician_id',
+        'address' => false,
+      ],
+      'column' => 'address',
+    ],
     self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
@@ -1042,6 +1061,15 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'email',
       array_merge($this->defaultFDD['email'], [ 'tab' => [ 'id' => [ 'musician', 'contactdata', ], ], ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_EMAILS_TABLE, 'address', Util::arrayMergeRecursive(
+        $this->defaultFDD['email'], [
+          'tab'  => [ 'id' => [ 'musician', 'contactdata', ], ],
+          'name' => $this->l->t('Principal Email'),
+          'css' => [ 'postfix' => [ 'email', 'principal', ], ],
+        ])
+    );
 
     $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
       'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',

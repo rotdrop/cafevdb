@@ -100,6 +100,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected const JOIN_SINGLE_VALUED = 0x10;
 
   const MUSICIANS_TABLE = 'Musicians';
+  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
   const PROJECTS_TABLE = 'Projects';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
   const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
@@ -2470,7 +2471,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $pme = $pme?:$this->pme;
     $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
-    foreach($pme->fds as $idx => $label) {
+    foreach ($pme->fds as $idx => $label) {
       if (isset($row['qf'.$idx])) {
         $data[$label] = $row['qf'.$idx];
       }
@@ -2497,10 +2498,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       case 'projects':
         $categories = array_merge($categories, explode(self::VALUES_SEP, Util::removeSpaces($value)));
         break;
-      case 'MusicianInstrument:instrument_id':
+      case $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
         foreach (explode(self::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
           $categories[] = $this->instrumentInfo['byId'][$instrumentId];
         }
+        break;
+      case $this->joinTableFieldName(self::MUSICIAN_EMAILS_TABLE, 'address'):
+        $musician->setEmail(new Entities\MusicianEmailAddress($value, $musician));
         break;
       default:
         if ($joinTable) {

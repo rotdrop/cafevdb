@@ -1806,7 +1806,7 @@ Whatever.',
   public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
   {
     $listId = $participant->getProject()->getMailingListId();
-    $email = $participant->getMusician()->getEmail();
+    $email = $participant->getMusician()->getEmailAddress();
 
     if (empty($listId) || empty($email)) {
       return null;
@@ -1850,7 +1850,7 @@ Whatever.',
   public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant)
   {
     $listId = $participant->getProject()->getMailingListId();
-    $email = $participant->getMusician()->getEmail();
+    $email = $participant->getMusician()->getEmailAddress();
 
     if (empty($listId) || empty($email)) {
       return;

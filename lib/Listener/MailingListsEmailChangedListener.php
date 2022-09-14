@@ -62,7 +62,7 @@ class MailingListsEmailChangedListener implements IEventListener
     /** @var HandledEvent $event */
 
     $oldEmail = $event->getOldEmail();
-    $newEmail = $event->getMusician()->getEmail();
+    $newEmail = $event->getMusician()->getEmailAddress();
 
     if (empty($oldEmail) && empty($newEmail)) {
       return;
