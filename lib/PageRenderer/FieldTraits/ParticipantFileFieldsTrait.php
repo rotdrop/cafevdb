@@ -231,8 +231,11 @@ trait ParticipantFileFieldsTrait
         case FieldType::SERVICE_FEE:
         case FieldType::DB_FILE:
           $pathChain[] = $this->getDocumentsFolderName();
+          if ($field->getDataType() == FieldType::SERVICE_FEE) {
+            $pathChain[] = $this->getSupportingDocumentsFolderName();
+          }
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
-            $pathChain[] = $field->getName();
+            $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           }
           break;
         case FieldType::CLOUD_FILE:
@@ -252,13 +255,18 @@ trait ParticipantFileFieldsTrait
     }
     $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
     array_unshift($pathChain, $participantFolder);
-    $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
-    try {
-      $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
-      $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
-    } catch (/*\OCP\Files\NotFoundException*/ \Throwable $e) {
-      $this->logException($e, [ 'level' => \OCP\ILogger::DEBUG ]);
-      $filesAppLink = '';
+
+    $filesAppLink = null;
+    $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
+    while (!empty($pathChain)) {
+      $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
+      try {
+        $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
+        break;
+      } catch (/*\OCP\Files\NotFoundException*/ \Throwable $e) {
+        $this->logException($e, [ 'level' => \OCP\ILogger::DEBUG ]);
+        array_pop($pathChain);
+      }
     }
     return [ $filesAppLink, $filesAppTarget ];
   }

@@ -486,12 +486,16 @@ trait ParticipantFieldsTrait
             break;
           case FieldType::CLOUD_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
+            $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use (
+              $field,
+              $dataOptions,
+            ) {
               $fieldId = $field->getId();
               $optionKey = $dataOptions->first()->getKey();
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
               // this code path is not timing critical, so just sync with the file-system
+              $fieldData = [];
               $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
               $this->reloadOuterForm = $dirty;
 
@@ -506,12 +510,15 @@ trait ParticipantFieldsTrait
   </table>
 </div>';
             };
-            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use (
+              $field,
+            ) {
               if ($op == 'view') {
                 // not timing critical, sync with the FS
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                 // this code path is not timing critical, so just sync with the file-system
+                $fieldData = [];
                 $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
                 $this->reloadOuterForm = $dirty;
 
@@ -740,10 +747,13 @@ trait ParticipantFieldsTrait
           switch ($dataType) {
           case FieldType::CLOUD_FILE:
             $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
-            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use (
+              $field,
+            ) {
 
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               // this code path is not timing critical, so just sync with the file-system
+              $fieldData = [];
               $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
               $this->reloadOuterForm = $dirty;
 
@@ -777,15 +787,18 @@ trait ParticipantFieldsTrait
 </div>';
               return $html;
             };
-            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
+            $phpViewFunction = function($value, $op, $k, $row, $recordId, $pme) use (
+              $field,
+            ) {
               if ($op === 'view') {
                 // this code path is not timing critical, so just sync with the file-system
                 list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+                $fieldData = [];
                 $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
                 $this->reloadOuterForm = $dirty;
 
                 /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-                foreach ($fielData as $fieldDatum) {
+                foreach ($fieldData as $fieldDatum) {
                   $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                 }
               } else if (!empty($value)) {
@@ -944,6 +957,7 @@ trait ParticipantFieldsTrait
             $fdd['css']['postfix'][] = 'data-type-' . $dataType;
             $fdd['css']['postfix'][] = 'multiplicity-' . $multiplicity;
             $fdd['css']['postfix'][] = 'recurring-generator-' . $generatorSlug;
+            $fdd['css']['postfix'][] = 'restrict-height';
             unset($fdd['mask']);
             $fdd['select'] = 'M';
             $fdd['values'] = array_merge(
@@ -979,43 +993,6 @@ trait ParticipantFieldsTrait
           if ($dataType != FieldType::DB_FILE) {
             $keyFdd['display|LF'] = [ 'popup' => 'data' ];
           }
-          $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
-            // LF are actually both the same. $value will always just
-            // come from the filter's $value2 array. The actual values
-            // we need are in the description fields which are passed
-            // through the 'qf'.$k field in $row.
-            $values = array_filter(Util::explodeIndexed($row['qf'.$k]));
-
-            $options = self::fetchValueOptions($field, $values);
-
-            switch ($dataType) {
-              case FieldType::DB_FILE:
-                // just model this like the FieldMultiplicity::PARALLEL stuff
-                if (!empty($values)) {
-                  list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                  $fileBase = $field->getName();
-                  $extension = 'zip';
-                  $fileName = $this->projectService->participantFilename($fileBase, $musician) . '.' . $extension;
-                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
-                    array_values($values), $fileName);
-                  $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-                  return $filesAppAnchor
-                    . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
-                }
-                return '';
-              default:
-                $html = [];
-                foreach ($options as $key => $option) {
-                  if (empty($option)) { // ??? how could this happen? Seems to be a legacy relict
-                    $this->logError('Missing option entity for key ' . $key);
-                    continue;
-                  }
-                  $label = $option->getLabel()??'';
-                  $html[] = $this->allowedOptionLabel($label, $values[$key], $dataType);
-                }
-                return '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
-            }
-          };
 
           // For a useful add/change/copy view we should use the value fdd.
           $valueFdd['input|ACP'] = $keyFdd['input'];
@@ -1052,20 +1029,7 @@ trait ParticipantFieldsTrait
               'filter' => [
                 'having' => true,
               ],
-              'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
-  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL)
-  ORDER BY $order_by))',
-              'values' => [
-                'grouped' => true,
-                'filters' => ('$table.field_id = '.$fieldId
-                              .$deletedValueFilter),
-                'orderby' => '$table.key ASC',
-              ],
-            ],
-          );
-          $labelFdd = &$fieldDescData[$labelFddName];
-
-          $labelFdd['sql'] = 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
+              'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
   DISTINCT
   IF(
     $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
@@ -1077,7 +1041,16 @@ trait ParticipantFieldsTrait
     NULL
   )
   ORDER BY $order_by)
-)';
+)',
+              'values' => [
+                'grouped' => true,
+                'filters' => ('$table.field_id = '.$fieldId
+                              .$deletedValueFilter),
+                'orderby' => '$table.key ASC',
+              ],
+            ],
+          );
+          $labelFdd = &$fieldDescData[$labelFddName];
 
           // yet another field for the supporting documents
           list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
@@ -1102,10 +1075,85 @@ trait ParticipantFieldsTrait
             ]);
           $invoiceFdd = &$fieldDescData[$invoiceFddName];
 
-          // @todo $keyFdd has probably to be voided here as otherwise hidden
+          $viewClosure = function($value, $op, $k, $row, $recordId, $pme) use (
+            $field,
+            $dataType,
+            $invoiceFddIndex,
+          ) {
+
+            // LF are actually both the same. $value will always just
+            // come from the filter's $value2 array. The actual values
+            // we need are in the description fields which are passed
+            // through the 'qf'.$k field in $row.
+            $values = array_filter(Util::explodeIndexed($row['qf' . $k]));
+            $options = self::fetchValueOptions($field, $values);
+            $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+            switch ($dataType) {
+              case FieldType::DB_FILE:
+                // just model this like the FieldMultiplicity::PARALLEL stuff
+                if (!empty($values)) {
+                  $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
+                  $extension = 'zip';
+                  $fileName = $this->projectService->participantFilename($fileBase, $musician, ignoreExtension: true) . '.' . $extension;
+                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
+                    array_values($values), $fileName);
+                  $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
+                  return $filesAppAnchor
+                    . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+                }
+                return '';
+              default:
+                $hasSupportingDocuments = false;
+                $html = [];
+                foreach ($options as $optionKey => $fieldOption) {
+                  if (empty($fieldOption)) { // ??? how could this happen? Seems to be a legacy relict
+                    $this->logError('Missing option entity for key ' . $optionKey);
+                    continue;
+                  }
+                  $optionValue = $values[$optionKey];
+                  $label = $fieldOption->getLabel()??'';
+                  $rowHtml = $this->allowedOptionLabel($label, $optionValue, $dataType);
+
+                  if (!empty($invoices[$optionKey])) {
+                    $hasSupportingDocuments = true;
+                    $fieldDatum = $this->makeFieldDatum($field, $musician, $fieldOption, $optionValue, $invoices[$optionKey]);
+                    $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+                    $fileName = $fileInfo['fileName'];
+                    $downloadLink = $this->urlGenerator()
+                      ->linkToRoute($this->appName().'.downloads.get', [
+                        'section' => 'database',
+                        'object' => $invoices[$optionKey],
+                      ])
+                      . '?'
+                      . http_build_query([
+                        'fileName' => $fileName,
+                        'requesttoken' => \OCP\Util::callRegister(),
+                      ], '', '&');
+                    $this->logInfo('DOWNLOAD ' . $downloadLink);
+                    $rowHtml = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $rowHtml . '</a>';
+                  }
+                  $html[] = $rowHtml;
+                }
+
+                $html = '<div class="allowed-option-wrapper">'.implode('<br/>', $html).'</div>';
+
+                if ($hasSupportingDocuments) {
+                  $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
+                  $html = '<div class="pme-cell-wrapper flex-container flex-center">' . $filesAppAnchor . $html . '</div>';
+                }
+
+                return $html;
+            }
+          };
+
+
+          $keyFdd['php|LF'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PME::OPERATION_LIST, $k, $row, $recordId, $pme);
+          $keyFdd['php|VD'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PME::OPERATION_VIEW, $k, $row, $recordId, $pme);
+
+          // $keyFdd has probably to be voided here as otherwise hidden
           // input fields are emitted which conflict with the $valueFdd
-          // $keyFdd['sql|ACP'] = 'NULL';
-          // $keyFdd['select|ACP'] = '';
           $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
             return '';
           };
