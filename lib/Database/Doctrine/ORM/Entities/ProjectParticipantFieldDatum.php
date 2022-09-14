@@ -50,7 +50,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\HasLifecycleCallbacks
  *
  * Soft deletion is necessary in case the ProjectPayments table
  * already contains entries.
