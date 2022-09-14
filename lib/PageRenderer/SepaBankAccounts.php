@@ -194,6 +194,11 @@ class SepaBankAccounts extends PMETableViewBase
     $this->projectService = $projectService;
     $this->userStorage = $userStorage;
     $this->initCrypto();
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    }
+
   }
 
   public function shortTitle()
