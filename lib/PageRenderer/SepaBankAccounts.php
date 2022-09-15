@@ -148,6 +148,23 @@ class SepaBankAccounts extends PMETableViewBase
       'column' => 'option_key',
       'encode' => 'BIN2UUID(%s)',
     ],
+    // the data for the extra input fields
+    self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
+      'entity' => Entities\ProjectParticipantFieldDataOption::class,
+      'flags' => 0,
+      'identifier' => [
+        'field_id' => [
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'column' => 'id',
+        ],
+        'key' => [
+          'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+          'column' => 'option_key',
+        ],
+      ],
+      'column' => 'key',
+      'encode' => 'BIN2UUID(%s)',
+    ],
     self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
@@ -194,6 +211,11 @@ class SepaBankAccounts extends PMETableViewBase
     $this->projectService = $projectService;
     $this->userStorage = $userStorage;
     $this->initCrypto();
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    }
+
   }
 
   public function shortTitle()
@@ -472,6 +494,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     // Define some further join-restrictions
     array_walk($this->joinStructure, function(&$joinInfo, $table) use ($projectMode) {
+      $joinInfo['table'] = $table;
       switch ($table) {
       case self::PROJECT_PARTICIPANTS_TABLE:
         if ($projectMode) {
@@ -491,6 +514,9 @@ class SepaBankAccounts extends PMETableViewBase
             'value' => null,
           ];
         }
+        break;
+      case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
         break;
       default:
         break;

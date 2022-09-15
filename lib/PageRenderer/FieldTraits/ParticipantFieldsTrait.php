@@ -954,17 +954,17 @@ trait ParticipantFieldsTrait
               $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType);
             }
             unset($keyFdd['mask']);
-            $keyFdd['values2glue'] = '<br/>';
             $keyFdd['escape'] = false;
             // fall through
           default:
             $keyFdd['values2'] = $values2;
             $keyFdd['valueTitles'] = $valueTitles;
             $keyFdd['valueData'] = $valueData;
+            $keyFdd['values2glue'] = '</span><br/><span>';
             $keyFdd['display|LF'] = [
               'popup' => 'data',
-              'prefix' => '<div class="allowed-option-wrapper">',
-              'postfix' => '</div>',
+              'prefix' => '<div class="allowed-option-wrapper"><span>',
+              'postfix' => '</spans></div>',
             ];
             if ($multiplicity == FieldMultiplicity::PARALLEL) {
               $keyFdd['css']['postfix'][] = 'set hide-subsequent-lines';
