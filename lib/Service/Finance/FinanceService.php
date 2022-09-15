@@ -132,7 +132,7 @@ class FinanceService
       $calendarInterval = $fromDate->diff($calendarDeadline, true);
 
       if ($calendarInterval->days > $businessInterval->days) {
-        return $calendarDeadline;
+        $businessDeadline = $calendarDeadline->nextBusinessDay();
       }
     }
 

@@ -1825,6 +1825,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $meta = $this->classMetadata($entityName);
     $entityId = $meta->extractKeyValues($pmeRecordId);
 
+    $this->logInfo('ENTITY ' . $entityName . ' ' . print_r($entityId, true));
+
     return $entityId;
   }
 
@@ -2471,8 +2473,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
     foreach($pme->fds as $idx => $label) {
-      if (isset($row['qf'.$idx])) {
-        $data[$label] = $row['qf'.$idx];
+      if (isset($row['qf' . $idx . '_idx'])) {
+        $data[$label] = $row['qf' . $idx . '_idx'];
+      } elseif (isset($row['qf'.$idx])) {
+        $data[$label] = $row['qf' . $idx];
       }
     }
     $categories = [];
@@ -2482,12 +2486,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       foreach ($this->joinStructure as $joinInfo) {
         if ($joinInfo['table'] == self::MUSICIANS_TABLE) {
           $idColumn = $joinInfo['identifier']['id'];
-          $id = $row['qf'.($pme->fdn[$idColumn])];
+          $id = $row['qf' . ($pme->fdn[$idColumn])];
           $musician->setId($id);
           break;
         }
       }
     }
+    $userIdSlugSeen = false;
     foreach ($data as $key => $value) {
       // In order to support "categories" the same way as the
       // AddressBook-integration we need to feed the
@@ -2514,10 +2519,20 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
         try {
           $musician[$column] = $value;
+          if ($column == 'user_id_slug') {
+            $userIdSlugSeen = true;
+          }
         } catch (\Throwable $t) {
           // Don't care, we know virtual stuff is not there
         }
         break;
+      }
+    }
+    if (!$userIdSlugSeen) {
+      $musicianId = $musician->getId();
+      $musician = $this->findEntity(Entities\Musician::class, $musicianId);
+      if (empty($musician)) {
+        $this->logError('NO MUSICIAN FOR ROW ' . $musicianId . ' ' . print_r($row, true));
       }
     }
     return [ 'musician' => $musician, 'categories' => $categories ];
