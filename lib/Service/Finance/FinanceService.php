@@ -50,6 +50,11 @@ class FinanceService
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   const ENTITY = Entities\SepaDebitMandate::class;
+  /**
+   * @var string
+   *
+   * The must-be-supported character set as regular expression.
+   */
   const SEPA_CHARSET = "a-zA-Z0-9 \/?:().,'+-";
   const SEPA_PURPOSE_LENGTH = 4*35;
   const SEPA_MANDATE_LENGTH = 35; ///< Maximum length of mandate reference.
@@ -410,13 +415,20 @@ class FinanceService
    * more, but at least at the beginning of the SEPA affair at least
    * some banks were at least very restrictive concerning the allowed
    * characters.
+   *
+   * @param string $string String to convert.
+   *
+   * @param null|string $locale
+   *
+   * @return string
    */
-  public function sepaTranslit($string, $language = null)
+  public function sepaTranslit(string $string, ?string $locale = null):string
   {
-    $locale = empty($language)
-      ? null
-      : strtolower($language).'_'.strtoupper($language).'UTF-8';
-    return $this->transliterate($string, $locale);
+    return str_replace(
+      ['[{', '}]', ';'],
+      ['(', ')', '/'],
+      $this->transliterate($string, $locale)
+    );
   }
 
   /**
