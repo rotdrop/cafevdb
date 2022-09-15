@@ -740,8 +740,8 @@ class SepaDebitMandatesController extends Controller {
     $requiredKeys = [
       'musicianId',
       'bankAccountIBAN',
-      'bankAccountBLZ', // @todo maybe get rid of it
-      'bankAccountBIC', // @todo maybe get rid of it
+      // 'bankAccountBLZ', // @todo maybe get rid of it
+      // 'bankAccountBIC', // @todo maybe get rid of it
       'bankAccountOwner',
     ];
 
@@ -757,6 +757,11 @@ class SepaDebitMandatesController extends Controller {
       if ($mandateNonRecurring === null) {
         $requiredKeys[] = 'mandateNonRecurring';
       }
+    }
+
+    if (!empty($bankAccountIBAN) && str_starts_with($bankAccountIBAN, 'DE')) {
+      $requiredKeys[] = 'bankAccountBLZ';
+      $requiredKeys[] = 'bankAccountBIC';
     }
 
     foreach ($requiredKeys as $required) {
