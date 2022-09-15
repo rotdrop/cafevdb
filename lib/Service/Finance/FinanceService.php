@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\BankAccountValidator;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
@@ -750,7 +751,7 @@ class FinanceService
       $ibanBLZ = $iban->Bank();
       $ibanKTO = $iban->Account();
 
-      $bav = new \malkusch\bav\BAV;
+      $bav = $this->di(BankAccountValidator::class);
 
       if (!$bav->isValidBank($ibanBLZ)) {
         return null;
@@ -812,7 +813,7 @@ class FinanceService
         throw new \InvalidArgumentException($this->l->t('BLZ and IBAN do not match: %s != %s', [ $BLZ, $ibanBLZ, ]));
       }
 
-      $bav = new \malkusch\bav\BAV;
+      $bav = $this->di(BankAccountValidator::class);
 
       if (!$bav->isValidBank($ibanBLZ)) {
         throw new \InvalidArgumentException($this->l->t('Invalid German BLZ: %s.', $BLZ));
