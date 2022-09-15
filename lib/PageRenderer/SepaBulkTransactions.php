@@ -42,6 +42,8 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
 {
+  use FieldTraits\CryptoTrait;
+
   const TEMPLATE = 'sepa-bulk-transactions';
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
   const DATA_TABLE = self::SEPA_BULK_TRANSACTION_DATA_TABLE;
@@ -160,6 +162,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $this->financeService = $financeService;
     $this->bulkTransactionService = $bulkTransactionService;
     $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
+
+    $this->initCrypto();
   }
 
   public function shortTitle()
@@ -420,7 +424,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
           $values = Util::explode(',', $value, Util::TRIM);
           foreach ($values as &$value) {
-            $value = $this->decrypt($value);
+            $value = $this->ormDecrypt($value);
           }
           return implode('<br/>', $values);
         },
