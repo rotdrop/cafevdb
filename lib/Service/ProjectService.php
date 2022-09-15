@@ -1709,12 +1709,15 @@ Whatever.',
                       [ $listId, $project->getName() ]));
       }
       $displayName = $project->getName();
+      $subjectPrefix = $displayName;
       $tag = $this->getConfigValue('bulkEmailSubjectTag');
       if (!empty($tag)) {
-        $displayName = $tag . '-' . $displayName;
+        $subjectPrefix = $tag . '-' . $subjectPrefix;
       }
+      $subjectPrefix = '[' . $subjectPrefix . ']' . ' ';
       $configuration = [
         'display_name' => $displayName,
+        'subject_prefix' => $subjectPrefix,
         'advertised' => 'False',
         'archive_policy' => 'private',
         'subscription_policy' => 'moderate',

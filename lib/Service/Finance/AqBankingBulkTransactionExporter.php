@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -224,16 +224,19 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     ];
   }
 
-  static private function generatePurpose($subject):array
+  private static function generatePurpose($subject):array
   {
-    $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subject);
+    list($subjectPrefix, $subjectTail) = explode(SepaBulkTransactionService::SUBJECT_PREFIX_SEPARATOR, $subject, 2);
+    $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subjectTail);
     $subject = SepaBulkTransactionService::generateCompositeSubject($subjects);
+
+    $subject = $subjectPrefix . SepaBulkTransactionService::SUBJECT_PREFIX_SEPARATOR . $subject;
 
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);
     }
     $purpose = [];
-    for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
+    for ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
       $purpose[] = '"' . substr($subject, $i, self::PURPOSE_LINE_LENGTH) . '"';
     }
     return $purpose;

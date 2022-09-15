@@ -432,7 +432,7 @@ class Util
    */
   public static function camelCaseToDashes($string, $separator = '-')
   {
-    return strtolower(preg_replace('/([A-Z])/', $separator.'$1', lcfirst($string)));
+    return strtolower(preg_replace('/([A-Z]|[0-9]+)/', $separator.'$1', lcfirst($string)));
   }
 
   /**

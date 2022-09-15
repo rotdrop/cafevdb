@@ -11,8 +11,9 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
- * Musician. In GnuCash this would be a "split transactions". The
- * transaction parts are ProjectPayment entities.
+ * Musician. In GnuCash this would be a "split transactions". The transaction
+ * parts are ProjectPayment entities. Composite-payments may contain payments
+ * for different projects.
  *
  * @ORM\Table(name="CompositePayments")
  *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
