@@ -38,7 +38,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   const CSV_DELIMITER = ';';
   const PURPOSE_LINE_LENGTH = FinanceService::SEPA_PURPOSE_LENGTH / 4;
   const CURRENCY = 'EUR';
-  const MANDATE_DATE_FORMAT = 'Ymd';
+  const MANDATE_DATE_FORMAT = 'Y/m/d';
   const DUE_DATE_FORMAT = 'Y/m/d';
   const NON_RECURRING = [
     true => 'once',
@@ -226,12 +226,6 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
 
   private static function generatePurpose($subject):array
   {
-    list($subjectPrefix, $subjectTail) = explode(SepaBulkTransactionService::SUBJECT_PREFIX_SEPARATOR, $subject, 2);
-    $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subjectTail);
-    $subject = SepaBulkTransactionService::generateCompositeSubject($subjects);
-
-    $subject = $subjectPrefix . SepaBulkTransactionService::SUBJECT_PREFIX_SEPARATOR . $subject;
-
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);
     }
