@@ -62,10 +62,10 @@ class SepaBulkTransactionService
   const EXPORT_AQBANKING = 'aqbanking';
 
   const SUBJECT_PREFIX_LIMIT = 16;
-  const SUBJECT_PREFIX_SEPARATOR = ': ';
-  const SUBJECT_GROUP_SEPARATOR = '; ';
+  const SUBJECT_PREFIX_SEPARATOR = ' / ';
+  const SUBJECT_GROUP_SEPARATOR = ' / ';
   const SUBJECT_ITEM_SEPARATOR = ', ';
-  const SUBJECT_OPTION_SEPARATOR = Entities\ProjectParticipantFieldDatum::PAYMENT_REFERENCE_SEPARATOR;
+  const SUBJECT_OPTION_SEPARATOR = ': ';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -261,8 +261,13 @@ class SepaBulkTransactionService
    * bulk-email tag.
    *
    * @param Entities\Project $project
+   *
+   * @return string
+   *
+   * @todo Move to the project-service, e.g. compute a length-limited
+   * project-slug at the correct place.
    */
-  private function generateSubjectPrefix(Entities\Project $project)
+  private function generateSubjectPrefix(Entities\Project $project):string
   {
     /** @var Service\EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(Service\EncryptionService::class);
@@ -290,7 +295,9 @@ class SepaBulkTransactionService
       $projectName = Util::dashesToCamelCase($parts, true, ' ');
     }
 
-    return $tag . '-' . $projectName;
+    $prefix = empty($tag) ? $projectName : $tag . '-' . $projectName;
+
+    return $this->financeService->sepaTranslit($prefix);
   }
 
   /**
@@ -300,14 +307,14 @@ class SepaBulkTransactionService
    *
    * @param array $subjects
    */
-  public static function generateCompositeSubject(array $subjects)
+  private function generateCompositeSubject(array $subjects):string
   {
     natsort($subjects);
     $oldPrefix = false;
     $postfix = [];
     $purpose = '';
     foreach ($subjects as $subject) {
-      $parts = Util::explode(self::SUBJECT_OPTION_SEPARATOR, $subject);
+      $parts = Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED);
       $prefix = $parts[0];
       if (count($parts) < 2 || $oldPrefix != $prefix) {
         $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
@@ -331,7 +338,7 @@ class SepaBulkTransactionService
       $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
     }
 
-    return $purpose;
+    return $this->financeService->sepaTranslit(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
   }
 
   /**
