@@ -18,6 +18,13 @@
     </properties>
   </rule>
 
+  <rule ref="Generic.Files.LineLength">
+    <properties>
+      <property name="lineLimit" value="192"/>
+      <property name="absoluteLineLimit" value="0"/>
+    </properties>
+  </rule>
+
   <rule ref="Generic.Commenting">
     <properties>
       <property name="indent" value="2"/>
