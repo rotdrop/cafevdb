@@ -320,16 +320,18 @@ class SepaBulkTransactionsController extends Controller {
       // so this would still be in accordance with the payment
       // negotiations of the participant.
 
-      $dueDateEstimate = $now;
+      $dueDateEstimate = $this->financeService->targetDeadline(0);
       foreach ($participants as $musicianId => $participant) {
-        $debitMandate = $debitMandates[$musicianId];
-        $dueDateEstimate = max(
-          $dueDateEstimate,
-          $this->financeService->targetDeadline(
+        $debitMandate = $debitMandates[$musicianId] ?? null;
+        if (!empty($debitMandate))  {
+          $dueDateEstimate = max(
+            $dueDateEstimate,
+            $this->financeService->targetDeadline(
               $debitMandate->getPreNotificationBusinessDays()?:0,
               $debitMandate->getPreNotificationCalendarDays(),
               $now)
-        );
+          );
+        }
       }
 
       // don't set $dueDeadline to $dueDateEstimate as we do not yet
