@@ -522,10 +522,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (empty($fieldName)) {
       return $optionLabel;
     }
-    if (empty($optionLabel) || $optionLabel === 'null') {
+    if (empty($optionLabel) || $optionLabel === 'null' || $fieldName == $optionLabel) {
       return $fieldName;
     }
-    return $fieldName.self::PAYMENT_REFERENCE_SEPARATOR.$optionLabel;
+    return $fieldName . self::PAYMENT_REFERENCE_SEPARATOR . $optionLabel;
   }
 
   /**
