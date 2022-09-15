@@ -19,7 +19,7 @@
     "doctrine/dbal": "^2.13.0",
     "doctrine/orm": "dev-production/2.11.x/cafevdb",
       "symfony/cache": "^6",
-    "gedmo/doctrine-extensions": "3.8.x-dev",
+    "gedmo/doctrine-extensions": "3.9.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
