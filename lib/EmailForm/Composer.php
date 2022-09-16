@@ -23,7 +23,9 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use \DateTimeImmutable;
 use ZipStream\ZipStream;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCP\IDateTimeFormatter;
@@ -84,6 +86,22 @@ class Composer
 
   private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
   private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
+
+  /**
+   * @var string
+   *
+   * The default attachment size limit. The actual limit is configured by the
+   * app-config value 'attachmentLinkSizeLimit'.
+   */
+  const DEFAULT_ATTACHMENT_SIZE_LIMIT = (1 << 20); // 1 Mib, quite small
+
+  /**
+   * @var int
+   *
+   * The default attachment-link expiration limit. The action limit is
+   * configured by the app-config value 'attachmentLinkExpirationLimit'.
+   */
+  const DEFAULT_ATTACHMENT_LINK_EXPIRATION_LIMIT = 7; // days
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
@@ -2178,54 +2196,58 @@ Störung.';
   }
 
   /**
-   * Compose all "global" attachments, possibly replacing large attachments by
-   * download links.
+   * Add the given file attachment, replacing it by a download-link if too
+   * large.
    *
    * @param PHPMailer $phpMailer
    *
-   * @param string $messageId Defines the sub-folder where the attachments are
-   * stored.
+   * @param string $messageId The message id is used to construct the folder
+   * on the server where stripped attachments can be downlaoded
+   * from.
+   *
+   * @param string $data The data to be attached.
+   *
+   * @param string $fileName The file-name to be presented to the recipient.
+   *
+   * @param string $transferEncoding
+   *
+   * @param string $mimeType
+   *
+   * @return void
    */
-  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
-  {
-    // also simulate link generation for attachments exceeding a certain size
-    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', (1 << 20)); // k=10, m=20
-    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', 7); // days
+  private function addFileAttachment(
+    PHPMailer $phpMailer,
+    string $messageId,
+    string $data,
+    string $fileName,
+    string $transferEncoding,
+    string $mimeType,
+  ) {
+    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', self::DEFAULT_ATTACHMENT_SIZE_LIMIT);
+    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', self::DEFAULT_ATTACHMENT_LINK_EXPIRATION_LIMIT);
 
     $outBoxSubFolderPath = self::outBoxSubFolderFromMessageId($messageId);
     $outBoxSubFolderPath = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolderPath);
 
     $expirationDate = $linkExpirationLimit <= 0
       ? null
-      : ((new \DateTimeImmutable('UTC midnight'))
+      : ((new DateTimeImmutable('UTC midnight'))
         ->modify('+' . $linkExpirationLimit . ' days'));
 
-    // Add all registered attachments.
-    foreach ($this->fileAttachments() as $attachment) {
-      if ($attachment['status'] != 'selected') {
-        continue;
+    if ($linkSizeLimit >= 0 && strlen($data) > $linkSizeLimit) {
+      $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $fileName);
+      $downloadFile = $this->userStorage->getFile($downloadPath);
+      if (empty($downloadFile)) {
+        $downloadFile = $this->userStorage->putContent($downloadPath, $data);
       }
-      if ($attachment['type'] == 'message/rfc822') {
-        $encoding = '8bit';
-      } else {
-        $encoding = 'base64';
-      }
-      $file = $this->appStorage->getFile($attachment['tmp_name']);
-      if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
-        $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $attachment['name']);
-        $downloadFile = $this->userStorage->getFile($downloadPath);
-        if (empty($downloadFile)) {
-          $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
-        }
-        if (!empty($downloadFile)) {
-          $shareLink = $this->simpleSharingService->linkShare(
-            $downloadFile,
-            $this->shareOwnerId(),
-            sharePerms: \OCP\Constants::PERMISSION_READ,
-            expirationDate: $expirationDate
-            );
-          $downloadAttachment = $this->l->t(
-            '<!DOCTYPE html>
+      $shareLink = $this->simpleSharingService->linkShare(
+        $downloadFile,
+        $this->shareOwnerId(),
+        sharePerms: \OCP\Constants::PERMISSION_READ,
+        expirationDate: $expirationDate
+      );
+      $downloadAttachment = $this->l->t(
+        '<!DOCTYPE html>
 <html lang="%1$s">
   <head>
     <title>%2$s</title>
@@ -2245,30 +2267,65 @@ Störung.';
     </div>
   </body>
 </html>', [
-  $this->getLanguage(),
-  $shareLink,
-  basename($attachment['name']),
-  Util::humanFileSize($downloadFile->getSize()),
-  $attachment['type'],
-  30,
-  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-]
-          );
-          $phpMailer->addStringAttachment(
-            $downloadAttachment,
-            basename($attachment['name']) . '.html',
-            '8bit',
-            'text/html'
-          );
-          $this->registerAttachmentDownloadsCleaner();
-          continue;
-        }
+        $this->getLanguage(),
+        $shareLink,
+        $fileName,
+        Util::humanFileSize($downloadFile->getSize()),
+        $mimeType,
+        30,
+        $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
+      ]);
+      $data = $downloadAttachment;
+      $fileName = $fileName . '.html';
+      $transferEncoding = '8bit';
+      $mimeType = 'text/html';
+      $this->registerAttachmentDownloadsCleaner();
+    }
+    $phpMailer->AddStringAttachment(
+      $data,
+      $fileName,
+      $transferEncoding,
+      $mimeType,
+    );
+  }
+
+  /**
+   * Compose all "global" attachments, possibly replacing large attachments by
+   * download links. Attachments are converted to download-links if they
+   * exceed the limit given by the 'attachmentLinkSizeLimit' app-config
+   * option. The download links will expire after the time given by the
+   * 'attachmentLinkExpirationLimit' limit.
+   *
+   * @param PHPMailer $phpMailer
+   *
+   * @param string $messageId The message id is used to construct the folder
+   * on the server where stripped attachments can be downlaoded
+   * from.
+   *
+   * @return void
+   */
+  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
+  {
+    // Add all registered attachments.
+    foreach ($this->fileAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
       }
-      $phpMailer->AddStringAttachment(
-        $file->getContent(),
-        basename($attachment['name']),
+      if ($attachment['type'] == 'message/rfc822') {
+        $encoding = '8bit';
+      } else {
+        $encoding = 'base64';
+      }
+      $file = $this->appStorage->getFile($attachment['tmp_name']);
+
+      $this->addFileAttachment(
+        $phpMailer,
+        $messageId,
+        $file->getConten(),
+        $attachment['name'],
         $encoding,
-        $attachment['type']);
+        $attachment['type'],
+      );
     }
 
     // add "global" blank template attachments with just the orchestra-data
@@ -2317,12 +2374,14 @@ Störung.';
           default:
             continue 2;
         }
-        $phpMailer->AddStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          $messageId,
           $fileData,
           $fileName,
           'base64',
-          $mimeType);
-        continue;
+          $mimeType,
+        );
       }
     }
   }
@@ -2793,12 +2852,12 @@ Störung.';
    * @todo Fold into composeAndSend
    */
   private function composeAndExport(
-    $strMessage
-    , $eMails
-    , $extraAttachments = []
-    , $addCC = true
-    , ?string $messageId = null
-    , $references = null
+    $strMessage,
+    $eMails,
+    $extraAttachments = [],
+    $addCC = true,
+    ?string $messageId = null,
+    $references = null,
   ) {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -2899,24 +2958,27 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage($calendar,
-                                           md5($this->projectName.'.ics'),
-                                           $this->projectName.'.ics',
-                                           'quoted-printable',
-                                           'text/calendar');
+        $phpMailer->AddStringEmbeddedImage(
+          $calendar,
+          md5($this->projectName.'.ics'),
+          $this->projectName.'.ics',
+          'quoted-printable',
+          'text/calendar',
+        );
       }
 
       // All extra (in particular: personal) attachments.
       foreach ($extraAttachments as $generator) {
         $attachment = call_user_func($generator);
-        $phpMailer->addStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          is_string($references) ? $references : $messageId,
           $attachment['data'],
           $attachment['fileName'],
           $attachment['encoding'],
           $attachment['mimeType']
         );
       }
-
     } catch (\Throwable $t) {
       $this->logException($t);
       // popup an alert and abort the form-processing
