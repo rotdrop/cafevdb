@@ -3753,17 +3753,14 @@ Störung.';
             break;
           }
         }
-        $words[] = strtolower($translatedWord);
+        $words[] = strtolower($this->transliterate($translatedWord));
       }
       if (!empty($words)) {
         $translation = Util::dashesToCamelCase(implode(' ', $words), true, ' ');
         array_unshift($result, $translation);
       }
     }
-    return array_map(
-      function($template) { return $this->transliterate($template); },
-      array_unique($result)
-    );
+    return array_unique($result);
   }
 
   /**
@@ -4571,7 +4568,7 @@ Störung.';
       $status = 'inactive';
       if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
         $status = 'selected';
-      } elseif (!empty($this->project)) {
+      } elseif (!empty($this->project) && !empty($this->bulkTransaction) && ($this->bulkTransaction instanceof Entities\SepaDebitNote)) {
         switch ($templateId) {
           case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if ($this->project->getId() != $this->getClubMembersProjectId()) {
