@@ -154,18 +154,19 @@ const pmeNavigationSelector = function(token) {
 };
 
 /**
- * Selector for main form
- *
- * @returns {string}
+ * Selector for main form.
  */
 const pmeFormSelector = 'form.' + pmeToken('form');
 
 /**
  * Selector for main table
- *
- * @returns {string}
  */
 const pmeTableSelector = 'table.' + pmeToken('main');
+
+/**
+ * Selector for input.
+ */
+const pmeInputSelector = 'input.' + pmeToken('input');
 
 /**
  * Genereate the default selector.
@@ -242,6 +243,7 @@ export {
   pmeDefaultSelector as defaultSelector,
   pmeSelector as selector,
   pmeFormSelector as formSelector,
+  pmeInputSelector as inputSelector,
   pmeIdSelector as idSelector,
   pmeSysNameSelector as sysNameSelector,
   pmeSysNameSelectors as sysNameSelectors,

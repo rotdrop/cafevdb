@@ -60,6 +60,14 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    */
+  public static function uiFlags():int
+  {
+    return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   static public function slug():string
   {
     return self::t('manually');
@@ -107,15 +115,58 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   }
 
   /**
+   * Subscribe the given participant to the given option, that is, generate an
+   * empty data-item for this option.
+   *
+   * @param Entities\ProjectParticipant $participant
+   *
+   * @param Entities\ProjectParticipantFieldDataOption $fieldOption
+   *
+   * @return int The number of data-items added, i.e. 0 or 1.
+   */
+  private function subscribeParticipant(Entities\ProjectParticipant $participant, Entities\ProjectParticipantFieldDataOption $fieldOption):int
+  {
+    if (!$fieldOption->getMusicianFieldData($participant->getMusician())->isEmpty()) {
+      return 0; // already subscribed
+    }
+
+    $datum = (new Entities\ProjectParticipantFieldDatum)
+      ->setField($this->serviceFeeField)
+      ->setMusician($participant->getMusician())
+      ->setProject($participant->getProject())
+      ->setDataOption($fieldOption);
+    $participant->getParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
+    $fieldOption->getFieldData()->add($datum);
+    $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
+    $participant->getProject()->getParticipantFieldsData()->add($datum);
+    return 1; // one new item
+  }
+
+  /**
    * {@inheritdoc}
    *
    * This will also make sure that there is always one extra emtpy field
    * available for the respective participant. If $receivable is non-null,
    * only this receivable-data will be removed if no longer needed.
+   *
+   * @return array
    */
   public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
-    $fieldDataOptions = $this->serviceFeeField->getDataOptions();
+    $added = 0;
+    $removed = 0;
+
+    $fieldDataOptions = $this->serviceFeeField->getSelectableOptions();
+
+    // First step: subscribe the participant to all labelled options. This
+    // must be, otherwise the UI will be a nightmare.
+    /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
+    foreach ($fieldDataOptions as $fieldOption) {
+      if (!empty($fieldOption->getLabel())) {
+        $added += $this->subscribeParticipant($participant, $fieldOption);
+      }
+    }
+
     $participantFieldsData = $participant->getParticipantFieldsData();
     /** @var Collection $emptyFieldData */
     $emptyFieldData = $participantFieldsData->matching(self::criteriaWhere([
@@ -129,8 +180,6 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
     $emptyFieldData = $emptyFieldData->filter(
       fn(Entities\ProjectParticipantFieldDatum $datum) => empty($datum->getDataOption()->getLabel()));
 
-    $added = false;
-    $removed = 0;
     if (!empty($receivable)) {
       // dedicated receivables update ... just update this one
 
@@ -149,7 +198,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       }
 
       return [
-        'added' => (int)$added,
+        'added' => $added,
         'removed' => $removed,
         'changed' => 0, // never
         'skipped' => 0,
@@ -190,6 +239,10 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
           // skip the generator
           continue;
         }
+        if (!empty($fieldOption->getLabel())) {
+          // skip labelled options, we want a blank one in label and value
+          continue;
+        }
         $this->logInfo('Check option ' . (string)$fieldOption->getKey());
         if ($fieldOption->getMusicianFieldData($participant->getMusician())->isEmpty()) {
           $this->logInfo('Found unbound option ' . (string)$fieldOption->getKey() . ' for musician ' . $participant->getMusician()->getPublicName());
@@ -216,16 +269,9 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       }
 
       // use it, add empty data to musician
-      $datum = (new Entities\ProjectParticipantFieldDatum)
-        ->setField($this->serviceFeeField)
-        ->setMusician($participant->getMusician())
-        ->setProject($participant->getProject())
-        ->setOptionKey($emptyFieldOption->getKey());
-      $participantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
-      $emptyFieldOption->getFieldData()->add($datum);
-      $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
-      $participant->getProject()->getParticipantFieldsData()->add($datum);
-      $added = true;
+
+      // use it, add empty data to musician
+      $added += $this->subscribeParticipant($participant, $emptyFieldOption);
     }
 
     return [

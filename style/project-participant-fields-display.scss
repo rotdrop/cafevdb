@@ -328,6 +328,26 @@ form.pme-form.project-participant-fields-display {
             }
           }
         }
+        &.show-empty-labels {
+          &.hide-empty-values {
+            tr.empty-option-value:not(.empty-option-label) {
+              display:none;
+            }
+          }
+        }
+        &:not(.show-empty-labels) {
+          &.hide-empty-values {
+            tr.empty-option-value {
+              display:none;
+            }
+          }
+        }
+        &:not(.has-empty-labelled-values) {
+          .show-empty-options {
+            display:none;
+          }
+        }
+
         th {
           .column-heading {
             padding-right: 0.5em;
@@ -370,6 +390,39 @@ form.pme-form.project-participant-fields-display {
             }
             &.busy {
               background-image:url('../../../core/img/loading.gif') !important;
+            }
+          }
+          // style the visibility toggle
+          input[type="checkbox"].show-empty-options {
+	    position: absolute;
+	    left: -10000px;
+	    top: auto;
+	    width: 1px;
+	    height: 1px;
+	    overflow: hidden;
+            + label::after {
+	      border-radius: 1px;
+	      height: 14px;
+	      width: 14px;
+	      box-shadow: none !important;
+	      background-position: center;
+
+	      content: '';
+	      display: inline-block;
+	      vertical-align: middle;
+	      margin: 0 6px 3px 3px;
+	      border: 1px solid #878787;
+            }
+            &:checked, &:indeterminate {
+              + label::after {
+	        background-color: var(--color-primary-element);
+	        border-color: var(--color-primary-element);
+              }
+            }
+            &:checked {
+              + label::after {
+	        background-image: url('../../../core/img/actions/checkbox-mark.svg');
+              }
             }
           }
         }

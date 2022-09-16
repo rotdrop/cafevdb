@@ -463,6 +463,7 @@ field. If left blank, every logged in user is allowed to change this field.'),
 
               'open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
             ],
+            'show-empty-options' => $this->l->t('Show all field options even if they contain no data.'),
           ],
         ],
         'projects' => [
@@ -538,6 +539,12 @@ help text in order to inform others what this option is about.'),
         'generator' => $this->l->t('Name of a the generator for this field. Can be be a fully-qualified PHP class-name or one of the known short-cuts.'),
         'generator-startdate' => $this->l->t('Starting date for the receivable generation. Maybe overridden by the concrete generator framework.'),
         'generator-run' => $this->l->t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
+        'update-strategy' => [
+          'default' => $this->l->t('Select how to handle conflicts with existing data during recomputation of receivables.'),
+          'replace' => $this->l->t('During update of receivables just replace any old value by the newly computed value.'),
+          'skip' => $this->l->t('During update of receivables skip the update of existing records and record inconsistencies for later processing.'),
+          'exception' => $this->l->t('During update of receivables compare with the newly computed value and throw an exception if the values differ. This is the default.'),
+        ],
       ],
 
       'participant-fields-default-multi-value' => $this->l->t('Specify a default value for the custom field here. Leave blank if unsure.'),

@@ -26,8 +26,10 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
 
 /**
+ * @param int $uiFlags
  * @param Entities\ProjectParticipantField $field
  * @param Entities\ProjectParticipantFieldDataOption $fieldOption
  * @param string $optionValue
@@ -48,7 +50,12 @@ $dataType = $field->getDataType();
 $optionKey = $fieldOption->getKey();
 $optionLabel = $fieldOption->getLabel();
 
-$locked = !empty($optionValue) || $dataType == FieldType::SERVICE_FEE;
+$optionLabelLocked = ($uiFlags & Generator::UI_PROTECTED_LABEL)
+  || !(empty($optionLabel) && ($uiFlags & Generator::UI_EDITABLE_LABEL));
+
+$optionValueLocked = ($uiFlags & Generator::UI_PROTECTED_VALUE)
+                  || !(empty($optionValue) && ($uiFlags & Generator::UI_EDITABLE_VALUE));
+
 $valueInputType = $dataType == FieldType::SERVICE_FEE ? 'type="number" step="0.01"' : 'type="text"';
 $filesAppTarget = md5($filesAppPath ?? '');
 
@@ -66,9 +73,17 @@ if ($dataType != FieldType::SERVICE_FEE) {
   $lockCssClass = $lockRightCssClass;
 }
 
+$rowClasses = [ 'field-datum', ];
+
+empty($optionLabel) && $rowClasses[] = 'empty-option-label';
+empty($optionValue) && $rowClasses[] = 'empty-option-value';
+empty($optionKey) && $rowClasses[] = 'empty-option-key';
+
+$rowClasses = implode(' ', $rowClasses);
+
 ?>
 
-<tr class="field-datum"
+<tr class="<?php p($rowClasses); ?>"
     data-field-id="<?php p($fieldId); ?>"
     data-option-key="<?php p($optionKey); ?>"
 >
@@ -87,7 +102,7 @@ if ($dataType != FieldType::SERVICE_FEE) {
   <td class="label">
     <input id="receivable-option-label-lock-<?php p($optionKey); ?>"
            type="checkbox"
-           <?php $locked && p('checked'); ?>
+           <?php $optionLabelLocked && p('checked'); ?>
            class="<?php p($lockCssClass); ?>"
     />
     <label class="<?php p($lockRightCssClass); ?>"
@@ -99,22 +114,22 @@ if ($dataType != FieldType::SERVICE_FEE) {
            type="text"
            value="<?php p($optionLabel); ?>"
            name="<?php p($optionLabelName); ?>[<?php p($optionIdx); ?>]"
-           readonly
+           <?php $optionLabelLocked && p('readonly'); ?>
            title="<?php echo $toolTips['participant-fields-recurring-data:set-label']; ?>"
     />
   </td>
   <td class="input">
     <input id="receivable-option-value-lock-<?php p($optionKey); ?>"
            type="checkbox"
-           <?php $locked && p('checked'); ?>
+           <?php $optionValueLocked && p('checked'); ?>
            class="<?php p($lockCssClass); ?>"
     />
     <label class="<?php p($lockCssClass); ?>"
            title="<?php echo $toolTips['pme:input:lock-unlock']; ?>"
            for="receivable-option-value-lock-<?php p($optionKey); ?>"></label>
     <input class="pme-input <?php p($dataType); ?>"
-           type="text"
-           <?php $locked && p('readonly'); ?>
+           <?php echo $valueInputType; ?>
+           <?php $optionValueLocked && p('readonly'); ?>
            name="<?php p($optionValueName); ?>[<?php p($optionIdx); ?>]"
            value="<?php p($optionValue); ?>"
     />

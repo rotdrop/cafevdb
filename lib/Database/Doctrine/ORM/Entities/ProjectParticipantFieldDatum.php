@@ -216,7 +216,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setProjectParticipant($projectParticipant):ProjectParticipantFieldDatum
+  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectParticipantFieldDatum
   {
     $this->projectParticipant = $projectParticipant;
     $this->musician = $projectParticipant->getMusician();
@@ -238,7 +238,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set field.
    *
-   * @param int $field
+   * @param ProjectParticipantField $field
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -321,6 +321,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     $uuid = Uuid::asUuid($optionKey);
     if (empty($uuid)) {
       throw new \RuntimeException('Empty option key data.');
+    }
+    if ($uuid == Uuid::NIL) {
+      throw new \RuntimeException('Generator options must not be linked to field data.');
     }
     $this->optionKey = $uuid;
 
