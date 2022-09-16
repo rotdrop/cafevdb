@@ -334,6 +334,9 @@ Störung.';
   /** @var int */
   private $bulkTransactionId;
 
+  /** @var float */
+  private $paymentSign = 1.0;
+
   /** @var bool */
   private $constructionMode;
 
@@ -502,6 +505,10 @@ Störung.';
         $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
         $template = $template . '-' . $this->l->t('announcement');
         list($template,) = $this->normalizeTemplateName($template);
+
+        $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
+          ? 1.0
+          : -1.0;
       }
     }
 
@@ -1144,14 +1151,16 @@ Störung.';
         if (empty($musician)) {
           return $keyArg[0];
         }
+        if (empty($this->bulkTransaction)) {
+          return $keyArg[0];
+        }
 
         /** @var Entities\CompositePayment $compositePayment */
         $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
         if (!empty($compositePayment)) {
-          $amount = $compositePayment->getAmount();
+          $amount = $this->paymentSign * $compositePayment->getAmount();
           return $this->moneyValue($amount);
         }
-
         return $keyArg[0];
       };
 
@@ -1292,6 +1301,9 @@ Störung.';
         if (empty($musician)) {
           return $keyArg[0];
         }
+        if (empty($this->bulkTransaction)) {
+          return $keyArg[0];
+        }
 
         /** @var Entities\CompositePayment $compositePayment */
         $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
@@ -1304,9 +1316,9 @@ Störung.';
             $keyArg);
 
           $tableTemplate = [
-            'header' => $keyArg[1]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
-            'row' => $keyArg[2]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
-            'footer' => $keyArg[3]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
+            'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+            'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+            'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
@@ -1337,10 +1349,10 @@ Störung.';
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
-            $invoiced = $payment->getAmount();
+            $invoiced = $this->paymentSign * $payment->getAmount();
 
-            $totals = $payment->getReceivable()->amountPayable();
-            $received = $payment->getReceivable()->amountPaid();
+            $totals = $this->paymentSign * $payment->getReceivable()->amountPayable();
+            $received = $this->paymentSign * $payment->getReceivable()->amountPaid();
 
             // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
@@ -1633,13 +1645,6 @@ Störung.';
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
-
-          // BIG FAT TODO
-          // if ($this->bulkTransactionId > 0 && $dbdata['PaymentId'] > 0) {
-          //   $messageId = $msg['messageId'];
-          //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
-          //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
-          // }
           if (!empty($this->bulkTransaction)) {
             $payment = $this->bulkTransaction->getPayment($musician);
             if (empty($payment)) {
@@ -1776,7 +1781,7 @@ Störung.';
         if (!empty($this->project)
             && $this->project->getId() == $this->getClubMembersProjectId()
             && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
-          $templateId = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+          $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
         }
 
         /** @var FinanceService $financeService */
@@ -1858,6 +1863,10 @@ Störung.';
             if (empty($this->project)) {
               continue 2;
             }
+            if ($musician->isMemberOf($this->getClubMembersProjectId())) {
+              // switch to the member-data update which also inludes a mandate form
+              $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+            }
             /**@var Entities\ProjectParticipant $participant */
             $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
               'musician' => $musician,
@@ -1869,7 +1878,6 @@ Störung.';
             if (empty($bankAccount)) {
               $bankAccount = $musician->getSepaBankAccounts()->first();
             }
-
             $personalAttachments[] = function() use ($financeService, $bankAccount, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
                 $financeService->preFilledDebitMandateForm(
@@ -3745,17 +3753,14 @@ Störung.';
             break;
           }
         }
-        $words[] = strtolower($translatedWord);
+        $words[] = strtolower($this->transliterate($translatedWord));
       }
       if (!empty($words)) {
         $translation = Util::dashesToCamelCase(implode(' ', $words), true, ' ');
         array_unshift($result, $translation);
       }
     }
-    return array_map(
-      function($template) { return $this->transliterate($template); },
-      array_unique($result)
-    );
+    return array_unique($result);
   }
 
   /**
@@ -4560,12 +4565,24 @@ Störung.';
         'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
-      if ((!empty($this->bulkTransaction) && $templateId == ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE)
-          || isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
-        $attachment['status'] = 'selected';
-      } else {
-        $attachment['status'] = 'inactive';
+      $status = 'inactive';
+      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+        $status = 'selected';
+      } elseif (!empty($this->project) && !empty($this->bulkTransaction) && ($this->bulkTransaction instanceof Entities\SepaDebitNote)) {
+        switch ($templateId) {
+          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+            if ($this->project->getId() != $this->getClubMembersProjectId()) {
+              $status = 'selected';
+            }
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+            if ($this->project->getId() == $this->getClubMembersProjectId()) {
+              $status = 'selected';
+            }
+            break;
+        }
       }
+      $attachment['status'] = $status;
       $templateAttachments[] = $attachment;
     }
 
