@@ -122,7 +122,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
         'remoteName' => $compositePayment->getSepaBankAccount()->getBankAccountOwner(),
 
         'date' => $transaction->getDueDate()->format(self::DUE_DATE_FORMAT),
-        'value/value' => $compositePayment->getAmount(),
+        'value/value' => abs($compositePayment->getAmount()),
         'value/currency' => self::CURRENCY,
 
         'purpose[0]' => $purpose[0],
@@ -177,7 +177,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
         'remoteBic' => $compositePayment->getSepaBankAccount()->getBic(),
         'remoteIban' => $compositePayment->getSepaBankAccount()->getIban(),
         'date' => $transaction->getDueDate()->format(self::DUE_DATE_FORMAT),
-        'value/value' => $compositePayment->getAmount(),
+        'value/value' => abs($compositePayment->getAmount()),
         'value/currency' => self::CURRENCY,
         'localName' => $this->owner,
         'remoteName' => $compositePayment->getSepaBankAccount()->getBankAccountOwner(),
