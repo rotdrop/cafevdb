@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-16 18:17+0200\n"
+"POT-Creation-Date: 2022-09-16 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2628,8 +2628,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:987
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
-"\"%s\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
+"\"."
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:1021
@@ -3094,61 +3094,61 @@ msgstr ""
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3915
+#: lib/EmailForm/Composer.php:3912
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3927
+#: lib/EmailForm/Composer.php:3924
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3951
+#: lib/EmailForm/Composer.php:3948
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3982
+#: lib/EmailForm/Composer.php:3979
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4040
-#: lib/EmailForm/Composer.php:4159
+#: lib/EmailForm/Composer.php:4037
+#: lib/EmailForm/Composer.php:4156
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4076
+#: lib/EmailForm/Composer.php:4073
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4101
+#: lib/EmailForm/Composer.php:4098
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4696
+#: lib/EmailForm/Composer.php:4693
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4696
+#: lib/EmailForm/Composer.php:4693
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4697
+#: lib/EmailForm/Composer.php:4694
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4698
+#: lib/EmailForm/Composer.php:4695
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4699
+#: lib/EmailForm/Composer.php:4696
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4815
+#: lib/EmailForm/Composer.php:4812
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -3692,7 +3692,7 @@ msgstr ""
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:150
 #: lib/PageRenderer/InstrumentInsurances.php:269
 #: lib/PageRenderer/ProjectPayments.php:448
-#: lib/PageRenderer/SepaBankAccounts.php:549
+#: lib/PageRenderer/SepaBankAccounts.php:554
 #: lib/PageRenderer/SepaBulkTransactions.php:381
 msgid "Musician"
 msgstr ""
@@ -4012,8 +4012,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1926
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
-"\"%s\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
+"\", new: \"%s\""
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2064
@@ -4139,7 +4139,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:267
 #: lib/PageRenderer/ProjectParticipants.php:1510
 #: lib/PageRenderer/ProjectPayments.php:384
-#: lib/PageRenderer/SepaBankAccounts.php:1045
+#: lib/PageRenderer/SepaBankAccounts.php:1050
 #: lib/PageRenderer/SepaBulkTransactions.php:259
 #: lib/Service/InstrumentationService.php:189
 msgid "Display all columns"
@@ -4855,7 +4855,7 @@ msgid "new option"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1688
-#: lib/PageRenderer/SepaBankAccounts.php:374
+#: lib/PageRenderer/SepaBankAccounts.php:379
 #: templates/fragments/participant-fields/recurring-receivable-generator-row.php:65
 msgid "In case of Conflict"
 msgstr ""
@@ -4893,7 +4893,7 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:2186
 #: lib/PageRenderer/ProjectPayments.php:489
-#: lib/PageRenderer/SepaBankAccounts.php:1003
+#: lib/PageRenderer/SepaBankAccounts.php:1008
 #: lib/PageRenderer/SepaBulkTransactions.php:373
 msgid "Amount"
 msgstr ""
@@ -4931,7 +4931,7 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectParticipants.php:417
 #: lib/PageRenderer/ProjectPayments.php:415
-#: lib/PageRenderer/SepaBankAccounts.php:470
+#: lib/PageRenderer/SepaBankAccounts.php:475
 msgid "Musician-Id"
 msgstr ""
 
@@ -5005,7 +5005,7 @@ msgid "Personal data"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipants.php:1505
-#: lib/PageRenderer/SepaBankAccounts.php:1038
+#: lib/PageRenderer/SepaBankAccounts.php:1043
 msgid "Miscinfo"
 msgstr ""
 
@@ -5079,7 +5079,7 @@ msgid "IBAN"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:884
-#: lib/PageRenderer/SepaBankAccounts.php:757
+#: lib/PageRenderer/SepaBankAccounts.php:762
 #: lib/PageRenderer/SepaBulkTransactions.php:441
 msgid "Mandate Reference"
 msgstr ""
@@ -5274,116 +5274,120 @@ msgstr ""
 msgid "Debit"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:334
+#: lib/PageRenderer/SepaBankAccounts.php:333
+msgid "=== (DE-)SELECT ALL ==="
+msgstr ""
+
+#: lib/PageRenderer/SepaBankAccounts.php:337
 msgid "SEPA Bulk Transactions"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:356
+#: lib/PageRenderer/SepaBankAccounts.php:361
 msgid "SEPA due date"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:367
+#: lib/PageRenderer/SepaBankAccounts.php:372
 msgid "Recompute"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:483
+#: lib/PageRenderer/SepaBankAccounts.php:488
 msgid "Bank-Account-Sequence"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:576
+#: lib/PageRenderer/SepaBankAccounts.php:581
 msgid "Bank Account Owner"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:659
+#: lib/PageRenderer/SepaBankAccounts.php:664
 msgid "Bank Code"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:687
+#: lib/PageRenderer/SepaBankAccounts.php:692
 msgid "Mandate Project"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:702
+#: lib/PageRenderer/SepaBankAccounts.php:707
 msgid "Choose a Project to define a Mandate"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:733
+#: lib/PageRenderer/SepaBankAccounts.php:738
 msgid "Mandate Sequence"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:742
+#: lib/PageRenderer/SepaBankAccounts.php:747
 msgid "generated on save"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:800
+#: lib/PageRenderer/SepaBankAccounts.php:805
 msgid "Non-Recurring"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:817
+#: lib/PageRenderer/SepaBankAccounts.php:822
 msgid "Date Issued"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:831
+#: lib/PageRenderer/SepaBankAccounts.php:836
 msgid "Notification Target Days"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:843
+#: lib/PageRenderer/SepaBankAccounts.php:848
 msgid "Notification Calendar Days"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:855
+#: lib/PageRenderer/SepaBankAccounts.php:860
 msgid "Written Mandate"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:864
+#: lib/PageRenderer/SepaBankAccounts.php:869
 msgid "please upload written mandate after saving"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:890
+#: lib/PageRenderer/SepaBankAccounts.php:895
 msgid "Mandate Revoked"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:898
+#: lib/PageRenderer/SepaBankAccounts.php:903
 msgid "Last-Used Date"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:989
+#: lib/PageRenderer/SepaBankAccounts.php:994
 msgid "Bank account associated to this debit mandate."
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:990
+#: lib/PageRenderer/SepaBankAccounts.php:995
 #: templates/sepa-debit-mandate.php:120
 #: templates/settings/orchestra-settings.php:109
 #: templates/settings/orchestra-settings.php:111
 msgid "Bank Account"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:994
+#: lib/PageRenderer/SepaBankAccounts.php:999
 msgid "Debit mandate, mandate-id, last used date, recurrence"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:995
+#: lib/PageRenderer/SepaBankAccounts.php:1000
 msgid "Mandate"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:1001
+#: lib/PageRenderer/SepaBankAccounts.php:1006
 msgid ""
 "Show the amounts to draw by debit transfer, including sum of payments\n"
 "received so far"
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:1065
+#: lib/PageRenderer/SepaBankAccounts.php:1070
 #, php-format
 msgid "The change-set contains read-only keys: %s."
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:1127
+#: lib/PageRenderer/SepaBankAccounts.php:1132
 #, php-format
 msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/PageRenderer/SepaBankAccounts.php:1158
+#: lib/PageRenderer/SepaBankAccounts.php:1163
 #, php-format
 msgid ""
 "More than one (%1$d) active bank account found for musician \"%2$s\" and "
@@ -5679,8 +5683,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: "
-"\"%2$s\"."
+"however, the following app-restriction have been imposed on the app: \"%2$s"
+"\"."
 msgstr ""
 
 #: lib/Service/CloudUserConnectorService.php:282
@@ -10442,24 +10446,24 @@ msgstr ""
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1635
+#: src/app/sepa-debit-mandate.js:1647
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
 "participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1637
+#: src/app/sepa-debit-mandate.js:1649
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1669
+#: src/app/sepa-debit-mandate.js:1681
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.js:1671
+#: src/app/sepa-debit-mandate.js:1683
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr ""
 

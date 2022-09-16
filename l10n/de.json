@@ -1035,6 +1035,7 @@
     "Overview over all SEPA Bank Accounts for %s" : "Übersicht über alle SEPA-Bankverbindungen für %s",
     "Overview over all SEPA Bank Accounts" : "Übersicht über alle SEPA Bankverbindungen",
     "Debit" : "Einziehen",
+    "=== (DE-)SELECT ALL ===" : "=== ALLES AUS- bzw. ABWÄHLEN ===",
     "SEPA Bulk Transactions" : "SEPA Sammelaufträge",
     "SEPA due date" : "SEPA Fälligkeitsdatum",
     "Recompute" : "Neuberechnung",
