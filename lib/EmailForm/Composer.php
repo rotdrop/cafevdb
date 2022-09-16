@@ -1316,9 +1316,9 @@ Störung.';
             $keyArg);
 
           $tableTemplate = [
-            'header' => $keyArg[1]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
-            'row' => $keyArg[2]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
-            'footer' => $keyArg[3]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
+            'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+            'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+            'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
