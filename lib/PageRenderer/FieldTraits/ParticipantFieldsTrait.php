@@ -1213,8 +1213,36 @@ trait ParticipantFieldsTrait
             $options = [];
             $labelled = false;
             $options = self::fetchValueOptions($field, $values, $labelled);
-
             $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+
+            $generatorOption = $field->getManagementOption();
+            $generatorClass = $generatorOption->getData();
+            $generatorSlug = $generatorClass::slug();
+            $noRecomputeButton = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE) === false;
+            $uiFlags = $generatorClass::uiFlags();
+
+            // generate the per-option input rows
+
+
+            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+            $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
+            $rowHtml = '';
+            $hasEmptyLabelledValues = false;
+            $idx = 0;
+            /** @var Entities\ProjectParticipantFieldDataOption $option */
+            foreach ($options as $optionKey => $option) {
+              $hasEmptyLabelledValues = $hasEmptyLabelledValues || (!empty($option->getLabel()) && empty($values[$optionKey]));
+              switch ($dataType)  {
+                case FieldType::DB_FILE:
+                  $rowHtml .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
+                  break;
+                default:
+                  $rowHtml .= $this->recurringChangeRowHtml($values[$optionKey], $field, $option, $invoices, $idx++, musician: $musician, uiFlags: $uiFlags);
+                  break;
+              }
+            }
+
+            // generate the table header
 
             $valueLabel = $this->l->t('Value');
             $invoiceLabel = $this->l->t('Documents');
@@ -1235,11 +1263,6 @@ trait ParticipantFieldsTrait
                 break;
             }
 
-            $generatorOption = $field->getManagementOption();
-            $generatorClass = $generatorOption->getData();
-            $generatorSlug = $generatorClass::slug();
-            $noRecomputeButton = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE) === false;
-
             $cssClass = [
               'row-count-' .count($values),
               'multiplicity-' . $multiplicity,
@@ -1247,6 +1270,14 @@ trait ParticipantFieldsTrait
               'recurring-generator-' . $generatorSlug,
               'recurring-option-recompute-button-' . ($noRecomputeButton ? 'dis' : 'en') . 'able',
             ];
+            if ($uiFlags & IRecurringReceivablesGenerator::UI_EDITABLE_LABEL) {
+              $cssClass[] = 'show-empty-labels';
+            }
+            $cssClass[] = 'hide-empty-values';
+            if ($hasEmptyLabelledValues) {
+              $cssClass[] = 'has-empty-labelled-values';
+            }
+
             $html = '<table class="'.implode(' ', $cssClass).'">
   <thead>
     <tr>
@@ -1258,63 +1289,34 @@ trait ParticipantFieldsTrait
   </thead>
   <tbody>';
 
-            list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-            switch ($dataType)  {
-              case FieldType::DB_FILE:
-                $subDir = $field->getName();
-                foreach ($options as $optionKey => $option) {
-                  $html .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
-                }
-                break;
-              default:
-                $idx = 0;
-                foreach ($options as $optionKey => $option) {
-                  $html .= $this->recurringChangeRowHtml($values[$optionKey], $field, $option, $invoices, $idx++, musician: $musician);
-                }
-            }
+            // add the rows
+            $html .= $rowHtml;
 
-            foreach ($generatorClass::updateStrategyChoices() as $tag) {
-              $option = [
-                'value' => $tag,
-                'name' => $this->l->t($tag),
-                'flags' => ($tag === IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION ? PageNavigation::SELECTED : 0),
-                'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
-              ];
-              $updateStrategies[] = $option;
-            }
-            $updateStrategies = PageNavigation::selectOptions($updateStrategies);
+            // generate the footer
             $recomputeLabel = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE_ALL);
             if (is_callable($recomputeLabel)) {
               $recomputeLabel = $recomputeLabel($dataType);
             }
             $recomputeLabel = $this->l->t($recomputeLabel);
+
+            $html .= (new TemplateResponse(
+              $this->appName(),
+              'fragments/participant-fields/recurring-receivable-generator-row', [
+                'field' => $field,
+                'uiFlags' => $uiFlags,
+                'generatorSlug' => $generatorSlug,
+                'recomputeLabel' => $recomputeLabel,
+                'updateStrategyChoices' => $generatorClass::updateStrategyChoices(),
+                'toolTips' => $this->toolTipsService,
+                'toolTipsPrefix' => self::$toolTipsPrefix,
+              ],
+              'blank'
+            ))->render();
+
             $html .= '
-    <tr class="generator" data-field-id="'.$fieldId.'">
-      <td class="operations" colspan="4">
-        <div class="flex-container">
-          <input
-            class="operation regenerate-all"
-            title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all:' . $generatorSlug].'"
-            type="button"
-            value="'.$recomputeLabel.'"
-          />
-          <label for="recurring-receivables-update-strategy-'.$fieldId.'" class="recurring-receivables-update-strategy update-strategy-count-'.count($generatorClass::updateStrategyChoices()).'">
-            '.$this->l->t('In case of Conflict').'
-            <select
-              id="recurring-receivables-update-strategy-'.$fieldId.'"
-              class="recurring-multiplicity-required recurring-receivables-update-strategy"
-              name="recurringReceivablesUpdateStrategy"
-              title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
-            >
-' . $updateStrategies
-. '
-            </select>
-          </label>
-        </div>
-      </td>
-    </tr>
   </tbody>
 </table>';
+
             return $html;
           };
           break;
@@ -1760,6 +1762,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     array $invoices,
     int $optionIdx,
     Entities\Musician $musician,
+    int $uiFlags,
   ) {
     $fieldId = $field->getId();
     $dataType = $field->getDataType();
@@ -1839,7 +1842,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
 
     return (new TemplateResponse(
       $this->appName(),
-      'fragments/participant-fields/recurring-change-row', [
+      'fragments/participant-fields/recurring-receivable-change-row', [
+        'uiFlags' => $uiFlags,
         'field' => $field,
         'fieldOption' => $fieldOption,
         'optionValue' => $optionValue,
