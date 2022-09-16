@@ -1394,6 +1394,9 @@ const mandateReady = function(selector, parameters, resizeCB) {
           allValues.splice(allValues.indexOf('-1'), 1);
           selectedValues.splice(0, selectedValues.length, ...allValues);
         }
+        while (selectedValues.indexOf('') !== -1) {
+          selectedValues.splice(selectedValues.indexOf(''), 1);
+        }
         SelectUtils.selected($self, selectedValues);
       }
       const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
