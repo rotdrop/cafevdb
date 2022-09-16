@@ -329,13 +329,18 @@ class SepaBankAccounts extends PMETableViewBase
 
       // Control to select what we want to debit
       $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions');
+
+      $selectAllLabel = Util::htmlEscape($this->l->t('=== (DE-)SELECT ALL ==='));
+
       $sepaBulkTransactions = '
 <span id="sepa-bulk-transactions" class="sepa-bulk-transactions pme-menu-block">
   <select multiple data-placeholder="'.$this->l->t('SEPA Bulk Transactions').'"
           class="sepa-bulk-transactions"
           title="'.$this->toolTipsService['sepa-bulk-transactions-choice'].'"
           name="sepaBulkTransactions[]">
-    <option value=""></option>';
+    <option value=""></option>
+    <option value="-1">' . $selectAllLabel . '</option>
+';
 
       $jobOptions = $this->participantFieldsService->monetarySelectOptions($this->project);
 
