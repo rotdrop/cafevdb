@@ -1693,7 +1693,7 @@ __EOT__;
       data-default-value="'.IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION.'"
       class="recurring-multiplicity-required recurring-receivables-update-strategy"
       name="recurringReceivablesUpdateStrategy"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategies']).'"
+      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategy']).'"
     >
 ' . $updateStrategies
 . '
