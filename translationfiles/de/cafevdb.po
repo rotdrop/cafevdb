@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-16 14:39+0200\n"
-"PO-Revision-Date: 2022-09-16 14:20+0200\n"
+"POT-Creation-Date: 2022-09-16 18:16+0200\n"
+"PO-Revision-Date: 2022-09-16 18:16+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -690,8 +690,8 @@ msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
-"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt `"
-"%s' stimmen nicht überein."
+"Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
+"`%s' stimmen nicht überein."
 
 #: lib/Controller/LegacyEventsController.php:321
 #: lib/Controller/LegacyEventsController.php:761
@@ -1396,8 +1396,8 @@ msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
-"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" \"gefangen"
-"\"."
+"Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
+"\"gefangen\"."
 
 #: lib/Controller/PersonalSettingsController.php:1311
 #, php-format
@@ -2846,8 +2846,8 @@ msgstr ""
 #: lib/Controller/SepaDebitMandatesController.php:987
 #, php-format
 msgid ""
-"Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
-"\"."
+"Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
+"\"%s\"."
 msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
@@ -3189,29 +3189,29 @@ msgstr "Grußformel"
 msgid "Signature"
 msgstr "Unterschrift"
 
-#: lib/EmailForm/Composer.php:503
+#: lib/EmailForm/Composer.php:506
 msgid "announcement"
 msgstr "Ankündigung"
 
-#: lib/EmailForm/Composer.php:571
+#: lib/EmailForm/Composer.php:578
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:577 src/app/email.js:1388
+#: lib/EmailForm/Composer.php:584 src/app/email.js:1388
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:898
+#: lib/EmailForm/Composer.php:905
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:899 lib/EmailForm/Composer.php:921
-#: lib/EmailForm/Composer.php:1314 lib/EmailForm/Composer.php:1321
+#: lib/EmailForm/Composer.php:906 lib/EmailForm/Composer.php:928
+#: lib/EmailForm/Composer.php:1326 lib/EmailForm/Composer.php:1333
 #: lib/PageRenderer/ProjectPayments.php:475
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:899
+#: lib/EmailForm/Composer.php:906
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:478
 #: lib/PageRenderer/ProjectParticipantFields.php:570
 #: lib/PageRenderer/ProjectParticipantFields.php:1895
@@ -3219,45 +3219,45 @@ msgstr "Gesamtbetrag"
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:900 lib/EmailForm/Composer.php:1322
+#: lib/EmailForm/Composer.php:907 lib/EmailForm/Composer.php:1334
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:901 lib/EmailForm/Composer.php:1323
+#: lib/EmailForm/Composer.php:908 lib/EmailForm/Composer.php:1335
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:902 lib/PageRenderer/PMETableViewBase.php:632
+#: lib/EmailForm/Composer.php:909 lib/PageRenderer/PMETableViewBase.php:632
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1041
+#: lib/EmailForm/Composer.php:1048
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1319
+#: lib/EmailForm/Composer.php:1331
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1320
+#: lib/EmailForm/Composer.php:1332
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1461
+#: lib/EmailForm/Composer.php:1473
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1539
+#: lib/EmailForm/Composer.php:1551
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:1648
+#: lib/EmailForm/Composer.php:1653
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr "Kann keine Buchung für die Person \"%s\" finden (Banktransaktion %d)"
 
-#: lib/EmailForm/Composer.php:2220
+#: lib/EmailForm/Composer.php:2228
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3305,11 +3305,11 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:3017
+#: lib/EmailForm/Composer.php:3025
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3057
+#: lib/EmailForm/Composer.php:3065
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -3318,39 +3318,39 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3059
+#: lib/EmailForm/Composer.php:3067
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3062
+#: lib/EmailForm/Composer.php:3070
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3221
+#: lib/EmailForm/Composer.php:3229
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/EmailForm/Composer.php:3245
+#: lib/EmailForm/Composer.php:3253
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3338 lib/EmailForm/Composer.php:3353
+#: lib/EmailForm/Composer.php:3346 lib/EmailForm/Composer.php:3361
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3437 lib/EmailForm/Composer.php:3513
-#: lib/EmailForm/Composer.php:3523
+#: lib/EmailForm/Composer.php:3445 lib/EmailForm/Composer.php:3521
+#: lib/EmailForm/Composer.php:3531
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
-#: lib/EmailForm/Composer.php:3456
+#: lib/EmailForm/Composer.php:3464
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3462
+#: lib/EmailForm/Composer.php:3470
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -3358,71 +3358,71 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:3488
+#: lib/EmailForm/Composer.php:3496
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3613
+#: lib/EmailForm/Composer.php:3621
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:3907
+#: lib/EmailForm/Composer.php:3915
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:3919
+#: lib/EmailForm/Composer.php:3927
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:3943
+#: lib/EmailForm/Composer.php:3951
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:3974
+#: lib/EmailForm/Composer.php:3982
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4032 lib/EmailForm/Composer.php:4151
+#: lib/EmailForm/Composer.php:4040 lib/EmailForm/Composer.php:4159
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4068
+#: lib/EmailForm/Composer.php:4076
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4093
+#: lib/EmailForm/Composer.php:4101
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4676
+#: lib/EmailForm/Composer.php:4696
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:4676
+#: lib/EmailForm/Composer.php:4696
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:4677
+#: lib/EmailForm/Composer.php:4697
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:4678
+#: lib/EmailForm/Composer.php:4698
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:4679
+#: lib/EmailForm/Composer.php:4699
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:4795
+#: lib/EmailForm/Composer.php:4815
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -4330,11 +4330,11 @@ msgstr "zu dieser Gruppe hinzufügen"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1926
 #, php-format
 msgid ""
-"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: \"%s"
-"\", new: \"%s\""
+"Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
+"\"%s\", new: \"%s\""
 msgstr ""
-"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt \"%s"
-"\""
+"Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
+"\"%s\""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2064
 #, php-format
@@ -5744,8 +5744,8 @@ msgid ""
 "Unable to find the bank-account with sequence \"%1$s\" for the musician "
 "\"%2$s\"."
 msgstr ""
-"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id \"%2$s"
-"\" nicht finden."
+"Kann die Bankverbindung mit lfd. Nr. \"%1$s\" für die Musiker:innen-Id "
+"\"%2$s\" nicht finden."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1158
 #, php-format
@@ -6091,8 +6091,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
-"however, the following app-restriction have been imposed on the app: \"%2$s"
-"\"."
+"however, the following app-restriction have been imposed on the app: "
+"\"%2$s\"."
 msgstr ""
 "Das Account-Backend \"%1$s\" scheint installiert und aktiviert zu sein, "
 "jedoch mit den follgenden Einschränkungen: \"%2$s\"."
@@ -14908,6 +14908,11 @@ msgstr "Orchester-Stempel auswählen"
 msgid "debitnote"
 msgstr "Lastschrift"
 
+#: lib/EmailForm/Composer.php:1948
+#, php-format
+msgid "banktransfer"
+msgstr "Überweisung"
+
 #: lib/EmailForm/Composer.php:1942
 #, php-format
 msgid "DebitnoteInsurance"
@@ -15294,8 +15299,8 @@ msgstr "ZUSATZKOSTEN"
 #~ msgid ""
 #~ "Upload-policy \"%s\" requested, but not supported by storage type \"%s\"."
 #~ msgstr ""
-#~ "Konfliktauflösung \"%s\" gewünscht, das wird aber vom Speicher-Type \"%s"
-#~ "\" nicht unterstützt.<\n"
+#~ "Konfliktauflösung \"%s\" gewünscht, das wird aber vom Speicher-Type "
+#~ "\"%s\" nicht unterstützt.<\n"
 
 #, php-format
 #~ msgid "Invalid upload-policy \"%s\" for data type \"%s\"."

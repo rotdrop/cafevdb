@@ -2608,6 +2608,7 @@ OC.L10N.register(
     "orchestra seal" : "Orchester-Stempel",
     "Select orchestra seal" : "Orchester-Stempel auswählen",
     "debitnote" : "Lastschrift",
+    "banktransfer" : "Überweisung",
     "DebitnoteInsurance" : "LastschriftVersicherung",
     "ADDRESS" : "ADRESSE",
     "BANK_ACCOUNT" : "BANK_KONTO",

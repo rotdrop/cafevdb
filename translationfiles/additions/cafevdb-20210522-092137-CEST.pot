@@ -3,6 +3,11 @@
 msgid "debitnote"
 msgstr ""
 
+#: lib/EmailForm/Composer.php:1948
+#, php-format
+msgid "banktransfer"
+msgstr ""
+
 #: lib/EmailForm/Composer.php:1942
 #, php-format
 msgid "DebitnoteInsurance"
