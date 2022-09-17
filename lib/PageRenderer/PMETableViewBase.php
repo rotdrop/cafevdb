@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -339,8 +340,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         if (strlen($logEntry['query']) > 24) {
           $label .= ' &#8230;';
         }
+        $toolTip = htmlspecialchars($logEntry['query']);
         $data = htmlspecialchars(json_encode($logEntry), ENT_QUOTES, 'UTF-8');
-        $html .= '<option data-query=\'' . $data . '\' value="' . $cnt . '">' . $label . '</option>';
+        $html .= '<option data-query=\'' . $data . '\' title="' . $toolTip . '" class="tooltip-wide" value="' . $cnt . '">' . $label . '</option>';
         $cnt++;
       }
       $html .= '</select></span>';
@@ -591,7 +593,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'URLdisp'  => '$value',
         'display|LF' => ['popup' => 'data'],
         'select'   => 'T',
-        'maxlen'   => 768,
+        'maxlen'   => 254,
         'sort'     => true,
         'nowrap'   => true,
         'escape'   => true,
@@ -2521,13 +2523,27 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           $column = $key;
         }
-        try {
-          $musician[$column] = $value;
-          if ($column == 'user_id_slug') {
+        switch ($column) {
+          case 'email':
+            try {
+              $musician->setEmailAddress($value, $musician);
+            } catch (\Throwable $t) {
+              $this->logException($t);
+              /** @var Service\MusicianService $musicianService */
+              $musicianService = $this->di(Service\MusicianService::class);
+              $value = $musicianService->generateDisabledEmailAddress($musician);
+              $musician->setEmailAddress($value);
+            }
+            break;
+          case 'user_id_slug':
             $userIdSlugSeen = true;
-          }
-        } catch (\Throwable $t) {
-          // Don't care, we know virtual stuff is not there
+          default:
+            try {
+              $musician[$column] = $value;
+              break;
+            } catch (\Throwable $t) {
+              // Don't care, we know virtual stuff is not there
+            }
         }
         break;
       }
