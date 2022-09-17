@@ -32,6 +32,16 @@ import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
+import {
+  formSelector as pmeFormSelector,
+  inputSelector as pmeInputSelector,
+} from './pme-selectors.js';
+
+const pmeLabelInputSelector = 'td.label ' + pmeInputSelector + '[type="text"]';
+const pmeValueInputSelector = [
+  'td.input ' + pmeInputSelector + '[type="text"]',
+  'td.input ' + pmeInputSelector + '[type="number"]',
+].join(',');
 
 const participantOptionHandlers = function(container, musicianId, projectId, dialogParameters) {
 
@@ -63,15 +73,14 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
   // Handle buttons to revert to default value. Field id must be given
   // as data-value.
 
-  const $pmeForm = $container.find('form.pme-form');
+  const $pmeForm = $container.find(pmeFormSelector);
 
   $pmeForm
     .find('tr.participant-field input.revert-to-default')
     .off('click')
     .on('click', function(event) {
-      console.info('REVERT', $(this));
       const $self = $(this);
-      const $inputElement = $self.parent().find('.pme-input');
+      const $inputElement = $self.parent().find(pmeInputSelector);
       const fieldId = $self.data('fieldId');
       const fieldProperty = $self.data('fieldProperty') || 'defaultValue';
 
@@ -97,7 +106,6 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
       };
 
       if ($inputElement.val() !== '') {
-        console.info('VALUE', $inputElement.val());
         Dialogs.confirm(
           t(appName,
             'Input element is not empty, do your really want to revert it to its default value?'),
@@ -117,8 +125,47 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     });
 
   // handle buttons to update or delete recurrent receivables
-  $pmeForm
-    .find('tr.participant-field.recurring td.operations input.regenerate')
+
+  const $recurringReceivablesRows = $pmeForm.find('tr.participant-field.recurring');
+  const $recurringReceivablesOperations = $recurringReceivablesRows.find('td.operations');
+  const $recurringReceivablesFieldData = $recurringReceivablesRows.find('tr.field-datum');
+
+  $recurringReceivablesOperations
+    .find('input.show-empty-options')
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      $this.closest('table').toggleClass('hide-empty-values', !$this.prop('checked'));
+      $this.closest('.resize-target').trigger('resize');
+      return false;
+    });
+
+  $recurringReceivablesFieldData
+    .off('blur', 'td.label, td.input')
+    .on('blur', 'td.label, td.input', function(event) {
+      const $dataRow = $(event.delegateTarget);
+      const $parentTable = $dataRow.closest('table');
+      const hasLabel = $dataRow.find(pmeLabelInputSelector).val() !== '';
+      const hasValue = $dataRow.find(pmeValueInputSelector).val() !== '';
+
+      let parentHasEmptyLabelledValues = false;
+      if (hasLabel && !hasValue) {
+        parentHasEmptyLabelledValues = true;
+      } else {
+        $parentTable.find('tr.field-datum').each(function() {
+          const $thisRow = $(this);
+          const hasLabel = $thisRow.find(pmeLabelInputSelector).val() !== '';
+          const hasValue = $thisRow.find(pmeValueInputSelector).val() !== '';
+          if (hasLabel && !hasValue) {
+            parentHasEmptyLabelledValues = true;
+          }
+        });
+      }
+      $parentTable.toggleClass('has-empty-labelled-values', parentHasEmptyLabelledValues);
+    });
+
+  $recurringReceivablesOperations
+    .find('input.regenerate')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -163,8 +210,8 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
       return false;
     });
 
-  $pmeForm
-    .find('tr.participant-field.recurring td.operations input.delete-undelete')
+  $recurringReceivablesOperations
+    .find('input.delete-undelete')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -188,8 +235,8 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
       return false;
     });
 
-  $pmeForm
-    .find('tr.participant-field.recurring td.operations input.regenerate-all')
+  $recurringReceivablesOperations
+    .find('input.regenerate-all')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -238,7 +285,6 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
         .find('td.pme-value')
         .on('pme:upload-done pme:upload-deleted', '.file-upload-row', function(event) {
           $container.trigger('pmedialog:changed');
-          console.info('CONTAINER', $container);
           submitOuterForm(ambientContainerSelector);
         });
     }

@@ -96,6 +96,29 @@ const getOptions = function($select) {
 };
 
 /**
+ * Fetch the possible values as flat array.
+ *
+ * @param {jQuery} $select TBD.
+ *
+ * @returns {Array} The set of options.
+ */
+const getOptionValues = function($select) {
+  const selectize = getSelectize($select);
+  if (selectize) {
+    return Object.keys(selectize.options);
+  } else {
+    const values = [];
+    getOptions($select).each(function() {
+      const $option = $(this);
+      if (!$option.prop('disabled')) {
+        values.push($option.val());
+      }
+    });
+    return values;
+  }
+};
+
+/**
  * Find an option by its value
  *
  * @param {jQuery} $select TBD.
@@ -377,6 +400,7 @@ export {
   selectedValues as selected,
   selectedOptions,
   getOptions as options,
+  getOptionValues as optionValues,
   getChildren as children,
   getWidget as widget,
   locked,

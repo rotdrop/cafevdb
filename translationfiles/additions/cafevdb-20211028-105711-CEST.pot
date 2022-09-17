@@ -5,5 +5,10 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
 #, php-format
+msgid "replace"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1387
+#, php-format
 msgid "exception"
 msgstr ""

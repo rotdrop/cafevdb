@@ -57,6 +57,8 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
     <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamType"/>
     <exclude name="PEAR.Commenting.FunctionComment.ParamCommentAlignment"/>
     <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamName"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
     <properties>
       <property name="indent" value="2"/>
       <property name="minimumVisibility" value="protected"/>
@@ -68,6 +70,12 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
     <properties>
       <property name="indent" value="2"/>
       <property name="tabIndent" value="false"/>
+    </properties>
+  </rule>
+
+  <rule ref="Squiz.Commenting.FunctionComment">
+    <properties>
+      <property name="skipIfInheritdoc" value="true"/>
     </properties>
   </rule>
 

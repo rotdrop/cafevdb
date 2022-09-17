@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,7 +38,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   const CSV_DELIMITER = ';';
   const PURPOSE_LINE_LENGTH = FinanceService::SEPA_PURPOSE_LENGTH / 4;
   const CURRENCY = 'EUR';
-  const MANDATE_DATE_FORMAT = 'Ymd';
+  const MANDATE_DATE_FORMAT = 'Y/m/d';
   const DUE_DATE_FORMAT = 'Y/m/d';
   const NON_RECURRING = [
     true => 'once',
@@ -122,7 +122,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
         'remoteName' => $compositePayment->getSepaBankAccount()->getBankAccountOwner(),
 
         'date' => $transaction->getDueDate()->format(self::DUE_DATE_FORMAT),
-        'value/value' => $compositePayment->getAmount(),
+        'value/value' => abs($compositePayment->getAmount()),
         'value/currency' => self::CURRENCY,
 
         'purpose[0]' => $purpose[0],
@@ -177,7 +177,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
         'remoteBic' => $compositePayment->getSepaBankAccount()->getBic(),
         'remoteIban' => $compositePayment->getSepaBankAccount()->getIban(),
         'date' => $transaction->getDueDate()->format(self::DUE_DATE_FORMAT),
-        'value/value' => $compositePayment->getAmount(),
+        'value/value' => abs($compositePayment->getAmount()),
         'value/currency' => self::CURRENCY,
         'localName' => $this->owner,
         'remoteName' => $compositePayment->getSepaBankAccount()->getBankAccountOwner(),
@@ -224,16 +224,13 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     ];
   }
 
-  static private function generatePurpose($subject):array
+  private static function generatePurpose($subject):array
   {
-    $subjects = Util::explode(SepaBulkTransactionService::SUBJECT_GROUP_SEPARATOR, $subject);
-    $subject = SepaBulkTransactionService::generateCompositeSubject($subjects);
-
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);
     }
     $purpose = [];
-    for  ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
+    for ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
       $purpose[] = '"' . substr($subject, $i, self::PURPOSE_LINE_LENGTH) . '"';
     }
     return $purpose;

@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\BankAccountValidator;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
@@ -64,7 +65,8 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
-class PersonalSettingsController extends Controller {
+class PersonalSettingsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
@@ -632,11 +634,11 @@ class PersonalSettingsController extends Controller {
           return self::response('');
         }
         $iban = new \PHP_IBAN\IBAN($realValue);
+        $bav = $this->appContainer->get(BankAccountValidator::class);
         if (!$iban->Verify() && is_numeric($realValue)) {
           // maybe simlpy the bank account number, if we have a BLZ,
           // then compute the IBAN
           $blz = $data['bankAccountBLZ'];
-          $bav = new \malkusch\bav\BAV;
           if ($bav->isValidBank($blz)) {
             $realValue = $this->financeService->makeIBAN($blz, $realValue);
             $iban = new \PHP_IBAN\IBAN($realValue);
@@ -653,7 +655,6 @@ class PersonalSettingsController extends Controller {
 
           // Compute as well the BLZ and the BIC
           $blz = $iban->Bank();
-          $bav = new \malkusch\bav\BAV;
           if ($bav->isValidBank($blz)) {
             $realValue = $blz;
             $parameter = 'bankAccountBLZ';
@@ -706,7 +707,7 @@ class PersonalSettingsController extends Controller {
         if (empty($realValue)) {
           return self::response('');
         }
-        $bav = new \malkusch\bav\BAV;
+        $bav = $this->appContainer->get(BankAccountValidator::class);
         if ($bav->isValidBank($realValue)) {
           $data['message'] = [];
           $this->setConfigValue($parameter, $realValue);
@@ -739,7 +740,7 @@ class PersonalSettingsController extends Controller {
         $data['message'] = [];
         if (!$this->financeService->validateSWIFT($realValue)) {
           // maybe a BLZ
-          $bav = new \malkusch\bav\BAV;
+          $bav = $this->appContainer->get(BankAccountValidator::class);
           if ($bav->isValidBank($realValue)) {
             $parameter = 'bankAccountBLZ';
             $this->setConfigValue($parameter, $realValue);

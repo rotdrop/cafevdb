@@ -65,6 +65,14 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /**
    * {@inheritdoc}
    */
+  public static function uiFlags():int
+  {
+    return self::UI_PROTECTED_LABEL|self::UI_PROTECTED_VALUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   static public function updateStrategyChoices():array
   {
     return self::UPDATE_STRATEGIES;

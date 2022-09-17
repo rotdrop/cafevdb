@@ -857,14 +857,12 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   pmeForm
     .find('tr.participant-field tr.field-datum td.documents')
     .each(function() {
-      console.info('INIT FILE UPLOAD', this);
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
 
   pmeForm
     .find('tr.participant-field.simple-valued.service-fee .documents')
     .each(function() {
-      console.info('INIT FILE UPLOAD', this);
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
 };
@@ -894,6 +892,8 @@ const myDocumentReady = function() {
         } else {
           $sepaTable.removeClass('show-deleted').addClass('hide-deleted');
         }
+        resizeCB();
+        return false;
       });
 
       myReady(selector, parameters, resizeCB);

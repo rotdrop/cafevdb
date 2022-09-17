@@ -52,7 +52,7 @@ class SepaBulkTransactionService
 
   // ordinary submission and notification deadlines
   const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
-  const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14;
+  const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14; // unused
 
   // fancy, just to have some reminders and a deadline on the task-list
   const BANK_TRANSFER_SUBMISSION_DEADLINE = 1; // 1 should be enough ...
@@ -61,9 +61,11 @@ class SepaBulkTransactionService
 
   const EXPORT_AQBANKING = 'aqbanking';
 
-  const SUBJECT_GROUP_SEPARATOR = '; ';
+  const SUBJECT_PREFIX_LIMIT = 16;
+  const SUBJECT_PREFIX_SEPARATOR = ' / ';
+  const SUBJECT_GROUP_SEPARATOR = ' / ';
   const SUBJECT_ITEM_SEPARATOR = ', ';
-  const SUBJECT_OPTION_SEPARATOR = Entities\ProjectParticipantFieldDatum::PAYMENT_REFERENCE_SEPARATOR;
+  const SUBJECT_OPTION_SEPARATOR = ': ';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -72,11 +74,11 @@ class SepaBulkTransactionService
   private $financeService;
 
   public function __construct(
-    EntityManager $entityManager
-    , FinanceService $financeService
-    , IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
+    EntityManager $entityManager,
+    FinanceService $financeService,
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->entityManager = $entityManager;
     $this->financeService = $financeService;
@@ -141,8 +143,9 @@ class SepaBulkTransactionService
   }
 
   /**
-   * Generate the payments for the specified service-fee options. The
-   * payments are returned unpersisted.
+   * Generate the payments for the specified service-fee options. The payments
+   * are returned unpersisted. Although composite-payments may in principle
+   * contain payments for different projects this is not implemented here.
    *
    * @param Entities\ProjectParticipant $participant
    *
@@ -170,7 +173,7 @@ class SepaBulkTransactionService
                       ->setMusician($musician)
                       ->setProjectPayments($payments)
                       ->setAmount($totalAmount)
-                      ->setSubject(implode('; ', $subjects));
+                      ->setSubject('');
 
     if (empty($receivableOptions)) {
       return [ $payments, $totalAmount ];
@@ -200,7 +203,7 @@ class SepaBulkTransactionService
             // debit note
             if ($receivableDueDate <= $transactionDueDate) {
               // past due-date, just keep billing the entire amount
-            } else if ($depositDueDate <= $transactionDueDate) {
+            } elseif ($depositDueDate <= $transactionDueDate) {
               // past deposit-due date, charge the deposit
               $payableAmount = $depositAmount;
             } else {
@@ -238,8 +241,13 @@ class SepaBulkTransactionService
         $subjects[] = $payment->getSubject();
       }
     }
+
     // try to compact the subject ...
     $purpose = self::generateCompositeSubject($subjects);
+
+    // prefix the subject with the project-slug
+    $purposePrefix = $this->generateSubjectPrefix($project);
+    $purpose = $purposePrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
 
     $compositePayment->setMusician($participant->getMusician())
                      ->setAmount($totalAmount)
@@ -248,14 +256,65 @@ class SepaBulkTransactionService
     return $compositePayment;
   }
 
-  static public function generateCompositeSubject(array $subjects)
+  /**
+   * Generate a not-too-long prefix referring to the project name and the
+   * bulk-email tag.
+   *
+   * @param Entities\Project $project
+   *
+   * @return string
+   *
+   * @todo Move to the project-service, e.g. compute a length-limited
+   * project-slug at the correct place.
+   */
+  private function generateSubjectPrefix(Entities\Project $project):string
+  {
+    /** @var Service\EncryptionService $encryptionService */
+    $encryptionService = $this->appContainer->get(Service\EncryptionService::class);
+    $tag = $encryptionService->getConfigValue('bulkEmailSubjectTag', '');
+
+    $projectName = $project->getName();
+    $projectYear = $project->getYear();
+    if (substr($projectName, -4) == (string)$projectYear) {
+      $projectName = substr($projectName, 0, -4) . ($projectYear % 100);
+    }
+    $limit = self::SUBJECT_PREFIX_LIMIT - strlen($tag) - 1;
+    $excess = strlen($projectName) - $limit;
+    if ($excess > 0) {
+      $parts = explode(' ', Util::camelCaseToDashes($projectName, ' '));
+      do {
+        $shortened = false;
+        foreach ($parts as &$part) {
+          if (strlen($part)  > 2) {
+            $part = substr($part, 0, -1);
+            $excess --;
+            $shortened = true;
+          }
+        }
+      } while ($excess > 0 && $shortened);
+      $projectName = Util::dashesToCamelCase($parts, true, ' ');
+    }
+
+    $prefix = empty($tag) ? $projectName : $tag . '-' . $projectName;
+
+    return $this->financeService->sepaTranslit($prefix);
+  }
+
+  /**
+   * This is only here because it is used in the AqBankingBulkTransactionExporter.
+   *
+   * @todo Check whether this really needs to be public.
+   *
+   * @param array $subjects
+   */
+  private function generateCompositeSubject(array $subjects):string
   {
     natsort($subjects);
     $oldPrefix = false;
     $postfix = [];
     $purpose = '';
     foreach ($subjects as $subject) {
-      $parts = Util::explode(self::SUBJECT_OPTION_SEPARATOR, $subject);
+      $parts = Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED);
       $prefix = $parts[0];
       if (count($parts) < 2 || $oldPrefix != $prefix) {
         $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
@@ -279,9 +338,18 @@ class SepaBulkTransactionService
       $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
     }
 
-    return $purpose;
+    return $this->financeService->sepaTranslit(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
   }
 
+  /**
+   * Remove the given bulk-transaction if it is essentially unused.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction
+   *
+   * @param bool $force Disable security checks and just delete it. Defaults to \false.
+   *
+   * @throws Exceptions\DatabaseReadonlyException, Exceptions\DatabaseException
+   */
   public function removeBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $force = false)
   {
     if (!$force && $bulkTransaction->getSubmitDate() !== null) {
@@ -317,9 +385,6 @@ class SepaBulkTransactionService
         'uid' => $bulkTransaction->getPreNotificationTaskUid(),
       ];
     }
-
-    /** @var Service\CalDavService $calDavService */
-    $calDavService = $this->appContainer->get(Service\CalDavService::class);
 
     $this->entityManager->beginTransaction();
     try {
@@ -360,6 +425,8 @@ class SepaBulkTransactionService
    * @param Entities\SepaBulkTransaction $bulkTransaction
    *
    * @param null|Entities\Project $project Project the transaction belongs to.
+   *
+   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING
    *
    * @return null|Entities\EncryptedFile The generated export set.
    *

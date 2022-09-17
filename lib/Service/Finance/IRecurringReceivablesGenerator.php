@@ -86,12 +86,61 @@ interface IRecurringReceivablesGenerator
   ];
 
   /**
+   * @var int
+   *
+   * The option label may be edited in the per-musician view
+   */
+  const UI_EDITABLE_LABEL = (1 << 0);
+
+  /**
+   * @var int
+   *
+   * The option value may be edited in the per-musician view
+   */
+  const UI_EDITABLE_VALUE = (1 << 1);
+
+  /**
+   * @var int
+   *
+   * The option label should be protected in the per-musician view
+   */
+  const UI_PROTECTED_LABEL = (1 << 2);
+
+  /**
+   * @var int
+   *
+   * The option value should be protected in the per-musician view
+   */
+  const UI_PROTECTED_VALUE = (1 << 2);
+
+  /**
+   * @var array flags controlling the user interaction
+   */
+  const UI_FLAGS = [
+    self::UI_EDITABLE_LABEL,
+    self::UI_EDITABLE_VALUE,
+    self::UI_PROTECTED_LABEL,
+    self::UI_PROTECTED_VALUE,
+  ];
+
+  /**
+   * Flags controlling the intended user interaction in the per-musician view.
+   *
+   * @return int
+   */
+  public static function uiFlags():int;
+
+  /**
    * A unique short slug which can be used to identify the generator.
+   *
+   * @return string
    */
   static public function slug():string;
 
   /**
    * An array of possible conflict resolutions for conflicting data-items.
+   *
+   * @return array
    */
   static public function updateStrategyChoices():array;
 

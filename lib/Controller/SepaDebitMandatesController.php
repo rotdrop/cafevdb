@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -42,7 +43,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Storage\AppStorage;
-use OCP\Files\SimpleFS\ISimpleFile;
+use OCA\CAFEVDB\Common\BankAccountValidator;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -74,6 +75,9 @@ class SepaDebitMandatesController extends Controller {
   /** @var Repositories\SepaDebitMandatesRepository */
   private $debitMandatesRepository;
 
+  /** @var BankAccountValidator */
+  private $bav;
+
   public function __construct(
     $appName
     , IRequest $request
@@ -83,6 +87,7 @@ class SepaDebitMandatesController extends Controller {
     , FinanceService $financeService
     , ProjectService $projectService
     , FuzzyInputService $fuzzyInputService
+    , BankAccountValidator $bav
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -91,6 +96,8 @@ class SepaDebitMandatesController extends Controller {
     $this->financeService = $financeService;
     $this->projectService = $projectService;
     $this->fuzzyInputService = $fuzzyInputService;
+    $this->bav = $bav;
+
     $this->l = $this->l10N();
 
     $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
@@ -284,7 +291,6 @@ class SepaDebitMandatesController extends Controller {
           // maybe simply the bank account number, if we have a BLZ,
           // then compute the IBAN
           $blz = $BLZ;
-          $bav = new \malkusch\bav\BAV;
 
           if (empty($BLZ)) {
             return self::grumble(
@@ -292,14 +298,14 @@ class SepaDebitMandatesController extends Controller {
           }
 
           // First validate the BLZ
-          if (!$bav->isValidBank($blz)) {
+          if (!$this->bav->isValidBank($blz)) {
             if (strlen($blz) != 8 || !is_numeric($blz)) {
               return self::grumble(
                 $this->l->t('A German bank id consists of exactly 8 digits: %s.', [ $blz ]));
             }
 
-            $suggestions = $this->fuzzyInputService->transposition($blz, function($input) use($bav) {
-              return $bav->isValidBank($input);
+            $suggestions = $this->fuzzyInputService->transposition($blz, function($input) {
+              return $this->bav->isValidBank($input);
             });
 
             return self::dataResponse(
@@ -313,11 +319,11 @@ class SepaDebitMandatesController extends Controller {
           // BLZ is valid -- or at least appears to be valid
 
           // assume this is a bank account number and validate it with BAV
-          if (!$bav->isValidAccount($value)) {
+          if (!$this->bav->isValidAccount($value)) {
             $message = $this->l->t('Invalid German(?) bank account number %s @ %s.',
                                    [ $value, $blz ]);
-            $suggestions = $this->fuzzyInputService->transposition($value, function($input) use ($bav) {
-              return $bav->isValidAccount($input);
+            $suggestions = $this->fuzzyInputService->transposition($value, function($input) {
+              return $this->bav->isValidAccount($input);
             });
             $suggestions = implode(', ', $suggestions);
 
@@ -363,10 +369,9 @@ class SepaDebitMandatesController extends Controller {
         if ($iban->Country() == 'DE') {
           $ktnr = $iban->Account();
           $blz = $iban->Bank();
-          $bav = new \malkusch\bav\BAV;
-          if (!$bav->isValidBank($blz)) {
-            $suggestions = $this->fuzzyInputService->transposition($blz, function($input) use($bav) {
-              return $bav->isValidBank($input);
+          if (!$this->bav->isValidBank($blz)) {
+            $suggestions = $this->fuzzyInputService->transposition($blz, function($input) {
+              return $this->bav->isValidBank($input);
             });
             $message = $this->l->t('Invalid German(?) bank id "%s".', [ $blz ]);
             $suggestions = implode(', ', $suggestions);
@@ -380,11 +385,11 @@ class SepaDebitMandatesController extends Controller {
 
           // BLZ is valid after this point
 
-          if (!$bav->isValidAccount($ktnr)) {
+          if (!$this->bav->isValidAccount($ktnr)) {
             $message = $this->l->t('Invalid German(?) bank account number %s @ %s.',
                                    [ $ktnr, $blz ]);
-            $suggestions = $this->fuzzyInputService->transposition($ktnr, function($input) use ($bav) {
-              return $bav->isValidAccount($input);
+            $suggestions = $this->fuzzyInputService->transposition($ktnr, function($input) {
+              return $this->bav->isValidAccount($input);
             });
             $suggestions = implode(', ', $suggestions);
 
@@ -402,10 +407,9 @@ class SepaDebitMandatesController extends Controller {
 
         // Compute as well the BLZ and the BIC
         $blz = $iban->Bank();
-        $bav = new \malkusch\bav\BAV;
-        if ($bav->isValidBank($blz)) {
+        if ($this->bav->isValidBank($blz)) {
           $BLZ = $blz;
-          $BIC = $bav->getMainAgency($blz)->getBIC();
+          $BIC = $this->bav->getMainAgency($blz)->getBIC();
         }
         $result['bankAccountBLZ'] = $BLZ;
         $result['bankAccountBIC'] = $BIC;
@@ -416,14 +420,13 @@ class SepaDebitMandatesController extends Controller {
           break;
         }
         $value = Util::removeSpaces($value);
-        $bav = new \malkusch\bav\BAV;
-        if (!$bav->isValidBank($value)) {
+        if (!$this->bav->isValidBank($value)) {
           return self::grumble(
             $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]));
         }
         // set also the BIC
         $BLZ = $value;
-        $agency = $bav->getMainAgency($value);
+        $agency = $this->bav->getMainAgency($value);
         $bic = $agency->getBIC();
         if ($this->financeService->validateSWIFT($bic)) {
           $BIC = $bic;
@@ -443,10 +446,9 @@ class SepaDebitMandatesController extends Controller {
         $value = Util::removeSpaces($value);
         if (!$this->financeService->validateSWIFT($value)) {
           // maybe a BLZ
-          $bav = new \malkusch\bav\BAV;
-          if ($bav->isValidBank($value)) {
+          if ($this->bav->isValidBank($value)) {
             $BLZ = $value;
-            $agency = $bav->getMainAgency($value);
+            $agency = $this->bav->getMainAgency($value);
             $value = $agency->getBIC();
             // Set also the BLZ
           }
@@ -587,9 +589,8 @@ class SepaDebitMandatesController extends Controller {
     $ibanValidator = new IBAN($iban);
     if ($ibanValidator->Verify()) {
       $blz = $ibanValidator->Bank();
-      $bav = new \malkusch\bav\BAV;
-      if ($bav->isValidBank($blz)) {
-        $bic = $bav->getMainAgency($blz)->getBIC();
+      if ($this->bav->isValidBank($blz)) {
+        $bic = $this->bav->getMainAgency($blz)->getBIC();
       }
       $iban = $ibanValidator->MachineFormat();
     }
@@ -740,8 +741,8 @@ class SepaDebitMandatesController extends Controller {
     $requiredKeys = [
       'musicianId',
       'bankAccountIBAN',
-      'bankAccountBLZ', // @todo maybe get rid of it
-      'bankAccountBIC', // @todo maybe get rid of it
+      // 'bankAccountBLZ', // @todo maybe get rid of it
+      // 'bankAccountBIC', // @todo maybe get rid of it
       'bankAccountOwner',
     ];
 
@@ -757,6 +758,11 @@ class SepaDebitMandatesController extends Controller {
       if ($mandateNonRecurring === null) {
         $requiredKeys[] = 'mandateNonRecurring';
       }
+    }
+
+    if (!empty($bankAccountIBAN) && str_starts_with($bankAccountIBAN, 'DE')) {
+      $requiredKeys[] = 'bankAccountBLZ';
+      $requiredKeys[] = 'bankAccountBIC';
     }
 
     foreach ($requiredKeys as $required) {

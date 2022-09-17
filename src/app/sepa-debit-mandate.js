@@ -1384,9 +1384,24 @@ const mandateReady = function(selector, parameters, resizeCB) {
     .off('change')
     .on('change', function(event) {
       const $self = $(this);
+      // handle special "select-all" option.
+      const selectedValues = SelectUtils.selected($self);
+      if (selectedValues.indexOf('-1') !== -1) {
+        const allValues = SelectUtils.optionValues($self);
+        if (allValues.length === selectedValues.length) {
+          selectedValues.splice(0, selectedValues.length);
+        } else {
+          allValues.splice(allValues.indexOf('-1'), 1);
+          selectedValues.splice(0, selectedValues.length, ...allValues);
+        }
+        while (selectedValues.indexOf('') !== -1) {
+          selectedValues.splice(selectedValues.indexOf(''), 1);
+        }
+        SelectUtils.selected($self, selectedValues);
+      }
       const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
       const $other = bulkTransactionChooser.filter(otherClass);
-      SelectUtils.selected($other, SelectUtils.selected($self));
+      SelectUtils.selected($other, selectedValues);
       $.fn.cafevTooltip.remove();
       return false;
     });
