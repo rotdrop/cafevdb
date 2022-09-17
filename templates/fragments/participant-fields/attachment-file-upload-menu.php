@@ -88,7 +88,7 @@ $filesAppTarget = md5($filesAppPath ?? '');
           </a>
         </li>
         <li class="menu-item tooltip-auto"
-            title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
+            title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:open-parent']; ?>"
         >
           <a class="operation open-parent<?php empty($filesAppLink) && p(' disabled'); ?>"
              href="<?php p($filesAppLink); ?>"
