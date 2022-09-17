@@ -3703,7 +3703,7 @@ Störung.';
     }
     $referencedBy = $sentEmail->getReferencedBy();
     foreach ($referencedBy as $referrer) {
-      $this->referencing[] = $refererrer->getMessageId();
+      $this->referencing[] = $referrer ->getMessageId();
     }
     $this->cgiData['referencing'] = $this->referencing;
 
