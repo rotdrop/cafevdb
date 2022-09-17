@@ -2562,7 +2562,9 @@ Störung.';
       // All extra (in particular: personal) attachments.
       foreach ($extraAttachments as $generator) {
         $attachment = call_user_func($generator);
-        $phpMailer->addStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          is_string($references) ? $references : $messageId,
           $attachment['data'],
           $attachment['fileName'],
           $attachment['encoding'],
