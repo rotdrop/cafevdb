@@ -1387,7 +1387,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       // handle special "select-all" option.
       const selectedValues = SelectUtils.selected($self);
       if (selectedValues.indexOf('-1') !== -1) {
-        const allValues = SelectUtils.optionValues($self);
+        const allValues = SelectUtils.optionValues($self).filter((x) => x !== '');
         if (allValues.length === selectedValues.length) {
           selectedValues.splice(0, selectedValues.length);
         } else {
