@@ -123,6 +123,28 @@ class MusicianService
   }
 
   /**
+   * As a last resort generate a "disabled" email address pointing back to the
+   * orchestra from the user-id and optionally an existing (broken) email
+   * address.
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|string $email
+   *
+   * @return string
+   */
+  public function generateDisabledEmailAddress(Entities\Musician $musician, ?string $email = null):string
+  {
+    $orchestraAddress = $this->getConfigValue('emailfromaddress');
+    if (!empty($email)) {
+      $email = '_' . preg_replace('|[@+!./]|', '_', $email);
+    }
+    $email = str_replace('@', '+' . $musician->getUserIdSlug() . ($email ?? '') . '@', $orchestraAddress);
+
+    return $email;
+  }
+
+  /**
    * Remove all personal data from the record in order to keep
    * project-structures intact but still honour privacy regulations.
    * This function then would have to cleanup data-base storage and
@@ -135,7 +157,7 @@ class MusicianService
    * @todo Musicians without OPEN payments can safely be remove, worst case
    * after a couple of years. ATM we just block.
    */
-  protected function impersonateMusician(Entities\Musician $musician)
+  protected function impersonateMusician(Entities\Musician $musician):void
   {
     $financialArtifacts = ProjectParticipantFieldsService::participantMonetaryObligations($musician);
     if ($financialArtifacts['sum'] !== $financialArtifacts['received']) {
@@ -244,9 +266,10 @@ class MusicianService
     $this->persist($musician);
     $this->flush();
 
-    $orchestraAddress = $this->getConfigValue('emailfromaddress');
-    $email = str_replace('@', '+' . $musician->getUserIdSlug() . '@', $orchestraAddress);
-    $musician->setEmail($email);
+    $emailAddress = $this->generateDisabledEmailAddress($musician);
+    $musician->setEmailAddresses(new Collections\ArrayCollection);
+    $musician->setEmailAddress($emailAddress);
+
     $this->persist($musician);
     $this->flush();
   }
