@@ -750,6 +750,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     }
     $addressEntity = new MusicianEmailAddress($email, $this);
     $this->emailAddresses->set($email, $addressEntity);
+    $this->email = $addressEntity;
 
     return $this;
   }
