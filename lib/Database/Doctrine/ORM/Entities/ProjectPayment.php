@@ -87,6 +87,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   private $projectParticipant;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $projectBalanceSupportingDocument;
+
   public function __construct() {
     $this->arrayCTOR();
   }
@@ -306,6 +315,30 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getReceivableOption()
   {
     return $this->receivableOption;
+  }
+
+  /**
+   * Set projectBalanceSupportingDocument.
+   *
+   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   *
+   * @return ProjectPayment
+   */
+  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):ProjectPayment
+  {
+    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+
+    return $this;
+  }
+
+  /**
+   * Get projectBalanceSupportingDocument.
+   *
+   * @return ?ProjectBalanceSupportingDocument
+   */
+  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  {
+    return $this->projectBalanceSupportingDocument;
   }
 
   /** \JsonSerializable interface */

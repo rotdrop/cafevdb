@@ -142,6 +142,7 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.receivable_key) ORDER BY __t1.id) AS receivable_key,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.balance_document_sequence) ORDER BY __t1.id) AS balance_document_sequence,
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.musician_id,
   __t1.composite_payment_id
@@ -158,6 +159,7 @@ SELECT
   __t2.project_id,
   __t2.field_id,
   __t2.receivable_key,
+  __t2.balance_document_sequence,
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
@@ -531,7 +533,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
-      'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
+      'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
       'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
       'input|LFVD' => 'HRM',
       'select' => 'T',
@@ -553,7 +555,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Subject'),
         'input'  => 'M',
-        'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
+        'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
         'sql' => '$join_col_fqn',
         'display|LF' => [
