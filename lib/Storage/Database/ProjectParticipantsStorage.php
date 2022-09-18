@@ -149,6 +149,8 @@ class ProjectParticipantsStorage extends Storage
     $userId = $this->entityManager->getUserId();
     $isTreasurer = $this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true);
 
+    // Arguably, these should be classes, but as PHP does not support multiple
+    // inheritance this really would produce a lot of boiler-plate-code.
     $dirInfos = [
       [
         'skipDepthIfOther' => -1,
@@ -176,7 +178,7 @@ class ProjectParticipantsStorage extends Storage
 
             list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
             if ($fileDirName == $dirName) {
-                $this->files[$dirName][$baseName] = $fileInfo['file'];
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
             } elseif (strpos($fileDirName, $dirName) === 0) {
               list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
               $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
