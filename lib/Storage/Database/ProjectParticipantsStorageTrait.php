@@ -49,6 +49,40 @@ trait ProjectParticipantsStorageTrait
   }
 
   /**
+   * @return string The name of the sub-folder containing supporting
+   * documents.
+   */
+  protected function getSupportingDocumentsFolderName():string
+  {
+    // TRANSLATORS: folder-name
+    return $this->l->t('SupportingDocuments');
+  }
+
+  /**
+   * Get the name of the sub-folder containing supporting documents for
+   * bank-transactions.
+   *
+   * @return string
+   */
+  protected function getBankTransactionsFolderName():string
+  {
+    // TRANSLATORS: folder-name
+    return $this->l->t('BankTransactions');
+  }
+
+  /**
+   * Get the name of the sub-folder containing supporting documents for
+   * bank-transactions.
+   *
+   * @return string
+   */
+  protected function getReceivablesFolderName():string
+  {
+    // TRANSLATORS: folder-name
+    return $this->l->t('Receivables');
+  }
+
+  /**
    * Get the name of the sub-folder holding payment records.
    *
    * @return string Translated name of the payment-records sub-folder.
@@ -61,6 +95,12 @@ trait ProjectParticipantsStorageTrait
 
   /**
    * PME-legacy.
+   *
+   * @param int $compositePaymentId
+   *
+   * @param string $userIdSlug
+   *
+   * @return string
    */
   protected function getLegacyPaymentRecordFileName(int $compositePaymentId, string $userIdSlug):string
   {
@@ -75,6 +115,8 @@ trait ProjectParticipantsStorageTrait
    * Generate a file-name for the given composite payment.
    *
    * @param Entities\CompositePayment $compositePayment
+   *
+   * @return string
    */
   protected function getPaymentRecordFileName(Entities\CompositePayment $compositePayment):string
   {
@@ -91,12 +133,6 @@ trait ProjectParticipantsStorageTrait
   {
     // TRANSLATORS: folder-name
     return $this->l->t('DebitMandates');
-  }
-
-  protected function getSupportingDocumentsFolderName():string
-  {
-    // TRANSLATORS: folder-name
-    return $this->l->t('SupportingDocuments');
   }
 
   /**
