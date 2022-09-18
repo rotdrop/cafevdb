@@ -18,7 +18,11 @@
     <exclude name="StaticAcces" />
   </rule>
 
-  <rule ref="rulesets/controversial.xml"/>
+  <rule ref="rulesets/controversial.xml">
+    <exclude name="CamelCaseVariableName"/>
+    <exclude name="CamelCaseParameterName"/>
+    <exclude name="CamelCaseMethodName"/>
+  </rule>
 
   <rule ref="rulesets/design.xml"/>
 
