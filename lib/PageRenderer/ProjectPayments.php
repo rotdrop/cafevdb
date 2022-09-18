@@ -611,14 +611,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ON ppfo.field_id = pp.field_id
       AND ppfo.key = pp.receivable_key
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppf.id = pp.field_id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
@@ -688,14 +688,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ppf.multiplicity AS multiplicity
   FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
@@ -758,6 +758,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'options' => 'LFACDPV',
       'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
 
+        if ($pme->hidden($k)) {
+          return '';
+        }
+
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
@@ -765,15 +769,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
-            . $this->dbFileUploadRowHtml($value,
-                                         fieldId: $musicianId,
-                                         optionKey: $recordId['id'],
-                                         subDir: $this->getPaymentRecordsFolderName(),
-                                         fileBase: $fileName,
-                                         overrideFileName: true,
-                                         musician: $musician,
-                                         project: null)
-            . '
+          . $this->dbFileUploadRowHtml(
+            $value,
+            fieldId: $musicianId,
+            optionKey: $recordId['id'],
+            subDir: $this->getPaymentRecordsFolderName(),
+            fileBase: $fileName,
+            overrideFileName: true,
+            musician: $musician,
+            project: null,
+          )
+          . '
   </table>
 </div>';
       },
@@ -865,9 +871,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
         'display' => [
           'popup' => function($data) {
-	    if (empty($data)) {
-	      return ''; // can happen
-	    }
+            if (empty($data)) {
+              return ''; // can happen
+            }
             $info  = $this->financeService->getIbanInfo($data);
             $result = '';
             foreach ($info as $key => $value) {
@@ -904,9 +910,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
       $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
-      if (!empty($bulkTransactionId)) {
+      if (false && !empty($bulkTransactionId)) {
         $pme->options = 'LVF';
-        if ($op !== 'select' ) {
+        if ($op !== 'select') {
           throw new \BadFunctionCallException(
             $this->l->t('Payments resulting from direct debit transfers cannot be changed.')
           );
@@ -926,8 +932,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
-      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row)
-        use ($musicianReceivableFilter) {
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
 
         if ($this->listOperation()) {
           return true;
@@ -993,6 +998,23 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
           $pme->fdd[$musicianIdIndex]['input'] = 'R';
         }
+
+        // if this payment originated from a scheduled bulk-transaction, then
+        // disallow any changes safe the date_of_receipt and adding/changing
+        // supporting documents.
+        $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+        if (!empty($bulkTransactionId)) {
+          // make all rows read-only with the exception of some
+          foreach ($pme->fdn as $fieldName => $fieldIndex) {
+            if ($fieldName == 'date_of_receipt') {
+              $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
+              continue;
+            }
+            // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
+            $pme->fdd[$fieldIndex]['input'] .= 'R';
+          }
+        }
+
         return true;
       };
 
@@ -1321,7 +1343,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
   }
 
-  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme) {
+  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme)
+  {
     $compositeRow = $this->isCompositeRow($row, $pme);
     $composite = $where === 'composite';
     $component = $where === 'component';
