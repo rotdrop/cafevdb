@@ -399,6 +399,7 @@ trait ParticipantFieldsTrait
                 'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                 'documentsFolders' => $this->getDocumentsFolderName(),
                 'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
+                'receivablesFolder' => $this->getReceivablesFolderName(),
               ];
               $participantFolder = $pathChain['participantFolder'];
 
@@ -1824,6 +1825,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
       'documentsFolders' => $this->getDocumentsFolderName(),
       'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
+      'receivablesFolder' => $this->getReceivablesFolderName(),
       'fieldFolder' => $this->participantFieldsService->getFileSystemFieldName($field),
     ];
     $participantFolder = $pathChain['participantFolder'];
