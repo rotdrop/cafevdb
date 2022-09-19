@@ -239,4 +239,58 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   {
     return $this->documentsChanged ?? $this->updated;
   }
+
+  /**
+   * Set projectPayments.
+   *
+   * @param Collection $projectPayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setProjectPayments(?Collection $projectPayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($projectPayments)) {
+      $projectPayments = new ArrayCollection;
+    }
+    $this->projectPayments = $projectPayments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectPayments.
+   *
+   * @return Collection
+   */
+  public function getProjectPayments():Collection
+  {
+    return $this->projectPayments;
+  }
+
+  /**
+   * Set compositePayments.
+   *
+   * @param Collection $compositePayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setCompositePayments(?Collection $compositePayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($compositePayments)) {
+      $compositePayments = new ArrayCollection;
+    }
+    $this->compositePayments = $compositePayments;
+
+    return $this;
+  }
+
+  /**
+   * Get compositePayments.
+   *
+   * @return Collection
+   */
+  public function getCompositePayments():Collection
+  {
+    return $this->compositePayments;
+  }
 }
