@@ -78,6 +78,15 @@
             background-image:url('../../../core/img/filetypes/folder-external.svg');
           }
         }
+        .flex-container {
+          > * {
+            overflow: hidden;
+          }
+          .pme-cell-squeezer {
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
       }
     }
   }
