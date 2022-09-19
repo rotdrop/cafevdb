@@ -49,8 +49,8 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   private $financeService;
 
   public function __construct(
-    ConfigService $configService
-    , FinanceService $financeService
+    ConfigService $configService,
+    FinanceService $financeService,
   ) {
     $this->configService = $configService;
     $this->financeService = $financeService;
@@ -65,30 +65,24 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   /**
    * @inheritdoc
    */
-  static public function identifier():string
+  public static function identifier():string
   {
     return self::IDENTIFIER;
   }
 
-  /**
-   * @inheritdoc
-   */
+  /** {@inheritdoc} */
   public function mimeType(Entities\SepaBulkTransaction $transaction):string
   {
     return 'text/csv';
   }
 
-  /**
-   * @inheritdoc
-   */
+  /** {@inheritdoc} */
   public function fileExtension(Entities\SepaBulkTransaction $transaction):string
   {
     return 'csv';
   }
 
-  /**
-   * @inheritdoc
-   */
+  /** {@inheritdoc} */
   public function fileData(Entities\SepaBulkTransaction $transaction):string
   {
     if ($transaction instanceof Entities\SepaDebitNote) {
