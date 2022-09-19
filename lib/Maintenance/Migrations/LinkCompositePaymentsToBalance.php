@@ -43,6 +43,13 @@ class LinkCompositePaymentsToBalance extends AbstractMigration
       'CREATE INDEX IF NOT EXISTS IDX_65D9920C166D1F9C9523AA8A ON CompositePayments (project_id, musician_id)',
       'CREATE INDEX IF NOT EXISTS IDX_65D9920C166D1F9C6A022FD1 ON CompositePayments (project_id, balance_document_sequence)',
     ],
+    self::TRANSACTIONAL => [
+      'UPDATE CompositePayments cp
+LEFT JOIN ProjectPayments pp
+ON cp.id = pp.composite_payment_id
+SET cp.project_id = pp.project_id
+WHERE cp.project_id IS NULL',
+    ],
   ];
 
   /** {@inheritdoc} */
