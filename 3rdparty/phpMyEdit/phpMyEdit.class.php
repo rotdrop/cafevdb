@@ -2598,9 +2598,10 @@ class phpMyEdit
 					$hiddenValues[] = '';
 				}
 				foreach($hiddenValues as $hidden) {
-					// @TODO now emitted twice?
 					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden, $css_class_name);
 				}
+				// set $readonly to 'disabled' as this has already been handled here
+				$readonly = 'disabled';
 			}
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
