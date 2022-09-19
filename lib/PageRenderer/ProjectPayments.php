@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
@@ -54,6 +55,7 @@ class ProjectPayments extends PMETableViewBase
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
+  const ALL_BALANCE_DOCUMENTS_TABLE = self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE . self::VALUES_TABLE_SEP . 'all';
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   const ROW_TAG_PREFIX = '0;';
@@ -215,6 +217,31 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
+    ],
+    self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE => [
+      'entity' => Entities\ProjectBalanceSupportingDocument::class,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'sequence' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'balance_document_sequence',
+        ],
+      ],
+      'column' => 'sequence',
+    ],
+    self::ALL_BALANCE_DOCUMENTS_TABLE => [
+      'entity' => Entities\ProjectBalanceSupportingDocument::class,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'sequence' => false,
+      ],
+      'column' => 'sequence',
     ],
   ];
 
@@ -505,6 +532,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'input' => 'R',
           'options' => 'LFCDV',
           'php|CDV' => function($value, $action, $k, $row, $recordId, $pme) {
+            if ($pme->hidden($k)) {
+              return '';
+            }
             $name = $pme->fds[$k];
             $html = $pme->htmlHiddenData($name, $value);
             $html .= '<span class="cell-wrapper">' . $this->moneyValue($value) . '</span>';
@@ -829,6 +859,59 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ];
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE, 'sequence', [
+        'name' => $this->l->t('Project Balance'),
+        'tab' => [ 'id' => 'booking' ],
+        'css' => [ 'postfix' => [ 'allow-empty', 'project-balance-documents', ], ],
+        'select' => 'D',
+        'sql' => $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence',
+        'values' => [
+          'description' => [
+            'columns' => [ 'LPAD($table.sequence, 3, "0")', ],
+            'divs' => [ -1 => $this->projectName . '-', 0 => '/', ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
+          // 'filters' => '$table.project_id = $record_id[project_id]',
+        ],
+        'display' => [
+          'prefix' => function($op, $pos, $k, $row, $pme) {
+            if ($op === PHPMyEdit::OPERATION_DISPLAY) {
+              return;
+            }
+
+            $value = $row['qf' . $k];
+            $this->logInfo('VALUE ' . $value . ' ' . $op);
+
+            $documentPathChain = [ $this->getProjectBalancesPath() ];
+            if ($this->project->getType() == ProjectType::TEMPORARY) {
+              $documentPathChain[] = $this->project->getYear();
+            };
+            $documentPathChain[] = $this->project->getName();
+            $documentPathChain[] = $this->getSupportingDocumentsFolderName();
+
+            $documentPath = implode('/', $documentPathChain);
+            try {
+              $filesAppLink = $this->userStorage->getFilesAppLink($documentPath, subDir: true);
+              $filesAppTarget = md5($documentPath);
+            } catch (\OCP\Files\NotFoundException $e) {
+              $this->logInfo('No file found for ' . $documentPath);
+              $filesAppLink = '';
+            }
+
+            $filesAppLink = '
+<a href="' . $filesAppLink . '"
+   target=" . $filesAppTarget . "
+   title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
+   class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+></a>';
+            return $filesAppLink;
+          },
+        ],
+      ],
+    );
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
       array_merge(
         $this->defaultFDD['date'], [
@@ -901,7 +984,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'input'  => 'R',
       'options' => 'LFVD',
       'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
-      'input' => 'R',
       'select' => 'T',
       'escape' => true,
       'sort' => true,
@@ -1010,6 +1092,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           foreach ($pme->fdn as $fieldName => $fieldIndex) {
             if ($fieldName == 'date_of_receipt') {
               $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
+              continue;
+            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE, 'sequence')) {
               continue;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
