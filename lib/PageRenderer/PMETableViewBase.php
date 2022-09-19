@@ -1210,10 +1210,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'default' => $pme->fdd[$field]['default']??null,
           ];
           if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
-            // assume everything after the first self::JOIN_KEY_SEP is
-            // the one and only value
-            list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
-            $multipleValues[$column]['data'][$key] = $value;
+            if (!empty($newvals[$field])) {
+              // assume everything after the first self::JOIN_KEY_SEP is
+              // the one and only value
+              list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
+              $multipleValues[$column]['data'][$key] = $value;
+            }
           } else {
             foreach (Util::explodeIndexed($newvals[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
               $multipleValues[$column]['data'][$key] = $value;
@@ -1649,10 +1651,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             // the correct value.
             $multipleValues[$column]['default'] = $newvals[$field];
           } else if ($joinInfo['flags'] & self::JOIN_SINGLE_VALUED) {
-            // assume everything after the first self::JOIN_KEY_SEP is
-            // the one and only value
-            list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
-            $multipleValues[$column]['data'][$key] = $value;
+            if (!empty($newvals[$field])) {
+              // assume everything after the first self::JOIN_KEY_SEP is
+              // the one and only value
+              list($key, $value) = explode(self::JOIN_KEY_SEP, $newvals[$field], 2);
+              $multipleValues[$column]['data'][$key] = $value;
+            }
           } else {
             foreach (Util::explodeIndexed($newvals[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
               $multipleValues[$column]['data'][$key] = $value;
