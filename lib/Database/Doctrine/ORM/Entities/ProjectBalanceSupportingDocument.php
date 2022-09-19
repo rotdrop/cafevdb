@@ -191,12 +191,28 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
     return $this->documents;
   }
 
+  /**
+   * Add the given file to the list of supporting documents if not already present.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
   public function addDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    $this->documents->add($file);
+    if (!$this->documents->contains($file)) {
+      $this->documents->add($file);
+    }
     return $this;
   }
 
+  /**
+   * Remove the given file from the list of supporting documents.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
   public function removeDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
     $this->documents->removeElement($file);
