@@ -807,7 +807,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $value,
             fieldId: $musicianId,
             optionKey: $recordId['id'],
-            subDir: $this->getPaymentRecordsFolderName(),
+            subDir: $this->getSupportingDocumentsFolderName() . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName(),
             fileBase: $fileName,
             overrideFileName: true,
             musician: $musician,
@@ -840,7 +840,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
           $subDirPrefix =
             UserStorage::PATH_SEP . $this->getDocumentsFolderName()
-            . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+            . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName()
+            . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName();
           $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
           try {
             $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
@@ -874,11 +875,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ],
         ],
         'select' => 'D',
-        'sql|LF' => 'IF(
+        'sql' => 'IF(
   ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
   ' .  $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values,
   $join_col_fqn)',
-        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
         'values' => [
           'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
           'column' => 'sequence',
@@ -889,6 +889,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'ifnull' => [ false ],
             'cast' => [ false ],
           ],
+          'data' => 'CONCAT("' . $this->projectName . '", "-", LPAD($table.sequence, 3, "0"), "/")',
           // 'filters' => '$table.project_id = $record_id[project_id]',
         ],
         'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
@@ -897,19 +898,27 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           }
           return $value;
         },
+        'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
         'display' => [
-          'popup' => 'data',
+          'popup' => function($cellData, $k, $row, $pme) {
+            if ($this->isCompositeRow($row, $pme)) {
+              return $cellData;
+            } else {
+              return $pme->fdd[$k]['tooltip'];
+            }
+          },
           'prefix' => function($op, $pos, $k, $row, $pme) {
 
-            $value = $row['qf' . $k];
             if ($this->isCompositeRow($row, $pme)) {
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row['qf' . $k . '_idx'])) {
                 return null;
               }
+              $value = null;
             } else {
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
                 return null;
               }
+              $value = $row['qf' . $k];
             }
 
             $documentPathChain = [ $this->getProjectBalancesPath() ];
@@ -918,24 +927,28 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             };
             $documentPathChain[] = $this->project->getName();
             $documentPathChain[] = $this->getSupportingDocumentsFolderName();
-            $filesAppTarget = md5(implode('/', $documentPathChain));
+
+            $documentParentPath = implode('/', $documentPathChain);
+            $filesAppTarget = md5($documentParentPath);
             if (!empty($value)) {
               if (is_numeric($value)) {
                 $value = sprintf('%s-%03d', $this->projectName, $value);
               }
-              $documentPathChain[] = $value;
             }
 
-            $documentPath = implode('/', $documentPathChain);
             try {
-              $filesAppLink = $this->userStorage->getFilesAppLink($documentPath, subDir: true);
+              $filesAppParentLink = $this->userStorage->getFilesAppLink($documentParentPath, subDir: true);
+              $filesAppLink = empty($value)
+                ? $filesAppParentLink
+                : $filesAppParentLink . '/' . $value;
             } catch (\OCP\Files\NotFoundException $e) {
-              $this->logInfo('No file found for ' . $documentPath);
-              $filesAppLink = '';
+              $this->logInfo('No file found for ' . $documentParentPath);
+              $filesAppParentLink = $filesAppLink = '';
             }
 
             $filesAppAnchor = '
 <a href="' . $filesAppLink . '"
+   data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
    target=" . $filesAppTarget . "
    title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
    class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
@@ -1100,6 +1113,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ];
           $pme->fdd[$subjectIndex]['input'] = 'M';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
+          $pme->fdd[$balanceDocumentSequenceIndex]['input'] = 'R';
 
           if ($this->copyOperation()) {
             $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
@@ -1551,7 +1565,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         }
 
         // there should be at least one project ...
-        $subFolder = empty($supportingDocuments) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+        $subFolder = empty($supportingDocuments)
+          ? null
+          : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
         return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
