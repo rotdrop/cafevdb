@@ -475,6 +475,12 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'bill-to-party' => $this->l->t('The person who pays the insurance fees. If left blank then the instrument-holder receives the bills.'),
           'instrument-owner' => $this->l->t('The person who has the legal possession of this instrument. If left blank then it is assumed that the instrument holder is also the instrument owner.'),
         ],
+        'project-payments' => [
+          'project-balance' => [
+            'default' => $this->l->t('Link this payment and the supporting documents of its receivable to the project balance folder.'),
+            'open' => $this->l->t('Open the project balance folder in the files app of the cloud.'),
+          ],
+        ],
       ],
 
       'participant-field-multiplicity' => [
