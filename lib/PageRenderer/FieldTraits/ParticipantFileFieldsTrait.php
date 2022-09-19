@@ -77,10 +77,10 @@ trait ParticipantFileFieldsTrait
     }
     if (!empty($fileBase)) {
       $fileName = $this->projectService->participantFilename($fileBase, $musician);
+      $placeHolder = $this->l->t('Load %s', $fileName);
       if (!empty($optionValue)) {
         $fileName .= '.' . pathinfo($optionValue, PATHINFO_EXTENSION);
       }
-      $placeHolder = $this->l->t('Load %s', $fileName);
     } else {
       $fileName = $optionValue;
       $placeHolder = $this->l->t('Drop files here or click to upload fileds.');
@@ -192,7 +192,7 @@ trait ParticipantFileFieldsTrait
     }
     $placeHolder = empty($fileBase)
       ? $this->l->t('Drop files here or click to upload files.')
-      : $this->l->t('Load %s', $fileName);
+      : $this->l->t('Load %s', pathinfo($fileName, PATHINFO_FILENAME));
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
 
     return (new TemplateResponse(

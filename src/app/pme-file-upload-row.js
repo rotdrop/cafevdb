@@ -253,6 +253,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       fileName,
     };
     const failHandler = function(xhr, status, errorThrown) {
+      $.fn.cafevTooltip.remove();
       const data = Ajax.failData(xhr, status, errorThrown);
       console.debug('FAIL DATA', data);
       if (data.confirmation
@@ -287,6 +288,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       }
     };
     const doneHandler = function(data) {
+      $.fn.cafevTooltip.remove();
       if (!Ajax.validateResponse(data, ['message'], cleanup)) {
         return;
       }
@@ -304,6 +306,8 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
           $downloadLink.html('');
         }
         $placeholder.val('');
+        $thisRow.data('fileName', $thisRow.data('fileBase'));
+        $thisRow.attr('data-file-name', $thisRow.data('fileBase'));
         $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
         $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
       }

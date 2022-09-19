@@ -83,17 +83,6 @@ trait ProjectParticipantsStorageTrait
   }
 
   /**
-   * Get the name of the sub-folder holding payment records.
-   *
-   * @return string Translated name of the payment-records sub-folder.
-   */
-  protected function getPaymentRecordsFolderName():string
-  {
-    // TRANSLATORS: folder-name
-    return $this->l->t('PaymentRecords');
-  }
-
-  /**
    * PME-legacy.
    *
    * @param int $compositePaymentId
