@@ -169,6 +169,21 @@ const pmeTableSelector = 'table.' + pmeToken('main');
 const pmeInputSelector = 'input.' + pmeToken('input');
 
 /**
+ * Selector for key.
+ */
+const pmeKeySelector = 'td.' + pmeToken('key');
+
+/**
+ * Selector for value.
+ */
+const pmeValueSelector = 'td.' + pmeToken('value');
+
+/**
+ * Selector for display cell.
+ */
+const pmeCellSelector = 'td.' + pmeToken('cell');
+
+/**
  * Genereate the default selector.
  *
  * @param {string} selector The selector to construct the final
@@ -251,6 +266,9 @@ export {
   pmeClassSelectors as classSelectors,
   pmeNavigationSelector as navigationSelector,
   pmeTableSelector as tableSelector,
+  pmeKeySelector as keySelector,
+  pmeValueSelector as valueSelector,
+  pmeCellSelector as cellSelector,
 };
 
 // Local Variables: ***
