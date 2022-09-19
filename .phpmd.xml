@@ -28,7 +28,7 @@
   </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="l,fp,id,k"/>
+      <property name="exceptions" value="l,fp,id,k,op"/>
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/LongVariable">
