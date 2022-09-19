@@ -920,6 +920,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $documentPathChain[] = $this->getSupportingDocumentsFolderName();
             $filesAppTarget = md5(implode('/', $documentPathChain));
             if (!empty($value)) {
+              if (is_numeric($value)) {
+                $value = sprintf('%s-%03d', $this->projectName, $value);
+              }
               $documentPathChain[] = $value;
             }
 
