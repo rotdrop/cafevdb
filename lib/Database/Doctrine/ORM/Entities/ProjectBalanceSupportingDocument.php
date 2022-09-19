@@ -104,14 +104,25 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    * @var Collection
    *
    * Optional linked project payments.
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist","remove"}, fetch="EXTRA_LAZY")
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $projectPayments;
+
+  /**
+   * @var Collection
+   *
+   * Optional linked composite payments.
+   *
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $compositePayments;
 
   public function __construct(?Project $project = null, ?int $sequence = null) {
     $this->arrayCTOR();
     $this->documents = new ArrayCollection();
     $this->projectPayments = new ArrayCollection();
+    $this->compositePayments = new ArrayCollefction();
     $this->setProject($project);
     $this->setSequence($sequence);
   }

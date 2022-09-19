@@ -111,6 +111,13 @@ class CompositePayment implements \ArrayAccess
   private $notificationMessageId;
 
   /**
+   * @var Project
+   *
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="compositePayments", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $project;
+
+  /**
    * @var Musician
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
@@ -119,9 +126,19 @@ class CompositePayment implements \ArrayAccess
   private $musician;
 
   /**
+   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
+   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
+   * )
+   */
+  private $projectParticipant;
+
+  /**
    * @var EncryptedFile
    *
-   * Optional. ATM only used for particular auto-generated monetary fields.
+   * Optional. In case an additional overview document needs to be added in
+   * addition to the individual supporting documents of the project payments.
    *
    * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
    *
@@ -129,9 +146,21 @@ class CompositePayment implements \ArrayAccess
    */
   private $supportingDocument;
 
+  /**
+   * @var ProjectBalanceSupportingDocument
+   *
+   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="compositePayments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $projectBalanceSupportingDocument;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
+    $this->projectBalanceSupportingDocuments = new ArrayCollection;
   }
 
   /**
