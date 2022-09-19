@@ -516,14 +516,18 @@ Störung.';
     $this->bulkTransactionId = $this->cgiValue(
       'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', 0));
     if ($this->bulkTransactionId > 0) {
-      $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
-                                    ->find($this->bulkTransactionId);
-      if (!empty($this->bulkTransaction) && empty($template)) {
+      $this->bulkTransaction = $this
+        ->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+        ->find($this->bulkTransactionId);
+      if (!empty($this->bulkTransaction)) {
+        /** @var SepaBulkTransactionService $bulkTransactionService */
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
-        $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $template . '-' . $this->l->t('announcement');
-        list($template,) = $this->normalizeTemplateName($template);
-
+        $bulkTransactionService->updateBulkTransaction($this->bulkTransaction, flush: true);
+        if (empty($template)) {
+          $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
+          $template = $template . '-' . $this->l->t('announcement');
+          list($template,) = $this->normalizeTemplateName($template);
+        }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
           ? 1.0
           : -1.0;
@@ -1060,7 +1064,7 @@ Störung.';
                     );
                     $row = str_ireplace($keyVariants, $replacements[$key], $row);
                   }
-                  $cssClass = $cssRowClass;
+                  $cssClass = '@cssRowClass@';
                   if (!empty($memberNames)) {
                     $cssClass .= ' has-data';
                     $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
@@ -1113,9 +1117,8 @@ Störung.';
                     $fieldHtml = $fieldHeader  . $fieldHtml;
                   }
 
-                  $html .= $fieldHtml;
+                  $html .= str_replace('@cssRowClass@', $cssRowClass ?? '', $fieldHtml);
                 }
-
               }
             }
 

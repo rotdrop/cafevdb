@@ -62,7 +62,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  const PAYMENT_REFERENCE_SEPARATOR = ': ';
+  const PAYMENT_REFERENCE_SEPARATOR = CompositePayment::SUBJECT_OPTION_SEPARATOR;
 
   /**
    * @var ProjectParticipantField

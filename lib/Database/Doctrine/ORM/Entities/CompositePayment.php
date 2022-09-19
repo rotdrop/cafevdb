@@ -1,6 +1,30 @@
 <?php
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use \Closure;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -8,6 +32,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
@@ -25,6 +51,12 @@ class CompositePayment implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+
+  const SUBJECT_PREFIX_LIMIT = 16;
+  const SUBJECT_PREFIX_SEPARATOR = ' / ';
+  const SUBJECT_GROUP_SEPARATOR = ' / ';
+  const SUBJECT_ITEM_SEPARATOR = ', ';
+  const SUBJECT_OPTION_SEPARATOR = ': ';
 
   /**
    * @var int
@@ -254,7 +286,7 @@ class CompositePayment implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -286,11 +318,11 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set subject.
    *
-   * @param string $subject
+   * @param null|string $subject
    *
    * @return CompositePayment
    */
-  public function setSubject($subject):CompositePayment
+  public function setSubject(?string $subject):CompositePayment
   {
     $this->subject = $subject;
 
@@ -300,9 +332,9 @@ class CompositePayment implements \ArrayAccess
   /**
    * Get subject.
    *
-   * @return string
+   * @return null|string
    */
-  public function getSubject()
+  public function getSubject():?string
   {
     return $this->subject;
   }
@@ -436,7 +468,15 @@ class CompositePayment implements \ArrayAccess
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
+      $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+    }
+
     $this->supportingDocument = $supportingDocument;
+
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
+      $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+    }
 
     return $this;
   }
@@ -449,6 +489,147 @@ class CompositePayment implements \ArrayAccess
   public function getSupportingDocument():?EncryptedFile
   {
     return $this->supportingDocument;
+  }
+
+  /**
+   * Set projectBalanceSupportingDocument.
+   *
+   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   *
+   * @return ProjectPayment
+   */
+  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):CompositePayment
+  {
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
+      $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+    }
+
+    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
+      $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get projectBalanceSupportingDocument.
+   *
+   * @return ?ProjectBalanceSupportingDocument
+   */
+  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  {
+    return $this->projectBalanceSupportingDocument;
+  }
+
+  /**
+   * Automatic subject generation from receivables and linked
+   * ProjectBalanceSupportingDocument's. The routine applies the supplied
+   * transliteration routine such that the result only contains valid
+   * characters for a potential bank transaction data-set. It also tries to
+   * group and compactify payments which carry the same prefix assuming the
+   * particluar subjects result from
+   * ProjectParticipantFieldDatum::paymentReference().
+   *
+   * @param null|Closure $transliterate A transliteration routine with the
+   * signature function(string $x):string. It defaults to the identity if not
+   * specified.
+   *
+   * @return string
+   */
+  public function generateSubject(?Closure $transliterate = null):string
+  {
+    if (empty($transliterate)) {
+      $transliterate = fn(string $x) => $x;
+    }
+
+    // collect the ProjectBalanceSupportingDocument's
+    $balanceDocuments = [ $this->projectBalanceSupportingDocument ];
+    /** @var ProjectPayment $projectPayment */
+    foreach ($this->projectPayments as $projectPayment) {
+      $balanceDocuments[] = $projectPayment->getProjectBalanceSupportingDocument();
+    }
+    $balanceSequences =  array_map(
+      fn(ProjectBalanceSupportingDocument $document) => $document->getSequence(),
+      array_filter($balanceDocuments),
+    );
+    sort($balanceSequences, SORT_NUMERIC);
+
+    $projectName = $this->project->getName();
+    $projectYear = $this->project->getYear();
+    if (substr($projectName, -4) == (string)$projectYear) {
+      $projectName = substr($projectName, 0, -4) . ($projectYear % 100);
+    }
+
+    $projectName = Util::dashesToCamelCase(
+      $transliterate(strtolower(Util::camelCaseToDashes($projectName, separator: ' '))),
+      capitalizeFirstCharacter: true,
+      dashes: ' ',
+    );
+
+    $subjectPrefix = Util::shortenCamelCaseString($projectName, self::SUBJECT_PREFIX_LIMIT, minLen: 2);
+
+    if (count($balanceSequences) >= 1) {
+      $sequenceSuffix = sprintf('%03d', array_shift($balanceSequences));
+      foreach ($balanceSequences as $sequence) {
+        $sequenceSuffix .= trim(self::SUBJECT_PREFIX_SEPARATOR) . $sequence; // without padding
+      }
+      $subjectPrefix .= '-' . $sequenceSuffix;
+    }
+
+    $subjects = $this->projectPayments
+      ->map(fn(ProjectPayment $payment) => $transliterate($payment->getSubject()))
+      ->toArray();
+    natsort($subjects);
+
+    // try to compactify the composite subject by attempting to group similar subjects
+    $oldPrefix = false;
+    $postfix = [];
+    $purpose = '';
+    foreach ($subjects as $subject) {
+      $parts = Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED);
+      $prefix = $parts[0];
+      if (count($parts) < 2 || $oldPrefix != $prefix) {
+        $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+        if (strlen($purpose) > 0) {
+          $purpose .= self::SUBJECT_GROUP_SEPARATOR;
+        }
+        $purpose .= $prefix;
+        if (count($parts) >= 2) {
+          $purpose .= self::SUBJECT_OPTION_SEPARATOR;
+          $oldPrefix = $prefix;
+        } else {
+          $oldPrefix = false;
+        }
+        $postfix = [];
+      }
+      if (count($parts) >= 2) {
+        $postfix = array_merge($postfix, array_splice($parts, 1));
+      }
+    }
+    if (!empty($postfix)) {
+      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+    }
+    $purpose = $transliterate(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
+
+    $subject = $subjectPrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
+
+    return $subject;
+  }
+
+  /**
+   * Update the stored payment-subject by calling
+   * CompositePayment::generateSubject().
+   *
+   * @param null|Closure $transliterate See generateSubject().
+   *
+   * @return CompositePayment
+   */
+  public function updateSubject(?Closure $transliterate = null):CompositePayment
+  {
+    $this->subject = $this->generateSubject($transliterate);
+    return $this;
   }
 
   /** \JsonSerializable interface */
