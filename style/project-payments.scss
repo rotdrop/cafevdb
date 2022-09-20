@@ -79,6 +79,14 @@
           }
         }
         .flex-container {
+        }
+      }
+    }
+  }
+  &list, &view, &delete {
+    td.pme- {
+      &cell, &value {
+        .flex-container {
           > .pme-cell-content {
             overflow: hidden;
           }
