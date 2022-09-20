@@ -208,12 +208,18 @@ class Storage extends AbstractStorage
    *
    * @param string $path The path to work on.
    *
-   * @return array
+   * @param int $flags As for the upstream pathinfo() function.
+   *
+   * @return string|array
    */
-  protected static function pathInfo(string $path):attay
+  protected static function pathInfo(string $path, int $flags = PATHINFO_ALL)
   {
-    $pathInfo = pathinfo($path);
-    $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname']);
+    $pathInfo = pathinfo($path, $flags);
+    if ($flags == PATHINFO_DIRNAME) {
+      $pathInfo = self::normalizeDirectoryName($pathInfo);
+    } elseif (is_array($pathInfo)) {
+      $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname']);
+    }
     return $pathInfo;
   }
 

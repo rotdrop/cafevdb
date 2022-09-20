@@ -4,26 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine  <himself@claus-justus-heine.de>
  * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-// FIXME: those are not public, but ...
+use \DateTimeImmutable;
+
+// F I X M E: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -49,6 +52,7 @@ class BankTransactionsStorage extends Storage
   /** @var array */
   private $files = [];
 
+  /** {@inheritdoc} */
   public function __construct($params)
   {
     parent::__construct($params);
@@ -82,7 +86,7 @@ class BankTransactionsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function findFiles(string $dirName)
+  protected function findFiles(string $dirName):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
     if (!empty($this->files[$dirName])) {
@@ -90,7 +94,7 @@ class BankTransactionsStorage extends Storage
     }
 
     $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new \DateTimeImmutable('@1')),
+      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
     ];
 
     $directoryYear = (int)basename($dirName);
@@ -122,7 +126,7 @@ class BankTransactionsStorage extends Storage
         if (!empty($modificationTime) && $sepaTransactionData->count() == 0) {
           // just update the timestamp of the parent
           $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-        } else if (!empty($modificationTime) || $sepaTransactionData->count() > 0) {
+        } elseif (!empty($modificationTime) || $sepaTransactionData->count() > 0) {
           // add a directory entry
           if (empty($directories[$yearBaseName]) || $directories[$yearBaseName] < $modificationTime) {
             $directories[$yearBaseName] = $modificationTime;
@@ -147,6 +151,7 @@ class BankTransactionsStorage extends Storage
     return $this->files[$dirName];
   }
 
+  /** {@inheritdoc} */
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
     return $this->transactionsRepository->sepaTransactionDataModificationTime();

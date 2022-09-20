@@ -28,7 +28,7 @@ use \DateTimeImmutable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
-// FIXME: those are not public, but ...
+// F I X M E: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
 
@@ -132,7 +132,7 @@ class ProjectParticipantsStorage extends Storage
    * tracked in dedicated fields of the ProjectParticipant and Musician
    * entity.
    */
-  protected function findFiles(string $dirName)
+  protected function findFiles(string $dirName):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
     if (false && !empty($this->files[$dirName])) {
