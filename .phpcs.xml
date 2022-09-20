@@ -2,11 +2,14 @@
 <ruleset name="CJH">
   <description>CJH Custom Code-Sniffer Standard</description>
 
+  <arg name="bootstrap" value="vendor/zebra-north/phpcs-short-types/short-types.php"/>
+
   <rule ref="PSR2">
     <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
     <exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine"/>
     <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments"/>
     <exclude name="PSR2.ControlStructures.SwitchDeclaration.BreakIndent"/>
+    <exclude name="PSR2.ControlStructures.SwitchDeclaration.BodyOnNextLineCASE"/>
     <properties>
       <property name="indent" value="2"/>
     </properties>
@@ -59,6 +62,9 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
     <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamName"/>
     <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
     <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
+    <!-- already included by Squiz -->
+    <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
+
     <properties>
       <property name="indent" value="2"/>
       <property name="minimumVisibility" value="protected"/>
@@ -78,6 +84,7 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
       <property name="skipIfInheritdoc" value="true"/>
     </properties>
     <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
+    <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
   </rule>
 
   <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">
@@ -85,6 +92,6 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
   </rule>
   <rule ref="Squiz.WhiteSpace.ControlStructureSpacing">
     <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+    <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
   </rule>
-
 </ruleset>
