@@ -73,6 +73,16 @@ class File implements \ArrayAccess
   /**
    * @var string|null
    *
+   * Optional original file-name, e.g. if this file generated from an upload
+   * or was copied from a cloud folder.
+   *
+   * @ORM\Column(type="string", length=512, nullable=true)
+   */
+  protected $originalFileName;
+
+  /**
+   * @var string|null
+   *
    * @ORM\Column(type="string", length=128, nullable=false)
    */
   protected $mimeType;
@@ -126,9 +136,9 @@ class File implements \ArrayAccess
   /**
    * Get id.
    *
-   * @return int
+   * @return integer
    */
-  public function getId()
+  public function getId():int
   {
     return $this->id;
   }
@@ -140,7 +150,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setMimeType($mimeType = null):File
+  public function setMimeType(?string $mimeType = null):File
   {
     $this->mimeType = $mimeType;
 
@@ -152,7 +162,7 @@ class File implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getMimeType()
+  public function getMimeType():?string
   {
     return $this->mimeType;
   }
@@ -213,6 +223,30 @@ class File implements \ArrayAccess
   public function getBaseName(?string $extension = null):?string
   {
     return is_string($this->fileName) ? basename($this->fileName, $extension) : null;
+  }
+
+  /**
+   * Set originalFileName.
+   *
+   * @param string|null $originalFileName
+   *
+   * @return File
+   */
+  public function setOriginalFileName(?string $originalFileName = null):File
+  {
+    $this->originalFileName = $originalFileName;
+
+    return $this;
+  }
+
+  /**
+   * Get originalFileName.
+   *
+   * @return string|null
+   */
+  public function getOriginalFileName():?string
+  {
+    return $this->originalFileName;
   }
 
   /**
