@@ -4,29 +4,33 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use \DateTimeInterface;
+use \DateTimeImmutable;
+
 use OCP\Files\IMimeTypeDetector;
 use OCP\ITempManager;
 
-// FIXME: those are not public, but ...
+// F I X M E: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
 
@@ -38,6 +42,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions\Exception;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -65,6 +70,7 @@ class Storage extends AbstractStorage
   /** @var array */
   private $files = [];
 
+  /** {@inheritdoc} */
   public function __construct($params)
   {
     parent::__construct($params);
@@ -74,25 +80,30 @@ class Storage extends AbstractStorage
     $this->entityManager = $this->di(EntityManager::class);
 
     if (!$this->entityManager->connected()) {
-      throw new \Exception('not connected');
+      throw new Exception('not connected');
     }
 
     $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
   }
 
-  protected function findFiles(string $dirName)
+  /**
+   * @param string $dirName Find all files below the given directory.
+   *
+   * @return array
+   */
+  protected function findFiles(string $dirName):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
-    $files = empty($directory)
+    $files = empty($dirName)
       ? $this->filesRepository->findAll()
       : $this->filesRepository->findLike([ 'fileName' => $dirName . self::PATH_SEPARATOR . '%' ]);
     /** @var Entities\File $file */
     foreach ($files as $file) {
       $fileName = $this->buildPath($file->getFileName());
-      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathinfo($name);
+      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathinfo($fileName);
       if ($fileDirName == $dirName) {
         $this->files[$dirName][$baseName] = $file;
-      } else if (strpos($fileDirName, $dirName) === 0) {
+      } elseif (strpos($fileDirName, $dirName) === 0) {
         list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
         $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
       }
@@ -100,13 +111,18 @@ class Storage extends AbstractStorage
     return $this->files[$dirName];
   }
 
-  protected function getDirectoryModificationTime(string $dirName):\DateTimeInterface
+  /**
+   * @param string $dirName The directory to work on.
+   *
+   * @return DateTimeInterface
+   */
+  protected function getDirectoryModificationTime(string $dirName):DateTimeInterface
   {
     $directory = $this->fileFromFileName($dirName);
     if ($directory instanceof DirectoryNode) {
-      $date = $directory->minimalModificationTime ?? (new \DateTimeImmutable('@1'));
+      $date = $directory->minimalModificationTime ?? (new DateTimeImmutable('@1'));
     } else {
-      $date = new \DateTimeImmutable('@1');
+      $date = new DateTimeImmutable('@1');
     }
 
     // maybe we should skip the read-dir for performance reasons.
@@ -114,9 +130,9 @@ class Storage extends AbstractStorage
     foreach ($this->findFiles($dirName) as $node) {
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
-      } else if ($node instanceof DirectoryNode) {
+      } elseif ($node instanceof DirectoryNode) {
         $nodeName = $node->name;
-        $updated = $node->minimalModificationTime ?? (new \DateTimeImmutable('@1'));
+        $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
         if ($nodeName != '.') {
           $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
           if ($recursiveModificationTime > $updated) {
@@ -125,7 +141,7 @@ class Storage extends AbstractStorage
         }
       } else {
         $this->logError('Unknown directory entry in ' .$dirName);
-        $updated = new \DateTimeImmutable('@1');
+        $updated = new DateTimeImmutable('@1');
       }
       if ($updated > $date) {
         $date = $updated;
@@ -134,11 +150,21 @@ class Storage extends AbstractStorage
     return $date;
   }
 
-  protected function getStorageModificationDateTime():?\DateTimeInterface
+  /**
+   * Return the overall modification time of the entire storage.
+   *
+   * @return null|DateTimeInterface
+   */
+  protected function getStorageModificationDateTime():?DateTimeInterface
   {
     return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
   }
 
+  /**
+   * Get the overall modification time of the entire storage as Unix time-stamp.
+   *
+   * @return int
+   */
   protected function getStorageModificationTime():int
   {
     return $this->getStorageModificationDateTime()->getTimestamp();
@@ -150,12 +176,24 @@ class Storage extends AbstractStorage
     return $this->appName() . self::STORAGE_ID_TAG . self::PATH_SEPARATOR;
   }
 
-  protected function buildPath($path) {
+  /**
+   * @param null|string $path The path to work on.
+   *
+   * @return string
+   */
+  protected function buildPath(?string $path):string
+  {
     return \OC\Files\Filesystem::normalizePath($path);
   }
 
-  /** Attach self::PATH_SEPARATOR to the dirname if it is not the root directory. */
-  protected static function normalizeDirectoryName(string $dirName)
+  /**
+   * Attach self::PATH_SEPARATOR to the dirname if it is not the root directory.
+   *
+   * @param string $dirName The directory name to work on.
+   *
+   * @return string
+   */
+  protected static function normalizeDirectoryName(string $dirName):string
   {
     if ($dirName == '.') {
       $dirName = '';
@@ -164,8 +202,15 @@ class Storage extends AbstractStorage
     return empty($dirName) ? $dirName : $dirName . self::PATH_SEPARATOR;
   }
 
-  /** Attach self::PATH_SEPARATOR to the dirname if it is not the root directory. */
-  protected static function pathInfo(string $path)
+  /**
+   * Slightly modified pathinfo() function which also normalized directories
+   * before computing the components.
+   *
+   * @param string $path The path to work on.
+   *
+   * @return array
+   */
+  protected static function pathInfo(string $path):attay
   {
     $pathInfo = pathinfo($path);
     $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname']);
@@ -173,11 +218,17 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public static function checkDependencies() {
+  public static function checkDependencies()
+  {
     return true;
   }
 
-  private function fileIdFromFileName($name)
+  /**
+   * @param string $name The file-name to work on.
+   *
+   * @return int The file-id.
+   */
+  private function fileIdFromFileName(string $name):int
   {
     $name = $this->buildPath($name);
     $name = pathinfo($name, PATHINFO_BASENAME);
@@ -192,7 +243,7 @@ class Storage extends AbstractStorage
    * Fetch the file entity corresponding to file-name. If the entry is a
    * directory, return the directory name.
    *
-   * @param string $name
+   * @param string $name The path-name to work on.
    *
    * @return null|string|Entities\File
    */
@@ -205,23 +256,30 @@ class Storage extends AbstractStorage
     return null;
   }
 
-  public function isReadable($path) {
+  /** {@inheritdoc} */
+  public function isReadable($path)
+  {
     // at least check whether it exists
     // subclasses might want to implement this more thoroughly
     return $this->file_exists($path);
   }
 
-  public function isUpdatable($path) {
+  /** {@inheritdoc} */
+  public function isUpdatable($path)
+  {
     // return $this->file_exists($path);
     return false; // readonly for now
   }
 
-  public function isSharable($path) {
+  /** {@inheritdoc} */
+  public function isSharable($path)
+  {
     // sharing cannot work in general as the database access need additional
     // credentials
     return false;
   }
 
+  /** {@inheritdoc} */
   public function filemtime($path)
   {
     if ($this->is_dir($path)) {
@@ -240,6 +298,8 @@ class Storage extends AbstractStorage
   }
 
   /**
+   * {@inheritdoc}
+   *
    * The AbstractStorage class relies on mtime($path) > $time for triggering a
    * cache invalidation. This, however, does not cover cases where a directory
    * has been removed. Hence we also return true if mtime returns false
@@ -251,6 +311,7 @@ class Storage extends AbstractStorage
     return $mtime === false || ($mtime > $time);
   }
 
+  /** {@inheritdoc} */
   public function filesize($path)
   {
     if ($this->is_dir($path)) {
@@ -263,11 +324,13 @@ class Storage extends AbstractStorage
     return $file->getSize();
   }
 
+  /** {@inheritdoc} */
   public function rmdir($path)
   {
     return false;
   }
 
+  /** {@inheritdoc} */
   public function test()
   {
     try {
@@ -279,6 +342,7 @@ class Storage extends AbstractStorage
     return true;
   }
 
+  /** {@inheritdoc} */
   public function stat($path)
   {
     $file = $this->fileFromFileName($path);
@@ -291,6 +355,7 @@ class Storage extends AbstractStorage
     ];
   }
 
+  /** {@inheritdoc} */
   public function file_exists($path)
   {
     if ($this->is_dir($path)) {
@@ -303,6 +368,7 @@ class Storage extends AbstractStorage
     return true;
   }
 
+  /** {@inheritdoc} */
   public function unlink($path)
   {
     $file = $this->fileFromFileName($path);
@@ -315,6 +381,7 @@ class Storage extends AbstractStorage
     // return true;
   }
 
+  /** {@inheritdoc} */
   public function opendir($path)
   {
     if (!$this->is_dir($path)) {
@@ -326,11 +393,13 @@ class Storage extends AbstractStorage
     return IteratorDirectory::wrap(array_values($fileNames));
   }
 
+  /** {@inheritdoc} */
   public function mkdir($path)
   {
     return false;
   }
 
+  /** {@inheritdoc} */
   public function is_dir($path)
   {
     if ($path === '' || $path == self::PATH_SEPARATOR) {
@@ -345,11 +414,13 @@ class Storage extends AbstractStorage
     return false;
   }
 
+  /** {@inheritdoc} */
   public function is_file($path)
   {
     return $this->filesize($path) !== false;
   }
 
+  /** {@inheritdoc} */
   public function filetype($path)
   {
     if ($this->is_dir($path)) {
@@ -361,52 +432,54 @@ class Storage extends AbstractStorage
     }
   }
 
+  /** {@inheritdoc} */
   public function fopen($path, $mode)
   {
     $useExisting = true;
     switch ($mode) {
-    case 'r':
-    case 'rb':
-      return $this->readStream($path);
-    case 'w':
-    case 'w+':
-    case 'wb':
-    case 'wb+':
-      $useExisting = false;
-      // no break
-    case 'a':
-    case 'ab':
-    case 'r+':
-    case 'a+':
-    case 'x':
-    case 'x+':
-    case 'c':
-    case 'c+':
-      //emulate these
-      if ($useExisting and $this->file_exists($path)) {
-        if (!$this->isUpdatable($path)) {
-          return false;
+      case 'r':
+      case 'rb':
+        return $this->readStream($path);
+      case 'w':
+      case 'w+':
+      case 'wb':
+      case 'wb+':
+        $useExisting = false;
+        // no break
+      case 'a':
+      case 'ab':
+      case 'r+':
+      case 'a+':
+      case 'x':
+      case 'x+':
+      case 'c':
+      case 'c+':
+        //emulate these
+        if ($useExisting and $this->file_exists($path)) {
+          if (!$this->isUpdatable($path)) {
+            return false;
+          }
+          $tmpFile = $this->getCachedFile($path);
+        } else {
+          if (!$this->isCreatable(dirname($path))) {
+            return false;
+          }
+          if (!$this->touch($path)) {
+            return false;
+          }
+          $tmpFile = $this->di(ITempManager::class)->getTemporaryFile();
         }
-        $tmpFile = $this->getCachedFile($path);
-      } else {
-        if (!$this->isCreatable(dirname($path))) {
-          return false;
-        }
-        if (!$this->touch($path)) {
-          return false;
-        }
-        $tmpFile = $this->di(ITempManager::class)->getTemporaryFile();
-      }
-      $source = fopen($tmpFile, $mode);
+        $source = fopen($tmpFile, $mode);
 
-      return CallbackWrapper::wrap($source, null, null, function () use ($tmpFile, $path) {
-        $this->writeStream($path, fopen($tmpFile, 'r'));
-        unlink($tmpFile);
-      });
+        return CallbackWrapper::wrap($source, null, null, function () use ($tmpFile, $path) {
+          $this->writeStream($path, fopen($tmpFile, 'r'));
+          unlink($tmpFile);
+        });
     }
     return false;
   }
 
+  /** {@inheritdoc} */
   public function writeStream(string $path, $stream, int $size = null): int
   {
     if (!$this->touch($path)) {
@@ -436,6 +509,7 @@ class Storage extends AbstractStorage
     return $size;
   }
 
+  /** {@inheritdoc} */
   public function readStream(string $path)
   {
     /** @var Entities\EncryptedFile $file */
@@ -453,11 +527,13 @@ class Storage extends AbstractStorage
     return $stream;
   }
 
+  /** {@inheritdoc} */
   public function touch($path, $mtime = null)
   {
     return false;
   }
 
+  /** {@inheritdoc} */
   public function rename($path1, $path2)
   {
     return false;
