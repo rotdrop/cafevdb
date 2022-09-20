@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-20 15:23+0200\n"
+"POT-Creation-Date: 2022-09-20 16:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,7 +210,7 @@ msgstr ""
 #: lib/Controller/AdminSettingsController.php:254
 #: lib/Controller/PersonalSettingsController.php:1844
 #: lib/Controller/PersonalSettingsController.php:1894
-#: lib/Controller/ProjectParticipantsController.php:802
+#: lib/Controller/ProjectParticipantsController.php:807
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr ""
@@ -375,47 +375,47 @@ msgid "Attachment file-names were not submitted"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1003
-#: lib/Controller/UploadsController.php:169
+#: lib/Controller/UploadsController.php:170
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1006
-#: lib/Controller/UploadsController.php:172
+#: lib/Controller/UploadsController.php:173
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1020
 #: lib/Controller/EmailFormController.php:1078
-#: lib/Controller/UploadsController.php:249
+#: lib/Controller/UploadsController.php:250
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1038
 #: lib/Controller/FileUploadRowTrait.php:77
-#: lib/Controller/UploadsController.php:205
+#: lib/Controller/UploadsController.php:206
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1046
 #: lib/Controller/FileUploadRowTrait.php:85
-#: lib/Controller/UploadsController.php:213
+#: lib/Controller/UploadsController.php:214
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1048
 #: lib/Controller/FileUploadRowTrait.php:87
-#: lib/Controller/UploadsController.php:215
+#: lib/Controller/UploadsController.php:216
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1060
 #: lib/Controller/FileUploadRowTrait.php:115
-#: lib/Controller/UploadsController.php:227
+#: lib/Controller/UploadsController.php:228
 msgid "Not enough storage available"
 msgstr ""
 
@@ -868,7 +868,7 @@ msgid "Error, caught an exception. No changes were performed."
 msgstr ""
 
 #: lib/Controller/PaymentsController.php:193
-#: lib/Controller/ProjectParticipantsController.php:758
+#: lib/Controller/ProjectParticipantsController.php:763
 #: lib/Controller/SepaDebitMandatesController.php:1218
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
@@ -1962,7 +1962,7 @@ msgid "Unable to find any data for the option key \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectParticipantsController.php:396
-#: lib/Controller/ProjectParticipantsController.php:638
+#: lib/Controller/ProjectParticipantsController.php:643
 #, php-format
 msgid "Unable to find the associated file with the id \"%s\" in data-base."
 msgstr ""
@@ -1975,51 +1975,51 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/ProjectParticipantsController.php:423
-#: lib/Controller/ProjectParticipantsController.php:528
+#: lib/Controller/ProjectParticipantsController.php:533
 #, php-format
 msgid "Unsupported field type \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:478
+#: lib/Controller/ProjectParticipantsController.php:483
 #, php-format
 msgid "Unable to delete file \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:480
+#: lib/Controller/ProjectParticipantsController.php:485
 #, php-format
 msgid "Successfully removed file \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:518
+#: lib/Controller/ProjectParticipantsController.php:523
 #, php-format
 msgid "Sub-directory \"%s\" requested, but not supported by db-storage."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:794
+#: lib/Controller/ProjectParticipantsController.php:799
 msgid "Unable to store uploaded data"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:823
+#: lib/Controller/ProjectParticipantsController.php:828
 msgid "Mailing-lists REST API is not configured."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:828
+#: lib/Controller/ProjectParticipantsController.php:833
 #, php-format
 msgid ""
 "Unable to find the participant by project- and musician-id \"%1$d / %2$d\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:835
+#: lib/Controller/ProjectParticipantsController.php:840
 #, php-format
 msgid "The project \"%s\" does not yet have a mailing-list."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:842
+#: lib/Controller/ProjectParticipantsController.php:847
 #, php-format
 msgid "The musician \"%s\" does not have an email-address."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:862
+#: lib/Controller/ProjectParticipantsController.php:867
 #, php-format
 msgid ""
 "%1$s participation has not been confirmed yet. Please consider to set the "
@@ -2029,66 +2029,66 @@ msgid ""
 "list?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:868
+#: lib/Controller/ProjectParticipantsController.php:873
 #, php-format
 msgid "%1$s <%2$s> has been subscribed to %3$s."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:871
-#: lib/Controller/ProjectParticipantsController.php:891
+#: lib/Controller/ProjectParticipantsController.php:876
+#: lib/Controller/ProjectParticipantsController.php:896
 #, php-format
 msgid "A notification has been sent to %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:882
+#: lib/Controller/ProjectParticipantsController.php:887
 #, php-format
 msgid ""
 "The participation of %1$s has already been been confirmed. Are you really "
 "really sure that want to unsubscribe %1$s from the project mailing list?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:888
+#: lib/Controller/ProjectParticipantsController.php:893
 #, php-format
 msgid "%1$s <%2$s> has been unsubscribed from %3$s."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:902
+#: lib/Controller/ProjectParticipantsController.php:907
 #, php-format
 msgid ""
 "%1$s can enable message delivery by itself. Are you really sure that you "
 "want to enable message delivery for %1$s?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:910
+#: lib/Controller/ProjectParticipantsController.php:915
 #, php-format
 msgid "Re-enabled message delivery for %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:921
+#: lib/Controller/ProjectParticipantsController.php:926
 #, php-format
 msgid ""
 "%1$s can disable message delivery by itself. Are you really sure that you "
 "want to disable message delivery for %1$s?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:930
+#: lib/Controller/ProjectParticipantsController.php:935
 #, php-format
 msgid "Disabled message delivery for %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:969
+#: lib/Controller/ProjectParticipantsController.php:974
 msgid "digest"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:977
+#: lib/Controller/ProjectParticipantsController.php:982
 msgid "disabled by user"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:982
+#: lib/Controller/ProjectParticipantsController.php:987
 msgid "disabled because of bounces"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:987
+#: lib/Controller/ProjectParticipantsController.php:992
 msgid "disabled by moderator"
 msgstr ""
 
@@ -2747,20 +2747,20 @@ msgstr ""
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:95
+#: lib/Controller/UploadsController.php:96
 #, php-format
 msgid "Moved \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:140
+#: lib/Controller/UploadsController.php:141
 msgid "Moved \"%1$s\" to db-storage with name \"%2$s\", id %d."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:146
+#: lib/Controller/UploadsController.php:147
 msgid "Unknown request"
 msgstr ""
 
-#: lib/Controller/UploadsController.php:179
+#: lib/Controller/UploadsController.php:180
 msgid "Could not copy cloud file to upload storage."
 msgstr ""
 
@@ -2934,32 +2934,32 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:533
+#: lib/EmailForm/Composer.php:534
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:605
+#: lib/EmailForm/Composer.php:606
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:611
+#: lib/EmailForm/Composer.php:612
 #: src/app/email.js:1388
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:932
+#: lib/EmailForm/Composer.php:933
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:933
-#: lib/EmailForm/Composer.php:955
-#: lib/EmailForm/Composer.php:1352
-#: lib/EmailForm/Composer.php:1359
+#: lib/EmailForm/Composer.php:934
+#: lib/EmailForm/Composer.php:956
+#: lib/EmailForm/Composer.php:1353
+#: lib/EmailForm/Composer.php:1360
 #: lib/PageRenderer/ProjectPayments.php:495
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:933
+#: lib/EmailForm/Composer.php:934
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:479
 #: lib/PageRenderer/ProjectParticipantFields.php:570
 #: lib/PageRenderer/ProjectParticipantFields.php:1895
@@ -2967,48 +2967,48 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:934
-#: lib/EmailForm/Composer.php:1360
+#: lib/EmailForm/Composer.php:935
+#: lib/EmailForm/Composer.php:1361
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:935
-#: lib/EmailForm/Composer.php:1361
+#: lib/EmailForm/Composer.php:936
+#: lib/EmailForm/Composer.php:1362
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:936
+#: lib/EmailForm/Composer.php:937
 #: lib/PageRenderer/PMETableViewBase.php:633
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1075
+#: lib/EmailForm/Composer.php:1076
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1357
+#: lib/EmailForm/Composer.php:1358
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1358
+#: lib/EmailForm/Composer.php:1359
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1499
+#: lib/EmailForm/Composer.php:1500
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1577
+#: lib/EmailForm/Composer.php:1578
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1680
+#: lib/EmailForm/Composer.php:1681
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2262
+#: lib/EmailForm/Composer.php:2264
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3034,120 +3034,125 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3133
+#: lib/EmailForm/Composer.php:2504
+#: lib/EmailForm/Composer.php:2941
+msgid "DO NOT REPLY"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3156
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3173
+#: lib/EmailForm/Composer.php:3196
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3175
+#: lib/EmailForm/Composer.php:3198
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3178
+#: lib/EmailForm/Composer.php:3201
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3339
+#: lib/EmailForm/Composer.php:3363
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3363
+#: lib/EmailForm/Composer.php:3387
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3456
-#: lib/EmailForm/Composer.php:3471
+#: lib/EmailForm/Composer.php:3480
+#: lib/EmailForm/Composer.php:3495
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3555
-#: lib/EmailForm/Composer.php:3631
-#: lib/EmailForm/Composer.php:3641
+#: lib/EmailForm/Composer.php:3579
+#: lib/EmailForm/Composer.php:3655
+#: lib/EmailForm/Composer.php:3665
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3574
+#: lib/EmailForm/Composer.php:3598
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3580
+#: lib/EmailForm/Composer.php:3604
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3606
+#: lib/EmailForm/Composer.php:3630
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3731
+#: lib/EmailForm/Composer.php:3755
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4022
+#: lib/EmailForm/Composer.php:4046
 msgid "Unable to load draft without id"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:4034
-#, php-format
-msgid "Draft %s could not be loaded"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:4058
 #, php-format
+msgid "Draft %s could not be loaded"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4082
+#, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4089
+#: lib/EmailForm/Composer.php:4113
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4147
-#: lib/EmailForm/Composer.php:4266
+#: lib/EmailForm/Composer.php:4171
+#: lib/EmailForm/Composer.php:4290
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4183
+#: lib/EmailForm/Composer.php:4207
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4208
+#: lib/EmailForm/Composer.php:4232
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4803
+#: lib/EmailForm/Composer.php:4827
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4803
+#: lib/EmailForm/Composer.php:4827
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4804
+#: lib/EmailForm/Composer.php:4828
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4805
+#: lib/EmailForm/Composer.php:4829
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4806
+#: lib/EmailForm/Composer.php:4830
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4922
+#: lib/EmailForm/Composer.php:4946
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
