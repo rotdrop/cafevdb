@@ -4,27 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -42,7 +44,8 @@ use OCA\CAFEVDB\Common\Util;
  * Simple upload end-point which moved uploaded file to a temporary
  * location in the app-storage area.
  */
-class UploadsController extends Controller {
+class UploadsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -54,11 +57,12 @@ class UploadsController extends Controller {
   /** @var AppStorage */
   private $appStorage;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , AppStorage $appStorage
+    $appName,
+    IRequest $request,
+    ConfigService $configService,
+    AppStorage $appStorage,
   ) {
 
     parent::__construct($appName, $request);
@@ -70,19 +74,29 @@ class UploadsController extends Controller {
   }
 
   /**
-   * @NoAdminRequired
-   *
-   * @param string $stashedFile
-   * @param string $destinationPath
-   * @param null|string $originalFileName
+   * @param string $stashedFile The stashed file-name in the app-storage area.
+   * @param string $destinationPath DOCME.
+   * @param null|string $originalFileName The original upload file-name if any.
    * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
    * @param bool $encrypted Whether to store the data encrypted (DB only).
-   * @param int $ownerId Musician-id of owner of encrypted file
-   * @param string $appDirectory
+   * @param int $ownerId Musician-id of owner of encrypted file.
+   * @param string $uploadFolder The sub-folder in the app-storage containing
+   * the stashed file.
+   *
+   * @return Response
+   *
+   * @NoAdminRequired
    */
-  public function move(string $stashedFile, string $destinationPath, ?string $originalFileName = null, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, int $ownerId = 0, string $appDirectory = AppStorage::UPLOAD_FOLDER)
-  {
-    $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
+  public function move(
+    string $stashedFile,
+    string $destinationPath,
+    ?string $originalFileName = null,
+    string $storage = self::MOVE_DEST_CLOUD,
+    bool $encrypted = false,
+    int $ownerId = 0,
+    string $uploadFolder = AppStorage::UPLOAD_FOLDER
+  ):Response {
+    $appFile = $this->appStorage->getFile($uploadFolder, $stashedFile);
     switch ($storage) {
       case self::MOVE_DEST_CLOUD:
         /** @var UserStorage $userStorage */
@@ -148,13 +162,21 @@ class UploadsController extends Controller {
   }
 
   /**
+   * @param array $cloudPaths File-names in the cloud storage. May be empty in
+   * which case an ordinary upload is assumed.
+   *
+   * @param string $uploadFolder The sub-folder in the app-storage containing
+   * the stashed file.
+   *
+   * @return Response
+   *
    * @NoAdminRequired
    */
-  public function stash($cloudPaths = [], $appDirectory = AppStorage::UPLOAD_FOLDER)
+  public function stash(array $cloudPaths = [], string $uploadFolder = AppStorage::UPLOAD_FOLDER):Repsonse
   {
-    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
-    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
-    $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
+    $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
 
     $uploads = [];
@@ -171,10 +193,10 @@ class UploadsController extends Controller {
         }
         if ($cloudFile->getType() != FileInfo::TYPE_FILE) {
           return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
-          }
+        }
 
         try {
-          $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
+          $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
           $uploadFile->putContent($cloudFile->getContent());
         } catch (\Throwable $t) {
           return self::grumble($this->l->t('Could not copy cloud file to upload storage.'));
@@ -241,10 +263,10 @@ class UploadsController extends Controller {
         }
 
         try {
-          $uploadFile = $this->appStorage->newTemporaryFile($appDirectory);
+          $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
           $this->appStorage->moveFileSystemFile($file['tmp_name'], $uploadFile);
           $file['name'] = $uploadFile->getName();
-          $file['tmp_name'] = AppStorage::PATH_SEP.$appDirectory.AppStorage::PATH_SEP.$file['name'];
+          $file['tmp_name'] = AppStorage::PATH_SEP.$uploadFolder.AppStorage::PATH_SEP.$file['name'];
         } catch (\Throwable $t) {
           $file['error'] = 99;
           $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
@@ -255,7 +277,6 @@ class UploadsController extends Controller {
     }
     return self::dataResponse($uploads);
   }
-
 }
 
 // Local Variables: ***
