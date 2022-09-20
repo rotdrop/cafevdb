@@ -758,6 +758,7 @@ class SepaDebitMandatesController extends Controller
     $writtenMandateId,
     $writtenMandateFileUpload,
     $mandateUploadLater,
+    $uploadPlaceholder,
   ) {
     $requiredKeys = [
       'musicianId',
@@ -976,6 +977,7 @@ class SepaDebitMandatesController extends Controller
           ->setSize($uploadFile->getSize())
           ->getFileData()->setData($fileContents);
       }
+      $writtenMandate->setOriginalFileName($uploadPlaceholder);
       $this->persist($writtenMandate);
     }
 
