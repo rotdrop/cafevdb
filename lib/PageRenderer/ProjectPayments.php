@@ -922,7 +922,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
 ></a>';
 
-          return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>'
+          return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
             . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
@@ -989,10 +989,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               }
               $value = null;
             } else {
+              $value = $row['qf' . $k];
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
                 return null;
               }
-              $value = $row['qf' . $k];
             }
 
             $documentPathChain = [ $this->getProjectBalancesPath() ];
@@ -1028,11 +1028,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
 ></a>';
 
-            return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>'
-              . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+            if ($this->isCompositeRow($row, $pme)) {
+              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
+                . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+            } else {
+              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">';
+            }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            return '</div></div></span></div>';
+            if ($this->isCompositeRow($row, $pme)) {
+              return '</div></div></span></div>';
+            } else {
+              return '</span></div>';
+            }
           },
         ],
       ],
@@ -1646,7 +1654,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
-        return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
+        return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
       }
     }
 

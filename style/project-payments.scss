@@ -79,7 +79,7 @@
           }
         }
         .flex-container {
-          > * {
+          > .pme-cell-content {
             overflow: hidden;
           }
           .pme-cell-squeezer {
