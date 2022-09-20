@@ -76,12 +76,12 @@ class PaymentsController extends Controller {
       case self::DOCUMENT_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
         // are in the "data" parameter and have to be remapped.
-        $data = $this->parameterService['data'];
         $uploadData = json_decode($data, true);
         $musicianId = $uploadData['fieldId'];
         $compositePaymentId = $uploadData['optionKey'];
         $supportingDocumentFileName = $uploadData['fileName'];
         $files = $this->parameterService['files'];
+        $filesAppPath = $uploadData['filesAppPath']??null;
         break;
       case self::DOCUMENT_ACTION_DELETE:
         $compositePaymentId = $this->parameterService['optionKey'];
@@ -105,9 +105,6 @@ class PaymentsController extends Controller {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
         // the following should be made a service routine or Trait
-
-        $uploadData = json_decode($data, true);
-        $filesAppPath = $uploadData['filesAppPath']??null;
 
         $files = $this->prepareUploadInfo($files, $compositePaymentId, multiple: false);
         if ($files instanceof Http\Response) {
@@ -143,6 +140,9 @@ class PaymentsController extends Controller {
             ->setSize(strlen($fileContent))
             ->getFileData()->setData($fileContent);
         }
+        if ($file['original_name']) {
+          $supportingDocument->setOriginalFileName($file['original_name']);
+        }
 
         $supportingDocumentFileName = basename($supportingDocumentFileName);
         $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -150,7 +150,7 @@ class PaymentsController extends Controller {
           $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         }
         if (!empty($extension)) {
-          $supportingDocumentFileName .= '.' . $extension;
+          $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
         }
 
         $supportingDocument->setFileName($supportingDocumentFileName);
