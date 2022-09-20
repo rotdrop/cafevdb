@@ -188,14 +188,6 @@ trait FileUploadRowTrait
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
 
-    $cloudFile = $userStorage->get($cloudPath);
-    $storage = $cloudFile->getStorage();
-
-    if (!($storage instanceof DatabaseStorage)) {
-      return null;
-    }
-
-    /** @var DatabaseStorage $storage */
-    return $storage->fileFromFileName($cloudFile->getInternalPath());
+    return $userStorage->getDatabaseFile($cloudPath);
   }
 }

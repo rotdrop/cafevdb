@@ -47,6 +47,7 @@ use OCP\Files\NotFoundException as FileNotFoundException;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions\Exception;
+use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 
 /**
  * Some tweaks to for the user-folder stuff.
@@ -523,6 +524,27 @@ class UserStorage
     } catch (Throwable $t) {
       throw new RuntimeException($this->l->t('Unable to get content of file "%s".', $path), $t->getCode(), $t);
     }
+  }
+
+  /**
+   * Return the underline storage entity if the cloud-path refers to a
+   * db-backed cloud-file.
+   *
+   * @param string $cloudPath The path in the cloud FS.
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  protected function getDatabaseFile(string $cloudPath):?Entities\EncryptedFile
+  {
+    $cloudFile = $this->get($cloudPath);
+    $storage = $cloudFile->getStorage();
+
+    if (!($storage instanceof DatabaseStorage)) {
+      return null;
+    }
+
+    /** @var DatabaseStorage $storage */
+    return $storage->fileFromFileName($cloudFile->getInternalPath());
   }
 
   /**
