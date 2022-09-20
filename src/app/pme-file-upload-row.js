@@ -70,6 +70,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   } else {
     $oldUploadForm.replaceWith($uploadUi);
   }
+
   $thisRow.data('uploadFormId', widgetId);
   uploadUrls = $.extend({}, defaultUploadUrls, uploadUrls);
 
@@ -297,6 +298,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         const widgetId = $thisRow.data('uploadFormId');
         $('#' + widgetId).remove();
         $.fn.cafevTooltip.remove();
+        $uploadUi.remove();
         $thisRow.remove();
         resizeCB();
       } else {
@@ -306,10 +308,14 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
           $downloadLink.html('');
         }
         $placeholder.val('');
-        $thisRow.data('fileName', $thisRow.data('fileBase'));
-        $thisRow.attr('data-file-name', $thisRow.data('fileBase'));
+        const fileBase = $thisRow.data('fileBase');
+        $thisRow.data('fileName', fileBase);
+        $thisRow.attr('data-file-name', fileBase);
         $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
         $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
+
+        // replace the upload data
+        $uploadUi.find('input[name="data"]').val(JSON.stringify($thisRow.data()));
       }
       Notification.messages(data.message);
       cleanup();
