@@ -1161,6 +1161,7 @@ const afterLoad = function(container) {
         generateUrl('upload/move'), {
           stashedFile: file.name,
           destinationPath,
+          originalFileName: file.original_name,
         })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);

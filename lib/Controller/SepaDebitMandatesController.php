@@ -1138,6 +1138,7 @@ class SepaDebitMandatesController extends Controller {
             ->setSize(strlen($fileContent))
             ->getFileData()->setData($fileContent);
         }
+        $writtenMandate->setOriginalFileName($file['original_name'] ?? null);
 
         $this->entityManager->beginTransaction();
         try {

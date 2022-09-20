@@ -140,9 +140,7 @@ class PaymentsController extends Controller {
             ->setSize(strlen($fileContent))
             ->getFileData()->setData($fileContent);
         }
-        if ($file['original_name']) {
-          $supportingDocument->setOriginalFileName($file['original_name']);
-        }
+        $supportingDocument->setOriginalFileName($file['original_name'] ?? null);
 
         $supportingDocumentFileName = basename($supportingDocumentFileName);
         $extension = Util::fileExtensionFromMimeType($mimeType);

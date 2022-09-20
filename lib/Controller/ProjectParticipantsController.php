@@ -717,6 +717,7 @@ class ProjectParticipantsController extends Controller
                     ->setMimeType($mimeType)
                     ->getFileData()->setData($fileData);
                 }
+                $dbFile->setOriginalFileName($file['original_name'] ?? null);
 
                 $this->persist($dbFile);
                 $this->flush();

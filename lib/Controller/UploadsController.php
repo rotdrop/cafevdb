@@ -79,7 +79,7 @@ class UploadsController extends Controller {
    * @param int $ownerId Musician-id of owner of encrypted file
    * @param string $appDirectory
    */
-  public function move(string $stashedFile, string $destinationPath, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, int $ownerId = 0, string $appDirectory = AppStorage::UPLOAD_FOLDER)
+  public function move(string $stashedFile, string $destinationPath, ?string $originalFileName = null, string $storage = self::MOVE_DEST_CLOUD, bool $encrypted = false, int $ownerId = 0, string $appDirectory = AppStorage::UPLOAD_FOLDER)
   {
     $appFile = $this->appStorage->getFile($appDirectory, $stashedFile);
     switch ($storage) {
@@ -101,6 +101,7 @@ class UploadsController extends Controller {
         if (empty($this->entityManager)) {
           $this->entityManager = $this->di(EntityManager::class);
         }
+        /** @var Entities\EncryptedFile $dbFile */
         $dbFileClass = $encrypted ? Entities\EncryptedFile::class : Entities\File::class;
         $dbFile = new $dbFileClass(
           fileName: $destinationPath,
@@ -111,6 +112,7 @@ class UploadsController extends Controller {
           $owner = $this->getDatabaseRepository(Entities\Musician::class)->find($ownerId);
           $dbFile->addOwner($owner);
         }
+        $dbFile->setOriginalFileName($originalFileName);
 
         $this->entityManager->beginTransaction();
         try {
