@@ -83,7 +83,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function fileFromFileName(string $name)
+  public function fileFromFileName(string $name)
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
@@ -187,9 +187,10 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName()
-      . '::'
-      . 'database-storage/finance/balances/projects/' . $this->project->getName()
+    return parent::getId()
+      . implode(self::PATH_SEPARATOR, [
+        'finance', 'balances', 'projects', $this->project->getName(),
+      ])
       . self::PATH_SEPARATOR;
   }
 

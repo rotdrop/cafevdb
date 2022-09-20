@@ -49,6 +49,14 @@ class Storage extends AbstractStorage
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  /**
+   * @var string
+   *
+   * The entire storage id starts with $this->appName().self::STORAGE_ID_TAG,
+   * followed by path information about the intended mount-point.
+   */
+  const STORAGE_ID_TAG = '::database-storage';
+
   const PATH_SEPARATOR = '/';
 
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository */
@@ -139,7 +147,7 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName() . '::' . 'database-storage'. self::PATH_SEPARATOR;
+    return $this->appName() . self::STORAGE_ID_TAG . self::PATH_SEPARATOR;
   }
 
   protected function buildPath($path) {
@@ -188,7 +196,7 @@ class Storage extends AbstractStorage
    *
    * @return null|string|Entities\File
    */
-  protected function fileFromFileName(string $name)
+  public function fileFromFileName(string $name)
   {
     $id = $this->fileIdFromFileName($name);
     if ($id > 0) {

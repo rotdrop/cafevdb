@@ -65,7 +65,7 @@ class BankTransactionsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function fileFromFileName(string $name)
+  public function fileFromFileName(string $name)
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
@@ -155,9 +155,10 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName()
-      . '::'
-      . 'database-storage/finance/transactions'
+    return parent::getId()
+      . implode(self::PATH_SEPARATOR, [
+        'finance', 'transactions',
+      ])
       . self::PATH_SEPARATOR;
   }
 }

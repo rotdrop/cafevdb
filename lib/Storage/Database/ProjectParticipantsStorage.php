@@ -110,7 +110,7 @@ class ProjectParticipantsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function fileFromFileName(?string $name)
+  public function fileFromFileName(?string $name)
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
@@ -365,12 +365,10 @@ class ProjectParticipantsStorage extends Storage
   {
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-    $result = $this->appName()
-      . '::'
-      . 'database-storage/'
-      . $this->project->getName()
-      . 'participants/'
-      . $this->participant->getMusician()->getUserIdSlug()
+    $result = parent::getId()
+      . implode(self::PATH_SEPARATOR, [
+        $this->project->getName(), 'participants', $this->participant->getMusician()->getUserIdSlug(),
+      ])
       . self::PATH_SEPARATOR;
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     return $result;
