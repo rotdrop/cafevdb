@@ -427,7 +427,10 @@ invited to have a look, but please do not change anything unless you know what y
               'disable-delivery' => $this->l->t('Disable delivery of the mailing list traffic to this participant. This can as well be done by the participant itself by tuing its membership settings on the configuration pages of the mailing list software.'),
             ],
           ],
-          'voice' => $this->l->t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
+          'voice' => [
+            'default' => $this->l->t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
+            'define-new' => $this->l->t('Opens an input field in order to let you define an arbitrary new voice. The voice is automatically created if it does not yet exist.'),
+          ],
           'section-leader' => [
             'default' => $this->l->t('Check in order to mark the section leader. If this instrument is sub devided into voices the musician first has to be assigned to a voice before it can be marked as section leader for its configured voice.'),
             'view' => $this->l->t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])

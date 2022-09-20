@@ -1171,7 +1171,6 @@ trait ParticipantFieldsTrait
                         'fileName' => $fileName,
                         'requesttoken' => \OCP\Util::callRegister(),
                       ], '', '&');
-                    $this->logInfo('DOWNLOAD ' . $downloadLink);
                     $rowHtml = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'" href="'.$downloadLink.'">' . $rowHtml . '</a>';
                   }
                   $html[] = $rowHtml;

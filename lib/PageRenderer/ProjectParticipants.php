@@ -741,6 +741,10 @@ class ProjectParticipants extends PMETableViewBase
             'columns' => [ '$table.l10n_name', 'IF($table.seq <= GREATEST(' . self::EXTRA_VOICES . ', $table.number_of_voices), $table.seq, \'?\')' ],
             'divs' => ' ',
           ],
+          'titles' => 'IF($table.seq > GREATEST(' . self::EXTRA_VOICES . ', $table.number_of_voices),
+  "' . $this->toolTipsService['page-renderer:participants:voice:define-new'] . '",
+  NULL
+)',
           'orderby' => '$table.sort_order ASC, $table.seq ASC',
           'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
           //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
