@@ -422,7 +422,29 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     try {
       $documentContainer->removeDocument($file); // depends on orphanRemoval=true
       $file->setProjectBalanceSupportingDocument(null);
-      $this->entityManager->remove($file);
+
+      $safeToDelete = true;
+
+      // break the link to the supporting documents of payments
+      /** @var Entities\CompositePayment $compositePayment */
+      foreach ($documentContainer->getCompositePayments() as $compositePayment) {
+        if ($file->getId() == $compositePayment->getSupportingDocument()->getId()) {
+          $safeToDelete = false;
+          $compositePayment->setProjectBalanceSupportingDocument(null);
+        }
+      }
+      /** @var Entities\ProjectPayment $projectPayment */
+      foreach ($documentContainer->getProjectPayments() as $projectPayment) {
+        $supportingDocument = $projectPayment->getReceivable() ? $projectPayment->getReceivable()->getSupportingDocument() : null;
+        if ($supportingDocument && $supportingDocument->getId() == $file->getId()) {
+          $safeToDelete = false;
+          $projectPayment->setProjectBalanceSupportingDocument(null);
+        }
+      }
+      if ($safeToDelete) {
+        // remove, unused by payments.
+        $this->entityManager->remove($file);
+      }
       $this->flush();
 
       $this->unsetFileNameCache($path);

@@ -290,18 +290,24 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
   {
-    if (!empty($this->projectBalanceSupportingDocument)
-        && !empty($this->receivable)
-        && !empty($this->receivable->getSupportingDocument())) {
-      $this->projectBalanceSupportingDocument->removeDocument($this->receivable->getSupportingDocument());
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+        // if ($supportingDocument->getNumberOfLinks() > 1) {
+        //   $supportingDocument->unlink();
+        // }
+      }
     }
 
     $this->receivable = $receivable;
 
-    if (!empty($this->projectBalanceSupportingDocument)
-        && !empty($this->receivable)
-        && !empty($this->receivable->getSupportingDocument())) {
-      $this->projectBalanceSupportingDocument->addDocument($this->receivable->getSupportingDocument());
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+        // $supportingDocument->link();
+      }
     }
 
     return $this;
@@ -350,18 +356,24 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):ProjectPayment
   {
-    if (!empty($this->projectBalanceSupportingDocument)
-        && !empty($this->receivable)
-        && !empty($this->receivable->getSupportingDocument())) {
-      $this->projectBalanceSupportingDocument->removeDocument($this->receivable->getSupportingDocument());
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+        // if ($supportingDocument->getNumberOfLinks() > 1) {
+        //   $supportingDocument->unlink();
+        // }
+      }
     }
 
     $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
 
-    if (!empty($this->projectBalanceSupportingDocument)
-        && !empty($this->receivable)
-        && !empty($this->receivable->getSupportingDocument())) {
-      $this->projectBalanceSupportingDocument->addDocument($this->receivable->getSupportingDocument());
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+        // $supportingDocument->link();
+      }
     }
 
     return $this;
