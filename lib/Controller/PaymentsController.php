@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Common\Util;
@@ -54,11 +54,11 @@ class PaymentsController extends Controller {
   private $parameterService;
 
   public function __construct(
-    $appName
-    , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , EntityManager $entityManager
+    $appName,
+    IRequest $request,
+    RequestParameterService $parameterService,
+    ConfigService $configService,
+    EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -70,7 +70,7 @@ class PaymentsController extends Controller {
   /**
    * @NoAdminRequired
    */
-  public function documents($operation, $musicianId, $projectId, $compositePaymentId)
+  public function documents($operation, $musicianId, $projectId, $compositePaymentId, string $data = '{}')
   {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
@@ -105,6 +105,9 @@ class PaymentsController extends Controller {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
         // the following should be made a service routine or Trait
+
+        $uploadData = json_decode($data, true);
+        $filesAppPath = $uploadData['filesAppPath']??null;
 
         $files = $this->prepareUploadInfo($files, $compositePaymentId, multiple: false);
         if ($files instanceof Http\Response) {
@@ -177,6 +180,17 @@ class PaymentsController extends Controller {
           . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
           . '&fileName=' . urlencode($supportingDocumentFileName);
 
+        $filesAppLink = '';
+        try {
+          if (!empty($filesAppPath)) {
+            /** @var UserStorage $userStorage */
+            $userStorage = $this->di(UserStorage::class);
+            $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
+            }
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
+        }
+
         unset($file['tmp_name']);
         $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
                                        [ $file['name'], $supportingDocumentFileName ]);
@@ -193,6 +207,7 @@ class PaymentsController extends Controller {
           'extension' => $pathInfo['extension']?:'',
           'fileName' => $pathInfo['filename'],
           'download' => $downloadLink,
+          'filesApp' => $filesAppLink,
           'conflict' => $conflict,
           'messages' => $file['message'],
         ];
