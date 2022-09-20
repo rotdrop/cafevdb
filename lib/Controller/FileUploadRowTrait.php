@@ -4,38 +4,55 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
 
+use OCP\AppFramework\Http\Response;
+
+use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\Util;
 
 /** Handle PME file-uplaod row. The controller must make sure to define all ingredients. */
 trait FileUploadRowTrait
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
-  protected function prepareUploadInfo($files, $optionKey, bool $multiple)
+  /**
+   * @param string $files File-uploads presented by PHP, JSON encoded.
+   *
+   * @param string $optionKey Optional index into $files.
+   *
+   * @param bool $multiple Whether multiple uploads are to be expected.
+   *
+   * @return array|Response
+   *
+   * @SuppressWarnings(PHPMD.Superglobals)
+   */
+  protected function prepareUploadInfo(?string $files, string $optionKey, bool $multiple)
   {
-    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
-    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
-    $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
+    $uploadMaxFilesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFileSize = min($uploadMaxFilesize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
 
     $fileKey = 'files';
@@ -89,7 +106,7 @@ trait FileUploadRowTrait
     }
 
     $totalSize = 0;
-    foreach ($files as $index => &$file) {
+    foreach ($files as &$file) {
 
       $totalSize += $file['size'];
 
@@ -119,7 +136,12 @@ trait FileUploadRowTrait
     return $files;
   }
 
-  protected function getUploadContent($file)
+  /**
+   * @param array $file File-upload data as prepared by self::prepareUploadInfo().
+   *
+   * @return string
+   */
+  protected function getUploadContent(array $file):string
   {
     if (!file_exists($file['tmp_name'])) {
       /** @var UserStorage $appStorage */
@@ -132,7 +154,10 @@ trait FileUploadRowTrait
     return $fileData;
   }
 
-  protected function removeStashedFile($file)
+  /**
+   * @param array $file File-upload data as prepared by self::prepareUploadInfo().
+   */
+  protected function removeStashedFile(array $file):void
   {
     if (!file_exists($file['tmp_name'])) {
       /** @var UserStorage $appStorage */
@@ -142,5 +167,35 @@ trait FileUploadRowTrait
     } else {
       unlink($file['tmp_name']);
     }
+  }
+
+  /**
+   * Return the underline storage entity if the upload refers to db-backed
+   * cloud-file.
+   *
+   * @param array $file File-upload data as prepared by
+   * FileUploadRowTrait::prepareUploadInfo().
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  protected function getDatabaseFile(array $file):?Entities\EncryptedFile
+  {
+    if (!isset($file['cloud_path'])) {
+      return null;
+    }
+    $cloudPath = $file['cloud_path'];
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $cloudFile = $userStorage->get($cloudPath);
+    $storage = $cloudFile->getStorage();
+
+    if (!($storage instanceof DatabaseStorage)) {
+      return null;
+    }
+
+    /** @var DatabaseStorage $storage */
+    return $storage->fileFromFileName($cloudFile->getInternalPath());
   }
 }

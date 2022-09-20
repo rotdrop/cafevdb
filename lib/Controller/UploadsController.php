@@ -74,6 +74,7 @@ class UploadsController extends Controller {
    *
    * @param string $stashedFile
    * @param string $destinationPath
+   * @param null|string $originalFileName
    * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
    * @param bool $encrypted Whether to store the data encrypted (DB only).
    * @param int $ownerId Musician-id of owner of encrypted file
@@ -182,6 +183,7 @@ class UploadsController extends Controller {
         // We emulate an uploaded file here:
         $fileRecord = [
           'name' => $uploadFile->getName(),
+          'cloud_path' => $path, // additional info if maybe someone needs to know
           'original_name' => $cloudFile->getName(),
           'error' => 0,
           'tmp_name' => $uploadFile->getName(),

@@ -522,6 +522,7 @@ class ProjectParticipantsController extends Controller
             } elseif (!empty($fileName)) {
               $filePath = pathinfo($fileName, PATHINFO_FILENAME);
             }
+
             break;
           default:
             return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
@@ -549,6 +550,8 @@ class ProjectParticipantsController extends Controller
 
         $uploads = [];
         foreach ($files as $file) {
+
+          $this->getDatabaseFile($file);
 
           $messages = []; // messages for non-fatal errors
 
