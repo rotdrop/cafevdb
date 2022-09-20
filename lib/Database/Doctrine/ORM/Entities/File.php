@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -62,6 +63,15 @@ class File implements \ArrayAccess
    * @ORM\GeneratedValue(strategy="IDENTITY")
    */
   protected $id;
+
+  /**
+   * @var int
+   *
+   * The number of links pointing to this file.
+   *
+   * @ORM\Column(type="integer", nullable=false, options={"default"=1,"unsigned"=true})
+   */
+  protected $numberOfLinks;
 
   /**
    * @var string|null
@@ -141,6 +151,71 @@ class File implements \ArrayAccess
   public function getId():int
   {
     return $this->id;
+  }
+
+  /**
+   * Set numberOfLinks.
+   *
+   * @param int $numberOfLinks
+   *
+   * @return File
+   *
+   * @throws DatabaseException
+   */
+  public function setNumberOfLinks(int $numberOfLinks):File
+  {
+    if ($numberOfLinks < 0) {
+      throw new DatabaseException(
+        'Number of links ' . $numberOfLinks
+          . ' has to be non negative. '
+          . 'File ' . $this->fileName . '@' . $this->id);
+    }
+
+    $this->numberOfLinks = $numberOfLinks;
+
+    return $this;
+  }
+
+  /**
+   * Get numberOfLinks.
+   *
+   * @return int
+   */
+  public function getNumberOfLinks():int
+  {
+    return $this->numberOfLinks;
+  }
+
+  /**
+   * Increment the link-count.
+   *
+   * @return File
+   */
+  public function link():File
+  {
+    ++$this->numberOfLinks;
+
+    return $this;
+  }
+
+  /**
+   * Decrement the link-count
+   *
+   * @return File
+   *
+   * @throws DatabaseException
+   */
+  public function unlink():File
+  {
+    if ($this->numberOfLinks <= 0) {
+      throw new DatabaseException(
+        'Number of links ' . $this->numberOfLinks . ' is already zero or less '
+          . ' but has to be non-negative. '
+          . 'File ' . $this->fileName . '@' . $this->id);
+    }
+    --$this->numberOfLinks;
+
+    return $this;
   }
 
   /**
