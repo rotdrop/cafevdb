@@ -91,6 +91,7 @@ class Composer
   private const HEADER_MARKER = [ self::HEADER_TAG => 'YES', ];
   private const HEADER_MARKER_RECIPIENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Recipient', ];
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
+  private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
   /**
    * @var string
@@ -1702,6 +1703,7 @@ Störung.';
         messageId: $templateMessageId,
         references: $references,
         customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
@@ -2444,6 +2446,7 @@ Störung.';
     ?string $messageId = null,
     $references = null,
     $customHeaders = [],
+    $doNotReply = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
@@ -2493,7 +2496,16 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       if (!$this->constructionMode) {
@@ -2891,6 +2903,7 @@ Störung.';
     ?string $messageId = null,
     $references = null,
     $customHeaders = [],
+    $doNotReply = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
@@ -2920,7 +2933,17 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
+
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       // Loop over all data-base records and add each recipient in turn
@@ -3240,6 +3263,7 @@ Störung.';
         messageId: $templateMessageId,
         references: $references,
         customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
