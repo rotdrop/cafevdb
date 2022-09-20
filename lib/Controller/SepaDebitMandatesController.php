@@ -1256,7 +1256,11 @@ class SepaDebitMandatesController extends Controller
 
         // ok, delete it
         $debitMandate->setWrittenMandate(null);
-        $this->remove($writtenMandate, flush: true);
+        if ($writtenMandate->getNumberOfLinks() == 0) {
+          $this->remove($writtenMandate, flush: true);
+        } else {
+          $this->logInfo('Keeping ' . $writtenMandate->getFileName() . ', link count is still ' . $writtenMandate->getNumberOfLinks());
+        }
 
         return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
     }

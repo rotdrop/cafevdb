@@ -454,15 +454,24 @@ class ProjectParticipantsController extends Controller
               $fieldDatum->setOptionValue(null);
               break;
             case FieldDataType::DB_FILE:
-              $filePath = $dbFile->getFileName();
-              $this->remove($dbFile, hard: true);
               $fieldDatum->setOptionValue(null);
+              $filePath = $dbFile->getFileName();
+              $dbFile->unlink();
+              if ($dbFile->getNumberOfLinks() == 0) {
+                $this->remove($dbFile, hard: true);
+              } else {
+                $this->logInfo('NUMBER OF LINKS IS STILL ' . $dbFile->getNumberOfLinks() . ' ' . $filePath);
+              }
               break;
             case FieldDataType::SERVICE_FEE:
               $fieldDatum->setSupportingDocument(null);
               $this->flush();
               $filePath = $dbFile->getFileName();
-              $this->remove($dbFile, hard: true);
+              if ($dbFile->getNumberOfLinks() == 0) {
+                $this->remove($dbFile, hard: true);
+              } else {
+                $this->logInfo('NUMBER OF LINKS IS STILL ' . $dbFile->getNumberOfLinks() . ' ' . $filePath);
+              }
               $doDeleteFieldDatum = false;
               break;
           }
@@ -639,6 +648,7 @@ class ProjectParticipantsController extends Controller
                     $fieldData->getOptionValue()
                   ));
                 }
+                $dbFile->unlink(); // link-count incremented again below
                 $conflict = 'replaced';
                 break;
               case FieldDataType::SERVICE_FEE:
@@ -726,6 +736,7 @@ class ProjectParticipantsController extends Controller
                 $this->flush();
                 if ($dataType == FieldDataType::DB_FILE) {
                   $fieldData->setOptionValue($dbFile->getId());
+                  $dbFile->link(); // setOptionValue() can't
                 } else {
                   $fieldData->setSupportingDocument($dbFile);
                 }

@@ -69,7 +69,7 @@ class File implements \ArrayAccess
    *
    * The number of links pointing to this file.
    *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=1,"unsigned"=true})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=0,"unsigned"=true})
    */
   protected $numberOfLinks;
 

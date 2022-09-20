@@ -211,8 +211,9 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   public function addDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    if (!$this->documents->contains($file)) {
-      $this->documents->add($file);
+    if (!$this->documents->containsKey($file->getId())) {
+      $file->link();
+      $this->documents->set($file->getId(), $file);
     }
     return $this;
   }
@@ -226,7 +227,10 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   public function removeDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    $this->documents->removeElement($file);
+    if ($this->documents->containsKey($file->getId())) {
+      $this->documents->remove($file->getId());
+      $file->unlink();
+    }
     return $this;
   }
 

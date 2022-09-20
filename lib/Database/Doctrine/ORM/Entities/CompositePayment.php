@@ -470,16 +470,20 @@ class CompositePayment implements \ArrayAccess
   {
     if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
       $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
-      // if ($this->supportingDocument->getNumberOfLinks() > 1) {
-      //   $this->supportingDocument->unlink();
-      // }
+    }
+
+    if (!empty($this->supportingDocument)) {
+      $this->supportingDocument->unlink();
     }
 
     $this->supportingDocument = $supportingDocument;
 
+    if (!empty($this->supportingDocument)) {
+      $this->supportingDocument->link();
+    }
+
     if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
       $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
-      // $this->supportingDocument->link();
     }
 
     return $this;
@@ -506,16 +510,12 @@ class CompositePayment implements \ArrayAccess
   {
     if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
       $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
-      // if ($this->supportingDocument->getNumberOfLinks() > 1) {
-      //   $this->supportingDocument->unlink();
-      // }
     }
 
     $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
 
     if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
       $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
-      // $this->supportingDocument->link();
     }
 
     return $this;

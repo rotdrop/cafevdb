@@ -645,9 +645,8 @@ __EOT__;
       $payment = $this->find($paymentId);
       $bulkTransaction->getPayments()->removeElement($payment);
       // Remove the transaction data in order to force recomputation
-      $bulkTransactionData = $bulkTransaction->getSepaTransactionData();
-      foreach ($bulkTransactionData as $exportFile) {
-        $bulkTransactionData->removeElement($exportFile);
+      foreach ($bulkTransaction->getSepaTransactionData() as $exportFile) {
+        $bulkTransaction->removeTransactionData($exportFile);
       }
       $this->flush();
     }

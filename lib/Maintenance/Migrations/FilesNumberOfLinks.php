@@ -35,7 +35,7 @@ class FilesNumberOfLinks extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE Files ADD COLUMN IF NOT EXISTS number_of_links INT UNSIGNED DEFAULT 1 NOT NULL',
+      'ALTER TABLE Files ADD COLUMN IF NOT EXISTS number_of_links INT UNSIGNED DEFAULT 0 NOT NULL',
     ],
   ];
 

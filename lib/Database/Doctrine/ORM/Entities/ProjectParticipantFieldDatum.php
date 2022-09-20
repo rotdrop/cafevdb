@@ -373,7 +373,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectParticipantFieldDatum
   {
+    if (!empty($this->supportingDocument)) {
+      $this->supportingDocument->unlink();
+    }
+
     $this->supportingDocument = $supportingDocument;
+
+    if (!empty($this->supportingDocument)) {
+      $this->supportingDocument->link();
+    }
 
     return $this;
   }

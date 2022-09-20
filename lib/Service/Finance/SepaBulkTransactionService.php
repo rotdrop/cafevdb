@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \InvalidArgumentException;
 use \DateTimeImmutable as DateTime;
 
 use OCP\AppFramework\IAppContainer;
@@ -57,6 +58,10 @@ class SepaBulkTransactionService
   // ordinary submission and notification deadlines
   const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
   const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14; // unused
+
+  const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
+  const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
+
 
   // fancy, just to have some reminders and a deadline on the task-list
   const BANK_TRANSFER_SUBMISSION_DEADLINE = 1; // 1 should be enough ...
@@ -308,11 +313,9 @@ class SepaBulkTransactionService
 
     $this->entityManager->beginTransaction();
     try {
-
-      $bulkTransactionData = $bulkTransaction->getSepaTransactionData();
       /** @var Entities\EncryptedFile $transactionData */
-      foreach ($bulkTransactionData as $transactionData) {
-        $bulkTransactionData->removeElement($transactionData);
+      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
+        $bulkTransaction->removeTransactionData($transactionData);
       }
       $this->remove($bulkTransaction, flush: true);
 
@@ -390,7 +393,7 @@ class SepaBulkTransactionService
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project,
-    string $format = self::EXPORT_AQBANKING
+    string $format = self::EXPORT_AQBANKING,
   ):?Entities\EncryptedFile {
 
     // as a safe-guard regenerate the subject in order to catch changes in
@@ -411,12 +414,12 @@ class SepaBulkTransactionService
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
-        throw new \InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
+        throw new InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
       }
       if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
-        $transactionType = 'banktransfer';
+        $transactionType = self::TRANSACTION_TYPE_BANK_TRANSFER;
       } elseif ($bulkTransaction instanceof Entities\SepaDebitNote) {
-        $transactionType = 'debitnote';
+        $transactionType = self::TRANSACTION_TYPE_DEBIT_NOTE;
       }
 
       // FIXME: just for the timeStamp() function ...
@@ -437,7 +440,7 @@ class SepaBulkTransactionService
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
-        $bulkTransaction->getSepaTransactionData()->add($exportFile);
+        $bulkTransaction->addTransactionData($exportFile);
       } else {
         $exportFile
           ->setFileName($fileName)
@@ -458,7 +461,6 @@ class SepaBulkTransactionService
     }
     return $exportFile;
   }
-
 };
 
 // Local Variables: ***

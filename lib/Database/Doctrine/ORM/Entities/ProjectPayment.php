@@ -294,9 +294,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
         $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
-        // if ($supportingDocument->getNumberOfLinks() > 1) {
-        //   $supportingDocument->unlink();
-        // }
       }
     }
 
@@ -306,7 +303,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
         $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
-        // $supportingDocument->link();
       }
     }
 
@@ -360,9 +356,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
         $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
-        // if ($supportingDocument->getNumberOfLinks() > 1) {
-        //   $supportingDocument->unlink();
-        // }
       }
     }
 
@@ -372,7 +365,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
         $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
-        // $supportingDocument->link();
       }
     }
 
