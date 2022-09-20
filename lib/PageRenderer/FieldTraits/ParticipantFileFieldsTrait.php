@@ -97,11 +97,13 @@ trait ParticipantFileFieldsTrait
       $downloadLink = '';
     }
 
+    $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder);
+    $filesAppTarget = md5($filesAppLinkParticipant);
     $filesAppPath = $participantFolder . $subDirPrefix;
     try {
       $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
     } catch (\OCP\Files\NotFoundException $e) {
-      $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
+      $filesAppLink = $filesAppLinkParticipant;
     }
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
@@ -120,6 +122,7 @@ trait ParticipantFileFieldsTrait
         'participantFolder' => $participantFolder,
         'filesAppPath' => $filesAppPath,
         'filesAppLink' => $filesAppLink,
+        'filesAppTarget' => $filesAppTarget,
         'downloadLink' => $downloadLink,
         'optionValueName' => $optionValueName,
         'uploadPlaceHolder' => $placeHolder,
@@ -179,12 +182,14 @@ trait ParticipantFileFieldsTrait
       $downloadLink = $dbFileName = $dbExtension = '';
     }
     if (!empty($participantFolder)) {
+      $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder);
+      $filesAppTarget = md5($filesAppLinkParticipant);
       $filesAppPath = $participantFolder . $subDirPrefix;
       try {
         $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
       } catch (\OCP\Files\NotFoundException $e) {
         $this->logInfo('No file found for ' . $filesAppPath);
-        $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder, true);
+        $filesAppLink = $filesAppLinkParticipant;
       }
     } else {
       $filesAppPath = '';
@@ -208,6 +213,7 @@ trait ParticipantFileFieldsTrait
         'participantFolder' => $participantFolder,
         'filesAppPath' => $filesAppPath,
         'filesAppLink' => $filesAppLink,
+        'filesAppTarget' => $filesAppTarget,
         'downloadLink' => $downloadLink,
         'optionValueName' => $optionValueName,
         'uploadPlaceHolder' => $placeHolder,

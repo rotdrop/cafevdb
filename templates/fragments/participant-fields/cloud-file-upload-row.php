@@ -30,6 +30,7 @@
  * @param string $fileBase
  * @param string $fileName
  * @param string $filesAppPath
+ * @param string $filesAppTarget
  * @param string $uploadPolicy
  * @param string $participantFolder
  * @param string $filesAppLink

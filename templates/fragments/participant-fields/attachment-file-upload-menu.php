@@ -35,13 +35,16 @@ namespace OCA\CAFEVDB;
  * @param string $entityField
  * @param string $filesAppPath
  * @param string $filesAppLink
+ * @param string $filesAppTarget
  * @param string $downloadLink
  * @param string $participantFolder
  * @param array $toolTips
  * @param string $toolTipsPrefix
  */
 
-$filesAppTarget = md5($filesAppPath ?? '');
+if (empty($filesAppTarget)) {
+  $filesAppTarget = md5($filesAppPath ?? '');
+}
 
 ?>
 
