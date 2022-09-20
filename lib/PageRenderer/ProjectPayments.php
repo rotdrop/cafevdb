@@ -1225,6 +1225,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$musicianIdIndex]['input'] = 'R';
           $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
           $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = 'HR';
+
+          $pme->fdd[$balanceDocumentSequenceIndex]['name'] = $this->l->t('Project Balance');
         }
 
         // if this payment originated from a scheduled bulk-transaction, then
