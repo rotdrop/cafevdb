@@ -37,6 +37,7 @@ import md5 from 'blueimp-md5';
 // but NOT: import { md5 } from 'blueimp-md5';
 import modalizer from './modalizer.js';
 import { parse as pathParse } from 'path';
+import escapeHtml from 'escape-html';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -251,9 +252,13 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
               }
               const templateParameters = {
                 operations: uploadModes.join(' '),
-                files: '<span class="file-node">'
-                  + uploadFiles.map((info) => '<span class="dirname">' + info.dir + '/' + '</span>' + '<span class="basename">' + info.base + '</span>').join('</span><span class="file-node">')
-                  + '</span>',
+                files: uploadFiles.map(
+                  (info) => `<span class="file-node tooltip-auto tooltip-wide"
+      title="${escapeHtml(info.dir + '/' + info.base)}"
+>
+  <span class="dirname">${escapeHtml(info.dir)}/</span>
+  <span class="basename">${escapeHtml(info.base)}</span>
+</span>`).join(''),
                 widgetCssClass: 'cloud-file-system-operations',
                 widgetRadioName: 'cloudFileSystemOperations',
               };
@@ -282,6 +287,10 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
                   uploadMode = $(this).val();
                   console.info('UPLOAD MODE', uploadMode);
                 });
+              $('body')
+                .on('open', '#oc-dialog-0-content', function(event) {
+                  console.info('DIALOG OPENED', event);
+                });
 
               Dialogs.confirm(
                 $fileSystemOps.html(),
@@ -292,7 +301,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
                       performUpload(uploadMode);
                     } else {
                       setBusyIndicators(false);
-                      Notification.messages(appName, 'Operation has been cancelled.');
+                      Notification.messages(t(appName, 'Operation has been cancelled.'));
                     }
                   },
                   buttons: {
@@ -303,7 +312,10 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
                   modal: true,
                   allowHtml: true,
                 }
-              );
+              )
+                .then(function() {
+                  $('.oc-dialog .oc-dialog-content .cloud-file-system-operations-wrapper .tooltip-auto').cafevTooltip();
+                });
 
             });
         },

@@ -122,10 +122,10 @@ trait FileUploadRowTrait
 
       $file['upload_max_file_size'] = $maxUploadFileSize;
       $file['max_human_file_size']  = $maxHumanFileSize;
-      if (!empty($file['original_name'])) {
+      if ($file['upload_mode'] == UploadsController::UPLOAD_MODE_COPY && !empty($file['original_name'])) {
         $file['name'] = $file['original_name'];
-      } else {
-          $file['original_name'] = $file['name']; // clone
+      } elseif (empty($file['original_name']))  {
+        $file['original_name'] = $file['name']; // clone
       }
 
       $file['str_error'] = Util::fileUploadError($file['error'], $this->l);

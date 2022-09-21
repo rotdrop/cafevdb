@@ -130,7 +130,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
                {<?php p($mode); ?>Selected}
         />
         <label for="{widgetCssClass}-<?php p($mode); ?>-control"
-               class="{widgetCssClass} {widgetCssClass}-label"
+               class="{widgetCssClass} {widgetCssClass}-label tooltip-auto"
                title="<?php echo $toolTips['cloud-file-system-operations:' . $mode]; ?>"
         >
         <?php p($modeName); ?>

@@ -91,6 +91,7 @@ class ProjectParticipantsController extends Controller
   /** @var EntityManager */
   protected $entityManager;
 
+  /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
@@ -115,14 +116,17 @@ class ProjectParticipantsController extends Controller
   }
 
   /**
+   * @param int $projectId The numeric project id.
+   *
+   * @param null|int $musicianId The musician id to add. If empty, then the
+   * legacy PME "mrecs" parameter is fetched from the request.
+   *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function addMusicians($projectId, $projectName, $musicianId = null)
+  public function addMusicians(int $projectId, ?int $musicianId = null):Response
   {
-    $this->logInfo($projectId.' '.$projectName.' '.$musicianId);
-
     // Multi-mode:
     // projectId: ID
     // projectName: NAME
@@ -200,15 +204,17 @@ class ProjectParticipantsController extends Controller
   }
 
   /**
-   * @param string $context
-   * - change-musician-instruments
-   * - change-project-instruments
+   * @param string $context Either of 'change-musician-instruments' or 'change-project-instruments'.
+   *
+   * @param array $recordId TBD.
+   *
+   * @param array $instrumentValues TBD.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function changeInstruments(string $context, $recordId = [], $instrumentValues = []):Response
+  public function changeInstruments(string $context, array $recordId = [], array $instrumentValues = []):Response
   {
     $this->logDebug($context.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
     if (empty($instrumentValues)) {
@@ -267,7 +273,10 @@ class ProjectParticipantsController extends Controller
             foreach (array_diff(array_keys($musicianInstruments), $instrumentValues) as $removedId) {
 
               if (isset($projectInstruments[$removedId])) {
-                return self::grumble($this->l->t('Denying the attempt to remove the instrument %s because it is used in the current project.', $projectInstruments[$removedId]['instrument']['name']));
+                return self::grumble($this->l->t(
+                  'Denying the attempt to remove the instrument %s because it is used in the current project.',
+                  $projectInstruments[$removedId]['instrument']['name']
+                ));
               }
 
               if ($musicianInstruments[$removedId]->usage() > 0) {
@@ -349,14 +358,39 @@ class ProjectParticipantsController extends Controller
   }
 
   /**
-   * @param string $operation
+   * @param string $operation Either self::OPERATION_DELETE or self::OPERATION_UPLOAD.
+   *
+   * @param int $musicianId Musician id.
+   *
+   * @param int $projectId Project id.
+   *
+   * @param null|int $fieldId Field id, null if this is a file-upload.
+   *
+   * @param null|string $optionKey Option key, should be a UUID in string form, null if this is a file-upload.
+   *
+   * @param null|string $subDir Subdirectory to place the file in, null if this is a file upload.
+   *
+   * @param null|string $fileName The file name, null if this is a file-upload.
+   *
+   * @param null|string $data Additional upload data, JSON encoded.
+   *
+   * @param null|string $files Uploaded files, JSON encoded, null if this is not a file-upload.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function files(string $operation, $musicianId, $projectId, $fieldId, $optionKey, $subDir, $fileName, $data, $files = null):Response
-  {
+  public function files(
+    string $operation,
+    int $musicianId,
+    int $projectId,
+    ?int $fieldId,
+    ?string $optionKey,
+    ?string $subDir,
+    ?string $fileName,
+    ?string $data,
+    ?string $files = null
+  ):Response {
     // $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     // $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     // $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
@@ -560,8 +594,6 @@ class ProjectParticipantsController extends Controller
         $uploads = [];
         foreach ($files as $file) {
 
-          $this->getDatabaseFile($file);
-
           $messages = []; // messages for non-fatal errors
 
           if ($file['error'] != UPLOAD_ERR_OK) {
@@ -585,6 +617,41 @@ class ProjectParticipantsController extends Controller
             default:
               break; // ok, resp. cannot happen
           }
+
+          $originalFilePath = $file['original_name'] ?? null;
+
+          $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
+
+          switch ($uploadMode) {
+            case UploadsController::UPLOAD_MODE_MOVE:
+              if (empty($originalFilePath)) {
+                return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
+              }
+              $originalFile = $userStorage->get($originalFilePath);
+              if (empty($originalFile)) {
+                return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
+              }
+              break;
+            case UploadsController::UPLOAD_MODE_LINK:
+              if ($dataType != FieldDataType::DB_FILE && $dataType != FieldDataType::SERVICE_FEE) {
+                return self::grumble($this->l->t('Link operation requested, but the link target does not reside in the database storage.'));
+              }
+              $originalFileId = $file['original_name'];
+              if (empty($originalFileId)) {
+                return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
+              }
+              $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
+              if (empty($originalFile)) {
+                return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
+              }
+              $originalFilePath = $originalFile->getFileName();
+              break;
+            case UploadsController::UPLOAD_MODE_COPY:
+              // this is the default, nothing special
+              break;
+          }
+
+          $originalFileName = basename($originalFilePath);
 
           /*
            * upload successful now try to move the file to its proper
@@ -622,6 +689,7 @@ class ProjectParticipantsController extends Controller
             }
 
             $optionValue = $fieldData->getOptionValue();
+            $dbFile = null;
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
                 if (empty($optionValue)) {
@@ -671,7 +739,23 @@ class ProjectParticipantsController extends Controller
                 break;
             }
 
-            $fileData = $this->getUploadContent($file);
+            switch ($uploadMode) {
+              case UploadsController::UPLOAD_MODE_MOVE:
+                $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
+                // no break
+              case UploadsController::UPLOAD_MODE_COPY:
+                $fileData = $this->getUploadContent($file);
+                break;
+              case UploadsController::UPLOAD_MODE_LINK:
+                $fileData = null;
+                /** @var Entities\EncryptedFile $originalFile */
+                if (!empty($dbFile) && $dbFile->getId() == $originalFileId) {
+                  return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
+                    $originalFile->getFileName(), $originalFileId
+                  ]));
+                }
+                break;
+            }
 
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
@@ -711,26 +795,40 @@ class ProjectParticipantsController extends Controller
                 break;
               case FieldDataType::SERVICE_FEE:
               case FieldDataType::DB_FILE:
-                /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-                $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-                $mimeType = $mimeTypeDetector->detectString($fileData);
+                switch ($uploadMode) {
+                  case UploadsController::UPLOAD_MODE_COPY:
+                  case UploadsController::UPLOAD_MODE_MOVE:
+                    // replace the data or generate a new document
 
-                if (empty($dbFile)) {
-                  /** @var Entities\EncryptedFile $dbFilew */
-                  $dbFile = new Entities\EncryptedFile(
-                    fileName: $filePath,
-                    data: $fileData,
-                    mimeType: $mimeType,
-                    owner: $musician
-                  );
-                } else {
-                  $dbFile
-                    ->setFileName($filePath)
-                    ->setSize(strlen($fileData))
-                    ->setMimeType($mimeType)
-                    ->getFileData()->setData($fileData);
+                    /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+                    $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+                    $mimeType = $mimeTypeDetector->detectString($fileData);
+
+                    if (empty($dbFile)) {
+                      /** @var Entities\EncryptedFile $dbFilew */
+                      $dbFile = new Entities\EncryptedFile(
+                        fileName: $filePath,
+                        data: $fileData,
+                        mimeType: $mimeType,
+                        owner: $musician
+                      );
+                    } else {
+                      $dbFile
+                        ->setFileName($filePath)
+                        ->setSize(strlen($fileData))
+                        ->setMimeType($mimeType)
+                        ->getFileData()->setData($fileData);
+                    }
+                    $dbFile->setOriginalFileName($originalFileName ?? null);
+                    break;
+                  case UploadsController::UPLOAD_MODE_LINK:
+                    // Generate kind of a hard-link. The code below will just increase the link-count.
+                    if (!empty($dbFile) && $dbFile->getNumberOfLinks() == 0) {
+                      $this->remove($dbFile, flush: true);
+                    }
+                    $dbFile = $originalFile;
+                    break;
                 }
-                $dbFile->setOriginalFileName($file['original_name'] ?? null);
 
                 $this->persist($dbFile);
                 $this->flush();
@@ -738,7 +836,7 @@ class ProjectParticipantsController extends Controller
                   $fieldData->setOptionValue($dbFile->getId());
                   $dbFile->link(); // setOptionValue() can't
                 } else {
-                  $fieldData->setSupportingDocument($dbFile);
+                  $fieldData->setSupportingDocument($dbFile); // will increaes the link-count of $dbFile
                 }
                 $this->persist($fieldData);
 
@@ -761,14 +859,23 @@ class ProjectParticipantsController extends Controller
               $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
             }
 
-            $fileCopied = true;
-            $this->removeStashedFile($file);
+            if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+              $fileCopied = true;
+              $this->removeStashedFile($file);
+            }
 
             unset($file['tmp_name']);
-            $file['message'] = $this->l->t(
-              'Upload of "%s" as "%s" successful.',
-              [ $file['name'], $filePath ]
-            );
+            switch ($uploadMode) {
+              case UploadsController::UPLOAD_MODE_COPY:
+                $messages[] = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $filePath ]);
+                break;
+              case UploadsController::UPLOAD_MODE_MOVE:
+                $messages[] = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $filePath ]);
+                break;
+              case UploadsController::UPLOAD_MODE_LINK:
+                $messages[] = $this->l->t('Linking of "%s" to "%s" successful.', [ $originalFileId, $filePath ]);
+                break;
+            }
             $file['name'] = $filePath;
 
             $file['meta'] = [
@@ -792,9 +899,8 @@ class ProjectParticipantsController extends Controller
             if ($fileCopied) {
               switch ($dataType) {
                 case FieldDataType::CLOUD_FILE:
-                  // @todo HERE WE SHOULD RESTORE THE OLD FILE IF ANY
-                  // unlink the new file
-                  $userStorage->delete($filePath);
+                  // should have been handled by the undoable pre-commit actions
+                  // $userStorage->delete($filePath);
                   break;
                 case FieldDataType::DB_FILE:
                 case FieldDataType::SERVICE_FEE:
@@ -816,18 +922,22 @@ class ProjectParticipantsController extends Controller
   /**
    * @param string $operation The operation to perform, see LIST_ACTION defines in this class.
    *
-   * @param int $projectId
+   * @param int $projectId Project id.
    *
-   * @param int $musicianId
+   * @param int $musicianId Musician id.
    *
-   * @param bool $force
+   * @param bool $force Enforce the operation.
    *
    * @return OCP\AppFramework\Http\Response
    *
    * @NoAdminRequired
    */
-  public function mailingListSubscriptions(string $operation, int $projectId, int $musicianId, bool $force = false)
-  {
+  public function mailingListSubscriptions(
+    string $operation,
+    int $projectId,
+    int $musicianId,
+    bool $force = false,
+  ) {
     /** @var MailingListsService $listsService */
     $listsService = $this->di(MailingListsService::class);
     if (!$listsService->isConfigured()) {
@@ -870,9 +980,13 @@ class ProjectParticipantsController extends Controller
         if (!$force && empty($participant->getRegistration())) {
           return self::dataResponse([
             'status' => 'unconfirmed',
-            'feedback' => $this->l->t('%1$s participation has not been confirmed yet. Please consider to set the participation status to "confirmed" which also will subscribe %1$s to the project list and will send a notification to the participant. Are you sure that you want to subscribe an unconfirmed participant to the project mailing list?', [
-              $musician->getPublicName(firstNameFirst: true)
-            ]),
+            'feedback' => $this->l->t(
+              '%1$s participation has not been confirmed yet.'
+              . ' Please consider to set the participation status to "confirmed" which also will subscribe %1$s to the project list'
+              . ' and will send a notification to the participant.'
+              . ' Are you sure that you want to subscribe an unconfirmed participant to the project mailing list?', [
+                $musician->getPublicName(firstNameFirst: true)
+              ]),
           ]);
         }
         $this->projectService->ensureMailingListSubscription($participant);
@@ -952,7 +1066,27 @@ class ProjectParticipantsController extends Controller
     return self::dataResponse($summary);
   }
 
-  public static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email)
+  /**
+   * Fetch the delivery states for the given email. Delivery may be disabled
+   * by the list-member in which case the email-form has to send its messages
+   * separately to this member if needed.
+   *
+   * @param MailingListsService $listsService Mailing lists management class.
+   *
+   * @param string $listId The list id to work on.
+   *
+   * @param string $email The email address of the list-member.
+   *
+   * @return array
+   * ```
+   * [
+   *   'subscriptionStatus' => STATUS,
+   *   'summary' => DISPLAY_STATUS, // for UI
+   *   'statusTags' => STATUS_TAGS, // mode-digest etc.
+   * ];
+   * ```
+   */
+  public static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email):array
   {
     $status = $listsService->getSubscriptionStatus($listId, $email);
     $displayStatus = $status;
