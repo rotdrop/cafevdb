@@ -490,7 +490,7 @@ class ProjectParticipantsController extends Controller
             case FieldDataType::DB_FILE:
               $fieldDatum->setOptionValue(null);
               $filePath = $dbFile->getFileName();
-              $dbFile->unlink();
+              $dbFile->unlink(); // not done by setOptionValue().
               if ($dbFile->getNumberOfLinks() == 0) {
                 $this->remove($dbFile, hard: true);
               } else {
@@ -804,6 +804,18 @@ class ProjectParticipantsController extends Controller
                     $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
                     $mimeType = $mimeTypeDetector->detectString($fileData);
 
+                    if (!empty($dbFile) && $dbFile->getNumberOfLinks() > 1) {
+                      // if the file has multiple links then it is probably
+                      // better to remove the existing file rather than
+                      // overwriting a file which has multiple links.
+                      if ($dataType == FieldDataType::DB_FILE) {
+                        $dbFile->unlink(); // setOptionValue() can't
+                      } else {
+                        $fieldData->setSupportingDocument(null);
+                      }
+                      $dbFile = null;
+                    }
+
                     if (empty($dbFile)) {
                       /** @var Entities\EncryptedFile $dbFilew */
                       $dbFile = new Entities\EncryptedFile(
@@ -836,7 +848,7 @@ class ProjectParticipantsController extends Controller
                   $fieldData->setOptionValue($dbFile->getId());
                   $dbFile->link(); // setOptionValue() can't
                 } else {
-                  $fieldData->setSupportingDocument($dbFile); // will increaes the link-count of $dbFile
+                  $fieldData->setSupportingDocument($dbFile); // will increase the link-count of $dbFile
                 }
                 $this->persist($fieldData);
 
@@ -873,7 +885,7 @@ class ProjectParticipantsController extends Controller
                 $messages[] = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $filePath ]);
                 break;
               case UploadsController::UPLOAD_MODE_LINK:
-                $messages[] = $this->l->t('Linking of "%s" to "%s" successful.', [ $originalFileId, $filePath ]);
+                $messages[] = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $filePath ]);
                 break;
             }
             $file['name'] = $filePath;
