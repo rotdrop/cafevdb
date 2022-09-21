@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCP\Files\SimpleFS\ISimpleFile;
 
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 
 /** AJAX endpoint to support maintenance of payments. */
@@ -128,7 +129,9 @@ class PaymentsController extends Controller
 
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
-        // the following should be made a service routine or Trait
+
+        /** @var UserStorage $userStorage */
+        $userStorage = $this->di(UserStorage::class);
 
         $files = $this->prepareUploadInfo($files, $compositePaymentId, multiple: false);
         if ($files instanceof Http\Response) {
@@ -141,44 +144,123 @@ class PaymentsController extends Controller
           return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
         }
 
-        // Ok, got it, set or replace the hard-copy file
-        $fileContent = $this->getUploadContent($file);
+        $originalFilePath = $file['original_name'] ?? null;
+        $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
 
-        /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-        $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-        $mimeType = $mimeTypeDetector->detectString($fileContent);
+        switch ($uploadMode) {
+          case UploadsController::UPLOAD_MODE_MOVE:
+            if (empty($originalFilePath)) {
+              return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
+            }
+            $originalFile = $userStorage->get($originalFilePath);
+            if (empty($originalFile)) {
+              return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
+            }
+            break;
+          case UploadsController::UPLOAD_MODE_LINK:
+            $originalFileId = $file['original_name'];
+            if (empty($originalFileId)) {
+              return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
+            }
+            $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
+            if (empty($originalFile)) {
+              return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
+            }
+            $originalFilePath = $originalFile->getFileName();
+            break;
+          case UploadsController::UPLOAD_MODE_COPY:
+            // this is the default, nothing special
+            break;
+        }
 
-        $conflict = null;
+        $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
+
         /** @var Entities\EncryptedFile $supportingDocument */
         $supportingDocument = $compositePayment->getSupportingDocument();
-        if (empty($supportingDocument)) {
-          $supportingDocument = new Entities\EncryptedFile(
-            data: $fileContent,
-            mimeType: $mimeType,
-            owner: $compositePayment->getMusician()
-          );
-        } else {
-          $conflict = 'replaced';
-          $supportingDocument
-            ->setMimeType($mimeType)
-            ->setSize(strlen($fileContent))
-            ->getFileData()->setData($fileContent);
-        }
-        $supportingDocument->setOriginalFileName($file['original_name'] ?? null);
 
-        $supportingDocumentFileName = basename($supportingDocumentFileName);
-        $extension = Util::fileExtensionFromMimeType($mimeType);
-        if (empty($extension) && $file['name']) {
-          $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        }
-        if (!empty($extension)) {
-          $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
-        }
-
-        $supportingDocument->setFileName($supportingDocumentFileName);
+        $conflict = null;
 
         $this->entityManager->beginTransaction();
         try {
+
+          switch ($uploadMode) {
+            case UploadsController::UPLOAD_MODE_MOVE:
+              $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
+              // no break
+            case UploadsController::UPLOAD_MODE_COPY:
+              $fileContent = $this->getUploadContent($file);
+              $fileContent = $this->getUploadContent($file);
+
+              /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+              $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+              $mimeType = $mimeTypeDetector->detectString($fileContent);
+
+              if (!empty($supportingDocument) && $supportingDocument->numberOfLinks() > 1) {
+                // if the file has multiple links then it is probably
+                // better to remove the existing file rather than
+                // overwriting a file which has multiple links.
+                if (!empty($supportingDocument->getOriginalFileName())) {
+                  // undo greedily modified filename
+                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
+                }
+                $compositePayment->setSupportingDocument(null); // will decrease the link-count
+                $supportingDocument = null;
+              }
+
+              if (empty($supportingDocument)) {
+                $supportingDocument = new Entities\EncryptedFile(
+                  data: $fileContent,
+                  mimeType: $mimeType,
+                  owner: $compositePayment->getMusician()
+                );
+              } else {
+                $conflict = 'replaced';
+                $supportingDocument
+                  ->setMimeType($mimeType)
+                  ->setSize(strlen($fileContent))
+                  ->getFileData()->setData($fileContent);
+              }
+              $supportingDocument->setOriginalFileName($originalFileName);
+
+              break;
+            case UploadsController::UPLOAD_MODE_LINK:
+              $fileContent = null;
+              /** @var Entities\EncryptedFile $originalFile */
+              if (!empty($supportingDocument) && $supportingDocument->getId() == $originalFileId) {
+                return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
+                  $originalFile->getFileName(), $originalFileId
+                ]));
+              }
+              if (!empty($supportingDocument)) {
+                if ($supportingDocument->getNumberOfLinks() == 0) {
+                  $this->remove($supportingDocument, flush: true);
+                } elseif (!empty($supportingDocument->getOriginalFileName())) {
+                  // undo greedily modified filename
+                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
+                }
+              }
+              $supportingDocument = $originalFile;
+              $mimeType = $supportingDocument->getMimeType();
+              break;
+          }
+
+          // somewhat questionable, as this way even when linking the
+          // supporting document file-name will take precedence over the
+          // "real" file-name
+          $supportingDocumentFileName = basename($supportingDocumentFileName);
+          $extension = Util::fileExtensionFromMimeType($mimeType);
+          if (empty($extension) && $file['name']) {
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+          }
+          if (!empty($extension)) {
+            $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
+          }
+          $originalFileName = $supportingDocument->getFileName();
+          if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
+            $supportingDocument->setOriginalFileName($originalFileName);
+          }
+          $supportingDocument->setFileName($supportingDocumentFileName);
+
           $this->persist($supportingDocument);
           $compositePayment->setSupportingDocument($supportingDocument);
           $this->flush();
@@ -193,7 +275,9 @@ class PaymentsController extends Controller
           return self::grumble($exceptionChain);
         }
 
-        $this->removeStashedFile($file);
+        if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+          $this->removeStashedFile($file);
+        }
 
         $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
           'section' => 'database',
@@ -205,8 +289,6 @@ class PaymentsController extends Controller
         $filesAppLink = '';
         try {
           if (!empty($filesAppPath)) {
-            /** @var UserStorage $userStorage */
-            $userStorage = $this->di(UserStorage::class);
             $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
           }
         } catch (\Throwable $t) {
@@ -214,10 +296,18 @@ class PaymentsController extends Controller
         }
 
         unset($file['tmp_name']);
-        $file['message'] = $this->l->t(
-          'Upload of "%s" as "%s" successful.',
-          [ $file['name'], $supportingDocumentFileName ]
-        );
+        switch ($uploadMode) {
+          case UploadsController::UPLOAD_MODE_COPY:
+            $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $supportingDocumentFileName ]);
+            break;
+          case UploadsController::UPLOAD_MODE_MOVE:
+            $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $supportingDocumentFileName ]);
+            break;
+          case UploadsController::UPLOAD_MODE_LINK:
+            $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $supportingDocumentFileName ]);
+            break;
+        }
+        $file['message'] = $message;
         $file['name'] = $supportingDocumentFileName;
 
         $pathInfo = pathinfo($supportingDocumentFileName);
@@ -233,7 +323,7 @@ class PaymentsController extends Controller
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $conflict,
-          'messages' => $file['message'],
+          'messages' => $message,
         ];
 
         return self::dataResponse([ $file ]);
@@ -246,7 +336,12 @@ class PaymentsController extends Controller
 
         // ok, delete it
         $compositePayment->setSupportingDocument(null);
-        $this->remove($supportingDocument, flush: true);
+        if ($supportingDocument->getNumberOfLinks() == 0) {
+          $this->remove($supportingDocument, flush: true);
+        } elseif (!empty($supportingDocument->getOriginalFileName())) {
+          $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
+        }
+        $this->flush();
 
         return self::response($this->l->t('Successfully deleted the supporting document for the payment "%1$s", please upload a new one!', $compositePaymentId));
     }
