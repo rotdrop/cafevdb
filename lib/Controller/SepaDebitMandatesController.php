@@ -32,6 +32,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Files\SimpleFS\ISimpleFile;
 
@@ -45,6 +46,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 
@@ -58,6 +60,7 @@ class SepaDebitMandatesController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait; // cloud-paths
 
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
@@ -111,7 +114,7 @@ class SepaDebitMandatesController extends Controller
   }
 
   /**
-   * @param string $changed
+   * @param string $changed The name of the changed parameter.
    *
    * @return Response
    *
@@ -528,16 +531,21 @@ class SepaDebitMandatesController extends Controller
   }
 
   /**
+   * @param int $projectId The project-id.
+   *
+   * @param int $musicianId The musician-id.
+   * @param int $bankAccountSequence The bank-account sequence (per-musician sequence count).
+   * @param int $mandateSequence The debit-mandate sequence (per-musician sequence count).
    *
    * @return Response
    *
    * @NoAdminRequired
    */
   public function mandateForm(
-    $projectId,
-    $musicianId,
-    $bankAccountSequence,
-    $mandateSequence,
+    int $projectId,
+    int $musicianId,
+    int $bankAccountSequence,
+    int $mandateSequence,
   ):Response {
 
     // @todo
@@ -733,6 +741,8 @@ class SepaDebitMandatesController extends Controller
     return self::dataResponse($responseData);
   }
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
+
   /**
    * @return Response
    *
@@ -764,9 +774,7 @@ class SepaDebitMandatesController extends Controller
     $requiredKeys = [
       'musicianId',
       'bankAccountIBAN',
-      // 'bankAccountBLZ', // @todo maybe get rid of it
-        // 'bankAccountBIC', // @todo maybe get rid of it
-        'bankAccountOwner',
+      'bankAccountOwner',
     ];
 
     if (!empty($mandateSequence) || !empty($mandateRegistration)) {
@@ -943,52 +951,12 @@ class SepaDebitMandatesController extends Controller
       $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
     }
 
-    $uploadFile = null;
-    /** @var Entities\EncryptedFile $writtenMandate */
-    $writtenMandate = $debitMandate->getWrittenMandate();
-    if (!empty($writtenMandateFileUpload)) {
-      /** @var AppStorage $appStorage */
-      $appStorage = $this->di(AppStorage::class);
-
-      /** @var ISimpleFile $uploadFile */
-      $uploadFile = $appStorage->getUploadFile($writtenMandateFileUpload);
-      $fileContents = $uploadFile->getContent();
-
-      /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-      $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-      $mimeType = $mimeTypeDetector->detectString($fileContents);
-
-      $writtenMandateFileName = $mandateReference;
-      $extension = Util::fileExtensionFromMimeType($mimeType);
-      if (!empty($extension)) {
-        $writtenMandateFileName .= '.' . $extension;
-      }
-
-      if (empty($writtenMandate)) {
-        $writtenMandate = new Entities\EncryptedFile(
-          fileName: $writtenMandateFileName,
-          data: $fileContents,
-          mimeType: $mimeType,
-          owner: $musician
-        );
-      } else {
-        $writtenMandate
-          ->setFileName($writtenMandateFileName)
-          ->setMimeType($mimeType)
-          ->setSize($uploadFile->getSize())
-          ->getFileData()->setData($fileContents);
-      }
-      $writtenMandate->setOriginalFileName($uploadPlaceholder);
-      $this->persist($writtenMandate);
-    }
-
     // set the new values
     $debitMandate->setSepaBankAccount($bankAccount)
       ->setMandateDate($mandateDate)
       ->setNonRecurring($mandateNonRecurring)
       ->setMandateReference($mandateReference)
-      ->setLastUsedDate($mandateLastUsedDate)
-      ->setWrittenMandate($writtenMandate);
+      ->setLastUsedDate($mandateLastUsedDate);
 
     do {
       try {
@@ -1005,26 +973,36 @@ class SepaDebitMandatesController extends Controller
       }
     } while ($debitMandate->getSequence() === null);
 
-    if (!empty($uploadFile)) {
-      $uploadFile->delete();
-    }
+    $messages = [
+      $this->l->t(
+        'Successfully stored the bank-account with IBAN "%s" and owner "%s"',
+        [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]
+      ),
+      $this->l->t(
+        'Successfully stored the debit-mandate with reference "%s" for the IBAN "%s".',
+        [ $debitMandate->getMandateReference(), $bankAccount->getIban()]
+      ),
+    ];
 
     if (!empty($writtenMandateFileUpload)) {
-      // make sure the user-folder exists
-      $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $debitMandate->getMusician(), dry: false);
+      $files = $this->prepareUploadInfo($writtenMandateFileUpload, optionKey: 0, multiple: false);
+
+      if ($files instanceof DataResponse) {
+        $uploadMessages = self::getResponseMessages($files);
+        if (empty($uploadMessages)) {
+          $uploadMessages = [ $this->l->t('Unknown upload failure.') ];
+        }
+      } else {
+        // this handles the entire storage logic, including hard-links and
+        // moving cloud-files.
+        $uploadResponse = $this->storeMandateHardCopy($files, $debitMandate);
+        $uploadMessages = self::getResponseMessages($uploadResponse);
+      }
+      $messages = array_merge($messages, $uploadMessages);
     }
 
     $responseData = [
-      'message' => [
-        $this->l->t(
-          'Successfully stored the bank-account with IBAN "%s" and owner "%s"',
-          [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]
-        ),
-        $this->l->t(
-          'Successfully stored the debit-mandate with reference "%s" for the IBAN "%s".',
-          [ $debitMandate->getMandateReference(), $bankAccount->getIban()]
-        ),
-      ],
+      'message' => $messages,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'bankAccountSequence' => $bankAccount->getSequence(),
@@ -1035,18 +1013,25 @@ class SepaDebitMandatesController extends Controller
     return self::dataResponse($responseData);
   }
 
+  // phpcs:enable
+
   /**
-   * Pre-fill the configured PDF-form with the values of the
-   * form-element.
+   * Pre-fill the configured PDF-form with the values of the geven musician
+   *
+   * @param null|int $projectId The project-id.
+   *
+   * @param int $musicianId The musician-id.
+   *
+   * @param int $bankAccountSequence The bank-account-sequence.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
   public function preFilledMandateForm(
-    $projectId,
-    $musicianId,
-    $bankAccountSequence,
+    ?int $projectId,
+    int $musicianId,
+    int $bankAccountSequence,
   ):Response {
 
     if (empty($projectId)) {
@@ -1074,36 +1059,56 @@ class SepaDebitMandatesController extends Controller
   }
 
   /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function mandateDelete($musicianId, $mandateSequence):Response
+  public function mandateDelete(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
   }
 
   /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function mandateDisable($musicianId, $mandateSequence):Response
+  public function mandateDisable(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
   }
 
   /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function mandateReactivate($musicianId, $mandateSequence):Reponse
+  public function mandateReactivate(int $musicianId, int $mandateSequence):Reponse
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
   }
 
   /**
+   * @param string $operation One of HARDCOPY_ACTION_UPLOAD or HARDCOPY_ACTION_DELETE.
+   *
+   * @param int $musicianId The musician-id.
+   *
+   * @param null|int $mandateSequence The mandate-sequence.
+   *
+   * @param bool $force Whether to enforce the operation.
+   *
    * @return Response
    *
    * @NoAdminRequired
@@ -1119,7 +1124,6 @@ class SepaDebitMandatesController extends Controller
         $musicianId = $uploadData['fieldId'];
         $mandateSequence = $uploadData['optionKey'];
         $files = $this->parameterService['files'];
-        $filesAppPath = $uploadData['filesAppPath']??null;
         break;
       case self::HARDCOPY_ACTION_DELETE:
         $mandateSequence = $this->parameterService['optionKey'];
@@ -1151,195 +1155,8 @@ class SepaDebitMandatesController extends Controller
           return $files;
         }
 
-        $file = array_shift($files); // only one
-        if ($file['error'] != UPLOAD_ERR_OK) {
-          return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
-        }
+        return $this->storeMandateHardCopy($files, $debitMandate);
 
-        /** @var UserStorage $userStorage */
-        $userStorage = $this->di(UserStorage::class);
-
-        $originalFilePath = $file['original_name'] ?? null;
-        $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
-
-        switch ($uploadMode) {
-          case UploadsController::UPLOAD_MODE_MOVE:
-            if (empty($originalFilePath)) {
-              return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
-            }
-            $originalFile = $userStorage->get($originalFilePath);
-            if (empty($originalFile)) {
-              return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
-            }
-            break;
-          case UploadsController::UPLOAD_MODE_LINK:
-            $originalFileId = $file['original_name'];
-            if (empty($originalFileId)) {
-              return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
-            }
-            $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
-            if (empty($originalFile)) {
-              return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
-            }
-            $originalFilePath = $originalFile->getFileName();
-            break;
-          case UploadsController::UPLOAD_MODE_COPY:
-            // this is the default, nothing special
-            break;
-        }
-
-        $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
-
-        /** @var Entities\EncryptedFile $writtenMandate */
-        $writtenMandate = $debitMandate->getWrittenMandate();
-
-        $conflict = null;
-        $this->entityManager->beginTransaction();
-        try {
-
-          switch ($uploadMode) {
-            case UploadsController::UPLOAD_MODE_MOVE:
-              $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
-              // no break
-            case UploadsController::UPLOAD_MODE_COPY:
-              $fileContent = $this->getUploadContent($file);
-
-              /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-              $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
-              $mimeType = $mimeTypeDetector->detectString($fileContent);
-
-              if (!empty($writtenMandate) && $writtenMandate->numberOfLinks() > 1) {
-                // if the file has multiple links then it is probably
-                // better to remove the existing file rather than
-                // overwriting a file which has multiple links.
-                if (!empty($writtenMandate->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
-                }
-                $debitMandate->setWrittenMandate(null); // will decrease the link-count
-                $writtenMandate = null;
-              }
-
-              if (empty($writtenMandate)) {
-                $writtenMandate = new Entities\EncryptedFile(
-                  data: $fileContent,
-                  mimeType: $mimeType,
-                  owner: $debitMandate->getMusician()
-                );
-              } else {
-                $conflict = 'replaced';
-                $writtenMandate
-                  ->setMimeType($mimeType)
-                  ->setSize(strlen($fileContent))
-                  ->getFileData()->setData($fileContent);
-              }
-              $writtenMandate->setOriginalFileName($originalFileName);
-
-              break;
-            case UploadsController::UPLOAD_MODE_LINK:
-              $fileContent = null;
-              /** @var Entities\EncryptedFile $originalFile */
-              if (!empty($writtenMandate) && $writtenMandate->getId() == $originalFileId) {
-                return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
-                  $originalFile->getFileName(), $originalFileId
-                ]));
-              }
-              if (!empty($writtenMandate)) {
-                if ($writtenMandate->getNumberOfLinks() == 0) {
-                  $this->remove($writtenMandate, flush: true);
-                } elseif (!empty($writtenMandate->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
-                }
-              }
-              $writtenMandate = $originalFile;
-              $mimeType = $writtenMandate->getMimeType();
-              break;
-          }
-
-          // somewhat questionable, as this way even when linking the
-          // supporting document file-name will take precedence over the
-          // "real" file-name
-          $writtenMandateFileName = $mandateReference;
-          $extension = Util::fileExtensionFromMimeType($mimeType);
-          if (!empty($extension)) {
-            $writtenMandateFileName .= '.' . $extension;
-          }
-          $originalFileName = $writtenMandate->getFileName();
-          if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
-            $writtenMandate->setOriginalFileName($originalFileName);
-          }
-          $writtenMandate->setFileName($writtenMandateFileName);
-
-          $this->persist($writtenMandate);
-          $debitMandate->setWrittenMandate($writtenMandate);
-          $this->flush();
-
-          $this->entityManager->commit();
-        } catch (\Throwable $t) {
-          $this->logException($t);
-          $this->entityManager->rollback();
-          $exceptionChain = $this->exceptionChainData($t);
-          $exceptionChain['message'] =
-            $this->l->t('Error, caught an exception. No changes were performed.');
-          return self::grumble($exceptionChain);
-        }
-
-        if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
-          $this->removeStashedFile($file);
-        }
-
-        $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-          'section' => 'database',
-          'object' => $writtenMandate->getId(),
-        ])
-          . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
-          . '&fileName=' . urlencode($writtenMandateFileName);
-
-        $filesAppLink = '';
-        try {
-          if (!empty($filesAppPath)) {
-            $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
-          }
-        } catch (\Throwable $t) {
-          $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
-        }
-
-        unset($file['tmp_name']);
-
-        switch ($uploadMode) {
-          case UploadsController::UPLOAD_MODE_COPY:
-            $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $writtenMandateFileName ]);
-            break;
-          case UploadsController::UPLOAD_MODE_MOVE:
-            $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $writtenMandateFileName ]);
-            break;
-          case UploadsController::UPLOAD_MODE_LINK:
-            $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $writtenMandateFileName ]);
-            break;
-        }
-        $file['message'] = $message;
-        $file['name'] = $writtenMandateFileName;
-
-        $pathInfo = pathinfo($writtenMandateFileName);
-
-        $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $debitMandate->getMusician(), dry: false);
-
-        $file['meta'] = [
-          'musicianId' => $musicianId,
-          'projectId' => $debitMandate->getProject()->getId(),
-          // 'pathChain' => $pathChain, ?? needed ??
-          'dirName' => $pathInfo['dirname'],
-          'baseName' => $pathInfo['basename'],
-          'extension' => $pathInfo['extension']??'',
-          'fileName' => $pathInfo['filename'],
-          'download' => $downloadLink,
-          'filesApp' => $filesAppLink,
-          'conflict' => $conflict,
-          'messages' => $message,
-        ];
-
-        return self::dataResponse([ $file ]);
       case self::HARDCOPY_ACTION_DELETE:
         $writtenMandate = $debitMandate->getWrittenMandate();
         if (empty($writtenMandate)) {
@@ -1371,8 +1188,230 @@ class SepaDebitMandatesController extends Controller
     return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
 
-  private function handleMandateRevocation($musicianId, $mandateSequence, $operation)
+  /**
+   * @param array $files File upload data as prepared by
+   * FileUploadRowTrait::prepareUploadInfo().
+   *
+   * @param Entities\SepaDebitMandate $debitMandate The mandate to work on.
+   *
+   * @return DataResponse A response object.
+   */
+  private function storeMandateHardCopy(array $files, Entities\SepaDebitMandate $debitMandate):DataResponse
   {
+    $file = array_shift($files); // only one
+
+    if ($file['error'] != UPLOAD_ERR_OK) {
+      return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
+    }
+
+    $musician = $debitMandate->getMusician();
+    $project = $debitMandate->getProject();
+    $mandateReference = $debitMandate->getMandateReference();
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $originalFilePath = $file['original_name'] ?? null;
+    $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
+
+    switch ($uploadMode) {
+      case UploadsController::UPLOAD_MODE_MOVE:
+        if (empty($originalFilePath)) {
+          return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
+        }
+        $originalFile = $userStorage->get($originalFilePath);
+        if (empty($originalFile)) {
+          return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
+        }
+        break;
+      case UploadsController::UPLOAD_MODE_LINK:
+        $originalFileId = $file['original_name'];
+        if (empty($originalFileId)) {
+          return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
+        }
+        $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
+        if (empty($originalFile)) {
+          return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
+        }
+        $originalFilePath = $originalFile->getFileName();
+        break;
+      case UploadsController::UPLOAD_MODE_COPY:
+        // this is the default, nothing special
+        break;
+    }
+
+    $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
+
+    /** @var Entities\EncryptedFile $writtenMandate */
+    $writtenMandate = $debitMandate->getWrittenMandate();
+
+    $conflict = null;
+    $this->entityManager->beginTransaction();
+    try {
+
+      switch ($uploadMode) {
+        case UploadsController::UPLOAD_MODE_MOVE:
+          $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
+          // no break
+        case UploadsController::UPLOAD_MODE_COPY:
+          $fileContent = $this->getUploadContent($file);
+
+          /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+          $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+          $mimeType = $mimeTypeDetector->detectString($fileContent);
+
+          if (!empty($writtenMandate) && $writtenMandate->getNumberOfLinks() > 1) {
+            // if the file has multiple links then it is probably
+            // better to remove the existing file rather than
+            // overwriting a file which has multiple links.
+            if (!empty($writtenMandate->getOriginalFileName())) {
+              // undo greedily modified filename
+              $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
+            }
+            $debitMandate->setWrittenMandate(null); // will decrease the link-count
+            $writtenMandate = null;
+          }
+
+          if (empty($writtenMandate)) {
+            $writtenMandate = new Entities\EncryptedFile(
+              data: $fileContent,
+              mimeType: $mimeType,
+              owner: $musician,
+            );
+          } else {
+            $conflict = 'replaced';
+            $writtenMandate
+              ->setMimeType($mimeType)
+              ->setSize(strlen($fileContent))
+              ->getFileData()->setData($fileContent);
+          }
+          $writtenMandate->setOriginalFileName($originalFileName);
+
+          break;
+        case UploadsController::UPLOAD_MODE_LINK:
+          $fileContent = null;
+          /** @var Entities\EncryptedFile $originalFile */
+          if (!empty($writtenMandate) && $writtenMandate->getId() == $originalFileId) {
+            return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
+              $originalFile->getFileName(), $originalFileId
+            ]));
+          }
+          if (!empty($writtenMandate)) {
+            if ($writtenMandate->getNumberOfLinks() == 0) {
+              $this->remove($writtenMandate, flush: true);
+            } elseif (!empty($writtenMandate->getOriginalFileName())) {
+              // undo greedily modified filename
+              $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
+            }
+          }
+          $writtenMandate = $originalFile;
+          $mimeType = $writtenMandate->getMimeType();
+          break;
+      }
+
+      // somewhat questionable, as this way even when linking the
+      // supporting document file-name will take precedence over the
+      // "real" file-name
+      $writtenMandateFileName = $mandateReference;
+      $extension = Util::fileExtensionFromMimeType($mimeType);
+      if (!empty($extension)) {
+        $writtenMandateFileName .= '.' . $extension;
+      }
+      $originalFileName = $writtenMandate->getFileName();
+      if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
+        $writtenMandate->setOriginalFileName($originalFileName);
+      }
+      $writtenMandate->setFileName($writtenMandateFileName);
+
+      $this->persist($writtenMandate);
+      $debitMandate->setWrittenMandate($writtenMandate);
+      $this->flush();
+
+      $this->entityManager->commit();
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      $exceptionChain = $this->exceptionChainData($t);
+      $exceptionChain['message'] =
+        $this->l->t('Error, caught an exception. No changes were performed.');
+      return self::grumble($exceptionChain);
+    }
+
+    if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+      $this->removeStashedFile($file);
+    }
+
+    $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+      'section' => 'database',
+      'object' => $writtenMandate->getId(),
+    ])
+      . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+      . '&fileName=' . urlencode($writtenMandateFileName);
+
+    $filesAppLink = '';
+    try {
+      $filesAppPath = implode(
+        UserStorage::PATH_SEP, [
+          $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $musician, dry: true),
+          $this->getDocumentsFolderName(),
+          $this->getDebitMandatesFolderName(),
+        ]);
+      $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
+    } catch (\Throwable $t) {
+      $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
+    }
+
+    unset($file['tmp_name']);
+
+    switch ($uploadMode) {
+      case UploadsController::UPLOAD_MODE_COPY:
+        $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $writtenMandateFileName ]);
+        break;
+      case UploadsController::UPLOAD_MODE_MOVE:
+        $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $writtenMandateFileName ]);
+        break;
+      case UploadsController::UPLOAD_MODE_LINK:
+        $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $writtenMandateFileName ]);
+        break;
+    }
+    $file['message'] = $message;
+    $file['name'] = $writtenMandateFileName;
+
+    $pathInfo = pathinfo($writtenMandateFileName);
+
+    $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
+
+    $file['meta'] = [
+      'musicianId' => $musician->getId(),
+      'projectId' => $project->getId(),
+      // 'pathChain' => $pathChain, ?? needed ??
+      'dirName' => $pathInfo['dirname'],
+      'baseName' => $pathInfo['basename'],
+      'extension' => $pathInfo['extension']??'',
+      'fileName' => $pathInfo['filename'],
+      'download' => $downloadLink,
+      'filesApp' => $filesAppLink,
+      'conflict' => $conflict,
+      'messages' => $message,
+    ];
+
+    return self::dataResponse([ $file ]);
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
+   * @param string $operation The operation to perform.
+   *
+   * @return Response
+   */
+  private function handleMandateRevocation(
+    int $musicianId,
+    int $mandateSequence,
+    string $operation,
+  ):Response {
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -1441,53 +1480,53 @@ class SepaDebitMandatesController extends Controller
   }
 
   /**
-   * @param string $musicianId
+   * @param int $musicianId The musician id.
    *
-   * @param string $bankAccountSequence
+   * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function accountDelete(string $musicianId, string $bankAccountSequence):Response
+  public function accountDelete(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
   }
 
   /**
-   * @param string $musicianId
+   * @param int $musicianId The musician id.
    *
-   * @param string $bankAccountSequence
+   * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function accountDisable(string $musicianId, string $bankAccountSequence):Response
+  public function accountDisable(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
   }
 
   /**
-   * @param string $musicianId
+   * @param int $musicianId The musician id.
    *
-   * @param string $bankAccountSequence
+   * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function accountReactivate(string $musicianId, string $bankAccountSequence):Response
+  public function accountReactivate(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');
   }
 
   /**
-   * @param int $musicianId
+   * @param int $musicianId The musician id.
    *
-   * @param int $bankAccountSequence
+   * @param int $bankAccountSequence The bank-account sequence.
    *
-   * @param string $action
+   * @param string $action The action to perform.
    *
    * @return Response
    */
