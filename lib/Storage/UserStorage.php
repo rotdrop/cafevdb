@@ -30,6 +30,8 @@ use \InvalidArgumentException;
 use ZipStream\ZipStream;
 use ZipStream\Option\Archive as ArchiveOptions;
 
+use OC\Files\Storage\Wrapper\Wrapper as WrapperStorage;
+
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\IL10N;
@@ -48,6 +50,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions\Exception;
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Some tweaks to for the user-folder stuff.
@@ -534,10 +537,15 @@ class UserStorage
    *
    * @return null|Entities\EncryptedFile
    */
-  protected function getDatabaseFile(string $cloudPath):?Entities\EncryptedFile
+  public function getDatabaseFile(string $cloudPath):?Entities\EncryptedFile
   {
     $cloudFile = $this->get($cloudPath);
     $storage = $cloudFile->getStorage();
+
+    while ($storage instanceof WrapperStorage) {
+      /** @var WrapperStorage $storage */
+      $storage = $storage->getWrapperStorage();
+    }
 
     if (!($storage instanceof DatabaseStorage)) {
       return null;
