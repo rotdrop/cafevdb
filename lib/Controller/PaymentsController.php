@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -29,6 +30,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationExcepti
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -41,7 +43,9 @@ use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Common\Util;
 
-class PaymentsController extends Controller {
+/** AJAX endpoint to support maintenance of payments. */
+class PaymentsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -53,6 +57,7 @@ class PaymentsController extends Controller {
   /** @var ReqeuestParameterService */
   private $parameterService;
 
+  /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
@@ -68,10 +73,29 @@ class PaymentsController extends Controller {
   }
 
   /**
+   * @param string $operation One of self::DOCUMENT_ACTION_UPLOAD or self::DOCUMENT_ACTION_DELETE.
+   *
+   * @param null|int $musicianId The musician to work on, null if this is a file-upload.
+   *
+   * @param int $projectId The project to work on. This is ATM just
+   * passed-through to the return value.
+   *
+   * @param null|int $compositePaymentId The payment to work on, null if this
+   * is a file-upload.
+   *
+   * @param string $data File upload data if this is a file-upload.
+   *
+   * @return Response
+   *
    * @NoAdminRequired
    */
-  public function documents($operation, $musicianId, $projectId, $compositePaymentId, string $data = '{}')
-  {
+  public function documents(
+    string $operation,
+    ?int $musicianId,
+    int $projectId,
+    ?int $compositePaymentId,
+    string $data = '{}'
+  ):Response {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
@@ -184,14 +208,16 @@ class PaymentsController extends Controller {
             /** @var UserStorage $userStorage */
             $userStorage = $this->di(UserStorage::class);
             $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
-            }
+          }
         } catch (\Throwable $t) {
           $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
         }
 
         unset($file['tmp_name']);
-        $file['message'] = $this->l->t('Upload of "%s" as "%s" successful.',
-                                       [ $file['name'], $supportingDocumentFileName ]);
+        $file['message'] = $this->l->t(
+          'Upload of "%s" as "%s" successful.',
+          [ $file['name'], $supportingDocumentFileName ]
+        );
         $file['name'] = $supportingDocumentFileName;
 
         $pathInfo = pathinfo($supportingDocumentFileName);
@@ -226,7 +252,6 @@ class PaymentsController extends Controller {
     }
     return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
-
 }
 
 // Local Variables: ***
