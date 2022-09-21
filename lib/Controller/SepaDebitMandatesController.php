@@ -1309,19 +1309,19 @@ class SepaDebitMandatesController extends Controller
           break;
       }
 
-      // somewhat questionable, as this way even when linking the
-      // supporting document file-name will take precedence over the
-      // "real" file-name
-      $writtenMandateFileName = $mandateReference;
-      $extension = Util::fileExtensionFromMimeType($mimeType);
-      if (!empty($extension)) {
-        $writtenMandateFileName .= '.' . $extension;
+      if ($writtenMandate->getNumberOfLinks() == 1) {
+        // only tweak the file name if we are the only user.
+        $writtenMandateFileName = $mandateReference;
+        $extension = Util::fileExtensionFromMimeType($mimeType);
+        if (!empty($extension)) {
+          $writtenMandateFileName .= '.' . $extension;
+        }
+        $originalFileName = $writtenMandate->getFileName();
+        if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
+          $writtenMandate->setOriginalFileName($originalFileName);
+        }
+        $writtenMandate->setFileName($writtenMandateFileName);
       }
-      $originalFileName = $writtenMandate->getFileName();
-      if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
-        $writtenMandate->setOriginalFileName($originalFileName);
-      }
-      $writtenMandate->setFileName($writtenMandateFileName);
 
       $this->persist($writtenMandate);
       $debitMandate->setWrittenMandate($writtenMandate);

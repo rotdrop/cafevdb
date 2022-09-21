@@ -243,22 +243,22 @@ class PaymentsController extends Controller
               break;
           }
 
-          // somewhat questionable, as this way even when linking the
-          // supporting document file-name will take precedence over the
-          // "real" file-name
-          $supportingDocumentFileName = basename($supportingDocumentFileName);
-          $extension = Util::fileExtensionFromMimeType($mimeType);
-          if (empty($extension) && $file['name']) {
-            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+          if ($supportingDocument->getNumberOfLinks() ==  1) {
+            // only tweak the file name if we are the only user.
+            $supportingDocumentFileName = basename($supportingDocumentFileName);
+            $extension = Util::fileExtensionFromMimeType($mimeType);
+            if (empty($extension) && $file['name']) {
+              $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            }
+            if (!empty($extension)) {
+              $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
+            }
+            $originalFileName = $supportingDocument->getFileName();
+            if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
+              $supportingDocument->setOriginalFileName($originalFileName);
+            }
+            $supportingDocument->setFileName($supportingDocumentFileName);
           }
-          if (!empty($extension)) {
-            $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
-          }
-          $originalFileName = $supportingDocument->getFileName();
-          if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
-            $supportingDocument->setOriginalFileName($originalFileName);
-          }
-          $supportingDocument->setFileName($supportingDocumentFileName);
 
           $this->persist($supportingDocument);
           $compositePayment->setSupportingDocument($supportingDocument);
