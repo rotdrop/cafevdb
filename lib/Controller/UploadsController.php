@@ -387,15 +387,16 @@ class UploadsController extends Controller
           ]);
         }
 
-        $file['upload_max_file_size'] = $maxUploadFileSize;
-        $file['max_human_file_size']  = $maxHumanFileSize;
-        $file['original_name'] = $file['name']; // clone
-        $file['upload_mode'] = self::UPLOAD_MODE_COPY;
 
         $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
         if ($file['error'] != UPLOAD_ERR_OK) {
           continue;
         }
+
+        $file['upload_max_file_size'] = $maxUploadFileSize;
+        $file['max_human_file_size']  = $maxHumanFileSize;
+        $file['original_name'] = $file['name']; // clone
+        $file['upload_mode'] = self::UPLOAD_MODE_COPY;
 
         try {
           $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
