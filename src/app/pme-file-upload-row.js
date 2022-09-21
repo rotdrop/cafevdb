@@ -207,7 +207,6 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
               Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
             })
             .done(function(data) {
-              console.info('STASH TEST', data);
 
               const performUpload = function(uploadMode) {
                 $.post(generateUrl(uploadUrls.stash), {
