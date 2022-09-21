@@ -4,7 +4,7 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
@@ -204,30 +204,34 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
         'require-three' => $this->l->t('Type at least three characters to get autocomplete suggestions.'),
       ],
-      'blog-acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
+      'blog' => [
+        'acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
 
-      'blog-cancelentry' => $this->l->t('Discard the changes for this blog-entry.'),
+        'cancelentry' => $this->l->t('Discard the changes for this blog-entry.'),
 
-      'blog-newentry' => $this->l->t('Write a new bulletin entry.'),
+        'newentry' => $this->l->t('Write a new bulletin entry.'),
 
-      'blog-popup-clear' => $this->l->t('Disable the pop-up function for this blog-note. The list of associated readers is maintained, so reenabling the pop-up function will still not present this note to users already on the reader-list.'),
+        'popup-clear' => $this->l->t('Disable the pop-up function for this blog-note. The list of associated readers is maintained, so reenabling the pop-up function will still not present this note to users already on the reader-list.'),
 
-      'blog-popup-set' => $this->l->t('Place this note in a pop-up window after login. The window will only pop-up once, the list of readers is remembered.'),
+        'popup-set' => $this->l->t('Place this note in a pop-up window after login. The window will only pop-up once, the list of readers is remembered.'),
 
-      'blog-priority' => $this->l->t('Change the display-priority. Entries with higher priority are
+        'priority' => $this->l->t('Change the display-priority. Entries with higher priority are
 displayed closer to the top of the page.'),
 
-      'blog-reader-clear' => $this->l->t('Clear the list of readers of this note. Consequently, if this note is marked as popup, then it will pop-up again after clearing the list of readers.'),
+        'reader-clear' => $this->l->t('Clear the list of readers of this note. Consequently, if this note is marked as popup, then it will pop-up again after clearing the list of readers.'),
 
-      'blogentry-delete' => $this->l->t('Delete the message and the message-thread depending on this message.'),
+        'entry' => [
+          'delete' => $this->l->t('Delete the message and the message-thread depending on this message.'),
 
-      'blogentry-edit' => $this->l->t('Edit the bulletin entry; everyone is allowed to do so.'),
+          'edit' => $this->l->t('Edit the bulletin entry; everyone is allowed to do so.'),
 
-      'blogentry-lower' => $this->l->t('Decrease the display priority; move the note closer to the bottom of the page.'),
+          'lower' => $this->l->t('Decrease the display priority; move the note closer to the bottom of the page.'),
 
-      'blogentry-raise' => $this->l->t('Increase the display priority; move the note closer to the top of the page.'),
+          'raise' => $this->l->t('Increase the display priority; move the note closer to the top of the page.'),
 
-      'blogentry-reply' => $this->l->t('Write a follow-up to the bulletin entry.'),
+          'reply' => $this->l->t('Write a follow-up to the bulletin entry.'),
+        ],
+      ],
 
       'club-member-project' => $this->l->t('Name of the pseudo-project listing the permanent members of the orchestra.'),
 
@@ -261,6 +265,10 @@ opened.'),
 
       'bulk-transaction-download' => $this->l->t('Download the data-set of this bulk-transaction for transferal to our bank
 institute.'),
+
+
+        'cloud-file-system-operations' => [
+        ],
 
       'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use. Debug output can be found in the log-file.'),
 
