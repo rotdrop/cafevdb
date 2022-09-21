@@ -402,7 +402,7 @@ class UploadsController extends Controller
           $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
           $this->appStorage->moveFileSystemFile($file['tmp_name'], $uploadFile);
           $file['name'] = $uploadFile->getName();
-          $file['tmp_name'] = AppStorage::PATH_SEP.$uploadFolder.AppStorage::PATH_SEP.$file['name'];
+          $file['tmp_name'] = $file['name'];
         } catch (\Throwable $t) {
           $file['error'] = 99;
           $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);

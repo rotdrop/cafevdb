@@ -26,18 +26,14 @@ import { appName } from './app-info.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
-import * as Page from './page.js';
 import * as Notification from './notification.js';
-import { tableDialogLoadIndicator } from './pme.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
-import { close as closeActionMenus } from './action-menu.js';
 import generateUrl from './generate-url.js';
 import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
-import modalizer from './modalizer.js';
-import { parse as pathParse } from 'path';
-import escapeHtml from 'escape-html';
+import setAppBusyIndicators from './busy-indicators.js';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -98,18 +94,11 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   unmaskInputs();
 
   const setBusyIndicators = function(state) {
+    setAppBusyIndicators(state, $pmeContainer);
     if (state) {
-      tableDialogLoadIndicator($pmeContainer, true);
-      Page.busyIcon(true);
       $thisRow.addClass('busy');
-      modalizer(true);
     } else {
-      Page.busyIcon(false);
-      tableDialogLoadIndicator($pmeContainer, false);
       $thisRow.removeClass('busy');
-      modalizer(false);
-      unmaskInputs();
-      closeActionMenus();
       unmaskInputs();
     }
   };
@@ -187,143 +176,30 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       const filePickerCaption = filePickerObject
         ? t(appName, 'Select cloud-files for {object}', { object: filePickerObject })
         : t(appName, 'Select a file from the cloud');
-      Dialogs.filePicker(
+
+      cloudFilePickerDialog({
+        setup: () => setBusyIndicators(true),
+        cleanup: () => setBusyIndicators(false),
         filePickerCaption,
-        function(paths) {
-          setBusyIndicators(true);
-          if (!paths) {
-            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-            setBusyIndicators(false);
-            return;
-          }
-          if (!Array.isArray(paths)) {
-            paths = [paths];
-          }
-          $.post(generateUrl(uploadUrls.stash), {
-            cloudPaths: paths,
-            uploadMode: 'test',
-          })
+        stashUrl: uploadUrls.stash,
+        multiple: uploadMultiple,
+        initialCloudFolder: $thisRow.data('participantFolder'),
+        handlePickedFiles(files, paths, cleanup) {
+          const formData = $uploadUi.find('form').serializeArray();
+          formData.push({ name: 'files', value: JSON.stringify(files) });
+          $.post(generateUrl(uploadUrls.upload), formData)
             .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
+              Ajax.handleError(xhr, status, errorThrown, cleanup);
             })
             .done(function(data) {
-
-              const performUpload = function(uploadMode) {
-                $.post(generateUrl(uploadUrls.stash), {
-                  cloudPaths: paths,
-                  uploadMode,
-                })
-                  .fail(function(xhr, status, errorThrown) {
-                    Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
-                  })
-                  .done(function(files) {
-                    if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
-                      Dialogs.alert(
-                        t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
-                        t(appName, 'Error'),
-                        function() {
-                          setBusyIndicators(false);
-                        });
-                      return;
-                    }
-                    const formData = $uploadUi.find('form').serializeArray();
-                    formData.push({ name: 'files', value: JSON.stringify(files) });
-                    $.post(generateUrl(uploadUrls.upload), formData)
-                      .fail(function(xhr, status, errorThrown) {
-                        Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
-                      })
-                      .done(function(data) {
-                        $.each(data, function(index, file) {
-                          doneCallback(file, index, $uploadUi);
-                        });
-                        setBusyIndicators(false);
-                        $thisRow.trigger('pme:upload-done');
-                      });
-                  });
-              };
-
-              const uploadFiles = [];
-              const allUploadModes = ['copy', 'move', 'link'];
-              let uploadModes = allUploadModes;
-              for (const uploadInfo of data) {
-                uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));
-                uploadFiles.push(pathParse(uploadInfo.original_name));
-              }
-              const templateParameters = {
-                operations: uploadModes.join(' '),
-                files: uploadFiles.map(
-                  (info) => `<span class="file-node tooltip-auto tooltip-wide"
-      title="${escapeHtml(info.dir + '/' + info.base)}"
->
-  <span class="dirname">${escapeHtml(info.dir)}/</span>
-  <span class="basename">${escapeHtml(info.base)}</span>
-</span>`).join(''),
-                widgetCssClass: 'cloud-file-system-operations',
-                widgetRadioName: 'cloudFileSystemOperations',
-              };
-              for (const mode of allUploadModes) {
-                templateParameters[mode + 'Selected'] = '';
-                templateParameters[mode + 'CssClass'] = mode + '-control';
-                if (uploadModes.includes(mode)) {
-                  templateParameters[mode + 'Disabled'] = '';
-                  templateParameters[mode + 'CssClass'] += ' enabled';
-                } else {
-                  templateParameters[mode + 'Disabled'] = 'disabled';
-                  templateParameters[mode + 'CssClass'] += ' disabled';
-                }
-              }
-              templateParameters.copySelected = 'checked';
-
-              const $fileSystemOps = $('#cloudFileSystemOperations').octemplate(
-                templateParameters,
-                { escapeFunction: (x) => x }
-              );
-
-              let uploadMode = 'copy';
-              $('body')
-                .off('change', 'input.cloud-file-system-operations-input')
-                .on('change', 'input.cloud-file-system-operations-input', function(event) {
-                  uploadMode = $(this).val();
-                  console.info('UPLOAD MODE', uploadMode);
-                });
-              $('body')
-                .on('open', '#oc-dialog-0-content', function(event) {
-                  console.info('DIALOG OPENED', event);
-                });
-
-              Dialogs.confirm(
-                $fileSystemOps.html(),
-                t(appName, 'Select File System Operation'), {
-                  callback(answer) {
-                    console.info('UPLOAD MODE', uploadMode);
-                    if (answer) {
-                      performUpload(uploadMode);
-                    } else {
-                      setBusyIndicators(false);
-                      Notification.messages(t(appName, 'Operation has been cancelled.'));
-                    }
-                  },
-                  buttons: {
-                    type: OC.dialogs.YES_NO_BUTTONS,
-                    confirm: t(appName, 'Apply'),
-                    cancel: t(appName, 'Cancel'),
-                  },
-                  modal: true,
-                  allowHtml: true,
-                }
-              )
-                .then(function() {
-                  $('.oc-dialog .oc-dialog-content .cloud-file-system-operations-wrapper .tooltip-auto').cafevTooltip();
-                });
-
+              $.each(data, function(index, file) {
+                doneCallback(file, index, $uploadUi);
+              });
+              cleanup();
+              $thisRow.trigger('pme:upload-done');
             });
         },
-        uploadMultiple,
-        undefined, // mimetypeFilter
-        undefined, // modal
-        undefined, // type
-        $thisRow.data('participantFolder'),
-      );
+      });
       $.fn.cafevTooltip.remove();
       return false;
     });
