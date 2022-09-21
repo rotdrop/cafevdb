@@ -6,31 +6,33 @@
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use \RuntimeException;
 
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
-/** Tool-tips management with translations.
- *
- * @todo Perhaps base on \ArrayObject
- */
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+
+/** Tool-tips management with translations. */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -53,12 +55,12 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var array */
   private $failedKeys = [];
 
+  /** {@inheritdoc} */
   public function __construct(
     IAppContainer $appContainer,
     IL10N $l,
     ILogger $logger,
   ) {
-    $this->appName = $appName;
     $this->logger = $logger;
     $this->l = $l;
     $this->toolTipsData = [];
@@ -74,74 +76,94 @@ class ToolTipsService implements \ArrayAccess, \Countable
     }
   }
 
-  public function debug($debug = null) {
+  /**
+   * Enable debug-messages.
+   *
+   * @param null|bool $debug If null, just return the setting, otherwise enable or
+   * disabled debug-mode.
+   *
+   * @return bool The current debug-mode enabled setting.
+   */
+  public function debug(?bool $debug = null):bool
+  {
     if ($debug === true || $debug === false) {
       $this->debug = $debug;
     }
     return $this->debug;
   }
 
-  public function getLastKey()
+  /**
+   * Get the argument of ToolTipsService::fetch($key) of the most recent call.
+   *
+   * @return null|string
+   */
+  public function getLastKey():?string
   {
     return $this->lastKey;
   }
 
-  public function getFailedKeys()
+  /**
+   * Return the array of failed tooltip-searches after the last successful
+   * call.
+   *
+   * @return array
+   */
+  public function getFailedKeys():array
   {
     return $this->failedKeys;
   }
 
-  public function toolTips() {
+  /**
+   * Return all tooltips contained in this class.
+   *
+   * @return array
+   */
+  public function toolTips():array
+  {
     $this->makeToolTips();
     return $this->toolTipsData;
   }
 
-  /**
-   * Countable method
-   * @return int
-   */
-  public function count(): int {
+  /** {@inheritdoc} */
+  public function count():int
+  {
     $this->makeToolTips();
     return \count($this->toolTipsData);
   }
 
-  /**
-   * ArrayAccess methods
-   *
-   * @param string $offset The key to lookup
-   * @return boolean
-   */
-  public function offsetExists($offset): bool {
+  /** {@inheritdoc} */
+  public function offsetExists(mixed $offset):bool
+  {
     return $this->fetch($offset) !== null;
   }
 
-  /**
-   * @see offsetExists
-   * @param string $offset
-   * @return mixed
-   */
-  public function offsetGet($offset) {
+  /** {@inheritdoc} */
+  public function offsetGet($offset)
+  {
     return $this->fetch($offset);
   }
 
-  /**
-   * @see offsetExists
-   * @param string $offset
-   * @param mixed $value
-   */
-  public function offsetSet($offset, $value) {
-    throw new \RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
+  /** {@inheritdoc} */
+  public function offsetSet($offset, $value)
+  {
+    throw new RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
+  }
+
+  /** {@inheritdoc} */
+  public function offsetUnset($offset)
+  {
+    throw new RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
 
   /**
-   * @see offsetExists
-   * @param string $offset
+   * Pre-process the given $key, replacing some known prefix separated by the
+   * standard separator.
+   *
+   * @param string $key The key to process.
+   *
+   * @return string
    */
-  public function offsetUnset($offset) {
-    throw new \RuntimeException($this->l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
-  }
-
-  private function preProcessKey($key)
+  private function preProcessKey(string $key):string
   {
     foreach (self::SUBKEY_PREFIXES as $prefix) {
       if (strpos($key, $prefix . '-') === 0) {
@@ -154,9 +176,13 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /**
    * Return a translated tool-tip for the given key.
    *
-   * @param string $key
+   * @param string $key The tool-tip key to look up.
+   *
+   * @param bool $escape Escape HTML entities.
+   *
+   * @return null|string
    */
-  public function fetch($key, bool $escape = true)
+  public function fetch(string $key, bool $escape = true):?string
   {
     $this->lastKey = $key;
     $this->makeToolTips();
@@ -165,7 +191,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
     $key = $this->preprocessKey($key);
 
     $keys = explode(self::SUB_KEY_SEP, $key);
-    while (count($keys) > 0) {
+    while (\count($keys) > 0) {
       $key = array_shift($keys);
       $toolTipsData = $toolTipsData[$key]??($toolTipsData['default']??null);
     }
@@ -194,6 +220,12 @@ class ToolTipsService implements \ArrayAccess, \Countable
     return empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
   }
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
+
+  /**
+   * Generate the tooltips-data. This is primarily not static because the
+   * translation function is not static.
+   */
   private function makeToolTips()
   {
     if (!empty($this->toolTipsData)) {
@@ -700,7 +732,8 @@ simply marked as "disabled" and normally are hidden from sight.'),
 
       'clouddev-link' => $this->l->t('Web-link to the current Cloud developer documentation.'),
 
-      'payment-status' => $this->l->t('Status of outstanding project fees:
+      'payment-status' => $this->l->t(
+        'Status of outstanding project fees:
 <dl>
 <dt>%s</dt>
 <dd>Project-fees are just entirely outstanding yet.</dd>
@@ -748,12 +781,12 @@ project. Please click the
 actually add all selected
 musicians.'),
 
-        'cancel' => array(
-        'default' => $this->l->t('Stop the current operation. Settings which already have been stored by
+        'cancel' => [
+          'default' => $this->l->t('Stop the current operation. Settings which already have been stored by
 hitting an "Apply" button are maintained, though. You will be returned
 to the previous view.'),
-        'canceldelete' => $this->l->t('Stop the current operation. You will be returned to the previous view.'),
-      ),
+          'canceldelete' => $this->l->t('Stop the current operation. You will be returned to the previous view.'),
+        ],
 
         'change' => $this->l->t('Directs you to a form with input fields. From there you can return to
 this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
@@ -1143,10 +1176,11 @@ sent us a signed registration form. It is left blannk otherwise.'),
 
       'sepa-instant-validation' => $this->l->t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
 
-      'sepa-mandate-expired' => $this->l->t('This debit-mandate has not been used for more than %d month and
+      'sepa-mandate-expired' => $this->l->t(
+        'This debit-mandate has not been used for more than %d month and
 therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
-                                            array('Finance::SEPA_MANDATE_EXPIRE_MONTHS')
+        FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
       ),
 
       'sharedfolder' => $this->l->t('Folder shared by the orchestra group.'),
@@ -1264,7 +1298,7 @@ configuration storage if the test can be performed successfully.'),
 
     ];
   } // method makeToolTips()
-}; // class toolTips
+} // class toolTips
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
