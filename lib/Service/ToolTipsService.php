@@ -33,10 +33,10 @@ use OCP\AppFramework\IAppContainer;
  */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
+
   const SUBKEY_PREFIXES = [ 'pme' ];
   const SUB_KEY_SEP = ':';
-
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var IL10N */
   private $l;
@@ -54,10 +54,11 @@ class ToolTipsService implements \ArrayAccess, \Countable
   private $failedKeys = [];
 
   public function __construct(
-    IAppContainer $appContainer
-    , IL10N $l
-    , ILogger $logger
+    IAppContainer $appContainer,
+    IL10N $l,
+    ILogger $logger,
   ) {
+    $this->appName = $appName;
     $this->logger = $logger;
     $this->l = $l;
     $this->toolTipsData = [];
@@ -233,6 +234,12 @@ displayed closer to the top of the page.'),
         ],
       ],
 
+      'cloud-file-system-operations' => [
+        'copy' => $this->l->t('Copy the source file to the destination.'),
+        'move' => $this->l->t('Move the source file to the destination. That is: the source file will be deleted after successful completion of the operation.'),
+        'link' => $this->l->t('Link the source file to the destination. This currently only works for files backed by the app\'s database-storage. It can be used to link supporting documents to the project-balance, for example.'),
+      ],
+
       'club-member-project' => $this->l->t('Name of the pseudo-project listing the permanent members of the orchestra.'),
 
       'configrecheck' => $this->l->t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
@@ -265,10 +272,6 @@ opened.'),
 
       'bulk-transaction-download' => $this->l->t('Download the data-set of this bulk-transaction for transferal to our bank
 institute.'),
-
-
-        'cloud-file-system-operations' => [
-        ],
 
       'debug-mode' => $this->l->t('Amount of debug output. Keep this disabled for normal use. Debug output can be found in the log-file.'),
 
@@ -1260,7 +1263,6 @@ configuration storage if the test can be performed successfully.'),
       'wysiwyg-edtior' => $this->l->t('Change to another WYSIWYG editor.'),
 
     ];
-
   } // method makeToolTips()
 }; // class toolTips
 
