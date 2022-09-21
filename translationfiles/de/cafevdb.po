@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-21 13:18+0200\n"
-"PO-Revision-Date: 2022-09-21 13:16+0200\n"
+"POT-Creation-Date: 2022-09-21 14:17+0200\n"
+"PO-Revision-Date: 2022-09-21 14:22+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -223,7 +223,7 @@ msgstr ""
 #: lib/Controller/AdminSettingsController.php:254
 #: lib/Controller/PersonalSettingsController.php:1844
 #: lib/Controller/PersonalSettingsController.php:1894
-#: lib/Controller/ProjectParticipantsController.php:880
+#: lib/Controller/ProjectParticipantsController.php:919
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
@@ -286,7 +286,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/PersonalSettingsController.php:281
 #: lib/Controller/ProgressStatusController.php:147
 #: lib/Controller/ProjectEventsController.php:145
-#: lib/Controller/ProjectParticipantsController.php:199
+#: lib/Controller/ProjectParticipantsController.php:203
 #: lib/Controller/ProjectWebPagesController.php:160
 #: lib/Controller/ProjectsController.php:166
 #: lib/Controller/ProjectsController.php:183
@@ -900,7 +900,7 @@ msgid "Error, caught an exception. No changes were performed."
 msgstr "Interner Fehler. Es wurden deshalb keine Änderungen gespeichert."
 
 #: lib/Controller/PaymentsController.php:193
-#: lib/Controller/ProjectParticipantsController.php:836
+#: lib/Controller/ProjectParticipantsController.php:870
 #: lib/Controller/SepaDebitMandatesController.php:1218
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
@@ -1990,32 +1990,32 @@ msgstr "Unbekannte Anfrage \"%s/%s\""
 msgid "Unable to find the option with id \"%1$s\" for field \"%2$s\"."
 msgstr "Kann die Option mit Id \"%1$s\" für das Feld \"%2$s\" nicht finden."
 
-#: lib/Controller/ProjectParticipantsController.php:152
+#: lib/Controller/ProjectParticipantsController.php:156
 msgid "Missing Musician Ids"
 msgstr "Fehlende Musizierende-Ids"
 
-#: lib/Controller/ProjectParticipantsController.php:156
+#: lib/Controller/ProjectParticipantsController.php:160
 msgid "Missing Project Id"
 msgstr "Fehlende Projekt-Id"
 
-#: lib/Controller/ProjectParticipantsController.php:169
+#: lib/Controller/ProjectParticipantsController.php:173
 #, php-format
 msgid "No musician could be added to the project, #failures: %d."
 msgstr ""
 "Keine Person konnte zum Projekt hinzugefügt werden, Anzahl der Fehlschäge: "
 "%d."
 
-#: lib/Controller/ProjectParticipantsController.php:223
+#: lib/Controller/ProjectParticipantsController.php:229
 #, php-format
 msgid "Project- or musician-id is missing (%s/%s)"
 msgstr "Projekt- oder Musizierende-Id fehlt (%s/%s)"
 
-#: lib/Controller/ProjectParticipantsController.php:230
+#: lib/Controller/ProjectParticipantsController.php:236
 #, php-format
 msgid "Unable to fetch project-participant with given key %s"
 msgstr "Kann Projekt-Teilnehmer:in mit der Id %s nicht laden"
 
-#: lib/Controller/ProjectParticipantsController.php:270
+#: lib/Controller/ProjectParticipantsController.php:277
 #, php-format
 msgid ""
 "Denying the attempt to remove the instrument %s because it is used in the "
@@ -2024,7 +2024,7 @@ msgstr ""
 "Erfolgloser Versuch, der Person das Instrument %s zu entziehen, dass er bei "
 "diesem Projekt spielt. "
 
-#: lib/Controller/ProjectParticipantsController.php:277
+#: lib/Controller/ProjectParticipantsController.php:286
 #, php-format
 msgid ""
 "Just marking the instrument \"%1$s\" as disabled because it is still used in "
@@ -2033,7 +2033,7 @@ msgstr ""
 "Das Instrument \"%1$s\" wird nur als gesperrt markiert und nicht gelöscht,\n"
 "weil es immer nur an %2$d anderen Stellen verwendet wird."
 
-#: lib/Controller/ProjectParticipantsController.php:282
+#: lib/Controller/ProjectParticipantsController.php:291
 #, php-format
 msgid ""
 "Removing instrument \"%1$s\" from the list of instruments played by %2$s."
@@ -2041,135 +2041,144 @@ msgstr ""
 "Entferne das Instrument \"%1$s\" aus der Liste der Instrumente, die %2$s "
 "spielen kann"
 
-#: lib/Controller/ProjectParticipantsController.php:291
+#: lib/Controller/ProjectParticipantsController.php:300
 #, php-format
 msgid "Denying the attempt to add an unknown instrument (id = %s)"
 msgstr "Weigere mich, ein unbekanntes Instrument hinzuzufügen (id = %s)"
 
-#: lib/Controller/ProjectParticipantsController.php:296
+#: lib/Controller/ProjectParticipantsController.php:305
 #, php-format
 msgid "Adding instrument \"%s\" to the list of instruments played by \"%s\""
 msgstr ""
 "Füge das Instrument \"%s\" zu den Instrumenten hinzu, die %s spielen kann"
 
-#: lib/Controller/ProjectParticipantsController.php:305
+#: lib/Controller/ProjectParticipantsController.php:314
 #, php-format
 msgid "Setting \"%1$s\" as the primary instrument of %2$s."
 msgstr "Verwende \"%1$s\" als bevorzugtes Instrument von %2$s."
 
-#: lib/Controller/ProjectParticipantsController.php:321
+#: lib/Controller/ProjectParticipantsController.php:330
 #, php-format
 msgid "Denying the attempt to add an unknown instrument (id = %s)."
 msgstr "Weigere mich, ein unbekanntes Instrument hinzuzufügen (id = %s)."
 
-#: lib/Controller/ProjectParticipantsController.php:330
+#: lib/Controller/ProjectParticipantsController.php:339
 #, php-format
 msgid "Denying the attempt to add the instrument %s because %s cannot play it."
 msgstr ""
 "Weigere mich das Instrument %s hinzuzufügen, weil %s das nicht spielen kann."
 
-#: lib/Controller/ProjectParticipantsController.php:336
+#: lib/Controller/ProjectParticipantsController.php:345
 #, php-format
 msgid "Adding instrument \"%1$s\" to the list of project-instruments of %s."
 msgstr ""
 "Füge das Instrument \"%1$s\" zu den Projekt-Instrumenten von %2$s hinzu."
 
-#: lib/Controller/ProjectParticipantsController.php:345
+#: lib/Controller/ProjectParticipantsController.php:354
 msgid "Validation not yet implemented"
 msgstr "Validierung ist noch nicht implementiert."
 
-#: lib/Controller/ProjectParticipantsController.php:348
+#: lib/Controller/ProjectParticipantsController.php:357
 #, php-format
 msgid "Unknown Request %s"
 msgstr "Unbekannte Anfrage %s"
 
-#: lib/Controller/ProjectParticipantsController.php:382
+#: lib/Controller/ProjectParticipantsController.php:416
 #, php-format
 msgid "Unable to find any data for the option key \"%s\"."
 msgstr "Kann die Daten zur Option mit dem Schlüssel \"%s\" nicht finden."
 
-#: lib/Controller/ProjectParticipantsController.php:396
-#: lib/Controller/ProjectParticipantsController.php:684
+#: lib/Controller/ProjectParticipantsController.php:430
+#: lib/Controller/ProjectParticipantsController.php:715
 #, php-format
 msgid "Unable to find the associated file with the id \"%s\" in data-base."
 msgstr "Kann die zugehörige Datei mit id \"%s\" nicht in der Datenbank finden."
 
-#: lib/Controller/ProjectParticipantsController.php:416
+#: lib/Controller/ProjectParticipantsController.php:450
 #, php-format
 msgid ""
 "Unable to find any supporting document for the field \"%1$s\", musician "
 "\"%2$s\"."
 msgstr "Kann keinen Beleg für das Feld \"%1$s\", Musiker \"%2$s\" finden."
 
-#: lib/Controller/ProjectParticipantsController.php:423
-#: lib/Controller/ProjectParticipantsController.php:537
+#: lib/Controller/ProjectParticipantsController.php:457
+#: lib/Controller/ProjectParticipantsController.php:571
 #, php-format
 msgid "Unsupported field type \"%s\"."
 msgstr "Nicht unterstützter Feld-Typ: \"%s\"."
 
-#: lib/Controller/ProjectParticipantsController.php:487
+#: lib/Controller/ProjectParticipantsController.php:521
 #, php-format
 msgid "Unable to delete file \"%s\"."
 msgstr "Kann die Datei \"%s\" nicht löschen."
 
-#: lib/Controller/ProjectParticipantsController.php:489
+#: lib/Controller/ProjectParticipantsController.php:523
 #, php-format
 msgid "Successfully removed file \"%s\"."
 msgstr "Datei \"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/ProjectParticipantsController.php:527
+#: lib/Controller/ProjectParticipantsController.php:561
 #, php-format
 msgid "Sub-directory \"%s\" requested, but not supported by db-storage."
 msgstr ""
 "Unterverzeichnis \"%s\" gewünscht, das wird aber vom DB-Dateispeicher nicht "
 "unterstützt."
 
-#: lib/Controller/ProjectParticipantsController.php:596
+#: lib/Controller/ProjectParticipantsController.php:628
 msgid ""
 "Move operation requested, but the original file path has not been specified."
-msgstr ""
+msgstr "Verschieben einer Datei angefragt, aber deren Datei-Pfad wurde nicht angegeben."
 
-#: lib/Controller/ProjectParticipantsController.php:600
-#, fuzzy, php-format
-#| msgid "Recryption-request for user \"%s\" not found."
+#: lib/Controller/ProjectParticipantsController.php:632
+#, php-format
 msgid "Move operation requested, but the original file \"%s\" cannot be found."
-msgstr "Neu-Verschlüsselungs-Anfrage für Benutzer \"%s\" nicht gefunden."
+msgstr "Verschieben einer Datei angefragt, aber die Quelldatei \"%s\" kann nicht gefunden werden."
 
-#: lib/Controller/ProjectParticipantsController.php:606
+#: lib/Controller/ProjectParticipantsController.php:637
 msgid ""
 "Link operation requested, but the link target does not reside in the "
 "database storage."
-msgstr ""
+msgstr "Verknüpfen einer Datei angefragt, aber das Link-Ziel ist nicht in der Datenbank gespeichert."
 
-#: lib/Controller/ProjectParticipantsController.php:610
+#: lib/Controller/ProjectParticipantsController.php:641
 msgid ""
 "Link operation requested, but the id of the original file has not been "
 "specified."
-msgstr ""
+msgstr "Verknüpfen einer Datei angefragt, aber die Datenbank-Id der ursprünglichen Datei wurde nicht angegeben."
 
-#: lib/Controller/ProjectParticipantsController.php:614
+#: lib/Controller/ProjectParticipantsController.php:645
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file with id \"%s\" "
 "cannot be found."
-msgstr ""
+msgstr "Verknüpfen einer Datei angefragt, aber die ursprüngliche Datei mit der Id \"%s\" konnte nicht gefunden werden."
 
-#: lib/Controller/ProjectParticipantsController.php:720
+#: lib/Controller/ProjectParticipantsController.php:753
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file is the same as the "
 "target destination (%s@%s)"
-msgstr ""
+msgstr "Verknüpfen einer Datei angefragt, aber Quelle und Ziel sind gleich (%s@%s)."
 
-#: lib/Controller/ProjectParticipantsController.php:872
+#: lib/Controller/ProjectParticipantsController.php:873
+#, php-format
+msgid "Move of \"%s\" to \"%s\" successful."
+msgstr "Verschieben von \"%s\" nach \"%s\" erfolgreich."
+
+#: lib/Controller/ProjectParticipantsController.php:876
+#, php-format
+msgid "Linking of \"%s\" to \"%s\" successful."
+msgstr "Verknüpfen von \"%s\" zum Ziel \"%s\" erfolgreich."
+
+#: lib/Controller/ProjectParticipantsController.php:911
 msgid "Unable to store uploaded data"
 msgstr "Kann die hochgeladenen Daten nicht speichern."
 
-#: lib/Controller/ProjectParticipantsController.php:901
+#: lib/Controller/ProjectParticipantsController.php:944
 msgid "Mailing-lists REST API is not configured."
 msgstr "Der REST-API-Zugang zum Mailing-Listen-Server ist nicht konfiguriert."
 
-#: lib/Controller/ProjectParticipantsController.php:906
+#: lib/Controller/ProjectParticipantsController.php:949
 #, php-format
 msgid ""
 "Unable to find the participant by project- and musician-id \"%1$d / %2$d\"."
@@ -2177,17 +2186,17 @@ msgstr ""
 "Kann das Projekt-Mitglied mit Projekt- und Personen-Id \"%1$d / %2$d\" nicht "
 "finden."
 
-#: lib/Controller/ProjectParticipantsController.php:913
+#: lib/Controller/ProjectParticipantsController.php:956
 #, php-format
 msgid "The project \"%s\" does not yet have a mailing-list."
 msgstr "Das Projekt \"%s\" hat keine Diskussions-Mailing-Lists."
 
-#: lib/Controller/ProjectParticipantsController.php:920
+#: lib/Controller/ProjectParticipantsController.php:963
 #, php-format
 msgid "The musician \"%s\" does not have an email-address."
 msgstr "Zur Person \"%s\" ist keine Email-Adresse hinterlegt."
 
-#: lib/Controller/ProjectParticipantsController.php:940
+#: lib/Controller/ProjectParticipantsController.php:984
 #, php-format
 msgid ""
 "%1$s participation has not been confirmed yet. Please consider to set the "
@@ -2203,18 +2212,18 @@ msgstr ""
 "trotz unbestätigter Teilnahme %$1s zur Projekt-Mailing-Liste\n"
 "hinzufügen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:946
+#: lib/Controller/ProjectParticipantsController.php:993
 #, php-format
 msgid "%1$s <%2$s> has been subscribed to %3$s."
 msgstr "%1$s <%2$s> wurde in den Verteiler %3$s eingetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:949
-#: lib/Controller/ProjectParticipantsController.php:969
+#: lib/Controller/ProjectParticipantsController.php:996
+#: lib/Controller/ProjectParticipantsController.php:1016
 #, php-format
 msgid "A notification has been sent to %1$s <%2$s>."
 msgstr "%1$s <%2$s> wurde Benachrichtigt."
 
-#: lib/Controller/ProjectParticipantsController.php:960
+#: lib/Controller/ProjectParticipantsController.php:1007
 #, php-format
 msgid ""
 "The participation of %1$s has already been been confirmed. Are you really "
@@ -2224,12 +2233,12 @@ msgstr ""
 "hunderprozentig sicher, dass Sie %1$s aus der Projekt-Mailing-Liste "
 "austragen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:966
+#: lib/Controller/ProjectParticipantsController.php:1013
 #, php-format
 msgid "%1$s <%2$s> has been unsubscribed from %3$s."
 msgstr "%1$s <%2$s> wurde aus dem Verteiler %3$s ausgetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:980
+#: lib/Controller/ProjectParticipantsController.php:1027
 #, php-format
 msgid ""
 "%1$s can enable message delivery by itself. Are you really sure that you "
@@ -2239,12 +2248,12 @@ msgstr ""
 "einschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s einschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:988
+#: lib/Controller/ProjectParticipantsController.php:1035
 #, php-format
 msgid "Re-enabled message delivery for %1$s <%2$s>."
 msgstr "Die Nachrichtenauslieferung an %1$s <%2$s> wurde wieder eingeschaltet"
 
-#: lib/Controller/ProjectParticipantsController.php:999
+#: lib/Controller/ProjectParticipantsController.php:1046
 #, php-format
 msgid ""
 "%1$s can disable message delivery by itself. Are you really sure that you "
@@ -2254,24 +2263,24 @@ msgstr ""
 "ausschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s ausschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:1008
+#: lib/Controller/ProjectParticipantsController.php:1055
 #, php-format
 msgid "Disabled message delivery for %1$s <%2$s>."
 msgstr "Nachrichtenauslieferung an %1$s <%2$s> ausgeschaltet."
 
-#: lib/Controller/ProjectParticipantsController.php:1047
+#: lib/Controller/ProjectParticipantsController.php:1114
 msgid "digest"
 msgstr "Sammlung"
 
-#: lib/Controller/ProjectParticipantsController.php:1055
+#: lib/Controller/ProjectParticipantsController.php:1122
 msgid "disabled by user"
 msgstr "ausgeschaltet vom Mitglied"
 
-#: lib/Controller/ProjectParticipantsController.php:1060
+#: lib/Controller/ProjectParticipantsController.php:1127
 msgid "disabled because of bounces"
 msgstr "ausgeschaltet wegen Rückläufern"
 
-#: lib/Controller/ProjectParticipantsController.php:1065
+#: lib/Controller/ProjectParticipantsController.php:1132
 msgid "disabled by moderator"
 msgstr "ausgeschaltet vom Moderator"
 
@@ -11786,8 +11795,6 @@ msgid "Select File System Operation"
 msgstr "Auswahl der Dateioperation"
 
 #: src/app/pme-file-upload-row.js:304
-#, fuzzy
-#| msgid "Operation cancelled by user."
 msgid "Operation has been cancelled."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
