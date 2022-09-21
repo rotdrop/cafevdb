@@ -130,9 +130,6 @@ class PaymentsController extends Controller
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
 
-        /** @var UserStorage $userStorage */
-        $userStorage = $this->di(UserStorage::class);
-
         $files = $this->prepareUploadInfo($files, $compositePaymentId, multiple: false);
         if ($files instanceof Http\Response) {
           // error generated
@@ -143,6 +140,9 @@ class PaymentsController extends Controller
         if ($file['error'] != UPLOAD_ERR_OK) {
           return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
         }
+
+        /** @var UserStorage $userStorage */
+        $userStorage = $this->di(UserStorage::class);
 
         $originalFilePath = $file['original_name'] ?? null;
         $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
@@ -188,7 +188,6 @@ class PaymentsController extends Controller
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
               // no break
             case UploadsController::UPLOAD_MODE_COPY:
-              $fileContent = $this->getUploadContent($file);
               $fileContent = $this->getUploadContent($file);
 
               /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -296,6 +295,7 @@ class PaymentsController extends Controller
         }
 
         unset($file['tmp_name']);
+
         switch ($uploadMode) {
           case UploadsController::UPLOAD_MODE_COPY:
             $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $supportingDocumentFileName ]);
@@ -340,8 +340,8 @@ class PaymentsController extends Controller
           $this->remove($supportingDocument, flush: true);
         } elseif (!empty($supportingDocument->getOriginalFileName())) {
           $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
+          $this->flush();
         }
-        $this->flush();
 
         return self::response($this->l->t('Successfully deleted the supporting document for the payment "%1$s", please upload a new one!', $compositePaymentId));
     }
