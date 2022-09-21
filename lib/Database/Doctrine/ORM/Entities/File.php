@@ -71,7 +71,7 @@ class File implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=false, options={"default"=0,"unsigned"=true})
    */
-  protected $numberOfLinks;
+  protected $numberOfLinks = 0;
 
   /**
    * @var string|null
