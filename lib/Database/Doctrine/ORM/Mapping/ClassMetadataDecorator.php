@@ -55,6 +55,9 @@ class ClassMetadataDecorator implements ClassMetadataInterface
   /** @var IL10N */
   private $l;
 
+  /** @var bool */
+  private $debug = false;
+
   public function __construct(
     ClassMetadata $metaData
     , EntityManager $entityManager
@@ -66,6 +69,15 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->l = $l10n;
+  }
+
+  private function debug(string $message, array $context = [], bool $showTrace = false)
+  {
+    if ($this->debug) {
+      return $this->logInfo($message, $context, 1, $showTrace);
+    } else {
+      return $this->logDebug($message, $context, 1, $showTrace);
+    }
   }
 
   ////////////////////////////////////
@@ -319,7 +331,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     , ClassMetadataInterface $targetMeta
   ) {
     if (!empty($association['mappedBy'])) {
-      $this->logInfo('WE ARE THE INVERSE SIDE ' . print_r($association, true));
+      $this->debug('WE ARE THE INVERSE SIDE ' . print_r($association, true));
     }
     // try to maintain connectivity if it does not cause additional direct database access
     if (!empty($association['inversedBy'])
@@ -513,7 +525,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
 
   public function setColumnValue($entity, string $column, $value)
   {
-    $this->logDebug('Set column value for ' . $column . ' to ' . $value);
+    $this->debug('Set column value for ' . $column . ' to ' . $value);
 
     $meta = $this->metaData;
     $numSetters = 0;
@@ -531,6 +543,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
         // an empty join-column value must void the association as the
         // join-columns are the identifier of the referenced entity and hence
         // cannot be null unless the referenced entity is null
+        $this->debug('DO CLEAR FIELD VALUE FOR ' . $field);
         $this->doSetFieldValue($meta, $entity, $field, null);
         continue;
       }
@@ -565,9 +578,10 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     }
     if ($numSetters == 0) {
       // throw new \RuntimeException($this->l->t('Unable to feed a single field with the value of the column "' . $column . '".'));
-      $this->logDebug('Remember value for column ' . $column . ': ' . $value);
+      $this->debug('Remember value for column ' . $column . ': ' . $value);
       $this->temporaryColumnStorage[$column] = $value;
     } else {
+      $this->debug('Clear value for column ' . $column);
       unset($this->temporaryColumnStorage[$column]);
     }
   }
@@ -603,6 +617,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
       }
     }
     if (!empty($this->temporaryColumnStorage[$column])) {
+      $this->debug('USE TEMPORARY COLUMN STORAGE ' . $column . ' => ' . $this->temporaryColumnStorage[$column]);
       return $this->temporaryColumnStorage[$column];
     }
     return null;

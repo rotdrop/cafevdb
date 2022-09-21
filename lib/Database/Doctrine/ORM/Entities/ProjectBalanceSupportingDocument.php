@@ -100,9 +100,29 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   private $documentsChanged;
 
+  /**
+   * @var Collection
+   *
+   * Optional linked project payments.
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $projectPayments;
+
+  /**
+   * @var Collection
+   *
+   * Optional linked composite payments.
+   *
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $compositePayments;
+
   public function __construct(?Project $project = null, ?int $sequence = null) {
     $this->arrayCTOR();
     $this->documents = new ArrayCollection();
+    $this->projectPayments = new ArrayCollection();
+    $this->compositePayments = new ArrayCollefction();
     $this->setProject($project);
     $this->setSequence($sequence);
   }
@@ -182,15 +202,35 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
     return $this->documents;
   }
 
+  /**
+   * Add the given file to the list of supporting documents if not already present.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
   public function addDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    $this->documents->add($file);
+    if (!$this->documents->containsKey($file->getId())) {
+      $file->link();
+      $this->documents->set($file->getId(), $file);
+    }
     return $this;
   }
 
+  /**
+   * Remove the given file from the list of supporting documents.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
   public function removeDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    $this->documents->removeElement($file);
+    if ($this->documents->containsKey($file->getId())) {
+      $this->documents->remove($file->getId());
+      $file->unlink();
+    }
     return $this;
   }
 
@@ -202,5 +242,59 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   public function getDocumentsChanged():?\DateTimeInterface
   {
     return $this->documentsChanged ?? $this->updated;
+  }
+
+  /**
+   * Set projectPayments.
+   *
+   * @param Collection $projectPayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setProjectPayments(?Collection $projectPayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($projectPayments)) {
+      $projectPayments = new ArrayCollection;
+    }
+    $this->projectPayments = $projectPayments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectPayments.
+   *
+   * @return Collection
+   */
+  public function getProjectPayments():Collection
+  {
+    return $this->projectPayments;
+  }
+
+  /**
+   * Set compositePayments.
+   *
+   * @param Collection $compositePayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setCompositePayments(?Collection $compositePayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($compositePayments)) {
+      $compositePayments = new ArrayCollection;
+    }
+    $this->compositePayments = $compositePayments;
+
+    return $this;
+  }
+
+  /**
+   * Get compositePayments.
+   *
+   * @return Collection
+   */
+  public function getCompositePayments():Collection
+  {
+    return $this->compositePayments;
   }
 }

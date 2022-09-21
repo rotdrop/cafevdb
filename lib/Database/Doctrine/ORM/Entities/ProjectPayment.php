@@ -41,6 +41,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $subject;
 
   /**
+   * @var ProjectParticipantFieldDatum
+   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
@@ -52,6 +54,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $receivable;
 
   /**
+   * @var ProjectParticipantFieldDataOption
+   *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="payments")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
@@ -61,6 +65,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $receivableOption;
 
   /**
+   * @var CompositePayment
+   *
    * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(nullable=false)
@@ -69,11 +75,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $compositePayment;
 
   /**
+   * @var Project
+   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $project;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
    */
   private $musician;
@@ -86,6 +96,17 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * )
    */
   private $projectParticipant;
+
+  /**
+   * @var ProjectBalanceSupportingDocument
+   *
+   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
+   * )
+   */
+  private $projectBalanceSupportingDocument;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -269,7 +290,21 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
   {
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+      }
+    }
+
     $this->receivable = $receivable;
+
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+      }
+    }
 
     return $this;
   }
@@ -306,6 +341,44 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getReceivableOption()
   {
     return $this->receivableOption;
+  }
+
+  /**
+   * Set projectBalanceSupportingDocument.
+   *
+   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   *
+   * @return ProjectPayment
+   */
+  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):ProjectPayment
+  {
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+      }
+    }
+
+    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+
+    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+      $supportingDocument = $this->receivable->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get projectBalanceSupportingDocument.
+   *
+   * @return ?ProjectBalanceSupportingDocument
+   */
+  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  {
+    return $this->projectBalanceSupportingDocument;
   }
 
   /** \JsonSerializable interface */

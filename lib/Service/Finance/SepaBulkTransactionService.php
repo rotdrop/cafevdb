@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \InvalidArgumentException;
 use \DateTimeImmutable as DateTime;
 
 use OCP\AppFramework\IAppContainer;
@@ -45,6 +46,10 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service;
 
+/**
+ * Service class for generating bulk-transactions for submittance to the
+ * respective bank.
+ */
 class SepaBulkTransactionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -53,6 +58,10 @@ class SepaBulkTransactionService
   // ordinary submission and notification deadlines
   const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
   const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14; // unused
+
+  const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
+  const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
+
 
   // fancy, just to have some reminders and a deadline on the task-list
   const BANK_TRANSFER_SUBMISSION_DEADLINE = 1; // 1 should be enough ...
@@ -169,6 +178,7 @@ class SepaBulkTransactionService
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
+    /** @var Entities\CompositePayment $compositePayment */
     $compositePayment = (new Entities\CompositePayment)
                       ->setMusician($musician)
                       ->setProjectPayments($payments)
@@ -250,95 +260,10 @@ class SepaBulkTransactionService
     $purpose = $purposePrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
 
     $compositePayment->setMusician($participant->getMusician())
-                     ->setAmount($totalAmount)
-                     ->setSubject($purpose);
+      ->setAmount($totalAmount)
+      ->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
 
     return $compositePayment;
-  }
-
-  /**
-   * Generate a not-too-long prefix referring to the project name and the
-   * bulk-email tag.
-   *
-   * @param Entities\Project $project
-   *
-   * @return string
-   *
-   * @todo Move to the project-service, e.g. compute a length-limited
-   * project-slug at the correct place.
-   */
-  private function generateSubjectPrefix(Entities\Project $project):string
-  {
-    /** @var Service\EncryptionService $encryptionService */
-    $encryptionService = $this->appContainer->get(Service\EncryptionService::class);
-    $tag = $encryptionService->getConfigValue('bulkEmailSubjectTag', '');
-
-    $projectName = $project->getName();
-    $projectYear = $project->getYear();
-    if (substr($projectName, -4) == (string)$projectYear) {
-      $projectName = substr($projectName, 0, -4) . ($projectYear % 100);
-    }
-    $limit = self::SUBJECT_PREFIX_LIMIT - strlen($tag) - 1;
-    $excess = strlen($projectName) - $limit;
-    if ($excess > 0) {
-      $parts = explode(' ', Util::camelCaseToDashes($projectName, ' '));
-      do {
-        $shortened = false;
-        foreach ($parts as &$part) {
-          if (strlen($part)  > 2) {
-            $part = substr($part, 0, -1);
-            $excess --;
-            $shortened = true;
-          }
-        }
-      } while ($excess > 0 && $shortened);
-      $projectName = Util::dashesToCamelCase($parts, true, ' ');
-    }
-
-    $prefix = empty($tag) ? $projectName : $tag . '-' . $projectName;
-
-    return $this->financeService->sepaTranslit($prefix);
-  }
-
-  /**
-   * This is only here because it is used in the AqBankingBulkTransactionExporter.
-   *
-   * @todo Check whether this really needs to be public.
-   *
-   * @param array $subjects
-   */
-  private function generateCompositeSubject(array $subjects):string
-  {
-    natsort($subjects);
-    $oldPrefix = false;
-    $postfix = [];
-    $purpose = '';
-    foreach ($subjects as $subject) {
-      $parts = Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED);
-      $prefix = $parts[0];
-      if (count($parts) < 2 || $oldPrefix != $prefix) {
-        $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
-        if (strlen($purpose) > 0) {
-          $purpose .= self::SUBJECT_GROUP_SEPARATOR;
-        }
-        $purpose .= $prefix;
-        if (count($parts) >= 2) {
-          $purpose .= self::SUBJECT_OPTION_SEPARATOR;
-          $oldPrefix = $prefix;
-        } else {
-          $oldPrefix = false;
-        }
-        $postfix = [];
-      }
-      if (count($parts) >= 2) {
-        $postfix = array_merge($postfix, array_splice($parts, 1));
-      }
-    }
-    if (!empty($postfix)) {
-      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
-    }
-
-    return $this->financeService->sepaTranslit(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
   }
 
   /**
@@ -388,11 +313,9 @@ class SepaBulkTransactionService
 
     $this->entityManager->beginTransaction();
     try {
-
-      $bulkTransactionData = $bulkTransaction->getSepaTransactionData();
       /** @var Entities\EncryptedFile $transactionData */
-      foreach ($bulkTransactionData as $transactionData) {
-        $bulkTransactionData->removeElement($transactionData);
+      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
+        $bulkTransaction->removeTransactionData($transactionData);
       }
       $this->remove($bulkTransaction, flush: true);
 
@@ -420,6 +343,43 @@ class SepaBulkTransactionService
   }
 
   /**
+   * Update the given bulk-transaction. ATM this "just" updates the
+   * automatically generated payment subject.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransactio The transaction to update.
+   *
+   * @param boolean $flush Whether to flush the result to the data-base. The
+   * routine may through if set to \true.
+   *
+   * @return Entities\SepaBulkTransaction Just the argument $bulkTransaction
+   * in case of success.
+   */
+  public function updateBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $flush = false):Entities\SepaBulkTransaction
+  {
+    /** @var Entities\CompositePayment $compositePayment */
+    foreach ($bulkTransaction->getPayments() as $compositePayment) {
+      $compositePayment->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
+    }
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->flush();
+        $this->entityManager->commit();
+      } catch (\Throwable $t) {
+        $this->logException($t);
+        $this->entityManager->rollback();
+        throw new Exceptions\DatabaseException(
+          $this->l->t('Unable to update payment subject while generating bank export data.'),
+          $t->getCode(),
+          $t);
+      }
+    }
+
+    return $bulkTransaction;
+  }
+
+  /**
    * Generate the export data for the given bulk-transaction and project.
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction
@@ -429,10 +389,17 @@ class SepaBulkTransactionService
    * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING
    *
    * @return null|Entities\EncryptedFile The generated export set.
-   *
    */
-  public function generateTransactionData(Entities\SepaBulkTransaction $bulkTransaction, ?Entities\Project $project, string $format = self::EXPORT_AQBANKING):?Entities\EncryptedFile
-  {
+  public function generateTransactionData(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    ?Entities\Project $project,
+    string $format = self::EXPORT_AQBANKING,
+  ):?Entities\EncryptedFile {
+
+    // as a safe-guard regenerate the subject in order to catch changes in
+    // linked supporting documents.
+    $this->updateBulkTransaction($bulkTransaction, flush: true);
+
     $transcationData = $bulkTransaction->getSepaTransactionData();
     /** @var Entities\EncryptedFile $exportFile */
     foreach ($transcationData as $exportFile) {
@@ -447,12 +414,12 @@ class SepaBulkTransactionService
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
-        throw new \InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
+        throw new InvalidArgumentException($this->l->t('Unable to find exporter for format "%s".', $format));
       }
       if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
-        $transactionType = 'banktransfer';
-      } else if ($bulkTransaction instanceof Entities\SepaDebitNote) {
-        $transactionType = 'debitnote';
+        $transactionType = self::TRANSACTION_TYPE_BANK_TRANSFER;
+      } elseif ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $transactionType = self::TRANSACTION_TYPE_DEBIT_NOTE;
       }
 
       // FIXME: just for the timeStamp() function ...
@@ -473,7 +440,7 @@ class SepaBulkTransactionService
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
-        $bulkTransaction->getSepaTransactionData()->add($exportFile);
+        $bulkTransaction->addTransactionData($exportFile);
       } else {
         $exportFile
           ->setFileName($fileName)
@@ -494,7 +461,6 @@ class SepaBulkTransactionService
     }
     return $exportFile;
   }
-
 };
 
 // Local Variables: ***

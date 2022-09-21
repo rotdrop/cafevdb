@@ -759,7 +759,10 @@ class ProjectService
     }
 
     if ($dataType == FieldDataType::SERVICE_FEE) {
-      $subDirPrefix = $this->getSupportingDocumentsFolderName();
+      $subDirPrefix =
+        $this->getSupportingDocumentsFolderName()
+        . UserStorage::PATH_SEP
+        . $this->getReceivablesFolderName();
       $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . UserStorage::PATH_SEP . $dirName;
     }
 

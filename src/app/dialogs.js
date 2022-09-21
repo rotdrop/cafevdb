@@ -57,7 +57,7 @@ const info = function(text, title, callback, modal, allowHtml) {
 const confirm = function(text, title, options, modal, allowHtml) {
   const defaultOptions = {
     callback() {},
-    model: false,
+    modal: false,
     allowHtml: false,
     default: 'confirm',
   };
@@ -69,26 +69,33 @@ const confirm = function(text, title, options, modal, allowHtml) {
     };
   }
 
-  let buttons;
+  options = $.extend({}, defaultOptions, options);
+
   if (options.default === 'cancel') {
-    buttons = {
-      type: OC.dialogs.YES_NO_BUTTONS,
-      confirm: t('core', 'No'),
-      cancel: t('core', 'Yes'),
-    };
+    if (!options.buttons || options.buttons === OC.dialogs.YES_NO_BUTTONS) {
+      options.buttons = {
+        type: OC.dialogs.YES_NO_BUTTONS,
+        confirm: t('core', 'No'),
+        cancel: t('core', 'Yes'),
+      };
+    } else {
+      const cancel = options.buttons.cancel;
+      options.buttons.cancel = options.buttons.confirm;
+      options.buttons.confirm = cancel;
+    }
     const userCallback = options.callback;
     options.callback = choice => userCallback(!choice);
   } else {
-    buttons = OC.dialogs.YES_NO_BUTTONS;
+    options.buttons = options.buttons || OC.dialogs.YES_NO_BUTTONS;
   }
-  options = $.extend({}, defaultOptions, options);
+
   return OC.dialogs.message(
     text,
     title,
     'notice',
-    buttons,
+    options.buttons,
     options.callback,
-    options.model,
+    options.modal,
     options.allowHtml
   );
 };

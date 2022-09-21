@@ -54,6 +54,7 @@
     "dependency-cruiser": "^9.22.0",
     "docdash": "^1.2.0",
     "dokuwikiembedded": "github:rotdrop/ocapp-dokuwikiembed",
+    "escape-html": "^1.0.3",
     "eslint": "^8.16.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-webpack": "^0.13.0",

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -114,6 +114,20 @@ trait ResponseTrait
       $data['message'] = $message;
     }
     return self::dataResponse($data, $status);
+  }
+
+  static private function getResponseMessages(DataResponse $response)
+  {
+    $messages = [];
+    $data = $response->getData();
+    foreach (['message', 'messages'] as $key) {
+      $messageData = $data[$key] ?? [];
+      if (!is_array($messageData)) {
+        $messageData = [ $messageData ];
+      }
+      $messages = array_merge($messages, $messageData);
+    }
+    return $messages;
   }
 
 }

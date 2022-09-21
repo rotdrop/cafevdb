@@ -31,6 +31,7 @@ import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
 import {
+  valueSelector as pmeValueSelector,
   sys as pmeSys,
   data as pmeData,
   formSelector as pmeFormSelector,
@@ -227,6 +228,21 @@ const ready = function(selector, pmeParameters, resizeCB) {
             upload: 'finance/payments/documents/upload',
             delete: 'finance/payments/documents/delete',
           });
+      });
+
+    $container
+      .on('change', 'select.project-balance-documents', function(event) {
+        const $this = $(this);
+        const $option = SelectUtils.selectedOptions($this);
+        const $cell = $this.closest(pmeValueSelector);
+        const $filesAppAnchor = $cell.find('.open-parent');
+        const filesAppLink = $filesAppAnchor.data('parent-link');
+        if ($option.length > 0) {
+          $filesAppAnchor.attr('href', filesAppLink + '/' + $option.data('data'));
+        } else {
+          $filesAppAnchor.attr('href', filesAppLink);
+        }
+        return false;
       });
 
   } // reason === 'dialogOpen'

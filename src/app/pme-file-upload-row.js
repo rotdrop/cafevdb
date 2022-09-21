@@ -26,16 +26,14 @@ import { appName } from './app-info.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
-import * as Page from './page.js';
 import * as Notification from './notification.js';
-import { tableDialogLoadIndicator } from './pme.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
-import { close as closeActionMenus } from './action-menu.js';
 import generateUrl from './generate-url.js';
 import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
-import modalizer from './modalizer.js';
+import setAppBusyIndicators from './busy-indicators.js';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -70,6 +68,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   } else {
     $oldUploadForm.replaceWith($uploadUi);
   }
+
   $thisRow.data('uploadFormId', widgetId);
   uploadUrls = $.extend({}, defaultUploadUrls, uploadUrls);
 
@@ -95,18 +94,11 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   unmaskInputs();
 
   const setBusyIndicators = function(state) {
+    setAppBusyIndicators(state, $pmeContainer);
     if (state) {
-      tableDialogLoadIndicator($pmeContainer, true);
-      Page.busyIcon(true);
       $thisRow.addClass('busy');
-      modalizer(true);
     } else {
-      Page.busyIcon(false);
-      tableDialogLoadIndicator($pmeContainer, false);
       $thisRow.removeClass('busy');
-      modalizer(false);
-      unmaskInputs();
-      closeActionMenus();
       unmaskInputs();
     }
   };
@@ -184,53 +176,30 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       const filePickerCaption = filePickerObject
         ? t(appName, 'Select cloud-files for {object}', { object: filePickerObject })
         : t(appName, 'Select a file from the cloud');
-      Dialogs.filePicker(
+
+      cloudFilePickerDialog({
+        setup: () => setBusyIndicators(true),
+        cleanup: () => setBusyIndicators(false),
         filePickerCaption,
-        function(paths) {
-          setBusyIndicators(true);
-          if (!paths) {
-            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-            setBusyIndicators(false);
-            return;
-          }
-          if (!Array.isArray(paths)) {
-            paths = [paths];
-          }
-          $.post(generateUrl(uploadUrls.stash), { cloudPaths: paths })
+        stashUrl: uploadUrls.stash,
+        multiple: uploadMultiple,
+        initialCloudFolder: $thisRow.data('participantFolder'),
+        handlePickedFiles(files, paths, cleanup) {
+          const formData = $uploadUi.find('form').serializeArray();
+          formData.push({ name: 'files', value: JSON.stringify(files) });
+          $.post(generateUrl(uploadUrls.upload), formData)
             .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
+              Ajax.handleError(xhr, status, errorThrown, cleanup);
             })
-            .done(function(files) {
-              if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
-                Dialogs.alert(
-                  t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
-                  t(appName, 'Error'),
-                  function() {
-                    setBusyIndicators(false);
-                  });
-                return;
-              }
-              const formData = $uploadUi.find('form').serializeArray();
-              formData.push({ name: 'files', value: JSON.stringify(files) });
-              $.post(generateUrl(uploadUrls.upload), formData)
-                .fail(function(xhr, status, errorThrown) {
-                  Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
-                })
-                .done(function(data) {
-                  $.each(data, function(index, file) {
-                    doneCallback(file, index, $uploadUi);
-                  });
-                  setBusyIndicators(false);
-                  $thisRow.trigger('pme:upload-done');
-                });
+            .done(function(data) {
+              $.each(data, function(index, file) {
+                doneCallback(file, index, $uploadUi);
+              });
+              cleanup();
+              $thisRow.trigger('pme:upload-done');
             });
         },
-        uploadMultiple,
-        undefined, // mimetypeFilter
-        undefined, // modal
-        undefined, // type
-        $thisRow.data('participantFolder'),
-      );
+      });
       $.fn.cafevTooltip.remove();
       return false;
     });
@@ -253,6 +222,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       fileName,
     };
     const failHandler = function(xhr, status, errorThrown) {
+      $.fn.cafevTooltip.remove();
       const data = Ajax.failData(xhr, status, errorThrown);
       console.debug('FAIL DATA', data);
       if (data.confirmation
@@ -287,6 +257,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       }
     };
     const doneHandler = function(data) {
+      $.fn.cafevTooltip.remove();
       if (!Ajax.validateResponse(data, ['message'], cleanup)) {
         return;
       }
@@ -295,6 +266,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         const widgetId = $thisRow.data('uploadFormId');
         $('#' + widgetId).remove();
         $.fn.cafevTooltip.remove();
+        $uploadUi.remove();
         $thisRow.remove();
         resizeCB();
       } else {
@@ -304,8 +276,14 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
           $downloadLink.html('');
         }
         $placeholder.val('');
+        const fileBase = $thisRow.data('fileBase');
+        $thisRow.data('fileName', fileBase);
+        $thisRow.attr('data-file-name', fileBase);
         $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
         $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
+
+        // replace the upload data
+        $uploadUi.find('input[name="data"]').val(JSON.stringify($thisRow.data()));
       }
       Notification.messages(data.message);
       cleanup();

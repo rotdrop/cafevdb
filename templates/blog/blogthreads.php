@@ -69,22 +69,22 @@ while (!empty($blog)) {
   echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
     <span class="avatar photo" data-author="'.$author.'" data-size="64"></span>
     <span id="blogentryactions">
-      <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-reply'].'">
+      <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.$toolTips['blog:entry:reply'].'">
         <img class="png blogbutton reply" src="'.$urlGenerator->imagePath('cafevdb', 'reply.png').'" alt="'.$l->t('Reply').'"/>
       </button>
-      <button class="blogbutton edit" id="blogedit'.$id.'" name="blogedit'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-edit'].'">
+      <button class="blogbutton edit" id="blogedit'.$id.'" name="blogedit'.$id.'" value="'.$id.'" title="'.$toolTips['blog:entry:edit'].'">
         <img class="png blogbutton edit" src="'.$urlGenerator->imagePath('cafevdb', 'edit.png').'" alt="'.$l->t('Edit').'"/>
       </button>
       '.($reply >= 0 || $priority == 0 ? '<!-- ' : '').'
       <input type="hidden" id="blogpriority'.$id.'" name="blogpriority'.$id.'" value="'.$priority.'" />
-      <button class="blogbutton raise" id="blograise'.$id.'" name="blograise'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-raise'].'">
+      <button class="blogbutton raise" id="blograise'.$id.'" name="blograise'.$id.'" value="'.$id.'" title="'.$toolTips['blog:entry:raise'].'">
         <img class="svg blogbutton raise" src="'.$urlGenerator->imagePath('cafevdb', 'up.svg').'" alt="'.$l->t('Raise priority').'"/>
       </button>
-      <button class="blogbutton lower" id="bloglower'.$id.'" name="bloglower'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-lower'].'">
+      <button class="blogbutton lower" id="bloglower'.$id.'" name="bloglower'.$id.'" value="'.$id.'" title="'.$toolTips['blog:entry:lower'].'">
         <img class="svg blogbutton lower" src="'.$urlGenerator->imagePath('cafevdb', 'down.svg').'" alt="'.$l->t('Lower priority').'"/>
       </button>
       '.($reply >= 0 || $priority == 0 ? ' -->' : '').'
-      <button class="blogbutton delete" id="blogdelete'.$id.'" name="blogdelete'.$id.'" value="'.$id.'" title="'.$toolTips['blogentry-delete'].'">
+      <button class="blogbutton delete" id="blogdelete'.$id.'" name="blogdelete'.$id.'" value="'.$id.'" title="'.$toolTips['blog:entry:delete'].'">
         <img class="png blogbutton delete" src="'.$urlGenerator->imagePath('cafevdb', 'delete.png').'" alt="'.$l->t('Delete').'"/>
       </button>
     </span>

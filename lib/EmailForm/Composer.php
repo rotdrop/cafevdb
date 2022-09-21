@@ -87,6 +87,12 @@ class Composer
   private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
   private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
 
+  private const HEADER_TAG = 'X-CAFEVDB';
+  private const HEADER_MARKER = [ self::HEADER_TAG => 'YES', ];
+  private const HEADER_MARKER_RECIPIENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Recipient', ];
+  private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
+  private const DO_NOT_REPLY_SENDER = 'do-not-reply';
+
   /**
    * @var string
    *
@@ -516,14 +522,18 @@ Störung.';
     $this->bulkTransactionId = $this->cgiValue(
       'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', 0));
     if ($this->bulkTransactionId > 0) {
-      $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
-                                    ->find($this->bulkTransactionId);
-      if (!empty($this->bulkTransaction) && empty($template)) {
+      $this->bulkTransaction = $this
+        ->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+        ->find($this->bulkTransactionId);
+      if (!empty($this->bulkTransaction)) {
+        /** @var SepaBulkTransactionService $bulkTransactionService */
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
-        $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $template . '-' . $this->l->t('announcement');
-        list($template,) = $this->normalizeTemplateName($template);
-
+        $bulkTransactionService->updateBulkTransaction($this->bulkTransaction, flush: true);
+        if (empty($template)) {
+          $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
+          $template = $template . '-' . $this->l->t('announcement');
+          list($template,) = $this->normalizeTemplateName($template);
+        }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
           ? 1.0
           : -1.0;
@@ -1060,7 +1070,7 @@ Störung.';
                     );
                     $row = str_ireplace($keyVariants, $replacements[$key], $row);
                   }
-                  $cssClass = $cssRowClass;
+                  $cssClass = '@cssRowClass@';
                   if (!empty($memberNames)) {
                     $cssClass .= ' has-data';
                     $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
@@ -1113,9 +1123,8 @@ Störung.';
                     $fieldHtml = $fieldHeader  . $fieldHtml;
                   }
 
-                  $html .= $fieldHtml;
+                  $html .= str_replace('@cssRowClass@', $cssRowClass ?? '', $fieldHtml);
                 }
-
               }
             }
 
@@ -1654,7 +1663,8 @@ Störung.';
         $msg = $this->composeAndSend(
           $strMessage, [ $recipient ], $personalAttachments,
           addCC: false,
-          references: $templateMessageId
+          references: $templateMessageId,
+          customHeaders: self::HEADER_MARKER_RECIPIENT,
         );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
@@ -1684,12 +1694,16 @@ Störung.';
       // this makes no sense) to all Cc:, Bcc: recipients and the
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
+
+
       ++$this->diagnostics['TotalCount'];
       $mimeMsg = $this->composeAndSend(
         $messageTemplate, [],
         addCC: true,
         messageId: $templateMessageId,
-        references: $references
+        references: $references,
+        customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
@@ -2413,6 +2427,8 @@ Störung.';
    * header. If a string then the single message-id of the master-template. If
    * an array then these are the message ids of the individual merged messages.
    *
+   * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
+   *
    * @return array
    * ```
    * [
@@ -2423,13 +2439,17 @@ Störung.';
    * ```
    */
   private function composeAndSend(
-    $strMessage
-    , $EMails
-    , $extraAttachments = []
-    , $addCC = true
-    , ?string $messageId = null
-    , $references = null)
-  {
+    $strMessage,
+    $EMails,
+    $extraAttachments = [],
+    $addCC = true,
+    ?string $messageId = null,
+    $references = null,
+    $customHeaders = [],
+    $doNotReply = false,
+  ) {
+    $customHeaders[] = self::HEADER_MARKER;
+
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2476,7 +2496,16 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       if (!$this->constructionMode) {
@@ -2611,6 +2640,17 @@ Störung.';
     }
     if (!empty($this->inReplyToId)) {
       $phpMailer->addCustomHeader('In-Reply-To', $this->inReplyToId);
+    }
+
+    // add custom headers as requested
+    foreach ($customHeaders as $key => $value) {
+      if (is_array($value)) {
+        foreach ($value as $key => $value) {
+          $phpMailer->addCustomHeader($key,$value);
+        }
+      } else {
+        $phpMailer->addCustomHeader($key,$value);
+      }
     }
 
     // Finally the point of no return. Send it out!!!
@@ -2841,6 +2881,8 @@ Störung.';
    * header. If a string then the single message-id of the master-template. If
    * an array then these are the message ids of the individual merged messages.
    *
+   * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
+   *
    * @return array
    * ```
    * [
@@ -2860,7 +2902,11 @@ Störung.';
     $addCC = true,
     ?string $messageId = null,
     $references = null,
+    $customHeaders = [],
+    $doNotReply = false,
   ) {
+    $customHeaders[] = self::HEADER_MARKER;
+
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2887,7 +2933,17 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
+
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       // Loop over all data-base records and add each recipient in turn
@@ -3003,6 +3059,17 @@ Störung.';
     }
     foreach ($this->referencing as $referenceMessageId) {
       $phpMailer->addReference($referenceMessageId);
+    }
+
+    // add custom headers as requested
+    foreach ($customHeaders as $key => $value) {
+      if (is_array($value)) {
+        foreach ($value as $key => $value) {
+          $phpMailer->addCustomHeader($key,$value);
+        }
+      } else {
+        $phpMailer->addCustomHeader($key,$value);
+      }
     }
 
     // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
@@ -3171,7 +3238,8 @@ Störung.';
           [ $recipient ],
           $personalAttachments,
           addCC: false,
-          references: $templateMessageId
+          references: $templateMessageId,
+          customHeaders: self::HEADER_MARKER_RECIPIENT,
         );
         if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
           ++$this->diagnostics['FailedCount'];
@@ -3193,7 +3261,9 @@ Störung.';
         $messageTemplate, [], [],
         addCC: true,
         messageId: $templateMessageId,
-        references: $references
+        references: $references,
+        customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
@@ -3703,7 +3773,7 @@ Störung.';
     }
     $referencedBy = $sentEmail->getReferencedBy();
     foreach ($referencedBy as $referrer) {
-      $this->referencing[] = $refererrer->getMessageId();
+      $this->referencing[] = $referrer ->getMessageId();
     }
     $this->cgiData['referencing'] = $this->referencing;
 
