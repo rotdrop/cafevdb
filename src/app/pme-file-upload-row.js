@@ -36,6 +36,7 @@ import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
 import modalizer from './modalizer.js';
+import { parse as pathParse } from 'path';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -197,33 +198,113 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
           if (!Array.isArray(paths)) {
             paths = [paths];
           }
-          $.post(generateUrl(uploadUrls.stash), { cloudPaths: paths })
+          $.post(generateUrl(uploadUrls.stash), {
+            cloudPaths: paths,
+            uploadMode: 'test',
+          })
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
             })
-            .done(function(files) {
-              if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
-                Dialogs.alert(
-                  t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
-                  t(appName, 'Error'),
-                  function() {
-                    setBusyIndicators(false);
-                  });
-                return;
-              }
-              const formData = $uploadUi.find('form').serializeArray();
-              formData.push({ name: 'files', value: JSON.stringify(files) });
-              $.post(generateUrl(uploadUrls.upload), formData)
-                .fail(function(xhr, status, errorThrown) {
-                  Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
+            .done(function(data) {
+              console.info('STASH TEST', data);
+
+              const performUpload = function(uploadMode) {
+                $.post(generateUrl(uploadUrls.stash), {
+                  cloudPaths: paths,
+                  uploadMode,
                 })
-                .done(function(data) {
-                  $.each(data, function(index, file) {
-                    doneCallback(file, index, $uploadUi);
+                  .fail(function(xhr, status, errorThrown) {
+                    Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
+                  })
+                  .done(function(files) {
+                    if (!Array.isArray(files) || (!isCloudFolder && files.length !== 1)) {
+                      Dialogs.alert(
+                        t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
+                        t(appName, 'Error'),
+                        function() {
+                          setBusyIndicators(false);
+                        });
+                      return;
+                    }
+                    const formData = $uploadUi.find('form').serializeArray();
+                    formData.push({ name: 'files', value: JSON.stringify(files) });
+                    $.post(generateUrl(uploadUrls.upload), formData)
+                      .fail(function(xhr, status, errorThrown) {
+                        Ajax.handleError(xhr, status, errorThrown, () => setBusyIndicators(false));
+                      })
+                      .done(function(data) {
+                        $.each(data, function(index, file) {
+                          doneCallback(file, index, $uploadUi);
+                        });
+                        setBusyIndicators(false);
+                        $thisRow.trigger('pme:upload-done');
+                      });
                   });
-                  setBusyIndicators(false);
-                  $thisRow.trigger('pme:upload-done');
+              };
+
+              const uploadFiles = [];
+              const allUploadModes = ['copy', 'move', 'link'];
+              let uploadModes = allUploadModes;
+              for (const uploadInfo of data) {
+                uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));
+                uploadFiles.push(pathParse(uploadInfo.original_name));
+              }
+              const templateParameters = {
+                operations: uploadModes.join(' '),
+                files: '<span class="file-node">'
+                  + uploadFiles.map((info) => '<span class="dirname">' + info.dir + '/' + '</span>' + '<span class="basename">' + info.base + '</span>').join('</span><span class="file-node">')
+                  + '</span>',
+                widgetCssClass: 'cloud-file-system-operations',
+                widgetRadioName: 'cloudFileSystemOperations',
+              };
+              for (const mode of allUploadModes) {
+                templateParameters[mode + 'Selected'] = '';
+                templateParameters[mode + 'CssClass'] = mode + '-control';
+                if (uploadModes.includes(mode)) {
+                  templateParameters[mode + 'Disabled'] = '';
+                  templateParameters[mode + 'CssClass'] += ' enabled';
+                } else {
+                  templateParameters[mode + 'Disabled'] = 'disabled';
+                  templateParameters[mode + 'CssClass'] += ' disabled';
+                }
+              }
+              templateParameters.copySelected = 'checked';
+
+              const $fileSystemOps = $('#cloudFileSystemOperations').octemplate(
+                templateParameters,
+                { escapeFunction: (x) => x }
+              );
+
+              let uploadMode = 'copy';
+              $('body')
+                .off('change', 'input.cloud-file-system-operations-input')
+                .on('change', 'input.cloud-file-system-operations-input', function(event) {
+                  uploadMode = $(this).val();
+                  console.info('UPLOAD MODE', uploadMode);
                 });
+
+              Dialogs.confirm(
+                $fileSystemOps.html(),
+                t(appName, 'Select File System Operation'), {
+                  callback(answer) {
+                    console.info('UPLOAD MODE', uploadMode);
+                    if (answer) {
+                      performUpload(uploadMode);
+                    } else {
+                      setBusyIndicators(false);
+                      Notification.messages(appName, 'Operation has been cancelled.');
+                    }
+                  },
+                  buttons: {
+                    type: OC.dialogs.YES_NO_BUTTONS,
+                    confirm: t(appName, 'Apply'),
+                    cancel: t(appName, 'Cancel'),
+                  },
+                  modal: true,
+                  allowHtml: true,
+                }
+              );
+
             });
         },
         uploadMultiple,

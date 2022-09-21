@@ -31,7 +31,9 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
+use OCP\Files\File;
 use OCP\Files\FileInfo;
+use OCP\Constants as CloudConstants;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
@@ -54,8 +56,16 @@ class UploadsController extends Controller
   public const MOVE_DEST_CLOUD = 'cloud';
   public const MOVE_DEST_DB = 'db';
 
+  public const UPLOAD_MODE_TEST = 'test';
+  public const UPLOAD_MODE_MOVE = 'move';
+  public const UPLOAD_MODE_LINK = 'link';
+  public const UPLOAD_MODE_COPY = 'copy';
+
   /** @var AppStorage */
   private $appStorage;
+
+  /** @var UserStorage */
+  private $userStorage;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -63,12 +73,14 @@ class UploadsController extends Controller
     IRequest $request,
     ConfigService $configService,
     AppStorage $appStorage,
+    UserStorage $userStorage,
   ) {
 
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
     $this->appStorage = $appStorage;
+    $this->userStorage = $userStorage;
     $this->entityManager = null;
     $this->l = $this->l10N();
   }
@@ -76,6 +88,8 @@ class UploadsController extends Controller
   /**
    * @param string $stashedFile The stashed file-name in the app-storage area.
    * @param string $destinationPath DOCME.
+   * @param string $uploadMode One of the upload-modes self::UPLOAD_MODE_COPY,
+   *   self::UPLOAD_MODE_MOVE, self::UPLOAD_MODE link.
    * @param null|string $originalFileName The original upload file-name if any.
    * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
    * @param bool $encrypted Whether to store the data encrypted (DB only).
@@ -90,20 +104,47 @@ class UploadsController extends Controller
   public function move(
     string $stashedFile,
     string $destinationPath,
+    string $uploadMode = self::UPLOAD_MODE_COPY,
     ?string $originalFileName = null,
     string $storage = self::MOVE_DEST_CLOUD,
     bool $encrypted = false,
     int $ownerId = 0,
     string $uploadFolder = AppStorage::UPLOAD_FOLDER
   ):Response {
+    if ($uploadMode == self::UPLOAD_MODE_MOVE) {
+      if (empty($originalFileName)) {
+        return self::grumble($this->l->t(
+          'Original file path is not given, cannot move files.'
+        ));
+      }
+      /** @var File $originalFile */
+      $originalFile = $this->userStorage->getFile($originalFileName);
+      if (empty($originalFile)) {
+        return self::grumble($this->l->t(
+          'The original file "%s" cannot be found, cannot move files.',
+          $originalFileName
+        ));
+      }
+      if (!($originalFile->getPermissions() & CloudConstants::PERMISSION_DELETE)) {
+        return self::grumble($this->l->t(
+          'Original file "%s" cannot be deleted, moving it is therefore not possible.',
+          $originalFileName
+        ));
+      }
+      $originalFile->delete();
+    }
+
     $appFile = $this->appStorage->getFile($uploadFolder, $stashedFile);
     switch ($storage) {
       case self::MOVE_DEST_CLOUD:
-        /** @var UserStorage $userStorage */
-        $userStorage = $this->di(UserStorage::class);
+        if ($uploadMode == self::UPLOAD_MODE_LINK) {
+          return self::grumble($this->l->t(
+            'Linking files is only support when the destination storage is backed by the data-base.'
+          ));
+        }
 
-        $userStorage->putContent($destinationPath, $appFile->getContent());
-        $downloadLink = $userStorage->getDownloadLink($destinationPath);
+        $this->userStorage->putContent($destinationPath, $appFile->getContent());
+        $downloadLink = $this->userStorage->getDownloadLink($destinationPath);
         $appFile->delete();
 
         return self::dataResponse([
@@ -116,18 +157,36 @@ class UploadsController extends Controller
         if (empty($this->entityManager)) {
           $this->entityManager = $this->di(EntityManager::class);
         }
-        /** @var Entities\EncryptedFile $dbFile */
+
         $dbFileClass = $encrypted ? Entities\EncryptedFile::class : Entities\File::class;
-        $dbFile = new $dbFileClass(
-          fileName: $destinationPath,
-          data: $appFile->getContent(),
-          mimeType: $appFile->getMimeType()
-        );
+        if ($uploadMode == self::UPLOAD_MODE_LINK) {
+          // this is somewhat academic as here is no dedicate storage
+          // location. However, this is how linking in principle works: just
+          // increase the link-count.
+          $dbFile = $this->entityManager->find(Entities\File::class, $originalFileName);
+          if (empty($dbFile)) {
+            return self::grumble($this->l->t('Link source cannot be found.'));
+          }
+          if ($encrypted && !($dbFile instanceof Entities\EncryptedFile)) {
+            return self::grumble($this->l->t(
+              'Encryption requested, but link-source "%s" is unencrypted',
+              $dbFile->getName()
+            ));
+          }
+          $dbFile->link(); // increase the link-count
+        } else {
+          /** @var Entities\EncryptedFile $dbFile */
+          $dbFile = new $dbFileClass(
+            fileName: $destinationPath,
+            data: $appFile->getContent(),
+            mimeType: $appFile->getMimeType()
+          );
+          $dbFile->setOriginalFileName($originalFileName);
+        }
         if ($encrypted && $ownerId > 0) {
           $owner = $this->getDatabaseRepository(Entities\Musician::class)->find($ownerId);
           $dbFile->addOwner($owner);
         }
-        $dbFile->setOriginalFileName($originalFileName);
 
         $this->entityManager->beginTransaction();
         try {
@@ -162,8 +221,29 @@ class UploadsController extends Controller
   }
 
   /**
+   * Stash-away upload data from cloud-files or file-system files for later usage.
+   *
    * @param array $cloudPaths File-names in the cloud storage. May be empty in
    * which case an ordinary upload is assumed.
+   *
+   * @param string $uploadMode One of self::UPLOAD_MODE_COPY, self::UPLOAD_MODE_MOVE,
+   * self::UPLOAD_MODE_LINK and self::UPLOAD_MODE_TEST. This only applies
+   * to "uploads" from the cloud file-space.
+   *
+   * - self::UPLOAD_MODE_COPY The default, just make and copy and generate a
+   *   new file.
+   *
+   * - self::UPLOAD_MODE_MOVE This is like copy but removes the source. This is
+       somewhat inefficient at it will generate an intermediate temporary
+       file.
+   *
+   * - self::UPLOAD_MODE_LINK If the cloud file is backed by our db-storage
+   *   then do not copy the source but instead link the existing
+   *   file-entity. In this mode no temporary file generated, just the
+   *   File-entity id is reported back to the caller
+   *
+   * - self::UPLOAD_MODE_TEST check what could be done and return the list of
+   *   possible modes to the caller.
    *
    * @param string $uploadFolder The sub-folder in the app-storage containing
    * the stashed file.
@@ -172,8 +252,11 @@ class UploadsController extends Controller
    *
    * @NoAdminRequired
    */
-  public function stash(array $cloudPaths = [], string $uploadFolder = AppStorage::UPLOAD_FOLDER):Repsonse
-  {
+  public function stash(
+    array $cloudPaths = [],
+    string $uploadMode = self::UPLOAD_MODE_COPY,
+    string $uploadFolder = AppStorage::UPLOAD_FOLDER,
+  ):Response {
     $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
@@ -182,12 +265,14 @@ class UploadsController extends Controller
     $uploads = [];
     if (!empty($cloudPaths)) {
       foreach ($cloudPaths as $path) {
-        /** @var UserStorage $storage */
-        $storage = $this->di(UserStorage::class);
         $files = [];
 
         /** @var OCP\Files\File $cloudFile */
-        $cloudFile = $storage->get($path);
+        $cloudFile = $this->userStorage->get($path);
+
+        /** @var Entities\EncryptedFile $dbFile */
+        $dbFile = $this->userStorage->getDatabaseFile($path);
+
         if (empty($cloudFile)) {
           return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
         }
@@ -195,28 +280,77 @@ class UploadsController extends Controller
           return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
         }
 
-        try {
-          $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
-          $uploadFile->putContent($cloudFile->getContent());
-        } catch (\Throwable $t) {
-          return self::grumble($this->l->t('Could not copy cloud file to upload storage.'));
+        $fileName = $cloudFile->getName();
+        $fileEntityId = !empty($dbFile) ? $dbFile->getId() : null;
+
+        switch ($uploadMode) {
+          case self::UPLOAD_MODE_TEST:
+            $uploadModes = [ self::UPLOAD_MODE_COPY, ];
+            if ($cloudFile->getPermissions() & CloudConstants::PERMISSION_DELETE) {
+              $uploadModes[] = self::UPLOAD_MODE_MOVE;
+            }
+            if (!empty($dbFile)) {
+              $uploadModes[] = self::UPLOAD_MODE_LINK;
+            }
+            $uploads[] = [
+              'original_name' => $path,
+              'upload_mode' => $uploadModes,
+            ];
+            continue 2;
+          case self::UPLOAD_MODE_LINK:
+            if (empty($dbFile)) {
+              return self::grumble($this->l->t(
+                'File "%s" is not backed by database-storage and thus cannot be linked.',
+                $cloudFile->getName()
+              ));
+            }
+            $originalName = $fileEntityId;
+            $tmpName = null;
+            break;
+          case self::UPLOAD_MODE_MOVE:
+            if (!($cloudFile->getPermissions() & CloudConstants::PERMISSION_DELETE)) {
+              return self::grumble($this->l->t(
+                'File "%s" cannot be deleted, moving it is therefor not possible.',
+                $fileName
+              ));
+            }
+            // the actual deletion should be post-poned until the stashed file
+            // has been moved into place.
+            // no break
+          case self::UPLOAD_MODE_COPY:
+            try {
+              $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
+              $uploadFile->putContent($cloudFile->getContent());
+            } catch (\Throwable $t) {
+              return self::grumble($this->l->t('Could not copy cloud file "%s" to upload storage.', $fileName));
+            }
+            $originalName = $uploadMode == self::UPLOAD_MODE_MOVE ? $path : $fileName;
+            $tmpName = $uploadFile->getName();
+            break;
         }
 
         // We emulate an uploaded file here:
         $fileRecord = [
-          'name' => $uploadFile->getName(),
-          'cloud_path' => $path, // additional info if maybe someone needs to know
-          'original_name' => $cloudFile->getName(),
+          'name' => $fileName,
           'error' => 0,
-          'tmp_name' => $uploadFile->getName(),
+          'tmp_name' => $tmpName,
           'type' => $cloudFile->getMimetype(),
           'size' => $cloudFile->getSize(),
           'upload_max_file_size' => $maxUploadFileSize,
           'max_human_file_size'  => $maxHumanFileSize,
+          'upload_mode' => $uploadMode,
+          'original_name' => $originalName,
         ];
         $uploads[] = $fileRecord;
       }
     } else {
+      if ($uploadMode != self::UPLOAD_MODE_COPY) {
+        return self::grumble($this->l->t(
+          'For client-uploads the only supported upload-mode is "copy", "%s" is not possible.',
+          $uploadMode
+        ));
+      }
+
       $files = $this->request->files[self::UPLOAD_KEY];
       if (empty($files)) {
         // may be caused by PHP restrictions which are not caught by
@@ -256,6 +390,7 @@ class UploadsController extends Controller
         $file['upload_max_file_size'] = $maxUploadFileSize;
         $file['max_human_file_size']  = $maxHumanFileSize;
         $file['original_name'] = $file['name']; // clone
+        $file['upload_mode'] = self::UPLOAD_MODE_COPY;
 
         $file['str_error'] = Util::fileUploadError($file['error'], $this->l);
         if ($file['error'] != UPLOAD_ERR_OK) {

@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use OCP\IRequest;
 use OCP\AppFramework\Http\Response;
 
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
@@ -37,6 +38,9 @@ trait FileUploadRowTrait
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
+  /** @var IRequest */
+  protected $request;
+
   /**
    * @param string $files File-uploads presented by PHP, JSON encoded.
    *
@@ -45,8 +49,6 @@ trait FileUploadRowTrait
    * @param bool $multiple Whether multiple uploads are to be expected.
    *
    * @return array|Response
-   *
-   * @SuppressWarnings(PHPMD.Superglobals)
    */
   protected function prepareUploadInfo(?string $files, string $optionKey, bool $multiple)
   {
@@ -67,7 +69,7 @@ trait FileUploadRowTrait
 
     } else {
 
-      if (empty($_FILES[$fileKey])) {
+      if (empty($this->request->files[$fileKey])) {
         // may be caused by PHP restrictions which are not caught by
         // error handlers.
         $contentLength = $this->request->server['CONTENT_LENGTH'];
@@ -89,7 +91,7 @@ trait FileUploadRowTrait
 
       $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
 
-      $files = Util::transposeArray($_FILES[$fileKey]);
+      $files = Util::transposeArray($this->request->files[$fileKey]);
       if (is_array($files[$optionKey]['name'])) {
         $files = Util::transposeArray($files[$optionKey]);
       }

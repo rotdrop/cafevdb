@@ -1162,6 +1162,7 @@ const afterLoad = function(container) {
           stashedFile: file.name,
           destinationPath,
           originalFileName: file.original_name,
+          uploadMode: 'copy',
         })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
