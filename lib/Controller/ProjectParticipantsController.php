@@ -651,7 +651,7 @@ class ProjectParticipantsController extends Controller
               break;
           }
 
-          $originalFileName = basename($originalFilePath);
+          $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
 
           /*
            * upload successful now try to move the file to its proper
