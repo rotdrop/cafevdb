@@ -194,7 +194,7 @@ class PaymentsController extends Controller
               $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-              if (!empty($supportingDocument) && $supportingDocument->numberOfLinks() > 1) {
+              if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
                 // if the file has multiple links then it is probably
                 // better to remove the existing file rather than
                 // overwriting a file which has multiple links.
