@@ -1429,12 +1429,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ${$dataSet}[$rowTagKey] = ${$dataSet}[$paymentIdKey];
       }
 
+      $unsetTags = [];
       // remove supporting_document_id as it is handled separately by direct
-      // db manipulation.
-      $tag = 'supporting_document_id';
-      unset($newValues[$tag]);
-      unset($oldValues[$tag]);
-      Util::unsetValue($changed, $tag);
+      // db manipulation.a
+      $unsetTags[] = 'supporting_document_id';
+
+      // handled on the entity-level
+      $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence');
+
+      foreach ($unsetTags as $tag) {
+        unset($newValues[$tag]);
+        unset($oldValues[$tag]);
+        Util::unsetValue($changed, $tag);
+      }
     }
 
     $changed = [];
