@@ -38,14 +38,10 @@ const ready = function(container, resizeCB) {
   const $container = PHPMyEdit.container(container);
 
   $container
-    .on('dblclick', 'table.pme-main tr.bulk-transaction.first td', function(event) {
-      event.stopImmediatePropagation();
-      PHPMyEdit.openRowDialog(this, event, $container);
-      return false;
-    });
-
-  $container
-    .on('click', 'table.pme-main tr.bulk-transaction.first td', function(event) {
+    .on('contextmenu', 'table.pme-main tr.bulk-transaction.first td', function(event) {
+      if (event.ctrlKey) {
+        return; // let the user see the normal context menu
+      }
       const $row = $(this).closest('tr.bulk-transaction.first');
       event.stopImmediatePropagation();
       $row.toggleClass('following-hidden');

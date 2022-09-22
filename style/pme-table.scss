@@ -1051,7 +1051,7 @@ table.pme-main {
       overflow:hidden;
     }
 
-    .pme-cell-squeezer {
+    .pme-cell-squeezer:not(.one-liner) {
       display:inline-block;
       max-height:24px;
       line-height:8px;
@@ -1068,12 +1068,12 @@ table.pme-main {
 	text-overflow:ellipsis;
 	max-width:100%;
       }
-    }
 
-    .pme-cell-squeezer::first-line,
-    .pme-cell-squeezer p:nth-child(1)::first-line {
-      line-height:12px;
-      font-size:150%; /* this is relative to the 2/3 above */
+      &::first-line,
+      p:nth-child(1)::first-line {
+        line-height:12px;
+        font-size:150%; /* this is relative to the 2/3 above */
+      }
     }
   }
 
