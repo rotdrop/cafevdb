@@ -292,6 +292,30 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
+   * Set project.
+   *
+   * @param int $project
+   *
+   * @return CompositePayment
+   */
+  public function setProject($project):CompositePayment
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project
+   */
+  public function getProject():?Project
+  {
+    return $this->project;
+  }
+
+  /**
    * Set dateOfReceipt.
    *
    * @param \DateTime|null $dateOfReceipt
