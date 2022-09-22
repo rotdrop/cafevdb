@@ -559,14 +559,31 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):CompositePayment
   {
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+    if (!empty($this->projectBalanceSupportingDocument)) {
+      /** @var ProjectPayment $part */
+      foreach ($this->projectPayments as $part) {
+        if ($part->getProjectBalanceSupportingDocument() == $this->projectBalanceSupportingDocument) {
+          $part->setProjectBalanceSupportingDocument(null);
+        }
+      }
+      if (!empty($this->supportingDocument)) {
+        $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+      }
     }
 
     $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
 
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+    if (!empty($this->projectBalanceSupportingDocument)) {
+      if (!empty($this->supportingDocument)) {
+        $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+      }
+
+      /** @var ProjectPayment $part */
+      foreach ($this->projectPayments as $part) {
+        if (empty($part->getProjectBalanceSupportingDocument())) {
+          $part->setProjectBalanceSupportingDocument($this->projectBalanceSupportingDocument);
+        }
+      }
     }
 
     return $this;
