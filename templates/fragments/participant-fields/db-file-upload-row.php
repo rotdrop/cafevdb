@@ -31,6 +31,7 @@
  * @param string $filesAppPath
  * @param string $participantFolder
  * @param string $filesAppLink
+ * @param string $filesAppTarget
  * @param string $downloadLink
  * @param string $optionValueName
  * @param string $uploadPlaceHolder

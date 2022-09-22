@@ -336,12 +336,19 @@ class Util
     return implode($delimiter, $result);
   }
 
-  /**Return the maximum upload file size.*/
-  public static function maxUploadSize($target = 'temporary')
+  /**
+   *  Return the maximum upload file size.
+   *
+   * @param string $target Defaults to 'temporary'. If 'cloud' takes the free
+   * space in the cloud FS for the current user into account.
+   *
+   * @return int
+   */
+  public static function maxUploadSize(string $target = 'temporary'):int
   {
-    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
-    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
-    $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
+    $uploadMaxFilesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFilesize = min($uploadMaxFilesize, $postMaxSize);
 
     if ($target == 'cloud') {
       $freeSpace = \OC_Filesystem::free_space('/');
@@ -404,13 +411,15 @@ class Util
    * Take any dashed or "underscored" lower-case string and convert to
    * camel-case.
    *
-   * @param string $string the string to convert.
+   * @param string $string The string to convert.
    *
-   * @param bool $capitalizeFirstCharacter self explaining.
+   * @param bool $capitalizeFirstCharacter Self explaining.
    *
    * @param string $dashes Characters to replace.
+   *
+   * @return string
    */
-  public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false, $dashes = '_-')
+  public static function dashesToCamelCase(string $string, bool $capitalizeFirstCharacter = false, string $dashes = '_-'):string
   {
     $str = str_replace(str_split($dashes), '', ucwords($string, $dashes));
 
@@ -429,10 +438,46 @@ class Util
    * @param string $string String to work on.
    *
    * @param string $separator Separator to use, defaults to '-'.
+   *
+   * @return string
    */
-  public static function camelCaseToDashes($string, $separator = '-')
+  public static function camelCaseToDashes(string $string, string $separator = '-'):string
   {
     return strtolower(preg_replace('/([A-Z]|[0-9]+)/', $separator.'$1', lcfirst($string)));
+  }
+
+  /**
+   * Shorten the given string by iteratively reducing the size of its
+   * camel-case components until it fits into the given length.
+   *
+   * @param string $string The string to shorten.
+   *
+   * @param integer $limit The target length.
+   *
+   * @param integer $minLen Defaults to 2. Components smaller than this will not
+   * be shortened. This also means that the target-length may not be reached.
+   *
+   * @return string
+   */
+  public static function shortenCamelCaseString(string $string, int $limit, int $minLen = 2):string
+  {
+    $excess = strlen($string) - $limit;
+    if ($excess > 0) {
+      $parts = explode(' ', Util::camelCaseToDashes($string, ' '));
+      do {
+        $shortened = false;
+        foreach ($parts as &$part) {
+          if (strlen($part)  > $minLen) {
+            $part = substr($part, 0, -1);
+            $excess --;
+            $shortened = true;
+          }
+        }
+      } while ($excess > 0 && $shortened);
+      $string = Util::dashesToCamelCase($parts, capitalizeFirstCharacter: true, separator: ' ');
+    }
+
+    return $string;
   }
 
   /**

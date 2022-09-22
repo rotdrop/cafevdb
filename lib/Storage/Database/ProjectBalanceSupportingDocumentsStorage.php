@@ -4,26 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-// FIXME: those are not public, but ...
+use \DateTimeImmutable;
+
+// F I X M E: those are not public, but ...
 use OC\Files\Storage\Common as AbstractStorage;
 use OC\Files\Storage\PolyFill\CopyDirectory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -50,12 +53,10 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** @var Entities\Project */
   private $project;
 
-  /** @var Repositories\ProjectBalanceSupportingDocumentsRepository */
-  private $supportingDocumentsRepository;
-
   /** @var array */
   private $files = [];
 
+  /** {@inheritdoc} */
   public function __construct($params)
   {
     parent::__construct($params);
@@ -83,7 +84,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function fileFromFileName(string $name)
+  public function fileFromFileName(string $name)
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
@@ -97,7 +98,14 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
                 ?? null));
   }
 
-  private function setFileNameCache(string $name, $node)
+  /**
+   * Insert a "cache" entry.
+   *
+   * @param string $name Path-name.
+   *
+   * @param DirectoryNode|Entities\EncryptedFile $node File-system node.
+   */
+  private function setFileNameCache(string $name, $node):void
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
@@ -105,14 +113,19 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $this->files[$dirName][$baseName] = $node;
   }
 
-  private function unsetFileNameCache(string $name)
+  /**
+   * Remove a "cache" entry.
+   *
+   * @param string $name Path-name.
+   */
+  private function unsetFileNameCache(string $name):void
   {
     $name = $this->buildPath($name);
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
 
     if (isset($this->files[$dirName][$baseName])) {
       unset($this->files[$dirName][$baseName]);
-    } else if (isset($this->files[$dirName][$baseName . self::PATH_SEPARATOR ])) {
+    } elseif (isset($this->files[$dirName][$baseName . self::PATH_SEPARATOR ])) {
       unset($this->files[$dirName][$baseName . self::PATH_SEPARATOR]);
     }
   }
@@ -120,7 +133,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function findFiles(string $dirName)
+  protected function findFiles(string $dirName):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
     if (!empty($this->files[$dirName])) {
@@ -128,7 +141,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     }
 
     $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new \DateTimeImmutable('@1')),
+      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
     ];
     if (empty($dirName)) {
       $modificationTime = $this->project->getFinancialBalanceSupportingDocumentsChanged();
@@ -179,7 +192,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return $this->files[$dirName];
   }
 
-  protected function getStorageModificationDateTime():?\DateTimeInterface
+  /**  {@inheritdoc} */
+  protected function getStorageModificationDateTime():\DateTimeInterface
   {
     return $this->project->getFinancialBalanceSupportingDocumentsChanged();
   }
@@ -187,13 +201,16 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName()
-      . '::'
-      . 'database-storage/finance/balances/projects/' . $this->project->getName()
+    return parent::getId()
+      . implode(self::PATH_SEPARATOR, [
+        'finance', 'balances', 'projects', $this->project->getName(),
+      ])
       . self::PATH_SEPARATOR;
   }
 
-  public function isUpdatable($path) {
+  /**  {@inheritdoc} */
+  public function isUpdatable($path)
+  {
     $result = $this->file_exists($path);
     return $result;
   }
@@ -201,8 +218,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * Return the sequence number if the given path refers to a document
    * container directory, otherwise return null.
+   *
+   * @param string $path File-system path.
+   *
+   * @return null|int
    */
-  private function isContainerDirectory($path):?int
+  private function isContainerDirectory(string $path):?int
   {
     if (preg_match('|^/?' . $this->project->getName() . '-' . '(\d{3})/?$|', $path, $matches)) {
       return $matches[1];
@@ -210,6 +231,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return null;
   }
 
+  /** {@inheritdoc} */
   public function mkdir($path)
   {
     $sequence = $this->isContainerDirectory($path);
@@ -225,7 +247,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $this->flush();
 
       // update the local cache
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+      list('basename' => $baseName,) = self::pathinfo($path);
       $this->setFileNameCache($path, new DirectoryNode($baseName, $documentContainer->getDocumentsChanged()));
     } catch (\Throwable $t) {
       $this->logException($t);
@@ -235,6 +257,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  /** {@inheritdoc} */
   public function rmdir($path)
   {
     $sequence = $this->isContainerDirectory($path);
@@ -268,6 +291,13 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  /**
+   * Find the container data-base entity for the given sequence number.
+   *
+   * @param int $sequence Supporting document sequence number.
+   *
+   * @return null|Entities\ProjectBalanceSupportingDocument
+   */
   private function findContainer(int $sequence):?Entities\ProjectBalanceSupportingDocument
   {
     return $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class)
@@ -275,6 +305,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Rename nodes inside the same storage, we have two "legal" cases:
    *
    * a) both paths are a top-level directory, then just change the sequence
@@ -288,8 +320,9 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   {
     $path1 = $this->buildPath($path1);
     $path2 = $this->buildPath($path2);
-    list('dirname' => $dirName1, 'basename' => $baseName1) = self::pathinfo($path1);
-    list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
+    // list('dirname' => $dirName1, 'basename' => $baseName1) = self::pathinfo($path1);
+    // list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
+    $baseName2 = self::pathInfo($path2, PATHINFO_BASENAME);
 
     $sequence1 = $this->isContainerDirectory($path1);
     $sequence2 = $this->isContainerDirectory($path2);
@@ -332,7 +365,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         // update our local files cache
         $directory->name = $baseName2;
         $this->setFileNameCache($path2, $directory);
-      } else if ($sequence1 === null && $sequence2 === null) {
+      } elseif ($sequence1 === null && $sequence2 === null) {
         /** @var Entities\EncryptedFile $file */
         $file = $this->fileFromFileName($path1);
         if (empty($file)) {
@@ -365,6 +398,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  /** {@inheritdoc} */
   public function touch($path, $mtime = null)
   {
     if ($this->is_dir($path)) {
@@ -403,12 +437,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  /** {@inheritdoc} */
   public function unlink($path)
   {
     if ($this->is_dir($path)) {
       return false;
     }
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
     /** @var Entities\EncryptedFile $file */
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
@@ -422,7 +456,26 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     try {
       $documentContainer->removeDocument($file); // depends on orphanRemoval=true
       $file->setProjectBalanceSupportingDocument(null);
-      $this->entityManager->remove($file);
+      $file->unlink();
+
+      // break the link to the supporting documents of payments
+      /** @var Entities\CompositePayment $compositePayment */
+      foreach ($documentContainer->getCompositePayments() as $compositePayment) {
+        if ($file->getId() == $compositePayment->getSupportingDocument()->getId()) {
+          $compositePayment->setProjectBalanceSupportingDocument(null);
+        }
+      }
+      /** @var Entities\ProjectPayment $projectPayment */
+      foreach ($documentContainer->getProjectPayments() as $projectPayment) {
+        $supportingDocument = $projectPayment->getReceivable() ? $projectPayment->getReceivable()->getSupportingDocument() : null;
+        if ($supportingDocument && $supportingDocument->getId() == $file->getId()) {
+          $projectPayment->setProjectBalanceSupportingDocument(null);
+        }
+      }
+
+      if ($file->getNumberOfLinks() == 0) {
+        $this->entityManager->remove($file);
+      }
       $this->flush();
 
       $this->unsetFileNameCache($path);

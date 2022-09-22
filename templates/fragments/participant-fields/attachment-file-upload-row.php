@@ -32,6 +32,7 @@
  * @param string $fileBase
  * @param string $fileName
  * @param string $filesAppPath
+ * @param string $filesAppTarget
  * @param string $dataStorage
  * @param string $entityfield Either "option-value" or "supporting-document".
  * @param string $participantFolder
@@ -45,7 +46,9 @@
 
 use OCA\CAFEVDB\Common\Util;
 
-$filesAppTarget = md5($filesAppPath);
+if (empty($filesAppTarget)) {
+  $filesAppTarget = md5($filesAppPath);
+}
 
 ?>
 <tr class="file-upload-row field-datum"

@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
@@ -46,7 +47,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Controller\DownloadsController;
 
-/**Table generator for Instruments table. */
+/** Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\ParticipantFileFieldsTrait;
@@ -54,6 +55,7 @@ class ProjectPayments extends PMETableViewBase
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
+  const ALL_BALANCE_DOCUMENTS_TABLE = self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE . self::VALUES_TABLE_SEP . 'all';
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
 
   const ROW_TAG_PREFIX = '0;';
@@ -142,6 +144,8 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.receivable_key) ORDER BY __t1.id) AS receivable_key,
+  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.balance_document_sequence) ORDER BY __t1.id) AS balance_document_sequence,
+  GROUP_CONCAT(DISTINCT __t1.balance_document_sequence ORDER BY __t1.id) AS balance_document_sequence_values,
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.musician_id,
   __t1.composite_payment_id
@@ -158,6 +162,8 @@ SELECT
   __t2.project_id,
   __t2.field_id,
   __t2.receivable_key,
+  __t2.balance_document_sequence,
+  __t2.balance_document_sequence AS balance_document_sequence_values,
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
@@ -213,6 +219,20 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
+    ],
+    self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE => [
+      'entity' => Entities\ProjectBalanceSupportingDocument::class,
+      'identifier' => [
+        'project_id' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'project_id',
+        ],
+        'sequence' => [
+          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'column' => 'balance_document_sequence',
+        ],
+      ],
+      'column' => 'sequence',
     ],
   ];
 
@@ -500,9 +520,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'sql' => '$main_table.amount - $join_table.total_amount',
           'css' => [ 'postfix' => [ 'tooltip-auto', ] ],
           'name' => $this->l->t('Imbalance'),
-          'input' => 'R',
+          'input' => 'VR',
           'options' => 'LFCDV',
           'php|CDV' => function($value, $action, $k, $row, $recordId, $pme) {
+            if ($pme->hidden($k)) {
+              return '';
+            }
             $name = $pme->fds[$k];
             $html = $pme->htmlHiddenData($name, $value);
             $html .= '<span class="cell-wrapper">' . $this->moneyValue($value) . '</span>';
@@ -531,7 +554,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
-      'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
+      'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
       'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
       'input|LFVD' => 'HRM',
       'select' => 'T',
@@ -553,7 +576,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Subject'),
         'input'  => 'M',
-        'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', ], ],
+        'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
         'sql' => '$join_col_fqn',
         'display|LF' => [
@@ -581,7 +604,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'select' => 'M',
         'input|LF' => 'H',
         'options' => 'PCDV',
-        'sql' => 'GROUP_CONCAT($join_col_fqn)',
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
         'values' => [
           'table' => 'SELECT
   pp.id,
@@ -611,14 +634,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ON ppfo.field_id = pp.field_id
       AND ppfo.key = pp.receivable_key
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppf.id = pp.field_id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
@@ -688,14 +711,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ppf.multiplicity AS multiplicity
   FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLocaleCode()).'"
+    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
@@ -758,6 +781,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'options' => 'LFACDPV',
       'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
 
+        if ($pme->hidden($k)) {
+          return '';
+        }
+
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
@@ -765,15 +792,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
-            . $this->dbFileUploadRowHtml($value,
-                                         fieldId: $musicianId,
-                                         optionKey: $recordId['id'],
-                                         subDir: $this->getPaymentRecordsFolderName(),
-                                         fileBase: $fileName,
-                                         overrideFileName: true,
-                                         musician: $musician,
-                                         project: null)
-            . '
+          . $this->dbFileUploadRowHtml(
+            $value,
+            fieldId: $musicianId,
+            optionKey: $recordId['id'],
+            subDir: $this->getSupportingDocumentsFolderName() . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName(),
+            fileBase: $fileName,
+            overrideFileName: true,
+            musician: $musician,
+            project: null,
+          )
+          . '
   </table>
 </div>';
       },
@@ -800,7 +829,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
           $subDirPrefix =
             UserStorage::PATH_SEP . $this->getDocumentsFolderName()
-            . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+            . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName()
+            . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName();
           $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
           try {
             $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
@@ -819,6 +849,202 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         }
       },
     ];
+
+    $opts['fdd']['balance_document_sequence'] = [
+      'name' => $this->l->t('Composite Project Balance'),
+      'tab' => [ 'id' => 'booking' ],
+      'css' => [
+        'postfix' => [
+          'allow-empty',
+          'project-balance-documents',
+          'chosen-dropup',
+          'squeeze-subsequent-lines',
+          'clip-long-text',
+        ],
+      ],
+      'input|LF' => 'HR',
+      'select' => 'D',
+      'sql' => '$main_table.$field_name',
+      'values' => [
+        'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
+        'column' => 'sequence',
+        'join' => [ 'reference' => $this->joinTables[self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE], ],
+        'description' => [
+          'columns' => [ 'LPAD($table.sequence, 3, "0")', ],
+          'divs' => [ -1 => $this->projectName . '-', 0 => '/', ],
+          'ifnull' => [ false ],
+          'cast' => [ false ],
+        ],
+        'data' => 'CONCAT("' . $this->projectName . '", "-", LPAD($table.sequence, 3, "0"), "/")',
+        // 'filters' => '$table.project_id = $record_id[project_id]',
+      ],
+      'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
+      'display' => [
+        'prefix' => function($op, $pos, $k, $row, $pme) {
+          if (!$this->isCompositeRow($row, $pme)) {
+            return null;
+          }
+          $value = $row['qf' . $k . '_idx'];
+          if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
+            return null;
+          }
+
+          $documentPathChain = [ $this->getProjectBalancesPath() ];
+          if ($this->project->getType() == ProjectType::TEMPORARY) {
+            $documentPathChain[] = $this->project->getYear();
+          };
+          $documentPathChain[] = $this->project->getName();
+          $documentPathChain[] = $this->getSupportingDocumentsFolderName();
+
+          $documentParentPath = implode('/', $documentPathChain);
+          $filesAppTarget = md5($documentParentPath);
+          if (!empty($value)) {
+            if (is_numeric($value)) {
+              $value = sprintf('%s-%03d', $this->projectName, $value);
+            }
+          }
+
+          try {
+            $filesAppParentLink = $this->userStorage->getFilesAppLink($documentParentPath, subDir: true);
+            $filesAppLink = empty($value)
+              ? $filesAppParentLink
+              : $filesAppParentLink . '/' . $value;
+          } catch (\OCP\Files\NotFoundException $e) {
+            $this->logInfo('No file found for ' . $documentParentPath);
+              $filesAppParentLink = $filesAppLink = '';
+          }
+
+          $filesAppAnchor = '
+<a href="' . $filesAppLink . '"
+   data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
+   target=" . $filesAppTarget . "
+   title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
+   class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+></a>';
+
+          return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
+            . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          return '</div></div></span></div>';
+        },
+      ],
+    ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence', [
+        'name' => $this->l->t('Parts Project Balances'),
+        'tab' => [ 'id' => 'booking' ],
+        'css' => [
+          'postfix' => [
+            'allow-empty',
+            'project-balance-documents',
+            'chosen-dropup',
+            'squeeze-subsequent-lines',
+            'clip-long-text',
+          ],
+        ],
+        'select' => 'D',
+        'sql' => 'IF(
+  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
+  CONCAT_WS(
+    ",",
+    $main_table.balance_document_sequence,
+    ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values
+  ),
+  $join_col_fqn)',
+        'values' => [
+          'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
+          'column' => 'sequence',
+          'join' => [ 'reference' => $this->joinTables[self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE], ],
+          'description' => [
+            'columns' => [ 'LPAD($table.sequence, 3, "0")', ],
+            'divs' => [ -1 => $this->projectName . '-', 0 => '/', ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
+          'data' => 'CONCAT("' . $this->projectName . '", "-", LPAD($table.sequence, 3, "0"), "/")',
+          // 'filters' => '$table.project_id = $record_id[project_id]',
+        ],
+        'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
+          if ($this->isCompositeRow($row, $pme)) {
+            $value = str_replace(', ', '<br/>', $value);
+          }
+          return $value;
+        },
+        'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
+        'display' => [
+          'popup' => function($cellData, $k, $row, $pme) {
+            if ($this->isCompositeRow($row, $pme)) {
+              return $cellData;
+            } else {
+              return $pme->fdd[$k]['tooltip'];
+            }
+          },
+          'prefix' => function($op, $pos, $k, $row, $pme) {
+
+            if ($this->isCompositeRow($row, $pme)) {
+              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row['qf' . $k . '_idx'])) {
+                return null;
+              }
+              $value = null;
+            } else {
+              $value = $row['qf' . $k];
+              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
+                return null;
+              }
+            }
+
+            $documentPathChain = [ $this->getProjectBalancesPath() ];
+            if ($this->project->getType() == ProjectType::TEMPORARY) {
+              $documentPathChain[] = $this->project->getYear();
+            };
+            $documentPathChain[] = $this->project->getName();
+            $documentPathChain[] = $this->getSupportingDocumentsFolderName();
+
+            $documentParentPath = implode('/', $documentPathChain);
+            $filesAppTarget = md5($documentParentPath);
+            if (!empty($value)) {
+              if (is_numeric($value)) {
+                $value = sprintf('%s-%03d', $this->projectName, $value);
+              }
+            }
+
+            try {
+              $filesAppParentLink = $this->userStorage->getFilesAppLink($documentParentPath, subDir: true);
+              $filesAppLink = empty($value)
+                ? $filesAppParentLink
+                : $filesAppParentLink . '/' . $value;
+            } catch (\OCP\Files\NotFoundException $e) {
+              $this->logInfo('No file found for ' . $documentParentPath);
+              $filesAppParentLink = $filesAppLink = '';
+            }
+
+            $filesAppAnchor = '
+<a href="' . $filesAppLink . '"
+   data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
+   target=" . $filesAppTarget . "
+   title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
+   class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+></a>';
+
+            if ($this->isCompositeRow($row, $pme)) {
+              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
+                . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+            } else {
+              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">';
+            }
+          },
+          'postfix' => function($op, $pos, $k, $row, $pme) {
+            if ($this->isCompositeRow($row, $pme)) {
+              return '</div></div></span></div>';
+            } else {
+              return '</span></div>';
+            }
+          },
+        ],
+      ],
+    );
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
@@ -865,9 +1091,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
         'display' => [
           'popup' => function($data) {
-	    if (empty($data)) {
-	      return ''; // can happen
-	    }
+            if (empty($data)) {
+              return ''; // can happen
+            }
             $info  = $this->financeService->getIbanInfo($data);
             $result = '';
             foreach ($info as $key => $value) {
@@ -893,7 +1119,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'input'  => 'R',
       'options' => 'LFVD',
       'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
-      'input' => 'R',
       'select' => 'T',
       'escape' => true,
       'sort' => true,
@@ -904,9 +1129,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
       $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
-      if (!empty($bulkTransactionId)) {
+      if (false && !empty($bulkTransactionId)) {
         $pme->options = 'LVF';
-        if ($op !== 'select' ) {
+        if ($op !== 'select') {
           throw new \BadFunctionCallException(
             $this->l->t('Payments resulting from direct debit transfers cannot be changed.')
           );
@@ -926,8 +1151,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
-      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row)
-        use ($musicianReceivableFilter) {
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
+
+
+        $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
+        $rowTag = $row['qf'.$rowTagIndex];
+        $balanceDocumentSequenceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence')];
+
+        $pme->fdd[$balanceDocumentSequenceIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
 
         if ($this->listOperation()) {
           return true;
@@ -937,7 +1168,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $receivableKeyIndex = $pme->fdn[$receivableKeyKey];
         $amountIndex = $pme->fdn['amount'];
 
-        $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
         $paymentsAmountIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount')];
         $subjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
         $musicianIdIndex = $pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
@@ -946,8 +1176,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
         $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
         $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
+        $compositeBalanceDocumentSequenceIndex = $pme->fdn['balance_document_sequence'];
 
-        if (str_starts_with($row['qf'.$rowTagIndex], self::ROW_TAG_PREFIX)) {
+        if ($this->isCompositeRowTag($rowTag)) {
           $this->logInfo('COMPOSITE ROW');
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
           $pme->fdd[$amountIndex]['input'] = 'M';
@@ -962,6 +1193,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ];
           $pme->fdd[$subjectIndex]['input'] = 'M';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
+          $pme->fdd[$balanceDocumentSequenceIndex]['input'] = 'R';
+          $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = '';
 
           if ($this->copyOperation()) {
             $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
@@ -979,7 +1212,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               $row[$rowIndex] = null;
             }
           }
-
         } else {
           $this->logDebug('COMPONENT ROW');
           $pme->fdd[$receivableKeyIndex]['select'] = 'D';
@@ -990,9 +1222,35 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$amountIndex]['input'] = 'HR';
           $pme->fdd[$paymentsAmountIndex]['input'] = 'M';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
-          $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
           $pme->fdd[$musicianIdIndex]['input'] = 'R';
+          $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
+          $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = 'HR';
+
+          $pme->fdd[$balanceDocumentSequenceIndex]['name'] = $this->l->t('Project Balance');
         }
+
+        // if this payment originated from a scheduled bulk-transaction, then
+        // disallow any changes safe the date_of_receipt and adding/changing
+        // supporting documents.
+        $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+        if (!empty($bulkTransactionId)) {
+          // make all rows read-only with the exception of some
+          foreach ($pme->fdn as $fieldName => $fieldIndex) {
+            if ($fieldName == 'date_of_receipt') {
+              $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
+              continue;
+            } elseif ($fieldName == 'balance_document_sequence') {
+              continue;
+            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence')) {
+              continue;
+            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE, 'sequence')) {
+              continue;
+            }
+            // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
+            $pme->fdd[$fieldIndex]['input'] .= 'R';
+          }
+        }
+
         return true;
       };
 
@@ -1040,7 +1298,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
     $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
 
-    if (!str_starts_with($oldValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+    if (!$this->isCompositeRowTag($oldValues[$rowTagKey])) {
       $paymentId = $oldValues[$rowTagKey] ?? $oldValues[$paymentIdKey];
       $this->setDatabaseRepository(Entities\ProjectPayment::class);
       $this->remove($paymentId, true);
@@ -1062,9 +1320,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * However, on insert we only add a single "split" transaction. Further
    * parts have to be added afterwards.
-   *
-   * @todo The UI should rather expose multiple edit lines and provide a
-   * "feeling" like e.g. in GnuCash for split-bookings.
 
    // update for composite
 
@@ -1110,9 +1365,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
 
     $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
-    $newValues['musician_id'] = $musicianId;
+    $oldValues['musician_id'] =
+      $newValues['musician_id'] = $musicianId;
 
-    if (!str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+    if (!$this->isCompositeRowTag($newValues[$rowTagKey])) {
       // current update dialog refers to a split payment
 
       $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['flags'] |= self::JOIN_SINGLE_VALUED;
@@ -1122,7 +1378,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       if (empty($paymentId)) {
         $paymentId = 0; // flag key generation
       }
-      $newValues[$paymentIdKey] = $newValues[$rowTagKey] = $paymentId;
+      $newValues[$paymentIdKey] =
+        $newValues[$rowTagKey] =
+        $oldValues[$paymentIdKey] =
+        $oldValues[$rowTagKey] = $paymentId;
 
       // extract project-id, field-id, receivable_key from the composite-option-key select
       list($projectId, $fieldId, $receivableKey) = explode(
@@ -1131,23 +1390,28 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         3
       );
 
-      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
-      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
-      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
-      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
-      $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')] = $pme->rec['id'];
+      foreach (['new', 'old'] as $dataSet) {
+        ${$dataSet . 'Values'} = array_merge(
+          ${$dataSet . 'Values'}, [
+            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
+            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id') => $projectId,
+            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id') => $fieldId,
+            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key') => $receivableKey,
+            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id') => $pme->rec['id'],
+          ]);
 
-      // index all values by the key in order to please the
-      // PMETableViewBase::beforeUpdateDoUpdateAll() machine
-      foreach ($newValues as $key => &$value) {
-        if ($key == $paymentIdKey || $key == $rowTagKey) {
-          continue;
-        }
-        if (empty($value)) {
-          continue;
-        }
-        if (strpos($key, self::PROJECT_PAYMENTS_TABLE . self::JOIN_KEY_SEP) === 0) {
-          $value = $paymentId . self::JOIN_KEY_SEP . $value;
+        // index all values by the key in order to please the
+        // PMETableViewBase::beforeUpdateDoUpdateAll() machine
+        foreach (${$dataSet . 'Values'} as $key => &$value) {
+          if ($key == $paymentIdKey || $key == $rowTagKey) {
+            continue;
+          }
+          if (empty($value)) {
+            continue;
+          }
+          if (str_starts_with($key, self::PROJECT_PAYMENTS_TABLE . self::JOIN_KEY_SEP)) {
+            $value = $paymentId . self::JOIN_KEY_SEP . $value;
+          }
         }
       }
       unset($value); // break reference
@@ -1203,7 +1467,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
     $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
 
-    if (!empty($newValues[$rowTagKey]) && !str_starts_with($newValues[$rowTagKey], self::ROW_TAG_PREFIX)) {
+    if (!empty($newValues[$rowTagKey]) && !$this->isCompositeRowTag($newValues[$rowTagKey])) {
       // Sub-payment, redirect to change mode
 
       $compositeKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
@@ -1293,6 +1557,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   }
 
   /**
+   * @param string $rowTag The tag to examine.
+   *
+   * @return boolean
+   */
+  public function isCompositeRowTag(string $rowTag):bool
+  {
+    return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
+  }
+
+  /**
    * Print only the values for the composite row.
    *
    * @todo: if the search results (e.g. for the amount) do not contain
@@ -1318,10 +1592,11 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   private function isCompositeRow($row, $pme)
   {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
-    return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
+    return $this->isCompositeRowTag($rowTag);
   }
 
-  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme) {
+  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme)
+  {
     $compositeRow = $this->isCompositeRow($row, $pme);
     $composite = $where === 'composite';
     $component = $where === 'component';
@@ -1376,10 +1651,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         }
 
         // there should be at least one project ...
-        $subFolder = empty($supportingDocuments) ? null : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getPaymentRecordsFolderName();
+        $subFolder = empty($supportingDocuments)
+          ? null
+          : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
-        return '<div class="flex-container"><span>' . $filesAppAnchor . ' </span><span>' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
+        return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
       }
     }
 

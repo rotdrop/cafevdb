@@ -179,26 +179,21 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
   let info = '<span class="bold toastify http-status error">' + decodedStatus + '</span>';
   // console.info(xhr.status, info, errorThrown, textStatus);
 
+  const reportBody = `JavaScript User Agent:
+${navigator.userAgent}
+
+PHP User Agent:
+${globalState.phpUserAgent || 'unknown'}
+
+Error Code:  ${decodedStatus}
+
+Error Data: ${print_r(failData, true)}
+`;
   let autoReport = '<a href="mailto:'
       + encodeURIComponent(globalState.adminContact)
       + '?subject=' + '[CAFEVDB Error] Error Feedback'
       + '&body='
-      + encodeURIComponent(
-        'JavaScript User Agent:'
-          + '\n'
-          + navigator.userAgent
-          + '\n'
-          + '\n'
-          + 'PHP User Agent:'
-          + '\n'
-          + (globalState.phpUserAgent || 'unknown')
-          + '\n'
-          + '\n'
-          + 'Error Code: ' + decodedStatus
-          + '\n'
-          + '\n'
-          + 'Error Data: ' + print_r(failData, true)
-          + '\n')
+      + encodeURIComponent(reportBody)
       + '">'
       + t('cafevdb', 'System Administrator')
       + '</a>';

@@ -435,7 +435,15 @@ class SepaDebitMandate implements \ArrayAccess
    */
   public function setWrittenMandate(?EncryptedFile $writtenMandate):SepaDebitMandate
   {
+    if (!empty($this->writtenMandate)) {
+      $this->writtenMandate->unlink();
+    }
+
     $this->writtenMandate = $writtenMandate;
+
+    if (!empty($this->writtenMandate)) {
+      $this->writtenMandate->link();
+    }
 
     return $this;
   }

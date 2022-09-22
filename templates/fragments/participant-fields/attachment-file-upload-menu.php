@@ -35,13 +35,16 @@ namespace OCA\CAFEVDB;
  * @param string $entityField
  * @param string $filesAppPath
  * @param string $filesAppLink
+ * @param string $filesAppTarget
  * @param string $downloadLink
  * @param string $participantFolder
  * @param array $toolTips
  * @param string $toolTipsPrefix
  */
 
-$filesAppTarget = md5($filesAppPath ?? '');
+if (empty($filesAppTarget)) {
+  $filesAppTarget = md5($filesAppPath ?? '');
+}
 
 ?>
 
@@ -88,7 +91,7 @@ $filesAppTarget = md5($filesAppPath ?? '');
           </a>
         </li>
         <li class="menu-item tooltip-auto"
-            title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:download']; ?>"
+            title="<?php echo $toolTips[$toolTipsPrefix . ':attachment:open-parent']; ?>"
         >
           <a class="operation open-parent<?php empty($filesAppLink) && p(' disabled'); ?>"
              href="<?php p($filesAppLink); ?>"

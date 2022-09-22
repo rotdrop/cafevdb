@@ -2343,10 +2343,20 @@ class phpMyEdit
 										   $helptip, $attributes);
 				}
 			} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
+				$readonly	= $this->disabledTag($k);
+				$mandatory  = $this->mandatory($k);
 				$attributes = $this->htmlAttributes(self::OPERATION_ADD, $k, []);
-				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
-										 $css_class_name,
-										 $k, $value, $escape, $helptip, $attributes);
+				echo $this->htmlTextarea(
+					$this->cgi['prefix']['data'].$this->fds[$k],
+					$css_class_name,
+					$k,
+					$value,
+					$readonly,
+					$mandatory,
+					$escape,
+					$helptip,
+					$attributes
+				);
 			} else {
 				// Simple edit box required
 				$readonly = $this->disabledTag($k);
@@ -2588,9 +2598,10 @@ class phpMyEdit
 					$hiddenValues[] = '';
 				}
 				foreach($hiddenValues as $hidden) {
-					// @TODO now emitted twice?
 					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden, $css_class_name);
 				}
+				// set $readonly to 'disabled' as this has already been handled here
+				$readonly = 'disabled';
 			}
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
@@ -2604,10 +2615,20 @@ class phpMyEdit
 									   $help, $attributes);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
+			$readonly = $this->disabledTag($k);
+			$mandatory = $this->mandatory($k);
 			$attributes = $this->htmlAttributes($operation, $k, $row);
-			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
-									 $css_class_name,
-									 $k, $row["qf$k"], $escape, $help, $attributes);
+			echo $this->htmlTextarea(
+				$this->cgi['prefix']['data'].$this->fds[$k],
+				$css_class_name,
+				$k,
+				$row["qf$k"],
+				$readonly,
+				$mandatory,
+				$escape,
+				$help,
+				$attributes
+			);
 		} else {
 			$value    = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$readonly = $this->disabledTag($k);
@@ -3464,7 +3485,15 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
-	function htmlTextarea($name, $css, $k, $value = null, $escape = true, $help = NULL, $attributes = NULL) /* {{{ */
+	function htmlTextarea($name,
+						  $css,
+						  $k,
+						  $value = null,
+						  $readonly = false,
+						  $required = false,
+						  $escape = true,
+						  $help = NULL,
+						  $attributes = NULL) /* {{{ */
 	{
 		// mce mod start
 		if (isset($this->fdd[$k]['textarea']['css'])) {
@@ -3499,6 +3528,12 @@ class phpMyEdit
 		}
 		if (!empty($attributes)) {
 			$ret .= ' '.$attributes;
+		}
+		if (!empty($readonly)) {
+			$ret .= ' readonly'; // readonly attribute not supported
+		}
+		if (!empty($required)) {
+			$ret .= ' required';
 		}
 		$ret .= '>';
 		if ($escape) {

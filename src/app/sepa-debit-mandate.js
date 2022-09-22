@@ -40,6 +40,7 @@ import modalizer from './modalizer.js';
 // import { recordValue as pmeRecordValue } from './pme-record-id.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import initFileUploadRow from './pme-file-upload-row.js';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
 import './lock-input.js';
 import {
   data as pmeData,
@@ -264,10 +265,14 @@ const mandatesInit = function(data, onChangeCallback) {
     });
 
   const writtenMandateUploadDone = function(file, index, container) {
+    console.info('FILE', [file]);
     const mandateFieldset = popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
-    mandateFieldset.find('input.written-mandate-file-upload').val(file.name);
+    mandateFieldset.find('input.written-mandate-file-upload').val(JSON.stringify([file]));
+    const fileName = (file.upload_mode !== 'link')
+      ? file.original_name
+      : file.name;
     mandateFieldset.find('input.upload-placeholder')
-      .val(file.original_name)
+      .val(fileName)
       .lockUnlock('lock', true);
     // we now should pretend that we have no written mandate in order to get the styling right
     mandateFieldset.removeClass('have-written-mandate').addClass('no-written-mandate');
@@ -278,43 +283,20 @@ const mandatesInit = function(data, onChangeCallback) {
     mandateFormSelector + ' ' + 'input.upload-from-cloud',
     function(event) {
       const $this = $(this);
-      Dialogs.filePicker(
-        t(appName, 'Select debit mandate for {musicianName}', popup.data()),
-        function(paths) {
-          $this.addClass('busy');
-          if (!paths) {
-            Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-            $this.removeClass('busy');
-            return;
-          }
-          if (!Array.isArray(paths)) {
-            paths = [paths];
-          }
-          $.post(generateUrl('upload/stash'), { cloudPaths: paths })
-            .fail(function(xhr, status, errorThrown) {
-              Ajax.handleError(xhr, status, errorThrown);
-              $this.removeClass('busy');
-            })
-            .done(function(files) {
-              if (!Array.isArray(files) || files.length !== 1) {
-                Dialogs.alert(
-                  t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
-                  t(appName, 'Error'),
-                  function() {
-                    $this.removeClass('busy');
-                  });
-                return;
-              }
-              writtenMandateUploadDone(files[0], 0, $uploadUi);
-              $this.removeClass('busy');
-            });
+
+      cloudFilePickerDialog({
+        setup: () => $this.addClass('busy'),
+        cleanup: () => $this.removeClass('busy'),
+        filePickerCaption: t(appName, 'Select debit mandate for {musicianName}', popup.data()),
+        initialCloudFolder: popup.data('participantFolder'),
+        handlePickedFiles(files, paths, cleanup) {
+          writtenMandateUploadDone(files[0], 0, $uploadUi);
+          cleanup();
         },
-        false, // multiple
-        undefined, // mimetypeFilter
-        undefined, // modal
-        undefined, // type
-        popup.data('participantFolder'),
-      );
+      });
+
+      $.fn.cafevTooltip.remove();
+      return false;
     });
 
   popup.on(
@@ -1384,9 +1366,24 @@ const mandateReady = function(selector, parameters, resizeCB) {
     .off('change')
     .on('change', function(event) {
       const $self = $(this);
+      // handle special "select-all" option.
+      const selectedValues = SelectUtils.selected($self);
+      if (selectedValues.indexOf('-1') !== -1) {
+        const allValues = SelectUtils.optionValues($self).filter((x) => x !== '');
+        if (allValues.length === selectedValues.length) {
+          selectedValues.splice(0, selectedValues.length);
+        } else {
+          allValues.splice(allValues.indexOf('-1'), 1);
+          selectedValues.splice(0, selectedValues.length, ...allValues);
+        }
+        while (selectedValues.indexOf('') !== -1) {
+          selectedValues.splice(selectedValues.indexOf(''), 1);
+        }
+        SelectUtils.selected($self, selectedValues);
+      }
       const otherClass = $self.hasClass('top') ? '.bottom' : '.top';
       const $other = bulkTransactionChooser.filter(otherClass);
-      SelectUtils.selected($other, SelectUtils.selected($self));
+      SelectUtils.selected($other, selectedValues);
       $.fn.cafevTooltip.remove();
       return false;
     });

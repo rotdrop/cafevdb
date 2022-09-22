@@ -23,7 +23,9 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
+use \DateTimeImmutable;
 use ZipStream\ZipStream;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCP\IDateTimeFormatter;
@@ -84,6 +86,28 @@ class Composer
 
   private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
   private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
+
+  private const HEADER_TAG = 'X-CAFEVDB';
+  private const HEADER_MARKER = [ self::HEADER_TAG => 'YES', ];
+  private const HEADER_MARKER_RECIPIENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Recipient', ];
+  private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
+  private const DO_NOT_REPLY_SENDER = 'do-not-reply';
+
+  /**
+   * @var string
+   *
+   * The default attachment size limit. The actual limit is configured by the
+   * app-config value 'attachmentLinkSizeLimit'.
+   */
+  const DEFAULT_ATTACHMENT_SIZE_LIMIT = (1 << 20); // 1 Mib, quite small
+
+  /**
+   * @var int
+   *
+   * The default attachment-link expiration limit. The action limit is
+   * configured by the app-config value 'attachmentLinkExpirationLimit'.
+   */
+  const DEFAULT_ATTACHMENT_LINK_EXPIRATION_LIMIT = 7; // days
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
@@ -334,6 +358,9 @@ Störung.';
   /** @var int */
   private $bulkTransactionId;
 
+  /** @var float */
+  private $paymentSign = 1.0;
+
   /** @var bool */
   private $constructionMode;
 
@@ -495,13 +522,21 @@ Störung.';
     $this->bulkTransactionId = $this->cgiValue(
       'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', 0));
     if ($this->bulkTransactionId > 0) {
-      $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
-                                    ->find($this->bulkTransactionId);
-      if (!empty($this->bulkTransaction) && empty($template)) {
+      $this->bulkTransaction = $this
+        ->getDatabaseRepository(Entities\SepaBulkTransaction::class)
+        ->find($this->bulkTransactionId);
+      if (!empty($this->bulkTransaction)) {
+        /** @var SepaBulkTransactionService $bulkTransactionService */
         $bulkTransactionService = $this->di(SepaBulkTransactionService::class);
-        $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
-        $template = $template . '-' . $this->l->t('announcement');
-        list($template,) = $this->normalizeTemplateName($template);
+        $bulkTransactionService->updateBulkTransaction($this->bulkTransaction, flush: true);
+        if (empty($template)) {
+          $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
+          $template = $template . '-' . $this->l->t('announcement');
+          list($template,) = $this->normalizeTemplateName($template);
+        }
+        $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
+          ? 1.0
+          : -1.0;
       }
     }
 
@@ -1035,7 +1070,7 @@ Störung.';
                     );
                     $row = str_ireplace($keyVariants, $replacements[$key], $row);
                   }
-                  $cssClass = $cssRowClass;
+                  $cssClass = '@cssRowClass@';
                   if (!empty($memberNames)) {
                     $cssClass .= ' has-data';
                     $rowData = [ $cssClass, $this->l->t('members'), implode(', ', $memberNames), ];
@@ -1088,9 +1123,8 @@ Störung.';
                     $fieldHtml = $fieldHeader  . $fieldHtml;
                   }
 
-                  $html .= $fieldHtml;
+                  $html .= str_replace('@cssRowClass@', $cssRowClass ?? '', $fieldHtml);
                 }
-
               }
             }
 
@@ -1144,14 +1178,16 @@ Störung.';
         if (empty($musician)) {
           return $keyArg[0];
         }
+        if (empty($this->bulkTransaction)) {
+          return $keyArg[0];
+        }
 
         /** @var Entities\CompositePayment $compositePayment */
         $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
         if (!empty($compositePayment)) {
-          $amount = $compositePayment->getAmount();
+          $amount = $this->paymentSign * $compositePayment->getAmount();
           return $this->moneyValue($amount);
         }
-
         return $keyArg[0];
       };
 
@@ -1292,6 +1328,9 @@ Störung.';
         if (empty($musician)) {
           return $keyArg[0];
         }
+        if (empty($this->bulkTransaction)) {
+          return $keyArg[0];
+        }
 
         /** @var Entities\CompositePayment $compositePayment */
         $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
@@ -1304,9 +1343,9 @@ Störung.';
             $keyArg);
 
           $tableTemplate = [
-            'header' => $keyArg[1]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
-            'row' => $keyArg[2]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
-            'footer' => $keyArg[3]?:self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
+            'header' => $keyArg[1] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['header'],
+            'row' => $keyArg[2] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['row'],
+            'footer' => $keyArg[3] ?? self::DEFAULT_HTML_TEMPLATES['transaction-parts']['footer'],
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
@@ -1337,10 +1376,10 @@ Störung.';
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
-            $invoiced = $payment->getAmount();
+            $invoiced = $this->paymentSign * $payment->getAmount();
 
-            $totals = $payment->getReceivable()->amountPayable();
-            $received = $payment->getReceivable()->amountPaid();
+            $totals = $this->paymentSign * $payment->getReceivable()->amountPayable();
+            $received = $this->paymentSign * $payment->getReceivable()->amountPaid();
 
             // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
@@ -1624,7 +1663,8 @@ Störung.';
         $msg = $this->composeAndSend(
           $strMessage, [ $recipient ], $personalAttachments,
           addCC: false,
-          references: $templateMessageId
+          references: $templateMessageId,
+          customHeaders: self::HEADER_MARKER_RECIPIENT,
         );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
@@ -1633,13 +1673,6 @@ Störung.';
 
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
-
-          // BIG FAT TODO
-          // if ($this->bulkTransactionId > 0 && $dbdata['PaymentId'] > 0) {
-          //   $messageId = $msg['messageId'];
-          //   $where =  '`Id` = '.$dbdata['PaymentId'].' AND `BulkTransactionId` = '.$this->bulkTransactionId;
-          //   mySQL::update('ProjectPayments', $where, [ 'DebitMessageId' => $messageId ], $this->dbh);
-          // }
           if (!empty($this->bulkTransaction)) {
             $payment = $this->bulkTransaction->getPayment($musician);
             if (empty($payment)) {
@@ -1661,12 +1694,16 @@ Störung.';
       // this makes no sense) to all Cc:, Bcc: recipients and the
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
+
+
       ++$this->diagnostics['TotalCount'];
       $mimeMsg = $this->composeAndSend(
         $messageTemplate, [],
         addCC: true,
         messageId: $templateMessageId,
-        references: $references
+        references: $references,
+        customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
@@ -1776,7 +1813,7 @@ Störung.';
         if (!empty($this->project)
             && $this->project->getId() == $this->getClubMembersProjectId()
             && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
-          $templateId = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+          $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
         }
 
         /** @var FinanceService $financeService */
@@ -1858,6 +1895,10 @@ Störung.';
             if (empty($this->project)) {
               continue 2;
             }
+            if ($musician->isMemberOf($this->getClubMembersProjectId())) {
+              // switch to the member-data update which also inludes a mandate form
+              $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+            }
             /**@var Entities\ProjectParticipant $participant */
             $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
               'musician' => $musician,
@@ -1869,7 +1910,6 @@ Störung.';
             if (empty($bankAccount)) {
               $bankAccount = $musician->getSepaBankAccounts()->first();
             }
-
             $personalAttachments[] = function() use ($financeService, $bankAccount, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
                 $financeService->preFilledDebitMandateForm(
@@ -2170,54 +2210,58 @@ Störung.';
   }
 
   /**
-   * Compose all "global" attachments, possibly replacing large attachments by
-   * download links.
+   * Add the given file attachment, replacing it by a download-link if too
+   * large.
    *
    * @param PHPMailer $phpMailer
    *
-   * @param string $messageId Defines the sub-folder where the attachments are
-   * stored.
+   * @param string $messageId The message id is used to construct the folder
+   * on the server where stripped attachments can be downlaoded
+   * from.
+   *
+   * @param string $data The data to be attached.
+   *
+   * @param string $fileName The file-name to be presented to the recipient.
+   *
+   * @param string $transferEncoding
+   *
+   * @param string $mimeType
+   *
+   * @return void
    */
-  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
-  {
-    // also simulate link generation for attachments exceeding a certain size
-    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', (1 << 20)); // k=10, m=20
-    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', 7); // days
+  private function addFileAttachment(
+    PHPMailer $phpMailer,
+    string $messageId,
+    string $data,
+    string $fileName,
+    string $transferEncoding,
+    string $mimeType,
+  ) {
+    $linkSizeLimit = $this->getConfigValue('attachmentLinkSizeLimit', self::DEFAULT_ATTACHMENT_SIZE_LIMIT);
+    $linkExpirationLimit = $this->getConfigValue('attachmentLinkExpirationLimit', self::DEFAULT_ATTACHMENT_LINK_EXPIRATION_LIMIT);
 
     $outBoxSubFolderPath = self::outBoxSubFolderFromMessageId($messageId);
     $outBoxSubFolderPath = UserStorage::pathCat($this->getOutBoxFolderPath(), $outBoxSubFolderPath);
 
     $expirationDate = $linkExpirationLimit <= 0
       ? null
-      : ((new \DateTimeImmutable('UTC midnight'))
+      : ((new DateTimeImmutable('UTC midnight'))
         ->modify('+' . $linkExpirationLimit . ' days'));
 
-    // Add all registered attachments.
-    foreach ($this->fileAttachments() as $attachment) {
-      if ($attachment['status'] != 'selected') {
-        continue;
+    if ($linkSizeLimit >= 0 && strlen($data) > $linkSizeLimit) {
+      $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $fileName);
+      $downloadFile = $this->userStorage->getFile($downloadPath);
+      if (empty($downloadFile)) {
+        $downloadFile = $this->userStorage->putContent($downloadPath, $data);
       }
-      if ($attachment['type'] == 'message/rfc822') {
-        $encoding = '8bit';
-      } else {
-        $encoding = 'base64';
-      }
-      $file = $this->appStorage->getFile($attachment['tmp_name']);
-      if ($linkSizeLimit >= 0 && $file->getSize() > $linkSizeLimit) {
-        $downloadPath = UserStorage::pathCat($outBoxSubFolderPath, $attachment['name']);
-        $downloadFile = $this->userStorage->getFile($downloadPath);
-        if (empty($downloadFile)) {
-          $downloadFile = $this->userStorage->putContent($downloadPath, $file->getContent());
-        }
-        if (!empty($downloadFile)) {
-          $shareLink = $this->simpleSharingService->linkShare(
-            $downloadFile,
-            $this->shareOwnerId(),
-            sharePerms: \OCP\Constants::PERMISSION_READ,
-            expirationDate: $expirationDate
-            );
-          $downloadAttachment = $this->l->t(
-            '<!DOCTYPE html>
+      $shareLink = $this->simpleSharingService->linkShare(
+        $downloadFile,
+        $this->shareOwnerId(),
+        sharePerms: \OCP\Constants::PERMISSION_READ,
+        expirationDate: $expirationDate
+      );
+      $downloadAttachment = $this->l->t(
+        '<!DOCTYPE html>
 <html lang="%1$s">
   <head>
     <title>%2$s</title>
@@ -2237,30 +2281,65 @@ Störung.';
     </div>
   </body>
 </html>', [
-  $this->getLanguage(),
-  $shareLink,
-  basename($attachment['name']),
-  Util::humanFileSize($downloadFile->getSize()),
-  $attachment['type'],
-  30,
-  $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-]
-          );
-          $phpMailer->addStringAttachment(
-            $downloadAttachment,
-            basename($attachment['name']) . '.html',
-            '8bit',
-            'text/html'
-          );
-          $this->registerAttachmentDownloadsCleaner();
-          continue;
-        }
+        $this->getLanguage(),
+        $shareLink,
+        $fileName,
+        Util::humanFileSize($downloadFile->getSize()),
+        $mimeType,
+        30,
+        $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
+      ]);
+      $data = $downloadAttachment;
+      $fileName = $fileName . '.html';
+      $transferEncoding = '8bit';
+      $mimeType = 'text/html';
+      $this->registerAttachmentDownloadsCleaner();
+    }
+    $phpMailer->AddStringAttachment(
+      $data,
+      $fileName,
+      $transferEncoding,
+      $mimeType,
+    );
+  }
+
+  /**
+   * Compose all "global" attachments, possibly replacing large attachments by
+   * download links. Attachments are converted to download-links if they
+   * exceed the limit given by the 'attachmentLinkSizeLimit' app-config
+   * option. The download links will expire after the time given by the
+   * 'attachmentLinkExpirationLimit' limit.
+   *
+   * @param PHPMailer $phpMailer
+   *
+   * @param string $messageId The message id is used to construct the folder
+   * on the server where stripped attachments can be downlaoded
+   * from.
+   *
+   * @return void
+   */
+  private function composeGlobalAttachments(PHPMailer $phpMailer, string $messageId)
+  {
+    // Add all registered attachments.
+    foreach ($this->fileAttachments() as $attachment) {
+      if ($attachment['status'] != 'selected') {
+        continue;
       }
-      $phpMailer->AddStringAttachment(
-        $file->getContent(),
-        basename($attachment['name']),
+      if ($attachment['type'] == 'message/rfc822') {
+        $encoding = '8bit';
+      } else {
+        $encoding = 'base64';
+      }
+      $file = $this->appStorage->getFile($attachment['tmp_name']);
+
+      $this->addFileAttachment(
+        $phpMailer,
+        $messageId,
+        $file->getConten(),
+        $attachment['name'],
         $encoding,
-        $attachment['type']);
+        $attachment['type'],
+      );
     }
 
     // add "global" blank template attachments with just the orchestra-data
@@ -2309,12 +2388,14 @@ Störung.';
           default:
             continue 2;
         }
-        $phpMailer->AddStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          $messageId,
           $fileData,
           $fileName,
           'base64',
-          $mimeType);
-        continue;
+          $mimeType,
+        );
       }
     }
   }
@@ -2346,6 +2427,8 @@ Störung.';
    * header. If a string then the single message-id of the master-template. If
    * an array then these are the message ids of the individual merged messages.
    *
+   * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
+   *
    * @return array
    * ```
    * [
@@ -2356,13 +2439,17 @@ Störung.';
    * ```
    */
   private function composeAndSend(
-    $strMessage
-    , $EMails
-    , $extraAttachments = []
-    , $addCC = true
-    , ?string $messageId = null
-    , $references = null)
-  {
+    $strMessage,
+    $EMails,
+    $extraAttachments = [],
+    $addCC = true,
+    ?string $messageId = null,
+    $references = null,
+    $customHeaders = [],
+    $doNotReply = false,
+  ) {
+    $customHeaders[] = self::HEADER_MARKER;
+
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2409,7 +2496,16 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       if (!$this->constructionMode) {
@@ -2495,7 +2591,9 @@ Störung.';
       // All extra (in particular: personal) attachments.
       foreach ($extraAttachments as $generator) {
         $attachment = call_user_func($generator);
-        $phpMailer->addStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          is_string($references) ? $references : $messageId,
           $attachment['data'],
           $attachment['fileName'],
           $attachment['encoding'],
@@ -2542,6 +2640,17 @@ Störung.';
     }
     if (!empty($this->inReplyToId)) {
       $phpMailer->addCustomHeader('In-Reply-To', $this->inReplyToId);
+    }
+
+    // add custom headers as requested
+    foreach ($customHeaders as $key => $value) {
+      if (is_array($value)) {
+        foreach ($value as $key => $value) {
+          $phpMailer->addCustomHeader($key,$value);
+        }
+      } else {
+        $phpMailer->addCustomHeader($key,$value);
+      }
     }
 
     // Finally the point of no return. Send it out!!!
@@ -2772,6 +2881,8 @@ Störung.';
    * header. If a string then the single message-id of the master-template. If
    * an array then these are the message ids of the individual merged messages.
    *
+   * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
+   *
    * @return array
    * ```
    * [
@@ -2785,13 +2896,17 @@ Störung.';
    * @todo Fold into composeAndSend
    */
   private function composeAndExport(
-    $strMessage
-    , $eMails
-    , $extraAttachments = []
-    , $addCC = true
-    , ?string $messageId = null
-    , $references = null
+    $strMessage,
+    $eMails,
+    $extraAttachments = [],
+    $addCC = true,
+    ?string $messageId = null,
+    $references = null,
+    $customHeaders = [],
+    $doNotReply = false,
   ) {
+    $customHeaders[] = self::HEADER_MARKER;
+
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
@@ -2818,7 +2933,17 @@ Störung.';
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
-      $phpMailer->AddReplyTo($senderEmail, $senderName);
+
+      if ($doNotReply) {
+        list(,$domain) = explode('@', $senderEmail);
+        $phpMailer->addReplyTo(
+          self::DO_NOT_REPLY_SENDER . '@' . $domain,
+          $this->l->t('DO NOT REPLY')
+        );
+      } else {
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+      }
+
       $phpMailer->SetFrom($senderEmail, $senderName);
 
       // Loop over all data-base records and add each recipient in turn
@@ -2891,24 +3016,27 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage($calendar,
-                                           md5($this->projectName.'.ics'),
-                                           $this->projectName.'.ics',
-                                           'quoted-printable',
-                                           'text/calendar');
+        $phpMailer->AddStringEmbeddedImage(
+          $calendar,
+          md5($this->projectName.'.ics'),
+          $this->projectName.'.ics',
+          'quoted-printable',
+          'text/calendar',
+        );
       }
 
       // All extra (in particular: personal) attachments.
       foreach ($extraAttachments as $generator) {
         $attachment = call_user_func($generator);
-        $phpMailer->addStringAttachment(
+        $this->addFileAttachment(
+          $phpMailer,
+          is_string($references) ? $references : $messageId,
           $attachment['data'],
           $attachment['fileName'],
           $attachment['encoding'],
           $attachment['mimeType']
         );
       }
-
     } catch (\Throwable $t) {
       $this->logException($t);
       // popup an alert and abort the form-processing
@@ -2931,6 +3059,17 @@ Störung.';
     }
     foreach ($this->referencing as $referenceMessageId) {
       $phpMailer->addReference($referenceMessageId);
+    }
+
+    // add custom headers as requested
+    foreach ($customHeaders as $key => $value) {
+      if (is_array($value)) {
+        foreach ($value as $key => $value) {
+          $phpMailer->addCustomHeader($key,$value);
+        }
+      } else {
+        $phpMailer->addCustomHeader($key,$value);
+      }
     }
 
     // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
@@ -3099,7 +3238,8 @@ Störung.';
           [ $recipient ],
           $personalAttachments,
           addCC: false,
-          references: $templateMessageId
+          references: $templateMessageId,
+          customHeaders: self::HEADER_MARKER_RECIPIENT,
         );
         if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
           ++$this->diagnostics['FailedCount'];
@@ -3121,7 +3261,9 @@ Störung.';
         $messageTemplate, [], [],
         addCC: true,
         messageId: $templateMessageId,
-        references: $references
+        references: $references,
+        customHeaders: self::HEADER_MARKER_SENT,
+        doNotReply: true,
       );
       if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
         ++$this->diagnostics['FailedCount'];
@@ -3631,7 +3773,7 @@ Störung.';
     }
     $referencedBy = $sentEmail->getReferencedBy();
     foreach ($referencedBy as $referrer) {
-      $this->referencing[] = $refererrer->getMessageId();
+      $this->referencing[] = $referrer ->getMessageId();
     }
     $this->cgiData['referencing'] = $this->referencing;
 
@@ -3745,17 +3887,14 @@ Störung.';
             break;
           }
         }
-        $words[] = strtolower($translatedWord);
+        $words[] = strtolower($this->transliterate($translatedWord));
       }
       if (!empty($words)) {
         $translation = Util::dashesToCamelCase(implode(' ', $words), true, ' ');
         array_unshift($result, $translation);
       }
     }
-    return array_map(
-      function($template) { return $this->transliterate($template); },
-      array_unique($result)
-    );
+    return array_unique($result);
   }
 
   /**
@@ -4560,12 +4699,24 @@ Störung.';
         'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
-      if ((!empty($this->bulkTransaction) && $templateId == ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE)
-          || isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
-        $attachment['status'] = 'selected';
-      } else {
-        $attachment['status'] = 'inactive';
+      $status = 'inactive';
+      if (isset($selectedAttachments[$origin . ':' . $attachment[$attachment['value']]])) {
+        $status = 'selected';
+      } elseif (!empty($this->project) && !empty($this->bulkTransaction) && ($this->bulkTransaction instanceof Entities\SepaDebitNote)) {
+        switch ($templateId) {
+          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+            if ($this->project->getId() != $this->getClubMembersProjectId()) {
+              $status = 'selected';
+            }
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+            if ($this->project->getId() == $this->getClubMembersProjectId()) {
+              $status = 'selected';
+            }
+            break;
+        }
       }
+      $attachment['status'] = $status;
       $templateAttachments[] = $attachment;
     }
 

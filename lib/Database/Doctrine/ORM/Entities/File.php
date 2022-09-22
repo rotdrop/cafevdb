@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -64,11 +65,30 @@ class File implements \ArrayAccess
   protected $id;
 
   /**
+   * @var int
+   *
+   * The number of links pointing to this file.
+   *
+   * @ORM\Column(type="integer", nullable=false, options={"default"=0,"unsigned"=true})
+   */
+  protected $numberOfLinks = 0;
+
+  /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=512, nullable=true)
    */
   protected $fileName;
+
+  /**
+   * @var string|null
+   *
+   * Optional original file-name, e.g. if this file generated from an upload
+   * or was copied from a cloud folder.
+   *
+   * @ORM\Column(type="string", length=512, nullable=true)
+   */
+  protected $originalFileName;
 
   /**
    * @var string|null
@@ -126,11 +146,76 @@ class File implements \ArrayAccess
   /**
    * Get id.
    *
-   * @return int
+   * @return integer
    */
-  public function getId()
+  public function getId():int
   {
     return $this->id;
+  }
+
+  /**
+   * Set numberOfLinks.
+   *
+   * @param int $numberOfLinks
+   *
+   * @return File
+   *
+   * @throws DatabaseException
+   */
+  public function setNumberOfLinks(int $numberOfLinks):File
+  {
+    if ($numberOfLinks < 0) {
+      throw new DatabaseException(
+        'Number of links ' . $numberOfLinks
+          . ' has to be non negative. '
+          . 'File ' . $this->fileName . '@' . $this->id);
+    }
+
+    $this->numberOfLinks = $numberOfLinks;
+
+    return $this;
+  }
+
+  /**
+   * Get numberOfLinks.
+   *
+   * @return int
+   */
+  public function getNumberOfLinks():int
+  {
+    return $this->numberOfLinks;
+  }
+
+  /**
+   * Increment the link-count.
+   *
+   * @return File
+   */
+  public function link():File
+  {
+    ++$this->numberOfLinks;
+
+    return $this;
+  }
+
+  /**
+   * Decrement the link-count
+   *
+   * @return File
+   *
+   * @throws DatabaseException
+   */
+  public function unlink():File
+  {
+    if ($this->numberOfLinks <= 0) {
+      throw new DatabaseException(
+        'Number of links ' . $this->numberOfLinks . ' is already zero or less '
+          . ' but has to be non-negative. '
+          . 'File ' . $this->fileName . '@' . $this->id);
+    }
+    --$this->numberOfLinks;
+
+    return $this;
   }
 
   /**
@@ -140,7 +225,7 @@ class File implements \ArrayAccess
    *
    * @return File
    */
-  public function setMimeType($mimeType = null):File
+  public function setMimeType(?string $mimeType = null):File
   {
     $this->mimeType = $mimeType;
 
@@ -152,7 +237,7 @@ class File implements \ArrayAccess
    *
    * @return string|null
    */
-  public function getMimeType()
+  public function getMimeType():?string
   {
     return $this->mimeType;
   }
@@ -213,6 +298,30 @@ class File implements \ArrayAccess
   public function getBaseName(?string $extension = null):?string
   {
     return is_string($this->fileName) ? basename($this->fileName, $extension) : null;
+  }
+
+  /**
+   * Set originalFileName.
+   *
+   * @param string|null $originalFileName
+   *
+   * @return File
+   */
+  public function setOriginalFileName(?string $originalFileName = null):File
+  {
+    $this->originalFileName = $originalFileName;
+
+    return $this;
+  }
+
+  /**
+   * Get originalFileName.
+   *
+   * @return string|null
+   */
+  public function getOriginalFileName():?string
+  {
+    return $this->originalFileName;
   }
 
   /**

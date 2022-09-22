@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Storage;
@@ -34,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Controller\DownloadsController;
 
+/** Support functions for the database storage backend. */
 class DatabaseStorageUtil
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -44,11 +46,20 @@ class DatabaseStorageUtil
   /** @var string */
   protected $appName;
 
+  /**
+   * @param string $appName Application name.
+   *
+   * @param EntityManager $entityManager The ...
+   *
+   * @param ILogger $logger Cloud-logger.
+   *
+   * @param IL10N $l10n Guess what.
+   */
   public function __construct(
-    $appName
-    , EntityManager $entityManager
-    , ILogger $logger
-    , IL10N $l10n
+    string $appName,
+    EntityManager $entityManager,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appName = $appName;
     $this->entityManager = $entityManager;
@@ -59,7 +70,9 @@ class DatabaseStorageUtil
   /**
    * Find a database file by entity, file-id or file-name.
    *
-   * @param Entities\File|string|int $fileIdentifier
+   * @param Entities\File|string|int $fileIdentifier Either the entity-id or
+   * the file-name. For convenience a file-entity is just passed-through when
+   * passed as parameter.
    *
    * @return null|Entities\File
    */
@@ -72,7 +85,7 @@ class DatabaseStorageUtil
       $id = filter_var($fileIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]);
       if ($id !== false) {
         return $this->getDatabaseRepository(Entities\File::class)->find($id);
-      } else if (is_string($fileIdentifier)) {
+      } elseif (is_string($fileIdentifier)) {
         return $this->getDatabaseRepository(Entities\File::class)->findOneBy([ 'fileName' => $fileIdentifier ]);
       }
     } catch (\Throwable $t) {
@@ -88,10 +101,11 @@ class DatabaseStorageUtil
    * @param string|int|Entities\File|array $fileIdentifier Either a single
    * object understood by DatabaseStorageUtil::get().
    *
-   * @return string Return a download-link for the requested objects.
+   * @param null|string $fileName Download-filename.
    *
+   * @return string Return a download-link for the requested objects.
    */
-  public function getDownloadLink($fileIdentifier, $fileName = null):string
+  public function getDownloadLink($fileIdentifier, ?string $fileName = null):string
   {
     $urlGenerator = \OC::$server->getURLGenerator();
     $queryParameters = [
@@ -138,8 +152,6 @@ class DatabaseStorageUtil
    * contain all data in the given $folderName.
    *
    * @return string Binary zip-archive data.
-   *
-   * @todo Support streaming, maybe.
    */
   public function getCollectionArchive(array $items, ?string $folderName = null)
   {
@@ -166,7 +178,6 @@ class DatabaseStorageUtil
 
     return $data;
   }
-
 }
 
 // Local Variables: ***

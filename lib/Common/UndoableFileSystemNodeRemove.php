@@ -138,7 +138,9 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
         throw $e;
       }
     }
-    @time_sleep_until($startTime+1);
+    if ($startTime + 1 < $this->timeFactory->getTime()) {
+      time_sleep_until($startTime + 1);
+    }
     $endTime = $this->timeFactory->getTime();
     $this->doneInterval = [ $startTime, $endTime ];
   }

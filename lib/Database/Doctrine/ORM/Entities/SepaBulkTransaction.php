@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
@@ -59,9 +61,9 @@ class SepaBulkTransaction implements \ArrayAccess
   private $id;
 
   /**
-   * @var EncryptedFile
+   * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true, indexBy="id")
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -203,11 +205,39 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
+   * @param EncryptedFile $data
+   *
+   * @return SepaBulkTransaction
+   */
+  public function addTransactionData(EncryptedFile $data):SepaBulkTransaction
+  {
+    if (!$this->sepaTransactionData->containsKey($data->getId())) {
+      $data->link();
+      $this->sepaTransactionData->set($data->getId(), $data);
+    }
+    return $this;
+  }
+
+  /**
+   * @param EncryptedFile $data
+   *
+   * @return SepaBulkTransaction
+   */
+  public function removeTransactionData(EncryptedFile $data):SepaBulkTransaction
+  {
+    if ($this->sepaTransactionData->containsKey($data->getId())) {
+      $this->sepaTransactionData->remove($data->getId());
+      $data->unlink();
+    }
+    return $this;
+  }
+
+  /**
    * Get sepaTransactionDataChanged.
    *
    * @return Collection
    */
-  public function getSepaTransactionDataChanged():?\DateTimeInterface
+  public function getSepaTransactionDataChanged():?DateTimeInterface
   {
     return $this->sepaTransactionDataChanged;
   }
@@ -215,11 +245,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionDeadline.
    *
-   * @param \DateTime $submissionDeadline
+   * @param DateTimeInterface $submissionDeadline
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionDeadline($submissionDeadline):SepaBulkTransaction
+  public function setSubmissionDeadline(?DateTimeInterface $submissionDeadline):SepaBulkTransaction
   {
     $this->submissionDeadline = $submissionDeadline;
 
@@ -229,9 +259,9 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get submissionDeadline.
    *
-   * @return \DateTime
+   * @return null|DateTimeInterface
    */
-  public function getSubmissionDeadline()
+  public function getSubmissionDeadline():?DateTimeInterface
   {
     return $this->submissionDeadline;
   }
@@ -255,7 +285,7 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * @return \DateTimeInterface|null
    */
-  public function getSubmitDate():?\DateTimeInterface
+  public function getSubmitDate():?DateTimeInterface
   {
     return $this->submitDate;
   }
@@ -277,9 +307,9 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTime
+   * @return DateTimeInterface
    */
-  public function getDueDate():?\DateTimeInterface
+  public function getDueDate():?DateTimeInterface
   {
     return $this->dueDate;
   }
