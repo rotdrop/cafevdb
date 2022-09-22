@@ -158,9 +158,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get id.
    *
-   * @return int
+   * @return null|int
    */
-  public function getId():int
+  public function getId():?int
   {
     return $this->id;
   }
