@@ -53,6 +53,7 @@ class Storage extends AbstractStorage
   use CopyDirectory;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * @var string
@@ -157,7 +158,7 @@ class Storage extends AbstractStorage
    */
   protected function getStorageModificationDateTime():?DateTimeInterface
   {
-    return $this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime();
+    return self::ensureDate($this->getDatabaseRepository(Entities\LogEntry::class)->modificationTime());
   }
 
   /**

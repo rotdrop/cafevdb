@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 class BankTransactionsStorage extends Storage
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;
 
@@ -154,7 +156,7 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    return $this->transactionsRepository->sepaTransactionDataModificationTime();
+    return self::ensureDate($this->transactionsRepository->sepaTransactionDataModificationTime());
   }
 
   /** {@inheritdoc} */
