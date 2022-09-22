@@ -243,6 +243,9 @@ class PaymentsController extends Controller
               break;
           }
 
+          $this->persist($supportingDocument);
+          $compositePayment->setSupportingDocument($supportingDocument);
+
           if ($supportingDocument->getNumberOfLinks() ==  1) {
             // only tweak the file name if we are the only user.
             $supportingDocumentFileName = basename($supportingDocumentFileName);
@@ -260,8 +263,6 @@ class PaymentsController extends Controller
             $supportingDocument->setFileName($supportingDocumentFileName);
           }
 
-          $this->persist($supportingDocument);
-          $compositePayment->setSupportingDocument($supportingDocument);
           $this->flush();
 
           $this->entityManager->commit();
