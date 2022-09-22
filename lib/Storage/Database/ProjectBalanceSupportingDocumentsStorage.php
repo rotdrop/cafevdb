@@ -422,6 +422,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         if ($mtime !== null) {
           $file->setCreated($mtime);
         }
+        $this->persist($file);
+        $this->flush();
         $containerEntity->addDocument($file);
       }
       if ($mtime !== false) {
