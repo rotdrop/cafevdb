@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-21 14:17+0200\n"
-"PO-Revision-Date: 2022-09-21 14:22+0200\n"
+"POT-Creation-Date: 2022-09-22 15:06+0200\n"
+"PO-Revision-Date: 2022-09-22 15:13+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -223,7 +223,7 @@ msgstr ""
 #: lib/Controller/AdminSettingsController.php:254
 #: lib/Controller/PersonalSettingsController.php:1844
 #: lib/Controller/PersonalSettingsController.php:1894
-#: lib/Controller/ProjectParticipantsController.php:919
+#: lib/Controller/ProjectParticipantsController.php:931
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr "Unbekannte Anfrage: \"%s\""
@@ -296,8 +296,8 @@ msgstr "Unbekannte Anfrage."
 
 #: lib/Controller/ContactsController.php:82
 #: lib/Controller/EmailFormController.php:973
-#: lib/Controller/PaymentsController.php:227
-#: lib/Controller/SepaDebitMandatesController.php:1267
+#: lib/Controller/PaymentsController.php:349
+#: lib/Controller/SepaDebitMandatesController.php:1188
 msgid "UNIMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
@@ -406,7 +406,7 @@ msgstr ""
 
 #: lib/Controller/EmailFormController.php:1020
 #: lib/Controller/EmailFormController.php:1078
-#: lib/Controller/UploadsController.php:407
+#: lib/Controller/UploadsController.php:408
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr "Konnte folgende Datei nicht zwischen-speichern: %s"
@@ -871,14 +871,14 @@ msgstr "Inhalts-Erzeuger für Schablone `%s' ist leer."
 msgid "Page `%s\\' not found."
 msgstr "Seite `%s' nicht gefunden."
 
-#: lib/Controller/PaymentsController.php:94
-#: lib/Controller/SepaDebitMandatesController.php:1130
-#: lib/Controller/SepaDebitMandatesController.php:1275
+#: lib/Controller/PaymentsController.php:119
+#: lib/Controller/SepaDebitMandatesController.php:1136
+#: lib/Controller/SepaDebitMandatesController.php:1419
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr "Die Information \"%s\" wird benötigt, fehlt aber."
 
-#: lib/Controller/PaymentsController.php:102
+#: lib/Controller/PaymentsController.php:127
 #, php-format
 msgid ""
 "Unable to find composite-payment for musician id \"%1$d\" with payment id "
@@ -887,26 +887,89 @@ msgstr ""
 "Kann die Buchung für die Person \"%1$d\" mit Zahlungs-Id \"%2$d\" nicht "
 "finden."
 
-#: lib/Controller/PaymentsController.php:117
-#: lib/Controller/SepaDebitMandatesController.php:1154
+#: lib/Controller/PaymentsController.php:141
+#: lib/Controller/SepaDebitMandatesController.php:1204
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr "Hochlade-Fehler \"%s\"."
 
-#: lib/Controller/PaymentsController.php:168
-#: lib/Controller/SepaDebitMandatesController.php:1203
-#: lib/Controller/SepaDebitMandatesController.php:1469
+#: lib/Controller/PaymentsController.php:153
+#: lib/Controller/ProjectParticipantsController.php:628
+#: lib/Controller/SepaDebitMandatesController.php:1220
+msgid ""
+"Move operation requested, but the original file path has not been specified."
+msgstr ""
+"Verschieben einer Datei angefragt, aber deren Datei-Pfad wurde nicht "
+"angegeben."
+
+#: lib/Controller/PaymentsController.php:157
+#: lib/Controller/ProjectParticipantsController.php:632
+#: lib/Controller/SepaDebitMandatesController.php:1224
+#, php-format
+msgid "Move operation requested, but the original file \"%s\" cannot be found."
+msgstr ""
+"Verschieben einer Datei angefragt, aber die Quelldatei \"%s\" kann nicht "
+"gefunden werden."
+
+#: lib/Controller/PaymentsController.php:163
+#: lib/Controller/ProjectParticipantsController.php:641
+#: lib/Controller/SepaDebitMandatesController.php:1230
+msgid ""
+"Link operation requested, but the id of the original file has not been "
+"specified."
+msgstr ""
+"Verknüpfen einer Datei angefragt, aber die Datenbank-Id der ursprünglichen "
+"Datei wurde nicht angegeben."
+
+#: lib/Controller/PaymentsController.php:167
+#: lib/Controller/ProjectParticipantsController.php:645
+#: lib/Controller/SepaDebitMandatesController.php:1234
+#, php-format
+msgid ""
+"Link operation requested, but the existing original file with id \"%s\" "
+"cannot be found."
+msgstr ""
+"Verknüpfen einer Datei angefragt, aber die ursprüngliche Datei mit der Id "
+"\"%s\" konnte nicht gefunden werden."
+
+#: lib/Controller/PaymentsController.php:229
+#: lib/Controller/ProjectParticipantsController.php:753
+#: lib/Controller/SepaDebitMandatesController.php:1295
+#, php-format
+msgid ""
+"Link operation requested, but the existing original file is the same as the "
+"target destination (%s@%s)"
+msgstr ""
+"Verknüpfen einer Datei angefragt, aber Quelle und Ziel sind gleich (%s@%s)."
+
+#: lib/Controller/PaymentsController.php:274
+#: lib/Controller/SepaDebitMandatesController.php:1337
+#: lib/Controller/SepaDebitMandatesController.php:1613
 msgid "Error, caught an exception. No changes were performed."
 msgstr "Interner Fehler. Es wurden deshalb keine Änderungen gespeichert."
 
-#: lib/Controller/PaymentsController.php:193
-#: lib/Controller/ProjectParticipantsController.php:870
-#: lib/Controller/SepaDebitMandatesController.php:1218
+#: lib/Controller/PaymentsController.php:302
+#: lib/Controller/ProjectParticipantsController.php:882
+#: lib/Controller/SepaDebitMandatesController.php:1369
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr "Hochladen von \"%s\" als \"%s\" erfolgreich."
 
-#: lib/Controller/PaymentsController.php:218
+#: lib/Controller/PaymentsController.php:305
+#: lib/Controller/ProjectParticipantsController.php:885
+#: lib/Controller/SepaDebitMandatesController.php:1372
+#, php-format
+msgid "Move of \"%s\" to \"%s\" successful."
+msgstr "Verschieben von \"%s\" nach \"%s\" erfolgreich."
+
+#: lib/Controller/PaymentsController.php:308
+#: lib/Controller/ProjectParticipantsController.php:888
+#: lib/Controller/SepaDebitMandatesController.php:1375
+#, php-format
+msgid "Linking of file id \"%s\" to \"%s\" successful."
+msgstr "Verknüpfen der Datei \"%s\" zum Ziel \"%s\" erfolgreich."
+
+#: lib/Controller/PaymentsController.php:335
 #, php-format
 msgid ""
 "We have no supporting document for the payment \"%1$s\", so we cannot delete "
@@ -915,7 +978,7 @@ msgstr ""
 "Es ist kein Zahlungsbeleg zu Buchung \"%1$s\" gespeichert, kann also auch "
 "nicht gelöscht werden."
 
-#: lib/Controller/PaymentsController.php:225
+#: lib/Controller/PaymentsController.php:347
 #, php-format
 msgid ""
 "Successfully deleted the supporting document for the payment \"%1$s\", "
@@ -1126,7 +1189,7 @@ msgstr "Einstellung für Parameter \"%s\" gelöscht."
 #: lib/Controller/PersonalSettingsController.php:727
 #: lib/Controller/PersonalSettingsController.php:748
 #: lib/Controller/PersonalSettingsController.php:763
-#: lib/Controller/SepaDebitMandatesController.php:491
+#: lib/Controller/SepaDebitMandatesController.php:495
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
@@ -2124,61 +2187,23 @@ msgstr ""
 "Unterverzeichnis \"%s\" gewünscht, das wird aber vom DB-Dateispeicher nicht "
 "unterstützt."
 
-#: lib/Controller/ProjectParticipantsController.php:628
-msgid ""
-"Move operation requested, but the original file path has not been specified."
-msgstr "Verschieben einer Datei angefragt, aber deren Datei-Pfad wurde nicht angegeben."
-
-#: lib/Controller/ProjectParticipantsController.php:632
-#, php-format
-msgid "Move operation requested, but the original file \"%s\" cannot be found."
-msgstr "Verschieben einer Datei angefragt, aber die Quelldatei \"%s\" kann nicht gefunden werden."
-
 #: lib/Controller/ProjectParticipantsController.php:637
 msgid ""
 "Link operation requested, but the link target does not reside in the "
 "database storage."
-msgstr "Verknüpfen einer Datei angefragt, aber das Link-Ziel ist nicht in der Datenbank gespeichert."
+msgstr ""
+"Verknüpfen einer Datei angefragt, aber das Link-Ziel ist nicht in der "
+"Datenbank gespeichert."
 
-#: lib/Controller/ProjectParticipantsController.php:641
-msgid ""
-"Link operation requested, but the id of the original file has not been "
-"specified."
-msgstr "Verknüpfen einer Datei angefragt, aber die Datenbank-Id der ursprünglichen Datei wurde nicht angegeben."
-
-#: lib/Controller/ProjectParticipantsController.php:645
-#, php-format
-msgid ""
-"Link operation requested, but the existing original file with id \"%s\" "
-"cannot be found."
-msgstr "Verknüpfen einer Datei angefragt, aber die ursprüngliche Datei mit der Id \"%s\" konnte nicht gefunden werden."
-
-#: lib/Controller/ProjectParticipantsController.php:753
-#, php-format
-msgid ""
-"Link operation requested, but the existing original file is the same as the "
-"target destination (%s@%s)"
-msgstr "Verknüpfen einer Datei angefragt, aber Quelle und Ziel sind gleich (%s@%s)."
-
-#: lib/Controller/ProjectParticipantsController.php:873
-#, php-format
-msgid "Move of \"%s\" to \"%s\" successful."
-msgstr "Verschieben von \"%s\" nach \"%s\" erfolgreich."
-
-#: lib/Controller/ProjectParticipantsController.php:876
-#, php-format
-msgid "Linking of \"%s\" to \"%s\" successful."
-msgstr "Verknüpfen von \"%s\" zum Ziel \"%s\" erfolgreich."
-
-#: lib/Controller/ProjectParticipantsController.php:911
+#: lib/Controller/ProjectParticipantsController.php:923
 msgid "Unable to store uploaded data"
 msgstr "Kann die hochgeladenen Daten nicht speichern."
 
-#: lib/Controller/ProjectParticipantsController.php:944
+#: lib/Controller/ProjectParticipantsController.php:956
 msgid "Mailing-lists REST API is not configured."
 msgstr "Der REST-API-Zugang zum Mailing-Listen-Server ist nicht konfiguriert."
 
-#: lib/Controller/ProjectParticipantsController.php:949
+#: lib/Controller/ProjectParticipantsController.php:961
 #, php-format
 msgid ""
 "Unable to find the participant by project- and musician-id \"%1$d / %2$d\"."
@@ -2186,17 +2211,17 @@ msgstr ""
 "Kann das Projekt-Mitglied mit Projekt- und Personen-Id \"%1$d / %2$d\" nicht "
 "finden."
 
-#: lib/Controller/ProjectParticipantsController.php:956
+#: lib/Controller/ProjectParticipantsController.php:968
 #, php-format
 msgid "The project \"%s\" does not yet have a mailing-list."
 msgstr "Das Projekt \"%s\" hat keine Diskussions-Mailing-Lists."
 
-#: lib/Controller/ProjectParticipantsController.php:963
+#: lib/Controller/ProjectParticipantsController.php:975
 #, php-format
 msgid "The musician \"%s\" does not have an email-address."
 msgstr "Zur Person \"%s\" ist keine Email-Adresse hinterlegt."
 
-#: lib/Controller/ProjectParticipantsController.php:984
+#: lib/Controller/ProjectParticipantsController.php:996
 #, php-format
 msgid ""
 "%1$s participation has not been confirmed yet. Please consider to set the "
@@ -2212,18 +2237,18 @@ msgstr ""
 "trotz unbestätigter Teilnahme %$1s zur Projekt-Mailing-Liste\n"
 "hinzufügen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:993
+#: lib/Controller/ProjectParticipantsController.php:1005
 #, php-format
 msgid "%1$s <%2$s> has been subscribed to %3$s."
 msgstr "%1$s <%2$s> wurde in den Verteiler %3$s eingetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:996
-#: lib/Controller/ProjectParticipantsController.php:1016
+#: lib/Controller/ProjectParticipantsController.php:1008
+#: lib/Controller/ProjectParticipantsController.php:1028
 #, php-format
 msgid "A notification has been sent to %1$s <%2$s>."
 msgstr "%1$s <%2$s> wurde Benachrichtigt."
 
-#: lib/Controller/ProjectParticipantsController.php:1007
+#: lib/Controller/ProjectParticipantsController.php:1019
 #, php-format
 msgid ""
 "The participation of %1$s has already been been confirmed. Are you really "
@@ -2233,12 +2258,12 @@ msgstr ""
 "hunderprozentig sicher, dass Sie %1$s aus der Projekt-Mailing-Liste "
 "austragen wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:1013
+#: lib/Controller/ProjectParticipantsController.php:1025
 #, php-format
 msgid "%1$s <%2$s> has been unsubscribed from %3$s."
 msgstr "%1$s <%2$s> wurde aus dem Verteiler %3$s ausgetragen."
 
-#: lib/Controller/ProjectParticipantsController.php:1027
+#: lib/Controller/ProjectParticipantsController.php:1039
 #, php-format
 msgid ""
 "%1$s can enable message delivery by itself. Are you really sure that you "
@@ -2248,12 +2273,12 @@ msgstr ""
 "einschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s einschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:1035
+#: lib/Controller/ProjectParticipantsController.php:1047
 #, php-format
 msgid "Re-enabled message delivery for %1$s <%2$s>."
 msgstr "Die Nachrichtenauslieferung an %1$s <%2$s> wurde wieder eingeschaltet"
 
-#: lib/Controller/ProjectParticipantsController.php:1046
+#: lib/Controller/ProjectParticipantsController.php:1058
 #, php-format
 msgid ""
 "%1$s can disable message delivery by itself. Are you really sure that you "
@@ -2263,24 +2288,24 @@ msgstr ""
 "ausschalten. Sind Sie sich wirklich sicher, dass Sie die\n"
 "Nachrichtenauslieferung an %1$s ausschalten wollen?"
 
-#: lib/Controller/ProjectParticipantsController.php:1055
+#: lib/Controller/ProjectParticipantsController.php:1067
 #, php-format
 msgid "Disabled message delivery for %1$s <%2$s>."
 msgstr "Nachrichtenauslieferung an %1$s <%2$s> ausgeschaltet."
 
-#: lib/Controller/ProjectParticipantsController.php:1114
+#: lib/Controller/ProjectParticipantsController.php:1126
 msgid "digest"
 msgstr "Sammlung"
 
-#: lib/Controller/ProjectParticipantsController.php:1122
+#: lib/Controller/ProjectParticipantsController.php:1134
 msgid "disabled by user"
 msgstr "ausgeschaltet vom Mitglied"
 
-#: lib/Controller/ProjectParticipantsController.php:1127
+#: lib/Controller/ProjectParticipantsController.php:1139
 msgid "disabled because of bounces"
 msgstr "ausgeschaltet wegen Rückläufern"
 
-#: lib/Controller/ProjectParticipantsController.php:1132
+#: lib/Controller/ProjectParticipantsController.php:1144
 msgid "disabled by moderator"
 msgstr "ausgeschaltet vom Moderator"
 
@@ -2697,104 +2722,104 @@ msgstr "Der übermittelte Wert \"%s\" ist keine positive Ganzzahl."
 msgid "Unable to find bulk-transaction with id %d."
 msgstr "Kann den Sammelauftrag mit Id %d nicht finden."
 
-#: lib/Controller/SepaDebitMandatesController.php:138
+#: lib/Controller/SepaDebitMandatesController.php:142
 #, php-format
 msgid "Required information %s not provided."
 msgstr "Die Information %s wird benötigt, fehlt aber."
 
-#: lib/Controller/SepaDebitMandatesController.php:209
+#: lib/Controller/SepaDebitMandatesController.php:213
 #, php-format
 msgid "Found exisiting mandate with reference \"%s\""
 msgstr "Mandat mit Referenz \"%s\" ist bereits vorhanden."
 
-#: lib/Controller/SepaDebitMandatesController.php:215
+#: lib/Controller/SepaDebitMandatesController.php:219
 #, php-format
 msgid "Generated new reference \"%s\""
 msgstr "Neue Referenz \"%s\" erzeugt."
 
-#: lib/Controller/SepaDebitMandatesController.php:218
+#: lib/Controller/SepaDebitMandatesController.php:222
 msgid "No project, delete mandate-reference."
 msgstr "Kein Projekt, lösche Mandatsreferenz."
 
-#: lib/Controller/SepaDebitMandatesController.php:237
+#: lib/Controller/SepaDebitMandatesController.php:241
 #, php-format
 msgid "Failed setting `%s' to `%s'."
 msgstr "Konnte die Einstellung '%s' nicht auf den Wert '%s' setzen."
 
-#: lib/Controller/SepaDebitMandatesController.php:248
+#: lib/Controller/SepaDebitMandatesController.php:252
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: lib/Controller/SepaDebitMandatesController.php:266
+#: lib/Controller/SepaDebitMandatesController.php:270
 #, php-format
 msgid "Participant %d not found in project %d."
 msgstr "Teilnehmen %d wurde im Projekt %d nicht gefunden."
 
-#: lib/Controller/SepaDebitMandatesController.php:281
+#: lib/Controller/SepaDebitMandatesController.php:285
 msgid "Set bank-account owner to musician's name?"
 msgstr "Namen des/der Musizierenden als Kontoinhaber:in verwenden?"
 
-#: lib/Controller/SepaDebitMandatesController.php:288
+#: lib/Controller/SepaDebitMandatesController.php:292
 #, php-format
 msgid "Account owner contains invalid characters: \"%s\""
 msgstr "Kontoinhaber:in enthält ungültige Buchstaben: \"%s\""
 
-#: lib/Controller/SepaDebitMandatesController.php:310
+#: lib/Controller/SepaDebitMandatesController.php:314
 msgid "BLZ not given, cannot validate the bank account."
 msgstr ""
 "BLZ wurde noch nicht angegeben, kann die Kontonummer deshalb nicht "
 "verifizieren."
 
-#: lib/Controller/SepaDebitMandatesController.php:317
+#: lib/Controller/SepaDebitMandatesController.php:321
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr "Eine Deutsche Bankleitzahl besteht aus genau 8 Ziffern: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:326
-#: lib/Controller/SepaDebitMandatesController.php:391
+#: lib/Controller/SepaDebitMandatesController.php:330
+#: lib/Controller/SepaDebitMandatesController.php:395
 #, php-format
 msgid "Invalid German(?) bank id \"%s\"."
 msgstr "Ungültige Deutsche(?) Bankleitzahl \"%s\"."
 
-#: lib/Controller/SepaDebitMandatesController.php:337
-#: lib/Controller/SepaDebitMandatesController.php:405
+#: lib/Controller/SepaDebitMandatesController.php:341
+#: lib/Controller/SepaDebitMandatesController.php:409
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:356
+#: lib/Controller/SepaDebitMandatesController.php:360
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
-#: lib/Controller/SepaDebitMandatesController.php:442
-#: lib/Controller/SepaDebitMandatesController.php:475
+#: lib/Controller/SepaDebitMandatesController.php:446
+#: lib/Controller/SepaDebitMandatesController.php:479
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
-#: lib/Controller/SepaDebitMandatesController.php:482
+#: lib/Controller/SepaDebitMandatesController.php:486
 #, php-format
 msgid "Unknown Request: %s / %s / %s"
 msgstr "Unbekannte Anfrage %s / %s / %s"
 
-#: lib/Controller/SepaDebitMandatesController.php:546
+#: lib/Controller/SepaDebitMandatesController.php:555
 msgid "Parameter musicianId must be set, but is empty."
 msgstr "Parameter \"musicianId\" darf nicht leer sein."
 
-#: lib/Controller/SepaDebitMandatesController.php:571
+#: lib/Controller/SepaDebitMandatesController.php:580
 #, php-format
 msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr "Kann das SEPA-Lastschriftmandat für %s/%d, lfd. Nr. %d, nicht laden."
 
-#: lib/Controller/SepaDebitMandatesController.php:792
-#: lib/Controller/SepaDebitMandatesController.php:1395
+#: lib/Controller/SepaDebitMandatesController.php:801
+#: lib/Controller/SepaDebitMandatesController.php:1539
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr "Informationen zu `%s' fehlen."
 
-#: lib/Controller/SepaDebitMandatesController.php:816
+#: lib/Controller/SepaDebitMandatesController.php:825
 msgid ""
 "The current bank account has already been used for payments or is bound to "
 "debit-mandates. Therefore the IBAN must not be changed. Please create a new "
@@ -2805,30 +2830,30 @@ msgstr ""
 "nicht mehr verändert werden. Bitte eine neue eingegben. Die aktuelle\n"
 "darf deaktiviert werden, um sie für zukünftige Zahlungen zu sperren."
 
-#: lib/Controller/SepaDebitMandatesController.php:830
+#: lib/Controller/SepaDebitMandatesController.php:839
 #, php-format
 msgid "Bank-account failed to validate: %s."
 msgstr "Bankverbindung konnte nicht verifiziert werden: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:846
+#: lib/Controller/SepaDebitMandatesController.php:855
 #, php-format
 msgid ""
 "The IBAN %s, account-owner %s, has already been recorded for the musician %s."
 msgstr "Die IBAN %s, Kontoinhaber:in %s, wurde bereits für %s registriert."
 
-#: lib/Controller/SepaDebitMandatesController.php:863
+#: lib/Controller/SepaDebitMandatesController.php:872
 msgid "Unable to modify already used bank-account."
 msgstr ""
 "Bereits verwendete Bankverbindungen können nicht mehr verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:874
+#: lib/Controller/SepaDebitMandatesController.php:883
 #, php-format
 msgid "Successfully stored the bank account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 "Bankverbindung für Kontoinhaber:in \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:902
+#: lib/Controller/SepaDebitMandatesController.php:911
 #, php-format
 msgid ""
 "The bank-account with IBAN %s bound to the existing mandate does not match "
@@ -2837,7 +2862,7 @@ msgstr ""
 "Die Bankverbindung mit IBAN %s, die an das aktuelle Mandat gebunden\n"
 "ist, stimmt nicht mit der übermittelten Bankverbindung mit IBAN %s überein."
 
-#: lib/Controller/SepaDebitMandatesController.php:921
+#: lib/Controller/SepaDebitMandatesController.php:930
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "date of the debit-mandate must not be changed. Please create a new debit-"
@@ -2848,7 +2873,7 @@ msgstr ""
 "werden. Falls nötig bitte ein neues Mandat erstellen und as alte "
 "deaktivieren."
 
-#: lib/Controller/SepaDebitMandatesController.php:928
+#: lib/Controller/SepaDebitMandatesController.php:937
 msgid ""
 "The current debit-mandate already has been used for more than a single "
 "payment. Therefore it can non longer be changed from \"recurring\" to \"non-"
@@ -2858,7 +2883,7 @@ msgstr ""
 "verwendet. Daher darf der Typ nicht mehr von \"mehrfach\" auf \"einmalig\" "
 "verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:933
+#: lib/Controller/SepaDebitMandatesController.php:942
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "project-binding can no longer be changed."
@@ -2866,7 +2891,7 @@ msgstr ""
 "Das aktuelle Mandat wurde bereits für Zahlungen verwendet. Deshalb\n"
 "darf die Projekt-Bindung nicht mehr verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:936
+#: lib/Controller/SepaDebitMandatesController.php:945
 msgid ""
 "The current debit-mandate alrady has been used for payments. Therefore the "
 "stored copy of the written mandate cannot be deleted."
@@ -2875,20 +2900,20 @@ msgstr ""
 "darf die elektronische Kopie des schriftlichen Mandats nicht mehr\n"
 "gelöscht werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1000
+#: lib/Controller/SepaDebitMandatesController.php:969
 msgid "Unable to modify already used debit-mandate."
 msgstr ""
 "Das Lastschriftmandat wurde bereits verwendet und kann deshalb nicht mehr "
 "verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1019
+#: lib/Controller/SepaDebitMandatesController.php:978
 #, php-format
 msgid "Successfully stored the bank-account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 "Bankverbindung zu IBAN \"%s\" und Kontoinhaber:in \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1023
+#: lib/Controller/SepaDebitMandatesController.php:982
 #, php-format
 msgid ""
 "Successfully stored the debit-mandate with reference \"%s\" for the IBAN \"%s"
@@ -2897,7 +2922,11 @@ msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1060
+#: lib/Controller/SepaDebitMandatesController.php:993
+msgid "Unknown upload failure."
+msgstr "Irgendein Hochlade-Fehler"
+
+#: lib/Controller/SepaDebitMandatesController.php:1046
 #, php-format
 msgid ""
 "General debit-mandate requested but musician \"%s\" is not a club member."
@@ -2905,16 +2934,16 @@ msgstr ""
 "Allgemeines Lastschrift-Mandat angefordert, aber die Person \"%s\" ist kein "
 "Vereinsmitglied."
 
-#: lib/Controller/SepaDebitMandatesController.php:1069
+#: lib/Controller/SepaDebitMandatesController.php:1055
 msgid "Unable to find fillable debit mandate form."
 msgstr "Kann kein ausfüllbares Lastschriftmandatsformular finden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1138
+#: lib/Controller/SepaDebitMandatesController.php:1144
 #, php-format
 msgid "Unable to find mandate for musician id \"%1$d\" with sequence \"%2$d\"."
 msgstr "Kann die Person mit der Id \"%1$d\" nicht im Projekt \"%2$s\" nicht."
 
-#: lib/Controller/SepaDebitMandatesController.php:1245
+#: lib/Controller/SepaDebitMandatesController.php:1164
 #, php-format
 msgid ""
 "We have no hard-copy of the written-mandate for \"%1$s\", so we cannot "
@@ -2923,7 +2952,7 @@ msgstr ""
 "Es ist keine Kopie des schriftlichen Lastschrift-Mandats für \"%1$s\" "
 "gespeichert, ein Löschen ist also nicht möglich."
 
-#: lib/Controller/SepaDebitMandatesController.php:1249
+#: lib/Controller/SepaDebitMandatesController.php:1168
 #, php-format
 msgid ""
 "The debit mandate \"%1$s\" is already in use, the hard-copy of the written-"
@@ -2934,11 +2963,11 @@ msgstr ""
 "Mandats bestenfalls zur Korrektur ausgetauscht, aber nicht gelöscht\n"
 "werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1251
+#: lib/Controller/SepaDebitMandatesController.php:1170
 msgid "Are you sure you want to proceed?"
 msgstr "Sind Sie sicher, dass Sie fortfahren wollen?"
 
-#: lib/Controller/SepaDebitMandatesController.php:1265
+#: lib/Controller/SepaDebitMandatesController.php:1186
 #, php-format
 msgid ""
 "Successfully deleted the hard-copy of the written-mandate for \"%1$s\", "
@@ -2947,40 +2976,40 @@ msgstr ""
 "Kopie des schriftlichen Lastschrift-Mandats für \"%1$s\" gelöscht, bitte "
 "eine neue hochladen!"
 
-#: lib/Controller/SepaDebitMandatesController.php:1292
+#: lib/Controller/SepaDebitMandatesController.php:1436
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" ist bereits entwertet."
 
-#: lib/Controller/SepaDebitMandatesController.php:1299
+#: lib/Controller/SepaDebitMandatesController.php:1443
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" ist bereits aktiv und kann "
 "deshalb nicht aktiviert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1305
-#: lib/Controller/SepaDebitMandatesController.php:1460
+#: lib/Controller/SepaDebitMandatesController.php:1449
+#: lib/Controller/SepaDebitMandatesController.php:1604
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr "Unbekannte Deaktivierungs-/Aktivierungsanfrage: \"%s\"."
 
-#: lib/Controller/SepaDebitMandatesController.php:1315
+#: lib/Controller/SepaDebitMandatesController.php:1459
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" wurde entwertet."
 
-#: lib/Controller/SepaDebitMandatesController.php:1318
+#: lib/Controller/SepaDebitMandatesController.php:1462
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" wurde reaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1330
+#: lib/Controller/SepaDebitMandatesController.php:1474
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr "Das SEPA-Lastschriftmandat zur Referenz \"%s\" wurde gelöscht."
 
-#: lib/Controller/SepaDebitMandatesController.php:1420
+#: lib/Controller/SepaDebitMandatesController.php:1564
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
@@ -2989,12 +3018,12 @@ msgstr ""
 "Die Bankverbindung mit der IBAN \"%s\" kann nicht gelöscht werden, weil\n"
 "sie von den folgenden aktiven Lastschriftmandaten verwendet wird: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:1435
+#: lib/Controller/SepaDebitMandatesController.php:1579
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" ist bereits deaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1445
+#: lib/Controller/SepaDebitMandatesController.php:1589
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
@@ -3003,22 +3032,22 @@ msgstr ""
 "Die Bankverbindung mit der IBAN \"%s\" kann nicht deaktiviert werden, weil\n"
 "sie von den folgenden aktiven Lastschriftmandaten verwendet wird: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:1454
+#: lib/Controller/SepaDebitMandatesController.php:1598
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" ist bereits aktiv."
 
-#: lib/Controller/SepaDebitMandatesController.php:1476
+#: lib/Controller/SepaDebitMandatesController.php:1620
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde deaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1478
+#: lib/Controller/SepaDebitMandatesController.php:1622
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde reaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1479
+#: lib/Controller/SepaDebitMandatesController.php:1623
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
@@ -3026,7 +3055,7 @@ msgstr ""
 "Bitte beachten, dass die Lastschriftmandate, die die Bankverbindung "
 "verwenden, separatat reaktiviert werden müssen."
 
-#: lib/Controller/SepaDebitMandatesController.php:1482
+#: lib/Controller/SepaDebitMandatesController.php:1626
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde gelöscht."
@@ -4031,6 +4060,12 @@ msgstr ""
 #: lib/Maintenance/Migrations/NullifyBankTransactionEvents.php:49
 msgid "Make calendar links nullable."
 msgstr "Kalender-Verweise \"nullable\" machen."
+
+#: lib/Maintenance/Migrations/OneSupportingDocumentForMultiplePayments.php:50
+msgid ""
+"Support linking of multiple payments or receivables to one supporting "
+"document."
+msgstr "Multiple Verküpfungen zwischen Zahlungen oder Forderungen zu einem Beleg."
 
 #: lib/Maintenance/Migrations/ParticipantFieldsTypeCloudFolder.php:48
 msgid "Add cloud-folder type to catalog of participant fields."
@@ -5558,44 +5593,44 @@ msgstr "Eine neue Forderung hinzufügen"
 msgid "Supporting Document"
 msgstr "Beleg"
 
-#: lib/PageRenderer/ProjectPayments.php:854
+#: lib/PageRenderer/ProjectPayments.php:855
 msgid "Composite Project Balance"
 msgstr "Projekt-Bilanz Gesamt"
 
-#: lib/PageRenderer/ProjectPayments.php:936
+#: lib/PageRenderer/ProjectPayments.php:937
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/ProjectPayments.php:1054
+#: lib/PageRenderer/ProjectPayments.php:1059
 #: lib/PageRenderer/SepaBulkTransactions.php:250
 msgid "Bulk Transaction"
 msgstr "Sammelauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:1072
+#: lib/PageRenderer/ProjectPayments.php:1077
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:1083
+#: lib/PageRenderer/ProjectPayments.php:1088
 #: lib/PageRenderer/SepaBulkTransactions.php:411
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/ProjectPayments.php:1110
+#: lib/PageRenderer/ProjectPayments.php:1115
 #: lib/PageRenderer/SepaBankAccounts.php:762
 #: lib/PageRenderer/SepaBulkTransactions.php:441
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/ProjectPayments.php:1118
+#: lib/PageRenderer/ProjectPayments.php:1123
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/ProjectPayments.php:1136
+#: lib/PageRenderer/ProjectPayments.php:1141
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/ProjectPayments.php:1229
+#: lib/PageRenderer/ProjectPayments.php:1234
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
 
@@ -5957,7 +5992,7 @@ msgid "announce"
 msgstr "ankündigen"
 
 #: lib/PageRenderer/SepaBulkTransactions.php:614
-#: lib/Service/Finance/SepaBulkTransactionService.php:283
+#: lib/Service/Finance/SepaBulkTransactionService.php:276
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -6547,7 +6582,7 @@ msgstr "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\"."
 msgid "Unable to construct generator class \"%s\"."
 msgstr "Kann den Generatorklasse \"%s\" nicht erzeugen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:196
+#: lib/Service/Finance/SepaBulkTransactionService.php:195
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
@@ -6557,7 +6592,7 @@ msgstr ""
 "Aktuelles Projekt is \"%s\", die Forderung ist aber an das Projekt \"%s\" "
 "gebunden."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:209
+#: lib/Service/Finance/SepaBulkTransactionService.php:208
 #, php-format
 msgid ""
 "Payable amount \"%f\" and deposit amount \"%f\" should have the compatible "
@@ -6566,23 +6601,23 @@ msgstr ""
 "Der Endbetrag \"%f\" und die Anzahlung \"%f\" sollten das gleiche Vorzeichen "
 "haben."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:326
+#: lib/Service/Finance/SepaBulkTransactionService.php:319
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr "Kann den Sammelauftrag mit Id %d nicht löschen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:373
+#: lib/Service/Finance/SepaBulkTransactionService.php:366
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 "Der Zahlungsbetreff konnte nicht aktualisiert werden als versucht wurde, die "
 "Bankdaten für den Sammelauftrag zu exportieren."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:417
+#: lib/Service/Finance/SepaBulkTransactionService.php:410
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:459
+#: lib/Service/Finance/SepaBulkTransactionService.php:453
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
@@ -10295,6 +10330,21 @@ msgstr ""
 "Der Pfad \"%s\" muss aus genau einem Verzeichnis und einem Dateinamen "
 "bestehen."
 
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:480
+#, php-format
+msgid "Unable to find database entity for path \"%s\"."
+msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
+
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:487
+#, php-format
+msgid "Cannot deduce project name or document sequence from path \"%s\"."
+msgstr "Kann den Projekt-Namen und/oder die Beleg-Nummer nicht aus dem Dateipfad ableiten."
+
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:497
+#, php-format
+msgid "Unable to find document container for path \"%s\"."
+msgstr "Kann den Beleg-Container zum Pfad \"%s\" nicht finden."
+
 #. TRANSLATORS: folder-name
 #: lib/Storage/Database/ProjectParticipantsStorageTrait.php:58
 msgid "SupportingDocuments"
@@ -10557,7 +10607,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:439
 #: specialVueFakeDummyForL10nScript.js:60 src/app/project-participants.js:793
-#: src/app/projects.js:425 src/app/sepa-debit-mandate.js:862
+#: src/app/projects.js:425 src/app/sepa-debit-mandate.js:844
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
@@ -11050,12 +11100,11 @@ msgstr "Abgebrochen"
 #: src/app/ajax.js:178 src/app/ajax.js:354 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
-#: src/app/blog.js:386 src/app/email.js:89 src/app/email.js:813
-#: src/app/email.js:939 src/app/inlineimage.js:56 src/app/inlineimage.js:63
-#: src/app/inlineimage.js:158 src/app/inlineimage.js:429
-#: src/app/pme-file-upload-row.js:195 src/app/pme-file-upload-row.js:224
-#: src/app/sepa-debit-mandate.js:286 src/app/sepa-debit-mandate.js:302
-#: src/app/settings.js:1292 src/app/settings.js:1305
+#: src/app/blog.js:386 src/app/cloud-file-picker-dialog.js:59
+#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:89
+#: src/app/email.js:813 src/app/email.js:939 src/app/inlineimage.js:56
+#: src/app/inlineimage.js:63 src/app/inlineimage.js:158
+#: src/app/inlineimage.js:429 src/app/settings.js:1292 src/app/settings.js:1305
 #: src/legacy/calendar/calendar.js:340
 msgid "Error"
 msgstr "Fehler"
@@ -11219,7 +11268,7 @@ msgstr "Fehlende Eingabedaten"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:594
+#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:576
 #: templates/settings/share-settings.php:221
 #: templates/settings/share-settings.php:244
 msgid "Save"
@@ -11230,8 +11279,8 @@ msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: src/app/chosen-popup.js:45 src/app/inlineimage.js:247
-#: src/app/pme-file-upload-row.js:310 templates/blog/blogedit.php:42
+#: src/app/chosen-popup.js:45 src/app/cloud-file-picker-dialog.js:160
+#: src/app/inlineimage.js:247 templates/blog/blogedit.php:42
 #: templates/emailform/part.emailform.composer.php:345
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -11243,6 +11292,30 @@ msgid ""
 msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
+
+#: src/app/cloud-file-picker-dialog.js:39 src/app/pme-file-upload-row.js:178
+msgid "Select a file from the cloud"
+msgstr "Datei aus der \"Cloud\" auswählen"
+
+#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1292
+msgid "Empty response from file selection!"
+msgstr "Keine Antwort vom Datei-Auswahldialog!"
+
+#: src/app/cloud-file-picker-dialog.js:86
+msgid "Unable to copy selected file(s) {file}."
+msgstr "Kann die ausgwählte(n) Datei(en) {file} nicht kopieren."
+
+#: src/app/cloud-file-picker-dialog.js:147
+msgid "Select File System Operation"
+msgstr "Auswahl der Dateioperation"
+
+#: src/app/cloud-file-picker-dialog.js:154
+msgid "Operation has been cancelled."
+msgstr "Benutzer:in hat den Vorgang abgebrochen"
+
+#: src/app/cloud-file-picker-dialog.js:159 src/app/sepa-debit-mandate.js:596
+msgid "Apply"
+msgstr "Anwenden"
 
 #: src/app/configcheck.js:66
 msgid ""
@@ -11765,7 +11838,7 @@ msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr "Kann die Tabelle nicht als \"{format}\" von \"{url}\" laden: "
 
-#: src/app/pme-file-upload-row.js:119
+#: src/app/pme-file-upload-row.js:108
 msgid ""
 "File-upload feedback does not contain the required meta-information, the "
 "upload has probably failed."
@@ -11773,36 +11846,11 @@ msgstr ""
 "Der Datei-Upload-Feedback enthält nicht die benötigte\n"
 "Meta-Information, das Hochladen ist wahrscheinlich fehlgeschlagen."
 
-#: src/app/pme-file-upload-row.js:188
+#: src/app/pme-file-upload-row.js:177
 msgid "Select cloud-files for {object}"
 msgstr "\"Cloud\"-Dateien für {object} auswählen"
 
-#: src/app/pme-file-upload-row.js:189
-msgid "Select a file from the cloud"
-msgstr "Datei aus der \"Cloud\" auswählen"
-
-#: src/app/pme-file-upload-row.js:195 src/app/sepa-debit-mandate.js:286
-#: src/app/settings.js:1292
-msgid "Empty response from file selection!"
-msgstr "Keine Antwort vom Datei-Auswahldialog!"
-
-#: src/app/pme-file-upload-row.js:223 src/app/sepa-debit-mandate.js:301
-msgid "Unable to copy selected file(s) {file}."
-msgstr "Kann die ausgwählte(n) Datei(en) {file} nicht kopieren."
-
-#: src/app/pme-file-upload-row.js:297
-msgid "Select File System Operation"
-msgstr "Auswahl der Dateioperation"
-
-#: src/app/pme-file-upload-row.js:304
-msgid "Operation has been cancelled."
-msgstr "Benutzer:in hat den Vorgang abgebrochen"
-
-#: src/app/pme-file-upload-row.js:309 src/app/sepa-debit-mandate.js:614
-msgid "Apply"
-msgstr "Anwenden"
-
-#: src/app/pme-file-upload-row.js:367
+#: src/app/pme-file-upload-row.js:242
 msgid "Confirmation Required!"
 msgstr "Bestätigung erforderlich!"
 
@@ -11912,11 +11960,11 @@ msgstr ""
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/project-payments.js:190
+#: src/app/project-payments.js:183
 msgid "Too many Projects"
 msgstr "Zu viele Projekte"
 
-#: src/app/project-payments.js:191
+#: src/app/project-payments.js:184
 msgid ""
 "Currently merging composite-payments for different projects ({projects}) is "
 "not supported, sorry."
@@ -11924,11 +11972,11 @@ msgstr ""
 "Zur Zeit können Sammelbuchungen nicht mehrere Projekte ({projects}) "
 "zusammenfassen, tut uns leid."
 
-#: src/app/project-payments.js:197
+#: src/app/project-payments.js:190
 msgid "Too many Musicians"
 msgstr "Zu viele Personen"
 
-#: src/app/project-payments.js:198
+#: src/app/project-payments.js:191
 msgid ""
 "Internal error: splits of composite-payments cannot belong to different "
 "musicians ({musicians})."
@@ -11963,31 +12011,31 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: src/app/sepa-bulk-transactions.js:86
+#: src/app/sepa-bulk-transactions.js:82
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
-#: src/app/sepa-debit-mandate.js:185
+#: src/app/sepa-debit-mandate.js:186
 msgid "Unable to download pre-filled mandate form."
 msgstr "Kann das personalisierte Mandatsformular nicht herunter laden."
 
-#: src/app/sepa-debit-mandate.js:282
+#: src/app/sepa-debit-mandate.js:290
 msgid "Select debit mandate for {musicianName}"
 msgstr "Lastschrift-Formular für {musicianName} auswählen"
 
-#: src/app/sepa-debit-mandate.js:595
+#: src/app/sepa-debit-mandate.js:577
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: src/app/sepa-debit-mandate.js:615
+#: src/app/sepa-debit-mandate.js:597
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: src/app/sepa-debit-mandate.js:641
+#: src/app/sepa-debit-mandate.js:623
 msgid "Close"
 msgstr "Schließen"
 
-#: src/app/sepa-debit-mandate.js:642
+#: src/app/sepa-debit-mandate.js:624
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the \"Apply\" "
@@ -11997,11 +12045,11 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: src/app/sepa-debit-mandate.js:650 templates/blog/blogthreads.php:88
+#: src/app/sepa-debit-mandate.js:632 templates/blog/blogthreads.php:88
 msgid "Delete"
 msgstr "Löschen"
 
-#: src/app/sepa-debit-mandate.js:651
+#: src/app/sepa-debit-mandate.js:633
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
 "done in case of desinformation or misunderstanding. Use with care."
@@ -12010,11 +12058,11 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "der Person nötig sein."
 
-#: src/app/sepa-debit-mandate.js:663
+#: src/app/sepa-debit-mandate.js:645
 msgid "Reactivate"
 msgstr "Reaktivieren"
 
-#: src/app/sepa-debit-mandate.js:664
+#: src/app/sepa-debit-mandate.js:646
 msgid ""
 "Reactivate the debit-mandate or bank-account in case it has been deleted in "
 "error."
@@ -12022,11 +12070,11 @@ msgstr ""
 "Das Lastschriftmandat oder die Bankverbindung reaktivieren, falls die "
 "versehentlich deaktiviert wurde."
 
-#: src/app/sepa-debit-mandate.js:675
+#: src/app/sepa-debit-mandate.js:657
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: src/app/sepa-debit-mandate.js:676
+#: src/app/sepa-debit-mandate.js:658
 msgid ""
 "Disable the debit-mandate or bank-account in case the bank account has "
 "changed, or on request of the participant. The bank account can only be "
@@ -12036,18 +12084,18 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:689 templates/events.php:81
+#: src/app/sepa-debit-mandate.js:671 templates/events.php:81
 #: templates/part.common.header.php:63
 msgid "Reload"
 msgstr "Neu laden"
 
-#: src/app/sepa-debit-mandate.js:690
+#: src/app/sepa-debit-mandate.js:672
 msgid "Reload the form and locks it. Unsaved changes are lost."
 msgstr ""
 "Eingabeformular neu laden und sperren. Ungespeicherte Eingaben gehen "
 "verloren."
 
-#: src/app/sepa-debit-mandate.js:785
+#: src/app/sepa-debit-mandate.js:767
 msgid ""
 "Please either upload a copy of the written and signed debit-mandate or at "
 "least check the \"upload later\" option"
@@ -12056,49 +12104,49 @@ msgstr ""
 "Mandats hochladen, oder doch zuallermindest die \"später hochladen\"-Option\n"
 "aktivieren. "
 
-#: src/app/sepa-debit-mandate.js:785
+#: src/app/sepa-debit-mandate.js:767
 msgid "Missing Data"
 msgstr "Fehlende Daten"
 
-#: src/app/sepa-debit-mandate.js:832
+#: src/app/sepa-debit-mandate.js:814
 msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 "Möchten Sie wirklich die angezeigte Bankverbindung als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:834
+#: src/app/sepa-debit-mandate.js:816
 msgid "Do you really want to disable the current debit-mandate?"
 msgstr ""
 "Möchten Sie wirklich das angezeigte Lastschrift-Mandat als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:841
+#: src/app/sepa-debit-mandate.js:823
 msgid "Do you really want to reactivate the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:843
+#: src/app/sepa-debit-mandate.js:825
 msgid "Do you really want to reactiveate the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschrift-Mandat reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:852
+#: src/app/sepa-debit-mandate.js:834
 msgid "Do you really want to delete the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung löschen?"
 
-#: src/app/sepa-debit-mandate.js:854
+#: src/app/sepa-debit-mandate.js:836
 msgid "Do you really want to delete the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschriftmandat löschen?"
 
-#: src/app/sepa-debit-mandate.js:865
+#: src/app/sepa-debit-mandate.js:847
 msgid "Unconfirmed, doing nothing"
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/sepa-debit-mandate.js:890 src/app/sepa-debit-mandate.js:1007
+#: src/app/sepa-debit-mandate.js:872 src/app/sepa-debit-mandate.js:989
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: src/app/sepa-debit-mandate.js:894 src/app/sepa-debit-mandate.js:1011
+#: src/app/sepa-debit-mandate.js:876 src/app/sepa-debit-mandate.js:993
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: src/app/sepa-debit-mandate.js:1650
+#: src/app/sepa-debit-mandate.js:1632
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
@@ -12108,11 +12156,11 @@ msgstr ""
 "vom Projektmitglied. Soll der/die/das Kontoinhaber:in durch das "
 "Projektmitglied ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1652
+#: src/app/sepa-debit-mandate.js:1634
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr "Kontoinhaber:in durch Projekt-Mitglied ersetzen?"
 
-#: src/app/sepa-debit-mandate.js:1684
+#: src/app/sepa-debit-mandate.js:1666
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
@@ -12121,7 +12169,7 @@ msgstr ""
 "der/die/das Kontoinhaber:in. Sollt das Projektmitglied durch der/die/das "
 "Kontoinhaber:in ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1686
+#: src/app/sepa-debit-mandate.js:1668
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
