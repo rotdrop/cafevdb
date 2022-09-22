@@ -4,10 +4,11 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
+ * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
  * version 3 of the License, or any later version.
@@ -22,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use \RuntimeException;
 
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -155,6 +158,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   private $supportingDocument;
 
+  /** TBD. */
   public function __construct()
   {
     $this->arrayCTOR();
@@ -164,7 +168,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param Project $project
+   * @param int|null|Project $project
    *
    * @return ProjectParticipantProjectsData
    */
@@ -188,7 +192,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param Musician $musician
+   * @param int|null|Musician $musician
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -238,7 +242,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set field.
    *
-   * @param ProjectParticipantField $field
+   * @param int|null|ProjectParticipantField $field
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -320,10 +324,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     $uuid = Uuid::asUuid($optionKey);
     if (empty($uuid)) {
-      throw new \RuntimeException('Empty option key data.');
+      throw new RuntimeException('Empty option key data.');
     }
     if ($uuid == Uuid::NIL) {
-      throw new \RuntimeException('Generator options must not be linked to field data.');
+      throw new RuntimeException('Generator options must not be linked to field data.');
     }
     $this->optionKey = $uuid;
 
@@ -343,7 +347,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|string $float
+   * @param null|float $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -426,42 +430,44 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * Only meaningful if
    * ProjectParticipantFieldDatum::getField()::getDataType() is
    * 'service-fee'.
+   *
+   * @return float
    */
   public function amountPayable():float
   {
     switch ($this->field->getMultiplicity()) {
-    case Multiplicity::SINGLE():
-    case Multiplicity::MULTIPLE():
-    case Multiplicity::PARALLEL():
-    case Multiplicity::GROUPSOFPEOPLE():
-      $value = filter_var($this->dataOption->getData(), FILTER_VALIDATE_FLOAT);
-      if ($value === false) {
-        throw new \RuntimeException('Stored value cannot be converted to float.');
-      }
-      return $value;
-    case Multiplicity::GROUPOFPEOPLE():
-      // value in management option of $field
-      $managementOption = $this->field->getManagementOption();
-      if (empty($managementOption)) {
-        throw new \RuntimeException('Unable to access management option for obtaining the field value.');
-      }
-      $value = filter_var($managementOption->getData(), FILTER_VALIDATE_FLOAT);
-      if ($value === false) {
-        throw new \RuntimeException('Stored value cannot be converted to float.');
-      }
-      return $value;
-    case Multiplicity::SIMPLE():
-    case Multiplicity::RECURRING():
-      if (empty($this->optionValue)) {
-        return 0.0;
-      }
-      $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
-      if ($value === false) {
-        throw new \RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
-      }
-      return $value;
-    default:
-      throw new \RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+      case Multiplicity::SINGLE():
+      case Multiplicity::MULTIPLE():
+      case Multiplicity::PARALLEL():
+      case Multiplicity::GROUPSOFPEOPLE():
+        $value = filter_var($this->dataOption->getData(), FILTER_VALIDATE_FLOAT);
+        if ($value === false) {
+          throw new RuntimeException('Stored value cannot be converted to float.');
+        }
+        return $value;
+      case Multiplicity::GROUPOFPEOPLE():
+        // value in management option of $field
+        $managementOption = $this->field->getManagementOption();
+        if (empty($managementOption)) {
+          throw new RuntimeException('Unable to access management option for obtaining the field value.');
+        }
+        $value = filter_var($managementOption->getData(), FILTER_VALIDATE_FLOAT);
+        if ($value === false) {
+          throw new RuntimeException('Stored value cannot be converted to float.');
+        }
+        return $value;
+      case Multiplicity::SIMPLE():
+      case Multiplicity::RECURRING():
+        if (empty($this->optionValue)) {
+          return 0.0;
+        }
+        $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
+        if ($value === false) {
+          throw new RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
+        }
+        return $value;
+      default:
+        throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
     }
   }
 
@@ -477,24 +483,24 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function depositAmount():?float
   {
     switch ($this->field->getMultiplicity()) {
-    case Multiplicity::SINGLE():
-    case Multiplicity::MULTIPLE():
-    case Multiplicity::PARALLEL():
-    case Multiplicity::GROUPSOFPEOPLE():
-      return $this->dataOption->getDeposit();
-    case Multiplicity::GROUPOFPEOPLE():
-      // value in management option of $field
-      $managementOption = $this->field->getManagementOption();
-      if (empty($managementOption)) {
-        throw new \RuntimeException('Unable to access management option for obtaining the field value.');
-      }
-      return $managementOption->getDeposit();
-    case Multiplicity::SIMPLE():
-      return $this->getDeposit();
-    case Multiplicity::RECURRING():
-      return null;
-    default:
-      throw new \RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+      case Multiplicity::SINGLE():
+      case Multiplicity::MULTIPLE():
+      case Multiplicity::PARALLEL():
+      case Multiplicity::GROUPSOFPEOPLE():
+        return $this->dataOption->getDeposit();
+      case Multiplicity::GROUPOFPEOPLE():
+        // value in management option of $field
+        $managementOption = $this->field->getManagementOption();
+        if (empty($managementOption)) {
+          throw new RuntimeException('Unable to access management option for obtaining the field value.');
+        }
+        return $managementOption->getDeposit();
+      case Multiplicity::SIMPLE():
+        return $this->getDeposit();
+      case Multiplicity::RECURRING():
+        return null;
+      default:
+        throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
     }
   }
 
@@ -505,6 +511,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * ProjectParticipantFieldDatum::getField()::getDataType() is
    * 'service-fee'.
    *
+   * @return float
    */
   public function amountPaid():float
   {
@@ -522,6 +529,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * transfers. Constructed from the labels of the associated
    * ProjectParticipantField and ProjectParticipantFieldDataOption
    * entities.
+   *
+   * @return string
    */
   public function paymentReference():string
   {
@@ -541,6 +550,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   /**
    * Return the number of linked ProjectPayment entities.
+   *
+   * @return int
    */
   public function usage():int
   {
@@ -557,24 +568,24 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function getEffectiveValue()
   {
     switch ($this->field->getMultiplicity()) {
-    case Multiplicity::SIMPLE():
-    case Multiplicity::RECURRING():
-      return $this->optionValue;
-      break;
-    case Multiplicity::GROUPOFPEOPLE():
-    case Multiplicity::GROUPSOFPEOPLE():
-    case Multiplicity::MULTIPLE():
-    case Multiplicity::SINGLE():
-      return $this->dataOption->getData();
-      break;
-    case Multiplicity::PARALLEL():
-      if ($this->field->getDataType() == DataType::CLOUD_FILE
-          || $this->field->getDataType() == DataType::DB_FILE) {
+      case Multiplicity::SIMPLE():
+      case Multiplicity::RECURRING():
         return $this->optionValue;
-      } else {
+        break;
+      case Multiplicity::GROUPOFPEOPLE():
+      case Multiplicity::GROUPSOFPEOPLE():
+      case Multiplicity::MULTIPLE():
+      case Multiplicity::SINGLE():
         return $this->dataOption->getData();
-      }
-      break;
+        break;
+      case Multiplicity::PARALLEL():
+        if ($this->field->getDataType() == DataType::CLOUD_FILE
+            || $this->field->getDataType() == DataType::DB_FILE) {
+          return $this->optionValue;
+        } else {
+          return $this->dataOption->getData();
+        }
+        break;
     }
     // perhaps this should throw ...
     return null;
@@ -592,19 +603,18 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       return null;
     }
     switch ($this->field->getMultiplicity()) {
-    case Multiplicity::RECURRING():
-      return null; // regardless of data-base storage
-    case Multiplicity::SIMPLE():
-      return $this->deposit;
-    case Multiplicity::GROUPOFPEOPLE():
-    case Multiplicity::GROUPSOFPEOPLE():
-    case Multiplicity::MULTIPLE():
-    case Multiplicity::SINGLE():
-    case Multiplicity::PARALLEL():
-      return $this->dataOption->getDeposit();
-    default:
-      return null;
+      case Multiplicity::RECURRING():
+        return null; // regardless of data-base storage
+      case Multiplicity::SIMPLE():
+        return $this->deposit;
+      case Multiplicity::GROUPOFPEOPLE():
+      case Multiplicity::GROUPSOFPEOPLE():
+      case Multiplicity::MULTIPLE():
+      case Multiplicity::SINGLE():
+      case Multiplicity::PARALLEL():
+        return $this->dataOption->getDeposit();
+      default:
+        return null;
     }
   }
-
 }
