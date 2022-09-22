@@ -38,6 +38,9 @@ class OneSupportingDocumentForMultiplePayments extends AbstractMigration
     self::STRUCTURAL => [
       'ALTER TABLE CompositePayments DROP INDEX IF EXISTS UNIQ_65D9920C2423759C, ADD INDEX IF NOT EXISTS IDX_65D9920C2423759C (supporting_document_id)',
       'ALTER TABLE ProjectParticipantFieldsData DROP INDEX IF EXISTS UNIQ_E1AAA1E92423759C, ADD INDEX IF NOT EXISTS IDX_E1AAA1E92423759C (supporting_document_id)',
+      'ALTER TABLE project_balance_supporting_document_encrypted_file DROP INDEX IF EXISTS UNIQ_C2B8C544EC15E76C, ADD INDEX IF NOT EXISTS IDX_C2B8C544EC15E76C (encrypted_file_id)',
+      'ALTER TABLE project_balance_supporting_document_encrypted_file DROP FOREIGN KEY IF EXISTS FK_C2B8C544EC15E76C',
+      'ALTER TABLE project_balance_supporting_document_encrypted_file ADD CONSTRAINT FK_C2B8C544EC15E76C FOREIGN KEY IF NOT EXISTS (encrypted_file_id) REFERENCES Files (id) ON DELETE CASCADE',
     ],
   ];
 

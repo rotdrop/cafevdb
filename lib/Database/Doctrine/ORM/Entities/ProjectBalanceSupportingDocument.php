@@ -4,7 +4,7 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
@@ -81,13 +81,12 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    * @var Collection
    *
    * orphan removal would be nice, but make it more difficult to change the sequence number.
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="projectBalanceSupportingDocument", cascade={"all"}, indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="projectBalanceSupportingDocuments", cascade={"persist"}, indexBy="id", fetch="EXTRA_LAZY")
    * @ORM\JoinTable(
    *   joinColumns={
    *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *     @ORM\JoinColumn(name="sequence", referencedColumnName="sequence")
    *   },
-   *   inverseJoinColumns={@ORM\JoinColumn(unique=true)}
    * )
    */
   private $documents;
@@ -207,6 +206,9 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   /**
    * Add the given file to the list of supporting documents if not already present.
    *
+   * This increases the link-count of the file and add this entity to the
+   * container collection of the encrypted file.
+   *
    * @param EncryptedFile $file
    *
    * @return ProjectBalanceSupportingDocument
@@ -218,6 +220,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
     }
     if (!$this->documents->containsKey($file->getId())) {
       $file->link();
+      $file->addProjectBalanceSupportingDocument($this);
       $this->documents->set($file->getId(), $file);
     }
     return $this;
@@ -225,6 +228,9 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
 
   /**
    * Remove the given file from the list of supporting documents.
+   *
+   * This also decrements the link count of the file and removes $this from
+   * the collection of document containes of the encrypted file entity.
    *
    * @param EncryptedFile $file
    *
@@ -234,6 +240,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
   {
     if ($this->documents->contains($file)) {
       $this->documents->removeElement($file);
+      $file->removeProjectBalanceSupportingDocument($this);
       $file->unlink();
     }
     return $this;

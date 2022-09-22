@@ -103,16 +103,9 @@ const ready = function(selector, pmeParameters, resizeCB) {
       });
 
     $container
-      .on('dblclick', 'table.pme-main tr.composite-payment.first td', function(event) {
-        event.stopImmediatePropagation();
-        PHPMyEdit.openRowDialog(this, event, $container);
-        return false;
-      });
-
-    $container
-      .on('click', 'table.pme-main tr.composite-payment.first td', function(event) {
-        if ($(event.target).is('a.download-link, a.open-parent')) {
-          return;
+      .on('contextmenu', 'table.pme-main tr.composite-payment.first td', function(event) {
+        if (event.ctrlKey) {
+          return; // let the user see the normal context menu
         }
         const $row = $(this).closest('tr.composite-payment.first');
         event.stopImmediatePropagation();

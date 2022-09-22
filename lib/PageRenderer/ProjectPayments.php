@@ -344,7 +344,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         if (!($this->compositePaymentExpanded[$compositePaymentId]??false)) {
           $cssClasses[] = 'following-hidden';
         }
-        $cssClasses[] = 'disable-row-click';
+        // $cssClasses[] = 'disable-row-click';
         $cssClasses[] = $evenOdd[(int)$oddCompositePayment];
         $oddCompositePayment = !$oddCompositePayment;
       } else {
@@ -843,7 +843,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
             $filesAppLink = '';
           }
-          return $filesAppLink.'<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:payment:document'].'" href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
+          return $filesAppLink
+            . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:payment:document'].'" href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
         } else {
           return $value;
         }
@@ -945,13 +946,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ],
         ],
         'select' => 'D',
-        'sql' => 'IF(
+        'sql|LF' => 'IF(
   ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
   CONCAT_WS(
     ",",
     $main_table.balance_document_sequence,
     ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values
   ),
+  $join_col_fqn)',
+        'sql' => 'IF(
+  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
+  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values,
   $join_col_fqn)',
         'values' => [
           'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
@@ -1656,7 +1661,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
-        return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
+        return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . '</span><span class="pme-cell-content">' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
       }
     }
 
@@ -1677,13 +1682,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     }
     $filesAppAnchor = $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
     $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
+    $valueHtml = '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer one-liner">' . $value . '</div></div>';
+
     if (!empty($fileInfo)) {
       $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
-      $downloadAnchor = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $value . '</a>';
+      $downloadAnchor = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $valueHtml . '</a>';
     } else {
-      $downloadAnchor = $value;
+      $downloadAnchor = $valueHtml;
     }
 
-    return $filesAppAnchor . $downloadAnchor;
+    return '<div class="flex-container"><span class="pme-cell-prefix">'
+      . $filesAppAnchor
+      . '</span><span class="pme-cell-content">'
+      . $downloadAnchor
+      . '</span>';
   }
 }

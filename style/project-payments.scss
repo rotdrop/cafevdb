@@ -41,6 +41,11 @@
             display:none;
           }
         }
+        &:not(.project-payment) {
+          td.instrumentation-id {
+            padding-right:1em;
+          }
+        }
       }
 
       &.project-payment {
