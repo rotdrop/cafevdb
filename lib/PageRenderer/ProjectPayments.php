@@ -1573,9 +1573,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * @return boolean
    */
-  public function isCompositeRowTag(string $rowTag):bool
+  public function isCompositeRowTag(?string $rowTag):bool
   {
-    return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
+    return str_starts_with($rowTag ?? '', self::ROW_TAG_PREFIX);
   }
 
   /**

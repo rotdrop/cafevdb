@@ -35,7 +35,7 @@ class LinkCompositePaymentsToBalance extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS project_id INT DEFAULT NULL, ADD balance_document_sequence INT DEFAULT NULL',
+      'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS project_id INT DEFAULT NULL, ADD COLUMN IF NOT EXISTS balance_document_sequence INT DEFAULT NULL',
       'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)',
       'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C9523AA8A FOREIGN KEY IF NOT EXISTS (project_id, musician_id) REFERENCES ProjectParticipants (project_id, musician_id)',
       'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C6A022FD1 FOREIGN KEY IF NOT EXISTS (project_id, balance_document_sequence) REFERENCES ProjectBalanceSupportingDocuments (project_id, sequence)',
