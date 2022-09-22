@@ -47,6 +47,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   /** @var ProjectService */
   private $projectService;
 
@@ -195,7 +197,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**  {@inheritdoc} */
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return $this->project->getFinancialBalanceSupportingDocumentsChanged();
+    return self::ensureDate($this->project->getFinancialBalanceSupportingDocumentsChanged());
   }
 
   /** {@inheritdoc} */
