@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 
 /** AJAX endpoints for debit mandates */
