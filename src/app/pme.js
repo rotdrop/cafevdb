@@ -1352,7 +1352,7 @@ function installInputSelectize(containerSel, onlyClass) {
     if ($self.hasClass('drag-drop')) {
       plugins.push('drag_drop');
     }
-    $self.selectize({
+    const selectizeOptions = {
       plugins,
       delimiter: ',',
       persist: false,
@@ -1365,7 +1365,29 @@ function installInputSelectize(containerSel, onlyClass) {
           text: input,
         };
       },
-    });
+    };
+    if ($self.data('selectizeAjaxCreate')) {
+      const createUrl = generateUrl($self.data('selectizeAjaxCreate'));
+      const inputField = $self.data('selectizeCreateInputField') || 'input';
+      const valueField = $self.data('selectizeCreateValueField') || 'value';
+      const labelField = $self.data('selectizeCreateLabelField') || 'text';
+      selectizeOptions.labelField = labelField;
+      selectizeOptions.valueField = valueField;
+      selectizeOptions.create = function(input, createSetter) {
+        $.post(createUrl, {
+          [inputField]: input,
+        })
+          .fail(function(xhr, status, errorThrown) {
+            Ajax.handleError(xhr, status, errorThrown);
+            createSetter(false);
+          })
+          .done(createSetter);
+      };
+    }
+    if ($self.hasClass('selectice-no-create')) {
+      selectizeOptions.create = false;
+    }
+    $self.selectize(selectizeOptions);
   });
 }
 

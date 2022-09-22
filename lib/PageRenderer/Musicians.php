@@ -580,7 +580,16 @@ make sure that the musicians are also automatically added to the
     $fdd = [
       'name'        => $this->l->t('Instruments'),
       'tab'         => ['id' => 'orchestra'],
-      'css'         => ['postfix' => [ 'musician-instruments', 'tooltip-top', 'no-chosen', 'selectize', 'drag-drop', ], ],
+      'css'         => [
+        'postfix' => [
+          'musician-instruments',
+          'tooltip-top',
+          'no-chosen',
+          'selectize',
+          'drag-drop',
+          'selectize-no-create',
+        ],
+      ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
@@ -742,7 +751,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['email'] = Util::arrayMergeRecursive(
       $this->defaultFDD['email'], [
-        'name'  => $this->l->t('Em@il'),
+        'name'  => $this->l->t('Principal Em@il'),
         'tab'   => [ 'id' => 'contact' ],
         'input' => 'M',
         'select' => 'D',
@@ -756,7 +765,8 @@ make sure that the musicians are also automatically added to the
         ],
         'css'   => [
           'postfix' => [
-            'selectize', 'no-chosen',
+            'selectize',
+            'no-chosen',
             'duplicates-indicator',
             $addCSS,
           ],
@@ -776,8 +786,24 @@ make sure that the musicians are also automatically added to the
           'tab'    => [ 'id' => 'contact' ],
           'sql'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
           'select' => 'M',
+          'css'    => [
+            'postfix' => [
+              'drag-drop',
+              'selectize',
+              'no-chosen',
+              $addCSS,
+            ],
+          ],
           'values' => [
             'description' => self::trivialDescription(),
+          ],
+          'display' => [
+            'attributes' => [
+              'data-selectize-ajax-create' => 'validate/musicians/email',
+              'data-selectize-create-input-field' => 'email',
+              'data-selectize-create-value-field' => 'email',
+              'data-selectize-create-label-field' => 'email',
+            ],
           ],
         ]));
     $opts['fdd'][$allEmailsFddName]['values|CP'] = Util::arrayMergeRecursive(
