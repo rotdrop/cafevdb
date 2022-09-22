@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Util;
  *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
  * @ORM\Entity
  */
-class CompositePayment implements \ArrayAccess
+class CompositePayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -90,7 +90,6 @@ class CompositePayment implements \ArrayAccess
   /**
    * @var string
    * Subject of the bank transaction.
-   *
    *
    * @ORM\Column(type="string", length=1024, nullable=false)
    */
@@ -189,7 +188,9 @@ class CompositePayment implements \ArrayAccess
    */
   private $projectBalanceSupportingDocument;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
     $this->projectBalanceSupportingDocuments = new ArrayCollection;
@@ -256,6 +257,8 @@ class CompositePayment implements \ArrayAccess
   /**
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
+   *
+   * @return float
    */
   public function sumPaymentsAmount():float
   {
@@ -270,7 +273,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int|Musician $musician
    *
    * @return CompositePayment
    */
@@ -294,7 +297,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|int|Project $project
    *
    * @return CompositePayment
    */
@@ -313,6 +316,30 @@ class CompositePayment implements \ArrayAccess
   public function getProject():?Project
   {
     return $this->project;
+  }
+
+  /**
+   * Set projectParticipant.
+   *
+   * @param null|ProjectParticipant $projectParticipant
+   *
+   * @return CompositePayment
+   */
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):CompositePayment
+  {
+    $this->projectParticipant = $projectParticipant;
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipant.
+   *
+   * @return ProjectParticipant
+   */
+  public function getProjectParticipant():?ProjectParticipant
+  {
+    return $this->projectParticipant;
   }
 
   /**
@@ -462,11 +489,11 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set notificationMessageId.
    *
-   * @param string $notificationMessageId
+   * @param null|string $notificationMessageId
    *
    * @return CompositePayment
    */
-  public function setNotificationMessageId($notificationMessageId):CompositePayment
+  public function setNotificationMessageId(?string $notificationMessageId):CompositePayment
   {
     $this->notificationMessageId = $notificationMessageId;
 
@@ -476,9 +503,9 @@ class CompositePayment implements \ArrayAccess
   /**
    * Get notificationMessageId.
    *
-   * @return string
+   * @return null|string
    */
-  public function getNotificationMessageId()
+  public function getNotificationMessageId():?string
   {
     return $this->notificationMessageId;
   }
@@ -664,7 +691,7 @@ class CompositePayment implements \ArrayAccess
     return $this;
   }
 
-  /** \JsonSerializable interface */
+  /** {@inheritdoc} */
   public function jsonSerialize():array
   {
     return $this->toArray();
