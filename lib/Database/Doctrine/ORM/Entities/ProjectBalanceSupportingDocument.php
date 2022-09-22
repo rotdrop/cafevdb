@@ -124,7 +124,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
     $this->arrayCTOR();
     $this->documents = new ArrayCollection();
     $this->projectPayments = new ArrayCollection();
-    $this->compositePayments = new ArrayCollefction();
+    $this->compositePayments = new ArrayCollection();
     $this->setProject($project);
     $this->setSequence($sequence);
   }
