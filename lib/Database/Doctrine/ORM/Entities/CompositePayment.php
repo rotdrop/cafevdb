@@ -171,7 +171,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Optional. In case an additional overview document needs to be added in
    * addition to the individual supporting documents of the project payments.
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
    *
    * @todo Support more than one supporting document.
    */
