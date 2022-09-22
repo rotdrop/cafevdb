@@ -23,6 +23,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use \RuntimeException;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -115,6 +117,9 @@ class EncryptedFile extends File
   public function addOwner(Musician $musician):EncryptedFile
   {
     $musicianId = $musician->getId();
+    if (empty($musicianId)) {
+      throw new RuntimeException('The musician does not seem to have an id.');
+    }
     if (!$this->owners->containsKey($musicianId)) {
       $this->owners->set($musicianId, $musician);
     }

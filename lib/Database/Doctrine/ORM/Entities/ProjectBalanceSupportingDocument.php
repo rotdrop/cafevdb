@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use \RuntimeException;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -211,6 +213,9 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   public function addDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
+    if (empty($file->getId())) {
+      throw new RuntimeException('The supporting document does not have an id.');
+    }
     if (!$this->documents->containsKey($file->getId())) {
       $file->link();
       $this->documents->set($file->getId(), $file);
@@ -227,8 +232,8 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    */
   public function removeDocument(EncryptedFile $file):ProjectBalanceSupportingDocument
   {
-    if ($this->documents->containsKey($file->getId())) {
-      $this->documents->remove($file->getId());
+    if ($this->documents->contains($file)) {
+      $this->documents->removeElement($file);
       $file->unlink();
     }
     return $this;

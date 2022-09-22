@@ -433,7 +433,6 @@ class SepaBulkTransactionService
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
-        $bulkTransaction->addTransactionData($exportFile);
       } else {
         $exportFile
           ->setFileName($fileName)
@@ -445,6 +444,8 @@ class SepaBulkTransactionService
       $this->entityManager->beginTransaction();
       try {
         $this->persist($exportFile);
+        $this->flush();
+        $bulkTransaction->addTransactionData($exportFile);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
