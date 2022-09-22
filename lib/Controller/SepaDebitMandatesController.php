@@ -1309,6 +1309,9 @@ class SepaDebitMandatesController extends Controller
           break;
       }
 
+      $this->persist($writtenMandate);
+      $debitMandate->setWrittenMandate($writtenMandate);
+
       if ($writtenMandate->getNumberOfLinks() == 1) {
         // only tweak the file name if we are the only user.
         $writtenMandateFileName = $mandateReference;
@@ -1323,8 +1326,6 @@ class SepaDebitMandatesController extends Controller
         $writtenMandate->setFileName($writtenMandateFileName);
       }
 
-      $this->persist($writtenMandate);
-      $debitMandate->setWrittenMandate($writtenMandate);
       $this->flush();
 
       $this->entityManager->commit();
