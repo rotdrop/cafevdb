@@ -1541,6 +1541,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
     $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
 
+    $newValues['project_id'] = $projectId;
+
     // "row_tag" is used as "column" in $this->joinStructure, so transfer
     // the ProjectPayments ids to that field.
     $paymentId =
