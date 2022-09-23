@@ -1683,11 +1683,11 @@ Störung.';
         }
       }
 
-      // Finally send one message without template substitution (as
-      // this makes no sense) to all Cc:, Bcc: recipients and the
-      // catch-all. This Message also gets copied to the Sent-folder
-      // on the imap server.
-
+      // Finally send one message without template substitution (as this makes
+      // no sense) to all Cc:, Bcc: recipients and the catch-all. This Message
+      // also gets copied to the Sent-folder on the imap server. This message
+      // is allowed to fail the duplicates check as form-letters for standard
+      // purposes naturally generate duplicates.
 
       ++$this->diagnostics['TotalCount'];
       $mimeMsg = $this->composeAndSend(
@@ -1697,6 +1697,7 @@ Störung.';
         references: $references,
         customHeaders: self::HEADER_MARKER_SENT,
         doNotReply: true,
+        allowDuplicates: true,
       );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
@@ -2427,6 +2428,10 @@ Störung.';
    *
    * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
    *
+   * @param bool $doNotReply Add a reply-to header with a no-reply address
+   *
+   * @param bool $allowDuplicates Skip the duplicates check.
+   *
    * @return array
    * ```
    * [
@@ -2445,6 +2450,7 @@ Störung.';
     $references = null,
     $customHeaders = [],
     $doNotReply = false,
+    $allowDuplicates = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
@@ -2502,9 +2508,9 @@ Störung.';
           $this->l->t('DO NOT REPLY')
         );
       } else {
-        $phpMailer->AddReplyTo($senderEmail, $senderName);
+        $phpMailer->addReplyTo($senderEmail, $senderName);
       }
-      $phpMailer->SetFrom($senderEmail, $senderName);
+      $phpMailer->setFrom($senderEmail, $senderName);
 
       if (!$this->constructionMode) {
         // Loop over all data-base records and add each recipient in turn
@@ -2579,11 +2585,12 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage($calendar,
-                                           md5($this->projectName.'.ics'),
-                                           $this->projectName.'.ics',
-                                           'quoted-printable',
-                                           'text/calendar');
+        $phpMailer->AddStringEmbeddedImage(
+          $calendar,
+          md5($this->projectName.'.ics'),
+          $this->projectName.'.ics',
+          'quoted-printable',
+          'text/calendar');
       }
 
       // All extra (in particular: personal) attachments.
@@ -2609,7 +2616,7 @@ Störung.';
     }
 
     /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = $this->sentEmail($logMessage);
+    $sentEmail = $this->sentEmail($logMessage, allowDuplicates: $allowDuplicates);
     if (!$sentEmail) {
       return false;
     }
@@ -2793,13 +2800,14 @@ Störung.';
    * Log the sent message to the data base if it is new. Return false
    * if this is a duplicate, true otherwise.
    *
-   * @param $logMessage The email-message to record in the DB.
+   * @param SentEmailDTO $logMessage The email-message to record in the DB.
    *
-   * @param $allowDuplicates Whether or not to check for
+   * @param bool $allowDuplicates Whether or not to check for
    * duplicates. This is currently never set to true.
    *
+   * @return bool|Entities\SentEmail
    */
-  private function sentEmail(SentEmailDTO $logMessage, $allowDuplicates = false)
+  private function sentEmail(SentEmailDTO $logMessage, bool $allowDuplicates = false)
   {
     /** @var Entities\SentEmail $sentEmail */
     $sentEmail = new Entities\SentEmail;
