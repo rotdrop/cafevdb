@@ -295,7 +295,7 @@ class ProjectParticipantFieldsService
     if (empty($project)) {
       /** @var Entities\ProjectParticipant $projectParticipant */
       foreach ($musician->getProjectParticipation() as $projectParticipant) {
-        list($sum, $received) = self::participantMonetaryObligations($musician, $projectParticipant->getProject());
+        list('sum' => $sum, 'received' => $received) = self::participantMonetaryObligations($musician, $projectParticipant->getProject());
         $obligations['sum'] += $sum;
         $obligations['received'] += $received;
       }
