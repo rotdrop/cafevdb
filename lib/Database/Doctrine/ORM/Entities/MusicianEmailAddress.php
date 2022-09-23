@@ -84,16 +84,18 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
-   * @param string $address
+   * @param null|string $address
    *
    * @return MusicianEmailAddress
    */
-  public function setAddress(string $address):MusicianEmailAddress
+  public function setAddress(?string $address):MusicianEmailAddress
   {
-    if (!self::validateAddress($address)) {
-      throw new InvalidArgumentException('Email-address "' . $address . '" fails validation.');
+    if (!empty($address)) {
+      if (!self::validateAddress($address)) {
+        throw new InvalidArgumentException('Email-address "' . $address . '" fails validation.');
+      }
+      $this->address = $address;
     }
-    $this->address = $address;
     return $this;
   }
 
@@ -106,11 +108,11 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
-   * @param Musician $musican
+   * @param int|Musician $musican
    *
    * @return MusicianEmailAddress
    */
-  public function setMusician(Musician $musician):MusicianEmailAddress
+  public function setMusician($musician):MusicianEmailAddress
   {
     $this->musician = $musician;
     return $this;
