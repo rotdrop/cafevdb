@@ -145,6 +145,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @var Project
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="compositePayments", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(nullable=false)
    */
   private $project;
 
@@ -152,6 +153,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @var Musician
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(nullable=false)
    * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="supportingDocument", timestampField="paymentsChanged")
    */
   private $musician;
