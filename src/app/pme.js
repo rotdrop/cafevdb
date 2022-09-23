@@ -61,6 +61,7 @@ import 'jquery-ui/ui/effects/effect-highlight';
 import 'jquery-ui/ui/widgets/sortable';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
+import mergician from 'mergician';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 
@@ -1348,54 +1349,46 @@ function installInputSelectize(containerSel, onlyClass) {
 
   container.find('select.' + pmeInput + '.' + onlyClass).each(function(index) {
     const $self = $(this);
-    const plugins = ['remove_button'];
-    if ($self.hasClass('drag-drop')) {
-      plugins.push('drag_drop');
-    }
-    const selectizeOptions = {
-      plugins,
-      delimiter: ',',
-      persist: false,
-      hideSelected: false,
-      openOnFocus: false,
-      items: $self.data('initialValues'),
-      // closeAfterSelect: true,
-      create(input) {
-        return {
-          value: input,
-          text: input,
-        };
+    const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
+      {
+        plugins: ['remove_button'],
+        delimiter: ',',
+        persist: false,
+        hideSelected: false,
+        openOnFocus: false,
+        items: $self.data('initialValues'),
+        // closeAfterSelect: true,
+        create: false,
       },
-    };
-    if ($self.data('selectizeAjaxCreate')) {
-      const createUrl = generateUrl($self.data('selectizeAjaxCreate'));
-      const inputField = $self.data('selectizeCreateInputField') || 'input';
-      const valueField = $self.data('selectizeCreateValueField') || 'value';
-      const labelField = $self.data('selectizeCreateLabelField') || 'text';
-      selectizeOptions.labelField = labelField;
-      selectizeOptions.valueField = valueField;
-      selectizeOptions.create = function(input, createSetter) {
-        $.post(createUrl, {
-          [inputField]: input,
-        })
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown);
-            createSetter(false);
+      $self.data('selectizeOptions') || {}
+    );
+    if (selectizeOptions.create && selectizeOptions.create !== true) {
+      const create = selectizeOptions.create;
+      const inputField = create.inputField || 'input';
+      const valueField = selectizeOptions.valueField || 'value';
+      const labelField = selectizeOptions.labelField || 'text';
+      if (create.url) {
+        selectizeOptions.create = function(input, setterCallback) {
+          $.post(generateUrl(create.url), {
+            ...(create.post || {}),
+            [inputField]: input,
           })
-          .done(function(data) {
-            if (!data || !data[valueField] || !data[labelField]) {
-              createSetter(false);
-            }
-            createSetter(data);
-          });
-      };
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+              setterCallback(false);
+            })
+            .done(function(data) {
+              if (!data || !data[valueField] || !data[labelField]) {
+                setterCallback(false);
+              }
+              setterCallback(data);
+            });
+        };
+      } else {
+        selectizeOptions.create = function(input) { return { [valueField]: input, [labelField]: input }; };
+      }
     }
-    if ($self.hasClass('selectice-no-create')) {
-      selectizeOptions.create = false;
-    }
-    if ($self.data('selectizeOptions')) {
-      Object.assing(selectizeOptions, $self.data('selectizeOptions'));
-    }
+    console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
   });
 }
