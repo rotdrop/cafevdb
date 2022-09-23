@@ -1356,6 +1356,7 @@ function installInputSelectize(containerSel, onlyClass) {
       plugins,
       delimiter: ',',
       persist: false,
+      hideSelected: false,
       openOnFocus: false,
       items: $self.data('initialValues'),
       // closeAfterSelect: true,
@@ -1381,11 +1382,19 @@ function installInputSelectize(containerSel, onlyClass) {
             Ajax.handleError(xhr, status, errorThrown);
             createSetter(false);
           })
-          .done(createSetter);
+          .done(function(data) {
+            if (!data || !data[valueField] || !data[labelField]) {
+              createSetter(false);
+            }
+            createSetter(data);
+          });
       };
     }
     if ($self.hasClass('selectice-no-create')) {
       selectizeOptions.create = false;
+    }
+    if ($self.data('selectizeOptions')) {
+      Object.assing(selectizeOptions, $self.data('selectizeOptions'));
     }
     $self.selectize(selectizeOptions);
   });

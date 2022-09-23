@@ -800,9 +800,12 @@ make sure that the musicians are also automatically added to the
           'display' => [
             'attributes' => [
               'data-selectize-ajax-create' => 'validate/musicians/email',
-              'data-selectize-create-input-field' => 'email',
+              'data-selectize-create-input-field' => $this->pme->cgiDataName('email'),
               'data-selectize-create-value-field' => 'email',
               'data-selectize-create-label-field' => 'email',
+              'data-selectize-options' => [
+                'persist' => true,
+              ],
             ],
           ],
         ]));
