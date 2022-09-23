@@ -1237,7 +1237,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
               $this->debug('ENTITIY ID '.print_r($entityId, true));
-              $entity = $entityClass::create();
+              $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
                 if (is_numeric($value) && $value <= 0) {
                   // treat this as autoincrement or otherwise auto-generated ids
@@ -1340,7 +1340,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $entity = $this->find($entityId);
         if (empty($entity)) {
           $this->debug('Entity not found, creating');
-          $entity = $entityClass::create();
+          $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
             $entity[$key] = $value;
           }
@@ -1675,7 +1675,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
-            $entity = $entityClass::create();
+            $entity = new $entityClass;
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
             }
@@ -1737,7 +1737,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // "land" here
         $this->debug('IDENTIFIER ' . print_r($identifier, true));
         $entityId = $meta->extractKeyValues($identifier);
-        $entity = $entityClass::create();
+        $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
           $entity[$key] = $value;
