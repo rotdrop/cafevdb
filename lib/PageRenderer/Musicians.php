@@ -586,8 +586,6 @@ make sure that the musicians are also automatically added to the
           'tooltip-top',
           'no-chosen',
           'selectize',
-          'drag-drop',
-          'selectize-no-create',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
@@ -606,6 +604,14 @@ make sure that the musicians are also automatically added to the
       'valueGroups' => $this->instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
+      ],
+      'display' => [
+        'attributes' => [
+          'data-selectize-options' => [
+            'create' => false,
+            'plugins' => [ 'drag_drop', ],
+          ],
+        ],
       ],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
@@ -642,6 +648,13 @@ make sure that the musicians are also automatically added to the
         'filter' => [
           'having' => true,
           // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+        ],
+        'display' => [
+          'attributes' => [
+            'data-selectize-options' => [
+              'create' => false,
+            ],
+          ],
         ],
       ]);
 
@@ -749,46 +762,15 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
-    $opts['fdd']['email'] = Util::arrayMergeRecursive(
-      $this->defaultFDD['email'], [
-        'name'  => $this->l->t('Principal Em@il'),
-        'tab'   => [ 'id' => 'contact' ],
-        'input' => 'M',
-        'select' => 'D',
-        'select|LF' => 'T',
-        'sql'    => '$main_table.email',
-        'values' => [
-          'table'  => self::MUSICIAN_EMAILS_TABLE,
-          'column' => 'address',
-          'description' => self::trivialDescription('$table.address'),
-          'join'   => [ 'reference' => $this->joinTables[self::MUSICIAN_EMAILS_TABLE], ],
-        ],
-        'css'   => [
-          'postfix' => [
-            'selectize',
-            'no-chosen',
-            'duplicates-indicator',
-            $addCSS,
-          ],
-        ],
-        'css|VD' => [ 'postfix' => [ 'email', ], ],
-      ]);
-    $opts['fdd']['email']['values|CP'] = Util::arrayMergeRecursive(
-      $opts['fdd']['email']['values'], [
-        'filters' => '$table.musician_id = $record_id[id]',
-      ],
-    );
-
     list(, $allEmailsFddName) = $this->makeJoinTableField(
       $opts['fdd'], self::ALL_EMAILS_TABLE, 'address', Util::arrayMergeRecursive(
         $this->defaultFDD['email'], [
-          'name'   => $this->l->t('All Em@ils'),
+          'name'   => $this->l->t('Em@ils'),
           'tab'    => [ 'id' => 'contact' ],
-          'sql'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
+          'sql'    => 'CONCAT_WS(",", $main_table.email, GROUP_CONCAT(DISTINCT IF($join_col_fqn = $main_table.email, NULL, $join_col_fqn)))',
           'select' => 'M',
           'css'    => [
             'postfix' => [
-              'drag-drop',
               'selectize',
               'no-chosen',
               $addCSS,
@@ -799,18 +781,67 @@ make sure that the musicians are also automatically added to the
           ],
           'display' => [
             'attributes' => [
-              'data-selectize-ajax-create' => 'validate/musicians/email',
-              'data-selectize-create-input-field' => $this->pme->cgiDataName('email'),
-              'data-selectize-create-value-field' => 'email',
-              'data-selectize-create-label-field' => 'email',
+              'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
+              'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
               'data-selectize-options' => [
+                'create' => [
+                  'url' => 'validate/musicians/email',
+                  'post' => [
+                    'failure' => 'error', // vs. message
+                  ],
+                  'inputField' => $this->pme->cgiDataName('email'),
+                ],
+                'valueField' => 'email',
+                'labelField' => 'email',
                 'persist' => true,
+                'plugins' => [
+                  'drag_drop',
+                ],
               ],
             ],
           ],
         ]));
-    $opts['fdd'][$allEmailsFddName]['values|CP'] = Util::arrayMergeRecursive(
+    $opts['fdd'][$allEmailsFddName]['values|ACP'] = Util::arrayMergeRecursive(
       $opts['fdd'][$allEmailsFddName]['values'], [
+        'filters' => '$table.musician_id = $record_id[id]',
+      ],
+    );
+
+    $opts['fdd']['email'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['email'], [
+        'name'  => $this->l->t('Principal Em@il'),
+        'tab'   => [ 'id' => 'contact' ],
+        'input' => 'RM',
+        'select' => 'T',
+        'select|LF' => 'T',
+        'sql'    => '$main_table.email',
+        'values' => [
+          'table'  => self::MUSICIAN_EMAILS_TABLE,
+          'column' => 'address',
+          'description' => self::trivialDescription('$table.address'),
+          'join'   => [ 'reference' => $this->joinTables[self::MUSICIAN_EMAILS_TABLE], ],
+        ],
+        'css'   => [
+          'postfix' => [
+            // 'selectize',
+            'no-chosen',
+            'duplicates-indicator',
+            $addCSS,
+          ],
+        ],
+        'css|VD' => [ 'postfix' => [ 'email', ], ],
+        'display' => [
+          'attributes' => [
+            'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
+            'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
+            'data-selectize-options' => [
+              'create' => false,
+            ],
+          ],
+        ],
+      ]);
+    $opts['fdd']['email']['values|ACP'] = Util::arrayMergeRecursive(
+      $opts['fdd']['email']['values'], [
         'filters' => '$table.musician_id = $record_id[id]',
       ],
     );

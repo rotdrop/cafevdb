@@ -192,11 +192,23 @@ const contactValidation = function(container) {
         });
     });
 
-  const $emailInput = $form.find('input[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+  const $emailInput = $form.find('[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+  const $allEmailsInput = $form.find('[name$="MusicianEmailAddresses@all:address[]"]');
+
+  $allEmailsInput
+    .off('change')
+    .on('change', function(event) {
+      const allEmails = selectedValues($allEmailsInput);
+      console.info('ALL EMAILS', allEmails);
+      if (allEmails.length > 0) {
+        $emailInput.val(allEmails[0]).trigger('change');
+      }
+      return false;
+    });
 
   $emailInput
-    .off('blur')
-    .on('blur', function(event) {
+    .off('blur, change')
+    .on('blur, change', function(event) {
 
       event.stopImmediatePropagation();
 

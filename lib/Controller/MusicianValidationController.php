@@ -121,9 +121,17 @@ class MusicianValidationController extends Controller
    *
    * @NoAdminRequired
    */
-  public function validate(string $topic, ?string $subTopic = null):DataResponse
+  public function validate(string $topic, ?string $subTopic = null, string $failure = 'notice'):DataResponse
   {
     $message = [];
+    switch ($failure) {
+      case 'error':
+        $returnFailures = fn($data) => self::grumble($data);
+        break;
+      default:
+        $returnFailures = fn($data) => self::dataResponse($data);
+        break;
+    }
     switch ($topic) {
       case 'phone':
         $numbers = [
@@ -208,7 +216,7 @@ class MusicianValidationController extends Controller
         $email = $this->requestParameter('email');
 
         if (empty($email)) {
-          return self::dataResponse([ 'message' => '', 'email' => '' ]);
+          $returnFailures([ 'message' => $this->t->t('Submitted email is empty'), 'email' => '' ]);
         }
 
         $phpMailer = new PHPMailer(true);
@@ -245,10 +253,16 @@ class MusicianValidationController extends Controller
           $email = implode(', ', $emailArray);
         }
 
-        return self::dataResponse([
+        $result = [
           'message' => $message,
           'email' => $email,
-        ]);
+        ];
+
+        if (empty($message)) {
+          return self::dataResponse($result);
+        } else {
+          return $returnFailures($result);
+        }
 
       case 'autocomplete':
         $country = $this->requestParameter('country');
