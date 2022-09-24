@@ -86,8 +86,6 @@ trait MusicianEmailsTrait
         $emailField = $this->joinTables[BaseRenderer::MUSICIANS_TABLE] . '.' . 'email';
       }
 
-      $this->logInfo('FIELDS ' . $musicianIdField . ' ' . print_r($address, true) . ' ' . $emailField);
-
       list(, $allEmailsFddName) = $this->makeJoinTableField(
         $fdd,
         BaseRenderer::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all',
