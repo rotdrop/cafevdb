@@ -97,6 +97,7 @@ trait MusicianEmailsTrait
             'name'   => $this->l->t('Em@ils'),
             'tab'    => [ 'id' => $tableTab ],
             'sql'    => 'CONCAT_WS(",", ' . $emailField . ', GROUP_CONCAT(DISTINCT IF($join_col_fqn = ' . $emailField .  ', NULL, $join_col_fqn)))',
+            'input' => 'M',
             'select|F' => 'T',
             'select' => 'M',
             'css'    => [
@@ -133,6 +134,7 @@ trait MusicianEmailsTrait
                 ],
               ],
             ],
+            'tooltip' => $this->toolTipsService['page-renderer:musicians:emails:all'],
           ]));
       $fdd[$allEmailsFddName]['values|ACP'] = Util::arrayMergeRecursive(
         $fdd[$allEmailsFddName]['values'], [
@@ -172,6 +174,7 @@ trait MusicianEmailsTrait
               ],
             ],
           ],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:emails:principal'],
         ]);
 
       if ($address == 'email') {
