@@ -337,7 +337,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         return (($aVal == $bVal) ? 0 : ($aVal < $bVal ? +1 : -1));
       });
       foreach ($queryLog as $logEntry) {
-        $label = htmlspecialchars(substr($logEntry['query'], 0, 24));
+        $label = sprintf('%.03f ms: ', $logEntry['duration']);
+        $label .= htmlspecialchars(substr($logEntry['query'], 0, 24));
         if (strlen($logEntry['query']) > 24) {
           $label .= ' &#8230;';
         }
