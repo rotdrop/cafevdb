@@ -40,7 +40,7 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
+import { deselectAll as selectDeselectAll, widget as selectWidget } from './select-utils.js';
 import * as qs from 'qs';
 import {
   sys as pmeSys,
@@ -1388,8 +1388,13 @@ function installInputSelectize(containerSel, onlyClass) {
         selectizeOptions.create = function(input) { return { [valueField]: input, [labelField]: input }; };
       }
     }
-    console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
+    // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
+    const $selectWidget = selectWidget($self);
+    const toolTip = $self.attr('title') || $self.attr('data-original-title');
+    if (toolTip) {
+      $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
+    }
   });
 }
 
