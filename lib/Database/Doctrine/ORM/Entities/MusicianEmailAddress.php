@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  *
  * @ORM\Table(name="MusicianEmailAddresses")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class MusicianEmailAddress implements \ArrayAccess
 {
@@ -155,5 +156,44 @@ class MusicianEmailAddress implements \ArrayAccess
       return false;
     }
     return true;
+  }
+
+  /**
+   * @var null|array
+   *
+   * The array of changed field values.
+   */
+  private $preUpdateValue = [];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PreUpdate
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'address';
+    if ($event->hasChangedField($field)) {
+      $entityManager = $event->getEntityManager();
+      $oldValue = $event->getOldValue($field);
+      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this->musician, $oldValue, $event->getNewValue($field)));
+      $this->preUpdateValue[$field] = $oldValue;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PostUpdate
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    $field = 'address';
+    if (array_key_exists($field, $this->preUpdateValue)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = $event->getEntityManager();
+      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->musician, $this->preUpdateValue[$field]));
+      unset($this->preUpdateValue[$field]);
+    }
   }
 }
