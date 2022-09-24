@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use \RuntimeException;
+
 use OCP\IRequest;
 use OCP\ILogger;
 use OCP\IL10N;
@@ -39,6 +41,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
@@ -49,6 +52,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\PsrCachedReader;
+use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
+use OCA\CAFEVDB\Wrapped\Gedmo;
 
 use function class_exists;
 
@@ -152,9 +157,6 @@ class EntityManager extends EntityManagerDecorator
   /** @var IRequest */
   private $request;
 
-  /** @var IUserSession */
-  private $userSession;
-
   /** @var IAppContainer */
   private $appContainer;
 
@@ -215,14 +217,14 @@ class EntityManager extends EntityManagerDecorator
    */
   protected $databaseAccess = [];
 
-  // initial setup.
+  /** {@inheritdoc} */
   public function __construct(
-    EncryptionService $encryptionService
-    , IAppContainer $appContainer
-    , CloudLogger $sqlLogger
-    , IRequest $request
-    , ILogger $logger
-    , IL10N $l10n
+    EncryptionService $encryptionService,
+    IAppContainer $appContainer,
+    CloudLogger $sqlLogger,
+    IRequest $request,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->encryptionService = $encryptionService;
     $this->appContainer = $appContainer;
@@ -249,18 +251,21 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Dispatch the given event to the cloud's event dispatcher.
+   * @param Event $event Dispatch the given event to the cloud's event dispatcher.
    *
-   * @param Event $event.
+   * @return void
    */
-  public function dispatchEvent(Event $event)
+  public function dispatchEvent(Event $event):void
   {
     if (empty($this->eventDispatcher)) {
       $this->eventDispatcher = $this->appContainer->get(IEventDispatcher::class);
     }
-    return $this->eventDispatcher->dispatchTyped($event);
+    $this->eventDispatcher->dispatchTyped($event);
   }
 
+  /**
+   * @return bool Return \true if bound to the data-base, \false otherwise.
+   */
   public function bound():bool
   {
     return !empty($this->wrapped);
@@ -269,8 +274,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Initialize the wrapper if the EncryptionService has been bound to
    * a user and password.
+   *
+   * @return void
    */
-  public function bind()
+  public function bind():void
   {
     if (!$this->encryptionService->bound()) {
       return;
@@ -295,6 +302,7 @@ class EntityManager extends EntityManagerDecorator
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
 
+  /** {@inheritdoc} */
   public function getConnection():?DatabaseConnection
   {
     if (empty($this->entityManager)) {
@@ -303,50 +311,64 @@ class EntityManager extends EntityManagerDecorator
     return $this->entityManager->getConnection();
   }
 
+  /** {@inheritdoc} */
   public function getPlatform():?DatabasePlatform
   {
     $connection = $this->getConnection();
     return $connection ? $connection->getDatabasePlatform() : null;
   }
 
-  public function suspendLogging()
+  /**
+   * Suspend query logging.
+   *
+   * @return void
+   */
+  public function suspendLogging():void
   {
     $this->sqlLogger->disable();
   }
 
-  public function resumeLogging()
+  /**
+   * Resume query logging.
+   *
+   * @return void
+   */
+  public function resumeLogging():void
   {
     $this->sqlLogger->enable($this->debug);
   }
 
-  /*
+  /**
    * @return null|string The user-id of the currently logged-in user
    * if known.
    */
-  public function getUserId():string
+  public function getUserId():?string
   {
     return $this->userId;
   }
 
-  /*
-   * Close the entity-manager
-   */
-  public function close()
+  /** {@inheritdoc} */
+  public function close():void
   {
     parent::close();
     $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
   }
 
+  /**
+   * @return EntityManagerInterface The wrapped entity manager.
+   */
   public function getWrappedObject():EntityManagerInterface
   {
     return $this->entityManager;
   }
 
-  /*
+  /**
    * Reopen the entity-manager after it has been closed, e.g. after a
    * failed transaction.
+   *
+   * @return void
    */
-  public function reopen()
+  public function reopen():void
   {
     $this->preFlushActions->clearActionQueue();
     $this->preCommitActions = [];
@@ -391,7 +413,12 @@ class EntityManager extends EntityManagerDecorator
     return true;
   }
 
-  private function registerTypes()
+  /**
+   * Register the needed additional DBAL types.
+   *
+   * @return void
+   */
+  private function registerTypes():void
   {
     if ($this->typesBound) {
       return;
@@ -446,7 +473,14 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  private function connectionParameters($params = null) {
+  /**
+   * @param null|array $params Additional parameters.
+   *
+   * @return array The argument $params with merged needed additional
+   * parameters. In particular merge the db authentication parameters.
+   */
+  private function connectionParameters(?array $params = null):array
+  {
     if (empty($this->databaseAccess)) {
       $this->databaseAccess = [
         'dbname' => $this->encryptionService->getConfigValue('dbname'),
@@ -469,7 +503,12 @@ class EntityManager extends EntityManagerDecorator
     return $connectionParams;
   }
 
-  private function getEntityManager($params = null)
+  /**
+   * @param null|array $params Additional parameters.
+   *
+   * @return EntityManagerInterface Construct the wrapped entity manager instance.
+   */
+  private function getEntityManager(?array $params = null):EntityManagerInterface
   {
     list($config, $eventManager) = $this->createSimpleConfiguration();
     list($config, $eventManager, $annotationReader) = $this->createGedmoConfiguration($config, $eventManager);
@@ -477,10 +516,10 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
+    $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit);
 
     $eventManager->addEventListener([
-      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
+      ORM\Tools\ToolEvents::postGenerateSchema,
       ORM\Events::loadClassMetadata,
       ORM\Events::preUpdate,
       ORM\Events::postUpdate,
@@ -522,8 +561,10 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * @param Configuration $config
+   *
+   * @return void
    */
-  private function registerCustomFunctions(Configuration $config)
+  private function registerCustomFunctions(Configuration $config):void
   {
     // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
     $config->addCustomDatetimeFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\TimestampDiff::class);
@@ -533,6 +574,9 @@ class EntityManager extends EntityManagerDecorator
     $config->addCustomStringFunction('if', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\IfElse::class);
   }
 
+  /**
+   * @return array A simple configuration instance without extras.
+   */
   private function createSimpleConfiguration():array
   {
     $cache = null;
@@ -540,13 +584,16 @@ class EntityManager extends EntityManagerDecorator
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
 
+      /** @var IAppContainer */
       private $appContainer;
 
+      /** {@inheritdoc} */
       public function __construct(IAppContainer $appContainer)
       {
         $this->appContainer = $appContainer;
       }
 
+      /** {@inheritdoc} */
       public function resolve($className)
       {
         try {
@@ -557,10 +604,18 @@ class EntityManager extends EntityManagerDecorator
         }
       }
     });
-    return [ $config, new \OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager(), ];
+    return [ $config, new Doctrine\Common\EventManager, ];
   }
 
-  private function createGedmoConfiguration($config, $evm)
+
+  /**
+   * @param Configuration $config An existing configuration to be augmented.
+   *
+   * @param Doctrine\Common\EventManager $evm Existing event-manager to reuse.
+   *
+   * @return array Generate a cooked configuration with Gedmo extensions.
+   */
+  private function createGedmoConfiguration(Configuration $config, Doctrine\Common\EventManager $evm):array
   {
     // standard annotation reader
     $annotationReader = new AnnotationReader;
@@ -568,7 +623,7 @@ class EntityManager extends EntityManagerDecorator
     $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
 
     // create a driver chain for metadata reading
-    $driverChain = new \OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
+    $driverChain = new Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
@@ -583,7 +638,7 @@ class EntityManager extends EntityManagerDecorator
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+    $annotationDriver = new ORM\Mapping\Driver\AnnotationDriver(
       $cachedAnnotationReader, // our cached annotation reader
       self::ENTITY_PATHS, // paths to look in
     );
@@ -608,25 +663,25 @@ class EntityManager extends EntityManagerDecorator
     // gedmo extension listeners
 
     // loggable
-    //$loggableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
+    //$loggableListener = new Gedmo\Loggable\LoggableListener;
     $remoteAddress = $this->request->getRemoteAddress();
     $loggableListener = new Listeners\GedmoLoggableListener($this->userId, $remoteAddress);
     $loggableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
-    $timestampableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Timestampable\TimestampableListener();
+    $timestampableListener = new Gedmo\Timestampable\TimestampableListener();
     $timestampableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
-    $softDeletableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener = new Gedmo\SoftDeleteable\SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $evm->addEventSubscriber($softDeletableListener);
     $config->addFilter(self::SOFT_DELETEABLE_FILTER, \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // blameable
-    $blameableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\BlameableListener();
+    $blameableListener = new Gedmo\Blameable\BlameableListener();
     $blameableListener->setAnnotationReader($cachedAnnotationReader);
     $blameableListener->setUserValue($this->userId);
     $evm->addEventSubscriber($blameableListener);
@@ -637,7 +692,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($sluggableListener);
 
     // sortable
-    // $sortableListener = new \OCA\CAFEVDB\Wrapped\Gedmo\Sortable\SortableListener;
+    // $sortableListener = new Gedmo\Sortable\SortableListener;
     // $sortableListener->setAnnotationReader($cachedAnnotationReader);
     // $evm->addEventSubscriber($sortableListener);
 
@@ -696,27 +751,31 @@ class EntityManager extends EntityManagerDecorator
    * problem is here that otherwise the handlers do not get our decoryted
    * entity-manager instance, but the vanilla entity manager.
    *
+   * @param ORM\Event\LoadClassMetadataEventArgs $args Generic event arguments.
+   *
+   * @return void
+   *
    * @todo Switch to entity-listeners, override the resolver and be done. This
    * hack can then be removed.
    */
-  public function loadClassMetadata(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LoadClassMetadataEventArgs $args)
+  public function loadClassMetadata(ORM\Event\LoadClassMetadataEventArgs $args)
   {
     $metaData = $args->getClassMetadata();
     $className = $metaData->getName();
     $callbacks = [];
     foreach ($metaData->lifecycleCallbacks as $event => $eventHandlers) {
       switch ($event) {
-      case ORM\Events::preUpdate:
-      case ORM\Events::postUpdate:
-      case ORM\Events::prePersist:
-      case ORM\Events::postPersist:
-      case ORM\Events::preRemove:
-      case ORM\Events::postRemove:
-      case ORM\Events::postLoad:
-        $this->lifeCycleEvents[$event][$className] = $eventHandlers;
-        break;
-      default:
-        $callbacks[$event] = $eventHandlers;
+        case ORM\Events::preUpdate:
+        case ORM\Events::postUpdate:
+        case ORM\Events::prePersist:
+        case ORM\Events::postPersist:
+        case ORM\Events::preRemove:
+        case ORM\Events::postRemove:
+        case ORM\Events::postLoad:
+          $this->lifeCycleEvents[$event][$className] = $eventHandlers;
+          break;
+        default:
+          $callbacks[$event] = $eventHandlers;
       }
     }
     $metaData->setLifecycleCallbacks($callbacks);
@@ -725,6 +784,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\PreUpdateEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function preUpdate(ORM\Event\PreUpdateEventArgs $eventArgs)
   {
@@ -749,6 +812,15 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
+  /**
+   * Wrap life-cycle events and replace the vanilla entity-manager instance by $this.
+   *
+   * @param string $event TBD.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
+   */
   private function lifecycleEventWrapper(string $event, ORM\Event\LifecycleEventArgs $eventArgs)
   {
     $entity = $eventArgs->getEntity();
@@ -765,6 +837,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -774,6 +850,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -783,6 +863,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -792,6 +876,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function preRemove(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -801,6 +889,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function postRemove(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -812,6 +904,10 @@ class EntityManager extends EntityManagerDecorator
    *
    * Forward some life-cycle callbacks, replacing the entity-manager
    * instance with ourselves, the decorated EntityManager.
+   *
+   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   *
+   * @return void
    */
   public function postLoad(ORM\Event\LifecycleEventArgs $eventArgs)
   {
@@ -825,14 +921,16 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Remove unwanted constraints after schema generation.
    *
-   * @param \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs $args
+   * @param ORM\Tools\Event\GenerateSchemaEventArgs $args
+   *
+   * @return void
    *
    * @todo See that this is not necessary.
    */
   public function postGenerateSchema(ORM\Tools\Event\GenerateSchemaEventArgs $args)
   {
     $schema = $args->getSchema();
-    $em = $args->getEntityManager();
+    // $entityManager = $args->getEntityManager();
     foreach ($schema->getTables() as $table) {
 
       // tweak foreign keys
@@ -857,13 +955,27 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  public function columnName($propertyName)
+  /**
+   * @param string $propertyName The name of an entity property.
+   *
+   * @return string The associated database column name.
+   *
+   * @see property()
+   */
+  public function columnName(string $propertyName):string
   {
     //return $this->getConfiguration()->getNamingStrategy()->propertyToColumnName($propertyName);
     return Util::camelCaseToDashes($propertyName, '_');
   }
 
-  public function property($columnName)
+  /**
+   * @param string $columnName A database column name.
+   *
+   * @return string The entity property name referring to $columnName.
+   *
+   * @see columnName()
+   */
+  public function property(string $columnName):string
   {
     return Util::dashesToCamelCase($columnName);
   }
@@ -878,11 +990,15 @@ class EntityManager extends EntityManagerDecorator
    *
    * Then just move the modified entity on to the ordinary persister.
    *
+   * @param mixed $entity The entity instance to persist.
+   *
+   * @return mixed The persisted entity (actually the argument $entity).
+   *
    * @todo This unfortunately does not hack similar problems with
    * cascade="persist". There the "stock" persist operation seemingly
    * still causes problems.
    */
-  public function persist($entity)
+  public function persist(mixed $entity):mixed
   {
     $meta = $this->getClassMetadata(get_class($entity));
     if ($meta->containsForeignIdentifier) {
@@ -955,9 +1071,9 @@ class EntityManager extends EntityManagerDecorator
    *
    * The callables need to run "stand-alone" without parameters.
    *
-   * @param Callable|IUndoable $action Action to register.
+   * @param callable|IUndoable $action Action to register.
    *
-   * @param null|Callable $undo The associated undo-action. If
+   * @param null|callable $undo The associated undo-action. If
    * $actionm instanceof IUndoable then the $undo action is
    * ignored. It should rather be specified while constructing the
    * IUndoable instance.
@@ -965,7 +1081,7 @@ class EntityManager extends EntityManagerDecorator
    * @return UndoableRunQueue  Return the run-queue for  easy chaining
    * via UndoableRunQueue::register().
    */
-  public function registerPreCommitAction($action, ?Callable $undo = null):UndoableRunQueue
+  public function registerPreCommitAction($action, ?callable $undo = null):UndoableRunQueue
   {
     if (!$this->isOwnTransactionActive()) {
       throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
@@ -974,10 +1090,10 @@ class EntityManager extends EntityManagerDecorator
     $actions = $this->preCommitActions[$level];
     if (is_callable($action)) {
       $actions->register(new GenericUndoable($action, $undo));
-    } else if ($action instanceof IUndoable) {
+    } elseif ($action instanceof IUndoable) {
       $actions->register($action);
-    } else  {
-      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    } else {
+      throw new RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
     return $actions;
   }
@@ -987,7 +1103,9 @@ class EntityManager extends EntityManagerDecorator
    * execution matters. Only the pre-commit actions which were registered at
    * the current or a higher level will be executed.
    *
-   * @throws Exceptions\UndoableRunQueueException
+   * @return void
+   *
+   * @throws Exceptions\UndoableRunQueueException TBD.
    */
   public function executePreCommitActions()
   {
@@ -1014,17 +1132,19 @@ class EntityManager extends EntityManagerDecorator
    * block, any failing action may be logged but will not hinder the execution
    * of the other actions.
    *
+   * @param callable|IUndoable $action The action to register.
+   *
    * @return UndoableRunQueue  Return the run-queue for  easy chaining
    * via UndoableRunQueue::register().
    */
   public function registerPostCommitAction($action):UndoableRunQueue
   {
     if (is_callable($action)) {
-      $this->postCommitActions->register(new GenericUndoable($action, $undo));
-    } else if ($action instanceof IUndoable) {
+      $this->postCommitActions->register(new GenericUndoable($action, undo: null));
+    } elseif ($action instanceof IUndoable) {
       $this->postCommitActions->register($action);
-    } else  {
-      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    } else {
+      throw new RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
     return $this->postCommitActions;
   }
@@ -1041,6 +1161,8 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * @return array The list of exceptions thrown during execution of the run-queue.
+   *
    * @see UndoableRunQueue::getRunQueueExceptions()
    */
   public function getPostCommitExceptions():array
@@ -1093,7 +1215,9 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Start a new transaction.
+   * Start a new transaction and manage the associated run-queues.
+   *
+   * @return void
    */
   public function beginTransaction()
   {
@@ -1149,6 +1273,8 @@ class EntityManager extends EntityManagerDecorator
    * 2. run undo-actions of the pre-commit queue of the current level
    * 3. run undo-actions of the pre-flush queue
    *
+   * @return void
+   *
    * @throws ConnectionException
    */
   public function rollback()
@@ -1173,19 +1299,25 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * @param callable|IUndoable $action The action to be registered.
+   *
+   * @param null|callable $undo The undo action if $action is a mere callable.
+   *
+   * @return UndoableRunQueue
+   *
    * @see registerPreCommitAction
    *
    * The difference is that these function are executed when flush()
    * is called. The undo-queue is executed after the data-base rollback in case of an error.
    */
-  public function registerPreFlushAction($action, ?Callable $undo = null):UndoableRunQueue
+  public function registerPreFlushAction($action, ?callable $undo = null):UndoableRunQueue
   {
     if (is_callable($action)) {
       $this->preFlushActions->register(new GenericUndoable($action, $undo));
-    } else if ($action instanceof IUndoable) {
+    } elseif ($action instanceof IUndoable) {
       $this->preFlushActions->register($action);
-    } else  {
-      throw new \RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    } else {
+      throw new RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
     return $this->preFlushActions;
   }
@@ -1193,6 +1325,8 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Explicitly execute the registered actions in case that the order
    * of execution matters.
+   *
+   * @return void
    *
    * @throws Exceptions\UndoableRunQueueException
    */
@@ -1211,19 +1345,20 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * {@inheritdoc}
+   *
    * @todo Get rid of this function, the meta-data class is rather an
    * internal data structure of Doctrine\ORM.
-   *
-   * @return ClassMetadata|ClassMetadataDecorator
    */
   public function getClassMetadata($className)
   {
     if ($this->decorateClassMetadata) {
       return new ClassMetadataDecorator(
-        $this->entityManager->getClassMetadata($className)
-        , $this
-        , $this->logger
-        , $this->l);
+        $this->entityManager->getClassMetadata($className),
+        $this,
+        $this->logger,
+        $this->l,
+      );
     } else {
       return $this->entityManager->getClassMetadata($className);
     }
@@ -1232,13 +1367,18 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Switch metadata-decoration on and off. A hack. The console
    * application needs it switched off.
+   *
+   * @param bool $onOff TBD.
+   *
+   * @return void
    */
-  public function decorateClassMetadata(bool $onOff)
+  public function decorateClassMetadata(bool $onOff):void
   {
     $this->decorateClassMetadata = $onOff;
   }
 
-  private function createTableLookup()
+  /** @return void */
+  private function createTableLookup():void
   {
     $this->entityNames = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
@@ -1248,7 +1388,12 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  public function entityOfTable(string $table): ?string
+  /**
+   * @param string $table Data-base table name.
+   *
+   * @return null|string The associated entity-name, or null if not found.
+   */
+  public function entityOfTable(string $table):?string
   {
     if (empty($this->entityNames)) {
       $this->createTableLookup();
@@ -1258,6 +1403,10 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * Return a list of entities tagged by the given annotation.
+   *
+   * @param string $annotationClass The annotation class-name to look up.
+   *
+   * @return array The list of found entity class-names.
    */
   public function entitiesByAnnotation(string $annotationClass)
   {
@@ -1267,7 +1416,8 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationEntites[$annotationClass] = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
     foreach ($classNames as $className) {
-      if (!empty($annotation = $this->annotationReader->getClassAnnotation($className, $annotationClass))) {
+      $annotation = $this->annotationReader->getClassAnnotation($className, $annotationClass);
+      if (!empty($annotation)) {
         $this->annotationEntities[$annotationClass][$className] = $annotation;
       }
     }
@@ -1276,8 +1426,12 @@ class EntityManager extends EntityManagerDecorator
 
   /**
    * Return a list of properties tagged by the given annotation.
+   *
+   * @param string $annotationClass The annotation class-name to look-up.
+   *
+   * @return array The list of annotated properties.
    */
-  public function propertiesByAnnotation(string $annotationClass)
+  public function propertiesByAnnotation(string $annotationClass):array
   {
     if (is_array($this->annotationProperties[$annotationClass] ?? null)) {
       return $this->annotationProperties[$annotationClass];
@@ -1289,7 +1443,8 @@ class EntityManager extends EntityManagerDecorator
       $reflClass = $classMetaData->getReflectionClass();
       $properties = [];
       foreach ($reflClass->getProperties() as $property) {
-        if (!empty($annotation = $this->annotationReader->getPropertyAnnotation($property, $annotationClass))) {
+        $annotation = $this->annotationReader->getPropertyAnnotation($property, $annotationClass);
+        if (!empty($annotation)) {
           $properties[$property->getName()] = $annotation;
         }
       }
@@ -1313,7 +1468,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function getDataTransformer(string $key):Transformable\Transformer\TransformerInterface
   {
-    return $transformer = $this->transformerPool[$key]??null;
+    return $this->transformerPool[$key] ?? null;
   }
 
   /**
@@ -1330,6 +1485,10 @@ class EntityManager extends EntityManagerDecorator
    * @param null|callable $beforeFlush Optional callable which is invoked
    * before flushed the entities again to the database. Can be used to tweak
    * the app encryption-key, e.g.
+   *
+   * @return void
+   *
+   * @throws Exceptions\RecryptionFailedException
    */
   public function recryptEntityList(iterable $entities, ?callable $beforeLoad = null, ?callable $beforeFlush = null)
   {
@@ -1387,13 +1546,24 @@ class EntityManager extends EntityManagerDecorator
    * In order to change the encryption key the encrypted data has to
    * be decrypted with the old key and re-encrypted with the new key.
    *
+   * @param null|Crypto\ICryptor $newAppCryptor The new cryptor, may be null
+   * if the data is to be stored unencrypted in the future.
+   *
+   * @param null|Crypto\ICryptor $oldAppCryptor The old cryptor, may be null
+   * if the data has been stored unencrypted.
+   *
+   * @return void
+   *
+   * @throws Exceptions\RecryptionFailedException
+   *
    * @bug This function does not seem to belong here ...
+   *
    * @todo Find out where this function belongs to ...
    */
   public function recryptEncryptedProperties(?Crypto\ICryptor $newAppCryptor, ?Crypto\ICryptor $oldAppCryptor)
   {
     if (!$this->connected()) {
-      throw new \RuntimeException($this->l->t('EntityManager is not connected to database.'));
+      throw new RuntimeException($this->l->t('EntityManager is not connected to database.'));
     }
 
     $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
@@ -1404,7 +1574,7 @@ class EntityManager extends EntityManagerDecorator
 
     $encryptedEntities = [];
     foreach ($transformables as $annotationInfo) {
-      foreach ($annotationInfo['properties'] as $field => $transformable) {
+      foreach ($annotationInfo['properties'] as $transformable) {
         if ($transformable->name == self::TRANSFORM_ENCRYPT) {
           $entityClass = $annotationInfo['entity'];
           $entities = $this->getRepository($entityClass)->findAll();
