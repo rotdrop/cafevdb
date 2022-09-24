@@ -140,6 +140,9 @@ class Musicians extends PMETableViewBase
     ],
   ];
 
+  /** @var Entities\Project */
+  private $project;
+
   public function __construct(
     ConfigService $configService
     , RequestParameterService $requestParameters
@@ -178,6 +181,15 @@ class Musicians extends PMETableViewBase
   {
     $this->projectMode = true;
     $this->setTemplate(self::ADD_TEMPLATE);
+    if (empty($this->projectId)) {
+      $this->logInfo('NO PROJECT ID ?????');
+    }
+    if (empty($this->project)) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      if (empty($this->projectName)) {
+        $this->projectName = $this->project->getName();
+      }
+    }
   }
 
   public function disableProjectMode()
