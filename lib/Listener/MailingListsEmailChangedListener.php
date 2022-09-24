@@ -58,7 +58,12 @@ class MailingListsEmailChangedListener implements IEventListener
     $this->appContainer = $appContainer;
   }
 
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Multiple email addresses not yet supported.
+   * @todo Perhaps this should be a post-commit hook
+   */
   public function handle(Event $event):void
   {
     if (!($event instanceof HandledEvent)) {
