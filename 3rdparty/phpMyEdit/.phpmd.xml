@@ -20,8 +20,10 @@
 
   <rule ref="rulesets/controversial.xml">
     <exclude name="CamelCaseVariableName"/>
+    <exclude name="CamelCasePropertyName"/>
     <exclude name="CamelCaseParameterName"/>
     <exclude name="CamelCaseMethodName"/>
+    <exclude name="CamelCaseClassName"/>
   </rule>
 
   <rule ref="rulesets/design.xml"/>
@@ -32,7 +34,7 @@
   </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="l,fp,id,k,db,op"/>
+      <property name="exceptions" value="a,b,i,j,k,l,m,p,v,ar,br,db,dt,ed,fd,fm,fn,fl,hn,id,js,lc,li,mc,mi,op,pw,qf,qo,qp,sw,sd,tb,un"/>
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/LongVariable">

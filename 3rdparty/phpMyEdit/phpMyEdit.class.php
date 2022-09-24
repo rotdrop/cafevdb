@@ -1,5 +1,4 @@
 <?php
-
 /*
  * phpMyEdit - instant MySQL table editor and code generator
  *
@@ -70,6 +69,10 @@ class phpMyEdit_timer /* {{{ */
 	}
 } /* }}} */
 
+/**
+ * @SuppressWarnings(PHPMD.ErrorControlOperator)
+ * @SuppressWarnings(PHPMD.Superglobals)
+ */
 class phpMyEdit
 {
 	const COLUMN_ALIAS = 'PMEcolumn';
@@ -104,9 +107,12 @@ class phpMyEdit
 
 	const SQL_SELECT = 'SELECT';
 
+	const FDD_DISPLAY = 'display';
 	const FDD_SELECT = 'select';
 	const FDD_VALUES = 'values';
 	const FDD_VALUES2 = 'values2';
+
+	const OPT_DISPLAY = 'display';
 
 	const OPT_TRIGGERS = 'triggers';
 	const TRIGGER_DATA = 'data';
@@ -302,6 +308,10 @@ class phpMyEdit
 			|| isset($this->fdd[$k]['URLprefix']) || isset($this->fdd[$k]['URLpostfix']); }
 	function col_has_multiple($k)
 	{ return $this->col_has_multiple_select($k) || $this->col_has_checkboxes($k); }
+	function col_display_multiple($k)
+	{
+		return $this->col_has_multiple($k) || ($this->fdd[$k][self::FDD_DISPLAY][self::FDD_SELECT] ?? null) == 'M';
+	}
 	function col_has_multiple_select($k)
 	{ return $this->fdd[$k][self::FDD_SELECT] == 'M' /*&& (! @$this->fdd[$k][self::FDD_VALUES]['table'] || @$this->fdd[$k][self::FDD_VALUES]['queryvalues'])*/; }
 	function col_has_checkboxes($k)
@@ -359,7 +369,7 @@ class phpMyEdit
 							 addslashes($this->get_server_var('REMOTE_ADDR')),
 							 $operation,
 							 addslashes($this->tb),
-							 addslashes(implode(',',$this->rec)),
+							 addslashes(implode(',', $this->rec)),
 							 addslashes($key),
 							 addslashes(serialize($changeSetOld)),
 							 addslashes(serialize($changeSetNew)));
@@ -450,7 +460,7 @@ class phpMyEdit
 		if (!is_array($array)) {
 			return false;
 		}
-		foreach ($array as $key => $value) {
+		foreach ($array as $value) {
 			if (!is_scalar($value)) {
 				return false;
 			}
@@ -528,14 +538,14 @@ class phpMyEdit
 	function view_enabled()	  { return stristr($this->options, 'V'); }
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tab_names) > 0; }
-	function hidden($k)		  { return stristr($this->fdd[$k]['input'] ?? '','H'); }
-	function skipped($k)	  { return stristr($this->fdd[$k]['input'] ?? '','S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
-	function password($k)	  { return stristr($this->fdd[$k]['input'] ?? '','W'); }
-	function readonly($k)	  { return stristr($this->fdd[$k]['input'] ?? '','R'); }
-	function mandatory($k)	  { return stristr($this->fdd[$k]['input'] ?? '','M'); }
-	function annotation($k)	  { return stristr($this->fdd[$k]['input'] ?? '','A'); }
-	function disabled($k)	  { return stristr($this->fdd[$k]['input'] ?? '','D') || $this->virtual($k);		}
-	function virtual($k)	  { return stristr($this->fdd[$k]['input'] ?? '','V') && $this->col_has_sql($k); }
+	function hidden($k)		  { return stristr($this->fdd[$k]['input'] ?? '', 'H'); }
+	function skipped($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'S') /*|| isset($this->fdd[$k][self::FDD_VALUES]['join']['reference'])*/; }
+	function password($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'W'); }
+	function readonly($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'R'); }
+	function mandatory($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'M'); }
+	function annotation($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'A'); }
+	function disabled($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'D') || $this->virtual($k);		}
+	function virtual($k)	  { return stristr($this->fdd[$k]['input'] ?? '', 'V') && $this->col_has_sql($k); }
 
 	function add_operation()	{ return $this->label_cmp($this->operation, 'Add')	  && $this->add_enabled();	  }
 	function change_operation() { return $this->label_cmp($this->operation, 'Change') && $this->change_enabled(); }
@@ -574,7 +584,7 @@ class phpMyEdit
 	/**Return a normalized english name ... */
 	public function operationName()
 	{
-		foreach([self::OPERATION_ADD, self::OPERATION_CHANGE, self::OPERATION_COPY, self::OPERATION_DELETE, 'misc', self::OPERATION_VIEW, self::OPERATION_LIST] as $op) {
+		foreach ([self::OPERATION_ADD, self::OPERATION_CHANGE, self::OPERATION_COPY, self::OPERATION_DELETE, 'misc', self::OPERATION_VIEW, self::OPERATION_LIST] as $op) {
 			$method = $op.'_operation';
 			if ($this->$method()) {
 				return $op;
@@ -812,23 +822,23 @@ class phpMyEdit
 		// Language might look like this:
 		// de-de,en-us;q=0.8,de;q=0.5,en;q=0.3
 
-		$langtmpar = explode(',',$language);
+		$langtmpar = explode(',', $language);
 		$langar = array();
 		$haveprio = false;
 		foreach ($langtmpar as $lang) {
 			$lang = strtoupper(trim($lang));
-			$lang = explode(';',$lang);
+			$lang = explode(';', $lang);
 			// Convert de-de etc. into a single de.
-			$langvariants = explode('-',$lang[0]);
+			$langvariants = explode('-', $lang[0]);
 			if (isset($langvariants[1]) &&
 				$langvariants[0] == $langvariants[1]) {
 				unset($langvariants[0]);
-				$lang[0] = implode('-',$langvariants);
+				$lang[0] = implode('-', $langvariants);
 			}
 			if (!isset($langar["$lang[0]"])) {
 				if (isset($lang[1])) {
 					$haveprio = true;
-					$tmp = explode('=',$lang[1]);
+					$tmp = explode('=', $lang[1]);
 					$langar["$lang[0]"] = $tmp[1];
 				} else {
 					$langar["$lang[0]"] = 1.0;
@@ -883,7 +893,7 @@ class phpMyEdit
 		if (!file_exists($file)) {
 			$file = $this->dir['lang'].'PME.lang.EN.inc';
 		}
-		$ret = @include($file);
+		$ret = @include $file;
 		if (! is_array($ret)) {
 			return $ret;
 		}
@@ -979,6 +989,7 @@ class phpMyEdit
 			unset($desc);
 		}
 
+		$qparts = [];
 		$qparts[self::QPARTS_TYPE] = self::QPARTS_SELECT;
 
 		$table_name = self::TABLE_ALIAS.$field_num;
@@ -1205,7 +1216,6 @@ class phpMyEdit
 	 * @param bool $vanilla Return just the expression for the field.
 	 *
 	 * @bug $values['description'] only works for simple description fields.
-	 *
 	 */
 	protected function sql_field($field, $vanilla = false)
 	{
@@ -1304,7 +1314,6 @@ class phpMyEdit
 
 		// short-cut for simple
 
-		$ret = 'CONCAT(';
 		$descParts = [];
 		if (!empty($desc['divs'][-1])) {
 			$descParts[] = "'" . addslashes($desc['divs'][-1]) . "'";
@@ -1401,7 +1410,7 @@ class phpMyEdit
 	function get_SQL_groupby_query_opts()
 	{
 		$fields = [];
-		foreach($this->groupby as $field) {
+		foreach ($this->groupby as $field) {
 			$fields[] = $this->fqn($field, self::VANILLA);
 		}
 		return implode(',', $fields);
@@ -1412,18 +1421,19 @@ class phpMyEdit
 		/*
 		 * Prepare the SQL Query from the data definition file
 		 */
+		$qparts = [];
 		$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
 		$qparts[self::QPARTS_SELECT] = $this->get_SQL_column_list();
 		// Even if the key field isn't displayed, we still need its value
 		foreach (array_keys($this->key) as $key) {
-			if (!in_array ($key, $this->fds)) {
+			if (!in_array($key, $this->fds)) {
 				$qparts[self::QPARTS_SELECT] .= ','.$this->fqn($key);
 			}
 		}
 		// Do the same for group-by fields if "mrecs" are requested.
 		if ($this->misc_enabled()) {
 			foreach ($this->groupby as $key) {
-				if (!in_array ($key, $this->fds)) {
+				if (!in_array($key, $this->fds)) {
 					$qparts[self::QPARTS_SELECT] .= ','.$this->fqn($key);
 				}
 			}
@@ -1461,7 +1471,7 @@ class phpMyEdit
 				$qparts[self::QPARTS_ORDERBY] = implode(',', $sort_fields);
 			}
 		}
-		$qparts[self::QPARTS_LIMIT] = $this->listall() ? '' : $this->sql_limit($this->fm,$this->inc);
+		$qparts[self::QPARTS_LIMIT] = $this->listall() ? '' : $this->sql_limit($this->fm, $this->inc);
 		$this->sort_fields_w = $sort_fields_w; // due to display sorting sequence
 		return $qparts;
 	} /* }}} */
@@ -1473,9 +1483,10 @@ class phpMyEdit
 
 	function get_SQL_query($parts) /* {{{ */
 	{
-		foreach ($parts as $k => $v) {
-			$parts[$k] = trim($parts[$k]);
+		foreach ($parts as &$v) {
+			$v = trim($v);
 		}
+		unset($v);
 		switch (strtoupper($parts[self::QPARTS_TYPE])) {
 		case self::SQL_SELECT:
 			$ret  = 'SELECT ';
@@ -1516,8 +1527,7 @@ class phpMyEdit
 				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			break;
 		default:
-			die('unknown query type');
-			break;
+			throw new \Exception('unknown query type');
 		}
 		$this->generatedQueryHash = md5($ret);
 		return $ret;
@@ -1686,8 +1696,8 @@ class phpMyEdit
 		}
 
 		// Add any coder specified 'AND' filters
-		if (!$text && ($filter = $this->filters['AND'])) {
-			$where[] = $this->substituteVars($filter, $subs);
+		if (!$text && $this->filters['AND']) {
+			$where[] = $this->substituteVars($this->filters['AND'], $subs);
 		}
 
 		/* Join WHERE parts by AND */
@@ -1701,8 +1711,8 @@ class phpMyEdit
 		 * empty at this point, then it is implicitly "true", hence
 		 * adding further "OR" filters does not make sense.
 		 */
-		if ($where !== '' && ($filter = $this->filters['OR'])) {
-			$where = '('.$where.') OR ('.$this->substituteVars($filter, $subs).')';
+		if ($where !== '' && $this->filters['OR']) {
+			$where = '('.$where.') OR ('.$this->substituteVars($this->filters['OR'], $subs).')';
 		}
 
 		return $where;
@@ -1752,8 +1762,8 @@ class phpMyEdit
 		}
 
 		// Add any coder specified 'AND' filters
-		if (!$text && ($filter = $this->having['AND'])) {
-			$having[] = $filter;
+		if (!$text && $this->having['AND']) {
+			$having[] = $this->having['AND'];
 		}
 
 		$having = implode(' AND ', $having);
@@ -1766,8 +1776,8 @@ class phpMyEdit
 		 * empty at this point, then it is implicitly "true", hence
 		 * adding further "OR" filters does not make sense.
 		 */
-		if ($having !== '' && ($filter = $this->having['OR'])) {
-			$having = '('.$having.') OR ('.$filter.')';
+		if ($having !== '' && $this->having['OR']) {
+			$having = '('.$having.') OR ('.$this->having['OR'].')';
 		}
 
 		return $having;
@@ -2059,7 +2069,7 @@ class phpMyEdit
 				$this->tabs_by_id   = array('tab-all' => 'all');
 				$this->tabs_by_name = array('tab-all' => 'all');
 				$this->cur_tab = 0; // unless overridden
-				foreach($this->display['tabs'] as $idx => $tabdef) {
+				foreach ($this->display['tabs'] as $idx => $tabdef) {
 					if ($tabdef['id'] == 'tab-all') {
 						$idx = 'all';
 					}
@@ -2127,7 +2137,7 @@ class phpMyEdit
 								$idList = array($idList);
 							}
 							$tab_postfix = [];
-							foreach($idList as $id) {
+							foreach ($idList as $id) {
 								$tab_idx = $this->tabs_by_id[$id];
 								$tab_postfix[] = 'tab-'.$tab_idx;
 								$tab_postfix[] = 'tab-'.$id;
@@ -2146,7 +2156,7 @@ class phpMyEdit
 				if (!is_array($this->fdd[$k]['css']['postfix'])) {
 					$this->fdd[$k]['css']['postfix'] = [ $this->fdd[$k]['css']['postfix'], ];
 				}
-				$this->fdd[$k]['css']['postfix'] = array_merge($this->fdd[$k]['css']['postfix'], $tab_postfix );
+				$this->fdd[$k]['css']['postfix'] = array_merge($this->fdd[$k]['css']['postfix'], $tab_postfix);
 			}
 		}
 
@@ -2175,7 +2185,7 @@ class phpMyEdit
 		echo '<td colspan="2" class="table-tabs">'."\n";
 		echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs pme-container">'."\n";
 		echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
-		foreach($this->tab_names as $idx => $name) {
+		foreach ($this->tab_names as $idx => $name) {
 			$id = $this->tab_ids[$idx];
 			$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
 			if (isset($this->tabs_help[$idx])) {
@@ -2202,8 +2212,8 @@ class phpMyEdit
 	protected function htmlAttributes($op, $k, $row, &$readonly = null)
 	{
 		$htmlFragment = '';
-		if (isset($this->fdd[$k]['display']['attributes'])) {
-			$attributes = $this->fdd[$k]['display']['attributes'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['attributes'])) {
+			$attributes = $this->fdd[$k][self::FDD_DISPLAY]['attributes'];
 			if (is_callable($attributes)) {
 				$attributes = call_user_func($attributes, $op, $k, $row, $this);
 			}
@@ -2212,25 +2222,25 @@ class phpMyEdit
 			}
 			foreach ($attributes as $attributeKey => $attributeValue) {
 				switch ($attributeKey) {
-					case 'readonly':
-						if ($attributeValue === true) {
-							$readonly = $this->display['readonly'];
-						} else if ($attributeValue == false) {
-							$readonly = false;
-						}
-						break;
-					case 'disabled':
-						if ($attributeValue === true) {
-							$htmlFragment .= ' '.$this->display['disabled'];
-						}
-						break;
-					default:
-						if (!is_string($attributeValue)) {
-							$htmlFragment .= ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
-						} else {
-							$htmlFragment .= ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
-						}
-						break;
+				case 'readonly':
+					if ($attributeValue === true) {
+						$readonly = $this->display['readonly'];
+					} else if ($attributeValue == false) {
+						$readonly = false;
+					}
+					break;
+				case 'disabled':
+					if ($attributeValue === true) {
+						$htmlFragment .= ' '.$this->display['disabled'];
+					}
+					break;
+				default:
+					if (!is_string($attributeValue)) {
+						$htmlFragment .= ' '.$attributeKey.'='."'".json_encode($attributeValue)."'";
+					} else {
+						$htmlFragment .= ' '.$attributeKey.'="'.$this->enc($attributeValue).'"';
+					}
+					break;
 				}
 			}
 		}
@@ -2250,7 +2260,7 @@ class phpMyEdit
 			$opts = isset($php['parameters']) ? $php['parameters'] : '';
 			return call_user_func($php['function'], $value, $opts, $operation, $k, $row, $key_rec, $this);
 		} else if (file_exists($php)) {
-			return include($php);
+			return include $php;
 		}
 	}
 
@@ -2281,12 +2291,12 @@ class phpMyEdit
 			echo $this->fdd[$k]['name'],'</td>',"\n";
 			echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 			echo $this->getColAttributes($k),">\n";
-			if (isset($this->fdd[$k]['display']['prefix'])) {
-				$prefix = $this->fdd[$k]['display']['prefix'];
+			if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+				$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 				if (is_callable($prefix)) {
 					echo call_user_func($prefix, self::OPERATION_ADD, 'prefix', $k, [], $this);
 				} else {
-					echo $this->fdd[$k]['display']['prefix'];
+					echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 				}
 			}
 
@@ -2391,12 +2401,12 @@ class phpMyEdit
 				echo $value;
 				echo '" />';
 			}
-			if (isset($this->fdd[$k]['display']['postfix'])) {
-				$postfix = $this->fdd[$k]['display']['postfix'];
+			if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+				$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 				if (is_callable($postfix)) {
 					echo call_user_func($postfix, self::OPERATION_ADD, 'postfix', $k, [], $this);
 				} else {
-					echo $this->fdd[$k]['display']['postfix'];
+					echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 				}
 			}
 			echo '</td>',"\n";
@@ -2494,7 +2504,7 @@ class phpMyEdit
 		}
 	} /* }}} */
 
-	function display_change_field($row, $k, $help = NULL) /* {{{ */
+	function display_change_field($row, $k, $help = null) /* {{{ */
 	{
 		$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
@@ -2502,12 +2512,12 @@ class phpMyEdit
 		$operation      = $this->copy_operation() ? self::OPERATION_COPY : self::OPERATION_CHANGE;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
-		if (isset($this->fdd[$k]['display']['prefix'])) {
-			$prefix = $this->fdd[$k]['display']['prefix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+			$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			if (is_callable($prefix)) {
 				echo call_user_func($prefix, $operation, 'prefix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['prefix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			}
 		}
 
@@ -2551,7 +2561,7 @@ class phpMyEdit
 					$rowValues = self::explodeValueArray($row["qf$k"]);
 					if (array_intersect($rowValues, array_keys($vals)) == $rowValues) {
 						$value = array();
-						foreach($rowValues as $key) {
+						foreach ($rowValues as $key) {
 							$value[] = $vals[$key];
 						}
 						$value = self::implodeValueArray($value, onlyFlat: false);
@@ -2559,7 +2569,7 @@ class phpMyEdit
 						// assume the row already contains the imploded values
 						$value = $row["qf$k"];
 					} else {
-						throw new \RuntimeException(
+						throw new RuntimeException(
 							'Unexpected multi-value column data: '
 							. $row['qf'.$k]
 							. ' / ' . print_r($rowValues, true)
@@ -2597,7 +2607,7 @@ class phpMyEdit
 				if (empty($hiddenValues)) {
 					$hiddenValues[] = '';
 				}
-				foreach($hiddenValues as $hidden) {
+				foreach ($hiddenValues as $hidden) {
 					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden, $css_class_name);
 				}
 				// set $readonly to 'disabled' as this has already been handled here
@@ -2667,28 +2677,28 @@ class phpMyEdit
 			}
 			echo '"',$len_props,' />',"\n";
 		}
-		if (isset($this->fdd[$k]['display']['postfix'])) {
-			$postfix = $this->fdd[$k]['display']['postfix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			if (is_callable($postfix)) {
 				echo call_user_func($postfix, $operation, 'postfix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['postfix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			}
 		}
 		echo '</td>',"\n";
 	} /* }}} */
 
-	function display_password_field($row, $k, $help = NULL) /* {{{ */
+	function display_password_field($row, $k, $help = null) /* {{{ */
 	{
 		$css_postfix = $this->fdd[$k]['css']['postfix'] ?? null;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
-		if (isset($this->fdd[$k]['display']['prefix'])) {
-			$prefix = $this->fdd[$k]['display']['prefix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+			$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			if (is_callable($prefix)) {
 				echo call_user_func($prefix, 'password', 'prefix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['prefix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			}
 		}
 		$len_props = '';
@@ -2707,12 +2717,12 @@ class phpMyEdit
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo $this->enc($row["qf$k"]),'"',$len_props,' />',"\n";
-		if (isset($this->fdd[$k]['display']['postfix'])) {
-			$postfix = $this->fdd[$k]['display']['postfix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			if (is_callable($postfix)) {
 				echo call_user_func($postfix, 'password', 'postfix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['postfix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			}
 		}
 		echo '</td>',"\n";
@@ -2724,21 +2734,21 @@ class phpMyEdit
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
 		$title          = !empty($cell_popup) ? ' title="'.$this->enc($cell_popup).'"' : '';
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
-		if (isset($this->fdd[$k]['display']['prefix'])) {
-			$prefix = $this->fdd[$k]['display']['prefix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+			$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			if (is_callable($prefix)) {
 				echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['prefix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			}
 		}
 		echo $this->cellDisplay($k, $row, $css_class_name);
-		if (isset($this->fdd[$k]['display']['postfix'])) {
-			$postfix = $this->fdd[$k]['display']['postfix'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			if (is_callable($postfix)) {
 				echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 			} else {
-				echo $this->fdd[$k]['display']['postfix'];
+				echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			}
 		}
 		echo '</td>',"\n";
@@ -2801,7 +2811,7 @@ class phpMyEdit
 		$colattrs = '';
 		if (isset($this->fdd[$k]['colattrs'])) {
 			if (is_array($this->fdd[$k]['colattrs'])) {
-				foreach($this->fdd[$k]['colattrs'] as $name => $value) {
+				foreach ($this->fdd[$k]['colattrs'] as $name => $value) {
 					$colattrs .= ' ';
 					$colattrs .= $name.'="'.$this->enc($value).'"';
 				}
@@ -2886,7 +2896,7 @@ class phpMyEdit
 			'css'	=> $css,
 			'page'	=> $page,
 			'url'	=> $url
-			);
+		);
 		$urllink = isset($this->fdd[$k]['URL'])
 			?  $this->substituteVars($this->fdd[$k]['URL'], $ar)
 			: $link_val;
@@ -2949,7 +2959,7 @@ class phpMyEdit
 	 */
 	protected function timestampToDatabase($timeStamp, $k)
 	{
-		return date('Y-m-d H:i:s', $stamps);
+		return date('Y-m-d H:i:s', $timeStamp);
 	}
 
 	/**
@@ -2985,7 +2995,8 @@ class phpMyEdit
 	function formatValue($value, $k, $css, $key_rec)
 	{
 		$original_value = $value;
-		if ($num_ar = ($this->fdd[$k]['number_format']??null)) {
+		$num_ar = $this->fdd[$k]['number_format'] ?? null;
+		if ($num_ar) {
 			if (! is_array($num_ar)) {
 				$num_ar = array($num_ar);
 			}
@@ -3025,6 +3036,7 @@ class phpMyEdit
 			}
 			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
 		}
+		$key_rec = [];
 		foreach ($this->key_num as $key => $key_num) {
 			if ($this->col_has_description($key_num)) {
 				$key_rec[$key] = $row['qf'.$key_num.'_idx'];
@@ -3045,7 +3057,7 @@ class phpMyEdit
 			} else {
 				$value = $row["qf$k"];
 			}
-			if ($this->col_has_multiple($k)) {
+			if ($this->col_display_multiple($k)) {
 				$value_ar  = self::explodeValueArray($value);
 				$value_ar2 = array();
 				foreach ($value_ar as $value_key) {
@@ -3073,7 +3085,7 @@ class phpMyEdit
 			$value = strip_tags($value);
 		}
 		if (intval($this->fdd[$k]['trimlen'] ?? 0) > 0 && strlen($value) > $this->fdd[$k]['trimlen']) {
-			$value = preg_replace("/[\r\n\t ]+/",' ',$value);
+			$value = preg_replace("/[\r\n\t ]+/", ' ', $value);
 			$value = substr($value, 0, $this->fdd[$k]['trimlen'] - 3).'...';
 		}
 		if ($this->col_has_php($k)) {
@@ -3107,8 +3119,8 @@ class phpMyEdit
 	function fetchCellPopup($k, $row, $cell_data = null)
 	{
 		$cell_popup = null;
-		if (isset($this->fdd[$k]['display']['popup'])) {
-			$popup = $this->fdd[$k]['display']['popup'];
+		if (isset($this->fdd[$k][self::FDD_DISPLAY]['popup'])) {
+			$popup = $this->fdd[$k][self::FDD_DISPLAY]['popup'];
 			if (is_callable($popup)) {
 				if (empty($cell_data)) {
 					$cell_data = $this->cellDisplay($k, $row);
@@ -3206,14 +3218,14 @@ class phpMyEdit
 	/**
 	 * Creates HTML submit input element
 	 *
-	 * @param	name			element name
-	 * @param	label			key in the language hash used as label
-	 * @param	css_class_name	CSS class name
-	 * @param	disabled		if mark the button as disabled
-	 * @param   style           inline style
+	 * @param string $name element name
+	 * @param string $label key in the language hash used as label
+	 * @param string $css_class_name CSS class name
+	 * @param bool $disabled if mark the button as disabled
+	 * @param null|string $style inline style
 	 */
 	function htmlSubmit($name, $label, $css_class_name,
-						$disabled = false, $style = NULL) /* {{{ */
+						$disabled = false, $style = null) /* {{{ */
 	{
 		// Note that <input disabled> isn't valid HTML, but most browsers support it
 		if($disabled === -1) return;
@@ -3231,10 +3243,9 @@ class phpMyEdit
 	/**
 	 * Creates HTML hidden input element
 	 *
-	 * @param	name	element name
-	 * @param	value	value
+	 * @param	string $name	element name
+	 * @param	string $value	value
 	 */
-
 	function htmlHiddenSys($name, $value, $css = null) /* {{{ */
 	{
 		return $this->htmlHidden($this->cgi['prefix']['sys'].$name, $value, $css);
@@ -3256,20 +3267,19 @@ class phpMyEdit
 	/**
 	 * Creates HTML select element (tag)
 	 *
-	 * @param	name		element name
-	 * @param	css			CSS class name
-	 * @param	kv_array	key => value array
-	 * @param	kg_array	key => group array
-	 * @param	kt_array	key => title array for title attributes
-	 * @param	kd_array	key => data array for data attributes
-	 * @param	selected	selected key (it can be single string, array of
+	 * @param	string $name		element name
+	 * @param	string $css			CSS class name
+	 * @param	array $kv_array	key => value array
+	 * @param	array $kg_array	key => group array
+	 * @param	array $kt_array	key => title array for title attributes
+	 * @param	array $kd_array	key => data array for data attributes
+	 * @param	array|string $selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
-	 * @param	multiple	bool for multiple selection
-	 * @param	readonly	boolean or 'readonly' or 'disabled'
-	 * @param	required	bool for required attribute
-	 * @param	strip_tags	bool for stripping tags from values
-	 * @param	escape		bool for HTML escaping values
-	 * @param	js		string to be in the <select >, ususally onchange='..';
+	 * @param	bool $multiple for multiple selection
+	 * @param	bool|string $readonly	boolean or 'readonly' or 'disabled'
+	 * @param	bool $required for required attribute
+	 * @param	boool $strip_tags for stripping tags from values
+	 * @param	bool $escape for HTML escaping values
 	 */
 	function htmlSelect($name, $css,
 						$kv_array,
@@ -3283,8 +3293,8 @@ class phpMyEdit
 						$required = false,
 						$strip_tags = false,
 						$escape = true,
-						$help = NULL,
-						$attributes = NULL)
+						$help = null,
+						$attributes = null)
 	{
 		$ret = '<select class="'.$this->enc($css).'" name="'.$this->enc($name);
 		if ($multiple) {
@@ -3313,7 +3323,7 @@ class phpMyEdit
 			$selected = $selected === null ? array() : array((string)$selected);
 		} else {
 			$selected2 = [];
-			foreach($selected as $val) $selected2[]=(string)$val;
+			foreach ($selected as $val) $selected2[]=(string)$val;
 			$selected = $selected2;
 		}
 		is_array($kd_array) || $kd_array = array();
@@ -3384,20 +3394,21 @@ class phpMyEdit
 	/**
 	 * Creates HTML checkboxes or radio buttons
 	 *
-	 * @param	name		element name
-	 * @param	css			CSS class name
-	 * @param	kv_array	key => value array
-	 * @param	kg_array	key => group array, unused
-	 * @param   kt_array    key => titles
-	 * @param	kd_array	key => data array
-	 * @param	selected	selected key (it can be single string, array of
+	 * @param	string $name		element name
+	 * @param	string $css			CSS class name
+	 * @param	array $kv_array	key => value array
+	 * @param	array $kg_array	key => group array, unused
+	 * @param   array $kt_array    key => titles
+	 * @param	array $kd_array	key => data array
+	 * @param	string|array $selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
-	 * @param	multiple	bool for multiple selection (checkboxes)
-	 * @param	readonly	boolean or 'readonly' or 'disabled'
-	 * @param	required	bool for required attribute
-	 * @param	strip_tags	bool for stripping tags from values
-	 * @param	escape		bool for HTML escaping values
-	 * @param	attributes	string to be in the <select >
+	 * @param	bool $multiple	bool for multiple selection (checkboxes)
+	 * @param	bool|string $readonly	boolean or 'readonly' or 'disabled'
+	 * @param	bool $required	bool for required attribute
+	 * @param	bool $strip_tags	bool for stripping tags from values
+	 * @param	bool $escape		bool for HTML escaping values
+	 * @param   null|string $help tooltip
+	 * @param	null|string $attributes	string to be in the <select >
 	 */
 	function htmlRadioCheck($name, $css,
 							$kv_array,
@@ -3411,8 +3422,8 @@ class phpMyEdit
 							$required = false,
 							$strip_tags = false,
 							$escape = true,
-							$help = NULL,
-							$attributes = NULL)
+							$help = null,
+							$attributes = null)
 	{
 		$ret = '';
 		if ($multiple) {
@@ -3432,7 +3443,8 @@ class phpMyEdit
 					&& !isset($kt_array[$key])
 					&& !isset($kd_array[$key])) {
 					unset($kv_array[$key]);
-					if ($sel = array_search($key, $selected)) {
+					$sel = array_search($key, $selected);
+					if ($sel) {
 						unset($selected[$sel]);
 					}
 				}
@@ -3451,9 +3463,6 @@ class phpMyEdit
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
 				: $this->fetchToolTip($css, $name, $css.'radiolabel');
-			$inputhelp = !empty($tip)
-				? ' title="'.$this->enc($tip).'" '
-				: $this->fetchToolTip($css, $name, $css.'radio');
 			$ret .= '<label'.$labelhelp.' class="'.$this->enc($css).'-label">';
 			$ret .= '<input type="'.$type.'"'
 				.' name="'.$this->enc($name).'[]"'
@@ -3463,6 +3472,9 @@ class phpMyEdit
 				$data = $this->enc($kd_array[$key]);
 				$ret .= " data-data='".$data."'";
 			}
+			// $inputhelp = !empty($tip)
+			// 	? ' title="'.$this->enc($tip).'" '
+			// 	: $this->fetchToolTip($css, $name, $css.'radio');
 			// $ret .= $inputhelp;
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($kv_array) > 1 && count($selected) == 0 && ! $found && ! $multiple)) {
@@ -3492,8 +3504,8 @@ class phpMyEdit
 						  $readonly = false,
 						  $required = false,
 						  $escape = true,
-						  $help = NULL,
-						  $attributes = NULL) /* {{{ */
+						  $help = null,
+						  $attributes = null) /* {{{ */
 	{
 		// mce mod start
 		if (isset($this->fdd[$k]['textarea']['css'])) {
@@ -3552,6 +3564,7 @@ class phpMyEdit
 	 * @param	string	$method			type of method ("POST" or "GET")
 	 * @param	mixed	$default_value	default value of variables
 	 *									if null, empty values will be skipped
+	 *
 	 * @return							get HTML code of original varaibles
 	 */
 	function get_origvars_html($origvars, $method = 'post', $default_value = '') /* {{{ */
@@ -3584,7 +3597,7 @@ class phpMyEdit
 			foreach ($origvars as $key => $val) {
 				if (is_array($val)) {
 					$key = rawurldecode($key);
-					foreach($val as $subkey => $subval) {
+					foreach ($val as $subkey => $subval) {
 						$subval = rawurldecode($subval);
 						$ret .= $this->htmlHidden($key.'['.$subkey.']', $subval);
 					}
@@ -3721,7 +3734,7 @@ class phpMyEdit
 	 * Debug functions
 	 */
 
-	function print_get_vars ($miss = 'No GET variables found') // debug only /* {{{ */
+	function print_get_vars($miss = 'No GET variables found') // debug only /* {{{ */
 	{
 		// we parse form GET variables
 		if (is_array($_GET)) {
@@ -3774,7 +3787,7 @@ class phpMyEdit
 		}
 	} /* }}} */
 
-	function print_vars ($miss = 'Current instance variables')	// debug only /* {{{ */
+	function print_vars($miss = 'Current instance variables')	// debug only /* {{{ */
 	{
 		echo "$miss	  ";
 		echo 'page_name=',$this->page_name,'   ';
@@ -3822,7 +3835,8 @@ class phpMyEdit
 	 */
 	function display_list_table_buttons($position) /* {{{ */
 	{
-		if (($but_str = $this->display_buttons($position)) === null)
+		$but_str = $this->display_buttons($position);
+		if ($but_str === null)
 			return;
 		if($position == 'down') echo '<hr size="1" class="'.$this->getCSSclass('hr', 'down').'" />'."\n";
 		$num_nav_cols = 0;
@@ -3866,7 +3880,8 @@ class phpMyEdit
 	 */
 	function display_record_buttons($position) /* {{{ */
 	{
-		if (($but_str = $this->display_buttons($position)) === null)
+		$but_str = $this->display_buttons($position);
+		if ($but_str === null)
 			return;
 		if ($position == 'down') {
 			if ($this->tabs_enabled()) $this->display_tab_labels('down');
@@ -3918,6 +3933,7 @@ class phpMyEdit
 
 	function display_button($name, $position = 'up') /* {{{ */
 	{
+		$disabledControls = [];
 		if (is_array($name)) {
 			if (isset($name['code'])) return $name['code'];
 			$proto = array('name' => null,
@@ -3980,18 +3996,18 @@ class phpMyEdit
 									 $this->getCSSclass($name, $position));
 		}
 		if ($this->listall()) {
-			$disabledprev = true;
-			$disablednext = true;
+			$disabledControls['prev'] = true;
+			$disabledControls['next'] = true;
 			$total_pages  = 1;
 			$current_page = 1;
 		} else {
-			$disabledprev = $this->fm <= 0;
-			$disablednext =	 $this->fm + $this->inc >= $this->total_recs;
+			$disabledControls['prev'] = $this->fm <= 0;
+			$disabledControls['next'] =	 $this->fm + $this->inc >= $this->total_recs;
 			$total_pages  = max(1, ceil($this->total_recs / abs($this->inc)));
 			$current_page = ceil($this->fm / abs($this->inc)); // must + 1
 		}
-		$disabledfirst = $disabledprev;
-		$disabledlast  = $disablednext;
+		$disabledControls['first'] = $disabledControls['prev'];
+		$disabledControls['last']  = $disabledControls['next'];
 		// some statistics first
 		if ($name == 'total_pages') return $total_pages;
 		if ($name == 'current_page') return ($current_page+1);
@@ -4002,29 +4018,29 @@ class phpMyEdit
 			$ret .= '<input type="text" class="'.$this->getCSSclass('gotopn', $position).$listAllClass.'"';
 			$ret .= ' name="'.$this->cgi['prefix']['sys'].'navpn'.$position.'" value="'.($current_page+1).'"';
 			$ret .= ' size="'.(strlen($total_pages)+1).'" maxlength="'.(strlen($total_pages)+1).'"';
-			$ret .= $this->display_button('goto_combo',$position);
+			$ret .= $this->display_button('goto_combo', $position);
 			$ret .= '</span>';
 			return $ret;
 		}
 		if ($name == 'goto_combo') {
-			$disabledgoto = ($this->listall() || ($disablednext && $disabledprev));
-			if ($disabledgoto && $disabled < 0) return;
+			$disabledControls['goto'] = ($this->listall() || ($disabledControls['next'] && $disabledControls['prev']));
+			if ($disabledControls['goto'] && $disabled < 0) return;
 			$kv_array = array();
 			for ($i = 0; $i < $total_pages; $i++) {
 				$kv_array[$this->inc * $i] = $i + 1;
 			}
-			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
+			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledControls['goto']).'navfm'.$position,
 									 $this->getCSSclass('goto', $position).$listAllClass,
 									 $kv_array, null, null, null, (string)$this->fm,
-									 false, $disabledgoto, false, false, true,
+									 false, $disabledControls['goto'], false, false, true,
 									 null /* help */, null /* attributes */);
 		}
 		if ($name == 'goto') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).$listAllClass.'">';
 			$ret .= $this->htmlSubmit('navop', 'Go to',
 									  $this->getCSSclass('goto', $position),
-									  ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
-			$ret .= $this->display_button('goto_combo',$position);
+									  ($this->listall() || ($disabledControls['next'] && $disabledControls['prev'])) ? $disabled : 0);
+			$ret .= $this->display_button('goto_combo', $position);
 			$ret .= '</span>';
 			return $ret;
 		}
@@ -4032,7 +4048,7 @@ class phpMyEdit
 			$kv_array = array();
 			$nummax = min($this->total_recs, 100);
 			$kv_array[-1] = '&infin;';
-			for ($i = 1; $i <= min(5,$nummax); ++$i) {
+			for ($i = 1; $i <= min(5, $nummax); ++$i) {
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
 					$selected = (string)$i;
@@ -4065,21 +4081,21 @@ class phpMyEdit
 			$ret .= $this->htmlSubmit('navop', 'Rows/Page',
 									  $this->getCSSclass('pagerows', $position),
 									  $disabled);
-			$ret .= $this->display_button('rows_per_page_combo',$position);
+			$ret .= $this->display_button('rows_per_page_combo', $position);
 			$ret .= '</span>';
 			return $ret;
 		}
 		if (in_array($name, array('first','prev','next','last','<<','<','>','>>'))) {
-			$disabled_var = 'disabled'.$name;
+			$disabledValue = $disabledControls[$name] ?? null;
 			$name2 = $name;
 			if (strlen($name) <= 2) {
 				$nav_values = array('<<' => 'first', '<' => 'prev', '>' => 'next', '>>' => 'last');
-				$disabled_var = 'disabled'.$nav_values[$name];
+				$disabledValue = $disabledControls[$nav_values[$name]] ?? null;
 				$name2 = $nav_values[$name];
 			}
 			return $this->htmlSubmit('navop', ucfirst($name),
 									 $this->getCSSclass($name2, $position).$listAllClass,
-									 $$disabled_var ? $disabled : 0);
+									 $disabledValue ? $disabled : 0);
 		}
 		if(isset($this->labels[$name])) return $this->labels[$name];
 		return $name;
@@ -4281,10 +4297,12 @@ class phpMyEdit
 		 * Display the current query
 		 */
 		$queries = array();
-		if ($query = $this->get_SQL_where_from_query_opts(null, true)) {
+		$query = $this->get_SQL_where_from_query_opts(null, true);
+		if ($query) {
 			$queries[] = $query;
 		}
-		if ($query = $this->get_SQL_having_query_opts(null, true)) {
+		$query = $this->get_SQL_having_query_opts(null, true);
+		if ($query) {
 			$queries[] = $query;
 		}
 		$text_query = implode(' AND ', $queries);
@@ -4377,21 +4395,21 @@ class phpMyEdit
 					continue;
 				}
 				$cell = '';
-				if (isset($this->fdd[$k]['display']['prefix'])) {
-					$prefix = $this->fdd[$k]['display']['prefix'];
+				if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+					$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					if (is_callable($prefix)) {
 						$cell .= call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 					} else {
-						$cell .= $this->fdd[$k]['display']['prefix'];
+						$cell .= $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					}
 				}
 				$cell .= $this->cellDisplay($k, $row, $css);
-				if (isset($this->fdd[$k]['display']['postfix'])) {
-					$postfix = $this->fdd[$k]['display']['postfix'];
+				if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+					$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					if (is_callable($postfix)) {
 						$cell .= call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 					} else {
-						$cell .= $this->fdd[$k]['display']['postfix'];
+						$cell .= $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					}
 				}
 				if ($cellFilter !== false) {
@@ -4526,16 +4544,16 @@ class phpMyEdit
 					$hiddenCSS = ' '.$this->getCSSclass('hidden');
 					$hideCSS = $this->getCSSclass('hide');
 					$searchCSS = $this->getCSSclass('search');
-					$clearCSS = $this->getCSSclass('clear');
+					// $clearCSS = $this->getCSSclass('clear');
 					if ($this->filter_operation()) {
 						$searchCSS .= $hiddenCSS;
 					} else {
 						$hideCSS .= $hiddenCSS;
-						$clearCSS .= $hiddenCSS;
+						// $clearCSS .= $hiddenCSS;
 					}
 					echo $this->htmlSubmit('sw', 'Search', $searchCSS);
 					echo $this->htmlSubmit('sw', 'Hide', $hideCSS);
-					//echo $this->htmlSubmit('sw', 'Clear', $clearCSS);
+					// echo $this->htmlSubmit('sw', 'Clear', $clearCSS);
 				} else {
 					if ($this->filter_operation()) {
 						echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'));
@@ -4561,7 +4579,7 @@ class phpMyEdit
 				$search_key = $forward ? "$k" : "-$k";
 				$sfnidx = array_search($search_key, $this->sfn, true);
 				if ($sfnidx === false) {
-					die("Everything is a foo-bar. Contact your Guru.");
+					throw new \Exception("Everything is a foo-bar. Contact your Guru.");
 				}
 			} else {
 				/* Even worse: we just cannot give
@@ -4659,10 +4677,10 @@ class phpMyEdit
 			$qpcopy[]	 = $qp_prefix.'Copy';
 			$qpchange[]	 = $qp_prefix.'Change';
 			$qpdelete[]	 = $qp_prefix.'Delete';
-			$qpviewStr	 = $this->enc($this->page_name.'?'.implode('&',$qpview).$this->qfn);
-			$qpcopyStr	 = $this->enc($this->page_name.'?'.implode('&',$qpcopy).$this->qfn);
-			$qpchangeStr = $this->enc($this->page_name.'?'.implode('&',$qpchange).$this->qfn);
-			$qpdeleteStr = $this->enc($this->page_name.'?'.implode('&',$qpdelete).$this->qfn);
+			$qpviewStr	 = $this->enc($this->page_name.'?'.implode('&', $qpview).$this->qfn);
+			$qpcopyStr	 = $this->enc($this->page_name.'?'.implode('&', $qpcopy).$this->qfn);
+			$qpchangeStr = $this->enc($this->page_name.'?'.implode('&', $qpchange).$this->qfn);
+			$qpdeleteStr = $this->enc($this->page_name.'?'.implode('&', $qpdelete).$this->qfn);
 		}
 
 		/* Execute query constructed above */
@@ -4673,7 +4691,6 @@ class phpMyEdit
 		}
 
 		$first	  = true;
-		$rowCount = 0;
 		while (($row = $this->sql_fetch($res)) != false) {
 
 			$key_rec = [];
@@ -4793,7 +4810,7 @@ class phpMyEdit
 								sprintf($imgstyle, 'pme-delete.png'));
 						}
 						echo implode('&nbsp;', $navButtons);
-						$printed = true;
+						$printed_out = true;
 						echo '</div>';
 					}
 					if ($this->nav_text_links()) {
@@ -4902,21 +4919,21 @@ class phpMyEdit
 				$cell_popup = $this->fetchCellPopup($k, $row, $cell_data);
 				$title = $this->printTooltip($cell_popup);
 				echo '<td class="',$css_class_name,$css_align,'"',$this->getColAttributes($fd),$title,'>';
-				if (isset($this->fdd[$k]['display']['prefix'])) {
-					$prefix = $this->fdd[$k]['display']['prefix'];
+				if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
+					$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					if (is_callable($prefix)) {
 						echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
 					} else {
-						echo $this->fdd[$k]['display']['prefix'];
+						echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					}
 				}
 				echo $cell_data;
-				if (isset($this->fdd[$k]['display']['postfix'])) {
-					$postfix = $this->fdd[$k]['display']['postfix'];
+				if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
+					$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					if (is_callable($postfix)) {
 						echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
 					} else {
-						echo $this->fdd[$k]['display']['postfix'];
+						echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					}
 				}
 				echo '</td>',"\n";
@@ -4990,6 +5007,7 @@ class phpMyEdit
 
 		$row = false;
 		if (!$this->add_operation()) {
+			$qparts = [];
 			$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
 			$qparts[self::QPARTS_SELECT] = $this->get_SQL_column_list();
 			$qparts[self::QPARTS_FROM]	  = $this->get_SQL_join_clause();
@@ -4997,9 +5015,10 @@ class phpMyEdit
 			//$qparts[self::QPARTS_GROUPBY] = $this->get_SQL_groupby_query_opts();
 			//$qparts[self::QPARTS_HAVING] = $this->get_SQL_having_query_opts();
 
-			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
-			if (! ($row = $this->sql_fetch($res))) {
-				$row = false;
+			$res = $this->myquery($this->get_SQL_query($qparts), __LINE__);
+			$row = $this->sql_fetch($res);
+			if (!$row) {
+				$row = false; // ensure boolean value
 			}
 			$this->exec_data_triggers($trigger, $row);
 		}
@@ -5019,7 +5038,7 @@ class phpMyEdit
 				$qf = $this->get_sys_cgi_var('qf'.$k.$suf);
 				if (isset($qf) && $qf != '') {
 					if (is_array($qf) ) {
-						foreach($qf as $key => $value) {
+						foreach ($qf as $key => $value) {
 							echo $this->htmlHiddenSys('qf'.$k.$suf.'['.$key.']', $value);
 						}
 					} else {
@@ -5155,19 +5174,19 @@ class phpMyEdit
 				// if the triggers still left the stuff as array, try to do something useful.
 				$val = self::implodeValueArray($val, onlyFlat: false);
 			}
-			if (false) {
-				// query_groups not supported, would be difficult
-				if (isset($fdd['querygroup'])) {
-					// Split update query if requested by calling app
-					$query_group = $fdd['querygroup'];
-					if (!isset($query_groups[$query_group])) {
-						$query_groups[$query_group] = '';
-					}
-				} else {
-					$query_group = 'default';
-				}
-				$query = &$query_groups[$query_group];
-			}
+			// if (false) {
+			// 	// query_groups not supported, would be difficult
+			// 	if (isset($fdd['querygroup'])) {
+			// 		// Split update query if requested by calling app
+			// 		$query_group = $fdd['querygroup'];
+			// 		if (!isset($query_groups[$query_group])) {
+			// 			$query_groups[$query_group] = '';
+			// 		}
+			// 	} else {
+			// 		$query_group = 'default';
+			// 	}
+			// 	$query = &$query_groups[$query_group];
+			// }
 
 			if (!empty($fdd['encryption'])) {
 				// encrypt the value
@@ -5359,7 +5378,7 @@ class phpMyEdit
 
 		// Creating WHERE part for query groups, after the trigger as
 		// it may even have added things.
-		foreach($oldvals as $fd => $value) {
+		foreach ($oldvals as $fd => $value) {
 			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
 			$fdn = $this->fdn[$fd]??null; // $fdn == field number
 			if (empty($fdn)) {
@@ -5381,7 +5400,7 @@ class phpMyEdit
 
 		// Build the real query respecting changes to the newvals array
 		//foreach ($newvals as $fd => $val) {
-		foreach($changed as $fd) {
+		foreach ($changed as $fd) {
 			if ($fd == '') continue;
 			$fdn = $this->fdn[$fd];
 			if ($this->skipped($fdn) ||
@@ -5451,7 +5470,7 @@ class phpMyEdit
 				$num_rows = $this->sql_affected_rows();
 				$affected_rows = max($num_rows, $affected_rows);
 			}
-			$updateResult = $updateRestult && $res;
+			$updateResult = $updateResult && $res;
 		}
 		if ($affected_rows == 1) {
 			$this->message = $affected_rows.' '.$this->labels['record changed'];
@@ -5524,9 +5543,9 @@ class phpMyEdit
 
 		// Do an entire join-table query in order to provide the
 		// before-trigger with all the data it may need.
-		$where_part = " WHERE ".$this->key_record_where();
 
 		// Prepare query to retrieve oldvals
+		$stamps = [];
 		$query_parts = [];
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (!$this->processed($k)) {
@@ -5608,8 +5627,7 @@ class phpMyEdit
 			$action	 = self::SQL_QUERY_UPDATE;
 			$subject = 'Record updated in';
 			$kparts = [];
-			foreach ($this->rec as $key => $rec) {
-				$delim = $this->key_delim[$key];
+			foreach ($this->rec as $rec) {
 				$kparts[] = $this->fdd[$this->key]['name'].' = '.$this->key_delim.$rec.$this->key_delim;
 			}
 			$body	 = 'An item with '.implode(', ', $kparts).' was updated in';
@@ -5693,9 +5711,9 @@ class phpMyEdit
 				$ret = call_user_func_array($t, array(&$this, $op, $step, &$row));
 			} else if (is_string($t)) {
 				if (!file_exists($t)) {
-					throw new \RuntimeException('Trigger file "' . $t . '" does not exist.');
+					throw new RuntimeException('Trigger file "' . $t . '" does not exist.');
 				}
-				$ret = include($t);
+				$ret = include $t;
 			} else {
 				$class = is_object($t[0]??null) ? get_class($t[0]) : null;
 				$method = is_string($t[1]??null) ? $t[1] : null;
@@ -5705,7 +5723,7 @@ class phpMyEdit
 					$callable = 'unknown';
 				}
 				$this->logError('TRIGGER ' . \OCA\CAFEVDB\Common\Functions\dump($t));
-				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
+				throw new RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
 			}
 		}
 
@@ -5741,9 +5759,9 @@ class phpMyEdit
 												  &$changed, &$newvals));
 			} else if (is_string($t)) {
 				if (!file_exists($t)) {
-					throw new \RuntimeException('Trigger file "' . $t . '" does not exist.');
+					throw new RuntimeException('Trigger file "' . $t . '" does not exist.');
 				}
-				$ret = include($t);
+				$ret = include $t;
 			} else {
 				$class = is_object($t[0]??null) ? get_class($t[0]) : null;
 				$method = is_string($t[1]??null) ? $t[1] : null;
@@ -5752,7 +5770,7 @@ class phpMyEdit
 				} else {
 					$callable = 'unknown';
 				}
-				throw new \RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
+				throw new RuntimeException('Unable to execute trigger, not callable and not an include file: ' . $callable);
 			}
 		}
 
@@ -5846,7 +5864,8 @@ class phpMyEdit
 			$this->fdn[$key] = $field_num;
 			/* We must use here displayed() function, because displayed[] array
 			   is not created yet. We will simultaneously create that array as well. */
-			if ($this->displayed[$field_num] = $this->displayed($field_num)) {
+			$this->displayed[$field_num] = $this->displayed($field_num);
+			if ($this->displayed[$field_num]) {
 				$num_fields_displayed++;
 			}
 			$ref = $this->join_table_reference($this->fdd[$key]);
@@ -5911,7 +5930,8 @@ class phpMyEdit
 			} else {
 				$minus = '';
 			}
-			if (($val = array_search($val, $this->fds)) === false || $this->password($val)) {
+			$val = array_search($val, $this->fds);
+			if ($val === false || $this->password($val)) {
 				unset($this->sfn[$key]);
 			} else {
 				$val = intval($val);
@@ -5949,7 +5969,8 @@ class phpMyEdit
 			} else {
 				$minus = '';
 			}
-			if (($val = array_search($val, $this->fds)) === false || $this->password($val)) {
+			$val = array_search($val, $this->fds);
+			if ($val === false || $this->password($val)) {
 				unset($this->dfltsfn[$key]);
 			} else {
 				$val = intval($val);
@@ -6019,7 +6040,7 @@ class phpMyEdit
 			$this->error('no database defined');
 			return false;
 		}
-		if (!isset ($this->tb)) {
+		if (!isset($this->tb)) {
 			$this->error('no table defined');
 			return false;
 		}
@@ -6436,32 +6457,32 @@ class phpMyEdit
 			$this->page_name = basename($this->get_server_var('PHP_SELF'));
 			isset($this->page_name) || $this->page_name = $this->tb;
 		}
-		$this->display['query'] = @$opts['display']['query'];
-		$this->display['sort']	= @$opts['display']['sort'];
-		$this->display['time']	= @$opts['display']['time'];
+		$this->display['query'] = @$opts[self::OPT_DISPLAY]['query'];
+		$this->display['sort']	= @$opts[self::OPT_DISPLAY]['sort'];
+		$this->display['time']	= @$opts[self::OPT_DISPLAY]['time'];
 		if ($this->display['time']) {
 			$this->timer = new phpMyEdit_timer();
 		}
-		$this->display['postfix'] = @$opts['display']['postfix'];
-		$this->display['tabs'] = isset($opts['display']['tabs'])
-			? $opts['display']['tabs'] : true;
-		$this->display['form'] = isset($opts['display']['form'])
-			? $opts['display']['form'] : true;
-		$this->display['num_records'] = isset($opts['display']['num_records'])
-			? $opts['display']['num_records'] : true;
-		$this->display['num_pages'] = isset($opts['display']['num_pages'])
-			? $opts['display']['num_pages'] : true;
-		$this->display['navigation'] = isset($opts['display']['navigation'])
-			? $opts['display']['navigation'] : 'VCPD'; // default: all
-		$this->display['custom_navigation'] = $opts['display']['custom_navigation'] ?? null;
+		$this->display['postfix'] = @$opts[self::OPT_DISPLAY]['postfix'];
+		$this->display['tabs'] = isset($opts[self::OPT_DISPLAY]['tabs'])
+			? $opts[self::OPT_DISPLAY]['tabs'] : true;
+		$this->display['form'] = isset($opts[self::OPT_DISPLAY]['form'])
+			? $opts[self::OPT_DISPLAY]['form'] : true;
+		$this->display['num_records'] = isset($opts[self::OPT_DISPLAY]['num_records'])
+			? $opts[self::OPT_DISPLAY]['num_records'] : true;
+		$this->display['num_pages'] = isset($opts[self::OPT_DISPLAY]['num_pages'])
+			? $opts[self::OPT_DISPLAY]['num_pages'] : true;
+		$this->display['navigation'] = isset($opts[self::OPT_DISPLAY]['navigation'])
+			? $opts[self::OPT_DISPLAY]['navigation'] : 'VCPD'; // default: all
+		$this->display['custom_navigation'] = $opts[self::OPT_DISPLAY]['custom_navigation'] ?? null;
 
 		$this->display['readonly'] =
-			isset($opts['display']['readonly'])
-			? $opts['display']['readonly']
+			isset($opts[self::OPT_DISPLAY]['readonly'])
+			? $opts[self::OPT_DISPLAY]['readonly']
 			: 'readonly';
 		$this->display['disabled'] =
-			isset($opts['display']['disabled'])
-			? $opts['display']['disabled']
+			isset($opts[self::OPT_DISPLAY]['disabled'])
+			? $opts[self::OPT_DISPLAY]['disabled']
 			: 'disabled';
 
 		// Creating directory variables
@@ -6540,10 +6561,14 @@ class phpMyEdit
 		$rvrt = $this->get_sys_cgi_var('rvrt');
 		isset($rvrt) || $rvrt = array();
 		foreach ($rvrt as $k => $fqn) {
-			if (($i = array_search("$k", $this->sfn, true)) !== false) {
+			$i = array_search("$k", $this->sfn, true);
+			if ($i !== false) {
 				$this->sfn[$i] = "-$k";
-			} elseif (($i = array_search("-$k", $this->sfn, true)) !== false) {
-				$this->sfn[$i] = "$k";
+			} else {
+				$i = array_search("-$k", $this->sfn, true);
+				if ($i !== false) {
+					$this->sfn[$i] = "$k";
+				}
 			}
 		}
 
@@ -6557,7 +6582,7 @@ class phpMyEdit
 			'groupby_rec' => $this->groupby_rec,
 		) = $this->recordIdFromRequest();
 
-		/****************************************************************/
+		/*-***************************************************************/
 
 		$oper_prefix_len = strlen($this->cgi['prefix']['operation']);
 		if (! strncmp($this->cgi['prefix']['operation'], $this->operation, $oper_prefix_len)) {
@@ -6577,13 +6602,13 @@ class phpMyEdit
 				// use absolute indices, because this kills the
 				// information submitted by the user (checkboxes)
 				if ($key == $this->cgi['prefix']['sys'].'mrecs') {
-					foreach($val as $key2 => $val2) {
+					foreach ($val as $key2 => $val2) {
 						$this->cgi['persist'] .= '&'.rawurlencode($key)
 							.'[]='.rawurlencode($val2);
 					}
 				} else {
 					if (false) {
-						foreach($val as $key2 => $val2) {
+						foreach ($val as $key2 => $val2) {
 							$this->cgi['persist'] .= '&'.rawurlencode($key)
 								.'['.rawurlencode($key2).']='.rawurlencode($val2);
 						}
@@ -6598,7 +6623,7 @@ class phpMyEdit
 		// Form variables all around
 		$this->fl	 = intval($this->get_sys_cgi_var('fl'));
 		$this->fm	 = intval($this->get_sys_cgi_var('fm'));
-//		$old_page = ceil($this->fm / abs($this->inc)) + 1;
+		// $old_page = ceil($this->fm / abs($this->inc)) + 1;
 		$this->qfn	 = $this->get_sys_cgi_var('qfn');
 		$this->sw	 = $this->get_sys_cgi_var('sw');
 		$this->navop = $this->get_sys_cgi_var('navop');
@@ -6614,17 +6639,17 @@ class phpMyEdit
 			$this->inc = -1;
 		} elseif ($prevnp != '') {
 			$this->inc = $prevnp;
-			if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
-			elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
+			if($navnpdown != null && $navnpdown != $this->inc) $this->inc = $navnpdown;
+			elseif($navnpup != null && $navnpup != $this->inc) $this->inc = $navnpup;
 		}
-		if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
+		if ($prevnp != null && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
 			// Set current form such that it is at least close to the old position.
 			$this->navfm = intval($this->fm / $this->inc) * $this->inc;
 		} else {
-			if($navfmdown!=NULL && $navfmdown != $this->fm) $this->navfm = $navfmdown;
-			elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
-			elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
-			elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
+			if($navfmdown != null && $navfmdown != $this->fm) $this->navfm = $navfmdown;
+			elseif($navfmup != null && $navfmup != $this->fm) $this->navfm = $navfmup;
+			elseif($navpndown != null && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
+			elseif($navpnup != null && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
 			else $this->navfm = $this->fm;
 		}
 		$this->saveadd		= $this->get_sys_cgi_var('saveadd');
