@@ -774,11 +774,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get email.
    *
-   * @return string
+   * @return null|string
    */
-  public function getEmailAddress():string
+  public function getEmailAddress():?string
   {
-    return $this->email->getAddress();
+    return !empty($this->email) ? $this->email->getAddress() : null;
   }
 
   /**
@@ -1447,7 +1447,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
       $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this, $oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
-    // nothing
   }
 
   /**
