@@ -26,27 +26,45 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as BaseRenderer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 
 /** Add the email address traits. */
-trait MusicianEmailTrait
+trait MusicianEmailsTrait
 {
   /**
    * @param string $musicianIdField The field name of the column with the
-   * musician id.
+   * musician id. If null assume that the musicians table is the master table
+   * in the join and the column name is 'id'.
    *
    * @param string $tableTab The id of the column-group the fields should be
    * attached to.
    *
+   * @param array $css Additional css-classes to add to the field definition
+   * HTML entities.
+   *
    * @return array
    */
-  public function renderMusicianEmailFields(string $musicianIdField = 'id', string $tableTab = 'contact'):array
-  {
+  public function renderMusicianEmailFields(
+    ?string $musicianIdField = null,
+    string $tableTab = 'contact',
+    array $css = [],
+  ):array {
+    if ($musicianIdField === null) {
+      $musicianIdField = 'id';
+      $address = 'email';
+    } else {
+      $address = [
+        'table' => BaseRenderer::MUSICIANS_TABLE,
+        'column' => 'email',
+      ];
+    }
+
     $joinStructure = [
       BaseRenderer::MUSICIAN_EMAILS_TABLE => [
         'entity' => Entities\MusicianEmailAddress::class,
         'identifier' => [
           'musician_id' => $musicianIdField,
-          'address' => 'email',
+          'address' => $address,
         ],
         'column' => 'address',
       ],
@@ -58,27 +76,41 @@ trait MusicianEmailTrait
         ],
         'column' => 'address',
       ],
-
     ];
 
-    $generator = function(&$fdd) use ($musicianIdField, $tableTab, $addCss) {
+    $generator = function(&$fdd) use ($musicianIdField, $tableTab, $address, $css) {
+
+      if ($address == 'email') {
+        $emailField = '$main_table.email';
+      } else {
+        $emailField = $this->joinTables[BaseRenderer::MUSICIANS_TABLE] . '.' . 'email';
+      }
+
+      $this->logInfo('FIELDS ' . $musicianIdField . ' ' . print_r($address, true) . ' ' . $emailField);
 
       list(, $allEmailsFddName) = $this->makeJoinTableField(
-        $fdd, BaseRenderer::ALL_EMAILS_TABLE, 'address', Util::arrayMergeRecursive(
+        $fdd,
+        BaseRenderer::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all',
+        'address',
+        Util::arrayMergeRecursive(
           $this->defaultFDD['email'], [
             'name'   => $this->l->t('Em@ils'),
-            'tab'    => [ 'id' => 'contact' ],
-            'sql'    => 'CONCAT_WS(",", $main_table.email, GROUP_CONCAT(DISTINCT IF($join_col_fqn = $main_table.email, NULL, $join_col_fqn)))',
+            'tab'    => [ 'id' => $tableTab ],
+            'sql'    => 'CONCAT_WS(",", ' . $emailField . ', GROUP_CONCAT(DISTINCT IF($join_col_fqn = ' . $emailField .  ', NULL, $join_col_fqn)))',
+            'select|F' => 'T',
             'select' => 'M',
             'css'    => [
-              'postfix' => [
+              'postfix' => array_merge([
                 'selectize',
                 'no-chosen',
-                $addCSS,
-              ],
+              ], $css),
             ],
             'values' => [
               'description' => BaseRenderer::trivialDescription(),
+            ],
+            'display|LF' => [
+              'popup' => 'data',
+              'select' => 'M',
             ],
             'display' => [
               'attributes' => [
@@ -104,18 +136,19 @@ trait MusicianEmailTrait
           ]));
       $fdd[$allEmailsFddName]['values|ACP'] = Util::arrayMergeRecursive(
         $fdd[$allEmailsFddName]['values'], [
-          'filters' => '$table.musician_id = $record_id[id]',
+          'filters' => '$table.musician_id = $record_id[' . $musicianIdField . ']',
         ],
       );
 
-      $fdd['email'] = Util::arrayMergeRecursive(
+      $emailFieldDescription = Util::arrayMergeRecursive(
         $this->defaultFDD['email'], [
           'name'  => $this->l->t('Principal Em@il'),
-          'tab'   => [ 'id' => 'contact' ],
+          'tab'   => [ 'id' => $tableTab ],
+          'options' => 'ACDPV',
           'input' => 'RM',
           'select' => 'T',
           'select|LF' => 'T',
-          'sql'    => '$main_table.email',
+          'sql'    => $emailField,
           'values' => [
             'table'  => BaseRenderer::MUSICIAN_EMAILS_TABLE,
             'column' => 'address',
@@ -123,12 +156,11 @@ trait MusicianEmailTrait
             'join'   => [ 'reference' => $this->joinTables[BaseRenderer::MUSICIAN_EMAILS_TABLE], ],
           ],
           'css'   => [
-            'postfix' => [
-              // 'selectize',
+            'postfix' => array_merge([
+              'selectize',
               'no-chosen',
               'duplicates-indicator',
-              $addCSS,
-            ],
+            ], $css),
           ],
           'css|VD' => [ 'postfix' => [ 'email', ], ],
           'display' => [
@@ -141,14 +173,18 @@ trait MusicianEmailTrait
             ],
           ],
         ]);
-      $fdd['email']['values|ACP'] = Util::arrayMergeRecursive(
-        $fdd['email']['values'], [
-          'filters' => '$table.musician_id = $record_id[id]',
+
+      if ($address == 'email') {
+        $fdd['email'] = $emailFieldDescription;
+        $emailFddName = 'email';
+      } else {
+        list(, $emailFddName) = $this->makeJoinTableField($fdd, BaseRenderer::MUSICIANS_TABLE, 'email', $emailFieldDescription);
+      }
+      $fdd[$emailFddName]['values|ACP'] = Util::arrayMergeRecursive(
+        $fdd[$emailFddName]['values'], [
+          'filters' => '$table.musician_id = $record_id[' . $musicianIdField . ']',
         ],
       );
-
-
-
     };
 
     return [ $joinStructure, $generator ];

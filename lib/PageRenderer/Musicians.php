@@ -54,6 +54,7 @@ class Musicians extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianEmailsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
@@ -90,22 +91,6 @@ class Musicians extends PMETableViewBase
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\Musician::class,
-    ],
-    self::MUSICIAN_EMAILS_TABLE => [
-      'entity' => Entities\MusicianEmailAddress::class,
-      'identifier' => [
-        'musician_id' => 'id',
-        'address' => 'email',
-      ],
-      'column' => 'address',
-    ],
-    self::ALL_EMAILS_TABLE => [
-      'entity' => Entities\MusicianEmailAddress::class,
-      'identifier' => [
-        'musician_id' => 'id',
-        'address' => false,
-      ],
-      'column' => 'address',
     ],
     self::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
@@ -356,17 +341,26 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
+    if ($this->addOperation()) {
+      $addCSS = 'add-musician';
+    } else {
+      $addCSS = '';
+    }
+
+    list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(css: [ $addCSS ]);
+    $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
+
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts();
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::INSTRUMENTS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-        break;
-      default:
-        break;
+        case self::INSTRUMENTS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          break;
+        default:
+          break;
       }
     });
 
@@ -399,12 +393,6 @@ make sure that the musicians are also automatically added to the
         'nowrap' => true,
         'sort' =>false,
       ];
-    }
-
-    if ($this->addOperation()) {
-      $addCSS = 'add-musician';
-    } else {
-      $addCSS = '';
     }
 
     $opts['fdd']['sur_name'] = [
@@ -762,89 +750,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
-    list(, $allEmailsFddName) = $this->makeJoinTableField(
-      $opts['fdd'], self::ALL_EMAILS_TABLE, 'address', Util::arrayMergeRecursive(
-        $this->defaultFDD['email'], [
-          'name'   => $this->l->t('Em@ils'),
-          'tab'    => [ 'id' => 'contact' ],
-          'sql'    => 'CONCAT_WS(",", $main_table.email, GROUP_CONCAT(DISTINCT IF($join_col_fqn = $main_table.email, NULL, $join_col_fqn)))',
-          'select' => 'M',
-          'css'    => [
-            'postfix' => [
-              'selectize',
-              'no-chosen',
-              $addCSS,
-            ],
-          ],
-          'values' => [
-            'description' => self::trivialDescription(),
-          ],
-          'display' => [
-            'attributes' => [
-              'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-              'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-              'data-selectize-options' => [
-                'create' => [
-                  'url' => 'validate/musicians/email',
-                  'post' => [
-                    'failure' => 'error', // vs. message
-                  ],
-                  'inputField' => $this->pme->cgiDataName('email'),
-                ],
-                'valueField' => 'email',
-                'labelField' => 'email',
-                'persist' => true,
-                'plugins' => [
-                  'drag_drop',
-                ],
-              ],
-            ],
-          ],
-        ]));
-    $opts['fdd'][$allEmailsFddName]['values|ACP'] = Util::arrayMergeRecursive(
-      $opts['fdd'][$allEmailsFddName]['values'], [
-        'filters' => '$table.musician_id = $record_id[id]',
-      ],
-    );
-
-    $opts['fdd']['email'] = Util::arrayMergeRecursive(
-      $this->defaultFDD['email'], [
-        'name'  => $this->l->t('Principal Em@il'),
-        'tab'   => [ 'id' => 'contact' ],
-        'input' => 'RM',
-        'select' => 'T',
-        'select|LF' => 'T',
-        'sql'    => '$main_table.email',
-        'values' => [
-          'table'  => self::MUSICIAN_EMAILS_TABLE,
-          'column' => 'address',
-          'description' => self::trivialDescription('$table.address'),
-          'join'   => [ 'reference' => $this->joinTables[self::MUSICIAN_EMAILS_TABLE], ],
-        ],
-        'css'   => [
-          'postfix' => [
-            // 'selectize',
-            'no-chosen',
-            'duplicates-indicator',
-            $addCSS,
-          ],
-        ],
-        'css|VD' => [ 'postfix' => [ 'email', ], ],
-        'display' => [
-          'attributes' => [
-            'placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-            'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
-            'data-selectize-options' => [
-              'create' => false,
-            ],
-          ],
-        ],
-      ]);
-    $opts['fdd']['email']['values|ACP'] = Util::arrayMergeRecursive(
-      $opts['fdd']['email']['values'], [
-        'filters' => '$table.musician_id = $record_id[id]',
-      ],
-    );
+    $emailFieldGenerator($opts['fdd']);
 
     $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
