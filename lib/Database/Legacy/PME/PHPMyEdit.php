@@ -425,7 +425,7 @@ class PHPMyEdit extends \phpMyEdit
     $logEntry = [
       'query' => $query,
     ];
-    $startTime = hrtime(true);
+    $startTime = hrtime(true); // [ns]
     try {
       $stmt = $this->dbh->executeQuery($query);
       $endTime = hrtime(true);
@@ -435,7 +435,7 @@ class PHPMyEdit extends \phpMyEdit
       $logEntry['affectedRows'] = $this->affectedRows;
       $logEntry['errorCode'] = $this->errorCode;
       $logEntry['errorInfo'] = $this->errorInfo;
-      $logEntry['duration'] = ($endTime - $startTime) / 1e6;
+      $logEntry['duration'] = ($endTime - $startTime) / 1e6; // [ms]
       $this->queryLog[] = $logEntry;
     } catch (DBALException $t) {
       $endTime = hrtime(true);
