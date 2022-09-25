@@ -29,7 +29,6 @@
 
 import $ from './jquery.js';
 import { appName } from './app-info.js';
-import { selectFromWidget } from './select-utils.js';
 import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.css');
@@ -122,6 +121,7 @@ $.fn.cafevTooltip = function(argument) {
         }
       }
       self.removeData(appName + 'Title');
+      self.removeAttr('data-' + appName + '-title');
       self.removeAttr('data-original-title');
       self.removeData('original-title');
       // const title = self.attr('title');
@@ -132,7 +132,7 @@ $.fn.cafevTooltip = function(argument) {
       // }
       if (!selfOptions.title) {
         self.data(appName + 'Title', self.attr('title'));
-        self.attr(appName + '-' + 'title', self.attr('title'));
+        self.attr('data-' + appName + '-title', self.attr('title'));
         self.removeAttr('title');
         selfOptions.title = function() {
           const $this = $(this);
