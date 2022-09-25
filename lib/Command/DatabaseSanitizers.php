@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Maintenance\SanitizerRegistration;
 
@@ -192,7 +193,13 @@ class DatabaseSanitizers extends Command
         try {
           foreach ($entities as $entity) {
             $sanitizer->setEntity($entity);
-            $failures[$sanitizerName] += (int)($sanitizer->$method() === false);
+            try {
+              $failures[$sanitizerName] += (int)($sanitizer->$method() === false);
+            } catch (Exceptions\SanitizerNotNeededException $e) {
+              // ignore
+            } catch (Exceptions\SanitizerNotImplementedException $e) {
+              // ignore
+            }
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
               $validationMessages = $sanitizer->getValidationMessages();
               foreach ($validationMessages as $level => $messages)  {

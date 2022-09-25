@@ -98,16 +98,20 @@ abstract class AbstractSanitizer implements ISanitizer
    *
    * @return void
    */
-  protected function addMessage(string $message, int $level = self::VERBOSITY_VERBOSE):void
+  protected function addMessage(string $message, int $level = self::VERBOSITY_NORMAL):void
   {
     if ($this->logger) {
       switch ($level) {
         case self::VERBOSITY_QUIET:
           break;
         case self::VERBOSITY_VERY_VERBOSE:
+          $this->logDebug($message, shift: 1);
+          break;
         case self::VERBOSITY_VERBOSE:
+          $this->logInfo($message, shift: 1);
+          break;
         case self::VERBOSITY_NORMAL:
-          $this->logInfo($message);
+          $this->logInfo($message, shift: 1);
           break;
         case self::VERBOSITY_DEBUG:
           $this->logDebug($message);

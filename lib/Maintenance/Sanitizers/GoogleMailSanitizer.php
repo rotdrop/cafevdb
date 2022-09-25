@@ -119,12 +119,13 @@ class GoogleMailSanitizer extends AbstractSanitizer
         self::VERBOSITY_VERY_VERBOSE
       );
       $musician = $this->entity->getMusician();
-      $matching = $musician->getEmailAddresses()->matching(DBUtil::criteriaWhere([ 'address' => $otherAddress ]));
+      $matching = $musician->getEmailAddresses()->filter(fn(Entities\MusicianEmailAddress $address) => $address->getAddress() == $otherAddress);
+      // matching(DBUtil::criteriaWhere([ 'address' => $otherAddress ]));
       $this->validated = $matching->count() > 0;
       if ($this->validated) {
         $this->addMessage('Both google addresses are already present.', self::VERBOSITY_VERY_VERBOSE);
       } else {
-        $this->addMessage(sprintf('The additional address "%s" is missing.', $otherAddress));
+        $this->addMessage(sprintf('The additional address "%s" is missing.', $otherAddress), self::VERBOSITY_VERBOSE);
       }
     }
     return $this->validated;
@@ -137,7 +138,9 @@ class GoogleMailSanitizer extends AbstractSanitizer
       return;
     }
     $otherAddress = $this->otherAddress();
-    $otherEntity = new Entities\MusicianEmailAddress($otherAddress, $this->entity->getMusician());
+    $musician = $this->entity->getMusician();
+    $otherEntity = new Entities\MusicianEmailAddress($otherAddress, $musician);
+    $musician->getEmailAddresses()->set($otherAddress, $otherEntity);
     try {
       $this->persist($otherEntity);
       if ($flush) {
@@ -159,13 +162,15 @@ class GoogleMailSanitizer extends AbstractSanitizer
   /** {@inheritdoc} */
   public function sanitizeRemove(bool $flush = false):void
   {
-    if ($this->validate()) {
+    if ($this->validate() === false) {
       return;
     }
     $otherAddress = $this->otherAddress();
     $musician = $this->entity->getMusician();
-    $matching = $musician->getEmailAddresses()->matching(DBUtil::criteriaWhere([ 'address' => $otherAddress ]));
-    if (empty($matching)) {
+    $matching = $musician->getEmailAddresses()->filter(fn(Entities\MusicianEmailAddress $address) => $address->getAddress() == $otherAddress);
+    // $matching = $musician->getEmailAddresses()->matching(DBUtil::criteriaWhere([ 'address' => $otherAddress ]));
+    if ($matching->count() == 0) {
+      $this->addMessage(sprintf('Other address "%s" already removed.', $otherAddress), self::VERBOSITY_VERBOSE);
       throw new Exceptions\SanitizerNotNeededException(
         sprintf(
           'The alternate Google-email "%s" does not seem to be configured (our\'s is "%2$s").',
@@ -175,6 +180,6 @@ class GoogleMailSanitizer extends AbstractSanitizer
       );
     }
     $otherEntitiy = $matching->first();
-    $this->remove($otherEntitiy, flush: flush);
+    $this->remove($otherEntitiy, flush: $flush);
   }
 }

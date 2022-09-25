@@ -24,36 +24,10 @@
 
 namespace OCA\CAFEVDB\Events;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
 /**
- * Event fired by the Musician entity through a life-cycle hook after the
- * email address is changed.
+ * Event fired by the Musician entity through a life-cycle hook after a new
+ * email address has been persisted.
  */
-class PostChangeMusicianEmail extends MusicianEmailEvent
+class PrePersistMusicianEmail extends MusicianEmailEvent
 {
-  /**
-   * Getter for the musician entity.
-   *
-   * @return Entities\Musician
-   */
-  public function getMusician():Entities\Musician
-  {
-    return parent::getEntity()->getMusician();
-  }
-
-  /**
-   * Getter for the old email address.
-   *
-   * @return Entities\MusicianEmailAddress
-   */
-  public function getOldEmail():Entities\MusicianEmailAddress
-  {
-    return parent::getEntity();
-  }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -25,39 +25,21 @@
 namespace OCA\CAFEVDB\Events;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCP\EventDispatcher\Event;
 
-/**
- * Event fired by the Musician entity through a life-cycle hook before the
- * email address is changed.
- */
-class PreChangeMusicianEmail extends MusicianEmailEvent
+/** Base class for musician email events. */
+class MusicianEmailEvent extends Event
 {
   /** @var Entities\MusicianEmailAddress */
-  private $newEmail;
+  private $entity;
 
   /**
-   * @param Entities\Musician $musician The affected person.
-   *
-   * @param Entities\MusicianEmailAddress $oldEmail The old address.
-   *
-   * @param Entities\MusicianEmailAddress $newEmail The new address.
+   * @param Entities\MusicianEmailAddress $entity The old entity.
    */
-  public function __construct(
-    Entities\MusicianEmailAddress $oldEmail,
-    Entities\MusicianEmailAddress $newEmail,
-  ) {
-    parent::__construct($oldEmail);
-    $this->newEmail = $newEmail;
-  }
-
-  /**
-   * Getter for the musician entity.
-   *
-   * @return Entities\Musician
-   */
-  public function getMusician():Entities\Musician
+  public function __construct(Entities\MusicianEmailAddress $entity)
   {
-    return parent::getEntity()->getMusician();
+    parent::__construct();
+    $this->entity = $entity;
   }
 
   /**
@@ -65,23 +47,8 @@ class PreChangeMusicianEmail extends MusicianEmailEvent
    *
    * @return Entities\MusicianEmailAddress
    */
-  public function getOldEmail():Entities\MusicianEmailAddress
+  public function getEntity():Entities\MusicianEmailAddress
   {
-    return parent::getEntity();
-  }
-
-  /**
-   * Getter for the new email address.
-   *
-   * @return Entities\MusicianEmailAddress
-   */
-  public function getNewEmail():Entities\MusicianEmailAddress
-  {
-    return $this->newEmail;
+    return $this->entity;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

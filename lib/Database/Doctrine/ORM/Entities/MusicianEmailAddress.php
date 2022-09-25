@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+use OCA\CAFEVDB\Events;
 
 /**
  * InstrumentInsurance
@@ -159,41 +160,52 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
-   * @var null|array
-   *
-   * The array of changed field values.
-   */
-  private $preUpdateValue = [];
-
-  /**
    * {@inheritdoc}
    *
-   * @ORM\PreUpdate
+   * @ORM\PreRemove
    */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
+  public function preRemove(Event\LifecycleEventArgs $event)
   {
-    $field = 'address';
-    if ($event->hasChangedField($field)) {
-      $entityManager = $event->getEntityManager();
-      $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this->musician, $oldValue, $event->getNewValue($field)));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $this->musician->getEmailAddresses()->remove($this->address);
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
   }
 
   /**
    * {@inheritdoc}
    *
-   * @ORM\PostUpdate
+   * @ORM\PrePersist
    */
-  public function postUpdate(Event\LifecycleEventArgs $event)
+  public function prePersist(Event\LifecycleEventArgs $event)
   {
-    $field = 'address';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->musician, $this->preUpdateValue[$field]));
-      unset($this->preUpdateValue[$field]);
-    }
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $this->musician->getEmailAddresses()->set($this->address, $this);
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PrePersistMusicianEmail($this));
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PostRemove
+   */
+  public function postRemove(Event\LifecycleEventArgs $event)
+  {
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PostRemoveMusicianEmail($this));
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PostPersist
+   */
+  public function postPersist(Event\LifecycleEventArgs $event)
+  {
+    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+    $entityManager = $event->getEntityManager();
+    $entityManager->dispatchEvent(new Events\PostPersistMusicianEmail($this));
   }
 }
