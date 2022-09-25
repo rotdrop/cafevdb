@@ -30,7 +30,7 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Events\PostChangeMusicianEmail as HandledEvent;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -45,7 +45,11 @@ class MailingListsEmailChangedListener implements IEventListener
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const EVENT = HandledEvent::class;
+  const EVENT = [
+    Events\PostChangeMusicianEmail::class, // fired by Entities\Musician if the principal address changes
+    Events\PostRemoveMusicianEmail::class, // fired by Entities\MusicianEmailAddress if an address is removed
+    Events\PostPersistMusicianEmail::class, // fired by Entities\MusicianEmailAddress if an address is added
+  ];
 
   /** @var IAppContainer */
   private $appContainer;
@@ -66,10 +70,11 @@ class MailingListsEmailChangedListener implements IEventListener
    */
   public function handle(Event $event):void
   {
-    if (!($event instanceof HandledEvent)) {
+    if (array_search(get_class($event), self::EVENT) === false) {
       return;
     }
-    /** @var HandledEvent $event */
+
+    return; // @todo
 
     $oldEmail = $event->getOldEmail();
     $oldEmail = !empty($oldEmail) ? $oldEmail->getAddress() : null;
