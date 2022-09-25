@@ -96,7 +96,7 @@ trait MusicianEmailsTrait
             'tab'    => [ 'id' => $tableTab ],
             'sql'    => 'CONCAT_WS(",", ' . $emailField . ', GROUP_CONCAT(DISTINCT IF($join_col_fqn = ' . $emailField .  ', NULL, $join_col_fqn)))',
             'input' => 'M',
-            'select|F' => 'T',
+            'select|FL' => 'T',
             'select' => 'M',
             'css'    => [
               'postfix' => array_merge([
