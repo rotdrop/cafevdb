@@ -32,6 +32,22 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class PostChangeMusicianEmail extends MusicianEmailEvent
 {
+  /** @var Entities\MusicianEmailAddress */
+  private $oldEmail;
+
+  /**
+   * @param Entities\MusicianEmailAddress $oldEmail The old address.
+   *
+   * @param Entities\MusicianEmailAddress $newEmail The new address.
+   */
+  public function __construct(
+    Entities\MusicianEmailAddress $oldEmail,
+    Entities\MusicianEmailAddress $newEmail,
+  ) {
+    $this->oldEmail = $oldEmail;
+    parent::__construct($newEmail);
+  }
+
   /**
    * Getter for the musician entity.
    *
@@ -48,6 +64,16 @@ class PostChangeMusicianEmail extends MusicianEmailEvent
    * @return Entities\MusicianEmailAddress
    */
   public function getOldEmail():Entities\MusicianEmailAddress
+  {
+    return $this->oldEmail;
+  }
+
+  /**
+   * Getter for the new email address.
+   *
+   * @return Entities\MusicianEmailAddress
+   */
+  public function getNewEmail():Entities\MusicianEmailAddress
   {
     return parent::getEntity();
   }

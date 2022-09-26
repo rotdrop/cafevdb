@@ -36,8 +36,6 @@ class PreChangeMusicianEmail extends MusicianEmailEvent
   private $newEmail;
 
   /**
-   * @param Entities\Musician $musician The affected person.
-   *
    * @param Entities\MusicianEmailAddress $oldEmail The old address.
    *
    * @param Entities\MusicianEmailAddress $newEmail The new address.
