@@ -858,8 +858,8 @@ class MailingListsService
       $this->setSubscriptionPreferences(
         $listId,
         $subscriptionData[self::SUBSCRIBER_EMAIL],
-        $role ?? self::ROLE_MEMBER,
-        [ MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus ]
+        preferences: [ MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus ],
+        role: $role ?? self::ROLE_MEMBER,
       );
     }
 
@@ -989,17 +989,17 @@ class MailingListsService
    *
    * @param string $subscriber The email-address of the subscriber.
    *
-   * @param string $role Role of the subscription.
-   *
    * @param array $preferences Preferences data array.
+   *
+   * @param string $role Role of the subscription.
    *
    * @return bool Execution status.
    */
   public function setSubscriptionPreferences(
     string $listId,
     string $subscriber,
-    string $role = self::ROLE_MEMBER,
     array $preferences = [],
+    string $role = self::ROLE_MEMBER,
   ) {
     $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
     if (empty($selfLink)) {
