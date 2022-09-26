@@ -1169,6 +1169,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
             $entity = $this->find($entityId);
+            if (empty($entity)) {
+              // This can happen, in particular with the new gmail
+              // vs. googlemail sanitizer. Log this as an error for now.
+              $this->logError('Unable to find entity ' . $entityClass . ' with id ' . print_r($entityId, true));
+              continue;
+            }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
             $this->debug('Usage is '.$usage);
             $softDeleteable = method_exists($entity, 'isDeleted')
