@@ -43,6 +43,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
+use OCA\CAFEVDB\Database\EntityManager;
+
 /**
  * ProjectParticipantFieldsDataOptions
  *
@@ -485,7 +487,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
       return;
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantFieldOption($this, $event->getOldValue($field), $event->getNewValue($field)));
     $this->preUpdatePosted = true;
   }
@@ -501,7 +503,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
       return;
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantFieldOption($this));
     $this->preUpdatePosted = false;
   }

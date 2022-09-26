@@ -44,6 +44,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
+use OCA\CAFEVDB\Database\EntityManager;
+
 /**
  * ProjectParticipantFields
  *
@@ -822,7 +824,7 @@ class ProjectParticipantField implements \ArrayAccess
   public function prePersist(Event\LifecycleEventArgs $event)
   {
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
   }
 
@@ -837,7 +839,7 @@ class ProjectParticipantField implements \ArrayAccess
       return;
     }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PreRemoveProjectParticipantField($this));
   }
 
@@ -872,7 +874,7 @@ class ProjectParticipantField implements \ArrayAccess
     $changeSet = $this->getTranslationChangeSet($event, $field);
     if ($changeSet) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $changeSet[0], $changeSet[1]));
       $this->preUpdatePosted[$field] = $changeSet[0];
     }
@@ -880,7 +882,7 @@ class ProjectParticipantField implements \ArrayAccess
     $changeSet = $this->getTranslationChangeSet($event, $field);
     if ($changeSet) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldTooltip($this, $changeSet[0], $changeSet[1]));
       $this->preUpdatePosted[$field] = $changeSet[0];
     }
@@ -888,7 +890,7 @@ class ProjectParticipantField implements \ArrayAccess
     $changeSet = $this->getTranslationChangeSet($event, $field);
     if ($changeSet) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldType($this, $changeSet[0], $changeSet[1]));
       $this->preUpdatePosted[$field] = $changeSet[0];
     }
@@ -904,7 +906,7 @@ class ProjectParticipantField implements \ArrayAccess
     $field = 'name';
     if (isset($this->preUpdatePosted[$field])) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
       unset($this->preUpdatePosted[$field]);
     }

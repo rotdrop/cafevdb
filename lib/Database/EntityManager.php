@@ -207,15 +207,22 @@ class EntityManager extends EntityManagerDecorator
   /** @var IEventDispatcher */
   protected $eventDispatcher;
 
-  /** @var array */
-  protected $lifeCycleEvents;
-
   /**
    * @var array
    *
    * Cache of the current database connection parameters
    */
   protected $databaseAccess = [];
+
+  /**
+   * @var array
+   *
+   * Event listeners only get access to the vanilla entity manager. In order
+   * to give access to the decorated manager we supply a static lookup which
+   * lets us determine the decorator for each decorated insance (ahem, "each":
+   * there is probably always only one ...).
+   */
+  protected static $wrappedManagers = [];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -299,7 +306,25 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
+    self::$wrappedManagers[spl_object_id($this->entityManager)] = $this;
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
+  }
+
+  /**
+   * Give static access to the decorated entity manager.
+   *
+   * @param EntityManagerInterface $entityManager A potentially vanilla entity
+   * manager. If the decorator is passed as argument, then it is gracefully
+   * passed through.
+   *
+   * @return EntityManager The decorated entity Manager.
+   */
+  public static function getDecorator(EntityManagerInterface $entityManager):?EntityManager
+  {
+    if ($entityManager instanceof EntityManager) {
+      return $entityManager;
+    }
+    return self::$wrappedManagers[spl_object_id($entityManager)] ?? null;
   }
 
   /** {@inheritdoc} */
@@ -520,14 +545,14 @@ class EntityManager extends EntityManagerDecorator
 
     $eventManager->addEventListener([
       ORM\Tools\ToolEvents::postGenerateSchema,
-      ORM\Events::loadClassMetadata,
-      ORM\Events::preUpdate,
-      ORM\Events::postUpdate,
-      ORM\Events::prePersist,
-      ORM\Events::postPersist,
-      ORM\Events::preRemove,
-      ORM\Events::postRemove,
-      ORM\Events::postLoad,
+      // ORM\Events::loadClassMetadata,
+      // ORM\Events::preUpdate,
+      // ORM\Events::postUpdate,
+      // ORM\Events::prePersist,
+      // ORM\Events::postPersist,
+      // ORM\Events::preRemove,
+      // ORM\Events::postRemove,
+      ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
 
 
@@ -747,163 +772,7 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Manipulate class-metadata and replace life-cycle event handlers. The
-   * problem is here that otherwise the handlers do not get our decoryted
-   * entity-manager instance, but the vanilla entity manager.
-   *
-   * @param ORM\Event\LoadClassMetadataEventArgs $args Generic event arguments.
-   *
-   * @return void
-   *
-   * @todo Switch to entity-listeners, override the resolver and be done. This
-   * hack can then be removed.
-   */
-  public function loadClassMetadata(ORM\Event\LoadClassMetadataEventArgs $args)
-  {
-    $metaData = $args->getClassMetadata();
-    $className = $metaData->getName();
-    $callbacks = [];
-    foreach ($metaData->lifecycleCallbacks as $event => $eventHandlers) {
-      switch ($event) {
-        case ORM\Events::preUpdate:
-        case ORM\Events::postUpdate:
-        case ORM\Events::prePersist:
-        case ORM\Events::postPersist:
-        case ORM\Events::preRemove:
-        case ORM\Events::postRemove:
-        case ORM\Events::postLoad:
-          $this->lifeCycleEvents[$event][$className] = $eventHandlers;
-          break;
-        default:
-          $callbacks[$event] = $eventHandlers;
-      }
-    }
-    $metaData->setLifecycleCallbacks($callbacks);
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\PreUpdateEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function preUpdate(ORM\Event\PreUpdateEventArgs $eventArgs)
-  {
-    $entity = $eventArgs->getEntity();
-    $changeSet = $eventArgs->getEntityChangeSet();
-    $tmpEventArgs = new ORM\Event\PreUpdateEventArgs($entity, $this, $changeSet);
-    $handled = 0;
-    foreach ($this->lifeCycleEvents[ORM\Events::preUpdate] as $className => $eventHandlers) {
-      if ($entity instanceof $className) {
-        foreach ($eventHandlers as $handler) {
-          $entity->{$handler}($tmpEventArgs);
-          ++$handled;
-        }
-      }
-    }
-    if ($handled > 0) {
-      // need to merge back the changes
-      $newChangeSet = array_merge($eventArgs->getEntityChangeSet(), $tmpEventArgs->getEntityChangeSet());
-      foreach ($newChangeSet as $field => $value) {
-        $eventArgs->setNewValue($field, $value[1]);
-      }
-    }
-  }
-
-  /**
-   * Wrap life-cycle events and replace the vanilla entity-manager instance by $this.
-   *
-   * @param string $event TBD.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  private function lifecycleEventWrapper(string $event, ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $entity = $eventArgs->getEntity();
-    $eventArgs = new ORM\Event\LifecycleEventArgs($entity, $this);
-    foreach (($this->lifeCycleEvents[$event] ?? []) as $className => $eventHandlers) {
-      if ($entity instanceof $className) {
-        foreach ($eventHandlers as $handler) {
-          $entity->{$handler}($eventArgs);
-        }
-      }
-    }
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->lifecycleEventWrapper(ORM\Events::postUpdate, $eventArgs);
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->lifecycleEventWrapper(ORM\Events::prePersist, $eventArgs);
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->lifecycleEventWrapper(ORM\Events::postPersist, $eventArgs);
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function preRemove(ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->lifecycleEventWrapper(ORM\Events::preRemove, $eventArgs);
-  }
-
-  /**
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
-   *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
-   *
-   * @return void
-   */
-  public function postRemove(ORM\Event\LifecycleEventArgs $eventArgs)
-  {
-    $this->lifecycleEventWrapper(ORM\Events::postRemove, $eventArgs);
-  }
-
-  /**
    * Call ENTITY::__wakeup() if it exists.
-   *
-   * Forward some life-cycle callbacks, replacing the entity-manager
-   * instance with ourselves, the decorated EntityManager.
    *
    * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
    *
@@ -915,7 +784,6 @@ class EntityManager extends EntityManagerDecorator
     if (\method_exists($entity, '__wakeup')) {
       $entity->__wakeup();
     }
-    $this->lifecycleEventWrapper(ORM\Events::postLoad, $eventArgs);
   }
 
   /**

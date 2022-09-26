@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * InstrumentInsurance
@@ -160,6 +161,14 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
+   * @var bool
+   *
+   * Neither pre- nor post-remove events can cancel a remove, so we need to
+   * listen on pre-flush.
+   */
+  private $doTriggerPreFlushRemoveEvent = false;
+
+  /**
    * {@inheritdoc}
    *
    * @ORM\PreRemove
@@ -168,8 +177,23 @@ class MusicianEmailAddress implements \ArrayAccess
   {
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $this->musician->getEmailAddresses()->remove($this->address);
-    $entityManager = $event->getEntityManager();
-    $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
+    // $entityManager = EntityManager::getDecorator($event->getEntityManager());
+    // $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
+    $this->doTriggerPreFlushRemoveEvent = true;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PreFlush
+   */
+  public function preFlush(Event\PreFlushEventArgs $event)
+  {
+    if ($this->doTriggerPreFlushRemoveEvent) {
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
+      $this->doTriggerPreFlushRemoveEvent = false;
+    }
   }
 
   /**
@@ -181,7 +205,7 @@ class MusicianEmailAddress implements \ArrayAccess
   {
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $this->musician->getEmailAddresses()->set($this->address, $this);
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PrePersistMusicianEmail($this));
   }
 
@@ -193,7 +217,7 @@ class MusicianEmailAddress implements \ArrayAccess
   public function postRemove(Event\LifecycleEventArgs $event)
   {
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PostRemoveMusicianEmail($this));
   }
 
@@ -205,7 +229,7 @@ class MusicianEmailAddress implements \ArrayAccess
   public function postPersist(Event\LifecycleEventArgs $event)
   {
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = $event->getEntityManager();
+    $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PostPersistMusicianEmail($this));
   }
 }

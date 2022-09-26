@@ -40,6 +40,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+use OCA\CAFEVDB\Database\EntityManager;
+
 /**
  * Musician
  *
@@ -1435,14 +1437,14 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $field = 'userIdSlug';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
       $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
     $field = 'email';
     if ($event->hasChangedField($field)) {
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
       $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
@@ -1459,15 +1461,15 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $field = 'userIdSlug';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
     $field = 'email';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field]));
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $this->email));
       unset($this->preUpdateValue[$field]);
     }
   }
