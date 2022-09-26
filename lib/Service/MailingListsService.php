@@ -39,12 +39,20 @@ class MailingListsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
+  const ROLE = 'role';
+
+  const PRE_VERIFIED = 'pre_verified';
+  const PRE_CONFIRMED = 'pre_confirmed';
+  const PRE_APPROVED = 'pre_approved';
+  const SEND_WELCOME_MESSAGE = 'send_welcome_message';
+  const SEND_GOODBYE_MESSAGE = 'send_goodbye_message';
+
   private const DEFAULT_SUBSCRIPTION_DATA = [
-    'pre_verified' => true,
-    'pre_confirmed' => true,
-    'pre_approved' => true,
-    'send_welcome_message' => true,
-    'role' => self::ROLE_MEMBER,
+    self::PRE_VERIFIED => true,
+    self::PRE_CONFIRMED => true,
+    self::PRE_APPROVED => true,
+    self::SEND_WELCOME_MESSAGE => true,
+    self::ROLE => self::ROLE_MEMBER,
   ];
 
   const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
@@ -150,7 +158,7 @@ class MailingListsService
   ];
 
   public const DEFAULT_MEMBER_SEARCH_CRITERIA = [
-    'role' => self::ROLE_MEMBER,
+    self::ROLE => self::ROLE_MEMBER,
   ];
 
   /** @var string
@@ -225,9 +233,9 @@ class MailingListsService
   /**
    * @param null|array $coreVersion Storage for detailed version information.
    *
-   * @return null|string Obtain the server versions.
+   * @return array Obtain the server versions.
    */
-  public function getServerVersions(?array &$coreVersion = null):?string
+  public function getServerVersions(?array &$coreVersion = null):?array
   {
     $response = $this->restClient->get(
       '/3.1/system/versions', [
@@ -513,7 +521,7 @@ class MailingListsService
             self::SUBSCRIBER_EMAIL => $subscriber,
           ];
         }
-        $subscriptionData['role'] = $role;
+        $subscriptionData[self::ROLE] = $role;
         if (empty($this->getSubscription($listId, $subscriber, $role))) {
           $this->subscribe($listId, subscriptionData: $subscriptionData);
         }
@@ -639,7 +647,7 @@ class MailingListsService
     $post = [
       'list_id' => $listId,
       'subscriber' => $subscriptionAddress,
-      'role' => $role,
+      self::ROLE => $role,
     ];
 
     $response = $this->restClient->post(
@@ -654,8 +662,8 @@ class MailingListsService
 
     $result = [];
     foreach (($response['entries'] ?? []) as $entry) {
-      $result[$entry['role']] = $entry;
-      $this->selfLinkBySubscription[$listId][$subscriptionAddress][$entry['role']] = $entry[self::SUBSCRIPTION_SELF_LINK];
+      $result[$entry[self::ROLE]] = $entry;
+      $this->selfLinkBySubscription[$listId][$subscriptionAddress][$entry[self::ROLE]] = $entry[self::SUBSCRIPTION_SELF_LINK];
     }
     return $result;
   }
@@ -786,7 +794,7 @@ class MailingListsService
    * @param null|string $displayName If given the data for the 'display_name'
    * key of the $subscriptionData.
    *
-   * @param null|string $role If given the data for the 'role' key of the
+   * @param null|string $role If given the data for the self::ROLE key of the
    * $subscriptionData.
    *
    * @param array $subscriptionData The data array which at least the field
@@ -806,7 +814,7 @@ class MailingListsService
       $subscriptionData['display_name'] = $displayName;
     }
     if (!empty($role)) {
-      $subscriptionData['role'] = $role;
+      $subscriptionData[self::ROLE] = $role;
     }
     if (empty($subscriptionData['subscriber'])) {
       throw new InvalidArgumentException($this->l->t('Missing subscriber email-address.'));
@@ -864,13 +872,13 @@ class MailingListsService
    * @param string $listId The list-id or FQDN. If a list-fqdn, then an
    * additional query is needed to retrieve the list-id from the server.
    *
-   * @param null|string $email The subscriber email to send the invitation to.
+   * @param string $email The subscriber email to send the invitation to.
    *
    * @param null|string $displayName The subscribers display-name.
    *
    * @return bool Execution status.
    */
-  public function invite(string $listId, string $email = null, ?string $displayName = null):bool
+  public function invite(string $listId, string $email, ?string $displayName = null):bool
   {
     $subscriptionData = [
       'subscriber' => $email,
@@ -892,9 +900,11 @@ class MailingListsService
    *
    * @param string $role Role of the subscription.
    *
+   * @param bool $silent If set to \true then disable sending for confirmation messages and the like.
+   *
    * @return bool Execution status.
    */
-  public function unsubscribe(string $listId, string $subscriber, string $role = self::ROLE_MEMBER):bool
+  public function unsubscribe(string $listId, string $subscriber, string $role = self::ROLE_MEMBER, bool $silent = false):bool
   {
     $listId = $this->ensureListId($listId);
     if (empty($listId)) {
@@ -905,9 +915,33 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
+    if ($silent) {
+      $unsubscriptionData = [
+        self::PRE_APPROVED => true,
+        self::PRE_CONFIRMED => true,
+      ];
+      // unfortunately there is only a global "send goodbye message" flag for
+      // the list ...
+      $this->setListConfig($listId, self::SEND_GOODBYE_MESSAGE, false);
+    } else {
+      $unsubscriptionData = [];
+    }
+    foreach ($unsubscriptionData as $key => $value) {
+      // bloody Python rest implementation
+      if ($value === true) {
+        $unsubscriptionData[$key] = 'True';
+      } elseif ($value === false) {
+        $unsubscriptionData[$key] = 'False';
+      }
+    }
     /* $result = */ $this->restClient->delete($selfLink, [
       'auth' => $this->restAuth,
+      'json' => $unsubscriptionData,
     ]);
+    if ($silent) {
+      // undo
+      $this->setListConfig($listId, self::SEND_GOODBYE_MESSAGE, true);
+    }
     return true;
   }
 
@@ -921,9 +955,9 @@ class MailingListsService
    *
    * @param string $role Role of the subscription.
    *
-   * @return array The preferences data.
+   * @return array The preferences data or null in case of error.
    */
-  public function getSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER):array
+  public function getSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER):?array
   {
     $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
     if (empty($selfLink)) {
@@ -1012,7 +1046,7 @@ class MailingListsService
     $response['entries'] = $response['entries'] ?? [];
 
     foreach ($response['entries'] as $member) {
-      $this->selfLinkBySubscription[$listId][$member['email']][$member['role']] = $member[self::SUBSCRIPTION_SELF_LINK];
+      $this->selfLinkBySubscription[$listId][$member['email']][$member[self::ROLE]] = $member[self::SUBSCRIPTION_SELF_LINK];
     }
 
     if ($flat) {
