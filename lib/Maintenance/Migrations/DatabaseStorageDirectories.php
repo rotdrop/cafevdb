@@ -32,12 +32,15 @@ use OCA\CAFEVDB\Database\EntityManager;
 /**
  * Overlay generic files on top of database-backed storages.
  */
-class DatabaseStorageFileEntries extends AbstractMigration
+class DatabaseStorageDirectories extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'CREATE TABLE IF NOT EXISTS DatabaseStorageFileEntries (id INT AUTO_INCREMENT NOT NULL, file_id INT DEFAULT NULL, storage_id VARCHAR(64) NOT NULL, base_name VARCHAR(256) NOT NULL, dir_name VARCHAR(4000) NOT NULL, INDEX IDX_F4B2C74B93CB796C (file_id), UNIQUE INDEX UNIQ_F4B2C74B5CC5DB90AC632DD4C840B0F6 (storage_id, dir_name, base_name), PRIMARY KEY(id))',
-      'ALTER TABLE DatabaseStorageFileEntries ADD CONSTRAINT FK_F4B2C74B93CB796C FOREIGN KEY IF NOT EXISTS (file_id) REFERENCES Files (id)',
+      'CREATE TABLE IF NOT EXISTS DatabaseStorageDirectories (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, storage_id VARCHAR(64) NOT NULL, name VARCHAR(256) NOT NULL, updated DATETIME(6) DEFAULT NULL COMMENT "(DC2Type:datetime_immutable)", INDEX IDX_D1CC6CA1727ACA70 (parent_id), INDEX IDX_D1CC6CA15E237E06 (name), PRIMARY KEY(id))',
+      'CREATE TABLE IF NOT EXISTS database_storage_directory_encrypted_file (database_storage_directory_id INT NOT NULL, encrypted_file_id INT NOT NULL, INDEX IDX_9DDA237BCEB6337 (database_storage_directory_id), INDEX IDX_9DDA237BEC15E76C (encrypted_file_id), PRIMARY KEY(database_storage_directory_id, encrypted_file_id))',
+      'ALTER TABLE DatabaseStorageDirectories ADD CONSTRAINT FK_D1CC6CA1727ACA70 FOREIGN KEY IF NOT EXISTS (parent_id) REFERENCES DatabaseStorageDirectories (id)',
+      'ALTER TABLE database_storage_directory_encrypted_file ADD CONSTRAINT FK_9DDA237BCEB6337 FOREIGN KEY IF NOT EXISTS (database_storage_directory_id) REFERENCES DatabaseStorageDirectories (id) ON DELETE CASCADE',
+      'ALTER TABLE database_storage_directory_encrypted_file ADD CONSTRAINT FK_9DDA237BEC15E76C FOREIGN KEY IF NOT EXISTS (encrypted_file_id) REFERENCES Files (id) ON DELETE CASCADE',
     ],
   ];
 

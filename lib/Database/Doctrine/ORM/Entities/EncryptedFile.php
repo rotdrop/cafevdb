@@ -68,6 +68,14 @@ class EncryptedFile extends File
    */
   private $projectBalanceSupportingDocuments;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="DatabaseStorageDirectory", mappedBy="documents")
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
+   */
+  private $databaseStorageDirectories;
+
   public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;

@@ -156,7 +156,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
 
     $documents = $this->project->getFinancialBalanceSupportingDocuments();
 
-
     /** @var Entities\ProjectBalanceSupportingDocument $document */
     foreach ($documents as $document) {
 

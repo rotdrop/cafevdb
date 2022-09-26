@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20220926153000 extends DatabaseStorageFileEntries {}
+class Version20220926153000 extends DatabaseStorageDirectories {}
 
 // Local Variables: ***
 // c-basic-offset: 2 ***
