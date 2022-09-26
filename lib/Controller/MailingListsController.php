@@ -49,12 +49,14 @@ class MailingListsController extends Controller
   const OPERATION_UNSUBSCRIBE = 'unsubscribe';
   const OPERATION_ACCEPT = 'accept';
   const OPERATION_REJECT = 'reject';
+  const OPERATION_RELOAD = 'reload';
   const OPERATIONS = [
     self::OPERATION_INVITE,
     self::OPERATION_SUBSCRIBE,
     self::OPERATION_UNSUBSCRIBE,
     self::OPERATION_ACCEPT,
     self::OPERATION_REJECT,
+    self::OPERATION_RELOAD,
   ];
 
   /** @var MailingListsService */
@@ -118,6 +120,9 @@ class MailingListsController extends Controller
       case self::OPERATION_REJECT:
         $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
         $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
+        break;
+      case self::OPERATION_RELOAD:
+        // just fetch the status
         break;
       default:
         return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));

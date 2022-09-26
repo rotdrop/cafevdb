@@ -65,6 +65,7 @@ class ProjectParticipantsController extends Controller
   const LIST_ACTION_UNSUBSCRIBE = 'unsubscribe';
   const LIST_ACTION_ENABLE_DELIVERY = 'enable-delivery';
   const LIST_ACTION_DISABLE_DELIVERY = 'disable-delivery';
+  const LIST_ACTION_RELOAD_SUBSCRIPTION = 'reload-subscription';
 
   const LIST_SUBSCRIPTION_DELIVERY_ENABLED = 'delivery-enabled';
   const LIST_SUBSCRIPTION_DELIVERY_DISABLED = 'delivery-disabled';
@@ -1068,6 +1069,11 @@ class ProjectParticipantsController extends Controller
           $musician->getPublicName(firstNameFirst: true), $email
         ]);
         break;
+      case self::LIST_ACTION_RELOAD_SUBSCRIPTION:
+        // just fall through to the status query.
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown list action: "%s".', $operation));
     }
 
     // after performing the actions query the REST service again about the status
@@ -1109,7 +1115,7 @@ class ProjectParticipantsController extends Controller
         $subscription = $listsService->getSubscription($listId, $email);
         $preferences = $listsService->getSubscriptionPreferences($listId, $email);
 
-        \OCP\Util::writeLog('cafevdb', 'SUBSCRIPTION ' . print_r($subscription, true), \OCP\Util::INFO);
+        // \OCP\Util::writeLog('cafevdb', 'SUBSCRIPTION ' . print_r($subscription, true), \OCP\Util::INFO);
         \OCP\Util::writeLog('cafevdb', 'PREFERENCES ' . print_r($preferences, true), \OCP\Util::INFO);
 
         switch ($preferences[MailingListsService::MEMBER_DELIVERY_STATUS]) {
