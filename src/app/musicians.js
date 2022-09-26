@@ -203,6 +203,7 @@ const contactValidation = function(container) {
       if (allEmails.length > 0) {
         $emailInput.val(allEmails[0]).trigger('change');
       }
+      $.fn.cafevTooltip.remove();
       return false;
     });
 

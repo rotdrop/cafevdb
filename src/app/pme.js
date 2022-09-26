@@ -1395,6 +1395,7 @@ function installInputSelectize(containerSel, onlyClass) {
     if (toolTip) {
       $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
     }
+    $self.off('dropdown_open, dropdown_close').on('dropdown_open, dropdown_close', function(event) { $.fn.cafevTooltip.remove(); });
   });
 }
 
