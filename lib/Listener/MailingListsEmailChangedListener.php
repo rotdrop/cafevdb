@@ -55,6 +55,13 @@ class MailingListsEmailChangedListener implements IEventListener
   private $appContainer;
 
   /**
+   * @var array
+   *
+   * Collected subscription requests. These are handled in a post-commit hook.
+   */
+  private static $subscriptionRequests = [];
+
+  /**
    * @param IAppContainer $appContainer App-container in order to have a leight-weight constructor.
    */
   public function __construct(IAppContainer $appContainer)
@@ -74,75 +81,171 @@ class MailingListsEmailChangedListener implements IEventListener
       return;
     }
 
-    return; // @todo
+    /** @var Events\MusicianEmailEvent $event */
+    $musician = $event->getEntity()->getMusician();
+    $musicianId = $musician->getId();
 
-    $oldEmail = $event->getOldEmail();
-    $oldEmail = !empty($oldEmail) ? $oldEmail->getAddress() : null;
-    $newEmail = $event->getMusician()->getEmailAddress();
-
-    if (empty($oldEmail) && empty($newEmail)) {
-      return;
+    if (empty(self::$subscriptionRequests[$musicianId])) {
+      self::$subscriptionRequests[$musicianId] = [
+        'musician' => $musician,
+        'changed' => null,
+        'removed' => [],
+        'added' => [],
+      ];
     }
+    $subscriptionRequest = &self::$subscriptionRequests[$musicianId];
 
-    /** @var ConfigService $configService */
-    $configService = $this->appContainer->get(ConfigService::class);
-    if (empty($configService)) {
-      return;
+    /** @var Entities\MusicianEmailAddress $oldEmail */
+    /** @var Entities\MusicianEmailAddress $newEmail */
+    switch (true) {
+      case $event instanceof Events\PostChangeMusicianEmail:
+        /** @var Events\PostChangeMusicianEmail $event */
+        $subscriptionRequest['changed'] = [
+          'old' => $event->getOldEmail()->getAddress(),
+          'new' => $event->getNewEmail()->getAddress(),
+        ];
+        break;
+      case $event instanceof Events\PostRemoveMusicianEmail:
+        /** @var Events\PostRemoveMusicianEmail $event */
+        $subscriptionRequest['removed'][] = $event->getEntity()->getAddress();
+        break;
+      case $event instanceof Events\PostPersistMusicianEmail:
+        /** @var Events\PostPersistMusicianEmail $event */
+        $subscriptionRequest['added'][] = $event->getEntity()->getAddress();
+        break;
     }
 
     $this->entityManager = $this->appContainer->get(EntityManager::class);
-    /** @var Repositories\ProjectsRepository $projectsRepository */
-    $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
-    $listIds = $projectsRepository->fetchMailingListIds();
 
-    $listIds[] = $configService->getConfigValue('announcementsMailingList');
-    $listIds = array_filter($listIds);
+    $this->entityManager->registerPostCommitAction(function() {
+      // there may be more than one request, but only the first has an effect
+      $subscriptionRequests = self::$subscriptionRequests;
+      self::$subscriptionRequests = [];
 
-    if (empty($listIds)) {
-      return;
-    }
+      if (empty($subscriptionRequests)) {
+        return;
+      }
 
-    /** @var MailingListsService $listsService */
-    $listsService = $this->appContainer->get(MailingListsService::class);
-    if (empty($listsService)) {
-      return;
-    }
+      $this->logger = $this->appContainer->get(ILogger::class);
 
-    $this->logger = $this->appContainer->get(ILogger::class);
+      /** @var ConfigService $configService */
+      $configService = $this->appContainer->get(ConfigService::class);
+      if (empty($configService)) {
+        return;
+      }
 
-    $displayName = null;
-    $subscribeNewEmail = false;
+      /** @var Repositories\ProjectsRepository $projectsRepository */
+      $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
+      $listIds = $projectsRepository->fetchMailingListIds();
 
-    foreach ($listIds as $listId) {
-      $subscribeNewEmail = false;
-      if (!empty($oldEmail)) {
-        try {
-          $subscription = $listsService->getSubscription($listId, $oldEmail);
+      $announcementsListId = $configService->getConfigValue('announcementsMailingList');
+      $listIds[] = $announcementsListId;
+      $listIds = array_filter($listIds);
+
+      if (empty($listIds)) {
+        return;
+      }
+
+      /** @var MailingListsService $listsService */
+      $listsService = $this->appContainer->get(MailingListsService::class);
+      if (empty($listsService)) {
+        return;
+      }
+
+      foreach ($subscriptionRequests as $subscriptionRequest) {
+        /** @var Entities\Musician $musician */
+        $musician = $subscriptionRequest['musician'];
+        unset($subscriptionRequest['musician']);
+
+        $this->logInfo('SUBSCRIPTION REQUESTS ' . print_r($subscriptionRequest, true));
+
+        $oldPrimary = $subscriptionRequest['changed']['old'] ?? $musician->getEmailAddress();
+        $newPrimary = $musician->getEmailAddress();
+
+        $defaultPrimarySubscription = [
+          MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
+          MailingListsService::MEMBER_DISPLAY_NAME => $musician->getPublicName(firstNameFirst: true),
+          MailingListsService::SEND_WELCOME_MESSAGE => false,
+        ];
+
+        foreach ($listIds as $listId) {
+          // step 1: determine the old default for the primary subscription
+          $primarySubscription = $defaultPrimarySubscription;
+          $subscription = $listsService->getSubscription($listId, $oldPrimary);
           if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
             $subscription = $subscription[MailingListsService::ROLE_MEMBER];
-            $subscribeNewEmail = true;
-            $listsService->unsubscribe($listId, $oldEmail);
-            $displayName = $subscription['display_name'];
+            $preferences = $listsService->getSubscriptionPreferences($listId, $oldPrimary);
+            if (!empty($preferences[MailingListsService::MEMBER_DELIVERY_STATUS])) {
+              $primarySubscription[MailingListsService::MEMBER_DELIVERY_STATUS] = $preferences[MailingListsService::MEMBER_DELIVERY_STATUS];
+            }
+            if (!empty($subscription['display_name'])) {
+              $primarySubscription[MailingListsService::MEMBER_DISPLAY_NAME] = $subscription['display_name'];
+            }
+          } else {
+            // this is only the change handler, so new subscriptions should
+            // not be initiated here.
+            continue;
           }
-        } catch (\Throwable $t) {
-          $this->logException($t, 'Unsubscribing from old email failed.');
-          continue; // avoid duplicating subscriptions
-        }
-      }
 
-      if ($subscribeNewEmail && !empty($newEmail)) {
-        // subscribe
-        try {
-          $listsService->subscribe($listId, $newEmail, $displayName);
-        } catch (\Throwable $t) {
-          $this->logException($t, 'Subscribing to new email failed.');
+          $removedAddresses = $subscriptionRequest['removed'];
+          $addedAddresses = $subscriptionRequest['added'];
+
+          // for the announcements mailing list new emails addresses are
+          // ignored, only the primary address needs to remain subscribed if
+          // the old primary address was subscribed.
+          if ($listId == $announcementsListId) {
+            $removedAddresses = [];
+            $addedAddresses = [];
+            if ($oldPrimary != $newPrimary) {
+              $removedAddresses[] = $oldPrimary;
+            }
+          }
+
+          // step 2: remove all address which are to be removed
+          foreach ($removedAddresses as $removedAddress) {
+            $listsService->unsubscribe($listId, $removedAddress, silent: true);
+          }
+
+          // step 3: add the old and new primary address to the set of added address to simplify things.
+          if (!empty($newPrimary) && array_search($newPrimary, $addedAddresses) === false) {
+            $addedAddresses[] = $newPrimary;
+          }
+          if (array_search($oldPrimary, $removedAddresses) === false
+              && array_search($oldPrimary, $addedAddresses) === false) {
+            $addedAddresses[] = $oldPrimary;
+          }
+
+          // step 4: add or patch all new addresses with the proper delivery status
+          foreach ($addedAddresses as $addedAddress) {
+            $subscription = $listsService->getSubscription($listId, $addedAddress);
+            if (empty($subscription)) {
+              // generate a new subscription
+              $subscriptionData = $primarySubscription;
+              $subscriptionData[MailingListsService::SUBSCRIBER_EMAIL] = $addedAddress;
+              if ($addedAddress != $newPrimary) {
+                $subscriptionData[MailingListsService::MEMBER_DELIVERY_STATUS] = MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER;
+              }
+              try {
+                $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+              } catch (\Throwable $t) {
+                $this->logException($t, sprintf('Subscribing email "%1$s" to list "%2$s" failed.', $addedAddress, $listId));
+              }
+            } else {
+              // patch the existing subscription
+              $deliveryStatus = ($addedAddress == $newPrimary)
+                ? $primarySubscription[MailingListsService::MEMBER_DELIVERY_STATUS]
+                : MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER;
+              try {
+                $listsService->setSubscriptionPreferences($listId, $addedAddress, [
+                  MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus,
+                ]);
+              } catch (\Throwable $t) {
+                $this->logException($t, sprintf('Setting delivery status of email "%1$s" in list "%2$s" failed.', $addedAddress, $listId));
+              }
+            }
+          }
         }
       }
-    }
+    });
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
