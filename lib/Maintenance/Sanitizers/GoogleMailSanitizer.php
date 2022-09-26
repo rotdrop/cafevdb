@@ -101,7 +101,7 @@ class GoogleMailSanitizer extends AbstractSanitizer
   public function validate():bool
   {
     if ($this->validated !== null) {
-      $this->addMessage('Already validated.', self::VERBOSITY_DEBUG);
+      $this->addMessage('Already validated: ' . $this->entity->getAddress(), self::VERBOSITY_DEBUG);
       return $this->validated;
     }
     $this->messages = [];
@@ -179,7 +179,22 @@ class GoogleMailSanitizer extends AbstractSanitizer
         )
       );
     }
-    $otherEntitiy = $matching->first();
-    $this->remove($otherEntitiy, flush: $flush);
+    /** @var Entities\MusicianEmailAddress $otherEntity */
+    $otherEntity = $matching->first();
+    if ($this->entity->isPrimaryAddress() || $otherEntity->isPrimaryAddress()) {
+      // cancel removal, this is the primary email address
+      $this->addMessage(sprintf('Refusing to remove the primary email address "%s".', $this->entity->getMusician()->getEmailAddress()), self::VERBOSITY_VERBOSE);
+
+      $this->persist($this->entity);
+      $musician->getEmailAddresses()->set($this->entity->getAddress(), $this->entity);
+
+      if ($flush) {
+        $this->flush();
+      }
+      return;
+    }
+
+    $this->addMessage(sprintf('Removing also the other google-address "%1$s" (%2$s).', $otherAddress, $this->entity->getAddress()), self::VERBOSITY_VERBOSE);
+    $this->remove($otherEntity, flush: $flush);
   }
 }
