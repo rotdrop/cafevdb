@@ -85,6 +85,12 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
     </properties>
     <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
     <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+    <!-- The following would be just anoying. -->
+    <exclude name="Squiz.Commenting.FunctionComment.ParamCommentNotCapital"/>
+    <!-- Too much noise. Also, this produces boiler-plate documentation for setter/getter functions -->
+    <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+    <!-- We should rather use named exceptions than document each throw instruction -->
+    <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
   </rule>
 
   <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">

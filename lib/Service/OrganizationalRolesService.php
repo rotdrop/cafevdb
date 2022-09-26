@@ -84,7 +84,7 @@ class OrganizationalRolesService
     }
     $musician = $participant->getMusician();
     $data = [
-      'email' => $musician->getEmail(),
+      'email' => $musician->getEmailAddress(),
       'name' => $musician->getPublicName(true),
       'street' => $musician->getStreet(),
       'streetNumber' => $musician->getStreetNumber(),

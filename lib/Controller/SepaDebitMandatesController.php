@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 
+use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 
 /** AJAX endpoints for debit mandates */
@@ -1309,6 +1310,9 @@ class SepaDebitMandatesController extends Controller
           break;
       }
 
+      $this->persist($writtenMandate);
+      $debitMandate->setWrittenMandate($writtenMandate);
+
       if ($writtenMandate->getNumberOfLinks() == 1) {
         // only tweak the file name if we are the only user.
         $writtenMandateFileName = $mandateReference;
@@ -1323,8 +1327,6 @@ class SepaDebitMandatesController extends Controller
         $writtenMandate->setFileName($writtenMandateFileName);
       }
 
-      $this->persist($writtenMandate);
-      $debitMandate->setWrittenMandate($writtenMandate);
       $this->flush();
 
       $this->entityManager->commit();

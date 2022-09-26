@@ -1812,9 +1812,10 @@ Whatever.',
   public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
   {
     $listId = $participant->getProject()->getMailingListId();
-    $email = $participant->getMusician()->getEmail();
+    $musician = $participant->getMusician();
+    $principalEmail = $musician->getEmailAddress();
 
-    if (empty($listId) || empty($email)) {
+    if (empty($listId) || empty($principalEmail)) {
       return null;
     }
 
@@ -1824,28 +1825,39 @@ Whatever.',
       return null;
     }
 
-    if (!empty($listsService->getSubscription($listId, $email))) {
-      return false;
-    }
-
     $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
-
     $memberStatus = $participant->getMusician()->getMemberStatus();
-
     $deliveryStatus = ($memberStatus == MemberStatus::CONDUCTOR
         || $memberStatus == MemberStatus::SOLOIST
       || $memberStatus == MemberStatus::TEMPORARY)
       ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER
       : MailingListsService::DELIVERY_STATUS_ENABLED;
 
-    $subscriptionData = [
-      MailingListsService::SUBSCRIBER_EMAIL => $email,
-      MailingListsService::MEMBER_DISPLAY_NAME => $displayName,
-      MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus,
-      // MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER,
-    ];
+    foreach ($musician->getEmailAddresses() as $emailEntity) {
+      $emailAddress = $emailEntity->getAddress();
 
-    $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+      if (!empty($listsService->getSubscription($listId, $emailAddress))) {
+        if ($emailAddress == $principalEmail) {
+          // leave the preferences alone in order to allow the user to modify
+          // its preferences for the primary address.
+          continue;
+        }
+        $listsService->setSubscriptionPreferences($listId, $emailAddress, [
+          MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER,
+        ]);
+      } else {
+        // subscribe the email address, primary with delivery, others without
+        $subscriptionData = [
+          MailingListsService::SUBSCRIBER_EMAIL => $emailAddress,
+          MailingListsService::MEMBER_DISPLAY_NAME => $displayName,
+          MailingListsService::MEMBER_DELIVERY_STATUS => (($emailAddress == $principalEmail)
+                                                          ? $deliveryStatus
+                                                          : MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER),
+          MailingListsService::SEND_WELCOME_MESSAGE => ($emailAddress == $principalEmail),
+        ];
+        $listsService->subscribe($listId, subscriptionData: $subscriptionData);
+      }
+    }
 
     return true;
   }
@@ -1856,9 +1868,10 @@ Whatever.',
   public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant)
   {
     $listId = $participant->getProject()->getMailingListId();
-    $email = $participant->getMusician()->getEmail();
+    $musician = $participant->getMusician();
+    $principalEmail = $musician->getEmailAddress();
 
-    if (empty($listId) || empty($email)) {
+    if (empty($listId) || empty($principalEmail)) {
       return;
     }
 
@@ -1869,11 +1882,18 @@ Whatever.',
       return;
     }
 
-    try {
-      if (!empty($listsService->getSubscription($listId, $email))) {
-        $listsService->unsubscribe($listId, $email);
+    $failedAddresses = [];
+    foreach ($musician->getEmailAddresses() as $emailEntity) {
+      $emailAddress = $emailEntity->getAddress();
+      try {
+        if (!empty($listsService->getSubscription($listId, $emailAddress))) {
+          $listsService->unsubscribe($listId, $emailAddress, silent: $emailAddress != $principalEmail);
+        }
+      } catch (\Throwable $t) {
+        $failedAddresses[] = $emailAddress;
       }
-    } catch (\Throwable $t) {
+    }
+    if (!empty($failedAddresses)) {
       if ($participant->getRegistration()) {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',

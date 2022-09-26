@@ -4,8 +4,9 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,10 +36,11 @@ class LinkCompositePaymentsToBalance extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS project_id INT DEFAULT NULL, ADD balance_document_sequence INT DEFAULT NULL',
+      'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS project_id INT DEFAULT NULL, ADD COLUMN IF NOT EXISTS balance_document_sequence INT DEFAULT NULL',
       'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)',
       'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C9523AA8A FOREIGN KEY IF NOT EXISTS (project_id, musician_id) REFERENCES ProjectParticipants (project_id, musician_id)',
-      'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C6A022FD1 FOREIGN KEY IF NOT EXISTS (project_id, balance_document_sequence) REFERENCES ProjectBalanceSupportingDocuments (project_id, sequence)',
+      'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C166D1F9C6A022FD1 FOREIGN KEY IF NOT EXISTS (project_id,'
+      . ' balance_document_sequence) REFERENCES ProjectBalanceSupportingDocuments (project_id, sequence)',
       'CREATE INDEX IF NOT EXISTS IDX_65D9920C166D1F9C ON CompositePayments (project_id)',
       'CREATE INDEX IF NOT EXISTS IDX_65D9920C166D1F9C9523AA8A ON CompositePayments (project_id, musician_id)',
       'CREATE INDEX IF NOT EXISTS IDX_65D9920C166D1F9C6A022FD1 ON CompositePayments (project_id, balance_document_sequence)',
@@ -57,7 +59,20 @@ WHERE cp.project_id IS NULL',
   {
     return $this->l->t('Optionally link composite payments to the project balance supporting documents.');
   }
-};
+
+  /** {@inheritdoc} */
+  public function execute():bool
+  {
+    if (!parent::execute()) {
+      return false;
+    }
+    static::$sql[self::TRANSACTIONAL] = [];
+    static::$sql[self::STRUCTURAL] = [
+      'ALTER TABLE CompositePayments CHANGE project_id project_id INT NOT NULL',
+    ];
+    return parent::execute();
+  }
+}
 
 // Local Variables: ***
 // c-basic-offset: 2 ***

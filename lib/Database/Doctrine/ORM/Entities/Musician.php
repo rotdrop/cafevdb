@@ -1,28 +1,33 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use \InvalidArgumentException;
+
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Common\Uuid;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -35,6 +40,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+use OCA\CAFEVDB\Database\EntityManager;
+
 /**
  * Musician
  *
@@ -45,6 +52,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
  * @ORM\HasLifecycleCallbacks
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class Musician implements \ArrayAccess, \JsonSerializable
 {
@@ -213,16 +222,36 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $birthday;
 
   /**
-   * @var string
+   * @var MusicianEmailAddress
    *
-   * @ORM\Column(type="string", length=256, nullable=false)
+   * The primary email address.
+   *
+   * @ORM\OneToOne(targetEntity="MusicianEmailAddress")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="id", referencedColumnName="musician_id"),
+   *   @ORM\JoinColumn(name="email", referencedColumnName="address", nullable=false)
+   * )
    */
   private $email;
 
   /**
+   * @var Collection All email addresses.
+   *
+   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", cascade={"remove"}, orphanRemoval=true, indexBy="address")
+   */
+  private $emailAddresses;
+
+  /**
    * @var Types\EnumMemberStatus|null
    *
-   * @ORM\Column(type="EnumMemberStatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
+   * @ORM\Column(
+   *   type="EnumMemberStatus",
+   *   nullable=false,
+   *   options={
+   *     "default"="regular",
+   *     "comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."
+   *   }
+   * )
    */
   private $memberStatus;
 
@@ -348,13 +377,17 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var \DateTimeImmutable
+   *
    * @Gedmo\Timestampable(on={"update","change"}, field={"photo.updated"})
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
   private $updated;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->__wakeup();
+    $this->emailAddresses = new ArrayCollection();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -369,6 +402,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
   }
 
+  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
@@ -378,7 +412,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set id.
    *
-   * @param int $id
+   * @param null|int $id
    *
    * @return Musician
    */
@@ -392,9 +426,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get id.
    *
-   * @return int
+   * @return null|int
    */
-  public function getId()
+  public function getId():?int
   {
     return $this->id;
   }
@@ -402,11 +436,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set surName.
    *
-   * @param string $surName
+   * @param null|string $surName
    *
    * @return Musician
    */
-  public function setSurName($surName):Musician
+  public function setSurName(?string $surName):Musician
   {
     $this->surName = $surName;
 
@@ -426,11 +460,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set firstName.
    *
-   * @param string $firstName
+   * @param null|string $firstName
    *
    * @return Musician
    */
-  public function setFirstName($firstName):Musician
+  public function setFirstName(?string $firstName):Musician
   {
     $this->firstName = $firstName;
 
@@ -450,11 +484,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set city.
    *
-   * @param string $city
+   * @param null|string $city
    *
    * @return Musician
    */
-  public function setCity($city):Musician
+  public function setCity(?string $city):Musician
   {
     $this->city = $city;
 
@@ -474,11 +508,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set street.
    *
-   * @param string $street
+   * @param null|string $street
    *
    * @return Musician
    */
-  public function setStreet($street):Musician
+  public function setStreet(?string $street):Musician
   {
     $this->street = $street;
 
@@ -498,11 +532,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set streetNumber.
    *
-   * @param string $streetNumber
+   * @param null|string $streetNumber
    *
    * @return Musician
    */
-  public function setStreetNumber($streetNumber):Musician
+  public function setStreetNumber(?string $streetNumber):Musician
   {
     $this->streetNumber = $streetNumber;
 
@@ -522,11 +556,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set addressSupplement.
    *
-   * @param string $addressSupplement
+   * @param null|string $addressSupplement
    *
    * @return Musician
    */
-  public function setAddressSupplement($addressSupplement):Musician
+  public function setAddressSupplement(?string $addressSupplement):Musician
   {
     $this->addressSupplement = $addressSupplement;
 
@@ -570,11 +604,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set country.
    *
-   * @param string $country
+   * @param null|string $country
    *
    * @return Musician
    */
-  public function setCountry($country):Musician
+  public function setCountry(?string $country):Musician
   {
     $this->country = $country;
 
@@ -594,11 +628,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set language.
    *
-   * @param string $language
+   * @param null|string $language
    *
    * @return Musician
    */
-  public function setLanguage($language):Musician
+  public function setLanguage(?string $language):Musician
   {
     $this->language = $language;
 
@@ -618,11 +652,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set mobilePhone.
    *
-   * @param string $mobilePhone
+   * @param null|string $mobilePhone
    *
    * @return Musician
    */
-  public function setMobilePhone($mobilePhone):Musician
+  public function setMobilePhone(?string $mobilePhone):Musician
   {
     $this->mobilePhone = $mobilePhone;
 
@@ -642,11 +676,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set fixedLinePhone.
    *
-   * @param string $fixedLinePhone
+   * @param null|string $fixedLinePhone
    *
    * @return Musician
    */
-  public function setFixedLinePhone($fixedLinePhone):Musician
+  public function setFixedLinePhone(?string $fixedLinePhone):Musician
   {
     $this->fixedLinePhone = $fixedLinePhone;
 
@@ -688,13 +722,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set email.
-   *
-   * @param string $email
+   * @param MusicianEmailAddress $email
    *
    * @return Musician
    */
-  public function setEmail($email):Musician
+  public function setEmail(MusicianEmailAddress $email):Musician
   {
     $this->email = $email;
 
@@ -702,13 +734,77 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get email.
-   *
-   * @return string
+   * @return MusicianEmailAddress
    */
-  public function getEmail()
+  public function getEmail():MusicianEmailAddress
   {
     return $this->email;
+  }
+
+  /**
+   * Set email.
+   *
+   * @param string|MusicianEmailAddress $email
+   *
+   * @return Musician
+   */
+  public function setEmailAddress(mixed $email):Musician
+  {
+    if ($email instanceof MusicianEmailAddress) {
+      $this->email = $email;
+      return $this;
+    }
+    if (!is_string($email)) {
+      throw new InvalidArgumentException('Argument must be either an email address or an email address entitiy');
+    }
+    if ($this->emailAddresses->containsKey($email)) {
+      $this->email = $this->emailAddresses->get($email);
+      return $this;
+    }
+    $emails = $this->emailAddresses->filter(fn(MusicianEmailAddress $addressEntity) => $addressEntity->getAddress() == $email);
+    if (count($emails) === 1) {
+      $this->email = $emails->first();
+      return $this;
+    }
+    $addressEntity = new MusicianEmailAddress($email, $this);
+    $this->emailAddresses->set($email, $addressEntity);
+    $this->email = $addressEntity;
+
+    return $this;
+  }
+
+  /**
+   * Get email.
+   *
+   * @return null|string
+   */
+  public function getEmailAddress():?string
+  {
+    return !empty($this->email) ? $this->email->getAddress() : null;
+  }
+
+  /**
+   * Set emailAddresses.
+   *
+   * @param Collection $emailAddresses
+   *
+   * @return Musician
+   */
+  public function setEmailAddresses(Collection $emailAddresses):Musician
+  {
+    $this->emailAddresses = $emailAddresses;
+
+    return $this;
+  }
+
+  /**
+   * Get emailAddresses.
+   *
+   * @return Collection
+   */
+  public function getEmailAddresses():Collection
+  {
+    return $this->emailAddresses;
   }
 
   /**
@@ -962,7 +1058,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setProjectParticipantFieldsData($projectParticipantFieldsData):Musician
+  public function setProjectParticipantFieldsData(Collection $projectParticipantFieldsData):Musician
   {
     $this->projectParticipantFieldsData = $projectParticipantFieldsData;
 
@@ -987,7 +1083,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return null|ProjectParticipantFieldDatum
    */
-  public function getProjectParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  public function getProjectParticipantFieldsDatum(mixed $key):?ProjectParticipantFieldDatum
   {
     return $this->getByUuid($this->projectParticipantFieldsData, $key, 'optionKey');
   }
@@ -999,7 +1095,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setInstrumentInsurances($instrumentInsurances):Musician
+  public function setInstrumentInsurances(Collection $instrumentInsurances):Musician
   {
     $this->instrumentInsurances = $instrumentInsurances;
 
@@ -1023,7 +1119,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setPayableInsurances($payableInsurances):Musician
+  public function setPayableInsurances(Collection $payableInsurances):Musician
   {
     $this->payableInsurances = $payableInsurances;
 
@@ -1047,7 +1143,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setPayments($payments):Musician
+  public function setPayments(Collection $payments):Musician
   {
     $this->payments = $payments;
 
@@ -1207,9 +1303,14 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   /**
    * Get the cooked display-name, taking nick-name into account and
-   * just using $displayName if set.
+   * just using $displayName if that set.
+   *
+   * @param bool $firstNameFirst If true return "FIRSTNAME LASTNAME" rather
+   * than "LASTNAME, FIRSTNAME".
+   *
+   * @return string
    */
-  public function getPublicName($firstNameFirst = false)
+  public function getPublicName(bool $firstNameFirst = false):string
   {
     $firstName = empty($this->nickName) ? $this->firstName : $this->nickName;
     if ($firstNameFirst) {
@@ -1224,7 +1325,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if (empty($firstName)) {
       return $this->surName;
     }
-    return $this->surName.', '.$firstName;
+    return $this->surName . ', ' . $firstName;
   }
 
   /**
@@ -1311,6 +1412,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return $this->payments->count() + $this->projectParticipation->count();
   }
 
+  /** {@inheritdoc} */
   public function jsonSerialize():array
   {
     return array_merge($this->toArray(), [
@@ -1326,49 +1428,48 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $preUpdateValue = [];
 
   /**
-   * @ORM\PreUpdate
+   * {@inheritdoc}
    *
-   * @param Event\PreUpdateEventArgs $event
+   * @ORM\PreUpdate
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
     $field = 'userIdSlug';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
       $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
     $field = 'email';
     if ($event->hasChangedField($field)) {
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($this, $oldValue, $event->getNewValue($field)));
+      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
-    // nothing
   }
 
   /**
-   * @ORM\PostUpdate
+   * {@inheritdoc}
    *
-   * @param Event\LifecycleEventArgs $event
+   * @ORM\PostUpdate
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
     $field = 'userIdSlug';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
     $field = 'email';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
-      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this, $this->preUpdateValue[$field]));
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $this->email));
       unset($this->preUpdateValue[$field]);
     }
   }

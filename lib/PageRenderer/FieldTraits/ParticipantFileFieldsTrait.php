@@ -182,7 +182,7 @@ trait ParticipantFileFieldsTrait
       $downloadLink = $dbFileName = $dbExtension = '';
     }
     if (!empty($participantFolder)) {
-      $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder);
+      $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
       $filesAppTarget = md5($filesAppLinkParticipant);
       $filesAppPath = $participantFolder . $subDirPrefix;
       try {

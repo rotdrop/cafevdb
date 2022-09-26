@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\EmailForm;
@@ -382,16 +383,11 @@ Störung.';
   private $executionStatus; // false on error
   private $diagnostics; // mixed, depends on operation
 
-  private $memberVariables; // VARIABLENAME => column name
-
-  /** @var ConfigService */
-  private $configSerivce;
-
   /** @var RequestParameterService */
   private $parameterService;
 
   /** @var RecipientsFilter */
-  private  $recipientsFilter;
+  private $recipientsFilter;
 
   /** @var EventsService */
   private $eventsService;
@@ -450,21 +446,19 @@ Störung.';
    */
   private $implicitFileAttachments = null;
 
-  /*
-   * constructor
-   */
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $parameterService
-    , EventsService $eventsService
-    , RecipientsFilter $recipientsFilter
-    , EntityManager $entityManager
-    , ProjectParticipantFieldsService $participantFieldsService
-    , ProgressStatusService $progressStatusService
-    , SimpleSharingService $simpleSharingService
-    , OrganizationalRolesService $organizationRolesService
-    , AppStorage $appStorage
-    , UserStorage $userStorage
+    ConfigService $configService,
+    RequestParameterService $parameterService,
+    EventsService $eventsService,
+    RecipientsFilter $recipientsFilter,
+    EntityManager $entityManager,
+    ProjectParticipantFieldsService $participantFieldsService,
+    ProgressStatusService $progressStatusService,
+    SimpleSharingService $simpleSharingService,
+    OrganizationalRolesService $organizationRolesService,
+    AppStorage $appStorage,
+    UserStorage $userStorage,
   ) {
     $this->configService = $configService;
     $this->eventsService = $eventsService;
@@ -484,7 +478,7 @@ Störung.';
   }
 
   /**
-   * @param RequestParameterService $parameterservice Control
+   * @param RequestParameterService $parameterService Control
    *   structure holding the request parameters to bind to.
    *
    * @param RecipientsFilter $recipientsFilter Already bound
@@ -492,8 +486,8 @@ Störung.';
    *   bound to $parameterservice.
    */
   public function bind(
-    RequestParameterService $parameterService
-    , RecipientsFilter $recipientsFilter = null
+    RequestParameterService $parameterService,
+    RecipientsFilter $recipientsFilter = null,
   ) {
     $this->parameterService = $parameterService;
 
@@ -627,8 +621,14 @@ Störung.';
     return $this->recipientsFilter;
   }
 
-  /** Fetch a CGI-variable out of the form-select name-space */
-  private function cgiValue($key, $default = null)
+  /**
+   * Fetch a CGI-variable out of the form-select name-space.
+   *
+   * @param string $key The key to query.
+   *
+   * @param null|mixed $default
+   */
+  private function cgiValue(string $key, $default = null):?string
   {
     if (isset($this->cgiData[$key])) {
       $value = $this->cgiData[$key];
@@ -642,19 +642,9 @@ Störung.';
   }
 
   /**
-   * Return true if this email needs per-member substitutions. Up to
-   * now validation is not handled here, but elsewhere. Still this
-   * is not a static method (future ...)
-   */
-  private function isMemberTemplateEmail($message)
-  {
-    return preg_match('/([^$]|^)[$]{MEMBER::[^}]+}/', $message);
-  }
-
-  /**
    * Fill the $this->substitutions array.
    */
-  private function generateSubstitutionHandlers()
+  private function generateSubstitutionHandlers():void
   {
     $this->generateGlobalSubstitutionHandlers();
 
@@ -803,19 +793,19 @@ Störung.';
             $doSpecificField = true;
             $found = true;
             switch ($specificField->first()->getDataType()) {
-            case FieldType::SERVICE_FEE:
-              $fieldsByType = ['monetary' => $specificField ];
-              if (!empty($specificField->first()->getDepositDueDate())) {
-                $fieldsByType['deposit'] = $specificField;
-              }
-              break;
-            case FieldType::CLOUD_FILE:
-            case FieldType::DB_FILE:
-              $fieldsByType = [ 'file' => $specificField ];
-              break;
-            default:
-              $fieldsByType = [ 'other' => $specificField ];
-              break;
+              case FieldType::SERVICE_FEE:
+                $fieldsByType = ['monetary' => $specificField ];
+                if (!empty($specificField->first()->getDepositDueDate())) {
+                  $fieldsByType['deposit'] = $specificField;
+                }
+                break;
+              case FieldType::CLOUD_FILE:
+              case FieldType::DB_FILE:
+                $fieldsByType = [ 'file' => $specificField ];
+                break;
+              default:
+                $fieldsByType = [ 'other' => $specificField ];
+                break;
             }
           } else {
             foreach (array_keys($fieldsByType) as $type) {
@@ -927,7 +917,7 @@ Störung.';
               }
             }
             $html .= '</ul>';
-          } else if ($type == 'monetary' || $type == 'deposit') {
+          } elseif ($type == 'monetary' || $type == 'deposit') {
 
             $headerReplacements = [
               'option' => $this->l->t('Option'),
@@ -940,7 +930,7 @@ Störung.';
             $header = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['header'];
             foreach ($headerReplacements as $key => $replacement) {
               $keyVariants = array_map(
-                function($key) { return '['.$key.']'; },
+                fn($key) => '['.$key.']',
                 $this->translationVariants($key)
               );
               $header = str_ireplace($keyVariants, $replacement, $header);
@@ -993,25 +983,25 @@ Störung.';
                     $receivableDueDate = '';
                   }
 
-                  $option = $fieldOption->getLabel() ?: $field->getName();
+                  $option = $fieldOption->getLabel() ?: $field->getName(); // phpmd:ignore
 
                   $fieldData = $projectParticipant->getParticipantFieldsDatum($fieldOption->getKey());
 
                   $totals = '--';
                   $received = '--';
-                  $remaining = '--';
+                  $remaining = '--'; // phpmd:ignore
                   $memberNames = [];
 
                   if (!empty($fieldData)) {
                     switch ($type) {
-                    case 'monetary':
-                      $totals = $fieldData->amountPayable();
-                      $received = $fieldData->amountPaid();
-                      break;
-                    case 'deposit':
-                      $totals = $fieldData->depositAmount();
-                      $received = min($totals, $fieldData->amountPaid());
-                      break;
+                      case 'monetary':
+                        $totals = $fieldData->amountPayable();
+                        $received = $fieldData->amountPaid();
+                        break;
+                      case 'deposit':
+                        $totals = $fieldData->depositAmount();
+                        $received = min($totals, $fieldData->amountPaid());
+                        break;
                     }
                     $remaining = $totals - $received;
 
@@ -1023,7 +1013,7 @@ Störung.';
                         $memberNames[] = $groupMember->getMusician()->getPublicName(true);
                       }
                     }
-                  } else if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE) {
+                  } elseif ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE) {
                     if ($fieldOption != $field->getSelectableOptions()->last()) {
                       // make sure we only include the option the participant has booked.
                       continue;
@@ -1038,7 +1028,7 @@ Störung.';
                       $replacements[$key] = ${$key};
                       continue;
                     }
-                    if ($key == 'dueDate' ) {
+                    if ($key == 'dueDate') {
                       $replacements[$key] = $receivableDueDate
                         ? $receivableDueDate
                         : ($numberOfOptions === 1
@@ -1065,7 +1055,7 @@ Störung.';
                   $row = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['row'];
                   foreach ($replacementKeys as $key) {
                     $keyVariants = array_map(
-                      function($key) { return '['.$key.']'; },
+                      fn($key) => '['.$key.']',
                       $this->translationVariants($key)
                     );
                     $row = str_ireplace($keyVariants, $replacements[$key], $row);
@@ -1104,7 +1094,7 @@ Störung.';
                     $fieldHeader = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['fieldHeader'];
                     foreach ($replacements as $key => $replacement) {
                       $keyVariants = array_map(
-                        function($key) { return '['.$key.']'; },
+                        fn($key) => '['.$key.']',
                         $this->translationVariants($key)
                       );
                       $fieldHeader = str_ireplace($keyVariants, $replacement, $fieldHeader);
@@ -1131,26 +1121,26 @@ Störung.';
             $footer = self::DEFAULT_HTML_TEMPLATES['monetary-fields']['footer'];
             foreach ($replacementKeys as $key) {
               switch ($key) {
-              case 'option':
-                $key = 'label';
-                break;
-              case 'dueDate':
-                if (!empty($totalSum['dueDate'])) {
-                  $minDate = $formatter->formatDate($totalSum['dueDate']['min'], 'short');
-                  $maxDate = $formatter->formatDate($totalSum['dueDate']['max'], 'short');
-                  if (true || $minDate == $maxDate) {
-                    $totalSum['dueDate'] = $formatter->formatDate($totalSum['dueDate']['max'], 'medium');
-                  } else {
-                    $totalSum['dueDate'] = $minDate . ' - ' . $maxDate;
+                case 'option':
+                  $key = 'label';
+                  break;
+                case 'dueDate':
+                  if (!empty($totalSum['dueDate'])) {
+                    $minDate = $formatter->formatDate($totalSum['dueDate']['min'], 'short');
+                    $maxDate = $formatter->formatDate($totalSum['dueDate']['max'], 'short');
+                    if (true || $minDate == $maxDate) {
+                      $totalSum['dueDate'] = $formatter->formatDate($totalSum['dueDate']['max'], 'medium');
+                    } else {
+                      $totalSum['dueDate'] = $minDate . ' - ' . $maxDate;
+                    }
                   }
-                }
-                break;
-              default:
-                $totalSum[$key] = $this->moneyValue($totalSum[$key]);
-                break;
+                  break;
+                default:
+                  $totalSum[$key] = $this->moneyValue($totalSum[$key]);
+                  break;
               }
               $keyVariants = array_map(
-                function($key) { return '['.$key.']'; },
+                fn($key) => '['.$key.']',
                 $this->translationVariants($key)
               );
               $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
@@ -1364,7 +1354,7 @@ Störung.';
           $header = $tableTemplate['header'];
           foreach ($replacementKeys as $key) {
             $keyVariants = array_map(
-              function($key) { return '['.$key.']'; },
+              fn($key) => '['.$key.']',
               $this->translationVariants($key)
             );
             $header = str_ireplace($keyVariants, $headerReplacements[$key], $header);
@@ -1402,7 +1392,7 @@ Störung.';
             $row = $rowTemplate;
             foreach ($replacementKeys as $key) {
               $keyVariants = array_map(
-                function($key) { return '['.$key.']'; },
+                fn($key) => '['.$key.']',
                 $this->translationVariants($key)
               );
               $row = str_ireplace($keyVariants, $replacements[$key], $row);
@@ -1416,7 +1406,7 @@ Störung.';
               $totalSum[$key] = $this->moneyValue($totalSum[$key]);
             }
             $keyVariants = array_map(
-              function($key) { return '['.$key.']'; },
+              fn($key) => '['.$key.']',
               $this->translationVariants($key)
             );
             $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
@@ -1434,7 +1424,10 @@ Störung.';
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) { $keyArg[0] = $key; return $handler($keyArg, $musician); };
+        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) {
+          $keyArg[0] = $key;
+          return $handler($keyArg, $musician);
+        };
       }
     }
   }
@@ -1690,11 +1683,11 @@ Störung.';
         }
       }
 
-      // Finally send one message without template substitution (as
-      // this makes no sense) to all Cc:, Bcc: recipients and the
-      // catch-all. This Message also gets copied to the Sent-folder
-      // on the imap server.
-
+      // Finally send one message without template substitution (as this makes
+      // no sense) to all Cc:, Bcc: recipients and the catch-all. This Message
+      // also gets copied to the Sent-folder on the imap server. This message
+      // is allowed to fail the duplicates check as form-letters for standard
+      // purposes naturally generate duplicates.
 
       ++$this->diagnostics['TotalCount'];
       $mimeMsg = $this->composeAndSend(
@@ -1704,6 +1697,7 @@ Störung.';
         references: $references,
         customHeaders: self::HEADER_MARKER_SENT,
         doNotReply: true,
+        allowDuplicates: true,
       );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
@@ -1961,9 +1955,8 @@ Störung.';
       /** @var Entities\ProjectParticipantField $field */
       $field = $this->entityManager->find(Entities\ProjectParticipantField::class, $attachment['field_id']);
       if (empty($field)) {
-        $this->logError('Unable to find attachment field "%s".', $fieldId);
+        $this->logError('Unable to find attachment field "%s".', $field->getId());
         $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
-        $attachmentFailure = true;
         continue;
       }
 
@@ -1980,7 +1973,6 @@ Störung.';
         default:
           $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
           $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
-          $attachmentFailure = true;
           continue 2;
       }
 
@@ -1996,7 +1988,6 @@ Störung.';
       if ($fieldData->count() > 1 && $fieldMultiplicity == FieldMultiplicity::SIMPLE) {
         $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldType, $fieldMultiplicity));
         $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
-        $attachmentFailure = true;
         continue;
       }
 
@@ -2186,10 +2177,18 @@ Störung.';
 
     if ($authenticate) {
       switch ($this->getConfigValue('smtpsecure')) {
-        case 'insecure': $phpMailer->SMTPSecure = ''; break;
-        case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
-        case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
-        default:         $phpMailer->SMTPSecure = ''; break;
+        case 'insecure':
+          $phpMailer->SMTPSecure = '';
+          break;
+        case 'starttls':
+          $phpMailer->SMTPSecure = 'tls';
+          break;
+        case 'ssl':
+          $phpMailer->SMTPSecure = 'ssl';
+          break;
+        default:
+          $phpMailer->SMTPSecure = '';
+          break;
       }
       $phpMailer->SMTPAuth = true;
       $phpMailer->Username = $this->getConfigValue('emailuser');
@@ -2281,14 +2280,14 @@ Störung.';
     </div>
   </body>
 </html>', [
-        $this->getLanguage(),
-        $shareLink,
-        $fileName,
-        Util::humanFileSize($downloadFile->getSize()),
-        $mimeType,
-        30,
-        $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-      ]);
+          $this->getLanguage(),
+          $shareLink,
+          $fileName,
+          Util::humanFileSize($downloadFile->getSize()),
+          $mimeType,
+          30,
+          $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
+        ]);
       $data = $downloadAttachment;
       $fileName = $fileName . '.html';
       $transferEncoding = '8bit';
@@ -2429,6 +2428,10 @@ Störung.';
    *
    * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
    *
+   * @param bool $doNotReply Add a reply-to header with a no-reply address
+   *
+   * @param bool $allowDuplicates Skip the duplicates check.
+   *
    * @return array
    * ```
    * [
@@ -2447,6 +2450,7 @@ Störung.';
     $references = null,
     $customHeaders = [],
     $doNotReply = false,
+    $allowDuplicates = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
@@ -2504,16 +2508,16 @@ Störung.';
           $this->l->t('DO NOT REPLY')
         );
       } else {
-        $phpMailer->AddReplyTo($senderEmail, $senderName);
+        $phpMailer->addReplyTo($senderEmail, $senderName);
       }
-      $phpMailer->SetFrom($senderEmail, $senderName);
+      $phpMailer->setFrom($senderEmail, $senderName);
 
       if (!$this->constructionMode) {
         // Loop over all data-base records and add each recipient in turn
         foreach ($EMails as $recipient) {
           if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
             $phpMailer->AddAddress($recipient['email'], $recipient['name']);
-          } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
+          } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
             // blind copy, don't expose the victim to the others.
             $phpMailer->AddBCC($recipient['email'], $recipient['name']);
           } else {
@@ -2581,11 +2585,12 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage($calendar,
-                                           md5($this->projectName.'.ics'),
-                                           $this->projectName.'.ics',
-                                           'quoted-printable',
-                                           'text/calendar');
+        $phpMailer->AddStringEmbeddedImage(
+          $calendar,
+          md5($this->projectName.'.ics'),
+          $this->projectName.'.ics',
+          'quoted-printable',
+          'text/calendar');
       }
 
       // All extra (in particular: personal) attachments.
@@ -2611,7 +2616,7 @@ Störung.';
     }
 
     /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = $this->sentEmail($logMessage);
+    $sentEmail = $this->sentEmail($logMessage, allowDuplicates: $allowDuplicates);
     if (!$sentEmail) {
       return false;
     }
@@ -2774,7 +2779,7 @@ Störung.';
 
     if (($ret1 = $imap->selectMailbox('Sent')) === true) {
       $ret1 = $imap->appendMessage($mimeMessage, 'Sent');
-    } else if (($ret2 = $imap->selectMailbox('INBOX.Sent')) === true) {
+    } elseif (($ret2 = $imap->selectMailbox('INBOX.Sent')) === true) {
       $ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent');
     }
     if ($ret1 !== true && $ret2 !== true) {
@@ -2795,13 +2800,14 @@ Störung.';
    * Log the sent message to the data base if it is new. Return false
    * if this is a duplicate, true otherwise.
    *
-   * @param $logMessage The email-message to record in the DB.
+   * @param SentEmailDTO $logMessage The email-message to record in the DB.
    *
-   * @param $allowDuplicates Whether or not to check for
+   * @param bool $allowDuplicates Whether or not to check for
    * duplicates. This is currently never set to true.
    *
+   * @return bool|Entities\SentEmail
    */
-  private function sentEmail(SentEmailDTO $logMessage, $allowDuplicates = false)
+  private function sentEmail(SentEmailDTO $logMessage, bool $allowDuplicates = false)
   {
     /** @var Entities\SentEmail $sentEmail */
     $sentEmail = new Entities\SentEmail;
@@ -2950,7 +2956,7 @@ Störung.';
       foreach ($eMails as $recipient) {
         if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
           $phpMailer->AddAddress($recipient['email'], $recipient['name']);
-        } else if ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
+        } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
           // blind copy, don't expose the victim to the others.
           $phpMailer->AddBCC($recipient['email'], $recipient['name']);
         } else {
@@ -3408,7 +3414,7 @@ Störung.';
       return [];
     }
 
-    $phpMailer = new PHPMailer(true);
+    $phpMailer = new PHPMailer(exceptions: true);
     $parser = new \Mail_RFC822(null, null, null, false);
 
     $brokenRecipients = [];
@@ -3432,7 +3438,7 @@ Störung.';
         }
         if ($emailRecord->host === 'localhost') {
           $brokenRecipients[] = htmlspecialchars($recipient);
-        } else if (!$phpMailer->validateAddress($email)) {
+        } elseif (!$phpMailer->validateAddress($email)) {
           $brokenRecipients[] = htmlspecialchars($recipient);
         } else {
           $recipients[] = array('email' => $email,
@@ -3629,10 +3635,10 @@ Störung.';
       'PROJECT' => function($key) {
         $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
-      'BANK_TRANSACTION_DUE_DATE' => function($key) { return ''; },
-      'BANK_TRANSACTION_DUE_DAYS' => function($key) { return ''; },
-      'BANK_TRANSACTION_SUBMIT_DATE' => function($key) { return ''; },
-      'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) { return ''; },
+      'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
+      'BANK_TRANSACTION_DUE_DAYS' => fn($key) => '',
+      'BANK_TRANSACTION_SUBMIT_DATE' => fn($key) => '',
+      'BANK_TRANSACTION_SUBMIT_DAYS' => fn($key) => '',
 
       /**
        * Support date substitutions. Format is
@@ -4677,7 +4683,7 @@ Störung.';
             }
             $attachment['sub_options'][] = $subOption;
           }
-          usort($attachment['sub_options'], function($a, $b) { return strcmp($a['name'], $b['name']); });
+          usort($attachment['sub_options'], fn($a, $b) => strcmp($a['name'], $b['name']));
         }
         $serviceFeeAttachments[] = $attachment;
       } else {
@@ -4778,12 +4784,12 @@ Störung.';
 
     $localFileAttach = [];
     $cloudFileAttach = [];
-    foreach(($fileAttach ?? []) as $origin => $attachment) {
+    foreach (($fileAttach ?? []) as $origin => $attachment) {
       $attachment['value'] = 'tmp_name';
       $origin = $attachment['origin'];
       if ($attachment['status'] == 'new') {
         $attachment['status'] = 'selected';
-      } else if (isset($selectedAttachments[$origin . ':' . $attachment['tmp_name']])) {
+      } elseif (isset($selectedAttachments[$origin . ':' . $attachment['tmp_name']])) {
         $attachment['status'] = 'selected';
       } else {
         $attachment['status'] = 'inactive';
@@ -4797,7 +4803,7 @@ Störung.';
       }
     }
 
-    $comparator = function($a, $b) { return strcmp($a['name'], $b['name']); };
+    $comparator = fn($a, $b) => strcmp($a['name'], $b['name']);
     usort($cloudFileAttach, $comparator);
     usort($localFileAttach, $comparator);
 
@@ -4815,7 +4821,7 @@ Störung.';
     $fileAttachments = array_merge($this->fileAttachments(), $this->blankTemplateAttachments(), $this->personalAttachments());
 
     $selectOptions = [];
-    foreach($fileAttachments as $attachment) {
+    foreach ($fileAttachments as $attachment) {
       $value = $attachment[$attachment['value']];
       $name = $attachment['name'];
       if (isset($attachment['size'])) {
@@ -4824,10 +4830,19 @@ Störung.';
       }
       $origin = $attachment['origin'];
       switch ($origin) {
-        case AttachmentOrigin::TEMPLATE: $group = $this->l->t('Blank Template'); $name .= ' (' . $this->l->t('blank') . ')'; break;
-        case AttachmentOrigin::PARTICIPANT_FIELD: $group = $this->l->t('Personalized'); break;
-        case AttachmentOrigin::CLOUD: $group = $this->l->t('Cloud'); break;
-        case AttachmentOrigin::UPLOAD: $group = $this->l->t('Local Filesystem'); break;
+        case AttachmentOrigin::TEMPLATE:
+          $group = $this->l->t('Blank Template');
+          $name .= ' (' . $this->l->t('blank') . ')';
+          break;
+        case AttachmentOrigin::PARTICIPANT_FIELD:
+          $group = $this->l->t('Personalized');
+          break;
+        case AttachmentOrigin::CLOUD:
+          $group = $this->l->t('Cloud');
+          break;
+        case AttachmentOrigin::UPLOAD:
+          $group = $this->l->t('Local Filesystem');
+          break;
       }
       $groupData = [ 'origin' => $origin, ];
       if (isset($attachment['sub_topic'])) {

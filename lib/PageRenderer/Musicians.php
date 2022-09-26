@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -54,11 +55,13 @@ class Musicians extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianEmailsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
+  const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
 
   /** @var GeoCodingService */
   private $geoCodingService;
@@ -138,19 +141,23 @@ class Musicians extends PMETableViewBase
     ],
   ];
 
+  /** @var Entities\Project */
+  private $project;
+
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , GeoCodingService $geoCodingService
-    , ContactsService $contactsService
-    , PhoneNumberService $phoneNumberService
-    , InstrumentInsuranceService $insuranceService
-    , MusicianService $musicianService
-    , MailingListsService $listsService
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    GeoCodingService $geoCodingService,
+    ContactsService $contactsService,
+    PhoneNumberService $phoneNumberService,
+    InstrumentInsuranceService $insuranceService,
+    MusicianService $musicianService,
+    MailingListsService $listsService,
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
@@ -170,41 +177,71 @@ class Musicians extends PMETableViewBase
     }
   }
 
-  public function cssClass():string { return self::CSS_CLASS; }
+  /** @return string */
+  public function cssClass():string
+  {
+    return self::CSS_CLASS;
+  }
 
-  public function enableProjectMode()
+  /**
+   * Enable the project-mode which is used to add new participants to a
+   * project. In effect, all persons are shown except those already
+   * participating in the project and some additional controls are geneated in
+   * order to select new participants.
+   *
+   * @return void
+   */
+  public function enableProjectMode():void
   {
     $this->projectMode = true;
     $this->setTemplate(self::ADD_TEMPLATE);
+    if (empty($this->projectId)) {
+      $this->logInfo('NO PROJECT ID ?????');
+    }
+    if (empty($this->project)) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      if (empty($this->projectName)) {
+        $this->projectName = $this->project->getName();
+      }
+    }
   }
 
-  public function disableProjectMode()
+  /**
+   * Disable project mode.
+   *
+   * @see enableProjectMode()
+   *
+   * @return void
+   */
+  public function disableProjectMode():void
   {
     $this->projectMode = false;
     $this->setTemplate(self::ALL_TEMPLATE);
   }
 
-  /** Short title for heading. */
-  public function shortTitle() {
+  /** {@inheritdoc} */
+  public function shortTitle()
+  {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove all data of the displayed musician?');
-    } else if ($this->copyOperation()) {
+    } elseif ($this->copyOperation()) {
       return $this->l->t('Copy the displayed musician?');
-    } else if ($this->viewOperation()) {
+    } elseif ($this->viewOperation()) {
       return $this->l->t('Display of all stored personal data for the shown musician.');
-    } else if ($this->changeOperation()) {
+    } elseif ($this->changeOperation()) {
       return $this->l->t('Edit the personal data of the displayed musician.');
-    } else if ($this->addOperation()) {
+    } elseif ($this->addOperation()) {
       return $this->l->t('Add a new musician to the data-base.');
-    } else if (!$this->projectMode) {
+    } elseif (!$this->projectMode) {
       return $this->l->t('Overview over all registered musicians');
     } else {
       return $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
     }
   }
 
-  /** Header text informations. */
-  public function headerText() {
+  /** {@inheritdoc} */
+  public function headerText()
+  {
     $header = $this->shortTitle();
     if ($this->projectMode) {
       $title = $this->l->t("This page is the only way to add musicians to projects in order to
@@ -217,7 +254,7 @@ make sure that the musicians are also automatically added to the
     return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true)
   {
     $template        = $this->template;
@@ -339,21 +376,29 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
     ];
 
+    if ($this->addOperation()) {
+      $addCSS = 'add-musician';
+    } else {
+      $addCSS = '';
+    }
+
+    list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(css: [ $addCSS ]);
+    $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
+
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts();
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::INSTRUMENTS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-        break;
-      default:
-        break;
+        case self::INSTRUMENTS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          break;
+        default:
+          break;
       }
     });
 
-    // @todo still true? must come after the key-def fdd
     $joinTables = $this->defineJoinStructure($opts);
 
     $bval = strval($this->l->t('Add to %s', [ $projectName ]));
@@ -367,8 +412,7 @@ make sure that the musicians are also automatically added to the
         'options' => 'VCLR',
         'input' => 'V',
         'sql' => '$main_table.id',
-        'php' => function($musicianId, $action, $k, $row, $recordId, $pme)
-          use($bval, $tip) {
+        'php' => function($musicianId, $action, $k, $row, $recordId, $pme) use ($bval, $tip) {
             return '<div class="register-musician">'
               .'  <input type="button"'
               .'         value="'.$bval.'"'
@@ -382,12 +426,6 @@ make sure that the musicians are also automatically added to the
         'nowrap' => true,
         'sort' =>false,
       ];
-    }
-
-    if ($this->addOperation()) {
-      $addCSS = 'add-musician';
-    } else {
-      $addCSS = '';
     }
 
     $opts['fdd']['sur_name'] = [
@@ -563,9 +601,18 @@ make sure that the musicians are also automatically added to the
     $fdd = [
       'name'        => $this->l->t('Instruments'),
       'tab'         => ['id' => 'orchestra'],
-      'css'         => ['postfix' => [ 'musician-instruments', 'tooltip-top', 'no-chosen', 'selectize', 'drag-drop', ], ],
+      'css'         => [
+        'postfix' => [
+          'musician-instruments',
+          'tooltip-top',
+          'no-chosen',
+          'selectize',
+        ],
+      ],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT
+  IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
+  ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -580,6 +627,14 @@ make sure that the musicians are also automatically added to the
       'valueGroups' => $this->instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
+      ],
+      'display' => [
+        'attributes' => [
+          'data-selectize-options' => [
+            'create' => false,
+            'plugins' => [ 'drag_drop', ],
+          ],
+        ],
       ],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
@@ -616,6 +671,13 @@ make sure that the musicians are also automatically added to the
         'filter' => [
           'having' => true,
           // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+        ],
+        'display' => [
+          'attributes' => [
+            'data-selectize-options' => [
+              'create' => false,
+            ],
+          ],
         ],
       ]);
 
@@ -723,12 +785,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
     ];
 
-    $opts['fdd']['email'] = $this->defaultFDD['email'];
-    $opts['fdd']['email']['tab'] = ['id' => 'contact'];
-    $opts['fdd']['email']['input'] = ($opts['fdd']['email']['input'] ?? '') . 'M';
-    $opts['fdd']['email']['css|VD'] = [ 'postfix' => [ 'email', ], ];
-    $opts['fdd']['email']['css']['postfix'][] = 'duplicates-indicator';
-    $opts['fdd']['email']['css']['postfix'][] = $addCSS;
+    $emailFieldGenerator($opts['fdd']);
 
     $opts['fdd']['mailing_list'] = $this->announcementsSubscriptionControls(emailSql: '$table.email', columnTabs: [ 'orchestra', 'contact', ]);
 
@@ -861,7 +918,7 @@ make sure that the musicians are also automatically added to the
        'sql' => 'SUM($join_col_fqn)',
        'escape' => false,
        'nowrap' => true,
-       'sort' =>false,
+       'sort' => false,
        'css' => [ 'postfix' => [ 'restrict-height', ], ],
        'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
          $musicianId = $recordId['id'];
@@ -884,19 +941,19 @@ make sure that the musicians are also automatically added to the
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
-      'tab'      => ['id' => 'miscinfo'],
-      'input' => 'VRS',
-      'name' => $this->l->t('Photo'),
-      'select' => 'T',
-      'options' => 'APVCD',
-      'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $recordId['id'] ?? 0;
-        return $this->photoImageLink($musicianId, $action, $imageId);
-      },
-      'css' => ['postfix' => [ 'photo', ], ],
-      'default' => '',
-      'sort' => false
-    ]);
+        'tab'      => ['id' => 'miscinfo'],
+        'input' => 'VRS',
+        'name' => $this->l->t('Photo'),
+        'select' => 'T',
+        'options' => 'APVCD',
+        'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
+          $musicianId = $recordId['id'] ?? 0;
+          return $this->photoImageLink($musicianId, $action, $imageId);
+        },
+        'css' => ['postfix' => [ 'photo', ], ],
+        'default' => '',
+        'sort' => false
+      ]);
 
 //     ///////////////////// Test
 
@@ -909,19 +966,19 @@ make sure that the musicians are also automatically added to the
       'sql' => '$main_table.id',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
         // $this->logInfo('ROW: '.print_r($row, true));
-        switch($action) {
-        case 'change':
-        case 'display':
-          list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
-          $vcard = $this->contactsService->export($musician);
-          unset($vcard->PHOTO); // too much information
-          $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
-          sort($categories);
-          $vcard->CATEGORIES->setParts($categories);
-          // $this->logInfo($vcard->serialize());
-          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
-        default:
-          return '';
+        switch ($action) {
+          case 'change':
+          case 'display':
+            list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
+            $vcard = $this->contactsService->export($musician);
+            unset($vcard->PHOTO); // too much information
+            $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
+            sort($categories);
+            $vcard->CATEGORIES->setParts($categories);
+            // $this->logInfo($vcard->serialize());
+            return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
+          default:
+            return '';
         }
       },
       'default' => '',
@@ -1000,11 +1057,11 @@ make sure that the musicians are also automatically added to the
           switch ($newVals['mailing_list'] ?? '') {
             case 'invite':
               $this->logInfo('SHOULD INVITE TO MAILING LIST');
-              $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->invite($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
               break;
             case 'subscribe':
               $this->logInfo('SHOULD SUBSCRIBE TO MAILING LIST');
-              $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->subscribe($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
               break;
             default:
               $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
@@ -1050,24 +1107,24 @@ make sure that the musicians are also automatically added to the
   /**
    * This is a phpMyEdit before-SOMETHING trigger.
    *
-   * phpMyEdit calls the trigger (callback) with
-   * the following arguments:
+   * The phpMyEdit class calls the trigger (callback) with the following
+   * arguments:
    *
-   * @param $pme The phpMyEdit instance
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $step 'before' or 'after'
+   * @param string $step 'before' or 'after'.
    *
-   * @param $oldValues Self-explanatory.
+   * @param array $oldValues Self-explanatory.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newValues Set of new values, which may also be modified.
+   * @param null|array $newValues Set of new values, which may also be modified.
    *
-   * @return boolean If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
@@ -1077,7 +1134,6 @@ make sure that the musicians are also automatically added to the
 
     return true; // but run further triggers if appropriate
   }
-
 }
 
 // Local Variables: ***

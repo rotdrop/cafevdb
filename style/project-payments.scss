@@ -41,6 +41,11 @@
             display:none;
           }
         }
+        &:not(.project-payment) {
+          td.instrumentation-id {
+            padding-right:1em;
+          }
+        }
       }
 
       &.project-payment {
@@ -59,7 +64,7 @@
       }
     }
   }
-  &list, &view, &copy, &change, &delete {
+  &list, &view, &copy, &add, &copyadd, &change, &delete {
     td.pme- {
       &cell, &value {
         .operation {

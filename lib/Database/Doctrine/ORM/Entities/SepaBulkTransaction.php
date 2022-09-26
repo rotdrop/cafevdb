@@ -22,7 +22,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeInterface;
+use \DateTimeInterface;
+use \RuntimeException;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -211,6 +212,9 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function addTransactionData(EncryptedFile $data):SepaBulkTransaction
   {
+    if (empty($data->getId())) {
+      throw new RuntimeException('The transaction data does not have a file-id.');
+    }
     if (!$this->sepaTransactionData->containsKey($data->getId())) {
       $data->link();
       $this->sepaTransactionData->set($data->getId(), $data);
@@ -225,8 +229,8 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function removeTransactionData(EncryptedFile $data):SepaBulkTransaction
   {
-    if ($this->sepaTransactionData->containsKey($data->getId())) {
-      $this->sepaTransactionData->remove($data->getId());
+    if ($this->sepaTransactionData->contains($data)) {
+      $this->sepaTransactionData->removeElement($data);
       $data->unlink();
     }
     return $this;

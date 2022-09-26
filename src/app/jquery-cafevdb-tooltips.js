@@ -28,11 +28,32 @@
  */
 
 import $ from './jquery.js';
+import { appName } from './app-info.js';
 import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.css');
 
 console.log('jquery-cafevdb-tooltips');
+
+const whiteList = $.extend(
+  {},
+  $.fn.tooltip.Constructor.Default.whiteList,
+  {
+    table: [], thead: [], tbody: [], tr: [], td: [], th: [], dl: [], dt: [], dd: [],
+  }
+);
+
+const options = {
+  container: 'body',
+  html: true,
+  sanitize: true, // @todo just tweak whitelist
+  whiteList,
+  placement: 'auto',
+  cssclass: [],
+  fallbackPlacement: 'flip',
+  boundary: 'viewport',
+  // delay: { show: 500, hide: 100000 },
+};
 
 /**
  * Extend the tooltips to honour some special class elements, and
@@ -49,24 +70,6 @@ $.fn.cafevTooltip = function(argument) {
     argument = {};
   }
   if (typeof argument === 'object' && argument != null) {
-    const whiteList = $.extend(
-      {},
-      $.fn.tooltip.Constructor.Default.whiteList,
-      {
-        table: [], thead: [], tbody: [], tr: [], td: [], th: [], dl: [], dt: [], dd: [],
-      }
-    );
-    const options = {
-      container: 'body',
-      html: true,
-      sanitize: true, // @todo just tweak whitelist
-      whiteList,
-      placement: 'auto',
-      cssclass: [],
-      fallbackPlacement: 'flip',
-      boundary: 'viewport',
-      // delay: { show: 500, hide: 100000 },
-    };
     argument = $.extend(true, {}, options, argument);
     if (typeof argument.placement === 'string') {
       const words = argument.placement.split(' ');
@@ -108,17 +111,45 @@ $.fn.cafevTooltip = function(argument) {
         }
       }
       $.fn.tooltip.call(self, 'dispose');
-      const originalTitle = self.data('original-title');
-      if (originalTitle && !self.attr('title')) {
-        self.attr('title', originalTitle);
+      const appTitle = self.data(appName + 'Title');
+      if (appTitle && !self.attr('title')) {
+        self.attr('title', appTitle);
+      } else {
+        const originalTitle = self.data('original-title');
+        if (originalTitle && !self.attr('title')) {
+          self.attr('title', originalTitle);
+        }
       }
+      self.removeData(appName + 'Title');
+      self.removeAttr('data-' + appName + '-title');
       self.removeAttr('data-original-title');
       self.removeData('original-title');
-      const title = self.attr('title');
-      if (title === undefined || title.trim() === '') {
+      // const title = self.attr('title');
+      // if ((title === undefined || title.trim() === '') && !self.is(':invalid')) {
+      //   self.removeAttr('title');
+      //   self.cafevTooltip('destroy');
+      //   return;
+      // }
+      if (!selfOptions.title) {
+        self.data(appName + 'Title', self.attr('title'));
+        self.attr('data-' + appName + '-title', self.attr('title'));
         self.removeAttr('title');
-        self.cafevTooltip('destroy');
-        return;
+        selfOptions.title = function() {
+          const $this = $(this);
+          const originalTitle = $this.data(appName + 'Title');
+          if ($this.is(':invalid')) {
+            const invalidHint = t(appName, 'Please fill out this field!');
+            if (!selfOptions.html) {
+              return invalidHint + (originalTitle ? '\n' + originalTitle : '');
+            }
+            let titleHtml = `<div class="tooltip-field-required">${invalidHint}</div>`;
+            if (originalTitle) {
+              titleHtml += `<div class="tooltip-original-title">${originalTitle}</div>`;
+            }
+            return titleHtml;
+          }
+          return originalTitle;
+        };
       }
       if (!selfOptions.template) {
         selfOptions.template = '<div class="tooltip '

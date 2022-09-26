@@ -192,11 +192,24 @@ const contactValidation = function(container) {
         });
     });
 
-  const $emailInput = $form.find('input[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+  const $emailInput = $form.find('[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+  const $allEmailsInput = $form.find('[name$="MusicianEmailAddresses@all:address[]"]');
+
+  $allEmailsInput
+    .off('change')
+    .on('change', function(event) {
+      const allEmails = selectedValues($allEmailsInput);
+      console.info('ALL EMAILS', allEmails);
+      if (allEmails.length > 0) {
+        $emailInput.val(allEmails[0]).trigger('change');
+      }
+      $.fn.cafevTooltip.remove();
+      return false;
+    });
 
   $emailInput
-    .off('blur')
-    .on('blur', function(event) {
+    .off('blur, change')
+    .on('blur, change', function(event) {
 
       event.stopImmediatePropagation();
 
@@ -261,11 +274,13 @@ const contactValidation = function(container) {
 
       $.fn.cafevTooltip.remove(); // remove pending tooltips ...
 
-      $.post(generateUrl('mailing-lists/' + operation), {
+      const post = {
         list: 'announcements',
         email,
         displayName,
-      })
+      };
+
+      $.post(generateUrl('mailing-lists/' + operation), post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {
           });
@@ -289,6 +304,10 @@ const contactValidation = function(container) {
         });
       return false;
     });
+  // Trigger reload on page load. The problem is that meanwhile some
+  // data-base fixups run on events after the legacy PME code has
+  // generated its HTML output.
+  $mailingListOperations.filter('.reload').trigger('click');
 
   const address = $form.find('input.musician-address');
   const city = address.filter('.city');

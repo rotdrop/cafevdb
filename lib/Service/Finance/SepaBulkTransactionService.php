@@ -174,7 +174,6 @@ class SepaBulkTransactionService
   {
     $payments = new ArrayCollection();
     $totalAmount = 0.0;
-    $subjects = [];
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -248,18 +247,12 @@ class SepaBulkTransactionService
 
         $payments->add($payment);
         $totalAmount += $debitAmount;
-        $subjects[] = $payment->getSubject();
       }
     }
 
-    // try to compact the subject ...
-    $purpose = self::generateCompositeSubject($subjects);
-
-    // prefix the subject with the project-slug
-    $purposePrefix = $this->generateSubjectPrefix($project);
-    $purpose = $purposePrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
-
-    $compositePayment->setMusician($participant->getMusician())
+    $compositePayment
+      ->setMusician($participant->getMusician())
+      ->setProject($participant->getProject())
       ->setAmount($totalAmount)
       ->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
 
@@ -440,7 +433,6 @@ class SepaBulkTransactionService
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
-        $bulkTransaction->addTransactionData($exportFile);
       } else {
         $exportFile
           ->setFileName($fileName)
@@ -452,6 +444,8 @@ class SepaBulkTransactionService
       $this->entityManager->beginTransaction();
       try {
         $this->persist($exportFile);
+        $this->flush();
+        $bulkTransaction->addTransactionData($exportFile);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {

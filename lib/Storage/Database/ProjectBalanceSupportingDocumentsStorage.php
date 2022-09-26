@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -47,6 +48,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   /** @var ProjectService */
   private $projectService;
 
@@ -195,7 +198,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**  {@inheritdoc} */
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return $this->project->getFinancialBalanceSupportingDocumentsChanged();
+    return self::ensureDate($this->project->getFinancialBalanceSupportingDocumentsChanged());
   }
 
   /** {@inheritdoc} */
@@ -420,6 +423,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         if ($mtime !== null) {
           $file->setCreated($mtime);
         }
+        $this->persist($file);
+        $this->flush();
         $containerEntity->addDocument($file);
       }
       if ($mtime !== false) {
@@ -437,6 +442,31 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  /**
+   * Parse the given path and return the project name and the supporting
+   * document sequence number.
+   *
+   * @param string $path
+   *
+   * @return array
+   * ```
+   * [ 'projectName' => NAME, 'sequence' => SEQUENCE, ]
+   * ```
+   */
+  private static function parsePath(string $path):array
+  {
+    $pathInfo = self::pathInfo($path);
+    if (empty($pathInfo['dirname']) && empty($pathInfo['filename'])) {
+      return [ 'projectName' => null, 'sequence' => null ];
+    } elseif (empty($pathInfo['dirname'])) {
+      $slug = trim($pathInfo['filename'], self::PATH_SEPARATOR);
+    } else {
+      $slug = trim($pathInfo['dirname'], self::PATH_SEPARATOR);
+    }
+    list($projectName, $sequence) = explode('-', $slug);
+    return [ 'projectName' => $projectName, 'sequence' => $sequence ];
+  }
+
   /** {@inheritdoc} */
   public function unlink($path)
   {
@@ -446,17 +476,31 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     /** @var Entities\EncryptedFile $file */
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
-      return false;
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Unable to find database entity for path "%s".', $path)
+      );
     }
-    $documentContainer = $file->getProjectBalanceSupportingDocument();
-    if (empty($documentContainer)) {
-      return false;
+    $this->logInfo('PATH ' . print_r(self::parsePath($path), true));
+    list('projectName' => $projectName, 'sequence' => $sequence) = self::parsePath($path);
+    if (empty($projectName) || empty($sequence)) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Cannot deduce project name or document sequence from path "%s".', $path)
+      );
     }
 
+    // filter the file's document containers, should not be so many ...
+    $containers = $file->getProjectBalanceSupportingDocuments()->filter(
+      fn(Entities\ProjectBalanceSupportingDocument $container) => $container->getProject()->getName() == $projectName && $container->getSequence() == $sequence
+    );
+    if (count($containers) != 1) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Unable to find document container for path "%s".', $path)
+      );
+    }
+    $documentContainer = $containers->first();
+
     try {
-      $documentContainer->removeDocument($file); // depends on orphanRemoval=true
-      $file->setProjectBalanceSupportingDocument(null);
-      $file->unlink();
+      $documentContainer->removeDocument($file);
 
       // break the link to the supporting documents of payments
       /** @var Entities\CompositePayment $compositePayment */
