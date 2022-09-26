@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\IUserManager;
+use OCP\AppFramework\IAppContainer;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,60 +35,40 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 
+/** Authenticated files-scan which is thus also able to scan the database-backed mounts */
 class FilesScan extends \OCA\Files\Command\Scan
 {
-  /** @var string */
-  private $appName;
+  use AuthenticatedCommandTrait;
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IUserSession */
-  private $userSession;
-
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IL10N $l10n
-    , IUserManager $userManager
-    , IUserSession $userSession
+    string $appName,
+    IL10N $l10n,
+    IUserManager $userManager,
+    IUserSession $userSession,
+    IAppContainer $appContainer,
   ) {
     parent::__construct($userManager);
+    $this->appName = $appName;
     $this->l = $l10n;
     $this->userManager = $userManager;
     $this->userSession = $userSession;
-    $this->appName = $appName;
-    if (empty($l10n)) {
-      throw new \RuntimeException('No IL10N :(');
-    }
+    $this->appContainer = $appContainer;
   }
 
+  /** {@inheritdoc} */
   protected function configure()
   {
     parent::configure();
     $this->setName('cafevdb:files-scan');
   }
 
+  /** {@inheritdoc} */
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
-    $helper = $this->getHelper('question');
-    $question = new Question('User: ', '');
-    $userId = $helper->ask($input, $output, $question);
-    $question = (new Question('Password: ', ''))->setHidden(true);
-    $password = $helper->ask($input, $output, $question);
-
-    // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $userId, $password ]));
-    $user = $this->userManager->get($userId);
-    $this->userSession->setUser($user);
-
-    // Login event-handler binds encryption-service and entity-manager
-    if ($this->userSession->login($userId, $password)) {
-      $output->writeln($this->l->t('Login succeeded.'));
-    } else {
-      $output->writeln($this->l->t('Login failed.'));
-      return Command::FAILURE;
+    $result = $this->authenticate($input, $output);
+    if ($result != 0) {
+      return $result;
     }
 
     return parent::execute($input, $output);

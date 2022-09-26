@@ -299,6 +299,14 @@ const getWidget = function($select) {
   }
 };
 
+const getSelectFromWidget = function($widget) {
+  if ($widget.hasClass('selectize-control') || $widget.hasClass('chosen-container')) {
+    const $element = $widget.prev();
+    return $element.is('select') ? $element : $();
+  }
+  return $();
+};
+
 /**
  * Flush the readonly and disabled properties from $select to the
  * underlying widget, if any.
@@ -403,6 +411,7 @@ export {
   getOptionValues as optionValues,
   getChildren as children,
   getWidget as widget,
+  getSelectFromWidget as selectFromWidget,
   locked,
   makePlaceholder,
 };

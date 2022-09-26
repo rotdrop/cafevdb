@@ -60,6 +60,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianEmailsTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -363,6 +364,12 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     // Tweak the join-structure with dynamic data.
+    list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(
+      musicianIdField: 'musician_id',
+      tableTab: 'contactdata',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
 
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts(
       'musician_id', [ $this->projectId, $this->membersProjectId ], $financeTab);
@@ -1043,9 +1050,7 @@ class ProjectParticipants extends PMETableViewBase
       ],
     ];
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'email',
-      array_merge($this->defaultFDD['email'], [ 'tab' => [ 'id' => [ 'musician', 'contactdata', ], ], ]));
+    $emailFieldGenerator($opts['fdd']);
 
     $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
       'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',

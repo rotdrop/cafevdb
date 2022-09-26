@@ -40,7 +40,7 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
-import { deselectAll as selectDeselectAll } from './select-utils.js';
+import { deselectAll as selectDeselectAll, widget as selectWidget } from './select-utils.js';
 import * as qs from 'qs';
 import {
   sys as pmeSys,
@@ -61,6 +61,7 @@ import 'jquery-ui/ui/effects/effect-highlight';
 import 'jquery-ui/ui/widgets/sortable';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
+import mergician from 'mergician';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 
@@ -1348,24 +1349,53 @@ function installInputSelectize(containerSel, onlyClass) {
 
   container.find('select.' + pmeInput + '.' + onlyClass).each(function(index) {
     const $self = $(this);
-    const plugins = ['remove_button'];
-    if ($self.hasClass('drag-drop')) {
-      plugins.push('drag_drop');
-    }
-    $self.selectize({
-      plugins,
-      delimiter: ',',
-      persist: false,
-      openOnFocus: false,
-      items: $self.data('initialValues'),
-      // closeAfterSelect: true,
-      create(input) {
-        return {
-          value: input,
-          text: input,
-        };
+    const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
+      {
+        plugins: ['remove_button'],
+        delimiter: ',',
+        persist: false,
+        hideSelected: false,
+        openOnFocus: false,
+        items: $self.data('initialValues'),
+        // closeAfterSelect: true,
+        create: false,
       },
-    });
+      $self.data('selectizeOptions') || {}
+    );
+    if (selectizeOptions.create && selectizeOptions.create !== true) {
+      const create = selectizeOptions.create;
+      const inputField = create.inputField || 'input';
+      const valueField = selectizeOptions.valueField || 'value';
+      const labelField = selectizeOptions.labelField || 'text';
+      if (create.url) {
+        selectizeOptions.create = function(input, setterCallback) {
+          $.post(generateUrl(create.url), {
+            ...(create.post || {}),
+            [inputField]: input,
+          })
+            .fail(function(xhr, status, errorThrown) {
+              Ajax.handleError(xhr, status, errorThrown);
+              setterCallback(false);
+            })
+            .done(function(data) {
+              if (!data || !data[valueField] || !data[labelField]) {
+                setterCallback(false);
+              }
+              setterCallback(data);
+            });
+        };
+      } else {
+        selectizeOptions.create = function(input) { return { [valueField]: input, [labelField]: input }; };
+      }
+    }
+    // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
+    $self.selectize(selectizeOptions);
+    const $selectWidget = selectWidget($self);
+    const toolTip = $self.attr('title') || $self.attr('data-original-title');
+    if (toolTip) {
+      $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
+    }
+    $self.off('dropdown_open, dropdown_close').on('dropdown_open, dropdown_close', function(event) { $.fn.cafevTooltip.remove(); });
   });
 }
 

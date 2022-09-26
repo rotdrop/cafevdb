@@ -3414,7 +3414,7 @@ Störung.';
       return [];
     }
 
-    $phpMailer = new PHPMailer(true);
+    $phpMailer = new PHPMailer(exceptions: true);
     $parser = new \Mail_RFC822(null, null, null, false);
 
     $brokenRecipients = [];

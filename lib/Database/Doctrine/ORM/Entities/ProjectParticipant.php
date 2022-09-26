@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+use OCA\CAFEVDB\Database\EntityManager;
+
 /**
  * Entity for project participants.
  *
@@ -375,7 +377,7 @@ class ProjectParticipant implements \ArrayAccess
     $field = 'registration';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
       $entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
       $this->preUpdateValue[$field] = $oldValue;
@@ -392,7 +394,7 @@ class ProjectParticipant implements \ArrayAccess
     $field = 'registration';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = $event->getEntityManager();
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $entityManager->dispatchEvent(new Events\PostChangeRegistrationConfirmation($this, !empty($this->preUpdateValue[$field])));
       unset($this->preUpdateValue[$field]);
     }

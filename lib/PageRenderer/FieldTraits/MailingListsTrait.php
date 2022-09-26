@@ -2,10 +2,8 @@
 /**
  * Orchestra member, musician and project management application.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +17,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
@@ -32,6 +28,7 @@ use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Controller\ProjectParticipantsController;
 use OCA\CAFEVDB\Common\Util;
 
+/** Field-trait for reusable field definitions. */
 trait MailingListsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -42,6 +39,7 @@ trait MailingListsTrait
   /** @var Entities\Project */
   private $project;
 
+  /** @return MailingListsService */
   protected function getListsService():MailingListsService
   {
     if (empty($this->listsService)) {
@@ -52,9 +50,20 @@ trait MailingListsTrait
 
   /**
    * Return fdd for controlling the global announcements subscription.
+   *
+   * @param string $emailSql SQL table field with the email address.
+   *
+   * @param array $columnTabs Table-tabs definitions.
+   *
+   * @param array $override Generic override FDD fields.
+   *
+   * @return array The merge field definitions.
    */
-  protected function announcementsSubscriptionControls(string $emailSql = '$table.email', array $columnTabs = [], array $override = [])
-  {
+  protected function announcementsSubscriptionControls(
+    string $emailSql = '$table.email',
+    array $columnTabs = [],
+    array $override = [],
+  ):array {
     $fdd = [
       'name'    => $this->l->t('Mailing List'),
       'tab'     => [ 'id' => $columnTabs ],
@@ -88,14 +97,15 @@ trait MailingListsTrait
           MailingListsController::OPERATION_SUBSCRIBE,
           MailingListsController::OPERATION_REJECT,
           MailingListsController::OPERATION_UNSUBSCRIBE,
+          MailingListsController::OPERATION_RELOAD,
         ];
-        $disabled = [
-          MailingListsController::OPERATION_INVITE => ($status != MailingListsService::STATUS_UNSUBSCRIBED),
-          MailingListsController::OPERATION_ACCEPT => ($status != MailingListsService::STATUS_WAITING),
-          MailingListsController::OPERATION_REJECT => ($status != MailingListsService::STATUS_INVITED && $status != MailingListsService::STATUS_WAITING),
-          MailingListsController::OPERATION_SUBSCRIBE => (!$this->expertMode || $status != MailingListsService::STATUS_UNSUBSCRIBED),
-          MailingListsController::OPERATION_UNSUBSCRIBE => ($status != MailingListsService::STATUS_SUBSCRIBED),
-        ];
+        // $disabled = [
+        //   MailingListsController::OPERATION_INVITE => ($status != MailingListsService::STATUS_UNSUBSCRIBED),
+        //   MailingListsController::OPERATION_ACCEPT => ($status != MailingListsService::STATUS_WAITING),
+        //   MailingListsController::OPERATION_REJECT => ($status != MailingListsService::STATUS_INVITED && $status != MailingListsService::STATUS_WAITING),
+        //   MailingListsController::OPERATION_SUBSCRIBE => (!$this->expertMode || $status != MailingListsService::STATUS_UNSUBSCRIBED),
+        //   MailingListsController::OPERATION_UNSUBSCRIBE => ($status != MailingListsService::STATUS_SUBSCRIBED),
+        // ];
         $defaultCss = [ 'mailing-list', 'operation' ];
         $cssClasses = [
           MailingListsController::OPERATION_INVITE => [
@@ -115,6 +125,12 @@ trait MailingListsTrait
           MailingListsController::OPERATION_UNSUBSCRIBE => [
             'status-subscribed-visible' => true,
           ],
+          MailingListsController::OPERATION_RELOAD => [
+            'status-unsubscribed-visible' => true,
+            'status-waiting-visible' => true,
+            'status-invited-visible' => true,
+            'status-subscribed-visible' => true,
+          ],
         ];
         $icons = [
           MailingListsController::OPERATION_INVITE => [ 'app' => 'core', 'image' => 'actions/confirm.svg' ],
@@ -122,6 +138,15 @@ trait MailingListsTrait
           MailingListsController::OPERATION_REJECT => [ 'app' => 'core', 'image' => 'actions/close.svg' ],
           MailingListsController::OPERATION_SUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/add.svg' ],
           MailingListsController::OPERATION_UNSUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/delete.svg' ],
+          MailingListsController::OPERATION_RELOAD => [ 'app' => $this->appName(), 'image' => 'reload-solid.svg' ],
+        ];
+        $menuLabels = [
+          MailingListsController::OPERATION_INVITE => $this->l->t('invite'),
+          MailingListsController::OPERATION_ACCEPT => $this->l->t('accept'),
+          MailingListsController::OPERATION_REJECT => $this->l->t('reject'),
+          MailingListsController::OPERATION_SUBSCRIBE => $this->l->t('subscribe'),
+          MailingListsController::OPERATION_UNSUBSCRIBE => $this->l->t('unsubscribe'),
+          MailingListsController::OPERATION_RELOAD =>  $this->l->t('reload subscription'),
         ];
         $html = '
 <span class="mailing-list announcements subscription status status-label action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
@@ -146,7 +171,7 @@ trait MailingListsTrait
       >
         <a href="#">
           <img alt="" src="' . $this->urlGenerator()->imagePath($icon['app'], $icon['image']) . '"/>
-          ' . $this->l->t($operation) . '
+          ' . $menuLabels[$operation] . '
         </a>
       </li>
 ';
@@ -162,8 +187,20 @@ trait MailingListsTrait
     return Util::arrayMergeRecursive($fdd, $override ?? []);
   }
 
-  protected function projectListSubscriptionControls(string $emailSql = '$table.email', array $columnTabs = [], array $override = [])
-  {
+  /**
+   * @param string $emailSql SQL table field with the email address.
+   *
+   * @param array $columnTabs Table-tabs definitions.
+   *
+   * @param array $override Generic override FDD fields.
+   *
+   * @return array The merge field definitions.
+   */
+  protected function projectListSubscriptionControls(
+    string $emailSql = '$table.email',
+    array $columnTabs = [],
+    array $override = [],
+  ):array {
     $fdd = [
       'name' => $this->l->t('Project Mailing List'),
       'tab' => [ 'id' => $columnTabs ],
@@ -249,6 +286,15 @@ trait MailingListsTrait
         <a href="#">
           <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '"/>
           ' . $this->l->t('disable delivery') . '
+        </a>
+      </li>
+      <li class="subscription-action subscription-action-reload tooltip-auto"
+          data-operation="' . ProjectParticipantsController::LIST_ACTION_RELOAD_SUBSCRIPTION . '"
+          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:reload-subscription'] . '"
+      >
+        <a href="#">
+          <img alt="" src="' . $this->urlGenerator()->imagePath($this->appName(), 'reload-solid.svg') . '"/>
+          ' . $this->l->t('reload subscription') . '
         </a>
       </li>
     </ul>

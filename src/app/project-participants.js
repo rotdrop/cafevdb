@@ -822,7 +822,12 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         });
     };
     post(false);
+    return false;
   });
+  // Trigger reload on page load. The problem is that meanwhile some
+  // data-base fixups run on events after the legacy PME code has
+  // generated its HTML output.
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click');
 
   const pmeForm = container.find(pmeFormSelector);
   console.info('PME FORM', pmeForm, pmeFormSelector);
