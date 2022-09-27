@@ -853,6 +853,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
+    $this->changeSetSize = count($changed);
+
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     $changeSets = [];
@@ -860,6 +862,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
         Util::unsetValue($changed, $field);
         --$this->changeSetSize;
+        continue;
       }
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
@@ -868,10 +871,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
-    foreach ($this->joinStructure as $table => $joinInfo) {
-      $this->debug('TABLE ' . $table);
+    foreach ((empty($changeSets) ? [] : $this->joinStructure) as $table => $joinInfo) {
       $changeSet = $changeSets[$table]??[];
       if (empty($changeSet)) {
+        $this->debug('TABLE ' . $table . ' HAS EMPTY CHANGESET');
         continue;
       }
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
@@ -880,8 +883,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             --$this->changeSetSize;
           }
         }
+        $this->debug('TABLE ' . $table . ' IS SET READONLY');
         continue;
       }
+      $this->debug('TABLE ' . $table . ' HAS CHANGESET ' . print_r($changeSet, true));
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
