@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Service;
 use \RuntimeException;
 use \InvalidArgumentException;
 use GuzzleHttp\Client as RestClient;
+use GuzzleHttp\Exception\ConnectException;
 
 use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
@@ -760,6 +761,8 @@ class MailingListsService
    *
    * @return string One of self::STATUS_UNSUBSCRIBED, self::STATUS_SUBSCRIBED,
    * self::STATUS_INVITED, self::STATUS_WAITING;
+   *
+   * @throws ConnectException
    */
   public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
   {
