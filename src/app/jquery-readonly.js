@@ -126,6 +126,9 @@ $.fn.readonly = function(state) {
     $this.data(readonlyStateDataKey, state);
     $this.toggleClass(elementReadonlyClass, state);
     vanillaProp.call($this, 'readonly', state);
+    if (!state) {
+      $this.removeAttr('readonly');
+    }
     if ($this.is('select')) {
       // single-select can be handled like radio buttons
       if (!vanillaProp.call($this, 'multiple')) {
