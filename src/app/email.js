@@ -245,7 +245,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     t(appName, 'Click on the names to move the respective person to the other box'));
   dualSelect.addClass('tooltip-top');
 
-  if ($recipientsSelect.attr('readonly')) {
+  if ($recipientsSelect.prop('readonly')) {
     $dualListBoxContainer.find('input, select, button').readonly(true);
   }
 
