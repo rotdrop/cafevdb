@@ -97,22 +97,22 @@ class MusicianCardBackend implements ICardBackend
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();
     } else {
-      $expr = self::criteriaExpr();
-      $criteria = self::criteria();
+      $likePattern = '%' . $pattern . '%';
+      $criteria = [ [ '(|' => true ] ];
       if (array_search('FN', $properties) !== false) {
-        $criteria
-          ->orWhere($expr->contains('displayName', $pattern))
-          ->orWhere($expr->contains('nickName', $pattern))
-          ->orWhere($expr->contains('firstName', $pattern))
-          ->orWhere($expr->contains('surName', $pattern));
+        $criteria[] = [ 'displayName' => $likePattern ];
+        $criteria[] = [ 'nickName' => $likePattern ];
+        $criteria[] = [ 'firstName' => $likePattern ];
+        $criteria[] = [ 'surName' => $likePattern ];
       }
       if (array_search('EMAIL', $properties) !== false) {
-        $criteria->orWhere($expr->contains('email', $pattern));
+        $criteria[] = [ 'email.address' => $likePattern ];
       }
       if (array_search('UID', $properties) !== false) {
-        $criteria->orWhere($expr->eq('uuid', $pattern));
+        $criteria[] = [ 'uuid' => $pattern ];
       }
-      $musicians = $this->musiciansRepository->matching($criteria);
+      $musicians = $this->musiciansRepository->findBy($criteria);
+      // $this->logInfo('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
     }
     $vCards = [];
     foreach ($musicians as $musician) {
