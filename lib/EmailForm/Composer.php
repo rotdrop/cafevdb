@@ -26,6 +26,10 @@ namespace OCA\CAFEVDB\EmailForm;
 
 use \DateTimeImmutable;
 use ZipStream\ZipStream;
+use \stdClass;
+use \Net_IMAP;
+use \Mail_RFC822;
+use \PHP_IBAN;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -111,6 +115,7 @@ class Composer
   const DEFAULT_ATTACHMENT_LINK_EXPIRATION_LIMIT = 7; // days
 
   const DEFAULT_TEMPLATE_NAME = 'Default';
+  // phpcs:disable Generic.Files.LineLength.TooLong
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -125,6 +130,7 @@ Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
 löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
 auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
 Störung.';
+  // phpcs:enable
   const GLOBAL_NAMESPACE = 'GLOBAL';
   const MEMBER_NAMESPACE = 'MEMBER';
   const MEMBER_VARIABLES = [
@@ -484,11 +490,13 @@ Störung.';
    * @param RecipientsFilter $recipientsFilter Already bound
    *   recipients filter.  If null self::$recipientFilter will be
    *   bound to $parameterservice.
+   *
+   * @return void
    */
   public function bind(
     RequestParameterService $parameterService,
     RecipientsFilter $recipientsFilter = null,
-  ) {
+  ):void {
     $this->parameterService = $parameterService;
 
     if (empty($recipientsFilter)) {
@@ -627,8 +635,10 @@ Störung.';
    * @param string $key The key to query.
    *
    * @param null|mixed $default
+   *
+   * @return mixed
    */
-  private function cgiValue(string $key, $default = null):?string
+  private function cgiValue(string $key, $default = null)
   {
     if (isset($this->cgiData[$key])) {
       $value = $this->cgiData[$key];
@@ -643,6 +653,10 @@ Störung.';
 
   /**
    * Fill the $this->substitutions array.
+   *
+   * @return void
+   *
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   private function generateSubstitutionHandlers():void
   {
@@ -657,6 +671,13 @@ Störung.';
         return $musician[$field];
       };
     }
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['EMAIL'] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+          return $keyArg[0];
+      }
+      return $musician->getEmailAddress();
+    };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
@@ -1440,8 +1461,13 @@ Störung.';
    * ```
    * For example ${MEMBER::FIRST_NAME}.
    *
+   * @param string $nameSpace The name space of the variable.
+   *
+   * @param null|string $message The composed email message body.
+   *
+   * @return string
    */
-  private function hasSubstitutionNamespace($nameSpace, $message = null)
+  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null):string
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1467,7 +1493,7 @@ Störung.';
    * @return string Substituted message
    * @throw Exceptions\SubstitutionException
    */
-  private function replaceFormVariables(string $nameSpace, $data = null, ?string $message = null, ?array &$failures = null):string
+  private function replaceFormVariables(string $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1523,9 +1549,11 @@ Störung.';
    * Cleanup edge-cases. ATM this only replaces left-over '$$'
    * occurences with a single $.
    *
+   * @param null|string $message Email mesasge body.
+   *
    * @return string
    */
-  private function finalizeSubstitutions($message = null)
+  private function finalizeSubstitutions(?string $message = null):string
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1538,8 +1566,10 @@ Störung.';
    * Whether recipients are disclosed (send via Cc:) or undisclosed (send via
    * Bcc:). If not in project mode recipients are never disclosed, unless
    * there is only a single recipient, which is then addressed via To.
+   *
+   * @return bool
    */
-  public function discloseRecipients()
+  public function discloseRecipients():bool
   {
     return $this->projectId >= 0
       && (
@@ -1557,10 +1587,10 @@ Störung.';
    *
    * @return bool Success (true) or failure (false).
    */
-  public function sendMessages()
+  public function sendMessages():bool
   {
     if (!$this->preComposeValidation($this->recipients)) {
-      return;
+      return false;
     }
 
     // Checks passed, let's see what happens. The mailer may throw
@@ -1576,7 +1606,14 @@ Störung.';
     return $this->executionStatus;
   }
 
-  static private function emitHtmlBodyStyle($style, $cssPrefix = null)
+  /**
+   * @param string $style A style template.
+   *
+   * @param null|string $cssPrefix A prefix to substitute into $style.
+   *
+   * @return string
+   */
+  private static function emitHtmlBodyStyle(string $style, ?string $cssPrefix = null):string
   {
     return str_replace('[CSSPREFIX]', empty($cssPrefix) ? '' : ($cssPrefix . ' '), $style);
   }
@@ -1602,8 +1639,10 @@ Störung.';
    *
    * - after variable substitution we need to reencode some
    *   special characters.
+   *
+   * @return bool Exectution status
    */
-  private function doSendMessages()
+  private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
                      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
@@ -1733,15 +1772,17 @@ Störung.';
   /**
    * Extract the first few line of a text-buffer.
    *
-   * @param $text The text to compute the "head" of.
+   * @param string $text The text to compute the "head" of.
    *
-   * @param $lines The number of lines to return at most.
+   * @param int $lines The number of lines to return at most.
    *
-   * @param $separators Regexp for preg_split. The default is just
+   * @param string $separators Regexp for preg_split. The default is just
    * "/\\n/". Note that this is enough for \\n and \\r\\n as the text is
    * afterwars imploded again with \n separator.
+   *
+   * @return string
    */
-  private function head($text, $lines = 64, $separators = "/\n/")
+  private function head(string $text, int $lines = 64, string $separators = "/\n/"):string
   {
     $text = preg_split($separators, $text, $lines+1);
     if (isset($text[$lines])) {
@@ -1752,6 +1793,10 @@ Störung.';
 
   /**
    * Compose all personal attachments for the given musician.
+   *
+   * @param Entities\Musician $musician One of the recipients.
+   *
+   * @return array
    */
   private function composePersonalAttachments(Entities\Musician $musician):array
   {
@@ -2128,7 +2173,7 @@ Störung.';
           if (count($items) == 1) {
             /** @var Entities\File $file */
             $file = array_shift($items);
-            $personalAttachments[] = function() use($file) {
+            $personalAttachments[] = function() use ($file) {
               return [
                 'data' => $file->getFileData()->getData(),
                 'fileName' => $file->getFileName(),
@@ -2198,11 +2243,25 @@ Störung.';
     return $phpMailer;
   }
 
+  /**
+   * Generate a directory name for the stripped attachments in the cloud file space.
+   *
+   * @param string $messageId The message id of the email.
+   *
+   * @return string
+   */
   private static function outBoxSubFolderFromMessageId(string $messageId):string
   {
     return str_replace([ '@', '.' ], [ self::MSG_ID_AT, '_' ], substr($messageId, 1, -1));
   }
 
+  /**
+   * Reconstruct the message id from the given outbox folder name.
+   *
+   * @param string $outBoxSubFolderPath
+   *
+   * @return string
+   */
   private static function messageIdFromOutBoxSubFolder(string $outBoxSubFolderPath):string
   {
     return '<' . str_replace([ self::MSG_ID_AT, '_' ], [ '@', '.' ], $outBoxSubFolderPath) . '>';
@@ -2294,7 +2353,7 @@ Störung.';
       $mimeType = 'text/html';
       $this->registerAttachmentDownloadsCleaner();
     }
-    $phpMailer->AddStringAttachment(
+    $phpMailer->addStringAttachment(
       $data,
       $fileName,
       $transferEncoding,
@@ -2400,7 +2459,7 @@ Störung.';
   }
 
   /**
-   * Compose and send one message. If $EMails only contains one
+   * Compose and send one message. If $eMails only contains one
    * address, then the emails goes out using To: and Cc: fields,
    * otherwise Bcc: is used, unless sending to the recipients of a
    * project. All emails are logged with an MD5-sum to the DB in order
@@ -2410,14 +2469,14 @@ Störung.';
    *
    * @param string $strMessage The message to send.
    *
-   * @param array $EMails The recipient list
+   * @param array $eMails The recipient list.
    *
-   * @param array $extraAttachements Array of callables return a flat array
+   * @param array $extraAttachments Array of callables return a flat array
    * ```
    * [ 'data' => DATA, 'fileName' => NAME, 'encoding' => ENCODING, 'mimeType' => TYPE ]
-   * ```
+   * ```.
    *
-   * @param bool $addCC If @c false, then additional CC and BCC recipients will
+   * @param bool $addCC If \false, then additional CC and BCC recipients will
    *                   not be added.
    *
    * @param null|string $messageId A pre-computed message-id.
@@ -2428,7 +2487,7 @@ Störung.';
    *
    * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
    *
-   * @param bool $doNotReply Add a reply-to header with a no-reply address
+   * @param bool $doNotReply Add a reply-to header with a no-reply address.
    *
    * @param bool $allowDuplicates Skip the duplicates check.
    *
@@ -2442,26 +2501,26 @@ Störung.';
    * ```
    */
   private function composeAndSend(
-    $strMessage,
-    $EMails,
-    $extraAttachments = [],
-    $addCC = true,
+    string $strMessage,
+    array $eMails,
+    array $extraAttachments = [],
+    bool $addCC = true,
     ?string $messageId = null,
-    $references = null,
-    $customHeaders = [],
-    $doNotReply = false,
-    $allowDuplicates = false,
+    mixed $references = null,
+    array $customHeaders = [],
+    bool $doNotReply = false,
+    bool $allowDuplicates = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
-    $singleAddress = count($EMails) == 1;
+    $singleAddress = count($eMails) == 1;
 
     // Construct an array for the data-base log
     $logMessage = new SentEmailDTO;
-    $logMessage->recipients = $EMails;
+    $logMessage->recipients = $eMails;
     $logMessage->message = $strMessage;
 
     // One big try-catch block. Using exceptions we do not need to
@@ -2483,7 +2542,6 @@ Störung.';
         'active' => $this->diagnostics['TotalCount'],
       ]);
       $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus) {
-        $oldCurrent = $progressStatus->getCurrent();
         $oldTime = $progressStatus->getLastModified()->getTimestamp();
         $nowTime = time();
         if ($current >= $total
@@ -2514,32 +2572,32 @@ Störung.';
 
       if (!$this->constructionMode) {
         // Loop over all data-base records and add each recipient in turn
-        foreach ($EMails as $recipient) {
+        foreach ($eMails as $recipient) {
           if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
-            $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+            $phpMailer->addAddress($recipient['email'], $recipient['name']);
           } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
             // blind copy, don't expose the victim to the others.
-            $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+            $phpMailer->addBCC($recipient['email'], $recipient['name']);
           } else {
             // open recipients list is requested, still some recipients are hidden.
             if ($recipient['status'] == MemberStatus::CONDUCTOR ||
                 $recipient['status'] == MemberStatus::SOLOIST) {
-              $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+              $phpMailer->addBCC($recipient['email'], $recipient['name']);
             } else {
-              $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+              $phpMailer->addAddress($recipient['email'], $recipient['name']);
             }
           }
         }
       } else {
         // Construction mode: per force only send to the developer
-        $phpMailer->AddAddress($this->catchAllEmail, $this->catchAllName);
+        $phpMailer->addAddress($this->catchAllEmail, $this->catchAllName);
       }
 
       if ($addCC === true) {
         // Always drop a copy to the orchestra's email account for
         // archiving purposes and to catch illegal usage. It is legel
         // to modify $this->sender through the email-form.
-        $phpMailer->AddCC($this->catchAllEmail, $senderName);
+        $phpMailer->addCC($this->catchAllEmail, $senderName);
       }
 
       // If we have further Cc's, then add them also
@@ -2553,7 +2611,7 @@ Störung.';
           $stringCC .= $value['name'].' <'.$value['email'].'>, ';
           // PHP-Mailer adds " for itself as needed
           $value['name'] = trim($value['name'], '"');
-          $phpMailer->AddCC($value['email'], $value['name']);
+          $phpMailer->addCC($value['email'], $value['name']);
         }
         $stringCC = trim($stringCC, ', ');
       }
@@ -2569,7 +2627,7 @@ Störung.';
           $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
           // PHP-Mailer adds " for itself as needed
           $value['name'] = trim($value['name'], '"');
-          $phpMailer->AddBCC($value['email'], $value['name']);
+          $phpMailer->addBCC($value['email'], $value['name']);
         }
         $stringBCC = trim($stringBCC, ', ');
       }
@@ -2585,7 +2643,7 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage(
+        $phpMailer->addStringEmbeddedImage(
           $calendar,
           md5($this->projectName.'.ics'),
           $this->projectName.'.ics',
@@ -2651,10 +2709,10 @@ Störung.';
     foreach ($customHeaders as $key => $value) {
       if (is_array($value)) {
         foreach ($value as $key => $value) {
-          $phpMailer->addCustomHeader($key,$value);
+          $phpMailer->addCustomHeader($key, $value);
         }
       } else {
-        $phpMailer->addCustomHeader($key,$value);
+        $phpMailer->addCustomHeader($key, $value);
       }
     }
 
@@ -2682,7 +2740,7 @@ Störung.';
             // fallthrough
           case PHPMailer::STOP_CRITICAL:
           default:
-            throw $t;
+            throw $e;
         }
       }
       $sentEmail->setMessageId($phpMailer->getLastMessageID());
@@ -2704,8 +2762,12 @@ Störung.';
   /**
    * Record diagnostic output from the actual message composition for
    * the status page.
+   *
+   * @param string $mimeMsg The undecoded sent mime-message.
+   *
+   * @return void
    */
-  private function recordMessageDiagnostics($mimeMsg)
+  private function recordMessageDiagnostics(string $mimeMsg):void
   {
     // Positive diagnostics
     $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
@@ -2731,7 +2793,7 @@ Störung.';
     $events = $this->eventAttachments();
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
-    foreach($events as $eventUri => $calendarId) {
+    foreach (array_keys($events) as $eventUri) {
       $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
       $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
@@ -2741,8 +2803,12 @@ Störung.';
 
   /**
    * Take the supplied message and copy it to the "Sent" folder.
+   *
+   * @param string $mimeMessage The raw undecoded mime message.
+   *
+   * @return bool Execution status.
    */
-  private function copyToSentFolder($mimeMessage)
+  private function copyToSentFolder(string $mimeMessage):bool
   {
     // PEAR IMAP works without the c-client library
     ini_set('error_reporting', ini_get('error_reporting') & ~E_STRICT);
@@ -2757,30 +2823,36 @@ Störung.';
       'total' =>  $this->diagnostics['TotalPayload'],
       'active' => $this->diagnostics['TotalCount'],
     ]);
-    $imap = new \Net_IMAP($imapHost,
-                          $imapPort,
-                          $imapSecurity == 'starttls' ? true : false, 'UTF-8',
-                          function($current, $total) use ($progressStatus) {
-                            if ($total < 128) {
-                              return; // ignore non-data transfers
-                            }
-                            $progressStatus->update($current, $total);
-                          },
-                          self::PROGRESS_CHUNK_SIZE); // 4 kb chunk-size
+    $imap = new Net_IMAP(
+      $imapHost,
+      $imapPort,
+      $imapSecurity == 'starttls' ? true : false, 'UTF-8',
+      function($current, $total) use ($progressStatus) {
+        if ($total < 128) {
+          return; // ignore non-data transfers
+        }
+        $progressStatus->update($current, $total);
+      },
+      self::PROGRESS_CHUNK_SIZE); // 4 kb chunk-size
 
     $user = $this->getConfigValue('emailuser');
     $pass = $this->getConfigValue('emailpassword');
-    if (($ret = $imap->login($user, $pass)) !== true) {
+    $ret = $imap->login($user, $pass);
+    if ($ret !== true) {
       $this->executionStatus = false;
       $this->diagnostics['CopyToSent']['login'] = $ret->toString();
       $imap->disconnect();
       return false;
     }
 
-    if (($ret1 = $imap->selectMailbox('Sent')) === true) {
+    $ret1 = $imap->selectMailbox('Sent');
+    if ($ret1 === true) {
       $ret1 = $imap->appendMessage($mimeMessage, 'Sent');
-    } elseif (($ret2 = $imap->selectMailbox('INBOX.Sent')) === true) {
-      $ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent');
+    } else {
+      $ret2 = $imap->selectMailbox('INBOX.Sent');
+      if ($ret === true) {
+        $ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent');
+      }
     }
     if ($ret1 !== true && $ret2 !== true) {
       $this->executionStatus = false;
@@ -2869,16 +2941,16 @@ Störung.';
   /**
    * Compose and export one message to HTML.
    *
-   * @param $strMessage The message to send.
+   * @param string $strMessage The message to send.
    *
-   * @param $eMails The recipient list
+   * @param array $eMails The recipient list.
    *
-   * @param array $extraAttachements Array of callables return a flat array
+   * @param array $extraAttachments Array of callables return a flat array
    * ```
    * [ 'data' => DATA, 'fileName' => NAME, 'encoding' => ENCODING, 'mimeType' => TYPE ]
-   * ```
+   * ```.
    *
-   * @param $addCC If @c false, then additional CC and BCC recipients will
+   * @param bool $addCC If @c false, then additional CC and BCC recipients will
    *               not be added.
    *
    * @param null|string $messageId A pre-computed message-id.
@@ -2888,6 +2960,8 @@ Störung.';
    * an array then these are the message ids of the individual merged messages.
    *
    * @param array $customHeaders Array for HEADER_NAME => HEADER_VALUE pairs.
+   *
+   * @param bool $doNotReply Add a reply-to header with a no-reply address.
    *
    * @return array
    * ```
@@ -2902,14 +2976,14 @@ Störung.';
    * @todo Fold into composeAndSend
    */
   private function composeAndExport(
-    $strMessage,
-    $eMails,
-    $extraAttachments = [],
-    $addCC = true,
+    string $strMessage,
+    array $eMails,
+    array $extraAttachments = [],
+    bool $addCC = true,
     ?string $messageId = null,
-    $references = null,
-    $customHeaders = [],
-    $doNotReply = false,
+    mixed $references = null,
+    array $customHeaders = [],
+    bool $doNotReply = false,
   ) {
     $customHeaders[] = self::HEADER_MARKER;
 
@@ -2919,7 +2993,7 @@ Störung.';
     $singleAddress = count($eMails) == 1;
 
     // Construct an array for the data-base log
-    $logMessage = new \stdClass;
+    $logMessage = new stdClass;
     $logMessage->recipients = $eMails;
     $logMessage->message = $strMessage;
 
@@ -2947,7 +3021,7 @@ Störung.';
           $this->l->t('DO NOT REPLY')
         );
       } else {
-        $phpMailer->AddReplyTo($senderEmail, $senderName);
+        $phpMailer->addReplyTo($senderEmail, $senderName);
       }
 
       $phpMailer->SetFrom($senderEmail, $senderName);
@@ -2955,17 +3029,17 @@ Störung.';
       // Loop over all data-base records and add each recipient in turn
       foreach ($eMails as $recipient) {
         if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
-          $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+          $phpMailer->addAddress($recipient['email'], $recipient['name']);
         } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
           // blind copy, don't expose the victim to the others.
-          $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+          $phpMailer->addBCC($recipient['email'], $recipient['name']);
         } else {
           // open recipients list is requested, still some recipients are hidden.
           if ($recipient['status'] == MemberStatus::CONDUCTOR ||
               $recipient['status'] == MemberStatus::SOLOIST) {
-            $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+            $phpMailer->addBCC($recipient['email'], $recipient['name']);
           } else {
-            $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+            $phpMailer->addAddress($recipient['email'], $recipient['name']);
           }
         }
       }
@@ -2974,7 +3048,7 @@ Störung.';
         // Always drop a copy to the orchestra's email account for
         // archiving purposes and to catch illegal usage. It is legel
         // to modify $this->sender through the email-form.
-        $phpMailer->AddCC($this->catchAllEmail, $senderName);
+        $phpMailer->addCC($this->catchAllEmail, $senderName);
       }
 
       // If we have further Cc's, then add them also
@@ -2988,7 +3062,7 @@ Störung.';
           $stringCC .= $value['name'].' <'.$value['email'].'>, ';
           // PHP-Mailer adds " for itself as needed
           $value['name'] = trim($value['name'], '"');
-          $phpMailer->AddCC($value['email'], $value['name']);
+          $phpMailer->addCC($value['email'], $value['name']);
         }
         $stringCC = trim($stringCC, ', ');
       }
@@ -3004,7 +3078,7 @@ Störung.';
           $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
           // PHP-Mailer adds " for itself as needed
           $value['name'] = trim($value['name'], '"');
-          $phpMailer->AddBCC($value['email'], $value['name']);
+          $phpMailer->addBCC($value['email'], $value['name']);
         }
         $stringBCC = trim($stringBCC, ', ');
       }
@@ -3022,7 +3096,7 @@ Störung.';
         $calendar = $this->eventsService->exportEvents($events, $this->projectName, hideParticipants: true);
 
         // Encode it as attachment
-        $phpMailer->AddStringEmbeddedImage(
+        $phpMailer->addStringEmbeddedImage(
           $calendar,
           md5($this->projectName.'.ics'),
           $this->projectName.'.ics',
@@ -3071,10 +3145,10 @@ Störung.';
     foreach ($customHeaders as $key => $value) {
       if (is_array($value)) {
         foreach ($value as $key => $value) {
-          $phpMailer->addCustomHeader($key,$value);
+          $phpMailer->addCustomHeader($key, $value);
         }
       } else {
-        $phpMailer->addCustomHeader($key,$value);
+        $phpMailer->addCustomHeader($key, $value);
       }
     }
 
@@ -3143,7 +3217,7 @@ Störung.';
       $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician($this->project);
       $previewRecipients = [
         $dummy->getId() => [
-          'email' => $dummy->getEmail(),
+          'email' => $dummy->getEmailAddress(),
           'name' => $dummy->getPublicName(true),
           'dbdata' => $dummy,
         ],
@@ -3171,9 +3245,13 @@ Störung.';
    * or to have hardcopies from debit note notifications and other
    * important emails.
    *
+   * @param null|array $recipients The recipients of the message.
+   *
+   * @return null|array The exported messages.
+   *
    * @todo This really should be folded in to sendMessages()
    */
-  private function exportMessages(?array $recipients = null)
+  private function exportMessages(?array $recipients = null):?array
   {
     // @todo yield needs more care concerning error management
     $messages = [];
@@ -3199,7 +3277,9 @@ Störung.';
 
       if ($this->recipientsFilter->announcementsMailingList()) {
         $this->executionStatus = false;
-        $this->diagnostics['TemplateValidation']['PreconditionError'] = [ $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.') ];
+        $this->diagnostics['TemplateValidation']['PreconditionError'] = [
+          $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.'),
+        ];
         if ($hasPersonalSubstitutions) {
           $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
         }
@@ -3300,11 +3380,10 @@ Störung.';
 
   /**
    * Pre-message construction validation. Collect all data and perform
-   * some checks on it.
+   * some checks on it. As a side-effect $this->executionStatus is set.
    *
    * @param null|array $recipients The set of recipients to
-   * check. Currently it is only checked whether the set of recipients
-   * is empty which is treated as error.
+   * check.
    *
    * - Cc, valid email addresses
    * - Bcc, valid email addresses
@@ -3313,8 +3392,11 @@ Störung.';
    * - sender name, must not be empty
    * - file attachments, temporary local copy must exist
    * - events, must exist
+   * .
+   *
+   * @return bool The result of the validation.
    */
-  private function preComposeValidation($recipients)
+  private function preComposeValidation(array $recipients):bool
   {
     // Basic boolean stuff
     if ($this->subject() == '') {
@@ -3345,7 +3427,7 @@ Störung.';
 
     // file attachments, check the selected ones for readability
     $attachments = $this->fileAttachments();
-    foreach($attachments as $attachment) {
+    foreach ($attachments as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue; // don't bother
       }
@@ -3358,7 +3440,7 @@ Störung.';
 
     // event attachment
     $events = $this->eventAttachments();
-    foreach ($events as $eventUri => $calendarId) {
+    foreach (array_keys($events) as $eventUri) {
       if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
         $this->executionStatus = false;
         $this->diagnostics['AttachmentValidation']['Events'][] = $eventUri;
@@ -3375,8 +3457,10 @@ Störung.';
   /**
    * Compute the subject tag, depending on whether we are in project
    * mode or not.
+   *
+   * @return void
    */
-  private function setSubjectTag()
+  private function setSubjectTag():void
   {
     if ($this->recipientsFilter->announcementsMailingList()) {
       if ($this->projectId <= 0 || $this->projectName == '') {
@@ -3401,21 +3485,21 @@ Störung.';
    * Validate a comma separated list of email address from the Cc:
    * or Bcc: input.
    *
-   * @param $header For error diagnostics, either CC or BCC.
+   * @param string $header For error diagnostics, either CC or BCC.
    *
-   * @param $freeForm the value from the input field.
+   * @param string $freeForm the value from the input field.
    *
-   * @return bool false in case of error, otherwise a borken down list of
+   * @return bool|array \false in case of error, otherwise a borken down list of
    * recipients [ [ 'name' => '"Doe, John"', 'email' => 'john@doe.org', ], ... ]
    */
-  public function validateFreeFormAddresses($header, $freeForm)
+  public function validateFreeFormAddresses(string $header, string $freeForm):mixed
   {
     if (empty($freeForm)) {
       return [];
     }
 
     $phpMailer = new PHPMailer(exceptions: true);
-    $parser = new \Mail_RFC822(null, null, null, false);
+    $parser = new Mail_RFC822(null, null, null, false);
 
     $brokenRecipients = [];
     $parsedRecipients = $parser->parseAddressList($freeForm);
@@ -3441,8 +3525,10 @@ Störung.';
         } elseif (!$phpMailer->validateAddress($email)) {
           $brokenRecipients[] = htmlspecialchars($recipient);
         } else {
-          $recipients[] = array('email' => $email,
-                                'name' => $name);
+          $recipients[] = [
+            'email' => $email,
+            'name' => $name,
+          ];
         }
       }
     }
@@ -3462,8 +3548,13 @@ Störung.';
    * stuff out and before storing drafts. In order to do so we
    * substitute each known variable by a dummy value and then make
    * sure that no variable tag ${...} remains.
+   *
+   * @param null|string $template A message body template, i.e. the message
+   * body with potential ${SUBSTITION} things.
+   *
+   * @return bool Execution status.
    */
-  public function validateTemplate($template = null)
+  public function validateTemplate(string $template = null):bool
   {
     if (empty($template)) {
       $template = $this->messageText();
@@ -3506,7 +3597,6 @@ Störung.';
       }
     }
 
-    $spuriousTemplateLeftOver = [];
     // No substitutions should remain. Check for that.
     if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
@@ -3522,7 +3612,12 @@ Störung.';
     return false;
   }
 
-  public function setDefaultTemplate()
+  /**
+   * Install a default email text if no tempalte is given.
+   *
+   * @return void
+   */
+  public function setDefaultTemplate():void
   {
     // Make sure that at least the default template exists and install
     // that as default text
@@ -3538,7 +3633,14 @@ Störung.';
     $this->templateName = self::DEFAULT_TEMPLATE_NAME;
   }
 
-  private function setCatchAll()
+  /**
+   * Set the catch-all email address. If in "construction mode" then emails
+   * are only send to the configured 'emailtestaddress' in the app
+   * config-space.
+   *
+   *  @return void
+   */
+  private function setCatchAll():void
   {
     if ($this->constructionMode) {
       $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
@@ -3552,7 +3654,21 @@ Störung.';
     }
   }
 
-  private function dateSubstitution(array $arg, string $nameSpace, $data = null)
+  /**
+   * Generic data substitution function which is used to substitute
+   * data-variables during mail-merge.
+   *
+   * @param array $arg Arguments taken from the message template.
+   *
+   * @param string $nameSpace Namespace of the substitution, i.e. GLOBAL or
+   * MEMBER.
+   *
+   * @param mixed $data Further generic $data for forwarding the substitued
+   * date string to other substitution handlers.
+   *
+   * @return string
+   */
+  private function dateSubstitution(array $arg, string $nameSpace, mixed $data = null):string
   {
     try {
       $dateString = $arg[1];
@@ -3588,6 +3704,8 @@ Störung.';
 
   /**
    * Generate the substitutions for the global form variables.
+   *
+   * @return void
    *
    * @todo unify timezone and date and time formatting.
    */
@@ -3678,10 +3796,10 @@ Störung.';
       $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
         $this->substitutions[self::GLOBAL_NAMESPACE], [
           'BANK_TRANSACTION_DUE_DAYS' => function($key) {
-            return (new \DateTime())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
+            return (new DateTimeImmutable())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
           },
           'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) {
-            return (new \DateTime())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
+            return (new DateTimeImmutable())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
           },
           'BANK_TRANSACTION_DUE_DATE' => function($key) {
             return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
@@ -3693,7 +3811,8 @@ Störung.';
     }
   }
 
-  private function streetAddress()
+  /** @return string The formatted street-address of the orchester. */
+  private function streetAddress():string
   {
     return
       $this->getConfigValue('streetAddressName01')."<br/>\n".
@@ -3704,9 +3823,10 @@ Störung.';
       $this->getConfigValue('streetAddressCity');
   }
 
-  private function bankAccount()
+  /** @return string The formatted bank account of the orchestra. */
+  private function bankAccount():string
   {
-    $iban = new \PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
     return
       $this->getConfigValue('bankAccountOwner')."<br/>\n".
       "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
@@ -3716,8 +3836,10 @@ Störung.';
   /**
    * Fetch the pre-names of the members of the organizing committee in
    * order to construct an up-to-date greeting.
+   *
+   * @return string
    */
-  private function fetchExecutiveBoard()
+  private function fetchExecutiveBoard():string
   {
     $executiveBoardId = $this->getExecutiveBoardProjectId();
 
@@ -3740,8 +3862,12 @@ Störung.';
 
   /**
    * Load an already sent email and prepare the data for a useful reply
+   *
+   * @param string $messageId The message id of the old message.
+   *
+   * @return bool The execution status.
    */
-  public function loadSentEmail(string $messageId)
+  public function loadSentEmail(string $messageId):bool
   {
     $messageId = trim($messageId, " \n\r\t\v\x00");
     /** @var Entities\SentEmail $sentEmail */
@@ -3785,7 +3911,7 @@ Störung.';
 
     $this->draftId = 0; // avoid accidental overwriting
 
-    $parser = new \Mail_RFC822(null, null, null, false);
+    $parser = new Mail_RFC822(null, null, null, false);
     $recipients = [];
     foreach (explode(';', $sentEmail->getBulkRecipients()) as $recipient) {
       $emailRecord = $parser->parseAddressList($recipient);
@@ -3809,8 +3935,16 @@ Störung.';
    * Take the text supplied by $contents and store it in the DB
    * EmailTemplates table with tag $templateName. An existing template
    * with the same tag will be replaced.
+   *
+   * @param string $templateName The name of the template.
+   *
+   * @param null|string $subject Subject, if null then subject().
+   *
+   * @param null|string $contents Message body, if null then messageText().
+   *
+   * @return void
    */
-  public function storeTemplate($templateName, $subject = null, $contents = null)
+  public function storeTemplate(string $templateName, ?string $subject = null, ?string $contents = null):void
   {
     if (empty($subject)) {
       $subject = $this->subject();
@@ -3832,8 +3966,12 @@ Störung.';
     $this->flush();
   }
 
-  /** Delete the named email template. */
-  public function deleteTemplate($templateName)
+  /**
+   * @param string $templateName Delete the named email template.
+   *
+   * @return void
+   */
+  public function deleteTemplate(string $templateName):void
   {
     $template = $this
       ->getDatabaseRepository(Entities\EmailTemplate::class)
@@ -3843,7 +3981,12 @@ Störung.';
     }
   }
 
-  public function loadTemplate($templateIdentifier)
+  /**
+   * @param string $templateIdentifier Load the given template.
+   *
+   * @return bool The execution status.
+   */
+  public function loadTemplate(string $templateIdentifier):bool
   {
     $template = $this->fetchTemplate($templateIdentifier);
     if (empty($template)) {
@@ -3864,11 +4007,13 @@ Störung.';
    * Normalize the given template-name: CamelCase, not spaces, no
    * dashes.
    *
+   * @param string $templateName The name of the template.
+   *
    * @return array<int, string> First element is the normalized
    * version, second element a translation of the normalized version,
    * if it differs from the non-translated version.
    */
-  private function normalizeTemplateName($templateName)
+  private function normalizeTemplateName(string $templateName):array
   {
     $normalizedName = Util::dashesToCamelCase(
       Util::normalizeSpaces($templateName), true, '_- ');
@@ -3943,25 +4088,25 @@ Störung.';
     return $template;
   }
 
-  /** Return a flat array with all known template names. */
-  private function fetchTemplatesList()
+  /** @return array A flat array with all known template names. */
+  private function fetchTemplatesList():array
   {
     return $this->getDatabaseRepository(Entities\EmailTemplate::class)->list();
   }
 
   /**
-   * Return an associative matrix with all currently stored draft
+   * @return An associative matrix with all currently stored draft
    * messages. In order to load the draft we only need the id. The
    * list of drafts is used to generate a select menu where some fancy
    * title is displayed and the option value is the unique draft id.
    */
-  private function fetchDraftsList()
+  private function fetchDraftsList():array
   {
     return $this->getDatabaseRepository(Entities\EmailDraft::class)->list();
   }
 
   /**
-   * Return the array or collection of sent-email related to the current
+   * @return array|Collection The array or collection of sent-email related to the current
    * project, or all sent-email which have been sent without project context.
    */
   private function fetchSentEmailsList()
@@ -3977,8 +4122,10 @@ Störung.';
    * Store a draft message. The only constraint on the "operator
    * behaviour" is that the subject must not be empty. Otherwise in
    * any way incomplete messages may be stored as drafts.
+   *
+   * @return bool The execution status.
    */
-  public function storeDraft()
+  public function storeDraft():bool
   {
     if ($this->subject() == '') {
       $this->diagnostics['SubjectValidation'] = $this->messageTag;
@@ -3993,7 +4140,7 @@ Störung.';
     if ($autoSave === null) {
       $autoSave = $this->parameterService[self::POST_TAG]['draftAutoSave'] ?? false;
     }
-    $autoSave = filter_var($autoSave,  FILTER_VALIDATE_BOOLEAN);
+    $autoSave = filter_var($autoSave, FILTER_VALIDATE_BOOLEAN);
 
     $draftData = [
       'projectId' => $this->parameterService['projectId'],
@@ -4042,8 +4189,14 @@ Störung.';
     return $this->executionStatus;
   }
 
-  /** Preliminary draft read-back. */
-  public function loadDraft(?int $draftId = null)
+  /**
+   * Load a previously saved draft.
+   *
+   * @param null|int $draftId The entity id of the draft.
+   *
+   * @return bool The execution status.
+   */
+  public function loadDraft(?int $draftId = null):bool
   {
     if ($draftId === null) {
       $draftId = $this->draftId;
@@ -4100,10 +4253,10 @@ Störung.';
    *
    * @return bool
    */
-  public function deleteDraft(?int $draftId = null)
+  public function deleteDraft(?int $draftId = null):bool
   {
     $draftId = $draftId??$this->draftId;
-    if ($draftId > 0 )  {
+    if ($draftId > 0) {
       // detach any attachnments for later clean-up
       if (!$this->detachTemporaryFiles($draftId)) {
         return false;
@@ -4136,13 +4289,15 @@ Störung.';
    * @param int $age Age in seconds from now. Deleted are drafts with the
    * autogenerated flag set to true which were not modified in the last $age
    * seconds. Defaults to 1 day.
+   *
+   * @return void
    */
-  public function cleanDrafts(int $age = 60*60*24)
+  public function cleanDrafts(int $age = 60*60*24):void
   {
-    $updatedTime = (new \DateTimeImmutable)
+    $updatedTime = (new DateTimeImmutable)
       ->modify('-' . $age . ' seconds')
       ->setTimezone($this->getDateTimeZone());
-    $autoGeneratedDrafts = $duplicates = $this->getDatabaseRepository(Entities\EmailDraft::class)->findBy([
+    $autoGeneratedDrafts = $this->getDatabaseRepository(Entities\EmailDraft::class)->findBy([
       'autoGenerated' => true,
       '<updated' => $updatedTime,
     ]);
@@ -4160,13 +4315,13 @@ Störung.';
    * is successfully removed, then it is also removed from the
    * config-space.
    *
-   * @param $fileAttach List of files @b not to be removed.
+   * @param array $fileAttach List of files @b not to be removed.
    *
    * @return bool $this->executionStatus
    *
    * @todo use cloud storage
    */
-  public function cleanTemporaries($fileAttach = [])
+  public function cleanTemporaries(array $fileAttach = []):bool
   {
     try {
       $tmpFiles = $this
@@ -4247,11 +4402,13 @@ Störung.';
    * remembered across sessions, temporaries not attached to message
    * drafts are cleaned at logout and when closing the email form.
    *
-   * @param string $tmpFile
+   * @param string $tmpFile The name for the temporary file.
    *
-   * @param string|AttachmentOrigin $origin
+   * @param string|AttachmentOrigin $origin The attachment origin.
+   *
+   * @return bool The execution status.
    */
-  private function rememberTemporaryFile(string $tmpFile, $origin)
+  private function rememberTemporaryFile(string $tmpFile, mixed $origin):bool
   {
     if ($origin == AttachmentOrigin::PARTICIPANT_FIELD) {
       // no need to save, we just need the field-id which is stored anyway
@@ -4280,8 +4437,14 @@ Störung.';
     return $this->executionStatus = true;
   }
 
-  /** Forget a temporary file, i.e. purge it from the data-base. */
-  private function forgetTemporaryFile($tmpFile)
+  /**
+   * Forget a temporary file, i.e. purge it from the data-base.
+   *
+   * @param string $tmpFile The name of the temporary file.
+   *
+   * @return bool The execution status.
+   */
+  private function forgetTemporaryFile(string $tmpFile):bool
   {
     $tmpFile = basename($tmpFile);
     try {
@@ -4305,13 +4468,13 @@ Störung.';
    * course. We store the generated temporaries in the user
    * config-space in order to (latest) remove them on logout/login.
    *
-   * @param $fileRecord Typically $_FILES['fileAttach'], but maybe
+   * @param array $fileRecord Typically $_FILES['fileAttach'], but maybe
    * any file record.
    *
-   * @return array Copy of $fileRecord with changed temporary file which
+   * @return bool|array Copy of $fileRecord with changed temporary file which
    * survives script-reload, or @c false on error.
    */
-  public function saveAttachment(&$fileRecord)
+  public function saveAttachment(array &$fileRecord)
   {
     if (!empty($fileRecord['name'])) {
 
@@ -4350,8 +4513,10 @@ Störung.';
 
   /**
    * Clean expired download attachments and left over preview downloads
+   *
+   * @return void
    */
-  public function registerAttachmentDownloadsCleaner()
+  public function registerAttachmentDownloadsCleaner():void
   {
     /** @var \OCP\BackgroundJob\IJobList $jobList */
     $jobList = $this->di(\OCP\BackgroundJob\IJobList::class);
@@ -4367,9 +4532,11 @@ Störung.';
    * Expire all orphan download shares, e.g. generated by preview
    * messages. The idea is to simply expire all orphan shares. The regular
    * cleanup-job will then delete all shares after a given time (24 hours by
-    * default).
+   * default).
+   *
+   * @return void
    */
-  public function cleanAttachmentDownloads()
+  public function cleanAttachmentDownloads():void
   {
     $outBoxFolderPath = $this->getOutBoxFolderPath();
     if (empty($outBoxFolderPath)) {
@@ -4412,8 +4579,8 @@ Störung.';
 
   // public methods exporting data needed by the web-page template
 
-  /** General form data for hidden input elements.*/
-  public function formData()
+  /** @return array General form data for hidden input elements. */
+  public function formData():array
   {
     return [
       'formStatus' => 'submitted',
@@ -4423,8 +4590,8 @@ Störung.';
     ];
   }
 
-  /** Return the current catch-all email. */
-  public function catchAllEmail()
+  /** @return string The current catch-all email. */
+  public function catchAllEmail():string
   {
     return htmlspecialchars($this->catchAllName.' <'.$this->catchAllEmail.'>');
   }
@@ -4433,11 +4600,13 @@ Störung.';
    * Compose one "readable", flat array of recipients,
    * meant only for display. The real recipients list is composed
    * somewhere else.
+   *
+   * @return array
    */
-  public function toStringArray()
+  public function toStringArray():array
   {
     $toString = [];
-    foreach($this->recipients as $recipient) {
+    foreach ($this->recipients as $recipient) {
       $name = trim($recipient['name']);
       $email = trim($recipient['email']);
       if (!empty($name)) {
@@ -4452,18 +4621,21 @@ Störung.';
    * Compose one "readable", comma separated list of recipients,
    * meant only for display. The real recipients list is composed
    * somewhere else.
+   *
+   * @return string
    */
-  public function toString()
+  public function toString():string
   {
     return implode(', ', $this->toStringArray());
   }
 
-
   /**
    * Export an option array suitable to load stored email messages,
    * currently templates and message drafts.
+   *
+   * @return array
    */
-  public function storedEmails()
+  public function storedEmails():array
   {
     $drafts = $this->fetchDraftsList();
     $templates = $this->fetchTemplatesList();
@@ -4476,70 +4648,72 @@ Störung.';
 
   /**
    * Return a list of previously sent emails related to the current project.
+   *
+   * @return array|Collection
    */
   public function sentEmails()
   {
     return $this->fetchSentEmailsList();
   }
 
-  /**Export the currently selected template name. */
-  public function currentEmailTemplate()
+  /** @return string The currently selected template name. */
+  public function currentEmailTemplate():string
   {
     return $this->templateName;
   }
 
-  /** Export the currently selected draft id. */
-  public function messageDraftId()
+  /** @return null|int The currently selected draft id. */
+  public function messageDraftId():?int
   {
     return $this->draftId;
   }
 
-  /** Export the currently replied-to message id */
-  public function inReplyTo()
+  /** @return null|string The currently replied-to message id */
+  public function inReplyTo():?string
   {
     return $this->inReplyToId;
   }
 
-  /** Export the subject tag depending on whether we ar in "project-mode" or not. */
-  public function subjectTag()
+  /** @return string The subject tag depending on whether we ar in "project-mode" or not. */
+  public function subjectTag():string
   {
     return $this->messageTag;
   }
 
-  /** Export the From: name. This is modifiable. The From: email
+  /** @return string The From: name. This is modifiable. The From: email
    * address, however, is fixed in order to prevent abuse.
    */
-  public function fromName()
+  public function fromName():string
   {
     return $this->cgiValue('fromName', $this->catchAllName);
   }
 
-  /** Return the current From: addres. This is fixed and cannot be changed. */
-  public function fromAddress()
+  /** @return string The current From: addres. This is fixed and cannot be changed. */
+  public function fromAddress():string
   {
     return htmlspecialchars($this->catchAllEmail);
   }
 
-  /** In principle the most important stuff: the message text. */
-  public function messageText()
+  /** @return string In principle the most important stuff: the message text. */
+  public function messageText():string
   {
     return $this->messageContents;
   }
 
-  /** Export BCC. */
-  public function blindCarbonCopy()
+  /** @return string Export BCC. */
+  public function blindCarbonCopy():string
   {
     return $this->cgiValue('BCC', '');
   }
 
-  /** Export CC. */
-  public function carbonCopy()
+  /** @return string Export CC. */
+  public function carbonCopy():string
   {
     return $this->cgiValue('CC', '');
   }
 
-  /** Export Subject. */
-  public function subject()
+  /** @return string Export Subject. */
+  public function subject():string
   {
     return $this->cgiValue('subject', '');
   }
@@ -4551,8 +4725,10 @@ Störung.';
    * mass-email. Also, attaching personalized attachments means that each
    * recipients has to be addressed by its own private email. So for
    * mass-email we just want the unfilled PDF forms.
+   *
+   * @return array
    */
-  private function blankTemplateAttachments()
+  private function blankTemplateAttachments():array
   {
     if ($this->templateFileAttachments !== null) {
       return $this->templateFileAttachments;
@@ -4741,7 +4917,8 @@ Störung.';
     return $this->personalFileAttachments;
   }
 
-  private function activePersonalAttachments()
+  /** @return int The number of currently selected personal attachments.*/
+  private function activePersonalAttachments():int
   {
     $numAttachments = 0;
     // walk through the list of configured attachments and attach all requested.
@@ -4814,9 +4991,11 @@ Störung.';
 
   /**
    * A helper function to generate suitable select options for
-   * PageNavigation::selectOptions()
+   * PageNavigation::selectOptions().
+   *
+   * @return array
    */
-  public function fileAttachmentOptions()
+  public function fileAttachmentOptions():array
   {
     $fileAttachments = array_merge($this->fileAttachments(), $this->blankTemplateAttachments(), $this->personalAttachments());
 
@@ -4899,12 +5078,14 @@ Störung.';
    * A helper function to generate suitable select options for
    * PageNavigation::selectOptions().
    *
-   * @param $projectId Id of the active project. If <= 0 an empty
+   * @param int $projectId Id of the active project. If <= 0 an empty
    * array is returned.
    *
-   * @param $attachedEvents Flat array of attached events.
+   * @param array $attachedEvents Flat array of attached events.
+   *
+   * @return array
    */
-  public function eventAttachmentOptions($projectId, $attachedEvents)
+  public function eventAttachmentOptions(int $projectId, array $attachedEvents):array
   {
     if ($projectId <= 0) {
       return [];
@@ -4938,28 +5119,35 @@ Störung.';
     return $selectOptions;
   }
 
-  /** Return the dispatch status */
-  public function executionStatus()
+  /** @return bool The dispatch status */
+  public function executionStatus():bool
   {
     return $this->executionStatus;
   }
 
-  /** Return the dispatch status. */
-  public function errorStatus()
+  /** @return bool The negated dispatch status. */
+  public function errorStatus():bool
   {
     return !$this->executionStatus();
   }
 
-  /** Return possible diagnostics or not. Depending on operation. */
-  public function statusDiagnostics()
+  /** @return array Possible diagnostics or not. Depending on operation. */
+  public function statusDiagnostics():array
   {
     return $this->diagnostics;
   }
 
-  private function formatExceptionMessage(\Throwable $t)
+  /**
+   * Compose a "readable" message from a thrown exception.
+   *
+   * @param \Throwbled $throwable The caught exception.
+   *
+   * @return string
+   */
+  private function formatExceptionMessage(\Throwable $throwable):string
   {
     return $this->l->t('code %1$d, %2$s:%3$d -- %4$s', [
-      $t->getCode(), $t->getFile(), $t->getLine(), $t->getMessage()
+      $throwable->getCode(), $throwable->getFile(), $throwable->getLine(), $throwable->getMessage()
     ]);
   }
 }
