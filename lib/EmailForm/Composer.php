@@ -628,7 +628,7 @@ Störung.';
    *
    * @param null|mixed $default
    */
-  private function cgiValue(string $key, $default = null):?string
+  private function cgiValue(string $key, $default = null)
   {
     if (isset($this->cgiData[$key])) {
       $value = $this->cgiData[$key];
