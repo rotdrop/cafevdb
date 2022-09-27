@@ -129,6 +129,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
 
+  const MASTER_FIELD_SUFFIX = '_key';
+
   /**
    * MySQL/MariaDB column quote.
    */
@@ -855,6 +857,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $changeSets = [];
     foreach ($changed as $field) {
+      if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
+        Util::unsetValue($changed, $field);
+        --$this->changeSetSize;
+      }
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
@@ -2100,7 +2106,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $table = $tableInfo;
     }
-    return $table.'_key';
+    return $table . self::MASTER_FIELD_SUFFIX;
   }
 
   /**
