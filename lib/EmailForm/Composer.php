@@ -1748,6 +1748,9 @@ Störung.';
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
 
+      // if possible use the announcements mailing list
+      $recipients = $this->recipientsFilter->substituteAnnouncementsMailingList($this->recipients);
+
       // if in project mode potentially send to the mailing list instead of the individual recipients ...
       $recipients = $this->recipientsFilter->substituteProjectMailingList($this->recipients);
 
@@ -3363,6 +3366,9 @@ Störung.';
       $this->diagnostics['TotalPayload'] = 1;
       ++$this->diagnostics['TotalCount']; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
+
+      // if possible use the announcements mailing list
+      $recipients = $this->recipientsFilter->substituteAnnouncementsMailingList($recipients);
 
       // if in project mode potentially send to the mailing list instead of the individual recipients ...
       $recipients = $this->recipientsFilter->substituteProjectMailingList($recipients);

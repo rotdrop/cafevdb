@@ -140,7 +140,7 @@ function emailTabResize(dialogWidget, panelHolder) {
 }
 
 function updateComposerElements($emailForm, elements) {
-  elements = elements || ['TO'];
+  elements = elements || ['to'];
   if (!Array.isArray(elements)) {
     elements = [elements];
   }
@@ -492,7 +492,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         const $radio = $(this);
         basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
       return false;
     });
 
@@ -505,7 +505,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       applyRecipientsFilter.call(this, event, {
         cleanup: () => readonlyFilterControls(false),
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
     });
 
   // initialization
@@ -2144,7 +2144,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                 return true;
               }
 
-              updateComposerElements(emailForm, ['TO', 'subjectTag']);
+              updateComposerElements(emailForm, ['to', 'subjectTag']);
 
               return true;
             },

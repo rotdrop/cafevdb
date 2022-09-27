@@ -850,6 +850,36 @@ class RecipientsFilter
   }
 
   /**
+   * Programmatically set the user base, e.g. to force sending to the mailing
+   * list.
+   *
+   * @param int $userBase User-base flags.
+   *
+   * @return void
+   */
+  public function setUserBase(int $userBase):void
+  {
+    $userBaseData = [];
+    if ($userBase & self::MUSICIANS_FROM_PROJECT_PRELIMINARY) {
+      $userBaseData[self::FROM_PROJECT_PRELIMINARY_KEY] = true;
+    }
+    if ($userBase & self::MUSICIANS_FROM_PROJECT_CONFIRMED) {
+      $userBaseData[self::FROM_PROJECT_CONFIRMED_KEY] = true;
+    }
+    if ($userBase & self::MUSICIANS_EXCEPT_PROJECT) {
+      $userBaseData[self::EXCEPT_PROJECT_KEY] = true;
+    }
+    if ($userBase & self::ANNOUNCEMENTS_MAILING_LIST) {
+      $userBaseData[self::ANNOUNCEMENTS_MAILING_LIST_KEY] = true;
+    }
+    if ($userBase & self::PROJECT_MAILING_LIST) {
+      $userBaseData[self::PROJECT_MAILING_LIST_KEY] = true;
+    }
+    $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY] = $userBaseData;
+    $this->getUserBase();
+  }
+
+  /**
    * Decode the check-boxes which select the set of users we
    * consider basically.
    *
@@ -1124,12 +1154,16 @@ class RecipientsFilter
   }
 
   /**
+   * @param null|int $userBase Optional different user base. If unset
+   * $this->userBase is used.
+   *
    * @return The list of selected recipients. To have this method is
    * in principle the goal of all the mess above ...
    */
-  public function selectedRecipients():array
+  public function selectedRecipients(?int $userBase = null):array
   {
-    if ($this->userBase & self::ANNOUNCEMENTS_MAILING_LIST) {
+    $userBase = $userBase ?? $this->userBase;
+    if ($userBase & self::ANNOUNCEMENTS_MAILING_LIST) {
       $listInfo = $this->getMailingListInfo(self::ANNOUNCEMENTS_MAILING_LIST_KEY);
       return [
         [
@@ -1140,7 +1174,7 @@ class RecipientsFilter
           'dbdata' => null,
         ],
       ];
-    } elseif ($this->userBase & self::PROJECT_MAILING_LIST) {
+    } elseif ($userBase & self::PROJECT_MAILING_LIST) {
       $listInfo = $this->getMailingListInfo(self::PROJECT_MAILING_LIST_KEY);
       return [
         [
@@ -1239,18 +1273,22 @@ class RecipientsFilter
   }
 
   /**
-   * Give a hint whether the announcements mailing list should be used.
+   * Substitute the recipients by the announcements mailing list if
+   * possible. The composer does this if the email does not contain personal
+   * substitutions.
    *
-   * @param array $selectedRecipients The selected recipients array.
+   * @param array $selectedRecipients Recipients-set in the form returned by
+   * RecipientsFilter::selectedRecipients().
    *
-   * @return bool
+   * @return bool \true if the recipients list has been altered, \false if it
+   * has been left as is.
    */
-  public function shouldSendToAnnouncementsList(array $selectedRecipients):bool
+  public function substituteAnnouncementsMailingList(array &$selectedRecipients):bool
   {
     if ($this->announcementsMailingList()) {
       return true;
     }
-    if (($this->userBase & self::DATABASE_MUSICIANS) != self::ALL_MUSICIANS) {
+    if (!empty($this->project) && ($this->userBase & self::DATABASE_MUSICIANS) != self::ALL_MUSICIANS) {
       return false;
     }
     if (!empty($this->instrumentsFilter())) {
@@ -1269,6 +1307,12 @@ class RecipientsFilter
       return false;
     }
 
+    if (empty($this->getMailingListInfo(self::ANNOUNCEMENTS_MAILING_LIST_KEY))) {
+      return false;
+    }
+
+    $selectedRecipients = $this->selectedRecipients(self::ANNOUNCEMENTS_MAILING_LIST);
+
     return true;
   }
 
@@ -1282,18 +1326,19 @@ class RecipientsFilter
    * @param array $selectedRecipients Recipients-set in the form returned by
    * RecipientsFilter::selectedRecipients().
    *
-   * @return array The possibly tweaked array of recipients.
+   * @return bool \true If the recipients list has been tweaked, \false if it
+   * has not been altered.
    */
-  public function substituteProjectMailingList(array $selectedRecipients)
+  public function substituteProjectMailingList(array &$selectedRecipients):bool
   {
     if (count($selectedRecipients) == 1) {
       // never send single-address email to the list
-      return $selectedRecipients;
+      return false;
     }
 
     $listInfo = $this->getMailingListInfo();
     if (empty($listInfo)) {
-      return $selectedRecipients;
+      return false;
     }
     $listId = $listInfo['list_id'];
     /** @var MailingListsService $listsService */
@@ -1313,20 +1358,18 @@ class RecipientsFilter
 
     if (!empty($remainingListMembers)) {
       // list contains members not present in the recipients-set: bail out
+      // @todo We may want to allow excess members on the list. Maybe better
+      // have a look at the filter values.
       $this->logInfo('Excess members ' . print_r($remainingListMembers, true));
-      return $selectedRecipients;
+      return false;
     }
 
     // throw away all recipients which are also reached by posting to the list
     // and add the list address as additional recipient.
-    $selectedRecipients = array_values($remainingRecipients);
-    array_unshift($selectedRecipients, [
-      'email' => $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME] ?? '',
-      'name' =>  $listInfo[MailingListsService::LIST_INFO_DISPLAY_NAME] ?? '',
-      'status' => self::MEMBER_STATUS_OPEN,
-      'project' => $this->projectId ?? 0,
-      'dbdata' => null,
-    ]);
-    return $selectedRecipients;
+    $selectedRecipients = array_merge(
+      $this->selectedRecipients(self::PROJECT_MAILING_LIST),
+      array_values($remainingRecipients),
+    );
+    return true;
   }
 }
