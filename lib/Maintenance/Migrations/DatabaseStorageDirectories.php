@@ -36,7 +36,8 @@ class DatabaseStorageDirectories extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      'CREATE TABLE IF NOT EXISTS DatabaseStorageDirectories (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, storage_id VARCHAR(64) NOT NULL, name VARCHAR(256) NOT NULL, updated DATETIME(6) DEFAULT NULL COMMENT "(DC2Type:datetime_immutable)", INDEX IDX_D1CC6CA1727ACA70 (parent_id), INDEX IDX_D1CC6CA15E237E06 (name), PRIMARY KEY(id))',
+      'CREATE TABLE IF NOT EXISTS DatabaseStorageDirectories (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, storage_id VARCHAR(64) DEFAULT NULL, name VARCHAR(256) NOT NULL, updated DATETIME(6) DEFAULT NULL COMMENT "(DC2Type:datetime_immutable)", INDEX IDX_D1CC6CA1727ACA70 (parent_id), PRIMARY KEY(id))',
+      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_D1CC6CA15CC5DB90727ACA705E237E06 ON DatabaseStorageDirectories (storage_id, parent_id, name)',
       'CREATE TABLE IF NOT EXISTS database_storage_directory_encrypted_file (database_storage_directory_id INT NOT NULL, encrypted_file_id INT NOT NULL, INDEX IDX_9DDA237BCEB6337 (database_storage_directory_id), INDEX IDX_9DDA237BEC15E76C (encrypted_file_id), PRIMARY KEY(database_storage_directory_id, encrypted_file_id))',
       'ALTER TABLE DatabaseStorageDirectories ADD CONSTRAINT FK_D1CC6CA1727ACA70 FOREIGN KEY IF NOT EXISTS (parent_id) REFERENCES DatabaseStorageDirectories (id)',
       'ALTER TABLE database_storage_directory_encrypted_file ADD CONSTRAINT FK_9DDA237BCEB6337 FOREIGN KEY IF NOT EXISTS (database_storage_directory_id) REFERENCES DatabaseStorageDirectories (id) ON DELETE CASCADE',

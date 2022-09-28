@@ -166,6 +166,13 @@ class Project implements \ArrayAccess
    */
   private $financialBalanceSupportingDocumentsChanged;
 
+  /**
+   * @var DatabaseStorageDirectory
+   *
+   * @ORM\OneToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
+   */
+  private $financialBalanceDocumentsFolder;
+
   public function __construct() {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();

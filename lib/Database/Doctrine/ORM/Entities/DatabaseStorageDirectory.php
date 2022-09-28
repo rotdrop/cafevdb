@@ -35,9 +35,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(
  *   name="DatabaseStorageDirectories",
- *   indexes={
- *     @ORM\Index(columns={"name"}),
- *   }
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"storage_id", "parent_id", "name"})
+ *   },
  * )
  * @ORM\Entity
  */
@@ -58,7 +58,7 @@ class DatabaseStorageDirectory implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=64)
+   * @ORM\Column(type="string", length=64, nullable=true)
    */
   protected $storageId;
 
