@@ -129,7 +129,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
 
-  const MASTER_FIELD_SUFFIX = '_key';
+  const MASTER_FIELD_SUFFIX = '__master_key_';
 
   /**
    * MySQL/MariaDB column quote.
