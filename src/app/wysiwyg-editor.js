@@ -54,6 +54,7 @@ const addEditor = function(selector, initCallback) {
               return ClassicEditor
                 .create(editorElement)
                 .then(editorInstance => {
+                  $(editorElement).data('ckeditorInstance', editorInstance);
                   editorInstance.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
                     if (!isFocused) {
                       editorInstance.updateSourceElement();
@@ -143,16 +144,25 @@ const removeEditor = function(selector) {
   if (!$editorElements.length) {
     return;
   }
-  try {
-    $editorElements.ckeditor().remove();
-  } catch (e) {
-    // console.info('EXCEPTION', e);
-  }
-  try {
-    $editorElements.tinymce().remove();
-  } catch (e) {
-    // console.info('EXCEPTION', e);
-  }
+  $editorElements.each(function(index) {
+    const $editorElement = $(this);
+    try {
+      const ckeditor = $editorElement.data('ckeditorInstance');
+      if (ckeditor) {
+        ckeditor.destroy();
+        $editorElement.removeData('ckeditorInstance');
+      }
+    } catch (e) {
+      console.debug('EXCEPTION', e);
+    }
+    try {
+      if ($editorElement.tinymce) {
+        $editorElement.tinymce().remove();
+      }
+    } catch (e) {
+      console.debug('EXCEPTION', e);
+    }
+  });
 };
 
 /**
@@ -170,12 +180,12 @@ const updateEditor = function(selector, contents) {
   }
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
-    if ($editorElements.ckeditor) {
-      editor = $editorElements.ckeditor().ckeditorGet();
-      editor.setData(contents);
-      // ckeditor snapshots itself on update.
-      // editor.undoManager.save(true);
-    }
+    $editorElements.each(function(index) {
+      const ckeditor = $(this).data('ckeditorInstance');
+      if (ckeditor) {
+        ckeditor.setData(contents);
+      }
+    });
     break;
   case 'tinymce':
     $editorElements.tinymce().setContent(contents);
@@ -206,10 +216,12 @@ const snapshotEditor = function(selector) {
   }
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
-    if ($editorElements.ckeditor) {
-      editor = $editorElements.ckeditor().ckeditorGet();
-      editor.undoManager.save(true);
-    }
+    $editorElements.each(function(index) {
+      const ckeditor = $(this).data('ckeditorInstance');
+      if (ckeditor) {
+        ckeditor.undoManager.save(true);
+      }
+    });
     break;
   case 'tinymce':
     $editorElements.tinymce().undoManager.add();
