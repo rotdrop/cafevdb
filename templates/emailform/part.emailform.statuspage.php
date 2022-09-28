@@ -4,30 +4,27 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-/**@file
+/**
  * Error-status page for email-form validation
  *
- * @param $_['ProjectName'] optional
- *
- * @param $_['ProjectId'] optional
- *
- * @param $_['Diagnostics'] array, all fields are optional, recognized
+ * @param $diagnostics array, all fields are optional, recognized
  * records are:
  *
  * [
@@ -48,6 +45,8 @@
  *   'MailerException' => EXCEPTION_MESSAGE_FROM_PHP_MAILER,
  *   'Message' => FIRST_FEW_LINES_OF_SENT_MESSAGE,
  * ]
+ *
+ * @todo this doc comment is incomplete
  */
 
 namespace OCA\CAFEVDB;
@@ -70,7 +69,7 @@ $output = false; // set to true if anything has been printed
 
 echo '<div class="emailform statuspage">';
 
-/*****************************************************************************
+/*-***************************************************************************
  *
  * Overall status
  *
@@ -97,7 +96,7 @@ if ($numTotal > 0 && $numFailed == 0) {
   </span>
 </div>';
   }
-} else if ($numFailed > 0) {
+} elseif ($numFailed > 0) {
   $output = true;
   echo '
 <div class="emailform error group messagecount">
@@ -107,13 +106,15 @@ if ($numTotal > 0 && $numFailed == 0) {
     if ($numFailed == $numTotal) {
       echo '
       '.$l->t('Sending of all %d messages has failed, propably no message has been sent.', $numTotal);
-    } else if ($numFailed == 1) {
+    } elseif ($numFailed == 1) {
       echo '
       '.$l->t('One (out of %d) message has probably not been sent.', $numTotal);
     } else {
       echo '
-      '.$l->t('%d (out of %d) messages have probably not been sent.',
-              [ $numFailed, $numTotal, ]);
+      '.$l->t(
+        '%d (out of %d) messages have probably not been sent.',
+        [ $numFailed, $numTotal, ]
+      );
     }
   } else {
     echo '
@@ -124,7 +125,7 @@ if ($numTotal > 0 && $numFailed == 0) {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Failed template substitutions
  *
@@ -163,25 +164,27 @@ Not all variable substitutions could be resolved:').'
   }
   $explanations = !$needExplanations
     ? ''
-    : $l->t("Please understand that the software is really `picky'; ".
-            "names have to match exactly. ".
-            "Please use only capital letters for variable names. ".
-            "Please do not use spaces. Vaiable substitutions have to start with ".
-            "a dollar-sign `%s', be enclosed by curly braces `%s' and consist of a ".
-            "category-name (e.g. `%s') separated by double colons `%s' from ".
-            "the variable name itself (e.g. `%s'). An example is ".
-            "`%s'. ".
-            "Please have a look at the example template `%s' which contains ".
-            "a complete list of all known substitutions.",
-            [
-	      '<span class="error code">$</span>',
-              '<span class="error code">{...}</span>',
-              '<span class="error code">GLOBAL</span>',
-              '<span class="error code">::</span>',
-              '<span class="error code">ORGANIZER</span>',
-              '<span class="error code">${GLOBAL::ORGANIZER}</span>',
-              '<span class="error code">All Variables</span>',
-            ]);
+    : $l->t(
+      "Please understand that the software is really `picky'; ".
+      "names have to match exactly. ".
+      "Please use only capital letters for variable names. ".
+      "Please do not use spaces. Vaiable substitutions have to start with ".
+      "a dollar-sign `%s', be enclosed by curly braces `%s' and consist of a ".
+      "category-name (e.g. `%s') separated by double colons `%s' from ".
+      "the variable name itself (e.g. `%s'). An example is ".
+      "`%s'. ".
+      "Please have a look at the example template `%s' which contains ".
+      "a complete list of all known substitutions.",
+      [
+        '<span class="error code">$</span>',
+        '<span class="error code">{...}</span>',
+        '<span class="error code">GLOBAL</span>',
+        '<span class="error code">::</span>',
+        '<span class="error code">ORGANIZER</span>',
+        '<span class="error code">${GLOBAL::ORGANIZER}</span>',
+        '<span class="error code">All Variables</span>',
+      ]
+    );
   echo ' <div class="error contents explanations">
   '.$explanations.'
   </div>';
@@ -189,7 +192,7 @@ Not all variable substitutions could be resolved:').'
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Failed email validations
  *
@@ -206,7 +209,7 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
           'meaning that they have not the form of an email address:').'
     </span>
   </div>';
-  foreach([ 'CC', 'BCC', ] as $header) {
+  foreach ([ 'CC', 'BCC', ] as $header) {
     $addresses = $addressDiag[$header];
     if (!empty($addresses)) {
       $lcHeader = strtolower($header);
@@ -216,7 +219,7 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
   '.$l->t("Broken `%s' addresses", ucfirst($lcHeader).':').'
     </span>
     <ul>';
-      foreach($addresses as $address) {
+      foreach ($addresses as $address) {
         echo '
       <li><span class="error item contents adresses">'.$address.'</span></li>';
       }
@@ -249,7 +252,7 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * More trivial stuff: empty fields which should not be empty
  *
@@ -277,10 +280,12 @@ if ($diagnostics['FromValidation'] !== true) {
 <div class="emailform error group emptyfrom">
   <div class="error contents emptyfrom">
     <div class="error caption emptyfrom">'.$l->t('Empty Sender Name').'</div>
-    '.$l->t('The sender name should not be empty. '.
-            'Originally, it used to be %s, but seemingly this did not suite your needs. '.
-            'Please fill in a non-empty sender name before hitting the "Send"-button again.',
-            $defaultSender).'
+    '.$l->t(
+      'The sender name should not be empty. '.
+      'Originally, it used to be %s, but seemingly this did not suite your needs. '.
+      'Please fill in a non-empty sender name before hitting the "Send"-button again.',
+      $defaultSender
+    ).'
   </div>
 </div>';
 }
@@ -300,7 +305,7 @@ if ($diagnostics['AddressValidation']['Empty']) {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * File-attachments which misteriously have vanished
  *
@@ -317,7 +322,7 @@ if (!empty($diagnostics['AttachmentValidation']['Files'])) {
           'they do not seem to exists:').'
     </span>
     <ul>';
-  foreach($failedFiles as $file) {
+  foreach ($failedFiles as $file) {
     echo '
       <li><span class="error item contents">
         <span class="file original-name">'.$file['original_name'].'</span>
@@ -327,9 +332,11 @@ if (!empty($diagnostics['AttachmentValidation']['Files'])) {
   echo '
     </ul>
   </div>';
-  $explanations = $l->t('This is probably an internal error. '
-		      . 'It may be possible to simply click on the red, underlined text '
-		      . 'in order to compose a useful message.');
+  $explanations = $l->t(
+    'This is probably an internal error. '
+    . 'It may be possible to simply click on the red, underlined text '
+    . 'in order to compose a useful message.'
+  );
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
@@ -339,7 +346,7 @@ if (!empty($diagnostics['AttachmentValidation']['Files'])) {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Event-attachments which misteriously are no longer there
  *
@@ -356,16 +363,18 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
           'they do not seem to exists:').'
     </span>
     <ul>';
-  foreach($failedEvents as $event) {
+  foreach ($failedEvents as $event) {
     echo '
       <li><span class="error item contents">'.$event.'</span></li>';
   }
   echo '
     </ul>
   </div>';
-  $explanations = $l->t('This is probably an internal error. '
-		      . 'It may be possible to simply click on the red, underlined text '
-		      . 'in order to compose a useful message.');
+  $explanations = $l->t(
+    'This is probably an internal error. '
+  . 'It may be possible to simply click on the red, underlined text '
+  . 'in order to compose a useful message.'
+  );
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
@@ -375,7 +384,7 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Failed recipients determined during the SMTP communication (i.e. not
  * messages
@@ -390,7 +399,11 @@ if (!empty($diagnostics['FailedRecipients'])) {
 <div class="emailform error group failed-recipients">
   <div class="error contents failed-recipients">
     <span class="error caption failed-recipients">'
-    . $l->t('While sending the message the following recipients failed. All other recipients were successfully sumitted to the email-server, but you should still monitor the email-inbox for messages returned later.')
+    . $l->t(
+      'While sending the message the following recipients failed.'
+      . ' All other recipients were successfully sumitted to the email-server,'
+      . ' but you should still monitor the email-inbox for messages returned later.'
+    )
     . '</span>
     <dl>';
   foreach ($failedRecipients as $failedRecipipient => $errorMessage) {
@@ -407,7 +420,7 @@ if (!empty($diagnostics['FailedRecipients'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * This is really evil. Internal erros generated by PHPMailer.
  *
@@ -424,7 +437,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
   '.$l->t('While trying to send the message(s), the following exception(s) were caught:').'
     </span>
     <ul>';
-  foreach($exceptions as $exception) {
+  foreach ($exceptions as $exception) {
     echo '
       <li><span class="error item contents exception name">'.htmlspecialchars($exception).'</span></li>';
   }
@@ -434,15 +447,17 @@ if (!empty($diagnostics['MailerExceptions'])) {
   $mailto = $adminMailto
     . '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form')
     . '&body='.rawurlencode(implode("\r\n", $exceptions));
-  $explanations = $l->t('This is an internal error. '.
-                        'Please copy this page and send it via email to %s.'.
-                        'It may be possible to simply click on the red, underlined text '.
-                        'in order to compose a useful message.',
-                        [ '<span class="error cafevdb email">'
-                        . '<a href="mailto:' . $mailto . '">'
-                        . $adminName
-                        . '</a>'
-                        . '</span>' ]);
+  $explanations = $l->t(
+    'This is an internal error. '.
+    'Please copy this page and send it via email to %s.'.
+    'It may be possible to simply click on the red, underlined text '.
+    'in order to compose a useful message.',
+    [ '<span class="error cafevdb email">'
+      . '<a href="mailto:' . $mailto . '">'
+      . $adminName
+      . '</a>'
+      . '</span>' ]
+  );
   echo '
   <div class="error contents explanations">
   <div class="error heading">'.$l->t('Explanations').'</div>
@@ -452,7 +467,7 @@ if (!empty($diagnostics['MailerExceptions'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * The following can -- in principle -- never be set, as we use
  * exceptions to catch the errors generated by the PHPMailer class.
@@ -471,7 +486,7 @@ if (!empty($diagnostics['MailerErrors'])) {
   '.$l->t('While trying to send the message(s), the following error(s) have been encountered:').'
     </span>
     <ul>';
-  foreach($errors as $error) {
+  foreach ($errors as $error) {
     echo '
       <li><span class="error item contents exception name">'.$error.'</span></li>';
   }
@@ -481,15 +496,17 @@ if (!empty($diagnostics['MailerErrors'])) {
   $mailto = $adminMailto
     . '?subject='.rawurlencode('[CAFEVDB-ImpossibleMailerErrors] Errors from Email-Form')
     . '&body='.rawurlencode(implode("\r\n", $errors));
-  $explanations = $l->t('This is an internal error. '.
-                        'Please copy this page and send it via email to %s. '.
-                        'It may be possible to simply click on the red, underlined text '.
-                        'in order to compose a useful message.',
-                        [ '<span class="error cafevdb email">'
-                        . '<a href="mailto:' . $mailto . '">'
-                        . $adminName
-                        . '</a>'
-                        . '</span>' ]);
+  $explanations = $l->t(
+    'This is an internal error. '.
+    'Please copy this page and send it via email to %s. '.
+    'It may be possible to simply click on the red, underlined text '.
+    'in order to compose a useful message.',
+    [ '<span class="error cafevdb email">'
+      . '<a href="mailto:' . $mailto . '">'
+      . $adminName
+      . '</a>'
+      . '</span>' ]
+  );
   echo '
   <div class="error contents explanations">
   <div class="error heading">'.$l->t('Explanations').'</div>
@@ -500,7 +517,7 @@ if (!empty($diagnostics['MailerErrors'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Detected message duplicates.
  *
@@ -516,7 +533,7 @@ if (!empty($diagnostics['Duplicates'])) {
   '.$l->t('Message Duplicates Detected!').'
     </span>
   </div>';
-  foreach($duplicates as $duplicate) {
+  foreach ($duplicates as $duplicate) {
     if (empty($duplicate['recipients'])) {
       // This is very likely just the Cc: to the shared email account.
       continue;
@@ -527,11 +544,10 @@ if (!empty($diagnostics['Duplicates'])) {
     echo '
   <div class="error contents duplicates>
     <span class="error heading">
-    '.$l->t('Message already sent at time %s to the following recipient(s):',
-            $dates).'
+    ' . $l->t('Message already sent at time %s to the following recipient(s):', $dates) . '
     </span>
     <ul>';
-    foreach($duplicate['recipients'] as $address) {
+    foreach ($duplicate['recipients'] as $address) {
       echo '
       <li><span class="error item contents adresses">'.htmlentities($address).'</span></li>';
     }
@@ -552,14 +568,16 @@ if (!empty($diagnostics['Duplicates'])) {
     . '&body='.rawurlencode($errorBody);
   $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$adminName.'</a></span>';
   $explanations =
-    $l->t('The email-form refuses to send email twice to the same recipients. '.
-          'In order to send out your email you have either to change the subject '.
-          'or the message body. If your message has been constructed from a pre-defined '.
-          'message-template (like the one for the yearly adress-validation) then '.
-          'please add a self-explaining subject. Otherwise the error is probably '.
-          'really on your side. Mass-emails should never be submitted twice. If in doubt '.
-          'contact %s. Please add a detailed description.',
-          [ $mailto ]);
+    $l->t(
+      'The email-form refuses to send email twice to the same recipients. '.
+      'In order to send out your email you have either to change the subject '.
+      'or the message body. If your message has been constructed from a pre-defined '.
+      'message-template (like the one for the yearly adress-validation) then '.
+      'please add a self-explaining subject. Otherwise the error is probably '.
+      'really on your side. Mass-emails should never be submitted twice. If in doubt '.
+      'contact %s. Please add a detailed description.',
+      [ $mailto ]
+    );
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
@@ -570,7 +588,7 @@ if (!empty($diagnostics['Duplicates'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Copy-to-Sent failures. These are not fatal (messages have probably
  * been sent), but still: we want to have our copy in the Sent-folder.
@@ -597,12 +615,11 @@ if (!empty($diagnostics['CopyToSent'])) {
   }
   if (isset($copyErrors['copy'])) {
     $folderErrors = $copyErrors['copy'];
-    foreach($folderErrors as $folder => $error) {
+    foreach ($folderErrors as $folder => $error) {
       $errorBody .= "Folder Error:\n".$folder." -- ".$error."\n";
       echo '
-  <div class="error contents copytosent">'.
-           $l->t('Copy to folder %s has failed: %s',
-                 [ $folder, $error, ]).'
+  <div class="error contents copytosent">' .
+           $l->t('Copy to folder %s has failed: %s', [ $folder, $error, ]) . '
   </div>';
     }
   }
@@ -611,13 +628,15 @@ if (!empty($diagnostics['CopyToSent'])) {
             '?subject='.rawurlencode('[CAFEVDB-CopyToSent] IMAP Error').
             '&body='.rawurlencode($errorBody);
   $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
-  $explanations =
-    $l->t('If no other error messages are echoed on this page, then '.
-          'the emails have probably been sent successfully. However, copying '.
-          'the sent-out message to the sent-folder on the email-server has failed. '.
-          'This is nothing you can solve on your own, please contact %s. '.
-          'It may be possible to simply click on the red, underlined text '.
-          'in order to compose a useful message.', $mailto);
+  $explanations = $l->t(
+    'If no other error messages are echoed on this page, then'
+    . ' the emails have probably been sent successfully. However, copying'
+    . ' the sent-out message to the sent-folder on the email-server has failed.'
+    . ' This is nothing you can solve on your own, please contact %s.'
+    . ' It may be possible to simply click on the red, underlined text'
+    . ' in order to compose a useful message.',
+    $mailto
+  );
   echo '
   <div class="error contents explanations">
     <div class="error heading">'.$l->t('Explanations').'</div>
@@ -628,7 +647,7 @@ if (!empty($diagnostics['CopyToSent'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Notify once more about the attached event after successful sending.
  *
@@ -645,7 +664,7 @@ if (!empty($diagnostics['Message']['Events'])) {
   </span>
   <div class="error contents message events">
     <ul>';
-  foreach($events as $event) {
+  foreach ($events as $event) {
     echo '
       <li><span class="error item contents">'.$event.'</span></li>';
   }
@@ -656,7 +675,7 @@ if (!empty($diagnostics['Message']['Events'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Notify once more about the attached files after successful sending.
  *
@@ -673,7 +692,7 @@ if (!empty($diagnostics['Message']['Files'])) {
   </span>
   <div class="error contents message files">
     <ul>';
-  foreach($files as $file) {
+  foreach ($files as $file) {
     echo '
       <li><span class="error item contents">'.$file.'</span></li>';
   }
@@ -684,7 +703,7 @@ if (!empty($diagnostics['Message']['Files'])) {
 
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Notify about the start of the raw message after successful
  * sending. This is primarily valuable for me :)
@@ -704,7 +723,7 @@ if ($diagnostics['Message']['Text'] != '') {
 </div>';
 }
 
-/*****************************************************************************
+/*-****************************************************************************
  *
  * Final notes. Also show up in the status log. But so what ;)
  *
