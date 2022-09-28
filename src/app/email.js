@@ -592,7 +592,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   {
     // @todo why is this so separated from rest???
-    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
     $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
     $('#cafevdb-sent-messages-selector').chosen({ disable_search_threshold: 10 });
@@ -2074,7 +2074,7 @@ function emailFormPopup(post, modal, single, afterInit) {
               WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
             if (when === 'after') {
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
           });
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
