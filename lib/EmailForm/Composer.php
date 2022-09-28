@@ -4782,7 +4782,7 @@ Störung.';
   {
     $message = $message ?? $this->messageContents;
 
-    $this->logInfo('MESSAGE BEFORE ' . $message);
+    // $this->logInfo('MESSAGE BEFORE ' . $message);
 
     $doc = new DOMDocument('1.0', 'UTF-8');
     $doc->encoding = 'UTF-8';
@@ -4811,7 +4811,7 @@ Störung.';
     $body = $doc->getElementsByTagName('body')->item(0);
     $content = substr(substr($doc->saveHTML($body), strlen('<body>')), 0, -strlen('</body>'));
 
-    $this->logInfo('MESSAGE AFTER ' . $content);
+    // $this->logInfo('MESSAGE AFTER ' . $content);
 
     return $content;
   }
