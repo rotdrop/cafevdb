@@ -30,6 +30,7 @@ use \stdClass;
 use \Net_IMAP;
 use \Mail_RFC822;
 use \PHP_IBAN;
+use \DOMDocument;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -84,8 +85,8 @@ class Composer
 
   const MSG_ID_AT = '_at_';
 
-  const PROGRESS_CHUNK_SIZE = 4096;
-  const PROGRESS_THROTTLE_SECONDS = 2;
+  private const PROGRESS_CHUNK_SIZE = 4096;
+  private const PROGRESS_THROTTLE_SECONDS = 2;
 
   const POST_TAG = 'emailComposer';
 
@@ -97,6 +98,22 @@ class Composer
   private const HEADER_MARKER_RECIPIENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Recipient', ];
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
+
+  public const DIAGNOSTICS_CAPTION = 'caption'; // appears not to be displayed?
+  public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
+  public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
+  public const DIAGNOSTICS_FAILED_COUNT = 'FailedCount';
+  public const DIAGNOSTICS_FAILED_RECIPIENTS = 'FailedRecipients';
+  public const DIAGNOSTICS_MAILER_EXCEPTIONS = 'MailerExceptions';
+  public const DIAGNOSTICS_DUPLICATES = 'Duplicates';
+  public const DIAGNOSTICS_COPY_TO_SENT = 'CopyToSent';
+  public const DIAGNOSTICS_TEMPLATE_VALIDATION = 'TemplateValidation';
+  public const DIAGNOSTICS_ADDRESS_VALIDATION = 'AddressValidation';
+  public const DIAGNOSTICS_SUBJECT_VALIDATION = 'SubjectValidation';
+  public const DIAGNOSTICS_FROM_VALIDATION = 'FromValidation';
+  public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
+  public const DIAGNOSTICS_MESSAGE = 'Message';
+  public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
 
   /**
    * @var string
@@ -566,32 +583,32 @@ Störung.';
     // $this->statusDiagnostics()
     $this->diagnostics = [
       'caption' => '',
-      'AddressValidation' => [
+      self::DIAGNOSTICS_ADDRESS_VALIDATION => [
         'CC' => [],
         'BCC' => [],
         'Empty' => false,
       ],
-      'TemplateValidation' => [],
-      'SubjectValidation' => true,
-      'FromValidation' => true,
-      'AttachmentValidation' => [
+      self::DIAGNOSTICS_TEMPLATE_VALIDATION => [],
+      'ExternalLinkValidation' => [],
+      self::DIAGNOSTICS_SUBJECT_VALIDATION => true,
+      self::DIAGNOSTICS_FROM_VALIDATION => true,
+      self::DIAGNOSTICS_ATTACHMENT_VALIDATION => [
         'Files' => [],
         'Events' => [],
       ],
-      'FailedRecipients' => [],
-      'MailerExceptions' => [],
-      'MailerErrors' => [],
-      'Duplicates' => [],
-      'CopyToSent' => [], // IMAP stuff
-      'Message' => [
+      self::DIAGNOSTICS_FAILED_RECIPIENTS => [],
+      self::DIAGNOSTICS_MAILER_EXCEPTIONS => [],
+      self::DIAGNOSTICS_DUPLICATES => [],
+      self::DIAGNOSTICS_COPY_TO_SENT => [], // IMAP stuff
+      self::DIAGNOSTICS_MESSAGE => [
         'Text' => '',
         'Files' => [],
         'Events' => [],
       ],
       // start of sent-messages for log window
-      'TotalPayload' => 0,
-      'TotalCount' => 0,
-      'FailedCount' => 0
+      self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
+      self::DIAGNOSTICS_TOTAL_COUNT => 0,
+      self::DIAGNOSTICS_FAILED_COUNT => 0
     ];
 
     // Maybe should also check something else. If submitted is true,
@@ -617,6 +634,9 @@ Störung.';
     } else {
       $this->messageContents = $this->cgiValue('messageText', $this->initialTemplate);
     }
+
+    // sanitze the message contents here
+    $this->messageContents = $this->sanitizeMessageHtml($this->messageContents);
   }
 
   /**
@@ -1598,7 +1618,7 @@ Störung.';
     $this->doSendMessages();
     if (!$this->errorStatus()) {
       // Hurray!!!
-      $this->diagnostics['caption'] = $this->l->t('Message(s) sent out successfully!');
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) sent out successfully!');
 
       // If sending out a draft, remove the draft.
       $this->deleteDraft();
@@ -1661,10 +1681,10 @@ Störung.';
         . ' / '
         . (int)$hasPersonalAttachments);
 
-      $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
+      $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD] = count($this->recipients)+1;
 
       foreach ($this->recipients as $recipient) {
-        ++$this->diagnostics['TotalCount'];
+        ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
 
         /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
@@ -1687,8 +1707,8 @@ Störung.';
 
         // we should not send the message out if the generation of the
         // personal attachment has failed.
-        if (!empty($this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()])) {
-          ++$this->diagnostics['FailedCount'];
+        if (!empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()])) {
+          ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
           continue;
         }
 
@@ -1718,7 +1738,7 @@ Störung.';
             $payment->setNotificationMessageId($messageId);
           }
         } else {
-          ++$this->diagnostics['FailedCount'];
+          ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
         }
       }
 
@@ -1728,7 +1748,7 @@ Störung.';
       // is allowed to fail the duplicates check as form-letters for standard
       // purposes naturally generate duplicates.
 
-      ++$this->diagnostics['TotalCount'];
+      ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $mimeMsg = $this->composeAndSend(
         $messageTemplate, [],
         addCC: true,
@@ -1742,24 +1762,31 @@ Störung.';
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
       } else {
-        ++$this->diagnostics['FailedCount'];
+        ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
     } else {
-      $this->diagnostics['TotalPayload'] = 1;
-      ++$this->diagnostics['TotalCount']; // this is ONE then ...
+      $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD] = 1;
+      ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT]; // this is ONE then ...
 
-      // if possible use the announcements mailing list
-      $recipients = $this->recipientsFilter->substituteAnnouncementsMailingList($this->recipients);
+      $recipients = $this->recipients;
 
-      // if in project mode potentially send to the mailing list instead of the individual recipients ...
-      $recipients = $this->recipientsFilter->substituteProjectMailingList($this->recipients);
+      $announcementsList = $this->recipientsFilter->substituteAnnouncementsMailingList($recipients);
+      if ($announcementsList) {
+        $this->setSubjectTag(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST);
+      } else {
+        // if in project mode potentially send to the mailing list instead of the individual recipients ...
+        $projectList = $this->recipientsFilter->substituteProjectMailingList($recipients);
+        if ($projectList) {
+          $this->setSubjectTag(RecipientsFilter::PROJECT_MAILING_LIST);
+        }
+      }
 
       $mimeMsg = $this->composeAndSend($messageTemplate, $recipients);
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
       } else {
-        ++$this->diagnostics['FailedCount'];
+        ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
     }
 
@@ -1809,7 +1836,7 @@ Störung.';
 
     $personalAttachments = [];
 
-    $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()] = [];
+    $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()] = [];
 
     // Find payments and potential attachments. Always attached a pre-filled
     // member-data update-form
@@ -2004,7 +2031,7 @@ Störung.';
       $field = $this->entityManager->find(Entities\ProjectParticipantField::class, $attachment['field_id']);
       if (empty($field)) {
         $this->logError('Unable to find attachment field "%s".', $field->getId());
-        $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+        $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
         continue;
       }
 
@@ -2020,7 +2047,7 @@ Störung.';
           break;
         default:
           $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
-          $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+          $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
           continue 2;
       }
 
@@ -2035,7 +2062,7 @@ Störung.';
 
       if ($fieldData->count() > 1 && $fieldMultiplicity == FieldMultiplicity::SIMPLE) {
         $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldType, $fieldMultiplicity));
-        $this->diagnostics['AttachmentValidation']['Personal'][$musician->getId()]['Fields'][] = $attachment;
+        $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
         continue;
       }
 
@@ -2541,8 +2568,8 @@ Störung.';
       $progressStatus = $this->progressStatusService->get($this->progressToken);
       $progressStatus->update(0, null, [
         'proto' => 'smtp',
-        'total' =>  $this->diagnostics['TotalPayload'],
-        'active' => $this->diagnostics['TotalCount'],
+        'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
+        'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
       ]);
       $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus) {
         $oldTime = $progressStatus->getLastModified()->getTimestamp();
@@ -2671,7 +2698,7 @@ Störung.';
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
 
       return false;
     }
@@ -2732,8 +2759,8 @@ Störung.';
             // least currently this happens only with smtp, which is just the
             // send-method we are using.
             $failedRecipients = $phpMailer->failedRecipients($e->getMessage());
-            $this->diagnostics['FailedRecipients'] = array_merge(
-              $this->diagnostics['FailedRecipients'],
+            $this->diagnostics[self::DIAGNOSTICS_FAILED_RECIPIENTS] = array_merge(
+              $this->diagnostics[self::DIAGNOSTICS_FAILED_RECIPIENTS],
               $failedRecipients
             );
             // something was sent in this case, so do not terminate and record
@@ -2751,7 +2778,7 @@ Störung.';
       // $this->flush();
     } catch (\Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
       $this->logException($t);
       return false;
     }
@@ -2773,26 +2800,26 @@ Störung.';
   private function recordMessageDiagnostics(string $mimeMsg):void
   {
     // Positive diagnostics
-    $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
+    $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Text'] = self::head($mimeMsg, 40);
 
-    $this->diagnostics['Message']['Files'] = [];
+    $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Files'] = [];
     foreach ($this->fileAttachments() as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue;
       }
       $size     = \OCP\Util::humanFileSize($attachment['size']);
       $name     = basename($attachment['name']).' ('.$size.')';
-      $this->diagnostics['Message']['Files'][] = $name;
+      $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Files'][] = $name;
     }
 
     foreach ($this->personalAttachments() as $attachment) {
       if ($attachment['status'] != 'selected') {
         continue;
       }
-      $this->diagnostics['Message']['Files'][] = $attachment['name'];
+      $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Files'][] = $attachment['name'];
     }
 
-    $this->diagnostics['Message']['Events'] = [];
+    $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Events'] = [];
     $events = $this->eventAttachments();
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
@@ -2800,7 +2827,7 @@ Störung.';
       $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
       $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
-      $this->diagnostics['Message']['Events'][] = $name;
+      $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Events'][] = $name;
     }
   }
 
@@ -2823,8 +2850,8 @@ Störung.';
     $progressStatus = $this->progressStatusService->get($this->progressToken);
     $progressStatus->update(0, null, [
       'proto' => 'imap',
-      'total' =>  $this->diagnostics['TotalPayload'],
-      'active' => $this->diagnostics['TotalCount'],
+      'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
+      'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
     ]);
     $imap = new Net_IMAP(
       $imapHost,
@@ -2843,7 +2870,7 @@ Störung.';
     $ret = $imap->login($user, $pass);
     if ($ret !== true) {
       $this->executionStatus = false;
-      $this->diagnostics['CopyToSent']['login'] = $ret->toString();
+      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['login'] = $ret->toString();
       $imap->disconnect();
       return false;
     }
@@ -2859,7 +2886,7 @@ Störung.';
     }
     if ($ret1 !== true && $ret2 !== true) {
       $this->executionStatus = false;
-      $this->diagnostics['CopyToSent']['copy'] = [
+      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['copy'] = [
         'Sent' => $ret1->toString(),
         'INBOX.Sent' => $ret2->toString(),
       ];
@@ -2928,7 +2955,7 @@ Störung.';
 
       if (!empty($duplicates)) {
         $this->executionStatus = false;
-        $this->diagnostics['Duplicates'][] = [
+        $this->diagnostics[self::DIAGNOSTICS_DUPLICATES][] = [
           'dates' => $loggedDates,
           'authors' => $loggedUsers,
           'text' => $logMessage->message,
@@ -3125,7 +3152,7 @@ Störung.';
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
 
       return null;
     }
@@ -3161,7 +3188,7 @@ Störung.';
     } catch (\Throwable $t) {
       $this->logException($t);
       $this->executionStatus = false;
-      $this->diagnostics['MailerExceptions'][] = $this->formatExceptionMessage($t);
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
 
       return null;
     }
@@ -3236,7 +3263,7 @@ Störung.';
     $preview = $this->exportMessages($previewRecipients);
 
     if (!empty($preview)) {
-      $this->diagnostics['caption'] = $this->l->t('Message(s) exported successfully!');
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) exported successfully!');
     }
 
     return $preview;
@@ -3259,8 +3286,8 @@ Störung.';
     // @todo yield needs more care concerning error management
     $messages = [];
 
-    $this->diagnostics['TotalCount'] =
-      $this->diagnostics['FailedCount'] = 0;
+    $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT] =
+      $this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT] = 0;
 
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
@@ -3280,14 +3307,14 @@ Störung.';
 
       if ($this->recipientsFilter->announcementsMailingList()) {
         $this->executionStatus = false;
-        $this->diagnostics['TemplateValidation']['PreconditionError'] = [
+        $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'] = [
           $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.'),
         ];
         if ($hasPersonalSubstitutions) {
-          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
         }
         if ($hasPersonalAttachments) {
-          $this->diagnostics['TemplateValidation']['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
         }
         return null;
       }
@@ -3298,7 +3325,7 @@ Störung.';
         . ' / '
         . (int)$hasPersonalAttachments);
 
-      $this->diagnostics['TotalPayload'] = count($recipients)+1;
+      $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD] = count($recipients)+1;
 
       foreach ($recipients as $recipient) {
         /** @var Entities\Musician $musician */
@@ -3321,7 +3348,7 @@ Störung.';
 
         $personalAttachments = $this->composePersonalAttachments($musician);
 
-        ++$this->diagnostics['TotalCount'];
+        ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
         $message = $this->composeAndExport(
           $strMessage,
           [ $recipient ],
@@ -3330,8 +3357,8 @@ Störung.';
           references: $templateMessageId,
           customHeaders: self::HEADER_MARKER_RECIPIENT,
         );
-        if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
-          ++$this->diagnostics['FailedCount'];
+        if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
+          ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
         }
 
         if (!empty($message)) {
@@ -3345,7 +3372,7 @@ Störung.';
       // catch-all. This Message also gets copied to the Sent-folder
       // on the imap server.
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
-      ++$this->diagnostics['TotalCount'];
+      ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
       $message = $this->composeAndExport(
         $messageTemplate, [], [],
         addCC: true,
@@ -3354,8 +3381,8 @@ Störung.';
         customHeaders: self::HEADER_MARKER_SENT,
         doNotReply: true,
       );
-      if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
-        ++$this->diagnostics['FailedCount'];
+      if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
+        ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
 
       if (!empty($message)) {
@@ -3363,19 +3390,26 @@ Störung.';
       }
 
     } else {
-      $this->diagnostics['TotalPayload'] = 1;
-      ++$this->diagnostics['TotalCount']; // this is ONE then ...
+      $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD] = 1;
+      ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT]; // this is ONE then ...
       $messageTemplate = $this->finalizeSubstitutions($messageTemplate);
 
       // if possible use the announcements mailing list
-      $recipients = $this->recipientsFilter->substituteAnnouncementsMailingList($recipients);
 
-      // if in project mode potentially send to the mailing list instead of the individual recipients ...
-      $recipients = $this->recipientsFilter->substituteProjectMailingList($recipients);
+      $announcementsList = $this->recipientsFilter->substituteAnnouncementsMailingList($recipients);
+      if ($announcementsList) {
+        $this->setSubjectTag(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST);
+      } else {
+        // if in project mode potentially send to the mailing list instead of the individual recipients ...
+        $projectList = $this->recipientsFilter->substituteProjectMailingList($recipients);
+        if ($projectList) {
+          $this->setSubjectTag(RecipientsFilter::PROJECT_MAILING_LIST);
+        }
+      }
 
       $message = $this->composeAndExport($messageTemplate, $recipients);
-      if (empty($message) || !empty($this->diagnostics['AttachmentValidation'])) {
-        ++$this->diagnostics['FailedCount'];
+      if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
+        ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
       }
       if (!empty($message)) {
         $messages[] = $message;
@@ -3406,24 +3440,27 @@ Störung.';
   {
     // Basic boolean stuff
     if ($this->subject() == '') {
-      $this->diagnostics['SubjectValidation'] = $this->messageTag;
+      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = $this->messageTag;
       $this->executionStatus = false;
     } else {
-      $this->diagnostics['SubjectValidation'] = true;
+      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = true;
     }
     if ($this->fromName() == '') {
-      $this->diagnostics['FromValidation'] = $this->catchAllName;
+      $this->diagnostics[self::DIAGNOSTICS_FROM_VALIDATION] = $this->catchAllName;
       $this->executionStatus = false;
     } else {
-      $this->diagnostics['FromValidation'] = true;
+      $this->diagnostics[self::DIAGNOSTICS_FROM_VALIDATION] = true;
     }
     if (empty($recipients)) {
-      $this->diagnostics['AddressValidation']['Empty'] = true;
+      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION]['Empty'] = true;
       $this->executionStatus = false;
     }
 
     // Template validation (i.e. variable substituions)
     $this->validateTemplate($this->messageContents);
+
+    // Validate message contents, e.g. reachability of links
+    $this->validateMessageHtml($this->messageContents);
 
     // Cc: and Bcc: validation
     foreach ([ 'CC' => $this->carbonCopy(),
@@ -3440,7 +3477,7 @@ Störung.';
       if (!$this->appStorage->fileExists($attachment['tmp_name'])) {
         $this->executionStatus = false;
         $attachment['status'] = 'unreadable';
-        $this->diagnostics['AttachmentValidation']['Files'][] = $attachment;
+        $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Files'][] = $attachment;
       }
     }
 
@@ -3449,12 +3486,12 @@ Störung.';
     foreach (array_keys($events) as $eventUri) {
       if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
         $this->executionStatus = false;
-        $this->diagnostics['AttachmentValidation']['Events'][] = $eventUri;
+        $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Events'][] = $eventUri;
       }
     }
 
     if (!$this->executionStatus) {
-      $this->diagnostics['caption'] = $this->l->t('Pre-composition validation has failed!');
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Pre-composition validation has failed!');
     }
 
     return $this->executionStatus;
@@ -3464,22 +3501,31 @@ Störung.';
    * Compute the subject tag, depending on whether we are in project
    * mode or not.
    *
+   * @param null|int $recipientsSet If set assume the given recipients
+   * set.
+   *
    * @return void
+   *
+   * @see RecipientsFilter::getUserBase()
    */
-  private function setSubjectTag():void
+  private function setSubjectTag(?int $recipientsSet = null):void
   {
-    if ($this->recipientsFilter->announcementsMailingList()) {
+    $recipientsSet = $recipientsSet ?? $this->recipientsFilter->getUserBase();
+    if ($recipientsSet & RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST) {
       if ($this->projectId <= 0 || $this->projectName == '') {
         $this->messageTag = ''; // the mailing list has its own tag
       } else {
         $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag
       }
+    } elseif ($recipientsSet & RecipientsFilter::PROJECT_MAILING_LIST) {
+      $this->messageTag = ''; // the mailing list has its own tag
     } else {
       $tagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
       if (!empty($tagPrefix)) {
         $tagPrefix = $tagPrefix . '-';
       }
       if ($this->projectId <= 0 || $this->projectName == '') {
+        // TRANSLATORS: email prefix when writing to all musicians
         $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('ALL_PERSONS: musicians')) . ']';
       } else {
         $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
@@ -3539,7 +3585,7 @@ Störung.';
       }
     }
     if (!empty($brokenRecipients)) {
-      $this->diagnostics['AddressValidation'][$header] = $brokenRecipients;
+      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header] = $brokenRecipients;
       $this->executionStatus = false;
       return false;
     } else {
@@ -3580,9 +3626,9 @@ Störung.';
         $templateError[] = 'member';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics['TemplateValidation']['MemberErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
-            $this->diagnostics['TemplateValidation']['MemberErrors'] = $failures;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'] = $failures;
           }
         }
       }
@@ -3595,9 +3641,9 @@ Störung.';
         $templateError[] = 'global';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics['TemplateValidation']['GlobalErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
-            $this->diagnostics['TemplateValidation']['GlobalErrors'][] = $failure;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $failure;
           }
         }
       }
@@ -3606,7 +3652,7 @@ Störung.';
     // No substitutions should remain. Check for that.
     if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
-      $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
+      $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['SpuriousErrors'] = $leftOver;
     }
 
     if (empty($templateError)) {
@@ -4134,10 +4180,10 @@ Störung.';
   public function storeDraft():bool
   {
     if ($this->subject() == '') {
-      $this->diagnostics['SubjectValidation'] = $this->messageTag;
+      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = $this->messageTag;
       return $this->executionStatus = false;
     } else {
-      $this->diagnostics['SubjectValidation'] = true;
+      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = true;
     }
 
     // autoSave is the flag programmatically submitted by the ajax-call,
@@ -4208,7 +4254,7 @@ Störung.';
       $draftId = $this->draftId;
     }
     if ($draftId <= 0) {
-      $this->diagnostics['caption'] = $this->l->t('Unable to load draft without id');
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Unable to load draft without id');
       return $this->executionStatus = false;
     }
 
@@ -4220,7 +4266,7 @@ Störung.';
     $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
       ->find($draftId);
     if (empty($draft)) {
-      $this->diagnostics['caption'] = $this->l->t('Draft %s could not be loaded', $draftId);
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Draft %s could not be loaded', $draftId);
       return $this->executionStatus = false;
     }
 
@@ -4244,7 +4290,7 @@ Störung.';
     try {
       $this->flush();
     } catch (\Throwable $t) {
-      $this->diagnostics['caption'] = $this->l->t('Could not clear auto-generated flag of draft %s, "%s".', [
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Could not clear auto-generated flag of draft %s, "%s".', [
         $draftId, $draft->getSubject(), ]);
       $this->executionStatus = false;
     }
@@ -4274,7 +4320,7 @@ Störung.';
       } catch (\Throwable $t) {
         $this->entityManager->reopen();
         $this->logException($t);
-        $this->diagnostics['caption'] = $this->l->t(
+        $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
           'Deleting draft with id %d failed: %s',
           [ $this->draftId, $t->getMessage() ]);
         return $this->executionStatus = false;
@@ -4334,7 +4380,7 @@ Störung.';
         ->getDatabaseRepository(Entities\EmailAttachment::class)
         ->findBy([ 'draft' => null ]);
     } catch (\Throwable $t) {
-      $this->diagnostics['caption'] = $this->l->t(
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Cleaning temporary files failed: %s', $t->getMessage());
       return $this->executionStatus = false;
     }
@@ -4371,7 +4417,7 @@ Störung.';
         }
       }
     }
-    $this->diagnostics['caption'] = $this->l->t('Cleaning temporary files succeeded.');
+    $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Cleaning temporary files succeeded.');
     return $this->executionStatus = true;
   }
 
@@ -4395,7 +4441,7 @@ Störung.';
       $this->flush();
     } catch (\Throwable $t) {
       $this->logException($t);
-      $this->diagnostics['caption'] = $this->l->t(
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Detaching temporary file attachments from draft %d failed: %s',
         [ $this->draftId, $t->getMessage() ]);
       return $this->executionStatus = false;
@@ -4461,7 +4507,7 @@ Störung.';
       }
       $this->remove($tmpFile, true);
     } catch (\Throwable $t) {
-      $this->diagnostics['caption'] = $this->l->t(
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Cleaning temporary files failed: %s', $t->getMessage());
       return $this->executionStatus = false;
     }
@@ -4722,6 +4768,110 @@ Störung.';
   public function subject():string
   {
     return $this->cgiValue('subject', '');
+  }
+
+  /**
+   * Sanitze the message content in order to have a "second defence line"
+   * against malconfigured WYSIWYG editors.
+   *
+   * @param null|string $message The original message.
+   *
+   * @return string The hopefully sanitized message content.
+   */
+  private function sanitizeMessageHtml(?string $message = null):string
+  {
+    $message = $message ?? $this->messageContents;
+
+    $this->logInfo('MESSAGE BEFORE ' . $message);
+
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    $doc->encoding = 'UTF-8';
+    // $doc->substituteEntities = true;
+    $doc->loadHTML('<html><head><meta charset="utf-8"></head><body>' . $message . '</body></html>');
+    $links = $doc->getElementsByTagName('a');
+    /** @var DOMElement $item */
+    foreach ($links as $item) {
+      // add a target="_blank" attribute to all links.
+      if (!$item->hasAttribute('target')) {
+        $item->setAttribute('target', '_blank');
+      }
+      // Remove relative links. We assume that any iteration of /?../ can be
+      // replaced by the base-url, so
+      //
+      // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
+      $href = $item->getAttribute('href');
+      if (isset(parse_url($href)['host'])) {
+        continue;
+      }
+      $baseUrl = $this->urlGenerator()->getBaseUrl();
+      $href = $baseUrl . preg_replace('|/?(\.\./)+|', '/', $href);
+      $item->setAttribute('href', $href);
+    }
+
+    $body = $doc->getElementsByTagName('body')->item(0);
+    $content = substr(substr($doc->saveHTML($body), strlen('<body>')), 0, -strlen('</body>'));
+
+    $this->logInfo('MESSAGE AFTER ' . $content);
+
+    return $content;
+  }
+
+  /**
+   * Validate external links in the message. This is done by fetching the
+   * headers of the destination web page.
+   *
+   * @param null|string $message The HTML message.
+   *
+   * @return bool The validation status
+   */
+  private function validateMessageHtml(?string $message = null):bool
+  {
+    $message = $message ?? $this->messageContents;
+
+    $linkStatus = [];
+    $hasErrors = false;
+
+    $doc = new DOMDocument();
+    $doc->loadHTML($message);
+    $links = $doc->getElementsByTagName('a');
+    /** @var DOMElement $item */
+    foreach ($links as $item) {
+      $thisLinkGood = false;
+      $href = $item->getAttribute('href');
+      $text = $item->nodeValue;
+      try {
+        $headers = get_headers($href);
+      } catch (\Throwable $t) {
+        $headers = null;
+      }
+      if ($headers && count($headers) > 0) {
+        $code = (int)substr($headers[0], 9, 3);
+        if ($code >= 200 && $code < 400) {
+          $thisLinkGood = true;
+        }
+      }
+      $linkStatus[] = [
+        'url' => $href,
+        'text' => $text,
+        'status' => $thisLinkGood,
+      ];
+      $hasErrors = $hasErrors || ! $thisLinkGood;
+    }
+
+    $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
+    $badLinks =  array_filter($linkStatus, fn($info) => !$info['status']);
+    $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = [
+      'Status' => !$hasErrors,
+      'All' => $linkStatus,
+      'Good' => $goodLinks,
+      'Bad' =>  $badLinks,
+    ];
+
+    if ($hasErrors) {
+      $this->executionStatus = false;
+    }
+
+    return !$hasErrors;
   }
 
   /**
@@ -5146,7 +5296,7 @@ Störung.';
   /**
    * Compose a "readable" message from a thrown exception.
    *
-   * @param \Throwbled $throwable The caught exception.
+   * @param \Throwble $throwable The caught exception.
    *
    * @return string
    */
