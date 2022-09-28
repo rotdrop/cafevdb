@@ -238,6 +238,17 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'column' => 'sequence',
     ],
+    // link only the balance directies via their parent_id
+    self::DATABASE_STORAGE_DIRECTORIES_TABLE => [
+      'entity' => Entities\DatabaseStorageDirectory::class,
+      'identifier' => [
+        'parent_id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'financial_balance_documents_folder_id',
+        ],
+        'id' => false,
+      ],
+    ],
   ];
 
   /** {@inheritdoc} */
