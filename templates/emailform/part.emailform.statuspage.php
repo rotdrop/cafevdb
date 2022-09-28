@@ -51,6 +51,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\Common\Util;
 
 $adminMailto = [];
@@ -62,8 +63,8 @@ foreach ($cloudAdminContact as $contact) {
 $adminMailto = implode(',', $adminMailto);
 $adminName = implode(', ', $adminName);
 
-$numTotal = $diagnostics['TotalCount'];
-$numFailed = $diagnostics['FailedCount'];
+$numTotal = $diagnostics[Composer::DIAGNOSTICS_TOTAL_COUNT];
+$numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
 
 $output = false; // set to true if anything has been printed
 
@@ -131,7 +132,7 @@ if ($numTotal > 0 && $numFailed == 0) {
  *
  */
 
-$templateDiag = $diagnostics['TemplateValidation'];
+$templateDiag = $diagnostics[Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
 if (!empty($templateDiag)) {
   $output = true;
   $leadIns = [
@@ -198,7 +199,7 @@ Not all variable substitutions could be resolved:').'
  *
  */
 
-$addressDiag = $diagnostics['AddressValidation'];
+$addressDiag = $diagnostics[Composer::DIAGNOSTICS_ADDRESS_VALIDATION];
 if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
   $output = true;
   echo '
@@ -258,10 +259,10 @@ if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
  *
  */
 
-if ($diagnostics['SubjectValidation'] !== true) {
+if ($diagnostics[Composer::DIAGNOSTICS_SUBJECT_VALIDATION] !== true) {
   // empty subject
   $output = true;
-  $subjectTag = $diagnostics['SubjectValidation'];
+  $subjectTag = $diagnostics[Composer::DIAGNOSTICS_SUBJECT_VALIDATION];
   echo '
 <div class="emailform error group emptysubject">
   <div class="error contents emptysubject">
@@ -272,10 +273,10 @@ if ($diagnostics['SubjectValidation'] !== true) {
 </div>';
 }
 
-if ($diagnostics['FromValidation'] !== true) {
+if ($diagnostics[Composer::DIAGNOSTICS_FROM_VALIDATION] !== true) {
   // empty from name
   $output = true;
-  $defaultSender = $diagnostics['FromValidation'];
+  $defaultSender = $diagnostics[Composer::DIAGNOSTICS_FROM_VALIDATION];
   echo '
 <div class="emailform error group emptyfrom">
   <div class="error contents emptyfrom">
@@ -290,7 +291,7 @@ if ($diagnostics['FromValidation'] !== true) {
 </div>';
 }
 
-if ($diagnostics['AddressValidation']['Empty']) {
+if ($diagnostics[Composer::DIAGNOSTICS_ADDRESS_VALIDATION]['Empty']) {
   // no recipients
   $output = true;
   echo '
@@ -307,13 +308,54 @@ if ($diagnostics['AddressValidation']['Empty']) {
 
 /*-****************************************************************************
  *
+ * External links which could not be followed
+ *
+ */
+if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
+  $goodUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Good'];
+  $badUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Bad'];
+
+  // no recipients
+  $output = true;
+  echo '
+<div class="emailform error group broken-external-links">
+  <div class="error contents broken-external-links">
+    <div class="error caption broken-external-links">'
+    . Util::htmlEscape($l->t('The message contains references to external links which could not be followed.'))
+    . '</div>
+    <div class="error hint broken-external-links">'
+    . Util::htmlEscape($l->t(
+      'Please understand that the relevant broken part is the link-target which is normally invisible.'
+      . ' You can edit the link-target in the message editor by using the context menu (right-click) or the link-button.'))
+    . '
+    </div>
+    <ul>';
+  foreach ($diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Bad'] as $info) {
+    $url = $info['url'];
+    $text = $info['text'];
+    echo '
+      <li>
+        <dl>
+           <dt>' . Util::htmlEscape($l->t('Link-Target')) . '</dt><dd>' . Util::htmlEscape($url) . '</dd>
+           <dt>' . Util::htmlEscape($l->t('Link-Text')) . '</dt><dd>' . Util::htmlEscape($text) . '</dd>
+        </dl>
+      </li>';
+  }
+  echo '
+    </ul>
+  </div>
+</div>';
+}
+
+/*-****************************************************************************
+ *
  * File-attachments which misteriously have vanished
  *
  */
-if (!empty($diagnostics['AttachmentValidation']['Files'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Files'])) {
   $output = true;
 
-  $failedFiles = $diagnostics['AttachmentValidation']['Files'];
+  $failedFiles = $diagnostics[Composer::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Files'];
   echo '
 <div class="emailform error group attachments files">
   <div class="error contents attachments files">
@@ -351,10 +393,10 @@ if (!empty($diagnostics['AttachmentValidation']['Files'])) {
  * Event-attachments which misteriously are no longer there
  *
  */
-if (!empty($diagnostics['AttachmentValidation']['Events'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Events'])) {
   $output = true;
 
-  $failedEvents = $diagnostics['AttachmentValidation']['Events'];
+  $failedEvents = $diagnostics[Composer::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Events'];
   echo '
 <div class="emailform error group attachments events">
   <div class="error contents attachments events">
@@ -390,11 +432,11 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
  * messages
  *
  */
-if (!empty($diagnostics['FailedRecipients'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_FAILED_RECIPIENTS])) {
 
   $output = true;
 
-  $failedRecipients = $diagnostics['FailedRecipients'];
+  $failedRecipients = $diagnostics[Composer::DIAGNOSTICS_FAILED_RECIPIENTS];
   echo '
 <div class="emailform error group failed-recipients">
   <div class="error contents failed-recipients">
@@ -425,11 +467,11 @@ if (!empty($diagnostics['FailedRecipients'])) {
  * This is really evil. Internal erros generated by PHPMailer.
  *
  */
-if (!empty($diagnostics['MailerExceptions'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_MAILER_EXCEPTIONS])) {
 
   $output = true;
 
-  $exceptions = $diagnostics['MailerExceptions'];
+  $exceptions = $diagnostics[Composer::DIAGNOSTICS_MAILER_EXCEPTIONS];
   echo '
 <div class="emailform error group exceptions">
   <div class="error contents exceptions">
@@ -469,63 +511,13 @@ if (!empty($diagnostics['MailerExceptions'])) {
 
 /*-****************************************************************************
  *
- * The following can -- in principle -- never be set, as we use
- * exceptions to catch the errors generated by the PHPMailer class.
- *
- */
-if (!empty($diagnostics['MailerErrors'])) {
-
-  $output = true;
-
-  $errors = $diagnostics['MailerErrors'];
-  $failedEvents = $diagnostics['AttachmentValidation']['Events'];
-  echo '
-<div class="emailform error group attachments events">
-  <div class="error contents attachments events">
-    <span class="error caption attachments events">
-  '.$l->t('While trying to send the message(s), the following error(s) have been encountered:').'
-    </span>
-    <ul>';
-  foreach ($errors as $error) {
-    echo '
-      <li><span class="error item contents exception name">'.$error.'</span></li>';
-  }
-  echo '
-    </ul>
-  </div>';
-  $mailto = $adminMailto
-    . '?subject='.rawurlencode('[CAFEVDB-ImpossibleMailerErrors] Errors from Email-Form')
-    . '&body='.rawurlencode(implode("\r\n", $errors));
-  $explanations = $l->t(
-    'This is an internal error. '.
-    'Please copy this page and send it via email to %s. '.
-    'It may be possible to simply click on the red, underlined text '.
-    'in order to compose a useful message.',
-    [ '<span class="error cafevdb email">'
-      . '<a href="mailto:' . $mailto . '">'
-      . $adminName
-      . '</a>'
-      . '</span>' ]
-  );
-  echo '
-  <div class="error contents explanations">
-  <div class="error heading">'.$l->t('Explanations').'</div>
-  '.$explanations.'
-  </div>';
-  echo '
-</div>';
-
-}
-
-/*-****************************************************************************
- *
  * Detected message duplicates.
  *
  */
-if (!empty($diagnostics['Duplicates'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_DUPLICATES])) {
   $output = true;
 
-  $duplicates = $diagnostics['Duplicates'];
+  $duplicates = $diagnostics[Composer::DIAGNOSTICS_DUPLICATES];
   echo '
 <div class="emailform error group duplicates">
   <div class="error contents duplicates">
@@ -594,10 +586,10 @@ if (!empty($diagnostics['Duplicates'])) {
  * been sent), but still: we want to have our copy in the Sent-folder.
  *
  */
-if (!empty($diagnostics['CopyToSent'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_COPY_TO_SENT])) {
   $output = true;
 
-  $copyErrors = $diagnostics['CopyToSent'];
+  $copyErrors = $diagnostics[Composer::DIAGNOSTICS_COPY_TO_SENT];
   echo '
 <div class="emailform error group copytosent">
   <span class="error caption copytosent">
@@ -652,10 +644,10 @@ if (!empty($diagnostics['CopyToSent'])) {
  * Notify once more about the attached event after successful sending.
  *
  */
-if (!empty($diagnostics['Message']['Events'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Events'])) {
   $output = true;
 
-  $events = $diagnostics['Message']['Events'];
+  $events = $diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Events'];
 
   echo '
 <div class="emailform error group message events">
@@ -680,10 +672,10 @@ if (!empty($diagnostics['Message']['Events'])) {
  * Notify once more about the attached files after successful sending.
  *
  */
-if (!empty($diagnostics['Message']['Files'])) {
+if (!empty($diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Files'])) {
   $output = true;
 
-  $files = $diagnostics['Message']['Files'];
+  $files = $diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Files'];
 
   echo '
 <div class="emailform error group message files">
@@ -709,11 +701,11 @@ if (!empty($diagnostics['Message']['Files'])) {
  * sending. This is primarily valuable for me :)
  *
  */
-if ($diagnostics['Message']['Text'] != '') {
+if ($diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Text'] != '') {
   // no recipients
   $output = true;
 
-  $text = $diagnostics['Message']['Text'];
+  $text = $diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Text'];
   echo '
 <div class="emailform error group message text">
   <div class="error caption message text">'.$l->t('First Few Lines of Sent Message').'</div>
