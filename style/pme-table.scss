@@ -1183,7 +1183,7 @@ table.pme-main {
   }
 
   /* Style links in a more ordinary fashion */
-  a:not(.ui-tabs-anchor, .chosen-single) {
+  a:not(.ui-tabs-anchor, .chosen-single, .remove-single) {
     color:CornFlowerBlue;
     text-decoration:underline;
     font-weight:bold;

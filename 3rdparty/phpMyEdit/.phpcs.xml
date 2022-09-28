@@ -2,34 +2,69 @@
 <ruleset name="CJH">
   <description>CJH Custom Code-Sniffer Standard</description>
 
-  <arg name="bootstrap" value="vendor/zebra-north/phpcs-short-types/short-types.php"/>
+  <arg name="bootstrap" value="../../vendor/zebra-north/phpcs-short-types/short-types.php"/>
 
-  <rule ref="Squiz.Commenting.FunctionComment">
+  <rule ref="PEAR">
+    <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
+    <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
+    <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine"/>
+
+    <exclude name="PEAR.Functions.FunctionDeclaration.BraceOnSameLine"/>
+    <exclude name="PEAR.Functions.FunctionDeclaration.ContentAfterBrace"/>
+    <exclude name="PEAR.Functions.FunctionDeclaration.Indent"/>
+    <exclude name="PEAR.Functions.FunctionDeclaration.CloseBracketLine"/>
+    <exclude name="PEAR.Functions.FunctionDeclaration.SpaceAfterFunction"/>
+    <exclude name="PEAR.Functions.FunctionDeclaration.NewlineBeforeOpenBrace"/>
+
+    <exclude name="PEAR.Formatting.MultiLineAssignment.EqualSignLine"/>
+
+    <exclude name="PEAR.NamingConventions.ValidClassName.StartWithCapital"/>
+    <exclude name="PEAR.NamingConventions.ValidClassName.Invalid"/>
+
+    <exclude name="PEAR.NamingConventions.ValidFunctionName.NotCamelCaps"/>
+    <exclude name="PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+    <exclude name="PEAR.NamingConventions.ValidFunctionName.PrivateNoUnderscore"/>
+
+    <exclude name="PEAR.ControlStructures.ControlSignature.Found"/>
+    <exclude name="PEAR.ControlStructures.MultiLineCondition.CloseBracketNewLine"/>
+    <exclude name="PEAR.ControlStructures.MultiLineCondition.StartWithBoolean"/>
+    <exclude name="PEAR.ControlStructures.MultiLineCondition.Alignment"/>
+
+    <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+    <exclude name="Generic.Functions.FunctionCallArgumentSpacing.SpaceBeforeComma"/>
+    <exclude name="Generic.ControlStructures.InlineControlStructure.Discouraged"/>
+  </rule>
+
+  <rule ref="PEAR.Commenting">
+    <exclude name="PEAR.Commenting.FileComment.WrongStyle"/>
+    <exclude name="PEAR.Commenting.FileComment.IncompleteCopyright"/>
+    <exclude name="PEAR.Commenting.FileComment.MissingCategoryTag"/>
+    <exclude name="PEAR.Commenting.FileComment.MissingPackageTag"/>
+    <exclude name="PEAR.Commenting.FileComment.MissingLinkTag"/>
+    <exclude name="PEAR.Commenting.FileComment.MissingVersion"/>
+    <exclude name="PEAR.Commenting.FileComment.IncompleteLicense"/>
+    <exclude name="PEAR.Commenting.ClassComment.WrongStyle"/>
+    <exclude name="PEAR.Commenting.ClassComment.MissingCategoryTag"/>
+    <exclude name="PEAR.Commenting.ClassComment.MissingPackageTag"/>
+    <exclude name="PEAR.Commenting.ClassComment.MissingAuthorTag"/>
+    <exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag"/>
+    <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
+    <exclude name="PEAR.Commenting.ClassComment.Missing"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
+    <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamType"/>
+    <exclude name="PEAR.Commenting.FunctionComment.ParamCommentAlignment"/>
+    <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamName"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
+    <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
+    <exclude name="PEAR.Commenting.FunctionComment.WrongStyle"/>
     <properties>
-      <property name="skipIfInheritdoc" value="true"/>
+      <property name="indent" value="4"/>
+      <property name="minimumVisibility" value="protected"/>
     </properties>
   </rule>
 
-  <rule ref="PSR2">
-    <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
-    <exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine"/>
-    <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments"/>
-    <exclude name="PSR2.ControlStructures.SwitchDeclaration.BreakIndent"/>
-    <properties>
-      <property name="indent" value="4"/>
-    </properties>
-  </rule>
-
-  <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
-    <properties>
-      <property name="indent" value="4"/>
-    </properties>
-  </rule>
-
-  <rule ref="Generic.Commenting">
-    <properties>
-      <property name="indent" value="4"/>
-    </properties>
+  <rule ref="Generic.Commenting.DocComment">
     <!-- Allow single-line doc comments. See https://github.com/squizlabs/PHP_CodeSniffer/issues/258. -->
     <exclude name="Generic.Commenting.DocComment.ContentAfterOpen" />
     <exclude name="Generic.Commenting.DocComment.ContentBeforeClose" />
@@ -41,54 +76,21 @@
     <!-- Allow empty lines between param -->
     <exclude name="Generic.Commenting.DocComment.ParamGroup" />
   </rule>
-PEAR.Commenting.FunctionComment.ParamCommentAlignment
-  <rule ref="PEAR.Commenting">
-    <exclude name="PEAR.Commenting.FileComment.IncompleteCopyright"/>
-    <exclude name="PEAR.Commenting.FileComment.MissingCategoryTag"/>
-    <exclude name="PEAR.Commenting.FileComment.MissingPackageTag"/>
-    <exclude name="PEAR.Commenting.FileComment.MissingLinkTag"/>
-    <exclude name="PEAR.Commenting.FileComment.MissingVersion"/>
-    <exclude name="PEAR.Commenting.FileComment.IncompleteLicense"/>
-    <exclude name="PEAR.Commenting.ClassComment.MissingCategoryTag"/>
-    <exclude name="PEAR.Commenting.ClassComment.MissingPackageTag"/>
-    <exclude name="PEAR.Commenting.ClassComment.MissingAuthorTag"/>
-    <exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag"/>
-    <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
-    <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
-    <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamType"/>
-    <exclude name="PEAR.Commenting.FunctionComment.ParamCommentAlignment"/>
-    <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamName"/>
-    <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
-    <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
+
+  <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
     <properties>
       <property name="indent" value="4"/>
-      <property name="minimumVisibility" value="protected"/>
     </properties>
-  </rule>
-  <rule ref="PEAR.Commenting.FileComment.Missing"/>
-
-  <arg name="tab-width" value="4"/>
-  <rule ref="Generic.WhiteSpace">
-    <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
-  </rule>
-  <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
-  <rule ref="Generic.WhiteSpace.ScopeIndent">
-    <properties>
-      <property name="indent" value="4"/>
-      <property name="tabIndent" value="true"/>
-    </properties>
-  </rule>
-
-  <rule ref="PEAR">
-    <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
-    <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine"/>
+    <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.Line"/>
   </rule>
 
   <rule ref="Generic.Files.LineLength">
     <properties>
-      <property name="lineLimit" value="192"/>
+      <property name="lineLimit" value="256"/>
       <property name="absoluteLineLimit" value="0"/>
     </properties>
   </rule>
+
+  <arg name="tab-width" value="4"/>
 
 </ruleset>

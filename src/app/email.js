@@ -140,7 +140,7 @@ function emailTabResize(dialogWidget, panelHolder) {
 }
 
 function updateComposerElements($emailForm, elements) {
-  elements = elements || ['TO'];
+  elements = elements || ['to'];
   if (!Array.isArray(elements)) {
     elements = [elements];
   }
@@ -245,7 +245,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     t(appName, 'Click on the names to move the respective person to the other box'));
   dualSelect.addClass('tooltip-top');
 
-  if ($recipientsSelect.attr('readonly')) {
+  if ($recipientsSelect.prop('readonly')) {
     $dualListBoxContainer.find('input, select, button').readonly(true);
   }
 
@@ -492,7 +492,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         const $radio = $(this);
         basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
       return false;
     });
 
@@ -505,7 +505,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       applyRecipientsFilter.call(this, event, {
         cleanup: () => readonlyFilterControls(false),
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
     });
 
   // initialization
@@ -592,7 +592,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   {
     // @todo why is this so separated from rest???
-    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
     $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
     $('#cafevdb-sent-messages-selector').chosen({ disable_search_threshold: 10 });
@@ -2074,7 +2074,7 @@ function emailFormPopup(post, modal, single, afterInit) {
               WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
             if (when === 'after') {
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
           });
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
@@ -2144,7 +2144,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                 return true;
               }
 
-              updateComposerElements(emailForm, ['TO', 'subjectTag']);
+              updateComposerElements(emailForm, ['to', 'subjectTag']);
 
               return true;
             },

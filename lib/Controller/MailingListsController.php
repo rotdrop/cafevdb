@@ -4,22 +4,21 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 /**
  * @file Expose tooltips as AJAY controllers, fetching them by their key.
@@ -50,22 +49,25 @@ class MailingListsController extends Controller
   const OPERATION_UNSUBSCRIBE = 'unsubscribe';
   const OPERATION_ACCEPT = 'accept';
   const OPERATION_REJECT = 'reject';
+  const OPERATION_RELOAD = 'reload';
   const OPERATIONS = [
     self::OPERATION_INVITE,
     self::OPERATION_SUBSCRIBE,
     self::OPERATION_UNSUBSCRIBE,
     self::OPERATION_ACCEPT,
     self::OPERATION_REJECT,
+    self::OPERATION_RELOAD,
   ];
 
   /** @var MailingListsService */
   private $listsService;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , MailingListsService $listsService
+    string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    MailingListsService $listsService,
   ) {
     parent::__construct($appName, $request);
     $this->configService = $configService;
@@ -74,10 +76,27 @@ class MailingListsController extends Controller
   }
 
   /**
+   * @param string $operation Operation to perform.
+   *
+   * @param string $list List id of FQDN.
+   *
+   * @param string $email Subscription email address.
+   *
+   * @param null|string $displayName Display name on the list.
+   *
+   * @param null|string $role Rold, member vs. moderator vs. owner.
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function serviceSwitch($operation, $list, $email, $displayName = null, $role = null)
-  {
+  public function serviceSwitch(
+    string $operation,
+    string $list,
+    string $email,
+    ?string $displayName = null,
+    ?string $role = null,
+  ):DataResponse {
     if ($list == 'announcements') {
       $list = $this->getConfigValue('announcementsMailingList');
     }
@@ -102,29 +121,39 @@ class MailingListsController extends Controller
         $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
         $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
         break;
+      case self::OPERATION_RELOAD:
+        break;
       default:
         return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
     }
-    $status = $this->listsService->getSubscriptionStatus($list, $email);
+    try {
+      $status = $this->listsService->getSubscriptionStatus($list, $email);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $status = 'unknown';
+    }
     return self::dataResponse([
       'status' =>  $status,
     ]);
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Get the status of the queried email-address.
    *
-   * @return array
+   * @param string $listId The list id.
+   *
+   * @param string $email Subscription email address.
+   *
+   * @return DataResponse
    * ```
    * [
    *   'status' => { 'subscribed', 'unsubscribed', 'invited', 'waiting' }
    * ]
    * ```
    *
+   * @NoAdminRequired
    */
-  public function getStatus(string $listId, string $email)
+  public function getStatus(string $listId, string $email):DataResponse
   {
     if (empty($listId)) {
       return self::grumble($this->l->t('List-id must not be empty.'));
@@ -135,10 +164,4 @@ class MailingListsController extends Controller
     $status = $this->listsService->getSubscriptionStatus($listId, $email);
     return self::dataResponse([ 'status' => $status ]);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

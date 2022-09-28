@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -50,12 +50,11 @@ const myConfig = {
   browser_spellcheck: true,
   gecko_spellcheck: true,
   file_picker_types: 'file image media',
-  // relative_urls: false,
   // convert_urls: false,
   relative_urls: true,
-  suffix: '.min',
   base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
-  // document_base_url: 'https://fritz.claus-justus-heine.info:8888/owncloud8/index.php/apps/cafevdb/',
+  // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
+  suffix: '.min',
 
   setup(editor) {
     console.debug('tinyMCE::setup()');
@@ -115,7 +114,7 @@ const myConfig = {
     'save table directionality template paste textcolor emoticons', // emoticons smileys contextmenu
   ],
   // content_css: 'css/content.css',
-  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
+  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | pastetext | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
   style_formats_merge: true,
   style_formats: [
     {
@@ -170,7 +169,7 @@ const myGetConfig = function(plusConfig) {
     plusConfig = {};
   }
   const nonceConfig = {
-    nonce: () => globalState.initialNonce,
+    nonce: () => globalState.nonce,
   };
   // const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   // if (width <= 768) { // perhaps mobile

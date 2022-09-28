@@ -23,6 +23,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -100,6 +101,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected const JOIN_SINGLE_VALUED = 0x10;
 
   const MUSICIANS_TABLE = 'Musicians';
+  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
   const PROJECTS_TABLE = 'Projects';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
   const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
@@ -126,6 +128,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const JOIN_KEY_SEP = ':';
   const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
+
+  const MASTER_FIELD_SUFFIX = '__master_key_';
 
   /**
    * MySQL/MariaDB column quote.
@@ -335,12 +339,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         return (($aVal == $bVal) ? 0 : ($aVal < $bVal ? +1 : -1));
       });
       foreach ($queryLog as $logEntry) {
-        $label = htmlspecialchars(substr($logEntry['query'], 0, 24));
+        $label = sprintf('%.03f ms: ', $logEntry['duration']);
+        $label .= htmlspecialchars(substr($logEntry['query'], 0, 24));
         if (strlen($logEntry['query']) > 24) {
           $label .= ' &#8230;';
         }
+        $toolTip = htmlspecialchars($logEntry['query']);
         $data = htmlspecialchars(json_encode($logEntry), ENT_QUOTES, 'UTF-8');
-        $html .= '<option data-query=\'' . $data . '\' value="' . $cnt . '">' . $label . '</option>';
+        $html .= '<option data-query=\'' . $data . '\' title="' . $toolTip . '" class="tooltip-wide" value="' . $cnt . '">' . $label . '</option>';
         $cnt++;
       }
       $html .= '</select></span>';
@@ -591,7 +597,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         'URLdisp'  => '$value',
         'display|LF' => ['popup' => 'data'],
         'select'   => 'T',
-        'maxlen'   => 768,
+        'maxlen'   => 254,
         'sort'     => true,
         'nowrap'   => true,
         'escape'   => true,
@@ -847,10 +853,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
+    $this->changeSetSize = count($changed);
+
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     $changeSets = [];
     foreach ($changed as $field) {
+      if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
+        Util::unsetValue($changed, $field);
+        --$this->changeSetSize;
+        continue;
+      }
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
@@ -858,10 +871,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
-    foreach ($this->joinStructure as $table => $joinInfo) {
-      $this->debug('TABLE ' . $table);
+    foreach ((empty($changeSets) ? [] : $this->joinStructure) as $table => $joinInfo) {
       $changeSet = $changeSets[$table]??[];
       if (empty($changeSet)) {
+        $this->debug('TABLE ' . $table . ' HAS EMPTY CHANGESET');
         continue;
       }
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
@@ -870,8 +883,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             --$this->changeSetSize;
           }
         }
+        $this->debug('TABLE ' . $table . ' IS SET READONLY');
         continue;
       }
+      $this->debug('TABLE ' . $table . ' HAS CHANGESET ' . print_r($changeSet, true));
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
@@ -1165,6 +1180,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
             $entity = $this->find($entityId);
+            if (empty($entity)) {
+              // This can happen, in particular with the new gmail
+              // vs. googlemail sanitizer. Log this as an error for now.
+              $this->logError('Unable to find entity ' . $entityClass . ' with id ' . print_r($entityId, true));
+              continue;
+            }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
             $this->debug('Usage is '.$usage);
             $softDeleteable = method_exists($entity, 'isDeleted')
@@ -1234,7 +1255,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
               $this->debug('ENTITIY ID '.print_r($entityId, true));
-              $entity = $entityClass::create();
+              $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
                 if (is_numeric($value) && $value <= 0) {
                   // treat this as autoincrement or otherwise auto-generated ids
@@ -1337,7 +1358,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $entity = $this->find($entityId);
         if (empty($entity)) {
           $this->debug('Entity not found, creating');
-          $entity = $entityClass::create();
+          $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
             $entity[$key] = $value;
           }
@@ -1672,7 +1693,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
-            $entity = $entityClass::create();
+            $entity = new $entityClass;
             foreach ($entityId as $key => $value) {
               $entity[$key] = $value;
             }
@@ -1734,7 +1755,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         // "land" here
         $this->debug('IDENTIFIER ' . print_r($identifier, true));
         $entityId = $meta->extractKeyValues($identifier);
-        $entity = $entityClass::create();
+        $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
           $entity[$key] = $value;
@@ -2090,7 +2111,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $table = $tableInfo;
     }
-    return $table.'_key';
+    return $table . self::MASTER_FIELD_SUFFIX;
   }
 
   /**
@@ -2477,7 +2498,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $pme = $pme?:$this->pme;
     $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
-    foreach($pme->fds as $idx => $label) {
+    foreach ($pme->fds as $idx => $label) {
       if (isset($row['qf' . $idx . '_idx'])) {
         $data[$label] = $row['qf' . $idx . '_idx'];
       } elseif (isset($row['qf'.$idx])) {
@@ -2507,10 +2528,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       case 'projects':
         $categories = array_merge($categories, explode(self::VALUES_SEP, Util::removeSpaces($value)));
         break;
-      case 'MusicianInstrument:instrument_id':
+      case $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
         foreach (explode(self::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
           $categories[] = $this->instrumentInfo['byId'][$instrumentId];
         }
+        break;
+      case $this->joinTableFieldName(self::MUSICIAN_EMAILS_TABLE, 'address'):
+        $musician->setEmail(new Entities\MusicianEmailAddress($value, $musician));
         break;
       default:
         if ($joinTable) {
@@ -2522,13 +2546,27 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         } else {
           $column = $key;
         }
-        try {
-          $musician[$column] = $value;
-          if ($column == 'user_id_slug') {
+        switch ($column) {
+          case 'email':
+            try {
+              $musician->setEmailAddress($value, $musician);
+            } catch (\Throwable $t) {
+              $this->logException($t);
+              /** @var Service\MusicianService $musicianService */
+              $musicianService = $this->di(Service\MusicianService::class);
+              $value = $musicianService->generateDisabledEmailAddress($musician);
+              $musician->setEmailAddress($value);
+            }
+            break;
+          case 'user_id_slug':
             $userIdSlugSeen = true;
-          }
-        } catch (\Throwable $t) {
-          // Don't care, we know virtual stuff is not there
+          default:
+            try {
+              $musician[$column] = $value;
+              break;
+            } catch (\Throwable $t) {
+              // Don't care, we know virtual stuff is not there
+            }
         }
         break;
       }

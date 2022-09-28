@@ -4,26 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Service;
 
+use \RuntimeException;
+use \InvalidArgumentException;
 use GuzzleHttp\Client as RestClient;
+use GuzzleHttp\Exception\ConnectException;
 
 use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
@@ -37,12 +40,20 @@ class MailingListsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
+  const ROLE = 'role';
+
+  const PRE_VERIFIED = 'pre_verified';
+  const PRE_CONFIRMED = 'pre_confirmed';
+  const PRE_APPROVED = 'pre_approved';
+  const SEND_WELCOME_MESSAGE = 'send_welcome_message';
+  const SEND_GOODBYE_MESSAGE = 'send_goodbye_message';
+
   private const DEFAULT_SUBSCRIPTION_DATA = [
-    'pre_verified' => true,
-    'pre_confirmed' => true,
-    'pre_approved' => true,
-    'send_welcome_message' => true,
-    'role' => self::ROLE_MEMBER,
+    self::PRE_VERIFIED => true,
+    self::PRE_CONFIRMED => true,
+    self::PRE_APPROVED => true,
+    self::SEND_WELCOME_MESSAGE => true,
+    self::ROLE => self::ROLE_MEMBER,
   ];
 
   const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
@@ -148,7 +159,7 @@ class MailingListsService
   ];
 
   public const DEFAULT_MEMBER_SEARCH_CRITERIA = [
-    'role' => self::ROLE_MEMBER,
+    self::ROLE => self::ROLE_MEMBER,
   ];
 
   /** @var string
@@ -176,6 +187,9 @@ class MailingListsService
    */
   private $selfLinkBySubscription = [];
 
+  /**
+   * @param ConfigService $configService Global app configuration service.
+   */
   public function __construct(
     ConfigService $configService
   ) {
@@ -191,6 +205,7 @@ class MailingListsService
     ];
   }
 
+  /** @return bool Whether the mailing list service is configured. */
   public function isConfigured():bool
   {
     foreach (ConfigService::MAILING_LIST_REST_CONFIG as $configKey) {
@@ -204,8 +219,10 @@ class MailingListsService
   /**
    * Obtain the server configuration, this is rather for testing in
    * order to check the basic connectivity.
+   *
+   * @return null|array
    */
-  public function getServerConfig()
+  public function getServerConfig():?array
   {
     $response = $this->restClient->get(
       '/3.1/system/configuration', [
@@ -215,9 +232,11 @@ class MailingListsService
   }
 
   /**
-   * Obtain the server versions.
+   * @param null|array $coreVersion Storage for detailed version information.
+   *
+   * @return array Obtain the server versions.
    */
-  public function getServerVersions(?array &$coreVersion = null)
+  public function getServerVersions(?array &$coreVersion = null):?array
   {
     $response = $this->restClient->get(
       '/3.1/system/versions', [
@@ -235,16 +254,34 @@ class MailingListsService
     return $result;
   }
 
-  static private function combinedVersion(int $major, int $minor, int $revision)
+  /**
+   * MAJOR.MINOR.REVISION.
+   *
+   * @param int $major Major verion.
+   *
+   * @param int $minor Minor version.
+   *
+   * @param int $revision Revision.
+   *
+   * @return int Combined integral version.
+   */
+  private static function combinedVersion(int $major, int $minor, int $revision):int
   {
     return $revision + 100 + ($minor + 100 * $major);
   }
 
   /**
-   * Fetch the list configuration from the server. Returns null if the list
+   * Fetch the list configuration from the server. Returns null if the lis
    * does not exist.
+   *
+   * @param string $fqdnName The list FQDN.
+   *
+   * @param null|string $resource A particular resource. If null the entire
+   * list config is returned.
+   *
+   * @return null|array The list configuration.
    */
-  public function getListConfig(string $fqdnName, ?string $resource = null)
+  public function getListConfig(string $fqdnName, ?string $resource = null):?array
   {
     $response = $this->restClient->get(
       '/3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
@@ -260,20 +297,33 @@ class MailingListsService
     return $response;
   }
 
-  public function setListConfig(string $fqdnName, $config, mixed $value = null)
+  /**
+   * Set the list config.
+   *
+   * @param string $fqdnName The list FQDN.
+   *
+   * @param string|array $config Configuration array or a particular
+   * configuraiton key.
+   *
+   * @param mixed $value If $config is a string then this is the configuration
+   * value.
+   *
+   * @return bool Execution status.
+   */
+  public function setListConfig(string $fqdnName, mixed $config, mixed $value = null):bool
   {
     if (!is_array($config)) {
       $config = [ $config => $value ];
     }
     // Bloody Python "wisdom"
-    foreach ($config as $key => &$value) {
+    foreach ($config as &$value) {
       if ($value === true) {
         $value = 'True';
-      } else if ($value === false) {
+      } elseif ($value === false) {
         $value = 'False';
       }
     }
-    $response = $this->restClient->patch(
+    /* $response = */ $this->restClient->patch(
       '/3.1/lists/' . $fqdnName . '/config', [
         'json' => $config,
         'auth' => $this->restAuth,
@@ -281,7 +331,11 @@ class MailingListsService
     return true;
   }
 
-  /** Fetch the brief list-info. */
+  /**
+   * @param string $fqdnName The list FQDN.
+   *
+   * @return null|array The brief list-info.
+   */
   public function getListInfo(string $fqdnName):?array
   {
     try {
@@ -298,14 +352,22 @@ class MailingListsService
     return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
   }
 
-  /** Create a non-existing list */
-  public function createList(string $fqdnName, string $style = 'private-default')
+  /**
+   * Create a non-existing list.
+   *
+   * @param string $fqdnName The list FQDN.
+   *
+   * @param string $style The list-style.
+   *
+   * @return bool Execution status.
+   */
+  public function createList(string $fqdnName, string $style = 'private-default'):bool
   {
     // replace the first dot by @ if no @ is present
     if (strpos($fqdnName, '@') === false) {
       $fqdnName[strpos($fqdnName, '.')] = '@';
     }
-    $response = $this->restClient->post('/3.1/lists', [
+    /* $response = */ $this->restClient->post('/3.1/lists', [
       'json' => [
         'fqdn_listname' => $fqdnName,
         'style_name' => $style,
@@ -315,13 +377,21 @@ class MailingListsService
     return true;
   }
 
-  /** Delete an existing list */
-  public function deleteList(string $listId)
+  /**
+   * Delete an existing list.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @return bool Execution status.
+   */
+  public function deleteList(string $listId):bool
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
-    $response = $this->restClient->delete('/3.1/lists/' . $listId, [
+    /* $response = */ $this->restClient->delete('/3.1/lists/' . $listId, [
       'auth' => $this->restAuth,
     ]);
     return true;
@@ -335,6 +405,15 @@ class MailingListsService
    * address of the list, but just the display name and add the desired
    * email-address to the list of acceptable aliases and then: how to add an
    * email-alias?
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param null|string $newFqdn The new name.
+   *
+   * @param null|string $newDisplayName The new display name.
+   *
+   * @return bool Execution status.
    */
   public function renameList(string $listId, ?string $newFqdn = null, ?string $newDisplayName = null)
   {
@@ -352,7 +431,7 @@ class MailingListsService
     if (!empty($newDisplayName)) {
       $displayName = $newDisplayName;
     }
-    $response = $this->restClient->patch(
+    /* $response = */ $this->restClient->patch(
       '/3.1/lists/' . $listId . '/config', [
         'json' => [
           self::LIST_CONFIG_DISPLAY_NAME => $displayName,
@@ -363,10 +442,18 @@ class MailingListsService
     return true;
   }
 
-  /** Somehow add an email alias to the mail system ... */
-  private function addEmailAlias(string $fromAddress, string $toAddress)
+  /**
+   * Somehow add an email alias to the mail system ...
+   *
+   * @param string $fromAddress Incoming email address.
+   *
+   * @param string $toAddress Resulting email address.
+   *
+   * @return void
+   */
+  private function addEmailAlias(string $fromAddress, string $toAddress):void
   {
-    throw new \RuntimeException($this->l->t('Adding email alias is not yet supported'));
+    throw new RuntimeException($this->l->t('Adding email alias is not yet supported'));
   }
 
   /**
@@ -391,8 +478,10 @@ class MailingListsService
    * @param string|array $posters Array of posters or the single posters as
    * string. "posters" are the email addresses which are allowed to post to
    * the list without moderation.
+   *
+   * @return void
    */
-  public function configureAnnouncementsList(string $listId, $owners = [], $moderators = [], $posters = [])
+  public function configureAnnouncementsList(string $listId, $owners = [], $moderators = [], $posters = []):void
   {
     $listId = $this->ensureListId($listId);
     $config = [
@@ -433,7 +522,7 @@ class MailingListsService
             self::SUBSCRIBER_EMAIL => $subscriber,
           ];
         }
-        $subscriptionData['role'] = $role;
+        $subscriptionData[self::ROLE] = $role;
         if (empty($this->getSubscription($listId, $subscriber, $role))) {
           $this->subscribe($listId, subscriptionData: $subscriptionData);
         }
@@ -453,17 +542,24 @@ class MailingListsService
    *
    * @param string $listId List-id or FQDN. If FQDN, an additional query is
    * necessary to retrieve the list-id from the server.
+   *
+   * @param string $template The name of the message template to set.
+   *
+   * @param null|string $uri The url to the template.
+   *
+   * @return bool Execution status.
    */
-  public function setMessageTemplate(string $listId, string $template, ?string $uri)
+  public function setMessageTemplate(string $listId, string $template, ?string $uri):bool
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
 
     if ($uri === null) {
       // delete
       try {
-        $response = $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
+        /* $response = */ $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
           'auth' => $this->restAuth,
         ]);
       } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -475,7 +571,7 @@ class MailingListsService
         }
       }
     } else {
-      $response = $this->restClient->patch('/3.1/lists/' . $listId . '/uris', [
+      /* $response = */ $this->restClient->patch('/3.1/lists/' . $listId . '/uris', [
         'json' => [
         $template => $uri,
         ],
@@ -487,7 +583,11 @@ class MailingListsService
 
   /**
    * Fetch the list-id of the given list. Normally it is just the
-   * email-address with @ replaced by a dot
+   * email-address with @ replaced by a dot.
+   *
+   * @param string $fqdnName The list FQDN.
+   *
+   * @return string The list id.
    */
   public function getListId(string $fqdnName)
   {
@@ -501,13 +601,25 @@ class MailingListsService
     return $this->listIdByFqdn[$fqdnName];
   }
 
-  public function getConfigurationUrl(string $listId)
+  /**
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @return The configuration URL.
+   */
+  public function getConfigurationUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
     return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
   }
 
-  public function getArchiveUrl(string $listId)
+  /**
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @return The archive url.
+   */
+  public function getArchiveUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
     return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
@@ -516,17 +628,27 @@ class MailingListsService
   /**
    * Find the basic information about a subscription for the given
    * email.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriptionAddress The email address to query.
+   *
+   * @param string $role Subscription role (member vs. moderator vs owner).
+   *
+   * @return array The subscription info.
    */
-  public function getSubscription(string $listId, string $subscriptionAddress, string $role = self::ROLE_MEMBER)
+  public function getSubscription(string $listId, string $subscriptionAddress, string $role = self::ROLE_MEMBER):array
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
 
     $post = [
       'list_id' => $listId,
       'subscriber' => $subscriptionAddress,
-      'role' => $role,
+      self::ROLE => $role,
     ];
 
     $response = $this->restClient->post(
@@ -541,8 +663,8 @@ class MailingListsService
 
     $result = [];
     foreach (($response['entries'] ?? []) as $entry) {
-      $result[$entry['role']] = $entry;
-      $this->selfLinkBySubscription[$listId][$subscriptionAddress][$entry['role']] = $entry[self::SUBSCRIPTION_SELF_LINK];
+      $result[$entry[self::ROLE]] = $entry;
+      $this->selfLinkBySubscription[$listId][$subscriptionAddress][$entry[self::ROLE]] = $entry[self::SUBSCRIPTION_SELF_LINK];
     }
     return $result;
   }
@@ -555,10 +677,18 @@ class MailingListsService
    * confirmation. The difference is that invitations are not moderated after
    * the email address has been confirmed, but subscription requests may be
    * moderated.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriptionAddress The email address to query.
+   *
+   * @return array|bool Exectution status or the requested information.
    */
-  public function getSubscriptionRequest(string $listId, string $subscriptionAddress)
+  public function getSubscriptionRequest(string $listId, string $subscriptionAddress):mixed
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
 
@@ -583,22 +713,28 @@ class MailingListsService
    * Dispose any pending subscription request with the given action. In
    * principle there should only be one pending request, so this should be ok.
    *
-   * @param string $listId
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
    *
-   * @param string $subscriptionAddress
+   * @param string $subscriptionAddress The email address to query.
    *
-   * @param string $action
+   * @param string $action The action to perform, see self::MODERATION_ACTIONS.
+   *
+   * @param null|string $reason Optional reason to mail to the $subscriptionAddress.
+   *
+   * @return bool Execution status.
    */
   public function handleSubscriptionRequest(string $listId, string $subscriptionAddress, string $action, ?string $reason = null)
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
     $requests = $this->getSubscriptionRequest($listId, $subscriptionAddress);
     if (count($requests) > 1) {
-      throw new \RuntimeException($this->l->t('More than one pending subscription request, bailing out.'));
+      throw new RuntimeException($this->l->t('More than one pending subscription request, bailing out.'));
     }
-    foreach ($requests as $owner => $request) {
+    foreach ($requests as $request) {
       $token = $request['token'];
       $postData = [
         'action' => $action,
@@ -606,9 +742,8 @@ class MailingListsService
       if (!empty($reason) && $action == self::MODERATION_ACTION_REJECT) {
         $postData['reason'] = $reason;
       }
-      $response = $this->restClient->post(
-        '/3.1/lists/' . $listId . '/requests/' . $token
-        , [
+      /* $response = */ $this->restClient->post(
+        '/3.1/lists/' . $listId . '/requests/' . $token, [
           'json' => $postData,
           'auth' => $this->restAuth,
         ]);
@@ -619,8 +754,15 @@ class MailingListsService
   /**
    * Return a brief status for the requested list and email address
    *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriptionAddress The email address to query.
+   *
    * @return string One of self::STATUS_UNSUBSCRIBED, self::STATUS_SUBSCRIBED,
    * self::STATUS_INVITED, self::STATUS_WAITING;
+   *
+   * @throws ConnectException
    */
   public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
   {
@@ -628,7 +770,6 @@ class MailingListsService
     self::t('subscribed');
     self::t('invited');
     self::t('waiting');
-    $result = self::STATUS_UNSUBSCRIBED;
     $subscription = $this->getSubscription($listId, $subscriptionAddress);
     if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
       return self::STATUS_SUBSCRIBED;
@@ -637,7 +778,7 @@ class MailingListsService
       $subscriptionRequest = $this->getSubscriptionRequest($listId, $subscriptionAddress);
       if (!empty($subscriptionRequest['subscriber'])) {
         return self::STATUS_INVITED;
-      } else if (!empty($subscriptionRequest['moderator'])) {
+      } elseif (!empty($subscriptionRequest['moderator'])) {
         return self::STATUS_WAITING;
       }
     }
@@ -650,11 +791,22 @@ class MailingListsService
    * @param string $listId The list-id or FQDN. If a list-fqdn, then an
    * additional query is needed to retrieve the list-id from the server.
    *
+   * @param null|string $email If given the data for the 'subscriber' key of
+   * the $subscriptionData.
+   *
+   * @param null|string $displayName If given the data for the 'display_name'
+   * key of the $subscriptionData.
+   *
+   * @param null|string $role If given the data for the self::ROLE key of the
+   * $subscriptionData.
+   *
    * @param array $subscriptionData The data array which at least the field
    * 'subscriber' which is the email-address to subscribe. It should also
    * contain a display name. All other parameters understood by the rest-API
    * are passed on the the list-server. The 'list_id' is overridden by the
    * first parameter.
+   *
+   * @return bool Execution status.
    */
   public function subscribe(string $listId, ?string $email = null, ?string $displayName = null, ?string $role = null, array $subscriptionData = [])
   {
@@ -665,13 +817,14 @@ class MailingListsService
       $subscriptionData['display_name'] = $displayName;
     }
     if (!empty($role)) {
-      $subscriptionData['role'] = $role;
+      $subscriptionData[self::ROLE] = $role;
     }
     if (empty($subscriptionData['subscriber'])) {
-      throw new \InvalidArgumentException($this->l->t('Missing subscriber email-address.'));
+      throw new InvalidArgumentException($this->l->t('Missing subscriber email-address.'));
     }
 
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
 
@@ -682,6 +835,7 @@ class MailingListsService
     if (($subscriptionData[self::MEMBER_DELIVERY_STATUS] ?? self::DELIVERY_STATUS_ENABLED)
         !=
         self::DELIVERY_STATUS_ENABLED) {
+      $coreVersion = [];
       $this->getServerVersions($coreVersion);
       if ($coreVersion['combined'] < self::combinedVersion(3, 3, 4)) {
         $quirkDeliveryStatus = true;
@@ -694,11 +848,11 @@ class MailingListsService
       // bloody Python rest implementation
       if ($value === true) {
         $subscriptionData[$key] = 'True';
-      } else if ($value === false) {
+      } elseif ($value === false) {
         $subscriptionData[$key] = 'False';
       }
     }
-    $response = $this->restClient->post('/3.1/members', [
+    /* $response = */ $this->restClient->post('/3.1/members', [
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
@@ -707,16 +861,27 @@ class MailingListsService
       $this->setSubscriptionPreferences(
         $listId,
         $subscriptionData[self::SUBSCRIBER_EMAIL],
-        $role ?? self::ROLE_MEMBER,
-        [ MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus ]
+        preferences: [ MailingListsService::MEMBER_DELIVERY_STATUS => $deliveryStatus ],
+        role: $role ?? self::ROLE_MEMBER,
       );
     }
 
     return true;
   }
 
-  /** Just send an invitation. */
-  public function invite(string $listId, string $email = null, ?string $displayName = null)
+  /**
+   * Just send an invitation.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $email The subscriber email to send the invitation to.
+   *
+   * @param null|string $displayName The subscribers display-name.
+   *
+   * @return bool Execution status.
+   */
+  public function invite(string $listId, string $email, ?string $displayName = null):bool
   {
     $subscriptionData = [
       'subscriber' => $email,
@@ -735,10 +900,17 @@ class MailingListsService
    * additional query is needed to retrieve the list-id from the server.
    *
    * @param string $subscriber The email-address of the subscriber.
+   *
+   * @param string $role Role of the subscription.
+   *
+   * @param bool $silent If set to \true then disable sending for confirmation messages and the like.
+   *
+   * @return bool Execution status.
    */
-  public function unsubscribe(string $listId, string $subscriber, string $role = self::ROLE_MEMBER)
+  public function unsubscribe(string $listId, string $subscriber, string $role = self::ROLE_MEMBER, bool $silent = false):bool
   {
-    if (empty($listId = $this->ensureListId($listId))) {
+    $listId = $this->ensureListId($listId);
+    if (empty($listId)) {
       return false;
     }
     $subscriptionData = $this->getSubscription($listId, $subscriber);
@@ -746,15 +918,52 @@ class MailingListsService
     if (empty($selfLink)) {
       return false;
     }
-    $result = $this->restClient->delete($selfLink, [
+    if ($silent) {
+      $unsubscriptionData = [
+        self::PRE_APPROVED => true,
+        self::PRE_CONFIRMED => true,
+      ];
+      // unfortunately there is only a global "send goodbye message" flag for
+      // the list ...
+      $this->setListConfig($listId, self::SEND_GOODBYE_MESSAGE, false);
+    } else {
+      $unsubscriptionData = [];
+    }
+    foreach ($unsubscriptionData as $key => $value) {
+      // bloody Python rest implementation
+      if ($value === true) {
+        $unsubscriptionData[$key] = 'True';
+      } elseif ($value === false) {
+        $unsubscriptionData[$key] = 'False';
+      }
+    }
+    /* $result = */ $this->restClient->delete($selfLink, [
       'auth' => $this->restAuth,
+      'json' => $unsubscriptionData,
     ]);
+    if ($silent) {
+      // undo
+      $this->setListConfig($listId, self::SEND_GOODBYE_MESSAGE, true);
+    }
     return true;
   }
 
-  public function getSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER)
+  /**
+   * Fetch the subscription preferences.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriber The email-address of the subscriber.
+   *
+   * @param string $role Role of the subscription.
+   *
+   * @return array The preferences data or null in case of error.
+   */
+  public function getSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER):?array
   {
-    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+    $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    if (empty($selfLink)) {
       $this->getSubscription($listId, $subscriber, $role);
       $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
     }
@@ -775,16 +984,35 @@ class MailingListsService
     return $response;
   }
 
-  public function setSubscriptionPreferences(string $listId, string $subscriber, string $role = self::ROLE_MEMBER, array $preferences = [])
-  {
-    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+  /**
+   * Set the subscription preferences.
+   *
+   * @param string $listId The list-id or FQDN. If a list-fqdn, then an
+   * additional query is needed to retrieve the list-id from the server.
+   *
+   * @param string $subscriber The email-address of the subscriber.
+   *
+   * @param array $preferences Preferences data array.
+   *
+   * @param string $role Role of the subscription.
+   *
+   * @return bool Execution status.
+   */
+  public function setSubscriptionPreferences(
+    string $listId,
+    string $subscriber,
+    array $preferences = [],
+    string $role = self::ROLE_MEMBER,
+  ) {
+    $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    if (empty($selfLink)) {
       $this->getSubscription($listId, $subscriber, $role);
       $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
     }
     if (empty($selfLink)) {
       return false;
     }
-    $response = $this->restClient->patch($selfLink . '/preferences', [
+    /* $response = */ $this->restClient->patch($selfLink . '/preferences', [
       'json' => $preferences,
       'auth' => $this->restAuth,
     ]);
@@ -799,8 +1027,10 @@ class MailingListsService
    * @param array $criteria Search criteria in order to restrict the search.
    *
    * @param bool $flat Return the result as flat array of just email addresses.
+   *
+   * @return array The array of members.
    */
-  public function findMembers(string $listId, array $criteria = [], bool $flat = false)
+  public function findMembers(string $listId, array $criteria = [], bool $flat = false):array
   {
     $criteria = array_merge(self::DEFAULT_MEMBER_SEARCH_CRITERIA, $criteria);
 
@@ -819,7 +1049,7 @@ class MailingListsService
     $response['entries'] = $response['entries'] ?? [];
 
     foreach ($response['entries'] as $member) {
-      $this->selfLinkBySubscription[$listId][$member['email']][$member['role']] = $member[self::SUBSCRIPTION_SELF_LINK];
+      $this->selfLinkBySubscription[$listId][$member['email']][$member[self::ROLE]] = $member[self::SUBSCRIPTION_SELF_LINK];
     }
 
     if ($flat) {
@@ -845,18 +1075,19 @@ class MailingListsService
    *
    * @param array $data The to-be-patched-in data.
    *
-   * @return bool
+   * @return bool Execution status.
    */
   public function patchMember(string $listId, string $subscriber, string $role, array $data):bool
   {
-    if (empty($selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null)) {
+    $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
+    if (empty($selfLink)) {
       $this->getSubscription($listId, $subscriber, $role);
       $selfLink = $this->selfLinkBySubscription[$listId][$subscriber][$role] ?? null;
     }
     if (empty($selfLink)) {
       return false;
     }
-    $response = $this->restClient->patch($selfLink, [
+    /* $response = */ $this->restClient->patch($selfLink, [
       'json' => $data,
       'auth' => $this->restAuth,
     ]);
@@ -866,10 +1097,12 @@ class MailingListsService
   /**
    * Generate the full path to the given templates leaf-directory.
    *
-   * @paran string $leafDirectory Leaf-component,
+   * @param string $leafDirectory Leaf-component,
    * e.g. self::TEMPLATE_TYPE_ANNOUNCEMENTS or self::TEMPLATE_TYPE_PROJECTS.
+   *
+   * @return string The full path for the given directory.
    */
-  public function templateFolderPath(string $leafDirectory)
+  public function templateFolderPath(string $leafDirectory):string
   {
     // relative path
     $l = $this->appL10n();
@@ -891,15 +1124,15 @@ class MailingListsService
   /**
    * Ensure that the given folder exists and is anonymously shared.
    *
-   * @param string $folder The template folder to check for.The $folderName is
+   * @param string $folderName The template folder to check for.The $folderName is
    * always treated relative to the shared orchestra file-space. If
    * $folderName is an absolute path, it is still relative to the shared
    * file-space of the orchestra. If $folderName is a relative path then it is
    * treated as relative to the configured document-templates folder.
    *
-   * @return string The URL in order to access the folder.
+   * @return null|string The URL in order to access the folder.
    */
-  public function ensureTemplateFolder(string $folderName)
+  public function ensureTemplateFolder(string $folderName):?string
   {
     $shareOwnerUid = $this->getConfigValue('shareowner');
     $folderPath = $folderName[0] != '/'
@@ -912,17 +1145,18 @@ class MailingListsService
       /** @var IRootFolder $rootFolder */
       $rootFolder = $this->di(IRootFolder::class);
 
-      $shareOwner = $this->user();
+      // $shareOwner = $this->user();
       $rootView = $rootFolder->getUserFolder($shareOwnerUid);
 
-      if ($rootView->nodeExists($folderPath)
-          && (($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER
-              || !$node->isShareable())) {
-        try {
-          $node->delete();
-        } catch (\Throwable $t) {
-          $this->logException($t);
-          return null;
+      if ($rootView->nodeExists($folderPath)) {
+        $node = $rootView->get($folderPath);
+        if ($node->getType() != FileInfo::TYPE_FOLDER || !$node->isShareable()) {
+          try {
+            $node->delete();
+          } catch (\Throwable $t) {
+            $this->logException($t);
+            return null;
+          }
         }
       }
 
@@ -932,7 +1166,7 @@ class MailingListsService
 
       if (!$rootView->nodeExists($folderPath)
           || ($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER) {
-        throw new \Exception($this->l->t('Folder \`%s\' could not be created', [$folderPath]));
+        throw new RuntimeException($this->l->t('Folder \`%s\' could not be created', [$folderPath]));
       }
 
       // Now it should exist as directory and $node should contain its file-info
@@ -1015,9 +1249,15 @@ class MailingListsService
     return $templates;
   }
 
-  // ensure that the given string is a list-id, if it is a FQDN then try to
-  // retrieve the list-id.
-  private function ensureListId(string $identifier)
+  /**
+   * Ensure that the given string is a list-id, if it is a FQDN then try to
+   * retrieve the list-id.
+   *
+   * @param string $identifier List-id of list-FQDN.
+   *
+   * @return null|string The List-id or null.
+   */
+  private function ensureListId(string $identifier):?string
   {
     if (strpos($identifier, '@') !== false) {
       $listId = $this->getListId($identifier);

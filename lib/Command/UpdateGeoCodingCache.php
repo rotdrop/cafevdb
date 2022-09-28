@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Command;
@@ -42,40 +43,28 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\GeoCodingService;
 
+/** Selectively update the GeoCoding cache from various remote sources. */
 class UpdateGeoCodingCache extends Command
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use AuthenticatedCommandTrait;
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IL10N $l10n
-    , IUserManager $userManager
-    , IUserSession $userSession
-    , IAppContainer $appContainer
+    string $appName,
+    IL10N $l10n,
+    IUserManager $userManager,
+    IUserSession $userSession,
+    IAppContainer $appContainer
   ) {
     parent::__construct();
+    $this->appName = $appName;
     $this->l = $l10n;
     $this->userManager = $userManager;
     $this->userSession = $userSession;
-    $this->appName = $appName;
     $this->appContainer = $appContainer;
-    if (empty($l10n)) {
-      throw new \RuntimeException('No IL10N :(');
-    }
   }
 
+  /** {@inheritdoc} */
   protected function configure()
   {
     $this
@@ -115,55 +104,42 @@ class UpdateGeoCodingCache extends Command
         'sanitize',
         null,
         InputOption::VALUE_REQUIRED,
-        "Arguemnt is one of 'countries', 'cities', 'continents', 'languages' in order to sanitize the respetive data in the data-base",
+        "Argument is one of 'countries', 'cities', 'continents', 'languages' in order to sanitize the respetive data in the data-base",
       )
       ;
   }
 
+  /** {@inheritdoc} */
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
-    $helper = $this->getHelper('question');
-    $question = new Question('User: ', '');
-    $userId = $helper->ask($input, $output, $question);
-    $question = (new Question('Password: ', ''))->setHidden(true);
-    $password = $helper->ask($input, $output, $question);
-
-    // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $userId, $password ]));
-    $user = $this->userManager->get($userId);
-    $this->userSession->setUser($user);
-
-    // Login event-handler binds encryption-service and entity-manager
-    if ($this->userSession->login($userId, $password)) {
-      $output->writeln($this->l->t('Login succeeded.'));
-    } else {
-      $output->writeln($this->l->t('Login failed.'));
-      return 1;
+    $result = $this->authenticate($input, $output);
+    if ($result != 0) {
+      return $result;
     }
-
-    /** @var EntityManager $entityManager */
-    $entityManager = $this->appContainer->get(EntityManager::class);
 
     /** @var GeoCodingService $geoCodingService */
     $geoCodingService = $this->appContainer->get(GeoCodingService::class);
 
     $countries = explode(',', $input->getOption('country'));
-    $cities = explode(',', $input->getOption('city'));
-    $continents = explode(',',  $input->getOption('continent'));
-    $languages = explode(',', $input->getOption('language'));
+    // $cities = explode(',', $input->getOption('city'));
+    // $continents = explode(',',  $input->getOption('continent'));
+    // $languages = explode(',', $input->getOption('language'));
 
     $list = $input->getOption('list');
     switch ($list) {
       case 'languages':
         $output->writeln(implode(', ', $geoCodingService->getLanguages()));
+        break;
       default:
         break;
     }
 
-    if (!empty($sanitize = $input->getOption('sanitize'))) {
+    $sanitize = $input->getOption('sanitize');
+    if (!empty($sanitize)) {
       switch ($sanitize) {
         case 'continents':
         case 'countries':
-          $countries = $entityManager->getRepository(Entities\GeoCountry::class)->findAll();
+          $countries = $this->entityManager->getRepository(Entities\GeoCountry::class)->findAll();
           $numOk =
             $numFailed =
             $numDeleted =
@@ -176,16 +152,21 @@ class UpdateGeoCodingCache extends Command
               $output->writeln('No continent for ' . $country->getIso() . ' / ' . $country->getTarget() . ' / ' . $country->getL10nName());
               try {
                 $geoCodingService->updateCountriesForLanguage($country->getTarget(), force: true);
-                $output->writeln('Updated data for ' . $country->getIso() . ' / ' . $country->getTarget() . ' / ' . $country->getL10nName() . ' continent: ' . $country->getContinent()->getCode() . ' / ' . $country->getContinent()->getL10nName());
+                $output->writeln(
+                  'Updated data for '
+                  . $country->getIso() . ' / '
+                  . $country->getTarget() . ' / '
+                  . $country->getL10nName() . ' continent: ' . $country->getContinent()->getCode() . ' / '
+                  . $country->getContinent()->getL10nName());
               } catch (\Throwable $t) {
                 $output->writeln('Error updating country ' . $country->getIso() . ' / ' . $country->getTarget() . ' failed with error: ' . $t->getMessage());
                 ++$numFailed;
               }
-            } else if (empty($country->getL10nName())) {
+            } elseif (empty($country->getL10nName())) {
               ++$numTodo;
               try {
-                $entityManager->remove($country);
-                $entityManager->flush();
+                $this->entityManager->remove($country);
+                $this->entityManager->flush();
                 $output->writeln('Deleted country ' . $country->getIso() . ' / ' . $country->getTarget() . ' because of missing translation.');
                 ++$numDeleted;
               } catch (\Throwabled $t) {
@@ -195,7 +176,10 @@ class UpdateGeoCodingCache extends Command
             } else {
               ++$numOk;
               if ($output->isVerbose()) {
-                $output->writeln('Data ok for ' . $country->getIso() . ' / ' . $country->getTarget() . ' / ' . $country->getL10nName() . ' continent: ' . $country->getContinent()->getL10nName());
+                $output->writeln(
+                  'Data ok for ' . $country->getIso() . ' / '
+                  . $country->getTarget() . ' / '
+                  . $country->getL10nName() . ' continent: ' . $country->getContinent()->getL10nName());
               }
             }
           }

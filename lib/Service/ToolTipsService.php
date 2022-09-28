@@ -459,6 +459,10 @@ invited to have a look, but please do not change anything unless you know what y
             ],
           ],
           'address-supplement' => $this->l->t('Additional required address parts like "c/o X Y" or "Apt. N"'),
+          'emails' => [
+            'principal' => $this->l->t('The principal email address of the musician.'),
+            'all' => $this->l->t('A musician must have at least one valid email address in order to contact the person. A person may have more than one email-address in which case the first in the list is used as the principal contact address. You can drag any address with your mouse to the beginning of the list. All email-addresses are subscribed to the configured mailing-lists. However, only the principal email address receives email traffic.'),
+          ],
         ],
         'participants' => [
           'mailing-list' => [
