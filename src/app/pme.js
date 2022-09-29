@@ -1472,7 +1472,7 @@ const installTabHandler = function(containerSel, changeCallback) {
 
   if (typeof changeCallback !== 'function') {
     changeCallback = function() {
-      CAFEVDB.toolTipsInit(container);
+      // CAFEVDB.toolTipsInit(container); THIS SHOULD NOT BE NEEDED?
     };
   }
 
