@@ -501,6 +501,7 @@ trait FindLikeTrait
    * PHPMD cannot handle dynamic variable names
    *
    * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   protected function generateFindByWhere(
     ORM\QueryBuilder $qb,
