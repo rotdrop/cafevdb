@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-09-26 15:16+0200\n"
+"POT-Creation-Date: 2022-09-29 13:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: lib/AddressBook/MusicianCardBackend.php:71
+#: lib/AddressBook/MusicianCardBackend.php:78
 #, php-format
 msgid "%s Musicians"
 msgstr ""
@@ -301,7 +301,7 @@ msgid "Unknown Request"
 msgstr ""
 
 #: lib/Controller/ContactsController.php:82
-#: lib/Controller/EmailFormController.php:973
+#: lib/Controller/EmailFormController.php:1041
 #: lib/Controller/PaymentsController.php:349
 #: lib/Controller/SepaDebitMandatesController.php:1189
 msgid "UNIMPLEMENTED"
@@ -317,130 +317,130 @@ msgstr ""
 msgid "File with cache-key \"%s\" not found in user's file-cache."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:337
+#: lib/Controller/EmailFormController.php:383
 msgid "Preview generation successful."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:418
+#: lib/Controller/EmailFormController.php:464
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:423
-#: lib/Controller/EmailFormController.php:643
-#: lib/Controller/EmailFormController.php:669
-#: lib/Controller/EmailFormController.php:697
+#: lib/Controller/EmailFormController.php:469
+#: lib/Controller/EmailFormController.php:689
+#: lib/Controller/EmailFormController.php:715
+#: lib/Controller/EmailFormController.php:743
 #, php-format
 msgid "Unknown request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:433
+#: lib/Controller/EmailFormController.php:479
 #, php-format
 msgid "Unable to load sent email with message-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:512
+#: lib/Controller/EmailFormController.php:558
 #, php-format
 msgid "Unable to load template \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:521
+#: lib/Controller/EmailFormController.php:567
 #, php-format
 msgid "Invalid draft name \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:639
+#: lib/Controller/EmailFormController.php:685
 #, php-format
 msgid "Loaded draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:651
+#: lib/Controller/EmailFormController.php:697
 msgid "Email template name must not be empty"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:673
+#: lib/Controller/EmailFormController.php:719
 #, php-format
 msgid "%s could not be saved"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:689
+#: lib/Controller/EmailFormController.php:735
 #, php-format
 msgid "Deleted draft message with id %d"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:708
+#: lib/Controller/EmailFormController.php:756
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:712
+#: lib/Controller/EmailFormController.php:760
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:862
+#: lib/Controller/EmailFormController.php:929
 #, php-format
 msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:892
+#: lib/Controller/EmailFormController.php:960
 msgid "Form Input"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:967
+#: lib/Controller/EmailFormController.php:1035
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:994
+#: lib/Controller/EmailFormController.php:1068
 msgid "Attachment file-names were not submitted"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1003
+#: lib/Controller/EmailFormController.php:1077
 #: lib/Controller/UploadsController.php:277
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1006
+#: lib/Controller/EmailFormController.php:1080
 #: lib/Controller/UploadsController.php:280
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1020
-#: lib/Controller/EmailFormController.php:1078
+#: lib/Controller/EmailFormController.php:1094
+#: lib/Controller/EmailFormController.php:1152
 #: lib/Controller/UploadsController.php:408
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1038
+#: lib/Controller/EmailFormController.php:1112
 #: lib/Controller/FileUploadRowTrait.php:79
 #: lib/Controller/UploadsController.php:362
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1046
+#: lib/Controller/EmailFormController.php:1120
 #: lib/Controller/FileUploadRowTrait.php:87
 #: lib/Controller/UploadsController.php:370
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1048
+#: lib/Controller/EmailFormController.php:1122
 #: lib/Controller/FileUploadRowTrait.php:89
 #: lib/Controller/UploadsController.php:372
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1060
+#: lib/Controller/EmailFormController.php:1134
 #: lib/Controller/FileUploadRowTrait.php:117
 #: lib/Controller/UploadsController.php:384
 msgid "Not enough storage available"
 msgstr ""
 
-#: lib/Controller/EmailFormController.php:1084
+#: lib/Controller/EmailFormController.php:1158
 #, php-format
 msgid "Unknown attachment source: \"%s\"."
 msgstr ""
@@ -630,8 +630,8 @@ msgstr ""
 #: lib/Service/Finance/InstrumentInsuranceService.php:590
 #: lib/Service/PhoneNumberService.php:135
 #: lib/Service/PhoneNumberService.php:262
-#: src/app/cafevdb.js:42
-#: src/app/cafevdb.js:43
+#: src/app/cafevdb.js:46
+#: src/app/cafevdb.js:47
 msgid "unknown"
 msgstr ""
 
@@ -755,16 +755,16 @@ msgstr ""
 msgid "MailMerge"
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:128
+#: lib/Controller/MailingListsController.php:127
 #, php-format
 msgid "Unknown mailing list operation \"%s\""
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:155
+#: lib/Controller/MailingListsController.php:159
 msgid "List-id must not be empty."
 msgstr ""
 
-#: lib/Controller/MailingListsController.php:158
+#: lib/Controller/MailingListsController.php:162
 msgid "Email-address must not be empty."
 msgstr ""
 
@@ -3077,32 +3077,32 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:528
+#: lib/EmailForm/Composer.php:555
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:600
+#: lib/EmailForm/Composer.php:627
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:606
+#: lib/EmailForm/Composer.php:633
 #: src/app/email.js:1388
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:923
+#: lib/EmailForm/Composer.php:966
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:924
-#: lib/EmailForm/Composer.php:946
-#: lib/EmailForm/Composer.php:1343
-#: lib/EmailForm/Composer.php:1350
+#: lib/EmailForm/Composer.php:967
+#: lib/EmailForm/Composer.php:989
+#: lib/EmailForm/Composer.php:1386
+#: lib/EmailForm/Composer.php:1393
 #: lib/PageRenderer/ProjectPayments.php:495
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:924
+#: lib/EmailForm/Composer.php:967
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:479
 #: lib/PageRenderer/ProjectParticipantFields.php:570
 #: lib/PageRenderer/ProjectParticipantFields.php:1895
@@ -3110,48 +3110,48 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:925
-#: lib/EmailForm/Composer.php:1351
+#: lib/EmailForm/Composer.php:968
+#: lib/EmailForm/Composer.php:1394
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:926
-#: lib/EmailForm/Composer.php:1352
+#: lib/EmailForm/Composer.php:969
+#: lib/EmailForm/Composer.php:1395
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:927
-#: lib/PageRenderer/PMETableViewBase.php:637
+#: lib/EmailForm/Composer.php:970
+#: lib/PageRenderer/PMETableViewBase.php:639
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1066
+#: lib/EmailForm/Composer.php:1109
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1348
+#: lib/EmailForm/Composer.php:1391
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1349
+#: lib/EmailForm/Composer.php:1392
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1493
+#: lib/EmailForm/Composer.php:1541
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1571
+#: lib/EmailForm/Composer.php:1623
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1674
+#: lib/EmailForm/Composer.php:1735
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2263
+#: lib/EmailForm/Composer.php:2354
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3177,185 +3177,186 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2508
-#: lib/EmailForm/Composer.php:2947
+#: lib/EmailForm/Composer.php:2598
+#: lib/EmailForm/Composer.php:3053
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3162
+#: lib/EmailForm/Composer.php:3268
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3202
+#: lib/EmailForm/Composer.php:3313
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3204
+#: lib/EmailForm/Composer.php:3316
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3207
+#: lib/EmailForm/Composer.php:3319
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3369
+#: lib/EmailForm/Composer.php:3496
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3393
+#. TRANSLATORS: email prefix when writing to all musicians
+#: lib/EmailForm/Composer.php:3531
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3486
-#: lib/EmailForm/Composer.php:3501
+#: lib/EmailForm/Composer.php:3631
+#: lib/EmailForm/Composer.php:3646
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3585
-#: lib/EmailForm/Composer.php:3661
-#: lib/EmailForm/Composer.php:3671
+#: lib/EmailForm/Composer.php:3755
+#: lib/EmailForm/Composer.php:3833
+#: lib/EmailForm/Composer.php:3843
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3604
+#: lib/EmailForm/Composer.php:3776
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3610
+#: lib/EmailForm/Composer.php:3782
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3636
+#: lib/EmailForm/Composer.php:3808
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3761
+#: lib/EmailForm/Composer.php:3941
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4052
+#: lib/EmailForm/Composer.php:4259
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4064
+#: lib/EmailForm/Composer.php:4271
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4088
+#: lib/EmailForm/Composer.php:4295
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4119
+#: lib/EmailForm/Composer.php:4326
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4177
-#: lib/EmailForm/Composer.php:4296
+#: lib/EmailForm/Composer.php:4386
+#: lib/EmailForm/Composer.php:4513
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4213
+#: lib/EmailForm/Composer.php:4422
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4238
+#: lib/EmailForm/Composer.php:4447
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4834
+#: lib/EmailForm/Composer.php:5171
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4835
+#: lib/EmailForm/Composer.php:5172
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4838
+#: lib/EmailForm/Composer.php:5175
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4841
+#: lib/EmailForm/Composer.php:5178
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4844
+#: lib/EmailForm/Composer.php:5181
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4961
+#: lib/EmailForm/Composer.php:5307
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:474
+#: lib/EmailForm/RecipientsFilter.php:530
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:500
+#: lib/EmailForm/RecipientsFilter.php:559
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:739
-#: lib/PageRenderer/PMETableViewBase.php:369
+#: lib/EmailForm/RecipientsFilter.php:809
+#: lib/PageRenderer/PMETableViewBase.php:371
 msgid "member status "
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:825
+#: lib/EmailForm/RecipientsFilter.php:936
 msgid "project mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:829
+#: lib/EmailForm/RecipientsFilter.php:940
 msgid "announcements mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:833
+#: lib/EmailForm/RecipientsFilter.php:944
 msgid "musician database"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:837
+#: lib/EmailForm/RecipientsFilter.php:948
 msgid "all known musicians"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:841
+#: lib/EmailForm/RecipientsFilter.php:952
 msgid "all musicians NOT participating"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:845
+#: lib/EmailForm/RecipientsFilter.php:956
 msgid "participants (confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:849
+#: lib/EmailForm/RecipientsFilter.php:960
 msgid "participants (preliminary)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:853
+#: lib/EmailForm/RecipientsFilter.php:964
 msgid "participants (preliminary and confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:857
+#: lib/EmailForm/RecipientsFilter.php:968
 msgid "all musicians except confirmed participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:861
+#: lib/EmailForm/RecipientsFilter.php:972
 msgid "all musicians except preliminary participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:865
+#: lib/EmailForm/RecipientsFilter.php:976
 msgid "no one"
 msgstr ""
 
@@ -4719,143 +4720,143 @@ msgid "Add all to %s"
 msgstr ""
 
 #: lib/PageRenderer/PME/Config.php:58
-#: lib/PageRenderer/PMETableViewBase.php:592
+#: lib/PageRenderer/PMETableViewBase.php:594
 #: templates/fragments/projects/project-actions.php:168
 msgid "Em@il"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:317
+#: lib/PageRenderer/PMETableViewBase.php:319
 msgid "%n data field affected"
 msgid_plural "%n data fields affected"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PageRenderer/PMETableViewBase.php:329
+#: lib/PageRenderer/PMETableViewBase.php:331
 msgid "Query Log"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:436
+#: lib/PageRenderer/PMETableViewBase.php:438
 #, php-format
 msgid "SQL Transaction failed: %s"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:604
+#: lib/PageRenderer/PMETableViewBase.php:606
 msgid "Fees"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:604
+#: lib/PageRenderer/PMETableViewBase.php:606
 msgid "expenses negative"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:645
+#: lib/PageRenderer/PMETableViewBase.php:647
 msgid "Revoked"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:655
+#: lib/PageRenderer/PMETableViewBase.php:657
 msgid "birthday"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:899
+#: lib/PageRenderer/PMETableViewBase.php:910
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
 "already set."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:932
-#: lib/PageRenderer/PMETableViewBase.php:1507
+#: lib/PageRenderer/PMETableViewBase.php:943
+#: lib/PageRenderer/PMETableViewBase.php:1518
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
 "than one key: \"%s\" / \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:949
-#: lib/PageRenderer/PMETableViewBase.php:1298
-#: lib/PageRenderer/PMETableViewBase.php:1531
-#: lib/PageRenderer/PMETableViewBase.php:1734
+#: lib/PageRenderer/PMETableViewBase.php:960
+#: lib/PageRenderer/PMETableViewBase.php:1309
+#: lib/PageRenderer/PMETableViewBase.php:1542
+#: lib/PageRenderer/PMETableViewBase.php:1745
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
 "column: %s."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1026
+#: lib/PageRenderer/PMETableViewBase.php:1037
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1053
+#: lib/PageRenderer/PMETableViewBase.php:1064
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1080
+#: lib/PageRenderer/PMETableViewBase.php:1091
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1105
-#: lib/PageRenderer/PMETableViewBase.php:1605
+#: lib/PageRenderer/PMETableViewBase.php:1116
+#: lib/PageRenderer/PMETableViewBase.php:1616
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1132
+#: lib/PageRenderer/PMETableViewBase.php:1143
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1291
-#: lib/PageRenderer/PMETableViewBase.php:1727
+#: lib/PageRenderer/PMETableViewBase.php:1302
+#: lib/PageRenderer/PMETableViewBase.php:1738
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
 "column \"%2$s\", prescribed value was \"%3$s\", generated value is \"%4$s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1312
+#: lib/PageRenderer/PMETableViewBase.php:1323
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1380
+#: lib/PageRenderer/PMETableViewBase.php:1391
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1492
+#: lib/PageRenderer/PMETableViewBase.php:1503
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1581
+#: lib/PageRenderer/PMETableViewBase.php:1592
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1624
+#: lib/PageRenderer/PMETableViewBase.php:1635
 msgid "Master entity is unset."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1808
+#: lib/PageRenderer/PMETableViewBase.php:1819
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2018
+#: lib/PageRenderer/PMETableViewBase.php:2029
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2154
+#: lib/PageRenderer/PMETableViewBase.php:2165
 msgid "Table-name not specified"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2216
+#: lib/PageRenderer/PMETableViewBase.php:2227
 #, php-format
 msgid "Master join-table field for %s not found."
 msgstr ""
@@ -5957,7 +5958,7 @@ msgstr ""
 
 #: lib/Service/ConfigCheckService.php:584
 #: lib/Service/ConfigCheckService.php:658
-#: lib/Service/MailingListsService.php:1166
+#: lib/Service/MailingListsService.php:1169
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
@@ -6291,41 +6292,41 @@ msgstr ""
 msgid "Project file attachments"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:455
+#: lib/Service/MailingListsService.php:456
 msgid "Adding email alias is not yet supported"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:734
+#: lib/Service/MailingListsService.php:735
 msgid "More than one pending subscription request, bailing out."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:766
+#: lib/Service/MailingListsService.php:769
 msgid "unsubscribed"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:767
+#: lib/Service/MailingListsService.php:770
 msgid "subscribed"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:768
+#: lib/Service/MailingListsService.php:771
 #: lib/PageRenderer/Musicians.php:646
 #, php-format
 msgid "invited"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:769
+#: lib/Service/MailingListsService.php:772
 msgid "waiting"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:820
+#: lib/Service/MailingListsService.php:823
 msgid "Missing subscriber email-address."
 msgstr ""
 
-#: lib/Service/MailingListsService.php:1109
+#: lib/Service/MailingListsService.php:1112
 msgid "mailing lists"
 msgstr ""
 
-#: lib/Service/MailingListsService.php:1110
+#: lib/Service/MailingListsService.php:1113
 msgid "auto-responses"
 msgstr ""
 
@@ -10371,7 +10372,7 @@ msgstr ""
 msgid "Unable to export insurance overview."
 msgstr ""
 
-#: src/app/jquery-cafevdb-tooltips.js:141
+#: src/app/jquery-cafevdb-tooltips.js:152
 msgid "Please fill out this field!"
 msgstr ""
 
@@ -11260,38 +11261,38 @@ msgstr ""
 msgid "One (out of %d) message has probably not been sent."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:115
+#: templates/emailform/part.emailform.statuspage.php:116
 #, php-format
 msgid "%d (out of %d) messages have probably not been sent."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:120
+#: templates/emailform/part.emailform.statuspage.php:122
 msgid "The message has probably not been sent."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:137
+#: templates/emailform/part.emailform.statuspage.php:139
 msgid "Failed individual substitutions"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:138
+#: templates/emailform/part.emailform.statuspage.php:140
 msgid "Failed global substitutions"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:139
+#: templates/emailform/part.emailform.statuspage.php:141
 msgid "Other failed substitutions"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:140
+#: templates/emailform/part.emailform.statuspage.php:142
 msgid "Precondition failed"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:145
+#: templates/emailform/part.emailform.statuspage.php:147
 msgid ""
 "The operation failed due to template validation errors.\n"
 "Not all variable substitutions could be resolved:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:166
+#: templates/emailform/part.emailform.statuspage.php:169
 #, php-format
 msgid ""
 "Please understand that the software is really `picky'; names have to match "
@@ -11303,18 +11304,18 @@ msgid ""
 "contains a complete list of all known substitutions."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:205
+#: templates/emailform/part.emailform.statuspage.php:209
 msgid ""
 "The following email addresses appear to be syntactically incorrect, meaning "
 "that they have not the form of an email address:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:216
+#: templates/emailform/part.emailform.statuspage.php:220
 #, php-format
 msgid "Broken `%s' addresses"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:230
+#: templates/emailform/part.emailform.statuspage.php:234
 msgid ""
 "No email will be sent out unless these errors are corrected. Please separate "
 "individual emails by commas. Please use standard-address notation (see "
@@ -11322,21 +11323,20 @@ msgid ""
 "quotes if it contains a comma. Some valid examples are:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:245
-#: templates/emailform/part.emailform.statuspage.php:335
-#: templates/emailform/part.emailform.statuspage.php:371
-#: templates/emailform/part.emailform.statuspage.php:448
-#: templates/emailform/part.emailform.statuspage.php:495
-#: templates/emailform/part.emailform.statuspage.php:565
-#: templates/emailform/part.emailform.statuspage.php:623
+#: templates/emailform/part.emailform.statuspage.php:249
+#: templates/emailform/part.emailform.statuspage.php:384
+#: templates/emailform/part.emailform.statuspage.php:422
+#: templates/emailform/part.emailform.statuspage.php:505
+#: templates/emailform/part.emailform.statuspage.php:575
+#: templates/emailform/part.emailform.statuspage.php:634
 msgid "Explanations"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:265
+#: templates/emailform/part.emailform.statuspage.php:269
 msgid "Empty Subject"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:266
+#: templates/emailform/part.emailform.statuspage.php:270
 #, php-format
 msgid ""
 "The subject must not consist of \"%s\" as only part. Please correct that "
@@ -11344,11 +11344,11 @@ msgid ""
 "message as draft. Thanks."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:279
+#: templates/emailform/part.emailform.statuspage.php:283
 msgid "Empty Sender Name"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:280
+#: templates/emailform/part.emailform.statuspage.php:285
 #, php-format
 msgid ""
 "The sender name should not be empty. Originally, it used to be %s, but "
@@ -11356,11 +11356,11 @@ msgid ""
 "name before hitting the \"Send\"-button again."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:294
+#: templates/emailform/part.emailform.statuspage.php:300
 msgid "No Recipients"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:295
+#: templates/emailform/part.emailform.statuspage.php:301
 msgid ""
 "You did not specify any recipients (Cc: and Bcc: does not count here!)."
 "Please got to the `Em@il Recipients' panel and select some before hitting "
@@ -11368,38 +11368,59 @@ msgid ""
 "without email address at the bottom of the `Em@il Recipients' panel."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:316
+#: templates/emailform/part.emailform.statuspage.php:324
+msgid ""
+"The message contains references to external links which could not be "
+"followed."
+msgstr ""
+
+#: templates/emailform/part.emailform.statuspage.php:328
+msgid ""
+"Please understand that the relevant broken part is the link-target which is "
+"normally invisible. You can edit the link-target in the message editor by "
+"using the context menu (right-click) or the link-button."
+msgstr ""
+
+#: templates/emailform/part.emailform.statuspage.php:339
+msgid "Link-Target"
+msgstr ""
+
+#: templates/emailform/part.emailform.statuspage.php:340
+msgid "Link-Text"
+msgstr ""
+
+#: templates/emailform/part.emailform.statuspage.php:363
 msgid ""
 "The files(s) with the following name(s) could not be attached; they do not "
 "seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:330
-#: templates/emailform/part.emailform.statuspage.php:366
+#: templates/emailform/part.emailform.statuspage.php:378
+#: templates/emailform/part.emailform.statuspage.php:416
 msgid ""
 "This is probably an internal error. It may be possible to simply click on "
 "the red, underlined text in order to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:355
+#: templates/emailform/part.emailform.statuspage.php:404
 msgid ""
 "The event(s) with the following id(s) could not be attached; they do not "
 "seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:393
+#: templates/emailform/part.emailform.statuspage.php:445
 msgid ""
 "While sending the message the following recipients failed. All other "
 "recipients were successfully sumitted to the email-server, but you should "
 "still monitor the email-inbox for messages returned later."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:424
+#: templates/emailform/part.emailform.statuspage.php:479
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:437
+#: templates/emailform/part.emailform.statuspage.php:493
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to %s."
@@ -11407,30 +11428,16 @@ msgid ""
 "compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:471
-msgid ""
-"While trying to send the message(s), the following error(s) have been "
-"encountered:"
-msgstr ""
-
-#: templates/emailform/part.emailform.statuspage.php:484
-#, php-format
-msgid ""
-"This is an internal error. Please copy this page and send it via email to "
-"%s. It may be possible to simply click on the red, underlined text in order "
-"to compose a useful message."
-msgstr ""
-
-#: templates/emailform/part.emailform.statuspage.php:516
+#: templates/emailform/part.emailform.statuspage.php:525
 msgid "Message Duplicates Detected!"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:530
+#: templates/emailform/part.emailform.statuspage.php:539
 #, php-format
 msgid "Message already sent at time %s to the following recipient(s):"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:555
+#: templates/emailform/part.emailform.statuspage.php:564
 #, php-format
 msgid ""
 "The email-form refuses to send email twice to the same recipients. In order "
@@ -11442,21 +11449,21 @@ msgid ""
 "Please add a detailed description."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:586
+#: templates/emailform/part.emailform.statuspage.php:596
 msgid "Copy to Sent-Folder has Failed"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:595
+#: templates/emailform/part.emailform.statuspage.php:605
 #, php-format
 msgid "Could not authenticate with IMAP-server: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:604
+#: templates/emailform/part.emailform.statuspage.php:614
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:615
+#: templates/emailform/part.emailform.statuspage.php:624
 #, php-format
 msgid ""
 "If no other error messages are echoed on this page, then the emails have "
@@ -11466,19 +11473,19 @@ msgid ""
 "the red, underlined text in order to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:644
+#: templates/emailform/part.emailform.statuspage.php:655
 msgid "The Following Events have been attached to the Message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:672
+#: templates/emailform/part.emailform.statuspage.php:683
 msgid "The following files have been attached to the message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:700
+#: templates/emailform/part.emailform.statuspage.php:711
 msgid "First Few Lines of Sent Message"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:716
+#: templates/emailform/part.emailform.statuspage.php:727
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
@@ -13948,6 +13955,16 @@ msgstr ""
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "STREET"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "STREET_NUMBER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "STREET_AND_NUMBER"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
