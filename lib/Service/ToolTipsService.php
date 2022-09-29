@@ -1192,6 +1192,13 @@ and contact the treasurer for further instructions.',
       'documenttemplatesfolder' => $this->l->t('Shared folder for document templates.'),
       'projectsfolder' => $this->l->t('Shared folder for per-project data.'),
       'projectparticipantsfolder' => $this->l->t('Shared folder for per-project per-participant data'),
+      'projectpostersfolder' => $this->l->t('Shared folder for flyers and posters'),
+      'projectpublicdownloadsfolder' => $this->l->t(
+        'Link-shared folder for data needed by participants.'
+        . ' In particular, this can be used for music-sheet downloads.'
+        . ' The folder is automatically created and shared when the project is created.'
+        . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
+        ),
       'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
 
       'settings' => [

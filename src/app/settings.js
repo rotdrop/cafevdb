@@ -578,6 +578,7 @@ const afterLoad = function(container) {
     });
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectpostersfolder');
+    sharedFolder('projectpublicdownloadsfolder');
     sharedFolder('transactionsfolder');
     sharedFolder('balancesfolder');
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {

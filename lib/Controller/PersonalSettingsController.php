@@ -1151,6 +1151,7 @@ class PersonalSettingsController extends Controller
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
     case ConfigService::PROJECT_POSTERS_FOLDER:
+    case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
     case ConfigService::FINANCE_FOLDER:
     case ConfigService::TRANSACTIONS_FOLDER:
     case ConfigService::BALANCES_FOLDER:
@@ -1191,6 +1192,9 @@ class PersonalSettingsController extends Controller
       case ConfigService::PROJECT_POSTERS_FOLDER:
         $this->setConfigValue($parameter, $real);
         return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
+      case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+        $this->setConfigValue($parameter, $real);
+        return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
       case ConfigService::BALANCES_FOLDER:
       case ConfigService::TRANSACTIONS_FOLDER:
         $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
