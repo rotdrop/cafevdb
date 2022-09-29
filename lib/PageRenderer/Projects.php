@@ -1,26 +1,30 @@
-<?php // Hey, Emacs, we are -*- php -*- mode!
-/* Orchestra member, musician and project management application.
+<?php
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
+
+use \RuntimeException;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
@@ -108,18 +112,19 @@ class Projects extends PMETableViewBase
     ],
   ];
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , ProjectService $projectService
-    , EventsService $eventsService
-    , ImagesService $imagesService
-    , MailingListsService $listsService
-    , OrganizationalRolesService $orgaRolesService
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    ProjectService $projectService,
+    EventsService $eventsService,
+    ImagesService $imagesService,
+    MailingListsService $listsService,
+    OrganizationalRolesService $orgaRolesService,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
@@ -146,23 +151,23 @@ class Projects extends PMETableViewBase
     }
   }
 
+  /** {@inheritdoc} */
   public function needPhpSession():bool
   {
     return !$this->listOperation();
   }
 
-  /** Short title for heading. */
-  public function shortTitle() {
+  /** {@inheritdoc} */
+  public function shortTitle()
+  {
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s",
-                         [ ucfirst($this->getConfigValue('orchestra')),
-                           $this->projectName]);
+      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue('orchestra')), $this->projectName]);
     } else {
       return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue('orchestra')) ]);
     }
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true)
   {
     $template        = $this->template;
@@ -232,7 +237,6 @@ class Projects extends PMETableViewBase
       'tabs'  => false,
     ];
 
-    $idIdx = 0;
     $opts['fdd']['id'] = [
       'name'     => 'id',
       'select'   => 'T',
@@ -247,17 +251,17 @@ class Projects extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::PROJECT_PARTICIPANT_FIELDS_TABLE:
-        $tweakedJoinInfo = $joinInfo;
-        unset($tweakedJoinInfo['identifier']['project_id']);
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($tweakedJoinInfo, 'name');
-        break;
-      default:
-        break;
+        case self::PROJECT_PARTICIPANT_FIELDS_TABLE:
+          $tweakedJoinInfo = $joinInfo;
+          unset($tweakedJoinInfo['identifier']['project_id']);
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($tweakedJoinInfo, 'name');
+          break;
+        default:
+          break;
       }
     });
 
-    $joinTables = $this->defineJoinStructure($opts);
+    /* $joinTables = */ $this->defineJoinStructure($opts);
 
     $currentYear = date('Y');
     $yearRange = $this->getDatabaseRepository(self::ENTITY)->findYearRange();
@@ -499,7 +503,15 @@ class Projects extends PMETableViewBase
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
   JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= 1+GREATEST(".self::NUM_VOICES_MIN.", (pin.voice + ".self::NUM_VOICES_EXTRA.")) AND n.seq > 0 AND n.seq <= 1+GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
+    ON n.seq <= 1 + GREATEST(
+      " . self::NUM_VOICES_MIN . ",
+      (pin.voice + ".self::NUM_VOICES_EXTRA.")
+    )
+    AND n.seq > 0
+    AND n.seq <= 1 + GREATEST(
+      " . self::NUM_VOICES_MIN . ",
+      " . self::NUM_VOICES_EXTRA . " + (SELECT MAX(pin2.voice)
+  FROM " . self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE . " pin2))
   WHERE
     pin.project_id = \$record_id[id]
   GROUP BY
@@ -627,7 +639,7 @@ class Projects extends PMETableViewBase
         $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
         $l10nStatus = $this->l->t($status = 'unset');
         $configUrl = '';
-        $archiveUrl = '';
+        // $archiveUrl = '';
         if (!empty($value)) {
           try {
             // fetch the basic list-info from the lists-server
@@ -639,7 +651,7 @@ class Projects extends PMETableViewBase
               $l10nStatus = $this->l->t($status = 'closed');
             }
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
-            $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
+            // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
           } catch (\Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
             $l10nStatus = $this->l->t($status = 'unknown');
@@ -650,14 +662,14 @@ class Projects extends PMETableViewBase
         } else {
           $configAnchor = $listAddress;
         }
-        $css_postfix	= $pme->fdd[$field]['css']['postfix']??[];
-        $css_class_name = $pme->getCSSclass('input', null, false, $css_postfix);
+        $cssPostfix   = $pme->fdd[$field]['css']['postfix']??[];
+        $cssClassName = $pme->getCSSclass('input', null, false, $cssPostfix);
         return '<div class="cell-wrapper flex-container flex-center">
   <span class="list-id display status-' . $status . ' tooltip-top"
         data-status="' . $status . '"
         title="' . $this->toolTipsService['projects:mailing-list'] . '"
   >
-    ' . $pme->htmlHiddenData('mailing_list_id', $value, $css_class_name) . '
+    ' . $pme->htmlHiddenData('mailing_list_id', $value, $cssClassName) . '
     <span class="list-label">' . $configAnchor . '</span>
     <span class="list-status">' . $l10nStatus . '</span>
   </span>
@@ -851,7 +863,6 @@ class Projects extends PMETableViewBase
         }
         return $html;
       },
-      'css' => ['postfix' => [ 'projectposter', ], ],
       'default' => '',
       'sort'     => false,
       'escape' => false
@@ -930,14 +941,24 @@ class Projects extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
-
   }
 
-  public function posterImageLink($postersFolder, $action, $imageColumns, $imageId)
+  /**
+   * @param string $postersFolder Posters folder path.
+   *
+   * @param string $action Action to perform.
+   *
+   * @param int $imageColumns Number of display columns.
+   *
+   * @param int $imageId Entity id.
+   *
+   * @return string HTML snippet for the project posters.
+   */
+  public function posterImageLink(string $postersFolder, string $action, int $imageColumns, int $imageId):string
   {
     if ($imageColumns <= 1) {
       $sizeCss = 'full';
-    } else if ($imageColumns <= 2) {
+    } elseif ($imageColumns <= 2) {
       $sizeCss = 'half';
     } else {
       $sizeCss = 'quarter';
@@ -990,7 +1011,18 @@ project without a poster first.");
     }
   }
 
-  private function templateEditButton($projectId, $projectName, $template)
+  /**
+   * Generate an HTML snippet for editing web-page templates in the CMS.
+   *
+   * @param int $projectId Id of the project.
+   *
+   * @param string $projectName Name of the project.
+   *
+   * @param string $template Which template to edit.
+   *
+   * @return string HTML code.
+   */
+  private function templateEditButton(int $projectId, string $projectName, string $template):string
   {
     $post = [
       'template' => $template,
@@ -1009,8 +1041,30 @@ project without a poster first.");
     return $html;
   }
 
-  public function projectActionMenu($projectId, $projectName, $overview = false, $direction = 'left', $dropDirection = 'down')
-  {
+  /**
+   * Generate a HTML snippet for the project actions menu, giving access to
+   * other pages and cloud services related to the project.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $projectName Project name.
+   *
+   * @param bool $overview Whether this is the overview in which page the
+   * overview menu entry is not generated.
+   *
+   * @param string $direction Menu direction left, right.
+   *
+   * @param string $dropDirection Drop up or down.
+   *
+   * @return string HTML.
+   */
+  public function projectActionMenu(
+    int $projectId,
+    string $projectName,
+    bool $overview = false,
+    string $direction = 'left',
+    string $dropDirection = 'down',
+  ):string {
     $templateParameters = [
       'appName' => $this->appName(),
       'projectId' => $projectId,
@@ -1031,13 +1085,19 @@ project without a poster first.");
   }
 
   /**
-   * Genereate the input data for the link to the CMS in order to edit
+   * Generate the input data for the link to the CMS in order to edit
    * the project's public web articles inline.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $action Action to perform.
+   *
+   * @return string HTML coder.
    *
    * @todo Do something more useful in the case of an error (database
    * or CMS unavailable)
    */
-  public function projectProgram($projectId, $action)
+  public function projectProgram(int $projectId, string $action):string
   {
     $projectPages = $this->projectService->projectWebPages($projectId);
     $urlTemplate = $this->projectService->webPageCMSURL('%articleId%', $action == 'change');
@@ -1068,24 +1128,30 @@ project without a poster first.");
   }
 
   /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param $pme The phpMyEdit instance
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $step 'before' or 'after'
+   * @param string $step 'before' or 'after'.
    *
-   * @param $oldvals Self-explanatory.
+   * @param null|array $oldVals Self-explanatory.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newVals Set of new values, which may also be modified.
+   * @param array $newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeInsertTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
-  {
+  public function beforeInsertTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    ?array $oldVals,
+    array &$changed,
+    array &$newVals,
+  ):bool {
     $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
 
     if (empty($newVals['name'])) {
@@ -1110,11 +1176,11 @@ project without a poster first.");
     }
     $voiceItems = Util::explode(',', $newVals[$voicesColumn]);
     foreach ($voiceItems as $key => $voiceItem) {
-       list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
-       if (array_search($instrument, $instruments) === false) {
-         $this->debug('REMOVE VOICE ' . $voice . ' FOR INSTRUMENT ' . $instrument);
-         unset($voiceItems[$key]);
-       }
+      list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
+      if (array_search($instrument, $instruments) === false) {
+        $this->debug('REMOVE VOICE ' . $voice . ' FOR INSTRUMENT ' . $instrument);
+        unset($voiceItems[$key]);
+      }
     }
     sort($voiceItems, SORT_NATURAL);
     $newVals[$voicesColumn] = implode(',', array_unique($voiceItems));
@@ -1138,26 +1204,35 @@ project without a poster first.");
   }
 
   /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param $pme The phpMyEdit instance
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $step 'before' or 'after'
+   * @param string $step 'before' or 'after'.
    *
-   * @param $oldVals Self-explanatory.
+   * @param array $oldVals Self-explanatory.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$newVals Set of new values, which may also be modified.
+   * @param array $newVals Set of new values, which may also be modified.
    *
-   * @return bool If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated.
    *
    * @bug Convert this to a function triggering a "user-friendly" error message.
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
-  public function beforeUpdateTrigger(&$pme, $op, $step, &$oldVals, &$changed, &$newVals)
-  {
+  public function beforeUpdateTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    array &$oldVals,
+    array &$changed,
+    array &$newVals,
+  ):bool {
     $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
 
     if (array_search('name', $changed) !== false) {
@@ -1206,7 +1281,7 @@ project without a poster first.");
       // Update changed to reflect the manipulation
       foreach ([$instrumentsColumn, $voicesColumn] as $column) {
         Util::unsetValue($changed, $column);
-        if  ($oldVals[$column] != $newVals[$column]) {
+        if ($oldVals[$column] != $newVals[$column]) {
           $changed[] = $column;
         }
       }
@@ -1218,31 +1293,38 @@ project without a poster first.");
   }
 
   /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
    *
-   * @param OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $pme The phpMyEdit instance
+   * @param OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $pme The phpMyEdit instance.
    *
    * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param string $step 'before' or 'after'
+   * @param string $step 'before' or 'after'.
    *
    * @param array $oldVals Self-explanatory.
    *
-   * @param array &$changed Set of changed fields, may be modified by the callback.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array &$newVals Set of new values, which may also be modified.
+   * @param array $newVals Set of new values, which may also be modified.
    *
-   * @return bool If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated.
    */
-  public function afterInsertTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
-  {
+  public function afterInsertTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    ?array $oldVals,
+    array &$changed,
+    array &$newVals,
+  ):bool {
+
     $this->debug('OLDVALS '.print_r($oldVals, true));
     $this->debug('NEWVALS '.print_r($newVals, true));
     $this->debug('CHANGED '.print_r($changed, true));
 
     $newProjectId = $newVals['id'];
     if (empty($newProjectId)) {
-      throw new \RuntimeException($this->l->t('Copying participants is requested, but the new project id is not given.'));
+      throw new RuntimeException($this->l->t('Copying participants is requested, but the new project id is not given.'));
     }
 
     // add the new project id to the persistent CGI array
@@ -1253,8 +1335,8 @@ project without a poster first.");
 
     if ($this->copyOperation()) {
       $oldProjectId = $this->pmeRecordId['id']??null;
-      if (empty($oldProjectId))  {
-        throw new \RuntimeException($this->l->t('Copying is requested, but the old project id is not given.'));
+      if (empty($oldProjectId)) {
+        throw new RuntimeException($this->l->t('Copying is requested, but the old project id is not given.'));
       }
 
       $this->debug('Operation: ' . $this->operation());
@@ -1329,7 +1411,7 @@ project without a poster first.");
       }
     }
 
-    //throw new \RuntimeException('DEBUG STOPPER');
+    //throw new RuntimeException('DEBUG STOPPER');
 
     $this->projectService->createProjectInfraStructure($newVals);
 
@@ -1340,30 +1422,70 @@ project without a poster first.");
   }
 
   /**
-   * @copydoc Projects::afterInsertTrigger()
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldVals Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param array $newVals Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated.
    */
-  public function afterUpdateTrigger(&$pme, $op, $step, $oldVals, &$changed, &$newVals)
-  {
+  public function afterUpdateTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    array $oldVals,
+    array &$changed,
+    array &$newVals,
+  ):bool {
     if (array_search('name', $changed) === false) {
       // Nothing more has to be done if the name stays the same
       return true;
     }
 
-    $this->projectService->renameProject($oldVals,  $newVals);
+    $this->projectService->renameProject($oldVals, $newVals);
     $this->projectName = $newVals['name'];
 
     return true;
   }
 
   /**
-   * @copydoc Projects::afterInsertTrigger()
-   *
    * This trigger, in particular, tries to take care to remove all
    * "side-effects" the existance of the project had. However, there
-   * is some data which must not be removed automatically
+   * is some data which must not be removed automatically.
+   *
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldVals Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param array $newVals Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated.
    */
-  public function deleteTrigger(&$pme, $op, $step, &$oldVals, &$changed, &$newVals)
-  {
+  public function deleteTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    array &$oldVals,
+    array &$changed,
+    array &$newVals,
+  ):bool {
     $this->projectService->deleteProject($pme->rec);
 
     $changed = []; // signal nothing more to delete
@@ -1372,7 +1494,6 @@ project without a poster first.");
 
     return true;
   }
-
 }
 
 // Local Variables: ***
