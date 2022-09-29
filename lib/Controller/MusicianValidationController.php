@@ -346,7 +346,7 @@ class MusicianValidationController extends Controller
         $commCriteria = [];
         $email = $this->requestParameter('email');
         if (!empty($email)) {
-          $commCriteria[] = [ 'email' => $email ];
+          $commCriteria[] = [ 'email.address' => $email ];
         }
         $fixedLinePhone = $this->requestParameter('fixed_line_phone');
         if (!empty($fixedLinePhone)) {
