@@ -658,84 +658,31 @@ class Projects extends PMETableViewBase
             $listAddress = preg_replace('/\./', '@', $value, 1);
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($value));
           }
-          $configAnchor = '<a href="' . $configUrl . '" target="' . md5($listAddress) . '">' . $listAddress . '</a>';
-        } else {
-          $configAnchor = $listAddress;
         }
         $cssPostfix   = $pme->fdd[$field]['css']['postfix']??[];
         $cssClassName = $pme->getCSSclass('input', null, false, $cssPostfix);
-        return '<div class="cell-wrapper flex-container flex-center">
-  <span class="list-id display status-' . $status . ' tooltip-top"
-        data-status="' . $status . '"
-        title="' . $this->toolTipsService['projects:mailing-list'] . '"
-  >
-    ' . $pme->htmlHiddenData('mailing_list_id', $value, $cssClassName) . '
-    <span class="list-label">' . $configAnchor . '</span>
-    <span class="list-status">' . $l10nStatus . '</span>
-  </span>
-  <span class="list-id actions status-' . $status . ' dropdown-container dropdown-no-hover" data-status="' . $status . '">
-    <button class="menu-title action-menu-toggle"
-            title="' . $this->toolTipsService['projects:mailing-list:dropdown'] . '">...</button>
-    <nav class="mailing-list-dropdown dropdown-content dropdown-align-right">
-      <ul>
-        <li class="list-action list-action-create tooltip-auto"
-            data-operation="create"
-            title="' . $this->toolTipsService['projects:mailing-list:create'] . '"
-        >
-          <a href="#">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/add.svg') . '">
-            ' . $this->l->t('create') . '
-          </a>
-        </li>
-        <li class="list-action list-action-manage tooltip-auto"
-            title="' . $this->toolTipsService['projects:mailing-list:manage'] . '"
-          >
-          <a href="' . $configUrl . '" target="' . md5($listAddress) . '">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/settings-dark.svg') . '">
-            ' . $this->l->t('manage') . '
-          </a>
-        </li>
-        <li class="list-action list-action-subscribe tooltip-auto"
-            data-operation="subscribe"
-            title="' . $this->toolTipsService['projects:mailing-list:subscribe'] . '"
-        >
-          <a href="#">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/confirm.svg') . '">
-            ' . $this->l->t('subscribe') . '
-          </a>
-        </li>
-        <li class="list-action list-action-close tooltip-auto"
-            data-operation="close"
-            title="' . $this->toolTipsService['projects:mailing-list:close'] . '"
-        >
-          <a href="#">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '">
-            ' . $this->l->t('close') . '
-          </a>
-        </li>
-        <li class="list-action list-action-reopen tooltip-auto"
-            data-operation="reopen"
-            title="' . $this->toolTipsService['projects:mailing-list:reopen'] . '"
-        >
-          <a href="#">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/play.svg') . '">
-            ' . $this->l->t('reopen') . '
-          </a>
-        </li>
-        <li class="list-action list-action-delete expert-mode-only tooltip-auto"
-            data-operation="delete"
-            title="' . $this->toolTipsService['projects:mailing-list:delete'] . '"
-        >
-          <a href="#">
-            <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/delete.svg') . '">
-            ' . $this->l->t('delete') . '
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </span>
-</div>
-';
+
+        $templateParameters = [
+          'listId' => $value,
+          'status' => $status,
+          'l10nStatus' => $l10nStatus,
+          'listAddress' => $listAddress,
+          'configUrl' => $configUrl,
+          'pme' => $pme,
+          'toolTips' => $this->toolTipsService,
+          'urlGenerator' => $this->urlGenerator(),
+          'cssClassName' => $cssClassName,
+        ];
+
+        $template = new TemplateResponse(
+          $this->appName(),
+          'fragments/projects/project-mailing-list',
+          $templateParameters,
+          'blank'
+        );
+        $html = $template->render();
+
+        return $html;
       }
     ];
     $this->addSlug('mailing-list', $opts['fdd']['mailing_list_id']);
