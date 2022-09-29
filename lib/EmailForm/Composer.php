@@ -626,6 +626,8 @@ Störung.';
         if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
+        $initialTemplate = $template->getTag();
+        $this->cgiData['storedMessagesSelector'] = $initialTemplate;
         $this->templateName = $initialTemplate;
         if (!empty($template)) {
           $this->messageContents = $template->getContents();
@@ -3688,11 +3690,12 @@ Störung.';
     $dbTemplate = $this->fetchTemplate(self::DEFAULT_TEMPLATE_NAME, exact: false);
     if (empty($dbTemplate)) {
       $this->storeTemplate(self::DEFAULT_TEMPLATE_NAME, '', $this->initialTemplate);
+      $this->templateName = self::DEFAULT_TEMPLATE_NAME;
     } else {
       $this->initialTemplate = $dbTemplate->getContents();
+      $this->templateName = $dbTemplate->getTag();
     }
     $this->messageContents = $this->initialTemplate;
-    $this->templateName = self::DEFAULT_TEMPLATE_NAME;
   }
 
   /**
