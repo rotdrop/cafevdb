@@ -159,6 +159,8 @@ Störung.';
     'MOBILE_PHONE',
     'FIXED_LINE_PHONE',
     'STREET',
+    'STREET_NUMBER',
+    'STREET_AND_NUMBER',
     'POSTAL_CODE',
     'CITY',
     'COUNTRY',
@@ -620,9 +622,9 @@ Störung.';
       // initial template and subject
       $initialTemplate = $this->cgiValue('storedMessagesSelector');
       if (!empty($initialTemplate)) {
-        $template = $this->fetchTemplate($initialTemplate);
+        $template = $this->fetchTemplate($initialTemplate, exact: false);
         if (empty($template)) {
-          $template = $this->fetchTemplate($this->l->t('ExampleFormletter'));
+          $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
         $this->templateName = $initialTemplate;
         if (!empty($template)) {
@@ -691,6 +693,14 @@ Störung.';
         return $musician[$field];
       };
     }
+
+    $this->substitutions[self::MEMBER_NAMESPACE]['STREET_AND_NUMBER'] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+          return $keyArg[0];
+      }
+      // maybe some day formatted according to locale
+      return $musician->getStreet() . ' ' . $musician->getStreetNumber();
+    };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['EMAIL'] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
@@ -3675,7 +3685,7 @@ Störung.';
     // that as default text
     $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
-    $dbTemplate = $this->fetchTemplate(self::DEFAULT_TEMPLATE_NAME);
+    $dbTemplate = $this->fetchTemplate(self::DEFAULT_TEMPLATE_NAME, exact: false);
     if (empty($dbTemplate)) {
       $this->storeTemplate(self::DEFAULT_TEMPLATE_NAME, '', $this->initialTemplate);
     } else {
@@ -4108,9 +4118,12 @@ Störung.';
    * string then it will first be normalized (CamelCase, not spaces,
    * no dashes) and translated.
    *
+   * @param bool $exact Whether to search include a numeric prefix like
+   * 00-Default and the like.
+   *
    * @return null|Entities\EmailTemplate
    */
-  private function fetchTemplate($templateIdentifier):?Entities\EmailTemplate
+  private function fetchTemplate($templateIdentifier, bool $exact = true):?Entities\EmailTemplate
   {
     if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
       if (filter_var($templateIdentifier, FILTER_VALIDATE_INT) !== false) {
@@ -4120,10 +4133,25 @@ Störung.';
       } else {
         $templateNames = $this->normalizeTemplateName($templateIdentifier);
 
+        if (!$exact) {
+          $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
+        }
+
+        $this->logInfo('TEMPLATE ' . print_r($templateNames, true));
+
         /** @var Entities\EmailTemplate */
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
-          ->findOneBy([ 'tag' => $templateNames ]);
+          ->findOneBy(
+            criteria: [
+              'tag' => $templateNames
+            ],
+            orderBy: [
+              'tag' => 'ASC',
+            ],
+          );
+
+        $this->logInfo('FOUND TEMPLATE ' . (empty($template) ? 'NONE' : $template->getTag()));
       }
     }
 
