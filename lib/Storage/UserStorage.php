@@ -106,9 +106,9 @@ class UserStorage
   }
 
   /**
-   * @return IUser The current user
+   * @return null|IUser The current user
    */
-  public function user():IUser
+  public function user():?IUser
   {
     return $this->user;
   }
