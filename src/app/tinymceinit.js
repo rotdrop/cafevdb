@@ -41,7 +41,7 @@ const myConfig = {
   // theme_advanced_resizing: true,
   // theme_advanced_resizing_use_cookie : false,
   theme: 'silver',
-  language: 'en',
+  language: globalState.language || 'en',
   //    width: 300,
   //    height: 100,
   //    forced_root_block : '',
@@ -168,8 +168,13 @@ const myGetConfig = function(plusConfig) {
   if (typeof plusConfig === 'undefined') {
     plusConfig = {};
   }
+  // NOTE: This must return the initial nonce as the nonce is part of
+  // the CSP policy and thus configured when the page is
+  // loaded. Although the request token changes while after while the
+  // nonce value must be the one of the CSP policy and thus based on
+  // the initial request token.
   const nonceConfig = {
-    nonce: () => globalState.nonce,
+    nonce: () => globalState.initialNonce,
   };
   // const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   // if (width <= 768) { // perhaps mobile
@@ -184,7 +189,12 @@ const myInit = function(lang) {
   myConfig.language = lang;
   const allconfig = myGetConfig({
     selector: 'textarea.wysiwyg-editor',
-    nonce: () => globalState.nonce,
+    // NOTE: This must return the initial nonce as the nonce is part of
+    // the CSP policy and thus configured when the page is
+    // loaded. Although the request token changes while after while the
+    // nonce value must be the one of the CSP policy and thus based on
+    // the initial request token.
+    nonce: () => globalState.initialNonce,
   });
   // console.info('Try init tinymce');
   // console.info('tinymce: ', window.tinymce);
