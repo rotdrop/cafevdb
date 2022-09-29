@@ -400,6 +400,21 @@ const pmeFormInit = function(containerSel) {
       });
   }
 
+  $form.find('.download-share .action.button')
+    .off('click')
+    .on('click', function(event) {
+      const projectId = $form.find('input[name="projectId"]').val();
+      $.post(
+        generateUrl('projects/' + projectId + '/share/downloads'))
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data, textStatus, request) {
+          Notification.messages(data.message);
+        });
+      return false;
+    });
+
   $form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
     const $this = $(this);
     const operation = $this.data('operation');

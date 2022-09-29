@@ -687,6 +687,33 @@ class Projects extends PMETableViewBase
     ];
     $this->addSlug('mailing-list', $opts['fdd']['mailing_list_id']);
 
+    $opts['fdd']['public_download_share'] = [
+      'name' => $this->l->t('Public Downloads'),
+      'title' => $this->l->t('projectpublicdownloadsfolder'),
+      'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', ], ],
+      'input' => 'RV',
+      'options'  => 'LFCPVD', // not in add mode
+      'sql' => '$main_table.id', // sql is needed if is to be displayed.
+      'select' => 'T',
+      'display|LFD'  => [
+        'popup' => 'data',
+        'prefix' => '<div class="cell-wrapper">',
+        'postfix' => '</div>'
+      ],
+      'php' => function($value, $op, $field, $row, $recordId, $pme) {
+        list('share' => $url, /* 'folder' => $path */) = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
+        if (!empty($url)) {
+          $url = Util::htmlEscape($url);
+          return '<a href="' . $url . '">' . $url . '</a>';
+        } elseif (!$this->listOperation()) {
+          return '<a href="#" class="action button">' . $this->l->t('create') . '</a>';
+        } else {
+          return '';
+        }
+      },
+      'sort' => true,
+    ];
+
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
       [
