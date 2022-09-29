@@ -4,24 +4,27 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use \DateTimeImmutable;
 
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
@@ -29,6 +32,10 @@ use OCP\Files\Node as FileSystemNode;
 use OCP\IURLGenerator;
 use OCP\ILogger;
 
+/**
+ * Support class for the creating cloud shared, currently only web-links can
+ * be generated.
+ */
 class SimpleSharingService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -36,11 +43,12 @@ class SimpleSharingService
   /** @var IShareManager */
   private $shareManager;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , IShareManager $shareManager
-    , IURLGenerator $urlGenerator
-  )  {
+    ConfigService $configService,
+    IShareManager $shareManager,
+    IURLGenerator $urlGenerator,
+  ) {
     $this->configService = $configService;
     $this->shareManager = $shareManager;
     $this->urlGenerator = $urlGenerator;
@@ -52,20 +60,25 @@ class SimpleSharingService
    * already shared with the requested permissions then just return the old
    * share.
    *
-   * @param FileSystemNode $node
+   * @param FileSystemNode $node The cloud file-system node which shall be shared.
    *
-   * @paran null|string $shareOwner User-id of the owner.
+   * @param null|string $shareOwner User-id of the owner.
    *
    * @param int $sharePerms Permissions for the link. Defaults to PERMISSION_CREATE.
    *
-   * @return null|string The absolute URL for the share or null.
+   * @param null|DateTimeInterface $expirationDate Optional expiration date for the link.
    *
+   * @param bool $noCreate Do not create a new share, but return an existing
+   * share if it exists.
+   *
+   * @return null|string The absolute URL for the share or null.
    */
   public function linkShare(
-    FileSystemNode $node
-    , ?string $shareOwner = null
-    , int $sharePerms = \OCP\Constants::PERMISSION_CREATE
-    , ?\DateTimeInterface $expirationDate = null
+    FileSystemNode $node,
+    ?string $shareOwner = null,
+    int $sharePerms = \OCP\Constants::PERMISSION_CREATE,
+    ?\DateTimeInterface $expirationDate = null,
+    bool $noCreate = false,
   ) {
     $this->logDebug('shared folder id ' . $node->getId());
 
@@ -77,7 +90,7 @@ class SimpleSharingService
 
     if (!empty($expirationDate)) {
       // make sure it is UTC midnight
-      $expirationDate = new \DateTimeImmutable($expirationDate->format('Y-m-d'));
+      $expirationDate = new DateTimeImmutable($expirationDate->format('Y-m-d'));
     }
     $expirationTimeStamp = empty($expirationDate) ? -1 : $expirationDate->getTimestamp();
 
@@ -103,6 +116,10 @@ class SimpleSharingService
         $this->logInfo('Reuse existing link-share ' . $url);
         return $url;
       }
+    }
+
+    if ($noCreate) {
+      return null;
     }
 
     // None found, generate a new one
@@ -134,10 +151,9 @@ class SimpleSharingService
    *
    * @param null|string $shareOwner
    *
-   * @param int $shareType Defaults to IShare::TYPE_LINK
+   * @param int $shareType Defaults to IShare::TYPE_LINK.
    *
    * @return int The number of changed shares
-   *
    */
   public function expire(FileSystemNode $node, ?string $shareOwner = null, int $shareType = IShare::TYPE_LINK):int
   {
@@ -145,7 +161,7 @@ class SimpleSharingService
       $shareOwner = $this->userId();
     }
 
-    $now = new \DateTimeImmutable;
+    $now = new DateTimeImmutable;
 
     $numChanged = 0;
 
