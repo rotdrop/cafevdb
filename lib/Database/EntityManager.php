@@ -597,6 +597,7 @@ class EntityManager extends EntityManagerDecorator
     $config->addCustomStringFunction('year', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Year::class);
     $config->addCustomStringFunction('group_concat', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\GroupConcat::class);
     $config->addCustomStringFunction('if', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\IfElse::class);
+    $config->addCustomStringFunction('regexp', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Regexp::class);
   }
 
   /**
