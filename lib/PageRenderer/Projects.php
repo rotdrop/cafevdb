@@ -690,26 +690,19 @@ class Projects extends PMETableViewBase
     $opts['fdd']['public_download_share'] = [
       'name' => $this->l->t('Public Downloads'),
       'title' => $this->l->t('projectpublicdownloadsfolder'),
-      'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', ], ],
+      'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', 'restrict-height', ], ],
       'input' => 'RV',
       'options'  => 'LFCPVD', // not in add mode
       'sql' => '$main_table.id', // sql is needed if is to be displayed.
       'select' => 'T',
-      'display|LFD'  => [
-        'popup' => 'data',
-        'prefix' => '<div class="cell-wrapper">',
-        'postfix' => '</div>'
-      ],
+      'display' => [ 'popup' => 'tooltip', ],
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        list('share' => $url, /* 'folder' => $path */) = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
-        if (!empty($url)) {
-          $url = Util::htmlEscape($url);
-          return '<a href="' . $url . '">' . $url . '</a>';
-        } elseif (!$this->listOperation()) {
-          return '<a href="#" class="action button">' . $this->l->t('create') . '</a>';
-        } else {
-          return '';
-        }
+        $templateParameters = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
+        $templateParameters['toolTips'] = $this->toolTipsService;
+        $templateParameters['operation'] = $this->listOperation() ? 'list' : $op;
+        // $this->logInfo('SHARE ' . print_r($templateParameters, true));
+        $template = new TemplateResponse($this->appName(), 'fragments/projects/project-download-share', $templateParameters, 'blank');
+        return $template->render();
       },
       'sort' => true,
     ];

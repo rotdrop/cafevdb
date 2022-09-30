@@ -26,6 +26,40 @@
 
   form.pme-form {
 
+    .empty > .not-empty {
+      display:none!important;
+    }
+    .has-content > .only-empty {
+      display:none!important;
+    }
+
+    &.pme-list {
+      .not-list-operation {
+        display:none;
+      }
+      td.pme-cell .pme-cell-squezer {
+        max-width:12em;
+      }
+      td.download-share {
+        .button.button-use-icon {
+          background-size: 18px 18px;
+          padding:4px 11px;
+          min-height:24px;
+          height:10px;
+        }
+      }
+    }
+
+    td.download-share {
+      .button.copy-to-clipboard {
+        background-image:url('../../../core/img/actions/clippy.svg');
+      }
+      .button.create-share-link {
+        background-image:url('../../../core/img/actions/add.svg');
+      }
+    }
+
+
     /***************************************************************************
      *
      * Further chosen stuff

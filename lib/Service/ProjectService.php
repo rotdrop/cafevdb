@@ -652,6 +652,7 @@ class ProjectService
   public function ensureDownloadsFolder($projectOrId, bool $dry = false)
   {
     list(self::FOLDER_TYPE_DOWNLOADS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_DOWNLOADS, $dry);
+    $this->logInfo('DOWNLOADS FOLDER ' . $path);
     return $path;
   }
 

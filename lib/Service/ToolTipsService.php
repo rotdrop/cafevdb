@@ -519,6 +519,10 @@ field. If left blank, every logged in user is allowed to change this field.'),
         'projects' => [
           'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
           'edit-project-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
+          'public-downloads' => [
+            'create' => $this->l->t('Create the download folder and generate a public share link.'),
+            'clipboard' => $this->l->t('Copy the share-link to the clipboard'),
+          ],
         ],
         'instrument-insurances' => [
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),

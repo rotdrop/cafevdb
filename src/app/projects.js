@@ -400,9 +400,10 @@ const pmeFormInit = function(containerSel) {
       });
   }
 
-  $form.find('.download-share .action.button')
+  $form.find('.download-share .operation.button.create-share-link')
     .off('click')
     .on('click', function(event) {
+      const $this = $(this);
       const projectId = $form.find('input[name="projectId"]').val();
       $.post(
         generateUrl('projects/' + projectId + '/share/downloads'))
@@ -411,8 +412,26 @@ const pmeFormInit = function(containerSel) {
         })
         .done(function(data, textStatus, request) {
           Notification.messages(data.message);
+          const $container = $this.closest('.pme-cell-wrapper');
+          const empty = !data.share;
+          const tooltip = [data.folder, data.share].filter((x) => !!x).join('<br/>');
+          const $anchor = $container.find('a.url');
+          $container.toggleClass('empty', empty).toggleClass('has-content', !empty);
+          $anchor.attr('href', data.share).html(data.share);
+          $anchor.cafevTooltip('dispose').attr('title', tooltip).cafevTooltip();
         });
       return false;
+    });
+
+  $form.find('.download-share .operation.button.copy-to-clipboard')
+    .off('click')
+    .on('click', function(event) {
+      const url = $(this).next().attr('href');
+      navigator.clipboard.writeText(url).then(function() {
+        Notification.showTemporary(t(appName, 'Share-link has been copied to the clipboard.'));
+      }, function(reason) {
+        Notification.showTemporary(t(appName, 'Failed copying share-link to the clipboard: {reason}.', { reason }));
+      });
     });
 
   $form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
