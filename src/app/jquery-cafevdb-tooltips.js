@@ -101,9 +101,6 @@ const unlockElement = function($element) {
 const toolTipsWorkQueue = [];
 
 function singleToolTipWorker(optionsForAll, jobChunkSize) {
-  if (jobChunkSize !== undefined) {
-    console.info('.');
-  }
   const $this = $(this);
   const selfOptions = $.extend(true, {}, optionsForAll);
   const classAttr = $this.attr('class');
@@ -178,8 +175,7 @@ function singleToolTipWorker(optionsForAll, jobChunkSize) {
   $.fn.tooltip.call($this, selfOptions);
   unlockElement($this);
   jobChunkSize = jobChunkSize || 0;
-  --jobChunkSize; // count also ourselves
-  for (let i = 0; i < jobChunkSize; i++) {
+  for (let i = 0; i < jobChunkSize - 1; i++) {
     const job = toolTipsWorkQueue.pop();
     if (job === undefined) {
       break;
