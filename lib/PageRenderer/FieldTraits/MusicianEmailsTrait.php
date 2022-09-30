@@ -125,6 +125,7 @@ trait MusicianEmailsTrait
                   ],
                   'valueField' => 'email',
                   'labelField' => 'email',
+                  'createOnBlur' => true,
                   'persist' => true,
                   'plugins' => [
                     'drag_drop',

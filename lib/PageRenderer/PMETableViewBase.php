@@ -1255,13 +1255,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
               $this->debug('ENTITIY ID '.print_r($entityId, true));
-              $entity = new $entityClass;
-              foreach ($entityId as $key => $value) {
-                if (is_numeric($value) && $value <= 0) {
-                  // treat this as autoincrement or otherwise auto-generated ids
-                  continue;
+
+              // maybe already there caused by ORM persist cascading
+              $entity = $this->find($entityId);
+              $needPersist = false;
+              if (empty($entity)) {
+                $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
+                $entity = new $entityClass;
+                foreach ($entityId as $key => $value) {
+                  if (is_numeric($value) && $value <= 0) {
+                    // treat this as autoincrement or otherwise auto-generated ids
+                    continue;
+                  }
+                  $entity[$key] = $value;
                 }
-                $entity[$key] = $value;
+                $needPersist = true;
+              } else {
+                $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
               }
 
               // set further properties ...
@@ -1273,7 +1283,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               }
 
               // persist
-              $this->persist($entity);
+              if ($needPersist) {
+                $this->persist($entity);
+              }
 
               // flush in order to trigger auto-increment
               $this->flush();
@@ -1690,7 +1702,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->debug('MULTIPLE VALUS '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUES '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
@@ -1698,9 +1710,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
-            $entity = new $entityClass;
-            foreach ($entityId as $key => $value) {
-              $entity[$key] = $value;
+
+            // maybe already there caused by ORM persist cascading
+            $entity = $this->find($entityId);
+            $needPersist = false;
+            if (empty($entity)) {
+              $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
+              $entity = new $entityClass;
+              foreach ($entityId as $key => $value) {
+                $entity[$key] = $value;
+              }
+              $needPersist = true;
+            } else {
+              $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
             }
 
             // set further properties ...
@@ -1715,7 +1737,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
 
             // persist
-            $this->persist($entity);
+            if ($needPersist) {
+              $this->persist($entity);
+            }
 
             // flush in order to trigger auto-increment
             $this->flush();
@@ -1772,7 +1796,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
 
         if (!($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) || !empty($entity[$joinInfo['column']])) {
-          $this->persist($entity);
+          try {
+            $this->persist($entity);
+            $this->flush();
+          } catch (\OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMInvalidArgumentException $e) {
+            $this->logException($e);
+          }
         }
 
         // if this is the master table, then we need also to fetch the
@@ -2556,13 +2585,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         switch ($column) {
           case 'email':
             try {
-              $musician->setEmailAddress($value, $musician);
+              $musician->setEmail($value, $musician);
             } catch (\Throwable $t) {
               $this->logException($t);
               /** @var Service\MusicianService $musicianService */
               $musicianService = $this->di(Service\MusicianService::class);
               $value = $musicianService->generateDisabledEmailAddress($musician);
-              $musician->setEmailAddress($value);
+              $musician->setEmail($value);
             }
             break;
           case 'user_id_slug':

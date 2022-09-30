@@ -346,7 +346,7 @@ class MusicianValidationController extends Controller
         $commCriteria = [];
         $email = $this->requestParameter('email');
         if (!empty($email)) {
-          $commCriteria[] = [ 'email.address' => $email ];
+          $commCriteria[] = [ 'email' => $email ];
         }
         $fixedLinePhone = $this->requestParameter('fixed_line_phone');
         if (!empty($fixedLinePhone)) {
@@ -430,7 +430,7 @@ class MusicianValidationController extends Controller
           $duplicatesPropability = 0.0;
 
           $commsMatch = (
-            (!empty($email) && $email == $musician->getEmailAddress())
+            (!empty($email) && $email == $musician->getEmail())
             || (!empty($fixedLinePhone) && $fixedLinePhone == $musician->getFixedLinePhone())
             || (!empty($mobilePhone) && $mobilePhone == $musician->getMobilePhone()));
 

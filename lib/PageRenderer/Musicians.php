@@ -1057,11 +1057,11 @@ make sure that the musicians are also automatically added to the
           switch ($newVals['mailing_list'] ?? '') {
             case 'invite':
               $this->logInfo('SHOULD INVITE TO MAILING LIST');
-              $this->listsService->invite($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
               break;
             case 'subscribe':
               $this->logInfo('SHOULD SUBSCRIBE TO MAILING LIST');
-              $this->listsService->subscribe($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
               break;
             default:
               $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');

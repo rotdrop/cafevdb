@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -102,7 +103,9 @@ class Instrument implements \ArrayAccess
    */
   private $projectInstrumentationNumbers;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->families = new ArrayCollection();
     $this->musicianInstruments = new ArrayCollection();
@@ -199,7 +202,7 @@ class Instrument implements \ArrayAccess
    *
    * @return Instrument
    */
-  public function setSortOrder($sortOrder):Instrument
+  public function setSortOrder(int $sortOrder):Instrument
   {
     $this->sortOrder = $sortOrder;
 
@@ -219,11 +222,11 @@ class Instrument implements \ArrayAccess
   /**
    * Set musicianInstruments.
    *
-   * @param bool $musicianInstruments
+   * @param Collection $musicianInstruments
    *
    * @return Instrument
    */
-  public function setMusicianInstruments($musicianInstruments):Instrument
+  public function setMusicianInstruments(Collection $musicianInstruments):Instrument
   {
     $this->musicianInstruments = $musicianInstruments;
 
@@ -290,11 +293,28 @@ class Instrument implements \ArrayAccess
 
   /**
    * Get the usage count, i.e. the number of entity instances which  use this instrument.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->musicianInstruments->count()
       + $this->projectInstruments->count()
       + $this->projectInstrumentationNumbers->count();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $families = [];
+    /** @var InstrumentFamily $family */
+    foreach ($this->families as $family) {
+      $families[] = $family->getFamily();
+    }
+    $name = $this->name;
+    if (!empty($families)) {
+      $name .= ' (' . implode(', ', $families) . ')';
+    }
+    return $name;
   }
 }

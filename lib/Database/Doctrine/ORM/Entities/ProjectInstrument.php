@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -113,18 +114,20 @@ class ProjectInstrument implements \ArrayAccess
    */
   private $instrumentationNumber;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
 
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|int|Project $project
    *
    * @return ProjectInstrument
    */
-  public function setProject($project)
+  public function setProject(mixed $project):ProjectInstrument
   {
     $this->project = $project;
 
@@ -144,11 +147,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int|Musician $musician
    *
    * @return ProjectInstrument
    */
-  public function setMusician($musician)
+  public function setMusician($musician):ProjectInstrument
   {
     $this->musician = $musician;
 
@@ -158,9 +161,9 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int
+   * @return null|Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -168,11 +171,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set instrument.
    *
-   * @param int $instrument
+   * @param null|int|Instrument $instrument
    *
    * @return ProjectInstrument
    */
-  public function setInstrument($instrument)
+  public function setInstrument(mixed $instrument):ProjectInstrument
   {
     $this->instrument = $instrument;
 
@@ -220,7 +223,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return ProjectInstrument
    */
-  public function setSectionLeader($sectionLeader)
+  public function setSectionLeader(bool $sectionLeader):ProjectInstrument
   {
     $this->sectionLeader = $sectionLeader;
 
@@ -232,19 +235,43 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return bool
    */
-  public function getSectionLeader()
+  public function getSectionLeader():bool
   {
     return $this->sectionLeader;
   }
 
   /**
-   * Set projectParticipant.
+   * Set instrumentationNumber.
    *
-   * @param int $projectParticipant
+   * @param null|ProjectInstrumentationNumber $instrumentationNumber
    *
    * @return ProjectInstrument
    */
-  public function setProjectParticipant($projectParticipant)
+  public function setInstrumentationNumber(?ProjectInstrumentationNumber $instrumentationNumber):ProjectInstrument
+  {
+    $this->instrumentationNumber = $instrumentationNumber;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentationNumber.
+   *
+   * @return ProjectInstrumentationNumber
+   */
+  public function getInstrumentationNumber():ProjectInstrumentationNumber
+  {
+    return $this->instrumentationNumber;
+  }
+
+  /**
+   * Set projectParticipant.
+   *
+   * @param null|ProjectParticipant $projectParticipant
+   *
+   * @return ProjectInstrument
+   */
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectInstrument
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -273,11 +300,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set musicianInstrument.
    *
-   * @param int $musicianInstrument
+   * @param null|MusicianInstrument $musicianInstrument
    *
    * @return ProjectInstrument
    */
-  public function setMusicianInstrument($musicianInstrument)
+  public function setMusicianInstrument(?MusicianInstrument $musicianInstrument):ProjectInstrument
   {
     $this->musicianInstrument = $musicianInstrument;
 
@@ -303,4 +330,16 @@ class ProjectInstrument implements \ArrayAccess
     return $this->musicianInstrument;
   }
 
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $name = (string)$this->instrument;
+    if (!empty($this->musician)) {
+      $name .= ' | ' . $this->musician->getUserIdSlug();
+    }
+    if (!empty($this->project)) {
+      $name .= '@' . $this->project->getName();
+    }
+    return $name;
+  }
 }

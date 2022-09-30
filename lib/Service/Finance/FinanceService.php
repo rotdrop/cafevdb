@@ -257,7 +257,7 @@ class FinanceService
           $musician->getStreet() . ' ' . $musician->getStreetNumber(),
           $musician->getPostalCode() . ' ' . $musician->getCity(),
         ])),
-        'memberEmail' => $musician->getEmailAddress(),
+        'memberEmail' => $musician->getEmail(),
         'memberFixedLinePhone' => $musician->getFixedLinePhone(),
         'memberMobilePhone' => $musician->getMobilePhone(),
       ];

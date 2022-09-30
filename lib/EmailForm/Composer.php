@@ -708,7 +708,7 @@ Störung.';
       if (empty($musician)) {
           return $keyArg[0];
       }
-      return $musician->getEmailAddress();
+      return $musician->getEmail();
     };
 
     $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
@@ -3259,7 +3259,7 @@ Störung.';
       $dummy = $this->appContainer()->get(InstrumentationService::class)->getDummyMusician($this->project);
       $previewRecipients = [
         $dummy->getId() => [
-          'email' => $dummy->getEmailAddress(),
+          'email' => $dummy->getEmail(),
           'name' => $dummy->getPublicName(true),
           'dbdata' => $dummy,
         ],

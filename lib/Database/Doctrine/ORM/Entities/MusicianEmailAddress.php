@@ -86,6 +86,12 @@ class MusicianEmailAddress implements \ArrayAccess
     return $this->address;
   }
 
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->musician->getPublicName(firstNameFirst: true) . ' <' . $this->address . '>';
+  }
+
   /**
    * @param null|string $address
    *
@@ -111,7 +117,7 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
-   * @param int|Musician $musican
+   * @param int|Musician $musician
    *
    * @return MusicianEmailAddress
    */
@@ -128,7 +134,7 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function isPrimaryAddress():bool
   {
-    return $this->musician->getEmailAddress() == $this->address;
+    return $this->musician->getEmail() == $this->address;
   }
 
   /**

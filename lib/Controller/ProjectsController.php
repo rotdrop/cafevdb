@@ -318,7 +318,7 @@ class ProjectsController extends Controller {
             ++$notConfirmedCount;
             continue; // only subscribe confirmed participants
           }
-          $email = $participant->getMusician()->getEmailAddress();
+          $email = $participant->getMusician()->getEmail();
           if (empty($email)) {
             ++$noEmailCount;
             continue; // after all, it is a mailing list ...

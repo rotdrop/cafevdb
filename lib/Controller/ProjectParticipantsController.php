@@ -971,7 +971,7 @@ class ProjectParticipantsController extends Controller
 
     /** @var Entities\Musician $musician */
     $musician = $participant->getMusician();
-    $email = $musician->getEmailAddress();
+    $email = $musician->getEmail();
     if (empty($email)) {
       return self::grumble($this->l->t('The musician "%s" does not have an email-address.', $musician->getPublicName()));
     }

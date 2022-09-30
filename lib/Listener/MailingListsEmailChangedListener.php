@@ -159,8 +159,8 @@ class MailingListsEmailChangedListener implements IEventListener
 
         $this->logInfo('SUBSCRIPTION REQUESTS ' . print_r($subscriptionRequest, true));
 
-        $oldPrimary = $subscriptionRequest['changed']['old'] ?? $musician->getEmailAddress();
-        $newPrimary = $musician->getEmailAddress();
+        $oldPrimary = $subscriptionRequest['changed']['old'] ?? $musician->getEmail();
+        $newPrimary = $musician->getEmail();
 
         $defaultPrimarySubscription = [
           MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
