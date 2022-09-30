@@ -36,6 +36,11 @@ body#body-settings {
 
 #content.app-cafevdb {
   @import 'flex.scss';
+
+  textarea.wysiwyg-editor {
+    @import 'wysiwyg-editors.scss';
+  }
+
   width:100%;
   height:100%;
 
