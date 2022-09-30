@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -165,7 +166,7 @@ class SepaBulkTransactionsController extends Controller {
       $accountId = json_decode($accountRecord, true);
       $musicianId = $accountId['musician_id'];
       $sequence = $accountId['sequence'];
-      $mandateSequence = $accountId['SepaDebitMandates_key'];
+      $mandateSequence = $accountId[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::SEPA_DEBIT_MANDATES_TABLE)];
 
       /** @var Entities\SepaBankAccount $account */
       $account = $accountsRepository->find([
