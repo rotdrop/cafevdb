@@ -67,7 +67,7 @@ class MailingListsRegistrationConfirmationListener implements IEventListener
 
     /** @var Entities\ProjectParticipant $participant */
     $participant = $event->getProjectParticipant();
-    $email = $participant->getMusician()->getEmailAddress();
+    $email = $participant->getMusician()->getEmail();
     $listId = $participant->getProject()->getMailingListId();
 
     if (empty($email) || empty($listId)) {

@@ -1813,7 +1813,7 @@ Whatever.',
   {
     $listId = $participant->getProject()->getMailingListId();
     $musician = $participant->getMusician();
-    $principalEmail = $musician->getEmailAddress();
+    $principalEmail = $musician->getEmail();
 
     if (empty($listId) || empty($principalEmail)) {
       return null;
@@ -1869,7 +1869,7 @@ Whatever.',
   {
     $listId = $participant->getProject()->getMailingListId();
     $musician = $participant->getMusician();
-    $principalEmail = $musician->getEmailAddress();
+    $principalEmail = $musician->getEmail();
 
     if (empty($listId) || empty($principalEmail)) {
       return;

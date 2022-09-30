@@ -279,7 +279,7 @@ class MusicianService
     // Unsubscribe the musician from the mailing-list
     $list = $this->getConfigValue('announcementsMailingList');
     try {
-      $this->listsService->unsubscribe($list, $musician->getEmailAddress());
+      $this->listsService->unsubscribe($list, $musician->getEmail());
     } catch (\Throwable $t) {
       // for now we ignore any mailing list related errors in order not to
       // annoy the persons who are desperately trying to add persons to
