@@ -60,6 +60,21 @@ const chosenActive = function($select) {
 };
 
 /**
+ * Fetch the control instance attached to the given $select if any.
+ *
+ * @param {jQuery} $select TBD.
+ *
+ * @returns {(object|undefined)}
+ */
+const getControlObject = function($select) {
+  if (chosenActive($select)) {
+    return $select.data('chosen');
+  } else {
+    return getSelectize($select);
+  }
+};
+
+/**
  * Fetch the children of the underlying select regardless of the widget
  * used.
  *
@@ -412,6 +427,7 @@ export {
   getChildren as children,
   getWidget as widget,
   getSelectFromWidget as selectFromWidget,
+  getControlObject,
   locked,
   makePlaceholder,
 };
