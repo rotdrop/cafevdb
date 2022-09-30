@@ -1304,7 +1304,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 if ($pivotColumn === false) {
                   // assume that the 'column' component contains the keys.
                   $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
-                  $masterField = $this->joinTableMasterFieldName($joinInfo);
+                  $masterField = self::joinTableMasterFieldName($joinInfo);
                   $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
                 } else if (!is_array($pivotColumn)) {
                   $newvals[$pivotColumn] = $identifierColumnValues[$key];
@@ -1757,7 +1757,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               if ($pivotColumn === false) {
                 // assume that the 'column' component contains the keys.
                 $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
-                $masterField = $this->joinTableMasterFieldName($joinInfo);
+                $masterField = self::joinTableMasterFieldName($joinInfo);
                 $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
               } else if (!is_array($pivotColumn)) {
                 $newvals[$pivotColumn] = $identifierColumnValues[$key];
@@ -2078,7 +2078,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
       $grouped[$table] = $group;
       $orderBy[$table] = $groupOrderBy;
-      $fieldName = $this->joinTableMasterFieldName($table);
+      $fieldName = self::joinTableMasterFieldName($table);
       $opts['fdd'][$fieldName] = [
         'tab' => 'all',
         'name' => $fieldName,
@@ -2137,8 +2137,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param string|array $tableInfo @see joinTableFieldName().
    *
    * @return string
+   *
+   * @see OCA\CAFEVDB\Controller\SepaBulkTransactionsController::generateBulkTransaction()
    */
-  protected function joinTableMasterFieldName($tableInfo)
+  public static function joinTableMasterFieldName($tableInfo)
   {
     if (is_array($tableInfo)) {
       $table = $tableInfo['table'];
@@ -2254,7 +2256,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         ],
       ];
     } else {
-      $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
+      $masterFieldName = self::joinTableMasterFieldName($tableInfo);
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
@@ -2499,7 +2501,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   public function ensureUserIdSlug($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     $tag = 'user_id_slug';
-    if (!empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
+    if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
       $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
@@ -2530,7 +2532,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function musicianFromRow($row, ?PHPMyEdit $pme)
   {
     $pme = $pme?:$this->pme;
-    $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
+    $joinTable = !empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
     foreach ($pme->fds as $idx => $label) {
       if (isset($row['qf' . $idx . '_idx'])) {
