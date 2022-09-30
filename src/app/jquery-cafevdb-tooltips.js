@@ -98,7 +98,12 @@ const unlockElement = function($element) {
   $element.data(appName + '-tooltip-lock', false);
 };
 
-function singleToolTipWorker(optionsForAll) {
+const toolTipsWorkQueue = [];
+
+function singleToolTipWorker(optionsForAll, jobChunkSize) {
+  if (jobChunkSize !== undefined) {
+    console.info('.');
+  }
   const $this = $(this);
   const selfOptions = $.extend(true, {}, optionsForAll);
   const classAttr = $this.attr('class');
@@ -172,6 +177,19 @@ function singleToolTipWorker(optionsForAll) {
   }
   $.fn.tooltip.call($this, selfOptions);
   unlockElement($this);
+  jobChunkSize = jobChunkSize || 0;
+  --jobChunkSize; // count also ourselves
+  for (let i = 0; i < jobChunkSize; i++) {
+    const job = toolTipsWorkQueue.pop();
+    if (job === undefined) {
+      break;
+    }
+    singleToolTipWorker.call($(job.element), job.options);
+  }
+  const job = toolTipsWorkQueue.pop();
+  if (job !== undefined) {
+    setTimeout(() => singleToolTipWorker.call($(job.element), job.options, jobChunkSize));
+  }
 }
 
 /**
@@ -216,7 +234,14 @@ $.fn.cafevTooltip = function(argument) {
       if (!lockElement($element)) {
         return;
       }
-      setTimeout(() => singleToolTipWorker.call($(this), optionsForAll));
+      if (backGroundCount === 1) {
+        setTimeout(() => singleToolTipWorker.call($(this), optionsForAll, 10));
+      } else {
+        toolTipsWorkQueue.push({
+          element: this,
+          options: optionsForAll,
+        });
+      }
     });
   } else {
     if (argument === 'destroy') {
