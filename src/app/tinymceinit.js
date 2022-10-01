@@ -78,9 +78,9 @@ const myConfig = {
     // instance -- we try to be clever and only forward if the size
     // actually has changed.
     const mceWindow = inst.getWin();
-    const mceContainer = inst.getContainer();
-    console.debug(mceContainer);
-    const ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
+    const $mceContainer = $(inst.getContainer());
+    console.debug($mceContainer);
+    const ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
     mceWindow.oldWidth = [-1, -1];
     mceWindow.oldHeight = [-1, -1];
     mceWindow.onresize = function(e) {
@@ -103,6 +103,12 @@ const myConfig = {
         }
       }
     };
+
+    inst.on('blur', function(event) {
+      // FIXME: how the heck get the element the editor is attached to????
+      $mceContainer.prev().trigger('blur');
+    });
+
     console.debug('Resolve mceDeferred');
     $('#' + inst.id).data('mceDeferred').resolve(inst.id);
   },

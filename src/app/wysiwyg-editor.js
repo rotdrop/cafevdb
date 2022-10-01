@@ -32,13 +32,14 @@ import { globalState } from './cafevdb.js';
  * @param {Function} initCallback TBD.
  */
 const addEditor = function(selector, initCallback) {
-  console.debug('WysiwygEditor.addEditor');
   const $editorElements = $(selector);
+  console.debug('WysiwygEditor.addEditor', $editorElements.length);
   initCallback = (typeof initCallback === 'function') ? initCallback : () => {};
   if (!$editorElements.length) {
     initCallback();
     return;
   }
+  console.info('GLOBALSTATE', globalState);
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
     console.debug('attach ckeditor');
@@ -51,13 +52,15 @@ const addEditor = function(selector, initCallback) {
           .apply(
             $,
             $editorElements.map(function(index, editorElement) {
+              const $editorElement = $(editorElement);
               return ClassicEditor
                 .create(editorElement)
                 .then(editorInstance => {
-                  $(editorElement).data('ckeditorInstance', editorInstance);
+                  $editorElement.data('ckeditorInstance', editorInstance);
                   editorInstance.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
                     if (!isFocused) {
                       editorInstance.updateSourceElement();
+                      $editorElement.trigger('blur');
                     }
                   });
                 })
