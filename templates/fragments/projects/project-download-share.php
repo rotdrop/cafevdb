@@ -29,31 +29,51 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**
  * @param string $share The url to show.
  * @param string $folder The file-system path of the shared folder.
+ * @param string $filesAppLink Link to the shared folder in the cloud file-system (if the folder exits)
+ * @param string $expirationDate Formatted expiration date of the link.
  * @param ToolTipsService $toolTips
  * @param string $operation
  */
 
-$dataToolTip = implode('<br/>', array_filter([ $folder, $share ]));
+$toolTipsPrefix = 'page-renderer:projects:public-downloads:';
+$dataToolTip = implode('<br/>', array_filter([ $folder, $share, $expirationDate ]));
+$filesAppTarget = md5($folder);
 
 ?>
 
 <div class="tooltip-auto pme-cell-wrapper flex-container flex-center flex-justify-start <?php p(empty($share) ? 'empty' : 'has-content'); ?>">
   <a href="#" class="only-empty not-list-operation create-share-link button button-use-icon operation tooltip-auto"
-     title="<?php echo $toolTips['page-renderer:projects:public-downloads:create']; ?>"
+     title="<?php echo $toolTips[$toolTipsPrefix . 'create']; ?>"
   >
     <?php p($l->t('create share link')); ?>
   </a>
-  <a class="not-empty copy-to-clipboard button button-use-icon operation tooltip-auto"
-     title="<?php echo $toolTips['page-renderer:projects:public-downloads:clipboard']; ?>""
-     href="#">
-    <?php p($l->t('copy to clipboard')); ?>
+  <a href="#" class="not-empty not-list-operation delete-share-link button button-use-icon operation tooltip-auto"
+     title="<?php echo $toolTips[$toolTipsPrefix . 'delete']; ?>"
+  >
+    <?php p($l->t('delete share link')); ?>
   </a>
   <a class="url external not-empty tooltip-top tooltip-wide"
-     target="_blank"
+     target="<?php p(md5($share)); ?>"
      title="<?php p($dataToolTip); ?>"
      href="<?php p($share); ?>">
-    <div class="nav pme-cell-wrapper pme-cell-squeezer one-liner ellipsis medium-width">
+    <div class="nav content pme-cell-wrapper pme-cell-squeezer pme-style-all-views one-liner ellipsis medium-width clip-long-text">
       <?php p($share); ?>
     </div>
   </a>
+  <a class="not-empty copy-to-clipboard button button-use-icon operation tooltip-auto"
+     title="<?php echo $toolTips[$toolTipsPrefix . 'clipboard']; ?>""
+     href="#">
+    <?php p($l->t('copy to clipboard')); ?>
+  </a>
+  <a href="<?php echo $filesAppLink; ?>" target="<?php echo $filesAppTarget; ?>"
+     title="<?php echo $toolTips[$toolTipsPrefix . 'open-cloud']; ?>"
+     class="not-empty open-cloud button button-use-icon operation tooltip-auto<?php empty($filesAppLink) && p(' disabled'); ?>"
+  ></a>
+  <input type="text"
+         class="date not-empty not-pme-list share-expiration-date"
+         value="<?php p($expirationDate); ?>"
+         size="11"
+         placeholder="<?php p($l->t('e.g. 29.04.2032')); ?>"
+         title="<?php echo $toolTips[$toolTipsPrefix . 'expiration-date']; ?>"
+  />
 </div>

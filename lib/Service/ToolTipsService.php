@@ -522,6 +522,8 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'public-downloads' => [
             'create' => $this->l->t('Create the download folder and generate a public share link.'),
             'clipboard' => $this->l->t('Copy the share-link to the clipboard'),
+            'delete' => $this->l->t('Delete the download share. This will make it impossible to access the data using any previously generated share-link. Note that this of course does not delete the data in the cloud, it just invalidates the public web-link.'),
+            'expiration-date' => $this->l->t('Set the expiration date for the link. The default expiration date is the end of the year where the project is performed.'),
           ],
         ],
         'instrument-insurances' => [

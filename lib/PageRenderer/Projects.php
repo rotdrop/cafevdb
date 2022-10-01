@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use \phpMyEdit as PME;
@@ -75,6 +76,9 @@ class Projects extends PMETableViewBase
 
   /** @var OrganizationalRolesService */
   private $orgaRolesService;
+
+  /** @var UserStorage */
+  private $userStorage;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -121,6 +125,7 @@ class Projects extends PMETableViewBase
     ImagesService $imagesService,
     MailingListsService $listsService,
     OrganizationalRolesService $orgaRolesService,
+    UserStorage $userStorage,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
@@ -132,6 +137,7 @@ class Projects extends PMETableViewBase
     $this->imagesService = $imagesService;
     $this->listsService = $listsService;
     $this->orgaRolesService = $orgaRolesService;
+    $this->userStorage = $userStorage;
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;
@@ -697,10 +703,22 @@ class Projects extends PMETableViewBase
       'select' => 'T',
       'display' => [ 'popup' => 'tooltip', ],
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        $templateParameters = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
-        $templateParameters['toolTips'] = $this->toolTipsService;
-        $templateParameters['operation'] = $this->listOperation() ? 'list' : $op;
-        // $this->logInfo('SHARE ' . print_r($templateParameters, true));
+        list(
+          'folder' => $folder,
+          'share' => $share,
+          'expires' => $expires
+        ) = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
+        $filesAppLink = empty($folder)
+          ? null
+          : $this->userStorage->getFilesAppLink($folder, subDir: true);
+        $templateParameters = [
+          'folder' => $folder,
+          'share' => $share,
+          'filesAppLink' => $filesAppLink,
+          'toolTips' => $this->toolTipsService,
+          'operation' => $this->listOperation() ? 'list' : $op,
+          'expirationDate' => $this->formatDate($expires, 'medium'),
+        ];
         $template = new TemplateResponse($this->appName(), 'fragments/projects/project-download-share', $templateParameters, 'blank');
         return $template->render();
       },

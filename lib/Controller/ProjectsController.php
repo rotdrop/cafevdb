@@ -33,6 +33,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -487,6 +488,112 @@ class ProjectsController extends Controller
                 $project->getName(),
                 $data['share'],
             ]);
+            return self::dataResponse($data);
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Delete the named thing.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            $data = $projectService->ensureDownloadsShare($project, noCreate: true);
+            $share = $data['share'];
+            if (empty($share)) {
+              return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
+            }
+            /** @var SimpleSharingService $shareService */
+            $shareService = $this->di(SimpleSharingService::class);
+            $shareService->deleteLinkShare($share);
+            $data['share'] = null;
+            $data['expires'] = null;
+            $data['message'] = $this->l->t(
+              'Participant download share "%1$s" for project "%2$s" has been deleted.', [
+                $share,
+                $project->getName(),
+              ]);
+            return self::dataResponse($data);
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Delete the named thing.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            $data = $projectService->ensureDownloadsShare($project, noCreate: true);
+            $share = $data['share'];
+            if (empty($share)) {
+              return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
+            }
+            if (isset($this->parameterService['expirationDate'])) {
+              $expirationDate = $this->parameterService['expirationDate'];
+              $expirationDate = Util::dateTime($expirationDate);
+              /** @var SimpleSharingService $shareService */
+              $shareService = $this->di(SimpleSharingService::class);
+              $shareService->expireLinkShare($share, $expirationDate);
+              $data['expires'] = $expirationDate;
+              $data['message'] = $this->l->t(
+                'Expiration date of the participant download share "%1$s" for project "%2$s" has been set to %3$s.', [
+                  $share,
+                  $project->getName(),
+                  $this->formatDate($expirationDate, 'medium'),
+                ]);
+            }
             return self::dataResponse($data);
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
