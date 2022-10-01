@@ -57,6 +57,7 @@ use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -99,6 +100,7 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
+  public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption'; // appears not to be displayed?
   public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
   public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
@@ -114,6 +116,10 @@ class Composer
   public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_MESSAGE = 'Message';
   public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
+  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+
+  public const DIAGNOSTICS_STAGE_PREVIEW = 'preview';
+  public const DIAGNOSTICS_STAGE_SEND = 'send';
 
   /**
    * @var string
@@ -584,7 +590,7 @@ Störung.';
     // Error diagnostics, can be retrieved by
     // $this->statusDiagnostics()
     $this->diagnostics = [
-      'caption' => '',
+      self::DIAGNOSTICS_CAPTION => '',
       self::DIAGNOSTICS_ADDRESS_VALIDATION => [
         'CC' => [],
         'BCC' => [],
@@ -1497,9 +1503,9 @@ Störung.';
    *
    * @param null|string $message The composed email message body.
    *
-   * @return string
+   * @return bool|int
    */
-  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null):string
+  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null)
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1535,7 +1541,7 @@ Störung.';
       $this->generateSubstitutionHandlers();
     }
 
-    $regexp = '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)}/u';
+    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
     return preg_replace_callback(
       $regexp,
       function($matches) use ($data, &$failures) {
@@ -1621,6 +1627,8 @@ Störung.';
    */
   public function sendMessages():bool
   {
+    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+
     if (!$this->preComposeValidation($this->recipients)) {
       return false;
     }
@@ -1677,7 +1685,11 @@ Störung.';
   private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
-                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+
+    if (!$this->validateMessageHtml($messageTemplate)) {
+      $this->logInfo('VALIDATION FAILED');
+    }
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
@@ -3253,6 +3265,8 @@ Störung.';
    */
   public function previewMessages()
   {
+    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_PREVIEW;
+
     $previewRecipients = $this->recipients;
     if (empty($previewRecipients)) {
       /** @var Entities\Musician $dummy */
@@ -3265,17 +3279,17 @@ Störung.';
         ],
       ];
     }
-    $status = $this->preComposeValidation($previewRecipients);
-    if (!$status) {
-      return null;
-    }
+
+    /* $status = */ $this->preComposeValidation($previewRecipients);
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
     $preview = $this->exportMessages($previewRecipients);
 
-    if (!empty($preview)) {
+    if ($this->executionStatus()) {
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) exported successfully!');
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Prewiew generation detected errors!');
     }
 
     return $preview;
@@ -3307,7 +3321,11 @@ Störung.';
     $messageTemplate = implode("\n", array_map(function($style) {
       return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
     }, self::DEFAULT_HTML_STYLES))
-                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+
+    if (!$this->validateMessageHtml($messageTemplate)) {
+      $this->logInfo('LINK VALIDATION FAILED');
+    }
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
@@ -3473,6 +3491,41 @@ Störung.';
 
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
+
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE_LINK') !== false) {
+      $shareStatus = true;
+
+      $projectService = $this->di(ProjectService::class);
+      list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
+
+      try {
+        $headers = get_headers($share);
+      } catch (\Throwable $t) {
+        $headers = null;
+      }
+      if ($headers && count($headers) > 0) {
+        $code = (int)substr($headers[0], 9, 3);
+        if ($code < 200 && $code >= 400) {
+          $shareStatus = false;
+        }
+      }
+
+      $filesCount = $this->userStorage->folderWalk($folder);
+      $this->logInfo('FILES COUNT DOWNLOAD FOLDER ' . $filesCount);
+      if ($filesCount == 0) {
+        $shareStatus = false;
+      }
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+        'status' => $shareStatus,
+        'filesCount' => $filesCount,
+        'httpCode' => $code,
+        'folder' => $folder,
+        'appLink' => $this->userStorage->getFilesAppLink($folder, subDir: true),
+        'share' => $share,
+      ];
+
+      $this->executionStatus = $this->executionStatus && $shareStatus;
+    }
 
     // Cc: and Bcc: validation
     foreach ([ 'CC' => $this->carbonCopy(),
@@ -3662,7 +3715,7 @@ Störung.';
     }
 
     // No substitutions should remain. Check for that.
-    if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
+    if (preg_match('!([^$]|^)([$]|%24)({|%7B)[^}]+(}|%7D)?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
       $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['SpuriousErrors'] = $leftOver;
     }
@@ -3815,9 +3868,20 @@ Störung.';
       'BANK_ACCOUNT' => function($key) {
         return $this->bankAccount();
       },
+
       'PROJECT' => function($key) {
-        $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
+        return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
+      'PROJECT_PUBLIC_SHARE_LINK' => function($key) {
+        if (empty($this->project)) {
+          return $key;
+        }
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        list('share' => $share,) =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
+        return $share;
+      },
+
       'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
       'BANK_TRANSACTION_DUE_DAYS' => fn($key) => '',
       'BANK_TRANSACTION_SUBMIT_DATE' => fn($key) => '',
@@ -4277,9 +4341,10 @@ Störung.';
    *
    * @param null|int $draftId The entity id of the draft.
    *
-   * @return bool The execution status.
+   * @return bool|array The execution status in case of error (i.e. \false) or
+   * a data array for the loaded message draft.
    */
-  public function loadDraft(?int $draftId = null):bool
+  public function loadDraft(?int $draftId = null)
   {
     if ($draftId === null) {
       $draftId = $this->draftId;
@@ -4831,7 +4896,8 @@ Störung.';
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if (isset(parse_url($href)['host'])) {
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href)) || isset(parse_url($href)['host'])) {
+        $this->logInfo('KEEP HREF AS ' . $href);
         continue;
       }
       $baseUrl = $this->urlGenerator()->getBaseUrl();
@@ -4863,12 +4929,17 @@ Störung.';
     $hasErrors = false;
 
     $doc = new DOMDocument();
-    $doc->loadHTML($message);
+    $doc->loadHTML('<html><head><meta charset="utf-8"></head><body>' . $message . '</body></html>');
     $links = $doc->getElementsByTagName('a');
     /** @var DOMElement $item */
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))) {
+        $this->logInfo('KEEP HREF UNCHECKED ' . $href);
+        continue;
+      }
+      $this->logInfo('CHECK HREF ' . $href);
       $text = $item->nodeValue;
       try {
         $headers = get_headers($href);
