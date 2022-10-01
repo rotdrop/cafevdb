@@ -926,11 +926,7 @@ div#contact_photo_upload {
   min-height:100px;
 }
 
-form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value.clip-long-text,
-form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value .clip-long-text,
-td.pme-cell.clip-long-text,
-td.pme-cell .clip-long-text,
-td.pme-cell.musician-instruments {
+@mixin clip-long-text {
   /*width:12em;*/
   max-width:12em;
   /*max-height:1em;*/
@@ -939,10 +935,51 @@ td.pme-cell.musician-instruments {
   text-overflow:ellipsis;
 }
 
-td.pme-cell span.clip-long-text {
-  max-height:unset;
-  display:inline-block;
-  vertical-align:top;
+form.pme-form  {
+  @mixin hideIf($class, $prefix: "&") {
+    #{$prefix}.#{$class} .not-#{$class} {
+      display:none;
+    }
+  }
+  @mixin hideIfNot($class, $prefix: "&") {
+    #{$prefix}:not(.#{$class}) .only-#{$class} {
+      display:none;
+    }
+  }
+
+  @each $view in pme-list, pme-change, pme-add, pme-copyadd, pme-view {
+    @include hideIf($view);
+    @include hideIfNot($view);
+  }
+
+  &:not(.pme-change, .pme-add, .pme-copyadd) {
+    td.pme-value {
+      &.clip-long-text, .clip-long-text {
+        @include clip-long-text;
+      }
+    }
+  }
+  &.pme- {
+    &change, &add, &copyadd {
+      td.pme-value {
+        &.pme-style-all-views, .pme-style-all-views {
+          &.clip-long-text, .clip-long-text {
+            @include clip-long-text;
+          }
+        }
+      }
+    }
+  }
+  td.pme-cell {
+    &.clip-long-text, .clip-long-text, &.musician-instruments {
+      @include clip-long-text;
+    }
+    span.clip-long-text {
+      max-height:unset;
+      display:inline-block;
+      vertical-align:top;
+    }
+  }
 }
 
 td.pme-cell.medium-width,
