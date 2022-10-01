@@ -39,7 +39,7 @@ trait FakeTranslationTrait
    *
    * @see IL10N
    */
-  protected static function t(string $text, array $parameters = []):string
+  protected static function t(string $text, mixed $parameters = []):string
   {
     if (!is_array($parameters)) {
       $parameters = [ $parameters ];

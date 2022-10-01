@@ -361,11 +361,6 @@ class EmailFormController extends Controller
         switch ($topic) {
           case self::TOPIC_UNSPECIFIC:
             $previewMessages = $composer->previewMessages();
-            if ($composer->errorStatus()) {
-              $requestData['errorStatus'] = $composer->errorStatus();
-              $requestData['diagnostics'] = $composer->statusDiagnostics();
-              break;
-            }
             $templateParameters = [
               'appName' => $this->appName,
               'projectName' => $projectName,
@@ -379,15 +374,16 @@ class EmailFormController extends Controller
               'emailform/part.emailform.preview',
               $templateParameters,
               'blank'))->render();
-            return self::dataResponse([
-              'message' => $this->l->t('Preview generation successful.'),
-              'contents' => $html,
-            ]);
-          case 'attachment':
-            // @todo
-            //
-            // * identify attachment by file-name and musician, probably
-            break;
+            if ($composer->errorStatus()) {
+              $requestData['errorStatus'] = $composer->errorStatus();
+              $requestData['diagnostics'] = $composer->statusDiagnostics();
+              $requestData['previewData'] = $html;
+            } else {
+              return self::dataResponse([
+                'message' => $this->l->t('Preview generation successful.'),
+                'contents' => $html,
+              ]);
+            }
         }
         break;
       case 'cancel':
@@ -773,6 +769,7 @@ class EmailFormController extends Controller
           'diagnostics' => $requestData['diagnostics'],
           'cloudAdminContact' => $roles->cloudAdminContact(),
           'dateTimeFormatter' => $this->dateTimeFormatter(),
+          'urlGenerator' => $this->urlGenerator,
         ],
         'blank'))->render();
 

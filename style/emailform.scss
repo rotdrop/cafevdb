@@ -1079,9 +1079,7 @@ span.error.contents.item.substitutions {
  *
  */
 div.emailform.statuspage {
-  dl, dt, dd {
-    all:revert;
-  }
+  @import 'error-dialogs.scss';
 }
 
 /*

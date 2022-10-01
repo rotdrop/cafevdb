@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -32,6 +33,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -42,7 +44,9 @@ use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-class ProjectsController extends Controller {
+/** AJAX controller for projects. */
+class ProjectsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -63,13 +67,14 @@ class ProjectsController extends Controller {
   /** @var EntityManager */
   protected $entityManager;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
+    string $appName,
+    IRequest $request,
+    RequestParameterService $parameterService,
+    ConfigService $configService,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
   ) {
 
     parent::__construct($appName, $request);
@@ -82,9 +87,13 @@ class ProjectsController extends Controller {
   }
 
   /**
+   * @param string $topic What to validate.
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function validate($topic)
+  public function validate(string $topic):DataResponse
   {
     $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
@@ -119,8 +128,10 @@ class ProjectsController extends Controller {
             $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
             //$projectName = preg_replace('/\s+/', '', $projectName);
             if ($origName != $projectName) {
-              $infoMessage .= $this->l->t('The project name has been simplified from "%s" to "%s".',
-                                          [ $origName, $projectName ]);
+              $infoMessage .= $this->l->t(
+                'The project name has been simplified from "%s" to "%s".',
+                [ $origName, $projectName ]
+              );
             }
             $matches = [];
             // Get the year from the name, if set
@@ -133,14 +144,16 @@ class ProjectsController extends Controller {
               if ($projectName == "") {
                 return self::grumble($this->l->t("The project-name must not only consist of the year-number."));
               }
-            } else if ($projectName == "") {
+            } elseif ($projectName == "") {
               return self::grumble($this->l->t("No project-name given."));
             }
             if (mb_strlen($projectName) > Renderer::NAME_LENGTH_MAX) {
-              return self::grumble($this->l->t("The project-name is too long, ".
-                                               "please use something less than %d characters ".
-                                               "(excluding the attached year). Thanks",
-                                               [ Renderer::NAME_LENGTH_MAX ]));
+              return self::grumble($this->l->t(
+                "The project-name is too long, ".
+                "please use something less than %d characters ".
+                "(excluding the attached year). Thanks",
+                [ Renderer::NAME_LENGTH_MAX ]
+              ));
             }
             // fallthrough
           case "year":
@@ -170,8 +183,10 @@ class ProjectsController extends Controller {
         $projects = $repository->shortDescription();
         foreach ($projects['projects'] as $id => $nameYear) {
           if ($id != $projectId && $nameYear['name'] == $projectName && $nameYear['year'] == $projectYear) {
-            return self::grumble($this->l->t('A project with the name "%1$s" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year.',
-                                             [ $projectName, $projectYear, $id, $projectId ]));
+            return self::grumble($this->l->t(
+              'A project with the name "%1$s" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year.',
+              [ $projectName, $projectYear, $id, $projectId ]
+            ));
           }
         }
         return self::dataResponse(['projectYear' => $projectYear,
@@ -184,13 +199,15 @@ class ProjectsController extends Controller {
   }
 
   /**
+   * @param string $instruments The name of the instruments select.
+   *
+   * @param string $voices The name of the voices select.
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
-   *
-   * @param string $instrumentsKey The name of the instruments select.
-   *
-   * @param string $voicesKey The name of the voices select.
    */
-  public function changeInstrumentation(string $instruments, string $voices)
+  public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
     $instruments = array_filter($this->parameterService[$instrumentsKey]??[]);
@@ -231,11 +248,17 @@ class ProjectsController extends Controller {
   }
 
   /**
-   * @NoAdminRequired
+   * @param string $operation One of create, close, delete.
    *
-   * @param string $operation One of create, close, delete
+   * @param int $projectId Entity id.
+   *
+   * @param bool $force Whether to enforce the operation.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function mailingLists(string $operation, int $projectId, bool $force = false)
+  public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
   {
     switch ($operation) {
       case self::LIST_OPERATION_CREATE:
@@ -372,19 +395,27 @@ class ProjectsController extends Controller {
     ProjectService::FOLDER_TYPE_PROJECT => ConfigService::PROJECTS_FOLDER,
     ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigService::PROJECT_PARTICIPANTS_FOLDER,
     ProjectService::FOLDER_TYPE_POSTERS => ConfigService::PROJECT_POSTERS_FOLDER,
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
     ProjectService::FOLDER_TYPE_BALANCE => ConfigService::BALANCES_FOLDER,
   ];
 
+  const GET_PROJECT_SHARE = 'share';
+  const SHARE_TYPES = [
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+  ];
+
   /**
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
-   *
-   * $param int $projectId
-   *
-   * $param string $topic
-   *
-   * $param string $subTopic
    */
-  public function get(int $projectId, string $topic = '', string $subTopic = '')
+  public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
@@ -395,6 +426,17 @@ class ProjectsController extends Controller {
     switch ($topic) {
       case '':
         return self::dataResponse($this->flattenProject($project));
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            return self::dataResponse([
+              $projectService->ensureDownloadsShare($project, noCreate: true),
+            ]);
+            break;
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
       case self::GET_PROJECT_FOLDER:
         switch ($subTopic) {
           case '':
@@ -404,6 +446,7 @@ class ProjectsController extends Controller {
           case ProjectService::FOLDER_TYPE_BALANCE:
           case ProjectService::FOLDER_TYPE_PARTICIPANTS:
           case ProjectService::FOLDER_TYPE_POSTERS:
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
             $configKey = self::FOLDER_TYPES[$subTopic];
             return self::dataResponse([
               'folder' => $projectService->getProjectFolder($project, only: $configKey),
@@ -415,9 +458,150 @@ class ProjectsController extends Controller {
     }
     return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
   }
-}
 
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+  /**
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function post(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            $data = $projectService->ensureDownloadsShare($project, noCreate: false);
+            $data['message'] = $this->l->t(
+              'Participant download share for project "%1$s" created as "%2$s"', [
+                $project->getName(),
+                $data['share'],
+            ]);
+            return self::dataResponse($data);
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Delete the named thing.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            $data = $projectService->ensureDownloadsShare($project, noCreate: true);
+            $share = $data['share'];
+            if (empty($share)) {
+              return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
+            }
+            /** @var SimpleSharingService $shareService */
+            $shareService = $this->di(SimpleSharingService::class);
+            $shareService->deleteLinkShare($share);
+            $data['share'] = null;
+            $data['expires'] = null;
+            $data['message'] = $this->l->t(
+              'Participant download share "%1$s" for project "%2$s" has been deleted.', [
+                $share,
+                $project->getName(),
+              ]);
+            return self::dataResponse($data);
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Delete the named thing.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Item in major topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    $project = $projectService->findById($projectId);
+    if (empty($project)) {
+      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+    }
+    switch ($topic) {
+      case self::GET_PROJECT_SHARE:
+        switch ($subTopic) {
+          case ProjectService::FOLDER_TYPE_DOWNLOADS:
+            $data = $projectService->ensureDownloadsShare($project, noCreate: true);
+            $share = $data['share'];
+            if (empty($share)) {
+              return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
+            }
+            if (isset($this->parameterService['expirationDate'])) {
+              $expirationDate = $this->parameterService['expirationDate'];
+              $expirationDate = Util::dateTime($expirationDate);
+              /** @var SimpleSharingService $shareService */
+              $shareService = $this->di(SimpleSharingService::class);
+              $shareService->expireLinkShare($share, $expirationDate);
+              $data['expires'] = $expirationDate;
+              $data['message'] = $this->l->t(
+                'Expiration date of the participant download share "%1$s" for project "%2$s" has been set to %3$s.', [
+                  $share,
+                  $project->getName(),
+                  $this->formatDate($expirationDate, 'medium'),
+                ]);
+            }
+            return self::dataResponse($data);
+          default:
+            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+        }
+        break;
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+}

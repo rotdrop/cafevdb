@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\EmailForm;
 
 use \DateTimeImmutable;
+use \DateTimeInterface;
 use ZipStream\ZipStream;
 use \stdClass;
 use \Net_IMAP;
@@ -57,6 +58,7 @@ use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -82,6 +84,7 @@ class Composer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   const MSG_ID_AT = '_at_';
 
@@ -99,6 +102,7 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
+  public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption'; // appears not to be displayed?
   public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
   public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
@@ -114,6 +118,10 @@ class Composer
   public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_MESSAGE = 'Message';
   public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
+  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+
+  public const DIAGNOSTICS_STAGE_PREVIEW = 'preview';
+  public const DIAGNOSTICS_STAGE_SEND = 'send';
 
   /**
    * @var string
@@ -584,7 +592,7 @@ Störung.';
     // Error diagnostics, can be retrieved by
     // $this->statusDiagnostics()
     $this->diagnostics = [
-      'caption' => '',
+      self::DIAGNOSTICS_CAPTION => '',
       self::DIAGNOSTICS_ADDRESS_VALIDATION => [
         'CC' => [],
         'BCC' => [],
@@ -1497,9 +1505,9 @@ Störung.';
    *
    * @param null|string $message The composed email message body.
    *
-   * @return string
+   * @return bool|int
    */
-  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null):string
+  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null)
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1535,7 +1543,7 @@ Störung.';
       $this->generateSubstitutionHandlers();
     }
 
-    $regexp = '/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)}/u';
+    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
     return preg_replace_callback(
       $regexp,
       function($matches) use ($data, &$failures) {
@@ -1621,6 +1629,8 @@ Störung.';
    */
   public function sendMessages():bool
   {
+    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+
     if (!$this->preComposeValidation($this->recipients)) {
       return false;
     }
@@ -1677,7 +1687,11 @@ Störung.';
   private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
-                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+
+    if (!$this->validateMessageHtml($messageTemplate)) {
+      $this->logInfo('VALIDATION FAILED');
+    }
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
@@ -3253,6 +3267,8 @@ Störung.';
    */
   public function previewMessages()
   {
+    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_PREVIEW;
+
     $previewRecipients = $this->recipients;
     if (empty($previewRecipients)) {
       /** @var Entities\Musician $dummy */
@@ -3265,17 +3281,17 @@ Störung.';
         ],
       ];
     }
-    $status = $this->preComposeValidation($previewRecipients);
-    if (!$status) {
-      return null;
-    }
+
+    /* $status = */ $this->preComposeValidation($previewRecipients);
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
     $preview = $this->exportMessages($previewRecipients);
 
-    if (!empty($preview)) {
+    if ($this->executionStatus()) {
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) exported successfully!');
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Prewiew generation detected errors!');
     }
 
     return $preview;
@@ -3307,7 +3323,11 @@ Störung.';
     $messageTemplate = implode("\n", array_map(function($style) {
       return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
     }, self::DEFAULT_HTML_STYLES))
-                     . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+
+    if (!$this->validateMessageHtml($messageTemplate)) {
+      $this->logInfo('LINK VALIDATION FAILED');
+    }
 
     $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
@@ -3474,6 +3494,41 @@ Störung.';
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE') !== false) {
+      $shareStatus = true;
+
+      $projectService = $this->di(ProjectService::class);
+      list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
+
+      try {
+        $headers = get_headers($share);
+      } catch (\Throwable $t) {
+        $headers = null;
+      }
+      if ($headers && count($headers) > 0) {
+        $code = (int)substr($headers[0], 9, 3);
+        if ($code < 200 && $code >= 400) {
+          $shareStatus = false;
+        }
+      }
+
+      $filesCount = $this->userStorage->folderWalk($folder);
+      $this->logInfo('FILES COUNT DOWNLOAD FOLDER ' . $filesCount);
+      if ($filesCount == 0) {
+        $shareStatus = false;
+      }
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+        'status' => $shareStatus,
+        'filesCount' => $filesCount,
+        'httpCode' => $code,
+        'folder' => $folder,
+        'appLink' => $this->userStorage->getFilesAppLink($folder, subDir: true),
+        'share' => $share,
+      ];
+
+      $this->executionStatus = $this->executionStatus && $shareStatus;
+    }
+
     // Cc: and Bcc: validation
     foreach ([ 'CC' => $this->carbonCopy(),
                'BCC' => $this->blindCarbonCopy(), ] as $key => $emails) {
@@ -3638,7 +3693,8 @@ Störung.';
         $templateError[] = 'member';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'] = $failures;
           }
@@ -3653,7 +3709,8 @@ Störung.';
         $templateError[] = 'global';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $failure;
           }
@@ -3662,7 +3719,7 @@ Störung.';
     }
 
     // No substitutions should remain. Check for that.
-    if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
+    if (preg_match('!([^$]|^)([$]|%24)({|%7B)[^}]+(}|%7D)?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
       $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['SpuriousErrors'] = $leftOver;
     }
@@ -3739,18 +3796,21 @@ Störung.';
       $dateString = $arg[1];
       $dateFormat = $arg[2]??'long';
 
-      // allow other global replacement variables as date-time source
-      if (!empty($this->substitutions[$nameSpace][$dateString])) {
-        $dateString = call_user_func(
-          $this->substitutions[$nameSpace][$dateString],
-          [ $dateString, 'medium' ],
-          $data);
-        if (empty($dateString)) {
-          return $arg[0];
+      if (filter_var($dateString, FILTER_VALIDATE_INT) === false) {
+        if (!empty($this->substitutions[$nameSpace][$dateString])) {
+          // allow other global replacement variables as date-time source
+          $dateString = call_user_func(
+            $this->substitutions[$nameSpace][$dateString],
+            [ $dateString, 'medium' ],
+            $data);
+          if (empty($dateString)) {
+            return $arg[0];
+          }
         }
+        $stamp = strtotime($dateString);
+      } else {
+        $stamp = $dateString;
       }
-
-      $stamp = strtotime($dateString);
       if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
         return $this->formatDate($stamp, $dateFormat);
       }
@@ -3815,9 +3875,57 @@ Störung.';
       'BANK_ACCOUNT' => function($key) {
         return $this->bankAccount();
       },
+
       'PROJECT' => function($key) {
-        $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
+        return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
+
+      self::t('PROJECT_PUBLIC_SHARE') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        list('share' => $share,) =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
+        return $share;
+      },
+
+      self::t('PROJECT_PUBLIC_SHARE_EXPIRATION') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        $this->logInfo('ARGS ' . print_r($key, true));
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        list('expires' => $expires,) =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
+        if (empty($expires)) {
+          return '';
+        }
+        $phrase = false;
+        $keyWordIndex = false;
+        foreach (['phrase', $this->l->t('phrase')] as $keyWord) {
+          $keyWordIndex = array_search($keyWord, $key);
+          if ($keyWordIndex !== false) {
+            break;
+          }
+        }
+        if ($keyWordIndex !== false) {
+          unset($key[$keyWordIndex]);
+          $key = array_values($key);
+          $phrase = true;
+        }
+        $key[2] = $key[1] ?? null;
+        $key[1] = $expires->getTimestamp();
+
+        $date = $this->dateSubstitution($key, self::GLOBAL_NAMESPACE, null);
+
+        if ($phrase) {
+          return ' ' . $this->l->t('(expires at %s)', $date);
+        } else {
+          return $date;
+        }
+      },
+
       'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
       'BANK_TRANSACTION_DUE_DAYS' => fn($key) => '',
       'BANK_TRANSACTION_SUBMIT_DATE' => fn($key) => '',
@@ -4277,9 +4385,10 @@ Störung.';
    *
    * @param null|int $draftId The entity id of the draft.
    *
-   * @return bool The execution status.
+   * @return bool|array The execution status in case of error (i.e. \false) or
+   * a data array for the loaded message draft.
    */
-  public function loadDraft(?int $draftId = null):bool
+  public function loadDraft(?int $draftId = null)
   {
     if ($draftId === null) {
       $draftId = $this->draftId;
@@ -4831,7 +4940,8 @@ Störung.';
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if (isset(parse_url($href)['host'])) {
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href)) || isset(parse_url($href)['host'])) {
+        $this->logInfo('KEEP HREF AS ' . $href);
         continue;
       }
       $baseUrl = $this->urlGenerator()->getBaseUrl();
@@ -4863,12 +4973,17 @@ Störung.';
     $hasErrors = false;
 
     $doc = new DOMDocument();
-    $doc->loadHTML($message);
+    $doc->loadHTML('<html><head><meta charset="utf-8"></head><body>' . $message . '</body></html>');
     $links = $doc->getElementsByTagName('a');
     /** @var DOMElement $item */
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))) {
+        $this->logInfo('KEEP HREF UNCHECKED ' . $href);
+        continue;
+      }
+      $this->logInfo('CHECK HREF ' . $href);
       $text = $item->nodeValue;
       try {
         $headers = get_headers($href);
@@ -5327,7 +5442,7 @@ Störung.';
   /**
    * Compose a "readable" message from a thrown exception.
    *
-   * @param \Throwble $throwable The caught exception.
+   * @param \Throwable $throwable The caught exception.
    *
    * @return string
    */

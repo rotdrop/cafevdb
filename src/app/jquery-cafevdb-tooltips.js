@@ -31,7 +31,7 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import 'bootstrap/js/dist/tooltip';
 
-require('tooltips.css');
+require('tooltips.scss');
 
 console.log('jquery-cafevdb-tooltips');
 
@@ -165,12 +165,10 @@ function singleToolTipWorker(optionsForAll, jobChunkSize) {
     };
   }
   if (!selfOptions.template) {
-    selfOptions.template = '<div class="tooltip '
-      + selfOptions.cssclass.join(' ')
-      + '" role="tooltip">'
-      + '<div class="tooltip-arrow"></div>'
-      + '<div class="tooltip-inner"></div>'
-      + '</div>';
+    selfOptions.template = `<div class="tooltip {selfOptions.cssclass.join(' ')}" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner"></div>
+</div>`;
   }
   $.fn.tooltip.call($this, selfOptions);
   unlockElement($this);

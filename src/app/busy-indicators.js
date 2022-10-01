@@ -26,15 +26,22 @@ import { tableDialogLoadIndicator } from './pme.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 
-const setBusyIndicators = function(state, $pmeContainer) {
+const setBusyIndicators = function(state, $pmeContainer, modal) {
+  if (modal === undefined) {
+    modal = true;
+  }
   if (state) {
-    modalizer(true);
+    if (modal) {
+      modalizer(true);
+    }
     $pmeContainer && tableDialogLoadIndicator($pmeContainer, true);
     Page.busyIcon(true);
   } else {
     Page.busyIcon(false);
     $pmeContainer && tableDialogLoadIndicator($pmeContainer, false);
-    modalizer(false);
+    if (modal) {
+      modalizer(false);
+    }
     closeActionMenus();
   }
 };

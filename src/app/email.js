@@ -1094,7 +1094,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
           Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
-            Page.busyIcon(false);
             let debugText = '';
             if (data.caption !== undefined) {
               debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -1102,11 +1101,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             if (data.message !== undefined) {
               debugText += data.message;
             }
-            debugOutput.html(debugText);
-
-            if (data.message) {
-              debugOutput.html(data.message);
+            const hasPreviewMessages = data.requestData && data.requestData.previewData;
+            if (hasPreviewMessages) {
+              debugText += data.requestData.previewData;
             }
+            debugOutput.html(debugText);
+            debugOutput.find('.for-dialog').addClass('hidden');
+
+            Page.busyIcon(false);
+
+            if (hasPreviewMessages) {
+              dialogHolder.tabs('option', 'active', 2);
+            }
+
+            $.fn.cafevTooltip.remove();
           });
         })
         .done(function(data) {

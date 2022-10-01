@@ -519,6 +519,12 @@ field. If left blank, every logged in user is allowed to change this field.'),
         'projects' => [
           'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
           'edit-project-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
+          'public-downloads' => [
+            'create' => $this->l->t('Create the download folder and generate a public share link.'),
+            'clipboard' => $this->l->t('Copy the share-link to the clipboard'),
+            'delete' => $this->l->t('Delete the download share. This will make it impossible to access the data using any previously generated share-link. Note that this of course does not delete the data in the cloud, it just invalidates the public web-link.'),
+            'expiration-date' => $this->l->t('Set the expiration date for the link. The default expiration date is the end of the year where the project is performed.'),
+          ],
         ],
         'instrument-insurances' => [
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),
@@ -1192,6 +1198,13 @@ and contact the treasurer for further instructions.',
       'documenttemplatesfolder' => $this->l->t('Shared folder for document templates.'),
       'projectsfolder' => $this->l->t('Shared folder for per-project data.'),
       'projectparticipantsfolder' => $this->l->t('Shared folder for per-project per-participant data'),
+      'projectpostersfolder' => $this->l->t('Shared folder for flyers and posters'),
+      'projectpublicdownloadsfolder' => $this->l->t(
+        'Link-shared folder for data needed by participants.'
+        . ' In particular, this can be used for music-sheet downloads.'
+        . ' The folder is automatically created and shared when the project is created.'
+        . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
+        ),
       'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
 
       'settings' => [

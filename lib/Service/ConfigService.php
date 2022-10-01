@@ -84,6 +84,7 @@ class ConfigService
   const PROJECTS_FOLDER = 'projectsfolder';
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
   const PROJECT_POSTERS_FOLDER = 'projectpostersfolder';
+  const PROJECT_PUBLIC_DOWNLOADS_FOLDER = 'projectpublicdownloadsfolder';
   const FINANCE_FOLDER = 'financefolder';
   const BALANCES_FOLDER = 'balancesfolder';
   const TRANSACTIONS_FOLDER = 'transactionsfolder';

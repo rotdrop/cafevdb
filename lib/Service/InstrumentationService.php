@@ -90,7 +90,7 @@ class InstrumentationService
       ->setPostalCode('Z-7')
       ->setCity($this->l->t('Nowhere'))
       ->setCountry('AQ')
-      ->setEmailAddress($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
+      ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
       ->setBirthday(new \DateTimeImmutable)
       ->setMobilePhone('0815')
       ->setFixedLinePhone('4711')

@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \DateTimeImmutable;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Share\Exceptions\ShareNotFound;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -61,6 +63,7 @@ class ProjectService
   const FOLDER_TYPE_PROJECT = 'project';
   const FOLDER_TYPE_PARTICIPANTS = 'participants';
   const FOLDER_TYPE_POSTERS = 'posters';
+  const FOLDER_TYPE_DOWNLOADS = 'downloads';
   const FOLDER_TYPE_BALANCE = 'balance';
 
   const WEBPAGE_TYPE_CONCERT = 'concert';
@@ -70,6 +73,7 @@ class ProjectService
     ConfigService::PROJECTS_FOLDER,
     ConfigService::PROJECT_PARTICIPANTS_FOLDER,
     ConfigService::PROJECT_POSTERS_FOLDER,
+    ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
     ConfigService::BALANCES_FOLDER,
   ];
 
@@ -355,6 +359,7 @@ class ProjectService
       case ConfigService::PROJECTS_FOLDER:
       case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
       case ConfigService::PROJECT_POSTERS_FOLDER:
+      case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
         $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
         if ($key == ConfigService::PROJECTS_FOLDER) {
           $paths[$key] = $projectsFolder;
@@ -382,9 +387,10 @@ class ProjectService
    *
    * @param string $projectName Name of the project.
    *
-   * @param null|string $only If a string create only this folder, can
-   * be one of self::FOLDER_TYPE_PROJECT, self::FOLDER_TYPE_BALANCE,
-   * self::FOLDER_TYPE_PARTICIPANTS, self::FOLDER_TYPE_POSTERS
+   * @param null|string $only If a string create only this folder, can be one
+   * of self::FOLDER_TYPE_PROJECT, self::FOLDER_TYPE_BALANCE,
+   * self::FOLDER_TYPE_PARTICIPANTS, self::FOLDER_TYPE_POSTERS,
+   * self::FOLDER_TYPE_DOWNLOADS
    *
    * @parm bool $dry Just create the name, but do not perform any
    * file-system operations.
@@ -411,6 +417,7 @@ class ProjectService
     $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
     $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
     $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
+    $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
     $projectPaths = [
@@ -441,6 +448,13 @@ class ProjectService
         $project['year'],
         $project['name'],
         $postersFolder,
+      ],
+      self::FOLDER_TYPE_DOWNLOADS => [
+        $sharedFolder,
+        $projectsFolder,
+        $project['year'],
+        $project['name'],
+        $downloadsFolder,
       ],
     ];
 
@@ -491,6 +505,7 @@ class ProjectService
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
     $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
     $postersFolder  = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
+    $downloadsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balanceFolder  = $sharedFolder
                     . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
                     . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
@@ -624,6 +639,99 @@ class ProjectService
   {
     list(self::FOLDER_TYPE_POSTERS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
     return $path;
+  }
+
+  /**
+   * Make sure the per-project downloads folder exists for the given project and is shared via link.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param bool $dry If true then just create the name, do not
+   * perform any file-system operations.
+   *
+   * @return string Folder path.
+   */
+  public function ensureDownloadsFolder($projectOrId, bool $dry = false)
+  {
+    list(self::FOLDER_TYPE_DOWNLOADS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_DOWNLOADS, $dry);
+    $this->logInfo('DOWNLOADS FOLDER ' . $path);
+    return $path;
+  }
+
+  /**
+   * Make sure the per-project downloads folder exists for the given project and is shared via link.
+   *
+   * @param int|Entities\Project $projectOrId Entity or entity id for a project.
+   *
+   * @param bool $noCreate Do not create the share if it does not exist, defaults to \false.
+   *
+   * @return array [ 'share' => URL, 'folder' => PATH, 'expires' => DATE ]
+   */
+  public function ensureDownloadsShare($projectOrId, bool $noCreate = false):array
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+    try {
+      if ($noCreate) {
+        $path = $this->ensureDownloadsFolder($projectOrId, dry: true);
+        $node = $this->userStorage->get($path);
+        if (empty($node)) {
+          return [
+            'share' => null,
+            'folder' => null,
+            'expires' => null,
+          ];
+        }
+      } else {
+        $path = $this->ensureDownloadsFolder($projectOrId, dry: false);
+        $node = $this->userStorage->get($path);
+        $expires = null;
+      }
+      /** @var SimpleSharingService $sharingService */
+      $sharingService = $this->di(SimpleSharingService::class);
+
+      $shareOwnerUid = $this->getConfigValue('shareowner');
+      // try to create or use the folder and share it by a public link
+      $url = $sharingService->linkShare(
+        $node,
+        $shareOwnerUid,
+        sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+        expirationDate: false, // ignore
+        noCreate: $noCreate,
+      );
+      if (!empty($url)) {
+        try {
+          $expires = $sharingService->getLinkExpirationDate($url);
+          if ($expires === null) {
+            $expires = new DateTimeImmutable($project->getYear() . '-12-31');
+            $expires = $sharingService->expireLinkShare($url, $expires);
+          }
+        } catch (ShareNotFound $e) {
+          $expires = null;
+        }
+        if (empty($expires)) {
+          throw new Exceptions\Exception(
+            $this->l->t(
+              'Unable set expiration date for the public download link "%1$s" for the project "%2$s".',
+              [ $url, $project->getName(), ]
+            ),
+            0,
+            $e
+          );
+        }
+      }
+    } catch (\Throwable $t) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to create the public donwload link for the project "%s".', $project->getName()),
+        0,
+        $t
+      );
+    }
+    return [
+      'share' => $url,
+      'folder' => $path,
+      'expires' => $expires,
+    ];
   }
 
   /**
