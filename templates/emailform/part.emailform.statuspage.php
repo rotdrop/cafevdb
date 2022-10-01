@@ -68,69 +68,86 @@ $numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
 
 $output = false; // set to true if anything has been printed
 
-echo '<div class="emailform statuspage">';
+?>
+<div class="emailform statuspage">
+  <?php
 
-/*-***************************************************************************
- *
- * Overall status
- *
- */
+  /*-***************************************************************************
+   *
+   * Overall status
+   *
+   */
 
-if ($numTotal > 0 && $numFailed == 0) {
-  $output = true;
-  if ($numTotal == 1) {
-    echo '
-<div class="emailform error group messagecount">
-  <span class="error caption messagecount">
-    '.$l->t('The mailing software did not signal an error.').
-         ' '.
-         $l->t('The message was propably sent out successfully.').'
-  </span>
-</div>';
-  } else {
-    echo '
-<div class="emailform error group messagecount">
-  <span class="error caption messagecount">
-    '.$l->t('The mailing software did not signal an error. ').
-         ' '.
-         $l->t('%d messages were propably sent out successfully.', $numTotal).'
-  </span>
-</div>';
-  }
-} elseif ($numFailed > 0) {
-  $output = true;
-  echo '
-<div class="emailform error group messagecount">
-  <span class="error caption messagecount">
-  '.$l->t('The mailing software encountered errors.');
-  if ($numTotal > 1) {
-    if ($numFailed == $numTotal) {
-      echo '
-      '.$l->t('Sending of all %d messages has failed, propably no message has been sent.', $numTotal);
-    } elseif ($numFailed == 1) {
-      echo '
-      '.$l->t('One (out of %d) message has probably not been sent.', $numTotal);
-    } else {
-      echo '
-      '.$l->t(
-        '%d (out of %d) messages have probably not been sent.',
-        [ $numFailed, $numTotal, ]
-      );
-    }
-  } else {
-    echo '
-    '.$l->t('The message has probably not been sent.', $numTotal);
-  }
-  echo '
-  </span>
-</div>';
-}
+  $stage = $diagnostics[Composer::DIAGNOSTICS_STAGE];
+  ?>
+  <div class="emailform error group messagecount">
+    <span class="error caption messagecount">
+      <?php
+      if ($numTotal > 0 && $numFailed == 0) {
+        $output = true;
+        // if ($numTotal == 1) {
+        p($l->t('The mailing software did not signal an error.'));
+        p(' ');
+        if ($stage == Composer::DIAGNOSTICS_STAGE_SEND) {
+          p($l->n(
+            'The message was propably sent out successfully.',
+            '%n messages were propably sent out successfully.',
+            $numTotal)
+          );
+        } else {
+          p($l->n(
+            'The preview message was generated successfully.',
+            '%n preview messages successfully generated.',
+            $numTotal)
+          );
+        }
+      } elseif ($numFailed > 0) {
+        $output = true;
+        p($l->t('The mailing software encountered errors.'));
+        p(' ');
+        if ($stage == Composer::DIAGNOSTICS_STAGE_SEND) {
+          if ($numTotal > 1) {
+            if ($numFailed == $numTotal) {
+              p($l->t('Sending of all %d messages has failed, propably no message has been sent.', $numTotal));
+            } elseif ($numFailed == 1) {
+              p($l->t('One (out of %d) message has probably not been sent.', $numTotal));
+            } else {
+              p($l->t(
+                '%d (out of %d) messages have probably not been sent.',
+                [ $numFailed, $numTotal, ]
+              ));
+            }
+          } else {
+            p($l->t('The message has probably not been sent.'));
+          }
+        } else {
+          if ($numTotal > 1) {
+            if ($numFailed == $numTotal) {
+              p($l->t('Generating the previerw for all %d messages has failed.', $numTotal));
+            } elseif ($numFailed == 1) {
+              p($l->t('The preview for one (out of %d) message could not be generated.', $numTotal));
+            } else {
+              p($l->t(
+                'The preview for %d (out of %d) messages could not be generated.',
+                [ $numFailed, $numTotal, ]
+              ));
+            }
+          } else {
+            p($l->t('A preview for the message could not be generated.'));
+          }
+        }
+      }
+      p($l->t('The following lines may contain further diagnostic messages.'));
+      ?>
+    </span>
+  </div>
+  <?php
 
-/*-****************************************************************************
- *
- * Failed template substitutions
- *
- */
+  /*-****************************************************************************
+   *
+   * Failed template substitutions
+   *
+   */
 
 $templateDiag = $diagnostics[Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
 if (!empty($templateDiag)) {
@@ -346,6 +363,43 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
   </div>
 </div>';
 }
+
+  /*-****************************************************************************
+   *
+   * Public downloads folder which is somehow broken
+   *
+   */
+  if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
+
+    $output = true;
+    $folder = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['folder'];
+    $appLink = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['appLink'];
+    $httpCode = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['httpCode'];
+  ?>
+  <div class="emailform error group broken-public-download">
+    <div class="error contents broken-public-download">
+      <div class="error caption broken-public-download">
+        <?php p($l->t('There is something wrong with the pariticipants downloads folder.')); ?>
+      </div>
+      <dl>
+        <?php if ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['filesCount'] == 0) { ?>
+          <dt><?php p($l->t('The folder contains no data.')); ?></dt>
+          <dd>
+            <p><?php p($l->t('Please visit the following link to examine the situation:')); ?></p>
+            <a href="<?php echo $appLink; ?>" target="<?php p(md5($folder)); ?>">
+              <?php p($folder); ?>
+              <img src="<?php echo $urlGenerator->imagePath('core', 'filetypes/folder-external.svg'); ?>">
+            </a>
+          </dd>
+        <?php } ?>
+        <?php if ($httpCode < 200 || $httpCode >= 400) { ?>
+          <dt></dt><dd></dd>
+        <?php } ?>
+    </dl>
+  </div>
+  </div>
+  <?php
+  }
 
 /*-****************************************************************************
  *
@@ -720,12 +774,13 @@ if ($diagnostics[Composer::DIAGNOSTICS_MESSAGE]['Text'] != '') {
  * Final notes. Also show up in the status log. But so what ;)
  *
  */
-if ($output) {
-  echo '
-<div class="spacer"><div class="ruler"></div></div>
-<div class="emailform error group">
-  <div class="emailform error heading">'.$l->t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.').'</div>
-</div>
-<div class="spacer"><div class="ruler"></div></div>';
-}
-echo '</div>';
+?>
+<?php if ($output) { ?>
+
+  <div class="spacer for-dialog"><div class="ruler"></div></div>
+  <div class="emailform error group for-dialog">
+    <div class="emailform error heading"><?php p($l->t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.')); ?></div>
+  </div>
+  <div class="spacer"><div class="ruler"></div></div>
+<?php } ?>
+</div> <!-- Endo Status Page -->
