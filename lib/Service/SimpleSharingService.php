@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use \DateTimeImmutable;
+use \DateTimeInterface;
 
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
@@ -66,7 +67,10 @@ class SimpleSharingService
    *
    * @param int $sharePerms Permissions for the link. Defaults to PERMISSION_CREATE.
    *
-   * @param null|DateTimeInterface $expirationDate Optional expiration date for the link.
+   * @param null|false|DateTimeInterface $expirationDate Optional expiration
+   * date for the link. If null then create a link which does not expire. If
+   * \false then just ignore the expiration date. Otherwise do an exact match
+   * on the given date. Default to null.
    *
    * @param bool $noCreate Do not create a new share, but return an existing
    * share if it exists.
@@ -77,7 +81,7 @@ class SimpleSharingService
     FileSystemNode $node,
     ?string $shareOwner = null,
     int $sharePerms = \OCP\Constants::PERMISSION_CREATE,
-    ?\DateTimeInterface $expirationDate = null,
+    mixed $expirationDate = null,
     bool $noCreate = false,
   ) {
     $this->logDebug('shared folder id ' . $node->getId());
@@ -88,7 +92,7 @@ class SimpleSharingService
       $shareOwner = $this->userId();
     }
 
-    if (!empty($expirationDate)) {
+    if ($expirationDate instanceof DateTimeInterface) {
       // make sure it is UTC midnight
       $expirationDate = new DateTimeImmutable($expirationDate->format('Y-m-d'));
     }
@@ -101,13 +105,15 @@ class SimpleSharingService
         continue;
       }
 
-      // check expiration time
-      $shareExpirationDate = $share->getExpirationDate();
+      if ($expirationDate !== false) {
+        // check expiration time
+        $shareExpirationDate = $share->getExpirationDate();
 
-      $shareExpirationStamp = empty($shareExpirationDate) ? -1 : $shareExpirationDate->getTimestamp();
+        $shareExpirationStamp = empty($shareExpirationDate) ? -1 : $shareExpirationDate->getTimestamp();
 
-      if ($shareExpirationStamp != $expirationTimeStamp) {
-        continue;
+        if ($shareExpirationStamp != $expirationTimeStamp) {
+          continue;
+        }
       }
 
       // check permissions
@@ -130,7 +136,9 @@ class SimpleSharingService
     $share->setShareType($shareType);
     $share->setShareOwner($shareOwner);
     $share->setSharedBy($shareOwner);
-    $share->setExpirationDate($expirationDate);
+    if ($expirationDate !== false) {
+      $share->setExpirationDate($expirationDate);
+    }
 
     if (!$this->shareManager->createShare($share)) {
       return null;
@@ -145,6 +153,48 @@ class SimpleSharingService
 
   /**
    * Expire all shares of the respective user of the respective type of the given file-system node by
+   * setting their expiration time to the current or the given time.
+   *
+   * @param FileSystemNode $node
+   *
+   * @param null|string $shareOwner
+   *
+   * @param null|DateTimeInterface $expirationDate Optional expiration date for the link.
+   *
+   * @param int $shareType Defaults to IShare::TYPE_LINK.
+   *
+   * @return int The number of changed shares
+   */
+  public function expire(
+    FileSystemNode $node,
+    ?string $shareOwner = null,
+    ?\DateTimeInterface $expirationDate = null,
+    int $shareType = IShare::TYPE_LINK,
+  ):int {
+    if (empty($shareOwner)) {
+      $shareOwner = $this->userId();
+    }
+
+    if (empty($expirationDate)) {
+      $expirationDate = new DateTimeImmutable;
+    }
+
+    $numChanged = 0;
+
+    /** @var IShare $share */
+    foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
+      $shareExpirationDate = $share->getExpirationDate();
+      if (empty($shareExpirationDate) || $shareExpirationDate > $expirationDate) {
+        $share->setExpirationDate($expirationDate);
+        $this->shareManager->updateShare($share);
+        ++$numChanged;
+      }
+    }
+    return $numChanged;
+  }
+
+  /**
+   * Delete all shares of the respective user of the respective type of the given file-system node by
    * setting their expiration time to the current time.
    *
    * @param FileSystemNode $node
@@ -153,32 +203,109 @@ class SimpleSharingService
    *
    * @param int $shareType Defaults to IShare::TYPE_LINK.
    *
-   * @return int The number of changed shares
+   * @return int The number of deleted shares
    */
-  public function expire(FileSystemNode $node, ?string $shareOwner = null, int $shareType = IShare::TYPE_LINK):int
+  public function delete(FileSystemNode $node, ?string $shareOwner, int $shareType = IShare::TYPE_LINK)
   {
     if (empty($shareOwner)) {
       $shareOwner = $this->userId();
     }
 
-    $now = new DateTimeImmutable;
-
-    $numChanged = 0;
+    $numDeleted = 0;
 
     /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
-      $expirationDate = $share->getExpirationDate() ?? $now;
-      if ($expirationDate > $now) {
-        $share->setExpirationDate($now);
-        $this->shareManager->updateShare($share);
-        ++$numChanged;
+      $this->shareManager->deleteShare($share);
+      ++$numDeleted;
+    }
+    return $numDeleted;
+  }
+
+  /**
+   * Delete the given share.
+   *
+   * @param string $token The share token or the web-url to the share which
+   * carries the token as last path component.
+   *
+   * @return bool Execution status.
+   */
+  public function deleteLinkShare(string $token)
+  {
+    $share = $this->getShareFromUrl($token);
+    if (empty($share)) {
+      return false;
+    }
+    $this->shareManager->deleteShare($share);
+    return true;
+  }
+
+  /**
+   * Expire just the given share.
+   *
+   * @param string $token The share token or the web-url to the share which
+   * carries the token as last path component.
+   *
+   * @param null|DateTimeInterface $expirationDate Optional expiration date
+   * for the link. If null then it is only made sure the share is expired from
+   * the current date on, if non-null the expiration date is actually set to
+   * the requested value.
+   *
+   * @return null|DateTimeInterface The actual expiration date of the share or
+   * null if the share cannot be found.
+   */
+  public function expireLinkShare(string $token, ?\DateTimeInterface $expirationDate = null):?DateTimeInterface
+  {
+    $share = $this->getShareFromUrl($token);
+    if (empty($share)) {
+      return null;
+    }
+
+    if (empty($expirationDate)) {
+      $now = new DateTimeImmutable;
+      $shareExpirationDate = $share->getExpirationDate();
+      if (empty($shareExpirationDate) || $shareExpirationDate > $now) {
+        $expirationDate = $now;
       }
     }
-    return $numChanged;
+
+    if (!empty($expirationDate)) {
+      $shareExpirationDate = $expirationDate;
+      $share->setExpirationDate($expirationDate);
+      $this->shareManager->updateShare($share);
+    }
+
+    return $shareExpirationDate;
+  }
+
+  /**
+   * @param string $token The share token or the web-url to the share which
+   * carries the token as last path component.
+   *
+   * @return null|false|\DateTimeInterface The expiration date of the given share or null.
+   */
+  public function getLinkExpirationDate(string $token):mixed
+  {
+    $share = $this->getShareFromUrl($token);
+    if (empty($share)) {
+      return false;
+    }
+    $shareExpirationDate = $share->getExpirationDate();
+
+    return $shareExpirationDate;
+  }
+
+  /**
+   * @param string $url Share token or the url to it.
+   *
+   * @return null|IShare The share if is found, null otherwise.
+   *
+   */
+  private function getShareFromUrl(string $url):?IShare
+  {
+    $token = basename($url); // allow an URL.
+
+    $share = $this->shareManager->getShareByToken($token);
+
+    return empty($share) ? null : $share;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
