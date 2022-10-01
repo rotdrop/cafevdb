@@ -687,15 +687,12 @@ class ProjectService
 
       $shareOwnerUid = $this->getConfigValue('shareowner');
       // try to create or use the folder and share it by a public link
-      $url = $this->sudo($shareOwnerUid, function(string $shareOwnerUid) use ($node, $sharingService, $noCreate) {
-        $url = $sharingService->linkShare(
-          $node,
-          $shareOwnerUid,
-          sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
-          noCreate: $noCreate,
-        );
-        return $url;
-      });
+      $url = $sharingService->linkShare(
+        $node,
+        $shareOwnerUid,
+        sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+        noCreate: $noCreate,
+      );
     } catch (\Throwable $t) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Unable to create the public donwload link for the project "%s".', $project->getName()),
