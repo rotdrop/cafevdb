@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\EmailForm;
 
 use \DateTimeImmutable;
+use \DateTimeInterface;
 use ZipStream\ZipStream;
 use \stdClass;
 use \Net_IMAP;
@@ -83,6 +84,7 @@ class Composer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+  use \OCA\CAFEVDB\Traits\FakeTranslationTrait;
 
   const MSG_ID_AT = '_at_';
 
@@ -3492,7 +3494,7 @@ Störung.';
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE_LINK') !== false) {
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE') !== false) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
@@ -3691,7 +3693,8 @@ Störung.';
         $templateError[] = 'member';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'] = $failures;
           }
@@ -3706,7 +3709,8 @@ Störung.';
         $templateError[] = 'global';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
             $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $failure;
           }
@@ -3792,18 +3796,21 @@ Störung.';
       $dateString = $arg[1];
       $dateFormat = $arg[2]??'long';
 
-      // allow other global replacement variables as date-time source
-      if (!empty($this->substitutions[$nameSpace][$dateString])) {
-        $dateString = call_user_func(
-          $this->substitutions[$nameSpace][$dateString],
-          [ $dateString, 'medium' ],
-          $data);
-        if (empty($dateString)) {
-          return $arg[0];
+      if (filter_var($dateString, FILTER_VALIDATE_INT) === false) {
+        if (!empty($this->substitutions[$nameSpace][$dateString])) {
+          // allow other global replacement variables as date-time source
+          $dateString = call_user_func(
+            $this->substitutions[$nameSpace][$dateString],
+            [ $dateString, 'medium' ],
+            $data);
+          if (empty($dateString)) {
+            return $arg[0];
+          }
         }
+        $stamp = strtotime($dateString);
+      } else {
+        $stamp = $dateString;
       }
-
-      $stamp = strtotime($dateString);
       if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
         return $this->formatDate($stamp, $dateFormat);
       }
@@ -3872,14 +3879,51 @@ Störung.';
       'PROJECT' => function($key) {
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
-      'PROJECT_PUBLIC_SHARE_LINK' => function($key) {
+
+      self::t('PROJECT_PUBLIC_SHARE') => function(array $key) {
         if (empty($this->project)) {
-          return $key;
+          return $key[0];
         }
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
         list('share' => $share,) =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
         return $share;
+      },
+
+      self::t('PROJECT_PUBLIC_SHARE_EXPIRATION') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        $this->logInfo('ARGS ' . print_r($key, true));
+        /** @var ProjectService $projectService */
+        $projectService = $this->di(ProjectService::class);
+        list('expires' => $expires,) =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
+        if (empty($expires)) {
+          return '';
+        }
+        $phrase = false;
+        $keyWordIndex = false;
+        foreach (['phrase', $this->l->t('phrase')] as $keyWord) {
+          $keyWordIndex = array_search($keyWord, $key);
+          if ($keyWordIndex !== false) {
+            break;
+          }
+        }
+        if ($keyWordIndex !== false) {
+          unset($key[$keyWordIndex]);
+          $key = array_values($key);
+          $phrase = true;
+        }
+        $key[2] = $key[1] ?? null;
+        $key[1] = $expires->getTimestamp();
+
+        $date = $this->dateSubstitution($key, self::GLOBAL_NAMESPACE, null);
+
+        if ($phrase) {
+          return ' ' . $this->l->t('(expires at %s)', $date);
+        } else {
+          return $date;
+        }
       },
 
       'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
@@ -5398,7 +5442,7 @@ Störung.';
   /**
    * Compose a "readable" message from a thrown exception.
    *
-   * @param \Throwble $throwable The caught exception.
+   * @param \Throwable $throwable The caught exception.
    *
    * @return string
    */

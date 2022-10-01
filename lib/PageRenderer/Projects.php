@@ -695,7 +695,7 @@ class Projects extends PMETableViewBase
 
     $opts['fdd']['public_download_share'] = [
       'name' => $this->l->t('Public Downloads'),
-      'title' => $this->l->t('projectpublicdownloadsfolder'),
+      'title' => $this->toolTipsService['projectpublicdownloadsfolder'],
       'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', 'restrict-height', ], ],
       'input' => 'RV',
       'options'  => 'LFCPVD', // not in add mode
