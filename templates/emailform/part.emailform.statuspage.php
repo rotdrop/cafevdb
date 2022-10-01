@@ -395,8 +395,35 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
         <?php if ($httpCode < 200 || $httpCode >= 400) { ?>
           <dt></dt><dd></dd>
         <?php } ?>
-    </dl>
+      </dl>
+    </div>
   </div>
+  <?php
+  }
+
+  /*-****************************************************************************
+   *
+   * Obsolete privacy notice.
+   *
+   */
+  if (!$diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['status']) {
+    $forbidden = $diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['forbiddenAddress'];
+  ?>
+  <div class="emailform error group broken-privacy-notice">
+    <div class="error contents broken-privacy-notice">
+      <div class="error caption broken-privacy-notice">
+        <?php p($l->t('Please do not try to add custom privacy notices')); ?>
+      </div>
+      <div>
+        <?php p($l->t('The message contains an explicit link to the opt-out email-address "%s". Do not do this! Please read on:', $forbidden)); ?>
+        <ul>
+          <li><?php p($l->t('Mailing list traffic does not need it, it has its own privacy notices. Also, people can unregister themselves from a mailing list.')); ?></li>
+          <li><?php p($l->t('Project emails do not need it, because we have a justified reason to contact project-participants.')); ?></li>
+          <li><?php p($l->t('@All email is routed automatically to mailing lists (see above).')); ?></li>
+          <li><?php p($l->t('All remaining cases are handled by the cloud-software and a pre-configured privacy notice is attached automatically.')); ?>
+        </ul>
+      </div>
+    </div>
   </div>
   <?php
   }

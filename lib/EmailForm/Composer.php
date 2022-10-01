@@ -119,6 +119,7 @@ class Composer
   public const DIAGNOSTICS_MESSAGE = 'Message';
   public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
   public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+  public const DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION = 'PrivacyNoticeValidation';
 
   public const DIAGNOSTICS_STAGE_PREVIEW = 'preview';
   public const DIAGNOSTICS_STAGE_SEND = 'send';
@@ -3488,6 +3489,26 @@ Störung.';
       $this->executionStatus = false;
     }
 
+    // As a special hack deny templates containing references to
+    //
+    // datenschutz-opt-out@cafev.de
+    //
+    // This is here as a temporary hack to catch ignorant copy'n paste
+    // messages
+    $forbiddenString = 'datenschutz-opt-out@cafev.de';
+    if (strpos($this->messageContents, $forbiddenString)) {
+      $this->logInfo('FORBIDDEN PRIVACY NOTICE');
+      $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
+        'status' => false,
+        'forbiddenAddress' => $forbiddenString,
+      ];
+      $this->executionStatus = false;
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
+        'status' => true,
+      ];
+    }
+
     // Template validation (i.e. variable substituions)
     $this->validateTemplate($this->messageContents);
 
@@ -3527,6 +3548,15 @@ Störung.';
       ];
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+        'status' => true,
+        'filesCount' => 0,
+        'httpCode' => 200,
+        'folder' => null,
+        'appLink' => null,
+        'share' => null,
+      ];
     }
 
     // Cc: and Bcc: validation
@@ -4940,7 +4970,9 @@ Störung.';
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href)) || isset(parse_url($href)['host'])) {
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+          || str_starts_with($href, 'mailto:')
+          || isset(parse_url($href)['host'])) {
         $this->logInfo('KEEP HREF AS ' . $href);
         continue;
       }
@@ -4979,7 +5011,10 @@ Störung.';
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))) {
+      if (
+        $this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+        || str_starts_with($href, 'mailto:')
+      ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
         continue;
       }

@@ -22,6 +22,7 @@
  */
 
 import $ from './app/jquery.js';
+import { nonce, webRoot } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';
@@ -29,6 +30,9 @@ import './app/jquery-extensions.js';
 import { attachDialogHandlers } from './app/dialogs.js';
 
 require('settings.scss');
+
+__webpack_public_path__ = webRoot;
+__webpack_nonce__ = nonce;
 
 $(function() {
   attachDialogHandlers();

@@ -337,6 +337,7 @@ class PersonalForm {
             ConfigService::PROJECTS_FOLDER => $this->getConfigValue(ConfigService::PROJECTS_FOLDER, ''),
             ConfigService::PROJECT_PARTICIPANTS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER, ''),
             ConfigService::PROJECT_POSTERS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER, ''),
+            ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, ''),
             ConfigService::FINANCE_FOLDER => $this->getConfigValue(ConfigService::FINANCE_FOLDER, ''),
             ConfigService::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER, ''),
             ConfigService::BALANCES_FOLDER => $this->getConfigValue(ConfigService::BALANCES_FOLDER, ''),
@@ -402,6 +403,7 @@ class PersonalForm {
         $templateParameters['announcementsMailingList'] = $announcementsMailingList;
         // $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
+        $this->parameterFromConfig($templateParameters, 'bulkEmailPrivacyNotice');
 
         $key = 'attachmentLinkExpirationLimit';
         $templateParameters[$key] = $this->getConfigValue($key);
