@@ -755,25 +755,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     if (empty($email)) {
       $this->email = null;
-      $this->principalEmailAddress = null;
       return $this;
     }
     $this->email = $email;
     // check by key
     if ($this->emailAddresses->containsKey($email)) {
-      $this->principalEmailAddress = $this->emailAddresses->get($email);
       return $this;
     }
     // if indexing is broken seach through the collection
     $emails = $this->emailAddresses->filter(fn(MusicianEmailAddress $addressEntity) => $addressEntity->getAddress() == $email);
     if (count($emails) === 1) {
-      $this->principalEmailAddress = $emails->first();
       return $this;
     }
     // otherwise make a new entity
     $addressEntity = new MusicianEmailAddress($email, $this);
     $this->emailAddresses->set($email, $addressEntity);
-    $this->principalEmailAddress = $addressEntity;
 
     return $this;
   }
