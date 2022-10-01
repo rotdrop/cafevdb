@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \DateTimeImmutable;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Share\Exceptions\ShareNotFound;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -663,10 +665,11 @@ class ProjectService
    *
    * @param bool $noCreate Do not create the share if it does not exist, defaults to \false.
    *
-   * @return array [ 'share' => URL, 'folder' => PATH ]
+   * @return array [ 'share' => URL, 'folder' => PATH, 'expires' => DATE ]
    */
   public function ensureDownloadsShare($projectOrId, bool $noCreate = false):array
   {
+    /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
     try {
       if ($noCreate) {
@@ -676,11 +679,13 @@ class ProjectService
           return [
             'share' => null,
             'folder' => null,
+            'expires' => null,
           ];
         }
       } else {
         $path = $this->ensureDownloadsFolder($projectOrId, dry: false);
         $node = $this->userStorage->get($path);
+        $expires = null;
       }
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
@@ -691,8 +696,30 @@ class ProjectService
         $node,
         $shareOwnerUid,
         sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+        expirationDate: false, // ignore
         noCreate: $noCreate,
       );
+      if (!empty($url)) {
+        try {
+          $expires = $sharingService->getLinkExpirationDate($url);
+          if ($expires === null) {
+            $expires = new DateTimeImmutable($project->getYear() . '-12-31');
+            $expires = $sharingService->expireLinkShare($url, $expires);
+          }
+        } catch (ShareNotFound $e) {
+          $expires = null;
+        }
+        if (empty($expires)) {
+          throw new Exceptions\Exception(
+            $this->l->t(
+              'Unable set expiration date for the public download link "%1$s" for the project "%2$s".',
+              [ $url, $project->getName(), ]
+            ),
+            0,
+            $e
+          );
+        }
+      }
     } catch (\Throwable $t) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Unable to create the public donwload link for the project "%s".', $project->getName()),
@@ -703,6 +730,7 @@ class ProjectService
     return [
       'share' => $url,
       'folder' => $path,
+      'expires' => $expires,
     ];
   }
 
