@@ -4,26 +4,30 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \DateTimeImmutable AS DateTime;
+use \PHP_IBAN;
+use \RuntimeException;
+use \InvalidArgumentException;
+use \DateTimeImmutable as DateTime;
+use \DateTimeInterface;
 use Cmixin\BusinessDay;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
@@ -77,10 +81,11 @@ class FinanceService
   /** @var Repositories\SepaDebitMandatesRepository */
   private $mandatesRepository;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , EventsService $eventsService
+    ConfigService $configService,
+    EntityManager $entityManager,
+    EventsService $eventsService,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -110,9 +115,14 @@ class FinanceService
    * @param int|null $calendarOffset Offset in calendar days.
    *
    * @param \DateTimeInterface|null $fromDate The pivot-date.
+   *
+   * @return DateTimeInterface The resulting date.
    */
-  public function targetDeadline(int $businessOffset, ?int $calendarOffset = null, ?\DateTimeInterface $fromDate = null):\DateTimeInterface
-  {
+  public function targetDeadline(
+    int $businessOffset,
+    ?int $calendarOffset = null,
+    ?\DateTimeInterface $fromDate = null,
+  ):DateTimeInterface {
     /** @var CarbonImmutable $fromDate */
     if (empty($fromDate)) {
       $fromDate = new CarbonImmutable('now', $this->getDateTimeZone());
@@ -123,7 +133,7 @@ class FinanceService
     }
 
     if (!empty($calendarOffset) && $businessOffset*$calendarOffset < 0) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t('The business-day and calendar-day offset must have the same sign (%d / %d)', [
           $businessOffset, $calendarOffset
         ]));
@@ -145,6 +155,11 @@ class FinanceService
     return $businessDeadline;
   }
 
+  /**
+   * @param int|Entities\Project $projectOrId Entitiy or its identifier.
+   *
+   * @return bool Whether the given project is the club-members project.
+   */
   public function isClubMembersProject($projectOrId):bool
   {
     if (empty($projectOrId)) {
@@ -156,6 +171,12 @@ class FinanceService
     return (int)$projectId === $this->getClubMembersProjectId();
   }
 
+
+  /**
+   * @param int|Entities\Musician $musicianOrId Entitiy or its identifier.
+   *
+   * @return bool Whether the given musician is a club-member.
+   */
   public function isClubMember($musicianOrId):bool
   {
     $musician = $this->ensureMusician($musicianOrId);
@@ -168,16 +189,22 @@ class FinanceService
   /**
    * Provide pre-filled debit-mandate and personal data forms.
    *
-   * @param mixed $accountSequenceOrAccount
+   * @param int|Entities\SepaBankAccount $accountSequenceOrAccount The database entity or its sequence number.
    *
-   * @param int|Entities\Project $projectOrId
+   * @param int|Entities\Project $projectOrId The database entity or its id.
    *
-   * @param int|Entities\Musician $musicianOrId
+   * @param int|Entities\Musician $musicianOrId The database entity or its id.
    *
-   * @param null|string $formName
+   * @param null|string $formName Then name of the form to populate with values.
+   *
+   * @return array [ FILE_DATA, MIME_TYPE, FILE_NAME ] or empty array in case of failure.
    */
-  public function preFilledDebitMandateForm($accountSequenceOrAccount, $projectOrId, $musicianOrId = null, ?string $formName = null)
-  {
+  public function preFilledDebitMandateForm(
+    $accountSequenceOrAccount,
+    $projectOrId,
+    $musicianOrId = null,
+    ?string $formName = null,
+  ):array {
     if ($accountSequenceOrAccount instanceof Entities\SepaBankAccount) {
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $accountSequenceOrAccount;
@@ -186,9 +213,10 @@ class FinanceService
       $musician = $bankAccount->getMusician();
       if (!empty($musicianOrId)
           && $musician->getId() != $this->ensureMusician($musicianOrId)->getId()) {
-        throw new \InvalidArgumentException(
-          $this->l->t('Bankaccount belongs to musician "%s", but specified musician is "%s".',
-                      [ $musician->getPublicName(), $this->ensureMusician($musicianOrId)->getPublicName() ]));
+        throw new InvalidArgumentException($this->l->t(
+          'Bankaccount belongs to musician "%s", but specified musician is "%s".',
+          [ $musician->getPublicName(), $this->ensureMusician($musicianOrId)->getPublicName() ]
+        ));
       }
     } else {
       /** @var Entities\Musician $musician */
@@ -292,19 +320,24 @@ class FinanceService
    * Add an event to the finance calendar, possibly including a
    * reminder.
    *
-   * @param string $title
-   * @param string $description (may be empty)
-   * @param null|Entities\Project $projectName (may be empty)
-   * @param \DateTimeInterface $timeStamp
-   * @param int $alarm (maybe <= 0 for no alarm)
+   * @param string $title Title of the event.
+   * @param string $description Description of th event.
+   * @param null|Entities\Project $project Associated project, may be null.
+   * @param DateTimeInterface $time The date and time of the event.
+   * @param int $alarm Alarm timeout in seconds, <= 0 for no alarm.
    *
    * @return null|array new
    * ```
    * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
    * ```
    */
-  public function financeEvent($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
-  {
+  public function financeEvent(
+    string $title,
+    string $description,
+    ?Entities\Project $project,
+    DateTimeInterface $time,
+    int $alarm = 0,
+  ): ?array {
     $eventKind = 'finance';
     $categories = '';
     if ($project) {
@@ -313,7 +346,6 @@ class FinanceService
     }
     $categories .= $this->l->t('finance');
     $calKey       = $eventKind.'calendar';
-    $calendarName = $this->getConfigValue($calKey, $this->l->t($eventKind));
     $calendarId   = $this->getConfigValue($calKey.'id', false);
 
     $eventData = [
@@ -336,19 +368,24 @@ class FinanceService
    * Add a task to the finance calendar, possibly including a
    * reminder.
    *
-   * @param string $title
-   * @param string $description (may be empty)
-   * @param null|Entities\Project $project (may be empty)
-   * @param \DateTimeInterface $time
-   * @param int $alarm (maybe <= 0 for no alarm)
+   * @param string $title Title of the event.
+   * @param string $description Description of th event.
+   * @param null|Entities\Project $project Associated project, may be null.
+   * @param DateTimeInterface $time The date and time of the event.
+   * @param int $alarm Alarm timeout in seconds, <= 0 for no alarm.
    *
    * @return null|array new
    * ```
    * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
    * ```
    */
-  public function financeTask($title, $description, ?Entities\Project $project, \DateTimeInterface $time, int $alarm = 0): ?array
-  {
+  public function financeTask(
+    string $title,
+    string $description,
+    ?Entities\Project $project,
+    DateTimeInterface $time,
+    int $alarm = 0,
+  ): ?array {
     $taskKind = 'finance';
     $categories = '';
     if ($project) {
@@ -357,7 +394,6 @@ class FinanceService
     }
     $categories .= $this->l->t('finance');
     $calKey       = $taskKind.'calendar';
-    $calendarName = $this->getConfigValue($calKey, $this->l->t($taskKind));
     $calendarId   = $this->getConfigValue($calKey.'id', false);
 
     $taskData = [
@@ -380,8 +416,10 @@ class FinanceService
    *
    * @param mixed $objectIdentifier Either the local URI, or the UID or an
    * array [ 'uri' => OBJECT_URI, 'uid' => OBJECT_UID ].
+   *
+   * @return void
    */
-  public function deleteFinanceCalendarEntry($objectIdentifier)
+  public function deleteFinanceCalendarEntry(mixed $objectIdentifier):void
   {
     $taskKind = 'finance';
     $calKey = $taskKind.'calendar';
@@ -395,13 +433,19 @@ class FinanceService
         return;
       }
     }
-    throw new \InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%2$s" in calendar with id "%1$s".', [ $calendarId, implode(', ', $objectIdentifier) ]));
+    throw new InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%2$s" in calendar with id "%1$s".', [ $calendarId, implode(', ', $objectIdentifier) ]));
   }
 
   /**
    * Find a finance calendar entry by its uri.
+   *
+   * @param string $localUri "basename" part of the URI.
+   *
+   * @return array
+   *
+   * @see EventsService::findCalendarEntry()
    */
-  public function findFinanceCalendarEntry($localUri)
+  public function findFinanceCalendarEntry(string $localUri)
   {
     $taskKind = 'finance';
     $calKey = $taskKind.'calendar';
@@ -436,8 +480,12 @@ class FinanceService
    * character set. I may not be necesary any more, but at least at
    * the beginning of the SEPA affair at least some banks were at
    * least very restrictive concerning the allowed characters.
+   *
+   * @param string $string The string to validate.
+   *
+   * @return bool The validation result.
    */
-  public function validateSepaString($string)
+  public function validateSepaString(string $string):bool
   {
     return !preg_match('@[^'.self::SEPA_CHARSET.']@', $string);
   }
@@ -468,13 +516,12 @@ class FinanceService
    * generate the reference for.
    *
    * @return string New mandate reference.
-   *
    */
   public function generateSepaMandateReference(Entities\SepaDebitMandate $mandate):string
   {
     $project = $this->ensureProject($mandate->getProject());
     if (empty($project)) {
-      throw new \InvalidArgumentException($this->l->t('The given mandate does not contain a valid project-id.'));
+      throw new InvalidArgumentException($this->l->t('The given mandate does not contain a valid project-id.'));
     }
     $mandate->setProject($project);
 
@@ -490,7 +537,7 @@ class FinanceService
 
     $musician = $this->ensureMusician($mandate->getMusician());
     if (empty($musician)) {
-      throw new \InvalidArgumentException($this->l->t('The given mandate does not contain a valid musician-id.'));
+      throw new InvalidArgumentException($this->l->t('The given mandate does not contain a valid musician-id.'));
     }
     $mandate->setMusician($musician);
 
@@ -504,18 +551,20 @@ class FinanceService
             ? '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X19.19s%.0s+%02d'
             : '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X15.15s%04d+%02d';
 
-    $ref = sprintf($format,
-                   $projectId, $musicianId,
-                   $firstName, $surName,
-                   $projectName, $projectYear,
-                   (int)$sequence);
+    $ref = sprintf(
+      $format,
+      $projectId, $musicianId,
+      $firstName, $surName,
+      $projectName, $projectYear,
+      (int)$sequence);
 
     $ref = strtoupper(Util::normalizeSpaces($ref, 'X'));
 
     if (strlen($ref) != self::SEPA_MANDATE_LENGTH) {
-      throw new \RuntimeException(
-        $this->l->t('SEPA mandate-reference "%s" is too long (%d > %d).',
-                    [ $ref, strlen($ref), self::SEPA_MANDATE_LENGTH]));
+      throw new RuntimeException(
+        $this->l->t(
+          'SEPA mandate-reference "%s" is too long (%d > %d).',
+          [ $ref, strlen($ref), self::SEPA_MANDATE_LENGTH]));
     }
 
     return $ref;
@@ -526,8 +575,16 @@ class FinanceService
    * fetch the entire db-row, i.e. everything known about the
    * mandate. Expired and inactive mandates are ignored, i.e. false
    * is returned in this case.
+   *
+   * @param int $projectId Database entity id.
+   *
+   * @param int $musicianId Database entity id.
+   *
+   * @param bool $expired Include expired or not.
+   *
+   * @return null|Entities\SepaDebitMandate
    */
-  public function fetchSepaMandate($projectId, $musicianId, $expired = false)
+  public function fetchSepaMandate(int $projectId, int $musicianId, bool $expired = false):?Entities\SepaDebitMandate
   {
     $mandate = null;
 
@@ -548,12 +605,15 @@ class FinanceService
    * @param array|SepaDebitMandate $mandate Either a plain array were
    * the keys are the actual names of the database columns, or the
    * database entity from the model.
+   *
+   * @return bool|string \false in case of error, 'once', 'first' or
+   * 'following' otherwise.
    */
   public function sepaMandateSequenceType($mandate)
   {
     if ($mandate['nonRecurring']) {
       return 'once';
-    } else if (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') {
+    } elseif (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') {
       return 'first';
     } else {
       return 'following';
@@ -566,10 +626,14 @@ class FinanceService
    * information. mandateReference, musicianId and projectId are
    * required.
    *
+   * @param mixed $newMandate Debit mandate data.
+   *
+   * @return null|Entities\SepaDebitMandate
+   *
    * @todo Switch to \OCA\CAFEVDB\Wrapped\Doctrine\ORM entities, i.e. $mandate should at
    * least optionally be an Entities\SepaDebitMandate.
    */
-  public function storeSepaMandate($newMandate)
+  public function storeSepaMandate(mixed $newMandate):?Entities\SepaDebitMandate
   {
     if (!is_array($newMandate) ||
         !isset($newMandate['mandateReference']) ||
@@ -604,8 +668,6 @@ class FinanceService
       }
     }
 
-    $table = $this->DATA_BASE_INFO['table'];
-
     // fetch the old mandate, but keep the old values encrypted
     $mandate = $this->fetchSepaMandate($prj, $mus, false);
     if (!empty($mandate)) {
@@ -621,15 +683,15 @@ class FinanceService
       // passed: issue an update query
       foreach ($newMandate as $key => $value) {
         switch ($key) {
-        case 'musicianId':
-          $targetKey = 'musician';
-          break;
-        case 'projectId':
-          $targetKey = 'project';
-          break;
-        default:
-          $targetKey = $key;
-          break;
+          case 'musicianId':
+            $targetKey = 'musician';
+            break;
+          case 'projectId':
+            $targetKey = 'project';
+            break;
+          default:
+            $targetKey = $key;
+            break;
         }
         if (empty($value) && $key != 'lastUsedDate') {
           unset($newMandate[$key]);
@@ -641,15 +703,15 @@ class FinanceService
       $mandate = Entities\SepaDebitMandate::create();
       foreach ($newMandate as $key => $value) {
         switch ($key) {
-        case 'musicianId':
-          $targetKey = 'musician';
-          break;
-        case 'projectId':
-          $targetKey = 'project';
-          break;
-        default:
-          $targetKey = $key;
-          break;
+          case 'musicianId':
+            $targetKey = 'musician';
+            break;
+          case 'projectId':
+            $targetKey = 'project';
+            break;
+          default:
+            $targetKey = $key;
+            break;
         }
         $mandate[$targetKey] = $value; // @todo check date and time-stamps.
       }
@@ -660,8 +722,16 @@ class FinanceService
     return $mandate;
   }
 
-  /**Compute usage data for the given mandate reference*/
-  public function mandateReferenceUsage($reference, $brief = false)
+  /**
+   * Compute usage data for the given mandate reference
+   *
+   * @param string $reference The debit-mandate reference.
+   *
+   * @param bool $brief Less detailed information if \true.
+   *
+   * @return array Usage data.
+   */
+  public function mandateReferenceUsage(string $reference, bool $brief = false):array
   {
     return $this->mandatesRepository->usage($reference, $brief);
   }
@@ -671,13 +741,12 @@ class FinanceService
    * would need a new mandate.
    *
    * @param mixed $usageInfo Either a mandate-reference or a
-   * previously fetched result from $this->mandateReferenceUsage()
+   * previously fetched result from $this->mandateReferenceUsage().
    *
-   * @return bool @c true iff the mandate is expired, @c false otherwise.
+   * @return bool \true iff the mandate is expired, \false otherwise.
    */
-  public function mandateIsExpired($usageInfo)
+  public function mandateIsExpired(mixed $usageInfo):bool
   {
-    $mandate = $usageInfo;
     if (empty($usageInfo['lastUsed'])) {
       $usageInfo = $this->mandateReferenceUsage($usageInfo, true);
     }
@@ -712,7 +781,7 @@ class FinanceService
    *
    * @return ?Entities\SepaDebitMandate
    */
-  public function deactivateSepaMandate($mandateReference):?Entities\SepaDebitMandate
+  public function deactivateSepaMandate(string $mandateReference):?Entities\SepaDebitMandate
   {
     return !empty($this->mandatesRepository->ban($mandateReference));
   }
@@ -725,7 +794,7 @@ class FinanceService
    *
    * @return bool True on success.
    */
-  public function deleteSepaMandate($mandateReference)
+  public function deleteSepaMandate(string $mandateReference):bool
   {
     return !empty($this->mandatesRepository->remove($mandateReference));
   }
@@ -751,7 +820,7 @@ class FinanceService
   {
     $result = [ 'iban' => $iban ];
 
-    $iban = new \PHP_IBAN\IBAN($iban);
+    $iban = new PHP_IBAN\IBAN($iban);
     if (!$iban->Verify()) {
       return null;
     }
@@ -794,15 +863,20 @@ class FinanceService
    * validation of user input, so this need not be very user-friendly.
    *
    * @param Entities\SepaBankAccount $account
-   * @throws \InvalidArgumentException
+   *
+   * @return bool \true on success, otherwise the function throws.
+   *
+   * @throws InvalidArgumentException
+   *
+   * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
-  public function validateSepaAccount(Entities\SepaBankAccount $account)
+  public function validateSepaAccount(Entities\SepaBankAccount $account):bool
   {
 
     // Verify that bankAccountOwner conforms to the brain-damaged
     // SEPA charset. Thank you so much. Banks.
     if (!$this->validateSepaString($account->getBankAccountOwner())) {
-      throw new \InvalidArgumentException($this->l->t('Illegal characters in bank account owner field.'));
+      throw new InvalidArgumentException($this->l->t('Illegal characters in bank account owner field.'));
     }
 
     // Check IBAN and BIC: extract the bank and bank account id,
@@ -811,9 +885,9 @@ class FinanceService
     $BLZ  = $account->getBlz();
     $BIC  = $account->getBic();
 
-    $iban = new \PHP_IBAN\IBAN($IBAN);
+    $iban = new PHP_IBAN\IBAN($IBAN);
     if (!$iban->Verify()) {
-      throw new \InvalidArgumentException($this->l->t('Invalid IBAN: %s', $IBAN));
+      throw new InvalidArgumentException($this->l->t('Invalid IBAN: %s', $IBAN));
     }
 
     if ($iban->Country() == 'DE') {
@@ -822,22 +896,22 @@ class FinanceService
       $ibanKTO = $iban->Account();
 
       if ($BLZ != $ibanBLZ) {
-        throw new \InvalidArgumentException($this->l->t('BLZ and IBAN do not match: %s != %s', [ $BLZ, $ibanBLZ, ]));
+        throw new InvalidArgumentException($this->l->t('BLZ and IBAN do not match: %s != %s', [ $BLZ, $ibanBLZ, ]));
       }
 
       $bav = $this->di(BankAccountValidator::class);
 
       if (!$bav->isValidBank($ibanBLZ)) {
-        throw new \InvalidArgumentException($this->l->t('Invalid German BLZ: %s.', $BLZ));
+        throw new InvalidArgumentException($this->l->t('Invalid German BLZ: %s.', $BLZ));
       }
 
       if (!$bav->isValidAccount($ibanKTO)) {
-        throw new \InvalidArgumentException($this->l->t('Invalid German bank account: %s @ %s.', [ $ibanKTO, $BLZ, ]));
+        throw new InvalidArgumentException($this->l->t('Invalid German bank account: %s @ %s.', [ $ibanKTO, $BLZ, ]));
       }
 
       $blzBIC = $bav->getMainAgency($ibanBLZ)->getBIC();
       if ($blzBIC != $BIC) {
-        throw new \InvalidArgumentException($this->l->t('Probably invalid BIC: %s. Computed: %s. ', [ $BIC, $blzBIC, ]));
+        throw new InvalidArgumentException($this->l->t('Probably invalid BIC: %s. Computed: %s. ', [ $BIC, $blzBIC, ]));
       }
     }
 
@@ -861,42 +935,53 @@ class FinanceService
    * 32-Bit-CPUs koennen mit PHP aber nur maximal 9 Stellen mit allen Ziffern genutzt werden.
    * Deshalb muss die Modulo-Rechnung in mehere Teilschritte zerlegt werden.
    * http://www.michael-schummel.de/2007/10/05/iban-prufung-mit-php
+   *
+   * @param string $iban IBAN to verify.
+   *
+   * @return bool
    ********************************************************/
-  public function testIBAN( $iban ) {
-    $iban = str_replace( ' ', '', $iban );
-    $iban1 = substr( $iban,4 )
-           . strval( ord( $iban[0] )-55 )
-           . strval( ord( $iban[1] )-55 )
-           . substr( $iban, 2, 2 );
+  public function testIBAN(string $iban):bool
+  {
+    $iban = str_replace(' ', '', $iban);
+    $iban1 = substr($iban, 4)
+      . strval(ord($iban[0]) - 55)
+      . strval(ord($iban[1]) - 55)
+      . substr($iban, 2, 2);
 
-    for( $i = 0; $i < strlen($iban1); $i++) {
-      if(ord( $iban1[$i] )>64 && ord( $iban1[$i] )<91) {
-        $iban1 = substr($iban1,0,$i) . strval( ord( $iban1[$i] )-55 ) . substr($iban1,$i+1);
+    for ($i = 0; $i < strlen($iban1); $i++) {
+      if (ord($iban1[$i]) > 64 && ord($iban1[$i]) < 91) {
+        $iban1 = substr($iban1, 0, $i) . strval(ord($iban1[$i]) - 55) . substr($iban1, $i+1);
       }
     }
-    $rest=0;
-    for ( $pos=0; $pos<strlen($iban1); $pos+=7 ) {
-      $part = strval($rest) . substr($iban1,$pos,7);
+    $rest = 0;
+    for ($pos = 0; $pos < strlen($iban1); $pos += 7) {
+      $part = strval($rest) . substr($iban1, $pos, 7);
       $rest = intval($part) % 97;
     }
-    $pz = sprintf("%02d", 98-$rest);
+    $checkSum = sprintf("%02d", 98 - $rest);
 
-    if ( substr($iban,2,2)=='00')
-      return substr_replace( $iban, $pz, 2, 2 );
-    else
-      return ($rest==1) ? true : false;
+    if (substr($iban, 2, 2)=='00') {
+      return substr_replace($iban, $checkSum, 2, 2);
+    } else {
+      return ($rest == 1) ? true : false;
+    }
   }
 
-  public function testCI($ci)
+  /**
+   * @param string $creditorIdentifier As the name states.
+   *
+   * @return bool Whether it passes some checks.
+   */
+  public function testCI(string $creditorIdentifier):bool
   {
-    $ci = preg_replace('/\s+/', '', $ci); // eliminate space
-    $country      = substr($ci, 0, 2);
-    $checksum     = substr($ci, 2, 2);
-    $businesscode = substr($ci, 4, 3);
-    $id           = substr($ci, 7);
-    if ($country == 'DE' && strlen($ci) != 18) {
+    $creditorIdentifier = preg_replace('/\s+/', '', $creditorIdentifier); // eliminate space
+    $country      = substr($creditorIdentifier, 0, 2);
+    $checksum     = substr($creditorIdentifier, 2, 2);
+    // $businesscode = substr($creditorIdentifier, 4, 3);
+    $id           = substr($creditorIdentifier, 7);
+    if ($country == 'DE' && strlen($creditorIdentifier) != 18) {
       return false;
-    } else if (strlen($ci) > 35) {
+    } elseif (strlen($creditorIdentifier) > 35) {
       return false;
     }
     $fakeIBAN = $country . $checksum . $id;
@@ -906,26 +991,32 @@ class FinanceService
   /********************************************************
    * Funktion zur Erstellung einer IBAN aus BLZ+Kontonr
    * Gilt nur fuer deutsche Konten
+   *
+   * @param string $blz German BankLeitZahl.
+   *
+   * @param string $kontonr German KontoNummer.
+   *
+   * @return string The resulting IBAN.
    ********************************************************/
-  public function makeIBAN($blz, $kontonr) {
-    $blz8 = str_pad ( $blz, 8, "0", STR_PAD_RIGHT);
-    $kontonr10 = str_pad ( $kontonr, 10, "0", STR_PAD_LEFT);
+  public function makeIBAN(string $blz, string $kontonr)
+  {
+    $blz8 = str_pad($blz, 8, "0", STR_PAD_RIGHT);
+    $kontonr10 = str_pad($kontonr, 10, "0", STR_PAD_LEFT);
     $bban = $blz8 . $kontonr10;
     $pruefsumme = $bban . "131400";
-    $modulo = (bcmod($pruefsumme,"97"));
-    $pruefziffer =str_pad ( 98 - $modulo, 2, "0",STR_PAD_LEFT);
+    $modulo = bcmod($pruefsumme, "97");
+    $pruefziffer =str_pad(98 - $modulo, 2, "0", STR_PAD_LEFT);
     $iban = "DE" . $pruefziffer . $bban;
     return $iban;
   }
 
-  public function validateSWIFT($swift)
+  /**
+   * @param string $swift BIC/SWIFT code to validate.
+   *
+   * @return bool The result of the validation.
+   */
+  public function validateSWIFT(string $swift):bool
   {
     return preg_match('/^([a-zA-Z]){4}([a-zA-Z]){2}([0-9a-zA-Z]){2}([0-9a-zA-Z]{3})?$/i', $swift);
   }
-
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}
