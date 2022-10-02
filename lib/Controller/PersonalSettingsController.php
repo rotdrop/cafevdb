@@ -1693,7 +1693,9 @@ class PersonalSettingsController extends Controller
     case 'emailpassword':
     case 'emailfromname':
       return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
-
+    case 'bulkEmailPrivacyNotice':
+      $value = $this->fuzzyInputService->purifyHTML($value);
+      return $this->setSimpleConfigValue($parameter, $value);
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       if ($realValue === null) {

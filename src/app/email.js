@@ -171,6 +171,7 @@ function updateComposerElements($emailForm, elements) {
           rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
           const title = toSpan.data('titleIntro') + '<br>' + rcpts;
 
+          toSpan.cafevTooltip('dispose');
           toSpan.html(rcpts);
           toSpan.attr('title', title);
           toSpan.cafevTooltip();

@@ -518,6 +518,20 @@ input.randomkey {
       }
     }
   }
+  form.bulk-email-privacy-notice {
+
+    $editorHeight: 15em;
+
+    // tweak editor height etc.
+    textarea.bulk-email-privacy-notice ~ {
+      .ck-editor .ck-editor__editable {
+        min-height: calc($editorHeight - var(--ck-form-header-height));
+      }
+      .tox.tox-tinymce {
+        height:$editorHeight;
+      }
+    }
+  }
   form.mailing-list {
     input[type="text"], input[type="password"] {
       width:200px;

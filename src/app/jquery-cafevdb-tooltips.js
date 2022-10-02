@@ -165,7 +165,7 @@ function singleToolTipWorker(optionsForAll, jobChunkSize) {
     };
   }
   if (!selfOptions.template) {
-    selfOptions.template = `<div class="tooltip {selfOptions.cssclass.join(' ')}" role="tooltip">
+    selfOptions.template = `<div class="tooltip ${selfOptions.cssclass.join(' ')}" role="tooltip">
   <div class="tooltip-arrow"></div>
   <div class="tooltip-inner"></div>
 </div>`;
@@ -241,7 +241,26 @@ $.fn.cafevTooltip = function(argument) {
     if (argument === 'destroy') {
       arguments[0] = 'dispose';
     }
-    $.fn.tooltip.apply(this, arguments);
+    try {
+      $.fn.tooltip.apply(this, arguments);
+    } catch (e) {
+      console.error('EXCEPTION DURING TOOLTIP HANDLING', this, arguments);
+    }
+    if (argument === 'dispose') {
+      const appTitle = $this.data(appName + 'Title');
+      if (appTitle && !$this.attr('title')) {
+        $this.attr('title', appTitle);
+      } else {
+        const originalTitle = $this.data('original-title');
+        if (originalTitle && !$this.attr('title')) {
+          $this.attr('title', originalTitle);
+        }
+      }
+      $this.removeData(appName + 'Title');
+      $this.removeAttr('data-' + appName + '-title');
+      $this.removeAttr('data-original-title');
+      $this.removeData('original-title');
+    }
   }
   return $this;
 };
