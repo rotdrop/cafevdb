@@ -4,25 +4,26 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+  * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \RuntimeException;
 use \InvalidArgumentException;
 use \DateTimeImmutable as DateTime;
 
@@ -64,7 +65,7 @@ class SepaBulkTransactionService
 
 
   // fancy, just to have some reminders and a deadline on the task-list
-  const BANK_TRANSFER_SUBMISSION_DEADLINE = 1; // 1 should be enough ...
+  const BANK_TRANSFER_SUBMISSION_DEADLINE = 2; // 1 should be enough but play safe
 
   const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
 
@@ -82,6 +83,7 @@ class SepaBulkTransactionService
   /** @var FinanceService */
   private $financeService;
 
+  /** {@inheritdoc} */
   public function __construct(
     EntityManager $entityManager,
     FinanceService $financeService,
@@ -97,16 +99,20 @@ class SepaBulkTransactionService
   }
 
   /**
+   * @param string $format Export format specifier such as 'aqbanking'.
+   *
    * @return IBulkTransactionExporter
    */
-  public function getTransactionExporter($format):?IBulkTransactionExporter
+  public function getTransactionExporter(string $format):?IBulkTransactionExporter
   {
     $serviceName = 'export:' . 'bank-bulk-transactions:' . $format;
     return $this->appContainer->get($serviceName);
   }
 
   /**
-   * @return A slug for the given bulk-transaction which can for
+   * @param Entities\SepaBulkTransaction $transaction Given bank transaction database entity.
+   *
+   * @return string A slug for the given bulk-transaction which can for
    * example be used to tag email-templates.
    *
    * The strategy is to return the string 'banktransfer' for
@@ -114,7 +120,7 @@ class SepaBulkTransactionService
    * bulk-transaction refers to a single payment kind (e.g. only
    * insurance fees) and otherwise just 'debitnote'.
    */
-  public function getBulkTransactionSlug(Entities\SepaBulkTransaction $transaction)
+  public function getBulkTransactionSlug(Entities\SepaBulkTransaction $transaction):string
   {
     if ($transaction instanceof Entities\SepaBankTransfer) {
       return 'banktransfer';
@@ -191,7 +197,7 @@ class SepaBulkTransactionService
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
     foreach ($receivableOptions as $receivableOption) {
       if ($project != $receivableOption->getField()->getProject()) {
-        throw new \RuntimeException(
+        throw new RuntimeException(
           $this->l->t('Refusing to generate payments for mismatching projects, current is "%s", but the receivable belongs to project "%s".', [
             $project->getName(),
             $receivableOption->getField()->getProject()->getName(),
@@ -205,7 +211,7 @@ class SepaBulkTransactionService
         $payableAmount = (float)$receivable->amountPayable();
         $depositAmount = (float)$receivable->depositAmount();
         if ((float)$payableAmount * (float)$depositAmount < 0) {
-          throw new \RuntimeException($this->l->t('Payable amount "%f" and deposit amount "%f" should have the compatible signs.', [ $payableAmount, $depositAmount ]));
+          throw new RuntimeException($this->l->t('Payable amount "%f" and deposit amount "%f" should have the compatible signs.', [ $payableAmount, $depositAmount ]));
         }
         if (!empty($transactionDueDate) && !empty($receivableDueDate)) {
           if ($payableAmount > 0) {
@@ -262,13 +268,16 @@ class SepaBulkTransactionService
   /**
    * Remove the given bulk-transaction if it is essentially unused.
    *
-   * @param Entities\SepaBulkTransaction $bulkTransaction
+   * @param Entities\SepaBulkTransaction $bulkTransaction Database entity.
    *
    * @param bool $force Disable security checks and just delete it. Defaults to \false.
    *
-   * @throws Exceptions\DatabaseReadonlyException, Exceptions\DatabaseException
+   * @return void
+   *
+   * @throws Exceptions\DatabaseReadonlyException
+   * @throws Exceptions\DatabaseException
    */
-  public function removeBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $force = false)
+  public function removeBulkTransaction(Entities\SepaBulkTransaction $bulkTransaction, bool $force = false):void
   {
     if (!$force && $bulkTransaction->getSubmitDate() !== null) {
       throw new Exceptions\DatabaseReadonlyException(
@@ -339,7 +348,7 @@ class SepaBulkTransactionService
    * Update the given bulk-transaction. ATM this "just" updates the
    * automatically generated payment subject.
    *
-   * @param Entities\SepaBulkTransaction $bulkTransactio The transaction to update.
+   * @param Entities\SepaBulkTransaction $bulkTransaction The transaction to update.
    *
    * @param boolean $flush Whether to flush the result to the data-base. The
    * routine may through if set to \true.
@@ -379,7 +388,7 @@ class SepaBulkTransactionService
    *
    * @param null|Entities\Project $project Project the transaction belongs to.
    *
-   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING
+   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
    *
    * @return null|Entities\EncryptedFile The generated export set.
    */
@@ -450,14 +459,17 @@ class SepaBulkTransactionService
         $this->entityManager->commit();
       } catch (\Throwable $t) {
         $this->entityManager->rollback();
-        throw new Exceptions\DatabaseException($this->l->t('Unable to generate export data for bulk-transaction id %1$d, format "%2$s".', [ $bulkTransaction->getId(), $format ]), $t->getCode(), $t);
+        throw new Exceptions\DatabaseException(
+          $this->l->t(
+            'Unable to generate export data for bulk-transaction id %1$d, format "%2$s".', [
+              $bulkTransaction->getId(), $format
+            ]
+          ),
+          $t->getCode(),
+          $t
+        );
       }
     }
     return $exportFile;
   }
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}
