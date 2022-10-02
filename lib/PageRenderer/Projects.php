@@ -939,7 +939,7 @@ class Projects extends PMETableViewBase
    *
    * @return string HTML snippet for the project posters.
    */
-  public function posterImageLink(string $postersFolder, string $action, int $imageColumns, int $imageId):string
+  public function posterImageLink(string $postersFolder, string $action, int $imageColumns, string $imageId):string
   {
     if ($imageColumns <= 1) {
       $sizeCss = 'full';

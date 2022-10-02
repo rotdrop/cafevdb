@@ -217,7 +217,7 @@ class UserStorage
         }
         ++$numberOfFiles;
       } else {
-        $numberOfFiles += $this->folderWalk($node, $depth);
+        $numberOfFiles += $this->folderWalk($node, $callback, $depth);
       }
     }
     return $numberOfFiles;
