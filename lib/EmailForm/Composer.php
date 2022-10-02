@@ -3526,18 +3526,21 @@ Störung.';
     //
     // This is here as a temporary hack to catch ignorant copy'n paste
     // messages
+    $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
+      'status' => true,
+    ];
     $forbiddenString = 'datenschutz-opt-out@cafev.de';
-    if (strpos($this->messageContents, $forbiddenString)) {
+    if (strpos($this->messageContents, $forbiddenString) !== false) {
       $this->logInfo('FORBIDDEN PRIVACY NOTICE');
-      $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
-        'status' => false,
-        'forbiddenAddress' => $forbiddenString,
-      ];
-      $this->executionStatus = false;
-    } else {
-      $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
-        'status' => true,
-      ];
+      if (empty($this->getConfigValue('bulkEmailPrivacyNotice'))) {
+        $this->logInfo('PRIVACY NOTICE UNCONFIGURED, IGNORING FORBIDDEN OPT-OUT LINK');
+      } else {
+        $this->diagnostics[self::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION] = [
+          'status' => false,
+          'forbiddenAddress' => $forbiddenString,
+        ];
+        $this->executionStatus = false;
+      }
     }
 
     // Template validation (i.e. variable substituions)
