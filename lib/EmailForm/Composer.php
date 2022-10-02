@@ -2568,17 +2568,16 @@ Störung.';
     bool $doNotReply = false,
     bool $allowDuplicates = false,
   ) {
+    // Construct an array for the data-base log
+    $logMessage = new SentEmailDTO;
+    $logMessage->recipients = $eMails;
+
     $customHeaders[] = self::HEADER_MARKER;
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
     $singleAddress = count($eMails) == 1;
-
-    // Construct an array for the data-base log
-    $logMessage = new SentEmailDTO;
-    $logMessage->recipients = $eMails;
-    $logMessage->message = $strMessage;
 
     // One big try-catch block. Using exceptions we do not need to
     // keep track of all return values, which is quite beneficial
@@ -2610,8 +2609,6 @@ Störung.';
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
-      // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -2627,9 +2624,17 @@ Störung.';
       }
       $phpMailer->setFrom($senderEmail, $senderName);
 
+      $requirePrivacyNotice = false;
+
       if (!$this->constructionMode) {
         // Loop over all data-base records and add each recipient in turn
         foreach ($eMails as $recipient) {
+
+          if ((!empty($this->project) && ($recipient['userBase'] & RecipientsFilter::MUSICIANS_EXCEPT_PROJECT))
+              || (empty($this->project) && $recipient['userBase'] == RecipientsFilter::UNDETERMINED_MUSICIANS)) {
+            $requirePrivacyNotice = true;
+          }
+
           if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
             $phpMailer->addAddress($recipient['email'], $recipient['name']);
           } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
@@ -2649,6 +2654,17 @@ Störung.';
         // Construction mode: per force only send to the developer
         $phpMailer->addAddress($this->catchAllEmail, $this->catchAllName);
       }
+
+      if ($requirePrivacyNotice) {
+        $privacyNotice = $this->getConfigValue('bulkEmailPrivacyNotice');
+        if (!empty($privacyNotice)) {
+          $strMessage .= '<br/><hr>' . $privacyNotice;
+        }
+      }
+
+      // pass the correct path in order for automatic image conversion
+      $phpMailer->msgHTML($strMessage, __DIR__ . '/../../');
+      $logMessage->message = $strMessage;
 
       if ($addCC === true) {
         // Always drop a copy to the orchestra's email account for
@@ -3042,17 +3058,16 @@ Störung.';
     array $customHeaders = [],
     bool $doNotReply = false,
   ) {
+    // Construct an array for the data-base log
+    $logMessage = new stdClass;
+    $logMessage->recipients = $eMails;
+
     $customHeaders[] = self::HEADER_MARKER;
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
     // we do not need to send via BCC.
     $singleAddress = count($eMails) == 1;
-
-    // Construct an array for the data-base log
-    $logMessage = new stdClass;
-    $logMessage->recipients = $eMails;
-    $logMessage->message = $strMessage;
 
     // First part: go through the composition part of PHPMailer in
     // order to have some consistency checks. If this works, we
@@ -3064,9 +3079,6 @@ Störung.';
 
       $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
       $logMessage->subject = $phpMailer->Subject;
-
-      // pass the correct path in order for automatic image conversion
-      $phpMailer->msgHTML($strMessage, __DIR__.'/../../');
 
       $senderName = $this->fromName();
       $senderEmail = $this->fromAddress();
@@ -3083,8 +3095,16 @@ Störung.';
 
       $phpMailer->SetFrom($senderEmail, $senderName);
 
+      $requirePrivacyNotice = false;
+
       // Loop over all data-base records and add each recipient in turn
       foreach ($eMails as $recipient) {
+
+        if ((!empty($this->project) && ($recipient['userBase'] & RecipientsFilter::MUSICIANS_EXCEPT_PROJECT))
+            || (empty($this->project) && $recipient['userBase'] == RecipientsFilter::UNDETERMINED_MUSICIANS)) {
+          $requirePrivacyNotice = true;
+        }
+
         if ($singleAddress || $recipient['status'] == RecipientsFilter::MEMBER_STATUS_OPEN) {
           $phpMailer->addAddress($recipient['email'], $recipient['name']);
         } elseif ($recipient['project'] <= 0 || !$this->discloseRecipients()) {
@@ -3100,6 +3120,17 @@ Störung.';
           }
         }
       }
+
+      if ($requirePrivacyNotice) {
+        $privacyNotice = $this->getConfigValue('bulkEmailPrivacyNotice');
+        if (!empty($privacyNotice)) {
+          $strMessage .= '<br/><hr>' . $privacyNotice;
+        }
+      }
+
+      // pass the correct path in order for automatic image conversion
+      $phpMailer->msgHTML($strMessage, __DIR__.'/../../');
+      $logMessage->message = $strMessage;
 
       if ($addCC === true) {
         // Always drop a copy to the orchestra's email account for
@@ -3924,7 +3955,6 @@ Störung.';
         if (empty($this->project)) {
           return $key[0];
         }
-        $this->logInfo('ARGS ' . print_r($key, true));
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
         list('expires' => $expires,) =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
@@ -4278,8 +4308,6 @@ Störung.';
           $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
         }
 
-        $this->logInfo('TEMPLATE ' . print_r($templateNames, true));
-
         /** @var Entities\EmailTemplate */
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
@@ -4291,8 +4319,6 @@ Störung.';
               'tag' => 'ASC',
             ],
           );
-
-        $this->logInfo('FOUND TEMPLATE ' . (empty($template) ? 'NONE' : $template->getTag()));
       }
     }
 

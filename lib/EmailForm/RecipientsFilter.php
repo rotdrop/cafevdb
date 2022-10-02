@@ -71,7 +71,7 @@ class RecipientsFilter
   public const ANNOUNCEMENTS_MAILING_LIST = (1 << 3);
   public const PROJECT_MAILING_LIST = (1 << 4);
   public const MAILING_LIST = self::ANNOUNCEMENTS_MAILING_LIST|self::PROJECT_MAILING_LIST;
-  public const NO_MUSICIANS = 0;
+  public const UNDETERMINED_MUSICIANS = 0;
   public const ALL_MUSICIANS = self::MUSICIANS_FROM_PROJECT | self::MUSICIANS_EXCEPT_PROJECT;
   public const DATABASE_MUSICIANS = self::ALL_MUSICIANS;
 
@@ -642,7 +642,7 @@ class RecipientsFilter
             $userBase = 0;
             if ($isParticipant) {
               $userBase |= self::MUSICIANS_FROM_PROJECT;
-            } elseif (!$isNonParticipant) {
+            } elseif ($isNonParticipant) {
               $userBase |= self::MUSICIANS_EXCEPT_PROJECT;
             }
             $emailRecord = [
@@ -904,7 +904,7 @@ class RecipientsFilter
       if ($userBase === false) {
         $this->userBase = $this->defaultUserBase();
       } else {
-        $this->userBase = self::NO_MUSICIANS;
+        $this->userBase = self::UNDETERMINED_MUSICIANS;
         if (!empty($userBase[self::FROM_PROJECT_PRELIMINARY_KEY])) {
           $this->userBase |= self::MUSICIANS_FROM_PROJECT_PRELIMINARY;
         }
@@ -1035,7 +1035,7 @@ class RecipientsFilter
    */
   public function getUserBase():int
   {
-    return $this->userBase ?? self::NO_MUSICIANS;
+    return $this->userBase ?? self::UNDETERMINED_MUSICIANS;
   }
 
   /** @return array The user basic set for the email form template */
@@ -1353,11 +1353,6 @@ class RecipientsFilter
    */
   public function substituteProjectMailingList(array &$selectedRecipients):bool
   {
-    if (count($selectedRecipients) == 1) {
-      // never send single-address email to the list
-      return false;
-    }
-
     if (empty($this->project)) {
       // this is not a project email
       return false;
