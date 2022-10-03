@@ -60,6 +60,13 @@ class SepaBulkTransactionsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  const TRANSACTION_TYPE_DEBIT_NOTE = SepaBulkTransactionService::TRANSACTION_TYPE_DEBIT_NOTE;
+  const TRANSACTION_TYPE_BANK_TRANSFER = SepaBulkTransactionService::TRANSACTION_TYPE_BANK_TRANSFER;
+  const TRANSACTION_TYPES = [
+    self::TRANSACTION_TYPE_DEBIT_NOTE,
+    self::TRANSACTION_TYPE_BANK_TRANSFER,
+  ];
+
   /** @var RequestParameterService */
   private $parameterService;
 
@@ -438,30 +445,18 @@ class SepaBulkTransactionsController extends Controller
 
         if (empty($dueDeadline)) {
           // count forward from now, just take the maximum
-          $earliestDueDate = max(
-            $earliestDueDate,
-            $this->financeService->targetDeadline(
-              $debitMandate->getPreNotificationBusinessDays()?:0,
-              $debitMandate->getPreNotificationCalendarDays(),
-              $now)
-          );
+          list('dueDate' => $dueDate,) = $this->bulkTransactionService->calculateDebitNoteDeadlines($debitMandate);
+          $earliestDueDate = max($earliestDueDate, $dueDate);
         } else {
           // count backwards from desired deadline
-          $notificationDeadline = $this->financeService->targetDeadline(
-            $debitMandate->getPreNotificationBusinessDays()?:0,
-            $debitMandate->getPreNotificationCalendarDays(),
-            $dueDeadline);
+          list(
+            'preNofiticationDeadline' => $notificationDeadline,
+          ) = $this->bulkTransactionService->calculateDebitNoteDeadlines($debitMandate, $dueDeadline, fromDueDate:true);
           if ($notificationDeadline < $now) {
             $preNotificationConflicts[] = [
               'mandate' => $debitMandate,
               'notification' => $notificationDeadline,
             ];
-            // return self::grumble($this->l->t(
-            //   'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
-            //     $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),
-            //     $this->dateTimeFormatter->formatDate($notificationDeadline, 'medium'),
-            //     $debitMandate->getMandateReference(),
-            //   ]));
           }
           $latestNotification = min($latestNotification, $notificationDeadline);
         }
@@ -485,15 +480,32 @@ class SepaBulkTransactionsController extends Controller
       return self::grumble([ 'message' => $messages ]);
     }
 
+    // The "hard submission deadline" ATM only supplies to debit notes, As of
+    // now the bank just adjusts the due-date to the future if we submit
+    // bank-transfers too late. Still: handle it for both, debit notes and
+    // bank tansfers.
+    //
+    // The "hard submission deadline" is somewhat artificial: it adds one
+    // workday grace time in order to relax the pressure on the treasurer.
+
+    $hardSubmissionDeadline = [
+      self::TRANSACTION_TYPE_BANK_TRANSFER => null,
+      self::TRANSACTION_TYPE_DEBIT_NOTE => null,
+    ];
+
     if ($debitNote->getPayments()->count() > 0) {
       $submissionDeadline = $this->financeService->targetDeadline(
-        -SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_DEADLINE,
-        null,
-        $earliestDueDate);
+        fromDate: $earliestDueDate,
+        businessOffset: -(SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_DEADLINE
+                          + SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS)
+      );
+      $hardSubmissionDeadline[self::TRANSACTION_TYPE_DEBIT_NOTE] = $this->financeService->targetDeadline(
+        fromDate: $earliestDueDate,
+        businessOffset: -SepaBulkTransactionService::DEBIT_NOTE_SUBMISSION_DEADLINE
+      );
       $debitNote->setDueDate($earliestDueDate)
                 ->setSubmissionDeadline($submissionDeadline)
                 ->setPreNotificationDeadline($latestNotification);
-
     } else {
       $debitNote = null;
     }
@@ -510,6 +522,7 @@ class SepaBulkTransactionsController extends Controller
           null,
           $dueDeadline
       );
+      $hardSubmissionDeadline[self::TRANSACTION_TYPE_BANK_TRANSFER] = $submissionDeadline;
 
       $bankTransfer->setDueDate($dueDeadline)
                    ->setSubmissionDeadline($submissionDeadline);
@@ -521,30 +534,32 @@ class SepaBulkTransactionsController extends Controller
     // stuff should possibly be moved into the FinanceService.
 
     $bulkSubmissionNames = [
-      'debitNotes' => [
+      self::TRANSACTION_TYPE_DEBIT_NOTE => [
         'submission' => $this->l->t('Debit notes submission deadline for %s', $project->getName()),
+        'submissionHard' => $this->l->t('Debit notes submission hard-deadline for %s', $project->getName()),
         'due' => $this->l->t('Debit notes due for %s', $project->getName()),
         'notification' => $this->l->t('Debit notes pre-notification deadline for %s', $project->getName()),
       ],
-      'bankTransfers' => [
+      self::TRANSACTION_TYPE_BANK_TRANSFER => [
         'submission' => $this->l->t('Bank transfers submission deadline for %s', $project->getName()),
+        'submissionHard' => $this->l->t('Bank transfers submission deadline for %s', $project->getName()),
         'due' => $this->l->t('Bank transfers due for %s', $project->getName()),
       ],
     ];
 
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
-    foreach ([ 'debitNotes' => $debitNote, 'bankTransfers' => $bankTransfer] as $bulkTag => $bulkTransaction) {
+    foreach ([ self::TRANSACTION_TYPE_DEBIT_NOTE => $debitNote, self::TRANSACTION_TYPE_BANK_TRANSFER => $bankTransfer, ] as $bulkTag => $bulkTransaction) {
       if (!empty($bulkTransaction)) {
         $this->entityManager
           ->registerPreFlushAction(new GenericUndoable(
-            function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
+            function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames, $hardSubmissionDeadline) {
               list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
-                $bulkSubmissionNames[$bulkTag]['submission'],
+                $bulkSubmissionNames[$bulkTag]['submissionHard'],
                 $this->l->t(
                   'Due date: %s',
                   $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
                 $project,
-                $bulkTransaction->getSubmissionDeadline(),
+                $hardSubmissionDeadline[$bulkTag],
                 SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
               $bulkTransaction->setSubmissionEventUri($eventUri);
               $bulkTransaction->setSubmissionEventUid($eventUid);
@@ -576,7 +591,7 @@ class SepaBulkTransactionsController extends Controller
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
               list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
                 $bulkSubmissionNames[$bulkTag]['due'],
-                $this->l->t('TODO: add more information like the list of export-files, totals etc.'),
+                $this->l->t('Total amount to receive or spend: %s.', $this->moneyValue($bulkTransaction->totals())),
                 $project,
                 $bulkTransaction->getDueDate());
               $bulkTransaction->setDueEventUri($eventUri);
@@ -596,7 +611,7 @@ class SepaBulkTransactionsController extends Controller
         ->registerPreFlushAction(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
             list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
-              $bulkSubmissionNames['debitNotes']['notification'],
+              $bulkSubmissionNames[self::TRANSACTION_TYPE_DEBIT_NOTE]['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
                 $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),
@@ -615,7 +630,7 @@ class SepaBulkTransactionsController extends Controller
         ->register(new GenericUndoable(
           function() use ($debitNote, $project, $bulkSubmissionNames) {
             list('uri' => $taskUri, 'uid' => $taskUid) = $this->financeService->financeTask(
-              $bulkSubmissionNames['debitNotes']['notification'],
+              $bulkSubmissionNames[self::TRANSACTION_TYPE_DEBIT_NOTE]['notification'],
               $this->l->t('Submission-deadline: %s, due date: %s.', [
                 $this->dateTimeFormatter->formatDate($debitNote->getSubmissionDeadline(), 'long'),
                 $this->dateTimeFormatter->formatDate($debitNote->getDueDate(), 'long'),

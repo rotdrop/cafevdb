@@ -6,7 +6,7 @@
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
-  * @license AGPL-3.0-or-later
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -56,16 +56,30 @@ class SepaBulkTransactionService
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  // ordinary submission and notification deadlines
+  /**
+   * @var int
+   * The hard bank deadline, 1 working day in advance, otherwise the debit
+   * note will not be accepted.
+   */
   const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
-  const DEBIT_NOTE_NOTIFICATION_DEADLINE = 14; // unused
+
+  /**
+   * @var int
+   *
+   * Allow for that many extra working days.
+   */
+  const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
 
   const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
   const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
 
-
   // fancy, just to have some reminders and a deadline on the task-list
-  const BANK_TRANSFER_SUBMISSION_DEADLINE = 2; // 1 should be enough but play safe
+  const BANK_TRANSFER_SUBMISSION_DEADLINE = 1;
+
+  const TRANSACTION_TYPES = [
+    self::TRANSACTION_TYPE_BANK_TRANSFER,
+    self::TRANSACTION_TYPE_DEBIT_NOTE,
+  ];
 
   const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
 
@@ -99,6 +113,63 @@ class SepaBulkTransactionService
   }
 
   /**
+   * Given the raw due-data calculate the deadlines for submission and
+   * pre-notification. We allow for extra "space" between the resulting
+   * due-date and the submission date. So the idea is to allow two more
+   * business days by adding another work-day between due-date and hard
+   * bank-submission dead-line.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate Database entity.
+   *
+   * @param null|DateTimeImmutable $baseDate Either pre-notificatio date or
+   * due-date, es determined by $fromDueDate. If omitted now() is assumed.
+   *
+   * @param bool $fromDueDate \true means that $baseDate is the due-date of
+   * the debit-node. \false is the default and means that $baseDate is the
+   * pre-notification date.
+   *
+   * @return array
+   * ```
+   * [
+   *   dueDate => DATE,
+   *   preNotificationDeadline => DATE,
+   *   submissionDeadline => DATE,
+   *   hardSubmissionDeadline => DATE,
+   * ]
+   * ```
+   */
+  public function calculateDebitNoteDeadlines(
+    Entities\SepaDebitMandate $debitMandate,
+    ?DateTimeImmutable $baseDate = null,
+    bool $fromDueDate = false,
+  ) {
+    if ($baseDate === null) {
+      $baseDate = new DateTime;
+    }
+    $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
+      + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
+      + self::DEBIT_NOTE_SUBMISSION_DEADLINE;
+    if ($fromDueDate) {
+      $due = $baseDate;
+      $preNotification = $this->financeService->targetDeadline(
+        -$preNotificationBusinessDays,
+        -$debitMandate->getPreNotificationCalendarDays() ?: 0,
+        $due);
+    } else {
+      $preNotification = $baseDate;
+      $due = $this->financeService->targetDeadline(
+        $preNotificationBusinessDays,
+        $debitMandate->getPreNotificationCalendarDays() ?: 0,
+        $preNotification);
+    }
+
+    return [
+      'dueDate' => $due,
+      'preNofificationDeadline' => $preNotification,
+    ];
+  }
+
+  /**
    * @param string $format Export format specifier such as 'aqbanking'.
    *
    * @return IBulkTransactionExporter
@@ -115,17 +186,17 @@ class SepaBulkTransactionService
    * @return string A slug for the given bulk-transaction which can for
    * example be used to tag email-templates.
    *
-   * The strategy is to return the string 'banktransfer' for
+   * The strategy is to return the string self::TRANSACTION_TYPE_BANK_TRANSFER for
    * bank-transfers and 'debitnote-UNIQUEOPTIONSLUG' if the
    * bulk-transaction refers to a single payment kind (e.g. only
-   * insurance fees) and otherwise just 'debitnote'.
+   * insurance fees) and otherwise just self::TRANSACTION_TYPE_DEBIT_NOTE.
    */
   public function getBulkTransactionSlug(Entities\SepaBulkTransaction $transaction):string
   {
     if ($transaction instanceof Entities\SepaBankTransfer) {
-      return 'banktransfer';
+      return self::TRANSACTION_TYPE_BANK_TRANSFER;
     }
-    $slugParts = [ 'debitnote' => true ];
+    $slugParts = [ self::TRANSACTION_TYPE_DEBIT_NOTE => true ];
 
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
