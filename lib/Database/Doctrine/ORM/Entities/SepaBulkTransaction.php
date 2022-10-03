@@ -505,6 +505,16 @@ class SepaBulkTransaction implements \ArrayAccess
     return null;
   }
 
+  public function totals():float
+  {
+    $totals = 0.0;
+    /** @var CompositePayment $payment */
+    foreach ($this->payments as $payment) {
+      $totals += $payment->getAmount();
+    }
+    return $totals;
+  }
+
   /**
    * Return the number of related ProjectPayment entities.
    */
