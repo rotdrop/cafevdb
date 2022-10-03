@@ -118,6 +118,24 @@ class ConfigService
     [ 'uri' => 'finance', 'public' => false ],
   ];
 
+  const BANK_ACCOUNT_OWNER = 'bankAccountOwner';
+  const BANK_ACCOUNT_IBAN = 'bankAccountIBAN';
+  const BANK_ACCOUNT_BLZ = 'bankAccountBLZ';
+  const BANK_ACCOUNT_BIC = 'bankAccountBIC';
+  const BANK_ACCOUNT_NAME = 'bankAccountBankName';
+  const BANK_ACCOUNT_CREDITOR_IDENTIFIER = 'bankAccountCreditorIdentifier';
+  const BANK_ACCOUNT_BANK_HOLIDAYS = 'bankAccountBankHolidays';
+
+  const BANK_ACCOUNT_CONFIG_KEYS = [
+    self::BANK_ACCOUNT_OWNER,
+    self::BANK_ACCOUNT_IBAN,
+    self::BANK_ACCOUNT_BLZ,
+    self::BANK_ACCOUNT_BIC,
+    self::BANK_ACCOUNT_NAME,
+    self::BANK_ACCOUNT_CREDITOR_IDENTIFIER,
+    self::BANK_ACCOUNT_BANK_HOLIDAYS
+  ];
+
   const DOCUMENT_TYPE_CONSTANT = 'constant';
   const DOCUMENT_TYPE_TEMPLATE = 'template';
 
@@ -580,7 +598,7 @@ class ConfigService
    */
   public function deleteAppValue($key)
   {
-    return $this->containerConfig->deleteAppValue($this->appName, $key);
+    $this->containerConfig->deleteAppValue($this->appName, $key);
   }
 
   /*
@@ -688,7 +706,7 @@ class ConfigService
   public function deleteConfigValue($key)
   {
     unset($this->encryptionCache[$key]);
-    return $this->deleteAppValue($key);
+    $this->deleteAppValue($key);
   }
 
   public function getAppKeys()

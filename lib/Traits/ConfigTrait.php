@@ -180,7 +180,7 @@ trait ConfigTrait
    */
   protected function deleteAppValue($key)
   {
-    return $this->configService->deleteAppValue($key);
+    $this->configService->deleteAppValue($key);
   }
 
   /**
@@ -233,14 +233,14 @@ trait ConfigTrait
   }
 
   /** Set a possibly encrypted app-config value. */
-  public function setConfigValue($key, $value)
+  public function setConfigValue($key, $value):bool
   {
     return $this->configService->setConfigValue($key, $value);
   }
 
-  public function deleteConfigValue($key)
+  public function deleteConfigValue($key):void
   {
-    return $this->configService->deleteConfigValue($key);
+    $this->configService->deleteConfigValue($key);
   }
 
   public function generateRandomBytes($length = 30)
