@@ -1162,6 +1162,8 @@ const afterLoad = function(container) {
         fail: Ajax.handleError,
       },
     );
+
+    simpleSetValueHandler($('select[name="bankAccountBankHolidays"]'), 'change', msg);
   }
 
   {

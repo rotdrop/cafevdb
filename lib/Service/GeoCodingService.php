@@ -65,6 +65,7 @@ class GeoCodingService
   private $continentNames = [];
   private $countryContinents = [];
   private $languages = [];
+  private $regionNames = [];
 
   /** @var bool */
   private $debug = false;
@@ -115,9 +116,10 @@ class GeoCodingService
    *
    * @param int $type
    *
-   * @return null|array
+   * @return null|arrayz|string If $type == GeoCodingService::TYPE_DRY then the
+   * request URI, otherwise null on failure, array with results on success.
    */
-  private function request(string $command, array $parameters, int $type = self::JSON):?array
+  private function request(string $command, array $parameters, int $type = self::JSON):mixed
   {
     if (isset($parameters['postalCode']) && !isset($parameters['postalcode'])) {
       $parameters['postalcode'] = $parameters['postalCode'];
@@ -593,7 +595,6 @@ class GeoCodingService
         $result['adminName1'] = $translation['geonames'][0]['adminName1'];
         $result['adminCode1'] = $translation['geonames'][0]['adminCodes1']['ISO3166_2'];
       }
-      $this->logInfo('TRANSLATION ' . print_r($translation, true));
       return $result;
     } else {
       return null;
@@ -829,7 +830,7 @@ class GeoCodingService
               $entity = (new Entities\GeoStateProvince)
                 ->setCountryIso($country)
                 ->setCode($code)
-                 ->setTarget($language)
+                ->setTarget($language)
                 ->setL10nName($translation);
               $hasChanged = true;
             } else {
@@ -1177,5 +1178,40 @@ class GeoCodingService
     $this->countryNames[$language] = $countries;
 
     return $countries;
+  }
+
+  /**
+   * @param null|string $country Restrict the names to this country.
+   *
+   * @param string $language Language to update, use current user's language if not given.
+   *
+   * @return array If country is not given all available regions, otherwise
+   * the regions of the respective country.
+   */
+  public function getRegionNames(?string $country = null, ?string $language = null):array
+  {
+    if (!$language) {
+      $locale = $this->getLocale();
+      $language = locale_get_primary_language($locale);
+    }
+
+    if (!empty($country)) {
+      if (isset($this->regionNames[$language][$country])) {
+        return $this->regionNames[$language][$country];
+      }
+    }
+
+    $criteria = [ 'target' => [self::DEFAULT_LANGUAGE, $language], ];
+    if (!empty($country)) {
+      $criteria['countryIso'] = $country;
+    }
+    $criteria = self::criteriaWhere($criteria)
+      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+
+    /** @var Entities\GeoStateProvince $stateProvince */
+    foreach ($this->matching($criteria, Entities\GeoStateProvince::class) as $stateProvince) {
+      $this->regionNames[$language][$stateProvince->getCountryIso()][$stateProvince->getCode()] = $stateProvince->getL10nName();
+    }
+    return empty($country) ? $this->regionNames[$language] : $this->regionNames[$language][$country];
   }
 }

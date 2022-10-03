@@ -98,7 +98,14 @@ class FinanceService
       Carbon::class,
       CarbonImmutable::class,
     ]);
-    CarbonImmutable::setHolidays('target2', self::TARGET2_HOLIDAYS);
+
+    $bankHolidays = $this->getConfigValue(ConfigService::BANK_ACCOUNT_BANK_HOLIDAYS);
+    if (!empty($bankHolidays)) {
+      CarbonImmutable::setHolidaysRegion(strtolower($bankHolidays));
+      CarbonImmutable::addHolidays(strtolower($bankHolidays), self::TARGET2_HOLIDAYS);
+    } else {
+      CarbonImmutable::setHolidays('target2', self::TARGET2_HOLIDAYS);
+    }
   }
 
   /**

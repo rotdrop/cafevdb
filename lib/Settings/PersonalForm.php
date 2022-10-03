@@ -188,6 +188,7 @@ class PersonalForm
         ],
         'appName' => $this->appName(),
         'userId' => $this->userId(),
+        //
         'locale' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
         'locales' => $this->findAvailableLocales(),
@@ -196,6 +197,7 @@ class PersonalForm
         'localeLanguageNames' => $this->localeLanguageNames(),
         'currencyCode' => $this->currencyCode(),
         'currencySymbol' => $this->currencySymbol(),
+        'geoCodingService' => $this->geoCodingService,
         //
         'appLocale' => $this->appLocale(),
         'appL' => $this->appL10n(),
@@ -301,14 +303,6 @@ class PersonalForm
 
             'phoneNumber' => $this->getConfigValue('phoneNumber'),
 
-            'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
-            'bankAccountIBAN' => $this->getConfigValue('bankAccountIBAN'),
-            'bankAccountBLZ' => $this->getConfigValue('bankAccountBLZ'),
-            'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
-            'bankAccountBankName' => $this->getConfigValue('bankAccountBankName'),
-            'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifier'),
-            'bankAccountBankHolidays' => $this->getConfigValue('bankAccountBankHolidays'),
-
             'projectOptions' => $projectOptions,
             'memberProject' => $memberProject,
             'memberProjectId' => $memberProjectId,
@@ -368,6 +362,11 @@ class PersonalForm
 
             'requesttoken' => \OCP\Util::callRegister(),
           ]);
+
+        // bank account settings
+        foreach (ConfigService::BANK_ACCOUNT_CONFIG_KEYS as $configKey) {
+          $this->parameterFromConfig($templateParameters, $configKey);
+        }
 
         // document templates
         if (!empty($documentTemplatesFolder) && !empty($sharedFolder)) {
