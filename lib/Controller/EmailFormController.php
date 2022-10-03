@@ -347,6 +347,7 @@ class EmailFormController extends Controller
               'diagnostics' => $diagnostics,
               'cloudAdminContact' => $roles->cloudAdminContact(),
               'dateTimeFormatter' => $this->dateTimeFormatter(),
+              'urlGenerator' => $this->urlGenerator,
             ],
             'blank');
           $messageText = $tmpl->render();

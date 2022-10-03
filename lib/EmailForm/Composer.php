@@ -616,6 +616,9 @@ Störung.';
         'Files' => [],
         'Events' => [],
       ],
+      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
+	'status' => true,
+      ],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
       self::DIAGNOSTICS_TOTAL_COUNT => 0,
