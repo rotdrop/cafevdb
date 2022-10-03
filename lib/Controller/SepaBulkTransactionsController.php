@@ -4,32 +4,35 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Controller;
 
 use \PHP_IBAN\IBAN;
+use \DateTimeImmutable;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -50,7 +53,9 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 
-class SepaBulkTransactionsController extends Controller {
+/** AJAX backend for managing bank bulk transactions. */
+class SepaBulkTransactionsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -76,17 +81,18 @@ class SepaBulkTransactionsController extends Controller {
   /** @var EntityManager */
   protected $entityManager;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , FinanceService $financeService
-    , ProjectService $projectService
-    , SepaBulkTransactionService $bulkTransactionService
-    , IDateTimeFormatter $dateTimeFormatter
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
+    string $appName,
+    IRequest $request,
+    RequestParameterService $parameterService,
+    ConfigService $configService,
+    FinanceService $financeService,
+    ProjectService $projectService,
+    SepaBulkTransactionService $bulkTransactionService,
+    IDateTimeFormatter $dateTimeFormatter,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -101,30 +107,49 @@ class SepaBulkTransactionsController extends Controller {
   }
 
   /**
+   * @param string $topic What to do.
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param array $sepaBulkTransactions Actually the options from
+   * Entities\ProjectParticipantFieldDataOption to take into account.
+   *
+   * @param null|string $sepaDueDeadline Desired due deadline of bulk-transaction,
+   * automatically determined if null.
+   *
+   * @param int $bulkTransactionId Existing bulk transaction entity id.
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $projectId = 0, $sepaBulkTransactions = [], $sepaDueDeadline = null, $bulkTransactionId = 0)
-  {
+  public function serviceSwitch(
+    string $topic,
+    int $projectId = 0,
+    array $sepaBulkTransactions = [],
+    ?string $sepaDueDeadline = null,
+    int $bulkTransactionId = 0,
+  ):DataResponse {
     switch ($topic) {
-    case 'create':
-      $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
-      // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
-      $bankAccountRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
-      if (!empty($sepaDueDeadline)) {
-        // kludgy, but should work
-        $sepaDueDeadline = (new \DateTimeImmutable)
-                         ->setTimezone($this->getDateTimeZone())
-                         ->setTimestamp(strtotime($sepaDueDeadline));
-      }
-      return $this->generateBulkTransactions(
-        $projectId,
-        $bankAccountRecords,
-        $sepaBulkTransactions,
-        $sepaDueDeadline);
-    case 'export':
-      return $this->exportBulkTransaction($bulkTransactionId, $projectId);
-    default:
-      break;
+      case 'create':
+        $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
+        // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
+        $bankAccountRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+        if (!empty($sepaDueDeadline)) {
+          // kludgy, but should work
+          $sepaDueDeadline = (new DateTimeImmutable)
+            ->setTimezone($this->getDateTimeZone())
+            ->setTimestamp(strtotime($sepaDueDeadline));
+        }
+        return $this->generateBulkTransactions(
+          $projectId,
+          $bankAccountRecords,
+          $sepaBulkTransactions,
+          $sepaDueDeadline);
+      case 'export':
+        return $this->exportBulkTransaction($bulkTransactionId, $projectId);
+      default:
+        break;
     }
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
   }
@@ -135,17 +160,26 @@ class SepaBulkTransactionsController extends Controller {
    *
    * @param int $projectId
    *
-   * @param string $bankAccoutRecords JSON-data with musician_id,
-   * sequence and debit-mandate sequence as SepaDebitMandates_key
+   * @param array $bankAccountRecords Array of JSON-data with musician_id,
+   * sequence and debit-mandate sequence as SepaDebitMandates_key.
    *
    * @param array $bulkTransactions Actually the options from
    * Entities\ProjectParticipantFieldDataOption to take into account.
    *
+   * @param null|string $dueDeadline Desired due deadline of bulk-transaction,
+   * automatically determined if null.
+   *
+   * @return DataResponse
+   *
    * @bug This function is too long; the functionality should be splitted and
    * moved to a service class.
    */
-  private function generateBulkTransactions($projectId, $bankAccountRecords, $bulkTransactions, $dueDeadline = null)
-  {
+  private function generateBulkTransactions(
+    int $projectId,
+    array $bankAccountRecords,
+    array $bulkTransactions = [],
+    ?string $dueDeadline = null,
+  ):DataResponse {
     /** @var Entities\Project $project */
     $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
@@ -174,22 +208,23 @@ class SepaBulkTransactionsController extends Controller {
         'sequence' => $sequence,
       ]);
       if (empty($account)) {
-        return self::grumble($this->l->t('Bank account for musician-id %d, sequence %d not found.',
-                                         [ $musicianId, $sequence ]));
+        return self::grumble($this->l->t(
+          'Bank account for musician-id %d, sequence %d not found.',
+          [ $musicianId, $sequence ]));
       }
       if ($account->isDeleted()) {
         // This can happen when forcing display of soft-deleted rows in expert mode.
-        return self::grumble($this->l->t('Refusing to use a revoked or disabled bank account. The bank-account %1$s for %2$s (musician-id %3$d, sequence %4$d) has been revoked or deleted on %5$s.',
-                                         [ $account->getIban(), $account->getMusician()->getPublicName(), $musicianId, $sequence, $this->formatDate($account->getDeleted()) ]));
+        return self::grumble($this->l->t(
+          'Refusing to use a revoked or disabled bank account. The bank-account %1$s for %2$s (musician-id %3$d, sequence %4$d) has been revoked or deleted on %5$s.',
+          [ $account->getIban(), $account->getMusician()->getPublicName(), $musicianId, $sequence, $this->formatDate($account->getDeleted()) ]));
       }
       if (!empty($bankAccounts[$musicianId])) {
-        return self::grumble(
-          $this->l->t('More than one bank account submitted for musician %s, multiple IBANs %s, %s.',
-                      [
-                        $bankAccounts[$musicianId]->getMusician()->getPublicName(),
-                        $bankAccounts[$musicianId]->getIban(),
-                        $account->getIban(),
-                      ]));
+        return self::grumble($this->l->t(
+          'More than one bank account submitted for musician %s, multiple IBANs %s, %s.', [
+            $bankAccounts[$musicianId]->getMusician()->getPublicName(),
+            $bankAccounts[$musicianId]->getIban(),
+            $account->getIban(),
+          ]));
       }
       $bankAccounts[$musicianId] = $account;
 
@@ -209,17 +244,18 @@ class SepaBulkTransactionsController extends Controller {
           'sequence' => $mandateSequence,
         ]);
         if (empty($mandate)) {
-          return self::grumble($this->l->t('Debit-mandate for musician-id %d, sequence %d not found.',
-                                           [ $musicianId, $mandateSequence ]));
+          return self::grumble($this->l->t(
+            'Debit-mandate for musician-id %d, sequence %d not found.',
+            [ $musicianId, $mandateSequence ]));
         }
         if (!empty($debitMandates[$musicianId])) {
           return self::grumble(
-            $this->l->t('More than one debit-mandate submitted for musician %s, multiple references %s, %s.',
-                        [
-                          $mandate[$musicianId]->getMusician()->getPublicName(),
-                          $debitMandates[$musicianId]->getMandateReference(),
-                          $mandate->getMandateReference(),
-                        ]));
+            $this->l->t(
+              'More than one debit-mandate submitted for musician %s, multiple references %s, %s.', [
+                $mandate[$musicianId]->getMusician()->getPublicName(),
+                $debitMandates[$musicianId]->getMandateReference(),
+                $mandate->getMandateReference(),
+              ]));
         }
         if ($mandate->getSepaBankAccount() != $account) {
           return self::grumble(
@@ -229,14 +265,16 @@ class SepaBulkTransactionsController extends Controller {
         }
         if ($mandate->isDeleted()) {
           // This can happen when forcing display of soft-deleted rows in expert mode.
-          return self::grumble($this->l->t('Refusing to use a revoked or disabled debit-mandate. The debit-mandate %1$s for the bank-account %2$s of %3$s (musician-id %4$d, mandate-sequence %5$d) has been revoked or deleted on %6$s.', [
-            $mandate->getMandateReference(),
-            $account->getIban(),
-            $account->getMusician()->getPublicName(),
-            $musicianId,
-            $mandateSequence,
-            $this->formatDate($mandate->getDeleted()),
-          ]));
+          return self::grumble($this->l->t(
+            'Refusing to use a revoked or disabled debit-mandate.'
+            . ' The debit-mandate %1$s for the bank-account %2$s of %3$s (musician-id %4$d, mandate-sequence %5$d) has been revoked or deleted on %6$s.', [
+              $mandate->getMandateReference(),
+              $account->getIban(),
+              $account->getMusician()->getPublicName(),
+              $musicianId,
+              $mandateSequence,
+              $this->formatDate($mandate->getDeleted()),
+            ]));
         }
         $debitMandates[$musicianId] = $mandate;
         // $this->logInfo('MANDATE '.\OCA\CAFEVDB\Common\Functions\dump($mandate));
@@ -261,19 +299,21 @@ class SepaBulkTransactionsController extends Controller {
         /** @var Entities\ProjectParticipantField $field */
         $field = $fieldRepository->find($fieldId);
         if ($field->getProject() != $project) {
-          return self::grumble($this->l->t('Internal data inconsistency, field-project "%s" does not match current project "%s".',
-                                           [ $project->getName(), $field->getProject()->getName() ]));
+          return self::grumble($this->l->t(
+            'Internal data inconsistency, field-project "%s" does not match current project "%s".',
+            [ $project->getName(), $field->getProject()->getName() ]));
         }
         foreach ($field->getSelectableOptions() as $receivable) {
           $receivables[] = $receivable;
         }
-      } else if (Uuid::isValid($bulkTransaction)) {
+      } elseif (Uuid::isValid($bulkTransaction)) {
         // just this option, should be a recurring receivable
         /** @var Entities\ProjectParticipantFieldDataOption $receivable */
         $receivable = $receivablesRepository->findOneBy(['key' => Uuid::asUuid($bulkTransaction) ]);
         if ($receivable->getField()->getProject() != $project) {
-          return self::grumble($this->l->t('Internal data inconsistency, field-project "%s" does not match current project "%s".',
-                                           [ $project->getName(), $receivable->getField()->getProject()->getName() ]));
+          return self::grumble($this->l->t(
+            'Internal data inconsistency, field-project "%s" does not match current project "%s".',
+            [ $project->getName(), $receivable->getField()->getProject()->getName() ]));
         }
         $receivables[] = $receivable;
       } else {
@@ -287,7 +327,7 @@ class SepaBulkTransactionsController extends Controller {
 
     // At this point the submitted data should be consistent, start to generate the payments.
 
-    $now = (new \DateTimeImmutable())->setTimezone($this->getDateTimeZone());
+    $now = (new DateTimeImmutable())->setTimezone($this->getDateTimeZone());
     if (empty($dueDeadline)) {
       $earliestDueDate = $now; // will increase
       $latestNotification = $now; // fixed
@@ -324,7 +364,7 @@ class SepaBulkTransactionsController extends Controller {
       $dueDateEstimate = $this->financeService->targetDeadline(0);
       foreach ($participants as $musicianId => $participant) {
         $debitMandate = $debitMandates[$musicianId] ?? null;
-        if (!empty($debitMandate))  {
+        if (!empty($debitMandate)) {
           $dueDateEstimate = max(
             $dueDateEstimate,
             $this->financeService->targetDeadline(
@@ -381,12 +421,14 @@ class SepaBulkTransactionsController extends Controller {
         // lead to errors when submitting the data to the bank.
         if ($nonRecurring !== null && $debitMandate->getNonRecurring() != $nonRecurring) {
           return self::grumble(
-            $this->l->t('The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only. The conflicting mandate of musician "%s", mandate-reference "%s" is %s, the previous mandates were %s.', [
-              $participant->getMusician()->getPublicName(),
-              $mandate->getMandateReference(),
-              ($nonRecurring ? $this->l->t('recurring') : $this->l->t('non-recurring')),
-              ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),
-            ]));
+            $this->l->t(
+              'The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only.'
+              . ' The conflicting mandate of musician "%s", mandate-reference "%s" is %s, the previous mandates were %s.', [
+                $participant->getMusician()->getPublicName(),
+                $mandate->getMandateReference(),
+                ($nonRecurring ? $this->l->t('recurring') : $this->l->t('non-recurring')),
+                ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),
+              ]));
         }
         $nonRecurring = $debitMandate->getNonRecurring();
 
@@ -432,7 +474,7 @@ class SepaBulkTransactionsController extends Controller {
     // notify the operator about all conflicts.
     if (!empty($preNotificationConflicts)) {
       $messages = [];
-      foreach ($preNotificationConflicts as list($debitMandate, $notifictationDeadline)) {
+      foreach ($preNotificationConflicts as list($debitMandate, $notificationDeadline)) {
         $messages[] = $this->l->t(
           'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
             $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),
@@ -498,8 +540,9 @@ class SepaBulkTransactionsController extends Controller {
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
               list('uri' => $eventUri, 'uid' => $eventUid) = $this->financeService->financeEvent(
                 $bulkSubmissionNames[$bulkTag]['submission'],
-                $this->l->t('Due date: %s',
-                            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
+                $this->l->t(
+                  'Due date: %s',
+                  $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
                 $project,
                 $bulkTransaction->getSubmissionDeadline(),
                 SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
@@ -515,8 +558,9 @@ class SepaBulkTransactionsController extends Controller {
             function() use ($bulkTag, $bulkTransaction, $project, $bulkSubmissionNames) {
               list('uri' => $taskUri, 'uid' => $taskUid) = $this->financeService->financeTask(
                 $bulkSubmissionNames[$bulkTag]['submission'],
-                $this->l->t('Due date: %s',
-                            $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
+                $this->l->t(
+                  'Due date: %s',
+                  $this->dateTimeFormatter->formatDate($bulkTransaction->getDueDate(), 'long')),
                 $project,
                 $bulkTransaction->getSubmissionDeadline(),
                 SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS);
@@ -644,15 +688,23 @@ class SepaBulkTransactionsController extends Controller {
   /**
    * Generate export-sets for the given bulk-transaction.
    *
-   * $param int $bulkTransactionId
+   * @param int $bulkTransactionId Bulk transaction entity id.
+   *
+   * @param int $projectId Project endity id.
+   *
+   * @param string $format Export format.
+   *
+   * @return Response
    */
-  private function exportBulkTransaction($bulkTransactionId, $projectId = 0, $format = SepaBulkTransactionService::EXPORT_AQBANKING)
-  {
+  private function exportBulkTransaction(
+    int $bulkTransactionId,
+    int $projectId = 0,
+    string $format = SepaBulkTransactionService::EXPORT_AQBANKING,
+  ):Response {
     $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['min_range' => 1]);
     if ($id === false) {
-      return self::grumble(
-        $this->l->t('Submitted value "%s" is not a positive integer.',
-                    $bulkTransactionId));
+      return self::grumble($this->l->t(
+        'Submitted value "%s" is not a positive integer.', $bulkTransactionId));
     }
 
     if ((int)$projectId > 0) {
@@ -684,10 +736,4 @@ class SepaBulkTransactionsController extends Controller {
       . '&requesttoken=' . urlencode(\OCP\Util::callRegister())
     );
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
