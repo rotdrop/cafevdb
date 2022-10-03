@@ -66,6 +66,13 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * @var string
    *
+   * @ORM\Column(type="string", length=3, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
+   */
+  private $stateProvince;
+
+  /**
+   * @var string
+   *
    * @ORM\Column(type="string", length=32, nullable=false)
    */
   private $postalCode;
@@ -135,6 +142,30 @@ class GeoPostalCode implements \ArrayAccess
   public function getCountry():?string
   {
     return $this->country;
+  }
+
+  /**
+   * Set stateProvince.
+   *
+   * @param null|string $stateProvince StateProvince-code.
+   *
+   * @return GeoPostalCode
+   */
+  public function setStateProvince(?string $stateProvince):GeoPostalCode
+  {
+    $this->stateProvince = $stateProvince;
+
+    return $this;
+  }
+
+  /**
+   * Get stateProvince code.
+   *
+   * @return null|string
+   */
+  public function getStateProvince():?string
+  {
+    return $this->stateProvince;
   }
 
   /**

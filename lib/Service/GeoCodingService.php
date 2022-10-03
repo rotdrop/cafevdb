@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr\Join;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinent;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountry;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCode;
@@ -54,6 +55,8 @@ class GeoCodingService
   const GEONAMES_TAG = "geonames";
   const POSTALCODESLOOKUP_TAG = "postalcodes";
   const POSTALCODESSEARCH_TAG = "postalCodes";
+  const POSTAL_CODE_STATE_CODE_TAG = 'adminCode1';
+  const POSTAL_CODE_STATE_NAME_TAG = 'adminName1';
   const PROVIDER_URL = 'http://api.geonames.org';
   const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
   const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
@@ -110,11 +113,11 @@ class GeoCodingService
    *
    * @param array $parameters
    *
-   * @param string $type
+   * @param int $type
    *
    * @return null|array
    */
-  private function request(string $command, array $parameters, string $type = self::JSON):?array
+  private function request(string $command, array $parameters, int $type = self::JSON):?array
   {
     if (isset($parameters['postalCode']) && !isset($parameters['postalcode'])) {
       $parameters['postalcode'] = $parameters['postalCode'];
@@ -131,7 +134,7 @@ class GeoCodingService
       $query = http_build_query($parameters, '', '&');
     }
     if ($type === self::JSON || $type === self::DRY) {
-      $url = self::PROVIDER_URL.'/'.$command.'JSON'.'?username='.$this->userName.'&'.$query;
+      $url = self::PROVIDER_URL . '/' .$command . 'JSON' . '?username=' . $this->userName . '&' . $query;
       if ($type === self::DRY) {
         return $url;
       } else {
@@ -425,6 +428,8 @@ class GeoCodingService
       $placeName = $zipCodePlace['placeName'];
       $placeCountry = $zipCodePlace['countryCode'];
       $postalCode = $zipCodePlace['postalCode'];
+      $stateCode = $zipCodePlace[self::POSTAL_CODE_STATE_CODE_TAG];
+      // $stateName = $zipCodePlace[self::POSTAL_CODE_STATE_NAME_TAG];
 
       $location = [
         'Latitude' => $lat,
@@ -435,16 +440,21 @@ class GeoCodingService
       ];
 
       $translations = [];
+      $stateTranslations = [];
       foreach ($languages as $lang) {
-        $translation = $this->translatePlaceName($placeName, $country, $lang);
+        list(
+          'name' => $translation,
+          'adminName1' => $stateName,
+          'adminCode1' => $stateCode,
+        ) = $this->translatePlaceName($placeName, $country, $lang);
         if (!$translation) {
           $translation = 'NULL';
         } else {
           $translation = Util::normalizeSpaces($translation);
           $location[$lang] = $translation;
-          $translation = "'".$translation."'";
+          $translations[$lang] = $translation;
+          $stateTranslations[$lang][$stateCode] = Util::normalizeSpaces($stateName);
         }
-        $translations[$lang] = $translation;
       }
 
       $locations[] = $location;
@@ -458,19 +468,27 @@ class GeoCodingService
         'name' => $placeName,
       ]);
       if (empty($geoPostalCode)) {
-        $geoPostalCode = GeoPostalCode::create()
-                ->setCountry($placeCountry)
-                ->setPostalCode($postalCode)
-                ->setName($placeName);
+        $geoPostalCode = (new GeoPostalCode)
+          ->setCountry($placeCountry)
+          ->setStateProvince($stateCode)
+          ->setPostalCode($postalCode)
+          ->setName($placeName)
+          ->setLongitude($lng)
+          ->setLatitude($lat);
         $hasChanged = true;
       } else {
         if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
+          $geoPostalCode
+            ->setLongitude($lng)
+            ->setLatitude($lat);
+          $hasChanged = true;
+        }
+        if ($stateCode != $geoPostalCode->getStateProvince()) {
+          $geoPostalCode->setStateProvince($stateCode);
           $hasChanged = true;
         }
       }
       if ($hasChanged) {
-        $geoPostalCode->setLongitude($lng);
-        $geoPostalCode->setLatitude($lat);
         $this->persist($geoPostalCode);
         $this->flush(); // needed for update the translations below
       }
@@ -483,18 +501,48 @@ class GeoCodingService
           'target' => $lang,
         ]);
         if (empty($entity)) {
-          $entity = GeoPostalCodeTranslation::create()
-                       ->setGeoPostalCode($geoPostalCode)
-                       ->setTarget($lang);
+          $entity = (new GeoPostalCodeTranslation)
+            ->setGeoPostalCode($geoPostalCode)
+            ->setTranslation($translation)
+            ->setTarget($lang);
           $hasChanged = true;
         } else {
           if ($translation != $entity->getTranslation()) {
+            $entity->setTranslation($translation);
             $hasChanged = true;
           }
         }
         if ($hasChanged) {
-          $entity->setTranslation($translation);
           $this->persist($entity);
+        }
+      }
+
+      foreach ($stateTranslations as $language => $translatedStates) {
+        foreach ($translatedStates as $code => $translation) {
+          $hasChanged = false;
+          $this->setDatabaseRepository(Entities\GeoStateProvince::class);
+          /** @var Entities\GeoStateProvince $entity */
+          $entity = $this->find([
+            'code' => $code,
+            'target' => $lang,
+            'countryIso' => $placeCountry,
+          ]);
+          if (empty($entity)) {
+            $entity = (new Entities\GeoStateProvince)
+              ->setCountryIso($placeCountry)
+              ->setCode($code)
+              ->setTarget($lang)
+              ->setL10nName($translation);
+            $hasChanged = true;
+          } else {
+            if ($translation != $entity->getL10nName()) {
+              $entity->setL10nName($translation);
+              $hasChanged = true;
+            }
+          }
+          if ($hasChanged) {
+            $this->persist($entity);
+          }
         }
       }
 
@@ -514,9 +562,9 @@ class GeoCodingService
    *
    * @param null|string $language Given locale, if null the current user's locale is used.
    *
-   * @return null|string Translation or null if not found.
+   * @return null|array [ name => TRANSLATION, adminName1 => TRANSLATED_ADMIN1, adminCode1 => CODE ], null if not found.
    */
-  public function translatePlaceName(string $name, string $country, ?string $language = null):?string
+  private function translatePlaceName(string $name, string $country, ?string $language = null):?array
   {
     if (!$language) {
       $locale = $this->getLocale();
@@ -537,7 +585,16 @@ class GeoCodingService
         isset($translation['geonames']) &&
         count($translation['geonames']) === 1 &&
         isset($translation['geonames'][0]['name'])) {
-      return $translation['geonames'][0]['name'];
+      $result = [
+        'name' => $translation['geonames'][0]['name'],
+      ];
+      if (isset($translation['geonames'][0]['adminName1'])
+          && isset($translation['geonames'][0]['adminCodes1']['ISO3166_2'])) {
+        $result['adminName1'] = $translation['geonames'][0]['adminName1'];
+        $result['adminCode1'] = $translation['geonames'][0]['adminCodes1']['ISO3166_2'];
+      }
+      $this->logInfo('TRANSLATION ' . print_r($translation, true));
+      return $result;
     } else {
       return null;
     }
@@ -651,8 +708,8 @@ class GeoCodingService
         $this->stampPostalCode($postalCode, $country);
         $this->logError(
           "No remote information for " . $postalCode . '@' . $country
-          . ', query-url ' . $this->request('postalCodeLookup', $zipCode, self::DRY)
-          . ', response ' . print_r($zipCodeInfo, true));
+          . ', query-url: ' . $this->request('postalCodeLookup', $zipCode, self::DRY)
+          . ', response: ' . print_r($zipCodeInfo, true));
         continue;
       }
 
@@ -662,19 +719,28 @@ class GeoCodingService
         $lat  = (double)($zipCodePlace['lat']);
         $lng  = (double)($zipCodePlace['lng']);
         $name = $zipCodePlace['placeName'];
+        $stateCode = $zipCodePlace[self::POSTAL_CODE_STATE_CODE_TAG];
+        // $stateName = $zipCodePlace[self::POSTAL_CODE_STATE_NAME_TAG];
 
         $translations = [];
+        $stateTranslations = [];
         foreach ($this->getLanguages($language) as $lang) {
-          $translation = $this->translatePlaceName($name, $country, $lang);
+          list(
+            'name' => $translation,
+            'adminName1' => $stateName,
+            'adminCode1' => $stateCode,
+          ) = $this->translatePlaceName($name, $country, $lang);
           $translation = Util::normalizeSpaces($translation);
-          $this->debug(print_r($translations, true));
-          $this->debug(print_r($lang, true));
-          $this->debug(print_r($translation, true));
+          $this->debug('LANG ' . print_r($lang, true));
+          $this->debug('TRANSLATION ' . print_r($translation, true));
           if (empty($translation)) {
             continue;
           }
           $translations[$lang] = $translation;
+          $stateTranslations[$lang][$stateCode] = Util::normalizeSpaces($stateName);
         }
+        $this->debug('TRANSLATIONS ' . print_r($translations, true));
+        $this->debug('STATE TRANSLATIONS ' . print_r($stateTranslations, true));
 
         /* Normalize name and translation */
         $name = Util::normalizeSpaces($name);
@@ -689,20 +755,28 @@ class GeoCodingService
           'name' => $name,
         ]);
         if (empty($geoPostalCode)) {
-          $geoPostalCode = GeoPostalCode::create()
-                         ->setCountry($country)
-                         ->setPostalCode($postalCode)
-                         ->setName($name);
+          $geoPostalCode = (new GeoPostalCode)
+            ->setCountry($country)
+            ->setStateProvince($stateCode)
+            ->setPostalCode($postalCode)
+            ->setName($name)
+            ->setLongitude($lng)
+            ->setLatitude($lat);
           $hasChanged = true;
           $newEntity = true;
         } else {
           if (($lat != $geoPostalCode->getLatitude()) || ($lng != $geoPostalCode->getLongitude())) {
+            $geoPostalCode
+              ->setLongitude($lng)
+              ->setLatitude($lat);
+            $hasChanged = true;
+          }
+          if ($stateCode != $geoPostalCode->getStateProvince()) {
+            $geoPostalCode->setStateProvince($stateCode);
             $hasChanged = true;
           }
         }
         if ($hasChanged) {
-          $geoPostalCode->setLongitude($lng);
-          $geoPostalCode->setLatitude($lat);
           $this->persist($geoPostalCode);
           if ($newEntity) {
             $this->flush(); // generate id for new entity
@@ -719,23 +793,53 @@ class GeoCodingService
           ]);
           $isNew = empty($entity);
           if (empty($entity)) {
-            $entity = GeoPostalCodeTranslation::create()
-                    ->setGeoPostalCode($geoPostalCode)
-                    ->setTarget($lang);
+            $entity = (new GeoPostalCodeTranslation)
+              ->setGeoPostalCode($geoPostalCode)
+              ->setTarget($lang)
+              ->setTranslation($translation);
             $hasChanged = true;
           } else {
             if ($translation != $entity->getTranslation()) {
+              $entity->setTranslation($translation);
               $hasChanged = true;
             }
           }
           if ($hasChanged) {
-            $entity->setTranslation($translation);
             $this->persist($entity);
             try {
               $this->flush();
             } catch (\Throwable $t) {
               $this->logError('PostalCodeTranslation ' . $geoPostalCode->getId() . ' target ' . $lang . ' new ' . (int)$isNew . ' but caught exception');
               $this->logException($t);
+            }
+          }
+        }
+
+        foreach ($stateTranslations as $language => $translatedStates) {
+          foreach ($translatedStates as $code => $translation) {
+            $hasChanged = false;
+            $this->setDatabaseRepository(Entities\GeoStateProvince::class);
+            /** @var Entities\GeoStateProvince $entity */
+            $entity = $this->find([
+              'code' => $code,
+              'target' => $language,
+              'countryIso' => $country,
+            ]);
+            if (empty($entity)) {
+              $entity = (new Entities\GeoStateProvince)
+                ->setCountryIso($country)
+                ->setCode($code)
+                 ->setTarget($language)
+                ->setL10nName($translation);
+              $hasChanged = true;
+            } else {
+              if ($translation != $entity->getL10nName()) {
+                $entity->setL10nName($translation);
+                $hasChanged = true;
+              }
+            }
+            if ($hasChanged) {
+              $this->persist($entity);
             }
           }
         }
@@ -934,11 +1038,11 @@ class GeoCodingService
   }
 
   /**
-   * @param null|array $extraLang Extra languages to add if given.
+   * @param null|string $extraLang Extra language (one) to add if given.
    *
    * @return array The languages supported in the database tables.
    */
-  public function getLanguages(?array $extraLang = null):array
+  public function getLanguages(?string $extraLang = null):array
   {
     $languages = $this->languages;
     if (empty($languages)) {
