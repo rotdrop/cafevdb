@@ -783,7 +783,7 @@ class ProjectService
     return [
       'share' => $url,
       'folder' => $path,
-      'expires' => $expires,
+      'expires' => $expires ?? null,
     ];
   }
 
