@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,10 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \Throwable;
+use \Exception;
+use \RuntimeException;
+use \DateInterval;
 use \DateTimeImmutable;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
@@ -98,13 +102,14 @@ class ProjectService
   /** @var MusicianService */
   private $musicianService;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , UserStorage $userStorage
-    , ProjectParticipantFieldsService $participantFieldsService
-    , MusicianService $musicianService
-    , IEventDispatcher $eventDispatcher
+    ConfigService $configService,
+    EntityManager $entityManager,
+    UserStorage $userStorage,
+    ProjectParticipantFieldsService $participantFieldsService,
+    MusicianService $musicianService,
+    IEventDispatcher $eventDispatcher
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -115,7 +120,7 @@ class ProjectService
 
     try {
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logError('HELLO');
       $request = \OC::$server->query(\OCP\IRequest::class);
       $this->logError('HELLO2');
@@ -142,7 +147,11 @@ class ProjectService
     );
   }
 
-  /** Lazy getter for WikiRPC */
+  /**
+   * Lazy getter for WikiRPC
+   *
+   * @return WikiRPC
+   */
   private function wikiRPC():WikiRPC
   {
     if (empty($this->wikiRPCInstance)) {
@@ -152,7 +161,12 @@ class ProjectService
     return $this->wikiRPCInstance;
   }
 
-  private function WebPagesRPC():WebPagesRPC
+  /**
+   * Lazy getter for WebPagesRPC
+   *
+   * @return WebPagesRPC
+   */
+  private function webPagesRPC():WebPagesRPC
   {
     if (empty($this->webPagesRPCInstance)) {
       $this->webPagesRPCInstance = $this->di(WebPagesRPC::class);
@@ -168,14 +182,16 @@ class ProjectService
    * musician id. The options are meant for a single-choice select
    * box.
    *
-   * @param $projectId The id of the project to fetch the musician options from
+   * @param int $projectId The id of the project to fetch the musician options from.
    *
-   * @param $projectName Optional project name, will be queried from
+   * @param null|string $projectName Optional project name, will be queried from
    * DB if not specified.
    *
-   * @param $musicianId A pre-selected musician, defaults to null.
+   * @param int $selectedMusicianId A pre-selected musician, defaults to -1.
+   *
+   * @return array
    */
-  public function participantOptions($projectId, $projectName = null, $selectedMusicianId = -1)
+  public function participantOptions(int $projectId, ?string $projectName = null, int $selectedMusicianId = -1):array
   {
     $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->fetchParticipantNames($projectId);
     $options = [];
@@ -192,17 +208,32 @@ class ProjectService
   }
 
   /**
-   * Find the participant given by $projectId and $musicianId
+   * Find the participant given by $projectOrId and $musicianOrId
+   *
+   * @param int|Entities\Project $projectOrId Database entity or id.
+   *
+   * @param int|Entities\Project $musicianOrId Database entity or id.
    *
    * @return null|Entities\ProjectParticipant
    */
-  public function findParticipant($projectId, $musicianId):?Entities\ProjectParticipant
+  public function findParticipant(mixed $projectOrId, mixed $musicianOrId):?Entities\ProjectParticipant
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipant::class)
-                ->find([ 'project' => $projectId, 'musician' => $musicianId]);
+                ->find([ 'project' => $projectOrId, 'musician' => $musicianOrId]);
   }
 
-  public function projectOptions($criteria = [], $selectedProject = -1)
+  /**
+   * Generate an selection options array.
+   *
+   * @param array $criteria Filter criteria for the projects database.
+   *
+   * @param int $selectedProject A pre-selected project-id.
+   *
+   * @return array
+   *
+   * @see OCA\CAFEVDB\PageRenderer\Util\Navigation::selectOptions()
+   */
+  public function projectOptions(array $criteria = [], int $selectedProject = 0):array
   {
     $projects = $this->repository->findBy($criteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
     $options = [];
@@ -224,11 +255,11 @@ class ProjectService
   }
 
   /**
-   * Fetch the instrumentation balance for the given project, @see \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::fetchInstrumentationBalance().
+   * Fetch the instrumentation balance for the given project.
    *
-   * @param int|Entities\Project $projectOrId
+   * @param int|Entities\Project $projectOrId Database entity or id.
    *
-   * @param bool $sumVoices Sum-up all voices into a single instrument field
+   * @param bool $sumVoices Sum-up all voices into a single instrument field.
    *
    * @return array<string, array>
    * ```
@@ -244,8 +275,10 @@ class ProjectService
    *
    * If $sumVoices == true, the voice field is not present and the key
    * consists of the instrument only.
+   *
+   * @see \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::fetchInstrumentationBalance().
    */
-  public function instrumentationBalance($projectOrId, $sumVoices = false)
+  public function instrumentationBalance(mixed $projectOrId, bool $sumVoices = false):array
   {
     $projectId = ($projectOrId instanceof Entities\Project) ? $projectOrId['id'] : $projectOrId;
 
@@ -309,16 +342,27 @@ class ProjectService
     ]);
   }
 
-  public function persistProject(Entities\Project $project)
+  /**
+   * Persist and flush the database.
+   *
+   * @param Entities\Project $project Database entity.
+   *
+   * @return void
+   *
+   * @see OCA\CAFEVDB\Controller\PersonalSettingsController::setApp()
+   */
+  public function persistProject(Entities\Project $project):void
   {
     $this->persist($project);
     $this->flush();
   }
 
   /**
-   * Fetch the project-name name corresponding to $projectId.
+   * @param int $projectId Database entity id.
+   *
+   * @return null|string Fetch the project-name name corresponding to $projectId.
    */
-  public function fetchName($projectId)
+  public function fetchName(int $projectId):?string
   {
     $project = $this->repository->find($projectId);
     if ($project == null) {
@@ -328,9 +372,10 @@ class ProjectService
   }
 
   /**
-   * Just return the collection of all projects.
+   * @return Just return the collection of all projects.
    */
-  public function fetchAll() {
+  public function fetchAll():array
+  {
     return $this->repository->findAll();
   }
 
@@ -356,24 +401,24 @@ class ProjectService
     $paths = [];
     foreach ($folders as $key) {
       switch ($key) {
-      case ConfigService::PROJECTS_FOLDER:
-      case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
-      case ConfigService::PROJECT_POSTERS_FOLDER:
-      case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
-        $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
-        if ($key == ConfigService::PROJECTS_FOLDER) {
-          $paths[$key] = $projectsFolder;
+        case ConfigService::PROJECTS_FOLDER:
+        case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
+        case ConfigService::PROJECT_POSTERS_FOLDER:
+        case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+          $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+          if ($key == ConfigService::PROJECTS_FOLDER) {
+            $paths[$key] = $projectsFolder;
+            break;
+          }
+          $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue($key);
           break;
-        }
-        $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue($key);
-        break;
-      case ConfigService::BALANCES_FOLDER:
-        $paths[$key] = $sharedFolder
-                     . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-                     . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-                     . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
-                     . $yearName;
-        break;
+        case ConfigService::BALANCES_FOLDER:
+          $paths[$key] = $sharedFolder
+            . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+            . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+            . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+            . $yearName;
+          break;
       }
     }
     return empty($only) ? $paths : $paths[$only];
@@ -383,32 +428,35 @@ class ProjectService
    * Check for the existence of the project folders. Returns an array
    * of folders (balance and general files).
    *
-   * @param int|Entities\Project $projectOrId
+   * @param int|Entities\Project $projectOrId Database entity or id.
    *
-   * @param string $projectName Name of the project.
+   * @param null|string $projectName Name of the project.
    *
    * @param null|string $only If a string create only this folder, can be one
    * of self::FOLDER_TYPE_PROJECT, self::FOLDER_TYPE_BALANCE,
    * self::FOLDER_TYPE_PARTICIPANTS, self::FOLDER_TYPE_POSTERS,
-   * self::FOLDER_TYPE_DOWNLOADS
+   * self::FOLDER_TYPE_DOWNLOADS.
    *
-   * @parm bool $dry Just create the name, but do not perform any
+   * @param bool $dry Just create the name, but do not perform any
    * file-system operations.
    *
    * @return array Array of created folders.
-   *
    */
-  public function ensureProjectFolders($projectOrId, $projectName = null, $only = null, $dry= false)
-  {
+  public function ensureProjectFolders(
+    mixed $projectOrId,
+    ?string $projectName = null,
+    ?string $only = null,
+    bool $dry = false
+  ):array {
     $project = $this->repository->ensureProject($projectOrId);
 
     if (empty($project)) {
-      throw new \Exception('CANNOT FIND PROJECT FOR ID ' . $projectOrId);
+      throw new Exception('CANNOT FIND PROJECT FOR ID ' . $projectOrId);
     }
 
     if (empty($projectName)) {
       $projectName = $project['name'];
-    } else if ($projectName !== $project['name']) {
+    } elseif ($projectName !== $project['name']) {
       return false;
     }
 
@@ -468,11 +516,12 @@ class ProjectService
           $this->userStorage->ensureFolderChain($chain);
         }
         $returnPaths[$key] = UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         if (!empty($only)) {
-          throw new \Exception(
-            $this->l->t('Unable to ensure existence of folder "%s".',
-                        UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain)),
+          throw new Exception(
+            $this->l->t(
+              'Unable to ensure existence of folder "%s".',
+              UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain)),
             $t->getCode(),
             $t);
         } else {
@@ -503,9 +552,9 @@ class ProjectService
 
     $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
-    $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-    $postersFolder  = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    $downloadsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    // $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    // $postersFolder  = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
+    // $downloadsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balanceFolder  = $sharedFolder
                     . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
                     . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
@@ -519,7 +568,7 @@ class ProjectService
       self::FOLDER_TYPE_BALANCE => $balanceFolder,
     ];
 
-    foreach($projectPaths as $key => $path) {
+    foreach ($projectPaths as $path) {
       $this->userStorage->delete($path);
     }
 
@@ -557,7 +606,7 @@ class ProjectService
     ];
 
     $count = 0;
-    foreach ($projectPaths as $key => $path) {
+    foreach ($projectPaths as $path) {
       $result = $this->userStorage->restore($path, $timeInterval);
       $count += (int)!!$result;
     }
@@ -616,7 +665,7 @@ class ProjectService
           $returnPaths = array_merge(
             $returnPaths,
             $this->ensureProjectFolders($newProject, null, $key /* only */));
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t);
         }
       }
@@ -704,6 +753,10 @@ class ProjectService
           $expires = $sharingService->getLinkExpirationDate($url);
           if ($expires === null) {
             $expires = new DateTimeImmutable($project->getYear() . '-12-31');
+            $now =  (new DateTimeImmutable)->setTime(0, 0, 0);
+            if ($expires < $now) {
+              $expires = $now->add(DateInterval::createFromDateString('1 week'));
+            }
             $expires = $sharingService->expireLinkShare($url, $expires);
           }
         } catch (ShareNotFound $e) {
@@ -720,7 +773,7 @@ class ProjectService
           );
         }
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Unable to create the public donwload link for the project "%s".', $project->getName()),
         0,
@@ -747,7 +800,7 @@ class ProjectService
    *
    * @return string Folder path.
    */
-  public function ensureParticipantFolder(Entities\Project $project, $musician, bool $dry = false)
+  public function ensureParticipantFolder(Entities\Project $project, Entities\Musician $musician, bool $dry = false):string
   {
     list(self::FOLDER_TYPE_PARTICIPANTS => $parentPath,) = $this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry);
     $userIdSlug = $this->musicianService->ensureUserIdSlug($musician);
@@ -761,8 +814,14 @@ class ProjectService
   /**
    * More leight-weight construction of the participant folder, assuming
    * everything else is just is ok.
+   *
+   * @param Entities\Project $project Database entity.
+   *
+   * @param Entities\Musician $musician Database entity.
+   *
+   * @return string
    */
-  public function getParticipantFolder(Entities\Project $project, Entities\Musician $musician)
+  public function getParticipantFolder(Entities\Project $project, Entities\Musician $musician):string
   {
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
@@ -786,8 +845,19 @@ class ProjectService
   /**
    * Avoid duplicated "extensions" in file-names, i.e. use
    * passport-ClausJustusHeine.pdf instead of passport-claus-justus.heine.pdf
+   *
+   * @param string $base Filename base.
+   *
+   * @param string|Entities\Musician $musicianOrSlug Entity or its user-id-slug.
+   *
+   * @param bool $ignoreExtension If \false (the default) then an extension
+   * present in $base will be stripped from $base and appended to the
+   * resulting file-name. If \true any dots in $base will just be replaced by
+   * dashes.
+   *
+   * @return string
    */
-  public function participantFilename(string $base, $musicianOrSlug, bool $ignoreExtension = false)
+  public function participantFilename(string $base, $musicianOrSlug, bool $ignoreExtension = false):string
   {
     if ($musicianOrSlug instanceof Entities\Musician) {
       $userIdSlug = $this->musicianService->ensureUserIdSlug($musicianOrSlug);
@@ -802,6 +872,8 @@ class ProjectService
    * information for the file.
    *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param bool $includeDeleted Include deleted entities in the result.
    *
    * @return null|array
    * ```
@@ -892,17 +964,18 @@ class ProjectService
    * the user-id-slug (== user-name). This functions registers suitable
    * Common\IUndoable actions with the EntityManager which are executed pre-commit.
    *
-   * @param Entities\Musician $musician
+   * @param Entities\Musician $musician Database entity.
    *
-   * @param string $oldUserIdSlug
+   * @param string $oldUserIdSlug Old slug.
    *
-   * @param string $newUserIdSlug
+   * @param string $newUserIdSlug New slug.
+   *
+   * @return void
    *
    * @todo This alone does not suffice. Wie also have to rename a bunch of
    * per-project files.
-   *
    */
-  public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug)
+  public function renameParticipantFolders(Entities\Musician $musician, string $oldUserIdSlug, string $newUserIdSlug):void
   {
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
@@ -978,7 +1051,12 @@ class ProjectService
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
-  public function projectWikiLink($pageName)
+  /**
+   * @param string $pageName The name of the wiki page without namespace.
+   *
+   * @return string The namespaced wiki page name.
+   */
+  public function projectWikiLink(string $pageName):string
   {
     $wikiNameSpace = $this->getConfigValue('orchestra');
     $wikiNameSpace = $this->getAppValue('wikinamespace', $wikiNameSpace);
@@ -992,8 +1070,10 @@ class ProjectService
    *
    * @param array<int> $exclude Excluded project-ids, used e.g. during
    * deletion of projects.
+   *
+   * @return mixed
    */
-  public function generateWikiOverview(array $exclude = [])
+  public function generateWikiOverview(array $exclude = []):mixed
   {
 /*
   ====== Projekte der Camerata Academica Freiburg e.V. ======
@@ -1045,12 +1125,16 @@ class ProjectService
     $projectsName = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
     $pageName = $this->projectWikiLink($projectsName);
 
-    return $this->wikiRPC()->putPage($pageName, $page,
-                                     [ "sum" => "Automatic CAFEVDB synchronization",
-                                       "minor" => true ]);
+    return $this->wikiRPC()->putPage(
+      $pageName,
+      $page, [
+        "sum" => "Automatic CAFEVDB synchronization",
+        "minor" => true,
+      ]);
   }
 
-  /**Generate an almost empty project page. This spares people the
+  /**
+   * Generate an almost empty project page. This spares people the
    * need to click on "new page".
    *
    * - We insert a proper title heading
@@ -1060,10 +1144,19 @@ class ProjectService
    * - We insert a sub-title "Financial Arrangements"
    *
    * - We insert a sub-title "Location"
+   *
+   * @param int $projectId Database entity id.
+   *
+   * @param string $projectName Project name.
+   *
+   * @return mixed
+   *
+   * @see WikiRPC::putPage()
    */
-  public function generateProjectWikiPage($projectId, $projectName)
+  public function generateProjectWikiPage(int $projectId, string $projectName):mixed
   {
-    $page = $this->l->t('====== Project %s ======
+    $page = $this->l->t(
+      '====== Project %s ======
 
 ===== Forword =====
 
@@ -1090,9 +1183,12 @@ Whatever.',
                  [ $projectName ]);
 
       $pagename = $this->projectWikiLink($projectName);
-      $this->wikiRPC()->putPage($pagename, $page,
-                                [ "sum" => "Automatic CAFEVDB synchronization, project created",
-                                  "minor" => true ]);
+      $this->wikiRPC()->putPage(
+        $pagename,
+        $page, [
+          "sum" => "Automatic CAFEVDB synchronization, project created",
+          "minor" => true,
+        ]);
   }
 
   /**
@@ -1109,20 +1205,25 @@ Whatever.',
     $pagename = $this->projectWikiLink($projectName);
 
     list('version' => $pageVersion) = $wikiRPC->getPageInfo($pagename);
-    $wikiRPC->putPage($pagename, '',
-                      [ "sum" => "Automatic CAFEVDB synchronization, project deleted.",
-                        "minor" => true ]);
+    $wikiRPC->putPage(
+      $pagename,
+      '', [
+        "sum" => "Automatic CAFEVDB synchronization, project deleted.",
+        "minor" => true,
+      ]);
     return $pageVersion;
   }
 
   /**
    * Restore the wiki page to the given or lastest version.
    *
-   * @param array|Entities\Project $project
+   * @param array|Entities\Project $project Database entity or "DTO array".
    *
-   * @param null|int $version
+   * @param null|int $version Page version.
+   *
+   * @return bool Execution status.
    */
-  public function restoreProjectWikiPage($project, ?int $version = null)
+  public function restoreProjectWikiPage($project, ?int $version = null):bool
   {
     $wikiRPC = $this->wikiRPC();
     $projectName = $project['name'];
@@ -1151,8 +1252,12 @@ Whatever.',
    *
    * @param array|Entities\Project $oldProject Array-like object,
    * "name" and "year" keys need to be present.
+   *
+   * @return mixed
+   *
+   * @see generateWikiOverview()
    */
-  public function renameProjectWikiPage($newProject, $oldProject)
+  public function renameProjectWikiPage(mixed $newProject, mixed $oldProject):mixed
   {
     $wikiRPC = $this->wikiRPC();
     $oldName = $oldProject['name'];
@@ -1183,13 +1288,23 @@ Whatever.',
   }
 
   /**
+   * @param bool|int|string $articleId Article id or \false.
+   *
+   * @param bool $editMode Whether the CMS url refers to the editor for the page.
+   *
+   * @return string The CMS url for the given articleid.
    */
-  public function webPageCMSURL($articleId, $editMode = false)
+  public function webPageCMSURL(mixed $articleId, bool $editMode = false):string
   {
     return $this->webPagesRPC()->redaxoURL($articleId, $editMode);
   }
 
-  public function pingWebPages()
+  /**
+   * @return bool Ping status.
+   *
+   * @see WebPagesRPC::ping()
+   */
+  public function pingWebPages():bool
   {
     return $this->webPagesRPC()->ping();
   }
@@ -1197,9 +1312,11 @@ Whatever.',
   /**
    * Fetch fetch the article entities from the database
    *
+   * @param int $projectId Entity id.
+   *
    * @return ArrayCollection
    */
-  public function fetchProjectWebPages($projectId)
+  public function fetchProjectWebPages(int $projectId)
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
@@ -1212,7 +1329,9 @@ Whatever.',
   /**
    * Fetch all articles known to the system.
    *
-   * @return array
+   * @param int $projectId Entity id.
+   *
+   * @return bool|array
    * ```
    * [
    *   'projectPages' => WEBPAGES,
@@ -1220,7 +1339,7 @@ Whatever.',
    * ]
    * ```
    */
-  public function projectWebPages($projectId)
+  public function projectWebPages(int $projectId)
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
@@ -1271,34 +1390,36 @@ Whatever.',
    * of the project, subsequent one have a number attached like
    * Tango2014-5.
    *
-   * @param $projectId Id of the project
+   * @param int $projectId Id of the project.
    *
-   * @param $kind One of self::WEBPAGE_TYPE_CONCERT or self::WEBPAGE_TYPE_REHEARSALS
+   * @param string $kind One of self::WEBPAGE_TYPE_CONCERT or self::WEBPAGE_TYPE_REHEARSALS.
    *
-   * @param $handle Optional active data-base handle.
+   * @return array
+   *
+   * @see WebPagesRPC::addArticle()
    */
-  public function createProjectWebPage($projectId, $kind = self::WEBPAGE_TYPE_CONCERT)
+  public function createProjectWebPage(int $projectId, string $kind = self::WEBPAGE_TYPE_CONCERT):array
   {
     $webPagesRPC = $this->webPagesRPC();
     $project = $this->repository->find($projectId);
     if (empty($project)) {
-      throw new \Exception($this->l->t('Empty project.'));
+      throw new Exception($this->l->t('Empty project.'));
     }
     $projectName = $project->getName();
 
     switch ($kind) {
-    case self::WEBPAGE_TYPE_REHEARSALS:
-      $prefix = $this->l->t('Rehearsals').' ';
-      $category = $this->getConfigValue('redaxoRehearsals');
-      $module = $this->getConfigValue('redaxoRehearsalsModule');
-      break;
-    default:
-      // Don't care about the archive, new pages go to preview, and the
-      // id will be unique even in case of a name clash
-      $prefix = '';
-      $category = $this->getConfigValue('redaxoPreview');
-      $module = $this->getConfigValue('redaxoConcertModule');
-      break;
+      case self::WEBPAGE_TYPE_REHEARSALS:
+        $prefix = $this->l->t('Rehearsals').' ';
+        $category = $this->getConfigValue('redaxoRehearsals');
+        $module = $this->getConfigValue('redaxoRehearsalsModule');
+        break;
+      default:
+        // Don't care about the archive, new pages go to preview, and the
+        // id will be unique even in case of a name clash
+        $prefix = '';
+        $category = $this->getConfigValue('redaxoPreview');
+        $module = $this->getConfigValue('redaxoConcertModule');
+        break;
     }
 
     // General page template
@@ -1307,8 +1428,8 @@ Whatever.',
     $pageName = $prefix.$projectName;
     try {
       $articles = $webPagesRPC->articlesByName($pageName.'(-[0-9]+)?', $category);
-    } catch (\Throwable $t)  {
-      throw new \Exception(
+    } catch (Throwable $t) {
+      throw new Exception(
         $this->l->t('Unable to fetch web-pages like "%s".', [ $pageName ]),
         $t->getCode(),
         $t);
@@ -1319,7 +1440,7 @@ Whatever.',
       $names[] = $article['articleName'];
     }
     if (array_search($pageName, $names) !== false) {
-      for ($i = 1; ; ++$i) {
+      for ($i = 1;; ++$i) {
         if (array_search($pageName.'-'.$i, $names) === false) {
           // this will teminate ;)
           $pageName = $pageName.'-'.$i;
@@ -1330,8 +1451,8 @@ Whatever.',
 
     try {
       $article = $webPagesRPC->addArticle($pageName, $category, $pageTemplate);
-    } catch (\Throwable $t) {
-      throw new \Exception(
+    } catch (Throwable $t) {
+      throw new Exception(
         $this->l->t('Unable to create web-page "%s".', [ $pageName ]),
         $t->getCode(),
         $t);
@@ -1349,10 +1470,10 @@ Whatever.',
 
       $this->flush();
       $this->entityManager->commit();
-    } catch (\Throwable $t)  {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception(
+      throw new Exception(
         $this->l->t('Unable to attach article "%s".', [ $pageName ]),
         $t->getCode(),
         $t);
@@ -1365,11 +1486,13 @@ Whatever.',
    * Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
    *
-   * @param int $projectId
+   * @param int $projectId Entity id.
    *
-   * @param mixed $article Either an array or Entities\ProjectWebPage
+   * @param mixed $article Either an array or Entities\ProjectWebPage.
+   *
+   * @return void
    */
-  public function deleteProjectWebPage($projectId, $article)
+  public function deleteProjectWebPage(int $projectId, mixed $article):void
   {
     $webPagesRPC = $this->webPagesRPC();
     $articleId = $article['articleId'];
@@ -1382,38 +1505,46 @@ Whatever.',
 
       // try moving to tash if the article exists in its category.
       if (!empty($webPagesRPC->articlesById([ $articleId ], $categoryId))) {
-        $result = $webPagesRPC->moveArticle($articleId, $trashCategory);
+        /* $result = */$webPagesRPC->moveArticle($articleId, $trashCategory);
       }
 
       $this->flush();
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
+      throw new Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
 
   /**
    * Restore the web-pages previously deleted by deleteProjectWebPage()
    *
-   * @param int $projectId
+   * @param int $projectId Entity id.
    *
-   * @param mixed $article Either an array or Entities\ProjectWebPage
+   * @param mixed $article Either an array or Entities\ProjectWebPage.
+   *
+   * @return void
    */
-  public function restoreProjectWebPage($projectId, $article)
+  public function restoreProjectWebPage(int $projectId, mixed $article):void
   {
-    $trashCategory = $this->getConfigValue('redaxoTrashbin');
-    $result = $this->webPagesRPC()->moveArticle($article['articleId'], $article['categoryId']);
+    // $trashCategory = $this->getConfigValue('redaxoTrashbin');
+    /* $result = */$this->webPagesRPC()->moveArticle($article['articleId'], $article['categoryId']);
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
-    $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $article);
+    /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectId, $article);
   }
 
   /**
    * Detach a web page, but do not delete it. Meant as utility routine
    * for the UI (in order to correct wrong associations).
+   *
+   * @param int $projectId Entity id.
+   *
+   * @param int $articleId CMS article id.
+   *
+   * @return void
    */
-  public function detachProjectWebPage($projectId, $articleId)
+  public function detachProjectWebPage(int $projectId, int $articleId):void
   {
     $this->entityManager->beginTransaction();
     try {
@@ -1422,22 +1553,23 @@ Whatever.',
       $this->flush();
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
+      throw new Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
 
   /**
    * Attach an existing web page to the project.
    *
-   * @param $projectId Project Id.
+   * @param int $projectId Project Id.
    *
-   * @param $article Article array as returned from articlesByName().
+   * @param int $article Article id from CMS.
    *
+   * @return void
    */
-  public function attachProjectWebPage($projectId, $article)
+  public function attachProjectWebPage(int $projectId, int $article):void
   {
     // Try to remove from trashbin, if appropriate.
     $trashCategory = $this->getConfigValue('redaxoTrashbin');
@@ -1458,17 +1590,23 @@ Whatever.',
 
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
     try {
-      $projectWebPage = $webPagesRepository->attachProjectWebPage($projectId, $article);
-    } catch (\Throwable $t) {
-      throw new \Exception("Unable to attach web-page ".$articleId." for ".$projectId, $t->getCode(), $t);
+      /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectId, $article);
+    } catch (Throwable $t) {
+      throw new Exception("Unable to attach web-page ".$articleId." for ".$projectId, $t->getCode(), $t);
     }
   }
 
   /**
    * Set the name of all registered web-pages to the canonical name,
    * project name given.
+   *
+   * @param int $projectId Database entity id.
+   *
+   * @param null|string $projectName Name of the project.
+   *
+   * @return bool Execution status.
    */
-  public function nameProjectWebPages($projectId, $projectName = null)
+  public function nameProjectWebPages(int $projectId, ?string $projectName = null):bool
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
@@ -1516,8 +1654,10 @@ Whatever.',
    * controls.
    *
    * @param int|Entities\Project $projectOrId
+   *
+   * @return bool Execution status.
    */
-  public function attachMatchingWebPages($projectOrId)
+  public function attachMatchingWebPages(mixed $projectOrId):bool
   {
     $webPagesRPC = $this->webPagesRPC();
     $project = $this->repository->ensureProject($projectOrId);
@@ -1576,11 +1716,11 @@ Whatever.',
    * ]
    * ```
    */
-  public function addMusicians(array $musicianIds, $projectId)
+  public function addMusicians(array $musicianIds, int $projectId)
   {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
-      throw new \Exception($this->l->t('Unabled to retrieve project with id %d', $projectId));
+      throw new Exception($this->l->t('Unabled to retrieve project with id %d', $projectId));
     }
 
     $statusReport = [
@@ -1588,6 +1728,7 @@ Whatever.',
       'failed' => [],
     ];
     foreach ($musicianIds as $id) {
+      $status = null;
       if ($this->addOneMusician($id, $project, $status)) {
         $statusReport['added'][$id] = $status;
       } else {
@@ -1603,8 +1744,16 @@ Whatever.',
    *
    * @param mixed $id Id of the musician, something understood by
    * MusiciansRepository::find().
+   *
+   * @param Entities\Project $project Database entity.
+   *
+   * @param array $status Status array by reference.
+   *
+   * @return bool Execution status.
+   *
+   * @see Repositories\MusiciansRepository::find()
    */
-  private function addOneMusician($id, Entities\Project $project, &$status)
+  private function addOneMusician(mixed $id, Entities\Project $project, ?array &$status):bool
   {
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
@@ -1617,7 +1766,7 @@ Whatever.',
         'notice' => $this->l->t(
           'Unable to fetch the data for the musician-id "%s".', (string)$id),
       ];
-      $this->logInfo('STATUS '. print_r($status,true));
+      $this->logInfo('STATUS '. print_r($status, true));
       return false;
     }
 
@@ -1718,7 +1867,7 @@ Whatever.',
         }
       }
 
-      $musician['updated'] = $project['updated'] = new \DateTime;
+      $musician['updated'] = $project['updated'] = new DateTimeImmutable;
 
       $this->flush();
 
@@ -1749,11 +1898,11 @@ Whatever.',
         );
       }
       // $this->entityManager->registerPreCommitAction(
-      //   new Common\GenericUndoable(fn() => throw new \Exception('SHOW STOPPER'))
+      //   new Common\GenericUndoable(fn() => throw new Exception('SHOW STOPPER'))
       // );
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
       $status[] = [
@@ -1767,8 +1916,9 @@ Whatever.',
 
     $status[] = [
       'id' => $id,
-      'notice' => $this->l->t('The musician %s has been added to project %s.',
-                              [ $musicianName, $project['name'], ]),
+      'notice' => $this->l->t(
+        'The musician %s has been added to project %s.',
+        [ $musicianName, $project['name'], ]),
     ];
 
     return true;
@@ -1779,8 +1929,12 @@ Whatever.',
    * as list-member.
    *
    * @param string|Entities\Project $projectOrId
+   *
+   * @return null|array List info.
+   *
+   * @see MailingListsService::getListInfo()
    */
-  public function createProjectMailingList($projectOrId)
+  public function createProjectMailingList($projectOrId):?array
   {
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
@@ -1789,8 +1943,8 @@ Whatever.',
 
     if ($listId === 'keep-empty') {
       $project->setMailingListId(null);
-      return;
-    } else if ($listId === 'create') {
+      return null;
+    } elseif ($listId === 'create') {
       $listId = null;
       $project->setMailingListId(null);
     }
@@ -1799,7 +1953,7 @@ Whatever.',
     $listsService = $this->di(MailingListsService::class);
 
     if (!$listsService->isConfigured()) {
-      return;
+      return null;
     }
 
     if (empty($listId)) {
@@ -1815,9 +1969,10 @@ Whatever.',
     try {
       $listInfo = $listsService->getListInfo($listId);
       if (empty($listInfo)) {
-        throw new \RuntimeException(
-          $this->l->t('Unable to create project-mailing list "%1$s" for project "%1$s".',
-                      [ $listId, $project->getName() ]));
+        throw new RuntimeException(
+          $this->l->t(
+            'Unable to create project-mailing list "%1$s" for project "%1$s".',
+            [ $listId, $project->getName() ]));
       }
       $displayName = $project->getName();
       $subjectPrefix = $displayName;
@@ -1868,17 +2023,17 @@ Whatever.',
       // not need to check if they are already there.
       $listsService->installListTemplates($listId, MailingListsService::TEMPLATE_TYPE_PROJECTS);
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       if ($new) {
         try {
           $listsService->deleteList($listId);
           $project->setMailingListId(null);
           $this->flush();
-        } catch (\Throwable $t1) {
+        } catch (Throwable $t1) {
           $this->logException($t1, 'Failure to clean-up failed list generation');
         }
       }
-      throw new \Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
+      throw new Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
     }
     $project->setMailingListId($listId);
     $this->flush();
@@ -1886,7 +2041,12 @@ Whatever.',
     return $listInfo;
   }
 
-  public function deleteProjectMailingList($projectOrId)
+  /**
+   * @param int|Entities\Project $projectOrId Database entity or its id.
+   *
+   * @return void
+   */
+  public function deleteProjectMailingList($projectOrId):void
   {
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
@@ -1911,6 +2071,8 @@ Whatever.',
   /**
    * Subscribe the participant to the mailing list if it is not already
    * subscribed.
+   *
+   * @param Entities\ProjectParticipant $participant The victim.
    *
    * @return null|boolean
    * - null if nothing could be done, no email, no list id, no rest service
@@ -1972,8 +2134,12 @@ Whatever.',
 
   /**
    * Unsubscribe the participant from the mailing list if it is subscribed
+   *
+   * @param Entities\ProjectParticipant $participant The victim.
+   *
+   * @return void
    */
-  public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant)
+  public function ensureMailingListUnsubscription(Entities\ProjectParticipant $participant):void
   {
     $listId = $participant->getProject()->getMailingListId();
     $musician = $participant->getMusician();
@@ -1997,15 +2163,16 @@ Whatever.',
         if (!empty($listsService->getSubscription($listId, $emailAddress))) {
           $listsService->unsubscribe($listId, $emailAddress, silent: $emailAddress != $principalEmail);
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $failedAddresses[] = $emailAddress;
       }
     }
     if (!empty($failedAddresses)) {
       if ($participant->getRegistration()) {
         throw new Exceptions\EnduserNotificationException(
-          $this->l->t('Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',
-                      $participant->getMusician()->getPublicName(true)),
+          $this->l->t(
+            'Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',
+            $participant->getMusician()->getPublicName(true)),
           0, $t);
       } else {
         $this->logException($t, 'Mailing list service not reachable');
@@ -2018,11 +2185,12 @@ Whatever.',
    * assumes that the infrastructure does not yet exist and will
    * remove any existing parts of the infrastructure on error.
    *
-   * @param array|int|Entities\Project $projectOdId Either the project entity
+   * @param array|int|Entities\Project $projectOrId Either the project entity
    * or an array with at least the entries for the id and name fields.
    *
+   * @return void
    */
-  public function createProjectInfraStructure($projectOrId)
+  public function createProjectInfraStructure($projectOrId):void
   {
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
@@ -2031,7 +2199,7 @@ Whatever.',
     $runQueue = (clone $this->appContainer()->get(Common\UndoableRunQueue::class))
       ->register(new Common\GenericUndoable(
         function() use ($project) {
-          $projectPaths = $this->ensureProjectFolders($project->getId(), $project->getName());
+          /* $projectPaths = */$this->ensureProjectFolders($project->getId(), $project->getName());
         },
         function() use ($project) {
           $this->logInfo('TRY REMOVE FOLDERS FOR ' . $project->getId());
@@ -2055,11 +2223,11 @@ Whatever.',
           $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_REHEARSALS);
         },
         function() use ($project) {
-           $webPages = $project->getWebPages();
-           foreach ($webPages as $page) {
-             // ignore errors
-             $this->deleteProjectWebPage($project->getId(), $page);
-           }
+          $webPages = $project->getWebPages();
+          foreach ($webPages as $page) {
+            // ignore errors
+            $this->deleteProjectWebPage($project->getId(), $page);
+          }
         }
       ))
       ->register(new Common\GenericUndoable(
@@ -2076,7 +2244,7 @@ Whatever.',
       $runQueue->executeActions();
     } catch (Exceptions\UndoableRunQueueException $qe) {
       $qe->getRunQueue()->executeUndo();
-      throw new \RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId()), $qe->getCode(), $qe);
+      throw new RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId()), $qe->getCode(), $qe);
     }
   }
 
@@ -2087,9 +2255,11 @@ Whatever.',
    *
    * @param int|null $year Optional year for "temporary" projects.
    *
-   * @param mixed $type Type of the project, @see Types\EnumProjectTemporalType
+   * @param string|Types\EnumProjectTemporalType $type Type of the project.
+   *
+   * @return null|Entities\Project
    */
-  public function createProject(string $name, ?int $year = null, $type = ProjectType::TEMPORARY):?Entities\Project
+  public function createProject(string $name, ?int $year = null, mixed $type = ProjectType::TEMPORARY):?Entities\Project
   {
     /** @var Entities\Project $project */
     $project = null;
@@ -2111,10 +2281,10 @@ Whatever.',
       $this->createProjectInfraStructure($project);
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception(
+      throw new Exception(
         $this->l->t('Unable to create new project with name "%s".', $name),
         $t->getCode(),
         $t);
@@ -2133,23 +2303,23 @@ Whatever.',
   /**
    * Delete the given project or id.
    *
-   * @param int|Entities\Project $project
+   * @param int|Entities\Project $projectOrId
    *
    * @return null|Entities\Project Returns null if project was
    * actually deleted, else the updated "soft-deleted" project instance.
    *
    * @todo Check for proper cascading.
    */
-  public function deleteProject($projectOrId):? Entities\Project
+  public function deleteProject($projectOrId):?Entities\Project
   {
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
-      throw new \RuntimeException($this->l->t('Unable to find the project to delete (id = %d)', $projectOrId));
+      throw new RuntimeException($this->l->t('Unable to find the project to delete (id = %d)', $projectOrId));
     }
 
     $projectId = $project->getId();
-    $projectName = $project->getName();
+    // $projectName = $project->getName();
 
     $softDelete  = count($project['payments']??[]) > 0;
 
@@ -2161,7 +2331,9 @@ Whatever.',
           // throttle deletion in order to have distinct file-names in the
           // trash-bin. Currently a file's MTIME in NextCloud has only
           // second resolution, so ...
-          @time_sleep_until($startTime + 1);
+          if ($this->getTimeStamp() < $startTime + 1) {
+            time_sleep_until($startTime + 1);
+          }
           $endTime = $this->getTimeStamp();
           return [ $startTime, $endTime ];
         },
@@ -2172,7 +2344,7 @@ Whatever.',
         function() use ($project) {
           try {
             $pageVersion = $this->deleteProjectWikiPage($project);
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
             $pageVersion = null;
           }
@@ -2197,23 +2369,26 @@ Whatever.',
           foreach ($webPages as $webPage) {
             try {
               $this->restoreProjectWebPage($project->getId(), $webPage);
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logException($t, 'Unable to restore web-article with id ' . $webPage['articleId']);
             }
           }
         }));
-    if ($softDelete && !empty($listId = $project->getMailingListId())) {
-      $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
-        function() use ($listId) {
-          /** @var MailingListsService $listsService */
-          $listService = $this->di(MailingListsService::class);
-          $listsService->setListConfig($listId, 'emergency', true);
-        },
-        function() use ($listId) {
-          /** @var MailingListsService $listsService */
-          $listService = $this->di(MailingListsService::class);
-          $listsService->setListConfig($listId, 'emergency', false);
-        }));
+    if ($softDelete) {
+      $listId = $project->getMailingListId();
+      if (!empty($listId)) {
+        $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
+          function() use ($listId) {
+            /** @var MailingListsService $listsService */
+            $listsService = $this->di(MailingListsService::class);
+            $listsService->setListConfig($listId, 'emergency', true);
+          },
+          function() use ($listId) {
+            /** @var MailingListsService $listsService */
+            $listsService = $this->di(MailingListsService::class);
+            $listsService->setListConfig($listId, 'emergency', false);
+          }));
+      }
     }
 
     $this->entityManager->beginTransaction();
@@ -2247,7 +2422,6 @@ Whatever.',
           Entities\ProjectEvent::class,
         ];
 
-        $triggerResult = true;
         foreach ($deleteTables as $table) {
           $this->entityManager
             ->createQueryBuilder()
@@ -2267,12 +2441,11 @@ Whatever.',
       }
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception(
-        $this->l->t('Failed to remove project "%s", id "%d".',
-                    [ $project['name'], $project['id'] ]),
+      throw new Exception(
+        $this->l->t('Failed to remove project "%s", id "%d".', [ $project['name'], $project['id'] ]),
         $t->getCode(),
         $t);
     }
@@ -2280,7 +2453,7 @@ Whatever.',
     if (!$softDelete) {
       try {
         $this->deleteProjectMailingList($project);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Removing the mailing list of the project failed.');
       }
     }
@@ -2288,7 +2461,7 @@ Whatever.',
     try {
       $this->eventDispatcher->dispatchTyped(
         new Events\AfterProjectDeletedEvent($project->getId(), $project->getName(), $softDelete));
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'After project-deleted handlers failed.');
     }
 
@@ -2322,7 +2495,7 @@ Whatever.',
   //   /** @var Entities\Project $project */
   //   $project = $this->repository->ensureProject($projectOrId);
   //   if (empty($project)) {
-  //     throw new \RuntimeException($this->l->t('Unable to find the project to copy (id = %d)', $projectOrId));
+  //     throw new RuntimeException($this->l->t('Unable to find the project to copy (id = %d)', $projectOrId));
   //   }
 
   //   // Road-map:
@@ -2354,10 +2527,10 @@ Whatever.',
   //     $this->createProjectInfraStructure($newProject);
 
   //     $this->entityManager->commit();
-  //   } catch (\Throwable $t)  {
+  //   } catch (Throwable $t)  {
   //     $this->logException($t);
   //     $this->entityManager->rollback();
-  //     throw new \Exception(
+  //     throw new Exception(
   //       $this->l->t('Unable to copy project "%1$s" to "%2$s".', [ $project->getName(), $newName ]),
   //       $t->getCode(),
   //       $t);
@@ -2369,16 +2542,14 @@ Whatever.',
   /**
    * Rename the given project or id.
    *
-   * @param int|Entities\Project $project
+   * @param int|Entities\Project $projectOrId Database entity or its id.
    *
-   * @param string|array|Entities\Project $oldData
-   *
-   * @param string|array|Entities\Project $newData
+   * @param string|array|Entities\Project $newData New project.
    *
    * @return Entities\Project Returns the renamed and persisted
    * entity.
    */
-  public function renameProject($projectOrId, $newData)
+  public function renameProject(mixed $projectOrId, mixed $newData):Entities\Project
   {
     // This may be inside a transaction where the project-entity
     // already reflects the new state, so rather rely on the data.
@@ -2464,7 +2635,8 @@ Whatever.',
         }
       ));
 
-    if (!empty($listId = $project->getMailingListId())) {
+    $listId = $project->getMailingListId();
+    if (!empty($listId)) {
       /** @var MailingListsService $listsService */
       $listsService = $this->di(MailingListsService::class);
       $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
@@ -2495,18 +2667,19 @@ Whatever.',
       $project->setName($newName);
       $project->setYear($newYear);
 
-      $this->persistProject($project);
+      $this->persist($project);
       $this->flush();
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $project->setName($oldName); // needed ?
       $project->setYear($oldYear); // needed ?
       $this->entityManager->rollback();
 
-      throw new \Exception(
-        $this->l->t('Failed to rename project "%s", id "%d" to new name "%s".',
-                    [ $project['name'], $project['id'], $newName ]),
+      throw new Exception(
+        $this->l->t(
+          'Failed to rename project "%s", id "%d" to new name "%s".',
+          [ $project['name'], $project['id'], $newName ]),
         $t->getCode(),
         $t);
     }
@@ -2518,7 +2691,7 @@ Whatever.',
   /**
    * Extract the year from the project name if present.
    *
-   * @param string $name
+   * @param string $projectName The name of the project.
    *
    * @return array
    *
@@ -2526,7 +2699,7 @@ Whatever.',
    * [ 'name' => NAME_WITHOUT_YEAR, 'year' => NULL_OR_YEAR ]
    * ```
    */
-  public function yearFromName($projectName)
+  public function yearFromName(string $projectName):array
   {
     $projectYear = substr($projectName, -4);
     if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
@@ -2545,8 +2718,10 @@ Whatever.',
    *
    * @param boolean $requireYear Year in last four characters is
    * mandatory.
+   *
+   * @return string
    */
-  public function sanitizeName($projectName, $requireYear = false)
+  public function sanitizeName(string $projectName, bool $requireYear = false):string
   {
     list('name' => $projectName, 'year' => $projectYear) = $this->yearFromName($projectName);
     if ($requireYear && !$projectYear) {
@@ -2565,25 +2740,23 @@ Whatever.',
     return $projectName;
   }
 
-  /*
+  /**
    * Sanitize the given project, i.e. make sure its infrastructure is
    * up-to-date.
    *
    * @param int|Entities\Project $projectOrId
    *
-   * @param string|null $only Get the name of only this folder if not
-   * null. $only can be one of the PROJECTS_..._FOLDER constants of
-   * the ConfigService class, @see ConfigService.
-   *
-   * @throws \Exception is something goes wrong
+   * @throws Exception If something goes wrong.
    *
    * @todo This is not really implemented yet.
+   *
+   * @return void
    */
-  public function sanitizeProject($projectOrId)
+  public function sanitizeProject(mixed $projectOrId):void
   {
     $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
-      throw new  \RuntimeException($this->l->t('Project not found.'));
+      throw new  RuntimeException($this->l->t('Project not found.'));
     }
     $projectId = $project->getId();
 
@@ -2591,7 +2764,7 @@ Whatever.',
 
     if ($projectId == $this->getClubMembersProjectId()) {
       // do stuff here ?
-    } else if ($projectId == $this->getExecutiveBoardProjectId()) {
+    } elseif ($projectId == $this->getExecutiveBoardProjectId()) {
       // ensure the signature field
 
       $participantFields = $project->getParticipantFields();
@@ -2599,7 +2772,7 @@ Whatever.',
       $signatureNames = $this->translationVariants(ConfigService::SIGNATURE_FIELD_NAME);
 
       /** @var Entities\ProjectParticipantField $field */
-      $signatureFound = $participantFields->exists(function($id, $field) use  ($signatureNames) {
+      $signatureFound = $participantFields->exists(function($id, $field) use ($signatureNames) {
         $fieldName = strtolower($field->getName());
         foreach ($signatureNames as $searchItem) {
           if ($fieldName == $searchItem
@@ -2615,17 +2788,25 @@ Whatever.',
           $this->l->t(ucfirst(ConfigService::SIGNATURE_FIELD_NAME)),
           FieldMultiplicity::SIMPLE,
           FieldDataType::DB_FILE,
-          $this->l->t('Upload an image with the personal signature to simplify the generation of "official" mails. Preferably the image should have a transparent background and a resolution of 600 DPI or more.'));
+          $this->l->t(
+            'Upload an image with the personal signature to simplify the generation of "official" mails.'
+            . ' Preferably the image should have a transparent background and a resolution of 600 DPI or more.'));
         $this->persist($signatureField);
         $this->flush();
       }
     } else {
-      throw new \RuntimeException($this->l->t('Validation of projects not yet implemented.'));
+      throw new RuntimeException($this->l->t('Validation of projects not yet implemented.'));
     }
   }
 
-  /** Delete or disable a project participant. */
-  public function deleteProjectParticipant(Entities\ProjectParticipant $participant)
+  /**
+   * Delete or disable a project participant.
+   *
+   * @param Entities\ProjectParticipant $participant The victim.
+   *
+   * @return void
+   */
+  public function deleteProjectParticipant(Entities\ProjectParticipant $participant):void
   {
     $publicName = $participant->getMusician()->getPublicName();
     $this->entityManager->beginTransaction();
@@ -2657,16 +2838,10 @@ Whatever.',
         new Common\GenericUndoable(fn() => $this->ensureMailingListUnsubscription($participant))
       );
       $this->entityManager->commit();
-    } catch (\Throwable $t)  {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new \Exception($this->l->t('Unable to remove participant "%1$s".', $publicName), 0 , $t);
+      throw new Exception($this->l->t('Unable to remove participant "%1$s".', $publicName), 0, $t);
     }
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
