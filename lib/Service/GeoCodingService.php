@@ -793,7 +793,7 @@ class GeoCodingService
             'target' => $lang,
           ]);
           $isNew = empty($entity);
-          if (empty($entity)) {
+          if ($isNew) {
             $entity = (new GeoPostalCodeTranslation)
               ->setGeoPostalCode($geoPostalCode)
               ->setTarget($lang)
@@ -826,7 +826,8 @@ class GeoCodingService
               'target' => $language,
               'countryIso' => $country,
             ]);
-            if (empty($entity)) {
+            $isNew = empty($entity);
+            if ($isNew) {
               $entity = (new Entities\GeoStateProvince)
                 ->setCountryIso($country)
                 ->setCode($code)
@@ -841,6 +842,12 @@ class GeoCodingService
             }
             if ($hasChanged) {
               $this->persist($entity);
+              try {
+                $this->flush();
+              } catch (\Throwable $t) {
+                $this->logError('GeoStateProvince ' . implode('-', [$country, $code, $language]) . ' new ' . (int)$isNew . ' but caught exception');
+                $this->logException($t);
+              }
             }
           }
         }
