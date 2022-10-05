@@ -985,7 +985,7 @@ class EntityManager extends EntityManagerDecorator
   public function executePreCommitActions()
   {
     if (!$this->isOwnTransactionActive()) {
-      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot execute pre-commit actions.'));
     }
     $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level] ?? null;
