@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Common\BankAccountValidator;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Documents\PDFFormFiller;
@@ -52,6 +53,9 @@ class FinanceService
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+
+  const VALARM_FROM_START = EventsService::VALARM_FROM_START;
+  const VALARM_FROM_END = EventsService::VALARM_FROM_END;
 
   const ENTITY = Entities\SepaDebitMandate::class;
   /**
@@ -75,6 +79,9 @@ class FinanceService
     'christmas-next-day'      => '12-26',
   ];
 
+  /** @var OrganizationalRolesService */
+  private $rolesService;
+
   /** @var EventsService */
   private $eventsService;
 
@@ -86,10 +93,12 @@ class FinanceService
     ConfigService $configService,
     EntityManager $entityManager,
     EventsService $eventsService,
+    OrganizationalRolesService $rolesService,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->eventsService = $eventsService;
+    $this->rolesService = $rolesService;
     $this->l = $this->l10n();
 
     $this->mandatesRepository = $this->getDatabaseRepository(self::ENTITY);
@@ -324,26 +333,101 @@ class FinanceService
   }
 
   /**
+   * Add participants to the given event or todo parameter array.
+   *
+   * @param array $calendarData The date-set to augment.
+   *
+   * @param iterable $payments Optional payments.
+   *
+   * @return array Return the argument.
+   */
+  private function addParticipantsToCalendar(array &$calendarData, iterable $payments):array
+  {
+    $treasurer = $this->rolesService->treasurerContact();
+    $user = $this->user();
+
+    if ($this->rolesService->isTreasurer()) {
+      $participants = [
+        'organizer'=> [
+          'name' => $treasurer['name'],
+          'email' => $treasurer['email'],
+        ],
+      ];
+    } else {
+      $participants = [
+        'organizer'=> [
+          'name' => $user->getDisplayName(),
+          'email' => $user->getEMailAddress(),
+        ],
+        'attendees' => [
+          $treasurer['email'] => [
+            'name' => $treasurer['name'],
+            'email' => $treasurer['email'],
+            'partstat' => 'ACCEPTED',
+          ],
+        ],
+      ];
+    }
+
+    $attendees = &$participants['attendees'];
+
+    /** @var Entities\CompositePayment $payment */
+    foreach ($payments as $payment) {
+      $musician = $payment->getMusician();
+      $email = $musician->getEmail();
+      if (!empty($attendees[$email])) {
+        continue;
+      }
+      $attendees[$email] = [
+        'name' => $musician->getPublicName(firstNameFirst: true),
+        'email' => $email,
+        'partstat' => 'ACCEPTED',
+      ];
+    }
+
+    $calendarData['participants'] = $participants;
+
+    return $calendarData;
+  }
+
+  /**
    * Add an event to the finance calendar, possibly including a
    * reminder.
    *
    * @param string $title Title of the event.
+   *
    * @param string $description Description of th event.
+   *
    * @param null|Entities\Project $project Associated project, may be null.
-   * @param DateTimeInterface $time The date and time of the event.
-   * @param int $alarm Alarm timeout in seconds, <= 0 for no alarm.
+   *
+   * @param DateTimeInterface $start The starting date and time of the event.
+   *
+   * @param null|DateTimeInterface $end The ending date and time of the
+   * event. Defaults to $from.
+   *
+   * @param int|array $alarm Alarm timeout in seconds, or array for multipled
+   * alarms. null, 0 or empty array for no alarms.
+   *
+   * @param iterable $payments Optional payments
+   * information. Used to generate a list of participants.
+   *
+   * @param array $related Other calendar object which are related to this
+   * one.
    *
    * @return null|array new
    * ```
-   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
+   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID, 'event' => EVENT_DATA ]
    * ```
    */
   public function financeEvent(
     string $title,
     string $description,
     ?Entities\Project $project,
-    DateTimeInterface $time,
-    int $alarm = 0,
+    DateTimeInterface $start,
+    ?DateTimeInterface $end = null,
+    mixed $alarm = 0,
+    iterable $payments = [],
+    array $related = [],
   ): ?array {
     $eventKind = 'finance';
     $categories = '';
@@ -357,9 +441,9 @@ class FinanceService
 
     $eventData = [
       'summary' => $title,
-      'from' => $time->format('d-m-Y'),
-      'to' => $time->format('d-m-Y'),
-      'allday' => 'on',
+      'from' => $start->format('d-m-Y'),
+      'to' => ($start ?? $end)->format('d-m-Y'),
+      'allday' => true,
       'location' => 'Cyber-Space',
       'categories' => $categories,
       'description' => $description,
@@ -367,6 +451,12 @@ class FinanceService
       'calendar' => $calendarId,
       'alarm' => $alarm,
     ];
+
+    if (!empty($related)) {
+      $eventData['related'] = [ 'SIBLING' => $related, ];
+    }
+
+    $this->addParticipantsToCalendar($eventData, $payments);
 
     return $this->eventsService->newEvent($eventData);
   }
@@ -376,22 +466,40 @@ class FinanceService
    * reminder.
    *
    * @param string $title Title of the event.
+   *
    * @param string $description Description of th event.
+   *
    * @param null|Entities\Project $project Associated project, may be null.
-   * @param DateTimeInterface $time The date and time of the event.
-   * @param int $alarm Alarm timeout in seconds, <= 0 for no alarm.
+   *
+   * @param DateTimeInterface $due The end date and time of the
+   * task.
+   *
+   * @param null|DateTimeInterface $start The starting date and time of the
+   * task. Defaults to due.
+   *
+   * @param int|array $alarm Alarm timeout in seconds, or array for multipled
+   * alarms. null, 0 or empty array for no alarms.
+   *
+   * @param iterable $payments Optional payments.
+   * information. Used to generate a list of participants.
+   *
+   * @param array $related Other calendar object which are related to this
+   * one.
    *
    * @return null|array new
    * ```
-   * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
+   * [ 'uri' => TASK_URI, 'uid' => TASK_UID, 'task' => TASK_DATA ]
    * ```
    */
   public function financeTask(
     string $title,
     string $description,
     ?Entities\Project $project,
-    DateTimeInterface $time,
-    int $alarm = 0,
+    DateTimeInterface $due,
+    ?DateTimeInterface $start = null,
+    mixed $alarm = 0,
+    iterable $payments = [],
+    array $related = [],
   ): ?array {
     $taskKind = 'finance';
     $categories = '';
@@ -405,8 +513,10 @@ class FinanceService
 
     $taskData = [
       'summary' => $title,
-      'due' => $time->format('d-m-Y'),
-      'start' => $time->format('d-m-Y'),
+      'due' => $due->format('d-m-Y'),
+      'start' => ($start ?? $due)->format('d-m-Y'),
+      'allday' => true,
+      'status' => EventsService::TASK_NEEDS_ACTION,
       'location' => 'Cyber-Space',
       'categories' => $categories,
       'description' => $description,
@@ -414,6 +524,12 @@ class FinanceService
       'priority' => 99, // will get a star if != 0
       'alarm' => $alarm,
     ];
+
+    if (!empty($related)) {
+      $taskData['related'] = [ 'SIBLING' => $related, ];
+    }
+
+    $this->addParticipantsToCalendar($taskData, $payments);
 
     return $this->eventsService->newTask($taskData);
   }
@@ -458,6 +574,35 @@ class FinanceService
     $calKey = $taskKind.'calendar';
     $calendarId = $this->getConfigValue($calKey.'id', false);
     return $this->eventsService->findCalendarEntry($calendarId, $localUri);
+  }
+
+  /**
+   * @param array $object Event data previously obtained by findCalendarEntry().
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see EventsService::updateCalendarEvent()
+   * @see EventsService::updateCalendarTask()
+   */
+  public function patchFinanceCalendarEntry(array $object, array $changeSet):void
+  {
+    $this->logInfo('PATCH ' . print_r(array_keys($object), true) . ' ' . print_r($changeSet, true));
+    $this->eventsService->updateCalendarEntry($object, $changeSet);
+  }
+
+  /**
+   * @param array $event Event data previously obtained by findCalendarEntry().
+   *
+   * @return void
+   */
+  public function updateFinanceCalendarEntry(array $event):void
+  {
+    $taskKind = 'finance';
+    $calKey = $taskKind.'calendar';
+    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $this->eventsService->udpateCalendarEntry($calendarId, $event);
   }
 
   /**

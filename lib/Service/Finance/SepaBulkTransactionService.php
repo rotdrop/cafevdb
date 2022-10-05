@@ -26,8 +26,11 @@ namespace OCA\CAFEVDB\Service\Finance;
 use \RuntimeException;
 use \InvalidArgumentException;
 use \DateTimeImmutable as DateTime;
+use \DateTimeInterface;
 
 use OCP\AppFramework\IAppContainer;
+use OCP\IDateTimeFormatter;
+
 use OCP\ILogger;
 use OCP\IL10N;
 
@@ -43,6 +46,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Service\EventsService;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service;
@@ -81,7 +85,34 @@ class SepaBulkTransactionService
     self::TRANSACTION_TYPE_DEBIT_NOTE,
   ];
 
-  const BULK_TRANSACTION_REMINDER_SECONDS = 24 * 60 * 60; /* alert one day in advance */
+  const SUBMISSION_EVENT = 'submissionEvent';
+  const SUBMISSION_TASK = 'submisisonTask';
+  const DUE_EVENT = 'dueEvent';
+  const PRE_NOTIFICATION_EVENT = 'preNotificationEvent';
+  const PRE_NOTIFICATION_TASK = 'preNotificationTask';
+
+  /** @var array Calendar event types. */
+  const CALENDAR_EVENTS = [
+    self::SUBMISSION_EVENT,
+    self::SUBMISSION_TASK,
+    self::DUE_EVENT,
+    self::PRE_NOTIFICATION_EVENT,
+    self::PRE_NOTIFICATION_TASK,
+  ];
+
+  /**
+   * @var int
+   *
+   * Alert one day before at 9:00.
+   */
+  const BULK_TRANSACTION_REMINDER_SECONDS = - 15 * 60 * 60; /* alert one day in advance at */
+
+  /**
+   * @var int
+   *
+   * Alert early two days before at 9:00,.
+   */
+  const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
 
   const EXPORT_AQBANKING = 'aqbanking';
 
@@ -97,19 +128,124 @@ class SepaBulkTransactionService
   /** @var FinanceService */
   private $financeService;
 
+  /** @var EventsService */
+  private $eventsService;
+
   /** {@inheritdoc} */
   public function __construct(
     EntityManager $entityManager,
     FinanceService $financeService,
+    EventsService $eventsService,
     IAppContainer $appContainer,
     ILogger $logger,
     IL10N $l10n,
   ) {
     $this->entityManager = $entityManager;
     $this->financeService = $financeService;
+    $this->eventsService = $eventsService;
     $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
+  }
+
+  /**
+   * Mark the bulk-transaction as submitted. This will resolve all submittance
+   * related tasks, remove all alarms from the submit deadline-event. The
+   * submit deadline-event will be renamed in order not to disturb the
+   * spectator and its date will be change to the given date.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
+   *
+   * @param DateTimeInterface $submitDate The date of submittance.
+   *
+   * @return void
+   */
+  public function markBulkTransactionSubmitted(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    ?DateTimeInterface $submitDate,
+  ):void {
+
+    $now = (new DateTime)->setTime(0, 0, 0);
+
+    $bulkTransaction->setSubmitDate($submitDate);
+
+    $this->entityManager->registerPreCommitAction(
+      function() use ($bulkTransaction, $submitDate, $now) {
+        $submissionTaskUri = $bulkTransaction->getSubmissionTaskUri();
+        $submissionTask = $this->financeService->findFinanceCalendarEntry($submissionTaskUri);
+        if (!empty($submissionTask)) {
+          $stash = [ self::SUBMISSION_TASK => $this->eventsService->cloneCalendarEntry($submissionTask) ];
+          if (empty($submitDate) || $submitDate > $now) {
+            $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
+          } else {
+            $this->eventsService->setCalendarTaskStatus($submissionTask, dateCompleted: $submitDate);
+          }
+        }
+        return $stash ?? [];
+      },
+      function($stash) {
+        $this->restoreCalendarObjects($stash);
+      },
+    )->register(
+      function() use ($bulkTransaction, $submitDate, $now) {
+        $submissionEventUri = $bulkTransaction->getSubmissionEventUri();
+        $submissionEvent = $this->financeService->findFinanceCalendarEntry($submissionEventUri);
+        if (!empty($submissionEvent)) {
+          $stash = [ self::SUBMISSION_EVENT => $this->eventsService->cloneCalendarEntry($submissionEvent) ];
+          if (empty($submitDate) || $submitDate > $now) {
+            $this->logInfo('SUBMIT > NOW ' . print_r($submitDate, true) . ' ' . print_r($now, true));
+            // leave as is for the moment
+          } else {
+            $project = $bulkTransaction->getPayments()->first()->getProject();
+            /** @var Service\ConfigService $configService */
+            $configService = $this->appContainer->get(Service\ConfigService::class);
+            if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+              $summary = $this->l->t('Debit-notes submitted for %s', $project->getName());
+              $description = $this->l->t(
+                'Debit-notes have been submitted, due-date is %s.', $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'))
+                . "\n"
+                . $this->l->t('Total amount to receive: %s.', $configService->moneyValue($bulkTransaction->totals()));
+              /** @var Entities\CompositePayment $payment */
+              foreach ($bulkTransaction->getPayments() as $payment) {
+                $description .= "\n"
+                  . $this->l->t('%s pays %s.', [
+                    $payment->getMusician()->getPublicName(firstNameFirst: false),
+                    $configService->moneyValue($payment->getAmount())
+                  ]);
+              }
+            } else {
+              $summary = $this->l->t('Bank-transfers submitted for %s', $project->getName());
+              $description = $this->l->t(
+                'Bank-transfers have been submitted, due-date is %s.', $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'))
+                . "\n"
+                . $this->l->t('Total amount to pay: %s.', $configService->moneyValue(-$bulkTransaction->totals()));
+              /** @var Entities\CompositePayment $payment */
+              foreach ($bulkTransaction->getPayments() as $payment) {
+                $description .= "\n"
+                  . $this->l->t('%s receives %s.', [
+                    $payment->getMusician()->getPublicName(firstNameFirst: false),
+                    $configService->moneyValue(-$payment->getAmount())
+                  ]);
+              }
+            }
+
+            $this->eventsService->updateCalendarEvent(
+              $submissionEvent, [
+                'start' => $submitDate,
+                'end' => $submitDate,
+                'allday' => true,
+                'alarm' => 0,
+                'summary' => $summary,
+                'description' => $description,
+              ]);
+          }
+        }
+        return $stash ?? [];
+      },
+      function($stash) {
+        $this->restoreCalendarObjects($stash);
+      }
+    );
   }
 
   /**
@@ -337,6 +473,124 @@ class SepaBulkTransactionService
   }
 
   /**
+   * @param Entities\SepaBulkTransaction $bulkTransaction Database entity.
+   *
+   * @return array Return an array
+   * ```
+   * [
+   *   'submissionEvent' => [ 'uri' => URI, 'uid' => UID ],
+   *   'submisisonTask' => [ 'uri' => URI, 'uid' => UID ],
+   *   'dueEvent' => [ 'uri' => URI, 'uid' => UID ],
+   *   'preNotificationEvent' => [ 'uri' => URI, 'uid' => UID ],
+   *   'preNotificationTask' => [ 'uri' => URI, 'uid' => UID ],
+   * ]
+   * ```
+   */
+  public function getCalendarObjects(
+    Entities\SepaBulkTransaction $bulkTransaction,
+  ):array {
+    // Undoing calendar entry deletion would be a bit hard ... so just
+    // delete them after we have successfully removed the bulk-transaction.
+    $calendarObjects = [
+      'submission' => [
+        'event' => [
+          'uri' => $bulkTransaction->getSubmissionEventUri(),
+          'uid' => $bulkTransaction->getSubmissionEventUid(),
+        ],
+        'task' => [
+          'uri' => $bulkTransaction->getSubmissionTaskUri(),
+          'uid' => $bulkTransaction->getSubmissionTaskUid(),
+        ],
+      ],
+      'due' => [
+        'event' => [
+          'uri' => $bulkTransaction->getDueEventUri(),
+          'uid' => $bulkTransaction->getDueEventUid(),
+        ],
+      ],
+    ];
+
+    if ($bulkTransaction instanceof Entities\SepaDebitNote) {
+      /** @var Entities\SepaDebitNote $bulkTransaction */
+      $calendarObjects['preNotification'] = [
+        'event' => [
+          'uri' => $bulkTransaction->getPreNotificationEventUri(),
+          'uid' => $bulkTransaction->getPreNotificationEventUid(),
+        ],
+        'task' => [
+          'uri' => $bulkTransaction->getPreNotificationTaskUri(),
+          'uid' => $bulkTransaction->getPreNotificationTaskUid(),
+        ]
+      ];
+    }
+    return $calendarObjects;
+  }
+
+  /**
+   * Make a backup-copy of the associated calendar entries in order to restore
+   * them after failed database transactions and the like.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction Database entity.
+   *
+   * @param null|array $only Stash only the given objects.
+   *
+   * @return array Return an array
+   * ```
+   * [
+   *   'submissionEvent' => EVENT_DATA,
+   *   'submisisonTask' => TASK_DATA,
+   *   'dueEvent' => EVENT_DATA,
+   *   'preNotificationEvent' => EVENT_DATA,
+   *   'preNotificationTask' => TASK_DATA,
+   * ]
+   * ```
+   *
+   * @see CALENDAR_EVENTS
+   */
+  public function stashCalendarObjects(Entities\SepaBulkTransaction $bulkTransaction, ?array $only = null):array
+  {
+    $calendarIds = $this->getCalendarObjects($bulkTransaction);
+
+    // $this->logInfo('CALIDS ' . print_r($calendarIds, true));
+
+    if ($only === null) {
+      $only = array_keys($calendarIds);
+    } else {
+      $only = array_intersect($only, array_keys($calendarIds));
+    }
+
+    $calendarObjects = [];
+    foreach ($only as $eventKind) {
+      $eventIds = $calendarIds[$eventKind];
+      foreach ($eventIds as $objectType => $objectIds) {
+        foreach (array_filter($objectIds) as $objectId) {
+          $calendarObject = $this->financeService->findFinanceCalendarEntry($objectId);
+          if (!empty($calendarObject)) {
+            $calendarObjects[$eventKind][$objectType] = $this->eventsService->cloneCalendarEntry($calendarObject);
+            break;
+          }
+        }
+      }
+    }
+
+    return $calendarObjects;
+  }
+
+  /**
+   * @param array $calendarObjects Previously stashed calendar objects.
+   *
+   * @return void
+   *
+   * @see stashCalendarObjects()
+   */
+  public function restoreCalendarObjects(array $calendarObjects):void
+  {
+    foreach ($calendarObjects as $object) {
+      $this->financeService->updateFinanceCalendarEntry($object);
+    }
+  }
+
+  /**
    * Remove the given bulk-transaction if it is essentially unused.
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction Database entity.
@@ -357,34 +611,27 @@ class SepaBulkTransactionService
       );
     }
 
-    // Undoing calendar entry deletion would be a bit hard ... so just
-    // delete them after we have successfully removed the bulk-transaction.
-    $calendarObjects = [
-      [
-        'uri' => $bulkTransaction->getSubmissionEventUri(),
-        'uid' => $bulkTransaction->getSubmissionEventUid(),
-      ], [
-        'uri' => $bulkTransaction->getSubmissionTaskUri(),
-        'uid' => $bulkTransaction->getSubmissionTaskUid(),
-      ], [
-        'uri' => $bulkTransaction->getDueEventUri(),
-        'uid' => $bulkTransaction->getDueEventUid(),
-      ],
-    ];
-
-    if ($bulkTransaction instanceof Entities\SepaDebitNote) {
-      /** @var Entities\SepaDebitNote $bulkTransaction */
-      $calendarObjects[] = [
-        'uri' => $bulkTransaction->getPreNotificationEventUri(),
-        'uid' => $bulkTransaction->getPreNotificationEventUid(),
-      ];
-      $calendarObjects[] = [
-        'uri' => $bulkTransaction->getPreNotificationTaskUri(),
-        'uid' => $bulkTransaction->getPreNotificationTaskUid(),
-      ];
-    }
-
     $this->entityManager->beginTransaction();
+
+    $this->entityManager->registerPreCommitAction(
+      function() use ($bulkTransaction) {
+        $stash = $this->stashCalendarObjects($bulkTransaction);
+        $calendarObjects = $this->getCalendarObjects($bulkTransaction);
+        foreach ($calendarObjects as $eventIds) {
+          foreach ($eventIds as $calIds) {
+            if (empty($calIds['uri']) && empty($calIds['uid'])) {
+              continue;
+            }
+            $this->financeService->deleteFinanceCalendarEntry($calIds);
+          }
+        }
+        return $stash;
+      },
+      function($stash) {
+        $this->restoreCalendarObjects($stash);
+      },
+    );
+
     try {
       /** @var Entities\EncryptedFile $transactionData */
       foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
@@ -393,6 +640,7 @@ class SepaBulkTransactionService
       $this->remove($bulkTransaction, flush: true);
 
       $this->entityManager->commit();
+
     } catch (\Throwable $t) {
       $this->entityManager->rollback();
       throw new Exceptions\DatabaseException(
@@ -400,18 +648,6 @@ class SepaBulkTransactionService
         $t->getCode(),
         $t
       );
-    }
-
-    // ok try to remove the remaining artifacts ...
-    foreach ($calendarObjects as $calIds) {
-      if (empty($calIds['uri']) && empty($calIds['uid'])) {
-        continue;
-      }
-      try {
-        $this->financeService->deleteFinanceCalendarEntry($calIds);
-      } catch (\Throwable $t) {
-        $this->logException($t, 'Unable to remove calendar entry "' . implode(', ', $calIds) . '".');
-      }
     }
   }
 
