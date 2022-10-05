@@ -102,6 +102,6 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
    */
   public function getNewValue():?string
   {
-    return $this->entity->getSubmitDate();
+    return $this->entity->getNotificationMessageId();
   }
 }

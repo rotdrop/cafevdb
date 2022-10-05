@@ -249,6 +249,23 @@ class SepaBulkTransactionService
   }
 
   /**
+   * Handle bulk transaction pre notifications and gradually complete the
+   * pre-notification task.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
+   *
+   * @param Entities\CompositePayment $payment The composite payment which was announced.
+   *
+   * @return void
+   */
+  public function handlePreNotification(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    Entities\CompositePayment $payment,
+  ):void {
+    $this->logInfo('GOT PRENOTIFICATION EVENT');
+  }
+
+  /**
    * Given the raw due-data calculate the deadlines for submission and
    * pre-notification. We allow for extra "space" between the resulting
    * due-date and the submission date. So the idea is to allow two more
