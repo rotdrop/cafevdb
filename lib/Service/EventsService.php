@@ -25,6 +25,7 @@ namespace OCA\CAFEVDB\Service;
 
 use \Exception;
 use \DateTimeImmutable;
+use \DateTimeZone;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
@@ -51,6 +52,14 @@ class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
+  const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
+
+  const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
+  const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
+  const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
+
 
   /** @var EntityManager */
   protected $entityManager;
@@ -975,7 +984,6 @@ class EventsService
    * simple task:
    *
    * @param array $taskData Passed on to VCalendarService::createVCalendarFromRequest()
-   *
    * ```
    * [
    *   'description' => $title, // required
@@ -991,13 +999,16 @@ class EventsService
    * ]
    * ```
    *
-   * We also support adding a reminder: 'alarm' => unset or interval
-   * in seconds (i.e. time-stamp diff). The function may throw
-   * errors.
+   * We also support adding a reminder: 'alarm' => ALARMSPEC.
+   * ALARMSPEC can be
+   * - null, 0 no alarm
+   * - int The alarm interval in seconds
+   * - [ RELATED => int ] where RELATED is either START or END.
+   *   Negative values reach in the past relative to RELATED.
    *
    * @return array task-uri, task-uid on success, null on error.
    * ```
-   * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
+   * [ 'uri' => TASK_URI, 'uid' => TASK_UID, 'task' => TASK_OBJECT ]
    * ```
    */
   public function newTask(array $taskData):?array
@@ -1014,8 +1025,9 @@ class EventsService
       $taskObject = $this->calDavService->getCalendarObject($taskData['calendar'], $taskUri);
       if (!empty($taskObject)) {
         $vCalendar  = VCalendarService::getVCalendar($taskObject);
+        $taskObject['calendardata'] = $vCalendar;
         $taskUid   = VCalendarService::getUid($vCalendar);
-        return [ 'uri' => $taskUri, 'uid' => $taskUid ];
+        return [ 'uri' => $taskUri, 'uid' => $taskUid, 'task' => $taskObject ];
       }
     }
     return null;
@@ -1048,7 +1060,7 @@ class EventsService
    *
    * @return array|null event-uri, event-uid or null on error.
    * ```
-   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
+   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID, 'event' => EVENT_OBJECT ]
    * ```
    */
   public function newEvent(array $eventData):?array
@@ -1066,7 +1078,8 @@ class EventsService
       if (!empty($eventObject)) {
         $vCalendar  = VCalendarService::getVCalendar($eventObject);
         $eventUid   = VCalendarService::getUid($vCalendar);
-        return [ 'uri' => $eventUri, 'uid' => $eventUid ];
+        $eventObject['calendardata'] = $vCalendar;
+        return [ 'uri' => $eventUri, 'uid' => $eventUid, 'event' => $eventObject ];
       }
     }
     return null;
@@ -1089,6 +1102,208 @@ class EventsService
   }
 
   /**
+   * Update the calendar entry contained in $object, i.e. write it back to the server.
+   *
+   * @param array $object Modified event object, previously obtained by findCalendarEntry().
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarEntry(array $object, array $changeSet = []):void
+  {
+    $vCalendar  = VCalendarService::getVCalendar($object);
+    if (!empty($changeSet)) {
+      if (!empty($vCalendar->VEVENT)) {
+        $this->logInfo('EVENT ' . print_r(array_keys($object), true));
+        $this->updateCalendarEvent($object, $changeSet);
+      } elseif (!empty($vCalendar->VTODO)) {
+        $this->updateCalendarTask($object, $changeSet);
+      }
+    } else {
+      $objectURI = $object['uri'];
+      $calendarId = $object['calendarid'];
+      $this->calDavService->updateCalendarObject($calendarId, $objectURI, $vCalendar);
+    }
+  }
+
+  /**
+   * @param array $event Event object to  modify, previously obtained by findCalendarEntry().
+   *
+   * @param null|string $status Status to set.
+   *
+   * @param null|int $percentComplete Percent completed to set.
+   *
+   * @param null|DateTimeImmutable $dateCompleted The date of completion, if
+   * non-null percent completed is set to 100 and the status also to
+   * COMPLETED.
+   *
+   * @return void
+   */
+  public function setCalendarTaskStatus(
+    array $event,
+    ?string $status = null,
+    ?int $percentComplete = null,
+    ?DateTimeImmutable $dateCompleted = null,
+  ):void {
+
+    $eventURI = $event['uri'];
+    $calendarId = $event['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($event);
+
+    if ($dateCompleted !== null) {
+      $status = self::TASK_COMPLETED;
+    }
+    if ($status == self::TASK_COMPLETED) {
+      $percentComplete = 100;
+    }
+    if ($percentComplete == 100) {
+      $status = self::TASK_COMPLETED;
+      if (empty($dateCompleted)) {
+        $dateCompleted = new DateTimeImmutable;
+      }
+    } elseif ($percentComplete == 0) {
+      $status = self::TASK_NEEDS_ACTION;
+      $dateCompleted = false;
+    } else {
+      $status = self::TASK_IN_PROCESS;
+      $dateCompleted = false;
+    }
+
+    if ($status == self::TASK_COMPLETED) {
+      if (empty($dateCompleted)) {
+        $dateCompleted = new DateTimeImmutable;
+      }
+    } elseif ($status == self::TASK_NEEDS_ACTION || $status == self::TASK_IN_PROCESS) {
+      $dateCompleted = false;
+    }
+
+    $vTodo = $vCalendar->VTODO;
+
+    if ($status !== null) {
+      $vTodo->STATUS = $status;
+      if ($status == self::TASK_COMPLETED) {
+        // remove alarms
+        unset($vTodo->VALARM);
+      }
+    }
+    if ($percentComplete !== null) {
+      $vTodo->{'PERCENT-COMPLETE'} = $percentComplete;
+    }
+    if ($dateCompleted !== null) {
+      if ($dateCompleted === false) {
+        unset($vTodo->COMPLETED);
+      } else {
+        $vTodo->COMPLETED = $dateCompleted;
+      }
+    }
+
+    $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
+  }
+
+  /**
+   * Update the event entry contained in $event, modify it and write it back
+   * to the server.
+   *
+   * @param array $event To be modified event object according to $changeSet.
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarEvent(array $event, array $changeSet = []):void
+  {
+    $eventURI = $event['uri'];
+    $calendarId = $event['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($event);
+
+    $vEvent = $vCalendar->VEVENT;
+
+    if (!empty($changeSet['start']) || !empty($changeSet['end'])) {
+      $timezone = $this->getDateTimeZone();
+      if (array_key_exists('allday', $changeSet)) {
+        $allDay = !empty($changeSet['allday']);
+      } else {
+        $dateValue = $vEvent->DTSTART['VALUE'];
+        $dtStart = DateTimeImmutable::createFromInterface($vEvent->DTSTART);
+        $allDay = ($dtStart == $dtStart->setTime(0, 0, 0) && $dateValue == 'DATE');
+      }
+      foreach (['start', 'end'] as $key) {
+        if (!empty($changeSet[$key])) {
+          $eventProperty = 'DT' . strtoupper($key);
+          if ($allDay) {
+            $date = $changeSet[$key]->setTime(0, 0, 0);
+            $vEvent->{$eventProperty} = $date;
+            $vEvent->{$eventProperty}['VALUE'] = 'DATE';
+          } else {
+            $date = $changeSet[$key]->setTimezone($timezone);
+          }
+        }
+      }
+    }
+    if (array_key_exists('alarm', $changeSet)) {
+      $this->vCalendarService->addVAlarmsFromRequest($vCalendar, $vEvent, $changeSet);
+    }
+    if (!empty($changeSet['summary'])) {
+      $this->vCalendarService->setSummary($vCalendar, $changeSet['summary']);
+    }
+    if (array_key_exists('description', $changeSet)) {
+      $this->vCalendarService->setDescription($vCalendar, $changeSet['description']);
+    }
+    if (array_key_exists('related', $changeSet)) {
+      $this->vCalendarService->addRelations($vCalendar, $vEvent, $changeSet);
+    }
+
+    $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+    $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
+  }
+
+  /**
+   * Update the task entry contained in $event, modify it and write it back
+   * to the server.
+   *
+   * @param array $task To be modified event object according to $changeSet.
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarTask(array $task, array $changeSet = []):void
+  {
+    $taskURI = $task['uri'];
+    $calendarId = $task['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($task);
+
+    $vTodo = $vCalendar->VTODO;
+
+    if (array_key_exists('alarm', $changeSet)) {
+      $this->vCalendarService->addVAlarmsFromRequest($vCalendar, $vTodo, $changeSet);
+    }
+    if (!empty($changeSet['summary'])) {
+      $this->vCalendarService->setSummary($vCalendar, $changeSet['summary']);
+    }
+    if (array_key_exists('description', $changeSet)) {
+      $this->vCalendarService->setDescription($vCalendar, $changeSet['description']);
+    }
+    if (array_key_exists('related', $changeSet)) {
+      $this->vCalendarService->addRelations($vCalendar, $vTodo, $changeSet);
+    }
+
+    $vTodo->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $vTodo->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+    $this->calDavService->updateCalendarObject($calendarId, $taskURI, $vCalendar);
+  }
+
+  /**
    * Find a calendar object by its URI or UID.
    *
    * @param mixed $calId
@@ -1103,7 +1318,29 @@ class EventsService
    */
   public function findCalendarEntry(mixed $calId, string $objectIdentifier)
   {
-    return $this->calDavService->getCalendarObject($calId, $objectIdentifier);
+    $event = $this->calDavService->getCalendarObject($calId, $objectIdentifier);
+
+    $vCalendar = VCalendarService::getVCalendar($event);
+    $event['calendardata'] = $vCalendar;
+
+    return $event;
+  }
+
+  /**
+   * @param array $event To be cloned event array obtained form
+   * findCalendarEntry().
+   *
+   * @return array The cloned event.
+   *
+   * @bug The existance of this function is caused by $event not being a class
+   * instance.
+   */
+  public static function cloneCalendarEntry(array $event):array
+  {
+    foreach ($event as $key => $value) {
+      $event[$key] = is_object($value) ? clone($value) : $value;
+    }
+    return $event;
   }
 
   /**
