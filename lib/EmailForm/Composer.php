@@ -5461,7 +5461,7 @@ Störung.';
    *
    * @return array
    */
-  public function eventAttachmentOptions(int $projectId, array $attachedEvents):array
+  public function eventAttachmentOptions(mixed $projectId, array $attachedEvents):array
   {
     if ($projectId <= 0) {
       return [];
