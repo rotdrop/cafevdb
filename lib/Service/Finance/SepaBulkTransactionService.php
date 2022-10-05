@@ -25,7 +25,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use \RuntimeException;
 use \InvalidArgumentException;
-use \DateTimeImmutable as DateTime;
+use \DateTimeImmutable;
 use \DateTimeInterface;
 
 use OCP\AppFramework\IAppContainer;
@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\VCalendarService;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service;
@@ -165,7 +166,7 @@ class SepaBulkTransactionService
     ?DateTimeInterface $submitDate,
   ):void {
 
-    $now = (new DateTime)->setTime(0, 0, 0);
+    $now = (new DateTimeImmutable)->setTime(0, 0, 0);
 
     $bulkTransaction->setSubmitDate($submitDate);
 
@@ -252,17 +253,63 @@ class SepaBulkTransactionService
    * Handle bulk transaction pre notifications and gradually complete the
    * pre-notification task.
    *
-   * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
+   * @param Entities\SepaDebitNote $bulkTransaction The bulk-transaction to modify.
    *
    * @param Entities\CompositePayment $payment The composite payment which was announced.
    *
    * @return void
    */
   public function handlePreNotification(
-    Entities\SepaBulkTransaction $bulkTransaction,
+    Entities\SepaDebitNote $debitNote,
     Entities\CompositePayment $payment,
   ):void {
-    $this->logInfo('GOT PRENOTIFICATION EVENT');
+
+    try  {
+      $this->logInfo('TWEAK PRE NOTIFICATION TASK');
+      $preNotificationTaskUri = $debitNote->getPreNotificationTaskUri();
+      $preNotificationTask = $this->financeService->findFinanceCalendarEntry($preNotificationTaskUri);
+      if (!empty($preNotificationTask)) {
+        $notifiedCount = $debitNote->getPayments()->filter(
+          fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
+        )->count();
+        $totalCount = $debitNote->getPayments()->count();
+
+        if ($notifiedCount == $totalCount) {
+          $percentage = 100;
+        } else {
+          $percentage = (int)round((float)$notifiedCount * 100.0 / (float)$totalCount);
+        }
+        $this->eventsService->setCalendarTaskStatus($preNotificationTask, percentComplete: $percentage);
+      }
+    }  catch (Throwable $t) {
+      $this->logException($t, 'Unable to tweak pre-notification task ' . $preNotificationTaskUri);
+    }
+
+    try {
+      $this->logInfo('TWEAK PRE NOTIFICATION EVENT');
+      $preNotificationEventUri = $debitNote->getPreNotificationEventUri();
+      $preNotificationEvent = $this->financeService->findFinanceCalendarEntry($preNotificationEventUri);
+      if (!empty($preNotificationEvent)) {
+        /** @var Service\ConfigService $configService */
+        $configService = $this->appContainer->get(Service\ConfigService::class);
+        $vCalendar = VCalendarService::getVCalendar($preNotificationEvent);
+        $description = VCalendarService::getDescription($vCalendar);
+        $musician = $payment->getMusician();
+        $description .= "\n----\n"
+          . $this->l->t('PRENOTIFICATION HAS BEEN SENT:')
+          . "\n"
+          . $this->l->t('Person: %s', $musician->getPublicName(true) . ' <' . $musician->getEmail() . '>')
+          . "\n"
+          . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime(new DateTimeImmutable))
+          . "\n"
+          . $this->l->t('MessageId: %s', $payment->getNotificationMessageId());
+        $this->eventsService->updateCalendarEntry($preNotificationEvent, [
+          'description' => $description,
+        ]);
+      }
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to tweak pre-notification event ' . $preNotificationEventUri);
+    }
   }
 
   /**
@@ -297,7 +344,7 @@ class SepaBulkTransactionService
     bool $fromDueDate = false,
   ) {
     if ($baseDate === null) {
-      $baseDate = new DateTime;
+      $baseDate = new DateTimeImmutable;
     }
     $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
       + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
