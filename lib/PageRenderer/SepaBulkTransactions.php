@@ -619,7 +619,7 @@ __EOT__;
     PHPMyEdit $pme,
     string $op,
     string $step,
-    array $oldValues,
+    array &$oldValues,
     array &$changed,
     array &$newValues,
   ):bool {
