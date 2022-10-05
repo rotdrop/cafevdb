@@ -750,7 +750,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangePaymentNotificationMessageId($entityManager, $this, $this->preUpdateValue[$field]));
+      $entityManager->dispatchEvent(new Events\PostChangeCompositePaymentNotificationMessageId($entityManager, $this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
   }
