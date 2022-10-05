@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +24,28 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use \InvalidArgumentException;
+use \Sabre\DAV;
+
+use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
 use OCP\Constants;
-
-// @@todo: replace the stuff below by more persistent APIs. As it
-// shows (Sep. 2020) the only option would be http calls to the dav
-// service. Even the perhaps-forthcoming writable calendar API does
-// not allow the creation of calendars or altering shring options.
-
-// missing: move/delete calendar
 
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 
 use OCA\CAFEVDB\Common\Uuid;
 
+/**
+ * Service class in order to interface to the dav app of Nextcloud
+ *
+ * Missing: move/delete calendar
+ *
+ * @todo: replace the stuff below by more persistent APIs. As it shows
+ * (Sep. 2020) the only option would be http calls to the dav service. Even
+ * the perhaps-forthcoming writable calendar API does not allow the creation
+ * of calendars or altering shring options.
+ */
 class CalDavService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -49,16 +56,17 @@ class CalDavService
   /** @var CalDavBackend */
   private $calDavBackend;
 
-  /** @var \OCP\Calendar\IManager */
+  /** @var CalendarManager */
   private $calendarManager;
 
   /** @var int */
   private $calendarUserId;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , \OCP\Calendar\IManager $calendarManager
-    , CalDavBackend $calDavBackend
+    ConfigService $configService,
+    CalendarManager $calendarManager,
+    CalDavBackend $calDavBackend,
   ) {
     $this->configService = $configService;
     $this->calendarManager = $calendarManager;
@@ -67,25 +75,27 @@ class CalDavService
     $this->l = $this->l10n();
   }
 
-  /**Get or create a calendar.
+  /**
+   * Get or create a calendar.
    *
-   * @param $uri Relative URI
+   * @param string $uri Relative URI.
    *
-   * @param $userId part of the principal name.
+   * @param null|string $displayName Display-name of the calendar.
    *
-   * @param $displayName Display-name of the calendar.
+   * @param null|string $userId part of the principal name.
    *
    * @return int Calendar id.
    *
    * @bug This function uses internal APIs.
    */
-  public function createCalendar($uri, $displayName = null, $userId = null) {
+  public function createCalendar(string $uri, ?string $displayName = null, ?string $userId = null):int
+  {
     empty($userId) && ($userId = $this->userId());
     empty($displayName)&& ($displayName = ucfirst($uri));
     $principal = "principals/users/$userId";
 
     $calendar = $this->calDavBackend->getCalendarByUri($principal, $uri);
-    if (!empty($calendar))  {
+    if (!empty($calendar)) {
       return $calendar['id'];
     } else {
       try {
@@ -94,7 +104,7 @@ class CalDavService
         ]);
         $this->refreshCalendarManager();
         return $calendarId;
-      } catch(\Exception $e) {
+      } catch (\Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
     }
@@ -104,13 +114,25 @@ class CalDavService
   /**
    * Delete the calendar with the given id.
    *
+   * @param int $id Calendar id.
+   *
+   * @return void
+   *
    * @bug This function uses internal APIs.
    */
-  public function deleteCalendar($id) {
+  public function deleteCalendar(int $id):void
+  {
     $this->calDavBackend->deleteCalendar($id);
   }
 
-  static private function makeGroupShare(string $groupId, bool $readOnly = false)
+  /**
+   * @param string $groupId GID.
+   *
+   * @param bool $readOnly Share read-only.
+   *
+   * @return array
+   */
+  private static function makeGroupShare(string $groupId, bool $readOnly = false):array
   {
     return [
       'href' => 'principal:principals/groups/'.$groupId,
@@ -120,7 +142,14 @@ class CalDavService
     ];
   }
 
-  private function makeCalendar(int $calendarId)
+  /**
+   * Create a new calendar if the one with the given id does not exist.
+   *
+   * @param int $calendarId
+   *
+   * @return null|Calendar
+   */
+  private function makeCalendar(int $calendarId):?Calendar
   {
     $calendarInfo = $this->calDavBackend->getCalendarById($calendarId);
     if (empty($calendarInfo)) {
@@ -132,9 +161,18 @@ class CalDavService
   /**
    * Share the given calendar with a group.
    *
+   * @param int $calendarId Numeric calendar id.
+   *
+   * @param string $groupId Cloud group id.
+   *
+   * @param bool $readOnly Whether to share read-only.
+   *
+   * @return bool Whether the group-share request succeeded.
+   *
    * @bug This function uses internal APIs.
    */
-  public function groupShareCalendar($calendarId, $groupId, $readOnly = false) {
+  public function groupShareCalendar(int $calendarId, string $groupId, bool $readOnly = false):bool
+  {
     if ($this->isGroupSharedCalendar($calendarId, $groupId, $readOnly)) {
       return true;
     }
@@ -148,9 +186,17 @@ class CalDavService
   }
 
   /**
-   * Test if the given calendar is shared with the given group
+   * Test if the given calendar is shared with the given group.
+   *
+   * @param int $calendarId Numeric calendar id.
+   *
+   * @param string $groupId Cloud group id.
+   *
+   * @param bool $readOnly Whether to share read-only.
+   *
+   * @return bool Result of the test.
    */
-  public function isGroupSharedCalendar($calendarId, $groupId, $readOnly = false)
+  public function isGroupSharedCalendar(int $calendarId, string $groupId, bool $readOnly = false):bool
   {
     $share = self::makeGroupShare($groupId, $readOnly);
     $shares = $this->calDavBackend->getShares($calendarId);
@@ -162,13 +208,22 @@ class CalDavService
     return false;
   }
 
-  public function displayName($calendarId, $displayName)
+  /**
+   * Set the display name.
+   *
+   * @param int $calendarId Numeric calendar id.
+   *
+   * @param string $displayName The display name to set.
+   *
+   * @return bool Whether the attempt succeeded.
+   */
+  public function displayName(int $calendarId, string $displayName):bool
   {
     try {
-      $propPatch = new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]);
+      $propPatch = new DAV\PropPatch(['{DAV:}displayname' => $displayName]);
       $this->calDavBackend->updateCalendar($calendarId, $propPatch);
       $propPatch->commit();
-    } catch(\Exception $e) {
+    } catch (\Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
     }
@@ -177,16 +232,22 @@ class CalDavService
   }
 
   /**
-   * @param string $pattern which should match within the $searchProperties
-   * @param array $searchProperties defines the properties within the query pattern should match
+   * @param string $pattern which should match within the $searchProperties.
+   *
+   * @param array $searchProperties defines the properties within the query pattern should match.
+   *
    * @param array $options - optional parameters:
-   * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
-   * @param integer|null $limit - limit number of search results
-   * @param integer|null $offset - offset for paging of search results
-   * @return array an array of events/journals/todos which are arrays of key-value-pairs
-   * @since 13.0.0
+   * ['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]].
+   *
+   * @param integer|null $limit - limit number of search results.
+   *
+   * @param integer|null $offset - offset for paging of search results.
+   *
+   * @return array an array of events/journals/todos which are arrays of key-value-pairs.
+   *
+   * @see CalendarManager::search()
    */
-  public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null)
+  public function search(string $pattern, array $searchProperties = [], array $options = [], ?int $limit = null, ?int $offset = null)
   {
     return $this->calendarManager->search($pattern, $searchProperties, $options, $limit, $offset);
   }
@@ -194,14 +255,16 @@ class CalDavService
   /**
    * Get a calendar with the given display name.
    *
-   * @return ICalendar[]
+   * @param string $displayName Search criterion.
+   *
+   * @return null|ICalendar
    */
-  public function calendarByName($displayName)
+  public function calendarByName(string $displayName):?ICalendar
   {
     if ($this->calendarUserId != $this->userId()) {
       $this->refreshCalendarManager();
     }
-    foreach($this->calendarManager->getCalendars() as $calendar) {
+    foreach ($this->calendarManager->getCalendars() as $calendar) {
       if ($displayName === $calendar->getDisplayName()) {
         return $calendar;
       }
@@ -212,14 +275,16 @@ class CalDavService
   /**
    * Get a calendar with the given id.
    *
-   * @return ICalendar[]
+   * @param int $id Numeric calendar id.
+   *
+   * @return ICalendar
    */
-  public function calendarById($id)
+  public function calendarById(int $id):?ICalendar
   {
     if ($this->calendarUserId != $this->userId()) {
       $this->refreshCalendarManager();
     }
-    foreach($this->calendarManager->getCalendars() as $calendar) {
+    foreach ($this->calendarManager->getCalendars() as $calendar) {
       if ((int)$id === (int)$calendar->getKey()) {
         return $calendar;
       }
@@ -227,8 +292,14 @@ class CalDavService
     return null;
   }
 
-  /** Get the uri of the original calendar */
-  public function calendarPrincipalUri($id)
+  /**
+   * Get the uri of the original calendar
+   *
+   * @param int $id Numeric calendar id.
+   *
+   * @return null|string Calendar URI.
+   */
+  public function calendarPrincipalUri(int $id):?string
   {
     $calendarInfo = $this->calDavBackend->getCalendarById($id);
     if (!empty($calendarInfo)) {
@@ -241,7 +312,9 @@ class CalDavService
    * Get principal, shared and original uri from the calendar id, as well as
    * the owner-user-id.
    *
-   * @return array
+   * @param int $id Numeric calendar id.
+   *
+   * @return null|array
    * ```
    * [
    *   'principaluri' => principals/users/OWNER_ID,
@@ -254,11 +327,11 @@ class CalDavService
    *
    * @bug Users inernal APIs. The NC PHP API is just too incomplete.
    */
-  public function calendarUris($id)
+  public function calendarUris(int $id):?array
   {
     $calendarInfo = $this->calDavBackend->getCalendarById($id);
     if (!empty($calendarInfo)) {
-      [,,$ownerId] = explode('/',  $calendarInfo['principaluri']);
+      [,,$ownerId] = explode('/', $calendarInfo['principaluri']);
       $userUri = ($ownerId != $this->calendarUserId)
         ? $calendarInfo['uri'] . '_shared_by_' . $ownerId
         : $calendarInfo['uri'];
@@ -273,7 +346,12 @@ class CalDavService
     return null;
   }
 
-  private function calendarWritable(ICalendar $calendar)
+  /**
+   * @param ICalendar $calendar Cloud calendar instance.
+   *
+   * @return bool Whether the calendar is writable.
+   */
+  private function calendarWritable(ICalendar $calendar):bool
   {
     $perms = $calendar->getPermissions();
     return ($perms & self::WRITE_PERMISSIONS) == self::WRITE_PERMISSIONS;
@@ -289,7 +367,7 @@ class CalDavService
   {
     $calendars = $this->calendarManager->getCalendars();
     if ($writable) {
-      foreach($calendars as $idx => $calendar) {
+      foreach ($calendars as $idx => $calendar) {
         if (!$this->calendarWritable($calendar)) {
           unset($calendars[$idx]);
         }
@@ -303,12 +381,18 @@ class CalDavService
    * Create an entry in the given calendar from either a VCalendar
    * blob or a Sabre VCalendar object.
    *
+   * @param int $calendarId Numeric calendar id.
+   *
+   * @param null|string $localUri Local URI to use or null.
+   *
+   * @param mixed $object Calendar data.
+   *
    * @return string local URI of the calendar object, relative to the
    * calendar's URI.
    *
    * @bug This function uses internal APIs.
    */
-  public function createCalendarObject($calendarId, $localUri, $object)
+  public function createCalendarObject(int $calendarId, ?string $localUri, mixed $object)
   {
     if (!is_string($object)) {
       $object = $object->serialize();
@@ -324,9 +408,17 @@ class CalDavService
    * Update an entry in the given calendar from either a VCalendar blob or a
    * Sabre VCalendar object.
    *
+   * @param int $calendarId Numeric calendar id.
+   *
+   * @param null|string $localUri Local URI to use or null.
+   *
+   * @param mixed $object Calendar data.
+   *
+   * @return void
+   *
    * @bug This function uses internal APIs.
    */
-  public function updateCalendarObject($calendarId, $localUri, $object)
+  public function updateCalendarObject(int $calendarId, string $localUri, mixed $object):void
   {
     if (!is_string($object)) {
       $object = $object->serialize();
@@ -338,17 +430,21 @@ class CalDavService
   /**
    * Remove the given calendar object.
    *
+   * @param int $calendarId Numeric calendar id.
+   *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
    * other the UID.
    *
+   * @return void
+   *
    * @bug This function uses internal APIs.
    */
-  public function deleteCalendarObject($calendarId, $objectIdentifier)
+  public function deleteCalendarObject(int $calendarId, string $objectIdentifier):void
   {
     $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
     if (empty($localUri)) {
-      throw new \InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
+      throw new InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
@@ -371,7 +467,7 @@ class CalDavService
    *     the Content-Type header.
    *   * calendarid - The passed argument $calendarId
    *
-   * @param mixed $calendarId
+   * @param int $calendarId
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
@@ -384,7 +480,7 @@ class CalDavService
    * respectively an arry/proxy object with calendarId, uri and the
    * calendar data.
    */
-  public function getCalendarObject($calendarId, string  $objectIdentifier):?array
+  public function getCalendarObject(int $calendarId, string $objectIdentifier):?array
   {
     $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
     if (empty($localUri)) {
@@ -400,7 +496,7 @@ class CalDavService
   /**
    * Convert an object UID to its local URI.
    *
-   * @param mixed $calendarId
+   * @param int $calendarId
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
@@ -410,7 +506,7 @@ class CalDavService
    *
    * @bug This function uses internal APIs.
    */
-  private function getObjectUri($calendarId, string $objectIdentifier):?string
+  private function getObjectUri(int $calendarId, string $objectIdentifier):?string
   {
     if (str_ends_with($objectIdentifier, self::URI_SUFFIX)) {
       $localUri = $objectIdentifier;
@@ -430,21 +526,17 @@ class CalDavService
   }
 
   /**
-   * Force OCP\Calendar\IManager to be refreshed.
+   * Force \OCA\DAV\CalDAV\CalendarManager to be refreshed.
+   *
+   * @return void
    *
    * @bug This function uses internal APIs.
    */
-  private function refreshCalendarManager()
+  private function refreshCalendarManager():void
   {
     $this->calendarManager->clear();
     \OC::$server->query(\OCA\DAV\CalDAV\CalendarManager::class)->setupCalendarProvider(
       $this->calendarManager, $this->userId());
     $this->calendarUserId = $this->userId();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

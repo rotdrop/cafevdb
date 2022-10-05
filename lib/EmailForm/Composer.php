@@ -4318,7 +4318,8 @@ Störung.';
         $templateNames = $this->normalizeTemplateName($templateIdentifier);
 
         if (!$exact) {
-          $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
+          // $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
+          $templateNames = implode('|', array_map(fn($name) => '([0-9]+-)?' . $name, $templateNames));
         }
 
         /** @var Entities\EmailTemplate */
@@ -4326,7 +4327,8 @@ Störung.';
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->findOneBy(
             criteria: [
-              'tag' => $templateNames
+              // Attention: DQL needs SINGLE quotes.
+              "tag#REGEXP(%s, '^" . $templateNames . "$')" => 1,
             ],
             orderBy: [
               'tag' => 'ASC',

@@ -32,13 +32,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * GeoCountries
+ * GeoStatesProvinces, localized first-level administrative regions, states,
+ * provinces etc.
  *
- * @ORM\Table(name="GeoCountries")
+ * @ORM\Table(name="GeoStatesProvinces")
  * @ORM\Entity
  * @Gedmo\Loggable(enabled=false)
  */
-class GeoCountry implements \ArrayAccess
+class GeoStateProvince implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
@@ -49,7 +50,15 @@ class GeoCountry implements \ArrayAccess
    * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
-  private $iso;
+  private $countryIso;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=3, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private $code;
 
   /**
    * @var string
@@ -67,48 +76,66 @@ class GeoCountry implements \ArrayAccess
   private $l10nName;
 
   /**
-   * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries", fetch="EAGER")
+   * @var GeoCountry
+   *
+   * @ORM\ManyToOne(targetEntity="GeoCountry", inversedBy="statesProvinces", fetch="EAGER")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
+   *   @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
    *   @ORM\JoinColumn(name="target", referencedColumnName="target")
    * )
    */
-  private $continent;
-
-  /**
-   * @ORM\OneToMany(targetEntity="GeoStateProvince", mappedBy="country", indexBy="code", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"l10nName" = "ASC"})
-   */
-  private $statesProvinces;
+  private $country;
 
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->arrayCTOR();
-    $this->statesProvinces = new ArrayCollection;
   }
 
   /**
-   * Set iso.
+   * Set code.
    *
-   * @param string $iso
+   * @param string $code
    *
    * @return GeoCountry
    */
-  public function setIso(string $iso):GeoCountry
+  public function setCode(string $code):GeoStateProvince
   {
-    $this->iso = $iso;
+    $this->code = $code;
 
     return $this;
   }
   /**
-   * Get iso.
+   * Get code.
    *
    * @return string
    */
-  public function getIso():string
+  public function getCode():string
   {
-    return $this->iso;
+    return $this->code;
+  }
+
+  /**
+   * Set countryIso.
+   *
+   * @param string $countryIso
+   *
+   * @return GeoCountry
+   */
+  public function setCountryIso(string $countryIso):GeoStateProvince
+  {
+    $this->countryIso = $countryIso;
+
+    return $this;
+  }
+  /**
+   * Get countryIso.
+   *
+   * @return string
+   */
+  public function getCountryIso():string
+  {
+    return $this->countryIso;
   }
 
   /**
@@ -118,7 +145,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return GeoCountries
    */
-  public function setTarget(string $target):GeoCountry
+  public function setTarget(string $target):GeoStateProvince
   {
     $this->target = $target;
 
@@ -142,7 +169,7 @@ class GeoCountry implements \ArrayAccess
    *
    * @return GeoCountries
    */
-  public function setL10nName(string $l10nName):GeoCountry
+  public function setL10nName(string $l10nName):GeoStateProvince
   {
     $this->l10nName = $l10nName;
 
@@ -160,50 +187,38 @@ class GeoCountry implements \ArrayAccess
   }
 
   /**
-   * Set continent.
+   * Set country.
    *
-   * @param GeoContinent $continent
+   * @param GeoCountry $country
    *
    * @return GeoCountries
    */
-  public function setContinent(GeoContinent $continent):GeoCountry
+  public function setCountry(GeoCountry $country):GeoStateProvince
   {
-    $this->continent = $continent;
+    $this->country = $country;
 
     return $this;
   }
 
   /**
-   * Get continent.
+   * Get country.
    *
-   * @return GeoContinent
+   * @return GeoCountry
    */
-  public function getContinent():?GeoContinent
+  public function getCountry():?GeoCountry
   {
-    return $this->continent;
+    return $this->country;
   }
 
   /**
-   * Set statesProvinces.
+   * Return the ISO 3166-2 code for the state or province.
    *
-   * @param Collection $statesProvinces
+   * @return string
    *
-   * @return GeoCountries
+   * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
    */
-  public function setStatesProvinces(Collection $statesProvinces):GeoCountry
+  public function getIso3166_2():string
   {
-    $this->statesProvinces = $statesProvinces;
-
-    return $this;
-  }
-
-  /**
-   * Get statesProvinces.
-   *
-   * @return GeoStatesProvinces
-   */
-  public function getStatesProvinces():Collection
-  {
-    return $this->statesProvinces;
+    return $this->countryIso . '-' . $this->code;
   }
 }

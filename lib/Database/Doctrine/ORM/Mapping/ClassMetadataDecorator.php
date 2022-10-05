@@ -4,28 +4,32 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
+use \Exception;
+use \RuntimeException;
+
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
@@ -33,15 +37,17 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 
+/** Counter part to the decorated entity manager. */
 class ClassMetadataDecorator implements ClassMetadataInterface
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var array */
-  private $columnAssociations_ = [];
+  private $columnAssociationsCache = [];
 
   /** @var array */
   private $temporaryColumnStorage = [];
@@ -58,25 +64,34 @@ class ClassMetadataDecorator implements ClassMetadataInterface
   /** @var bool */
   private $debug = false;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ClassMetadata $metaData
-    , EntityManager $entityManager
-    , ILogger $logger
-    , IL10N $l10n
-  )
-  {
+    ClassMetadata $metaData,
+    EntityManager $entityManager,
+    ILogger $logger,
+    IL10N $l10n,
+  ) {
     $this->metaData = $metaData;
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->l = $l10n;
   }
 
-  private function debug(string $message, array $context = [], bool $showTrace = false)
+  /**
+   * @param string $message Message to print.
+   *
+   * @param array $context Log context.
+   *
+   * @param bool $showTrace Whether to show a call-stack.
+   *
+   * @return void
+   */
+  private function debug(string $message, array $context = [], bool $showTrace = false):void
   {
     if ($this->debug) {
-      return $this->logInfo($message, $context, 1, $showTrace);
+      $this->logInfo($message, $context, 1, $showTrace);
     } else {
-      return $this->logDebug($message, $context, 1, $showTrace);
+      $this->logDebug($message, $context, 1, $showTrace);
     }
   }
 
@@ -86,208 +101,114 @@ class ClassMetadataDecorator implements ClassMetadataInterface
   //
   // Things ain't that simple, we must implement all methods.
 
-  /**
-   * Gets the fully-qualified class name of this persistent class.
-   *
-   * @return string
-   */
+  /** {@inheritdoc} */
   public function getName()
   {
     return $this->metaData->getName();
   }
 
-  /**
-   * Gets the mapped identifier field name.
-   *
-   * The returned structure is an array of the identifier field names.
-   *
-   * @return mixed[]
-   */
+  /** {@inheritdoc} */
   public function getIdentifier()
   {
     return $this->metaData->getIdentifier();
   }
 
-  /**
-   * Gets the ReflectionClass instance for this mapped class.
-   *
-   * @return ReflectionClass
-   */
+  /** {@inheritdoc} */
   public function getReflectionClass()
   {
     return $this->metaData->getReflectionClass();
   }
 
-  /**
-   * Checks if the given field name is a mapped identifier for this class.
-   *
-   * @param string $fieldName
-   *
-   * @return bool
-     */
+  /** {@inheritdoc} */
   public function isIdentifier($fieldName)
   {
     return $this->metaData->isIdentifier($fieldName);
   }
 
-  /**
-   * Checks if the given field is a mapped property for this class.
-   *
-   * @param string $fieldName
-   *
-   * @return bool
-   */
+  /** {@inheritdoc} */
   public function hasField($fieldName)
   {
     return $this->metaData->hasField($fieldName);
   }
 
-  /**
-   * Checks if the given field is a mapped association for this class.
-   *
-   * @param string $fieldName
-   *
-   * @return bool
-   */
+  /** {@inheritdoc} */
   public function hasAssociation($fieldName)
   {
     return $this->metaData->hasAssociation($fieldName);
   }
 
-  /**
-   * Checks if the given field is a mapped single valued association for this class.
-   *
-   * @param string $fieldName
-   *
-   * @return bool
-     */
+  /** {@inheritdoc} */
   public function isSingleValuedAssociation($fieldName)
   {
     return $this->metaData->isSingleValuedAssociation($fieldName);
   }
 
-  /**
-   * Checks if the given field is a mapped collection valued association for this class.
-   *
-   * @param string $fieldName
-   *
-   * @return bool
-   */
+  /** {@inheritdoc} */
   public function isCollectionValuedAssociation($fieldName)
   {
     return $this->metaData->isCollectionValuedAssociation($fieldName);
   }
 
-  /**
-   * A numerically indexed list of field names of this persistent class.
-   *
-   * This array includes identifier fields if present on this class.
-   *
-   * @return string[]
-   */
+  /** {@inheritdoc} */
   public function getFieldNames()
   {
     return $this->metaData->getFieldNames();
   }
 
-  /**
-   * Returns an array of identifier field names numerically indexed.
-   *
-   * @return string[]
-   */
+  /** {@inheritdoc} */
   public function getIdentifierFieldNames()
   {
     return $this->metaData->getIdentifierFieldNames();
   }
 
-  /**
-   * Returns a numerically indexed list of association names of this persistent class.
-   *
-   * This array includes identifier associations if present on this class.
-   *
-   * @return string[]
-   */
+  /** {@inheritdoc} */
   public function getAssociationNames()
   {
     return $this->metaData->getAssociationNames();
   }
 
-  /**
-   * Returns a type name of this field.
-   *
-   * This type names can be implementation specific but should at least include the php types:
-   * integer, string, boolean, float/double, datetime.
-   *
-   * @param string $fieldName
-   *
-   * @return string
-   */
+  /** {@inheritdoc} */
   public function getTypeOfField($fieldName)
   {
     return $this->metaData->getTypeOfField($fieldName);
   }
 
-
-  /**
-   * Returns the target class name of the given association.
-   *
-   * @param string $assocName
-   *
-   * @return string
-   */
+  /** {@inheritdoc} */
   public function getAssociationTargetClass($assocName)
   {
     return $this->metaData->getAssociationTargetClass($assocName);
   }
 
-  /**
-   * Checks if the association is the inverse side of a bidirectional association.
-   *
-   * @param string $assocName
-   *
-   * @return bool
-   */
+  /** {@inheritdoc} */
   public function isAssociationInverseSide($assocName)
   {
     return $this->metaData->isAssociationInverseSide($assocName);
   }
 
-  /**
-   * Returns the target field of the owning side of the association.
-   *
-   * @param string $assocName
-   *
-   * @return string
-   */
+  /** {@inheritdoc} */
   public function getAssociationMappedByTargetField($assocName)
   {
     return $this->metaData->getAssociationMappedByTargetField($assocName);
   }
 
-  /**
-   * Returns the identifier of this object as an array with field name as key.
-   *
-   * Has to return an empty array if no identifier isset.
-   *
-   * @param object $object
-   *
-   * @return mixed[]
-   */
+  /** {@inheritdoc} */
   public function getIdentifierValues($object)
   {
     return $this->metaData->getIdentifierValues($object);
   }
 
+  /** {@inheritdoc} */
   public function __call($method, $args)
   {
     if (is_callable([ $this->metaData, $method ])) {
       return call_user_func_array([ $this->metaData, $method ], $args);
     }
-    throw new \Exception(
+    throw new Exception(
       sprintf('Undefined method - %s::%s', get_class($this->metaData), $method)
     );
   }
 
+  /** {@inheritdoc} */
   public function __get($property)
   {
     if (property_exists($this->metaData, $property)) {
@@ -296,6 +217,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     return null;
   }
 
+  /** {@inheritdoc} */
   public function __set($property, $value)
   {
     $this->metaData->$property = $value;
@@ -315,21 +237,22 @@ class ClassMetadataDecorator implements ClassMetadataInterface
    * @param object $entity The current $entity which must be the owning side
    * of the association.
    *
-   * @param array $assocation The association mapping of the current field
+   * @param array $association The association mapping of the current field
    * (the field itself is not needed here).
    *
    * @param object $targetEntity The target-entity which must be the inverse
    * side of the association.
    *
-   * @param ClassMetadata|ClassMetadataDecorator $targetMeta The class meta-data of the target-entity
+   * @param ClassMetadata|ClassMetadataDecorator $targetMeta The class meta-data of the target-entity.
    *
+   * @return void
    */
   private function updateInverseSide(
-    $entity
-    , array $association
-    , $targetEntity
-    , ClassMetadataInterface $targetMeta
-  ) {
+    object $entity,
+    array $association,
+    object $targetEntity,
+    ClassMetadataInterface $targetMeta,
+  ):void {
     if (!empty($association['mappedBy'])) {
       $this->debug('WE ARE THE INVERSE SIDE ' . print_r($association, true));
     }
@@ -356,7 +279,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
           if (!empty($indexBy)) {
             $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
             $inversedByValue->set($indexByValue, $entity);
-          } else if (!$inversedByValue->contains($entity)) {
+          } elseif (!$inversedByValue->contains($entity)) {
             $inversedByValue->add($entity);
           }
           break;
@@ -371,9 +294,6 @@ class ClassMetadataDecorator implements ClassMetadataInterface
    *
    * @param mixed $entity The entity to extract the values from.
    *
-   * @param ClassMetadata $meta The meta-data
-   * for the given $entity.
-   *
    * @return array
    * ```
    * [ COLUMN1 => VALUE1, ... ]
@@ -384,7 +304,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
    * key is just a simple identifier value (like an int) and not an
    * entity instance or reference.
    */
-  public function getIdentifierColumnValues($entity)
+  public function getIdentifierColumnValues(mixed $entity)
   {
     $columnValues = [];
     foreach ($this->metaData->getIdentifierValues($entity) as $field => $value) {
@@ -394,7 +314,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
         /** @var ClassMetadata $targetMeta */
         $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
         if (count($association['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+          throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $joinInfo = $association['joinColumns'][0];
         $columnName = $joinInfo['name'];
@@ -445,6 +365,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
    *   ...
    * ]
    * ```
+   *
    * @todo $columnValues sometimes contains raw data-base values as it
    * is passed down here from code using the legacy phpMyEdit
    * stuff. ATM we hack around by converting string values to their
@@ -457,7 +378,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
       $dbalType = null;
       if (isset($this->metaData->associationMappings[$field])) {
         if (count($this->metaData->associationMappings[$field]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+          throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]['name'];
       } else {
@@ -467,7 +388,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
           if ($ignoreMissing || $this->metaData->usesIdGenerator()) {
             continue;
           }
-          throw new \Exception(
+          throw new Exception(
             $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]['type']);
@@ -490,7 +411,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
    */
   private function columnAssociations():array
   {
-    if (empty($this->columnAssociations_)) {
+    if (empty($this->columnAssociationsCache)) {
       $meta = $this->metaData;
       $fields = [];
       foreach ($meta->associationMappings as $field => $mapping) {
@@ -498,23 +419,43 @@ class ClassMetadataDecorator implements ClassMetadataInterface
           $fields[$joinColumn['name']][$joinColumn['referencedColumnName']] = $field;
         }
       }
-      $this->columnAssociations_ = $fields;
+      $this->columnAssociationsCache = $fields;
     }
-    return $this->columnAssociations_;
+    return $this->columnAssociationsCache;
   }
 
-  private function doSetFieldValue($meta, $entity, $field, $value)
+  /**
+   * @param mixed $meta
+   *
+   * @param mixed $entity
+   *
+   * @param string $field
+   *
+   * @param mixed $value
+   *
+   * @return void
+   */
+  private function doSetFieldValue(mixed $meta, mixed $entity, string $field, mixed $value):void
   {
-    // try to convert string to correct type if possible
-    $dbalTypeName = $meta->getTypeOfField($field);
-    if (!empty($dbalTypeName)) {
-      $dbalType = Type::getType($dbalTypeName);
-      if (!empty($dbalType) && is_string($value)) {
-        $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
-      }
-    }
     // try first the setter/getter of the entity
     $method = 'set'.ucfirst($field);
+
+    // try to convert string to correct type if possible
+    try {
+      $dbalTypeName = $meta->getTypeOfField($field);
+      if (!empty($dbalTypeName)) {
+        $dbalType = Type::getType($dbalTypeName);
+        if (!empty($dbalType) && is_string($value)) {
+          $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
+        }
+      }
+    } catch (ConversionException $e) {
+      if (empty($value) && is_callable([ $entity, $method ])) {
+        $this->logException($e, 'Type conversion for field ' . $field . ' failed, continuing anyway.');
+      } else {
+        throw new DatabaseException($this->l->t('Type conversion for field "%s" failed.', $field), 0, $e);
+      }
+    }
     if (is_callable([ $entity, $method ])) {
       $entity->$method($value);
     } else {
@@ -523,7 +464,16 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     }
   }
 
-  public function setColumnValue($entity, string $column, $value)
+  /**
+   * @param mixed $entity
+   *
+   * @param string $column
+   *
+   * @param mixed $value
+   *
+   * @return void
+   */
+  public function setColumnValue(mixed $entity, string $column, mixed $value):void
   {
     $this->debug('Set column value for ' . $column . ' to ' . $value);
 
@@ -588,8 +538,14 @@ class ClassMetadataDecorator implements ClassMetadataInterface
 
   /**
    * Fetch the value of a column, recursing into associations.
+   *
+   * @param mixed $entity
+   *
+   * @param string $column
+   *
+   * @return mixed
    */
-  public function getColumnValue($entity, string $column)
+  public function getColumnValue(mixed $entity, string $column)
   {
     $meta = $this->metaData;
     // simple case ...
@@ -611,7 +567,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
       } else {
         // assume the field-value is the just the column value of the single join-column
         if (count($associationMapping['joinColumns']) != 1) {
-          throw new \RuntimeException($this->l->t('Association field must eiter be an entity or the value of the single join column.') . print_r($associationMapping['joinColumns'], true) );
+          throw new RuntimeException($this->l->t('Association field must eiter be an entity or the value of the single join column.') . print_r($associationMapping['joinColumns'], true));
         }
         return $fieldValue;
       }
@@ -643,7 +599,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     foreach ($meta->identifier as $field) {
       if (isset($meta->associationMappings[$field])) {
         if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
-          throw new \Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+          throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
       } else {

@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Common\Uuid;
 
 /** Generate VCards from the musicians database. */
 class MusicianCardBackend implements ICardBackend
@@ -117,10 +118,17 @@ class MusicianCardBackend implements ICardBackend
         $criteria[] = [ 'surName' => $likePattern ];
       }
       if (array_search('EMAIL', $properties) !== false) {
-        $criteria[] = [ 'email.address' => $likePattern ];
+        $criteria[] = [ 'email#CONVERT(%s USING utf8mb4)' => $likePattern ];
       }
       if (array_search('UID', $properties) !== false) {
-        $criteria[] = [ 'uuid' => $pattern ];
+        if (strpos($pattern, '%') !== false) {
+          // Probably expensive. We only do a pattern match if $pattern contains
+          // wildcards.
+          $criteria[] = [ 'uuid#BIN2UUID(%s)' => $pattern ];
+        } elseif (Uuid::asUuid($pattern) !== null) {
+          // only pass exact search term if it is a UUID.
+          $criteria[] = [ 'uuid' => $pattern ];
+        }
       }
       $musicians = $this->musiciansRepository->findBy($criteria);
       // $this->logInfo('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));

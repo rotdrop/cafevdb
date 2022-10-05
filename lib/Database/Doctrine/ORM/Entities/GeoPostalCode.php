@@ -4,27 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -64,6 +66,13 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * @var string
    *
+   * @ORM\Column(type="string", length=3, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
+   */
+  private $stateProvince;
+
+  /**
+   * @var string
+   *
    * @ORM\Column(type="string", length=32, nullable=false)
    */
   private $postalCode;
@@ -94,7 +103,9 @@ class GeoPostalCode implements \ArrayAccess
    */
   private $translations;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->translations = new ArrayCollection();
   }
@@ -112,11 +123,11 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Set country.
    *
-   * @param string $country
+   * @param null|string $country Country-code.
    *
    * @return GeoPostalCode
    */
-  public function setCountry($country)
+  public function setCountry(?string $country):GeoPostalCode
   {
     $this->country = $country;
 
@@ -124,23 +135,47 @@ class GeoPostalCode implements \ArrayAccess
   }
 
   /**
-   * Get country.
+   * Get country code.
    *
-   * @return string
+   * @return null|string
    */
-  public function getCountry()
+  public function getCountry():?string
   {
     return $this->country;
   }
 
   /**
-   * Set postalCode.
+   * Set stateProvince.
    *
-   * @param string $postalCode
+   * @param null|string $stateProvince StateProvince-code.
    *
    * @return GeoPostalCode
    */
-  public function setPostalCode($postalCode)
+  public function setStateProvince(?string $stateProvince):GeoPostalCode
+  {
+    $this->stateProvince = $stateProvince;
+
+    return $this;
+  }
+
+  /**
+   * Get stateProvince code.
+   *
+   * @return null|string
+   */
+  public function getStateProvince():?string
+  {
+    return $this->stateProvince;
+  }
+
+  /**
+   * Set postalCode.
+   *
+   * @param null|string $postalCode
+   *
+   * @return GeoPostalCode
+   */
+  public function setPostalCode(?string $postalCode):GeoPostalCode
   {
     $this->postalCode = $postalCode;
 
@@ -152,7 +187,7 @@ class GeoPostalCode implements \ArrayAccess
    *
    * @return string
    */
-  public function getPostalCode()
+  public function getPostalCode():string
   {
     return $this->postalCode;
   }
@@ -160,11 +195,11 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Set name.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @return GeoPostalCode
    */
-  public function setName($name)
+  public function setName(?string $name):GeoPostalCode
   {
     $this->name = $name;
 
@@ -174,9 +209,9 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Get name.
    *
-   * @return string
+   * @return null|string
    */
-  public function getName()
+  public function getName():?string
   {
     return $this->name;
   }
@@ -184,11 +219,11 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Set latitude.
    *
-   * @param int $latitude
+   * @param null|float $latitude Latitude.
    *
    * @return GeoPostalCode
    */
-  public function setLatitude($latitude)
+  public function setLatitude(?float $latitude):GeoPostalCode
   {
     $this->latitude = $latitude;
 
@@ -198,9 +233,9 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Get latitude.
    *
-   * @return int
+   * @return null|float
    */
-  public function getLatitude()
+  public function getLatitude():?float
   {
     return $this->latitude;
   }
@@ -208,11 +243,11 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Set longitude.
    *
-   * @param double $longitude
+   * @param float $longitude Longitude.
    *
    * @return GeoPostalCode
    */
-  public function setLongitude($longitude)
+  public function setLongitude(?float $longitude):GeoPostalCode
   {
     $this->longitude = $longitude;
 
@@ -222,45 +257,21 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Get longitude.
    *
-   * @return double
+   * @return null|float
    */
-  public function getLongitude()
+  public function getLongitude():?float
   {
     return $this->longitude;
   }
 
   /**
-   * Set updated.
-   *
-   * @param \DateTime $updated
-   *
-   * @return GeoPostalCode
-   */
-  public function setUpdated($updated)
-  {
-    $this->updated = $updated;
-
-    return $this;
-  }
-
-  /**
-   * Get updated.
-   *
-   * @return \DateTime
-   */
-  public function getUpdated()
-  {
-    return $this->updated;
-  }
-
-  /**
    * Set translations.
    *
-   * @param \DateTime $translations
+   * @param Collection $translations
    *
    * @return GeoPostalCode
    */
-  public function setTranslations($translations)
+  public function setTranslations(Collection $translations):GeoPostalCode
   {
     $this->translations = $translations;
 
@@ -270,9 +281,9 @@ class GeoPostalCode implements \ArrayAccess
   /**
    * Get linked GeoPostalCodeTranslation entities.
    *
-   * @return ArrayCollection[]
+   * @return Collection
    */
-  public function getTranslations()
+  public function getTranslations():Collection
   {
     return $this->translations;
   }

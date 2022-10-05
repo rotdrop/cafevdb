@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Settings;
@@ -28,8 +30,8 @@ use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
-use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
@@ -47,7 +49,8 @@ use OCA\CAFEVDB\Common\Util;
  * helper classes just for the sake of creating the menu entry in the
  * settings page.
  */
-class PersonalForm {
+class PersonalForm
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const ERROR_TEMPLATE = "errorpage";
@@ -84,18 +87,23 @@ class PersonalForm {
   /** @var IInitialStateService */
   private $initialStateService;
 
+  /** @var GeoCodingService */
+  private $geoCodingService;
+
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , AssetService $assetService
-    , ProjectService $projectService
-    , ErrorService $errorService
-    , TranslationService $translationService
-    , IInitialStateService $initialStateService
-    , WikiRPC $wikiRPC
-    , WebPagesRPC $webPagesRPC
-    , AddressBookProvider $addressBookProvider
-    , UserStorage $userStorage
-    , CloudUserConnectorService $cloudUserService
+    ConfigService $configService,
+    AssetService $assetService,
+    ProjectService $projectService,
+    ErrorService $errorService,
+    TranslationService $translationService,
+    IInitialStateService $initialStateService,
+    WikiRPC $wikiRPC,
+    WebPagesRPC $webPagesRPC,
+    AddressBookProvider $addressBookProvider,
+    UserStorage $userStorage,
+    CloudUserConnectorService $cloudUserService,
+    GeoCodingService $geoCodingService,
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
@@ -108,9 +116,17 @@ class PersonalForm {
     $this->addressBookProvider = $addressBookProvider;
     $this->userStorage = $userStorage;
     $this->cloudUserService = $cloudUserService;
+    $this->geoCodingService = $geoCodingService;
     $this->l = $this->l10N();
   }
 
+  /**
+   * Forward from Personal::getForm()
+   *
+   * @return TemplateResponse
+   *
+   * @see \OCP\Settings\ISettings
+   */
   public function getForm()
   {
     if (!$this->inGroup()) {
@@ -172,6 +188,7 @@ class PersonalForm {
         ],
         'appName' => $this->appName(),
         'userId' => $this->userId(),
+        //
         'locale' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
         'locales' => $this->findAvailableLocales(),
@@ -180,6 +197,7 @@ class PersonalForm {
         'localeLanguageNames' => $this->localeLanguageNames(),
         'currencyCode' => $this->currencyCode(),
         'currencySymbol' => $this->currencySymbol(),
+        'geoCodingService' => $this->geoCodingService,
         //
         'appLocale' => $this->appLocale(),
         'appL' => $this->appL10n(),
@@ -227,7 +245,7 @@ class PersonalForm {
           // this can throw if there is no datadase configured yet.
           try {
             $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardProjectId, $executiveBoardProject);
-          } catch(\Throwable $t) {
+          } catch (\Throwable $t) {
             $this->logException($t);
             $executiveBoardMembers = [];
           }
@@ -239,11 +257,11 @@ class PersonalForm {
           // this can throw if there is no datadase configured yet.
           try {
             $clubMembers = $this->projectService->participantOptions($memberProjectId, $memberProject);
-          } catch(\Exception $e) {
+          } catch (\Exception $e) {
             $clubMembers = [];
           }
         } else {
-          $clubBoardMembers = [];
+          $clubMembers = [];
         }
 
         $musiciansAddressBookName = $this->addressBookProvider
@@ -285,13 +303,6 @@ class PersonalForm {
 
             'phoneNumber' => $this->getConfigValue('phoneNumber'),
 
-            'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
-            'bankAccountIBAN' => $this->getConfigValue('bankAccountIBAN'),
-            'bankAccountBLZ' => $this->getConfigValue('bankAccountBLZ'),
-            'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
-            'bankAccountBankName' => $this->getConfigValue('bankAccountBankName'),
-            'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifier'),
-
             'projectOptions' => $projectOptions,
             'memberProject' => $memberProject,
             'memberProjectId' => $memberProjectId,
@@ -299,7 +310,7 @@ class PersonalForm {
             'executiveBoardProject' => $executiveBoardProject,
             'executiveBoardProjectId' => $executiveBoardProjectId,
             'executiveBoardMembers' => $executiveBoardMembers,
-            'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
+            'userGroupMembers' => array_map(fn($user) => $user->getUID(), $this->group()->getUsers()),
             'userGroups' => array_map(function($group) {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
@@ -351,6 +362,11 @@ class PersonalForm {
 
             'requesttoken' => \OCP\Util::callRegister(),
           ]);
+
+        // bank account settings
+        foreach (ConfigService::BANK_ACCOUNT_CONFIG_KEYS as $configKey) {
+          $this->parameterFromConfig($templateParameters, $configKey);
+        }
 
         // document templates
         if (!empty($documentTemplatesFolder) && !empty($sharedFolder)) {
@@ -453,13 +469,28 @@ class PersonalForm {
         $templateParameters,
         'blank',
       );
-    } catch(\Exception $e) {
+    } catch (\Exception $e) {
       return $this->errorService->exceptionTemplate($e);
     }
   }
 
-  private function parameterFromConfig(array &$parameters, string $templateKey, $default = null, ?string $configKey = null)
-  {
+  /**
+   * @param array $parameters Template parameters by reference.
+   *
+   * @param string $templateKey Key into $templateParameters.
+   *
+   * @param mixed $default Default value, by default null.
+   *
+   * @param null|string $configKey Key into the space for the parameter should be fetched from.
+   *
+   * @return void
+   */
+  private function parameterFromConfig(
+    array &$parameters,
+    string $templateKey,
+    mixed $default = null,
+    ?string $configKey = null,
+  ):void {
     $parameters[$templateKey] = $this->getConfigValue($configKey ?? $templateKey, $default);
   }
 }

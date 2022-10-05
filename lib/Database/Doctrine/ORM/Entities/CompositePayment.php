@@ -32,7 +32,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Common\Util;
 
 /**
@@ -44,6 +47,8 @@ use OCA\CAFEVDB\Common\Util;
  * @ORM\Table(name="CompositePayments")
  *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
  * @ORM\Entity
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class CompositePayment implements \ArrayAccess, \JsonSerializable
 {
@@ -708,6 +713,46 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   {
     $this->subject = $this->generateSubject($transliterate);
     return $this;
+  }
+
+  /**
+   * @var null|array
+   *
+   * The array of changed field values.
+   */
+  private $preUpdateValue = [];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PreUpdate
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'notificationMessageId';
+    if ($event->hasChangedField($field)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      // $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $oldValue = $event->getOldValue($field);
+      // $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($entityManager, $this, $oldValue, $event->getNewValue($field)));
+      $this->preUpdateValue[$field] = $oldValue;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PostUpdate
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    $field = 'notificationMessageId';
+    if (array_key_exists($field, $this->preUpdateValue)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $entityManager->dispatchEvent(new Events\PostChangeCompositePaymentNotificationMessageId($entityManager, $this, $this->preUpdateValue[$field]));
+      unset($this->preUpdateValue[$field]);
+    }
   }
 
   /** {@inheritdoc} */
