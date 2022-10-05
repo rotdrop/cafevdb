@@ -602,6 +602,7 @@ trait FindLikeTrait
               $value = str_replace('*', '%', $value);
               if (!empty(array_filter($value, fn($x) => strpos($x, '%') !== false))) {
                 $value = implode('|', array_map(fn($x) => str_replace('%', '.*', preg_quote($x)), $value));
+                $value = '^' . $value . '$';
                 $expr = $qb->expr()->eq(new Expr\Func('REGEXP', [ $field, ':' . $param ]), 1);
                 $criterion['value'] = $value;
               } else {
