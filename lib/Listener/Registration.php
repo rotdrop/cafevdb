@@ -60,6 +60,7 @@ class Registration
     self::registerListener($context, MailingListsRegistrationConfirmationListener::class);
     self::registerListener($context, FilesHooksListener::class);
     self::registerListener($context, MusicianEmailPersistanceListener::class);
+    self::registerListener($context, SepaBulkTransactionSubmittedListener::class);
   }
 
   private static function registerListener(IRegistrationContext $context, $class) {
