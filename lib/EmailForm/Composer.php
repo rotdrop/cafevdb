@@ -617,7 +617,7 @@ Störung.';
         'Events' => [],
       ],
       self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
-	'status' => true,
+        'status' => true,
       ],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
@@ -638,9 +638,14 @@ Störung.';
         if (empty($template)) {
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
-        $initialTemplate = $template->getTag();
-        $this->cgiData['storedMessagesSelector'] = $initialTemplate;
-        $this->templateName = $initialTemplate;
+        $loadedTag = $template->getTag();
+        if (empty($this->bulkTransaction) || str_ends_with($loadedTag, $initialTemplate)) {
+          $initialTemplate = $template->getTag();
+          $this->cgiData['storedMessagesSelector'] = $initialTemplate;
+          $this->templateName = $initialTemplate;
+        } else {
+          $this->templateName = $initialTemplate;
+        }
         if (!empty($template)) {
           $this->messageContents = $template->getContents();
         } else {
@@ -3270,8 +3275,10 @@ Störung.';
       /** @var \OCP\ICache $cloudCache */
       $cloudCache = $this->di(\OCP\ICache::class);
       $cacheKey = (string)Uuid::create();
+
+
       $attachment['data'] =
-        $cloudCache->set($cacheKey, $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA] ?? '', self::ATTACHMENT_PREVIEW_CACHE_TTL)
+        $cloudCache->set($cacheKey, $mailerAttachment[PHPMailer::ATTACHMENT_INDEX_DATA] ?: $this->l->t('*** empty content ***'), self::ATTACHMENT_PREVIEW_CACHE_TTL)
         ? $cacheKey
         : null;
       $cloudCache->set($cacheKey . '-meta', json_encode($attachment));
@@ -5005,7 +5012,7 @@ Störung.';
       if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
           || str_starts_with($href, 'mailto:')
           || isset(parse_url($href)['host'])) {
-        $this->logInfo('KEEP HREF AS ' . $href);
+        $this->logDebug('KEEP HREF AS ' . $href);
         continue;
       }
       $baseUrl = $this->urlGenerator()->getBaseUrl();
