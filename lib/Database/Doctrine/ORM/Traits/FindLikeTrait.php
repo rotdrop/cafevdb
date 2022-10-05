@@ -192,7 +192,17 @@ trait FindLikeTrait
    * - supports Collections\Criteria, these are applied at the end.
    *
    * - support group-functions in order to collect grouped data, e.g.
-   *   ```[ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]```
+   *   ```
+   *   [ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]
+   *   ```
+   *   Such search criteria will end up in the having clause.
+   *
+   * - support ordinary-functions in the where part with the syntax
+   *   ```
+   *   [ foo.bar#BIN_TO_UUID(%s) => '%SEARCH%' ]
+   *   ```
+   *   The difference to the '@' syntax is that these criteria will end up in
+   *   the WHERE clause.
    *
    * - support explicit type specification for "complicated" cases where a
    *   mere string conversion would leads to wrong results, e.g.
@@ -330,7 +340,13 @@ trait FindLikeTrait
       $groupFunction = null;
       $fctPos = strpos($key, '@');
       if ($fctPos !== false) {
-        $groupFunction = substr($key, $fctPos+1);
+        $groupFunction = substr($key, $fctPos + 1);
+        $key = substr($key, 0, $fctPos);
+      }
+      $sqlFunction = null;
+      $fctPos = strpos($key, '#');
+      if ($fctPos !== false) {
+        $sqlFunction = substr($key, $fctPos +1);
         $key = substr($key, 0, $fctPos);
       }
       $fieldType = null;
@@ -350,6 +366,7 @@ trait FindLikeTrait
         'literal' => false,
         'index' => count($whereCriteria) + count($havingCriteria),
         'groupFunction' => $groupFunction,
+        'sqlFunction' => $sqlFunction,
       ];
 
       if (preg_match('/^[!=<>&|()]+/', $key, $matches)) {
@@ -564,6 +581,8 @@ trait FindLikeTrait
           $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
           if (!empty($criterion['groupFunction'])) {
             $field = sprintf($criterion['groupFunction'], $field);
+          } elseif (!empty($criterion['sqlFunction'])) {
+            $field = sprintf($criterion['sqlFunction'], $field);
           }
           $comparator = $criterion['comparator'] ?? 'eq';
           if ($value === null) {
@@ -647,7 +666,9 @@ trait FindLikeTrait
         if ($criterion['fieldType'] !== null) {
           $fieldType = $criterion['fieldType'];
         } elseif ($tableAlias == 'mainTable') {
-          if (!is_array($value)) {
+          if (!is_array($value)
+              && empty($criterion['groupFunction'])
+              && empty($criterion['sqlFunction'])) {
             // try to deduce the type as this is NOT done by ORM here
             $fieldType = $this->getClassMetadata()->getTypeOfField($column);
           }
