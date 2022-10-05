@@ -602,7 +602,8 @@ class EntityManager extends EntityManagerDecorator
     $config->addCustomStringFunction('group_concat', DoctrineExtensions\Query\Mysql\GroupConcat::class);
     $config->addCustomStringFunction('if', DoctrineExtensions\Query\Mysql\IfElse::class);
     $config->addCustomStringFunction('regexp', DoctrineExtensions\Query\Mysql\Regexp::class);
-    $config->addCustomStringFunction('bin_to_uuid', Functions\BinToUuid::class);
+    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
+    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
   }
 
   /**
