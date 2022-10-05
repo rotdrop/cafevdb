@@ -508,6 +508,22 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'name' => $this->l->t('Date of Submission'),
         'tooltip' => $this->toolTipsService['bulk-transaction-date-of-submission'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
+        'display|ACP' => [
+          'attributes' => function($op, $k, $row, $pme) {
+            return empty($row['qf' . $k]) ? [] : [ 'readonly' => true ];
+          },
+          'postfix' => function($op, $pos, $k, $row, $pme) {
+            $checked = empty($row['qf' . $k]) ? '' : 'checked';
+            return '<input id="pme-submit-date-lock"
+  type="checkbox"
+  ' . $checked . '
+  class="pme-input pme-input-lock lock-unlock"
+/><label
+    class="pme-input pme-input-lock lock-unlock"
+    title="'.$this->toolTipsService['pme:input:lock-unlock'].'"
+    for="pme-submit-date-lock"></label>';
+          },
+        ],
       ]);
 
     $opts['fdd']['due_date'] = array_merge(
@@ -579,7 +595,7 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts) {
-      if (empty($row['qf'.$submitIdx])) {
+      if ($this->expertMode || empty($row['qf'.$submitIdx])) {
         $pme->options = $opts['options'];
       } else {
         $pme->options = 'LFV';
