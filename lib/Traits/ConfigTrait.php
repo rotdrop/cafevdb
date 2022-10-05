@@ -258,7 +258,7 @@ trait ConfigTrait
     return $this->configService->loginUserId;
   }
 
-  protected function user($userId = null)
+  protected function user($userId = null):IUser
   {
     return $this->configService->getUser($userId);
   }
