@@ -36,6 +36,7 @@ use Sabre\VObject\Component\VCalendar;
 use Sabre\VObject\Component\VAlarm;
 use Sabre\VObject\Component\VTodo;
 use Sabre\VObject\Component as VComponent;
+use Sabre\VObject\Property\ICalendar;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
@@ -557,9 +558,9 @@ class VCalendarService
   /**
    * @param VCalendar $vCalendar Object reference.
    *
-   * @return DateTimeInterface DTEND property if set, otherwise DTSTART + duration.
+   * @return mixed DTEND property if set, otherwise DTSTART + duration.
    */
-  public static function getDTEnd(VCalendar $vCalendar):DateTimeInterface
+  public static function getDTEnd(VCalendar $vCalendar):ICalendar\DateTime
   {
     $vObject = self::getVObject($vCalendar);
     if ($vObject->DTEND) {
