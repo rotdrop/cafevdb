@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
@@ -33,6 +34,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -505,16 +507,25 @@ class ClassMetadataDecorator implements ClassMetadataInterface
 
   private function doSetFieldValue($meta, $entity, $field, $value)
   {
-    // try to convert string to correct type if possible
-    $dbalTypeName = $meta->getTypeOfField($field);
-    if (!empty($dbalTypeName)) {
-      $dbalType = Type::getType($dbalTypeName);
-      if (!empty($dbalType) && is_string($value)) {
-        $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
-      }
-    }
     // try first the setter/getter of the entity
     $method = 'set'.ucfirst($field);
+
+    // try to convert string to correct type if possible
+    try {
+      $dbalTypeName = $meta->getTypeOfField($field);
+      if (!empty($dbalTypeName)) {
+        $dbalType = Type::getType($dbalTypeName);
+        if (!empty($dbalType) && is_string($value)) {
+          $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
+        }
+      }
+    } catch (ConversionException $e) {
+      if (empty($value) && is_callable([ $entity, $method ])) {
+        $this->logException($e, 'Type conversion for field ' . $field . ' failed, continuing anyway.');
+      } else {
+        throw new DatabaseException($this->l->t('Type conversion for field "%s" failed.', $field), 0, $e);
+      }
+    }
     if (is_callable([ $entity, $method ])) {
       $entity->$method($value);
     } else {
