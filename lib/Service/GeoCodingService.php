@@ -822,9 +822,9 @@ class GeoCodingService
             $this->setDatabaseRepository(Entities\GeoStateProvince::class);
             /** @var Entities\GeoStateProvince $entity */
             $entity = $this->find([
+              'countryIso' => $country,
               'code' => $code,
               'target' => $language,
-              'countryIso' => $country,
             ]);
             $isNew = empty($entity);
             if ($isNew) {
